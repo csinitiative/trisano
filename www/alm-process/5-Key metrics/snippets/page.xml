@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page visibility="1">
+  <component_list>
+    <component visibility="2" type="Html" order="1">
+      <title localize="false"></title>
+      <filename>HtmlSnippet1.html</filename>
+    </component>
+    <component visibility="1" type="ArtifactReport" order="2" layout="2">
+      <title localize="false"></title>
+      <report title="" view_link=""></report>
+      <report title="" view_link=""></report>
+    </component>
+    <component visibility="1" type="Documents" order="3">
+      <title localize="false">Key metrics documents</title>
+      <showtemplates>false</showtemplates>
+    </component>
+  </component_list>
+</page>
+
