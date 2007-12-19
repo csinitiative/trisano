@@ -7,7 +7,7 @@
     </component>
     <component visibility="1" type="ArtifactReport" order="2" layout="2">
       <title localize="false"></title>
-      <report title="asf" view_link="ReportView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p2=submitted&amp;p3=_iteration_1.1_&amp;reportTitle=asf&amp;reportType=trend&amp;p4=target_iteration&amp;p5=status&amp;timeFrame=LastSevenDays&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true">ReportLetView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p2=submitted&amp;p3=_iteration_1.1_&amp;reportTitle=asf&amp;reportType=trend&amp;p4=target_iteration&amp;p5=status&amp;timeFrame=LastSevenDays&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true</report>
+      <report title="asf" view_link="ReportView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p2=submitted&amp;p2=accepted&amp;p3=_iteration_1.1_&amp;reportTitle=asf&amp;reportType=trend&amp;p4=target_iteration&amp;p5=status&amp;timeFrame=LastSevenDays&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true">ReportLetView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p2=submitted&amp;p2=accepted&amp;p3=_iteration_1.1_&amp;reportTitle=asf&amp;reportType=trend&amp;p4=target_iteration&amp;p5=status&amp;timeFrame=LastSevenDays&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true</report>
       <report title="" view_link=""></report>
     </component>
     <component visibility="1" type="Documents" order="3">
