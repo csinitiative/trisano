@@ -7,7 +7,7 @@
     </component>
     <component visibility="1" type="ArtifactReport" order="2" layout="2">
       <title localize="false"></title>
-      <report title="Submitted User Stories &amp; Tasks" view_link="ReportView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p1=task&amp;p2=submitted&amp;p3=_release_1_&amp;reportTitle=Submitted+User+Stories+%26+Tasks&amp;reportType=trend&amp;p4=target_release&amp;p5=status&amp;timeFrame=LastFourWeeks&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true">ReportLetView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p1=task&amp;p2=submitted&amp;p3=_release_1_&amp;reportTitle=Submitted+User+Stories+%26+Tasks&amp;reportType=trend&amp;p4=target_release&amp;p5=status&amp;timeFrame=LastFourWeeks&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=true</report>
+      <report title="Submitted User Stories &amp; Tasks" view_link="ReportView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p1=task&amp;p2=submitted&amp;reportTitle=Submitted+User+Stories+%26+Tasks&amp;reportType=trend&amp;p5=status&amp;timeFrame=LastFourWeeks&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=false">ReportLetView?reportId=1&amp;saved=true&amp;p1=user_story&amp;p1=task&amp;p2=submitted&amp;reportTitle=Submitted+User+Stories+%26+Tasks&amp;reportType=trend&amp;p5=status&amp;timeFrame=LastFourWeeks&amp;p6=false&amp;p7=true&amp;p8=true&amp;p9=false</report>
       <report title="" view_link=""></report>
     </component>
     <component visibility="1" type="Documents" order="3">
