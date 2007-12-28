@@ -1,0 +1,19 @@
+label {
+  white-space: nowrap;
+}
+
+.hd {
+  height: 36px;
+  color: #B9B9A0;
+  background-color: #3B3D9E;
+  padding-left: 5px;
+  padding-top: 15px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #FFB30F;
+}
+
+.bd {
+  padding-left: 7px;
+  padding-right: 7px;
+}
