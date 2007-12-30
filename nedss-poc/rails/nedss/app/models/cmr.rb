@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'chronic'
 
 class Cmr < ActiveRecord::Base
   validates_presence_of :first_name
@@ -19,6 +20,17 @@ class Cmr < ActiveRecord::Base
     month_diff = date.month - dob.month - (day_diff < 0 ? 1 : 0)
     self.age = date.year - dob.year - (month_diff < 0 ? 1 : 0)
    end
+  end
+  
+  protected
+  def validate
+    # We still need the rules for date validation. Only validating the birthdate for now
+    #  An example of using Chronic for natural language date parsing
+    errors.add("date_of_birth", "has invalid format") unless Chronic.parse(self.date_of_birth)
+    # errors.add("onset_date", "has invalid format") unless Chronic.parse(self.onset_date)
+    # errors.add("expired_date", "has invalid format") unless Chronic.parse(self.expired_date)
+    # errors.add("reported_date", "has invalid format") unless Chronic.parse(self.reported_date)
+    # errors.add("lhd_reviewed_date", "has invalid format") unless Chronic.parse(self.lhd_reviewed_date)
   end
   
 end

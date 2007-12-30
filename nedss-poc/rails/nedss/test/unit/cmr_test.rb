@@ -18,7 +18,7 @@ class CmrTest < ActiveSupport::TestCase
   end
   
   def test_accession_number_generation
-    @cmr = Cmr.new(:first_name => "Bob")
+    @cmr = Cmr.new(:first_name => "Bob", :date_of_birth => "November 11, 1987")
     @cmr.save
     @cmr.reload
     assert_not_equal("", @cmr.accession_number)
@@ -30,6 +30,21 @@ class CmrTest < ActiveSupport::TestCase
     @cmr.save
     @cmr.reload
     assert_equal(33, @cmr.age)
+  end
+  
+  def test_natural_language_date_parsing
+    @cmr.date_of_birth = "bad date"
+    assert(!@cmr.save, @cmr.errors.full_messages.join("; "))
+    @cmr.date_of_birth = "11-25-1974"
+    assert(!@cmr.save, @cmr.errors.full_messages.join("; "))
+    @cmr.date_of_birth = "nov 25, 1974"
+    assert(@cmr.save, @cmr.errors.full_messages.join("; "))
+    @cmr.date_of_birth = "november 25, 1974"
+    assert(@cmr.save, @cmr.errors.full_messages.join("; "))
+    @cmr.date_of_birth = "1974-11-25"
+    assert(@cmr.save, @cmr.errors.full_messages.join("; "))
+    @cmr.date_of_birth = "11/25/1974"
+    assert(@cmr.save, @cmr.errors.full_messages.join("; "))
   end
   
   def test_update

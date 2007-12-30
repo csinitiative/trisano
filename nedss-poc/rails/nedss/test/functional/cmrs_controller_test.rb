@@ -14,7 +14,7 @@ class CmrsControllerTest < ActionController::TestCase
 
   def test_should_create_cmr
     assert_difference('Cmr.count') do
-      post :create, :cmr => {:first_name => "Robert" }
+      post :create, :cmr => {:first_name => "Robert", :date_of_birth => "November 11, 1973" }
     end
     
     assert_redirected_to cmr_path(assigns(:cmr))
