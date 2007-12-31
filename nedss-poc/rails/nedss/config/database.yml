@@ -12,7 +12,7 @@ development:
   adapter: postgresql
   encoding: unicode
   database: nedss_development
-  username: nedss
+  username: mike
   password: password
   host: localhost
   port: 5432
@@ -39,7 +39,7 @@ test:
   adapter: postgresql
   encoding: unicode
   database: nedss_test
-  username: nedss
+  username: mike
   password: password
   host: localhost
   port: 5432
@@ -47,6 +47,8 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: nedss_production
-  username: nedss
-  password:
+  database: nedss_prod
+  username: mike
+  password: password
+  host: localhost
+  port: 5432
