@@ -31,6 +31,7 @@ class CmrsExternalIntegrationTest < Test::Unit::TestCase
     form = page.forms[0]
     form['cmr[first_name]'] = 'Chuck'
     form['cmr[last_name]'] = 'Paley'
+    form['cmr[date_of_birth]'] = 'november, 12, 1977'
     page = agent.submit(form, form.buttons.first)
     
     # Inspect the Show page?
