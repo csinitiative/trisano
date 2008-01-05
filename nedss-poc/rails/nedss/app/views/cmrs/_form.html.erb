@@ -54,7 +54,7 @@
 <table cellpadding="2">
 <tr>
 <td><%= label(:cmr, :disease) %></td>
-<td><%= text_field(:cmr, :disease, :tabindex => 13) %></td>
+<td><%= collection_select(:cmr, :disease_id, Disease.find(:all), :id, :name)  %></td>
 <td><%= label(:cmr, :onset_date) %></td>
 <td><%= text_field(:cmr, :onset_date, :tabindex => 14) %></td>
 </tr>

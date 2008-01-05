@@ -1,0 +1,5 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+basic_disease:
+  id: 1
+  name: The Pops 

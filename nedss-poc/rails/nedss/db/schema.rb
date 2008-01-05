@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "cmrs", :force => true do |t|
     t.string   "accession_number",       :limit => 100, :default => "", :null => false
@@ -35,7 +35,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   "hospitals",              :limit => 100
     t.string   "did_patient_die",        :limit => 1
     t.date     "expired_date"
-    t.string   "disease",                :limit => 40
     t.string   "reported_by",            :limit => 40
     t.date     "reported_date"
     t.string   "lhd_investigator",       :limit => 40
@@ -43,6 +42,13 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   "lhd_reviewed_by",        :limit => 40
     t.date     "lhd_reviewed_date"
     t.string   "case_classification",    :limit => 20
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "disease_id"
+  end
+
+  create_table "diseases", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

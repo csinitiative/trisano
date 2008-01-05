@@ -24,7 +24,7 @@ basic_cmr:
   hospitals: OHSU
   did_patient_die: n
   expired_date:
-  disease: The Pops
+  disease_id: 1 
   reported_by:
   reported_date:
   lhd_investigator:
