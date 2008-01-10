@@ -32,8 +32,12 @@ Rails::Initializer.run do |config|
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
-  config.logger = Logger.new(STDOUT)
-  #config.active_record.colorize_logging = false
+  # Uncomment the following line for running in Tomcat
+  # TODO: Find permanent fix
+  # config.logger = Logger.new(STDOUT)
+
+  # Uncomment the following line if you want to read the log file in Eclipse
+  # config.active_record.colorize_logging = false
 
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!

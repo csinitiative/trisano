@@ -3,7 +3,7 @@ require 'chronic'
 
 class Cmr < ActiveRecord::Base
   belongs_to :disease
-  validates_presence_of :first_name
+  validates_presence_of :last_name
   before_create :generate_accession_number
   before_save :generate_age
   
@@ -25,9 +25,8 @@ class Cmr < ActiveRecord::Base
  
   protected
   def validate
-    # We still need the rules for date validation. Only validating the birthdate for now
     #  An example of using Chronic for natural language date parsing
-    errors.add("date_of_birth", "has invalid format") unless Chronic.parse(self.date_of_birth)
+    # errors.add("date_of_birth", "has invalid format") unless Chronic.parse(self.date_of_birth)
   end
   
 end
