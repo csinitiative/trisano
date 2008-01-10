@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Cmr do
+describe Patient do
   before(:each) do
-    @cmr = Cmr.new
+    @patient = Patient.new
   end
 
   it "should be valid" do
-    @cmr.should be_valid
+    @patient.should be_valid
   end
 end

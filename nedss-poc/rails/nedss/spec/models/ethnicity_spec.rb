@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Cmr do
+describe Ethnicity do
   before(:each) do
-    @cmr = Cmr.new
+    @ethnicity = Ethnicity.new
   end
 
   it "should be valid" do
-    @cmr.should be_valid
+    @ethnicity.should be_valid
   end
 end

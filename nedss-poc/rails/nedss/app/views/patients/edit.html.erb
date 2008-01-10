@@ -1,0 +1,12 @@
+<h1>Editing patient</h1>
+
+<%= error_messages_for :patient %>
+
+<% form_for(@patient) do |f| %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @patient %> |
+<%= link_to 'Back', patients_path %>
