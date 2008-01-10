@@ -24,8 +24,9 @@ Warbler::Config.new do |config|
   # config.gems = ["ActiveRecord-JDBC", "jruby-openssl"]
   # config.gems << "tzinfo"
 
-  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "jruby-openssl", "rest-open-uri", "postgres-pr"]
+#  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
+  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
 #  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
 
