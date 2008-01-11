@@ -4,7 +4,22 @@ describe "/patients/edit.html.erb" do
   include PatientsHelper
   
   before do
-    @patient = mock_model(Patient)
+    #TODO: Factor this out and test partial separately
+    @patient = mock_model(Patient,
+      :last_name => 'Marx',
+      :first_name => 'Groucho',
+      :street_address => '',
+      :date_of_birth => '',
+      :city => '',
+      :phone_1 => '',
+      :county => '',
+      :state => '',
+      :zip_code => '',
+      :country => '',
+      :sex => '',
+      :race => '',
+      :ethnicity => ''
+    )
     assigns[:patient] = @patient
   end
 

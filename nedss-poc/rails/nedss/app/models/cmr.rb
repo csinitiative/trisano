@@ -3,6 +3,7 @@ require 'chronic'
 
 class Cmr < ActiveRecord::Base
   belongs_to :disease
+  belongs_to :patient
   before_create :generate_accession_number
   
   def generate_accession_number

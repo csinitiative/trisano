@@ -4,6 +4,7 @@
 
 <% form_for(@patient) do |f| %>
   <p>
+    <%= render :partial => 'form', :locals => { :f => f } %>
     <%= f.submit "Update" %>
   </p>
 <% end %>

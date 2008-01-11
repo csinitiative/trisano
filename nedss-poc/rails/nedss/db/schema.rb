@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "cmrs", :force => true do |t|
     t.string   "accession_number",       :limit => 100, :default => "", :null => false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 6) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "disease_id"
+    t.integer  "patient_id"
   end
 
   create_table "diseases", :force => true do |t|
