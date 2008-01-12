@@ -22,10 +22,7 @@ namespace :nedss do
     end
 
     def which_files_exist
-      puts "war file exist?"
-      puts File.file? WAR_FILE_NAME
-      puts "tomcat dir exist?"
-      puts File.directory? TOMCAT_DEPLOY_DIR_NAME
+      puts "#{WAR_FILE_NAME} exists? #{File.file? WAR_FILE_NAME} #{TOMCAT_DEPLOY_DIR_NAME} exists? #{File.directory? TOMCAT_DEPLOY_DIR_NAME}"
     end
   end
 end
