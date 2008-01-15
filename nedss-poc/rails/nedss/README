@@ -1,5 +1,7 @@
 == Welcome to Rails
 
+MIKE TRIGGERING A BUILD to test CI - IGNORE
+
 Rails is a web-application and persistence framework that includes everything
 needed to create database-backed web-applications according to the
 Model-View-Control pattern of separation. This pattern splits the view (also
