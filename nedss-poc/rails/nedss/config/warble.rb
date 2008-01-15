@@ -17,6 +17,7 @@ Warbler::Config.new do |config|
   # JRuby and Goldspike are pre-loaded in this list.  Be sure to include your
   # own versions if you directly set the value
   # config.java_libs += FileList["lib/java/*.jar"]
+  config.java_libs.reject! {|lib| lib =~ /jruby-complete|goldspike/ }
 
   # Gems to be packaged in the webapp.  Note that Rails gems are added to this
   # list if vendor/rails is not present, so be sure to include rails if you
@@ -26,9 +27,19 @@ Warbler::Config.new do |config|
 
 #  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
-  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
+#  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
-#  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
+config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
+
+# Include all gems which are used by the web application
+# TODO Circle back to this - simpler way to configure gems rather than having to set each manuall
+# See http://wiki.jruby.org/wiki/Warbler
+#require "#{RAILS ROOT}/config/boot"
+#BUILD_GEMS = %w(warbler rake rcov)
+#for gem in Gem.loaded_specs.values
+#  next if BUILD_GEMS.include?(gem.name)
+#  config.gems[gem.name] = gem.version.version
+#end
 
   # Include gem dependencies not mentioned specifically
   config.gem_dependencies = true
