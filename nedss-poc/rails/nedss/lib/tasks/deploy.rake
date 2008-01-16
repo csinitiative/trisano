@@ -12,7 +12,7 @@ namespace :nedss do
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
       puts "attempting to delete war file from Tomcat"
-
+      # TODO delete war and exploded dir
     end
 
     desc "copy nedss war file to Tomcat"
@@ -43,36 +43,26 @@ namespace :nedss do
     desc "stop Tomcat"
     task :stoptomcat do
       puts "attempting to stop Tomcat"
-      Dir.chdir(TOMCAT_BIN) 
-      sh "./shutdown.sh"
-    end
-
-    desc "force stop Tomcat"
-    task :forcestoptomcat do
-
-      puts "attempting to force stop Tomcat"
-      Dir.chdir(TOMCAT_BIN) 
-      sh %{./catalina.sh stop -force}
-
+      #Dir.chdir(TOMCAT_BIN) 
+      sh TOMCAT_BIN + "/shutdown.sh"
     end
 
     desc "start Tomcat"
     task :starttomcat do
       puts "attempting to start Tomcat"
-      Dir.chdir(TOMCAT_BIN)
-      sh "./startup.sh"
+      #Dir.chdir(TOMCAT_BIN)
+      sh TOMCAT_BIN + "/startup.sh"
     end
 
-    desc "restart Tomcat"
-    task :restarttomcat => [:istomcatup, :stoptomcat, :starttomcat] do
-      puts "restart"
+    desc "Wait 15 seconds for Tomcat to stop"
+    task :waitfortomcattostop do
+      puts "waiting for Tomcat to stop"
+      sleep 10
     end
 
-    desc "test"
-    task :testit do
-      puts "test start"
-      task(:stoptomcat).invoke
-      puts "test stop"
+    desc "redeploy Tomcat"
+    task :redeploytomcat => [:stoptomcat, :waitfortomcattostop, :deletewar, :copywar, :starttomcat] do
+      puts "redeploying Tomcat"
     end
 
   end
