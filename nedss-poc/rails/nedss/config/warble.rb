@@ -63,8 +63,8 @@ config.gems = ["rails", "activesupport", "activeresource", "activerecord", "acti
 
   # Control the pool of Rails runtimes
   # (Goldspike-specific; see README for details)
-  # config.webxml.pool.maxActive = 4
-  # config.webxml.pool.minIdle = 2
+  config.webxml.pool.maxActive = 10
+  config.webxml.pool.minIdle = 4
   # config.webxml.pool.checkInterval = 0
   # config.webxml.pool.maxWait = 30000
 
