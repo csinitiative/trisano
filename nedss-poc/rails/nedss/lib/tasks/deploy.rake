@@ -1,4 +1,5 @@
 require 'ftools'
+require 'fileutils'
 
 namespace :nedss do
 
@@ -8,11 +9,26 @@ namespace :nedss do
     #TOMCAT_HOME = '/home/mike/opt/apache-tomcat-6.0.14'
     TOMCAT_BIN = TOMCAT_HOME + '/bin'
     TOMCAT_DEPLOY_DIR_NAME = TOMCAT_HOME + '/webapps'
+    TOMCAT_DEPLOYED_EXPLODED_WAR_DIR = TOMCAT_DEPLOY_DIR_NAME + '/' + 'nedss'
+    TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
       puts "attempting to delete war file from Tomcat"
-      # TODO delete war and exploded dir
+      if File.file? TOMCAT_DEPLOYED_WAR_NAME
+        File.delete(TOMCAT_DEPLOYED_WAR_NAME) 
+        puts "deleted deployed war file"
+      else
+        puts "war file not found - did not delete"
+      end
+
+      puts "attempting to delete deployed exploded war directory"
+      if File.directory? TOMCAT_DEPLOYED_EXPLODED_WAR_DIR 
+        FileUtils.remove_dir(TOMCAT_DEPLOYED_EXPLODED_WAR_DIR)
+        puts "deleted deployed exploded war directory"
+      else
+        puts "deployed exploded war directory not found - did not delete"
+      end
     end
 
     desc "copy nedss war file to Tomcat"
@@ -43,18 +59,16 @@ namespace :nedss do
     desc "stop Tomcat"
     task :stoptomcat do
       puts "attempting to stop Tomcat"
-      #Dir.chdir(TOMCAT_BIN) 
       sh TOMCAT_BIN + "/shutdown.sh"
     end
 
     desc "start Tomcat"
     task :starttomcat do
       puts "attempting to start Tomcat"
-      #Dir.chdir(TOMCAT_BIN)
       sh TOMCAT_BIN + "/startup.sh"
     end
 
-    desc "Wait 15 seconds for Tomcat to stop"
+    desc "Wait 10 seconds for Tomcat to stop"
     task :waitfortomcattostop do
       puts "waiting for Tomcat to stop"
       sleep 10
