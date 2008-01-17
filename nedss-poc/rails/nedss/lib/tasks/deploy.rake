@@ -5,8 +5,8 @@ namespace :nedss do
 
   namespace :deploy do
     WAR_FILE_NAME = 'nedss.war'
-    TOMCAT_HOME = '/opt/tomcat/apache-tomcat-6.0.14'
-    #TOMCAT_HOME = '/home/mike/opt/apache-tomcat-6.0.14'
+    # Override with env variable if you have a different Tomcat home - just export it
+    TOMCAT_HOME = ENV['TOMCAT_HOME'].nil? ? '/opt/tomcat/apache-tomcat-6.0.14' : ENV['TOMCAT_HOME']
     TOMCAT_BIN = TOMCAT_HOME + '/bin'
     TOMCAT_DEPLOY_DIR_NAME = TOMCAT_HOME + '/webapps'
     TOMCAT_DEPLOYED_EXPLODED_WAR_DIR = TOMCAT_DEPLOY_DIR_NAME + '/' + 'nedss'
