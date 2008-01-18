@@ -1,0 +1,38 @@
+<h1>Show person</h1>
+<fieldset>
+<legend>Person Information/Demographics</legend>  
+<table cellpadding="2">
+<tr>
+<td><%= label(:person, :last_name) %></td>
+<td><%= @person.last_name %></td>
+<td><%= label(:person, :first_name) %></td>
+<td><%= @person.first_name %></td>
+</tr>
+<tr>
+<td><%= label(:person, :middle_name) %></td>
+<td><%= @person.middle_name %></td>
+<td><%= label(:person, :birth_date) %></td>
+<td><%= @person.birth_date %></td>
+</tr>
+<tr>
+<td><%= label(:person, :date_of_death) %></td>
+<td><%= @person.date_of_death %></td>
+<td><%= label(:person, :ethnicity) %></td>
+<td><%= @person.ethnicity.code_description %></td>
+</tr>
+<tr>
+<td><%= label(:person, :birth_gender) %></td>
+<td><%= @person.birth_gender.code_description %></td>
+<td><%= label(:person, :current_gender) %></td>
+<td><%= @person.current_gender.code_description %></td>
+</tr>
+<tr>
+<td><%= label(:person, :race) %></td>
+<td><%= @person.race.code_description %></td>
+<td><%= label(:person, :primary_language) %></td>
+<td><%= @person.primary_language.code_description %></td>
+</tr>
+</table>
+</fieldset>
+<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Back', people_path %>

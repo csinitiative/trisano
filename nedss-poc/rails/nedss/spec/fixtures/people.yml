@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+groucho:
+  id: 1
+  last_name: Marx
+  first_name: Groucho
+  middle_name: Julius
+  birth_date: 1890-10-2
+  date_of_death: 1977-8-19
+  birth_gender_id: 1
+  current_gender_id: 1
+  ethnicity_id: 103
+  race_id: 204
+  primary_language_id: 302
+#
+# two:
+#   column: value

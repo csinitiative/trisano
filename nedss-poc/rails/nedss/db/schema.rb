@@ -9,62 +9,213 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 7) do
+ActiveRecord::Schema.define(:version => 1) do
 
-  create_table "cmrs", :force => true do |t|
-    t.string   "accession_number",       :limit => 100, :default => "", :null => false
-    t.string   "entered_by",             :limit => 10,  :default => "", :null => false
-    t.date     "onset_date"
-    t.string   "clinician_name",         :limit => 40
-    t.string   "clinician_phone_number", :limit => 20
-    t.string   "patient_hospitalized",   :limit => 1
-    t.string   "hospitals",              :limit => 100
-    t.string   "did_patient_die",        :limit => 1
-    t.date     "expired_date"
-    t.string   "reported_by",            :limit => 40
-    t.date     "reported_date"
-    t.string   "lhd_investigator",       :limit => 40
-    t.string   "reporting_phone_number", :limit => 20
-    t.string   "lhd_reviewed_by",        :limit => 40
-    t.date     "lhd_reviewed_date"
-    t.string   "case_classification",    :limit => 20
+  create_table "addresses", :force => true do |t|
+    t.integer  "location_id"
+    t.integer  "city_id"
+    t.integer  "county_id"
+    t.integer  "district_id"
+    t.integer  "state_id"
+    t.string   "street_number", :limit => 10
+    t.string   "street_name",   :limit => 50
+    t.string   "unit_number",   :limit => 10
+    t.string   "postal_code",   :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "animals", :force => true do |t|
+    t.integer  "entity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "clinicals", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "test_public_health_lab_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "clusters", :force => true do |t|
+    t.integer  "primary_event_id"
+    t.integer  "secondary_event_id"
+    t.integer  "cluster_status_id"
+    t.string   "comment",            :limit => 500
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "codes", :force => true do |t|
+    t.string "code_name",        :limit => 50
+    t.string "the_code",         :limit => 20
+    t.string "code_description", :limit => 100
+  end
+
+  create_table "disease_events", :force => true do |t|
+    t.integer  "event_id"
     t.integer  "disease_id"
-    t.integer  "patient_id"
+    t.integer  "hospitalized_id"
+    t.integer  "died_id"
+    t.integer  "pregnant_id"
+    t.date     "disease_onset_date"
+    t.date     "date_diagnosed"
+    t.date     "pregnancy_due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "diseases", :force => true do |t|
-    t.string   "name"
+    t.string "disease_name", :limit => 50
+  end
+
+  create_table "encounters", :force => true do |t|
+    t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "ethnicities", :force => true do |t|
-    t.string "ethnic_group", :limit => 30
+  create_table "entities", :force => true do |t|
+    t.string   "record_number",     :limit => 20
+    t.string   "entity_url_number", :limit => 200
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "patients", :force => true do |t|
-    t.string   "last_name",                 :limit => 25, :null => false
-    t.string   "first_name",                :limit => 25
-    t.string   "middle_name",               :limit => 25
-    t.date     "date_of_birth"
-    t.string   "street_address",            :limit => 55
-    t.string   "city",                      :limit => 40
-    t.string   "county",                    :limit => 40
-    t.string   "country",                   :limit => 40
-    t.string   "state",                     :limit => 2
-    t.string   "zip_code",                  :limit => 10
-    t.string   "phone_1",                   :limit => 20
-    t.string   "phone_2",                   :limit => 20
-    t.string   "phone_3",                   :limit => 20
-    t.string   "sex",                       :limit => 1
+  create_table "entities_locations", :force => true do |t|
+    t.integer  "location_id"
+    t.integer  "entity_id"
+    t.integer  "entity_location_type_id"
+    t.integer  "primary_yn_id"
+    t.string   "comment",                 :limit => 500
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "entity_groups", :force => true do |t|
+    t.integer  "entity_group_type_id"
+    t.integer  "primary_entity_id"
+    t.integer  "secondary_entity_id"
+    t.string   "entity_group_name",    :limit => 50
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "event_cases", :force => true do |t|
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "events", :force => true do |t|
+    t.integer  "event_type_id"
+    t.integer  "event_status_id"
+    t.integer  "imported_from_id"
+    t.integer  "event_case_status_id"
+    t.string   "event_name",           :limit => 100
+    t.date     "event_onset_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string "location_url_number", :limit => 200
+  end
+
+  create_table "materials", :force => true do |t|
+    t.integer  "entity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "observations", :force => true do |t|
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "organizations", :force => true do |t|
+    t.integer  "entity_id"
+    t.integer  "organization_type_id"
+    t.integer  "organization_status_id"
+    t.string   "organization_name",      :limit => 50
+    t.datetime "duration_start_date"
+    t.datetime "duration_end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "participation_hospitals", :force => true do |t|
+    t.integer  "participation_id"
+    t.string   "hospital_record_number", :limit => 100
+    t.date     "admission_date"
+    t.date     "discharge_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "participations", :force => true do |t|
+    t.integer  "primary_event_id"
+    t.integer  "secondary_event_id"
+    t.integer  "role_id"
+    t.integer  "participation_status_id"
+    t.string   "comment",                 :limit => 500
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "participations_treatments", :force => true do |t|
+    t.integer  "participation_id"
+    t.integer  "treatment_id"
+    t.integer  "treatment_given_yn_id"
+    t.date     "treatment_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "people", :force => true do |t|
+    t.integer  "entity_id"
     t.integer  "race_id"
+    t.integer  "birth_gender_id"
+    t.integer  "current_gender_id"
     t.integer  "ethnicity_id"
-    t.integer  "language_id"
-    t.string   "primary_language_if_other", :limit => 20
+    t.integer  "primary_language_id"
+    t.string   "first_name",          :limit => 25
+    t.string   "middle_name",         :limit => 25
+    t.string   "last_name",           :limit => 25
+    t.date     "birth_date"
+    t.date     "date_of_death"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "places", :force => true do |t|
+    t.integer  "entity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "referrals", :force => true do |t|
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "telephones", :force => true do |t|
+    t.integer  "location_id"
+    t.integer  "country_code"
+    t.integer  "area_code"
+    t.integer  "exchange"
+    t.integer  "phone_number"
+    t.integer  "extension"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "treatments", :force => true do |t|
+    t.integer "treatment_type_id"
+    t.string  "treatment_name",    :limit => 100
   end
 
 end

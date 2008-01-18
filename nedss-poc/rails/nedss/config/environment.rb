@@ -63,4 +63,10 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
+
+  # For datetime validation plugin to switch to U.S. format (month/day/year)
+  # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README 
+  config.after_initialize do
+    ValidatesDateTime.us_date_format = true
+  end
 end
