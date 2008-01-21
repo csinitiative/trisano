@@ -195,19 +195,22 @@ describe PeopleController do
   describe "handling POST /people" do
 
     before(:each) do
-      @person = mock_model(Person, :to_param => "1")
+      @person = mock_model(Person, :to_param => '1')
+      @entity = mock_model(Entity, :to_param => "1")
+      Entity.stub!(:new).and_return(@entity)
       Person.stub!(:new).and_return(@person)
     end
     
     describe "with successful save" do
   
       def do_post
-        @person.should_receive(:save).and_return(true)
+        @entity.should_receive(:save).and_return(true)
         post :create, :person => {}
       end
   
       it "should create a new person" do
         Person.should_receive(:new).with({}).and_return(@person)
+        Entity.should_receive(:new).with(:person => @person).and_return(@entity)
         do_post
       end
 
@@ -221,7 +224,7 @@ describe PeopleController do
     describe "with failed save" do
 
       def do_post
-        @person.should_receive(:save).and_return(false)
+        @entity.should_receive(:save).and_return(false)
         post :create, :person => {}
       end
   

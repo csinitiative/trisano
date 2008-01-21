@@ -42,9 +42,11 @@ class PeopleController < ApplicationController
   # POST /people.xml
   def create
     @person = Person.new(params[:person])
+    @entity = Entity.new(:person => @person)
 
     respond_to do |format|
-      if @person.save
+#      if @person.save
+      if @entity.save
         flash[:notice] = 'Person was successfully created.'
         format.html { redirect_to(@person) }
         format.xml  { render :xml => @person, :status => :created, :location => @person }

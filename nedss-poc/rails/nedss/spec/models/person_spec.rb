@@ -46,6 +46,28 @@ describe Person, "with associated codes" do
   end
 end
 
+describe Person, "with dates of birth and/or death" do
+  it "should allow only valid dates" do
+    person = Person.new(:last_name => 'Lacey', :birth_date => "2007-02-29", :date_of_death => "today")
+    person.should_not be_valid
+    person.should have(1).error_on(:birth_date)
+    person.should have(1).error_on(:date_of_death)
+
+    person = Person.new(:last_name => 'Lacey', :birth_date => "2008-02-29", :date_of_death => "02/28/2009")
+    person.should be_valid
+  end
+
+  it "should not be valid to die before being born" do
+    person = Person.new(:last_name => 'Lacey', :birth_date => "2008-12-31", :date_of_death => "2008-12-30")
+    person.should_not be_valid
+  end
+
+  it "should be valid to die after being born" do
+    person = Person.new(:last_name => 'Lacey', :birth_date => "2007-12-31", :date_of_death => "2008-12-30")
+    person.should be_valid
+  end
+end
+
 describe Person, "loaded from fixtures" do
   fixtures :people, :codes
 
