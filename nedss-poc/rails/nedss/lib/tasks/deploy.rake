@@ -55,16 +55,11 @@ namespace :nedss do
       puts "#{WAR_FILE_NAME} exists? #{File.file? WAR_FILE_NAME} #{TOMCAT_DEPLOY_DIR_NAME} exists? #{File.directory? TOMCAT_DEPLOY_DIR_NAME}"
     end
 
-    desc "check to see if Tomcat is running"
-    task :istomcatup do
-      #TODO could check port just do a get?
-      puts "not yet implemented"
-    end
-
     desc "stop Tomcat"
     task :stoptomcat do
       puts "attempting to stop Tomcat"
       sh TOMCAT_BIN + "/shutdown.sh"
+      sleep 10
     end
 
     desc "start Tomcat"
@@ -79,19 +74,11 @@ namespace :nedss do
       sleep 10
     end
 
-    desc "redeploy Tomcat"
-    task :redeploytomcat => [:stoptomcat, :wait, :deletewar, :copywar, :starttomcat] do
-      puts "redeploying Tomcat"
-    end
-
-  end
-
-  namespace :smoke do
-  
     desc "smoke test that ensures NEDSS was deployed"
-    task :test do 
+    task :smoke do
+      sleep 10
       puts "executing smoke test"
-      people_url = NEDSS_URL + '/nedss/people'     
+      people_url = NEDSS_URL + '/nedss/people'
       puts people_url
 
       agent = WWW::Mechanize.new
@@ -102,5 +89,12 @@ namespace :nedss do
       puts "smoke test success"
     end
 
+
+    desc "redeploy Tomcat"
+    task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
+      puts "redeploy Tomcat success"
+    end
+
   end
+
 end
