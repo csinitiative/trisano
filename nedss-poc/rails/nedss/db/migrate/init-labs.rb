@@ -20,6 +20,7 @@ class init-labs.rb < ActiveRecord::Migration
 	    
 
     create_table :lab_results do |t|
+      t.integer    :event_id
       t.integer    :specimen_source_id
       t.timestamp  :collection_date
       t.timestamp  :lab_test_date
@@ -27,6 +28,11 @@ class init-labs.rb < ActiveRecord::Migration
       t.string	   :lab_result_text, :limit => 20
     end
 
+  execute "ALTER TABLE lab_results
+		ADD CONSTRAINT  fk_EventId 
+		FOREIGN KEY (event_id) 
+		REFERENCES event(id)"
+	
   execute "ALTER TABLE lab_results
 		ADD CONSTRAINT  fk_SpecimenSourceId 
 		FOREIGN KEY (specimen_source_id) 
