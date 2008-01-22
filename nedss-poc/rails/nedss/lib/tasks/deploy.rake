@@ -9,11 +9,13 @@ namespace :nedss do
   namespace :deploy do
     WAR_FILE_NAME = 'nedss.war'
     # Override with env variable if you have a different Tomcat home - just export it
-    TOMCAT_HOME = ENV['TOMCAT_HOME'].nil? ? '/opt/tomcat/apache-tomcat-6.0.14' : ENV['TOMCAT_HOME']
+    TOMCAT_HOME = ENV['TOMCAT_HOME'] ||= '/opt/tomcat/apache-tomcat-6.0.14' 
     TOMCAT_BIN = TOMCAT_HOME + '/bin'
     TOMCAT_DEPLOY_DIR_NAME = TOMCAT_HOME + '/webapps'
     TOMCAT_DEPLOYED_EXPLODED_WAR_DIR = TOMCAT_DEPLOY_DIR_NAME + '/' + 'nedss'
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
+    # Override with env variable if you are running locally http://localhost:8080
+    NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
@@ -71,14 +73,14 @@ namespace :nedss do
       sh TOMCAT_BIN + "/startup.sh"
     end
 
-    desc "Wait 10 seconds for Tomcat to stop"
-    task :waitfortomcattostop do
-      puts "waiting for Tomcat to stop"
+    desc "Wait 10 seconds"
+    task :wait do
+      puts "waiting 10 seconds"
       sleep 10
     end
 
     desc "redeploy Tomcat"
-    task :redeploytomcat => [:stoptomcat, :waitfortomcattostop, :deletewar, :copywar, :starttomcat] do
+    task :redeploytomcat => [:stoptomcat, :wait, :deletewar, :copywar, :starttomcat] do
       puts "redeploying Tomcat"
     end
 
@@ -86,16 +88,18 @@ namespace :nedss do
 
   namespace :smoke do
   
-    desc "smoke test that excercises basic NEDSS functionality"
+    desc "smoke test that ensures NEDSS was deployed"
     task :test do 
-      puts "hi"
+      puts "executing smoke test"
+      people_url = NEDSS_URL + '/nedss/people'     
+      puts people_url
 
       agent = WWW::Mechanize.new
-      page = agent.get 'http://ut-nedss-dev.csinitiative.com/nedss/people'
-      page2 = agent.get 'http://www.google.com'
-      puts page
-      puts page2
+      page = agent.get people_url
 
+      link = page.links.text(/New person/)
+      page = agent.click(link)
+      puts "smoke test success"
     end
 
   end
