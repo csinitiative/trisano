@@ -1,5 +1,8 @@
 require 'ftools'
 require 'fileutils'
+require 'mechanize'
+require 'rexml/document'
+require 'rest-open-uri'
 
 namespace :nedss do
 
@@ -80,7 +83,20 @@ namespace :nedss do
     end
 
   end
-end
 
+  namespace :smoke do
   
+    desc "smoke test that excercises basic NEDSS functionality"
+    task :test do 
+      puts "hi"
 
+      agent = WWW::Mechanize.new
+      page = agent.get 'http://ut-nedss-dev.csinitiative.com/nedss/people'
+      page2 = agent.get 'http://www.google.com'
+      puts page
+      puts page2
+
+    end
+
+  end
+end
