@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -27,6 +27,12 @@ ActiveRecord::Schema.define(:version => 1) do
 
   create_table "animals", :force => true do |t|
     t.integer  "entity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cases_events", :force => true do |t|
+    t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -102,12 +108,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_at"
   end
 
-  create_table "event_cases", :force => true do |t|
-    t.integer  "event_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "events", :force => true do |t|
     t.integer  "event_type_id"
     t.integer  "event_status_id"
@@ -115,6 +115,31 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer  "event_case_status_id"
     t.string   "event_name",           :limit => 100
     t.date     "event_onset_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "hospitals_participations", :force => true do |t|
+    t.integer  "participation_id"
+    t.string   "hospital_record_number", :limit => 100
+    t.date     "admission_date"
+    t.date     "discharge_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "lab_results", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "specimen_source_id"
+    t.datetime "collection_date"
+    t.datetime "lab_test_date"
+    t.integer  "tested_at_uphl_yn_id"
+    t.string   "lab_result_text",      :limit => 20
+  end
+
+  create_table "laboratories", :force => true do |t|
+    t.integer  "entity_id"
+    t.string   "laboratory_name", :limit => 50
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -146,23 +171,15 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_at"
   end
 
-  create_table "participation_hospitals", :force => true do |t|
-    t.integer  "participation_id"
-    t.string   "hospital_record_number", :limit => 100
-    t.date     "admission_date"
-    t.date     "discharge_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "participations", :force => true do |t|
-    t.integer  "primary_event_id"
-    t.integer  "secondary_event_id"
+    t.integer  "primary_entity_id"
+    t.integer  "secondary_entity_id"
     t.integer  "role_id"
     t.integer  "participation_status_id"
     t.string   "comment",                 :limit => 500
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
   create_table "participations_treatments", :force => true do |t|
