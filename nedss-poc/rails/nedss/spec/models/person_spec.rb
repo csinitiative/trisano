@@ -76,31 +76,31 @@ describe Person, "loaded from fixtures" do
   end
 
   it "should have one record" do
-    Person.should have(1).record
+    Person.should have(3).records
   end
 
   it "should find an existing person" do
-    person = Person.find(people(:groucho).id)
-    person.should eql(people(:groucho))
+    person = Person.find(people(:groucho_marx).id)
+    person.should eql(people(:groucho_marx))
   end
 
   it "should have an ethnicity of other" do
-    people(:groucho).ethnicity.should eql(codes(:ethnicity_other))
+    people(:groucho_marx).ethnicity.should eql(codes(:ethnicity_other))
   end
 
   it "should have a birth_gender of male" do
-    people(:groucho).birth_gender.should eql(codes(:gender_male))
+    people(:groucho_marx).birth_gender.should eql(codes(:gender_male))
   end
 
   it "should have a current_gender of male" do
-    people(:groucho).current_gender.should eql(codes(:gender_male))
+    people(:groucho_marx).current_gender.should eql(codes(:gender_male))
   end
 
   it "should have a race of Asian" do
-    people(:groucho).race.should eql(codes(:race_asian))
+    people(:groucho_marx).race.should eql(codes(:race_asian))
   end
 
   it "should have a primary language of Spanish" do
-    people(:groucho).primary_language.should eql(codes(:language_spanish))
+    people(:groucho_marx).primary_language.should eql(codes(:language_spanish))
   end
 end

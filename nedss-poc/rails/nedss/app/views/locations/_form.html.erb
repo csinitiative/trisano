@@ -1,0 +1,46 @@
+<fieldset>
+<legend>Address Information</legend>  
+<table cellpadding="2">
+  <tr>
+    <% fields_for(:entities_location, :builder => ExtendedFormBuilder) do |l| %>
+    <td>
+        <%= l.label(:entity_location_type_id, "Location type") %>
+        <%= l.dropdown_code_field(:entity_location_type_id, 'location', {}, :tabindex => 1) %>
+    </td>
+    <td>
+        <%= l.label(:primary_yn_id, "Primary location") %>
+        <%= l.dropdown_code_field(:primary_yn_id, 'yesno', {}, :tabindex => 2) %>
+    </td>
+    <% end %>
+  </tr>
+</table>
+
+<p/>
+
+<%= error_messages_for 'address' %>
+
+<table cellpadding="2">
+  <tr>
+    <td><%= f.label(:street_number) %></td>
+    <td><%= f.text_field(:street_number, :tabindex => 3, :size => 10) %></td>
+    <td><%= f.label(:street_name) %></td>
+    <td><%= f.text_field(:street_name, :tabindex => 4, :size => 50) %></td>
+    <td><%= f.label(:unit_number) %></td>
+    <td><%= f.text_field(:unit_number, :tabindex => 5, :size => 10) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:city) %></td>
+    <td><%= f.dropdown_code_field(:city_id, 'city', {:include_blank => true}, :tabindex => 6) %></td>
+    <td><%= f.label(:state) %></td>
+    <td><%= f.dropdown_code_field(:state_id, 'state', {:include_blank => true}, :tabindex => 7) %></td>
+    <td><%= f.label(:postal_code) %></td>
+    <td><%= f.text_field(:postal_code, :tabindex => 8, :size => 7) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:county) %></td>
+    <td><%= f.dropdown_code_field(:county_id, 'county', {:include_blank => true}, :tabindex => 9) %></td>
+    <td><%= f.label(:district) %></td>
+    <td><%= f.dropdown_code_field(:district_id, 'district', {:include_blank => true}, :tabindex => 10) %></td>
+  </tr>
+</table>
+</fieldset>

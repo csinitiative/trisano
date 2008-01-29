@@ -51,6 +51,7 @@ module PersonFormSpecHelper
 
   def mock_person
     person = mock_model(Person)
+    person.stub!(:entity_id).and_return("1")
     person.stub!(:last_name).and_return("Marx")
     person.stub!(:first_name).and_return("Groucho")
     person.stub!(:middle_name).and_return("Julius")

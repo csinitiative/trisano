@@ -1,0 +1,16 @@
+<% a = location.current_address %>
+<tr<%= location.primary? ? " class='highlight'" : nil %> >
+  <td>
+    <%# Get rid of these bolds when styling day comes %>
+    <b><%= location.type -%> : </b><%= a.street_number -%>
+<%= fml " ", a.street_name, "" -%>
+<%= fml ", Unit: ", a.unit_number, "" -%>
+<%= fml ", ", l(a.city), "" -%>
+<%= fml ", ", l(a.state), "" -%>
+<%= fml ", ", a.postal_code, "" -%>
+<%= fml " : ", l(a.county), " county" -%>
+<%= fml " : ", l(a.district), " district" -%>
+  </td>
+  <td><%= link_to 'Edit', edit_person_location_path(:person_id => @person.entity_id, :id => location.id) %></td>
+  <td><%= link_to 'Destroy', person_location_path(:person_id => @person.entity_id, :id => location.id), :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>

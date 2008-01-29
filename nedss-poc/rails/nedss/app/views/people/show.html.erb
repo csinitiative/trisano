@@ -18,21 +18,33 @@
 <td><%= label(:person, :date_of_death) %></td>
 <td><%= @person.date_of_death %></td>
 <td><%= label(:person, :ethnicity) %></td>
-<td><%= @person.ethnicity.code_description %></td>
+<td><%= l @person.ethnicity %></td>
 </tr>
 <tr>
 <td><%= label(:person, :birth_gender) %></td>
-<td><%= @person.birth_gender.code_description %></td>
+<td><%= l @person.birth_gender %></td>
 <td><%= label(:person, :current_gender) %></td>
-<td><%= @person.current_gender.code_description %></td>
+<td><%= l @person.current_gender %></td>
 </tr>
 <tr>
 <td><%= label(:person, :race) %></td>
-<td><%= @person.race.code_description %></td>
+<td><%= l @person.race %></td>
 <td><%= label(:person, :primary_language) %></td>
-<td><%= @person.primary_language.code_description %></td>
+<td><%= l @person.primary_language %></td>
 </tr>
 </table>
 </fieldset>
-<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Edit', edit_person_path(@person.entity_id) %> |
 <%= link_to 'Back', people_path %>
+<p/>
+<% if not @locations.empty? %>
+    <fieldset>
+    <legend>Location Information</legend>
+    <table>
+    <%= render :partial => "locations/location", :collection => @locations %>
+    </table>
+    </fieldset>
+<% else %>
+    <p>No location information available.</p>
+<% end %>
+<%= link_to 'Add a Location', new_person_location_path(@person.entity_id) %>

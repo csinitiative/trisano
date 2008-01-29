@@ -1,15 +1,14 @@
 <h1>Listing people</h1>
 
 <table>
+<% for entity in @person_entities %>
   <tr>
-  </tr>
-
-<% for person in @people %>
-  <tr>
-    <td><%= person.first_name %> <%= person.last_name %> </td>
-    <td><%= link_to 'Show', person %></td>
-    <td><%= link_to 'Edit', edit_person_path(person) %></td>
-    <td><%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= entity.current.last_name %>, <%= entity.current.first_name %> </td>
+      <%#= entity.primary_location.street_number %> <%#= entity.primary_location.street_name %>, 
+      <%#= entity.primary_location.city.code_description %> <%#= entity.primary_location.state.code_description %>
+    <td><%= link_to 'Show', person_path(entity) %></td>
+    <td><%= link_to 'Edit', edit_person_path(entity) %></td>
+    <td><%= link_to 'Destroy', person_path(entity), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

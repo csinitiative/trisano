@@ -13,5 +13,4 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes ||= Code.find(:all, :order => 'id')
     @codes.select {|code| code.code_name == code_name}
   end
-  
 end

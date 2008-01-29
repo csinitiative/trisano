@@ -96,3 +96,99 @@ language_spanish:
   the_code:  "ES"
   code_description: "Spanish"
 
+city_salt_lake:
+  id: 401
+  code_name: "city"
+  the_code:  "SLC"
+  code_description: "Salt Lake City"
+
+city_provo:
+  id: 402
+  code_name: "city"
+  the_code:  "PRV"
+  code_description: "Provo"
+
+state_utah:
+  id: 1001
+  code_name: "state"
+  the_code:  "UT"
+  code_description: "Utah"
+
+state_alabama:
+  id: 1002
+  code_name: "state"
+  the_code:  "AL"
+  code_description: "Alabama"
+
+state_alaska:
+  id: 1003
+  code_name: "state"
+  the_code:  "AK"
+  code_description: "Alaska"
+
+state_arizona:
+  id: 1004
+  code_name: "state"
+  the_code:  "AZ"
+  code_description: "Arizona"
+
+state_arkansas:
+  id: 1005
+  code_name: "state"
+  the_code:  "AR"
+  code_description: "Arkansas"
+
+county_salt_lake:
+  id: 1101
+  code_name: "county"
+  the_code:  "SL"
+  code_description: "Salt Lake"
+
+county_summit:
+  id: 1102
+  code_name: "county"
+  the_code:  "SU"
+  code_description: "Summit"
+
+district_alpine:
+  id: 1201
+  code_name: "district"
+  the_code:  "AL"
+  code_description: "Alpine"
+
+district_beaver:
+  id: 1202
+  code_name: "district"
+  the_code:  "BV"
+  code_description: "Beaver"
+
+location_home:
+  id: 1301
+  code_name: "location"
+  the_code:  "H"
+  code_description: "Home"
+
+location_work:
+  id: 1302
+  code_name: "location"
+  the_code:  "W"
+  code_description: "Work"
+
+yesno_yes:
+  id: 1401
+  code_name: "yesno"
+  the_code: "Y"
+  code_description: "Yes"
+
+yesno_no:
+  id: 1402
+  code_name: "yesno"
+  the_code: "N"
+  code_description: "No"
+
+yesno_unknown:
+  id: 1403
+  code_name: "yesno"
+  the_code: "U"
+  code_description: "Unknown"
+

@@ -1,7 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-Groucho:
-   id: 1
-
-Silvers:
-   id: 2
+# one:
+#   column: value
+#
+# two:
+#   column: value

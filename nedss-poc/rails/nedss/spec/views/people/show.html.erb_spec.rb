@@ -5,6 +5,7 @@ describe "/people/show.html.erb" do
   
   before(:each) do
     @person = mock_model(Person)
+
     @gender = @ethnicity = @race = @language = mock_model(Code)
 
     @gender.stub!(:code_description).and_return('Male')
@@ -12,6 +13,7 @@ describe "/people/show.html.erb" do
     @race.stub!(:code_description).and_return('Asian')
     @language.stub!(:code_description).and_return('Spanish')
 
+    @person.stub!(:entity_id).and_return("1")
     @person.stub!(:last_name).and_return("Marx")
     @person.stub!(:first_name).and_return("Groucho")
     @person.stub!(:middle_name).and_return("Julius")
@@ -24,6 +26,7 @@ describe "/people/show.html.erb" do
     @person.stub!(:primary_language).and_return(@language)
 
     assigns[:person] = @person
+    assigns[:locations] = Array.new
   end
 
   it "should render attributes" do

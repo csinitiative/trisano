@@ -4,8 +4,8 @@ describe PeopleController do
   describe "handling GET /people" do
 
     before(:each) do
-      @person = mock_model(Person)
-      Person.stub!(:find).and_return([@person])
+      @person_entity = mock_model(PersonEntity)
+      PersonEntity.stub!(:find_by_sql).and_return([@person_entity])
     end
   
     def do_get
@@ -23,21 +23,21 @@ describe PeopleController do
     end
   
     it "should find all people" do
-      Person.should_receive(:find).with(:all).and_return([@person])
+      PersonEntity.should_receive(:find_by_sql).and_return([@person_entity])
       do_get
     end
   
     it "should assign the found people for the view" do
       do_get
-      assigns[:people].should == [@person]
+      assigns[:person_entities].should == [@person_entity]
     end
   end
 
   describe "handling GET /people.xml" do
 
     before(:each) do
-      @person = mock_model(Person, :to_xml => "XML")
-      Person.stub!(:find).and_return(@person)
+      @person_entity = mock_model(PersonEntity, :to_xml => "XML")
+      PersonEntity.stub!(:find_by_sql).and_return(@person_entity)
     end
   
     def do_get
@@ -51,12 +51,12 @@ describe PeopleController do
     end
 
     it "should find all people" do
-      Person.should_receive(:find).with(:all).and_return([@person])
+      PersonEntity.should_receive(:find_by_sql).and_return([@person_entity])
       do_get
     end
   
     it "should render the found people as xml" do
-      @person.should_receive(:to_xml).and_return("XML")
+      @person_entity.should_receive(:to_xml).and_return("XML")
       do_get
       response.body.should == "XML"
     end
@@ -65,8 +65,12 @@ describe PeopleController do
   describe "handling GET /people/1" do
 
     before(:each) do
+      @person_entity = mock_model(PersonEntity)
       @person = mock_model(Person)
-      Person.stub!(:find).and_return(@person)
+      PersonEntity.stub!(:find).and_return(@person_entity)
+      @person_entity.stub!(:current).and_return(@person)
+      @location = mock_model(Location)
+      @person_entity.stub!(:current_locations).and_return([@location])
     end
   
     def do_get
@@ -84,7 +88,7 @@ describe PeopleController do
     end
   
     it "should find the person requested" do
-      Person.should_receive(:find).with("1").and_return(@person)
+      PersonEntity.should_receive(:find).with("1").and_return(@person_entity)
       do_get
     end
   
@@ -97,8 +101,12 @@ describe PeopleController do
   describe "handling GET /people/1.xml" do
 
     before(:each) do
-      @person = mock_model(Person, :to_xml => "XML")
-      Person.stub!(:find).and_return(@person)
+      @person_entity = mock_model(PersonEntity, :to_xml => "XML")
+      @person = mock_model(Person)
+      PersonEntity.stub!(:find).and_return(@person_entity)
+      @person_entity.stub!(:current).and_return(@person)
+      @location = mock_model(Location)
+      @person_entity.stub!(:current_locations).and_return([@location])
     end
   
     def do_get
@@ -112,7 +120,7 @@ describe PeopleController do
     end
   
     it "should find the person requested" do
-      Person.should_receive(:find).with("1").and_return(@person)
+      PersonEntity.should_receive(:find).with("1").and_return(@person_entity)
       do_get
     end
   
@@ -163,8 +171,10 @@ describe PeopleController do
   describe "handling GET /people/1/edit" do
 
     before(:each) do
+      @person_entity = mock_model(PersonEntity)
       @person = mock_model(Person)
-      Person.stub!(:find).and_return(@person)
+      PersonEntity.stub!(:find).and_return(@person_entity)
+      @person_entity.stub!(:current).and_return(@person)
     end
   
     def do_get
@@ -182,7 +192,8 @@ describe PeopleController do
     end
   
     it "should find the person requested" do
-      Person.should_receive(:find).and_return(@person)
+      PersonEntity.should_receive(:find).and_return(@person_entity)
+#      Entity.should_receive(:current).and_return(@person)
       do_get
     end
   
@@ -196,25 +207,27 @@ describe PeopleController do
 
     before(:each) do
       @person = mock_model(Person, :to_param => '1')
-      @entity = mock_model(Entity, :to_param => "1")
-      Entity.stub!(:new).and_return(@entity)
+      @person_entity = mock_model(PersonEntity, :to_param => "1")
+      PersonEntity.stub!(:new).and_return(@person_entity)
       Person.stub!(:new).and_return(@person)
     end
     
     describe "with successful save" do
   
       def do_post
-        @entity.should_receive(:save).and_return(true)
+        @person_entity.should_receive(:save).and_return(true)
         post :create, :person => {}
       end
   
       it "should create a new person" do
+        PersonEntity.should_receive(:new).and_return(@person_entity)
         Person.should_receive(:new).with({}).and_return(@person)
-        Entity.should_receive(:new).with(:person => @person).and_return(@entity)
+        @person_entity.should_receive(:current=).with(@person).and_return(true)
         do_post
       end
 
       it "should redirect to the new person" do
+        @person_entity.should_receive(:current=).with(@person).and_return(true)
         do_post
         response.should redirect_to(person_url("1"))
       end
@@ -224,7 +237,8 @@ describe PeopleController do
     describe "with failed save" do
 
       def do_post
-        @entity.should_receive(:save).and_return(false)
+        @person_entity.should_receive(:current=).with(@person)
+        @person_entity.should_receive(:save).and_return(false)
         post :create, :person => {}
       end
   
@@ -239,19 +253,22 @@ describe PeopleController do
   describe "handling PUT /people/1" do
 
     before(:each) do
+      @person_entity = mock_model(PersonEntity, :to_param => "1")
       @person = mock_model(Person, :to_param => "1")
-      Person.stub!(:find).and_return(@person)
+      PersonEntity.stub!(:find).and_return(@person_entity)
+      Person.stub!(:new).and_return(@person)
+      @person_entity.stub!(:people).and_return([])
     end
     
     describe "with successful update" do
 
       def do_put
-        @person.should_receive(:update_attributes).and_return(true)
+        @person_entity.people.should_receive(:<<).and_return(true)
         put :update, :id => "1"
       end
 
       it "should find the person requested" do
-        Person.should_receive(:find).with("1").and_return(@person)
+        PersonEntity.should_receive(:find).with("1").and_return(@person_entity)
         do_put
       end
 
@@ -275,7 +292,7 @@ describe PeopleController do
     describe "with failed update" do
 
       def do_put
-        @person.should_receive(:update_attributes).and_return(false)
+        @person_entity.people.should_receive(:<<).and_return(false)
         put :update, :id => "1"
       end
 
@@ -290,8 +307,8 @@ describe PeopleController do
   describe "handling DELETE /people/1" do
 
     before(:each) do
-      @person = mock_model(Person, :destroy => true)
-      Person.stub!(:find).and_return(@person)
+      @person_entity = mock_model(PersonEntity, :destroy => true)
+      PersonEntity.stub!(:find).and_return(@person_entity)
     end
   
     def do_delete
@@ -299,12 +316,12 @@ describe PeopleController do
     end
 
     it "should find the person requested" do
-      Person.should_receive(:find).with("1").and_return(@person)
+      PersonEntity.should_receive(:find).with("1").and_return(@person_entity)
       do_delete
     end
   
     it "should call destroy on the found person" do
-      @person.should_receive(:destroy)
+      @person_entity.should_receive(:destroy)
       do_delete
     end
   

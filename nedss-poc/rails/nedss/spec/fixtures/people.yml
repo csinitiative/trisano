@@ -1,7 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-groucho:
+groucho_marx:
   id: 1
+  entity_id: 1
   last_name: Marx
   first_name: Groucho
   middle_name: Julius
@@ -12,6 +13,35 @@ groucho:
   ethnicity_id: 103
   race_id: 204
   primary_language_id: 302
-#
-# two:
-#   column: value
+  created_at: <%= Time.now.to_s :db %> 
+
+phil_silvers_old:
+  id: 2
+  entity_id: 2
+  last_name: "Silvers"
+  first_name: "Phil"
+  middle_name:
+  birth_date: "1911-05-11"
+  date_of_death: "1985-11-01"
+  birth_gender_id: 1
+  current_gender_id: 1
+  ethnicity_id: 103
+  race_id: 204
+  primary_language_id: 301
+  created_at: <%= 1.day.ago.to_s :db %> 
+
+phil_silvers_cur:
+  id: 3
+  entity_id: 2
+  last_name: "Silvers"
+  first_name: "Phil"
+  middle_name: "Irving"
+  birth_date: "1911-05-11"
+  date_of_death: "1985-11-01"
+  birth_gender_id: 1
+  current_gender_id: 1
+  ethnicity_id: 103
+  race_id: 204
+  primary_language_id: 301
+  created_at: <%= Time.now.to_s :db %> 
+

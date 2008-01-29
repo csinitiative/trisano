@@ -14,7 +14,7 @@ describe "/people/edit.html.erb" do
   it "should render edit form" do
     do_render
 
-    response.should have_tag("form[action=#{person_path(@person)}][method=post]") do
+    response.should have_tag("form[action=#{person_path(@person.entity_id)}][method=post]") do
     end
   end
 end

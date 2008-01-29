@@ -1,4 +1,5 @@
 label {
+  font-weight: bold;
   white-space: nowrap;
 }
 
@@ -16,4 +17,8 @@ label {
 .bd {
   padding-left: 7px;
   padding-right: 7px;
+}
+
+.highlight {
+  color: green;
 }

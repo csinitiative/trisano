@@ -1,0 +1,17 @@
+<h1>Editing locations</h1>
+
+<%= error_messages_for 'location' %>
+
+<%= render :partial => 'person_header'%>
+
+<% form_for(@address, 
+            :url => person_location_path(:person_id => @person_entity.id, :id => @location.id), 
+            :html => {:method => :put}, 
+            :builder => ExtendedFormBuilder) do |f| %>
+  <p>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', person_path(@person_entity.id) %>
