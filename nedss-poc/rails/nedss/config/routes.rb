@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+
+  map.home '', :controller => 'dashboard'
+
   map.resources :people do |person|
     person.resources :locations
   end

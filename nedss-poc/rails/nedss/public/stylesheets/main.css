@@ -22,3 +22,8 @@ label {
 .highlight {
   color: green;
 }
+
+.title A:link {text-decoration: none; color: #B9B9A0}
+.title A:visited {text-decoration: none; color: #B9B9A0}
+.title A:active {text-decoration: none; color: #B9B9A0}
+.title A:hover {text-decoration: none; color: #B9B9A0}
