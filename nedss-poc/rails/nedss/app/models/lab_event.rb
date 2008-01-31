@@ -12,7 +12,7 @@ class LabEvent < ActiveRecord::Base
   has_many :disease_events, :foreign_key => 'event_id', :order => 'created_at', :dependent => :delete_all
   has_many :lab_results, :foreign_key => 'event_id', :order => 'created_at', :dependent => :delete_all
 
-  has_many :participations
+  has_many :participations, :foreign_key => 'event_id'
 
   validates_date :event_onset_date
 

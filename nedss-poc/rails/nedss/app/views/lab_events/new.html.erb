@@ -1,6 +1,5 @@
 <h1>New Lab Event</h1>
 
-<%#= error_messages_for :lab_event, :object => @lab_event.disease, :object => @lab_event.lab_result %>
 <%= error_messages_for :object => [@lab_event, @lab_event.disease, @lab_event.lab_result] %>
 
 <% form_for(@lab_event, :builder => ExtendedFormBuilder) do |f| %>

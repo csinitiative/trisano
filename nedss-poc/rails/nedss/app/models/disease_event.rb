@@ -4,7 +4,7 @@ class DiseaseEvent < ActiveRecord::Base
   belongs_to :pregnant, :class_name => 'Code'
 
   belongs_to :event
-  has_many :diseases
+  belongs_to :disease
 
   validates_date :disease_onset_date, :allow_nil => true
   validates_date :date_diagnosed, :allow_nil => true

@@ -3,12 +3,37 @@
 <legend>Lab Event</legend>  
 <table cellpadding="2">
 <tr>
-<td><%= label(:lab_event, :event_name) %></td>
-<td><%= @lab_event.event_name %></td>
-<td><%= label(:lab_event, :event_onset_date) %></td>
-<td><%= @lab_event.event_onset_date %></td>
+  <td><%= label(:lab_event, :event_onset_date) %></td>
+  <td><%= @lab_event.event_onset_date %></td>
+  <td><%= label(:lab_event, :event_name) %></td>
+  <td><%= @lab_event.event_name %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :disease_id, "Disease") %></td>
+  <td><%= @lab_event.disease.disease.disease_name %></td>
+  <td><%= label(:lab_event, :specimen_source, "Tested") %></td>
+  <td><%= l @lab_event.lab_result.specimen_source %></td>
+  <td><%= label(:lab_event, :lab_result_text, "Found") %></td>
+  <td><%= @lab_event.lab_result.lab_result_text %></td>
 </tr>
 </table>
 </fieldset>
 <%= link_to 'Edit', edit_lab_event_path(@lab_event) %> |
 <%= link_to 'Back', lab_events_path %>
+
+<fieldset>
+  <legend>Associations</legend>
+  <% if ! @lab_event.participations.empty? %>
+    <table cellpadding="2">
+    <% for participant in @lab_event.participations %>
+      <tr>
+        <td><%=link_to "#{participant.person_entity.current.last_name}" +"," + "#{participant.person_entity.current.first_name}", person_path(participant.person_entity) %></td>
+        <td>Removing an association is not yet activated</td>
+      <tr>
+    <% end %>
+    </table>
+  <% else %>
+    <p>No people are associated with this lab event</p>
+  <% end %>
+</fieldset>
+<%= link_to 'Add an association', associations_lab_event_path(@lab_event) %>

@@ -85,4 +85,31 @@ class LabEventsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  def associations
+    @lab_event = LabEvent.find(params[:id])
+    @people = find_unassociated_people
+  end
+
+  def add_association
+    @lab_event = LabEvent.find(params[:id])
+    association = Participation.new
+    association.primary_entity_id = params[:person]
+    respond_to do |format|
+      if @lab_event.participations << association
+        flash[:notice] = 'Association has been added.'
+        format.html { redirect_to(lab_event_url(@lab_event)) }
+      else
+        @people = find_unassociated_people
+        format.html { render :action => "associations" }
+      end
+    end
+  end
+
+  def find_unassociated_people
+    # If I weren't gonna rip this out, I'd do it in SQL
+    all_people = PersonEntity.find_all
+    participants = @lab_event.participations.map { |p| p.person_entity.id }
+    all_people.select { |p| not participants.include?(p.id) }
+  end
 end

@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :locations
   end
 
-  map.resources :lab_events
+  map.resources :lab_events, :member => { :associations => :get, :add_association => :post }
 
   # The priority is based upon order of creation: first created -> highest priority.
 
