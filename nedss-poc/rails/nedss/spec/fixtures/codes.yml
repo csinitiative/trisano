@@ -174,21 +174,45 @@ location_work:
   the_code:  "W"
   code_description: "Work"
 
-yesno_yes:
+yesno_unknown:
   id: 1401
+  code_name: "yesno"
+  the_code: "U"
+  code_description: "Unknown"
+
+yesno_yes:
+  id: 1402
   code_name: "yesno"
   the_code: "Y"
   code_description: "Yes"
 
 yesno_no:
-  id: 1402
+  id: 1403
   code_name: "yesno"
   the_code: "N"
   code_description: "No"
 
-yesno_unknown:
-  id: 1403
-  code_name: "yesno"
+specimen_blood:
+  id: 1501
+  code_name: "specimen"
+  the_code: "B"
+  code_description: "Blood"
+
+specimen_urine:
+  id: 1502
+  code_name: "specimen"
   the_code: "U"
-  code_description: "Unknown"
+  code_description: "Urine"
+
+specimen_stool:
+  id: 1503
+  code_name: "specimen"
+  the_code: "S"
+  code_description: "Stool"
+
+specimen_tissue:
+  id: 1504
+  code_name: "specimen"
+  the_code: "T"
+  code_description: "Tissue"
 

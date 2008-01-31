@@ -1,0 +1,69 @@
+<fieldset>
+<legend>Lab Event Information</legend>  
+<table cellpadding="2">
+  <tr>
+    <td><%= f.label(:event_onset_date) %></td>
+    <td><%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 2) %></td>
+    <td><%= f.label(:event_name) %></td>
+    <td><%= f.text_field(:event_name, :tabindex => 1, :size => 25) %></td>
+  </tr>
+</table>
+</fieldset>
+
+<fieldset>
+  <legend>Disease Information</legend>
+  <table cellpadding="2">
+    <% f.fields_for(:disease, @lab_event.disease, :builder => ExtendedFormBuilder) do |d| %>
+      <tr>
+        <td>
+          <%= d.label(:disease_id, "Disease") %>
+          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {}, :tabindex => 3) %>
+        </td>
+      <tr>
+        <td><%= d.label(:disease_onset_date) %></td>
+        <td><%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 4) %></td>
+        <td><%= d.label(:date_diagnosed) %></td>
+        <td><%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now, :tabindex => 5) %></td>
+      </tr>
+      <tr>
+        <td><%= d.label(:hospitalized_id) %></td>
+        <td><%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}, :tabindex => 6) %></td>
+        <td><%= d.label(:died_id) %></td>
+        <td><%= d.dropdown_code_field(:died_id, 'yesno', {}, :tabindex => 7) %></td>
+      <tr>
+        <td><%= d.label(:pregnant_id) %></td>
+        <td><%= d.dropdown_code_field(:pregnant_id, 'yesno', {}, :tabindex => 8) %></td>
+        <td><%= d.label(:pregnancy_due_date) %></td>
+        <td><%= d.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 9) %></td>
+      </tr>
+    <% end %>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend>Laboratory Information</legend>
+  <table cellpadding="2">
+    <% f.fields_for(:lab_result, @lab_event.lab_result, :builder => ExtendedFormBuilder) do |l| %>
+      <tr>
+        <td>
+          <%= l.label(:specimen_source_id, "Specimen Source") %>
+          <%= l.dropdown_code_field(:specimen_source_id, "specimen", {}, :tabindex => 9) %>
+        </td>
+        <td>
+          <%= l.label(:tested_at_uphl_yn_id, "Tested at UPHL Lab") %>
+          <%= l.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {}, :tabindex => 10) %>
+        </td>
+      </tr>
+      <tr>
+        <td><%= l.label(:collection_date) %></td>
+        <td><%= l.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 11) %></td>
+        <td><%= l.label(:lab_test_date) %></td>
+        <td><%= l.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 12) %></td>
+      </tr>
+      <tr>
+        <td><%= l.label(:lab_result_text, "Lab Result") %></td>
+        <td><%= l.text_field(:lab_result_text, :tabindex => 13, :size => 20) %></td>
+      </tr>
+    <% end %>
+  </table>
+</fieldset>

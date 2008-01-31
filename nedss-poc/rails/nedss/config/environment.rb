@@ -68,5 +68,7 @@ Rails::Initializer.run do |config|
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README 
   config.after_initialize do
     ValidatesDateTime.us_date_format = true
+    require "lib/active_record/errors.rb"
   end
+
 end

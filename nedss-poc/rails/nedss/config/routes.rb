@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :locations
   end
 
+  map.resources :lab_events
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

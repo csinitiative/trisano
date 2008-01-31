@@ -1,0 +1,16 @@
+<h1>Listing Lab Events</h1>
+
+<table>
+<% for lab_event in @lab_events %>
+  <tr>
+    <td><%= lab_event.event_name %>, <%= lab_event.event_onset_date %> <%= l lab_event.event_status %> </td>
+    <td><%= link_to 'Show', lab_event_path(lab_event) %></td>
+    <td><%= link_to 'Edit', edit_lab_event_path(lab_event) %></td>
+    <td><%= link_to 'Destroy', lab_event_path(lab_event), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Lab Event', new_lab_event_path %>

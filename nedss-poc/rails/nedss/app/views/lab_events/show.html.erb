@@ -1,0 +1,14 @@
+<h1>Show Lab Event</h1>
+<fieldset>
+<legend>Lab Event</legend>  
+<table cellpadding="2">
+<tr>
+<td><%= label(:lab_event, :event_name) %></td>
+<td><%= @lab_event.event_name %></td>
+<td><%= label(:lab_event, :event_onset_date) %></td>
+<td><%= @lab_event.event_onset_date %></td>
+</tr>
+</table>
+</fieldset>
+<%= link_to 'Edit', edit_lab_event_path(@lab_event) %> |
+<%= link_to 'Back', lab_events_path %>
