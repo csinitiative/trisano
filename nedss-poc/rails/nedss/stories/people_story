@@ -1,0 +1,17 @@
+Story: People management example; not so much an integration test but an example of lower level testing with story tests
+
+  As a user
+  I want to create a new person
+  So that I can later associate them to an event
+
+  Scenario: Create a new person
+
+    Given a new person named 'Smith'
+    And a number of existing persons
+    
+    When I save the person
+    
+    Then the person should be valid
+    And there should be 1 more person stored
+
+    
