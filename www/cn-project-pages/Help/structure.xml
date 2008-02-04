@@ -1,0 +1,26 @@
+<structure>
+<subpage>
+                                    <id>4456</id>
+                                  <name>Process overview</name>
+                              <directory>Process overview</directory>
+                    <ordinal>1</ordinal>
+                        </subpage>
+<subpage>
+                                    <id>4457</id>
+                                  <name>Getting started</name>
+                              <directory>Getting started</directory>
+                    <ordinal>2</ordinal>
+                        </subpage>
+<subpage>
+                                    <id>4458</id>
+                                  <name>Project FAQ</name>
+                              <directory>Project FAQ</directory>
+                    <ordinal>3</ordinal>
+                        </subpage>
+<subpage>
+                                    <id>4459</id>
+                                  <name>Glossary</name>
+                              <directory>Glossary</directory>
+                    <ordinal>4</ordinal>
+                        </subpage>
+</structure>

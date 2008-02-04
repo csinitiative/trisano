@@ -1,0 +1,44 @@
+<structure>
+<page>
+                                       <id>4460</id>
+                                  <name>Project tools</name>
+                              <directory>Project tools</directory>
+                    <ordinal>1</ordinal>
+                        </page>
+<page>
+                                       <id>4461</id>
+                                  <name>Backlog</name>
+                              <directory>Backlog</directory>
+                    <ordinal>2</ordinal>
+                        </page>
+<page>
+                                       <id>4462</id>
+                                  <name>Releases</name>
+                              <directory>Releases</directory>
+                    <ordinal>3</ordinal>
+                        </page>
+<page>
+                                       <id>4463</id>
+                                  <name>Work products</name>
+                              <directory>Work products</directory>
+                    <ordinal>4</ordinal>
+                        </page>
+<page>
+                                       <id>4464</id>
+                                  <name>Key metrics</name>
+                              <directory>Key metrics</directory>
+                    <ordinal>5</ordinal>
+                        </page>
+<page>
+                                       <id>4465</id>
+                                  <name>Configure</name>
+                              <directory>Configure</directory>
+                    <ordinal>6</ordinal>
+                        </page>
+<page>
+                                       <id>4466</id>
+                                  <name>Help</name>
+                              <directory>Help</directory>
+                    <ordinal>7</ordinal>
+                        </page>
+</structure>
