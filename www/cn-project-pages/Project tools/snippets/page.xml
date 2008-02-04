@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page visibility="1">
   <component_list>
-    <component visibility="2" type="Html" order="1">
+    <component visibility="3" type="Html" order="1">
       <title localize="false" />
       <filename>HtmlSnippet2.html</filename>
     </component>
