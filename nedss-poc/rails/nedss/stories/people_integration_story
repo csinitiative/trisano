@@ -1,0 +1,12 @@
+Story: People integration tests
+
+  As a user
+  I want to do manage people
+  So that I can later associate them to an event
+
+  Scenario: View people
+    
+    When I view the people listing
+
+    Then there should be a list of people
+    
