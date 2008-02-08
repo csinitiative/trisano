@@ -22,13 +22,13 @@ ethnicity_hispanic:
   id: 101
   code_name: "ethnicity"
   the_code:  "H"
-  code_description: "Hispanic"
+  code_description: "Hispanic or Latino"
 
 ethnicity_non_hispanic:
   id: 102
   code_name: "ethnicity"
   the_code:  "NH"
-  code_description: "Non-Hispanic"
+  code_description: "Not Hispanic or Latino"
 
 ethnicity_other:
   id: 103
