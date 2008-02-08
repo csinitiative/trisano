@@ -25,8 +25,8 @@ module PersonFormSpecHelper
           with_tag('option', 'Unknown')
         end
         with_tag('select#person_ethnicity_id[name=?]', "person[ethnicity_id]") do
-          with_tag('option', 'Hispanic')
-          with_tag('option', 'Non-Hispanic')
+          with_tag('option', 'Hispanic or Latino')
+          with_tag('option', 'Not Hispanic or Latino')
           with_tag('option', 'Other')
           with_tag('option', 'Unknown')
         end
