@@ -11,9 +11,9 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: ed
-  username: chuck
-  password: igavulch
+  database: nedss_development
+  username: nedss
+  password: password
   host: localhost
   port: 5432
 
