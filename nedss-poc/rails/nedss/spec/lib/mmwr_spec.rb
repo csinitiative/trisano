@@ -18,16 +18,16 @@ describe Mmwr do
     @mmwr.epi_date_used.should == :onsetdate
   end
 
-  it "should be onsetdate not diagnosisdate" do
+  it "should be onsetdate" do
     epi_dates = { :onsetdate => Time.now, :diagnosisdate => Time.now }
     @mmwr = Mmwr.new(epi_dates)
     @mmwr.epi_date_used.should == :onsetdate
   end
 
-  it "should be onsetdate" do
-    epi_dates = { :onsetdate => Time.now, :diagnosisdate => Time.now }
+  it "should be labresultdate" do
+    epi_dates = { :firstreportdate => Time.now, :labresultdate => Time.now }
     @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :onsetdate
+    @mmwr.epi_date_used.should == :labresultdate
   end
 
   it "should be diagnosisdate" do
