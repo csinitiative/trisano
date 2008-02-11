@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 6) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -113,10 +113,20 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "event_status_id"
     t.integer  "imported_from_id"
     t.integer  "event_case_status_id"
-    t.string   "event_name",           :limit => 100
+    t.string   "event_name",                         :limit => 100
     t.date     "event_onset_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "outbreak_associated_id"
+    t.string   "outbreak_name"
+    t.integer  "investigation_LHD_status_id"
+    t.datetime "investigation_started_date"
+    t.datetime "investigation_completed_LHD_date"
+    t.datetime "review_completed_UDOH_date"
+    t.datetime "first_reported_PH_date"
+    t.datetime "results_reported_to_clinician_date"
+    t.integer  "MMRW"
+    t.string   "record_number",                      :limit => 20
   end
 
   create_table "hospitals_participations", :force => true do |t|
@@ -200,11 +210,26 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "current_gender_id"
     t.integer  "ethnicity_id"
     t.integer  "primary_language_id"
-    t.string   "first_name",          :limit => 25
-    t.string   "middle_name",         :limit => 25
-    t.string   "last_name",           :limit => 25
+    t.string   "first_name",                  :limit => 25
+    t.string   "middle_name",                 :limit => 25
+    t.string   "last_name",                   :limit => 25
     t.date     "birth_date"
     t.date     "date_of_death"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "food_handler_id"
+    t.integer  "healthcare_worker_id"
+    t.integer  "group_living_id"
+    t.integer  "day_care_association_id"
+    t.integer  "age_type_id"
+    t.string   "risk_factors",                :limit => 25
+    t.string   "risk_factors_notes",          :limit => 100
+    t.integer  "approximate_age_no_birthday"
+  end
+
+  create_table "people_races", :force => true do |t|
+    t.integer  "race_id"
+    t.integer  "entity_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -213,6 +238,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "entity_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "place_type_id"
   end
 
   create_table "referrals", :force => true do |t|

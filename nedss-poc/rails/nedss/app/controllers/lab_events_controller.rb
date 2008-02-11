@@ -4,22 +4,21 @@ class LabEventsController < ApplicationController
   # GET /labevent
   # GET /labevent.xml
   def index
-    @lab_events = LabEvent.find(:all)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { @lab_events = LabEvent.find(:all) }# index.html.erb
       format.xml  { render :xml => @person_entities }
+      format.csv  { @lab_ruport_table = LabEvent.report_table}
     end
   end
 
   # GET /labevent/1
   # GET /labevent/1.xml
   def show
-    @lab_event = LabEvent.find(params[:id])
-
     respond_to do |format|
-      format.html # show.html.erb
+      format.html {@lab_event = LabEvent.find(params[:id])}# show.html.erb
       format.xml  { render :xml => @person }
+      format.csv  {@lab_ruport_table = LabEvent.report_table(params[:id])}
     end
   end
 

@@ -1,6 +1,6 @@
 class PersonEntity < ActiveRecord::Base
   set_table_name "entities"
-
+  acts_as_reportable
   has_many :people, :foreign_key => 'entity_id'
   has_one  :current, :class_name => 'Person', :foreign_key => 'entity_id', :order => 'created_at DESC'
 

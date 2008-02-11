@@ -62,6 +62,29 @@ describe PeopleController do
     end
   end
 
+  describe "handling GET/people.csv" do
+    before(:each) do
+      @ruport_person = mock_model(Person, :to_csv => "CSV")
+      Person.stub!(:report_table).and_return(@ruport_person)
+    end
+
+    def do_get
+      @request.env["HTTP_ACCEPT"] = "text/csv"
+      get :index
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+
+    it "should find all people" do
+      Person.should_receive(:report_table).and_return(@ruport_person)
+      do_get
+    end
+
+  end
+
   describe "handling GET /people/1" do
 
     before(:each) do

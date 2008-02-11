@@ -1,25 +1,41 @@
 class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
+  # GET /people.csv
   def index
-    @person_entities = PersonEntity.find_all
-
     respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @person_entities }
+      format.html {@person_entities = PersonEntity.find_all}# index.html.erb
+      format.xml do
+        @person_entities = PersonEntity.find_all
+	render :xml => @person_entities
+      end
+      format.csv do
+        @ruport_person = Person.report_table
+	render :csv => @ruport_person
+      end
     end
   end
 
   # GET /people/1
   # GET /people/1.xml
+  # GET /people/1.csv
   def show
-    person_entity = PersonEntity.find(params[:id])
-    @person = person_entity.current
-    @locations = person_entity.current_locations
-
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @person }
+      format.html do
+        person_entity = PersonEntity.find(params[:id])
+        @person = person_entity.current
+        @locations = person_entity.current_locations
+      end # show.html.erb
+      format.xml do
+        person_entity = PersonEntity.find(params[:id])
+        @person = person_entity.current
+        @locations = person_entity.current_locations
+
+        render :xml => @person
+      end
+      format.csv do
+        @ruport_person = Person.report_table(params[:id])
+      end
     end
   end
 
