@@ -1,4 +1,5 @@
 class DiseaseEvent < ActiveRecord::Base
+  acts_as_reportable
   belongs_to :hospitalized, :class_name => 'Code'
   belongs_to :died, :class_name => 'Code'
   belongs_to :pregnant, :class_name => 'Code'

@@ -1,4 +1,5 @@
 class Address < ActiveRecord::Base
+  acts_as_reportable
   belongs_to :location
   belongs_to :city, :class_name => 'Code'
   belongs_to :county, :class_name => 'Code'
