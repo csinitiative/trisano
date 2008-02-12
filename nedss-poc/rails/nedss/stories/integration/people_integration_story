@@ -1,0 +1,13 @@
+Story: People integration tests
+
+  As a user
+  I want to do manage people
+  So that I can later associate them to an event
+
+  Scenario: Manage people
+    
+    When I view the people listing
+
+    Then the page title should be 'UT-NEDSS'
+    And there should be a list of people
+    And there should be a link to create a new person

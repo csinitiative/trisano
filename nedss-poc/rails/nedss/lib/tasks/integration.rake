@@ -15,9 +15,9 @@ namespace :nedss do
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'\
       
     desc "run integration tests"
-    task :run_all_stories do
+    task :run_all do
       puts "Running all integration test stories"
-      ruby 'stories/all.rb'
+      ruby 'stories/integration/all.rb'
     end
     
   end

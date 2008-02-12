@@ -96,11 +96,25 @@ namespace :nedss do
       page = agent.click(link)
       puts "smoke test success"
     end
-
+    
+    desc "run the integration tests"
+    task :runintegration => 'nedss:integration:run_all' do
+      puts "integration test success"
+    end
 
     desc "redeploy Tomcat"
     task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
       puts "redeploy Tomcat success"
+    end
+    
+    desc "build war and redeploy Tomcat"
+    task :buildandredeploy => [:buildwar, :redeploytomcat] do
+      puts "build and redeploy success"
+    end
+    
+    desc "build and redeploy full: build and redeploy plus integration tests"
+    task :buildandredeployfull => [:buildandredeploy, :runintegration] do
+      "build, redeploy and integration test success"
     end
 
   end
