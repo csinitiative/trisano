@@ -36,6 +36,14 @@ namespace :nedss do
       end
     end
 
+    desc "build war file"
+    task :buildwar do
+      puts "running warble clean"
+      ruby "-S warble war:clean"
+      puts "running warble war"
+      ruby "-S warble war"
+    end
+    
     desc "copy nedss war file to Tomcat"
     task :copywar do
       puts "attempting to copy war file to Tomcat"
