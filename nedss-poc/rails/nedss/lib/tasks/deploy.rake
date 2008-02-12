@@ -114,7 +114,7 @@ namespace :nedss do
     
     desc "build and redeploy full: build and redeploy plus integration tests"
     task :buildandredeployfull => [:buildandredeploy, :runintegration] do
-      "build, redeploy and integration test success"
+      puts "build, redeploy and integration test success"
     end
 
   end
