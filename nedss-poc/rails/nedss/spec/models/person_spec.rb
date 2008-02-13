@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Person, "with last name Lacey" do
+describe Person, "with last name only" do
   before(:each) do
     @person = Person.new(:last_name => 'Lacey')
   end
@@ -13,6 +13,12 @@ describe Person, "with last name Lacey" do
     @person.save.should be_true
     @person.errors.should be_empty
   end
+  
+  it "should not have a Soundex code for first name" do
+    @person.save.should be_true
+    @person.first_name_soundex.should be_nil
+  end
+  
 end
 
 describe Person, "without a last name" do
@@ -28,6 +34,21 @@ describe Person, "without a last name" do
     @person.save.should be_false
     @person.should have(1).error_on(:last_name)
   end
+end
+
+describe Person, "with first and last names" do
+
+  it "should have Soundex codes after save" do
+    first_name = 'Robert'
+    last_name = 'Ford'
+    
+    @person = Person.new(:last_name => last_name, :first_name => first_name)
+    
+    @person.save.should be_true
+    @person.first_name_soundex.should eql(Text::Soundex.soundex(first_name))
+    @person.last_name_soundex.should eql(Text::Soundex.soundex(last_name))
+  end
+
 end
 
 describe Person, "with associated codes" do

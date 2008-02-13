@@ -13,7 +13,9 @@ groucho_marx:
   ethnicity_id: 103
   race_id: 204
   primary_language_id: 302
-  created_at: <%= Time.now.to_s :db %> 
+  last_name_soundex: <%= Text::Soundex.soundex("Marx") %>
+  first_name_soundex: <%= Text::Soundex.soundex("Groucho") %>
+  created_at: <%= Time.now.to_s :db %>
 
 phil_silvers_old:
   id: 2
@@ -28,7 +30,9 @@ phil_silvers_old:
   ethnicity_id: 103
   race_id: 204
   primary_language_id: 301
-  created_at: <%= 1.day.ago.to_s :db %> 
+  last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
+  first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
+  created_at: <%= 1.day.ago.to_s :db %>
 
 phil_silvers_cur:
   id: 3
@@ -43,5 +47,7 @@ phil_silvers_cur:
   ethnicity_id: 103
   race_id: 204
   primary_language_id: 301
-  created_at: <%= Time.now.to_s :db %> 
+  last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
+  first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
+  created_at: <%= Time.now.to_s :db %>
 

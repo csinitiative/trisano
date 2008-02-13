@@ -11,6 +11,8 @@ class Person < ActiveRecord::Base
   validates_presence_of :last_name
   validates_date :birth_date, :allow_nil => true
   validates_date :date_of_death, :allow_nil => true
+  
+  before_save :generate_soundex_codes
 
   protected
   def validate
@@ -18,4 +20,13 @@ class Person < ActiveRecord::Base
       errors.add(:date_of_death, "The date of death precedes birth date") if Chronic.parse(date_of_death) < Chronic.parse(birth_date)
     end
   end
+  
+  def generate_soundex_codes
+    if !first_name.blank?
+      self.first_name_soundex = Text::Soundex.soundex(first_name)
+    end
+    
+    self.last_name_soundex = Text::Soundex.soundex(last_name)
+  end
+  
 end

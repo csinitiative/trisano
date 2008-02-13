@@ -69,6 +69,7 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     ValidatesDateTime.us_date_format = true
     require "lib/active_record/errors.rb"
+    require "lib/soundex/Soundex.rb"
     require "ruport"
   end
 
