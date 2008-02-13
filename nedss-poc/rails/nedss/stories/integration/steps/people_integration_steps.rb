@@ -4,7 +4,7 @@ steps_for(:people_integration) do
   
   When("I view the people listing") do
     agent = WWW::Mechanize.new
-    @page = agent.get NEDSS_URL + "/nedss/people"
+    @page = agent.get NEDSS_URL + "/nedss/entities?type=person"
   end
   
   Then("the page title should be '$page_title'") do |page_title|
@@ -16,7 +16,7 @@ steps_for(:people_integration) do
   end
   
   Then("there should be a link to create a new person") do
-    @page.links.text("New person").should have_at_least(1).items
+    @page.links.text("New Person").should have_at_least(1).items
   end
   
 # Not implementing any further yet. For Release 1.2 -- until something different
