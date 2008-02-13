@@ -76,25 +76,37 @@ namespace :nedss do
       sh TOMCAT_BIN + "/startup.sh"
     end
 
-    desc "Wait 10 seconds"
-    task :wait do
-      puts "waiting 10 seconds"
-      sleep 10
-    end
-
     desc "smoke test that ensures NEDSS was deployed"
     task :smoke do
-      sleep 10
-      puts "executing smoke test"
-      people_url = NEDSS_URL + '/nedss/entities?type=person'
-      puts people_url
+      retries = 5
+      begin
+        sleep 10
+        puts "executing smoke test"
+        people_url = NEDSS_URL + '/nedss/entities?type=person'
+        puts people_url
 
-      agent = WWW::Mechanize.new
-      page = agent.get people_url
+        agent = WWW::Mechanize.new
+        page = agent.get people_url
 
-      # link = page.links.text(/New person/)
-      # page = agent.click(link)
-      puts "smoke test success"
+        new_person_url = NEDSS_URL + '/nedss/entities/new?type=person'
+        puts new_person_url
+        page = agent.get new_person_url
+
+        new_lab_event_url = NEDSS_URL + '/nedss/lab_events/new'
+        puts new_lab_event_url
+        page = agent.get new_lab_event_url
+
+        fake = NEDSS_URL + '/nedss/foo'
+        puts fake
+        page = agent.get fake
+
+        puts "smoke test success"
+      rescue => error
+        puts error
+        puts "smoke test retry attempts remaining: #{retries - 1}"
+        retry if (retries -= 1) > 0
+        raise
+      end
     end
     
     desc "run the integration tests"
