@@ -1,14 +1,36 @@
 require 'date'
-require 'pp'
+
 
 class Mmwr
 
-  def initialize(epi_dates)
+  # Accepts no-arg (defaults to DateTime.now), 1 DateTime, or a Hash of 
+  # epi date identification symbols and DateTimes.
+  def initialize(*args)
     
-    @epi_dates = epi_dates        
-    #TODO validation of some sort
-    #TODO may want to overload so that you can just give it one date
-    #TODO 1 arg with date 0 arg todays date
+    case args.size
+    when 0
+      @epi_date = DateTime.now
+    when 1
+      # could be a Hash or a DateTime
+      arg0 = args[0]
+      if !arg0.is_a?(Hash) && !arg0.is_a?(DateTime)
+        raise ArgumentError, "Mmwr initialize only handles Hash or DateTime"
+      end
+      
+      if arg0.is_a?(Hash)
+        @epi_dates = arg0
+        @epi_date = @epi_dates[epi_date_used]
+      end
+      
+      if arg0.is_a?(DateTime)
+        @epi_date = arg0
+      end
+      
+      @ranges = date_ranges
+      
+    else
+      raise ArgumentError, "Mmwr initialize takes 0 or 1 arguments."
+    end
   end
   
   # Business rules for assigning MMWR week
@@ -21,30 +43,31 @@ class Mmwr
   # calendar week that includes January 1 would be the last MMWR week of the previous 
   # year (52 or 53).  Because of this rule, December 29, 30, and 31 could potentially 
   # fall into MMWR week #1 of the following MMWR year.   
-  def mmwr_week    
+  def mmwr_week        
     mmwr_week_range.mmwr_week.to_i
   end  
   
   # Returns the MmwrDateRange that is in range.
-  def mmwr_week_range
-    calc_date = @epi_dates[epi_date_used]
-    
-    ranges = date_ranges    
-    
+  def mmwr_week_range    
+    #TODO this could just be called by initialize and make this part private, expose the range via accessor     
     mmwr_date_range = nil
-    ranges.sort.each do | k, range | 
-      # puts "#{range.to_s} in_range: #{range.in_range(calc_date)}"
-      if range.in_range(calc_date)
+    @ranges.sort.each do | k, range | 
+      #puts "#{range.to_s} in_range: #{range.in_range(@epi_date)}"
+      if range.in_range(@epi_date)
         mmwr_date_range = range
       end
     end
     
+    raise "Unable to find MmwrDateRange for #{@epi_date}" if nil == mmwr_date_range
     mmwr_date_range
   end  
 
   # Returns which epi date was used in calculation
   # Priority :onsetdate, :diagnosisdate, :labresultdate, :firstreportdate   
+  # Returns :unknown if Mmwr initialized without Hash of symbols/dates
   def epi_date_used
+    return :unknown if @epi_dates == nil
+    
     if @epi_dates.has_key? :onsetdate
       :onsetdate
     elsif @epi_dates.has_key? :diagnosisdate
@@ -54,7 +77,7 @@ class Mmwr
     elsif @epi_dates.has_key? :firstreportdate
       :firstreportdate
     else
-      raise ArgumentError, "No known date symbol found in @epi_dates #{@epi_dates}"
+      :unknown
     end       
   end
     
@@ -89,11 +112,10 @@ class Mmwr
   # Returns a symbol indicating whether the MMWR week starts the first week
   # of the year or the second.
   def year_first_mmwr_week(*args)
-    
     year = nil
     case args.size
     when 0
-      year = @epi_dates[epi_date_used]
+      year = @epi_date
     when 1
       year = args[0]
     else
@@ -112,10 +134,9 @@ class Mmwr
   # Creates a DateRange for each MMWR for the year.
   def date_ranges
     date_ranges = Hash.new()
-    calc_date = @epi_dates[epi_date_used]
         
-    first_day_of_year = calc_date.beginning_of_year    
-    first_mmwr_week = year_first_mmwr_week(calc_date)    
+    first_day_of_year = @epi_date.beginning_of_year     
+    first_mmwr_week = year_first_mmwr_week(first_day_of_year)    
     sunday = nil
     saturday = nil
     if first_mmwr_week == :first_week
@@ -142,8 +163,7 @@ class Mmwr
   
   # Returns a MmwrDateRange for the last week of the previous year
   def last_mmwr_week_previous_year
-    calc_date = @epi_dates[epi_date_used]
-    prev_year = DateTime.new(calc_date.year - 1, 12, 31)
+    prev_year = DateTime.new(@epi_date.year - 1, 12, 31)
     sunday = prev_year - prev_year.wday
     MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6)      
   end  
