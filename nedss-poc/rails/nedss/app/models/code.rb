@@ -1,3 +1,6 @@
 class Code < ActiveRecord::Base
-  acts_as_reportable
+
+  def self.yes
+   find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
+  end
 end

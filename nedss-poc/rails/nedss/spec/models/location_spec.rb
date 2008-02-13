@@ -27,8 +27,9 @@ describe Location do
   end
 end
 
+
 describe Location, "with fixtures loaded" do
-  fixtures :locations, :addresses
+  fixtures :locations, :addresses, :entities
 
   it "Phil Silvers should have two work addresses" do
     locations(:silvers_work_address).should have(2).addresses
@@ -45,7 +46,23 @@ describe Location, "with fixtures loaded" do
   it "Phil Silvers should have one current home address" do
     locations(:silvers_home_address).current_address.street_name.should eql("Birch St.")
   end
+
+  describe "using nested attributes" do
+    describe "with new" do
+      it "should save without errors" do
+        @location = Location.new( :entities_location => { :entity_id => 1, :primary_yn_id => 1402, :entity_location_type_id => 1302 },
+                                :address => { :street_number => '99', :street_name => '9th Ave.' } )
+        @location.save.should be_true
+      end
+    end
+
+    describe "with update_attributes" do
+      it "should save without errors" do
+        entity = Entity.find(2)
+        @location = entity.locations.first
+        @location.update_attributes( :entities_location => { :entity_id => entity.id, :primary_yn_id => 1402, :entity_location_type_id => 1302 },
+                                :address => { :street_number => '99', :street_name => '9th Ave.' } ).should be_true
+      end
+    end
+  end
 end
-
-
-

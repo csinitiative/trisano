@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(:version => 6) do
     t.string   "entity_url_number", :limit => 200
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "entity_type"
   end
 
   create_table "entities_locations", :force => true do |t|

@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe PeopleHelper do
+describe EntitiesHelper do
   
   #Delete this example and add some real ones or delete this file
-  it "should include the PersonHelper" do
+  it "should include the EntityHelper" do
     included_modules = self.metaclass.send :included_modules
-    included_modules.should include(PeopleHelper)
+    included_modules.should include(EntitiesHelper)
   end
   
 end

@@ -25,7 +25,7 @@ class LabEvent < ActiveRecord::Base
   end
 
   def disease=(attributes)
-      @disease = DiseaseEvent.new(attributes)
+    @disease = DiseaseEvent.new(attributes)
   end  
 
   def lab_result

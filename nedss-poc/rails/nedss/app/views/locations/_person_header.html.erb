@@ -1,1 +1,2 @@
-<h3><%= @person.first_name %> <%= @person.last_name %></h3>
+<% last_name = eval "@entity.#{@type}.last_name"; first_name = eval "@entity.#{@type}.first_name" %>
+<h3><%= last_name %>, <%= first_name %><h3>

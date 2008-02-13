@@ -1,11 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :entities do |entity|
+    entity.resources :locations
+  end
 
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
-
-  map.resources :people do |person|
-    person.resources :locations
-  end
 
   map.resources :lab_events, :member => { :associations => :get, :add_association => :post }
 

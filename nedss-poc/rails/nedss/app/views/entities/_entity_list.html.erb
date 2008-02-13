@@ -1,0 +1,6 @@
+<p/>
+<% for type in @valid_types %>
+  <% next if type == @type && is_index %>
+  <%= link_to type.pluralize.capitalize, entities_path(:type => type) %> | 
+<% end %>
+<%= link_to 'Entities', entities_path %> |

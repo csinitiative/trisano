@@ -2,6 +2,8 @@
 
 Groucho:
    id: 1
+   entity_type: "person"
 
 Silvers:
    id: 2
+   entity_type: "person"

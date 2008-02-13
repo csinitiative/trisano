@@ -1,0 +1,13 @@
+<h1>New <%= @type.capitalize %> </h1>
+
+<%= error_messages_for :object => [@entity, @entity.person, @entity.entities_location, @entity.address] %>
+
+<% form_for(@entity, :builder => ExtendedFormBuilder) do |f| %>
+  <p>
+    <%= render :partial => "#{@type.pluralize}/form", :locals => { :f => f } %>
+    <%= render :partial => 'locations/form', :locals => { :f => f, :location_data => @entity } %>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= render :partial => 'entity_list', :locals => {:is_index => false} %>

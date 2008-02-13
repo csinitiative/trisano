@@ -1,35 +1,25 @@
 class LocationsController < ApplicationController
 
-  before_filter :find_person
+  before_filter :find_entity
 
   # GET /locations
   # GET /locations.xml
   def index
-    @locations = @person_entity.current_locations
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @locations }
-    end
+    # We'll want to change this when we get more restful
+    redirect_to entity_path(@entity)
   end
 
-  # GET /people/1
-  # GET /people/1.xml
+  # GET /location/1
+  # GET /location/1.xml
   def show
-    @location = @person_entity.current_location_by_id(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @location }
-    end
+    # We'll want to change this when we get more restful
+    redirect_to entity_path(@entity)
   end
 
   # GET /locations/new
   # GET /locations/new.xml
   def new
-    @entities_location = EntitiesLocation.new
-    @location = Location.new
-    @address = Address.new
+    @location = Location.new(:entities_location => {:entity_id => @entity.id}, :address => {})
 
     respond_to do |format|
       format.html # new.html.erb
@@ -39,29 +29,18 @@ class LocationsController < ApplicationController
 
   # GET /locations/1/edit
   def edit
-    @location = @person_entity.locations.find(params[:id])
-    @entities_location = @person_entity.entities_locations.find(@location.id)
-    @address = @location.current_address
+    @location = @entity.locations.find(params[:id])
+    @location.entities_location = @entity.entities_locations.find_by_location_id(@location.id).attributes
   end
 
   # POST /locations
   # POST /locations.xml
   def create
-    @address = Address.new(params[:address])
-
-    # associate the address with a location
-    @location = Location.new
-    @location.addresses << @address
-
-    # Associate the location with the join model, add location type: Home, work, etc.
-    entities_location = EntitiesLocation.new(params[:entities_location])
-    entities_location.location = @location
-
+    @location = Location.new(params[:location])
     respond_to do |format|
-      # Attach the join model -> location -> address to the person entity
-      if (@address.valid?) && (@person_entity.entities_locations << entities_location)
+     if @location.save
         flash[:notice] = 'Location was successfully added.'
-        format.html { redirect_to(person_path(@person_id)) }
+        format.html { redirect_to(entity_path(@entity)) }
         format.xml  { render :xml => @locations, :status => :created, :location => @locations }
       else
         format.html { render :action => "new" }
@@ -73,19 +52,12 @@ class LocationsController < ApplicationController
   # PUT /locations/1
   # PUT /locations/1.xml
   def update
-    @location = @person_entity.locations.find(params[:id])
-    @entities_location = @person_entity.entities_locations.find(@location.id)
-
-    @entities_location.attributes=(params[:entities_location])
-    @address = Address.new(params[:address])
+    @location = @entity.locations.find(params[:id])
 
     respond_to do |format|
-      if @entities_location.transaction do
-          @entities_location.save
-          @location.addresses << @address
-        end
-        flash[:notice] = 'Locations was successfully updated.'
-        format.html { redirect_to(person_path(@person_id)) }
+      if @location.update_attributes(params[:location])
+        flash[:notice] = 'Location was successfully updated.'
+        format.html { redirect_to(entity_path(@entity)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -97,21 +69,20 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.xml
   def destroy
-    @entities_location = @person_entity.entities_locations.find(params[:id])
-    @entities_location.destroy
+    @location = @entity.locations.find(params[:id])
+    @location.destroy
 
     respond_to do |format|
-      format.html { redirect_to(person_path(@person_id)) }
+      format.html { redirect_to(entity_path(@entity)) }
       format.xml  { head :ok }
     end
   end
 
   private 
   
-  def find_person
-    @person_id = params[:person_id]
-    redirect_to people_url unless @person_id
-    @person_entity = PersonEntity.find(@person_id)
-    @person = @person_entity.current
+  def find_entity
+    redirect_to entity_url unless params[:entity_id]
+    @entity = Entity.find(params[:entity_id])
+    @type = @entity.entity_type
   end
 end
