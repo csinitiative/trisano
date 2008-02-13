@@ -105,6 +105,7 @@ namespace :nedss do
       end
     end
     
+    # This will still indicate success even if there was a faliure. Needs to be remedied
     desc "run the integration tests"
     task :runintegration => 'nedss:integration:run_all' do
       puts "integration test success"
