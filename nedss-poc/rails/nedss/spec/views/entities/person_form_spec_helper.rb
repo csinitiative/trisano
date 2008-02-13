@@ -79,7 +79,7 @@ module PersonFormSpecHelper
     address.stub!(:county_id).and_return(1101)
     address.stub!(:district_id).and_return(1201)
 
-    entity = mock_model(Entity)
+    entity = mock_model(Entity, :to_param => '1')
     entity.stub!(:entity_type).and_return('person')
     entity.stub!(:person).and_return(person)
     entity.stub!(:entities_location).and_return(entities_location)

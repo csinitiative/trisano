@@ -6,20 +6,25 @@ describe "/people/new.html.erb" do
   include PersonFormSpecHelper
   ActionController::Base.set_view_path(RAILS_ROOT + '/app/views/entities')
 
-  before(:each) do
-    @entity.stub!(:new_record?).and_return(true)
-  end
-
-  it_should_behave_like "a person form"
-  
   def do_render
     assigns[:valid_types] = ['person', 'animal', 'place', 'material']
     render "/entities/new.html.erb"
   end
 
+  it_should_behave_like "a person form"
+
+  before(:each) do
+    @entity.stub!(:new_record?).and_return(true)
+  end
+
   it "should render new person form" do
     do_render
-
+    response.should have_tag("form[action=?][method=post]", entities_path) do
+    end
+  end
+  
+  it "should link back to various indexes" do
+    do_render
     response.should have_tag("a[href=/entities?type=person]")
     response.should have_tag("a[href=/entities?type=animal]")
     response.should have_tag("a[href=/entities?type=material]")

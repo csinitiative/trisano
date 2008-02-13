@@ -6,8 +6,8 @@ groucho_marx:
   last_name: "Marx"
   first_name: "Groucho"
   middle_name: "Julius"
-  birth_date: "1890-10-2"
-  date_of_death: "1977-8-19"
+  birth_date: "1890-10-02"
+  date_of_death: "1977-08-19"
   birth_gender_id: 1
   current_gender_id: 1
   ethnicity_id: 103
@@ -15,6 +15,7 @@ groucho_marx:
   primary_language_id: 302
   last_name_soundex: <%= Text::Soundex.soundex("Marx") %>
   first_name_soundex: <%= Text::Soundex.soundex("Groucho") %>
+  updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
 
 phil_silvers_old:
@@ -32,6 +33,7 @@ phil_silvers_old:
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
   first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
+  updated_at: <%= 1.day.ago.to_s :db %>
   created_at: <%= 1.day.ago.to_s :db %>
 
 phil_silvers_cur:
@@ -49,5 +51,6 @@ phil_silvers_cur:
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
   first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
+  updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
 
