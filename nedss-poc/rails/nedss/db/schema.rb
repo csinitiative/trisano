@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -226,6 +226,8 @@ ActiveRecord::Schema.define(:version => 6) do
     t.string   "risk_factors",                :limit => 25
     t.string   "risk_factors_notes",          :limit => 100
     t.integer  "approximate_age_no_birthday"
+    t.string   "first_name_soundex"
+    t.string   "last_name_soundex"
   end
 
   create_table "people_races", :force => true do |t|
