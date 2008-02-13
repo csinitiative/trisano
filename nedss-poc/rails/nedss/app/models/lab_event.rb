@@ -2,7 +2,6 @@ require 'chronic'
 
 class LabEvent < ActiveRecord::Base
   set_table_name :events
-  acts_as_reportable
 
   belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'Code'

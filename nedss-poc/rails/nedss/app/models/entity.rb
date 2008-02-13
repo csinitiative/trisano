@@ -1,7 +1,7 @@
 class Entity < ActiveRecord::Base
   has_many :people, :before_add => :set_entity_type
   has_one  :current_person, :class_name => 'Person', :order => 'created_at DESC'
-  acts_as_reportable
+
   has_many :places, :before_add => :set_entity_type
   has_one  :current_place, :order => 'created_at DESC'
 

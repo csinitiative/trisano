@@ -1,5 +1,4 @@
 class EntitiesLocation < ActiveRecord::Base
-  acts_as_reportable
   belongs_to :location
   belongs_to :entity
 

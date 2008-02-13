@@ -1,5 +1,4 @@
 class Location < ActiveRecord::Base
-  acts_as_reportable
   has_many :entities_locations
   has_many :entities, :through => :entities_locations
   
