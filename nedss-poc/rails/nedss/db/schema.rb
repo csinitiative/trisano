@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(:version => 6) do
     t.datetime "review_completed_UDOH_date"
     t.datetime "first_reported_PH_date"
     t.datetime "results_reported_to_clinician_date"
-    t.integer  "MMRW"
+    t.integer  "MMWR"
     t.string   "record_number",                      :limit => 20
   end
 
