@@ -64,7 +64,7 @@ module PersonFormSpecHelper
     person.stub!(:race_id).and_return(201)
     person.stub!(:primary_language_id).and_return(301)
 
-    entities_location = mock_model(Location)
+    entities_location = mock_model(EntitiesLocation)
     entities_location.stub!(:entity_id).and_return("1")
     entities_location.stub!(:entity_location_type_id).and_return("1302")
     entities_location.stub!(:primary_yn_id).and_return("1402")
