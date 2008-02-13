@@ -96,10 +96,6 @@ namespace :nedss do
         puts new_lab_event_url
         page = agent.get new_lab_event_url
 
-        fake = NEDSS_URL + '/nedss/foo'
-        puts fake
-        page = agent.get fake
-
         puts "smoke test success"
       rescue => error
         puts error
