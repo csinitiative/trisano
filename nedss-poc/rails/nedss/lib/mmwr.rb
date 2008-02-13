@@ -8,7 +8,7 @@ class Mmwr
     @epi_dates = epi_dates        
     #TODO validation of some sort
     #TODO may want to overload so that you can just give it one date
-    #TODO some methods should be private
+    #TODO 1 arg with date 0 arg todays date
   end
   
   # Business rules for assigning MMWR week
@@ -32,12 +32,12 @@ class Mmwr
     ranges = date_ranges    
     
     mmwr_date_range = nil
-    ranges.sort.each { | k, range | 
+    ranges.sort.each do | k, range | 
       # puts "#{range.to_s} in_range: #{range.in_range(calc_date)}"
       if range.in_range(calc_date)
         mmwr_date_range = range
       end
-    }
+    end
     
     mmwr_date_range
   end  
@@ -111,7 +111,6 @@ class Mmwr
   
   # Creates a DateRange for each MMWR for the year.
   def date_ranges
-    # TODO lenght is now off
     date_ranges = Hash.new()
     calc_date = @epi_dates[epi_date_used]
         

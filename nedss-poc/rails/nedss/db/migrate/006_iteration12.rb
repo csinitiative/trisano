@@ -27,7 +27,7 @@ class Iteration12 < ActiveRecord::Migration
 		add_column :events, :review_completed_UDOH_date,  :timestamp
 		add_column :events, :first_reported_PH_date ,  :timestamp
 		add_column :events, :results_reported_to_clinician_date,  :timestamp
-		add_column :events, :MMRW ,  :integer
+		add_column :events, :MMWR ,  :integer
 		add_column :events, :record_number ,  :string, :limit=>20
 
   end
