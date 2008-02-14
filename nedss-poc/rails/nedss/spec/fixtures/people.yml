@@ -11,7 +11,6 @@ groucho_marx:
   birth_gender_id: 1
   current_gender_id: 1
   ethnicity_id: 103
-  race_id: 204
   primary_language_id: 302
   last_name_soundex: <%= Text::Soundex.soundex("Marx") %>
   first_name_soundex: <%= Text::Soundex.soundex("Groucho") %>
