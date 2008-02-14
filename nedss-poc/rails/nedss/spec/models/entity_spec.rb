@@ -139,7 +139,7 @@ describe Entity, "with associated location and person via custom attributes" do
 end
 
 describe Entity, "with people fixtures loaded" do
-  fixtures :entities, :people
+  fixtures :entities, :people, :people_races, :codes
 
   it "should have two records" do
     Entity.should have(2).records
@@ -169,7 +169,13 @@ describe Entity, "with people fixtures loaded" do
     it "should have the same person for association proxy and custom attribute" do
       entities(:Silvers).current_person.middle_name.should eql(entities(:Silvers).person.middle_name)
     end
+
+    it "the current instance should have a race of blank and white" do
+      entities(:Silvers).races.first.should eql(codes(:race_black))
+      entities(:Silvers).races.last.should eql(codes(:race_white))
+    end
   end
+
 end
 
 describe Entity, "with location fixtures loaded" do

@@ -1,0 +1,11 @@
+silvers_is_black:
+  race_id: 202
+  entity_id: 2
+
+silvers_is_white:
+  race_id: 201
+  entity_id: 2
+
+groucho_is_white:
+  race_id: 201
+  entity_id: 1

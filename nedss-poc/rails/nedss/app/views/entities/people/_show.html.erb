@@ -27,10 +27,15 @@
     <td><%= l p.current_gender %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :race) %></td>
-    <td><%= l p.race %></td>
     <td><%= label(:person, :primary_language) %></td>
     <td><%= l p.primary_language %></td>
+    <td><%= label(:person, :race) %></td>
+    <td>
+      <% i = 0; for race in @entity.races %>
+        <%= " and " unless i == 0 %><%= l race %>
+        <% i += 1 %>
+      <% end %>
+    </td>
   </tr>
 </table>
 </fieldset>

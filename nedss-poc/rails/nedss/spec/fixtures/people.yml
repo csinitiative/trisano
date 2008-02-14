@@ -29,7 +29,6 @@ phil_silvers_old:
   birth_gender_id: 1
   current_gender_id: 1
   ethnicity_id: 103
-  race_id: 204
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
   first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
@@ -47,7 +46,6 @@ phil_silvers_cur:
   birth_gender_id: 1
   current_gender_id: 1
   ethnicity_id: 103
-  race_id: 204
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
   first_name_soundex: <%= Text::Soundex.soundex("Phil") %>

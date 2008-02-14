@@ -14,12 +14,17 @@ class Entity < ActiveRecord::Base
   has_many :entities_locations, :foreign_key => 'entity_id'
   has_many :locations, :through => :entities_locations
 
+  has_and_belongs_to_many :races, 
+                          :class_name => 'Code', 
+                          :join_table => 'people_races', 
+                          :association_foreign_key => 'race_id', 
+                          :order => 'code_description'
+
   attr_protected :entity_type
   validates_presence_of :entity_type
 
   before_validation :save_entity_associations
   after_validation :clear_base_error
-#  after_create :save_location_associations
 
   def person
     @person || current_person

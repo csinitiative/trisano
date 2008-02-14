@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 8) do
+ActiveRecord::Schema.define(:version => 9) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -230,7 +230,7 @@ ActiveRecord::Schema.define(:version => 8) do
     t.string   "last_name_soundex"
   end
 
-  create_table "people_races", :force => true do |t|
+  create_table "people_races", :id => false, :force => true do |t|
     t.integer  "race_id"
     t.integer  "entity_id"
     t.datetime "created_at"

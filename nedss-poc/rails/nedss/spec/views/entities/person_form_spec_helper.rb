@@ -31,14 +31,13 @@ module PersonFormSpecHelper
           with_tag('option', 'Other')
           with_tag('option', 'Unknown')
         end
-        with_tag('select#entity_person_race_id[name=?]', "entity[person][race_id]") do
+        with_tag('select#entity_race_ids[name=?]', "entity[race_ids][]") do
           with_tag('option', 'White')
           with_tag('option', 'Black / African-American')
           with_tag('option', 'Asian')
           with_tag('option', 'American Indian')
           with_tag('option', 'Alaskan Native')
           with_tag('option', 'Native Hawaiian / Pacific Islander')
-          with_tag('option', 'Unknown')
         end
         with_tag('select#entity_person_primary_language_id[name=?]', "entity[person][primary_language_id]") do
           with_tag('option', 'English')
@@ -61,7 +60,6 @@ module PersonFormSpecHelper
     person.stub!(:birth_gender_id).and_return(1)
     person.stub!(:current_gender_id).and_return(1)
     person.stub!(:ethnicity_id).and_return(101)
-    person.stub!(:race_id).and_return(201)
     person.stub!(:primary_language_id).and_return(301)
 
     entities_location = mock_model(EntitiesLocation)
@@ -84,6 +82,7 @@ module PersonFormSpecHelper
     entity.stub!(:person).and_return(person)
     entity.stub!(:entities_location).and_return(entities_location)
     entity.stub!(:address).and_return(address)
+    entity.stub!(:race_ids).and_return([201])
     entity
   end
 end

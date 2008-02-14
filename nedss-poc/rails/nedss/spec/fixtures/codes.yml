@@ -78,11 +78,13 @@ race_hawaiian:
   the_code:  "H"
   code_description: "Native Hawaiian / Pacific Islander"
 
-race_unknown:
-  id: 207
-  code_name: "race"
-  the_code:  "U"
-  code_description: "Unknown"
+# Removing race unknown as UI currently uses a multi-select.  In which case selecting nothing is unknown.
+#
+# race_unknown:
+#   id: 207
+#   code_name: "race"
+#   the_code:  "U"
+#   code_description: "Unknown"
 
 language_english:
   id: 301

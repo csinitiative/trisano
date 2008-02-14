@@ -29,7 +29,6 @@ describe "/people/show.html.erb" do
     @person.stub!(:birth_gender).and_return(@gender)
     @person.stub!(:current_gender).and_return(@gender)
     @person.stub!(:ethnicity).and_return(@ethnicity)
-    @person.stub!(:race).and_return(@race)
     @person.stub!(:primary_language).and_return(@language)
 
     @entities_location = mock_model(EntitiesLocation)
@@ -61,6 +60,7 @@ describe "/people/show.html.erb" do
     @entity.stub!(:address).and_return(@address)
     @entity.stub!(:current_locations).and_return([@location])
     @entity.stub!(:locations).and_return([@location])
+    @entity.stub!(:races).and_return([@race])
 
     assigns[:entity] = @entity
     assigns[:locations] = Array.new
@@ -78,7 +78,7 @@ describe "/people/show.html.erb" do
     response.should have_text(/#{@person.date_of_death}/)
     response.should have_text(/#{@person.ethnicity.code_description}/)
     response.should have_text(/#{@person.birth_gender.code_description}/)
-    response.should have_text(/#{@person.race.code_description}/)
+    response.should have_text(/#{@entity.races.first.code_description}/)
     response.should have_text(/#{@person.primary_language.code_description}/)
 
     response.should have_text(/Work/)
