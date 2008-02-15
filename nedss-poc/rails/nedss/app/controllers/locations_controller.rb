@@ -19,7 +19,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   # GET /locations/new.xml
   def new
-    @location = Location.new(:entities_location => {:entity_id => @entity.id}, :address => {})
+    @location = Location.new(:entities_location => {:entity_id => @entity.id}, :address => {}, :telephone => {})
 
     respond_to do |format|
       format.html # new.html.erb

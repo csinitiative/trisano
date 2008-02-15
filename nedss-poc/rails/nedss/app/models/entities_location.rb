@@ -6,4 +6,5 @@ class EntitiesLocation < ActiveRecord::Base
   belongs_to  :primary_yn, :class_name => 'Code'
 
   # Should validate that entity_location_type and primary_yn are legitimate codes
+  validates_associated :location
 end

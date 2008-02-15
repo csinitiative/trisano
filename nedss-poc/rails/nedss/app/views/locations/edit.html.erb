@@ -1,6 +1,12 @@
 <h1>Editing locations</h1>
 
-<%= error_messages_for :object => [@location, @location.address, @location.entities_location] %>
+<%= error_messages_for :object => [@location, @location.entities_location] %>
+
+
+<%= error_messages_for :object => [@location.telephone] unless @location.telephone.nil? %>
+
+
+<%= error_messages_for :object => [@location.address] unless @location.address.nil? %>
 
 <%= render :partial => "#{@type}_header"%>
 

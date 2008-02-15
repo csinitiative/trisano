@@ -113,7 +113,7 @@ class EntitiesController < ApplicationController
   def assure_type
     @type = params[:type]
     if @valid_types.include?(@type)
-      @default_values = { @type.to_sym => {}, :entities_location => {}, :address => {} }
+      @default_values = { @type.to_sym => {}, :entities_location => {}, :address => {}, :telephone => {} }
     else
       send_not_found
     end

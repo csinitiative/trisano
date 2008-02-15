@@ -1,7 +1,22 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-# one:
-#   column: value
-#
-# two:
-#   column: value
+silvers_home_phone:
+  id: 1
+  location_id: 1
+  area_code: "212"
+  phone_number: "5551212"
+  extension:
+
+silvers_old_work_phone:
+  id: 2
+  location_id: 2
+  area_code: "212"
+  phone_number: "5558888"
+  extension: "9876"
+
+silvers_current_work_phone:
+  id: 3
+  location_id: 2
+  area_code: "212"
+  phone_number: "5559999"
+  extension: "1234"

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 9) do
+ActiveRecord::Schema.define(:version => 10) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -206,7 +206,6 @@ ActiveRecord::Schema.define(:version => 9) do
 
   create_table "people", :force => true do |t|
     t.integer  "entity_id"
-    t.integer  "race_id"
     t.integer  "birth_gender_id"
     t.integer  "current_gender_id"
     t.integer  "ethnicity_id"
@@ -252,11 +251,10 @@ ActiveRecord::Schema.define(:version => 9) do
 
   create_table "telephones", :force => true do |t|
     t.integer  "location_id"
-    t.integer  "country_code"
-    t.integer  "area_code"
-    t.integer  "exchange"
-    t.integer  "phone_number"
-    t.integer  "extension"
+    t.string   "country_code", :limit => 3
+    t.string   "area_code",    :limit => 3
+    t.string   "phone_number", :limit => 7
+    t.string   "extension",    :limit => 6
     t.datetime "created_at"
     t.datetime "updated_at"
   end

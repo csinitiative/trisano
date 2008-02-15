@@ -38,7 +38,7 @@ describe LocationsController do
     end
   
     it "should create a new location" do
-      Location.should_receive(:new).with(:entities_location => {:entity_id => @entity.id}, :address => {}).and_return(@location)
+      Location.should_receive(:new).with(:entities_location => {:entity_id => @entity.id}, :address => {}, :telephone => {}).and_return(@location)
       do_get
     end
   
@@ -102,6 +102,7 @@ describe LocationsController do
   describe "handling POST /locations" do
 
     before(:each) do
+      mimic_before_filter
       @location = mock_model(Location, :to_param => "1")
       Location.stub!(:new).and_return(@location)
     end

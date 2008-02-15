@@ -52,6 +52,10 @@ describe "/people/new.html.erb" do
       with_tag("input#entity_address_street_name[name=?]", "entity[address][street_name]")
       with_tag("input#entity_address_unit_number[name=?]", "entity[address][unit_number]")
       with_tag("input#entity_address_street_number[name=?]", "entity[address][street_number]")
+
+      with_tag("input#entity_telephone_area_code[name=?]", "entity[telephone][area_code]")
+      with_tag("input#entity_telephone_phone_number[name=?]", "entity[telephone][phone_number]")
+      with_tag("input#entity_telephone_extension[name=?]", "entity[telephone][extension]")
     end
   end
 

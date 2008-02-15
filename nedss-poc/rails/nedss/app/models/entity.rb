@@ -26,6 +26,8 @@ class Entity < ActiveRecord::Base
   before_validation :save_entity_associations
   after_validation :clear_base_error
 
+  validates_associated :entities_locations
+
   def person
     @person || current_person
   end
@@ -51,6 +53,14 @@ class Entity < ActiveRecord::Base
     @address = Address.new(attributes)
   end  
 
+  def telephone
+    @telephone
+  end
+
+  def telephone=(attributes)
+    @telephone = Telephone.new(attributes)
+  end  
+
   # [PGL] Not sure I like this.
   def current_locations
     locations.map do |l|
@@ -62,6 +72,11 @@ class Entity < ActiveRecord::Base
   end
 
   private
+
+#  def validate
+#    address.valid? unless Utilities::model_empty?(address)
+#    telephone.valid? unless Utilities::model_empty?(telephone)
+#  end
 
   def set_entity_type(record)
     self.entity_type = record.class.name.downcase
@@ -75,21 +90,18 @@ class Entity < ActiveRecord::Base
     # More 'when' clauses as needed
     end
 
-    if not address_empty?
+    if not (Utilities::model_empty?(address) and Utilities::model_empty?(telephone))
       l = Location.new
-      l.addresses << address
+      l.addresses << address unless Utilities::model_empty?(address)
+      l.telephones << telephone unless Utilities::model_empty?(telephone)
       entities_location.location = l
-      entities_locations << @entities_location
+      entities_locations << entities_location
     end
-  end
-
-  def address_empty?
-    address.nil? or address.attributes.all? {|k, v| v.blank?}
   end
 
   def clear_base_error
     errors.delete(:people)
     errors.delete(:entities_locations)
-    errors.delete(:address)
+    entities_location.errors.delete(:location) unless entities_location.nil?
   end
 end

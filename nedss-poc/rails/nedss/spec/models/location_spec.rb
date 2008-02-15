@@ -5,8 +5,8 @@ describe Location do
     @location = Location.new
   end
 
-  it "should be valid" do
-    @location.should be_valid
+  it "should not be valid with a phone or address component" do
+    @location.should_not be_valid
   end
 
   describe "with associated address" do
@@ -24,6 +24,10 @@ describe Location do
       @location.addresses << @address
       @location.should be_valid
     end
+  end
+
+  describe "with an associated telephone number" do
+    # Someday
   end
 end
 
@@ -51,7 +55,8 @@ describe Location, "with fixtures loaded" do
     describe "with new" do
       it "should save without errors" do
         @location = Location.new( :entities_location => { :entity_id => 1, :primary_yn_id => 1402, :entity_location_type_id => 1302 },
-                                :address => { :street_number => '99', :street_name => '9th Ave.' } )
+                                :address => { :street_number => '99', :street_name => '9th Ave.' },
+                                :telephone => { :area_code => '212', :phone_number => '555-1212' } )
         @location.save.should be_true
       end
     end
@@ -61,7 +66,8 @@ describe Location, "with fixtures loaded" do
         entity = Entity.find(2)
         @location = entity.locations.first
         @location.update_attributes( :entities_location => { :entity_id => entity.id, :primary_yn_id => 1402, :entity_location_type_id => 1302 },
-                                :address => { :street_number => '99', :street_name => '9th Ave.' } ).should be_true
+                                :address => { :street_number => '99', :street_name => '9th Ave.' },
+                                :telephone => { :area_code => '212', :phone_number => '5551212' } ).should be_true
       end
     end
   end

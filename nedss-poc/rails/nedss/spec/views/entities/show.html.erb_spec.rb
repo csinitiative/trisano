@@ -46,10 +46,16 @@ describe "/people/show.html.erb" do
     @address.stub!(:county).and_return(@county)
     @address.stub!(:district).and_return(@district)
 
+    @phone = mock_model(Telephone)
+    @phone.stub!(:area_code).and_return("212")
+    @phone.stub!(:phone_number).and_return("555-1212")
+    @phone.stub!(:extension).and_return("9999")
+
     @location = mock_model(Location)
     @location.stub!(:entities_locations).and_return([@entites_location])
 #    @location.stub!(:addresses).and_return([@address])
     @location.stub!(:current_address).and_return(@address)
+    @location.stub!(:current_phone).and_return(@phone)
     @location.stub!(:primary?).and_return(true)
     @location.stub!(:type).and_return('Work')
 
@@ -58,6 +64,7 @@ describe "/people/show.html.erb" do
     @entity.stub!(:person).and_return(@person)
     @entity.stub!(:entities_location).and_return(@entities_location)
     @entity.stub!(:address).and_return(@address)
+    @entity.stub!(:telephone).and_return(@phone)
     @entity.stub!(:current_locations).and_return([@location])
     @entity.stub!(:locations).and_return([@location])
     @entity.stub!(:races).and_return([@race])
@@ -89,6 +96,9 @@ describe "/people/show.html.erb" do
     response.should have_text(/#{@address.state.code_description}/)
     response.should have_text(/#{@address.county.code_description}/)
     response.should have_text(/#{@address.district.code_description}/)
+
+    response.should have_text(/#{@phone.area_code}/)
+    response.should have_text(/#{@phone.phone_number}/)
   end
 end
 

@@ -189,7 +189,7 @@ describe EntitiesController do
     end
   
     it "should create a new entity" do
-      Entity.should_receive(:new).with(:person => {}, :entities_location => {}, :address => {}).and_return(@entity)
+      Entity.should_receive(:new).with(:person => {}, :entities_location => {}, :address => {}, :telephone => {}).and_return(@entity)
       do_get_with_param 'person'
     end
   

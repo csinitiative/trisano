@@ -1,8 +1,10 @@
-<% a = location.current_address %>
-<tr <%= location.primary? ? "class='highlight'" : nil %> >
-  <td>
-    <%# Get rid of these bolds when styling day comes %>
-    <b><%= location.type -%> : </b><%= a.street_number -%>
+<% a = location.current_address; p = location.current_phone %>
+  <tr <%= location.primary? ? "class='highlight'" : nil %> >
+    <td>
+      <%# Get rid of these bolds when styling day comes %>
+      <b><%= location.type -%> : </b>
+<% if not a.nil? %>
+<%= a.street_number -%>
 <%= fml " ", a.street_name, "" -%>
 <%= fml ", Unit: ", a.unit_number, "" -%>
 <%= fml ", ", l(a.city), "" -%>
@@ -10,7 +12,14 @@
 <%= fml ", ", a.postal_code, "" -%>
 <%= fml " : ", l(a.county), " county" -%>
 <%= fml " : ", l(a.district), " district" -%>
-  </td>
+<% end %>
+    </td>
+  <% if not p.nil? %>
+    <td>Phone: <%= fml "(", p.area_code, ") " if p.area_code -%>
+<%= phone_number(p.phone_number) -%>
+<%= fml " Ext. ", p.extension, "" if p.extension -%>
+    </td>
+  <% end %>
   <td><%= link_to 'Edit', edit_entity_location_path(@entity, location) %></td>
   <td><%= link_to 'Destroy', entity_location_path(@entity, location), :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>

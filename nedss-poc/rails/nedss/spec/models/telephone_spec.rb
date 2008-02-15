@@ -5,7 +5,9 @@ describe Telephone do
     @phone = Telephone.new
   end
 
-  it "should be valid" do
-    @phone.should be_valid
+  it "should be valid without a properly formatted phone_number" do
+    @phone.should_not be_valid
   end
+
+  # TODO: test validations here
 end

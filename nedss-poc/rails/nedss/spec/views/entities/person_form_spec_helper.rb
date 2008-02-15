@@ -77,11 +77,17 @@ module PersonFormSpecHelper
     address.stub!(:county_id).and_return(1101)
     address.stub!(:district_id).and_return(1201)
 
+    phone = mock_model(Telephone)
+    phone.stub!(:area_code).and_return("212")
+    phone.stub!(:phone_number).and_return("5551212")
+    phone.stub!(:extension).and_return("4444")
+
     entity = mock_model(Entity, :to_param => '1')
     entity.stub!(:entity_type).and_return('person')
     entity.stub!(:person).and_return(person)
     entity.stub!(:entities_location).and_return(entities_location)
     entity.stub!(:address).and_return(address)
+    entity.stub!(:telephone).and_return(phone)
     entity.stub!(:race_ids).and_return([201])
     entity
   end

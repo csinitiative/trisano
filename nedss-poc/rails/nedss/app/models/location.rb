@@ -3,9 +3,10 @@ class Location < ActiveRecord::Base
   has_many :entities, :through => :entities_locations
   
   has_many :addresses
-  has_many :phones
+  has_many :telephones
 
   has_one :current_address, :class_name => 'Address', :order => 'created_at DESC'
+  has_one :current_phone, :class_name => 'Telephone', :order => 'created_at DESC'
 
   # Populated by PersonEntity to label as work, home, etc.
   attr_accessor :type
@@ -44,10 +45,30 @@ class Location < ActiveRecord::Base
     @address = Address.new(attributes)
   end  
 
-  private
+  def telephone
+    @telephone || telephones.last
+  end
+
+  def telephone=(attributes)
+    @telephone = Telephone.new(attributes)
+  end  
+
+  protected
+
+  def validate
+    if Utilities::model_empty?(address) and Utilities::model_empty?(telephone)
+      errors.add_to_base("You must enter at least a partial address or partial phone number.")
+    end
+  end
 
   def save_associations
-    addresses << address unless @address.nil?
+    if new_record?
+      addresses << address unless Utilities::model_empty?(address)
+      telephones << telephone unless Utilities::model_empty?(telephone)
+    else
+      addresses << address unless Utilities::model_empty?(address) and Utilities::model_empty?(telephone)
+      telephones << telephone unless Utilities::model_empty?(telephone) and Utilities::model_empty?(address)
+    end
   end
 
   def update_entities_locations
@@ -57,5 +78,6 @@ class Location < ActiveRecord::Base
   def clear_base_error
     errors.delete(:entities_locations)
     errors.delete(:addresses)
+    errors.delete(:telephones)
   end
 end

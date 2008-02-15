@@ -68,7 +68,8 @@ describe Entity, "with associated location and person via custom attributes" do
   before(:each) do
     @entity = Entity.new( :person => {:last_name => 'Fields'},
                           :entities_location => {:entity_location_type_id => 1302, :primary_yn_id => 1402 },
-                          :address => { :street_name => "Pine St.", :street_number => "123" } )
+                          :address => { :street_name => "Pine St.", :street_number => "123" },
+                          :telephone => { :area_code => '212', :phone_number => '5551212'} )
   end
     
   it "should have an entity_type of person" do
@@ -81,6 +82,10 @@ describe Entity, "with associated location and person via custom attributes" do
 
   it "address should be accesible via address attribute" do
     @entity.address.street_name.should eql("Pine St.")
+  end
+
+  it "phone number should be accesible via telephone attribute" do
+    @entity.telephone.phone_number.should eql("5551212")
   end
 
   it "entity location should be accesible via entities_location attribute" do
@@ -112,12 +117,18 @@ describe Entity, "with associated location and person via custom attributes" do
       lambda { @entity.save }.should change { Address.count }.by(1)
     end
       
+    it "should add one new row to the telephone table" do
+      lambda { @entity.save }.should change { Telephone.count }.by(1)
+    end
+      
   end
 
-  describe "where address is empty" do
+  describe "where address is empty and phone number are empty" do
     before(:each) do
       @entity.address.street_name = nil
       @entity.address.street_number = nil
+      @entity.telephone.area_code = nil
+      @entity.telephone.phone_number = nil
     end
 
     it "should save without error" do
@@ -135,6 +146,14 @@ describe Entity, "with associated location and person via custom attributes" do
     it "should add no new rows to the address table" do
       lambda { @entity.save}.should_not change { Address.count }
     end
+  end
+
+  describe "where address is empty" do
+    # someday
+  end
+
+  describe "where telephone is empty" do
+    # someday
   end
 end
 

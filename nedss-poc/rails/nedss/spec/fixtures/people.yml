@@ -6,7 +6,7 @@ groucho_marx:
   last_name: "Marx"
   first_name: "Groucho"
   middle_name: "Julius"
-  birth_date: "1890-10-02"
+  birth_date: "1902-10-02"
   date_of_death: "1977-08-19"
   birth_gender_id: 1
   current_gender_id: 1
