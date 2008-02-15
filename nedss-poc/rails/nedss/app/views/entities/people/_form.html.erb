@@ -14,6 +14,10 @@
   <tr>
     <td><%= p.label(:birth_date) %></td>
     <td><%= p.calendar_date_select(:birth_date, :year_range => 100.years.ago..0.years.from_now) %></td>
+    <td><%= p.label(:approximate_age_no_birthday, "Approximate age if birthday unknown") %></td>
+    <td><%= p.text_field(:approximate_age_no_birthday, :size => 3) %></td>
+  <tr>
+  </tr>
     <td><%= p.label(:date_of_death) %></td>
     <td><%= p.calendar_date_select(:date_of_death, :year_range => 100.years.ago..0.years.from_now) %></td>
   </tr>
@@ -28,6 +32,24 @@
     <td><%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {:include_blank => true}) %></td>
     <td><%= p.label(:primary_language) %></td>
     <td><%= p.dropdown_code_field(:primary_language_id, 'language', {:include_blank => true}) %></td>
+  </tr>
+  <tr>
+    <td><%= p.label(:food_handler) %></td>
+    <td><%= p.dropdown_code_field(:food_handler_id, 'yesno') %></td>
+    <td><%= p.label(:healthcare_worker) %></td>
+    <td><%= p.dropdown_code_field(:healthcare_worker_id, 'yesno') %></td>
+  <tr>
+  </tr>
+    <td><%= p.label(:group_living) %></td>
+    <td><%= p.dropdown_code_field(:group_living_id, 'yesno') %></td>
+    <td><%= p.label(:day_care_association) %></td>
+    <td><%= p.dropdown_code_field(:day_care_association_id, 'yesno') %></td>
+  </tr>
+  <tr>
+    <td><%= p.label(:risk_factors) %></td>
+    <td><%= p.text_field(:risk_factors, :size => 25) %></td>
+    <td><%= p.label(:risk_factors_notes) %></td>
+    <td><%= p.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %></td>
   </tr>
 <% end %>
   <tr>

@@ -6,13 +6,14 @@ describe "/people/show.html.erb" do
   
   before(:each) do
 
-    @gender = @ethnicity = @race = @language = mock_model(Code)
+    @gender = @ethnicity = @race = @language = @yesno = mock_model(Code)
     @city = @state = @county = @district = mock_model(Code)
 
     @gender.stub!(:code_description).and_return('Male')
     @ethnicity.stub!(:code_description).and_return('Hispanic')
     @race.stub!(:code_description).and_return('Asian')
     @language.stub!(:code_description).and_return('Spanish')
+    @yesno.stub!(:code_description).and_return('No')
 
     @city.stub!(:code_description).and_return('Salt Lake')
     @state.stub!(:code_description).and_return('UT')
@@ -24,12 +25,19 @@ describe "/people/show.html.erb" do
     @person.stub!(:last_name).and_return("Marx")
     @person.stub!(:first_name).and_return("Groucho")
     @person.stub!(:middle_name).and_return("Julius")
-    @person.stub!(:birth_date).and_return('1890-10-2')
-    @person.stub!(:date_of_death).and_return('1970-4-21')
+    @person.stub!(:birth_date).and_return(Date.parse('1902-10-02'))
+    @person.stub!(:date_of_death).and_return(Date.parse('1970-4-21'))
     @person.stub!(:birth_gender).and_return(@gender)
     @person.stub!(:current_gender).and_return(@gender)
     @person.stub!(:ethnicity).and_return(@ethnicity)
     @person.stub!(:primary_language).and_return(@language)
+    @person.stub!(:approximate_age_no_birthday).and_return(50)
+    @person.stub!(:food_handler).and_return(@yesno)
+    @person.stub!(:healthcare_worker).and_return(@yesno)
+    @person.stub!(:group_living).and_return(@yesno)
+    @person.stub!(:day_care_association).and_return(@yesno)
+    @person.stub!(:risk_factors).and_return("None")
+    @person.stub!(:risk_factors_notes).and_return("None")
 
     @entities_location = mock_model(EntitiesLocation)
     @entities_location.stub!(:entity_id).and_return("1")
@@ -53,7 +61,6 @@ describe "/people/show.html.erb" do
 
     @location = mock_model(Location)
     @location.stub!(:entities_locations).and_return([@entites_location])
-#    @location.stub!(:addresses).and_return([@address])
     @location.stub!(:current_address).and_return(@address)
     @location.stub!(:current_phone).and_return(@phone)
     @location.stub!(:primary?).and_return(true)

@@ -8,7 +8,7 @@ class Address < ActiveRecord::Base
   protected
   def validate
     if attributes.all? {|k, v| v.blank?}
-      errors.add_to_base("At least one address element must have a value")
+      errors.add_to_base("At least one address field must have a value")
     end
   end
 end

@@ -7,12 +7,19 @@
     <td><%= p.last_name %></td>
     <td><%= label(:person, :first_name) %></td>
     <td><%= p.first_name %></td>
-  </tr>
-  <tr>
     <td><%= label(:person, :middle_name) %></td>
     <td><%= p.middle_name %></td>
+  </tr>
+  <tr>
     <td><%= label(:person, :birth_date) %></td>
     <td><%= p.birth_date %></td>
+    <% if not p.birth_date.blank? %>
+      <td><%= label(:person, :age) %></td>
+      <td><%= calculate_age(p.birth_date) %></td>
+    <% elsif not p.approximate_age_no_birthday.blank?  %>
+      <td><%= label(:person, :approximate_age) %></td>
+      <td><%= p.approximate_age_no_birthday %></td>
+    <% end %>
   </tr>
   <tr>
     <td><%= label(:person, :date_of_death) %></td>
@@ -36,6 +43,24 @@
         <% i += 1 %>
       <% end %>
     </td>
+  </tr>
+  <tr>
+    <td><%= label(:person, :food_handler) %></td>
+    <td><%= l p.food_handler %></td>
+    <td><%= label(:person, :healthcare_worker) %></td>
+    <td><%= l p.healthcare_worker %></td>
+  </tr>
+  <tr>
+    <td><%= label(:person, :day_care_association) %></td>
+    <td><%= l p.group_living %></td>
+    <td><%= label(:person, :day_care_association) %></td>
+    <td><%= l p.group_living %></td>
+  </tr>
+  <tr>
+    <td><%= label(:person, :risk_factors) %></td>
+    <td><%= p.risk_factors %></td>
+    <td><%= label(:person, :risk_factors_notes) %></td>
+    <td><%= p.risk_factors_notes %></td>
   </tr>
 </table>
 </fieldset>
