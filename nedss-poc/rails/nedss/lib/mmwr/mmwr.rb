@@ -1,5 +1,4 @@
-require 'date'
-
+# Morbidity and Mortality Weekly Report (MMWR) week and year calculations.
 class Mmwr
 
   # Accepts no-arg (defaults to DateTime.now), 1 DateTime, or a Hash of 
@@ -8,12 +7,13 @@ class Mmwr
     
     case args.size
     when 0
-      @epi_date = DateTime.now
+      t = Time.now
+      @epi_date = Date.new(t.year, t.month, t.day)
     when 1
       # could be a Hash or a DateTime
       arg0 = args[0]
-      if !arg0.is_a?(Hash) && !arg0.is_a?(DateTime)
-        raise ArgumentError, "Mmwr initialize only handles Hash or DateTime"
+      if !arg0.is_a?(Hash) && !arg0.is_a?(Date)
+        raise ArgumentError, "Mmwr initialize only handles Hash or Date"
       end
       
       if arg0.is_a?(Hash)
@@ -21,15 +21,14 @@ class Mmwr
         @epi_date = @epi_dates[epi_date_used]
       end
       
-      if arg0.is_a?(DateTime)
+      if arg0.is_a?(Date)
         @epi_date = arg0
-      end
-      
-      @ranges = date_ranges
-      
+      end                
     else
       raise ArgumentError, "Mmwr initialize takes 0 or 1 arguments."
     end
+    
+    @ranges = date_ranges
   end
   
   # Business rules for assigning MMWR week
@@ -54,7 +53,7 @@ class Mmwr
   def mmwr_week_range    
     mmwr_date_range = nil
     @ranges.sort.each do | k, range | 
-      #puts "#{range.to_s} in_range: #{range.in_range(@epi_date)}"
+      #puts "#{range.to_s} epi_date: #{@epi_date} in_range: #{range.in_range(@epi_date)}"
       if range.in_range(@epi_date)
         mmwr_date_range = range
       end
@@ -82,6 +81,8 @@ class Mmwr
       :unknown
     end       
   end
+  
+  private
     
   # Returns the number of MMWR weeks for the given year
   def mmwr_weeks(year)
@@ -102,7 +103,7 @@ class Mmwr
       count += 1
     end
           
-    until saturday >= DateTime.new(first_day_of_year.year, 12, 31)
+    until saturday >= Date.new(first_day_of_year.year, 12, 31)
       sunday += 7
       saturday += 7
       count += 1
@@ -131,8 +132,6 @@ class Mmwr
     end
   end  
   
-  private
-  
   # Creates a DateRange for each MMWR for the year.
   def date_ranges
     date_ranges = Hash.new()
@@ -153,7 +152,7 @@ class Mmwr
     end
           
     count = 1
-    until saturday >= DateTime.new(first_day_of_year.year, 12, 31)
+    until saturday >= Date.new(first_day_of_year.year, 12, 31)
       sunday += 7
       saturday += 7
       count += 1

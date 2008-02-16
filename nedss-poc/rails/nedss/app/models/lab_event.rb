@@ -19,7 +19,7 @@ class LabEvent < ActiveRecord::Base
   before_validation :save_associations
   after_validation :clear_base_error
   
-  before_save :generate_record_id
+  before_save :generate_record_id, :generate_mmwr
 
   def disease
     @disease || disease_events.last
@@ -43,6 +43,16 @@ class LabEvent < ActiveRecord::Base
     t = Time.now    
     self.record_number = RecordId.new(Date.new(t.year, t.month, t.day), 5).value    
   end  
+  
+  def generate_mmwr
+    #epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
+    #mmwr = Mmwr.new(epi_dates)
+    #TODO need to do it like above, but with the full gammet of dates
+    mmwr = Mmwr.new
+    
+    self.MMWR_week = mmwr.mmwr_week
+    self.MMWR_year = mmwr.mmwr_year
+  end
 
   def save_associations
     disease_events << @disease

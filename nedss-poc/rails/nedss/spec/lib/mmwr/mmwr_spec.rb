@@ -4,8 +4,14 @@ require 'date'
 describe Mmwr do
   
   it "should handle bogus constructor args" do
-    lambda {Mmwr.new(String.new)}.should raise_error(ArgumentError, "Mmwr initialize only handles Hash or DateTime")
+    lambda {Mmwr.new(String.new)}.should raise_error(ArgumentError, "Mmwr initialize only handles Hash or Date")
   end  
+  
+  it "should calculate week and year for empty constructor" do
+    @mmwr = Mmwr.new
+    @mmwr.mmwr_week
+    @mmwr.mmwr_year    
+  end      
 
   it "should be onsetdate" do
     epi_dates = { :onsetdate => DateTime.now}
@@ -18,7 +24,10 @@ describe Mmwr do
     @mmwr = Mmwr.new(epi_dates)
     @mmwr.epi_date_used.should == :onsetdate
   end
-
+  it "should be unknown for no-arg constructor" do
+    @mmwr = Mmwr.new
+    @mmwr.epi_date_used.should == :unknown
+  end
   it "should be labresultdate" do
     epi_dates = { :firstreportdate => DateTime.now, :labresultdate => DateTime.now }
     @mmwr = Mmwr.new(epi_dates)
@@ -41,24 +50,7 @@ describe Mmwr do
     @mmwr = Mmwr.new(DateTime.new)
     @mmwr.epi_date_used.should == :unknown
   end  
-  
-  it "should be unknown for no-arg constructor" do
-    @mmwr = Mmwr.new
-    @mmwr.epi_date_used.should == :unknown
-  end    
-  
-  it "should be :first_week" do
-    epi_dates = { :onsetdate => DateTime.new(2008, 1, 1) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.year_first_mmwr_week.should == :first_week
-  end
-  
-  it "should be :second_week" do
-    epi_dates = { :onsetdate => DateTime.new(2009, 1, 1) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.year_first_mmwr_week.should == :second_week
-  end      
-
+    
   it "should be 1 for Jan 01 2008" do 
     epi_dates = { :onsetdate => DateTime.new(2008, 1, 1) }
     @mmwr = Mmwr.new(epi_dates)
@@ -119,14 +111,18 @@ describe Mmwr do
   end   
   
   it "should be week 1 for Jan 7 2006" do
-    Mmwr.new(DateTime.new(2006, 1, 07)).mmwr_week.should == 1
+    Mmwr.new(Date.new(2006, 1, 07)).mmwr_week.should == 1
   end    
   
   it "should be week 52 for Dec 30 2006" do
-    Mmwr.new(DateTime.new(2006, 12, 30)).mmwr_week.should == 52
+    Mmwr.new(Date.new(2006, 12, 30)).mmwr_week.should == 52
   end     
   
   it "should be week 1 for Jan 5 2007" do
-    Mmwr.new(DateTime.new(2007, 1, 05)).mmwr_week.should == 1
+    Mmwr.new(Date.new(2007, 1, 05)).mmwr_week.should == 1
   end       
+  
+  it "should be year 2008, week 7 for Feb 16, 2008" do
+    Mmwr.new(Date.new(2008, 2, 16)).mmwr_week.should == 7
+  end
 end

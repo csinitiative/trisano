@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 10) do
+ActiveRecord::Schema.define(:version => 11) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -126,8 +126,9 @@ ActiveRecord::Schema.define(:version => 10) do
     t.datetime "review_completed_UDOH_date"
     t.datetime "first_reported_PH_date"
     t.datetime "results_reported_to_clinician_date"
-    t.integer  "MMWR"
     t.string   "record_number",                      :limit => 20
+    t.integer  "MMWR_week"
+    t.integer  "MMWR_year"
   end
 
   create_table "hospitals_participations", :force => true do |t|
