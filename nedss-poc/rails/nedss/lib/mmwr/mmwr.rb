@@ -1,6 +1,5 @@
 require 'date'
 
-
 class Mmwr
 
   # Accepts no-arg (defaults to DateTime.now), 1 DateTime, or a Hash of 
@@ -47,9 +46,12 @@ class Mmwr
     mmwr_week_range.mmwr_week.to_i
   end  
   
+  def mmwr_year
+    mmwr_week_range.mmwr_year.to_i
+  end
+  
   # Returns the MmwrDateRange that is in range.
   def mmwr_week_range    
-    #TODO this could just be called by initialize and make this part private, expose the range via accessor     
     mmwr_date_range = nil
     @ranges.sort.each do | k, range | 
       #puts "#{range.to_s} in_range: #{range.in_range(@epi_date)}"

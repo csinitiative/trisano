@@ -18,6 +18,8 @@ class LabEvent < ActiveRecord::Base
 
   before_validation :save_associations
   after_validation :clear_base_error
+  
+  before_save :generate_record_id
 
   def disease
     @disease || disease_events.last
@@ -36,6 +38,11 @@ class LabEvent < ActiveRecord::Base
   end
 
   private
+  
+  def generate_record_id
+    t = Time.now    
+    self.record_number = RecordId.new(Date.new(t.year, t.month, t.day), 5).value    
+  end  
 
   def save_associations
     disease_events << @disease
