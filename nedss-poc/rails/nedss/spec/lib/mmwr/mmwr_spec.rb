@@ -8,86 +8,102 @@ describe Mmwr do
   end  
   
   it "should calculate week and year for empty constructor" do
-    @mmwr = Mmwr.new
-    @mmwr.mmwr_week
-    @mmwr.mmwr_year    
+    mmwr = Mmwr.new
+    mmwr.mmwr_week
+    mmwr.mmwr_year    
   end      
 
   it "should be onsetdate" do
     epi_dates = { :onsetdate => DateTime.now}
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :onsetdate
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :onsetdate
   end
 
   it "should be onsetdate" do
     epi_dates = { :onsetdate => DateTime.now, :diagnosisdate => DateTime.now }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :onsetdate
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :onsetdate
   end
   it "should be unknown for no-arg constructor" do
-    @mmwr = Mmwr.new
-    @mmwr.epi_date_used.should == :unknown
+    mmwr = Mmwr.new
+    mmwr.epi_date_used.should == :unknown
   end
   it "should be labresultdate" do
     epi_dates = { :firstreportdate => DateTime.now, :labresultdate => DateTime.now }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :labresultdate
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :labresultdate
   end
 
   it "should be diagnosisdate" do
     epi_dates = { :diagnosisdate => DateTime.now, :labresultdate => DateTime.now }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :diagnosisdate
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :diagnosisdate
   end
 
+  it "should be labresultdate when diagnosisdate hash value is nil" do
+    epi_dates = { :diagnosisdate => nil, :labresultdate => DateTime.now }
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :labresultdate
+  end
+  
+  it "should not fail with all nil dates" do
+    epi_dates = { :onsetdate => nil, 
+      :diagnosisdate => nil, 
+      :labresultdate => nil, 
+      :firstreportdate => nil }
+    mmwr = Mmwr.new(epi_dates)  
+    mmwr.mmwr_week
+    mmwr.mmwr_year        
+  end
+  
   it "should be firstreportdate" do
     epi_dates = { :firstreportdate => DateTime.now }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.epi_date_used.should == :firstreportdate
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.epi_date_used.should == :firstreportdate
   end
   
   it "should be unknown for a provided DateTime" do
-    @mmwr = Mmwr.new(DateTime.new)
-    @mmwr.epi_date_used.should == :unknown
+    mmwr = Mmwr.new(DateTime.new)
+    mmwr.epi_date_used.should == :unknown
   end  
     
   it "should be 1 for Jan 01 2008" do 
     epi_dates = { :onsetdate => DateTime.new(2008, 1, 1) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.mmwr_week.should == 1
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.mmwr_week.should == 1
   end
 
   it "should be 2 for Jan 06 2008" do
     epi_dates = { :onsetdate => DateTime.new(2008, 1, 6) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.mmwr_week.should == 2
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.mmwr_week.should == 2
   end
 
   it "should be 53 for Dec 31 2008" do 
     epi_dates = { :onsetdate => DateTime.new(2008, 12, 31) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.mmwr_week.should == 53
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.mmwr_week.should == 53
   end
 
   it "should be year 2008 week 53 for Jan 01 2009" do     
     epi_dates = { :onsetdate => DateTime.new(2009, 1, 1) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.mmwr_week.should == 53
-    @mmwr.mmwr_year.should == 2008
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.mmwr_week.should == 53
+    mmwr.mmwr_year.should == 2008
   end
   
   it "should be year 2009 week 53 for Dec 26 2009" do     
     epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
-    @mmwr = Mmwr.new(epi_dates)    
-    @mmwr.mmwr_week.should == 51
-    @mmwr.mmwr_year.should == 2009     
+    mmwr = Mmwr.new(epi_dates)    
+    mmwr.mmwr_week.should == 51
+    mmwr.mmwr_year.should == 2009     
   end
   
   it "should be year 2009 week 52 for Jan 02 2010" do     
     epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
-    @mmwr = Mmwr.new(epi_dates)
-    @mmwr.mmwr_week.should == 51
-    @mmwr.mmwr_year.should == 2009   
+    mmwr = Mmwr.new(epi_dates)
+    mmwr.mmwr_week.should == 51
+    mmwr.mmwr_year.should == 2009   
   end  
   
   it "should be week 27 for Jul 7 2009" do

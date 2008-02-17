@@ -40,15 +40,17 @@ class LabEvent < ActiveRecord::Base
   private
   
   def generate_record_id
-    t = Time.now    
-    self.record_number = RecordId.new(Date.new(t.year, t.month, t.day), 5).value    
+    #TODO need to get last RecordID
+    t = Time.now        
+    self.record_number = RecordId.new(Date.new(t.year, t.month, t.day), rand(99999)).value    
   end  
   
   def generate_mmwr
-    #epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
-    #mmwr = Mmwr.new(epi_dates)
-    #TODO need to do it like above, but with the full gammet of dates
-    mmwr = Mmwr.new
+    epi_dates = { :onsetdate => @disease.disease_onset_date, 
+      :diagnosisdate => @disease.date_diagnosed, 
+      :labresultdate => @lab_result.lab_test_date, 
+      :firstreportdate => self.first_reported_PH_date }
+    mmwr = Mmwr.new(epi_dates)
     
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year

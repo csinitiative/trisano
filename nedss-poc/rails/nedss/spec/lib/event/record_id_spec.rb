@@ -47,6 +47,16 @@ describe RecordId do
   it "should be 1999654321 for the 54,321th HARS record entered in 1999" do
     RecordId.new(Date.new(1999, 1, 1), 54321, :hars).value.should == "1999654321"
   end
-
+  
+  it "should work with a random number" do
+    random = rand(99999)
+    expected = "1999" +"6" + random.to_s
+    RecordId.new(Date.new(1999, 1, 1), 54321, :hars).value.should == "1999654321"
+  end
+  
+  it "should handle numbers that are too large" do
+    #TODO
+    pending
+  end
 end
 

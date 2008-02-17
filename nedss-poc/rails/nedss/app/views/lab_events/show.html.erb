@@ -3,18 +3,25 @@
 <legend>Lab Event</legend>  
 <table cellpadding="2">
 <tr>
-  <td><%= label(:lab_event, :event_onset_date) %></td>
-  <td><%= @lab_event.event_onset_date %></td>
-  <td><%= label(:lab_event, :event_name) %></td>
-  <td><%= @lab_event.event_name %></td>
+  <td><%= label(:@lab_event, :record_number) %></td>
   <td><%= @lab_event.record_number %></td>
+  <td><%= label(:lab_event, :event_name) %></td>
+  <td><%= @lab_event.event_name %></td>  
 </tr>
 <tr>
+  <td><%= label(:lab_event, :event_onset_date) %></td>
+  <td><%= @lab_event.event_onset_date %></td>
   <td><%= label(:lab_event, :disease_id, "Disease") %></td>
   <td><%= @lab_event.disease.disease.disease_name %></td>
   <td><%= label(:lab_event, :specimen_source, "Tested") %></td>
   <td><%= l @lab_event.lab_result.specimen_source %></td>
   <td><%= label(:lab_event, :lab_result_text, "Found") %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :MMWR_year) %></td>
+  <td><%= @lab_event.MMWR_year %></td>
+  <td><%= label(:lab_event, :MMWR_week) %></td>
+  <td><%= @lab_event.MMWR_week %></td>
 </tr>
 </table>
 </fieldset>

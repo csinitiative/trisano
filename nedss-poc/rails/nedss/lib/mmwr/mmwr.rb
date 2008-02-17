@@ -18,7 +18,14 @@ class Mmwr
       
       if arg0.is_a?(Hash)
         @epi_dates = arg0
-        @epi_date = @epi_dates[epi_date_used]
+        
+        if nil != @epi_dates[epi_date_used] 
+          @epi_date = @epi_dates[epi_date_used]
+        elsif
+          t = Time.now
+          @epi_date = Date.new(t.year, t.month, t.day)          
+        end
+        
       end
       
       if arg0.is_a?(Date)
@@ -69,13 +76,13 @@ class Mmwr
   def epi_date_used
     return :unknown if @epi_dates == nil
     
-    if @epi_dates.has_key? :onsetdate
+    if (@epi_dates.has_key? :onsetdate) && (nil != @epi_dates[:onsetdate])
       :onsetdate
-    elsif @epi_dates.has_key? :diagnosisdate
+    elsif (@epi_dates.has_key? :diagnosisdate) && (nil != @epi_dates[:diagnosisdate])
       :diagnosisdate
-    elsif @epi_dates.has_key? :labresultdate
+    elsif (@epi_dates.has_key? :labresultdate) && (nil != @epi_dates[:labresultdate])
       :labresultdate
-    elsif @epi_dates.has_key? :firstreportdate
+    elsif (@epi_dates.has_key? :firstreportdate) && (nil != @epi_dates[:firstreportdate])
       :firstreportdate
     else
       :unknown
