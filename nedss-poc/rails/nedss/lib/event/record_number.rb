@@ -1,5 +1,4 @@
-# 
-# The Record ID format for an entity.
+# The Record Number format for an event.
 # 
 # YYYYTNNNNN
 #
@@ -20,34 +19,33 @@
 # 2008000005 - 5th NEDSS record entered in 2008; record entered directly into NEDSS
 # 2008900005 - 5th NETSS record entered in 2008; NETSS number 0005
 #
-
-class RecordId    
+class RecordNumber    
 
   def initialize(*args)    
     
     case args.size
         
     when 1
-      raise ArgumentError, "RecordId: Expected Integer" if !args[0].is_a?(Integer)
+      raise ArgumentError, "RecordNumber: Expected Integer" if !args[0].is_a?(Integer)
       @count = args[0]
       t = Time.now
       @year = Date.new(t.year, t.month, t.day)
       @system = :nedss
     when 2
-      raise ArgumentError, "RecordId: Expected Date" if !args[0].is_a?(Date)
-      raise ArgumentError, "RecordId: Expected Integer" if !args[1].is_a?(Integer)
+      raise ArgumentError, "RecordNumber: Expected Date" if !args[0].is_a?(Date)
+      raise ArgumentError, "RecordNumber: Expected Integer" if !args[1].is_a?(Integer)
       @year = args[0]
       @count = args[1]
       @system = :nedss
     when 3
-      raise ArgumentError, "RecordId: Expected Date" if !args[0].is_a?(Date)
-      raise ArgumentError, "RecordId: Expected Integer" if !args[1].is_a?(Integer)
-      raise ArgumentError, "RecordId: Expected Symbol" if !args[2].is_a?(Symbol)
+      raise ArgumentError, "RecordNumber: Expected Date" if !args[0].is_a?(Date)
+      raise ArgumentError, "RecordNumber: Expected Integer" if !args[1].is_a?(Integer)
+      raise ArgumentError, "RecordNumber: Expected Symbol" if !args[2].is_a?(Symbol)
       @year = args[0]
       @count = args[1]      
       @system = args[2]
     else
-      raise ArgumentError, "RecordId initialize takes 1, 2, or 3 arguments."
+      raise ArgumentError, "RecordNumber initialize takes 1, 2, or 3 arguments."
     end
     
   end

@@ -1,6 +1,12 @@
 <fieldset>
 <legend>Lab Event Information</legend>  
 <table cellpadding="2">
+  <% if not @lab_event.record_number.blank? %>
+  <tr>
+    <td><%= label(:@lab_event, :record_number) %></td>
+    <td><%= @lab_event.record_number %></td>
+  </tr>
+  <% end %>
   <tr>
     <td><%= f.label(:event_onset_date) %></td>
     <td><%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now, :tabindex => 2) %></td>

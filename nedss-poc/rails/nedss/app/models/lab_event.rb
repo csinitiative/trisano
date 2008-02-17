@@ -40,9 +40,11 @@ class LabEvent < ActiveRecord::Base
   private
   
   def generate_record_id
-    #TODO need to get last RecordID
-    t = Time.now        
-    self.record_number = RecordId.new(Date.new(t.year, t.month, t.day), rand(99999)).value    
+    #TODO need to get last RecordNumber
+    if self.record_number.blank?
+      t = Time.now        
+      self.record_number = RecordNumber.new(Date.new(t.year, t.month, t.day), rand(99999)).value    
+    end
   end  
   
   def generate_mmwr

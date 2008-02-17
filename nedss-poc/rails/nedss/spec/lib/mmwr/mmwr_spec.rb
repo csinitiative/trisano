@@ -3,6 +3,11 @@ require 'date'
 
 describe Mmwr do
   
+  before(:each) do
+    t = Time.now
+    @now = Date.new(t.year, t.month, t.day) 
+  end
+          
   it "should handle bogus constructor args" do
     lambda {Mmwr.new(String.new)}.should raise_error(ArgumentError, "Mmwr initialize only handles Hash or Date")
   end  
@@ -14,13 +19,13 @@ describe Mmwr do
   end      
 
   it "should be onsetdate" do
-    epi_dates = { :onsetdate => DateTime.now}
+    epi_dates = { :onsetdate => @now}
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :onsetdate
   end
 
   it "should be onsetdate" do
-    epi_dates = { :onsetdate => DateTime.now, :diagnosisdate => DateTime.now }
+    epi_dates = { :onsetdate => @now, :diagnosisdate => @now }
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :onsetdate
   end
@@ -29,19 +34,19 @@ describe Mmwr do
     mmwr.epi_date_used.should == :unknown
   end
   it "should be labresultdate" do
-    epi_dates = { :firstreportdate => DateTime.now, :labresultdate => DateTime.now }
+    epi_dates = { :firstreportdate => @now, :labresultdate => @now }
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :labresultdate
   end
 
   it "should be diagnosisdate" do
-    epi_dates = { :diagnosisdate => DateTime.now, :labresultdate => DateTime.now }
+    epi_dates = { :diagnosisdate => @now, :labresultdate => @now }
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :diagnosisdate
   end
 
   it "should be labresultdate when diagnosisdate hash value is nil" do
-    epi_dates = { :diagnosisdate => nil, :labresultdate => DateTime.now }
+    epi_dates = { :diagnosisdate => nil, :labresultdate => @now }
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :labresultdate
   end
@@ -57,50 +62,50 @@ describe Mmwr do
   end
   
   it "should be firstreportdate" do
-    epi_dates = { :firstreportdate => DateTime.now }
+    epi_dates = { :firstreportdate => @now }
     mmwr = Mmwr.new(epi_dates)
     mmwr.epi_date_used.should == :firstreportdate
   end
   
   it "should be unknown for a provided DateTime" do
-    mmwr = Mmwr.new(DateTime.new)
+    mmwr = Mmwr.new(@now)
     mmwr.epi_date_used.should == :unknown
   end  
     
   it "should be 1 for Jan 01 2008" do 
-    epi_dates = { :onsetdate => DateTime.new(2008, 1, 1) }
+    epi_dates = { :onsetdate => Date.new(2008, 1, 1) }
     mmwr = Mmwr.new(epi_dates)
     mmwr.mmwr_week.should == 1
   end
 
   it "should be 2 for Jan 06 2008" do
-    epi_dates = { :onsetdate => DateTime.new(2008, 1, 6) }
+    epi_dates = { :onsetdate => Date.new(2008, 1, 6) }
     mmwr = Mmwr.new(epi_dates)
     mmwr.mmwr_week.should == 2
   end
 
   it "should be 53 for Dec 31 2008" do 
-    epi_dates = { :onsetdate => DateTime.new(2008, 12, 31) }
+    epi_dates = { :onsetdate => Date.new(2008, 12, 31) }
     mmwr = Mmwr.new(epi_dates)
     mmwr.mmwr_week.should == 53
   end
 
   it "should be year 2008 week 53 for Jan 01 2009" do     
-    epi_dates = { :onsetdate => DateTime.new(2009, 1, 1) }
+    epi_dates = { :onsetdate => Date.new(2009, 1, 1) }
     mmwr = Mmwr.new(epi_dates)
     mmwr.mmwr_week.should == 53
     mmwr.mmwr_year.should == 2008
   end
   
   it "should be year 2009 week 53 for Dec 26 2009" do     
-    epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
+    epi_dates = { :onsetdate => Date.new(2009, 12, 26) }
     mmwr = Mmwr.new(epi_dates)    
     mmwr.mmwr_week.should == 51
     mmwr.mmwr_year.should == 2009     
   end
   
   it "should be year 2009 week 52 for Jan 02 2010" do     
-    epi_dates = { :onsetdate => DateTime.new(2009, 12, 26) }
+    epi_dates = { :onsetdate => Date.new(2009, 12, 26) }
     mmwr = Mmwr.new(epi_dates)
     mmwr.mmwr_week.should == 51
     mmwr.mmwr_year.should == 2009   
