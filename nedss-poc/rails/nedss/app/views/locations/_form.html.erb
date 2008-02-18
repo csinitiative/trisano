@@ -1,7 +1,7 @@
 <fieldset>
   <legend>Address Information</legend>  
   <% f.fields_for(:entities_location, location_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
-  <%= el.hidden_field(:entity_id) unless @entity.new_record? %>
+  <%= el.hidden_field(:entity_id) %>
   <table cellpadding="2">
     <tr>
       <td>

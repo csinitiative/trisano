@@ -25,8 +25,7 @@ class Entity < ActiveRecord::Base
 
   before_validation :save_entity_associations
   after_validation :clear_base_error
-
-  validates_associated :entities_locations
+  after_save :save_location_info
 
   def person
     @person || current_person
@@ -73,10 +72,10 @@ class Entity < ActiveRecord::Base
 
   private
 
-#  def validate
-#    address.valid? unless Utilities::model_empty?(address)
-#    telephone.valid? unless Utilities::model_empty?(telephone)
-#  end
+  def validate
+    errors.add(:address) unless address.valid? unless Utilities::model_empty?(address)
+    errors.add(:telephone) unless telephone.valid? unless Utilities::model_empty?(telephone)
+  end
 
   def set_entity_type(record)
     self.entity_type = record.class.name.downcase
@@ -89,19 +88,19 @@ class Entity < ActiveRecord::Base
 
     # More 'when' clauses as needed
     end
+  end
 
+  def save_location_info
     if not (Utilities::model_empty?(address) and Utilities::model_empty?(telephone))
-      l = Location.new
-      l.addresses << address unless Utilities::model_empty?(address)
-      l.telephones << telephone unless Utilities::model_empty?(telephone)
-      entities_location.location = l
-      entities_locations << entities_location
+      entities_location.entity_id = id
+      l= Location.new(:entities_location => entities_location.attributes, :address => address.attributes, :telephone => telephone.attributes)
+      l.save
     end
   end
 
   def clear_base_error
     errors.delete(:people)
-    errors.delete(:entities_locations)
-    entities_location.errors.delete(:location) unless entities_location.nil?
+    errors.delete(:telephone)
+    errors.delete(:address)
   end
 end

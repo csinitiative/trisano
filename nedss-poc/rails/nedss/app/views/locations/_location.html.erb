@@ -14,12 +14,13 @@
 <%= fml " : ", l(a.district), " district" -%>
 <% end %>
     </td>
+    <td>
   <% if not p.nil? %>
-    <td>Phone: <%= fml "(", p.area_code, ") " if p.area_code -%>
+    Phone: <%= fml "(", p.area_code, ") " if p.area_code -%>
 <%= phone_number(p.phone_number) -%>
 <%= fml " Ext. ", p.extension, "" if p.extension -%>
-    </td>
   <% end %>
+    </td>
   <td><%= link_to 'Edit', edit_entity_location_path(@entity, location) %></td>
   <td><%= link_to 'Destroy', entity_location_path(@entity, location), :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>
