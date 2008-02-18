@@ -13,9 +13,38 @@
   <td><%= @lab_event.event_onset_date %></td>
   <td><%= label(:lab_event, :disease_id, "Disease") %></td>
   <td><%= @lab_event.disease.disease.disease_name %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :disease_onset_date) %></td>
+  <td><%= @lab_event.disease.disease_onset_date %></td>
+  <td><%= label(:lab_event, :date_diagnosed) %></td>
+  <td><%= @lab_event.disease.date_diagnosed %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :hospitalized) %></td>
+  <td><%= l @lab_event.disease.hospitalized %></td>
+  <td><%= label(:lab_event, :died) %></td>
+  <td><%= l @lab_event.disease.died %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :pregnant) %></td>
+  <td><%= l @lab_event.disease.pregnant %></td>
+  <td><%= label(:lab_event, :pregnancy_due_date) %></td>
+  <td><%= @lab_event.disease.pregnancy_due_date %></td>
+</tr>
+<tr>
   <td><%= label(:lab_event, :specimen_source, "Tested") %></td>
   <td><%= l @lab_event.lab_result.specimen_source %></td>
   <td><%= label(:lab_event, :lab_result_text, "Found") %></td>
+  <td><%= @lab_event.lab_result.lab_result_text %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :collection_date) %></td>
+  <td><%= @lab_event.lab_result.collection_date %></td>
+  <td><%= label(:lab_event, :lab_test_date) %></td>
+  <td><%= @lab_event.lab_result.lab_test_date %></td>
+  <td><%= label(:lab_event, :tested_at_uphl_yn, "Tested at UPHL lab") %></td>
+  <td><%= l @lab_event.lab_result.tested_at_uphl_yn %></td>
 </tr>
 <tr>
   <td><%= label(:lab_event, :MMWR_year) %></td>
