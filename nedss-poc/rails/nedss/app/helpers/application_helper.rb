@@ -13,6 +13,8 @@ module ApplicationHelper
       number = number[0,3] + "-" + number[3,4]
     elsif number =~ /\d{3}-\d{4}/
       number
+    elsif number == ""
+      ""
     else
       "! "+number
     end

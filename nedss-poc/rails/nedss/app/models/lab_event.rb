@@ -37,6 +37,13 @@ class LabEvent < ActiveRecord::Base
     @lab_result = LabResult.new(attributes)
   end
 
+  def participation
+    @participation || pariticpations.last
+  end
+
+  def participation=(attributes)
+    @participation = Participation.new(attributes)
+  end
   private
   
   def generate_record_id
@@ -61,10 +68,12 @@ class LabEvent < ActiveRecord::Base
   def save_associations
     disease_events << @disease
     lab_results << @lab_result
+    participations << @participation # unless (Utilities::model_empty?(participation.entity_primary.address) or Utilities::model_empty?(participation.entity_primary.telephone))
   end
 
   def clear_base_error
     errors.delete(:disease_events)
     errors.delete(:lab_results)
+    errors.delete(:participations)
   end
 end

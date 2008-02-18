@@ -16,8 +16,10 @@ class LabEventsController < ApplicationController
   # GET /labevent/1
   # GET /labevent/1.xml
   def show
+    @lab_event = LabEvent.find(params[:id])
+
     respond_to do |format|
-      format.html {@lab_event = LabEvent.find(params[:id])}# show.html.erb
+      format.html # show.html.erb
       format.xml  { render :xml => @person }
     end
   end
@@ -25,7 +27,10 @@ class LabEventsController < ApplicationController
   # GET /labevent/new
   # GET /labevent/new.xml
   def new
-    @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), :disease => {}, :lab_result => {})
+    # @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), :disease => {}, :lab_result => {})
+    @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), :disease => {}, :lab_result => {},
+                              :participation => { :entity_primary => { :person => {}, :entities_location => {},
+                              :address => {}, :telephone => {} } })
 
     respond_to do |format|
       format.html # new.html.erb

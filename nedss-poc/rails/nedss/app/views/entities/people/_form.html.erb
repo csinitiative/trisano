@@ -1,7 +1,7 @@
 <fieldset>
 <legend>Person Information</legend>  
 <%= f.hidden_field(:entity_type) %>
-<% f.fields_for(:person, @entity.person, :builder => ExtendedFormBuilder) do |p| %>
+<% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
 <table cellpadding="2">
   <tr>
     <td><%= p.label(:last_name) %></td>

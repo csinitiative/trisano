@@ -63,7 +63,7 @@
     <table cellpadding="2">
     <% for participant in @lab_event.participations %>
       <tr>
-        <td><%=link_to "#{participant.person_entity.current.last_name}" +"," + "#{participant.person_entity.current.first_name}", person_path(participant.person_entity) %></td>
+        <td><%=link_to "#{participant.primary_entity.current_person.last_name}" +"," + "#{participant.primary_entity.current_person.first_name}", entity_path(participant.primary_entity) %></td>
         <td>Removing an association is not yet activated</td>
       <tr>
     <% end %>

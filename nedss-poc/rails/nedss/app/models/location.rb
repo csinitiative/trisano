@@ -17,6 +17,7 @@ class Location < ActiveRecord::Base
   before_validation :save_associations
   after_validation :clear_base_error
   after_update :update_entities_locations
+  after_validation_on_update :clear_associated_errors
 
   def primary?
     @primary
@@ -79,5 +80,9 @@ class Location < ActiveRecord::Base
     errors.delete(:entities_locations)
     errors.delete(:addresses)
     errors.delete(:telephones)
+  end
+
+  def clear_associated_errors
+    telephone.errors.delete(:phone_number) if Utilities::model_empty?(telephone)
   end
 end
