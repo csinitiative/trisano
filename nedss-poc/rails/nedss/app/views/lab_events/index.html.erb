@@ -3,7 +3,11 @@
 <table>
 <% for lab_event in @lab_events %>
   <tr>
-    <td><%= lab_event.record_number %> <%= lab_event.event_name %>, <%= lab_event.event_onset_date %> <%= l lab_event.event_status %> </td>
+    <td><%= lab_event.record_number -%>
+<%= fml(", ", lab_event.event_onset_date.to_s, "") -%>
+<%= fml(", ", lab_event.event_name, "") if lab_event.event_name -%>
+<%= fml(", ", l(lab_event.event_status), "") if lab_event.event_status %>
+    </td>
     <td><%= link_to 'Show', lab_event_path(lab_event) %></td>
     <td><%= link_to 'Edit', edit_lab_event_path(lab_event) %></td>
     <td><%= link_to 'Destroy', lab_event_path(lab_event), :confirm => 'Are you sure?', :method => :delete %></td>
