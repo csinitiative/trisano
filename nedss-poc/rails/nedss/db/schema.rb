@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 11) do
+ActiveRecord::Schema.define(:version => 12) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -121,11 +121,11 @@ ActiveRecord::Schema.define(:version => 11) do
     t.integer  "outbreak_associated_id"
     t.string   "outbreak_name"
     t.integer  "investigation_LHD_status_id"
-    t.datetime "investigation_started_date"
-    t.datetime "investigation_completed_LHD_date"
-    t.datetime "review_completed_UDOH_date"
-    t.datetime "first_reported_PH_date"
-    t.datetime "results_reported_to_clinician_date"
+    t.date     "investigation_started_date"
+    t.date     "investigation_completed_LHD_date"
+    t.date     "review_completed_UDOH_date"
+    t.date     "first_reported_PH_date"
+    t.date     "results_reported_to_clinician_date"
     t.string   "record_number",                      :limit => 20
     t.integer  "MMWR_week"
     t.integer  "MMWR_year"
@@ -179,8 +179,8 @@ ActiveRecord::Schema.define(:version => 11) do
     t.integer  "organization_type_id"
     t.integer  "organization_status_id"
     t.string   "organization_name",      :limit => 50
-    t.datetime "duration_start_date"
-    t.datetime "duration_end_date"
+    t.date     "duration_start_date"
+    t.date     "duration_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

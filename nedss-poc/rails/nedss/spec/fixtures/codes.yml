@@ -218,3 +218,141 @@ specimen_tissue:
   the_code: "T"
   code_description: "Tissue"
 
+investigation_status_unknown:
+  id: 1701
+  code_name: "investigation"
+  the_code: "U"
+  code_description: "Unknown"
+
+investigation_status_nyo:
+  id: 1702
+  code_name: "investigation"
+  the_code: "NYO"
+  code_description: "Not Yet Open"
+
+investigation_status_open:
+  id: 1703
+  code_name: "investigation"
+  the_code: "O"
+  code_description: "Open"
+
+investigation_status_closed:
+  id: 1704
+  code_name: "investigation"
+  the_code: "C"
+  code_description: "Closed"
+
+case_status_unknown:
+  id: 1801
+  code_name: "case"
+  the_code: "U"
+  code_description: "Unknown"
+
+case_status_confirmed:
+  id: 1802
+  code_name: "case"
+  the_code: "C"
+  code_description: "Confirmed"
+
+case_status_probable:
+  id: 1803
+  code_name: "case"
+  the_code: "P"
+  code_description: "Probable"
+
+case_status_suspect:
+  id: 1804
+  code_name: "case"
+  the_code: "S"
+  code_description: "Suspect"
+
+case_status_notcase:
+  id: 1805
+  code_name: "case"
+  the_code: "NC"
+  code_description: "Not Case"
+
+case_status_chroniccarrier:
+  id: 1806
+  code_name: "case"
+  the_code: "CC"
+  code_description: "Chronic Carrier"
+
+case_status_discarded:
+  id: 1807
+  code_name: "case"
+  the_code: "D"
+  code_description: "Discarded"
+
+event_status_open:
+  id: 1901
+  code_name: "eventstatus"
+  the_code: "O"
+  code_description: "Open"
+
+event_status_closed:
+  id: 1902
+  code_name: "eventstatus"
+  the_code: "C"
+  code_description: "Closed"
+
+event_type_ons:
+  id: 2001
+  code_name: "eventtype"
+  the_code: "ONS"
+  code_description: "ONS"
+
+event_type_diag:
+  id: 2002
+  code_name: "eventtype"
+  the_code: "DIAG"
+  code_description: "Diag"
+
+event_type_lt:
+  id: 2003
+  code_name: "eventtype"
+  the_code: "LT"
+  code_description: "LT"
+
+event_type_rc:
+  id: 2004
+  code_name: "eventtype"
+  the_code: "RC"
+  code_description: "RC"
+
+event_type_rs:
+  id: 2005
+  code_name: "eventtype"
+  the_code: "RS"
+  code_description: "RS"
+
+event_type_un:
+  id: 2006
+  code_name: "eventtype"
+  the_code: "UN"
+  code_description: "RS"
+
+imported_from_unknown:
+  id: 2101
+  code_name: "imported"
+  the_code: "U"
+  code_description: "Unknown"
+
+imported_from_utah:
+  id: 2102
+  code_name: "imported"
+  the_code: "UT"
+  code_description: "Utah"
+
+imported_from_other_country:
+  id: 2103
+  code_name: "imported"
+  the_code: "F"
+  code_description: "Outside U.S."
+
+imported_from_other_state:
+  id: 2104
+  code_name: "imported"
+  the_code: "US"
+  code_description: "Other U.S. State"
+

@@ -5,6 +5,10 @@ class LabEvent < ActiveRecord::Base
 
   belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'Code'
+  belongs_to :imported_from, :class_name => 'Code'
+  belongs_to :event_case_status, :class_name => 'Code'
+  belongs_to :outbreak_associated, :class_name => 'Code'
+  belongs_to :investigation_LHD_status, :class_name => 'Code'
 
   # There are other codes too, but leaving them out for now
   # event_status, imported_from, event_case_status

@@ -3,7 +3,7 @@
 <legend>Lab Event</legend>  
 <table cellpadding="2">
 <tr>
-  <td><%= label(:@lab_event, :record_number) %></td>
+  <td><%= label(:lab_event, :record_number) %></td>
   <td><%= @lab_event.record_number %></td>
   <td><%= label(:lab_event, :event_name) %></td>
   <td><%= @lab_event.event_name %></td>  
@@ -13,6 +13,40 @@
   <td><%= @lab_event.event_onset_date %></td>
   <td><%= label(:lab_event, :disease_id, "Disease") %></td>
   <td><%= @lab_event.disease.disease.disease_name %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :event_type) %></td>
+  <td><%= l @lab_event.event_type %></td>
+  <td><%= label(:lab_event, :event_status) %></td>
+  <td><%= l @lab_event.event_status %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :imported_from) %></td>
+  <td><%= l @lab_event.imported_from %></td>
+  <td><%= label(:lab_event, :event_case_status) %></td>
+  <td><%= l @lab_event.event_case_status %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :outbreak_associated) %></td>
+  <td><%= l @lab_event.outbreak_associated %></td>
+  <td><%= label(:lab_event, :outbreak_name) %></td>
+  <td><%= @lab_event.outbreak_name %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :investigation_LHD_status) %></td>
+  <td><%= l @lab_event.investigation_LHD_status %></td>
+  <td><%= label(:lab_event, :investigation_started_date) %></td>
+  <td><%= @lab_event.investigation_started_date %></td>
+  <td><%= label(:lab_event, :investigation_completed_LHD_date) %></td>
+  <td><%= @lab_event.investigation_completed_LHD_date %></td>
+</tr>
+<tr>
+  <td><%= label(:lab_event, :review_completed_UDOH_date, "Review completed date") %></td>
+  <td><%= @lab_event.review_completed_UDOH_date %></td>
+  <td><%= label(:lab_event, :first_reported_PH_date, "First reported date") %></td>
+  <td><%= @lab_event.first_reported_PH_date %></td>
+  <td><%= label(:lab_event, :results_reported_to_clinician_date) %></td>
+  <td><%= @lab_event.results_reported_to_clinician_date %></td>
 </tr>
 <tr>
   <td><%= label(:lab_event, :disease_onset_date) %></td>
