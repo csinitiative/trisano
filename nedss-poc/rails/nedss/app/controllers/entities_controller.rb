@@ -15,6 +15,7 @@ class EntitiesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @entities }
+      format.csv
     end
   end
 
@@ -26,6 +27,7 @@ class EntitiesController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @entity }
+      format.csv
     end
   end
 
