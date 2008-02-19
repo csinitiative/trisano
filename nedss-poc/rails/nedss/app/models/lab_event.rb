@@ -68,7 +68,7 @@ class LabEvent < ActiveRecord::Base
   def save_associations
     disease_events << @disease
     lab_results << @lab_result
-    participations << @participation # unless (Utilities::model_empty?(participation.entity_primary.address) or Utilities::model_empty?(participation.entity_primary.telephone))
+    participations << @participation unless @participation.nil?
   end
 
   def clear_base_error
