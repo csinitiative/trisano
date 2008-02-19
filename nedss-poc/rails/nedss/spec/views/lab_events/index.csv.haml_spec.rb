@@ -2,8 +2,10 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/lab_events/index.csv.haml" do
   before(:each) do
-    lab_event_98 = mock_model(LabEvent, :event_name => 'Test', :event_onset_date => '2008-02-07', :event_status => 'Open')
-
+    lab_event_98 = mock_model(LabEvent, :event_name => 'Test', :event_onset_date => '2008-02-07', :event_status => 1901)
+    @event_status = mock_model(Code)
+    @event_status.stub!(:code_description).and_return('Open')
+    lab_event_98.stub!(:event_status).and_return(@event_status)
     assigns[:lab_events] = [lab_event_98]
   end
 
