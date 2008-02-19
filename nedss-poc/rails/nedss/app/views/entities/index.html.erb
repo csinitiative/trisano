@@ -19,5 +19,10 @@
     <%= link_to 'New ' + type.capitalize, new_entity_path(:type => type) %> | 
   <% end %>
 
+  <br />
+
+  <% for type in @valid_types %>
+    <%= link_to 'Export '+type.capitalize.pluralize+' to CSV', url_for(:action => 'index', :type => type, :format => 'csv') %> |
+  <% end %>
   <%= render :partial => 'entity_list', :locals => {:is_index => true} %>
 <% end %>
