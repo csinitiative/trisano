@@ -7,3 +7,15 @@ Groucho:
 Silvers:
    id: 2
    entity_type: "person"
+
+st_marys:
+   id: 3
+   entity_type: "place"
+
+beth_israel:
+   id: 4
+   entity_type: "place"
+
+general_hospital:
+   id: 5
+   entity_type: "place"

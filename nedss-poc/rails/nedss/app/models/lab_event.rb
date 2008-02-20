@@ -43,11 +43,15 @@ class LabEvent < ActiveRecord::Base
   end
 
   def participation
-    @participation || pariticpations.last
+    @participation || participations.last
   end
 
   def participation=(attributes)
-    @participation = Participation.new(attributes)
+    if new_record?
+      @participation = Participation.new(attributes)
+    else
+      participation.update_attributes(attributes)
+    end
   end
 
   private

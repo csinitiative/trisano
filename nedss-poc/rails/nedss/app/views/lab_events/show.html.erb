@@ -92,19 +92,40 @@
 <%= link_to 'Export to CSV', lab_event_path(@lab_event)+'.csv' %> |
 <%= link_to 'Back', lab_events_path %>
 
+<%# Currently makes some gross, simplifying assumptions: %>
+<%#  - the primary_entity is always a person: %>
+<%#  - the secondary entity is always a hospital: %>
 <fieldset>
   <legend>Associations</legend>
-  <% if ! @lab_event.participations.empty? %>
+  <% if not @lab_event.participations.empty? %>
     <table cellpadding="2">
     <% for participant in @lab_event.participations %>
+      <% for entity in [participant.primary_entity, participant.secondary_entity] %>
+        <% unless entity.nil? %>
+        <tr>
+          <% if entity.entity_type == 'person' %>
+            <% f_name = fml("' ", entity.current_person.first_name, "") unless entity.current_person.first_name.blank? %>
+            <% name = entity.current_person.last_name + f_name.to_s %>
+            <td>Person: <%=link_to name, entity_path(entity) %></td>
+          <% elsif entity.entity_type == 'place' %> 
+            <td>Place: 
+            <% if entity.places.last.is_hospital? %> 
+              Hospital:
+            <% end %>
+            <%= entity.places.last.name %></td>
+          <% end %>
+        </tr>
+        <% end %>
+      <% end %>
+      <% unless participant.hospitals_participation.nil? %>
       <tr>
-        <td><%=link_to "#{participant.primary_entity.current_person.last_name}" +"," + "#{participant.primary_entity.current_person.first_name}", entity_path(participant.primary_entity) %></td>
-        <td>Removing an association is not yet activated</td>
+        <td>Hospitalization data: Admitted: <%= participant.hospitals_participation.admission_date || 'Unknown' %> Discharged: <%= participant.hospitals_participation.discharge_date || 'Unknown' %></td>
       <tr>
+      <% end %>
     <% end %>
     </table>
   <% else %>
-    <p>No people are associated with this lab event</p>
+    <p>No entities are associated with this lab event</p>
   <% end %>
 </fieldset>
-<%= link_to 'Add an association', associations_lab_event_path(@lab_event) %>
+<%#= link_to 'Add an association', associations_lab_event_path(@lab_event) %>

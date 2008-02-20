@@ -1,0 +1,17 @@
+st_marys:
+  id: 1
+  name: "St. Mary's"
+  place_type_id: 2201
+  entity_id: 3
+
+beth_israel:
+  id: 2
+  name: "Beth Israel"
+  place_type_id: 2201
+  entity_id: 4
+
+general_hospital:
+  id: 3
+  name: "General Hospital"
+  place_type_id: 2201
+  entity_id: 5

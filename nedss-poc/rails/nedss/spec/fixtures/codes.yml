@@ -356,3 +356,8 @@ imported_from_other_state:
   the_code: "US"
   code_description: "Other U.S. State"
 
+place_type_hospital:
+  id: 2201
+  code_name: "placetype"
+  the_code: "H"
+  code_description: "Hospital"

@@ -28,10 +28,17 @@ class LabEventsController < ApplicationController
   # GET /labevent/new
   # GET /labevent/new.xml
   def new
-    # @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), :disease => {}, :lab_result => {})
-    @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), :disease => {}, :lab_result => {},
-                              :participation => { :entity_primary => { :person => {}, :entities_location => {},
-                              :address => {}, :telephone => {} } })
+    @lab_event = LabEvent.new(:event_onset_date => Chronic.parse('today'), 
+                              :disease => {}, 
+                              :lab_result => {},
+                              :participation => { :entity_primary => { :person => {}, 
+                                                                       :entities_location => {}, 
+                                                                       :address => {}, 
+                                                                       :telephone => {} 
+                                                                     }, 
+                                                  :hospitals_participation => {}
+                                                }
+                             )
 
     respond_to do |format|
       format.html # new.html.erb
