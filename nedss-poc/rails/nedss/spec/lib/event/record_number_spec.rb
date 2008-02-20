@@ -54,9 +54,5 @@ describe RecordNumber do
     RecordNumber.new(Date.new(1999, 1, 1), random, :hars).value.should == expected
   end
   
-  it "should handle numbers that are too large" do
-    #TODO
-    pending
-  end
 end
 

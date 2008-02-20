@@ -23,7 +23,8 @@ class LabEvent < ActiveRecord::Base
   before_validation :save_associations
   after_validation :clear_base_error
   
-  before_save :generate_record_id, :generate_mmwr
+  before_save :generate_mmwr
+  before_create :set_record_number
 
   def disease
     @disease || disease_events.last
@@ -48,15 +49,14 @@ class LabEvent < ActiveRecord::Base
   def participation=(attributes)
     @participation = Participation.new(attributes)
   end
+
   private
   
-  def generate_record_id
-    #TODO need to get last RecordNumber
-    if self.record_number.blank?
-      t = Time.now        
-      self.record_number = RecordNumber.new(Date.new(t.year, t.month, t.day), rand(99999)).value    
-    end
-  end  
+  def set_record_number
+    customer_number_sequence = 'events_record_number_seq'
+    record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
+    self.record_number = record_number
+  end
   
   def generate_mmwr
     epi_dates = { :onsetdate => @disease.disease_onset_date, 
