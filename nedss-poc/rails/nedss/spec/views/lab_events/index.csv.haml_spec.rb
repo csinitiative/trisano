@@ -20,7 +20,7 @@ describe "/lab_events/index.csv.haml" do
     @disease_event = mock_model(DiseaseEvent)
     @disease_mock = mock_model(Disease)
 
-    @disease_mock.stub!(:disease_name).and_return("Bubonic Plague")
+    @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
     @event_type.stub!(:code_description).and_return('ONS')
     @event_status.stub!(:code_description).and_return('Open')
     @imported_from.stub!(:code_description).and_return('Utah')
@@ -65,16 +65,18 @@ describe "/lab_events/index.csv.haml" do
     @lab_event_1.stub!(:MMWR_year).and_return("2008")
     @lab_event_1.stub!(:MMWR_week).and_return("7")
 
-    assigns[:lab_events] = [@lab_event_1]
+    @lab_event_2 = @lab_event_1
+
+    assigns[:lab_events] = [@lab_event_1,@lab_event_2]
   end
 
   it "should render a csv template of the lab_events" do
     render "/lab_events/index.csv.haml"
   end
 
-  it "should render csv data" do
+  it "should render csv data for 2 items" do
     render "/lab_events/index.csv.haml"
-    response.should have_text(/2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7$/)
+    response.should have_text(/2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7$/)
   end
 
   it "should render a header column" do
@@ -84,7 +86,12 @@ describe "/lab_events/index.csv.haml" do
 
   it "should render a csv" do
     render "/lab_events/index.csv.haml"
-    response.should have_text("record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n")
+    response.should have_text("record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n")
   end
 
+  it "should replace commas in fields with spaces to avoid adding fake columns" do
+    render "/lab_events/index.csv.haml"
+    response.should_not have_text(/Bubonic,Plague/)
+    response.should have_text(/Bubonic Plague/)
+  end
 end
