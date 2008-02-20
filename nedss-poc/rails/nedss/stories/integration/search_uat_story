@@ -1,0 +1,42 @@
+Story: Search user acceptance tests
+
+  As a user
+  I want to search for people
+  So I can know if they are already in the system
+
+  Scenario: Search for known users
+    
+    When I search for the known person 'Groucho Marx'
+    Then known person 'Groucho Marx' should appear in the search results.
+
+  Scenario: Search for users known not to exist
+
+    When I search for the non-existent person 'Xavier Xerces'
+    Then non-existent person 'Xavier Xerces' should not be returned.
+
+  Scenario: Search for users with their names slightly mis-spelled
+
+    When I search with the mispelled name 'Grocho Marks'
+    Then the correctly spelled name of 'Groucho Marx' should appear in the search results.
+
+  Scenario: Search for users with their first and last names transposed
+
+    When I search with the transposed names 'Marx Groucho'
+    Then the non-tranposed name of 'Groucho Marx' should appear in the search results.
+
+  Scenario: Search for users by disease
+
+    When I search for the person 'Groucho Marx' by disease 'Chicken Pox' and disease date 'Febraury 8th, 2007'
+    Then 'Groucho Marx' should appear in the search results. -- get scenario scoping working
+
+  Scenario: Search for users by correct birthdate
+
+    When I search for the person 'Groucho Marx' by the correct birthdate of 'correct birthdate'
+    Then 'Groucho Marx' should appear in the search results. -- get scenario scoping working
+
+  Scenario: Search for users by incorrect birthdate
+
+    When I search for the person 'Groucho Marx' by the incorrect birthdate of 'incorrect birthdate'
+    Then 'Groucho Marx' should not appear in the search results.
+
+

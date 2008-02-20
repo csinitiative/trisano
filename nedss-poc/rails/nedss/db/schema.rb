@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 14) do
+ActiveRecord::Schema.define(:version => 15) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -205,30 +205,8 @@ ActiveRecord::Schema.define(:version => 14) do
     t.datetime "updated_at"
   end
 
-  create_table "people", :force => true do |t|
-    t.integer  "entity_id"
-    t.integer  "birth_gender_id"
-    t.integer  "current_gender_id"
-    t.integer  "ethnicity_id"
-    t.integer  "primary_language_id"
-    t.string   "first_name",                  :limit => 25
-    t.string   "middle_name",                 :limit => 25
-    t.string   "last_name",                   :limit => 25
-    t.date     "birth_date"
-    t.date     "date_of_death"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "food_handler_id"
-    t.integer  "healthcare_worker_id"
-    t.integer  "group_living_id"
-    t.integer  "day_care_association_id"
-    t.integer  "age_type_id"
-    t.string   "risk_factors",                :limit => 25
-    t.string   "risk_factors_notes",          :limit => 100
-    t.integer  "approximate_age_no_birthday"
-    t.string   "first_name_soundex"
-    t.string   "last_name_soundex"
-  end
+# Could not dump table "people" because of following StandardError
+#   Unknown type 'tsvector' for column 'vector'
 
   create_table "people_races", :id => false, :force => true do |t|
     t.integer  "race_id"
@@ -236,6 +214,24 @@ ActiveRecord::Schema.define(:version => 14) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "pg_ts_cfg", :id => false, :force => true do |t|
+    t.text "ts_name",  :null => false
+    t.text "prs_name", :null => false
+    t.text "locale"
+  end
+
+  create_table "pg_ts_cfgmap", :id => false, :force => true do |t|
+    t.text   "ts_name",                  :null => false
+    t.text   "tok_alias",                :null => false
+    t.string "dict_name", :limit => nil
+  end
+
+# Could not dump table "pg_ts_dict" because of following StandardError
+#   Unknown type 'regprocedure' for column 'dict_init'
+
+# Could not dump table "pg_ts_parser" because of following StandardError
+#   Unknown type 'regprocedure' for column 'prs_start'
 
   create_table "places", :force => true do |t|
     t.integer  "entity_id"

@@ -50,7 +50,7 @@ class Iteration12 < ActiveRecord::Migration
 		remove_column :events, :review_completed_UDOH_date
 		remove_column :events, :first_reported_PH_date
 		remove_column :events, :results_reported_to_clinician_date
-		remove_column :events, :MMRW
+		# remove_column :events, :MMRW
 		remove_column :events, :record_number
   end
 end

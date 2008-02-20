@@ -7,5 +7,7 @@ class AlterMmwr < ActiveRecord::Migration
   
   def self.down
     add_column :events, :MMWR, :integer
+    remove_column :events, :MMWR_week
+    remove_column :events, :MMWR_year
   end
 end

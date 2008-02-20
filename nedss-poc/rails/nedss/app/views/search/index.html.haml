@@ -1,0 +1,26 @@
+
+- form_tag('', :method => :get) do
+
+  %fieldset
+    %legend
+      Search
+    %label Name:
+    = text_field_tag :name, params[:name]
+    / &nbsp;
+    / %label Date of birth:
+    / = text_field_tag :birth_date, params[:birth_date]
+    &nbsp;
+    %input{ :type => "submit" }
+
+%br
+
+- if !@people.blank?
+
+  %h3 Results
+
+  - for person in @people
+    = link_to ("#{person.first_name} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
+    - if !person.birth_date.blank?
+      = "&nbsp;&nbsp;&nbsp;(#{person.birth_date})"
+    %br
+    

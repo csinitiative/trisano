@@ -169,8 +169,8 @@ class ParticipationsRacesKeys < ActiveRecord::Migration
    end  
 
    def self.down
-     rename_table :cases_events, :event_cases
-     rename_table :hospitals_participations, :participation_hospitals
+     
+     
      rename_column :participations, :primary_entity_id, :primary_event_id 
      rename_column :participations,  :secondary_entity_id, :secondary_event_id
 
@@ -194,6 +194,8 @@ class ParticipationsRacesKeys < ActiveRecord::Migration
 	
 	execute "ALTER TABLE cases_events
 		DROP CONSTRAINT  fk_event_case;"
+     
+  
 	
 	execute "ALTER TABLE clinicals
 		DROP CONSTRAINT  fk_event_clinical;"
@@ -263,6 +265,8 @@ class ParticipationsRacesKeys < ActiveRecord::Migration
 	
 	execute "ALTER TABLE hospitals_participations
 		DROP CONSTRAINT  fk_participation;"
+     
+  
 	
 	execute "ALTER TABLE materials
 		DROP CONSTRAINT  Is_material_Entity;"
@@ -297,8 +301,7 @@ class ParticipationsRacesKeys < ActiveRecord::Migration
 	execute "ALTER TABLE people
 		DROP CONSTRAINT  fk_ethnicity;"
 	
-	execute "ALTER TABLE people
-		DROP CONSTRAINT  fk_race;"
+	# execute "ALTER TABLE people DROP CONSTRAINT  fk_race;"
 	
 	execute "ALTER TABLE people
 		DROP CONSTRAINT  fk_primary_language;"
@@ -323,5 +326,10 @@ class ParticipationsRacesKeys < ActiveRecord::Migration
 	
 	execute "ALTER TABLE participations_treatments
 		DROP CONSTRAINT  fk_treatment_given_yn;"
+  
+  rename_table :cases_events, :event_cases
+  rename_table :hospitals_participations, :participation_hospitals
+  
+     
    end
 end

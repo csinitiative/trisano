@@ -1,7 +1,7 @@
 Story: People integration tests
 
   As a user
-  I want to do manage people
+  I want to manage people
   So that I can later associate them to an event
 
   Scenario: Manage people
