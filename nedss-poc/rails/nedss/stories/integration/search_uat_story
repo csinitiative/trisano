@@ -26,8 +26,8 @@ Story: Search user acceptance tests
 
   Scenario: Search for users by correct birthdate
 
-    When I search for the person by birthdate 'Groucho Marx' by the correct birthdate of '10/2/1903'
-    Then known person by birthdate 'Groucho Marx' with correct birthdate '10/2/1903' should appear in the search results.
+    When I search for the person by birthdate 'Groucho Marx' by the correct birthdate of '10/2/1902'
+    Then known person by birthdate 'Groucho Marx' with correct birthdate '10/2/1902' should appear in the search results.
 
   Scenario: Search for users by incorrect birthdate
 
