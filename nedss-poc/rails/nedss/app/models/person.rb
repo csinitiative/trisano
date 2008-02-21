@@ -71,10 +71,6 @@ class Person < ActiveRecord::Base
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
-      puts "+++++++++++++++++++++++++++++++++++"
-      puts date_of_death
-      puts Chronic.parse(date_of_death)
-      puts Chronic.parse(birth_date)
       errors.add(:date_of_death, "The date of death precedes birth date") if Chronic.parse(date_of_death) < Chronic.parse(birth_date)
     end
   end
