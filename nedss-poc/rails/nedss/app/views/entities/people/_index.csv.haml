@@ -1,4 +1,12 @@
-== last_name,first_name
+== last_name,first_name,middle_name,birth_date,age,approximate_age_no_birthday,date_of_death,ethnicity,birth_gender,current_gender,primary_language,race,food_handler,healthcare_worker,group_living,day_care_association,risk_factors,risk_factor_notes
 - for entity in @entities
-== #{entity.current_person.last_name},#{entity.current_person.first_name}
+- p = entity.current_person
+- r = ''
+- i = 0
+- for race in entity.races
+- r = r + ' and ' unless i == 0
+- r = r + l(race).to_s
+- i = i + 1
+-end
+== #{p.last_name.to_s.gsub(/,/,' ')},#{p.first_name.to_s.gsub(/,/,' ')},#{p.middle_name.to_s.gsub(/,/,' ')},#{p.birth_date.to_s.gsub(/,/,' ')},#{calculate_age(p.birth_date).to_s.gsub(/,/,' ')},#{p.approximate_age_no_birthday.to_s.gsub(/,/,' ')},#{p.date_of_death.to_s.gsub(/,/,' ')},#{l(p.ethnicity).to_s.gsub(/,/,' ')},#{l(p.birth_gender).to_s.gsub(/,/,' ')},#{l(p.current_gender).to_s.gsub(/,/,' ')},#{l(p.primary_language).to_s.gsub(/,/,' ')},#{r.to_s.gsub(/,/,' ')},#{l(p.food_handler).to_s.gsub(/,/,' ')},#{l(p.healthcare_worker).to_s.gsub(/,/,' ')},#{l(p.group_living).to_s.gsub(/,/,' ')},#{l(p.day_care_association).to_s.gsub(/,/,' ')},#{p.risk_factors.to_s.gsub(/,/,' ')},#{p.risk_factors_notes.to_s.gsub(/,/,' ')}
 - end
