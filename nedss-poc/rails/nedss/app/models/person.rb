@@ -23,12 +23,23 @@ class Person < ActiveRecord::Base
   # http://www.edwardthomson.com/blog/2007/02/complex_sql_queries_with_rails.html
   def self.find_by_ts(*args)
     options = args.extract_options!
-    
-    where_clause = "WHERE "
-    order_by_clause = "ORDER BY "
+    where_clause = ""
+    order_by_clause = ""
     fulltext_terms = []
+    issue_query = false
+    
+    # Debt: The UI shows the user a format to use. Something a bit more robust
+    # could be in place.    
+    if !options[:birth_date].blank?
+      american_date = '%m/%d/%Y'
+      date = Date.strptime(options[:birth_date], american_date).to_s
+      issue_query = true
+      where_clause += "birth_date = '#{date}'"
+      order_by_clause += "last_name, first_name ASC;" 
+    end
     
     if !options[:fulltext_terms].blank?
+      issue_query = true
       soundex_codes = []
       raw_terms = options[:fulltext_terms].split(" ")
       
@@ -41,28 +52,29 @@ class Person < ActiveRecord::Base
       fulltext_terms << soundex_codes unless soundex_codes.empty?
       sql_terms = fulltext_terms.join(" | ")
       
+      where_clause += " AND " if !where_clause.empty?
       where_clause += "vector @@ to_tsquery('default', '#{sql_terms}')"
-      order_by_clause += "rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
-    end
-    
-    if !options[:birth_date].blank?
-      # Do this if there is time
+      order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
     end
     
     query = "SELECT entity_id, first_name, last_name, birth_date
       FROM (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people 
-      #{where_clause} #{order_by_clause}"
+      WHERE #{where_clause} ORDER BY #{order_by_clause}"
     
     puts "++++++++++++++++++"
-    puts query
+    puts query if issue_query
     puts "++++++++++++++++++"
     
-    find_by_sql(query)
+    find_by_sql(query) if issue_query
   end
 
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
+      puts "+++++++++++++++++++++++++++++++++++"
+      puts date_of_death
+      puts Chronic.parse(date_of_death)
+      puts Chronic.parse(birth_date)
       errors.add(:date_of_death, "The date of death precedes birth date") if Chronic.parse(date_of_death) < Chronic.parse(birth_date)
     end
   end

@@ -45,4 +45,25 @@ steps_for(:search_uat) do
       @page.links.text("#{name}").should have_at_least(1).items
     end
     
+    When("I search for the person by birthdate '$person' by the correct birthdate of '$birthdate'") do |person, birthdate|
+      agent = WWW::Mechanize.new
+      @page = agent.get NEDSS_URL + "/nedss/search?name=#{person}&birth_date=#{birthdate}"
+    end
+  
+    # Scrape the birthday out, too
+    Then("known person by birthdate '$person' with correct birthdate '$birthdate' should appear in the search results.") do |person, birthdate|
+      @page.links.text("#{person}").should have_at_least(1).items
+    end
+
+    
+#  Scenario: Search for users by incorrect birthdate
+#
+#    When I search for the person 'Groucho Marx' by the incorrect birthdate of 'incorrect birthdate'
+#    Then 'Groucho Marx' should not appear in the search results.
+#  
+  
+  
+  
+  
+    
 end

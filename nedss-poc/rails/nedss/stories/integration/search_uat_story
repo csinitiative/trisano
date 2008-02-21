@@ -24,19 +24,19 @@ Story: Search user acceptance tests
     When I search with the transposed names 'Marx Groucho'
     Then the non-tranposed name of 'Groucho Marx' should appear in the search results.
 
+  Scenario: Search for users by correct birthdate
+
+    When I search for the person by birthdate 'Groucho Marx' by the correct birthdate of '10/2/1903'
+    Then known person by birthdate 'Groucho Marx' with correct birthdate '10/2/1903' should appear in the search results.
+
+  Scenario: Search for users by incorrect birthdate
+
+    When I search for the person by incorrect birthdate 'Groucho Marx' by the incorrect birthdate of '10/2/1903'
+    Then known person by incorrect birthdate 'Groucho Marx' should not appear in the search results.
+
   Scenario: Search for users by disease
 
     When I search for the person 'Groucho Marx' by disease 'Chicken Pox' and disease date 'Febraury 8th, 2007'
     Then 'Groucho Marx' should appear in the search results. -- get scenario scoping working
-
-  Scenario: Search for users by correct birthdate
-
-    When I search for the person 'Groucho Marx' by the correct birthdate of 'correct birthdate'
-    Then 'Groucho Marx' should appear in the search results. -- get scenario scoping working
-
-  Scenario: Search for users by incorrect birthdate
-
-    When I search for the person 'Groucho Marx' by the incorrect birthdate of 'incorrect birthdate'
-    Then 'Groucho Marx' should not appear in the search results.
 
 
