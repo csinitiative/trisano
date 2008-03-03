@@ -104,7 +104,7 @@
         <% unless entity.nil? %>
         <tr>
           <% if entity.entity_type == 'person' %>
-            <% f_name = fml("' ", entity.current_person.first_name, "") unless entity.current_person.first_name.blank? %>
+            <% f_name = fml(" ", entity.current_person.first_name, "") unless entity.current_person.first_name.blank? %>
             <% name = entity.current_person.last_name + f_name.to_s %>
             <td>Person: <%=link_to name, entity_path(entity) %></td>
           <% elsif entity.entity_type == 'place' %> 
