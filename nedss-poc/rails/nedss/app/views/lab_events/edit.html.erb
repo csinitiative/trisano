@@ -1,0 +1,13 @@
+<h1>Editing Confidential Morbidity Report</h1>
+
+<%= error_messages_for :object => [@event, @event.disease, @event.lab_result] %>
+
+<% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |f| %>
+  <p>
+    <%= render :partial => 'form', :locals => { :f => f } %>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', cmr_url(@event) %> |
+<%= link_to 'Back', cmr_path %>

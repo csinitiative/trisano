@@ -6,7 +6,8 @@ ActionController::Routing::Routes.draw do |map|
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
 
-  map.resources :lab_events, :member => { :associations => :get, :add_association => :post }
+  map.resources :cmrs, :controller => :events, 
+                       :member => { :associations => :get, :add_association => :post }
 
   # The priority is based upon order of creation: first created -> highest priority.
 

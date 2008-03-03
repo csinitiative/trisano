@@ -1,7 +1,6 @@
 require 'chronic'
 
-class LabEvent < ActiveRecord::Base
-  set_table_name :events
+class Event < ActiveRecord::Base
 
   belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'Code'
@@ -10,13 +9,10 @@ class LabEvent < ActiveRecord::Base
   belongs_to :outbreak_associated, :class_name => 'Code'
   belongs_to :investigation_LHD_status, :class_name => 'Code'
 
-  # There are other codes too, but leaving them out for now
-  # event_status, imported_from, event_case_status
+  has_many :lab_results, :order => 'created_at', :dependent => :delete_all
+  has_many :disease_events, :order => 'created_at', :dependent => :delete_all
 
-  has_many :disease_events, :foreign_key => 'event_id', :order => 'created_at', :dependent => :delete_all
-  has_many :lab_results, :foreign_key => 'event_id', :order => 'created_at', :dependent => :delete_all
-
-  has_many :participations, :foreign_key => 'event_id'
+  has_many :participations
 
   validates_date :event_onset_date
 
