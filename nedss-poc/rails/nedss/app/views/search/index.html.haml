@@ -1,5 +1,7 @@
-
 - form_tag('', :method => :get) do
+
+  - if !flash[:error].blank?
+    %span{ :style => "color:red" }= flash[:error]
 
   %fieldset
     %legend
@@ -17,17 +19,11 @@
 %br
 
 - if !@people.blank?
-
   %h3 Results
-
   - for person in @people
     = link_to ("#{person.first_name} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
     - if !person.birth_date.blank?
       = "&nbsp;&nbsp;&nbsp;(#{person.birth_date.month}/#{person.birth_date.day}/#{person.birth_date.year})"
     %br
-
-
 - if @people.blank? && (!params[:name].blank? || !params[:birth_date].blank?)
   Your search returned no results.
-
-
