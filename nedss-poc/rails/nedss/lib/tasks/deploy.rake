@@ -92,7 +92,7 @@ namespace :nedss do
         puts new_person_url
         page = agent.get new_person_url
 
-        new_event_url = NEDSS_URL + '/nedss/events/new'
+        new_event_url = NEDSS_URL + '/nedss/cmrs/new'
         puts new_event_url
         page = agent.get new_event_url
 
