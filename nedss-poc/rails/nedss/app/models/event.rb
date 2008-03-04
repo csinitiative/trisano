@@ -22,6 +22,12 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
+  def patient
+  end
+
+  def patient=(attributes)
+  end
+
   def disease
     @disease || disease_events.last
   end
@@ -36,6 +42,18 @@ class Event < ActiveRecord::Base
 
   def lab_result=(attributes)
     @lab_result = LabResult.new(attributes)
+  end
+
+  def jurisdiction
+  end
+
+  def jurisdiction=
+  end
+
+  def reporting_agency
+  end
+
+  def reporting_agency=
   end
 
   def participation

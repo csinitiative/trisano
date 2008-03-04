@@ -1,5 +1,5 @@
 class Participation < ActiveRecord::Base
-  belongs_to :lab_event
+  belongs_to :event
   belongs_to :primary_entity, :foreign_key => :primary_entity_id, :class_name => 'Entity'
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
