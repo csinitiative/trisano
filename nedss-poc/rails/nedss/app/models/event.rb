@@ -79,7 +79,7 @@ class Event < ActiveRecord::Base
       where_clause += "d.id = " + sanitize_sql(options[:disease])
     end
     
-    query = "select first_name, last_name, middle_name, disease_name, record_number, event_onset_date, code_description
+    query = "select disease_events.event_id, first_name, last_name, middle_name, disease_name, record_number, event_onset_date, code_description
                   from diseases d
                   inner join (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
                   inner join participations p on p.event_id = disease_events.event_id
@@ -89,7 +89,8 @@ class Event < ActiveRecord::Base
                   left outer join locations l on l.id = el.location_id
                   left outer join addresses a on a.location_id = l.id
                   left outer join codes c on c.id = a.county_id
-                  WHERE #{where_clause}"
+                  WHERE #{where_clause}
+                  ORDER BY last_name"
     
     find_by_sql(query) if issue_query
   end

@@ -18,7 +18,6 @@ class SearchController < ApplicationController
         
   end
   
-  
   def cmrs
 
     @cmrs = []

@@ -24,7 +24,8 @@
 - if !@cmrs.blank?
   %h3 Results
   - for cmr in @cmrs
-    = "#{cmr.record_number} -- #{cmr.first_name} #{cmr.middle_name} #{cmr.last_name}, #{cmr.disease_name}  #{cmr.event_onset_date} #{cmr.code_description}"
+    = link_to ("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
+    = " #{cmr.first_name} #{cmr.middle_name} #{cmr.last_name}, #{cmr.disease_name}  #{cmr.event_onset_date} #{cmr.code_description}"
     %br
 - if @cmrs.blank? && (!params[:disease].blank?)
   Your search returned no results.
