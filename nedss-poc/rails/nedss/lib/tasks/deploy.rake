@@ -92,9 +92,9 @@ namespace :nedss do
         puts new_person_url
         page = agent.get new_person_url
 
-        new_lab_event_url = NEDSS_URL + '/nedss/lab_events/new'
-        puts new_lab_event_url
-        page = agent.get new_lab_event_url
+        new_event_url = NEDSS_URL + '/nedss/events/new'
+        puts new_event_url
+        page = agent.get new_event_url
 
         puts "smoke test success"
       rescue => error
