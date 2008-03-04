@@ -1,0 +1,30 @@
+
+- form_tag('', :method => :get) do
+
+  %h2
+    CMR Search
+
+  - if !flash[:error].blank?
+    %span{ :style => "color:red" }= flash[:error]
+
+  %fieldset
+    %legend
+      Search
+    %label Disease:
+
+    %select{ :name => "disease" }
+      - for disease in @diseases
+        %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
+          = "#{disease.disease_name}"
+    &nbsp;
+    %input{ :type => "submit" }
+
+%br
+
+- if !@cmrs.blank?
+  %h3 Results
+  - for cmr in @cmrs
+    = "#{cmr.record_number} -- #{cmr.first_name} #{cmr.middle_name} #{cmr.last_name}, #{cmr.disease_name}  #{cmr.event_onset_date} #{cmr.code_description}"
+    %br
+- if @cmrs.blank? && (!params[:disease].blank?)
+  Your search returned no results.

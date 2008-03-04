@@ -61,10 +61,6 @@ class Person < ActiveRecord::Base
       FROM (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people 
       WHERE #{where_clause} ORDER BY #{order_by_clause}"
     
-    puts "++++++++++++++++++"
-    puts query if issue_query
-    puts "++++++++++++++++++"
-    
     find_by_sql(query) if issue_query
   end
 

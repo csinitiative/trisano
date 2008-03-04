@@ -1,6 +1,7 @@
 class SearchController < ApplicationController
 
-  def index
+  
+  def people
 
     @people = []
 
@@ -16,8 +17,25 @@ class SearchController < ApplicationController
     end
         
   end
+  
+  
+  def cmrs
+
+    @cmrs = []
+    @diseases = Disease.find(:all, :order => "disease_name")
+    
+    flash[:error] = ""
+    
+    begin
+      if !params[:disease].blank?
+        @cmrs = Event.find_by_criteria(:disease => params[:disease])
+      end
+    rescue
+      flash[:error] = "There was a problem with your search criteria. Please try again."
+    end
+        
+  end
     
 end
-
 
 

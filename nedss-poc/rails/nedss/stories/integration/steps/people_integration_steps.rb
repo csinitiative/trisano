@@ -4,11 +4,7 @@ steps_for(:people_integration) do
   
   When("I view the people listing") do
     agent = WWW::Mechanize.new
-    @page = agent.get NEDSS_URL + "/entities?type=person"
-  end
-  
-  Then("the page title should be '$page_title'") do |page_title|
-    @page.title.should eql(page_title)
+    @page = agent.get NEDSS_URL + "/nedss/entities?type=person"
   end
 
   Then("there should be a list of people") do

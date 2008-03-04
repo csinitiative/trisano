@@ -1,0 +1,33 @@
+
+- form_tag('', :method => :get) do
+
+  %h2
+    Person Search
+
+  - if !flash[:error].blank?
+    %span{ :style => "color:red" }= flash[:error]
+
+  %fieldset
+    %legend
+      Search
+    %label Name:
+    = text_field_tag :name, params[:name]
+    &nbsp;
+    %label Date of birth:
+    / Get a more flexible option in here
+    = text_field_tag :birth_date, params[:birth_date]
+    %small (mm/dd/yyyy)
+    &nbsp;
+    %input{ :type => "submit" }
+
+%br
+
+- if !@people.blank?
+  %h3 Results
+  - for person in @people
+    = link_to ("#{person.first_name} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
+    - if !person.birth_date.blank?
+      = "&nbsp;&nbsp;&nbsp;(#{person.birth_date.month}/#{person.birth_date.day}/#{person.birth_date.year})"
+    %br
+- if @people.blank? && (!params[:name].blank? || !params[:birth_date].blank?)
+  Your search returned no results.

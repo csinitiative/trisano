@@ -67,6 +67,32 @@ class Event < ActiveRecord::Base
       participation.update_attributes(attributes)
     end
   end
+  
+  
+  def self.find_by_criteria(*args)
+    options = args.extract_options!
+    where_clause = ""
+    order_by_clause = ""
+    
+    if !options[:disease].blank?
+      issue_query = true
+      where_clause += "d.id = " + sanitize_sql(options[:disease])
+    end
+    
+    query = "select first_name, last_name, middle_name, disease_name, record_number, event_onset_date, code_description
+                  from diseases d
+                  inner join (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
+                  inner join participations p on p.event_id = disease_events.event_id
+                  inner join (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
+                  inner join events e on e.id = disease_events.event_id
+                  left outer join entities_locations el on el.entity_id = people.entity_id
+                  left outer join locations l on l.id = el.location_id
+                  left outer join addresses a on a.location_id = l.id
+                  left outer join codes c on c.id = a.county_id
+                  WHERE #{where_clause}"
+    
+    find_by_sql(query) if issue_query
+  end
 
   private
   
