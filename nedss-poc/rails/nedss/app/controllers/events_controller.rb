@@ -29,16 +29,16 @@ class EventsController < ApplicationController
   # GET /event/new.xml
   def new
     @event = Event.new(:event_onset_date => Chronic.parse('today'), 
-                              :disease => {}, 
-                              :lab_result => {},
-                              :participation => { :entity_primary => { :person => {}, 
-                                                                       :entities_location => {}, 
-                                                                       :address => {}, 
-                                                                       :telephone => {} 
-                                                                     }, 
-                                                  :hospitals_participation => {}
-                                                }
-                             )
+                       :disease => {}, 
+                       :lab_result => {},
+                       :active_patient => { :active_primary_entity => { :person => {}, 
+                                                                        :entities_location => {}, 
+                                                                        :address => {}, 
+                                                                        :telephone => {} 
+                                                                      }
+                                          },
+                       :active_hospital => { :hospitals_participation => {} }
+                      )
 
     respond_to do |format|
       format.html # new.html.erb

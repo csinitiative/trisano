@@ -1,21 +1,22 @@
 <h1>New Confidential Morbidity Report</h1>
 
-<%= error_messages_for :object => [@event, @event.disease, @event.lab_result, @event.participation.entity_primary.person] %>
-<%= error_messages_for :object => [@event.participation.entity_primary.entities_location] unless @event.participation.entity_primary.entities_location.nil? %>
-<%= error_messages_for :object => [@event.participation.entity_primary.address] unless @event.participation.entity_primary.address.nil? %>
-<%= error_messages_for :object => [@event.participation.entity_primary.telephone] unless @event.participation.entity_primary.telephone.nil? %>
+<%# Debt: Figure out how to merge these all together. %>
+<%= error_messages_for :object => [@event, @event.disease, @event.lab_result, @event.active_patient.active_primary_entity.person] %>
+<%= error_messages_for :object => [@event.active_patient.active_primary_entity.entities_location] unless @event.active_patient.active_primary_entity.entities_location.nil? %>
+<%= error_messages_for :object => [@event.active_patient.active_primary_entity.address] unless @event.active_patient.active_primary_entity.address.nil? %>
+<%= error_messages_for :object => [@event.active_patient.active_primary_entity.telephone] unless @event.active_patient.active_primary_entity.telephone.nil? %>
 
-<% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder) do |le| %>
-  <p>
-    <% le.fields_for(:participation, @event.participation, :builder => ExtendedFormBuilder) do |p| %>
-      <% p.fields_for(:entity_primary, @event.participation.entity_primary, :builder => ExtendedFormBuilder) do |f| %>
-        <%= render :partial => "entities/people/form", :locals => { :f => f, :entity_data => @event.participation.entity_primary } %>
-        <%= render :partial => 'locations/form', :locals => { :f => f, :location_data => @event.participation.entity_primary } %>
-      <% end %>
-   <% end %>
-  <%= render :partial => 'form', :locals => { :f => le } %>
-  <%= le.submit "Create" %>
-  </p>
+<p>
+<% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder) do |event_form| %>
+  <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
+    <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+      <%= render :partial => "entities/people/form", :locals => { :f => current_patient, :entity_data => @event.active_patient.active_primary_entity } %>
+      <%= render :partial => 'locations/form', :locals => { :f => current_patient, :location_data => @event.active_patient.active_primary_entity } %>
+    <% end %>
+  <% end %>
+  <%= render :partial => 'form', :locals => { :f => event_form } %>
+<%= event_form.submit "Create" %>
 <% end %>
+</p>
 
 <%= link_to 'Back', cmrs_path %>

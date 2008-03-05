@@ -361,3 +361,28 @@ place_type_hospital:
   code_name: "placetype"
   the_code: "H"
   code_description: "Hospital"
+
+participant_interested_party:
+  id: 2301
+  code_name: "participant"
+  the_code: "I"
+  code_description: "Interested Party"
+
+participant_hospitalized_at:
+  id: 2302
+  code_name: "participant"
+  the_code: "H"
+  code_description: "Hospitalized At"
+
+participant_reported_by:
+  id: 2303
+  code_name: "participant"
+  the_code: "R"
+  code_description: "Reported By"
+
+participant_jurisdiction:
+  id: 2304
+  code_name: "participant"
+  the_code: "J"
+  code_description: "Jurisdiction"
+

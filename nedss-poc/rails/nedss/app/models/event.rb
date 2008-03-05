@@ -14,6 +14,12 @@ class Event < ActiveRecord::Base
 
   has_many :participations
 
+# For reasons unknown the following 2 lines don't work.
+#  has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
+#  has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Hospitalized At')]
+  has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
+  has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
+
   validates_date :event_onset_date
 
   before_validation :save_associations
@@ -22,10 +28,27 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
-  def patient
+  def active_patient
+    @active_patient || patient
   end
 
-  def patient=(attributes)
+  def active_patient=(attributes)
+    @active_patient = Participation.new(attributes)
+    @active_patient.role_id = Event.participation_code('Interested Party')
+  end
+
+  def active_hospital
+    @active_hospital || hospital
+  end
+
+  # Ultimately need to populate the primary_entity field with the patient's ID.
+  def active_hospital=(attributes)
+    if new_record?
+      @active_hospital = Participation.new(attributes)
+      @active_hospital.role_id = Event.participation_code('Hospitalized At')
+    else
+      active_hospital.update_attributes(attributes)
+    end
   end
 
   def disease
@@ -56,19 +79,6 @@ class Event < ActiveRecord::Base
   def reporting_agency=
   end
 
-  def participation
-    @participation || participations.last
-  end
-
-  def participation=(attributes)
-    if new_record?
-      @participation = Participation.new(attributes)
-    else
-      participation.update_attributes(attributes)
-    end
-  end
-  
-  
   def self.find_by_criteria(*args)
     options = args.extract_options!
     where_clause = ""
@@ -97,6 +107,10 @@ class Event < ActiveRecord::Base
 
   private
   
+  def self.participation_code(description)
+    Code.find_by_code_name_and_code_description('participant', description).id
+  end
+
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
@@ -117,7 +131,8 @@ class Event < ActiveRecord::Base
   def save_associations
     disease_events << @disease
     lab_results << @lab_result
-    participations << @participation unless @participation.nil?
+    participations << @active_patient unless @active_patient.nil? # Change this when patients are edited along with CMRs
+    participations << @active_hospital unless @active_hospital.nil?
   end
 
   def clear_base_error
@@ -125,4 +140,5 @@ class Event < ActiveRecord::Base
     errors.delete(:lab_results)
     errors.delete(:participations)
   end
+
 end

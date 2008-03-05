@@ -69,12 +69,12 @@
         <td><%= d.label(:hospitalized_id) %></td>
         <td><%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %></td>
     <% end %>
-    <% f.fields_for(:participation, @event.participation, :builder => ExtendedFormBuilder) do |p| %>
+    <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
         <td><%= p.label(:hospital) %></td>
         <td><%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %></td>
       </tr>
       <tr>
-      <% p.fields_for(:hospitals_participation, @event.participation.hospitals_participation, :builder => ExtendedFormBuilder) do |hp| %>
+      <% p.fields_for(:hospitals_participation, @event.active_hospital.hospitals_participation, :builder => ExtendedFormBuilder) do |hp| %>
         <td><%= hp.label(:admission_date) %></td>
         <td><%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %></td>
         <td><%= hp.label(:discharge_date) %></td>
