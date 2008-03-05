@@ -1,0 +1,46 @@
+<fieldset>
+  <legend>Disease Information</legend>
+  <table cellpadding="2">
+    <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
+      <tr>
+        <td>
+          <%= d.label(:disease_id, "Disease") %>
+          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {}) %>
+        </td>
+      <tr>
+        <td><%= d.label(:disease_onset_date) %></td>
+        <td><%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+        <td><%= d.label(:date_diagnosed) %></td>
+        <td><%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %></td>
+      </tr>
+      <tr>
+        <td><%= d.label(:hospitalized_id) %></td>
+        <td><%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %></td>
+    <% end %>
+    <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
+        <td><%= p.label(:hospital) %></td>
+        <td><%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %></td>
+      </tr>
+      <tr>
+      <% p.fields_for(:hospitals_participation, @event.active_hospital.hospitals_participation, :builder => ExtendedFormBuilder) do |hp| %>
+        <td><%= hp.label(:admission_date) %></td>
+ <td><%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+        <td><%= hp.label(:discharge_date) %></td>
+        <td><%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+      </tr>
+      <% end %>
+    <% end %>
+      </tr>
+      <tr>
+    <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
+        <td><%= d.label(:died_id) %></td>
+        <td><%= d.dropdown_code_field(:died_id, 'yesno', {}) %></td>
+      <tr>
+        <td><%= d.label(:pregnant_id) %></td>
+        <td><%= d.dropdown_code_field(:pregnant_id, 'yesno', {}) %></td>
+        <td><%= d.label(:pregnancy_due_date) %></td>
+        <td><%= d.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+      </tr>
+    <% end %>
+  </table>
+</fieldset>

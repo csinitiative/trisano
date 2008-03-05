@@ -1,0 +1,55 @@
+<fieldset>
+<legend>CMR Information</legend>  
+<table cellpadding="2">
+  <% if not @event.record_number.blank? %>
+  <tr>
+    <td><%= label(:@event, :record_number) %></td>
+    <td><%= @event.record_number %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+      <td><%= j.label(:jurisdiction) %></td>
+      <td><%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name, {:include_blank => true}) %></td> 
+    <% end %>
+    <td><%= f.label(:event_onset_date) %></td>
+    <td><%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+    <td><%= f.label(:event_name) %></td>
+    <td><%= f.text_field(:event_name, :size => 25) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:event_type_id) %></td>
+    <td><%= f.dropdown_code_field(:event_type_id, 'eventtype', {}) %></td>
+    <td><%= f.label(:event_status_id) %></td>
+    <td><%= f.dropdown_code_field(:event_status_id, 'eventstatus', {}) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:imported_from_id) %></td>
+    <td><%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %></td>
+    <td><%= f.label(:event_case_status_id) %></td>
+    <td><%= f.dropdown_code_field(:event_case_status_id, 'case', {}) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:outbreak_associated_id) %></td>
+    <td><%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}) %></td>
+    <td><%= f.label(:outbreak_name) %></td>
+    <td><%= f.text_field(:outbreak_name, :size => 25) %></td>
+  </tr>
+  <tr>
+    <td><%= f.label(:investigation_LHD_status_id) %></td>
+    <td><%= f.dropdown_code_field(:investigation_LHD_status_id, 'investigation', {}) %></td>
+    <td><%= f.label(:investigation_started_date) %></td>
+    <td><%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+    <td><%= f.label(:investigation_completed_LHD_date, "Investigation completed date") %></td>
+    <td><%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+  </tr>
+    <td><%= f.label(:review_completed_UDOH_date, "Review completed date") %></td>
+    <td><%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+    <td><%= f.label(:first_reported_PH_date, "First reported date") %></td>
+    <td><%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+    <td><%= f.label(:results_reported_to_clinician_date) %></td>
+    <td><%= f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+  <tr>
+  </tr>
+</table>
+</fieldset>
