@@ -278,3 +278,53 @@ VVMC:
   id: 70
   entity_type: "place"
 
+##################
+# Jurisdictions
+
+Bear_River:
+  id: 71
+  entity_type: "place"
+
+Central_Utah:
+  id: 72
+  entity_type: "place"
+
+Davis_County:
+  id: 73
+  entity_type: "place"
+
+Salt_Lake_Valley:
+  id: 74
+  entity_type: "place"
+
+Southeastern_District:
+  id: 75
+  entity_type: "place"
+
+Southwestern_District:
+  id: 76
+  entity_type: "place"
+
+Summit_County:
+  id: 77
+  entity_type: "place"
+
+Tooele_County:
+  id: 78
+  entity_type: "place"
+
+TriCounty:
+  id: 79
+  entity_type: "place"
+
+Utah_County:
+  id: 80
+  entity_type: "place"
+
+Wasatch_County:
+  id: 81
+  entity_type: "place"
+
+Weber_Morgan:
+  id: 82
+  entity_type: "place"

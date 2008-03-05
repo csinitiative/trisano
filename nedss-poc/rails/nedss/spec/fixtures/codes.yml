@@ -362,6 +362,12 @@ place_type_hospital:
   the_code: "H"
   code_description: "Hospital"
 
+place_type_jurisdiction:
+  id: 2202
+  code_name: "placetype"
+  the_code: "J"
+  code_description: "Jurisdiction"
+
 participant_interested_party:
   id: 2301
   code_name: "participant"

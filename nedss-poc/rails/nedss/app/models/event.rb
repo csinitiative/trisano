@@ -19,6 +19,7 @@ class Event < ActiveRecord::Base
 #  has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Hospitalized At')]
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
+  has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
 
   validates_date :event_onset_date
 
@@ -67,10 +68,18 @@ class Event < ActiveRecord::Base
     @lab_result = LabResult.new(attributes)
   end
 
-  def jurisdiction
+  def active_jurisdiction
+    @active_jurisdiction || jurisdiction
   end
 
-  def jurisdiction=
+  def active_jurisdiction=(attributes)
+    if new_record?
+      @active_jurisdiction = Participation.new(attributes)
+      @active_jurisdiction.role_id = Event.participation_code('Jurisdiction')
+    else
+      p attributes
+      active_jurisdiction.update_attributes(attributes)
+    end
   end
 
   def reporting_agency
@@ -133,6 +142,7 @@ class Event < ActiveRecord::Base
     lab_results << @lab_result
     participations << @active_patient unless @active_patient.nil? # Change this when patients are edited along with CMRs
     participations << @active_hospital unless @active_hospital.nil?
+    participations << @active_jurisdiction unless @active_jurisdiction.nil?
   end
 
   def clear_base_error

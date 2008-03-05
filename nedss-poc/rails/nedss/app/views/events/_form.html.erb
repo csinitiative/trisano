@@ -8,6 +8,10 @@
   </tr>
   <% end %>
   <tr>
+    <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+      <td><%= j.label(:jurisdiction) %></td>
+      <td><%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name, {:include_blank => true}) %></td>
+    <% end %>
     <td><%= f.label(:event_onset_date) %></td>
     <td><%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %></td>
     <td><%= f.label(:event_name) %></td>
