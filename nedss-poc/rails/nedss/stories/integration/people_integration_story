@@ -8,6 +8,5 @@ Story: People integration tests
     
     When I view the people listing
 
-    Then the page title should be 'UT-NEDSS'
-    And there should be a list of people
+    Then there should be a list of people
     And there should be a link to create a new person

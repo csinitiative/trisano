@@ -1,0 +1,14 @@
+Story: CMR search user acceptance tests
+
+  As a user
+  I want to search for CMRs
+  So I can know if they are already in the system
+
+  Scenario: Search for known CMRs by disease
+    
+    When I search for all CMRs with the disease 'Chicken Pox'
+    Then I should see at least one result with the disease 'Chicken Pox'
+    And the user name and date of birth should be displayed for each result
+    And a link to the CMR show page should be displayed for each result
+
+

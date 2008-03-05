@@ -1,4 +1,3 @@
-
 - form_tag('', :method => :get) do
 
   %h2
@@ -24,7 +23,7 @@
 - if !@cmrs.blank?
   %h3 Results
   - for cmr in @cmrs
-    = link_to ("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
+    = link_to("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
     = " #{cmr.first_name} #{cmr.middle_name} #{cmr.last_name}, #{cmr.disease_name}  #{cmr.event_onset_date} #{cmr.code_description}"
     %br
 - if @cmrs.blank? && (!params[:disease].blank?)
