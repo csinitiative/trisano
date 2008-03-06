@@ -14,14 +14,36 @@
   border-bottom-color: #FFB30F;
 }
 
+.hd .title {
+  margin: 0;
+}
+
+#nav {
+  float: left;
+  height: 100%;
+  padding-right: 10px;
+  margin: 0;
+}
+
+#nav ul {
+  text-decoration: none;
+}
+
+#nav li {
+  list-style-type: none;
+}
+
 .bd {
   padding-left: 7px;
   padding-right: 7px;
+  position: relative;
+  overflow: hidden;
 }
 
 .highlight {
   color: green;
 }
+
 
 .title A:link {text-decoration: none; color: #B9B9A0}
 .title A:visited {text-decoration: none; color: #B9B9A0}

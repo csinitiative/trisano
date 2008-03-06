@@ -26,19 +26,35 @@
 </head>
 <body class="yui-skin-sam">
 
+
 <div id="doc"<!--doc, doc2, doc3, or doc4; controls overall pg width-->
 <div class="hd" id="hd"><!--header / masthead -->
 
 <h3><span class="title"><%= link_to '<i>UT-NEDSS</i>&nbsp;Utah - National Electronic Disease Surveillance System', home_path %></span></h3>
 
 </div>
+
+<div id="nav" style="float: left;">
+  <h3> Main Nav </h3>
+  <ul>
+    <li><%= link_to 'Confidential Morbidity Reports', cmrs_path %></li>
+    <li><%= link_to 'People', entities_path(:type => 'person') %></li>
+  </ul>
+  <h3> Search </h3>
+  <ul>
+    <li><%= link_to 'People Search', :controller => "search", :action => "people" %></li>
+    <li><%= link_to 'CMR Search', :controller => "search", :action => "cmrs" %></li>
+  </ul>
+  <br/>
+  <%= link_to 'Home', :controller => "dashboard", :action => "index" %>
+</div>
+
 <div class="bd" id="bd"><!--body-->
 
 <p style="color: green"><%= flash[:notice] %></p>
 
 <%= yield  %>
 
-<p><%= link_to "Home", {:action => "index", :controller => "dashboard"} %></p>
 </div>
 <div id="ft"><!--footer--></div>
 </div>
