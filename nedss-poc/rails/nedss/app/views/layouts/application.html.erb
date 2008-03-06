@@ -35,18 +35,18 @@
 </div>
 
 <div id="nav" style="float: left;">
-  <h3> Main Nav </h3>
-  <ul>
-    <li><%= link_to 'Confidential Morbidity Reports', cmrs_path %></li>
-    <li><%= link_to 'People', entities_path(:type => 'person') %></li>
-  </ul>
-  <h3> Search </h3>
-  <ul>
-    <li><%= link_to 'People Search', :controller => "search", :action => "people" %></li>
-    <li><%= link_to 'CMR Search', :controller => "search", :action => "cmrs" %></li>
-  </ul>
-  <br/>
-  <%= link_to 'Home', :controller => "dashboard", :action => "index" %>
+
+<br/>
+
+<%= link_to 'Home', :controller => "dashboard", :action => "index" %><br/>
+<%= link_to 'CMRs', cmrs_path %><br/>
+<%= link_to 'People', entities_path(:type => 'person') %><br/>
+
+<br/>
+<b>Search</b><br/>
+<%= link_to 'People Search', :controller => "search", :action => "people" %><br/>
+<%= link_to 'CMR Search', :controller => "search", :action => "cmrs" %><br/>
+
 </div>
 
 <div class="bd" id="bd"><!--body-->
