@@ -1,4 +1,4 @@
-- form_tag('', :method => :get) do
+- form_tag(search_path + "/people", :method => :get) do
 
   %h2
     Person Search
@@ -28,5 +28,10 @@
     - if !person.birth_date.blank?
       = "&nbsp;&nbsp;&nbsp;(#{person.birth_date.month}/#{person.birth_date.day}/#{person.birth_date.year})"
     %br
-- if @people.blank? && (!params[:name].blank? || !params[:birth_date].blank?)
-  Your search returned no results.
+- if @people.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:birth_date].blank?)
+  <span>Your search returned no results.</span>
+  
+  %br
+  %br
+  
+  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name,  :last_name => @last_name  })

@@ -130,7 +130,9 @@ class EventsController < ApplicationController
   private
   
   def prepopulate
+    # Perhaps include a message if we know the names were split out of a full text search
     @event.active_patient.active_primary_entity.person.first_name = params[:first_name]
+    @event.active_patient.active_primary_entity.person.last_name = params[:last_name]
   end
   
 end
