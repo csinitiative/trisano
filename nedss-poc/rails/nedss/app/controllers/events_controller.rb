@@ -39,6 +39,8 @@ class EventsController < ApplicationController
                                           },
                        :active_hospital => { :hospitals_participation => {} }
                       )
+                             
+    prepopulate if !params[:from_search].nil?
 
     respond_to do |format|
       format.html # new.html.erb
@@ -124,4 +126,11 @@ class EventsController < ApplicationController
     participants = @event.participations.map { |p| p.person_entity.id }
     all_people.select { |p| not participants.include?(p.id) }
   end
+  
+  private
+  
+  def prepopulate
+    @event.participation.entity_primary.person.first_name = params[:first_name]
+  end
+  
 end

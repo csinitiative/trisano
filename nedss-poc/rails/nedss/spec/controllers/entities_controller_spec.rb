@@ -203,6 +203,47 @@ describe EntitiesController do
       assigns[:entity].should equal(@entity)
     end
   end
+  
+    describe "handling GET /entities/new person from search" do
+
+    before(:each) do
+      @entity = mock_model(Entity)
+      Entity.stub!(:new).and_return(@entity)
+    end
+
+    def do_get
+      get :new, :type => 'person', :from_search => '', :birth_date => '11/25/1974'
+    end
+
+    it "should be successful with type and search parameters" do
+      do_get
+      response.should be_success
+    end
+    
+    it "should render new template" do
+      do_get
+      response.should render_template('new')
+    end
+
+    it "should create a new entity" do
+      Entity.should_receive(:new).with(:person => {}, :entities_location => {}, :address => {}, :telephone => {}).and_return(@entity)
+      do_get
+    end
+    
+    it "should set the birthdate for the person on the entity" do
+      # Not implemented yet -- how best to do this with mocking?
+    end
+    
+    it "should not save the new entity" do
+      @entity.should_not_receive(:save)
+      do_get
+    end
+    
+    it "should assign the new entity for the view" do
+      do_get
+      assigns[:entity].should equal(@entity)
+    end
+  end
 
   describe "handling GET /entities/1/edit" do
 
