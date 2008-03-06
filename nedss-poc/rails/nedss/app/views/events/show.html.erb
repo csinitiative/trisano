@@ -1,131 +1,132 @@
 <h1>Show Confidential Morbidity Report</h1>
+<% patient_entity = @event.active_patient.active_primary_entity %>
+<%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
+<p/>
+
 <fieldset>
-<legend>Lab Event</legend>  
+<legend>Location Information</legend>
+<% if not patient_entity.locations.empty? %>
+  <table>
+    <%= render :partial => "locations/location", :collection => patient_entity.current_locations, :locals => { :entity_data => patient_entity } %>
+    </table>
+<% else %>
+    <p>No location information available.</p>
+<% end %>
+<%= link_to 'Add a Location', new_entity_location_path(patient_entity) %>
+</fieldset>
+
+<fieldset>
+<legend>Clinical Information</legend>  
 <table cellpadding="2">
 <tr>
-  <td><%= label(:event, :record_number) %></td>
-  <td><%= @event.record_number %></td>
-  <td><%= label(:event, :event_name) %></td>
-  <td><%= @event.event_name %></td>  
-</tr>
-<tr>
-  <td><%= label(:event, :event_onset_date) %></td>
-  <td><%= @event.event_onset_date %></td>
-  <td><%= label(:event, :disease_id, "Disease") %></td>
+  <td><span class="label">Disease:</span></td>
   <td><%= @event.disease.disease.disease_name %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :event_type) %></td>
-  <td><%= l @event.event_type %></td>
-  <td><%= label(:event, :event_status) %></td>
-  <td><%= l @event.event_status %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :imported_from) %></td>
-  <td><%= l @event.imported_from %></td>
-  <td><%= label(:event, :event_case_status) %></td>
-  <td><%= l @event.event_case_status %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :outbreak_associated) %></td>
-  <td><%= l @event.outbreak_associated %></td>
-  <td><%= label(:event, :outbreak_name) %></td>
-  <td><%= @event.outbreak_name %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :investigation_LHD_status) %></td>
-  <td><%= l @event.investigation_LHD_status %></td>
-  <td><%= label(:event, :investigation_started_date) %></td>
-  <td><%= @event.investigation_started_date %></td>
-  <td><%= label(:event, :investigation_completed_LHD_date) %></td>
-  <td><%= @event.investigation_completed_LHD_date %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :review_completed_UDOH_date, "Review completed date") %></td>
-  <td><%= @event.review_completed_UDOH_date %></td>
-  <td><%= label(:event, :first_reported_PH_date, "First reported date") %></td>
-  <td><%= @event.first_reported_PH_date %></td>
-  <td><%= label(:event, :results_reported_to_clinician_date) %></td>
-  <td><%= @event.results_reported_to_clinician_date %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :disease_onset_date) %></td>
-  <td><%= @event.disease.disease_onset_date %></td>
-  <td><%= label(:event, :date_diagnosed) %></td>
-  <td><%= @event.disease.date_diagnosed %></td>
-</tr>
-<tr>
-  <td><%= label(:event, :hospitalized) %></td>
-  <td><%= l @event.disease.hospitalized %></td>
-  <td><%= label(:event, :died) %></td>
+  <td><span class="label">Died:</span></td>
   <td><%= l @event.disease.died %></td>
 </tr>
 <tr>
-  <td><%= label(:event, :pregnant) %></td>
-  <td><%= l @event.disease.pregnant %></td>
-  <td><%= label(:event, :pregnancy_due_date) %></td>
-  <td><%= @event.disease.pregnancy_due_date %></td>
+  <td><span class="label">Disease Onset Date:</span></td>
+  <td><%= @event.disease.disease_onset_date %></td>
+  <td><span class="label">Date Diagnosed:</span></td>
+  <td><%= @event.disease.date_diagnosed %></td>
 </tr>
 <tr>
-  <td><%= label(:event, :specimen_source, "Tested") %></td>
+  <td><span class="label">Hospitalized:</span></td>
+  <td><%= l @event.disease.hospitalized %></td>
+  <td><span class="label">Hospital:</span></td>
+  <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.secondary_entity.nil?%></td>
+</tr>
+<tr>
+  <td><span class="label">Admission Date:</span></td>
+  <td><span class="label"><%= @event.hospital.hospitals_participation.admission_date %></td>
+  <td><span class="label">Discharge Date:</span></td>
+  <td><%= @event.hospital.hospitals_participation.discharge_date %></td>
+</tr>
+<tr>
+  <td><span class="label">Preganant:</span></td>
+  <td><%= l @event.disease.pregnant %></td>
+  <td><span class="label">Due Date:</span></td>
+  <td><%= @event.disease.pregnancy_due_date %></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset>
+<legend>Laboratory Information</legend>  
+<table cellpadding="2">
+<tr>
+  <td><span class="label">Tested:</span></td>
   <td><%= l @event.lab_result.specimen_source %></td>
-  <td><%= label(:event, :lab_result_text, "Found") %></td>
+  <td><span class="label">Found:</span></td>
   <td><%= @event.lab_result.lab_result_text %></td>
 </tr>
 <tr>
-  <td><%= label(:event, :collection_date) %></td>
+  <td><span class="label">Collection Date:</span></td>
   <td><%= @event.lab_result.collection_date %></td>
-  <td><%= label(:event, :lab_test_date) %></td>
+  <td><span class="label">Lab Test Date:</span></td>
   <td><%= @event.lab_result.lab_test_date %></td>
-  <td><%= label(:event, :tested_at_uphl_yn, "Tested at UPHL lab") %></td>
-  <td><%= l @event.lab_result.tested_at_uphl_yn %></td>
 </tr>
 <tr>
-  <td><%= label(:event, :MMWR_year) %></td>
+  <td><span class="label">Tested at UPHL lab:</span></td>
+  <td><span class="label"><%= l @event.lab_result.tested_at_uphl_yn %></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset>
+<legend>Laboratory Information</legend>  
+<table cellpadding="2">
+<tr>
+  <td><span class="label">Record Number:</span></td>
+  <td><%= @event.record_number %></td>
+  <td><span class="label">Event Name:</span></td>
+  <td><%= @event.event_name %></td>  
+  <td><span class="label">Event Status:</span></td>
+  <td><%= l @event.event_status %></td>
+</tr>
+<tr>
+  <td><span class="label">Event Onset Date:</span></td>
+  <td><%= @event.event_onset_date %></td>
+  <td><span class="label">Event Type:</span></td>
+  <td><%= l @event.event_type %></td>
+  <td><span class="label">Event Case Status:</span></td>
+  <td><%= l @event.event_case_status %></td>
+</tr>
+<tr>
+  <td><span class="label">Investigation LHD Status:</span></td>
+  <td><%= l @event.investigation_LHD_status %></td>
+  <td><span class="label">Invetigation Start Date:</span></td>
+  <td><%= @event.investigation_started_date %></td>
+  <td><span class="label">Invesitgation Complete Date:</span></td>
+  <td><%= @event.investigation_completed_LHD_date %></td>
+</tr>
+<tr>
+  <td><span class="label">Imported From:</span></td>
+  <td><%= l @event.imported_from %></td>
+  <td><span class="label">Outbreak Associated:</span></td>
+  <td><%= l @event.outbreak_associated %></td>
+  <td><span class="label">Outbreak Name:</span></td>
+  <td><%= @event.outbreak_name %></td>
+</tr>
+<tr>
+  <td><span class="label">Review Completed Date:</span></td>
+  <td><%= @event.review_completed_UDOH_date %></td>
+  <td><span class="label">First Reported to PH Date:</span></td>
+  <td><%= @event.first_reported_PH_date %></td>
+  <td><span class="label">Results Reported to Clinician Date:</span></td>
+  <td><%= @event.results_reported_to_clinician_date %></td>
+</tr>
+<tr>
+  <td><span class="label">MMWR Year:</span></td>
   <td><%= @event.MMWR_year %></td>
-  <td><%= label(:event, :MMWR_week) %></td>
+  <td><span class="label">MMWR Week:</span></td>
   <td><%= @event.MMWR_week %></td>
 </tr>
 </table>
 </fieldset>
+
 <%= link_to 'Edit', edit_cmr_path(@event) %> |
 <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |
 <%= link_to 'Back', cmrs_path %>
 
-<%# Currently makes some gross, simplifying assumptions: %>
-<%#  - the primary_entity is always a person: %>
-<%#  - the secondary entity is always a hospital: %>
-<fieldset>
-  <legend>Associations</legend>
-  <% if not @event.participations.empty? %>
-    <table cellpadding="2">
-    <% for participant in @event.participations %>
-      <% for entity in [participant.primary_entity, participant.secondary_entity] %>
-        <% unless entity.nil? %>
-        <tr>
-          <% if entity.entity_type == 'person' %>
-            <% f_name = fml(" ", entity.current_person.first_name, "") unless entity.current_person.first_name.blank? %>
-            <% name = entity.current_person.last_name + f_name.to_s %>
-            <td>Person: <%=link_to name, entity_path(entity) %></td>
-          <% elsif entity.entity_type == 'place' %> 
-            <td>Place: 
-            <% if entity.places.last.is_hospital? %> 
-              Hospital:
-            <% end %>
-            <%= entity.places.last.name %></td>
-          <% end %>
-        </tr>
-        <% end %>
-      <% end %>
-      <% unless participant.hospitals_participation.nil? %>
-      <tr>
-        <td>Hospitalization data: Admitted: <%= participant.hospitals_participation.admission_date || 'Unknown' %> Discharged: <%= participant.hospitals_participation.discharge_date || 'Unknown' %></td>
-      <tr>
-      <% end %>
-    <% end %>
-    </table>
-  <% else %>
-    <p>No entities are associated with this CMR.</p>
-  <% end %>
-</fieldset>
 <%#= link_to 'Add an association', associations_event_path(@event) %>

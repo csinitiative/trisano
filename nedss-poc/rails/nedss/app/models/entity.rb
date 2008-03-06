@@ -3,13 +3,13 @@ class Entity < ActiveRecord::Base
   has_one  :current_person, :class_name => 'Person', :order => 'created_at DESC'
 
   has_many :places, :before_add => :set_entity_type
-  has_one  :current_place, :order => 'created_at DESC'
+  has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
   has_many :animals, :before_add => :set_entity_type
-  has_one  :current_animal, :order => 'created_at DESC'
+#  has_one  :current_animal, :class_name => 'Animal', :order => 'created_at DESC'
 
   has_many :materials, :before_add => :set_entity_type
-  has_one  :current_material, :order => 'created_at DESC'
+#  has_one  :current_material, :class_name => 'Material', :order => 'created_at DESC'
 
   has_many :entities_locations, :foreign_key => 'entity_id'
   has_many :locations, :through => :entities_locations

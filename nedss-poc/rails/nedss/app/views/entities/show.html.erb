@@ -1,6 +1,6 @@
 <h1>Show <%= @type.capitalize %> </h1>
 
-<%= render :partial => "#{@type.pluralize}/show" %>
+<%= render :partial => "#{@type.pluralize}/show", :locals => {:entity_data => @entity} %>
 <%= link_to 'Edit', edit_entity_path(@entity) %>
 <%= link_to 'Export to CSV', entity_path(@entity)+'.csv' %>
 <%= render :partial => 'entity_list', :locals => {:is_index => false} %>
@@ -10,7 +10,7 @@
 <legend>Location Information</legend>
 <% if not @entity.locations.empty? %>
   <table>
-    <%= render :partial => "locations/location", :collection => @entity.current_locations %>
+    <%= render :partial => "locations/location", :collection => @entity.current_locations, :locals => {:entity_data => @entity} %>
     </table>
 <% else %>
     <p>No location information available.</p>

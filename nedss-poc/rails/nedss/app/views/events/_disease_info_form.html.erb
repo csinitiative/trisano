@@ -7,6 +7,7 @@
           <%= d.label(:disease_id, "Disease") %>
           <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {}) %>
         </td>
+      </tr>
       <tr>
         <td><%= d.label(:disease_onset_date) %></td>
         <td><%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %></td>
@@ -30,11 +31,11 @@
       </tr>
       <% end %>
     <% end %>
-      </tr>
       <tr>
     <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
         <td><%= d.label(:died_id) %></td>
         <td><%= d.dropdown_code_field(:died_id, 'yesno', {}) %></td>
+      </tr>
       <tr>
         <td><%= d.label(:pregnant_id) %></td>
         <td><%= d.dropdown_code_field(:pregnant_id, 'yesno', {}) %></td>

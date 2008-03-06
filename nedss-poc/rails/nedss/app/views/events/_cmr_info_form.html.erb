@@ -43,13 +43,13 @@
     <td><%= f.label(:investigation_completed_LHD_date, "Investigation completed date") %></td>
     <td><%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %></td>
   </tr>
+  <tr>
     <td><%= f.label(:review_completed_UDOH_date, "Review completed date") %></td>
     <td><%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
     <td><%= f.label(:first_reported_PH_date, "First reported date") %></td>
     <td><%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
     <td><%= f.label(:results_reported_to_clinician_date) %></td>
     <td><%= f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now) %></td>
-  <tr>
   </tr>
 </table>
 </fieldset>

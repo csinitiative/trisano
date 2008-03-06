@@ -1,65 +1,66 @@
-<% p = @entity.person %>
+<% e = entity_data %>
+<% p = entity_data.current_person %>
 <fieldset>
 <legend> Person Information/Demographics</legend>  
 <table cellpadding="2">
   <tr>
-    <td><%= label(:person, :last_name) %></td>
+    <td><span class="label">Last Name:</span></td>
     <td><%= p.last_name %></td>
-    <td><%= label(:person, :first_name) %></td>
+    <td><span class="label">First Name:</span></td>
     <td><%= p.first_name %></td>
-    <td><%= label(:person, :middle_name) %></td>
+    <td><span class="label">Middle Name:</span></td>
     <td><%= p.middle_name %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :birth_date) %></td>
+    <td><span class="label">Birth Date:</span></td>
     <td><%= p.birth_date %></td>
     <% if not p.birth_date.blank? %>
-      <td><%= label(:person, :age) %></td>
+      <td><span class="label">Age:</span></td>
       <td><%= calculate_age(p.birth_date) %></td>
     <% elsif not p.approximate_age_no_birthday.blank?  %>
-      <td><%= label(:person, :approximate_age) %></td>
+      <td><span class="label">Approximage Age:</span></td>
       <td><%= p.approximate_age_no_birthday %></td>
     <% end %>
   </tr>
   <tr>
-    <td><%= label(:person, :date_of_death) %></td>
+    <td><span class="label">Date of Death:</span></td>
     <td><%= p.date_of_death %></td>
-    <td><%= label(:person, :ethnicity) %></td>
+    <td><span class="label">Ethnicity:</span></td>
     <td><%= l p.ethnicity %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :birth_gender) %></td>
+    <td><span class="label">Birth Gender:</span></td>
     <td><%= l p.birth_gender %></td>
-    <td><%= label(:person, :current_gender) %></td>
+    <td><span class="label">Current Gender:</span></td>
     <td><%= l p.current_gender %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :primary_language) %></td>
+    <td><span class="label">Primary Language:</span></td>
     <td><%= l p.primary_language %></td>
-    <td><%= label(:person, :race) %></td>
+    <td><span class="label">Race:</span></td>
     <td>
-      <% i = 0; for race in @entity.races %>
+      <% i = 0; for race in e.races %>
         <%= " and " unless i == 0 %><%= l race %>
         <% i += 1 %>
       <% end %>
     </td>
   </tr>
   <tr>
-    <td><%= label(:person, :food_handler) %></td>
+    <td><span class="label">Food Handler:</span></td>
     <td><%= l p.food_handler %></td>
-    <td><%= label(:person, :healthcare_worker) %></td>
+    <td><span class="label">Healthcare Worker:</span></td>
     <td><%= l p.healthcare_worker %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :group_living) %></td>
+    <td><span class="label">Group Living:</span></td>
     <td><%= l p.group_living %></td>
-    <td><%= label(:person, :day_care_association) %></td>
+    <td><span class="label">Day Care Association:</span></td>
     <td><%= l p.day_care_association %></td>
   </tr>
   <tr>
-    <td><%= label(:person, :risk_factors) %></td>
+    <td><span class="label">Risk Factors:</span></td>
     <td><%= p.risk_factors %></td>
-    <td><%= label(:person, :risk_factors_notes) %></td>
+    <td><span class="label">Risk Factor Notes:</span></td>
     <td><%= p.risk_factors_notes %></td>
   </tr>
 </table>

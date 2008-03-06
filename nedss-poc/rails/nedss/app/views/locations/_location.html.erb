@@ -21,6 +21,6 @@
 <%= fml " Ext. ", p.extension, "" if p.extension -%>
   <% end %>
     </td>
-  <td><%= link_to 'Edit', edit_entity_location_path(@entity, location) %></td>
-  <td><%= link_to 'Destroy', entity_location_path(@entity, location), :confirm => 'Are you sure?', :method => :delete %></td>
+  <td><%= link_to 'Edit', edit_entity_location_path(entity_data, location) %></td>
+  <td><%= link_to 'Destroy', entity_location_path(entity_data, location), :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>
