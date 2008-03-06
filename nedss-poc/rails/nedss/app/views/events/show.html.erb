@@ -1,4 +1,18 @@
 <h1>Show Confidential Morbidity Report</h1>
+
+<script type="text/javascript">
+var myTabs = new YAHOO.widget.TabView("cmr_tabs");
+</script>
+
+<div id="cmr_tabs" class="yui-navset">
+<ul class="yui-nav">
+<li class="selected"><a href="#demographic_tab"><em>Demographic Information</em></a></li>                                                                                           <li><a href="#clinical_tab"><em>Clinical Information</em></a></li>
+<li><a href="#lab_info_tab"><em>Laboratory Information</em></a></li>
+<li><a href="#administrative_tab"><em>Administrative</em></a></li>
+</ul>
+
+<div class="yui-content">
+<div id="demographic_tab">
 <% patient_entity = @event.active_patient.active_primary_entity %>
 <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
 
@@ -13,7 +27,8 @@
 <% end %>
 <%= link_to 'Add a Location', new_entity_location_path(patient_entity) %>
 </fieldset>
-
+</div>
+<div id="clinical_tab">
 <fieldset>
 <legend>Clinical Information</legend>  
 <table cellpadding="2">
@@ -49,7 +64,9 @@
 </tr>
 </table>
 </fieldset>
+</div>
 
+<div id="lab_info_tab">
 <fieldset>
 <legend>Laboratory Information</legend>  
 <table cellpadding="2">
@@ -71,7 +88,9 @@
 </tr>
 </table>
 </fieldset>
+</div>
 
+<div id="administrative">
 <fieldset>
 <legend>Laboratory Information</legend>  
 <table cellpadding="2">
@@ -123,7 +142,8 @@
 </tr>
 </table>
 </fieldset>
-
+</div>
+</div>
 <%= link_to 'Edit', edit_cmr_path(@event) %> |
 <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |
 <%= link_to 'Back', cmrs_path %>
