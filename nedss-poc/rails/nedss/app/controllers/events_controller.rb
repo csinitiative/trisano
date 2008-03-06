@@ -130,7 +130,7 @@ class EventsController < ApplicationController
   private
   
   def prepopulate
-    @event.participation.entity_primary.person.first_name = params[:first_name]
+    @event.active_patient.active_primary_entity.person.first_name = params[:first_name]
   end
   
 end
