@@ -2,11 +2,25 @@
 
 <%= error_messages_for :object => [@event, @event.disease, @event.lab_result] %>
 
-<% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |f| %>
-  <p>
-    <%= render :partial => 'form', :locals => { :f => f } %>
+<script type="text/javascript">
+var myTabs = new YAHOO.widget.TabView("cmr_tabs");
+</script>
+
+    <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |f| %>
+
+<div id="cmr_tabs" class="yui-navset">
+  <ul class="yui-nav">
+    <li class="selected"><a href="#clinical_tab"><em>Clinical Information</em></a></li>
+    <li><a href="#lab_info_tab"><em>Laboratory Information</em></a></li>
+    <li><a href="#administrative_tab"><em>Administrative</em></a></li>
+  </ul>
+  <div class="yui-content">
+     <div id="clinical_tab"><p><%= render :partial => 'disease_info_form', :locals => { :f => f } %></p></div>
+     <div id="lab_info_tab"><p><%= render :partial => 'lab_info_form', :locals => {:f => f} %> </p></div>
+     <div id="administrative_tab"><p><%= render :partial => 'cmr_info_form', :locals => {:f => f} %> </p></div>
+  </div>
+</div>
     <%= f.submit "Update" %>
-  </p>
 <% end %>
 
 <%= link_to 'Show', cmr_url(@event) %> |
