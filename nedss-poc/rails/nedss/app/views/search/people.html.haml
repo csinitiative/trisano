@@ -34,4 +34,4 @@
   %br
   %br
   
-  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name,  :last_name => @last_name  })
+  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name,  :last_name => @last_name, :birth_date => params[:birth_date]  }, {:id => "start_cmr"})

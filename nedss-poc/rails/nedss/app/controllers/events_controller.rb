@@ -133,6 +133,7 @@ class EventsController < ApplicationController
     # Perhaps include a message if we know the names were split out of a full text search
     @event.active_patient.active_primary_entity.person.first_name = params[:first_name]
     @event.active_patient.active_primary_entity.person.last_name = params[:last_name]
+    @event.active_patient.active_primary_entity.person.birth_date = params[:birth_date]
   end
   
 end
