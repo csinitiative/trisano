@@ -8,7 +8,7 @@
       <%= render :partial => "#{@type.pluralize}/index.html.erb", :locals => { :entity => entity } %>
       <td><%= link_to 'Show', entity %></td>
       <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
-      <td><%= link_to 'Destroy', entity, :confirm => 'Are you sure?', :method => :delete %></td>
+      <td><%= link_to 'Delete', entity, :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
   <% end %>
   </table>

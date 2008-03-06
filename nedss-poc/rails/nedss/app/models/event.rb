@@ -20,6 +20,7 @@ class Event < ActiveRecord::Base
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
+  has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
   validates_date :event_onset_date
 
@@ -72,6 +73,7 @@ class Event < ActiveRecord::Base
     @active_jurisdiction || jurisdiction
   end
 
+  # Ultimately need to populate the primary_entity field with the patient's ID.
   def active_jurisdiction=(attributes)
     if new_record?
       @active_jurisdiction = Participation.new(attributes)
@@ -82,10 +84,18 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def reporting_agency
+  def active_reporting_agency
+    @active_reporting_agency || reporting_agency
   end
 
-  def reporting_agency=
+  def active_reporting_agency=(attributes)
+    if new_record?
+      @active_reporting_agency = Participation.new(attributes)
+      @active_reporting_agency.role_id = Event.participation_code('Reported By')
+    else
+      p attributes
+      active_reporting_agency.update_attributes(attributes)
+    end
   end
 
   def self.find_by_criteria(*args)

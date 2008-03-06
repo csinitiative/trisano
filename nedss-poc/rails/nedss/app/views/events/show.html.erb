@@ -1,7 +1,6 @@
 <h1>Show Confidential Morbidity Report</h1>
 <% patient_entity = @event.active_patient.active_primary_entity %>
 <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
-<p/>
 
 <fieldset>
 <legend>Location Information</legend>
@@ -68,7 +67,7 @@
 </tr>
 <tr>
   <td><span class="label">Tested at UPHL lab:</span></td>
-  <td><span class="label"><%= l @event.lab_result.tested_at_uphl_yn %></td>
+  <td><%= l @event.lab_result.tested_at_uphl_yn %></td>
 </tr>
 </table>
 </fieldset>
