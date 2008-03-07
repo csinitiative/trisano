@@ -14,7 +14,23 @@ steps_for(:search_uat) do
   
     Then("known person '$person' should appear in the search results.") do |person|
       # This needs to be refined, as the person will show up just because they are in the search fields of the response
+      # This is OK for now, as long as the search doesn't include a middle name, but the results do
       response.should have_text(/#{person}/)
+    end
+    
+    Then("the birthdate '$birth_date' should appear in the search results.") do |birth_date|
+      # Get some more accurate parsing in here. Other fixture rows with identical birth dates could cause a false positive
+      response.should have_text(/#{birth_date}/)
+    end
+    
+    Then("the gender '$gender' should appear in the search results.") do |gender|
+      # Again, more specific parsing
+      response.should have_text(/#{gender}/)
+    end
+    
+    Then("the county '$county' should appear in the search results.") do |county|
+      # And again -- maybe parse out the result row and then just search that row in the cases that follow
+      response.should have_text(/#{county}/)
     end
     
     When("I search for the non-existent person '$person'") do |person|
@@ -47,6 +63,7 @@ steps_for(:search_uat) do
   
     Then("known person by birthdate '$person' with correct birthdate '$birthdate' should appear in the search results.") do |person, birthdate|
       # This needs to be refined, as the person and birthdate will show up just because they are in the search fields of the response
+      # This is OK for now, as long as the search doesn't include a middle name, but the results do
       response.should have_text(/#{person}/) 
       response.should have_text(/#{birthdate}/)
     end
@@ -56,7 +73,7 @@ steps_for(:search_uat) do
     end
   
     Then("known person by incorrect birthdate '$person' should not appear in the search results.") do |person|
-      response.should have_text(/no results/)
+      response.should_not have_text(/#{person}/)
     end
     
 end

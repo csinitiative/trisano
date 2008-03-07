@@ -23,11 +23,32 @@
 
 - if !@people.blank?
   %h3 Results
-  - for person in @people
-    = link_to("#{person.first_name} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
-    - if !person.birth_date.blank?
-      = "&nbsp;&nbsp;&nbsp;(#{person.birth_date.month}/#{person.birth_date.day}/#{person.birth_date.year})"
-    %br
+  %table{ :width => 500 }
+    %tr
+      %td
+        %b
+          Name
+      %td
+        %b
+          Birthdate
+      %td
+        %b
+          Gender
+      %td
+        %b
+          County
+    - for person in @people
+      %tr
+        %td
+          = link_to("#{person.first_name} #{person.middle_name if !person.middle_name.blank?} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
+        %td
+          - if !person.birth_date.blank?
+            = "#{person.birth_date.month}/#{person.birth_date.day}/#{person.birth_date.year}"
+        %td
+          = person.gender
+        %td
+          = person.county
+
 - if @people.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:birth_date].blank?)
   <span>Your search returned no results.</span>
   

@@ -14,8 +14,11 @@ describe "/search/people.html.haml" do
   it "should show results when results are present" do
     person = mock_model(Person)
     person.stub!(:first_name).and_return("John")
+    person.stub!(:middle_name).and_return("J.")
     person.stub!(:last_name).and_return("Otter")
     person.stub!(:entity_id).and_return(1234)
+    person.stub!(:gender).and_return("Male")
+    person.stub!(:county).and_return("Salt Lake")
     person.stub!(:birth_date).and_return(nil)
     assigns[:people] = [person]
     do_render
