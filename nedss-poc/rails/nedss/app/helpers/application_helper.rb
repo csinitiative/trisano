@@ -19,5 +19,9 @@ module ApplicationHelper
       "! "+number
     end
   end
+  
+  def calculate_age(date)
+   (Date.today - date).to_i / 365
+  end
 
 end

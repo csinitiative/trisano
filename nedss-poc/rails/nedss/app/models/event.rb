@@ -100,15 +100,40 @@ class Event < ActiveRecord::Base
 
   def self.find_by_criteria(*args)
     options = args.extract_options!
+    fulltext_terms = []
     where_clause = ""
     order_by_clause = ""
+    issue_query = false
     
     if !options[:disease].blank?
       issue_query = true
       where_clause += "d.id = " + sanitize_sql(options[:disease])
+      order_by_clause = "last_name"
     end
     
-    query = "select disease_events.event_id, first_name, last_name, middle_name, disease_name, record_number, event_onset_date, code_description
+    # Debt: The sql_term building is duplicated in Event. Where do you
+    # factor out code common to models? Also, it may be that we don't 
+    # need two different search avenues (CMR and People).
+    if !options[:fulltext_terms].blank?
+      issue_query = true
+      soundex_codes = []
+      raw_terms = options[:fulltext_terms].split(" ")
+      
+      raw_terms.each do |word|
+        soundex_code = Text::Soundex.soundex(word)
+        soundex_codes << soundex_code.downcase unless soundex_code.nil?
+        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+      end
+      
+      fulltext_terms << soundex_codes unless soundex_codes.empty?
+      sql_terms = fulltext_terms.join(" | ")
+      
+      where_clause += " AND " if !where_clause.empty?
+      where_clause += "vector @@ to_tsquery('default', '#{sql_terms}')"
+      order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+    end
+    
+    query = "select disease_events.event_id, first_name, last_name, middle_name, birth_date, disease_name, record_number, event_onset_date, code_description
                   from diseases d
                   inner join (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
                   inner join participations p on p.event_id = disease_events.event_id
@@ -119,7 +144,7 @@ class Event < ActiveRecord::Base
                   left outer join addresses a on a.location_id = l.id
                   left outer join codes c on c.id = a.county_id
                   WHERE #{where_clause}
-                  ORDER BY last_name"
+                  ORDER BY #{order_by_clause}"
     
     find_by_sql(query) if issue_query
   end

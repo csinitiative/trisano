@@ -54,3 +54,29 @@ phil_silvers_cur:
   created_at: <%= Time.now.to_s :db %>
   vector: "'p400':3 'phil':1 's416':4 'silver':2"
 
+
+marks_current:
+  age_type_id: 
+  last_name: Marks
+  entity_id: !str 84
+  primary_language_id: !str 301
+  ethnicity_id: !str 102
+  risk_factors_notes: ""
+  day_care_association_id: !str 1403
+  group_living_id: !str 1403
+  first_name_soundex: K640
+  healthcare_worker_id: !str 1403
+  approximate_age_no_birthday: 
+  current_gender_id: !str 1
+  birth_gender_id: !str 1
+  middle_name: J.
+  date_of_death: 
+  first_name: Karl
+  risk_factors: ""
+  id: !str 5
+  food_handler_id: !str 1403
+  birth_date: !str 1974-03-12
+  last_name_soundex: M620
+  created_at: <%= Time.now.to_s :db %>
+  vector: '''k640'':3 ''karl'':1 ''m620'':4 ''mark'':2'
+

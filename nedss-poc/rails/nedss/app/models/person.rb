@@ -38,7 +38,11 @@ class Person < ActiveRecord::Base
       order_by_clause += "last_name, first_name ASC;" 
     end
     
+    # Some more debt here. The sql_term building is duplicated in Event. Where
+    # do you factor out code common to models? Also, it may be that we don't need
+    # two different search avenues (CMR and People).
     if !options[:fulltext_terms].blank?
+      
       issue_query = true
       soundex_codes = []
       raw_terms = options[:fulltext_terms].split(" ")

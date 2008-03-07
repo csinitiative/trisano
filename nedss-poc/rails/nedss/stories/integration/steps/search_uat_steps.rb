@@ -12,7 +12,8 @@ steps_for(:search_uat) do
       get "/search/people?name=#{person}"
     end
   
-    Then("known person '$person' should appear in the search results.") do |person|  
+    Then("known person '$person' should appear in the search results.") do |person|
+      # This needs to be refined, as the person will show up just because they are in the search fields of the response
       response.should have_text(/#{person}/)
     end
     
@@ -45,6 +46,7 @@ steps_for(:search_uat) do
     end
   
     Then("known person by birthdate '$person' with correct birthdate '$birthdate' should appear in the search results.") do |person, birthdate|
+      # This needs to be refined, as the person and birthdate will show up just because they are in the search fields of the response
       response.should have_text(/#{person}/) 
       response.should have_text(/#{birthdate}/)
     end

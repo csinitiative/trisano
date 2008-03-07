@@ -1,0 +1,11 @@
+marks_disease:
+  disease_id: !str 2
+  pregnancy_due_date: 
+  id: !str 2
+  hospitalized_id: !str 1401
+  pregnant_id: !str 1401
+  died_id: !str 1401
+  disease_onset_date: 
+  date_diagnosed: 
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 2

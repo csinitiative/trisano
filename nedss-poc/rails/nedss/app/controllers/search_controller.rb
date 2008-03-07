@@ -33,8 +33,8 @@ class SearchController < ApplicationController
     flash[:error] = ""
     
     begin
-      if !params[:disease].blank?
-        @cmrs = Event.find_by_criteria(:disease => params[:disease])
+      if !params[:disease].blank? || !params[:name].blank?
+        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], :disease => params[:disease])
       end
     rescue
       flash[:error] = "There was a problem with your search criteria. Please try again."

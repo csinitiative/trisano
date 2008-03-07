@@ -1,7 +1,7 @@
 - form_tag(search_path + "/people", :method => :get) do
 
   %h2
-    Person Search
+    People Search
 
   - if !flash[:error].blank?
     %span{ :style => "color:red" }= flash[:error]

@@ -22,6 +22,7 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:last_name).and_return("Johnson")
     cmr.stub!(:disease_name).and_return("Chicken Pox")
     cmr.stub!(:event_onset_date).and_return("2008/12/12")
+    cmr.stub!(:birth_date).and_return("1977/1/12")
     cmr.stub!(:code_description).and_return("Salt Lake")
 
     assigns[:cmrs] = [cmr]

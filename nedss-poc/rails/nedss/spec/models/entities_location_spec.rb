@@ -12,8 +12,8 @@ describe EntitiesLocation do
   describe "with fixtures loaded" do
     fixtures :entities_locations
 
-    it "should have two records" do
-      EntitiesLocation.should have(2).records
+    it "should have three records" do
+      EntitiesLocation.should have(3).records
     end
 
     it "A Phil Silvers record should point to Phil Silvers" do

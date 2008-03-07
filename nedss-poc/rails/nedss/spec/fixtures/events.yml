@@ -1,0 +1,20 @@
+marks_event:
+  investigation_completed_LHD_date: 
+  outbreak_associated_id: !str 1401
+  record_number: !str 2008500002
+  outbreak_name: ""
+  first_reported_PH_date: 
+  event_onset_date: !str 2008-03-06
+  review_completed_UDOH_date: 
+  imported_from_id: !str 2101
+  investigation_started_date: 
+  results_reported_to_clinician_date: 
+  event_name: ""
+  MMWR_week: !str 10
+  event_status_id: !str 1901
+  event_type_id: !str 2001
+  event_case_status_id: !str 1801
+  MMWR_year: !str 2008
+  id: !str 2
+  investigation_LHD_status_id: !str 1701
+  created_at: <%= Time.now.to_s :db %> 
