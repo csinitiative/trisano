@@ -8,7 +8,7 @@ Story: Search user acceptance tests
     
     When I search for the known person 'Karl Marks'
     Then known person 'Karl J. Marks' should appear in the search results.
-    And the birthdate '10/2/1902' should appear in the search results.
+    And the birthdate '1974-03-12' should appear in the search results.
     And the gender 'Male' should appear in the search results.
     And the county 'Salt Lake' should appear in the search results.
 

@@ -17,13 +17,15 @@ describe "/search/cmrs.html.haml" do
     cmr = mock_model(Object)
     cmr.stub!(:record_number).and_return("20083453")
     cmr.stub!(:event_id).and_return("1234567")
+    cmr.stub!(:entity_id).and_return("12")
     cmr.stub!(:first_name).and_return("John")
     cmr.stub!(:middle_name).and_return("J")
     cmr.stub!(:last_name).and_return("Johnson")
     cmr.stub!(:disease_name).and_return("Chicken Pox")
     cmr.stub!(:event_onset_date).and_return("2008/12/12")
     cmr.stub!(:birth_date).and_return("1977/1/12")
-    cmr.stub!(:code_description).and_return("Salt Lake")
+    cmr.stub!(:gender).and_return("Male")
+    cmr.stub!(:county).and_return("Salt Lake")
 
     assigns[:cmrs] = [cmr]
     assigns[params[:disease]] = "1"

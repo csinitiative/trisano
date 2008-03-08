@@ -133,16 +133,18 @@ class Event < ActiveRecord::Base
       order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
     end
     
-    query = "select disease_events.event_id, first_name, last_name, middle_name, birth_date, disease_name, record_number, event_onset_date, code_description
-                  from diseases d
-                  inner join (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
-                  inner join participations p on p.event_id = disease_events.event_id
-                  inner join (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
-                  inner join events e on e.id = disease_events.event_id
-                  left outer join entities_locations el on el.entity_id = people.entity_id
-                  left outer join locations l on l.id = el.location_id
-                  left outer join addresses a on a.location_id = l.id
-                  left outer join codes c on c.id = a.county_id
+    query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date, 
+                    disease_name, record_number, event_onset_date, c.code_description as gender, co.code_description as county
+                  FROM diseases d
+                  INNER JOIN (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
+                  INNER JOIN participations p on p.event_id = disease_events.event_id
+                  INNER JOIN (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
+                  INNER JOIN events e on e.id = disease_events.event_id
+                  LEFT OUTER JOIN codes c on c.id = people.current_gender_id
+                  LEFT OUTER JOIN entities_locations el on el.entity_id = people.entity_id
+                  LEFT OUTER JOIN locations l on l.id = el.location_id
+                  LEFT OUTER JOIN addresses a on a.location_id = l.id
+                  LEFT OUTER JOIN codes co on co.id = a.county_id
                   WHERE #{where_clause}
                   ORDER BY #{order_by_clause}"
     

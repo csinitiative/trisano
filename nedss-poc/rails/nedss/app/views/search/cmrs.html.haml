@@ -27,12 +27,46 @@
 
 - if !@cmrs.blank?
   %h3 Results
-  - for cmr in @cmrs
-    = link_to("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
-    = " #{cmr.first_name} #{cmr.middle_name} #{cmr.last_name}"
-    - if  !cmr.birth_date.blank?
-      = "(#{calculate_age cmr.birth_date.to_date})"
-    = " #{cmr.disease_name}  #{cmr.event_onset_date} #{cmr.code_description}"
-    %br
+  %table{ :width => 700 }
+    %tr
+      %td
+        %b
+          Record Number
+      %td
+        %b
+          Name
+      %td
+        %b
+          Age / Birth Date
+      %td
+        %b
+          Gender
+      %td
+        %b
+          Disease
+      %td
+        %b
+          County
+      %td
+        %b
+          Onset Date
+    - for cmr in @cmrs
+      %tr
+        %td
+          = link_to("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
+        %td
+          = link_to("#{cmr.first_name} #{cmr.middle_name if !cmr.middle_name.blank?} #{cmr.last_name}", { :controller => "entities", :action => "show", :id => "#{cmr.entity_id}" })
+        %td
+          - if  !cmr.birth_date.blank?
+            = "#{calculate_age cmr.birth_date.to_date} / #{cmr.birth_date}"
+        %td
+          = cmr.gender
+        %td
+          = cmr.disease_name
+        %td
+          = cmr.county
+        %td
+          = cmr.event_onset_date
+
 - if @cmrs.blank? && (!params[:disease].blank?)
   Your search returned no results.
