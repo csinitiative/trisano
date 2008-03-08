@@ -1,10 +1,8 @@
 <h1>New Confidential Morbidity Report</h1>
 
 <%# Debt: Figure out how to merge these all together. %>
+<%# TODO: Add all other objects
 <%= error_messages_for :object => [@event, @event.disease, @event.lab_result, @event.active_patient.active_primary_entity.person] %>
-
-<%= error_messages_for :object => [@event.active_reporting_agency.active_secondary_entity.place] %>
-
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.entities_location] unless @event.active_patient.active_primary_entity.entities_location.nil? %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.address] unless @event.active_patient.active_primary_entity.address.nil? %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.telephone] unless @event.active_patient.active_primary_entity.telephone.nil? %>
