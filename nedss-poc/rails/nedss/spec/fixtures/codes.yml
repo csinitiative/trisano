@@ -383,11 +383,17 @@ participant_hospitalized_at:
 participant_reported_by:
   id: 2303
   code_name: "participant"
-  the_code: "R"
+  the_code: "RB"
   code_description: "Reported By"
 
-participant_jurisdiction:
+participant_reporting_agency:
   id: 2304
+  code_name: "participant"
+  the_code: "RA"
+  code_description: "Reporting Agency"
+
+participant_jurisdiction:
+  id: 2305
   code_name: "participant"
   the_code: "J"
   code_description: "Jurisdiction"

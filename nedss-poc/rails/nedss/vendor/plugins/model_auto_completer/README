@@ -1,0 +1,24 @@
+= model_auto_completer
+
+== Description
+
+model_auto_completer provides auto completion for models. That is, the user autocompletes a text field, but due to a small contract the widget is able to manage a hidden field that stores the ID of the model that corresponds to the selected completion.
+
+== Usage
+
+This plugin offers two helpers and a class method for controllers. See the
+documentation of ModelAutoCompleterHelper.
+
+== Installation
+
+To install this plugin run
+
+  script/plugin install svn://rubyforge.org/var/svn/model-ac/trunk/vendor/plugins/model_auto_completer
+
+== Copyright
+
+(C) 2007 {ASPgems S.L.}[http://www.aspgems.com]
+
+== License
+
+This code is available under the MIT license.

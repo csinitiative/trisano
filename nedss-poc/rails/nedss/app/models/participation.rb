@@ -6,7 +6,6 @@ class Participation < ActiveRecord::Base
   has_many :hospitals_participations
 
   before_validation :save_associations
-  validates_associated :primary_entity
 
   def active_primary_entity
     @active_primary_entity || primary_entity
@@ -14,6 +13,14 @@ class Participation < ActiveRecord::Base
 
   def active_primary_entity=(attributes)
     @active_primary_entity = Entity.new(attributes)
+  end
+
+  def active_secondary_entity
+    @active_secondary_entity || secondary_entity
+  end
+
+  def active_secondary_entity=(attributes)
+    @active_secondary_entity = Entity.new(attributes)
   end
 
   def hospitals_participation
@@ -27,6 +34,7 @@ class Participation < ActiveRecord::Base
   private
 
   def save_associations
-    self.primary_entity = active_primary_entity
+    self.primary_entity = active_primary_entity unless Utilities::model_empty?(active_primary_entity)
+    self.secondary_entity = active_secondary_entity unless Utilities::model_empty?(active_secondary_entity)
   end
 end

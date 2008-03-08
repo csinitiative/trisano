@@ -1,0 +1,33 @@
+-- 1.4.1 (5 May 2007)
+  * Reworded some bits of the documentation.
+
+-- 1.4 (1 May 2007)
+  * It turned out that Konqueror does no behave like Safari, so
+    right now :send_on_return disables form submission only for
+    Safari.
+
+-- 1.3 (30 Apr 2007)
+  * We only disable the return key in Safari and Konqueror (I assume
+    Konqueror behaves like Safari, check pending) since Firefox and IE
+    do not submit the form when you press return on the completion list.
+
+
+-- 1.2 (29 Apr 2007)
+  * Small change to the onkeypress handler.
+
+
+-- 1.1 (25 Mar 2007)
+  
+  * [NEW] Added a callback that receives the text field element, the
+  selected value, the hidden field element, and the extracted id.
+
+
+-- 1.0 (17 Feb 2007)
+  
+  * [BUG] The foreign key was not properly retrieved sometimes
+  (reported by James Stewart, thank you!)
+
+
+-- 0.9 (22 Jan 2007)
+
+  * Initial release

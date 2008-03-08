@@ -20,11 +20,11 @@ class Event < ActiveRecord::Base
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
-  has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
+  has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
 
   validates_date :event_onset_date
 
-  before_validation :save_associations
+  before_validation_on_create :save_associations
   after_validation :clear_base_error
   
   before_save :generate_mmwr
@@ -79,7 +79,6 @@ class Event < ActiveRecord::Base
       @active_jurisdiction = Participation.new(attributes)
       @active_jurisdiction.role_id = Event.participation_code('Jurisdiction')
     else
-      p attributes
       active_jurisdiction.update_attributes(attributes)
     end
   end
@@ -89,11 +88,16 @@ class Event < ActiveRecord::Base
   end
 
   def active_reporting_agency=(attributes)
+    if attributes[:secondary_entity_id].blank? # User selected an existing agency
+      attributes.delete('secondary_entity_id')
+      attributes[:active_secondary_entity][:entity_type] = 'place'
+    else                                       # User entered a new agency
+      attributes.delete('active_secondary_entity')
+    end
     if new_record?
       @active_reporting_agency = Participation.new(attributes)
-      @active_reporting_agency.role_id = Event.participation_code('Reported By')
+      @active_reporting_agency.role_id = Event.participation_code('Reporting Agency')
     else
-      p attributes
       active_reporting_agency.update_attributes(attributes)
     end
   end
@@ -180,6 +184,7 @@ class Event < ActiveRecord::Base
     participations << @active_patient unless @active_patient.nil? # Change this when patients are edited along with CMRs
     participations << @active_hospital unless @active_hospital.nil?
     participations << @active_jurisdiction unless @active_jurisdiction.nil?
+    participations << @active_reporting_agency unless @active_reporting_agency.nil?
   end
 
   def clear_base_error

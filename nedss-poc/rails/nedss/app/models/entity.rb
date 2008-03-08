@@ -36,6 +36,15 @@ class Entity < ActiveRecord::Base
     set_entity_type(@person)
   end  
 
+  def place
+    @place || current_place
+  end
+
+  def place=(attributes)
+    @place = Place.new(attributes)
+    set_entity_type(@place)
+  end  
+
   def entities_location
     @entities_location
   end
@@ -85,6 +94,8 @@ class Entity < ActiveRecord::Base
     case entity_type
     when "person"
       people << @person unless @person.nil?
+    when "place"
+      places << @place unless @place.nil?
 
     # More 'when' clauses as needed
     end

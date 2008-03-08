@@ -1,6 +1,18 @@
 require "chronic"
 
 class EventsController < ApplicationController
+
+  def auto_complete_for_event_reporting_agency
+    entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
+    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
+                     :conditions => [ "LOWER(name) LIKE ? and place_type_id = ?", entered_name.downcase + '%', 2201 ],
+                     :order => "entity_id, created_at ASC, name ASC",
+                     :limit => 10
+              )
+    # render :inline => "<%= auto_complete_result @items, 'name' %>"
+    render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
+  end
+
   # GET /event
   # GET /event.xml
   def index
@@ -28,16 +40,23 @@ class EventsController < ApplicationController
   # GET /event/new
   # GET /event/new.xml
   def new
-    @event = Event.new(:event_onset_date => Chronic.parse('today'), 
-                       :disease => {}, 
-                       :lab_result => {},
-                       :active_patient => { :active_primary_entity => { :person => {}, 
-                                                                        :entities_location => {}, 
-                                                                        :address => {}, 
-                                                                        :telephone => {} 
-                                                                      }
-                                          },
-                       :active_hospital => { :hospitals_participation => {} }
+    @event = Event.new(:event_onset_date        => Chronic.parse('today'), 
+                       :disease                 => {}, 
+                       :lab_result              => {},
+                       :active_patient          => { :active_primary_entity   => { :person => {}, 
+                                                                                   :entities_location => {}, 
+                                                                                   :address => {}, 
+                                                                                   :telephone => {} 
+                                                                                 }
+                                                   },
+                       :active_reporting_agency => { :secondary_entity_id => nil,
+                                                     :active_secondary_entity => { :place => {},
+                                                                                   :entities_location => {}, 
+                                                                                   :address => {}, 
+                                                                                   :telephone => {}
+                                                                                 }
+                                                   },
+                       :active_hospital         => { :hospitals_participation => {} }
                       )
                              
     prepopulate if !params[:from_search].nil?
