@@ -100,7 +100,7 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <td><span class="label">Reporting Agency:</span></td>
   <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.secondary_entity.current_place.nil?%></td>
   <td><span class="label">Jurisdiction:</span></td>
-  <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.secondary_entity.current_place.nil?%></td>
+  <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.secondary_entity.nil?%></td>
 <tr>
 </tr>
   <td><span class="label">Event Name:</span></td>

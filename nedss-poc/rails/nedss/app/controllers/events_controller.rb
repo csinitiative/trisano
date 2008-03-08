@@ -9,7 +9,6 @@ class EventsController < ApplicationController
                      :order => "entity_id, created_at ASC, name ASC",
                      :limit => 10
               )
-    # render :inline => "<%= auto_complete_result @items, 'name' %>"
     render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
@@ -56,7 +55,10 @@ class EventsController < ApplicationController
                                                                                    :telephone => {}
                                                                                  }
                                                    },
+                       :active_jurisdiction     => {},
                        :active_hospital         => { :hospitals_participation => {} }
+
+
                       )
                              
     prepopulate if !params[:from_search].nil?
