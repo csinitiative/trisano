@@ -48,13 +48,13 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <td><span class="label">Hospitalized:</span></td>
   <td><%= l @event.disease.hospitalized %></td>
   <td><span class="label">Hospital:</span></td>
-  <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.secondary_entity.nil?%></td>
+  <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.nil? or @event.hospital.secondary_entity.nil? %></td>
 </tr>
 <tr>
   <td><span class="label">Admission Date:</span></td>
-  <td><span class="label"><%= @event.hospital.hospitals_participation.admission_date %></td>
+  <td><%= @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
   <td><span class="label">Discharge Date:</span></td>
-  <td><%= @event.hospital.hospitals_participation.discharge_date %></td>
+  <td><%= @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
 </tr>
 <tr>
   <td><span class="label">Preganant:</span></td>
@@ -98,9 +98,9 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <td><span class="label">Record Number:</span></td>
   <td><%= @event.record_number %></td>
   <td><span class="label">Reporting Agency:</span></td>
-  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.secondary_entity.current_place.nil?%></td>
+  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
   <td><span class="label">Jurisdiction:</span></td>
-  <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.secondary_entity.nil?%></td>
+  <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
 <tr>
 </tr>
   <td><span class="label">Event Name:</span></td>

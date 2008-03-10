@@ -14,9 +14,9 @@ class Event < ActiveRecord::Base
 
   has_many :participations
 
-# For reasons unknown the following 2 lines don't work.
-#  has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
-#  has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Hospitalized At')]
+# For reasons unknown code like the following won't work.
+# has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
+
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
@@ -29,29 +29,6 @@ class Event < ActiveRecord::Base
   
   before_save :generate_mmwr
   before_create :set_record_number
-
-  def active_patient
-    @active_patient || patient
-  end
-
-  def active_patient=(attributes)
-    @active_patient = Participation.new(attributes)
-    @active_patient.role_id = Event.participation_code('Interested Party')
-  end
-
-  def active_hospital
-    @active_hospital || hospital
-  end
-
-  # Ultimately need to populate the primary_entity field with the patient's ID.
-  def active_hospital=(attributes)
-    if new_record?
-      @active_hospital = Participation.new(attributes)
-      @active_hospital.role_id = Event.participation_code('Hospitalized At')
-    else
-      active_hospital.update_attributes(attributes)
-    end
-  end
 
   def disease
     @disease || disease_events.last
@@ -69,6 +46,40 @@ class Event < ActiveRecord::Base
     @lab_result = LabResult.new(attributes)
   end
 
+  ### Participations
+  # For all secondary (non-patient) participations this code will ultimately need to populate the primary_entity field with the patient's ID.
+  
+  def active_patient
+    @active_patient || patient
+  end
+
+  def active_patient=(attributes)
+    @active_patient = Participation.new(attributes)
+    @active_patient.role_id = Event.participation_code('Interested Party')
+
+    ## This is where the edit code goes
+  end
+  
+  def active_hospital
+    @active_hospital || hospital
+  end
+
+  def active_hospital=(attributes)
+    if new_record?
+      @active_hospital = Participation.new(attributes)
+      @active_hospital.role_id = Event.participation_code('Hospitalized At')
+    else
+      unless attributes.values_blank?
+        if active_hospital.nil?
+          attributes[:role_id] = Event.participation_code('Hospitalized At')
+          self.create_hospital(attributes)
+        else
+          active_hospital.update_attributes(attributes)
+        end
+      end
+    end
+  end
+
   def active_jurisdiction
     @active_jurisdiction || jurisdiction
   end
@@ -79,7 +90,14 @@ class Event < ActiveRecord::Base
       @active_jurisdiction = Participation.new(attributes)
       @active_jurisdiction.role_id = Event.participation_code('Jurisdiction')
     else
-      active_jurisdiction.update_attributes(attributes)
+      unless attributes.values_blank?
+        if active_jurisdiction.nil?
+          attributes[:role_id] = Event.participation_code('Jurisdiction')
+          self.create_jurisdiction(attributes)
+        else
+          active_jurisdiction.update_attributes(attributes)
+        end
+      end
     end
   end
 
@@ -88,19 +106,29 @@ class Event < ActiveRecord::Base
   end
 
   def active_reporting_agency=(attributes)
-    if attributes[:secondary_entity_id].blank? # User selected an existing agency
+    if attributes[:secondary_entity_id].blank? # User entered a new agency
       attributes.delete('secondary_entity_id')
       attributes[:active_secondary_entity][:entity_type] = 'place'
-    else                                       # User entered a new agency
+    else                                       # User selected an existing entity
       attributes.delete('active_secondary_entity')
     end
+
     if new_record?
       @active_reporting_agency = Participation.new(attributes)
       @active_reporting_agency.role_id = Event.participation_code('Reporting Agency')
     else
-      active_reporting_agency.update_attributes(attributes)
+      unless attributes.values_blank?
+        if active_reporting_agency.nil?
+          attributes[:role_id] = Event.participation_code('Reporting Agency')
+          self.create_reporting_agency(attributes)
+        else
+          active_reporting_agency.update_attributes(attributes)
+        end
+      end
     end
   end
+
+  ### End participations
 
   def self.find_by_criteria(*args)
     options = args.extract_options!
@@ -182,9 +210,9 @@ class Event < ActiveRecord::Base
     disease_events << @disease
     lab_results << @lab_result
     participations << @active_patient unless @active_patient.nil? # Change this when patients are edited along with CMRs
-    participations << @active_hospital unless @active_hospital.nil?
-    participations << @active_jurisdiction unless @active_jurisdiction.nil?
-    participations << @active_reporting_agency unless @active_reporting_agency.nil?
+    participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)
+    participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
+    participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank?
   end
 
   def clear_base_error
