@@ -54,10 +54,12 @@ class Event < ActiveRecord::Base
   end
 
   def active_patient=(attributes)
-    @active_patient = Participation.new(attributes)
-    @active_patient.role_id = Event.participation_code('Interested Party')
-
-    ## This is where the edit code goes
+    if new_record?
+      @active_patient = Participation.new(attributes)
+      @active_patient.role_id = Event.participation_code('Interested Party')
+    else
+      active_patient.update_attributes(attributes)
+    end
   end
   
   def active_hospital
@@ -207,9 +209,9 @@ class Event < ActiveRecord::Base
   end
 
   def save_associations
-    disease_events << @disease
-    lab_results << @lab_result
-    participations << @active_patient unless @active_patient.nil? # Change this when patients are edited along with CMRs
+    participations << @active_patient
+    disease_events << @disease unless Utilities::model_empty?(@disease)
+    lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
     participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
     participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank?
