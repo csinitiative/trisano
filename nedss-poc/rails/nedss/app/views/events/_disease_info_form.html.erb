@@ -1,7 +1,7 @@
 <fieldset>
   <legend>Disease Information
-    <span onClick="Element.hide('disease_info_form'); return false;">[Hide]</span>
-    <span onClick="Element.show('disease_info_form'); return false;">[Show]</span>
+  <span id='disease_info_hide' onClick="Element.hide('disease_info_form'); Element.hide('disease_info_hide'); Element.show('disease_info_show'); return false;">[Hide]</span>
+  <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id ='disease_info_form'>
   <table cellpadding="2">

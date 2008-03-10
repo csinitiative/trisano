@@ -1,7 +1,7 @@
 <fieldset>
 <legend>Person Information
-  <span onClick="Element.hide('person_form');return false;">[Hide]</span>
-  <span onClick="Element.show('person_form');return false;">[Show]</span>
+  <span id='person_info_hide' onClick="Element.hide('person_form'); Element.hide('person_info_hide'); Element.show('person_info_show'); return false;">[Hide]</span>
+  <span id='person_info_show' onClick="Element.show('person_form'); Element.hide('person_info_show'); Element.show('person_info_hide'); return false;" style="display: none;">[Show]</span>
 </legend>
 <%= f.hidden_field(:entity_type) %>
 <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>

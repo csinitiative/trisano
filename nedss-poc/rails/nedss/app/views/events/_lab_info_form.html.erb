@@ -1,7 +1,7 @@
 <fieldset>
   <legend>Laboratory Information
-    <span onClick="Element.hide('lab_info_form'); return false;">[Hide]</span>
-    <span onClick="Element.show('lab_info_form'); return false;">[Show]</span>
+    <span id='lab_info_hide' onClick="Element.hide('lab_info_form'); Element.hide('lab_info_hide'); Element.show('lab_info_show'); return false;">[Hide]</span>
+    <span id='lab_info_show' onClick="Element.show('lab_info_form'); Element.hide('lab_info_show'); Element.show('lab_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id='lab_info_form'>
   <table cellpadding="2">

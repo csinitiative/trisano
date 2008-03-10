@@ -1,7 +1,7 @@
 <fieldset>
   <legend>Address Information
-    <span onClick="Element.hide('address_info_form'); return false;">[Hide]</span>
-    <span onClick="Element.show('address_info_form'); return false;">[Show]</span>
+    <span id='address_info_hide' onClick="Element.hide('address_info_form'); Element.hide('address_info_hide'); Element.show('address_info_show'); return false;">[Hide]</span>
+    <span id='address_info_show' onClick="Element.show('address_info_form'); Element.hide('address_info_show'); Element.show('address_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>  
   <% f.fields_for(:entities_location, location_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
   <%= el.hidden_field(:entity_id) %>
