@@ -1,5 +1,9 @@
 <fieldset>
-<legend>CMR Information</legend>  
+<legend>CMR Information
+  <span onClick="Element.hide('cmr_info_form'); return false;">[Hide]</span>
+  <span onClick="Element.show('cmr_info_form'); return false;">[Show]</span>
+</legend>
+<div id='cmr_info_form'>
 <table cellpadding="2">
   <% if not @event.record_number.blank? %>
   <tr>
@@ -63,4 +67,5 @@
     <td><%= f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now) %></td>
   </tr>
 </table>
+</div>
 </fieldset>

@@ -1,7 +1,11 @@
 <fieldset>
-<legend>Person Information</legend>  
+<legend>Person Information
+  <span onClick="Element.hide('person_form');return false;">[Hide]</span>
+  <span onClick="Element.show('person_form');return false;">[Show]</span>
+</legend>
 <%= f.hidden_field(:entity_type) %>
 <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+<div id='person_form'>
 <table cellpadding="2">
   <tr>
     <td><%= p.label(:last_name) %></td>
@@ -57,4 +61,5 @@
     <td><%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %></td>
   </tr>
 </table>
+</div>
 </fieldset>

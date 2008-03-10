@@ -1,5 +1,9 @@
 <fieldset>
-  <legend>Laboratory Information</legend>
+  <legend>Laboratory Information
+    <span onClick="Element.hide('lab_info_form'); return false;">[Hide]</span>
+    <span onClick="Element.show('lab_info_form'); return false;">[Show]</span>
+  </legend>
+  <div id='lab_info_form'>
   <table cellpadding="2">
     <% f.fields_for(:lab_result, @event.lab_result, :builder => ExtendedFormBuilder) do |l| %>
       <tr>
@@ -24,4 +28,5 @@
       </tr>
     <% end %>
   </table>
+  </div>
 </fieldset>
