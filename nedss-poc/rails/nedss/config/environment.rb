@@ -71,6 +71,7 @@ Rails::Initializer.run do |config|
     require "lib/active_record/errors.rb"
     require "lib/soundex/Soundex.rb"
     require "lib/mmwr/mmwr.rb"
+    require "lib/blankable.rb"
   end
 
 end
