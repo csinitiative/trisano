@@ -17,6 +17,7 @@
     %label Disease:
 
     %select{ :name => "disease" }
+      %option
       - for disease in @diseases
         %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
           = "#{disease.disease_name}"

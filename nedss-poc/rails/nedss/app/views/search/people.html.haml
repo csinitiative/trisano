@@ -44,6 +44,7 @@
         %td
           - if  !person.birth_date.blank?
             = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"
+        %td
           = person.gender
         %td
           = person.county
