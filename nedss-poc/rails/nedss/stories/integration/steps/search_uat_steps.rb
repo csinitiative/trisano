@@ -1,4 +1,3 @@
-require 'mechanize'
 
 steps_for(:search_uat) do
   

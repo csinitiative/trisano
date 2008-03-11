@@ -3,6 +3,7 @@ require 'fileutils'
 require 'mechanize'
 require 'rexml/document'
 require 'rest-open-uri'
+require 'logger'
 
 namespace :nedss do
 
@@ -85,7 +86,9 @@ namespace :nedss do
         people_url = NEDSS_URL + '/nedss/entities?type=person'
         puts people_url
 
-        agent = WWW::Mechanize.new
+        #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
+        agent = WWW::Mechanize.new 
+        agent.basic_auth('utah', 'arches')
         page = agent.get people_url
 
         new_person_url = NEDSS_URL + '/nedss/entities/new?type=person'
