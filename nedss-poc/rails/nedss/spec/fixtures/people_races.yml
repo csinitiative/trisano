@@ -9,3 +9,7 @@ silvers_is_white:
 groucho_is_white:
   race_id: 201
   entity_id: 1
+
+karl_is_white:
+  race_id: 201
+  entity_id: 86

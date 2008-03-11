@@ -96,8 +96,8 @@ describe Person, "loaded from fixtures" do
     Person.find(:all).should_not be_empty
   end
 
-  it "should have four record" do
-    Person.should have(4).records
+  it "should have five record" do
+    Person.should have(5).records
   end
 
   it "should find an existing person" do

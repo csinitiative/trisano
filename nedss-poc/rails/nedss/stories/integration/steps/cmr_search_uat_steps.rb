@@ -21,11 +21,10 @@ steps_for(:cmr_search_uat) do
     
     Then("the results should also include record number, age, county, and event date") do
       # See about pulling these values out of the fixtures
-      response.should have_text(/2008500002/)
+      response.should have_text(/2008500001/)
       response.should have_text(/Salt Lake/)
-      response.should have_text(/34/)
-      response.should have_text(/2008-03-06/)
+      response.should have_text(/31/)
+      response.should have_text(/2008-03-11/)
     end
   
-    
 end

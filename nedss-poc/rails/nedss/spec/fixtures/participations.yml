@@ -1,32 +1,60 @@
 
-marks_participation_1:
+marks_interested_party:
   comment: 
   role_id: !str 2301
   secondary_entity_id: 
   participation_status_id: 
   id: !str 1
-  primary_entity_id: !str 84
-  created_at: <%= Time.now.to_s :db %>
-  event_id: !str 2
+  primary_entity_id: !str 86
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1
 
-
-marks_participation_2:
+marks_current_treatment:
   comment: 
-  role_id: !str 2302
+  role_id: !str 2306
   secondary_entity_id: 
   participation_status_id: 
   id: !str 2
   primary_entity_id: 
-  created_at: <%= Time.now.to_s :db %>
-  event_id: !str 2
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1
 
-
-marks_participation_3:
+marks_hospitalized_at:
   comment: 
-  role_id: !str 2304
-  secondary_entity_id: 
+  role_id: !str 2302
+  secondary_entity_id: !str 7
   participation_status_id: 
   id: !str 3
   primary_entity_id: 
-  created_at: <%= Time.now.to_s :db %>
-  event_id: !str 2
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1
+
+marks_jurisdiction:
+  comment: 
+  role_id: !str 2305
+  secondary_entity_id: !str 75
+  participation_status_id: 
+  id: !str 4
+  primary_entity_id: 
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1
+
+marks_reporting_agency:
+  comment: 
+  role_id: !str 2304
+  secondary_entity_id: !str 4
+  participation_status_id: 
+  id: !str 5
+  primary_entity_id: 
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1
+
+marks_reported_by:
+  comment: 
+  role_id: !str 2303
+  secondary_entity_id: !str 87
+  participation_status_id: 
+  id: !str 6
+  primary_entity_id: 
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1

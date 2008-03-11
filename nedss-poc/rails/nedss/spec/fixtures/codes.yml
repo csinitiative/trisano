@@ -428,3 +428,8 @@ participant_jurisdiction:
   the_code: "J"
   code_description: "Jurisdiction"
 
+participant_treatment:
+  id: 2306
+  code_name: "participant"
+  the_code: "TW"
+  code_description: "Treated With"

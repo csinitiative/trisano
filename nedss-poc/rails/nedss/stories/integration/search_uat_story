@@ -7,8 +7,8 @@ Story: Search user acceptance tests
   Scenario: Search for known users
     
     When I search for the known person 'Karl Marks'
-    Then known person 'Karl J. Marks' should appear in the search results.
-    And the birthdate '1974-03-12' should appear in the search results.
+    Then known person 'Karl S. Marks' should appear in the search results.
+    And the birthdate '1977-02-17' should appear in the search results.
     And the gender 'Male' should appear in the search results.
     And the county 'Salt Lake' should appear in the search results.
 

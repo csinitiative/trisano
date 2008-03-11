@@ -1,6 +1,5 @@
 class SearchController < ApplicationController
 
-  
   def people
 
     @people = []

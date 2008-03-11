@@ -6,6 +6,6 @@ Story: CMR search user acceptance tests
 
   Scenario: Search for known CMRs by disease
     
-    When I search for all CMRs for the known person 'Karl Marks' with the disease 'Salmonela'
-    Then I should see at least one result with the person 'Karl J. Marks' and the disease 'Salmonela'
+    When I search for all CMRs for the known person 'Karl Marks' with the disease 'Chicken Pox'
+    Then I should see at least one result with the person 'Karl S. Marks' and the disease 'Chicken Pox'
     And the results should also include record number, age, county, and event date

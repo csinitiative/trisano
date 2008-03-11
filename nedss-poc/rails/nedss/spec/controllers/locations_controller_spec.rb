@@ -3,15 +3,15 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe LocationsController do
   describe "handling GET /locations" do
     it "should redirect to the entities show page" do
-      get :index, :entity_id => "1"
-      response.should redirect_to(entity_path("1"))
+      get :index, :entity_id => "2"
+      response.should redirect_to(entity_path("2"))
     end
   end
 
-  describe "handling GET /locations/1" do
+  describe "handling GET /locations/2" do
     it "should redirect to the entities show page" do
-      get :index, :entity_id => "1"
-      response.should redirect_to(entity_path("1"))
+      get :index, :entity_id => "2"
+      response.should redirect_to(entity_path("2"))
     end
   end
 

@@ -54,29 +54,55 @@ phil_silvers_cur:
   created_at: <%= Time.now.to_s :db %>
   vector: "'p400':3 'phil':1 's416':4 'silver':2"
 
-
-marks_current:
+marks_for_event:
   age_type_id: 
   last_name: Marks
-  entity_id: !str 84
+  entity_id: !str 86
   primary_language_id: !str 301
-  ethnicity_id: !str 102
+  ethnicity_id: !str 103
   risk_factors_notes: ""
-  day_care_association_id: !str 1403
+  day_care_association_id: !str 1402
   group_living_id: !str 1403
   first_name_soundex: K640
   healthcare_worker_id: !str 1403
   approximate_age_no_birthday: 
   current_gender_id: !str 1
+  updated_at: <%= Time.now.to_s :db %>
   birth_gender_id: !str 1
-  middle_name: J.
+  middle_name: S.
   date_of_death: 
   first_name: Karl
   risk_factors: ""
-  id: !str 5
-  food_handler_id: !str 1403
-  birth_date: !str 1974-03-12
+  id: !str 4
+  food_handler_id: !str 1402
+  birth_date: !str 1977-02-17
   last_name_soundex: M620
   created_at: <%= Time.now.to_s :db %>
   vector: '''k640'':3 ''karl'':1 ''m620'':4 ''mark'':2'
+
+johnson_on_marks_event:
+  age_type_id: 
+  last_name: Johnson
+  entity_id: !str 87
+  primary_language_id: 
+  ethnicity_id: 
+  risk_factors_notes: 
+  day_care_association_id: 
+  group_living_id: 
+  first_name_soundex: J500
+  healthcare_worker_id: 
+  approximate_age_no_birthday: 
+  current_gender_id: 
+  updated_at: <%= Time.now.to_s :db %>
+  birth_gender_id: 
+  middle_name: 
+  date_of_death: 
+  first_name: John
+  risk_factors: 
+  id: !str 5
+  food_handler_id: 
+  birth_date: 
+  last_name_soundex: J525
+  created_at: <%= Time.now.to_s :db %>
+  vector: '''j500'':3 ''j525'':4 ''john'':1 ''johnson'':2'
 

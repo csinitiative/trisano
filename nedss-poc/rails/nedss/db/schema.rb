@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 16) do
+ActiveRecord::Schema.define(:version => 17) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(:version => 16) do
     t.date     "treatment_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "treatment"
   end
 
 # Could not dump table "people" because of following StandardError

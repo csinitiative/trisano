@@ -1,9 +1,9 @@
-marks_lab_result: 
+marks_lab_result:
   collection_date: 
-  lab_result_text: ""
-  tested_at_uphl_yn_id: !str 1401
+  lab_result_text: Something red
+  tested_at_uphl_yn_id: !str 1402
   id: !str 1
-  specimen_source_id: !str 1501
+  specimen_source_id: !str 1502
   created_at: <%= Time.now.to_s :db %> 
   lab_test_date: 
-  event_id: !str 2
+  event_id: !str 1

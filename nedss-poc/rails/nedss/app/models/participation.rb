@@ -4,6 +4,7 @@ class Participation < ActiveRecord::Base
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
   has_many :hospitals_participations
+  has_many :participations_treatments
 
   validates_associated :primary_entity
   validates_associated :secondary_entity
@@ -32,6 +33,14 @@ class Participation < ActiveRecord::Base
 
   def hospitals_participation=(attributes)
     hospitals_participations.build(attributes)
+  end 
+  
+  def participations_treatment
+    @participations_treatment ||= participations_treatments.last
+  end
+
+  def  participations_treatment=(attributes)
+    participations_treatments.build(attributes)
   end  
 
   private

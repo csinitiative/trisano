@@ -57,6 +57,12 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <td><%= @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
 </tr>
 <tr>
+  <td><span class="label">Treatment given:</span></td>
+  <td><%= l @event.current_treatment.participations_treatments.last.treatment_given_yn unless @event.treatment.nil? or @event.treatment.participations_treatment.nil? %></td>
+  <td><span class="label">Treatment:</span></td>
+  <td><%= @event.current_treatment.participations_treatments.last.treatment unless @event.treatment.nil? or @event.treatment.participations_treatment.nil? %></td>
+</tr>
+<tr>
   <td><span class="label">Preganant:</span></td>
   <td><%= l @event.disease.pregnant %></td>
   <td><span class="label">Due Date:</span></td>
