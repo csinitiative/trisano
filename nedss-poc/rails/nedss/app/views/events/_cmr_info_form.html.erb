@@ -1,9 +1,9 @@
 <fieldset>
-<legend>CMR Information
-  <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
-  <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
+<legend>Reporting Agency
+  <span id='ra_info_hide' onClick="Element.hide('ra_info_form'); Element.hide('ra_info_hide'); Element.show('ra_info_show'); return false;">[Hide]</span>
+  <span id='ra_info_show' onClick="Element.show('ra_info_form'); Element.hide('ra_info_show'); Element.show('ra_info_hide'); return false;" style="display: none;">[Show]</span>
 </legend>
-<div id='cmr_info_form'>
+<div id='ra_info_form'>
 <table cellpadding="2">
   <% if not @event.record_number.blank? %>
   <tr>
@@ -23,19 +23,49 @@
     </td>
 
     <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
-      <% entity_data   = @event.active_reporter.nil? ? Entity.new : @event.active_reporter.active_secondary_entity %>
-      <% reporter_data = @event.active_reporter.nil? ? Person.new : @event.active_reporter.active_secondary_entity.person %>
+
+      <% entity_data    = @event.active_reporter.nil? ? Entity.new    : @event.active_reporter.active_secondary_entity %>
+      <% reporter_data  = @event.active_reporter.nil? ? Person.new    : @event.active_reporter.active_secondary_entity.person %>
+      <% location_data  = @event.active_reporter.nil? ? EntitiesLocation.new  : @event.active_reporter.active_secondary_entity.entities_location %>
+      <% telephone_data = @event.active_reporter.nil? ? Telephone.new : @event.active_reporter.active_secondary_entity.telephone %>
+
       <% participant_fields.fields_for(:active_secondary_entity, entity_data, :builder => ExtendedFormBuilder) do |agency_fields| %>
         <% agency_fields.fields_for(:person, reporter_data, :builder => ExtendedFormBuilder) do |reporter_fields| %>
-          <td><%= reporter_fields.label(:first_name, "Reporter first name") %></td>
-          <td><%= reporter_fields.text_field(:first_name, :size => 25) %></td>
-          <td><%= reporter_fields.label(:last_name, "Reporter last name") %></td>
-          <td><%= reporter_fields.text_field(:last_name, :size => 25) %></td>
+    <td><%= reporter_fields.label(:first_name, "Reporter first name") %></td>
+    <td><%= reporter_fields.text_field(:first_name, :size => 25) %></td>
+    <td><%= reporter_fields.label(:last_name, "Reporter last name") %></td>
+    <td><%= reporter_fields.text_field(:last_name, :size => 25) %></td>
         <% end %>
+  </tr>
+  <tr>
+    <td colspan="3">Reporter phone: &nbsp;
+        <% agency_fields.fields_for(:entities_location, location_data, :builder => ExtendedFormBuilder) do |loc_fields| %>
+          <%= loc_fields.hidden_field(:entity_location_type_id) %>
+          <%= loc_fields.hidden_field(:primary_yn_id) %>
+        <% end %>
+        <% agency_fields.fields_for(:telephone, telephone_data, :builder => ExtendedFormBuilder) do |phone_fields| %>
+          <%= phone_fields.label(:area_code) %>
+          <%= phone_fields.text_field(:area_code, :size => 3) %>
+          <%= phone_fields.label(:phone_number) %>
+          <%= phone_fields.text_field(:phone_number, :size => 8) %>
+          <%= phone_fields.label(:extension) %>
+          <%= phone_fields.text_field(:extension, :size => 6) %>
+        <% end %>
+    </td>
       <% end %>
     <% end %>
   </tr>
+</table>
+</div>
+</fieldset>
 
+<fieldset>
+<legend>CMR Information
+  <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
+  <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
+</legend>
+<div id='cmr_info_form'>
+<table cellpadding="2">
   <tr>
     <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
       <td><%= j.label(:jurisdiction) %></td>

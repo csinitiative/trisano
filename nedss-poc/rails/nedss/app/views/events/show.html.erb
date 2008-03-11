@@ -92,21 +92,13 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 
 <div id="administrative">
 <fieldset>
-<legend>Laboratory Information</legend>  
+<legend>Administrative Information</legend>  
 <table cellpadding="2">
 <tr>
   <td><span class="label">Record Number:</span></td>
   <td><%= @event.record_number %></td>
   <td><span class="label">Jurisdiction:</span></td>
   <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
-</tr>
-<tr>
-  <td><span class="label">Reporting Agency:</span></td>
-  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
-  <td><span class="label">Reporter first name:</span></td>
-  <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil?%></td>
-  <td><span class="label">Reporter last name:</span></td>
-  <td><%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil?%></td>
 </tr>
 <tr>
   <td><span class="label">Event Name:</span></td>
@@ -145,6 +137,20 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <td><%= @event.first_reported_PH_date %></td>
   <td><span class="label">Results Reported to Clinician Date:</span></td>
   <td><%= @event.results_reported_to_clinician_date %></td>
+</tr>
+<tr>
+  <td><span class="label">Reporting Agency:</span></td>
+  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
+  <td><span class="label">Reporter name:</span></td>
+  <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil? -%>
+  <%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil? %></td>
+  <td><span class="label">Reporter phone number:</span></td>
+  <td><% p = @event.reporter.secondary_entity.telephone unless @event.reporter.nil? %>
+  <% if not p.nil? %>
+    <%= fml " (", p.area_code, ") " if p.area_code -%>
+<%= phone_number(p.phone_number) -%>
+<%= fml " Ext. ", p.extension, "" if p.extension -%>
+  <% end %></td>
 </tr>
 <tr>
   <td><span class="label">MMWR Year:</span></td>

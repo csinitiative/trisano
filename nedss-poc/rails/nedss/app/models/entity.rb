@@ -14,6 +14,9 @@ class Entity < ActiveRecord::Base
   has_many :entities_locations, :foreign_key => 'entity_id'
   has_many :locations, :through => :entities_locations
 
+  # TODO: SERIOUS DEBT, Nothing enforces just one primary location
+  has_one :primary_entities_location, :class_name => 'EntitiesLocation', :foreign_key => 'entity_id', :conditions => [ "primary_yn_id = ?", Code.yes_id ]
+
   has_and_belongs_to_many :races, 
                           :class_name => 'Code', 
                           :join_table => 'people_races', 
@@ -46,7 +49,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def entities_location
-    @entities_location
+    @entities_location || primary_entities_location
   end
 
   def entities_location=(attributes)
@@ -54,7 +57,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def address
-    @address
+    @address || primary_entities_location.location.address
   end
 
   def address=(attributes)
@@ -62,14 +65,14 @@ class Entity < ActiveRecord::Base
   end  
 
   def telephone
-    @telephone
+    @telephone || primary_entities_location.location.telephone
   end
 
   def telephone=(attributes)
     @telephone = Telephone.new(attributes)
   end  
 
-  # [PGL] Not sure I like this.
+  # Debt: Not sure I like this.
   def current_locations
     locations.map do |l|
       entity_location = entities_locations.find_by_location_id(l.id)
@@ -82,8 +85,8 @@ class Entity < ActiveRecord::Base
   private
 
   def validate
-    errors.add(:address) unless address.valid? unless Utilities::model_empty?(address)
-    errors.add(:telephone) unless telephone.valid? unless Utilities::model_empty?(telephone)
+    errors.add(:address) unless address.valid? unless Utilities::model_empty?(@address)
+    errors.add(:telephone) unless telephone.valid? unless Utilities::model_empty?(@telephone)
   end
 
   def set_entity_type(record)
@@ -102,9 +105,11 @@ class Entity < ActiveRecord::Base
   end
 
   def save_location_info
-    if not (Utilities::model_empty?(address) and Utilities::model_empty?(telephone))
+    if not (Utilities::model_empty?(@address) and Utilities::model_empty?(@telephone))
       entities_location.entity_id = id
-      l= Location.new(:entities_location => entities_location.attributes, :address => address.attributes, :telephone => telephone.attributes)
+      a_attrs = @address.nil?   ? {} : @address.attributes
+      t_attrs = @telephone.nil? ? {} : @telephone.attributes
+      l= Location.new(:entities_location => entities_location.attributes, :address => a_attrs, :telephone => t_attrs)
       l.save
     end
   end

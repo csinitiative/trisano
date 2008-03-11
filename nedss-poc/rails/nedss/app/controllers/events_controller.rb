@@ -44,7 +44,8 @@ class EventsController < ApplicationController
                        :disease                 => {}, 
                        :lab_result              => {},
                        :active_patient          => { :active_primary_entity   => { :person => {}, 
-                                                                                   :entities_location => {}, 
+                                                                                   :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
+                                                                                                           :primary_yn_id => Code.yes_id }, 
                                                                                    :address => {}, 
                                                                                    :telephone => {} 
                                                                                  }
@@ -57,7 +58,8 @@ class EventsController < ApplicationController
                                                                                  }
                                                    },
                        :active_reporter         => { :active_secondary_entity   => { :person => {}, 
-                                                                                     :entities_location => {}, 
+                                                                                     :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
+                                                                                                             :primary_yn_id => Code.yes_id }, 
                                                                                      :address => {}, 
                                                                                      :telephone => {} 
                                                                                    }
