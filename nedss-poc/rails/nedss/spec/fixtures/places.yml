@@ -563,3 +563,24 @@ Weber_Morgan:
   short_name: "WMC"
   place_type_id: 2202
   entity_id: 82
+
+####################
+#  Clinics
+
+Test_Clinic:
+  id: 81
+  name: "Test Clinc"
+  short_name: "TC"
+  place_type_id: 2204
+  entity_id: 83
+
+####################
+#  Labs
+
+Test_Lab:
+  id: 82
+  name: "Test Lab"
+  short_name: "TL"
+  place_type_id: 2203
+  entity_id: 85
+

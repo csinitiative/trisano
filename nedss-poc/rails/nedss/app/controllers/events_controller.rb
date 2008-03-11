@@ -5,7 +5,8 @@ class EventsController < ApplicationController
   def auto_complete_for_event_reporting_agency
     entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
-                     :conditions => [ "LOWER(name) LIKE ? and place_type_id = ?", entered_name.downcase + '%', 2201 ],
+                     :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
+                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code IN ('H', 'L', 'C'))", entered_name.downcase + '%'],
                      :order => "entity_id, created_at ASC, name ASC",
                      :limit => 10
               )

@@ -1,6 +1,7 @@
 require 'chronic'
 
 class Event < ActiveRecord::Base
+  include Blankable
 
   belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'Code'
@@ -111,6 +112,7 @@ class Event < ActiveRecord::Base
     if attributes[:secondary_entity_id].blank? # User entered a new agency
       attributes.delete('secondary_entity_id')
       attributes[:active_secondary_entity][:entity_type] = 'place'
+      attributes[:active_secondary_entity][:place][:place_type_id] = Code.other_place_type_id
     else                                       # User selected an existing entity
       attributes.delete('active_secondary_entity')
     end
@@ -118,6 +120,8 @@ class Event < ActiveRecord::Base
     if new_record?
       @active_reporting_agency = Participation.new(attributes)
       @active_reporting_agency.role_id = Event.participation_code('Reporting Agency')
+      p @active_reporting_agency
+      p @active_reporting_agency.active_secondary_entity.place
     else
       unless attributes.values_blank?
         if active_reporting_agency.nil?
@@ -214,7 +218,7 @@ class Event < ActiveRecord::Base
     lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
     participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
-    participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank?
+    participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
   end
 
   def clear_base_error

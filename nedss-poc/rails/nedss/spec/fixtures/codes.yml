@@ -360,13 +360,31 @@ place_type_hospital:
   id: 2201
   code_name: "placetype"
   the_code: "H"
-  code_description: "Hospital"
+  code_description: "Hospital / ICP"
 
 place_type_jurisdiction:
   id: 2202
   code_name: "placetype"
   the_code: "J"
   code_description: "Jurisdiction"
+
+place_type_lab:
+  id: 2203
+  code_name: "placetype"
+  the_code: "L"
+  code_description: "Laboratory"
+
+place_type_clinic:
+  id: 2204
+  code_name: "placetype"
+  the_code: "C"
+  code_description: "Clinic / Doctor's Office"
+
+place_type_other:
+  id: 2206
+  code_name: "placetype"
+  the_code: "O"
+  code_description: "Other"
 
 participant_interested_party:
   id: 2301

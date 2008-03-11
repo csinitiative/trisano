@@ -332,3 +332,11 @@ Wasatch_County:
 Weber_Morgan:
   id: 82
   entity_type: "place"
+
+Test_Clinic:
+  id: 83
+  entity_type: "place"
+
+Test_Lab:
+  id: 85
+  entity_type: "place"
