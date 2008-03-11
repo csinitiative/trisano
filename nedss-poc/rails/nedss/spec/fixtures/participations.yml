@@ -28,5 +28,5 @@ marks_participation_3:
   participation_status_id: 
   id: !str 3
   primary_entity_id: 
-  created_at:<%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
   event_id: !str 2
