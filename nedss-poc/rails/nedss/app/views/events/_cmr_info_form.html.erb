@@ -21,7 +21,21 @@
                                  { :size => 25 }, 
                                  { :skip_style => false } %>
     </td>
+
+    <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
+      <% entity_data   = @event.active_reporter.nil? ? Entity.new : @event.active_reporter.active_secondary_entity %>
+      <% reporter_data = @event.active_reporter.nil? ? Person.new : @event.active_reporter.active_secondary_entity.person %>
+      <% participant_fields.fields_for(:active_secondary_entity, entity_data, :builder => ExtendedFormBuilder) do |agency_fields| %>
+        <% agency_fields.fields_for(:person, reporter_data, :builder => ExtendedFormBuilder) do |reporter_fields| %>
+          <td><%= reporter_fields.label(:first_name, "Reporter first name") %></td>
+          <td><%= reporter_fields.text_field(:first_name, :size => 25) %></td>
+          <td><%= reporter_fields.label(:last_name, "Reporter last name") %></td>
+          <td><%= reporter_fields.text_field(:last_name, :size => 25) %></td>
+        <% end %>
+      <% end %>
+    <% end %>
   </tr>
+
   <tr>
     <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
       <td><%= j.label(:jurisdiction) %></td>

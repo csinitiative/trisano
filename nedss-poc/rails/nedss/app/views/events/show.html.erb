@@ -97,12 +97,18 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 <tr>
   <td><span class="label">Record Number:</span></td>
   <td><%= @event.record_number %></td>
-  <td><span class="label">Reporting Agency:</span></td>
-  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
   <td><span class="label">Jurisdiction:</span></td>
   <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
-<tr>
 </tr>
+<tr>
+  <td><span class="label">Reporting Agency:</span></td>
+  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
+  <td><span class="label">Reporter first name:</span></td>
+  <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil?%></td>
+  <td><span class="label">Reporter last name:</span></td>
+  <td><%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil?%></td>
+</tr>
+<tr>
   <td><span class="label">Event Name:</span></td>
   <td><%= @event.event_name %></td>  
   <td><span class="label">Event Status:</span></td>

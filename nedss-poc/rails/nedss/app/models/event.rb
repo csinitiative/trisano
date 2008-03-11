@@ -22,6 +22,7 @@ class Event < ActiveRecord::Base
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
+  has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
   validates_date :event_onset_date
 
@@ -109,7 +110,8 @@ class Event < ActiveRecord::Base
   end
 
   def active_reporting_agency=(attributes)
-    if attributes[:secondary_entity_id].blank? # User entered a new agency
+    if attributes.values_blank? # User did nothing
+    elsif attributes[:secondary_entity_id].blank? # User entered a new agency
       attributes.delete('secondary_entity_id')
       attributes[:active_secondary_entity][:entity_type] = 'place'
       attributes[:active_secondary_entity][:place][:place_type_id] = Code.other_place_type_id
@@ -120,8 +122,6 @@ class Event < ActiveRecord::Base
     if new_record?
       @active_reporting_agency = Participation.new(attributes)
       @active_reporting_agency.role_id = Event.participation_code('Reporting Agency')
-      p @active_reporting_agency
-      p @active_reporting_agency.active_secondary_entity.place
     else
       unless attributes.values_blank?
         if active_reporting_agency.nil?
@@ -129,6 +129,26 @@ class Event < ActiveRecord::Base
           self.create_reporting_agency(attributes)
         else
           active_reporting_agency.update_attributes(attributes)
+        end
+      end
+    end
+  end
+
+  def active_reporter
+    @active_reporter || reporter
+  end
+
+  def active_reporter=(attributes)
+    if new_record?
+      @active_reporter = Participation.new(attributes)
+      @active_reporter.role_id = Event.participation_code('Reported By')
+    else
+      unless attributes.values_blank?
+        if active_reporter.nil?
+          attributes[:role_id] = Event.participation_code('Reported By')
+          self.create_reporter(attributes)
+        else
+          active_reporter.update_attributes(attributes)
         end
       end
     end
@@ -219,6 +239,7 @@ class Event < ActiveRecord::Base
     participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
     participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
+    participations << @active_reporter unless Utilities::model_empty?(@active_reporter.active_secondary_entity.person)
   end
 
   def clear_base_error

@@ -6,6 +6,7 @@ class Participation < ActiveRecord::Base
   has_many :hospitals_participations
 
   validates_associated :primary_entity
+  validates_associated :secondary_entity
 
   before_validation :save_associations
 

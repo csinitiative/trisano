@@ -56,6 +56,12 @@ class EventsController < ApplicationController
                                                                                    :telephone => {}
                                                                                  }
                                                    },
+                       :active_reporter         => { :active_secondary_entity   => { :person => {}, 
+                                                                                     :entities_location => {}, 
+                                                                                     :address => {}, 
+                                                                                     :telephone => {} 
+                                                                                   }
+                                                   },
                        :active_jurisdiction     => {},
                        :active_hospital         => { :hospitals_participation => {} }
                       )
