@@ -20,9 +20,7 @@
 
 #nav {
   float: left;
-  height: 100%;
   padding-right: 10px;
-  margin: 0;
 }
 
 #nav ul {
@@ -36,14 +34,14 @@
 .bd {
   padding-left: 7px;
   padding-right: 7px;
+  padding-top: 7px;
+  overflow: auto;
   position: relative;
-  overflow: hidden;
 }
 
 .highlight {
   color: green;
 }
-
 
 .title A:link {text-decoration: none; color: #B9B9A0}
 .title A:visited {text-decoration: none; color: #B9B9A0}

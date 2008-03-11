@@ -43,6 +43,8 @@
     <% end %>
     <td><%= f.label(:event_onset_date) %></td>
     <td><%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+  </tr>
+  <tr>
     <td><%= f.label(:event_name) %></td>
     <td><%= f.text_field(:event_name, :size => 25) %></td>
   </tr>
@@ -69,6 +71,8 @@
     <td><%= f.dropdown_code_field(:investigation_LHD_status_id, 'investigation', {}) %></td>
     <td><%= f.label(:investigation_started_date) %></td>
     <td><%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+  </tr>
+  <tr>
     <td><%= f.label(:investigation_completed_LHD_date, "Investigation completed date") %></td>
     <td><%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %></td>
   </tr>
@@ -77,6 +81,8 @@
     <td><%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
     <td><%= f.label(:first_reported_PH_date, "First reported date") %></td>
     <td><%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now) %></td>
+  </tr>
+  <tr>
     <td><%= f.label(:results_reported_to_clinician_date) %></td>
     <td><%= f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now) %></td>
   </tr>
