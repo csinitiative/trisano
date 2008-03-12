@@ -4,7 +4,7 @@ Story: Pre-populate new CMR from people search
   I want to be able to start a new CMR with data from a search pre-populating form fields
   So I can not have to repeat data entry tasks
 
-  Scenario: Search for unknown user
+  Scenario: Search for unknown person
 
     When I search for the non-existent person 'Xavier Xerces' with a birth date of '9/12/1988'
     Then there should be a link to create a new CMR
@@ -14,6 +14,16 @@ Story: Pre-populate new CMR from people search
     And 'Xavier' should display in the first name field
     And 'Xerces' should display in the last name field
     And 'September 12, 1988' should display in the birth date field
+
+  Scenario: Search for unknown CMR
+
+    When I search for the non-existent CMR with person 'Xavier Xerces'
+    Then there should be a link to create a new CMR
+    
+    When I click the link to create a new CMR
+    Then the new CMR view displays
+    And 'Xavier' should display in the first name field
+    And 'Xerces' should display in the last name field
 
 
 

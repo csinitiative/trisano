@@ -69,5 +69,11 @@
         %td
           = cmr.event_onset_date
 
-- if @cmrs.blank? && (!params[:disease].blank?)
-  Your search returned no results.
+- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:disease].blank?)
+  %span
+    Your search returned no results.
+
+  %br
+  %br
+
+  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease] }, {:id => "start_cmr"})
