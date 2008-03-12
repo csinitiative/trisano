@@ -47,9 +47,8 @@ class EventsController < ApplicationController
                                                                                    :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
                                                                                                            :primary_yn_id => Code.yes_id }, 
                                                                                    :address => {}, 
-                                                                                   :telephone => {} 
-                                                                                 }
-                                                   },
+                                                                                   :telephone => {}
+                                                                                 }, :participations_treatment => {}},
                        :active_reporting_agency => { :secondary_entity_id => nil,
                                                      :active_secondary_entity => { :place => {},
                                                                                    :entities_location => {}, 
@@ -65,8 +64,7 @@ class EventsController < ApplicationController
                                                                                    }
                                                    },
                        :active_jurisdiction     => {},
-                       :active_hospital         => { :hospitals_participation => {} },
-                       :current_treatment    => {}
+                       :active_hospital         => { :hospitals_participation => {} }
                       )
                              
     prepopulate if !params[:from_search].nil?

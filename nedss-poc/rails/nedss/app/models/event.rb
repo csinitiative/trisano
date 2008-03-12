@@ -153,22 +153,6 @@ class Event < ActiveRecord::Base
       end
     end
   end
-  
-  def current_treatment
-    @current_treatment || active_patient.participations_treatments.last
-  end
-    
-  def current_treatment=(attributes)
-    if new_record?
-      @current_treatment = ParticipationsTreatment.new(attributes)
-      @current_treatment.participation_id = active_patient.id
-    else
-      unless attributes.values_blank?
-          attributes[:participation_id] = active_patient.id
-          active_patient.participations_treatments << ParticipationsTreatment.new(attributes)
-      end
-    end
-  end
 
   ### End participations
 
@@ -250,7 +234,6 @@ class Event < ActiveRecord::Base
 
   def save_associations
     participations << @active_patient
-    active_patient.participations_treatments << @current_treatment
     disease_events << @disease unless Utilities::model_empty?(@disease)
     lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
     participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)

@@ -36,17 +36,15 @@
       </tr>
       <% end %>
     <% end %>
-
-
-    <% f.fields_for(:current_treatment, @event.current_treatment, :builder => ExtendedFormBuilder) do |ct| %>
-      
+    <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
+      <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
         <tr>
           <td><%= ct.label(:treatment_given_yn_id, "Treatment given") %></td>
           <td><%= ct.dropdown_code_field(:treatment_given_yn_id, 'yesno', {}) %></td>
-          <td><%= ct.label(:current_treatment, "Treatment") %></td>
+          <td><%= ct.label(:treatment, "Treatment") %></td>
           <td><%= ct.text_field(:treatment, :size => 50) %></td>
         </tr>
-
+        <% end %>
      <% end %>
       <tr>
     <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
