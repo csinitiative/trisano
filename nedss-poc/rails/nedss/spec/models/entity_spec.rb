@@ -125,6 +125,7 @@ describe Entity, "with associated location and person via custom attributes" do
 
   describe "where address is empty and phone number are empty" do
     before(:each) do
+      p @entity.person.last_name
       @entity.address.street_name = nil
       @entity.address.street_number = nil
       @entity.telephone.area_code = nil

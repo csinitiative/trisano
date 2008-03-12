@@ -57,7 +57,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def address
-    @address || primary_entities_location.nil? ? nil : primary_entities_location.location.address
+    @address || (primary_entities_location.nil? ? nil : primary_entities_location.location.address)
   end
 
   def address=(attributes)
@@ -65,7 +65,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def telephone
-    @telephone || primary_entities_location.nil? ? nil : primary_entities_location.location.telephone
+    @telephone || (primary_entities_location.nil? ? nil : primary_entities_location.location.telephone)
   end
 
   def telephone=(attributes)

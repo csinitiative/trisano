@@ -80,6 +80,9 @@ class EventsController < ApplicationController
   # GET /event/1/edit
   def edit
     @event = Event.find(params[:id])
+    if @event.active_patient.active_primary_entity.entities_location.nil?
+      @event.active_patient.active_primary_entity.entities_location = { :entity_location_type_id => Code.unspecified_location_id, :primary_yn_id => Code.yes_id }
+    end
   end
 
   # POST /event
