@@ -23,9 +23,6 @@ class Event < ActiveRecord::Base
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
-  
-  # Debt: Just doing this for the quick treatment fix; treatments will be a has_many some day...
-  has_one :treatment, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated With").id]
 
   validates_date :event_onset_date
 
@@ -158,21 +155,17 @@ class Event < ActiveRecord::Base
   end
   
   def current_treatment
-    @current_treatment || treatment
+    @current_treatment || active_patient.participations_treatments.last
   end
     
   def current_treatment=(attributes)
     if new_record?
-      @current_treatment = Participation.new(attributes)
-      @current_treatment.role_id = Event.participation_code('Treated With')
+      @current_treatment = ParticipationsTreatment.new(attributes)
+      @current_treatment.participation_id = active_patient.id
     else
       unless attributes.values_blank?
-        if current_treatment.nil?
-          attributes[:role_id] = Event.participation_code('Treated With')
-          self.create_current_treatment(attributes)
-        else
-          current_treatment.update_attributes(attributes)
-        end
+          attributes[:participation_id] = active_patient.id
+          active_patient.participations_treatments << ParticipationsTreatment.new(attributes)
       end
     end
   end
@@ -256,9 +249,8 @@ class Event < ActiveRecord::Base
   end
 
   def save_associations
-    puts "++++++++++ SAVING!!!!!!! ++++++++++++++++++++"
     participations << @active_patient
-    participations << @current_treatment
+    active_patient.participations_treatments << @current_treatment
     disease_events << @disease unless Utilities::model_empty?(@disease)
     lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
     participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)

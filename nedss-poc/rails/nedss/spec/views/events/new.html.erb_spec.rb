@@ -6,6 +6,7 @@ describe "/cmrs/new.html.erb" do
     
     @event = mock_event
     
+    # Maybe move this all up to the common mocking helper
     @participation = mock_model(Participation)
     @primary_entity =  mock_person_entity
     @secondary_entity =  mock_person_entity
@@ -14,10 +15,9 @@ describe "/cmrs/new.html.erb" do
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)
-    @current_treatment = mock_model(Participation)
+    @current_treatment = mock_model(ParticipationsTreatment)
 
     @hospitals_participation = mock_model(HospitalsParticipation)
-    @participations_treatment = mock_model(ParticipationsTreatment)
 
     @place = mock_model(Place)
     @person = mock_model(Person)
@@ -36,6 +36,7 @@ describe "/cmrs/new.html.erb" do
     @person.stub!(:last_name).and_return("Cool")
 
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
+    @participation.stub!(:participations_treatment).and_return(@current_treatment)
     @secondary_entity.stub!(:place).and_return(@place)
     @secondary_entity.stub!(:person).and_return(@person)
 
@@ -44,12 +45,12 @@ describe "/cmrs/new.html.erb" do
     @active_reporter.stub!(:active_secondary_entity).and_return(@secondary_entity)
     @active_hospital.stub!(:secondary_entity_id).and_return(13)
     @active_hospital.stub!(:hospitals_participation).and_return(@hospitals_participation)
-    @current_treatment.stub!(:participations_treatment).and_return(@participations_treatment)
+    @current_treatment.stub!(:treatment).and_return("Some pills")
+    @current_treatment.stub!(:treatment_given_yn_id).and_return(1402)
     
     @hospitals_participation.stub!(:admission_date).and_return("2008-02-15")
     @hospitals_participation.stub!(:discharge_date).and_return("2009-02-15")
-    @participations_treatment.stub!(:treatment).and_return("Some pills")
-    @participations_treatment.stub!(:treatment_given_yn_id).and_return(1402)
+
     
     assigns[:event] = @event
     

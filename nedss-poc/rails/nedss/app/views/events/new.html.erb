@@ -10,7 +10,7 @@
 
 <%= error_messages_for :object => [@event.active_hospital.hospitals_participation] unless @event.active_hospital.nil? and @event.active_hospital.hospitals_participation.nil? %>
 <%= error_messages_for :object => [@event.active_reporting_agency.active_secondary_entity.place] unless @event.active_reporting_agency.nil? %>
-<%= error_messages_for :object => [@event.current_treatment.participations_treatment] unless @event.current_treatment.nil? and @event.current_treatment.participations_treatment.nil? %>
+<%= error_messages_for :object => [@event.active_patient.participations_treatment] unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %>
 
 <script type="text/javascript">
 var myTabs = new YAHOO.widget.TabView("cmr_tabs");
