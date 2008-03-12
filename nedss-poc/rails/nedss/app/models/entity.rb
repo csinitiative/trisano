@@ -57,7 +57,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def address
-    @address || primary_entities_location.location.address
+    @address || primary_entities_location.nil? ? nil : primary_entities_location.location.address
   end
 
   def address=(attributes)
@@ -65,7 +65,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def telephone
-    @telephone || primary_entities_location.location.telephone
+    @telephone || primary_entities_location.nil? ? nil : primary_entities_location.location.telephone
   end
 
   def telephone=(attributes)
@@ -85,8 +85,8 @@ class Entity < ActiveRecord::Base
   private
 
   def validate
-    errors.add(:address) unless address.valid? unless Utilities::model_empty?(@address)
-    errors.add(:telephone) unless telephone.valid? unless Utilities::model_empty?(@telephone)
+    errors.add(:address) unless @address.valid? unless Utilities::model_empty?(@address)
+    errors.add(:telephone) unless @telephone.valid? unless Utilities::model_empty?(@telephone)
   end
 
   def set_entity_type(record)
