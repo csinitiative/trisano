@@ -1,17 +1,20 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LocationsController do
+  before(:each) do
+    mimic_before_filter
+  end
   describe "handling GET /locations" do
     it "should redirect to the entities show page" do
-      get :index, :entity_id => "1"
-      response.should redirect_to(entity_path("1"))
+      get :index, :entity_id => "10"
+      response.should redirect_to(entity_path("10"))
     end
   end
 
   describe "handling GET /locations/2" do
     it "should redirect to the entities show page" do
-      get :index, :entity_id => "1"
-      response.should redirect_to(entity_path("1"))
+      get :index, :entity_id => "10"
+      response.should redirect_to(entity_path("10"))
     end
   end
 
@@ -222,14 +225,18 @@ describe LocationsController do
   
     it "should redirect to the locations list" do
       do_delete
-      p @entity
       response.should redirect_to(entity_path("1"))
     end
   end
 
   def mimic_before_filter
     @entity = mock_model(Entity, :to_param => "1")
+    @entity_10 = mock_model(Entity, :to_param => "10")
+
     Entity.stub!(:find).with("1").and_return(@entity)
+    Entity.stub!(:find).with("10").and_return(@entity_10)
+
     @entity.stub!(:entity_type).and_return('person')
+    @entity_10.stub!(:entity_type).and_return('person')
   end
 end
