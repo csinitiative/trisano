@@ -32,6 +32,15 @@
           = "#{gender.code_description}"
     &nbsp;
 
+    %label Investigation Status:
+
+    %select{ :name => "investigation_status"}
+      %option
+      - for status in @investigation_statuses
+        %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
+          = "#{status.code_description}"
+    &nbsp;
+
     %input{ :type => "submit" }
 
 %br

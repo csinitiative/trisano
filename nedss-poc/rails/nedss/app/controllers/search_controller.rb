@@ -38,11 +38,17 @@ class SearchController < ApplicationController
                          :conditions => "code_name = 'gender'" )
 
     @genders << Code.new(:id => "U", :code_description => "Unspecified")
-    
+
+    @investigation_statuses = Code.find(:all,
+                                        :order => "id",
+					:select => "id, code_description",
+					:conditions => "code_name = 'investigation'")
+    @investigation_statuses << Code.new(:id => "U", :code_description => "Unspecified")
+
     flash[:error] = ""
     
     begin
-      if !params[:disease].blank? || !params[:name].blank? || !params[:gender].blank?
+      if !params[:disease].blank? || !params[:name].blank? || !params[:gender].blank? || !params[:investigation_status].blank?
         @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], 
                                        :disease => params[:disease],
                                        :gender => params[:gender]
