@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   belongs_to :imported_from, :class_name => 'Code'
   belongs_to :event_case_status, :class_name => 'Code'
   belongs_to :outbreak_associated, :class_name => 'Code'
-  belongs_to :investigation_LHD_status, :class_name => 'Code'
+  belongs_to :investigation_lhd_status, :class_name => 'Code'
 
   has_many :lab_results, :order => 'created_at', :dependent => :delete_all
   has_many :disease_events, :order => 'created_at', :dependent => :delete_all
@@ -162,11 +162,11 @@ class Event < ActiveRecord::Base
     where_clause = ""
     order_by_clause = ""
     issue_query = false
-    
+    debugger
     if !options[:disease].blank?
       issue_query = true
       where_clause += "d.id = " + sanitize_sql(options[:disease])
-      order_by_clause = "last_name"
+      order_by_clause = "last_name;"
     end
     
     if !options[:gender].blank?
@@ -179,20 +179,20 @@ class Event < ActiveRecord::Base
         where_clause += "people.current_gender_id = " + sanitize_sql(options[:gender])
       end
 
-      order_by_clause = "last_name"
+      order_by_clause = "last_name;"
     end
-    
+
     if !options[:investigation_status].blank?
       issue_query = true
       where_clause += " AND " if !where_clause.empty?
 
       if options[:investigation_status] == "Unspecified"
-        where_clause += "events.investigation_lhd_status_id IS NULL"
+        where_clause += "e.\"investigation_LHD_status_id\" IS NULL"
       else
-        where_clause += "events.investigation_lhd_status_id = " + sanitize_sql(options[:investigation_status])
+        where_clause += "e.\"investigation_LHD_status_id\" = " + sanitize_sql(options[:investigation_status])
       end
 
-      order_by_clause = "last_name"
+      order_by_clause = "last_name;"
    end
     #
     # Debt: The sql_term building is duplicated in Event. Where do you
@@ -218,14 +218,14 @@ class Event < ActiveRecord::Base
     end
     
     query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date,
-                    disease_name, record_number, event_onset_date, c.code_description as gender, co.code_description as county,
+                    disease_name, record_number, event_onset_date, c.code_description as gender, co.code_description as county, cs.code_description as investigation
                   FROM diseases d
                   INNER JOIN (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
                   INNER JOIN participations p on p.event_id = disease_events.event_id
                   INNER JOIN (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
                   INNER JOIN events e on e.id = disease_events.event_id
                   LEFT OUTER JOIN codes c on c.id = people.current_gender_id
-		  LEFT OUTER JOIN codes cs on cs.id = events.investigation_lhd_status_id
+                  LEFT OUTER JOIN codes cs on cs.id = e.\"investigation_LHD_status_id\"
                   LEFT OUTER JOIN entities_locations el on el.entity_id = people.entity_id
                   LEFT OUTER JOIN locations l on l.id = el.location_id
                   LEFT OUTER JOIN addresses a on a.location_id = l.id
