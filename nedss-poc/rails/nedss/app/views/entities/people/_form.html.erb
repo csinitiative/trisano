@@ -3,65 +3,126 @@
   <span id='person_info_hide' onClick="Element.hide('person_form'); Element.hide('person_info_hide'); Element.show('person_info_show'); return false;">[Hide]</span>
   <span id='person_info_show' onClick="Element.show('person_form'); Element.hide('person_info_show'); Element.show('person_info_hide'); return false;" style="display: none;">[Show]</span>
 </legend>
-<%= f.hidden_field(:entity_type) %>
-<% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
 <div id='person_form'>
-<table cellpadding="2">
-  <tr>
-    <td><%= p.label(:last_name) %></td>
-    <td><%= p.text_field(:last_name, :size => 25) %></td>
-    <td><%= p.label(:first_name) %></td>
-    <td><%= p.text_field(:first_name, :size => 25) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:middle_name) %></td>
-    <td><%= p.text_field(:middle_name, :size => 25) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:birth_date) %></td>
-    <td><%= p.calendar_date_select(:birth_date, :year_range => 100.years.ago..0.years.from_now) %></td>
-    <td><%= p.label(:approximate_age_no_birthday, "Approximate age if birthday unknown") %></td>
-    <td><%= p.text_field(:approximate_age_no_birthday, :size => 3) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:date_of_death) %></td>
-    <td><%= p.calendar_date_select(:date_of_death, :year_range => 100.years.ago..0.years.from_now) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:birth_gender) %></td>
-    <td><%= p.dropdown_code_field(:birth_gender_id, 'gender', {:include_blank => true}) %></td>
-    <td><%= p.label(:current_gender) %></td>
-    <td><%= p.dropdown_code_field(:current_gender_id, 'gender', {:include_blank => true}) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:ethnicity) %></td>
-    <td><%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {:include_blank => true}) %></td>
-    <td><%= p.label(:primary_language) %></td>
-    <td><%= p.dropdown_code_field(:primary_language_id, 'language', {:include_blank => true}) %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:food_handler) %></td>
-    <td><%= p.dropdown_code_field(:food_handler_id, 'yesno') %></td>
-    <td><%= p.label(:healthcare_worker) %></td>
-    <td><%= p.dropdown_code_field(:healthcare_worker_id, 'yesno') %></td>
-  <tr>
-  </tr>
-    <td><%= p.label(:group_living) %></td>
-    <td><%= p.dropdown_code_field(:group_living_id, 'yesno') %></td>
-    <td><%= p.label(:day_care_association) %></td>
-    <td><%= p.dropdown_code_field(:day_care_association_id, 'yesno') %></td>
-  </tr>
-  <tr>
-    <td><%= p.label(:risk_factors) %></td>
-    <td><%= p.text_field(:risk_factors, :size => 25) %></td>
-    <td><%= p.label(:risk_factors_notes) %></td>
-    <td><%= p.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %></td>
-  </tr>
-<% end %>
-  <tr>
-    <td><%= f.label(:race) %></td>
-    <td><%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %></td>
-  </tr>
-</table>
+
+<%= f.hidden_field(:entity_type) %>
+
+<fieldset class="form">
+  <legend>Name</legend>
+  <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+    <span class="horiz">
+      <%= p.label(:last_name) %>
+      <%= p.text_field(:last_name, :size => 25) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:first_name) %>
+      <%= p.text_field(:first_name, :size => 25) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:middle_name) %>
+      <%= p.text_field(:middle_name, :size => 25) %>
+    </span>
+  <% end %>
+</fieldset>
+
+<fieldset class="form">
+  <legend>Address</legend>
+  <% f.fields_for(:entities_location, entity_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
+    <%= el.hidden_field(:entity_id) %>
+    <%= el.hidden_field(:entity_location_type_id) %>
+    <%= el.hidden_field(:primary_yn_id) %>
+
+    <%= render :partial => 'locations/address_form', :locals => { :f => f, :address => entity_data.address } %>
+  <% end %>
+</fieldset>
+
+<fieldset class="form">
+  <legend>Age</legend>
+  <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+    <span class="horiz">
+      <%= p.label(:birth_date, "Date of Birth") %>
+      <%= p.calendar_date_select(:birth_date, :year_range => 100.years.ago..0.years.from_now) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:approximate_age_no_birthday, "Age") %>
+      <%= p.text_field(:approximate_age_no_birthday, :size => 3) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:date_of_death) %>
+      <%= p.calendar_date_select(:date_of_death, :year_range => 100.years.ago..0.years.from_now) %>
+    </span>
+  <% end %>
+</fieldset>
+
+<fieldset class="form">
+  <legend>Telephone</legend>
+  <% f.fields_for(:entities_location, entity_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
+    <%= render :partial => 'locations/phone_form', :locals => { :f => f, :telephone => entity_data.telephone } %>
+  <% end %>
+</fieldset>
+
+<fieldset class="form">
+  <legend>Demographics</legend>
+  <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+  <fieldset class="vert">
+    <span class="horiz">
+      <%= p.label(:birth_gender) %>
+      <%= p.dropdown_code_field(:birth_gender_id, 'gender', {:include_blank => true}) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:current_gender) %>
+      <%= p.dropdown_code_field(:current_gender_id, 'gender', {:include_blank => true}) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:ethnicity) %>
+      <%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {:include_blank => true}) %>
+    </span>
+  </fieldset>
+  <fieldset class="vert">
+    <span class="horiz">
+      <%= f.label(:race) %>
+      <%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:primary_language) %>
+      <%= p.dropdown_code_field(:primary_language_id, 'language', {:include_blank => true}) %>
+    </span>
+  </fieldset>
+  <% end %>
+</fieldset>
+
+<fieldset class="form">
+  <legend>The following to be moved to Epidemiolgical tab pending database changes</legend>
+  <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+  <fieldset class="vert">
+    <span class="horiz">
+      <%= p.label(:food_handler) %>
+      <%= p.dropdown_code_field(:food_handler_id, 'yesno') %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:healthcare_worker) %>
+      <%= p.dropdown_code_field(:healthcare_worker_id, 'yesno') %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:group_living) %>
+      <%= p.dropdown_code_field(:group_living_id, 'yesno') %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:day_care_association) %>
+      <%= p.dropdown_code_field(:day_care_association_id, 'yesno') %>
+    </span>
+  </fieldset>
+  <fieldset class="vert">
+    <span class="horiz">
+      <%= p.label(:risk_factors) %>
+      <%= p.text_field(:risk_factors, :size => 25) %>
+    </span>
+    <span class="horiz">
+      <%= p.label(:risk_factors_notes) %>
+      <%= p.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
+    </span>
+  </fieldset>
+  <% end %>
+</fieldset>
 </div>
 </fieldset>

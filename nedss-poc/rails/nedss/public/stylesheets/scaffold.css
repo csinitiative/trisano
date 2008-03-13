@@ -4,6 +4,7 @@ body {
   margin-left: 0px;
   margin-top: 0px;
   margin-right: 0px;
+  margin-bottom: 0px;
   margin: 0px;
 }
 
@@ -53,6 +54,72 @@ pre {
 #errorExplanation ul li {
   font-size: 12px;
   list-style: square;
+}
+
+fieldset.form
+{
+  border: 0 solid #FFFFFF;
+  border-top: 1px solid #000000;
+  margin: 0 0 1em 0;
+  padding: 0 1em 1em 1em;
+}
+
+fieldset.vert
+{
+  border: 0;
+  margin: 0 0 0em 0;
+  padding: 0 0em 0em 0em;
+}
+
+fieldset.radio
+{
+  margin: 1em 0 2em 0;
+}
+
+fieldset.radio input
+{
+  clear: both;
+  float: left;
+  width: auto;
+}
+
+fieldset.radio label
+{
+  font-weight: normal;
+}
+
+input
+{
+#  display: block;
+}
+
+input.submit
+{
+  clear: both;
+}
+
+label
+{
+  display: block;
+  margin: 1em 1em 0 0;
+  font-weight: bold;
+}
+
+select
+{
+  display: block;
+}
+
+.horiz
+{
+  display: block;
+  float: left;
+  margin: 0em 1em 0 0;
+}
+
+.vert
+{
+  display: block;
 }
 
 div.uploadStatus {

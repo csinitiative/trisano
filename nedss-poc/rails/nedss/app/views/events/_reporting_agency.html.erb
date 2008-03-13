@@ -1,0 +1,67 @@
+<fieldset>
+  <legend>Reporting Agency
+    <span id='ra_info_hide' onClick="Element.hide('ra_info_form'); Element.hide('ra_info_hide'); Element.show('ra_info_show'); return false;">[Hide]</span>
+    <span id='ra_info_show' onClick="Element.show('ra_info_form'); Element.hide('ra_info_show'); Element.show('ra_info_hide'); return false;" style="display: none;">[Show]</span>
+  </legend>
+  <div id='ra_info_form'>
+
+  <fieldset class="vert">
+    <span class="horiz">
+      <%= f.label(:reporting_agency) %>
+      <%= model_auto_completer "event[active_reporting_agency][active_secondary_entity][place][name]", 
+                               @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.name, 
+                               "event[active_reporting_agency][secondary_entity_id]", 
+                               @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.entity_id, 
+                               { :allow_free_text => true, :action => 'auto_complete_for_event_reporting_agency'},
+                               { :size => 25 }, 
+                               { :skip_style => false } %>
+     </span>
+  
+    <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
+      <% entity_data    = @event.active_reporter.nil? ? Entity.new    : @event.active_reporter.active_secondary_entity %>
+      <% reporter_data  = @event.active_reporter.nil? ? Person.new    : @event.active_reporter.active_secondary_entity.person %>
+      <% location_data  = @event.active_reporter.nil? ? EntitiesLocation.new  : @event.active_reporter.active_secondary_entity.entities_location %>
+      <% telephone_data = @event.active_reporter.nil? ? Telephone.new : @event.active_reporter.active_secondary_entity.telephone %>
+
+      <% participant_fields.fields_for(:active_secondary_entity, entity_data, :builder => ExtendedFormBuilder) do |agency_fields| %>
+        <% agency_fields.fields_for(:person, reporter_data, :builder => ExtendedFormBuilder) do |reporter_fields| %>
+          <span class="horiz">
+            <%= reporter_fields.label(:first_name, "Reporter first name") %>
+            <%= reporter_fields.text_field(:first_name, :size => 25) %>
+          </span>
+          <span class="horiz">
+            <%= reporter_fields.label(:last_name, "Reporter last name") %>
+            <%= reporter_fields.text_field(:last_name, :size => 25) %>
+          </span>
+        <% end %>
+  </fieldset>
+
+  <fieldset class="vert">
+        <% agency_fields.fields_for(:entities_location, location_data, :builder => ExtendedFormBuilder) do |loc_fields| %>
+          <%= loc_fields.hidden_field(:entity_location_type_id) %>
+          <%= loc_fields.hidden_field(:primary_yn_id) %>
+        <% end %>
+
+        <% agency_fields.fields_for(:telephone, telephone_data, :builder => ExtendedFormBuilder) do |phone_fields| %>
+          <span class="horiz">
+            <%= phone_fields.label(:area_code) %>
+            <%= phone_fields.text_field(:area_code, :size => 3) %>
+          </span>
+          <span class="horiz">
+            <%= phone_fields.label(:phone_number) %>
+            <%= phone_fields.text_field(:phone_number, :size => 8) %>
+          </span>
+          <span class="horiz">
+            <%= phone_fields.label(:extension) %>
+            <%= phone_fields.text_field(:extension, :size => 6) %>
+          </span>
+          <% end %>
+        <% end %>
+      <% end %>
+  </fieldset>
+  <fieldset class="vert">
+    <%= f.label(:results_reported_to_clinician_date) %>
+    <%= f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now) %>
+  </fieldset>
+</div>
+</fieldset>
