@@ -8,6 +8,7 @@ describe "/search/cmrs.html.haml" do
   
   it "should render a search form" do
     assigns[:diseases] = [mock_disease]
+    assigns[:genders] = [mock_gender]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
   end
@@ -30,6 +31,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:cmrs] = [cmr]
     assigns[params[:disease]] = "1"
     assigns[:diseases] = [mock_disease]
+    assigns[:genders] = [mock_gender]
     
     do_render
     response.should have_tag("h3", "Results")
@@ -39,6 +41,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:cmr] = []
     params[:disease] = "1"
     assigns[:diseases] = [mock_disease]
+    assigns[:genders] = [mock_gender]
     do_render
     response.should have_text(/Your search returned no results./)
   end
@@ -50,4 +53,10 @@ describe "/search/cmrs.html.haml" do
     disease
   end
   
+  def mock_gender
+    gender = mock_model(Code)
+    gender.stub!(:id).and_return("1")
+    gender.stub!(:code_description).and_return("Male")
+    gender
+  end
 end
