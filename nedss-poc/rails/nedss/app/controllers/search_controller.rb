@@ -32,12 +32,21 @@ class SearchController < ApplicationController
     @middle_name = ""
     @last_name = ""
     @diseases = Disease.find(:all, :order => "disease_name")
+    @genders = Code.find(:all, 
+                         :order => "id", 
+                         :select => "id, code_description", 
+                         :conditions => "code_name = 'gender'" )
+
+    @genders << Code.new(:id => "U", :code_description => "Unspecified")
     
     flash[:error] = ""
     
     begin
-      if !params[:disease].blank? || !params[:name].blank?
-        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], :disease => params[:disease])
+      if !params[:disease].blank? || !params[:name].blank? || !params[:gender].blank?
+        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], 
+                                       :disease => params[:disease],
+                                       :gender => params[:gender]
+                                      )
         
        if !params[:name].blank? && @cmrs.empty?
           parse_names_from_fulltext_search

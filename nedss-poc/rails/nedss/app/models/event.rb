@@ -169,6 +169,20 @@ class Event < ActiveRecord::Base
       order_by_clause = "last_name"
     end
     
+    if !options[:gender].blank?
+      issue_query = true
+      where_clause += " AND " if !where_clause.empty?
+
+      if options[:gender] == "Unspecified"
+        where_clause += "people.current_gender_id IS NULL"
+      else
+        where_clause += "people.current_gender_id = " + sanitize_sql(options[:gender])
+      end
+
+      order_by_clause = "last_name"
+    end
+    
+    #
     # Debt: The sql_term building is duplicated in Event. Where do you
     # factor out code common to models? Also, it may be that we don't 
     # need two different search avenues (CMR and People).

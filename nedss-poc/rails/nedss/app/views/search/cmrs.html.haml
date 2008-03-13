@@ -22,6 +22,16 @@
         %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
           = "#{disease.disease_name}"
     &nbsp;
+
+    %label Gender:
+
+    %select{ :name => "gender" }
+      %option
+      - for gender in @genders
+        %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
+          = "#{gender.code_description}"
+    &nbsp;
+
     %input{ :type => "submit" }
 
 %br
