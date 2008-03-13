@@ -10,38 +10,53 @@
     %legend
       Search
 
-    %label Name:
-    = text_field_tag :name, params[:name]
-    &nbsp;
+    %div
+      %fieldset{ :class => "horiz" }
+        %legend By name
+       
+        %span{ :class => "vert" }
+          %label Full-text name
+          = text_field_tag :name, params[:name], :size => "30", :class => "search"
+        %small
+          Uses Soundex and allows for first-/last-name transposition
+        %span{ :class => "horiz" }
+          %label Starts-with last name
+          = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
+        %span{ :class => "horiz" }
+          %label Starts-with first name
+          = text_field_tag :sw_first_name, params[:sw_first_name], :class => "search"
+        %br{ :clear => "all" }
+        %small
+          Full-text search ignored when using starts-with search
 
-    %label Disease:
-
-    %select{ :name => "disease" }
-      %option
-      - for disease in @diseases
-        %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
-          = "#{disease.disease_name}"
-    &nbsp;
-
-    %label Gender:
-
-    %select{ :name => "gender" }
-      %option
-      - for gender in @genders
-        %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
-          = "#{gender.code_description}"
-    &nbsp;
-
-    %label Investigation Status:
-
-    %select{ :name => "investigation_status"}
-      %option
-      - for status in @investigation_statuses
-        %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
-          = "#{status.code_description}"
-    &nbsp;
-
-    %input{ :type => "submit" }
+    %div
+      %fieldset{ :class => "horiz" }
+        %legend
+          Additional criteria
+        %span{ :class => "horiz" }
+          %label Disease
+          %select{ :name => "disease" }
+            %option
+            - for disease in @diseases
+              %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
+                = "#{disease.disease_name}"
+        %span{ :class => "horiz" }
+          %label Gender
+          %select{ :name => "gender" }
+            %option
+            - for gender in @genders
+              %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
+                = "#{gender.code_description}"
+        %span{ :class => "horiz" }
+          %label Investigation Status
+          %select{ :name => "investigation_status"}
+            %option
+            - for status in @investigation_statuses
+              %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
+                = "#{status.code_description}"
+      %br{ :clear => "all" }
+      %br
+      %input{ :type => "submit" }
 
 %br
 
@@ -96,3 +111,7 @@
   %br
 
   = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease] }, {:id => "start_cmr"})
+
+
+
+  

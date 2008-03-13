@@ -162,16 +162,16 @@ class Event < ActiveRecord::Base
     where_clause = ""
     order_by_clause = ""
     issue_query = false
-    debugger
+    
     if !options[:disease].blank?
       issue_query = true
       where_clause += "d.id = " + sanitize_sql(options[:disease])
-      order_by_clause = "last_name;"
+      order_by_clause = "last_name"
     end
     
     if !options[:gender].blank?
       issue_query = true
-      where_clause += " AND " if !where_clause.empty?
+      where_clause += " AND " unless where_clause.empty?
 
       if options[:gender] == "Unspecified"
         where_clause += "people.current_gender_id IS NULL"
@@ -179,9 +179,9 @@ class Event < ActiveRecord::Base
         where_clause += "people.current_gender_id = " + sanitize_sql(options[:gender])
       end
 
-      order_by_clause = "last_name;"
+      order_by_clause = "last_name" unless !order_by_clause.empty?
     end
-
+    
     if !options[:investigation_status].blank?
       issue_query = true
       where_clause += " AND " if !where_clause.empty?
@@ -193,12 +193,41 @@ class Event < ActiveRecord::Base
       end
 
       order_by_clause = "last_name;"
-   end
+    end
+    
+    # Debt: The UI shows the user a format to use. Something a bit more robust
+    # could be in place.    
+    if !options[:birth_date].blank?
+      
+      american_date = '%m/%d/%Y'
+      date = Date.strptime(options[:birth_date], american_date).to_s
+      issue_query = true
+      where_clause += "birth_date = '#{date}'"
+      order_by_clause += "last_name, first_name ASC;" 
+    end
+    
     #
-    # Debt: The sql_term building is duplicated in Event. Where do you
+    # Debt: The sql_term building is duplicated in Person. Where do you
     # factor out code common to models? Also, it may be that we don't 
     # need two different search avenues (CMR and People).
-    if !options[:fulltext_terms].blank?
+    if !options[:sw_last_name].blank? || !options[:sw_first_name].blank?
+    
+      issue_query = true
+      
+      where_clause += " AND " unless where_clause.empty?
+      
+      if !options[:sw_last_name].blank?
+        where_clause += "last_name ILIKE '" + sanitize_sql(options[:sw_last_name]) + "%'"
+      end
+      
+      if !options[:sw_first_name].blank?
+        where_clause += " AND " if !options[:sw_last_name].blank?
+        where_clause += "first_name ILIKE '" + sanitize_sql(options[:sw_first_name]) + "%'"
+      end
+      
+      order_by_clause = "last_name" unless !order_by_clause.empty?
+      
+    elsif !options[:fulltext_terms].blank?
       issue_query = true
       soundex_codes = []
       raw_terms = options[:fulltext_terms].split(" ")
@@ -212,13 +241,15 @@ class Event < ActiveRecord::Base
       fulltext_terms << soundex_codes unless soundex_codes.empty?
       sql_terms = fulltext_terms.join(" | ")
       
-      where_clause += " AND " if !where_clause.empty?
+      where_clause += " AND " unless where_clause.empty?
       where_clause += "vector @@ to_tsquery('default', '#{sql_terms}')"
       order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+      
     end
     
-    query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date,
-                    disease_name, record_number, event_onset_date, c.code_description as gender, co.code_description as county, cs.code_description as investigation
+    query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date, 
+                    disease_name, record_number, event_onset_date, c.code_description as gender, 
+                    co.code_description as county, cs.code_description as investigation
                   FROM diseases d
                   INNER JOIN (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
                   INNER JOIN participations p on p.event_id = disease_events.event_id

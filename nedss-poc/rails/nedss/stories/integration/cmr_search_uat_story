@@ -9,3 +9,17 @@ Story: CMR search user acceptance tests
     When I search for all CMRs for the known person 'Karl Marks' with the disease 'Chicken Pox'
     Then I should see at least one result with the person 'Karl S. Marks' and the disease 'Chicken Pox'
     And the results should also include record number, age, county, and event date
+
+  Scenario: Search for known CMRs with starts-with search
+    
+    When I search for all CMRs with the starts-with first name of 'K' and the last name starts-with of 'M'
+    Then I should see at least one result with the person 'Karl S. Marks'
+
+    When I search for all CMRs with the starts-with first name of 'K'
+    Then I should see at least one result with the person 'Karl S. Marks'
+
+    When I search for all CMRs with the starts-with last name of 'M'
+    Then I should see at least one result with the person 'Karl S. Marks'
+
+    When I search for all CMRs with the full text name of 'Karl Marks' and the starts-with last name of 'Xyz'
+    Then the full text search should be ignored and no results should display
