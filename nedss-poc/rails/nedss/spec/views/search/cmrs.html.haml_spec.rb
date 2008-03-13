@@ -9,6 +9,7 @@ describe "/search/cmrs.html.haml" do
   it "should render a search form" do
     assigns[:diseases] = [mock_disease]
     assigns[:genders] = [mock_gender]
+    assigns[:investigation_statuses] = [mock_investigation_status]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
   end
@@ -27,12 +28,14 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:birth_date).and_return("1977/1/12")
     cmr.stub!(:gender).and_return("Male")
     cmr.stub!(:county).and_return("Salt Lake")
+    cmr.stub!(:investigation_LHD_status_id).and_return("Not Yet Opened")
 
     assigns[:cmrs] = [cmr]
     assigns[params[:disease]] = "1"
     assigns[:diseases] = [mock_disease]
     assigns[:genders] = [mock_gender]
-    
+    assigns[:investigation_statuses] = [mock_investigation_status]
+
     do_render
     response.should have_tag("h3", "Results")
   end
@@ -42,6 +45,7 @@ describe "/search/cmrs.html.haml" do
     params[:disease] = "1"
     assigns[:diseases] = [mock_disease]
     assigns[:genders] = [mock_gender]
+    assigns[:investigation_statuses] = [mock_investigation_status]
     do_render
     response.should have_text(/Your search returned no results./)
   end
@@ -58,5 +62,12 @@ describe "/search/cmrs.html.haml" do
     gender.stub!(:id).and_return("1")
     gender.stub!(:code_description).and_return("Male")
     gender
+  end
+
+  def mock_investigation_status
+    status = mock_model(Code)
+    status.stub!(:id).and_return("1702")
+    status.stub!(:code_description).and_return("Not Yet Opened")
+    status
   end
 end

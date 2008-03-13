@@ -8,7 +8,7 @@ class Event < ActiveRecord::Base
   belongs_to :imported_from, :class_name => 'Code'
   belongs_to :event_case_status, :class_name => 'Code'
   belongs_to :outbreak_associated, :class_name => 'Code'
-  belongs_to :investigation_lhd_status, :class_name => 'Code'
+  belongs_to :investigation_LHD_status, :class_name => 'Code'
 
   has_many :lab_results, :order => 'created_at', :dependent => :delete_all
   has_many :disease_events, :order => 'created_at', :dependent => :delete_all
