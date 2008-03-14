@@ -39,11 +39,6 @@ describe "/people/show.html.erb" do
     @person.stub!(:risk_factors).and_return("None")
     @person.stub!(:risk_factors_notes).and_return("None")
 
-    @entities_location = mock_model(EntitiesLocation)
-    @entities_location.stub!(:entity_id).and_return("1")
-    @entities_location.stub!(:entity_location_type_id).and_return("1302")
-    @entities_location.stub!(:primary_yn_id).and_return("1402")
-
     @address = mock_model(Address)
     @address.stub!(:street_number).and_return("123")
     @address.stub!(:street_name).and_return("Elm St.")
@@ -65,6 +60,12 @@ describe "/people/show.html.erb" do
     @location.stub!(:current_phone).and_return(@phone)
     @location.stub!(:primary?).and_return(true)
     @location.stub!(:type).and_return('Work')
+
+    @entities_location = mock_model(EntitiesLocation)
+    @entities_location.stub!(:entity_id).and_return("1")
+    @entities_location.stub!(:entity_location_type_id).and_return("1302")
+    @entities_location.stub!(:primary_yn_id).and_return("1402")
+    @entities_location.stub!(:location).and_return(@location)
 
     @entity = mock_model(Entity)
     @entity.stub!(:entity_type).and_return('person')
@@ -89,7 +90,6 @@ describe "/people/show.html.erb" do
     response.should have_text(/#{@person.first_name}/)
     response.should have_text(/#{@person.middle_name}/)
     response.should have_text(/#{@person.birth_date}/)
-    response.should have_text(/#{@person.date_of_death}/)
     response.should have_text(/#{@person.ethnicity.code_description}/)
     response.should have_text(/#{@person.birth_gender.code_description}/)
     response.should have_text(/#{@entity.races.first.code_description}/)
