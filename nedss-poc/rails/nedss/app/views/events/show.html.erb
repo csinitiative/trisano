@@ -1,177 +1,186 @@
 <h1>Show Confidential Morbidity Report</h1>
 
 <script type="text/javascript">
-var myTabs = new YAHOO.widget.TabView("cmr_tabs");
+  var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </script>
 
-<span id='disable_tabs' onClick="myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','administrative_tab'].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;">[Disable Tabs]</span>
-<span id='enable_tabs' onClick="myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','administrative_tab','enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;" style='display: none;'>[Enable Tabs]</span>
-
+<span id='disable_tabs' onClick="myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','reporting_tab','administrative_tab'].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;">[Disable Tabs]</span>
+<span id='enable_tabs' onClick="myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','administrative_tab','reporting_tab','enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;" style='display: none;'>[Enable Tabs]</span>
 
 <div id="cmr_tabs" class="yui-navset">
-<ul class="yui-nav" id="tabs">
-<li class="selected"><a href="#demographic_tab"><em>Demographic Information</em></a></li>
-<li><a href="#clinical_tab"><em>Clinical Information</em></a></li>
-<li><a href="#lab_info_tab"><em>Laboratory Information</em></a></li>
-<li><a href="#administrative_tab"><em>Administrative</em></a></li>
-</ul>
+  <ul class="yui-nav" id="tabs">
+    <li class="selected"><a href="#demographic_tab"><em>Demographic Information</em></a></li>
+    <li><a href="#clinical_tab"><em>Clinical Information</em></a></li>
+    <li><a href="#lab_info_tab"><em>Laboratory Information</em></a></li>
+    <li><a href="#reporting_tab"><em>Reporting Information</em></a></li>
+    <li><a href="#administrative_tab"><em>Administrative</em></a></li>
+  </ul>
 
-<div class="yui-content">
-<div id="demographic_tab">
-<% patient_entity = @event.active_patient.active_primary_entity %>
-<%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
+  <div class="yui-content">
 
-<fieldset>
-<legend>Location Information</legend>
-<% if not patient_entity.locations.empty? %>
-  <table>
-    <%= render :partial => "locations/location", :collection => patient_entity.current_locations, :locals => { :entity_data => patient_entity } %>
+  <div id="demographic_tab">
+    <% patient_entity = @event.active_patient.active_primary_entity %>
+    <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
+  </div>
+
+  <div id="clinical_tab">
+    <fieldset>
+      <legend>Clinical Information</legend>  
+      <table cellpadding="2">
+        <tr>
+          <td><span class="label">Record Number:</span></td>
+          <td><%= @event.record_number %></td>
+          <td><span class="label">Disease:</span></td>
+          <td><%= @event.disease.disease.disease_name %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Disease Onset Date:</span></td>
+          <td><%= @event.disease.disease_onset_date %></td>
+          <td><span class="label">Date Diagnosed:</span></td>
+          <td><%= @event.disease.date_diagnosed %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Hospitalized:</span></td>
+          <td><%= l @event.disease.hospitalized %></td>
+          <td><span class="label">Hospital:</span></td>
+          <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.nil? or @event.hospital.secondary_entity.nil? %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Admission Date:</span></td>
+          <td><%= @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
+          <td><span class="label">Discharge Date:</span></td>
+          <td><%= @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Died:</span></td>
+          <td><%= l @event.disease.died %></td>
+          <td><span class="label">Date of Death:</span></td>
+          <td><%= patient_entity.current_person.date_of_death %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Preganant:</span></td>
+          <td><%= l @event.disease.pregnant %></td>
+          <td><span class="label">Due Date:</span></td>
+          <td><%= @event.disease.pregnancy_due_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Imported From:</span></td>
+          <td><%= l @event.imported_from %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Treatment Given:</span></td>
+          <td><%= l @event.active_patient.participations_treatment.treatment_given_yn unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
+          <td><span class="label">Treatment:</span></td>
+          <td><%= @event.active_patient.participations_treatment.treatment unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
+        </tr>
+      </table>
+    </fieldset>
+  </div>
+
+  <div id="lab_info_tab">
+    <fieldset>
+      <legend>Laboratory Information</legend>  
+      <table cellpadding="2">
+        <tr>
+          <td><span class="label">Lab Result:</span></td>
+          <td><%= @event.lab_result.lab_result_text %></td>
+          <td><span class="label">Specimen Source:</span></td>
+          <td><%= l @event.lab_result.specimen_source %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Collection Date:</span></td>
+          <td><%= @event.lab_result.collection_date %></td>
+          <td><span class="label">Lab Test Date:</span></td>
+          <td><%= @event.lab_result.lab_test_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Tested at UPHL lab:</span></td>
+          <td><%= l @event.lab_result.tested_at_uphl_yn %></td>
+        </tr>
+      </table>
+    </fieldset>
+  </div>
+
+  <div id="reporting_tab">
+    <table>
+      <tr>
+        <td><span class="label">Name of Reporter:</span></td>
+        <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil? -%>
+        <%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil? %></td>
+        <td><span class="label">Reporting Agency:</span></td>
+        <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
+      </tr>
+      <tr>
+        <td><span class="label">Reporter Phone number:</span></td>
+        <td><% p = @event.reporter.secondary_entity.telephone unless @event.reporter.nil? %>
+        <% if not p.nil? %>
+          <%= fml " (", p.area_code, ") " if p.area_code -%>
+          <%= phone_number(p.phone_number) -%>
+          <%= fml " Ext. ", p.extension, "" if p.extension -%>
+        <% end %></td>
+      </tr>
+       <tr>
+         <td><span class="label">Date Results Reported to Clinician:</span></td>
+         <td><%= @event.results_reported_to_clinician_date %></td>
+        </tr>
     </table>
-<% else %>
-    <p>No location information available.</p>
-<% end %>
-<%= link_to 'Add a Location', new_entity_location_path(patient_entity) %>
-</fieldset>
-</div>
-<div id="clinical_tab">
-<fieldset>
-<legend>Clinical Information</legend>  
-<table cellpadding="2">
-<tr>
-  <td><span class="label">Disease:</span></td>
-  <td><%= @event.disease.disease.disease_name %></td>
-  <td><span class="label">Died:</span></td>
-  <td><%= l @event.disease.died %></td>
-</tr>
-<tr>
-  <td><span class="label">Disease Onset Date:</span></td>
-  <td><%= @event.disease.disease_onset_date %></td>
-  <td><span class="label">Date Diagnosed:</span></td>
-  <td><%= @event.disease.date_diagnosed %></td>
-</tr>
-<tr>
-  <td><span class="label">Hospitalized:</span></td>
-  <td><%= l @event.disease.hospitalized %></td>
-  <td><span class="label">Hospital:</span></td>
-  <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.nil? or @event.hospital.secondary_entity.nil? %></td>
-</tr>
-<tr>
-  <td><span class="label">Admission Date:</span></td>
-  <td><%= @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
-  <td><span class="label">Discharge Date:</span></td>
-  <td><%= @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
-</tr>
-<tr>
-  <td><span class="label">Treatment given:</span></td>
-  <td><%= l @event.active_patient.participations_treatment.treatment_given_yn unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
-  <td><span class="label">Treatment:</span></td>
-  <td><%= @event.active_patient.participations_treatment.treatment unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
-</tr>
-<tr>
-  <td><span class="label">Preganant:</span></td>
-  <td><%= l @event.disease.pregnant %></td>
-  <td><span class="label">Due Date:</span></td>
-  <td><%= @event.disease.pregnancy_due_date %></td>
-</tr>
-</table>
-</fieldset>
-</div>
+  </div>
 
-<div id="lab_info_tab">
-<fieldset>
-<legend>Laboratory Information</legend>  
-<table cellpadding="2">
-<tr>
-  <td><span class="label">Tested:</span></td>
-  <td><%= l @event.lab_result.specimen_source %></td>
-  <td><span class="label">Found:</span></td>
-  <td><%= @event.lab_result.lab_result_text %></td>
-</tr>
-<tr>
-  <td><span class="label">Collection Date:</span></td>
-  <td><%= @event.lab_result.collection_date %></td>
-  <td><span class="label">Lab Test Date:</span></td>
-  <td><%= @event.lab_result.lab_test_date %></td>
-</tr>
-<tr>
-  <td><span class="label">Tested at UPHL lab:</span></td>
-  <td><%= l @event.lab_result.tested_at_uphl_yn %></td>
-</tr>
-</table>
-</fieldset>
-</div>
-
-<div id="administrative_tab">
-<fieldset>
-<legend>Administrative Information</legend>  
-<table cellpadding="2">
-<tr>
-  <td><span class="label">Record Number:</span></td>
-  <td><%= @event.record_number %></td>
-  <td><span class="label">Jurisdiction:</span></td>
-  <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
-</tr>
-<tr>
-  <td><span class="label">Event Name:</span></td>
-  <td><%= @event.event_name %></td>  
-  <td><span class="label">Event Status:</span></td>
-  <td><%= l @event.event_status %></td>
-</tr>
-<tr>
-  <td><span class="label">Event Onset Date:</span></td>
-  <td><%= @event.event_onset_date %></td>
-  <td><span class="label">Event Type:</span></td>
-  <td><%= l @event.event_type %></td>
-  <td><span class="label">Event Case Status:</span></td>
-  <td><%= l @event.event_case_status %></td>
-</tr>
-<tr>
-  <td><span class="label">Investigation LHD Status:</span></td>
-  <td><%= l @event.investigation_LHD_status %></td>
-  <td><span class="label">Invetigation Start Date:</span></td>
-  <td><%= @event.investigation_started_date %></td>
-  <td><span class="label">Invesitgation Complete Date:</span></td>
-  <td><%= @event.investigation_completed_LHD_date %></td>
-</tr>
-<tr>
-  <td><span class="label">Imported From:</span></td>
-  <td><%= l @event.imported_from %></td>
-  <td><span class="label">Outbreak Associated:</span></td>
-  <td><%= l @event.outbreak_associated %></td>
-  <td><span class="label">Outbreak Name:</span></td>
-  <td><%= @event.outbreak_name %></td>
-</tr>
-<tr>
-  <td><span class="label">Review Completed Date:</span></td>
-  <td><%= @event.review_completed_UDOH_date %></td>
-  <td><span class="label">First Reported to PH Date:</span></td>
-  <td><%= @event.first_reported_PH_date %></td>
-  <td><span class="label">Results Reported to Clinician Date:</span></td>
-  <td><%= @event.results_reported_to_clinician_date %></td>
-</tr>
-<tr>
-  <td><span class="label">Reporting Agency:</span></td>
-  <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
-  <td><span class="label">Reporter name:</span></td>
-  <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil? -%>
-  <%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil? %></td>
-  <td><span class="label">Reporter phone number:</span></td>
-  <td><% p = @event.reporter.secondary_entity.telephone unless @event.reporter.nil? %>
-  <% if not p.nil? %>
-    <%= fml " (", p.area_code, ") " if p.area_code -%>
-<%= phone_number(p.phone_number) -%>
-<%= fml " Ext. ", p.extension, "" if p.extension -%>
-  <% end %></td>
-</tr>
-<tr>
-  <td><span class="label">MMWR Year:</span></td>
-  <td><%= @event.MMWR_year %></td>
-  <td><span class="label">MMWR Week:</span></td>
-  <td><%= @event.MMWR_week %></td>
-</tr>
-</table>
-</fieldset>
-</div>
+  <div id="administrative_tab">
+    <fieldset>
+      <legend>Administrative Information</legend>  
+      <table cellpadding="2">
+        <tr>
+          <td><span class="label">Event Case Status:</span></td>
+          <td><%= l @event.event_case_status %></td>
+          <td><span class="label">Outbreak Associated:</span></td>
+          <td><%= l @event.outbreak_associated %></td>
+          <td><span class="label">Outbreak Name:</span></td>
+          <td><%= @event.outbreak_name %></td>
+        </tr>
+        <tr>
+          <td><span class="label">MMWR Year:</span></td>
+          <td><%= @event.MMWR_year %></td>
+          <td><span class="label">MMWR Week:</span></td>
+          <td><%= @event.MMWR_week %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Date Investigation Started:</span></td>
+          <td><%= @event.investigation_started_date %></td>
+          <td><span class="label">LHD Investigation Status:</span></td>
+          <td><%= @event.investigation_LHD_status %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Date Invesitgation Completed:</span></td>
+          <td><%= @event.investigation_completed_LHD_date %></td>
+          <td><span class="label">Date Submitted to UDOH:</span></td>
+          <td><%= @event.first_reported_PH_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Date Review Completed by UDOH:</span></td>
+          <td><%= @event.review_completed_UDOH_date %></td>
+        </tr>
+        <tr>
+          <th colspan="4">The following fields are not on the spreadsheet</th>
+        </tr>
+          <td><span class="label">Jurisdiction:</span></td>
+          <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
+          <td><span class="label">Event Name:</span></td>
+          <td><%= @event.event_name %></td>  
+        </tr>
+        <tr>
+          <td><span class="label">Event Status:</span></td>
+          <td><%= l @event.event_status %></td>
+          <td><span class="label">Event Onset Date:</span></td>
+          <td><%= @event.event_onset_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Event Type:</span></td>
+          <td><%= l @event.event_type %></td>
+        </tr>
+      </table>
+    </fieldset>
+  </div>
 </div>
 <%= link_to 'Edit', edit_cmr_path(@event) %> |
 <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |

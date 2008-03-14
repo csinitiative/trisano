@@ -1,5 +1,6 @@
 <% e = entity_data %>
 <% p = entity_data.current_person %>
+<% l = entity_data.entities_location.location; a = l.current_address; t = l.current_phone %>
 <fieldset>
 <legend> Person Information/Demographics</legend>  
 <table cellpadding="2">
@@ -10,6 +11,21 @@
     <td><%= p.first_name %></td>
     <td><span class="label">Middle Name:</span></td>
     <td><%= p.middle_name %></td>
+  </tr>
+
+  <tr> 
+    <td colspan="6"><span class="label"><%= l.type unless l.nil? %> Address: <%= " (Primary) " if l.primary? -%></span>
+<% unless a.nil? %>
+<%= a.street_number -%>
+<%= fml " ", a.street_name, "" -%>
+<%= fml ", Unit: ", a.unit_number, "" -%>
+<%= fml ", ", l(a.city), "" -%>
+<%= fml ", ", l(a.state), "" -%>
+<%= fml ", ", a.postal_code, "" -%>
+<%= fml " : ", l(a.county), " county" -%>
+<%= fml " : ", l(a.district), " district" -%>
+<% end %>
+    </td>
   </tr>
   <tr>
     <td><span class="label">Birth Date:</span></td>
@@ -23,10 +39,13 @@
     <% end %>
   </tr>
   <tr>
-    <td><span class="label">Date of Death:</span></td>
-    <td><%= p.date_of_death %></td>
-    <td><span class="label">Ethnicity:</span></td>
-    <td><%= l p.ethnicity %></td>
+    <td colspan="6"><span class="label"><%= l.type unless l.nil?%> Phone: <%= " (Primary) " if l.primary? -%></span>
+  <% unless t.nil? %>
+    <%= fml "(", t.area_code, ") " if t.area_code -%>
+<%= phone_number(t.phone_number) -%>
+<%= fml " Ext. ", t.extension, "" if t.extension -%>
+  <% end %>
+    </td>
   </tr>
   <tr>
     <td><span class="label">Birth Gender:</span></td>
@@ -35,8 +54,6 @@
     <td><%= l p.current_gender %></td>
   </tr>
   <tr>
-    <td><span class="label">Primary Language:</span></td>
-    <td><%= l p.primary_language %></td>
     <td><span class="label">Race:</span></td>
     <td>
       <% i = 0; for race in e.races %>
@@ -44,6 +61,15 @@
         <% i += 1 %>
       <% end %>
     </td>
+    <td><span class="label">Ethnicity:</span></td>
+    <td><%= l p.ethnicity %></td>
+  </tr>
+</table>
+
+<br/>
+<table>
+  <tr>
+    <th colspan="6">The following to be moved to epidemilogical tab pending database changes</th>
   </tr>
   <tr>
     <td><span class="label">Food Handler:</span></td>
