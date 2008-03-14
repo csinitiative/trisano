@@ -54,6 +54,24 @@
             - for status in @investigation_statuses
               %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
                 = "#{status.code_description}"
+        %span{ :class => "horiz" }
+          %label City
+          = model_auto_completer("city", params[:city], "city_id", params[:city_id], { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
+        %span{ :class => "horiz" }
+          %label County
+          %select{ :name => "county"}
+            %option
+            - for county in @counties
+              %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
+                = "#{county.code_description}"
+        %span{ :class => "horiz" }
+          %label District
+          %select{ :name => "district"}
+            %option
+            - for district in @districts
+              %option{ :value => district.id, :selected => district.id == (params[:district].to_i) ? "selected" : nil}
+                = "#{district.code_description}"
+          
       %br{ :clear => "all" }
       %br
       %input{ :type => "submit" }
@@ -62,7 +80,7 @@
 
 - if !@cmrs.blank?
   %h3 Results
-  %table{ :width => 700 }
+  %table{ :width => "60%" }
     %tr
       %td
         %b
@@ -81,7 +99,13 @@
           Disease
       %td
         %b
+          City
+      %td
+        %b
           County
+      %td
+        %b
+          District
       %td
         %b
           Onset Date
@@ -99,7 +123,11 @@
         %td
           = cmr.disease_name
         %td
+          = cmr.city
+        %td
           = cmr.county
+        %td
+          = cmr.district
         %td
           = cmr.event_onset_date
 

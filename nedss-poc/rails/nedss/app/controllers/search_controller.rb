@@ -1,4 +1,5 @@
 class SearchController < ApplicationController
+  include Blankable
 
   def people
 
@@ -41,35 +42,57 @@ class SearchController < ApplicationController
     
     @investigation_statuses = Code.find(:all,
                                        :order => "id",
-					:select => "id, code_description",
-					:conditions => "code_name = 'investigation'")
+                                       :select => "id, code_description",
+                                       :conditions => "code_name = 'investigation'")
     @investigation_statuses << Code.new(:id => "U", :code_description => "Unspecified")
+
+    @counties = Code.find(:all,
+                          :order => "id",
+                          :select => "id, code_description",
+                          :conditions => "code_name = 'county'")
+    
+    @districts = Code.find(:all,
+                           :order => "id",
+                           :select => "id, code_description",
+                           :conditions => "code_name = 'district'")
     
     flash[:error] = ""
     
-    begin
-      if (!params[:disease].blank? || !params[:name].blank? || !params[:gender].blank? || 
-            !params[:sw_last_name].blank? || !params[:sw_first_name].blank? || 
-            !params[:investigation_status].blank?)
-        
+#    begin
+      if not params.values_blank?
         @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], 
                                        :disease => params[:disease],
                                        :gender => params[:gender],
                                        :sw_last_name => params[:sw_last_name],
                                        :sw_first_name => params[:sw_first_name],
-                                       :investigation_status => params[:investigation_status]
+                                       :investigation_status => params[:investigation_status],
+                                       :city_id => params[:city_id],
+                                       :county => params[:county],
+                                       :district => params[:district]
                                       )
         
-       if !params[:name].blank? && @cmrs.empty?
+        if !params[:name].blank? && @cmrs.empty?
           parse_names_from_fulltext_search
         end
       end
-    rescue
-      flash[:error] = "There was a problem with your search criteria. Please try again."
-    end
-        
+#    rescue ActiveRecord::ActiveRecordError => e
+#      flash[:error] = "There was a problem with your search. Please try again. Details #{e}"
+#    end
   end
   
+  def auto_complete_model_for_city
+    entered_city = params[:city]
+    @cities = Code.find(:all, 
+                        :select => "id, code_description", 
+                        :conditions => [ "LOWER(code_description) LIKE ? and code_name = 'city'", 
+                          entered_city.downcase + '%'],
+                        :order => "code_description ASC",
+                        :limit => 10
+                       )
+    render :inline => '<ul><% for city in @cities %><li id="city_id_<%= city.id %>"><%= h city.code_description %></li><% end %></ul>'
+  end
+    
+
   private
   
   def parse_names_from_fulltext_search

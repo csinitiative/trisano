@@ -158,6 +158,7 @@ class Event < ActiveRecord::Base
 
   def self.find_by_criteria(*args)
     options = args.extract_options!
+    p options
     fulltext_terms = []
     where_clause = ""
     order_by_clause = ""
@@ -179,12 +180,12 @@ class Event < ActiveRecord::Base
         where_clause += "people.current_gender_id = " + sanitize_sql(options[:gender])
       end
 
-      order_by_clause = "last_name" unless !order_by_clause.empty?
+      order_by_clause = "last_name" if order_by_clause.empty?
     end
     
     if !options[:investigation_status].blank?
       issue_query = true
-      where_clause += " AND " if !where_clause.empty?
+      where_clause += " AND " unless where_clause.empty?
 
       if options[:investigation_status] == "Unspecified"
         where_clause += "e.\"investigation_LHD_status_id\" IS NULL"
@@ -192,7 +193,33 @@ class Event < ActiveRecord::Base
         where_clause += "e.\"investigation_LHD_status_id\" = " + sanitize_sql(options[:investigation_status])
       end
 
-      order_by_clause = "last_name;"
+      order_by_clause = "last_name" if order_by_clause.empty?
+    end
+    
+    if !options[:city_id].blank?
+      issue_query = true
+      where_clause += " AND " if !where_clause.empty?
+      where_clause += "a.city_id = " + options[:city_id].to_s
+
+      order_by_clause = "last_name" if order_by_clause.empty?
+    end
+
+    if !options[:county].blank?
+      issue_query = true
+      where_clause += " AND " unless where_clause.empty?
+
+      where_clause += "a.county_id = " + sanitize_sql(options[:county])
+
+      order_by_clause = "last_name" if order_by_clause.empty?
+    end
+    
+    if !options[:district].blank?
+      issue_query = true
+      where_clause += " AND " unless where_clause.empty?
+
+      where_clause += "a.district_id = " + sanitize_sql(options[:district])
+
+      order_by_clause = "last_name" if order_by_clause.empty?
     end
     
     # Debt: The UI shows the user a format to use. Something a bit more robust
@@ -221,11 +248,11 @@ class Event < ActiveRecord::Base
       end
       
       if !options[:sw_first_name].blank?
-        where_clause += " AND " if !options[:sw_last_name].blank?
+        where_clause += " AND " unless options[:sw_last_name].blank?
         where_clause += "first_name ILIKE '" + sanitize_sql(options[:sw_first_name]) + "%'"
       end
       
-      order_by_clause = "last_name" unless !order_by_clause.empty?
+      order_by_clause = "last_name" if order_by_clause.empty?
       
     elsif !options[:fulltext_terms].blank?
       issue_query = true
@@ -249,7 +276,8 @@ class Event < ActiveRecord::Base
     
     query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date, 
                     disease_name, record_number, event_onset_date, c.code_description as gender, 
-                    co.code_description as county, cs.code_description as investigation
+                    co.code_description as county, ci.code_description as city, cs.code_description as investigation,
+                    di.code_description as district
                   FROM diseases d
                   INNER JOIN (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
                   INNER JOIN participations p on p.event_id = disease_events.event_id
@@ -261,9 +289,12 @@ class Event < ActiveRecord::Base
                   LEFT OUTER JOIN locations l on l.id = el.location_id
                   LEFT OUTER JOIN addresses a on a.location_id = l.id
                   LEFT OUTER JOIN codes co on co.id = a.county_id
+                  LEFT OUTER JOIN codes di on di.id = a.district_id
+                  LEFT OUTER JOIN codes ci on ci.id = a.city_id
                   WHERE #{where_clause}
                   ORDER BY #{order_by_clause}"
     
+                  p query
     find_by_sql(query) if issue_query
   end
 
