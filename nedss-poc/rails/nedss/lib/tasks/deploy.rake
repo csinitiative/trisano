@@ -89,6 +89,7 @@ namespace :nedss do
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new 
         agent.basic_auth('utah', 'arches')
+        agent.set_proxy("localhost", "8118")
         page = agent.get people_url
 
         new_person_url = NEDSS_URL + '/nedss/entities/new?type=person'
@@ -98,6 +99,82 @@ namespace :nedss do
         new_event_url = NEDSS_URL + '/nedss/cmrs/new'
         puts new_event_url
         page = agent.get new_event_url
+
+        new_cmr_url = NEDSS_URL  + '/nedss/cmrs'
+        puts "POST #{new_cmr_url}"
+        agent.post(new_cmr_url, "event[active_patient][active_primary_entity][person][first_name]" => "Steve", 
+          "event[active_patient][active_primary_entity][person][last_name]" => "Smoke",
+          "event[active_patient][active_primary_entity][entity_type]" => "person",
+          "event[active_patient][active_primary_entity][entities_location][entity_id]" => "",
+          "event[active_patient][active_primary_entity][entities_location][entity_location_type_id]" => "1303",
+          "event[active_patient][active_primary_entity][entities_location][primary_yn_id]" => "1402",
+          "event[active_patient][active_primary_entity][address][street_number]" => "",
+          "event[active_patient][active_primary_entity][address][street_name]" => "",
+          "event[active_patient][active_primary_entity][address][unit_number]" => "",
+          "event[active_patient][active_primary_entity][address][city_id]" => "",
+          "event[active_patient][active_primary_entity][address][state_id]" => "",
+          "event[active_patient][active_primary_entity][address][county_id]" => "",
+          "event[active_patient][active_primary_entity][address][district_id]" => "",
+          "event[active_patient][active_primary_entity][address][postal_code]" => "",
+          "event[active_patient][active_primary_entity][person][birth_date]" => "",
+          "event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => "",
+          "event[active_patient][active_primary_entity][person][date_of_death]" => "",
+          "event[active_patient][active_primary_entity][telephone][area_code]" => "",
+          "event[active_patient][active_primary_entity][telephone][phone_number]" => "",
+          "event[active_patient][active_primary_entity][telephone][extension]" => "",
+          "event[active_patient][active_primary_entity][person][birth_gender_id]" => "",
+          "event[active_patient][active_primary_entity][person][current_gender_id]" => "", 
+          "event[active_patient][active_primary_entity][person][ethnicity_id]" => "",
+          "event[active_patient][active_primary_entity][person][primary_language_id]" => "",
+          "event[active_patient][active_primary_entity][person][food_handler_id]" => "1401",
+          "event[active_patient][active_primary_entity][person][healthcare_worker_id]" => "1401",
+          "event[active_patient][active_primary_entity][person][group_living_id]" => "1401",
+          "event[active_patient][active_primary_entity][person][day_care_association_id]" => "1401",
+          "event[active_patient][active_primary_entity][person][risk_factors]" => "",
+          "event[active_patient][active_primary_entity][person][risk_factors_notes]" => "",
+          "event[disease][disease_id]" => "2",
+          "event[disease][disease_onset_date]" => "",
+          "event[disease][date_diagnosed]" => "",
+          "event[disease][hospitalized_id]" => "1401",
+          "event[active_hospital][secondary_entity_id]" => "",
+          "event[active_hospital][hospitals_participation][admission_date]" => "",
+          "event[active_hospital][hospitals_participation][discharge_date]" => "",
+          "event[disease][died_id]" => "1401",
+          "event[disease][pregnant_id]" => "1401",
+          "event[disease][pregnancy_due_date]" => "",
+          "event[imported_from_id]" => "2101",
+          "event[active_patient][participations_treatment][treatment_given_yn_id]" => "1401",
+          "event[active_patient][participations_treatment][treatment]" => "",
+          "event[lab_result][lab_result_text]" => "",
+          "event[lab_result][specimen_source_id]" => "1501",
+          "event[lab_result][collection_date]" => "",
+          "event[lab_result][lab_test_date]" => "",
+          "event[lab_result][tested_at_uphl_yn_id]" => "1401",
+          "event[active_reporting_agency][secondary_entity_id]" => "",
+          "event[active_reporting_agency][active_secondary_entity][place][name]" => "",
+          "event[active_reporter][active_secondary_entity][person][first_name]" => "",
+          "event[active_reporter][active_secondary_entity][person][last_name]" => "",
+          "event[active_reporter][active_secondary_entity][entities_location][entity_location_type_id]" => "1303",
+          "event[active_reporter][active_secondary_entity][entities_location][primary_yn_id]" => "1402",
+          "event[active_reporter][active_secondary_entity][telephone][area_code]" => "",
+          "event[active_reporter][active_secondary_entity][telephone][phone_number]" => "",
+          "event[active_reporter][active_secondary_entity][telephone][extension]" => "",
+          "event[results_reported_to_clinician_date]" => "",
+          "event[event_case_status_id]" => "1801",
+          "event[outbreak_associated_id]" => "1401",
+          "event[outbreak_name]" => "",
+          "event[investigation_started_date]" => "",
+          "event[investigation_LHD_status_id]" => "1701",
+          "event[investigation_completed_LHD_date]" => "",
+          "event[first_reported_PH_date]" => "",
+          "event[review_completed_UDOH_date]" => "",
+          "event[active_jurisdiction][secondary_entity_id]" => "",
+          "event[event_onset_date]" => "March 15, 2008",
+          "event[event_name]" => "",
+          "event[event_type_id]" => "2001",
+          "event[event_status_id]" => "1901",
+          "commit" => "Create"
+        )
 
         puts "smoke test success"
       rescue => error
