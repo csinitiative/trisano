@@ -89,7 +89,7 @@ namespace :nedss do
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new 
         agent.basic_auth('utah', 'arches')
-        agent.set_proxy("localhost", "8118")
+        #agent.set_proxy("localhost", "8118")
         page = agent.get people_url
 
         new_person_url = NEDSS_URL + '/nedss/entities/new?type=person'
