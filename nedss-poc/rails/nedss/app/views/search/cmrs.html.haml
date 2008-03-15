@@ -10,77 +10,88 @@
     %legend
       Search
 
-    %div
-      %fieldset{ :class => "horiz" }
-        %legend By name
+    %fieldset{ :class => "horiz" }
+      %legend By name
        
-        %span{ :class => "vert" }
-          %label Full-text name
-          = text_field_tag :name, params[:name], :size => "30", :class => "search"
-        %small
-          Uses Soundex and allows for first-/last-name transposition
-        %span{ :class => "horiz" }
-          %label Starts-with last name
-          = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
-        %span{ :class => "horiz" }
-          %label Starts-with first name
-          = text_field_tag :sw_first_name, params[:sw_first_name], :class => "search"
-        %br{ :clear => "all" }
-        %small
-          Full-text search ignored when using starts-with search
+      %span{ :class => "vert" }
+        %label Full-text name
+        = text_field_tag :name, params[:name], :size => "30", :class => "search"
+      %small
+        Uses Soundex and allows for first-/last-name transposition
+      %span{ :class => "horiz" }
+        %label Starts-with last name
+        = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
+      %span{ :class => "horiz" }
+        %label Starts-with first name
+        = text_field_tag :sw_first_name, params[:sw_first_name], :class => "search"
+      %br{ :clear => "all" }
+      %small
+        Full-text search ignored when using starts-with search
 
-    %div
-      %fieldset{ :class => "horiz" }
-        %legend
-          Additional criteria
-        %span{ :class => "horiz" }
-          %label Disease
-          %select{ :name => "disease" }
-            %option
-            - for disease in @diseases
-              %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
-                = "#{disease.disease_name}"
-        %span{ :class => "horiz" }
-          %label Gender
-          %select{ :name => "gender" }
-            %option
-            - for gender in @genders
-              %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
-                = "#{gender.code_description}"
-        %span{ :class => "horiz" }
-          %label Investigation Status
-          %select{ :name => "investigation_status"}
-            %option
-            - for status in @investigation_statuses
-              %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
-                = "#{status.code_description}"
-        %span{ :class => "horiz" }
-          %label City
-          = model_auto_completer("city", params[:city], "city_id", params[:city_id], { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
-        %span{ :class => "horiz" }
-          %label County
-          %select{ :name => "county"}
-            %option
-            - for county in @counties
-              %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
-                = "#{county.code_description}"
-        %span{ :class => "horiz" }
-          %label District
-          %select{ :name => "district"}
-            %option
-            - for district in @districts
-              %option{ :value => district.id, :selected => district.id == (params[:district].to_i) ? "selected" : nil}
-                = "#{district.code_description}"
+    %fieldset{ :class => "horiz" }
+      %legend
+        Additional criteria
+      %span{ :class => "horiz" }
+        %label Disease
+        %select{ :name => "disease" }
+          %option
+          - for disease in @diseases
+            %option{ :value => disease.id, :selected => disease.id == (params[:disease].to_i) ?  "selected" : nil}
+              = "#{disease.disease_name}"
+      %span{ :class => "horiz" }
+        %label Gender
+        %select{ :name => "gender" }
+          %option
+          - for gender in @genders
+            %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
+              = "#{gender.code_description}"
+      %span{ :class => "horiz" }
+        %label Investigation Status
+        %select{ :name => "investigation_status"}
+          %option
+          - for status in @investigation_statuses
+            %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
+              = "#{status.code_description}"
+      %br{ :clear => "all" }
+      %span{ :class => "horiz" }
+        %label City
+        = model_auto_completer("city", params[:city], "city_id", params[:city_id], { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
+      %span{ :class => "horiz" }
+        %label County
+        %select{ :name => "county"}
+          %option
+          - for county in @counties
+            %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
+              = "#{county.code_description}"
+      %span{ :class => "horiz" }
+        %label District
+        %select{ :name => "district"}
+          %option
+          - for district in @districts
+            %option{ :value => district.id, :selected => district.id == (params[:district].to_i) ? "selected" : nil}
+              = "#{district.code_description}"
           
       %br{ :clear => "all" }
-      %br
-      %input{ :type => "submit" }
+      %span{ :class => "horiz" }
+        %label Date or year of birth
+        = text_field_tag :birth_date, params[:birth_date], :size => "10"
+        %small (mm/dd/yyyy, or yyyy)
+      %br{ :clear => "all" }
+      %span{ :class => "horiz" }
+        %label Entered-on date range
+        = text_field_tag :entered_on_start, params[:entered_on_start], :size => "10"
+        &nbsp;-&nbsp;
+        = text_field_tag :entered_on_end, params[:entered_on_end], :size => "10"
+        %small (mm/dd/yyyy)
+    %br{ :clear => "all" }
+    %br
+    %input{ :type => "submit" }
 
 %br
 
 - if !@cmrs.blank?
   %h3 Results
-  %table{ :width => "60%" }
+  %table{ :width => "100%", :cellpadding => "2" }
     %tr
       %td
         %b
@@ -99,13 +110,7 @@
           Disease
       %td
         %b
-          City
-      %td
-        %b
           County
-      %td
-        %b
-          District
       %td
         %b
           Onset Date
@@ -123,22 +128,20 @@
         %td
           = cmr.disease_name
         %td
-          = cmr.city
-        %td
           = cmr.county
-        %td
-          = cmr.district
         %td
           = cmr.event_onset_date
 
-- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:disease].blank?)
+- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:investigation_status].blank? || !params[:city].blank? || !params[:county].blank? || !params[:district].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
+
   %span
     Your search returned no results.
 
   %br
   %br
 
-  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease] }, {:id => "start_cmr"})
+  / Move the query string building out to a helper, sniff out what isn't there so it's not so long
+  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :district => params[:district], :birth_date => @birth_date }, {:id => "start_cmr"})
 
 
 

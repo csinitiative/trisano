@@ -157,17 +157,16 @@ class Event < ActiveRecord::Base
   ### End participations
 
   def self.find_by_criteria(*args)
+    
     options = args.extract_options!
-    p options
     fulltext_terms = []
     where_clause = ""
-    order_by_clause = ""
+    order_by_clause = "last_name, first_name ASC"
     issue_query = false
     
     if !options[:disease].blank?
       issue_query = true
       where_clause += "d.id = " + sanitize_sql(options[:disease])
-      order_by_clause = "last_name"
     end
     
     if !options[:gender].blank?
@@ -179,8 +178,7 @@ class Event < ActiveRecord::Base
       else
         where_clause += "people.current_gender_id = " + sanitize_sql(options[:gender])
       end
-
-      order_by_clause = "last_name" if order_by_clause.empty?
+      
     end
     
     if !options[:investigation_status].blank?
@@ -192,48 +190,58 @@ class Event < ActiveRecord::Base
       else
         where_clause += "e.\"investigation_LHD_status_id\" = " + sanitize_sql(options[:investigation_status])
       end
-
-      order_by_clause = "last_name" if order_by_clause.empty?
+      
     end
     
     if !options[:city_id].blank?
       issue_query = true
-      where_clause += " AND " if !where_clause.empty?
+      where_clause += " AND " unless where_clause.empty?
       where_clause += "a.city_id = " + options[:city_id].to_s
-
-      order_by_clause = "last_name" if order_by_clause.empty?
     end
 
     if !options[:county].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-
       where_clause += "a.county_id = " + sanitize_sql(options[:county])
-
-      order_by_clause = "last_name" if order_by_clause.empty?
     end
     
     if !options[:district].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-
       where_clause += "a.district_id = " + sanitize_sql(options[:district])
-
-      order_by_clause = "last_name" if order_by_clause.empty?
     end
     
     # Debt: The UI shows the user a format to use. Something a bit more robust
-    # could be in place.    
+    # could be in place.
     if !options[:birth_date].blank?
+      if (options[:birth_date].size == 4)
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "EXTRACT(YEAR FROM birth_date) = '" + sanitize_sql(options[:birth_date]) + "'"
+        
+      else
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "birth_date = '" + sanitize_sql(options[:birth_date]) + "'"
+      end
       
-      american_date = '%m/%d/%Y'
-      date = Date.strptime(options[:birth_date], american_date).to_s
-      issue_query = true
-      where_clause += "birth_date = '#{date}'"
-      order_by_clause += "last_name, first_name ASC;" 
     end
     
-    #
+    if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
+      issue_query = true
+      where_clause += " AND " unless where_clause.empty?
+      
+      if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
+        where_clause += "e.created_at BETWEEN '" + sanitize_sql(options[:entered_on_start]) + 
+          "' AND '" + sanitize_sql(options[:entered_on_end]) + "'"
+      elsif !options[:entered_on_start].blank?
+        where_clause += "e.created_at > '" + sanitize_sql(options[:entered_on_start]) + "'"
+      else
+        where_clause += "e.created_at < '" + sanitize_sql(options[:entered_on_end]) + "'"
+      end
+     
+    end
+    
     # Debt: The sql_term building is duplicated in Person. Where do you
     # factor out code common to models? Also, it may be that we don't 
     # need two different search avenues (CMR and People).
@@ -251,8 +259,6 @@ class Event < ActiveRecord::Base
         where_clause += " AND " unless options[:sw_last_name].blank?
         where_clause += "first_name ILIKE '" + sanitize_sql(options[:sw_first_name]) + "%'"
       end
-      
-      order_by_clause = "last_name" if order_by_clause.empty?
       
     elsif !options[:fulltext_terms].blank?
       issue_query = true
@@ -294,7 +300,6 @@ class Event < ActiveRecord::Base
                   WHERE #{where_clause}
                   ORDER BY #{order_by_clause}"
     
-                  p query
     find_by_sql(query) if issue_query
   end
 
