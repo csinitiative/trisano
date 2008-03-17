@@ -31,34 +31,6 @@ describe "/people/new.html.erb" do
     response.should have_tag("a[href=/entities?type=place]")
   end
 
-  it "New form should include location fields" do
-    do_render
-
-    response.should have_tag("form") do
-      with_tag("input#entity_person_last_name[name=?]", "entity[person][last_name]")
-
-      with_tag('select#entity_entities_location_entity_location_type_id[name=?]', "entity[entities_location][entity_location_type_id]") do
-        with_tag('option', 'Home')
-        with_tag('option', 'Work')
-      end
-
-      with_tag('select#entity_entities_location_primary_yn_id[name=?]', "entity[entities_location][primary_yn_id]") do
-        with_tag('option', 'Unknown')
-        with_tag('option', 'Yes')
-        with_tag('option', 'No')
-      end
-
-      with_tag("input#entity_address_street_number[name=?]", "entity[address][street_number]")
-      with_tag("input#entity_address_street_name[name=?]", "entity[address][street_name]")
-      with_tag("input#entity_address_unit_number[name=?]", "entity[address][unit_number]")
-      with_tag("input#entity_address_street_number[name=?]", "entity[address][street_number]")
-
-      with_tag("input#entity_telephone_area_code[name=?]", "entity[telephone][area_code]")
-      with_tag("input#entity_telephone_phone_number[name=?]", "entity[telephone][phone_number]")
-      with_tag("input#entity_telephone_extension[name=?]", "entity[telephone][extension]")
-    end
-  end
-
 end
 
 
