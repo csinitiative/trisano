@@ -8,7 +8,7 @@
 <p/>
 <fieldset>
 <legend>Location Information</legend>
-<% if not @entity.locations.empty? %>
+<% unless @entity.locations.empty? %>
   <table>
     <%= render :partial => "locations/location", :collection => @entity.current_locations, :locals => {:entity_data => @entity} %>
     </table>
