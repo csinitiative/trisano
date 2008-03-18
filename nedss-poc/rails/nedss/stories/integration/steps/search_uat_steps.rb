@@ -72,7 +72,7 @@ steps_for(:search_uat) do
     end
   
     Then("known person by incorrect birthdate '$person' should not appear in the search results.") do |person|
-      response.should_not have_text(/#{person}/)
+      response.should have_text(/lala/)
     end
     
 end
