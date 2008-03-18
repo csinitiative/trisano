@@ -5,6 +5,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
+  map.admin 'admin', :controller => 'admin'
 
   map.resources :cmrs, :controller => :events, 
                        :member => { :associations => :get, :add_association => :post }
