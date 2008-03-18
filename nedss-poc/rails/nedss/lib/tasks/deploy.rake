@@ -184,12 +184,6 @@ namespace :nedss do
         raise
       end
     end
-    
-    # This will still indicate success even if there was a faliure. Needs to be remedied
-    desc "run the integration tests"
-    task :runintegration => 'nedss:integration:run_all' do
-      puts "integration test success"
-    end
 
     desc "redeploy Tomcat"
     task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
@@ -202,7 +196,7 @@ namespace :nedss do
     end
     
     desc "build and redeploy full: build and redeploy plus integration tests"
-    task :buildandredeployfull => [:buildandredeploy, :runintegration] do
+    task :buildandredeployfull => [:buildandredeploy, 'nedss:integration:run_all'] do
       puts "build, redeploy and integration test success"
     end
 
