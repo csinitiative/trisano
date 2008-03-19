@@ -23,7 +23,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
       t.string    :description, :limit => 60
     end
 
-    create table  :entitlements do |t|
+    create_table  :entitlements do |t|
       t.integer   :user_id
       t.integer   :privilege_id
       t.integer   :jurisdiction_id
@@ -49,12 +49,12 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
 # Initial roles should include Administrator and Investigator
 # Note that there is a role_id column in participations, but no role table,
 # we may want to adjust nomenclature
-    create table  :roles do |t|
+    create_table  :roles do |t|
       t.string    :role_name, :limit => 15
       t.string    :description, :limit => 60
     end
 
-    create table  :users_roles do |t|
+    create_table  :users_roles do |t|
       t.integer   :user_id
       t.integer   :role_id
       t.integer   :jurisdiction_id
@@ -79,7 +79,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
 
 #
 
-    create table  :roles_entitlements do |t|
+    create_table  :roles_entitlements do |t|
       t.integer   :role_id
       t.integer   :entitlement_id
       t.integer   :jurisdiction_id
