@@ -110,7 +110,11 @@ class InitLabs < ActiveRecord::Migration
   end	
 
   def self.down
-    drop_table :laboratories
-    drop_table :entitlements
+    drop_table :users
+    drop_table :privileges
+    drop_table :entitelements
+    drop_table :roles
+    drop_table :users_roles
+    drop_table :roles_entitlements
   end
 end
