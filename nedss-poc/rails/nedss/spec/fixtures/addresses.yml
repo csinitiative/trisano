@@ -29,7 +29,6 @@ marks_home_address:
   street_name: NE Ankeny St
   id: !str 4
   district_id: !str 1201
-  city_id: !str 402
   unit_number: ""
   street_number: !str 3114
   created_at:  <%= Time.now.to_s :db %> 

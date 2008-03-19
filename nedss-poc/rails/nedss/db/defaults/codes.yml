@@ -65,14 +65,6 @@
   the_code:  "ES"
   code_description: "Spanish"
 
-- code_name: "city"
-  the_code:  "SLC"
-  code_description: "Salt Lake City"
-
-- code_name: "city"
-  the_code:  "PRV"
-  code_description: "Provo"
-
 - code_name: "state"
   the_code:  "UT"
   code_description: "Utah"

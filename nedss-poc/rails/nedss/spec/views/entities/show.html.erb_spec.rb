@@ -7,15 +7,14 @@ describe "/people/show.html.erb" do
   before(:each) do
 
     @gender = @ethnicity = @race = @language = @yesno = mock_model(Code)
-    @city = @state = @county = @district = mock_model(Code)
+    @state = @county = @district = mock_model(Code)
 
     @gender.stub!(:code_description).and_return('Male')
     @ethnicity.stub!(:code_description).and_return('Hispanic')
     @race.stub!(:code_description).and_return('Asian')
     @language.stub!(:code_description).and_return('Spanish')
     @yesno.stub!(:code_description).and_return('No')
-
-    @city.stub!(:code_description).and_return('Salt Lake')
+    
     @state.stub!(:code_description).and_return('UT')
     @county.stub!(:code_description).and_return('Alpine')
     @district.stub!(:code_description).and_return('Beaver')
@@ -43,7 +42,7 @@ describe "/people/show.html.erb" do
     @address.stub!(:street_number).and_return("123")
     @address.stub!(:street_name).and_return("Elm St.")
     @address.stub!(:unit_number).and_return("99")
-    @address.stub!(:city).and_return(@city)
+    @address.stub!(:city).and_return("Provo")
     @address.stub!(:state).and_return(@state)
     @address.stub!(:postal_code).and_return("12345")
     @address.stub!(:county).and_return(@county)
@@ -99,7 +98,7 @@ describe "/people/show.html.erb" do
     response.should have_text(/#{@address.street_number}/)
     response.should have_text(/#{@address.street_name}/)
     response.should have_text(/#{@address.unit_number}/)
-    response.should have_text(/#{@address.city.code_description}/)
+    response.should have_text(/#{@address.city}/)
     response.should have_text(/#{@address.state.code_description}/)
     response.should have_text(/#{@address.county.code_description}/)
     response.should have_text(/#{@address.district.code_description}/)

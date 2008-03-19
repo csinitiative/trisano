@@ -153,7 +153,7 @@ def mock_person_entity
     address.stub!(:street_number).and_return("123")
     address.stub!(:street_name).and_return("Elm St.")
     address.stub!(:unit_number).and_return("99")
-    address.stub!(:city_id).and_return(401)
+    address.stub!(:city).and_return("Provo")
     address.stub!(:state_id).and_return(1001)
     address.stub!(:postal_code).and_return("12345")
     address.stub!(:county_id).and_return(1101)

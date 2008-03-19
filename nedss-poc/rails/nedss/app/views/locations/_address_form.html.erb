@@ -16,8 +16,8 @@
 
   <fieldset class="vert">
   <span class="horiz">
-    <%= a.label(:city_id, "City") %>
-    <%= a.dropdown_code_field(:city_id, 'city', {:include_blank => true}) %>
+    <%= a.label(:city, "City") %>
+    <%= a.text_field(:city, :size => 30) %>
   </span>
   <span class="horiz">
     <%= a.label(:state_id, "State") %>

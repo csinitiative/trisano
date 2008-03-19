@@ -165,7 +165,7 @@ class EventsController < ApplicationController
     @event.active_patient.active_primary_entity.person.middle_name = params[:middle_name]
     @event.active_patient.active_primary_entity.person.last_name = params[:last_name]
     @event.active_patient.active_primary_entity.person.current_gender = Code.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
-    @event.active_patient.active_primary_entity.address.city = Code.find_by_code_description(params[:city]) unless params[:city].blank?
+    @event.active_patient.active_primary_entity.address.city = params[:city]
     @event.active_patient.active_primary_entity.address.county = Code.find(params[:county]) unless params[:county].blank?
     @event.active_patient.active_primary_entity.address.district = Code.find(params[:district]) unless params[:district].blank?
     @event.active_patient.active_primary_entity.person.birth_date = params[:birth_date]

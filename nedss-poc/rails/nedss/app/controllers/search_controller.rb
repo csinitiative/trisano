@@ -65,7 +65,7 @@ class SearchController < ApplicationController
         
         if !params[:birth_date].blank?
           begin
-            if (params[:birth_date].length == 4)
+            if (params[:birth_date].length == 4 && params[:birth_date].to_i != 0)
               @birth_date = params[:birth_date]
             else
               @birth_date = parse_american_date(params[:birth_date])
@@ -102,7 +102,7 @@ class SearchController < ApplicationController
                                        :birth_date => @birth_date,
                                        :entered_on_start => entered_on_start,
                                        :entered_on_end => entered_on_end,
-                                       :city_id => params[:city_id],
+                                       :city => params[:city],
                                        :county => params[:county],
                                        :district => params[:district]
                                       )
@@ -133,14 +133,14 @@ class SearchController < ApplicationController
   
   def auto_complete_model_for_city
     entered_city = params[:city]
-    @cities = Code.find(:all, 
-                        :select => "id, code_description", 
-                        :conditions => [ "LOWER(code_description) LIKE ? and code_name = 'city'", 
-                          entered_city.downcase + '%'],
-                        :order => "code_description ASC",
+    @addresses = Address.find(:all, 
+                        :select => "distinct city", 
+                        :conditions => [ "city ILIKE ?", 
+                          entered_city + '%'],
+                        :order => "city ASC",
                         :limit => 10
                        )
-    render :inline => '<ul><% for city in @cities %><li id="city_id_<%= city.id %>"><%= h city.code_description %></li><% end %></ul>'
+    render :inline => '<ul><% for address in @addresses %><li id="city_<%= address.city %>"><%= h address.city  %></li><% end %></ul>'
   end
   
   private

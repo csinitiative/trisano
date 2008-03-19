@@ -55,7 +55,7 @@
       %br{ :clear => "all" }
       %span{ :class => "horiz" }
         %label City
-        = model_auto_completer("city", params[:city], "city_id", params[:city_id], { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
+        = model_auto_completer("city", params[:city], "", "", { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
       %span{ :class => "horiz" }
         %label County
         %select{ :name => "county"}

@@ -98,18 +98,6 @@ language_spanish:
   the_code:  "ES"
   code_description: "Spanish"
 
-city_salt_lake:
-  id: 401
-  code_name: "city"
-  the_code:  "SLC"
-  code_description: "Salt Lake City"
-
-city_provo:
-  id: 402
-  code_name: "city"
-  the_code:  "PRV"
-  code_description: "Provo"
-
 state_utah:
   id: 1001
   code_name: "state"

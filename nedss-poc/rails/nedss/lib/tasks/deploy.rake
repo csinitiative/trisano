@@ -111,7 +111,7 @@ namespace :nedss do
           "event[active_patient][active_primary_entity][address][street_number]" => "",
           "event[active_patient][active_primary_entity][address][street_name]" => "",
           "event[active_patient][active_primary_entity][address][unit_number]" => "",
-          "event[active_patient][active_primary_entity][address][city_id]" => "",
+          "event[active_patient][active_primary_entity][address][city]" => "",
           "event[active_patient][active_primary_entity][address][state_id]" => "",
           "event[active_patient][active_primary_entity][address][county_id]" => "",
           "event[active_patient][active_primary_entity][address][district_id]" => "",
