@@ -1,0 +1,290 @@
+- code_name: "gender"
+  the_code:  "M"
+  code_description: "Male"
+
+- code_name: "gender"
+  the_code:  "F"
+  code_description: "Female"
+
+- code_name: "gender"
+  the_code:  "U"
+  code_description: "Unknown"
+
+- code_name: "ethnicity"
+  the_code:  "H"
+  code_description: "Hispanic or Latino"
+
+- code_name: "ethnicity"
+  the_code:  "NH"
+  code_description: "Not Hispanic or Latino"
+
+- code_name: "ethnicity"
+  the_code:  "O"
+  code_description: "Other"
+
+- code_name: "ethnicity"
+  the_code:  "U"
+  code_description: "Unknown"
+
+- code_name: "race"
+  the_code:  "W"
+  code_description: "White"
+
+- code_name: "race"
+  the_code:  "B"
+  code_description: "Black / African-American"
+
+- code_name: "race"
+  the_code:  "AA"
+  code_description: "American Indian"
+
+- code_name: "race"
+  the_code:  "A"
+  code_description: "Asian"
+
+- code_name: "race"
+  the_code:  "AK"
+  code_description: "Alaskan Native"
+
+- code_name: "race"
+  the_code:  "H"
+  code_description: "Native Hawaiian / Pacific Islander"
+
+# Removing race unknown as UI currently uses a multi-select.  In which case selecting nothing is unknown.
+#
+# race_unknown:
+#   code_name: "race"
+#   the_code:  "U"
+#   code_description: "Unknown"
+
+- code_name: "language"
+  the_code:  "EN"
+  code_description: "English"
+
+- code_name: "language"
+  the_code:  "ES"
+  code_description: "Spanish"
+
+- code_name: "city"
+  the_code:  "SLC"
+  code_description: "Salt Lake City"
+
+- code_name: "city"
+  the_code:  "PRV"
+  code_description: "Provo"
+
+- code_name: "state"
+  the_code:  "UT"
+  code_description: "Utah"
+
+- code_name: "state"
+  the_code:  "AL"
+  code_description: "Alabama"
+
+- code_name: "state"
+  the_code:  "AK"
+  code_description: "Alaska"
+
+- code_name: "state"
+  the_code:  "AZ"
+  code_description: "Arizona"
+
+- code_name: "state"
+  the_code:  "AR"
+  code_description: "Arkansas"
+
+- code_name: "county"
+  the_code:  "SL"
+  code_description: "Salt Lake"
+
+- code_name: "county"
+  the_code:  "SU"
+  code_description: "Summit"
+
+- code_name: "district"
+  the_code:  "AL"
+  code_description: "Alpine"
+
+- code_name: "district"
+  the_code:  "BV"
+  code_description: "Beaver"
+
+- code_name: "location"
+  the_code:  "H"
+  code_description: "Home"
+
+- code_name: "location"
+  the_code:  "W"
+  code_description: "Work"
+
+- code_name: "location"
+  the_code:  "U"
+  code_description: "Unspecified"
+
+- code_name: "location"
+  the_code:  "M"
+  code_description: "Mobile"
+
+- code_name: "yesno"
+  the_code: "U"
+  code_description: "Unknown"
+
+- code_name: "yesno"
+  the_code: "Y"
+  code_description: "Yes"
+
+- code_name: "yesno"
+  the_code: "N"
+  code_description: "No"
+
+- code_name: "specimen"
+  the_code: "B"
+  code_description: "Blood"
+
+- code_name: "specimen"
+  the_code: "U"
+  code_description: "Urine"
+
+- code_name: "specimen"
+  the_code: "S"
+  code_description: "Stool"
+
+- code_name: "specimen"
+  the_code: "T"
+  code_description: "Tissue"
+
+- code_name: "investigation"
+  the_code: "U"
+  code_description: "Unknown"
+
+- code_name: "investigation"
+  the_code: "NYO"
+  code_description: "Not Yet Open"
+
+- code_name: "investigation"
+  the_code: "O"
+  code_description: "Open"
+
+- code_name: "investigation"
+  the_code: "C"
+  code_description: "Closed"
+
+- code_name: "case"
+  the_code: "U"
+  code_description: "Unknown"
+
+- code_name: "case"
+  the_code: "C"
+  code_description: "Confirmed"
+
+- code_name: "case"
+  the_code: "P"
+  code_description: "Probable"
+
+- code_name: "case"
+  the_code: "S"
+  code_description: "Suspect"
+
+- code_name: "case"
+  the_code: "NC"
+  code_description: "Not Case"
+
+- code_name: "case"
+  the_code: "CC"
+  code_description: "Chronic Carrier"
+
+- code_name: "case"
+  the_code: "D"
+  code_description: "Discarded"
+
+- code_name: "eventstatus"
+  the_code: "O"
+  code_description: "Open"
+
+- code_name: "eventstatus"
+  the_code: "C"
+  code_description: "Closed"
+
+- code_name: "eventtype"
+  the_code: "ONS"
+  code_description: "ONS"
+
+- code_name: "eventtype"
+  the_code: "DIAG"
+  code_description: "Diag"
+
+- code_name: "eventtype"
+  the_code: "LT"
+  code_description: "LT"
+
+- code_name: "eventtype"
+  the_code: "RC"
+  code_description: "RC"
+
+- code_name: "eventtype"
+  the_code: "RS"
+  code_description: "RS"
+
+- code_name: "eventtype"
+  the_code: "UN"
+  code_description: "RS"
+
+- code_name: "imported"
+  the_code: "U"
+  code_description: "Unknown"
+
+- code_name: "imported"
+  the_code: "UT"
+  code_description: "Utah"
+
+- code_name: "imported"
+  the_code: "F"
+  code_description: "Outside U.S."
+
+- code_name: "imported"
+  the_code: "US"
+  code_description: "Other U.S. State"
+
+- code_name: "placetype"
+  the_code: "H"
+  code_description: "Hospital / ICP"
+
+- code_name: "placetype"
+  the_code: "J"
+  code_description: "Jurisdiction"
+
+- code_name: "placetype"
+  the_code: "L"
+  code_description: "Laboratory"
+
+- code_name: "placetype"
+  the_code: "C"
+  code_description: "Clinic / Doctor's Office"
+
+- code_name: "placetype"
+  the_code: "O"
+  code_description: "Other"
+
+- code_name: "participant"
+  the_code: "I"
+  code_description: "Interested Party"
+
+- code_name: "participant"
+  the_code: "H"
+  code_description: "Hospitalized At"
+
+- code_name: "participant"
+  the_code: "RB"
+  code_description: "Reported By"
+
+- code_name: "participant"
+  the_code: "RA"
+  code_description: "Reporting Agency"
+
+- code_name: "participant"
+  the_code: "J"
+  code_description: "Jurisdiction"
+
+- code_name: "participant"
+  the_code: "TW"
+  code_description: "Treated With"
