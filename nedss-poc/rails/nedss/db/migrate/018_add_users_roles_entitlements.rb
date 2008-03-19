@@ -92,9 +92,9 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
                 REFERENCES roles(id)"
         
     execute "ALTER TABLE roles_entitlements
-                ADD CONSTRAINT  fk_PrivilegeId 
-                FOREIGN KEY (privilege_id) 
-                REFERENCES privileges(id)"
+                ADD CONSTRAINT  fk_EntitlementId 
+                FOREIGN KEY (entitlement_id) 
+                REFERENCES entitlements(id)"
 
 # How do we make certain that this entity is a jurisdiction?
     execute "ALTER TABLE roles_entitlements
