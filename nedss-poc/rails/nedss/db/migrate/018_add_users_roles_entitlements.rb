@@ -44,7 +44,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
     execute "ALTER TABLE entitlements
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
-                REFERENCES entity(id)"
+                REFERENCES entities(id)"
 
 # Initial roles should include Administrator and Investigator
 # Note that there is a role_id column in participations, but no role table,
@@ -75,7 +75,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
     execute "ALTER TABLE users_roles
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
-                REFERENCES entity(id)"
+                REFERENCES entities(id)"
 
 #
 
@@ -100,7 +100,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
     execute "ALTER TABLE entitlements
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
-                REFERENCES entity(id)"
+                REFERENCES entities(id)"
 
    
   end	
