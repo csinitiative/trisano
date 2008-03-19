@@ -1,4 +1,4 @@
-class InitLabs < ActiveRecord::Migration
+class AddUsersRolesEntitlements < ActiveRecord::Migration
   def self.up
 #
 # This migration adds the basic user, role, and entitlement capabilities to the
@@ -12,10 +12,9 @@ class InitLabs < ActiveRecord::Migration
       t.string    :last_name,  :limit => 64
       t.string    :initials,   :limit => 8
       t.string	  :generational_qualifer, :limit => 8
-      t.string    :user_name    :limit => 20
+      t.string    :user_name,   :limit => 20
       t.string    :uid,         :limit => 9
-      t.datetime  :created_at
-      t.datetime  :updated_at
+      t.timestamps
     end
 
 # Initial privs should include view, update, and administer
@@ -28,8 +27,7 @@ class InitLabs < ActiveRecord::Migration
       t.integer   :user_id
       t.integer   :privilege_id
       t.integer   :jurisdiction_id
-      t.datetime  :created_at
-      t.datetime  :updated_at
+      t.timestamps
     end
 
     execute "ALTER TABLE entitlements
@@ -60,8 +58,7 @@ class InitLabs < ActiveRecord::Migration
       t.integer   :user_id
       t.integer   :role_id
       t.integer   :jurisdiction_id
-      t.datetime  :created_at
-      t.datetime  :updated_at
+      t.timestamps
     end
       
     execute "ALTER TABLE users_roles
@@ -86,8 +83,7 @@ class InitLabs < ActiveRecord::Migration
       t.integer   :role_id
       t.integer   :entitlement_id
       t.integer   :jurisdiction_id
-      t.datetime  :created_at
-      t.datetime  :updated_at
+      t.timestamps
     end
 
     execute "ALTER TABLE roles_entitlements
