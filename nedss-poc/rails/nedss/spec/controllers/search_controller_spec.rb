@@ -4,6 +4,10 @@ describe SearchController do
   
   describe "handling GET /search" do
   
+    before(:each) do
+      mock_user
+    end
+    
     def do_get
       get :index
     end
@@ -22,6 +26,10 @@ describe SearchController do
   
    describe "handling GET /search/people" do
   
+    before(:each) do
+      mock_user
+    end
+    
     def do_get
       get :people
     end
@@ -41,6 +49,7 @@ describe SearchController do
   describe "handling GET /search/people with search parameters" do
   
      before(:each) do
+       mock_user
       @person = mock_model(Person)
       Person.stub!(:find_by_ts).and_return([@person])
     end
@@ -74,6 +83,7 @@ describe SearchController do
   describe "handling GET /search/cmrs" do
   
     before(:each) do
+      mock_user
       @diseases = mock_model(Disease)
       Disease.stub!(:find).and_return([@diseases])
     end
@@ -102,6 +112,7 @@ describe SearchController do
   describe "handling GET /search/cmrs with search parameters" do
     
     before(:each) do
+      mock_user
       @event = mock_model(Event)
       Event.stub!(:find_by_criteria).and_return([@event])
       

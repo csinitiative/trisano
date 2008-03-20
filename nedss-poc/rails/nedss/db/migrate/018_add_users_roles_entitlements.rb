@@ -6,14 +6,13 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
 # Evan Bauer 14-Mar-2008
 #
     create_table  :users do |t|
-      t.integer	  :uid
+      t.string    :uid
       t.string    :given_name, :limit => 127
       t.string    :first_name, :limit => 32
       t.string    :last_name,  :limit => 64
       t.string    :initials,   :limit => 8
       t.string	  :generational_qualifer, :limit => 8
       t.string    :user_name,   :limit => 20
-      t.string    :uid,         :limit => 9
       t.timestamps
     end
 

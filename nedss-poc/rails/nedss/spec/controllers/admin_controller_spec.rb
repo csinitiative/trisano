@@ -4,6 +4,10 @@ describe AdminController do
 
   describe "handling GET /admin" do
     
+    before(:each) do
+      mock_user
+    end
+    
     def do_get
       get :index
     end

@@ -4,6 +4,7 @@ describe EntitiesController do
   describe "handling GET /entities" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity)
       Entity.stub!(:find).and_return([@entity])
     end
@@ -67,6 +68,7 @@ describe EntitiesController do
   describe "handling GET /entities.xml" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity, :to_xml => "XML")
       Entity.stub!(:find).and_return(@entity)
     end
@@ -96,6 +98,7 @@ describe EntitiesController do
   describe "handling GET /entities/1" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity)
       Entity.stub!(:find).and_return(@entity)
       @entity.stub!(:entity_type).and_return('person')
@@ -130,6 +133,7 @@ describe EntitiesController do
   describe "handling GET /entities/1.xml" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity, :to_xml => "XML")
       Entity.stub!(:find).and_return(@entity)
       @entity.stub!(:entity_type).and_return('person')
@@ -160,6 +164,7 @@ describe EntitiesController do
   describe "handling GET /entities/new" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity)
       Entity.stub!(:new).and_return(@entity)
     end
@@ -207,6 +212,7 @@ describe EntitiesController do
   describe "handling GET /entities/1/edit" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity)
       Entity.stub!(:find).and_return(@entity)
       @entity.stub!(:entity_type).and_return('person')
@@ -240,6 +246,7 @@ describe EntitiesController do
   describe "handling POST /entities" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity, :to_param => "1")
       Entity.stub!(:new).and_return(@entity)
     end
@@ -281,6 +288,7 @@ describe EntitiesController do
   describe "handling PUT /entities/1" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity, :to_param => "1")
       Entity.stub!(:find).and_return(@entity)
       @entity.stub!(:entity_type).and_return('person')
@@ -333,6 +341,7 @@ describe EntitiesController do
   describe "handling DELETE /entities/1" do
 
     before(:each) do
+      mock_user
       @entity = mock_model(Entity, :destroy => true)
       Entity.stub!(:find).and_return(@entity)
       @entity.stub!(:entity_type).and_return('person')

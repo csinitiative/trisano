@@ -1,0 +1,8 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+ default:
+   id: 1
+   uid: utah    # Just used Utah in order to match the value used by basic auth
+   user_name: default_user
+
+

@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LocationsController do
   before(:each) do
+    mock_user
     mimic_before_filter
   end
   describe "handling GET /locations" do
@@ -21,6 +22,7 @@ describe LocationsController do
   describe "handling GET /locations/new" do
 
     before(:each) do
+      mock_user
       mimic_before_filter
       @location = mock_model(Location)
       Location.stub!(:new).and_return(@location)
@@ -59,6 +61,7 @@ describe LocationsController do
   describe "handling GET /locations/1/edit" do
 
     before(:each) do
+      mock_user
       mimic_before_filter
       @location = mock_model(Location)
       @entities_location = mock_model(EntitiesLocation)
@@ -105,6 +108,7 @@ describe LocationsController do
   describe "handling POST /locations" do
 
     before(:each) do
+      mock_user
       mimic_before_filter
       @location = mock_model(Location, :to_param => "1")
       Location.stub!(:new).and_return(@location)
@@ -147,6 +151,7 @@ describe LocationsController do
   describe "handling PUT /locations/1" do
 
     before(:each) do
+      mock_user
       mimic_before_filter
       @array = mock_model(Array)
       @entity.stub!(:locations).and_return(@array)
@@ -200,6 +205,7 @@ describe LocationsController do
   describe "handling DELETE /locations/1" do
 
     before(:each) do
+      mock_user
       mimic_before_filter
       @location = mock_model(Location, :to_param => "1")
       @array = mock_model(Array)

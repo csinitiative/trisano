@@ -14,4 +14,23 @@ class ApplicationController < ActionController::Base
    
   # MJH 30-DEC just hacking for now - may be a rails bug - researching
   # See http://wiki.csinitiative.com/moin/NedssRailsPoc/PackagingAsWarFile
+  
+  before_filter :load_user
+  
+  protected
+  
+  def load_user
+    @user ||= NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID) 
+  end
+  
+  def load_user_by_uid(uid)
+    User.current_user = User.find_by_uid(uid)
+    if User.current_user.nil?
+      redirect_to "/500.html"
+      return
+    end
+    logger.info "User loaded: " + User.current_user.uid
+    User.current_user
+  end
+  
 end
