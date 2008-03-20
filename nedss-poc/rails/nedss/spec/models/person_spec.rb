@@ -113,10 +113,6 @@ describe Person, "loaded from fixtures" do
     people(:groucho_marx).birth_gender.should eql(codes(:gender_male))
   end
 
-  it "should have a current_gender of male" do
-    people(:groucho_marx).current_gender.should eql(codes(:gender_male))
-  end
-
   it "should have a primary language of Spanish" do
     people(:groucho_marx).primary_language.should eql(codes(:language_spanish))
   end

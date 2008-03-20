@@ -160,8 +160,8 @@ end
 describe Entity, "with people fixtures loaded" do
   fixtures :entities, :people, :people_races
 
-  it "should have 84 records" do
-    Entity.should have(84).records
+  it "should have 7 records" do
+    Entity.should have(7).records
   end
 
   describe "and a single instance of Grocuho Marx" do

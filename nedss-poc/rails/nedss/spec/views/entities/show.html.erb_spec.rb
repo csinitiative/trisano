@@ -27,7 +27,6 @@ describe "/people/show.html.erb" do
     @person.stub!(:birth_date).and_return(Date.parse('1902-10-02'))
     @person.stub!(:date_of_death).and_return(Date.parse('1970-4-21'))
     @person.stub!(:birth_gender).and_return(@gender)
-    @person.stub!(:current_gender).and_return(@gender)
     @person.stub!(:ethnicity).and_return(@ethnicity)
     @person.stub!(:primary_language).and_return(@language)
     @person.stub!(:approximate_age_no_birthday).and_return(50)

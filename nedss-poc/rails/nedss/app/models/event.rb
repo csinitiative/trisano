@@ -175,9 +175,9 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
 
       if options[:gender] == "Unspecified"
-        where_clause += "people.current_gender_id IS NULL"
+        where_clause += "people.birth_gender_id IS NULL"
       else
-        where_clause += "people.current_gender_id = " + sanitize_sql(["%s", options[:gender]])
+        where_clause += "people.birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
       end
       
     end
@@ -289,7 +289,7 @@ class Event < ActiveRecord::Base
                   INNER JOIN participations p on p.event_id = disease_events.event_id
                   INNER JOIN (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
                   INNER JOIN events e on e.id = disease_events.event_id
-                  LEFT OUTER JOIN codes c on c.id = people.current_gender_id
+                  LEFT OUTER JOIN codes c on c.id = people.birth_gender_id
                   LEFT OUTER JOIN codes cs on cs.id = e.\"investigation_LHD_status_id\"
                   LEFT OUTER JOIN entities_locations el on el.entity_id = people.entity_id
                   LEFT OUTER JOIN locations l on l.id = el.location_id

@@ -13,7 +13,6 @@ marks_cmr:
   event_name: Marks Chicken Pox
   MMWR_week: !str 10
   event_status_id: !str 1901
-  event_type_id: !str 2001
   event_case_status_id: !str 1802
   MMWR_year: !str 2006
   id: !str 1

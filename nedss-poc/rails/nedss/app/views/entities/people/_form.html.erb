@@ -64,21 +64,14 @@
 <fieldset class="form">
   <legend>Demographics</legend>
   <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
-  <fieldset class="vert">
     <span class="horiz">
       <%= p.label(:birth_gender) %>
       <%= p.dropdown_code_field(:birth_gender_id, 'gender', {:include_blank => true}) %>
     </span>
     <span class="horiz">
-      <%= p.label(:current_gender) %>
-      <%= p.dropdown_code_field(:current_gender_id, 'gender', {:include_blank => true}) %>
-    </span>
-    <span class="horiz">
       <%= p.label(:ethnicity) %>
       <%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {:include_blank => true}) %>
     </span>
-  </fieldset>
-  <fieldset class="vert">
     <span class="horiz">
       <%= f.label(:race) %>
       <%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %>
@@ -87,7 +80,6 @@
       <%= p.label(:primary_language) %>
       <%= p.dropdown_code_field(:primary_language_id, 'language', {:include_blank => true}) %>
     </span>
-  </fieldset>
   <% end %>
 </fieldset>
 

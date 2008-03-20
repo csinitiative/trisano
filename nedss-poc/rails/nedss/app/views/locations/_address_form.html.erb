@@ -27,10 +27,12 @@
     <%= a.label(:county_id, "County") %>
     <%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %>
   </span>
+  <!---
   <span class="horiz">
-    <%= a.label(:district_id, "District") %>
-    <%= a.dropdown_code_field(:district_id, 'district', {:include_blank => true}) %>
+    <%#= a.label(:district_id, "District") %>
+    <%#= a.dropdown_code_field(:district_id, 'district', {:include_blank => true}) %>
   </span>
+  -->
   <span class="horiz">
     <%= a.label(:postal_code, "Zip code") %>
     <%= a.text_field(:postal_code, :size => 7) %>

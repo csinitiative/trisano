@@ -9,7 +9,6 @@ groucho_marx:
   birth_date: "1902-10-02"
   date_of_death: "1977-08-19"
   birth_gender_id: 1
-  current_gender_id: 1
   ethnicity_id: 103
   primary_language_id: 302
   last_name_soundex: <%= Text::Soundex.soundex("Marx") %>
@@ -27,7 +26,6 @@ phil_silvers_old:
   birth_date: "1911-05-11"
   date_of_death: "1985-11-01"
   birth_gender_id: 1
-  current_gender_id: 1
   ethnicity_id: 103
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
@@ -45,7 +43,6 @@ phil_silvers_cur:
   birth_date: "1911-05-11"
   date_of_death: "1985-11-01"
   birth_gender_id: 1
-  current_gender_id: 1
   ethnicity_id: 103
   primary_language_id: 301
   last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
@@ -66,7 +63,6 @@ marks_for_event:
   first_name_soundex: K640
   healthcare_worker_id: !str 1403
   approximate_age_no_birthday: 
-  current_gender_id: !str 1
   updated_at: <%= Time.now.to_s :db %>
   birth_gender_id: !str 1
   middle_name: S.
@@ -92,7 +88,6 @@ johnson_on_marks_event:
   first_name_soundex: J500
   healthcare_worker_id: 
   approximate_age_no_birthday: 
-  current_gender_id: 
   updated_at: <%= Time.now.to_s :db %>
   birth_gender_id: 
   middle_name: 

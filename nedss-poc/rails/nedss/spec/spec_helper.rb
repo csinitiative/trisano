@@ -50,7 +50,6 @@ end
 def mock_event
   
   event = mock_model(Event)
-  event_type = mock_model(Code)
   event_status = mock_model(Code)
   imported_from = mock_model(Code)
   event_case_status =mock_model(Code)
@@ -69,7 +68,6 @@ def mock_event
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
     
-  event_type.stub!(:code_description).and_return('ONS')
   event_status.stub!(:code_description).and_return('Open')
   imported_from.stub!(:code_description).and_return('Utah')
   event_case_status.stub!(:code_description).and_return('Confirmed')
@@ -109,8 +107,6 @@ def mock_event
   event.stub!(:event_onset_date).and_return("2008-02-19")
   event.stub!(:disease).and_return(disease_event)
   event.stub!(:lab_result).and_return(lab_result)
-  event.stub!(:event_type_id).and_return("2001")
-  event.stub!(:event_type).and_return(event_type)
   event.stub!(:event_status_id).and_return("1901")
   event.stub!(:event_status).and_return(event_status)
   event.stub!(:imported_from_id).and_return("2101")
@@ -141,7 +137,6 @@ def mock_person_entity
   person.stub!(:birth_date).and_return(Date.parse('1902-10-2'))
   person.stub!(:date_of_death).and_return(Date.parse('1970-4-21'))
   person.stub!(:birth_gender_id).and_return(1)
-  person.stub!(:current_gender_id).and_return(1)
   person.stub!(:ethnicity_id).and_return(101)
   person.stub!(:primary_language_id).and_return(301)
   person.stub!(:approximate_age_no_birthday).and_return(50)
@@ -165,7 +160,6 @@ def mock_person_entity
   address.stub!(:state_id).and_return(1001)
   address.stub!(:postal_code).and_return("12345")
   address.stub!(:county_id).and_return(1101)
-  address.stub!(:district_id).and_return(1201)
 
   phone = mock_model(Telephone)
   phone.stub!(:area_code).and_return("212")

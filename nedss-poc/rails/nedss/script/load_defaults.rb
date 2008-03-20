@@ -1,17 +1,3 @@
-# Codes represented as an array of hashes
-codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/codes.yml"
-
-# Can't simply delete all and insert as the delete may trigger a FK constraint
-Code.transaction do
-  codes.each do |code|
-    c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
-                                                          :the_code => code['the_code'], 
-                                                          :code_description => code['code_description'])
-    c.attributes = code unless c.new_record?
-    c.save!
-  end
-end
-
 # Diseases are represented as an array of strings
 
 diseases = YAML::load_file "#{RAILS_ROOT}/db/defaults/diseases.yml"
@@ -34,5 +20,20 @@ Entity.transaction do
                     :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
                       hospital_type_id, hospital])
     Entity.create(:entity_type => 'place', :place => {:name => hospital, :place_type_id => hospital_type_id}) if h.nil?
+  end
+end
+
+# Jurisdictions are represented as an array of strings
+
+jurisdictions = YAML::load_file "#{RAILS_ROOT}/db/defaults/jurisdictions.yml"
+Entity.transaction do
+  jurisdictions.each do |jurisdiction|
+    jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
+    j = Entity.find(:first, 
+                    :include => :places, 
+                    :select => "places.name", 
+                    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
+                      jurisdiction_type_id, jurisdiction])
+    Entity.create(:entity_type => 'place', :place => {:name => jurisdiction, :place_type_id => jurisdiction_type_id}) if j.nil?
   end
 end

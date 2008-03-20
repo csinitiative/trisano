@@ -3,15 +3,3 @@
 chicken_pox:
   id: 1
   disease_name: "Chicken Pox"
-
-salmonela:
-  id: 2
-  disease_name: "Salmonela"
-
-bubonic_plague:
-  id: 3
-  disease_name: "Bubonic Plague"
-
-tuberculosis:
-  id: 4
-  disease_name: "Tuberculosis"

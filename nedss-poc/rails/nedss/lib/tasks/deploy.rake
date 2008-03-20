@@ -114,7 +114,6 @@ namespace :nedss do
           "event[active_patient][active_primary_entity][address][city]" => "",
           "event[active_patient][active_primary_entity][address][state_id]" => "",
           "event[active_patient][active_primary_entity][address][county_id]" => "",
-          "event[active_patient][active_primary_entity][address][district_id]" => "",
           "event[active_patient][active_primary_entity][address][postal_code]" => "",
           "event[active_patient][active_primary_entity][person][birth_date]" => "",
           "event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => "",
@@ -123,7 +122,6 @@ namespace :nedss do
           "event[active_patient][active_primary_entity][telephone][phone_number]" => "",
           "event[active_patient][active_primary_entity][telephone][extension]" => "",
           "event[active_patient][active_primary_entity][person][birth_gender_id]" => "",
-          "event[active_patient][active_primary_entity][person][current_gender_id]" => "", 
           "event[active_patient][active_primary_entity][person][ethnicity_id]" => "",
           "event[active_patient][active_primary_entity][person][primary_language_id]" => "",
           "event[active_patient][active_primary_entity][person][food_handler_id]" => "1401",
@@ -171,7 +169,6 @@ namespace :nedss do
           "event[active_jurisdiction][secondary_entity_id]" => "",
           "event[event_onset_date]" => "March 15, 2008",
           "event[event_name]" => "",
-          "event[event_type_id]" => "2001",
           "event[event_status_id]" => "1901",
           "commit" => "Create"
         )

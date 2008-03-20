@@ -19,7 +19,9 @@ namespace :nedss do
 #      ruby "-S rake db:drop RAILS_ENV=test"
 #      ruby "-S rake db:create RAILS_ENV=test"
 #      ruby "-S rake db:migrate RAILS_ENV=test"
-      ruby "-S rake spec:db:fixtures:load RAILS_ENV=test"
+#      ruby "-S rake spec:db:fixtures:load RAILS_ENV=test"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes.rb RAILS_ENV=test"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb RAILS_ENV=test"
       ruby 'stories/integration/all.rb'
     end
     

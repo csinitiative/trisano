@@ -20,11 +20,6 @@ module PersonFormSpecHelper
           with_tag('option', 'Female')
           with_tag('option', 'Unknown')
         end
-        with_tag('select#entity_person_current_gender_id[name=?]', "entity[person][current_gender_id]") do
-          with_tag('option', 'Male')
-          with_tag('option', 'Female')
-          with_tag('option', 'Unknown')
-        end
         with_tag('select#entity_person_ethnicity_id[name=?]', "entity[person][ethnicity_id]") do
           with_tag('option', 'Hispanic or Latino')
           with_tag('option', 'Not Hispanic or Latino')
