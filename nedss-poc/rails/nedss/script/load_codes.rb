@@ -6,7 +6,8 @@ Code.transaction do
   codes.each do |code|
     c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
                                                           :the_code => code['the_code'], 
-                                                          :code_description => code['code_description'])
+                                                          :code_description => code['code_description'],
+                                                          :sort_order => code['sort_order'])
     c.attributes = code unless c.new_record?
     c.save!
   end
