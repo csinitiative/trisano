@@ -10,7 +10,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    @codes ||= Code.find(:all, :order => 'id')
+    @codes ||= Code.find(:all, :order => 'sort_order')
     @codes.select {|code| code.code_name == code_name}
   end
 end
