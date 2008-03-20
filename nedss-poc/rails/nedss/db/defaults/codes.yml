@@ -662,18 +662,6 @@
   code_description: "Out-of-state"
   sort_order: 145
 
-  ### DISTRICTS ###
-
-- code_name: "district"
-  the_code:  "AL"
-  code_description: "Alpine"
-  sort_order: 1
-
-- code_name: "district"
-  the_code:  "BV"
-  code_description: "Beaver"
-  sort_order: 1
-
   ### LOCATIONS ###
   
 - code_name: "location"

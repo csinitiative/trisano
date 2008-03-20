@@ -37,3 +37,15 @@ Entity.transaction do
     Entity.create(:entity_type => 'place', :place => {:name => jurisdiction, :place_type_id => jurisdiction_type_id}) if j.nil?
   end
 end
+
+# Users are represented as an array of hashes
+users = YAML::load_file "#{RAILS_ROOT}/db/defaults/users.yml"
+
+# Can't simply delete all and insert as the delete may trigger a FK constraint
+User.transaction do
+  users.each do |user|
+    u = User.find_or_initialize_by_uid(:uid => user['uid'], :user_name => user['user_name'])
+    u.attributes = user unless u.new_record?
+    u.save!
+  end
+end
