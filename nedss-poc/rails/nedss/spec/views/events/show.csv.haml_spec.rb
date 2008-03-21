@@ -15,10 +15,13 @@ describe "/events/show.csv.haml" do
     @pregnant = mock_model(Code)
     @specimen_source = mock_model(Code)
     @tested_at_uphl_yn = mock_model(Code)
+    @pregant = mock_model(Code)
 
     @lab_result = mock_model(LabResult)
     @disease_event = mock_model(DiseaseEvent)
     @disease_mock = mock_model(Disease)
+    @active_patient = mock_model(Participation)
+    @participations_risk_factor = mock_model(ParticipationsRiskFactor)
 
     @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
     @event_type.stub!(:code_description).and_return('ONS')
@@ -29,14 +32,12 @@ describe "/events/show.csv.haml" do
     @investigation_LHD_status.stub!(:code_description).and_return('Closed')
     @hospitalized.stub!(:code_description).and_return('Yes')
     @died.stub!(:code_description).and_return('No')
-    @pregnant.stub!(:code_description).and_return('No')
+    @pregnant.stub!(:code_description).and_return('Yes')
     @disease_event.stub!(:hospitalized).and_return(@hospitalized)
     @disease_event.stub!(:died).and_return(@died)
-    @disease_event.stub!(:pregnant).and_return(@pregnant)
     @disease_event.stub!(:disease).and_return(@disease_mock)
     @disease_event.stub!(:date_diagnosed).and_return("2008-02-15")
     @disease_event.stub!(:disease_onset_date).and_return("2008-02-13")
-    @disease_event.stub!(:pregnancy_due_date).and_return("")
     @specimen_source.stub!(:code_description).and_return('Tissue')
     @tested_at_uphl_yn.stub!(:code_description).and_return('Yes')
     @lab_result.stub!(:specimen_source).and_return(@specimen_source)
@@ -44,6 +45,17 @@ describe "/events/show.csv.haml" do
     @lab_result.stub!(:collection_date).and_return("2008-02-14")
     @lab_result.stub!(:lab_test_date).and_return("2008-02-15")
     @lab_result.stub!(:tested_at_uphl_yn).and_return(@tested_at_uphl_yn)
+
+#    @participations_risk_factor.stub!(:food_handler_id).and_return(1402)
+#    @participations_risk_factor.stub!(:group_living_id).and_return(1402)
+#    @participations_risk_factor.stub!(:day_care_association_id).and_return(1402)
+#    @participations_risk_factor.stub!(:healthcare_worker_id).and_return(1402)
+#    @participations_risk_factor.stub!(:risk_factors).and_return("Obese")
+#    @participations_risk_factor.stub!(:risk_factors_notes).and_return("300 lbs")
+    @participations_risk_factor.stub!(:pregnant).and_return(@pregnant)
+    @participations_risk_factor.stub!(:pregnancy_due_date).and_return(Date.parse('2008-10-12'))
+
+    @active_patient.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
 
     @event_1.stub!(:record_number).and_return("2008537081")
     @event_1.stub!(:event_name).and_return('Test')
@@ -64,6 +76,7 @@ describe "/events/show.csv.haml" do
     @event_1.stub!(:results_reported_to_clinician_date).and_return("2008-02-08")
     @event_1.stub!(:MMWR_year).and_return("2008")
     @event_1.stub!(:MMWR_week).and_return("7")
+    @event_1.stub!(:active_patient).and_return(@active_patient)
 
     assigns[:event] = @event_1
   end
@@ -74,7 +87,7 @@ describe "/events/show.csv.haml" do
 
   it "should render csv data for 1 event" do
     render "/events/show.csv.haml"
-    response.should have_text(/2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7$/)
+    response.should have_text(/2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7$/)
   end
 
   it "should render a header column" do
@@ -84,7 +97,7 @@ describe "/events/show.csv.haml" do
 
   it "should render a csv" do
     render "/events/show.csv.haml"
-    response.should have_text("record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,No,,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n")
+    response.should have_text("record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week\n2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n")
   end
 
   it "should replace commas with spaces to avoid creating fake columns" do
