@@ -30,12 +30,6 @@ describe "/people/show.html.erb" do
     @person.stub!(:ethnicity).and_return(@ethnicity)
     @person.stub!(:primary_language).and_return(@language)
     @person.stub!(:approximate_age_no_birthday).and_return(50)
-    @person.stub!(:food_handler).and_return(@yesno)
-    @person.stub!(:healthcare_worker).and_return(@yesno)
-    @person.stub!(:group_living).and_return(@yesno)
-    @person.stub!(:day_care_association).and_return(@yesno)
-    @person.stub!(:risk_factors).and_return("None")
-    @person.stub!(:risk_factors_notes).and_return("None")
 
     @address = mock_model(Address)
     @address.stub!(:street_number).and_return("123")

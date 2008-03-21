@@ -83,38 +83,5 @@
   <% end %>
 </fieldset>
 
-<fieldset class="form">
-  <legend>The following to be moved to Epidemiolgical tab pending database changes</legend>
-  <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
-  <fieldset class="vert">
-    <span class="horiz">
-      <%= p.label(:food_handler) %>
-      <%= p.dropdown_code_field(:food_handler_id, 'yesno') %>
-    </span>
-    <span class="horiz">
-      <%= p.label(:healthcare_worker) %>
-      <%= p.dropdown_code_field(:healthcare_worker_id, 'yesno') %>
-    </span>
-    <span class="horiz">
-      <%= p.label(:group_living) %>
-      <%= p.dropdown_code_field(:group_living_id, 'yesno') %>
-    </span>
-    <span class="horiz">
-      <%= p.label(:day_care_association) %>
-      <%= p.dropdown_code_field(:day_care_association_id, 'yesno') %>
-    </span>
-  </fieldset>
-  <fieldset class="vert">
-    <span class="horiz">
-      <%= p.label(:risk_factors) %>
-      <%= p.text_field(:risk_factors, :size => 25) %>
-    </span>
-    <span class="horiz">
-      <%= p.label(:risk_factors_notes) %>
-      <%= p.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
-    </span>
-  </fieldset>
-  <% end %>
-</fieldset>
 </div>
 </fieldset>

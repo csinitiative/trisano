@@ -1,10 +1,8 @@
 
 marks_chicken_pox:
   disease_id: !str 1
-  pregnancy_due_date: 
   id: !str 1
   hospitalized_id: !str 1402
-  pregnant_id: !str 1403
   died_id: !str 1403
   disease_onset_date: !str 2006-03-09
   date_diagnosed: !str 2008-03-20

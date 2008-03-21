@@ -18,6 +18,7 @@ describe "/cmrs/new.html.erb" do
     @current_treatment = mock_model(ParticipationsTreatment)
 
     @hospitals_participation = mock_model(HospitalsParticipation)
+    @participations_risk_factor = mock_model(ParticipationsRiskFactor)
 
     @place = mock_model(Place)
     @person = mock_model(Person)
@@ -27,7 +28,7 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:active_jurisdiction).and_return(@active_jurisdiction)
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
-    @event.stub!(:current_treatment).and_return(@current_treatment)
+#    @event.stub!(:current_treatment).and_return(@current_treatment)
 
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)
@@ -37,6 +38,7 @@ describe "/cmrs/new.html.erb" do
 
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
     @participation.stub!(:participations_treatment).and_return(@current_treatment)
+    @participation.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
     @secondary_entity.stub!(:place).and_return(@place)
     @secondary_entity.stub!(:person).and_return(@person)
 
@@ -47,9 +49,17 @@ describe "/cmrs/new.html.erb" do
     @active_hospital.stub!(:hospitals_participation).and_return(@hospitals_participation)
     @current_treatment.stub!(:treatment).and_return("Some pills")
     @current_treatment.stub!(:treatment_given_yn_id).and_return(1402)
+    @participations_risk_factor.stub!(:food_handler_id).and_return(1402)
+    @participations_risk_factor.stub!(:healthcare_worker_id).and_return(1402)
+    @participations_risk_factor.stub!(:group_living_id).and_return(1402)
+    @participations_risk_factor.stub!(:day_care_association_id).and_return(1402)
+    @participations_risk_factor.stub!(:pregnant_id).and_return(1402)
+    @participations_risk_factor.stub!(:pregnancy_due_date).and_return(Date.parse('2009-10-02'))
+    @participations_risk_factor.stub!(:risk_factors).and_return("Obese")
+    @participations_risk_factor.stub!(:risk_factors_notes).and_return("300 lbs")
     
-    @hospitals_participation.stub!(:admission_date).and_return("2008-02-15")
-    @hospitals_participation.stub!(:discharge_date).and_return("2009-02-15")
+    @hospitals_participation.stub!(:admission_date).and_return(Date.parse("2008-02-15"))
+    @hospitals_participation.stub!(:discharge_date).and_return(Date.parse("2009-02-15"))
 
     
     assigns[:event] = @event

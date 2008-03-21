@@ -5,6 +5,7 @@ class Participation < ActiveRecord::Base
 
   has_many :hospitals_participations
   has_many :participations_treatments
+  has_many :participations_risk_factors
 
   validates_associated :primary_entity
   validates_associated :secondary_entity
@@ -39,8 +40,16 @@ class Participation < ActiveRecord::Base
     @participations_treatment ||= participations_treatments.last
   end
 
-  def  participations_treatment=(attributes)
+  def participations_treatment=(attributes)
     participations_treatments.build(attributes)
+  end  
+
+  def participations_risk_factor
+    @participations_risk_factor ||= participations_risk_factors.last
+  end
+
+  def participations_risk_factor=(attributes)
+    participations_risk_factors.build(attributes)
   end  
 
   private

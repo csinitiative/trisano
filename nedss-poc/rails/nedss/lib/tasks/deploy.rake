@@ -28,7 +28,7 @@ namespace :nedss do
         puts "war file not found - did not delete"
       end
 
-      puts "attempting to delete deployed exploded war directory"
+      puts "attempting to delete deployed exploded war directory #{TOMCAT_DEPLOYED_EXPLODED_WAR_DIR}"
       if File.directory? TOMCAT_DEPLOYED_EXPLODED_WAR_DIR 
         FileUtils.remove_dir(TOMCAT_DEPLOYED_EXPLODED_WAR_DIR)
         puts "deleted deployed exploded war directory"
@@ -109,6 +109,7 @@ namespace :nedss do
 
         # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
         # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
+        form.add_field!("event[disease][disease_id]", "")
         form.add_field!("event[active_patient][active_primary_entity][person][birth_gender_id]", "")
         form.add_field!("event[active_patient][active_primary_entity][person][ethnicity_id]", "")
         form.add_field!("event[active_patient][active_primary_entity][person][primary_language_id]", "")

@@ -1,5 +1,10 @@
 steps_for(:cmr_search_uat) do
   
+    Given("that the test database is populated with codes and defaults") do
+      result = `jruby #{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes`
+      result = `jruby #{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults`
+    end
+
     When("I search for all CMRs for the known person '$person' with the disease '$disease'") do |person, disease|
       diseases = Disease.find(:all)
       diseases.each do |d|

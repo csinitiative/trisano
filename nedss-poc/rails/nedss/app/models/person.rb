@@ -4,10 +4,6 @@ class Person < ActiveRecord::Base
   belongs_to :birth_gender, :class_name => 'Code'
   belongs_to :ethnicity, :class_name => 'Code'
   belongs_to :primary_language, :class_name => 'Code'
-  belongs_to :food_handler, :class_name => 'Code'
-  belongs_to :healthcare_worker, :class_name => 'Code'
-  belongs_to :group_living, :class_name => 'Code'
-  belongs_to :day_care_association, :class_name => 'Code'
   belongs_to :entity 
 
   validates_presence_of :last_name
