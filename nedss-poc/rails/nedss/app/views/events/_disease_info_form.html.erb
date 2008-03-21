@@ -7,47 +7,47 @@
 
   <fieldset class="form">
     <legend>Disease</legend>
-      <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
-        <span class="horiz">
-          <%= d.label(:disease_id, "Disease") %>
-          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
-        </span>
-        <span class="horiz">
-          <%= d.label(:disease_onset_date, "Onset date") %>
-          <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
-        </span>
-        <span class="horiz">
-          <%= d.label(:date_diagnosed) %>
-          <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
-        </span>
+    <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
+      <span class="horiz">
+        <%= d.label(:disease_id, "Disease") %>
+        <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
+      </span>
+      <span class="horiz">
+        <%= d.label(:disease_onset_date, "Onset date") %>
+        <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
+      <span class="horiz">
+        <%= d.label(:date_diagnosed) %>
+        <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
   </fieldset>
 
   <fieldset class="form">
     <legend>Hospitalization</legend>
+      <span class="horiz">
+        <%= d.label(:hospitalized_id, "Hospitalized") %>
+        <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
+      </span>
+    <% end %>
+
+    <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
+      <span class="horiz">
+        <%= p.label(:hospital) %>
+        <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
+      </span>
+
+      <% hospital_data = @event.active_hospital.nil? ? HospitalsParticipation.new : @event.active_hospital.hospitals_participation %> 
+      <% p.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp| %>
         <span class="horiz">
-          <%= d.label(:hospitalized_id, "Hospitalized") %>
-          <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
+          <%= hp.label(:admission_date) %>
+          <%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %>
+        </span>
+        <span class="horiz">
+          <%= hp.label(:discharge_date) %>
+          <%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %>
         </span>
       <% end %>
-
-      <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
-        <span class="horiz">
-          <%= p.label(:hospital) %>
-          <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
-        </span>
-
-        <% hospital_data = @event.active_hospital.nil? ? HospitalsParticipation.new : @event.active_hospital.hospitals_participation %> 
-        <% p.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp| %>
-          <span class="horiz">
-            <%= hp.label(:admission_date) %>
-            <%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %>
-          </span>
-          <span class="horiz">
-            <%= hp.label(:discharge_date) %>
-            <%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %>
-          </span>
-        <% end %>
-      <% end %>
+    <% end %>
   </fieldset>
 
   <fieldset class="form">

@@ -31,7 +31,7 @@
           <td><span class="label">Record Number:</span></td>
           <td><%= @event.record_number %></td>
           <td><span class="label">Disease:</span></td>
-          <td><%= @event.disease.disease.disease_name %></td>
+          <td><%= @event.disease.disease.disease_name unless @event.disease.disease.nil? %></td>
         </tr>
         <tr>
           <td><span class="label">Disease Onset Date:</span></td>
