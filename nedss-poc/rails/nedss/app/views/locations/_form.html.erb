@@ -35,15 +35,15 @@
         <td><%= a.label(:city) %></td>
         <td><%= a.text_field(:city, :size => 30) %></td>
         <td><%= a.label(:state) %></td>
-        <td><%= a.dropdown_code_field(:state_id, 'state', {}) %></td>
+        <td><%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}) %></td>
         <td><%= a.label(:postal_code) %></td>
         <td><%= a.text_field(:postal_code, :size => 7) %></td>
       </tr>
       <tr>
         <td><%= a.label(:county) %></td>
-        <td><%= a.dropdown_code_field(:county_id, 'county', {}) %></td>
+        <td><%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %></td>
         <td><%= a.label(:district) %></td>
-        <td><%= a.dropdown_code_field(:district_id, 'district', {}) %></td>
+        <td><%= a.dropdown_code_field(:district_id, 'district', {:include_blank => true}) %></td>
       </tr>
     <% end %>
   </table>

@@ -21,11 +21,11 @@
   </span>
   <span class="horiz">
     <%= a.label(:state_id, "State") %>
-    <%= a.dropdown_code_field(:state_id, 'state', {}) %>
+    <%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}) %>
   </span>
   <span class="horiz">
     <%= a.label(:county_id, "County") %>
-    <%= a.dropdown_code_field(:county_id, 'county', {}) %>
+    <%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %>
   </span>
   <!---
   <span class="horiz">
