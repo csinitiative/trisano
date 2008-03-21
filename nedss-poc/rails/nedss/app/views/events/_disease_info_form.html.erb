@@ -10,7 +10,7 @@
       <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
         <span class="horiz">
           <%= d.label(:disease_id, "Disease") %>
-          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {}) %>
+          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
         </span>
         <span class="horiz">
           <%= d.label(:disease_onset_date, "Onset date") %>
