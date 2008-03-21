@@ -4,9 +4,10 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
 # This migration adds the basic user, role, and entitlement capabilities to the
 # UT-NEDSS database for the CMR in Release 1 Iteration 4. 
 # Evan Bauer 14-Mar-2008
+# updated 21-Mar-2008
 #
     create_table  :users do |t|
-      t.string    :uid
+      t.string    :uid,        :limit => 9
       t.string    :given_name, :limit => 127
       t.string    :first_name, :limit => 32
       t.string    :last_name,  :limit => 64
@@ -78,25 +79,25 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
 
 #
 
-    create_table  :roles_entitlements do |t|
+    create_table  :roles_privileges do |t|
       t.integer   :role_id
-      t.integer   :entitlement_id
+      t.integer   :privilege_id
       t.integer   :jurisdiction_id
       t.timestamps
     end
 
-    execute "ALTER TABLE roles_entitlements
+    execute "ALTER TABLE roles_privileges
                 ADD CONSTRAINT  fk_RoleId 
                 FOREIGN KEY (role_id) 
                 REFERENCES roles(id)"
         
-    execute "ALTER TABLE roles_entitlements
-                ADD CONSTRAINT  fk_EntitlementId 
-                FOREIGN KEY (entitlement_id) 
-                REFERENCES entitlements(id)"
+    execute "ALTER TABLE roles_privileges
+                ADD CONSTRAINT  fk_privilegeId 
+                FOREIGN KEY (privilege_id) 
+                REFERENCES privileges(id)"
 
 # How do we make certain that this entity is a jurisdiction?
-    execute "ALTER TABLE roles_entitlements
+    execute "ALTER TABLE roles_privileges
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
                 REFERENCES entities(id)"
@@ -110,6 +111,6 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
     drop_table :entitlements
     drop_table :roles
     drop_table :users_roles
-    drop_table :roles_entitlements
+    drop_table :roles_privileges
   end
 end
