@@ -12,6 +12,10 @@
     <fieldset class="form">
       <legend>Case / Outbreak</legend>
       <span class="horiz">
+        <%= f.label(:event_onset_date) %>
+        <%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
+      <span class="horiz">
         <%= f.label(:event_case_status_id, "Case Status") %>
         <%= f.dropdown_code_field(:event_case_status_id, 'case', {}) %>
       </span>
@@ -26,6 +30,16 @@
     </fieldset>
     <fieldset class="form">
       <legend>Investigation</legend>
+      <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+        <span class="horiz">
+          <%= j.label(:jurisdiction) %>
+          <%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name, {:include_blank => true}) %> 
+        </span>
+      <% end %>
+      <span class="horiz">
+        <%= f.label(:event_status_id) %>
+        <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {}) %>
+      </span>
       <span class="horiz">
         <%= f.label(:investigation_started_date, "Date investigation started") %>
         <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>
@@ -42,6 +56,10 @@
     <fieldset class="form">
       <legend>Auditing</legend>
       <span class="horiz">
+        <%= f.label(:event_name) %>
+        <%= f.text_field(:event_name, :size => 25) %>
+      </span>
+      <span class="horiz">
         <%= f.label(:first_reported_PH_date, "Date submitted to UDOH") %>
         <%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now) %>
       </span>
@@ -50,30 +68,5 @@
         <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
       </span>
     </fieldset>
-
-    <fieldset class="form">
-      <legend>The following fields are no longer on the spreadsheet</legend>
-      <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
-        <span class="horiz">
-          <%= j.label(:jurisdiction) %>
-          <%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name, {:include_blank => true}) %> 
-        </span>
-      <% end %>
-
-      <span class="horiz">
-        <%= f.label(:event_onset_date) %>
-        <%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
-      <span class="horiz">
-        <%= f.label(:event_name) %>
-        <%= f.text_field(:event_name, :size => 25) %>
-      </span>
-      <span class="horiz">
-        <%= f.label(:event_status_id) %>
-        <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {}) %>
-      </span>
-    </fieldset>
   </div>
 </fieldset>
-
-

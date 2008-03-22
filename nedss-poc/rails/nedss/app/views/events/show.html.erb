@@ -158,8 +158,12 @@
       <legend>Administrative Information</legend>  
       <table cellpadding="2">
         <tr>
+          <td><span class="label">Event Onset Date:</span></td>
+          <td><%= @event.event_onset_date %></td>
           <td><span class="label">Event Case Status:</span></td>
           <td><%= l @event.event_case_status %></td>
+        </tr>
+        <tr>
           <td><span class="label">Outbreak Associated:</span></td>
           <td><%= l @event.outbreak_associated %></td>
           <td><span class="label">Outbreak Name:</span></td>
@@ -171,35 +175,28 @@
           <td><span class="label">MMWR Week:</span></td>
           <td><%= @event.MMWR_week %></td>
         </tr>
-        <tr>
-          <td><span class="label">Date Investigation Started:</span></td>
-          <td><%= @event.investigation_started_date %></td>
-          <td><span class="label">LHD Investigation Status:</span></td>
-          <td><%= @event.investigation_LHD_status %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Date Invesitgation Completed:</span></td>
-          <td><%= @event.investigation_completed_LHD_date %></td>
-          <td><span class="label">Date Submitted to UDOH:</span></td>
-          <td><%= @event.first_reported_PH_date %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Date Review Completed by UDOH:</span></td>
-          <td><%= @event.review_completed_UDOH_date %></td>
-        </tr>
-        <tr>
-          <th colspan="4">The following fields are not on the spreadsheet</th>
         </tr>
           <td><span class="label">Jurisdiction:</span></td>
           <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
           <td><span class="label">Event Name:</span></td>
           <td><%= @event.event_name %></td>  
-        </tr>
         <tr>
           <td><span class="label">Event Status:</span></td>
           <td><%= l @event.event_status %></td>
-          <td><span class="label">Event Onset Date:</span></td>
-          <td><%= @event.event_onset_date %></td>
+          <td><span class="label">Date Investigation Started:</span></td>
+          <td><%= @event.investigation_started_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">LHD Investigation Status:</span></td>
+          <td><%= l @event.investigation_LHD_status %></td>
+          <td><span class="label">Date Invesitgation Completed:</span></td>
+          <td><%= @event.investigation_completed_LHD_date %></td>
+        </tr>
+        <tr>
+          <td><span class="label">Date Submitted to UDOH:</span></td>
+          <td><%= @event.first_reported_PH_date %></td>
+          <td><span class="label">Date Review Completed by UDOH:</span></td>
+          <td><%= @event.review_completed_UDOH_date %></td>
         </tr>
       </table>
     </fieldset>
