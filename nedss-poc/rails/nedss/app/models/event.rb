@@ -33,19 +33,27 @@ class Event < ActiveRecord::Base
   before_create :set_record_number
 
   def disease
-    @disease || disease_events.last
+    @disease ||= disease_events.last
   end
 
   def disease=(attributes)
-    @disease = DiseaseEvent.new(attributes)
+    if new_record?
+      @disease = DiseaseEvent.new(attributes)
+    else
+      disease.update_attributes(attributes) unless attributes.values_blank?
+    end
   end  
 
   def lab_result
-    @lab_result || lab_results.last
+    @lab_result ||= lab_results.last
   end
 
   def lab_result=(attributes)
-    @lab_result = LabResult.new(attributes)
+    if new_record?
+      @lab_result = LabResult.new(attributes)
+    else
+      lab_result.update_attributes(attributes) unless attributes.values_blank?
+    end
   end
 
   ### Participations

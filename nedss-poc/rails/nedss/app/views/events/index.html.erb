@@ -1,14 +1,28 @@
 <h1>Listing Confidential Morbidity Reports</h1>
 
-<table>
-<% for event in @events %>
+<table width="50%">
+  <thead>
   <tr>
-    <td><%= event.event_name %>, <%= event.event_onset_date %> <%= l event.event_status %> </td>
+    <th>Patient Name</th>
+    <th>Disease</th>
+    <th>Event Name</th>
+    <th>Event Onset Date</th>
+    <th>Event Status</th>
+  </tr>
+  </thead>
+  <% for event in @events %>
+  <tr>
+    <% patient = event.active_patient.active_primary_entity.current_person %>
+    <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
+    <td><%= event.disease.disease.disease_name unless event.disease.disease.nil? %></td>
+    <td><%= event.event_name %></td>
+    <td><%= event.event_onset_date %></td>
+    <td><%= l event.event_status %></td>
     <td><%= link_to 'Show', cmr_path(event) %></td>
     <td><%= link_to 'Edit', edit_cmr_path(event) %></td>
     <td><%= link_to 'Delete', cmr_path(event), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
-<% end %>
+  <% end %>
 </table>
 
 <br />
