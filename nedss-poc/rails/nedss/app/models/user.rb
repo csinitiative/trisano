@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   end
   
   def remove_role_membership(role, jurisdiction)
-    # Debt? Is there some way to get the 
+    # Debt? What's the preferred way to manipulate join models and have changes reflected in memory?
     role_memberships.each do |rm|
       if rm.role_id == role.id && rm.jurisdiction_id ==  jurisdiction.id
         rm.destroy

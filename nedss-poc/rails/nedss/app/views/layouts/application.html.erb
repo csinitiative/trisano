@@ -48,14 +48,20 @@
 <%= link_to 'CMR Search', :controller => "search", :action => "cmrs" %><br/>
 
 <br/>
-<b>Admin</b><br/>
 
-<%= link_to 'Admin Home', :controller => "admin", :action => "index" %><br/>
+<% if User.current_user.is_admin? %>
+
+  <b>Admin</b><br/>
+
+  <%= link_to 'Admin Home', :controller => "admin", :action => "index" %><br/>
+  <%= link_to 'Users', users_path %><br/>
+
+<% end %>
 
 <br/>
 <br/>
 
-<small>User:, <%= @user.user_name %><br/></small>
+<small>User:, <%= User.current_user.user_name %><br/></small>
 
 </div>
 

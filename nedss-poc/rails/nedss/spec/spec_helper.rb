@@ -44,6 +44,12 @@ def mock_user
   User.stub!(:find_by_uid).and_return(@user)
   User.stub!(:current_user).and_return(@user)
   @user.stub!(:uid).and_return("utah")
+  @user.stub!(:user_name).and_return("default_user")
+  @user.stub!(:first_name).and_return("Johnny")
+  @user.stub!(:last_name).and_return("Johnson")
+  @user.stub!(:given_name).and_return("Johnny")
+  @user.stub!(:initials).and_return("JJ")
+  @user.stub!(:generational_qualifer).and_return("")
   @user.stub!(:is_admin?).and_return(true)
   @user
 end

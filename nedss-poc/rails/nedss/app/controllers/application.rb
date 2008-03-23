@@ -20,11 +20,19 @@ class ApplicationController < ActionController::Base
   protected
   
   def load_user
-    @user ||= NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID) 
+    NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID) 
   end
   
   def load_user_by_uid(uid)
+    
+    if uid.blank?
+      logger.info "No UID is present"
+      redirect_to "/500.html"
+      return
+    end
+    
     User.current_user = User.find_by_uid(uid)
+    
     if User.current_user.nil?
       logger.info "User not found by uid: " + uid
       redirect_to "/500.html"

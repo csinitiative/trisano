@@ -1,0 +1,29 @@
+%h1 Listing users
+
+%table{ :cellpadding => "2" }
+  %tr
+    %td
+      %b UID
+    %td
+      %b User name
+    %td
+      %b Full name
+    %td
+      &nbsp;
+  - for user in @users
+    %tr
+      %td
+        = user.uid
+      %td
+        = user.user_name
+      %td
+        = user.first_name
+        = user.last_name
+      %td
+        = link_to('Show', user)
+        = link_to('Edit', edit_user_path(user))
+        = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
+
+%br
+
+= link_to 'New user', new_user_path
