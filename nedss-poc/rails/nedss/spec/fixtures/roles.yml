@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+administrator:
+  id: 1
+  role_name: administrator
+
+investigator:
+  id: 2
+  role_name: investigator
+
+state_user:
+  id: 3
+  role_name: state user

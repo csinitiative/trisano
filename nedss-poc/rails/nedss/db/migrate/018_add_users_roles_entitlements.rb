@@ -54,50 +54,50 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
       t.string    :description, :limit => 60
     end
 
-    create_table  :users_roles do |t|
+    create_table :role_memberships do |t|
       t.integer   :user_id
       t.integer   :role_id
       t.integer   :jurisdiction_id
       t.timestamps
     end
       
-    execute "ALTER TABLE users_roles
+    execute "ALTER TABLE role_memberships
                 ADD CONSTRAINT  fk_UserId 
                 FOREIGN KEY (user_id) 
                 REFERENCES users(id)"
         
-    execute "ALTER TABLE users_roles
+    execute "ALTER TABLE role_memberships
                 ADD CONSTRAINT  fk_RoleId 
                 FOREIGN KEY (role_id) 
                 REFERENCES roles(id)"
 
 # How do we make certain that this entity is a jurisdiction?
-    execute "ALTER TABLE users_roles
+    execute "ALTER TABLE role_memberships
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
                 REFERENCES entities(id)"
 
 #
 
-    create_table  :roles_privileges do |t|
+    create_table  :privileges_roles do |t|
       t.integer   :role_id
       t.integer   :privilege_id
       t.integer   :jurisdiction_id
       t.timestamps
     end
 
-    execute "ALTER TABLE roles_privileges
+    execute "ALTER TABLE privileges_roles
                 ADD CONSTRAINT  fk_RoleId 
                 FOREIGN KEY (role_id) 
                 REFERENCES roles(id)"
         
-    execute "ALTER TABLE roles_privileges
+    execute "ALTER TABLE privileges_roles
                 ADD CONSTRAINT  fk_privilegeId 
                 FOREIGN KEY (privilege_id) 
                 REFERENCES privileges(id)"
 
 # How do we make certain that this entity is a jurisdiction?
-    execute "ALTER TABLE roles_privileges
+    execute "ALTER TABLE privileges_roles
                 ADD CONSTRAINT  fk_JurisdictionId
                 FOREIGN KEY (jurisdiction_id) 
                 REFERENCES entities(id)"

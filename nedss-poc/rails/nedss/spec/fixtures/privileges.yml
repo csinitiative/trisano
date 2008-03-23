@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+view:
+  id: 1
+  priv_name: view
+  description: 
+
+update:
+  id: 2
+  priv_name: update
+  description:
+
+administer:
+  id: 3
+  priv_name: administer
+  description: 

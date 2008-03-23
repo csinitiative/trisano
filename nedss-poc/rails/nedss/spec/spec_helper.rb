@@ -44,6 +44,7 @@ def mock_user
   User.stub!(:find_by_uid).and_return(@user)
   User.stub!(:current_user).and_return(@user)
   @user.stub!(:uid).and_return("utah")
+  @user.stub!(:is_admin?).and_return(true)
   @user
 end
 

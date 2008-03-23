@@ -38,6 +38,26 @@ Entity.transaction do
   end
 end
 
+# Roles are represented as an array of strings
+
+roles = YAML::load_file "#{RAILS_ROOT}/db/defaults/roles.yml"
+Role.transaction do
+  roles.each do |role|
+    r = Role.find_or_initialize_by_role_name(:role_name => role)
+    r.save! if r.new_record?
+  end
+end
+
+# Privileges are represented as an array of strings
+
+privileges = YAML::load_file "#{RAILS_ROOT}/db/defaults/privileges.yml"
+Privilege.transaction do
+  privileges.each do |privilege|
+    p = Privilege.find_or_initialize_by_priv_name(:priv_name => privilege)
+    p.save! if p.new_record?
+  end
+end
+
 # Users are represented as an array of hashes
 users = YAML::load_file "#{RAILS_ROOT}/db/defaults/users.yml"
 
@@ -47,5 +67,35 @@ User.transaction do
     u = User.find_or_initialize_by_uid(:uid => user['uid'], :user_name => user['user_name'])
     u.attributes = user unless u.new_record?
     u.save!
+    
+    if user['user_name'] == 'default_user'
+      
+      # Just cramming in some roles/entitlments for the default user
+      # Debt: Finding by a name that may change
+      # Salt Lake Valley Health Department
+      jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
+    
+      jurisdiction = Entity.find(:first, 
+                    :include => :places, 
+                    :select => "places.name",
+                    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
+                      jurisdiction_type_id, "Salt Lake Valley Health Department"])
+        
+      role = Role.find_by_role_name("administrator")
+      privilege = Privilege.find_by_priv_name("administer")
+        
+      u.add_role_membership(role, jurisdiction)
+      u.add_entitlement(privilege, jurisdiction)
+      
+    end
+    
   end
 end
+
+
+
+
+
+
+
+

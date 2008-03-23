@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
   def load_user_by_uid(uid)
     User.current_user = User.find_by_uid(uid)
     if User.current_user.nil?
+      logger.info "User not found by uid: " + uid
       redirect_to "/500.html"
       return
     end

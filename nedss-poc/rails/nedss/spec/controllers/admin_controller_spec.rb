@@ -24,4 +24,19 @@ describe AdminController do
     
   end
   
+  describe "handling GET /admin without an admin user on the request" do
+    
+    before(:each) do
+      mock_user
+      @user.stub!(:is_admin?).and_return(false)
+      @user.stub!(:user_name).and_return("not_an_admin")
+    end
+    
+    it "should redirect to 403 error page" do
+      get :index
+      response.should redirect_to("/403.html")
+    end
+    
+  end
+  
 end
