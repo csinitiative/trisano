@@ -26,10 +26,6 @@ describe User, "loaded from fixtures" do
     @user.is_admin?.should be_true
   end
   
-  it "should not be a state user" do
-    @user.is_state_user?.should be_false
-  end
-  
   it "should not be an investigator" do
     @user.is_investigator?.should be_false
   end
@@ -59,36 +55,8 @@ describe User, "modified with an investigator role" do
     @user.is_admin?.should be_false
   end
   
-  it "should not be a state user" do
-    @user.is_state_user?.should be_false
-  end
-  
   it "should be an investigator" do
     @user.is_investigator?.should be_true
-  end
-  
-end
-
-describe User, "modified with a state user role" do
-  
-  fixtures :users, :role_memberships, :roles, :entities
-  
-  before(:each) do
-    @user = users(:default_user)
-    @user.remove_role_membership(roles(:administrator), entities(:Southeastern_District))
-    @user.add_role_membership(roles(:state_user), entities(:Southeastern_District))
-  end
-  
-  it "should not be an admin" do
-    @user.is_admin?.should be_false
-  end
-  
-  it "should be a state user" do
-    @user.is_state_user?.should be_true
-  end
-  
-  it "should not be an investigator" do
-    @user.is_investigator?.should be_false
   end
   
 end
@@ -123,13 +91,8 @@ describe User, "modified to add new roles and privileges in Southeastern Distric
   
   before(:each) do
     @user = users(:default_user)
-    @user.add_role_membership(roles(:state_user), entities(:Southeastern_District))
     @user.add_entitlement(privileges(:view), entities(:Southeastern_District))
     
-  end
-  
-  it "should be a state user" do
-    @user.is_state_user?.should be_true
   end
   
   it "should have an entitlement in the Southeastern District" do

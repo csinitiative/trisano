@@ -51,6 +51,23 @@ def mock_user
   @user.stub!(:initials).and_return("JJ")
   @user.stub!(:generational_qualifer).and_return("")
   @user.stub!(:is_admin?).and_return(true)
+  
+  @role_membership = mock_model(RoleMembership)
+  @role = mock_model(Role)
+  @jurisdiction = mock_model(Entity)
+  @place = mock_model(Place)
+  
+  @role.stub!(:role_name).and_return("administrator")
+  @role_membership.stub!(:role).and_return(@role)
+  @role_membership.stub!(:jurisdiction).and_return(@jurisdiction)
+  @role_membership.stub!(:role_id).and_return("1")
+  @role_membership.stub!(:jurisdiction_id).and_return("75")
+  @role_membership.stub!(:should_destroy).and_return(0)
+  @role_membership.stub!(:is_admin?).and_return(true)
+  @jurisdiction.stub!(:places).and_return([@place])
+  @place.stub!(:name).and_return("Southeastern District")
+  
+  @user.stub!(:role_memberships).and_return([@role_membership])
   @user
 end
 

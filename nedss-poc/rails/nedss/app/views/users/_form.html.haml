@@ -1,18 +1,19 @@
 
-%fieldset{ :class => "vert" }
-  %span{ :class => "vert" }
+%fieldset
+  %legend User
+  %span{ :class => "horiz" }
     = f.label(:uid, "UID")
     = f.text_field(:uid)
   %span{ :class => "vert" }
     = f.label(:user_name)
     = f.text_field(:user_name)
-  %span{ :class => "vert" }
+  %span{ :class => "horiz" }
     = f.label(:first_name)
     = f.text_field(:first_name)
   %span{ :class => "vert" }
     = f.label(:last_name)
     = f.text_field(:last_name)
-  %span{ :class => "vert" }
+  %span{ :class => "horiz" }
     = f.label(:given_name)
     = f.text_field(:given_name)
   %span{ :class => "vert" }
@@ -21,3 +22,14 @@
   %span{ :class => "vert" }
     = f.label(:initials)
     = f.text_field(:initials)
+
+%br
+
+= add_role_link "Add a role"
+
+%br
+%br
+
+%div{ :id => "role_memberships" }
+  = render :partial => 'role', :collection => @user.role_memberships
+

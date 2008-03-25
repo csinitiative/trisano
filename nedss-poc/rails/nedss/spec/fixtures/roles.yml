@@ -7,7 +7,3 @@ administrator:
 investigator:
   id: 2
   role_name: investigator
-
-state_user:
-  id: 3
-  role_name: state user

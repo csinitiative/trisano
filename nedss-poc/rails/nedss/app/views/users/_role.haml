@@ -1,0 +1,23 @@
+
+%div{ :class => "role_membership" }
+  - fields_for "user[role_membership_attributes][]", role do |rm_form|
+    %table
+      %tr
+        %td
+          Add a(n)
+        %td
+          = rm_form.collection_select(:role_id, Role.find(:all, :order => :role_name), :id, :role_name, {}, {:index => nil})
+        %td
+          role for
+        %td
+          / The following will be changed to filter on the admin's jurisdictions
+          = rm_form.collection_select(:jurisdiction_id, Place.find(:all, :conditions => "place_type_id = 184"), :entity_id, :name,  {}, {:index => nil})
+        %td
+          - if role.new_record?
+            = link_to_function "remove", "$(this).up('.role_membership').remove()"
+          - else
+            = link_to_function "remove", "mark_for_destroy(this)"
+            = rm_form.hidden_field :id, :index => nil
+            = rm_form.hidden_field :should_destroy, :index => nil, :class => 'should_destroy'
+
+    %br

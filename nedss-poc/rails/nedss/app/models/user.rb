@@ -1,10 +1,14 @@
 class User < ActiveRecord::Base
   
-  has_many :role_memberships, :include => [:role]
+  has_many :role_memberships, :include => [:role, :jurisdiction]
   has_many :roles, :through => :role_memberships, :uniq => true
+  has_many :jurisdictions, :through => :role_memberships
   
   has_many :entitlements, :include => [:privilege]
   has_many :privileges, :through => :entitlements
+  
+  after_update :save_role_memberships
+  validates_associated :role_memberships
   
   validates_presence_of :uid, :user_name
   
@@ -12,40 +16,21 @@ class User < ActiveRecord::Base
   # This gets them into tools, for one thing.
   
   def is_admin?
-    roles.each do |role|
-      return true if role.role_name == "administrator"
-    end
-    false
-  end
-  
-  def is_state_user?
-    roles.each do |role|
-      return true if role.role_name == "state user"
-    end
-    false
+    roles.detect { |role| role.role_name == "administrator" }.nil? ? false : true
   end
   
   def is_investigator?
-    roles.each do |role|
-      return true if role.role_name == "investigator"
-    end
-    false
+    roles.detect { |role| role.role_name == "investigator" }.nil? ? false : true
   end
   
   # Get specific by jurisdiction
   
   def has_role_in?(jurisdiction)
-    role_memberships.each do |rm|
-      return true if rm.jurisdiction.id == jurisdiction.id
-    end
-    false 
+    role_memberships.detect { |rm| rm.jurisdiction.id ==  jurisdiction.id }.nil? ? false : true
   end
   
   def has_entitlement_in?(jurisdiction)
-    entitlements.each do |ent|
-      return true if ent.jurisdiction.id == jurisdiction.id
-    end
-    false 
+    entitlements.detect { |ent| ent.jurisdiction.id == jurisdiction.id }.nil? ? false : true
   end
 
   # Manage role memberships
@@ -81,6 +66,27 @@ class User < ActiveRecord::Base
       end
     end
     false
+  end
+  
+  def role_membership_attributes=(rm_attributes)
+    rm_attributes.each do |attributes|
+      if attributes[:id].blank?
+        role_memberships.build(attributes)
+      else
+        rm = role_memberships.detect { |rm| rm.id == attributes[:id].to_i }
+        rm.attributes = attributes
+      end
+    end
+  end
+  
+  def save_role_memberships
+    role_memberships.each do |rm|
+      if rm.should_destroy?
+        rm.destroy
+      else
+        rm.save(false)
+      end
+    end
   end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app
