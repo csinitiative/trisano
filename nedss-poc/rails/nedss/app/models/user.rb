@@ -7,10 +7,11 @@ class User < ActiveRecord::Base
   has_many :entitlements, :include => [:privilege]
   has_many :privileges, :through => :entitlements
   
-  after_update :save_role_memberships
   validates_associated :role_memberships
-  
   validates_presence_of :uid, :user_name
+  
+  after_update :save_role_memberships
+  after_validation :clear_base_error
   
   # Checks to see if  a user has a role in any jurisdiction at all
   # This gets them into tools, for one thing.
@@ -97,6 +98,10 @@ class User < ActiveRecord::Base
 
   def self.current_user
     Thread.current[:user]
+  end
+  
+  def clear_base_error
+    errors.delete(:role_memberships)
   end
 
 end

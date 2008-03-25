@@ -4,6 +4,10 @@ describe User, "loaded from fixtures" do
   
   fixtures :users, :role_memberships, :roles, :entities, :entitlements
   
+  # Add entitlement fixtures
+  # Test entitlments
+  # Run through and remove extra fixture references
+  
   before(:each) do
     @user = users(:default_user)
   end
@@ -44,6 +48,8 @@ describe User, "modified with an investigator role" do
   
   fixtures :users, :role_memberships, :roles, :entities
   
+  # Test entitlements
+  
   before(:each) do
     @user = users(:default_user)
     @user.remove_role_membership(roles(:administrator), entities(:Southeastern_District))
@@ -65,6 +71,8 @@ describe User, "modified to remove roles and privileges in Southeastern District
   
   fixtures :users, :role_memberships, :roles, :entities, :entitlements, :privileges
   
+  # Test entitlements
+  
   before(:each) do
     @user = users(:default_user)
     @user.remove_role_membership(roles(:administrator), entities(:Southeastern_District))
@@ -79,8 +87,25 @@ describe User, "modified to remove roles and privileges in Southeastern District
     @user.has_entitlement_in?(entities(:Southeastern_District)).should be_false
   end
   
-   it "should no longer be an admin" do
+  it "should no longer be an admin" do
     @user.is_admin?.should be_false
+  end
+  
+end
+
+describe User, "modified to add duplicate roles" do
+  
+  fixtures :users, :role_memberships, :roles, :entities, :entitlements, :privileges
+  
+  before(:each) do
+    @user = users(:default_user)
+  end
+  
+  it "should not be valid" do
+    @role = roles(:administrator)
+    @jurisdiction = entities(:Southeastern_District)
+    @user.add_role_membership(@role, @jurisdiction)
+    @user.should_not be_valid
   end
   
 end
@@ -92,7 +117,6 @@ describe User, "modified to add new roles and privileges in Southeastern Distric
   before(:each) do
     @user = users(:default_user)
     @user.add_entitlement(privileges(:view), entities(:Southeastern_District))
-    
   end
   
   it "should have an entitlement in the Southeastern District" do

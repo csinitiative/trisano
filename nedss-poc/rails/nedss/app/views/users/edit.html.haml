@@ -1,6 +1,6 @@
 %h1 Editing user
 
-= error_messages_for :user
+= error_messages_for :object => [@user, @user.role_memberships]
 
 - form_for(@user) do |f|
 
