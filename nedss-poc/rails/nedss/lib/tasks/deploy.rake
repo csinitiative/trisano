@@ -129,34 +129,6 @@ namespace :nedss do
       end
     end
 
-    desc "revised post"
-    
-    task :post do
-      puts "posting"
-
-      agent = WWW::Mechanize.new
-      agent.basic_auth('utah', 'arches')
-      page = agent.get("http://localhost:8080/nedss/cmrs/new")
-      form = page.forms.first
-      #form.fields.each { |f| puts f.name }
-
-      # Set minimal values
-      form['event[active_patient][active_primary_entity][person][first_name]'] = 'Steve'
-      form['event[active_patient][active_primary_entity][person][last_name]'] = 'Smoker'
-
-      # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
-      # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
-      form.add_field!("event[active_patient][active_primary_entity][person][birth_gender_id]", "")
-      form.add_field!("event[active_patient][active_primary_entity][person][ethnicity_id]", "")
-      form.add_field!("event[active_patient][active_primary_entity][person][primary_language_id]", "")
-      form.add_field!("event[active_patient][active_primary_entity][address][state_id]", "")
-      form.add_field!("event[active_patient][active_primary_entity][address][county_id]", "")
-      form.add_field!("event[active_hospital][secondary_entity_id]", "")
-      form.add_field!("event[active_jurisdiction][secondary_entity_id]", "")
-
-      page = agent.submit form      
-    end
-
     desc "redeploy Tomcat"
     task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
       puts "redeploy Tomcat success"
