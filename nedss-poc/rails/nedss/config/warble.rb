@@ -59,7 +59,11 @@ config.gems = ["rails", "activesupport", "activeresource", "activerecord", "acti
   # config.webxml.jruby_home = <jruby/home>
 
   # Value of RAILS_ENV for the webapp
-  config.webxml.rails_env = 'development'
+  #config.webxml.rails_env = 'development'
+  config.webxml.rails_env = ENV['RAILS_ENV'] ||= 'development'
+  
+  # Whether or not to turn basicauth on
+  config.webxml.basicauth = ENV['basicauth'] ||= 'true'
 
   # Control the pool of Rails runtimes
   # (Goldspike-specific; see README for details)

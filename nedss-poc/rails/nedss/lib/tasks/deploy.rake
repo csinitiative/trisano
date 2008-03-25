@@ -6,7 +6,11 @@ require 'rest-open-uri'
 require 'logger'
 
 namespace :nedss do
-
+  
+  # Supported rake task arguments:
+  # RAILS_ENV - controls what database config to use
+  # basicauth - whether or not to use HTTP Basic Auth from within the .war file (default = true)
+  # Example: jruby -S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false
   namespace :deploy do
     WAR_FILE_NAME = 'nedss.war'
     # Override with env variable if you have a different Tomcat home - just export it
