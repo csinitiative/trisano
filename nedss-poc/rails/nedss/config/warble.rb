@@ -50,7 +50,7 @@ config.gems = ["rails", "activesupport", "activeresource", "activerecord", "acti
 
   # Name of the war file (without the .war) -- defaults to the basename
   # of RAILS_ROOT
-  # config.war_name = "mywar"
+  config.war_name = "nedss"
 
   # True if the webapp has no external dependencies
   config.webxml.standalone = true
