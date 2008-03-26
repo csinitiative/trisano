@@ -6,10 +6,10 @@ class Entity < ActiveRecord::Base
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
   has_many :animals, :before_add => :set_entity_type
-#  has_one  :current_animal, :class_name => 'Animal', :order => 'created_at DESC'
+  #  has_one  :current_animal, :class_name => 'Animal', :order => 'created_at DESC'
 
   has_many :materials, :before_add => :set_entity_type
-#  has_one  :current_material, :class_name => 'Material', :order => 'created_at DESC'
+  #  has_one  :current_material, :class_name => 'Material', :order => 'created_at DESC'
 
   has_many :entities_locations, :foreign_key => 'entity_id'
   has_many :locations, :through => :entities_locations
@@ -18,10 +18,10 @@ class Entity < ActiveRecord::Base
   has_one :primary_entities_location, :class_name => 'EntitiesLocation', :foreign_key => 'entity_id', :conditions => [ "primary_yn_id = ?", Code.yes_id ]
 
   has_and_belongs_to_many :races, 
-                          :class_name => 'Code', 
-                          :join_table => 'people_races', 
-                          :association_foreign_key => 'race_id', 
-                          :order => 'code_description'
+    :class_name => 'Code', 
+    :join_table => 'people_races', 
+    :association_foreign_key => 'race_id', 
+    :order => 'code_description'
 
   attr_protected :entity_type
   validates_presence_of :entity_type
@@ -39,6 +39,9 @@ class Entity < ActiveRecord::Base
     set_entity_type(@person)
   end  
 
+   # Debt: Remove this when the associations are correct on user.rb.
+   # The role view uses this accessor to get a place name in a
+   # collection_select.
   def place
     @place || current_place
   end
@@ -46,7 +49,11 @@ class Entity < ActiveRecord::Base
   def place=(attributes)
     @place = Place.new(attributes)
     set_entity_type(@place)
-  end  
+  end
+  
+  def place_name
+    current_place.name
+  end
 
   def entities_location
     @entities_location || primary_entities_location
@@ -100,7 +107,7 @@ class Entity < ActiveRecord::Base
     when "place"
       places << @place unless @place.nil?
 
-    # More 'when' clauses as needed
+      # More 'when' clauses as needed
     end
   end
 

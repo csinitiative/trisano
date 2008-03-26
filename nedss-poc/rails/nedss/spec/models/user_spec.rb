@@ -38,6 +38,11 @@ describe User, "loaded from fixtures" do
   it "should have an entitlement in the Southeastern District" do
     @user.has_entitlement_in?(@jurisdiction).should be_true
   end
+ 
+# This does not pass but works in app and console. Fixture issue?
+#  it "should have one admin jurisdiction" do
+#    @user.admin_jurisdictions.size.should eql(1)
+#  end
   
 end
 

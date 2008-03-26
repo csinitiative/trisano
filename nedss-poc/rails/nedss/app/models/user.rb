@@ -1,11 +1,18 @@
 class User < ActiveRecord::Base
   
+  # Debt? Mess with these includes, see if they are helping or hurting
   has_many :role_memberships, :include => [:role, :jurisdiction]
   has_many :roles, :through => :role_memberships, :uniq => true
-  has_many :jurisdictions, :through => :role_memberships
   
-  has_many :entitlements, :include => [:privilege]
+  has_many :entitlements, :include => [:privilege, :jurisdiction]
   has_many :privileges, :through => :entitlements
+  has_many :admin_jurisdictions, 
+    :source => :jurisdiction, 
+    :through => :entitlements, 
+    :conditions => ["privilege_id = ?", Privilege.find_by_priv_name("administer")],
+    :include => :places, 
+    :select => "places.name", 
+    :order => "places.name ASC"
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name

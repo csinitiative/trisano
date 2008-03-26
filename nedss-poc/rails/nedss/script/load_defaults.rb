@@ -67,27 +67,6 @@ User.transaction do
     u = User.find_or_initialize_by_uid(:uid => user['uid'], :user_name => user['user_name'])
     u.attributes = user unless u.new_record?
     u.save!
-    
-    if user['user_name'] == 'default_user'
-      
-      # Just cramming in some roles/entitlments for the default user
-      # Debt: Finding by a name that may change
-      # Salt Lake Valley Health Department
-      jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
-    
-      jurisdiction = Entity.find(:first, 
-        :include => :places, 
-        :select => "places.name",
-        :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
-          jurisdiction_type_id, "Salt Lake Valley Health Department"])
-        
-      role = Role.find_by_role_name("administrator")
-      privilege = Privilege.find_by_priv_name("administer")
-        
-      u.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      
-    end
-    
   end
 end
 
@@ -97,7 +76,10 @@ PrivilegesRole.transaction do
   jurisdictions = Entity.find(:all, 
     :include => :places, 
     :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?",
-      jurisdiction_type_id])
+      jurisdiction_type_id],
+    :order => "places.name DESC")
+    
+  user = User.find_by_user_name('default_user')
                   
   roles = Role.find(:all)
   privileges = Privilege.find(:all)
@@ -105,13 +87,17 @@ PrivilegesRole.transaction do
   jurisdictions.each do |jurisdiction|
     roles.each do |role|
       privileges.each do |privilege|
-        unless (role.role_name == "investigator" && privilege.priv_name == "administer")
+        unless (role.role_name == 'investigator' && privilege.priv_name == 'administer')
           pr = PrivilegesRole.find_or_initialize_by_jurisdiction_id_and_role_id_and_privilege_id(:jurisdiction_id => jurisdiction.id, 
             :role_id => role.id, 
             :privilege_id => privilege.id)
           pr.save! if pr.new_record?
         end
       end
+      
+      # While, we're at it, grant the default user all roles for all jurisdictions
+      user.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      
     end
   end
 end
