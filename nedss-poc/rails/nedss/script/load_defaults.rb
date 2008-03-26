@@ -15,10 +15,10 @@ Entity.transaction do
   hospitals.each do |hospital|
     hospital_type_id = Code.find_by_code_name_and_the_code("placetype", "H").id
     h = Entity.find(:first, 
-                    :include => :places, 
-                    :select => "places.name", 
-                    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
-                      hospital_type_id, hospital])
+      :include => :places, 
+      :select => "places.name", 
+      :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
+        hospital_type_id, hospital])
     Entity.create(:entity_type => 'place', :place => {:name => hospital, :place_type_id => hospital_type_id}) if h.nil?
   end
 end
@@ -30,10 +30,10 @@ Entity.transaction do
   jurisdictions.each do |jurisdiction|
     jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
     j = Entity.find(:first, 
-                    :include => :places, 
-                    :select => "places.name", 
-                    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
-                      jurisdiction_type_id, jurisdiction])
+      :include => :places, 
+      :select => "places.name", 
+      :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
+        jurisdiction_type_id, jurisdiction])
     Entity.create(:entity_type => 'place', :place => {:name => jurisdiction, :place_type_id => jurisdiction_type_id}) if j.nil?
   end
 end
@@ -76,26 +76,44 @@ User.transaction do
       jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
     
       jurisdiction = Entity.find(:first, 
-                    :include => :places, 
-                    :select => "places.name",
-                    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
-                      jurisdiction_type_id, "Salt Lake Valley Health Department"])
+        :include => :places, 
+        :select => "places.name",
+        :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
+          jurisdiction_type_id, "Salt Lake Valley Health Department"])
         
       role = Role.find_by_role_name("administrator")
       privilege = Privilege.find_by_priv_name("administer")
         
-      u.add_role_membership(role, jurisdiction)
-      u.add_entitlement(privilege, jurisdiction)
+      u.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
       
     end
     
   end
 end
 
-
-
-
-
-
+PrivilegesRole.transaction do
+  
+  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
+  jurisdictions = Entity.find(:all, 
+    :include => :places, 
+    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?",
+      jurisdiction_type_id])
+                  
+  roles = Role.find(:all)
+  privileges = Privilege.find(:all)
+                  
+  jurisdictions.each do |jurisdiction|
+    roles.each do |role|
+      privileges.each do |privilege|
+        unless (role.role_name == "investigator" && privilege.priv_name == "administer")
+          pr = PrivilegesRole.find_or_initialize_by_jurisdiction_id_and_role_id_and_privilege_id(:jurisdiction_id => jurisdiction.id, 
+            :role_id => role.id, 
+            :privilege_id => privilege.id)
+          pr.save! if pr.new_record?
+        end
+      end
+    end
+  end
+end
 
 

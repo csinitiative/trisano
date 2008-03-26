@@ -9,12 +9,10 @@ class User < ActiveRecord::Base
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name
+  validates_length_of :uid, :maximum => 9
   
   after_update :save_role_memberships
   after_validation :clear_base_error
-  
-  # Checks to see if  a user has a role in any jurisdiction at all
-  # This gets them into tools, for one thing.
   
   def is_admin?
     roles.detect { |role| role.role_name == "administrator" }.nil? ? false : true
@@ -24,8 +22,6 @@ class User < ActiveRecord::Base
     roles.detect { |role| role.role_name == "investigator" }.nil? ? false : true
   end
   
-  # Get specific by jurisdiction
-  
   def has_role_in?(jurisdiction)
     role_memberships.detect { |rm| rm.jurisdiction.id ==  jurisdiction.id }.nil? ? false : true
   end
@@ -33,46 +29,20 @@ class User < ActiveRecord::Base
   def has_entitlement_in?(jurisdiction)
     entitlements.detect { |ent| ent.jurisdiction.id == jurisdiction.id }.nil? ? false : true
   end
-
-  # Manage role memberships
-   
-  def add_role_membership(role, jurisdiction)
-    role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-  end
   
-  def remove_role_membership(role, jurisdiction)
-    # Debt? What's the preferred way to manipulate join models and have changes reflected in memory?
-    role_memberships.each do |rm|
-      if rm.role_id == role.id && rm.jurisdiction_id ==  jurisdiction.id
-        rm.destroy
-        role_memberships.reload
-        return true
-      end
-    end
-    false
-  end
-  
-  # Manage entitlements
-  
-  def add_entitlement(privilege, jurisdiction)
-    entitlements << Entitlement.new(:privilege => privilege, :jurisdiction => jurisdiction)
-  end
-  
-  def remove_entitlement(privilege, jurisdiction)
-    entitlements.each do |ent|
-      if ent.privilege_id == privilege.id && ent.jurisdiction_id ==  jurisdiction.id
-        ent.destroy 
-        entitlements.reload
-        return true
-      end
-    end
-    false
+  def is_entitled_to_in?(privilege, jurisdiction)
+    entitlements.detect { |ent| ent.privilege_id == privilege.id && ent.jurisdiction_id == jurisdiction.id }.nil? ? false : true
   end
   
   def role_membership_attributes=(rm_attributes)
+    seen_before = []
     rm_attributes.each do |attributes|
       if attributes[:id].blank?
-        role_memberships.build(attributes)
+        attribute_check = seen_before.detect { |at| at[:role_id] == attributes[:role_id] and at[:jurisdiction_id] == attributes[:jurisdiction_id] } 
+        if attribute_check.nil?
+          role_memberships.build(attributes)
+          seen_before << attributes
+        end
       else
         rm = role_memberships.detect { |rm| rm.id == attributes[:id].to_i }
         rm.attributes = attributes
