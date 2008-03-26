@@ -21,6 +21,7 @@ namespace :nedss do
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
     # Override with env variable if you are running locally http://localhost:8080
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
+    RELEASE_DIRECTORY = 'release'
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
@@ -146,6 +147,21 @@ namespace :nedss do
     desc "build and redeploy full: build and redeploy plus integration tests"
     task :buildandredeployfull => [:buildandredeploy, 'nedss:integration:run_all'] do
       puts "build, redeploy and integration test success"
+    end
+
+    desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
+    task :release  do
+      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
+
+      config = RELEASE_DIRECTORY + '/WEB-INF/config'
+      if !File.directory? RELEASE_DIRECTORY
+        FileUtils.mkdir_p(config)
+      end
+
+      File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
+      File.copy('config/database.yml', config, true) 
+      # add time stamp
+      sh "tar cf nedss-release.tar release/"
     end
 
   end
