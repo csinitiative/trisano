@@ -50,10 +50,6 @@ class Entity < ActiveRecord::Base
     @place = Place.new(attributes)
     set_entity_type(@place)
   end
-  
-  def place_name
-    current_place.name
-  end
 
   def entities_location
     @entities_location || primary_entities_location

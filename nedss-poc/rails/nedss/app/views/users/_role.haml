@@ -10,8 +10,7 @@
         %td
           role for
         %td
-          / May change...
-          = rm_form.collection_select(:jurisdiction_id, User.current_user.admin_jurisdictions, :id, :place_name,  {}, {:index => nil})
+          = rm_form.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name,  {}, {:index => nil})
         %td
           - if role.new_record?
             = link_to_function "remove", "$(this).up('.role_membership').remove()"

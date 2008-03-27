@@ -76,8 +76,7 @@ PrivilegesRole.transaction do
   jurisdictions = Entity.find(:all, 
     :include => :places, 
     :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?",
-      jurisdiction_type_id],
-    :order => "places.name DESC")
+      jurisdiction_type_id])
     
   user = User.find_by_user_name('default_user')
                   

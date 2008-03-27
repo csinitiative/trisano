@@ -6,13 +6,6 @@ class User < ActiveRecord::Base
   
   has_many :entitlements, :include => [:privilege, :jurisdiction]
   has_many :privileges, :through => :entitlements
-  has_many :admin_jurisdictions, 
-    :source => :jurisdiction, 
-    :through => :entitlements, 
-    :conditions => ["privilege_id = ?", Privilege.find_by_priv_name("administer")],
-    :include => :places, 
-    :select => "places.name", 
-    :order => "places.name ASC"
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name
@@ -41,6 +34,14 @@ class User < ActiveRecord::Base
     entitlements.detect { |ent| ent.privilege_id == privilege.id && ent.jurisdiction_id == jurisdiction.id }.nil? ? false : true
   end
   
+  def entitlement_jurisdiction_ids
+    @entitlement_jurisdiction_ids ||= collect_entitlement_jurisdiction_ids
+  end
+  
+  def admin_jurisdiction_ids
+    @admin_jurisdiction_ids ||= collect_admin_jurisdiction_ids
+  end
+    
   def role_membership_attributes=(rm_attributes)
     seen_before = []
     rm_attributes.each do |attributes|
@@ -79,6 +80,25 @@ class User < ActiveRecord::Base
   
   def clear_base_error
     errors.delete(:role_memberships)
+  end
+  
+  private
+  
+  def collect_admin_jurisdiction_ids
+    admin_priv = Privilege.find_by_priv_name("administer")
+    ids = []
+    entitlements.each do |e| 
+      if e.privilege_id == admin_priv.id
+        ids << e.jurisdiction_id 
+      end
+    end
+    @admin_jurisdiction_ids = ids
+  end
+  
+  def collect_entitlement_jurisdiction_ids
+    ids =[]
+    entitlements.each { |e| ids << e.jurisdiction_id }
+    @entitlement_jurisdiction_ids = ids.uniq
   end
 
 end

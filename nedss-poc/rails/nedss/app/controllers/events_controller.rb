@@ -17,6 +17,11 @@ class EventsController < ApplicationController
   # GET /event.xml
   def index
     @events = Event.find(:all)
+    # The following filters on entitled jurisdictions, which shouldn't be enabled until jurisdiction is required
+    # @events = Event.find(:all, 
+    #   :include => :jurisdiction, 
+    #   :select => "jurisdiction.secondary_entity_id", 
+    #   :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.entitlement_jurisdiction_ids])
 
     respond_to do |format|
       format.html # index.html.erb
