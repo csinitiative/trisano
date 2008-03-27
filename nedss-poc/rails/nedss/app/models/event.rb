@@ -170,7 +170,7 @@ class Event < ActiveRecord::Base
     options = args.extract_options!
     fulltext_terms = []
     where_clause = ""
-    order_by_clause = "last_name, first_name ASC"
+    order_by_clause = "p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
     
     if !options[:disease].blank?
@@ -183,9 +183,9 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
 
       if options[:gender] == "Unspecified"
-        where_clause += "people.birth_gender_id IS NULL"
+        where_clause += "p3.primary_birth_gender_id IS NULL"
       else
-        where_clause += "people.birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
+        where_clause += "p3.primary.birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
       end
       
     end
@@ -195,9 +195,9 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
 
       if options[:investigation_status] == "Unspecified"
-        where_clause += "e.\"investigation_LHD_status_id\" IS NULL"
+        where_clause += "p3.investigation_LHD_status_id IS NULL"
       else
-        where_clause += "e.\"investigation_LHD_status_id\" = " + sanitize_sql(["%s", options[:investigation_status]])
+        where_clause += "p3.investigation_LHD_status_id = " + sanitize_sql(["%s", options[:investigation_status]])
       end
       
     end
@@ -214,10 +214,10 @@ class Event < ActiveRecord::Base
       where_clause += "a.county_id = " + sanitize_sql(["%s", options[:county]])
     end
     
-    if !options[:district].blank?
+    if !options[:jurisdiction_id].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "a.district_id = " + sanitize_sql(["%s", options[:district]])
+      where_clause += "p3.secondary_entity_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
     end
     
     # Debt: The UI shows the user a format to use. Something a bit more robust
@@ -226,26 +226,27 @@ class Event < ActiveRecord::Base
       if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "EXTRACT(YEAR FROM birth_date) = '" + sanitize_sql(["%s",options[:birth_date]]) + "'"
+        where_clause += "EXTRACT(YEAR FROM p3.primary_birth_date) = '" + sanitize_sql(["%s",options[:birth_date]]) + "'"
       else
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "birth_date = '" + sanitize_sql(["%s", options[:birth_date]]) + "'"
+        where_clause += "p3.primary_birth_date = '" + sanitize_sql(["%s", options[:birth_date]]) + "'"
       end
       
     end
     
+    # Problem?
     if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
       
       if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-        where_clause += "e.created_at BETWEEN '" + sanitize_sql(["%s", options[:entered_on_start]]) + 
+        where_clause += "p3.created_at BETWEEN '" + sanitize_sql(["%s", options[:entered_on_start]]) + 
           "' AND '" + sanitize_sql(options[:entered_on_end]) + "'"
       elsif !options[:entered_on_start].blank?
-        where_clause += "e.created_at > '" + sanitize_sql(["%s", options[:entered_on_start]]) + "'"
+        where_clause += "p3.created_at > '" + sanitize_sql(["%s", options[:entered_on_start]]) + "'"
       else
-        where_clause += "e.created_at < '" + sanitize_sql(["%s", options[:entered_on_end]]) + "'"
+        where_clause += "p3.created_at < '" + sanitize_sql(["%s", options[:entered_on_end]]) + "'"
       end
      
     end
@@ -260,12 +261,12 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
       
       if !options[:sw_last_name].blank?
-        where_clause += "last_name ILIKE '" + sanitize_sql(["%s", options[:sw_last_name]]) + "%'"
+        where_clause += "p3.primary_last_name ILIKE '" + sanitize_sql(["%s", options[:sw_last_name]]) + "%'"
       end
       
       if !options[:sw_first_name].blank?
         where_clause += " AND " unless options[:sw_last_name].blank?
-        where_clause += "first_name ILIKE '" + sanitize_sql(["%s", options[:sw_first_name]]) + "%'"
+        where_clause += "p3.primary_first_name ILIKE '" + sanitize_sql(["%s", options[:sw_first_name]]) + "%'"
       end
       
     elsif !options[:fulltext_terms].blank?
@@ -288,24 +289,96 @@ class Event < ActiveRecord::Base
       
     end
     
-    query = "SELECT people.entity_id, disease_events.event_id, first_name, last_name, middle_name, birth_date, 
-                    disease_name, record_number, event_onset_date, c.code_description as gender, 
-                    co.code_description as county, city, cs.code_description as investigation,
-                    di.code_description as district
-                  FROM diseases d
-                  INNER JOIN (SELECT DISTINCT ON(event_id) * FROM disease_events ORDER BY event_id, created_at DESC) disease_events on disease_events.disease_id = d.id
-                  INNER JOIN participations p on p.event_id = disease_events.event_id
-                  INNER JOIN (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people on p.primary_entity_id = entity_id
-                  INNER JOIN events e on e.id = disease_events.event_id
-                  LEFT OUTER JOIN codes c on c.id = people.birth_gender_id
-                  LEFT OUTER JOIN codes cs on cs.id = e.\"investigation_LHD_status_id\"
-                  LEFT OUTER JOIN entities_locations el on el.entity_id = people.entity_id
-                  LEFT OUTER JOIN locations l on l.id = el.location_id
-                  LEFT OUTER JOIN addresses a on a.location_id = l.id
-                  LEFT OUTER JOIN codes co on co.id = a.county_id
-                  LEFT OUTER JOIN codes di on di.id = a.district_id
-                  WHERE #{where_clause}
-                  ORDER BY #{order_by_clause}"
+    query = "
+    SELECT 
+           p3.event_id, 
+           p3.primary_entity_id AS entity_id,
+           p3.primary_first_name AS first_name,
+           p3.primary_middle_name AS middle_name,
+           p3.primary_last_name AS last_name,
+           p3.primary_birth_date AS birth_date,
+           p3.disease_name,
+           p3.primary_record_number AS record_number,
+           p3.event_onset_date,
+           p3.primary_birth_gender_id AS birth_gender_id,
+           p3.investigation_lhd_status_id,
+           p3.secondary_entity_id,
+           p3.secondary_entity_name, 
+           p3.vector,
+           p3.created_at,
+           c.code_description AS gender,
+           cs.code_description AS lhd_investigation_status, 
+           a.city, 
+           co.code_description AS county
+    FROM 
+           ( SELECT 
+                    p1.event_id, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
+                    p1.primary_birth_date, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
+                    p1.investigation_lhd_status_id, p1.created_at, p2.secondary_entity_id, p2.secondary_entity_name
+             FROM 
+                    ( SELECT 
+                             p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
+                             people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
+                             d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
+                             people.birth_gender_id as primary_birth_gender_id,
+                             e.\"investigation_LHD_status_id\" as investigation_lhd_status_id,
+                             e.created_at
+                      FROM   
+                             events e
+                      INNER JOIN  
+                             participations p on p.event_id = e.id
+                      INNER JOIN 
+                             people on people.entity_id = p.primary_entity_id
+                      LEFT OUTER JOIN 
+                            ( SELECT DISTINCT ON 
+                                     (event_id) * 
+                              FROM   
+                                     disease_events 
+                              ORDER BY event_id, created_at DESC
+                            ) AS disease_events 
+                              ON disease_events.event_id = e.id
+                      LEFT OUTER JOIN 
+                            diseases d ON disease_events.disease_id = d.id
+                      WHERE  
+                            p.primary_entity_id IS NOT NULL AND p.secondary_entity_id IS NULL
+                    ) AS p1
+             FULL OUTER JOIN 
+                   (
+                     SELECT 
+                            secondary_entity_id, j.name as secondary_entity_name, p.event_id as event_id
+                     FROM   
+                            events e
+                     INNER JOIN 
+                            participations p ON p.event_id = e.id
+                     LEFT OUTER JOIN 
+                            codes c ON c.id = p.role_id
+                     LEFT OUTER JOIN 
+                           ( SELECT DISTINCT ON 
+                                    (entity_id) entity_id, name 
+                             FROM 
+                                    places 
+                             ORDER BY 
+                                    entity_id, created_at DESC
+                           ) AS j ON j.entity_id = p.secondary_entity_id
+                     WHERE  c.code_description = 'Jurisdiction'
+                   ) AS p2 ON p1.event_id = p2.event_id
+           ) AS p3
+    LEFT OUTER JOIN 
+           entities_locations el ON el.entity_id = p3.primary_entity_id
+    LEFT OUTER JOIN 
+           locations l ON l.id = el.location_id
+    LEFT OUTER JOIN 
+           addresses a ON a.location_id = l.id
+    LEFT OUTER JOIN 
+           codes co ON co.id = a.county_id
+    LEFT OUTER JOIN 
+           codes c ON c.id = p3.primary_birth_gender_id
+    LEFT OUTER JOIN 
+           codes cs ON cs.id = p3.investigation_lhd_status_id
+    WHERE 
+           #{where_clause}
+    ORDER BY 
+           #{order_by_clause}"
     
     find_by_sql(query) if issue_query
   end

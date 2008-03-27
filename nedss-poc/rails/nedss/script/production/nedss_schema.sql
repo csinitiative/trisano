@@ -2356,6 +2356,7 @@ CREATE TABLE disease_events (
 --
 
 CREATE SEQUENCE disease_events_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -2373,7 +2374,7 @@ ALTER SEQUENCE disease_events_id_seq OWNED BY disease_events.id;
 -- Name: disease_events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('disease_events_id_seq', 2, true);
+SELECT pg_catalog.setval('disease_events_id_seq', 1, false);
 
 
 --
@@ -2485,7 +2486,7 @@ ALTER SEQUENCE entities_id_seq OWNED BY entities.id;
 -- Name: entities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('entities_id_seq', 83, true);
+SELECT pg_catalog.setval('entities_id_seq', 80, true);
 
 
 --
@@ -2549,6 +2550,7 @@ CREATE TABLE entitlements (
 --
 
 CREATE SEQUENCE entitlements_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -2566,7 +2568,7 @@ ALTER SEQUENCE entitlements_id_seq OWNED BY entitlements.id;
 -- Name: entitlements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('entitlements_id_seq', 2, true);
+SELECT pg_catalog.setval('entitlements_id_seq', 1, false);
 
 
 --
@@ -2668,6 +2670,7 @@ CREATE TABLE events (
 --
 
 CREATE SEQUENCE events_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -2685,7 +2688,7 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 -- Name: events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('events_id_seq', 2, true);
+SELECT pg_catalog.setval('events_id_seq', 1, false);
 
 
 --
@@ -2693,6 +2696,7 @@ SELECT pg_catalog.setval('events_id_seq', 2, true);
 --
 
 CREATE SEQUENCE events_record_number_seq
+    START WITH 2008000001
     INCREMENT BY 1
     MAXVALUE 2008999999
     MINVALUE 2008000001
@@ -2703,7 +2707,7 @@ CREATE SEQUENCE events_record_number_seq
 -- Name: events_record_number_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('events_record_number_seq', 2008000002, true);
+SELECT pg_catalog.setval('events_record_number_seq', 2008000001, false);
 
 
 --
@@ -2743,6 +2747,7 @@ CREATE TABLE lab_results (
 --
 
 CREATE SEQUENCE lab_results_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -2760,7 +2765,7 @@ ALTER SEQUENCE lab_results_id_seq OWNED BY lab_results.id;
 -- Name: lab_results_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('lab_results_id_seq', 2, true);
+SELECT pg_catalog.setval('lab_results_id_seq', 1, false);
 
 
 --
@@ -3005,6 +3010,7 @@ CREATE TABLE participations (
 --
 
 CREATE SEQUENCE participations_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -3022,7 +3028,7 @@ ALTER SEQUENCE participations_id_seq OWNED BY participations.id;
 -- Name: participations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('participations_id_seq', 5, true);
+SELECT pg_catalog.setval('participations_id_seq', 1, false);
 
 
 --
@@ -3050,6 +3056,7 @@ CREATE TABLE participations_risk_factors (
 --
 
 CREATE SEQUENCE participations_risk_factors_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -3067,7 +3074,7 @@ ALTER SEQUENCE participations_risk_factors_id_seq OWNED BY participations_risk_f
 -- Name: participations_risk_factors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('participations_risk_factors_id_seq', 3, true);
+SELECT pg_catalog.setval('participations_risk_factors_id_seq', 1, false);
 
 
 --
@@ -3091,6 +3098,7 @@ CREATE TABLE participations_treatments (
 --
 
 CREATE SEQUENCE participations_treatments_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -3108,7 +3116,7 @@ ALTER SEQUENCE participations_treatments_id_seq OWNED BY participations_treatmen
 -- Name: participations_treatments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('participations_treatments_id_seq', 3, true);
+SELECT pg_catalog.setval('participations_treatments_id_seq', 1, false);
 
 
 --
@@ -3142,6 +3150,7 @@ CREATE TABLE people (
 --
 
 CREATE SEQUENCE people_id_seq
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -3159,7 +3168,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 -- Name: people_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('people_id_seq', 3, true);
+SELECT pg_catalog.setval('people_id_seq', 1, false);
 
 
 --
@@ -3323,7 +3332,6 @@ CREATE TABLE privileges_roles (
 --
 
 CREATE SEQUENCE privileges_roles_id_seq
-    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -3341,7 +3349,7 @@ ALTER SEQUENCE privileges_roles_id_seq OWNED BY privileges_roles.id;
 -- Name: privileges_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('privileges_roles_id_seq', 1, false);
+SELECT pg_catalog.setval('privileges_roles_id_seq', 70, true);
 
 
 --
@@ -4076,8 +4084,6 @@ COPY codes (id, code_name, the_code, code_description, sort_order) FROM stdin;
 --
 
 COPY disease_events (id, event_id, disease_id, hospitalized_id, died_id, disease_onset_date, date_diagnosed, created_at, updated_at) FROM stdin;
-1	1	\N	134	134	\N	\N	2008-03-25 08:25:12.01	2008-03-25 08:25:12.01
-2	2	\N	134	134	\N	\N	2008-03-26 08:58:30.000916	2008-03-26 08:58:46.432
 \.
 
 
@@ -4235,89 +4241,86 @@ COPY encounters (id, event_id, created_at, updated_at) FROM stdin;
 --
 
 COPY entities (id, record_number, entity_url_number, created_at, updated_at, entity_type) FROM stdin;
-1	\N	\N	2008-03-25 08:21:49.152	2008-03-25 08:21:49.152	place
-2	\N	\N	2008-03-25 08:21:49.321	2008-03-25 08:21:49.321	place
-3	\N	\N	2008-03-25 08:21:49.466	2008-03-25 08:21:49.466	place
-4	\N	\N	2008-03-25 08:21:49.741	2008-03-25 08:21:49.741	place
-5	\N	\N	2008-03-25 08:21:49.947	2008-03-25 08:21:49.947	place
-6	\N	\N	2008-03-25 08:21:50.149	2008-03-25 08:21:50.149	place
-7	\N	\N	2008-03-25 08:21:50.21	2008-03-25 08:21:50.21	place
-8	\N	\N	2008-03-25 08:21:50.313	2008-03-25 08:21:50.313	place
-9	\N	\N	2008-03-25 08:21:50.351	2008-03-25 08:21:50.351	place
-10	\N	\N	2008-03-25 08:21:50.39	2008-03-25 08:21:50.39	place
-11	\N	\N	2008-03-25 08:21:50.427	2008-03-25 08:21:50.427	place
-12	\N	\N	2008-03-25 08:21:50.484	2008-03-25 08:21:50.484	place
-13	\N	\N	2008-03-25 08:21:50.518	2008-03-25 08:21:50.518	place
-14	\N	\N	2008-03-25 08:21:50.548	2008-03-25 08:21:50.548	place
-15	\N	\N	2008-03-25 08:21:50.584	2008-03-25 08:21:50.584	place
-16	\N	\N	2008-03-25 08:21:50.615	2008-03-25 08:21:50.615	place
-17	\N	\N	2008-03-25 08:21:50.646	2008-03-25 08:21:50.646	place
-18	\N	\N	2008-03-25 08:21:50.696	2008-03-25 08:21:50.696	place
-19	\N	\N	2008-03-25 08:21:50.739	2008-03-25 08:21:50.739	place
-20	\N	\N	2008-03-25 08:21:50.797	2008-03-25 08:21:50.797	place
-21	\N	\N	2008-03-25 08:21:50.833	2008-03-25 08:21:50.833	place
-22	\N	\N	2008-03-25 08:21:50.87	2008-03-25 08:21:50.87	place
-23	\N	\N	2008-03-25 08:21:50.903	2008-03-25 08:21:50.903	place
-24	\N	\N	2008-03-25 08:21:50.933	2008-03-25 08:21:50.933	place
-25	\N	\N	2008-03-25 08:21:50.963	2008-03-25 08:21:50.963	place
-26	\N	\N	2008-03-25 08:21:50.993	2008-03-25 08:21:50.993	place
-27	\N	\N	2008-03-25 08:21:51.031	2008-03-25 08:21:51.031	place
-28	\N	\N	2008-03-25 08:21:51.061	2008-03-25 08:21:51.061	place
-29	\N	\N	2008-03-25 08:21:51.092	2008-03-25 08:21:51.092	place
-30	\N	\N	2008-03-25 08:21:51.122	2008-03-25 08:21:51.122	place
-31	\N	\N	2008-03-25 08:21:51.181	2008-03-25 08:21:51.181	place
-32	\N	\N	2008-03-25 08:21:51.306	2008-03-25 08:21:51.306	place
-33	\N	\N	2008-03-25 08:21:51.335	2008-03-25 08:21:51.335	place
-34	\N	\N	2008-03-25 08:21:51.371	2008-03-25 08:21:51.371	place
-35	\N	\N	2008-03-25 08:21:51.48	2008-03-25 08:21:51.48	place
-36	\N	\N	2008-03-25 08:21:51.511	2008-03-25 08:21:51.511	place
-37	\N	\N	2008-03-25 08:21:51.54	2008-03-25 08:21:51.54	place
-38	\N	\N	2008-03-25 08:21:51.631	2008-03-25 08:21:51.631	place
-39	\N	\N	2008-03-25 08:21:51.673	2008-03-25 08:21:51.673	place
-40	\N	\N	2008-03-25 08:21:51.699	2008-03-25 08:21:51.699	place
-41	\N	\N	2008-03-25 08:21:51.736	2008-03-25 08:21:51.736	place
-42	\N	\N	2008-03-25 08:21:51.824	2008-03-25 08:21:51.824	place
-43	\N	\N	2008-03-25 08:21:51.852	2008-03-25 08:21:51.852	place
-44	\N	\N	2008-03-25 08:21:51.886	2008-03-25 08:21:51.886	place
-45	\N	\N	2008-03-25 08:21:51.914	2008-03-25 08:21:51.914	place
-46	\N	\N	2008-03-25 08:21:51.943	2008-03-25 08:21:51.943	place
-47	\N	\N	2008-03-25 08:21:52.091	2008-03-25 08:21:52.091	place
-48	\N	\N	2008-03-25 08:21:52.121	2008-03-25 08:21:52.121	place
-49	\N	\N	2008-03-25 08:21:52.159	2008-03-25 08:21:52.159	place
-50	\N	\N	2008-03-25 08:21:52.186	2008-03-25 08:21:52.186	place
-51	\N	\N	2008-03-25 08:21:52.289	2008-03-25 08:21:52.289	place
-52	\N	\N	2008-03-25 08:21:52.317	2008-03-25 08:21:52.317	place
-53	\N	\N	2008-03-25 08:21:52.36	2008-03-25 08:21:52.36	place
-54	\N	\N	2008-03-25 08:21:52.389	2008-03-25 08:21:52.389	place
-55	\N	\N	2008-03-25 08:21:52.417	2008-03-25 08:21:52.417	place
-56	\N	\N	2008-03-25 08:21:52.461	2008-03-25 08:21:52.461	place
-57	\N	\N	2008-03-25 08:21:52.487	2008-03-25 08:21:52.487	place
-58	\N	\N	2008-03-25 08:21:52.514	2008-03-25 08:21:52.514	place
-59	\N	\N	2008-03-25 08:21:52.545	2008-03-25 08:21:52.545	place
-60	\N	\N	2008-03-25 08:21:52.576	2008-03-25 08:21:52.576	place
-61	\N	\N	2008-03-25 08:21:52.604	2008-03-25 08:21:52.604	place
-62	\N	\N	2008-03-25 08:21:52.736	2008-03-25 08:21:52.736	place
-63	\N	\N	2008-03-25 08:21:52.783	2008-03-25 08:21:52.783	place
-64	\N	\N	2008-03-25 08:21:52.88	2008-03-25 08:21:52.88	place
-65	\N	\N	2008-03-25 08:21:52.907	2008-03-25 08:21:52.907	place
-66	\N	\N	2008-03-25 08:21:52.947	2008-03-25 08:21:52.947	place
-67	\N	\N	2008-03-25 08:21:53.012	2008-03-25 08:21:53.012	place
-68	\N	\N	2008-03-25 08:21:53.039	2008-03-25 08:21:53.039	place
-69	\N	\N	2008-03-25 08:21:53.067	2008-03-25 08:21:53.067	place
-70	\N	\N	2008-03-25 08:21:53.093	2008-03-25 08:21:53.093	place
-71	\N	\N	2008-03-25 08:21:53.118	2008-03-25 08:21:53.118	place
-72	\N	\N	2008-03-25 08:21:53.141	2008-03-25 08:21:53.141	place
-73	\N	\N	2008-03-25 08:21:53.166	2008-03-25 08:21:53.166	place
-74	\N	\N	2008-03-25 08:21:53.195	2008-03-25 08:21:53.195	place
-75	\N	\N	2008-03-25 08:21:53.221	2008-03-25 08:21:53.221	place
-76	\N	\N	2008-03-25 08:21:53.248	2008-03-25 08:21:53.248	place
-77	\N	\N	2008-03-25 08:21:53.273	2008-03-25 08:21:53.273	place
-78	\N	\N	2008-03-25 08:21:53.297	2008-03-25 08:21:53.297	place
-79	\N	\N	2008-03-25 08:21:53.322	2008-03-25 08:21:53.322	place
-80	\N	\N	2008-03-25 08:21:53.347	2008-03-25 08:21:53.347	place
-81	\N	\N	2008-03-25 08:25:12.077	2008-03-25 08:25:12.077	person
-82	\N	\N	2008-03-26 08:58:30.975	2008-03-26 08:58:30.975	person
-83	\N	\N	2008-03-26 08:58:46.253	2008-03-26 08:58:46.253	person
+1	\N	\N	2008-03-26 21:47:43.663	2008-03-26 21:47:43.663	place
+2	\N	\N	2008-03-26 21:47:43.971	2008-03-26 21:47:43.971	place
+3	\N	\N	2008-03-26 21:47:44.015	2008-03-26 21:47:44.015	place
+4	\N	\N	2008-03-26 21:47:44.047	2008-03-26 21:47:44.047	place
+5	\N	\N	2008-03-26 21:47:44.077	2008-03-26 21:47:44.077	place
+6	\N	\N	2008-03-26 21:47:44.105	2008-03-26 21:47:44.105	place
+7	\N	\N	2008-03-26 21:47:44.138	2008-03-26 21:47:44.138	place
+8	\N	\N	2008-03-26 21:47:44.166	2008-03-26 21:47:44.166	place
+9	\N	\N	2008-03-26 21:47:44.194	2008-03-26 21:47:44.194	place
+10	\N	\N	2008-03-26 21:47:44.232	2008-03-26 21:47:44.232	place
+11	\N	\N	2008-03-26 21:47:44.267	2008-03-26 21:47:44.267	place
+12	\N	\N	2008-03-26 21:47:44.315	2008-03-26 21:47:44.315	place
+13	\N	\N	2008-03-26 21:47:44.343	2008-03-26 21:47:44.343	place
+14	\N	\N	2008-03-26 21:47:44.371	2008-03-26 21:47:44.371	place
+15	\N	\N	2008-03-26 21:47:44.402	2008-03-26 21:47:44.402	place
+16	\N	\N	2008-03-26 21:47:44.43	2008-03-26 21:47:44.43	place
+17	\N	\N	2008-03-26 21:47:44.457	2008-03-26 21:47:44.457	place
+18	\N	\N	2008-03-26 21:47:44.50	2008-03-26 21:47:44.50	place
+19	\N	\N	2008-03-26 21:47:44.526	2008-03-26 21:47:44.526	place
+20	\N	\N	2008-03-26 21:47:44.563	2008-03-26 21:47:44.563	place
+21	\N	\N	2008-03-26 21:47:44.598	2008-03-26 21:47:44.598	place
+22	\N	\N	2008-03-26 21:47:44.703	2008-03-26 21:47:44.703	place
+23	\N	\N	2008-03-26 21:47:44.73	2008-03-26 21:47:44.73	place
+24	\N	\N	2008-03-26 21:47:44.756	2008-03-26 21:47:44.756	place
+25	\N	\N	2008-03-26 21:47:44.783	2008-03-26 21:47:44.783	place
+26	\N	\N	2008-03-26 21:47:44.809	2008-03-26 21:47:44.809	place
+27	\N	\N	2008-03-26 21:47:44.838	2008-03-26 21:47:44.838	place
+28	\N	\N	2008-03-26 21:47:44.926	2008-03-26 21:47:44.926	place
+29	\N	\N	2008-03-26 21:47:44.966	2008-03-26 21:47:44.966	place
+30	\N	\N	2008-03-26 21:47:44.994	2008-03-26 21:47:44.994	place
+31	\N	\N	2008-03-26 21:47:45.022	2008-03-26 21:47:45.022	place
+32	\N	\N	2008-03-26 21:47:45.051	2008-03-26 21:47:45.051	place
+33	\N	\N	2008-03-26 21:47:45.084	2008-03-26 21:47:45.084	place
+34	\N	\N	2008-03-26 21:47:45.128	2008-03-26 21:47:45.128	place
+35	\N	\N	2008-03-26 21:47:45.157	2008-03-26 21:47:45.157	place
+36	\N	\N	2008-03-26 21:47:45.187	2008-03-26 21:47:45.187	place
+37	\N	\N	2008-03-26 21:47:45.225	2008-03-26 21:47:45.225	place
+38	\N	\N	2008-03-26 21:47:45.268	2008-03-26 21:47:45.268	place
+39	\N	\N	2008-03-26 21:47:45.324	2008-03-26 21:47:45.324	place
+40	\N	\N	2008-03-26 21:47:45.35	2008-03-26 21:47:45.35	place
+41	\N	\N	2008-03-26 21:47:45.376	2008-03-26 21:47:45.376	place
+42	\N	\N	2008-03-26 21:47:45.402	2008-03-26 21:47:45.402	place
+43	\N	\N	2008-03-26 21:47:45.459	2008-03-26 21:47:45.459	place
+44	\N	\N	2008-03-26 21:47:45.485	2008-03-26 21:47:45.485	place
+45	\N	\N	2008-03-26 21:47:45.511	2008-03-26 21:47:45.511	place
+46	\N	\N	2008-03-26 21:47:45.537	2008-03-26 21:47:45.537	place
+47	\N	\N	2008-03-26 21:47:45.57	2008-03-26 21:47:45.57	place
+48	\N	\N	2008-03-26 21:47:45.666	2008-03-26 21:47:45.666	place
+49	\N	\N	2008-03-26 21:47:45.785	2008-03-26 21:47:45.785	place
+50	\N	\N	2008-03-26 21:47:45.811	2008-03-26 21:47:45.811	place
+51	\N	\N	2008-03-26 21:47:45.837	2008-03-26 21:47:45.837	place
+52	\N	\N	2008-03-26 21:47:45.887	2008-03-26 21:47:45.887	place
+53	\N	\N	2008-03-26 21:47:45.911	2008-03-26 21:47:45.911	place
+54	\N	\N	2008-03-26 21:47:45.936	2008-03-26 21:47:45.936	place
+55	\N	\N	2008-03-26 21:47:45.96	2008-03-26 21:47:45.96	place
+56	\N	\N	2008-03-26 21:47:45.991	2008-03-26 21:47:45.991	place
+57	\N	\N	2008-03-26 21:47:46.016	2008-03-26 21:47:46.016	place
+58	\N	\N	2008-03-26 21:47:46.041	2008-03-26 21:47:46.041	place
+59	\N	\N	2008-03-26 21:47:46.065	2008-03-26 21:47:46.065	place
+60	\N	\N	2008-03-26 21:47:46.101	2008-03-26 21:47:46.101	place
+61	\N	\N	2008-03-26 21:47:46.125	2008-03-26 21:47:46.125	place
+62	\N	\N	2008-03-26 21:47:46.149	2008-03-26 21:47:46.149	place
+63	\N	\N	2008-03-26 21:47:46.173	2008-03-26 21:47:46.173	place
+64	\N	\N	2008-03-26 21:47:46.202	2008-03-26 21:47:46.202	place
+65	\N	\N	2008-03-26 21:47:46.227	2008-03-26 21:47:46.227	place
+66	\N	\N	2008-03-26 21:47:46.252	2008-03-26 21:47:46.252	place
+67	\N	\N	2008-03-26 21:47:46.293	2008-03-26 21:47:46.293	place
+68	\N	\N	2008-03-26 21:47:46.317	2008-03-26 21:47:46.317	place
+69	\N	\N	2008-03-26 21:47:46.341	2008-03-26 21:47:46.341	place
+70	\N	\N	2008-03-26 21:47:46.365	2008-03-26 21:47:46.365	place
+71	\N	\N	2008-03-26 21:47:46.388	2008-03-26 21:47:46.388	place
+72	\N	\N	2008-03-26 21:47:46.414	2008-03-26 21:47:46.414	place
+73	\N	\N	2008-03-26 21:47:46.439	2008-03-26 21:47:46.439	place
+74	\N	\N	2008-03-26 21:47:46.463	2008-03-26 21:47:46.463	place
+75	\N	\N	2008-03-26 21:47:46.487	2008-03-26 21:47:46.487	place
+76	\N	\N	2008-03-26 21:47:46.512	2008-03-26 21:47:46.512	place
+77	\N	\N	2008-03-26 21:47:46.607	2008-03-26 21:47:46.607	place
+78	\N	\N	2008-03-26 21:47:46.631	2008-03-26 21:47:46.631	place
+79	\N	\N	2008-03-26 21:47:46.656	2008-03-26 21:47:46.656	place
+80	\N	\N	2008-03-26 21:47:46.681	2008-03-26 21:47:46.681	place
 \.
 
 
@@ -4334,8 +4337,6 @@ COPY entities_locations (id, location_id, entity_id, entity_location_type_id, pr
 --
 
 COPY entitlements (id, user_id, privilege_id, jurisdiction_id, created_at, updated_at) FROM stdin;
-1	1	3	70	2008-03-25 08:21:53.676	2008-03-25 08:21:53.676
-2	1	1	70	2008-03-25 08:21:53.699	2008-03-25 08:21:53.699
 \.
 
 
@@ -4352,8 +4353,6 @@ COPY entity_groups (id, entity_group_type_id, primary_entity_id, secondary_entit
 --
 
 COPY events (id, event_status_id, imported_from_id, event_case_status_id, event_name, event_onset_date, created_at, updated_at, outbreak_associated_id, outbreak_name, "investigation_LHD_status_id", investigation_started_date, "investigation_completed_LHD_date", "review_completed_UDOH_date", "first_reported_PH_date", results_reported_to_clinician_date, record_number, "MMWR_week", "MMWR_year") FROM stdin;
-1	172	179	165		2008-03-25	2008-03-25 08:25:11.944	2008-03-25 08:25:11.944	134		161	\N	\N	\N	\N	\N	2008000001	13	2008
-2	172	179	165		2008-03-26	2008-03-26 08:58:30.000864	2008-03-26 08:58:46.588	134		161	\N	\N	\N	\N	\N	2008000002	13	2008
 \.
 
 
@@ -4370,8 +4369,6 @@ COPY hospitals_participations (id, participation_id, hospital_record_number, adm
 --
 
 COPY lab_results (id, event_id, specimen_source_id, collection_date, lab_test_date, tested_at_uphl_yn_id, lab_result_text, created_at, updated_at) FROM stdin;
-1	1	160	\N	\N	134		2008-03-25 08:25:11.989	2008-03-25 08:25:11.989
-2	2	160	\N	\N	134		2008-03-26 08:58:30.000891	2008-03-26 08:58:46.482
 \.
 
 
@@ -4420,11 +4417,6 @@ COPY organizations (id, entity_id, organization_type_id, organization_status_id,
 --
 
 COPY participations (id, primary_entity_id, secondary_entity_id, role_id, participation_status_id, "comment", created_at, updated_at, event_id) FROM stdin;
-1	81	\N	188	\N	\N	2008-03-25 08:25:12.161	2008-03-25 08:25:12.161	1
-2	\N	70	192	\N	\N	2008-03-25 08:25:12.235	2008-03-25 08:25:12.235	1
-3	\N	5	191	\N	\N	2008-03-25 08:25:12.251	2008-03-25 08:25:12.251	1
-4	83	\N	188	\N	\N	2008-03-26 08:58:31.000005	2008-03-26 08:58:46.296	2
-5	\N	67	192	\N	\N	2008-03-26 08:58:46.373	2008-03-26 08:58:46.373	2
 \.
 
 
@@ -4433,9 +4425,6 @@ COPY participations (id, primary_entity_id, secondary_entity_id, role_id, partic
 --
 
 COPY participations_risk_factors (id, participation_id, food_handler_id, healthcare_worker_id, group_living_id, day_care_association_id, pregnant_id, pregnancy_due_date, risk_factors, risk_factors_notes, created_at, updated_at) FROM stdin;
-1	1	134	134	134	134	134	\N			2008-03-25 08:25:12.205	2008-03-25 08:25:12.205
-2	4	134	134	134	134	134	\N			2008-03-26 08:58:31.086	2008-03-26 08:58:31.086
-3	4	134	134	134	134	134	\N			2008-03-26 08:58:46.324	2008-03-26 08:58:46.324
 \.
 
 
@@ -4444,9 +4433,6 @@ COPY participations_risk_factors (id, participation_id, food_handler_id, healthc
 --
 
 COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, treatment) FROM stdin;
-1	1	\N	134	\N	2008-03-25 08:25:12.18	2008-03-25 08:25:12.18	
-2	4	\N	134	\N	2008-03-26 08:58:31.069	2008-03-26 08:58:31.069	
-3	4	\N	134	\N	2008-03-26 08:58:46.309	2008-03-26 08:58:46.309	
 \.
 
 
@@ -4455,9 +4441,6 @@ COPY participations_treatments (id, participation_id, treatment_id, treatment_gi
 --
 
 COPY people (id, entity_id, birth_gender_id, ethnicity_id, primary_language_id, first_name, middle_name, last_name, birth_date, date_of_death, created_at, updated_at, food_handler_id, age_type_id, approximate_age_no_birthday, first_name_soundex, last_name_soundex, vector) FROM stdin;
-1	81	3	7	14			Lacey	\N	\N	2008-03-25 08:25:12.107	2008-03-25 08:25:12.146	\N	\N	\N	\N	L200	'l200':2 'lacey':1
-2	82	3	7	14			Smith	\N	\N	2008-03-26 08:58:30.994	2008-03-26 08:58:31.036	\N	\N	\N	\N	S530	's530':2 'smith':1
-3	83	3	7	14			Smith	\N	\N	2008-03-26 08:58:46.27	2008-03-26 08:58:46.286	\N	\N	\N	\N	S530	's530':2 'smith':1
 \.
 
 
@@ -4594,86 +4577,86 @@ default	prsd_start(internal,integer)	prsd_getlexeme(internal,internal,internal)	
 --
 
 COPY places (id, entity_id, created_at, updated_at, place_type_id, name, short_name) FROM stdin;
-1	1	2008-03-25 08:21:49.205	2008-03-25 08:21:49.205	183	Allen Memorial Hospital	\N
-2	2	2008-03-25 08:21:49.358	2008-03-25 08:21:49.358	183	Alta View Hospital	\N
-3	3	2008-03-25 08:21:49.56	2008-03-25 08:21:49.56	183	American Fork Hospital	\N
-4	4	2008-03-25 08:21:49.791	2008-03-25 08:21:49.791	183	Ashley Regional Medical Center	\N
-5	5	2008-03-25 08:21:50.002	2008-03-25 08:21:50.002	183	Bear River Valley Hospital	\N
-6	6	2008-03-25 08:21:50.156	2008-03-25 08:21:50.156	183	Beaver Valley Hospital	\N
-7	7	2008-03-25 08:21:50.288	2008-03-25 08:21:50.288	183	Brigham City Community Hospital	\N
-8	8	2008-03-25 08:21:50.322	2008-03-25 08:21:50.322	183	Cache Valley Specialty Hospital	\N
-9	9	2008-03-25 08:21:50.358	2008-03-25 08:21:50.358	183	Castleview Hospital	\N
-10	10	2008-03-25 08:21:50.404	2008-03-25 08:21:50.404	183	Center For Change, Inc	\N
-11	11	2008-03-25 08:21:50.434	2008-03-25 08:21:50.434	183	Central Valley Medical Center	\N
-12	12	2008-03-25 08:21:50.492	2008-03-25 08:21:50.492	183	CHRISTUS St Joseph Villa	\N
-13	13	2008-03-25 08:21:50.525	2008-03-25 08:21:50.525	183	Davis Hospital and Medical Center	\N
-14	14	2008-03-25 08:21:50.556	2008-03-25 08:21:50.556	183	Delta Community Medical Center	\N
-15	15	2008-03-25 08:21:50.592	2008-03-25 08:21:50.592	183	Dixie Regional Medical Center	\N
-16	16	2008-03-25 08:21:50.622	2008-03-25 08:21:50.622	183	Fillmore Community Medical Center	\N
-17	17	2008-03-25 08:21:50.658	2008-03-25 08:21:50.658	183	Garfield Memorial Hospital	\N
-18	18	2008-03-25 08:21:50.703	2008-03-25 08:21:50.703	183	Gunnison Valley Hospital	\N
-19	19	2008-03-25 08:21:50.746	2008-03-25 08:21:50.746	183	Health South Rehab/Hospital of Utah	\N
-20	20	2008-03-25 08:21:50.811	2008-03-25 08:21:50.811	183	HealthSouth Rehab/Specialty Hospital of Utah	\N
-21	21	2008-03-25 08:21:50.844	2008-03-25 08:21:50.844	183	Heber Valley Medical Center	\N
-22	22	2008-03-25 08:21:50.879	2008-03-25 08:21:50.879	183	Huntsman Cancer Hospital	\N
-23	23	2008-03-25 08:21:50.91	2008-03-25 08:21:50.91	183	Intermountain Medical Center	\N
-24	24	2008-03-25 08:21:50.94	2008-03-25 08:21:50.94	183	Jordan Valley Hospital	\N
-25	25	2008-03-25 08:21:50.97	2008-03-25 08:21:50.97	183	Kane County Hospital	\N
-26	26	2008-03-25 08:21:51.01	2008-03-25 08:21:51.01	183	Lakeview Hospital	\N
-27	27	2008-03-25 08:21:51.039	2008-03-25 08:21:51.039	183	LDS Hospital	\N
-28	28	2008-03-25 08:21:51.068	2008-03-25 08:21:51.068	183	Logan Regional Medical Center	\N
-29	29	2008-03-25 08:21:51.10	2008-03-25 08:21:51.10	183	McKay-Dee Hospital Center	\N
-30	30	2008-03-25 08:21:51.136	2008-03-25 08:21:51.136	183	Milford Valley Healthcare Services	\N
-31	31	2008-03-25 08:21:51.193	2008-03-25 08:21:51.193	183	Mountain West Medical Center	\N
-32	32	2008-03-25 08:21:51.314	2008-03-25 08:21:51.314	183	Mountain View Hospital	\N
-33	33	2008-03-25 08:21:51.347	2008-03-25 08:21:51.347	183	Ogden Regional Medical Center	\N
-34	34	2008-03-25 08:21:51.378	2008-03-25 08:21:51.378	183	Orem Community Hospital	\N
-35	35	2008-03-25 08:21:51.488	2008-03-25 08:21:51.488	183	Pioneer Valley Hospital	\N
-36	36	2008-03-25 08:21:51.519	2008-03-25 08:21:51.519	183	Primary Children's Medical Center	\N
-37	37	2008-03-25 08:21:51.548	2008-03-25 08:21:51.548	183	Promise Hospital of Salt Lake	\N
-38	38	2008-03-25 08:21:51.639	2008-03-25 08:21:51.639	183	Salt Lake Regional Medical Center	\N
-39	39	2008-03-25 08:21:51.68	2008-03-25 08:21:51.68	183	San Juan Hospital	\N
-40	40	2008-03-25 08:21:51.706	2008-03-25 08:21:51.706	183	Sanpete Valley Hospital	\N
-41	41	2008-03-25 08:21:51.743	2008-03-25 08:21:51.743	183	Sevier Valley Medical Center	\N
-42	42	2008-03-25 08:21:51.831	2008-03-25 08:21:51.831	183	Shriners Hospital for Children	\N
-43	43	2008-03-25 08:21:51.859	2008-03-25 08:21:51.859	183	Surg-Alpine Surgical Center, LLC	\N
-44	44	2008-03-25 08:21:51.893	2008-03-25 08:21:51.893	183	Surg-Central Utah Surgical Center	\N
-45	45	2008-03-25 08:21:51.921	2008-03-25 08:21:51.921	183	Surg-Coral Desert Surgery Center	\N
-46	46	2008-03-25 08:21:51.95	2008-03-25 08:21:51.95	183	Endo-Northern Utah Endoscopy Center, LLC	\N
-47	47	2008-03-25 08:21:52.099	2008-03-25 08:21:52.099	183	Surg-Healthsouth Salt Lake Surgical Center	\N
-48	48	2008-03-25 08:21:52.138	2008-03-25 08:21:52.138	183	Surg-Healthsouth Park City Surgical Center	\N
-49	49	2008-03-25 08:21:52.166	2008-03-25 08:21:52.166	183	Surg-Intermountain Surgical Center	\N
-50	50	2008-03-25 08:21:52.193	2008-03-25 08:21:52.193	183	Surg-Mt. Ogden Surgical Center	\N
-51	51	2008-03-25 08:21:52.297	2008-03-25 08:21:52.297	183	Surg-St. George Surgical Center, LP	\N
-52	52	2008-03-25 08:21:52.324	2008-03-25 08:21:52.324	183	Surg-St. Mark's Outpatient Surgery Center	\N
-53	53	2008-03-25 08:21:52.367	2008-03-25 08:21:52.367	183	South Davis Community Hospital	\N
-54	54	2008-03-25 08:21:52.397	2008-03-25 08:21:52.397	183	Silverado Senior Living Aspen Park	\N
-55	55	2008-03-25 08:21:52.424	2008-03-25 08:21:52.424	183	St. Marks Hospital	\N
-56	56	2008-03-25 08:21:52.468	2008-03-25 08:21:52.468	183	Summit Hospital	\N
-57	57	2008-03-25 08:21:52.494	2008-03-25 08:21:52.494	183	The Orthopedic Speciality Hospital	\N
-58	58	2008-03-25 08:21:52.523	2008-03-25 08:21:52.523	183	Timpanogos Regional Hospital	\N
-59	59	2008-03-25 08:21:52.552	2008-03-25 08:21:52.552	183	Utah State Hospital	\N
-60	60	2008-03-25 08:21:52.584	2008-03-25 08:21:52.584	183	University Neuropsychiatric Institute	\N
-61	61	2008-03-25 08:21:52.717	2008-03-25 08:21:52.717	183	University Hospital	\N
-62	62	2008-03-25 08:21:52.743	2008-03-25 08:21:52.743	183	Utah Valley Specialty Hospital	\N
-63	63	2008-03-25 08:21:52.833	2008-03-25 08:21:52.833	183	Uintah Basin Medical Center	\N
-64	64	2008-03-25 08:21:52.888	2008-03-25 08:21:52.888	183	Utah Valley Regional Medical Center	\N
-65	65	2008-03-25 08:21:52.915	2008-03-25 08:21:52.915	183	Veteran's Medcial Center	\N
-66	66	2008-03-25 08:21:52.953	2008-03-25 08:21:52.953	183	Valley View Medical Center	\N
-67	67	2008-03-25 08:21:53.019	2008-03-25 08:21:53.019	184	Bear River Health Department	\N
-68	68	2008-03-25 08:21:53.045	2008-03-25 08:21:53.045	184	Central Utah Public Health Department	\N
-69	69	2008-03-25 08:21:53.074	2008-03-25 08:21:53.074	184	Davis County Health Department	\N
-70	70	2008-03-25 08:21:53.10	2008-03-25 08:21:53.10	184	Salt Lake Valley Health Department	\N
-71	71	2008-03-25 08:21:53.124	2008-03-25 08:21:53.124	184	Southeastern Utah District Health Department	\N
-72	72	2008-03-25 08:21:53.148	2008-03-25 08:21:53.148	184	Southwest Utah Public Health Department	\N
-73	73	2008-03-25 08:21:53.172	2008-03-25 08:21:53.172	184	Summit County Public Health Department	\N
-74	74	2008-03-25 08:21:53.201	2008-03-25 08:21:53.201	184	Tooele County Health Department	\N
-75	75	2008-03-25 08:21:53.228	2008-03-25 08:21:53.228	184	TriCounty Health Department	\N
-76	76	2008-03-25 08:21:53.254	2008-03-25 08:21:53.254	184	Utah County Health Department	\N
-77	77	2008-03-25 08:21:53.28	2008-03-25 08:21:53.28	184	Utah State	\N
-78	78	2008-03-25 08:21:53.303	2008-03-25 08:21:53.303	184	Wasatch County Health Department	\N
-79	79	2008-03-25 08:21:53.329	2008-03-25 08:21:53.329	184	Weber-Morgan Health Department	\N
-80	80	2008-03-25 08:21:53.353	2008-03-25 08:21:53.353	184	Out of State	\N
+1	1	2008-03-26 21:47:43.707	2008-03-26 21:47:43.707	183	Allen Memorial Hospital	\N
+2	2	2008-03-26 21:47:43.989	2008-03-26 21:47:43.989	183	Alta View Hospital	\N
+3	3	2008-03-26 21:47:44.023	2008-03-26 21:47:44.023	183	American Fork Hospital	\N
+4	4	2008-03-26 21:47:44.055	2008-03-26 21:47:44.055	183	Ashley Regional Medical Center	\N
+5	5	2008-03-26 21:47:44.084	2008-03-26 21:47:44.084	183	Bear River Valley Hospital	\N
+6	6	2008-03-26 21:47:44.112	2008-03-26 21:47:44.112	183	Beaver Valley Hospital	\N
+7	7	2008-03-26 21:47:44.145	2008-03-26 21:47:44.145	183	Brigham City Community Hospital	\N
+8	8	2008-03-26 21:47:44.173	2008-03-26 21:47:44.173	183	Cache Valley Specialty Hospital	\N
+9	9	2008-03-26 21:47:44.20	2008-03-26 21:47:44.20	183	Castleview Hospital	\N
+10	10	2008-03-26 21:47:44.244	2008-03-26 21:47:44.244	183	Center For Change, Inc	\N
+11	11	2008-03-26 21:47:44.273	2008-03-26 21:47:44.273	183	Central Valley Medical Center	\N
+12	12	2008-03-26 21:47:44.322	2008-03-26 21:47:44.322	183	CHRISTUS St Joseph Villa	\N
+13	13	2008-03-26 21:47:44.35	2008-03-26 21:47:44.35	183	Davis Hospital and Medical Center	\N
+14	14	2008-03-26 21:47:44.378	2008-03-26 21:47:44.378	183	Delta Community Medical Center	\N
+15	15	2008-03-26 21:47:44.408	2008-03-26 21:47:44.408	183	Dixie Regional Medical Center	\N
+16	16	2008-03-26 21:47:44.436	2008-03-26 21:47:44.436	183	Fillmore Community Medical Center	\N
+17	17	2008-03-26 21:47:44.464	2008-03-26 21:47:44.464	183	Garfield Memorial Hospital	\N
+18	18	2008-03-26 21:47:44.506	2008-03-26 21:47:44.506	183	Gunnison Valley Hospital	\N
+19	19	2008-03-26 21:47:44.533	2008-03-26 21:47:44.533	183	Health South Rehab/Hospital of Utah	\N
+20	20	2008-03-26 21:47:44.573	2008-03-26 21:47:44.573	183	HealthSouth Rehab/Specialty Hospital of Utah	\N
+21	21	2008-03-26 21:47:44.605	2008-03-26 21:47:44.605	183	Heber Valley Medical Center	\N
+22	22	2008-03-26 21:47:44.709	2008-03-26 21:47:44.709	183	Huntsman Cancer Hospital	\N
+23	23	2008-03-26 21:47:44.736	2008-03-26 21:47:44.736	183	Intermountain Medical Center	\N
+24	24	2008-03-26 21:47:44.763	2008-03-26 21:47:44.763	183	Jordan Valley Hospital	\N
+25	25	2008-03-26 21:47:44.79	2008-03-26 21:47:44.79	183	Kane County Hospital	\N
+26	26	2008-03-26 21:47:44.817	2008-03-26 21:47:44.817	183	Lakeview Hospital	\N
+27	27	2008-03-26 21:47:44.845	2008-03-26 21:47:44.845	183	LDS Hospital	\N
+28	28	2008-03-26 21:47:44.932	2008-03-26 21:47:44.932	183	Logan Regional Medical Center	\N
+29	29	2008-03-26 21:47:44.973	2008-03-26 21:47:44.973	183	McKay-Dee Hospital Center	\N
+30	30	2008-03-26 21:47:45.001	2008-03-26 21:47:45.001	183	Milford Valley Healthcare Services	\N
+31	31	2008-03-26 21:47:45.029	2008-03-26 21:47:45.029	183	Mountain West Medical Center	\N
+32	32	2008-03-26 21:47:45.061	2008-03-26 21:47:45.061	183	Mountain View Hospital	\N
+33	33	2008-03-26 21:47:45.091	2008-03-26 21:47:45.091	183	Ogden Regional Medical Center	\N
+34	34	2008-03-26 21:47:45.135	2008-03-26 21:47:45.135	183	Orem Community Hospital	\N
+35	35	2008-03-26 21:47:45.165	2008-03-26 21:47:45.165	183	Pioneer Valley Hospital	\N
+36	36	2008-03-26 21:47:45.202	2008-03-26 21:47:45.202	183	Primary Children's Medical Center	\N
+37	37	2008-03-26 21:47:45.233	2008-03-26 21:47:45.233	183	Promise Hospital of Salt Lake	\N
+38	38	2008-03-26 21:47:45.287	2008-03-26 21:47:45.287	183	Salt Lake Regional Medical Center	\N
+39	39	2008-03-26 21:47:45.33	2008-03-26 21:47:45.33	183	San Juan Hospital	\N
+40	40	2008-03-26 21:47:45.356	2008-03-26 21:47:45.356	183	Sanpete Valley Hospital	\N
+41	41	2008-03-26 21:47:45.383	2008-03-26 21:47:45.383	183	Sevier Valley Medical Center	\N
+42	42	2008-03-26 21:47:45.43	2008-03-26 21:47:45.43	183	Shriners Hospital for Children	\N
+43	43	2008-03-26 21:47:45.465	2008-03-26 21:47:45.465	183	Surg-Alpine Surgical Center, LLC	\N
+44	44	2008-03-26 21:47:45.492	2008-03-26 21:47:45.492	183	Surg-Central Utah Surgical Center	\N
+45	45	2008-03-26 21:47:45.518	2008-03-26 21:47:45.518	183	Surg-Coral Desert Surgery Center	\N
+46	46	2008-03-26 21:47:45.543	2008-03-26 21:47:45.543	183	Endo-Northern Utah Endoscopy Center, LLC	\N
+47	47	2008-03-26 21:47:45.587	2008-03-26 21:47:45.587	183	Surg-Healthsouth Salt Lake Surgical Center	\N
+48	48	2008-03-26 21:47:45.673	2008-03-26 21:47:45.673	183	Surg-Healthsouth Park City Surgical Center	\N
+49	49	2008-03-26 21:47:45.791	2008-03-26 21:47:45.791	183	Surg-Intermountain Surgical Center	\N
+50	50	2008-03-26 21:47:45.818	2008-03-26 21:47:45.818	183	Surg-Mt. Ogden Surgical Center	\N
+51	51	2008-03-26 21:47:45.857	2008-03-26 21:47:45.857	183	Surg-St. George Surgical Center, LP	\N
+52	52	2008-03-26 21:47:45.893	2008-03-26 21:47:45.893	183	Surg-St. Mark's Outpatient Surgery Center	\N
+53	53	2008-03-26 21:47:45.918	2008-03-26 21:47:45.918	183	South Davis Community Hospital	\N
+54	54	2008-03-26 21:47:45.942	2008-03-26 21:47:45.942	183	Silverado Senior Living Aspen Park	\N
+55	55	2008-03-26 21:47:45.966	2008-03-26 21:47:45.966	183	St. Marks Hospital	\N
+56	56	2008-03-26 21:47:45.998	2008-03-26 21:47:45.998	183	Summit Hospital	\N
+57	57	2008-03-26 21:47:46.023	2008-03-26 21:47:46.023	183	The Orthopedic Speciality Hospital	\N
+58	58	2008-03-26 21:47:46.047	2008-03-26 21:47:46.047	183	Timpanogos Regional Hospital	\N
+59	59	2008-03-26 21:47:46.071	2008-03-26 21:47:46.071	183	Utah State Hospital	\N
+60	60	2008-03-26 21:47:46.107	2008-03-26 21:47:46.107	183	University Neuropsychiatric Institute	\N
+61	61	2008-03-26 21:47:46.131	2008-03-26 21:47:46.131	183	University Hospital	\N
+62	62	2008-03-26 21:47:46.155	2008-03-26 21:47:46.155	183	Utah Valley Specialty Hospital	\N
+63	63	2008-03-26 21:47:46.18	2008-03-26 21:47:46.18	183	Uintah Basin Medical Center	\N
+64	64	2008-03-26 21:47:46.209	2008-03-26 21:47:46.209	183	Utah Valley Regional Medical Center	\N
+65	65	2008-03-26 21:47:46.233	2008-03-26 21:47:46.233	183	Veteran's Medcial Center	\N
+66	66	2008-03-26 21:47:46.258	2008-03-26 21:47:46.258	183	Valley View Medical Center	\N
+67	67	2008-03-26 21:47:46.299	2008-03-26 21:47:46.299	184	Bear River Health Department	\N
+68	68	2008-03-26 21:47:46.323	2008-03-26 21:47:46.323	184	Central Utah Public Health Department	\N
+69	69	2008-03-26 21:47:46.347	2008-03-26 21:47:46.347	184	Davis County Health Department	\N
+70	70	2008-03-26 21:47:46.371	2008-03-26 21:47:46.371	184	Salt Lake Valley Health Department	\N
+71	71	2008-03-26 21:47:46.395	2008-03-26 21:47:46.395	184	Southeastern Utah District Health Department	\N
+72	72	2008-03-26 21:47:46.421	2008-03-26 21:47:46.421	184	Southwest Utah Public Health Department	\N
+73	73	2008-03-26 21:47:46.445	2008-03-26 21:47:46.445	184	Summit County Public Health Department	\N
+74	74	2008-03-26 21:47:46.469	2008-03-26 21:47:46.469	184	Tooele County Health Department	\N
+75	75	2008-03-26 21:47:46.493	2008-03-26 21:47:46.493	184	TriCounty Health Department	\N
+76	76	2008-03-26 21:47:46.576	2008-03-26 21:47:46.576	184	Utah County Health Department	\N
+77	77	2008-03-26 21:47:46.613	2008-03-26 21:47:46.613	184	Utah State	\N
+78	78	2008-03-26 21:47:46.637	2008-03-26 21:47:46.637	184	Wasatch County Health Department	\N
+79	79	2008-03-26 21:47:46.663	2008-03-26 21:47:46.663	184	Weber-Morgan Health Department	\N
+80	80	2008-03-26 21:47:46.687	2008-03-26 21:47:46.687	184	Out of State	\N
 \.
 
 
@@ -4693,6 +4676,76 @@ COPY "privileges" (id, priv_name, description) FROM stdin;
 --
 
 COPY privileges_roles (id, role_id, privilege_id, jurisdiction_id, created_at, updated_at) FROM stdin;
+1	1	1	80	2008-03-26 21:47:47.014	2008-03-26 21:47:47.014
+2	1	2	80	2008-03-26 21:47:47.029	2008-03-26 21:47:47.029
+3	1	3	80	2008-03-26 21:47:47.039	2008-03-26 21:47:47.039
+4	2	1	80	2008-03-26 21:47:47.048	2008-03-26 21:47:47.048
+5	2	2	80	2008-03-26 21:47:47.057	2008-03-26 21:47:47.057
+6	1	1	79	2008-03-26 21:47:47.066	2008-03-26 21:47:47.066
+7	1	2	79	2008-03-26 21:47:47.075	2008-03-26 21:47:47.075
+8	1	3	79	2008-03-26 21:47:47.085	2008-03-26 21:47:47.085
+9	2	1	79	2008-03-26 21:47:47.094	2008-03-26 21:47:47.094
+10	2	2	79	2008-03-26 21:47:47.103	2008-03-26 21:47:47.103
+11	1	1	78	2008-03-26 21:47:47.112	2008-03-26 21:47:47.112
+12	1	2	78	2008-03-26 21:47:47.121	2008-03-26 21:47:47.121
+13	1	3	78	2008-03-26 21:47:47.129	2008-03-26 21:47:47.129
+14	2	1	78	2008-03-26 21:47:47.138	2008-03-26 21:47:47.138
+15	2	2	78	2008-03-26 21:47:47.147	2008-03-26 21:47:47.147
+16	1	1	77	2008-03-26 21:47:47.156	2008-03-26 21:47:47.156
+17	1	2	77	2008-03-26 21:47:47.166	2008-03-26 21:47:47.166
+18	1	3	77	2008-03-26 21:47:47.175	2008-03-26 21:47:47.175
+19	2	1	77	2008-03-26 21:47:47.184	2008-03-26 21:47:47.184
+20	2	2	77	2008-03-26 21:47:47.195	2008-03-26 21:47:47.195
+21	1	1	76	2008-03-26 21:47:47.205	2008-03-26 21:47:47.205
+22	1	2	76	2008-03-26 21:47:47.215	2008-03-26 21:47:47.215
+23	1	3	76	2008-03-26 21:47:47.224	2008-03-26 21:47:47.224
+24	2	1	76	2008-03-26 21:47:47.233	2008-03-26 21:47:47.233
+25	2	2	76	2008-03-26 21:47:47.242	2008-03-26 21:47:47.242
+26	1	1	75	2008-03-26 21:47:47.251	2008-03-26 21:47:47.251
+27	1	2	75	2008-03-26 21:47:47.30	2008-03-26 21:47:47.30
+28	1	3	75	2008-03-26 21:47:47.334	2008-03-26 21:47:47.334
+29	2	1	75	2008-03-26 21:47:47.343	2008-03-26 21:47:47.343
+30	2	2	75	2008-03-26 21:47:47.352	2008-03-26 21:47:47.352
+31	1	1	74	2008-03-26 21:47:47.361	2008-03-26 21:47:47.361
+32	1	2	74	2008-03-26 21:47:47.37	2008-03-26 21:47:47.37
+33	1	3	74	2008-03-26 21:47:47.378	2008-03-26 21:47:47.378
+34	2	1	74	2008-03-26 21:47:47.387	2008-03-26 21:47:47.387
+35	2	2	74	2008-03-26 21:47:47.397	2008-03-26 21:47:47.397
+36	1	1	73	2008-03-26 21:47:47.406	2008-03-26 21:47:47.406
+37	1	2	73	2008-03-26 21:47:47.415	2008-03-26 21:47:47.415
+38	1	3	73	2008-03-26 21:47:47.424	2008-03-26 21:47:47.424
+39	2	1	73	2008-03-26 21:47:47.433	2008-03-26 21:47:47.433
+40	2	2	73	2008-03-26 21:47:47.442	2008-03-26 21:47:47.442
+41	1	1	72	2008-03-26 21:47:47.45	2008-03-26 21:47:47.45
+42	1	2	72	2008-03-26 21:47:47.459	2008-03-26 21:47:47.459
+43	1	3	72	2008-03-26 21:47:47.468	2008-03-26 21:47:47.468
+44	2	1	72	2008-03-26 21:47:47.477	2008-03-26 21:47:47.477
+45	2	2	72	2008-03-26 21:47:47.486	2008-03-26 21:47:47.486
+46	1	1	71	2008-03-26 21:47:47.495	2008-03-26 21:47:47.495
+47	1	2	71	2008-03-26 21:47:47.504	2008-03-26 21:47:47.504
+48	1	3	71	2008-03-26 21:47:47.512	2008-03-26 21:47:47.512
+49	2	1	71	2008-03-26 21:47:47.521	2008-03-26 21:47:47.521
+50	2	2	71	2008-03-26 21:47:47.53	2008-03-26 21:47:47.53
+51	1	1	70	2008-03-26 21:47:47.539	2008-03-26 21:47:47.539
+52	1	2	70	2008-03-26 21:47:47.548	2008-03-26 21:47:47.548
+53	1	3	70	2008-03-26 21:47:47.556	2008-03-26 21:47:47.556
+54	2	1	70	2008-03-26 21:47:47.565	2008-03-26 21:47:47.565
+55	2	2	70	2008-03-26 21:47:47.574	2008-03-26 21:47:47.574
+56	1	1	69	2008-03-26 21:47:47.583	2008-03-26 21:47:47.583
+57	1	2	69	2008-03-26 21:47:47.592	2008-03-26 21:47:47.592
+58	1	3	69	2008-03-26 21:47:47.60	2008-03-26 21:47:47.60
+59	2	1	69	2008-03-26 21:47:47.609	2008-03-26 21:47:47.609
+60	2	2	69	2008-03-26 21:47:47.618	2008-03-26 21:47:47.618
+61	1	1	68	2008-03-26 21:47:47.627	2008-03-26 21:47:47.627
+62	1	2	68	2008-03-26 21:47:47.636	2008-03-26 21:47:47.636
+63	1	3	68	2008-03-26 21:47:47.645	2008-03-26 21:47:47.645
+64	2	1	68	2008-03-26 21:47:47.654	2008-03-26 21:47:47.654
+65	2	2	68	2008-03-26 21:47:47.663	2008-03-26 21:47:47.663
+66	1	1	67	2008-03-26 21:47:47.672	2008-03-26 21:47:47.672
+67	1	2	67	2008-03-26 21:47:47.681	2008-03-26 21:47:47.681
+68	1	3	67	2008-03-26 21:47:47.689	2008-03-26 21:47:47.689
+69	2	1	67	2008-03-26 21:47:47.698	2008-03-26 21:47:47.698
+70	2	2	67	2008-03-26 21:47:47.707	2008-03-26 21:47:47.707
 \.
 
 
@@ -4709,7 +4762,7 @@ COPY referrals (id, event_id, created_at, updated_at) FROM stdin;
 --
 
 COPY role_memberships (id, user_id, role_id, jurisdiction_id, created_at, updated_at) FROM stdin;
-1	1	1	70	2008-03-25 08:21:53.588	2008-03-25 08:21:53.588
+1	1	1	70	2008-03-26 21:47:46.941	2008-03-26 21:47:46.941
 \.
 
 
@@ -4753,7 +4806,7 @@ COPY treatments (id, treatment_type_id, treatment_name) FROM stdin;
 --
 
 COPY users (id, uid, given_name, first_name, last_name, initials, generational_qualifer, user_name, created_at, updated_at) FROM stdin;
-1	utah	\N	\N	\N	\N	\N	default_user	2008-03-25 08:21:53.539	2008-03-25 08:21:53.539
+1	utah	\N	\N	\N	\N	\N	default_user	2008-03-26 21:47:46.902	2008-03-26 21:47:46.902
 \.
 
 
@@ -5958,6 +6011,16 @@ ALTER TABLE ONLY participations
 
 ALTER TABLE ONLY participations
     ADD CONSTRAINT r_5 FOREIGN KEY (event_id) REFERENCES events(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --

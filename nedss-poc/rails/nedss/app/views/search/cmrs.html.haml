@@ -64,12 +64,11 @@
             %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
               = "#{county.code_description}"
       %span{ :class => "horiz" }
-        %label District
-        %select{ :name => "district"}
-          %option
-          - for district in @districts
-            %option{ :value => district.id, :selected => district.id == (params[:district].to_i) ? "selected" : nil}
-              = "#{district.code_description}"
+        %label Jurisdiction
+        %select{ :name => "jurisdiction_id"}
+          - for jurisdiction in @jurisdictions
+            %option{ :value => jurisdiction.id, :selected => jurisdiction.id == (params[:jurisdiction_id].to_i) ? "selected" : nil}
+              = "#{jurisdiction.current_place.name}"
           
       %br{ :clear => "all" }
       %span{ :class => "horiz" }
@@ -132,7 +131,7 @@
         %td
           = cmr.event_onset_date
 
-- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:investigation_status].blank? || !params[:city].blank? || !params[:county].blank? || !params[:district].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
+- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:investigation_status].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_id].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
 
   %span
     Your search returned no results.
@@ -141,7 +140,7 @@
   %br
 
   / Move the query string building out to a helper, sniff out what isn't there so it's not so long
-  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :district => params[:district], :birth_date => @birth_date }, {:id => "start_cmr"})
+  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
 
 
 

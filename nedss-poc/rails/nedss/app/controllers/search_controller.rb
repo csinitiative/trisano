@@ -44,9 +44,10 @@ class SearchController < ApplicationController
     @genders << Code.new(:id => "U", :code_description => "Unspecified")
     
     @investigation_statuses = Code.find(:all,
-                                       :order => "id",
+                                        :order => "id",
 					:select => "id, code_description",
 					:conditions => "code_name = 'investigation'")
+
     @investigation_statuses << Code.new(:id => "U", :code_description => "Unspecified")
     
     @counties = Code.find(:all,
@@ -55,10 +56,7 @@ class SearchController < ApplicationController
                           :conditions => "code_name = 'county'")
 
     
-    @districts = Code.find(:all,
-                           :order => "id",
-                           :select => "id, code_description",
-                           :conditions => "code_name = 'district'")
+    @jurisdictions = User.current_user.jurisdictions_for_privilege(:view)
     
     begin
      if not params.values_blank?
@@ -104,7 +102,7 @@ class SearchController < ApplicationController
                                        :entered_on_end => entered_on_end,
                                        :city => params[:city],
                                        :county => params[:county],
-                                       :district => params[:district]
+                                       :jurisdiction_id => params[:jurisdiction_id]
                                       )
            
            if (@cmrs.blank?)

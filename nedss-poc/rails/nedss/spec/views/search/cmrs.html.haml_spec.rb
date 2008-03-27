@@ -11,7 +11,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:genders] = [mock_gender]
     assigns[:cities] = [mock_gender]
     assigns[:counties] = [mock_county]
-    assigns[:districts] = [mock_district]
+    assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:investigation_statuses] = [mock_investigation_status]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
@@ -42,6 +42,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:genders] = [mock_gender]
     assigns[:cities] = [mock_gender]
     assigns[:counties] = [mock_county]
+    assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
     assigns[:investigation_statuses] = [mock_investigation_status]
 
@@ -56,6 +57,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:genders] = [mock_gender]
     assigns[:cities] = [mock_gender]
     assigns[:counties] = [mock_county]
+    assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
     assigns[:investigation_statuses] = [mock_investigation_status]
     do_render
@@ -88,6 +90,19 @@ describe "/search/cmrs.html.haml" do
     county.stub!(:id).and_return("1")
     county.stub!(:code_description).and_return("Salt Lake")
     county
+  end
+
+  def mock_place
+    place = mock_model(Place)
+    place.stub!(:name).and_return("Davis County")
+    place
+  end
+
+  def mock_jurisdiction
+    jurisdiction = mock_model(Entity)
+    jurisdiction.stub!(:id).and_return("1")
+    jurisdiction.stub!(:current_place).and_return(mock_place)
+    jurisdiction
   end
 
   def mock_district

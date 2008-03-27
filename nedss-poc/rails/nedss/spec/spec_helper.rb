@@ -40,6 +40,8 @@ Spec::Runner.configure do |config|
 end
 
 def mock_user
+  @jurisdiction = mock_model(Entity)
+
   @user = mock_model(User)
   User.stub!(:find_by_uid).and_return(@user)
   User.stub!(:current_user).and_return(@user)
@@ -51,10 +53,10 @@ def mock_user
   @user.stub!(:initials).and_return("JJ")
   @user.stub!(:generational_qualifer).and_return("")
   @user.stub!(:is_admin?).and_return(true)
+  @user.stub!(:jurisdictions_for_privilege).and_return([@jurisdiction])
   
   @role_membership = mock_model(RoleMembership)
   @role = mock_model(Role)
-  @jurisdiction = mock_model(Entity)
   @place = mock_model(Place)
   
   @role.stub!(:role_name).and_return("administrator")

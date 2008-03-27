@@ -83,6 +83,10 @@ describe User, "with admin role removed and investigator role added" do
     @user.is_entitled_to_in?(privileges(:update), entities(:Southeastern_District)).should be_true
   end
   
+   it "should have a juridiction in the Southeastern District for privilege view" do
+     @user.jurisdictions_for_privilege(:view).length.should eql(1)
+     @user.jurisdictions_for_privilege(:view).first.should eql(entities(:Southeastern_District))
+   end 
 end
 
 describe User, "modified to remove all roles and privileges in Southeastern District" do
