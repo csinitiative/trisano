@@ -10,6 +10,8 @@ namespace :nedss do
   # Supported rake task arguments:
   # RAILS_ENV - controls what database config to use
   # basicauth - whether or not to use HTTP Basic Auth from within the .war file (default = true)
+  # min - sets the minimum number of Rails instances in the pool (default is 4)
+  # max - sets the maximum number of Rails instances in the pool (defaul is 10)
   # Example: jruby -S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false
   namespace :deploy do
     WAR_FILE_NAME = 'nedss.war'
