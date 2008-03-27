@@ -84,13 +84,14 @@ class EntitiesController < ApplicationController
   # DELETE /entities/1
   # DELETE /entities/1.xml1
   def destroy
-    @entity = Entity.find(params[:id])
-    @entity.destroy
+    head :method_not_allowed
+    #@entity = Entity.find(params[:id])
+    #@entity.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(entities_url) }
-      format.xml  { head :ok }
-    end
+    #respond_to do |format|
+    #  format.html { redirect_to(entities_url) }
+    #  format.xml  { head :ok }
+    #end
   end
 
   private

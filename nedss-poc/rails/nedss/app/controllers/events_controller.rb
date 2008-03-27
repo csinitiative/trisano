@@ -125,14 +125,15 @@ class EventsController < ApplicationController
   # DELETE /event/1
   # DELETE /event/1.xml
   def destroy
+    head :method_not_allowed
     #TODO: Make this a soft delete.  Currently orphans all children
-    @event = Event.find(params[:id])
-    @event.destroy
+    #@event = Event.find(params[:id])
+    #@event.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(cmrs_url) }
-      format.xml  { head :ok }
-    end
+    #respond_to do |format|
+    #  format.html { redirect_to(cmrs_url) }
+    #  format.xml  { head :ok }
+    #end
   end
 
   def associations

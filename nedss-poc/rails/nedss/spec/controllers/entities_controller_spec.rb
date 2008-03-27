@@ -351,19 +351,19 @@ describe EntitiesController do
       delete :destroy, :id => "1"
     end
 
-    it "should find the entity requested" do
-      Entity.should_receive(:find).twice.with("1").and_return(@entity)
-      do_delete
-    end
+    #it "should find the entity requested" do
+    #  Entity.should_receive(:find).twice.with("1").and_return(@entity)
+    #  do_delete
+    #end
   
-    it "should call destroy on the found entity" do
-      @entity.should_receive(:destroy)
-      do_delete
-    end
+    #it "should call destroy on the found entity" do
+    #  @entity.should_receive(:destroy)
+    #  do_delete
+    #end
   
-    it "should redirect to the entities list" do
+    it "should return 405" do
       do_delete
-      response.should redirect_to(entities_url)
+      response.response_code.should == 405
     end
   end
 end
