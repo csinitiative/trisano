@@ -22,6 +22,7 @@ namespace :nedss do
     # Override with env variable if you are running locally http://localhost:8080
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
     RELEASE_DIRECTORY = 'release'
+    NEDSS_PROD_DIR = 'script/production'
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
@@ -149,9 +150,16 @@ namespace :nedss do
       puts "build, redeploy and integration test success"
     end
 
+    desc "Create database configuration file"
+    task :create_db_config do
+      ruby "-S rake nedss:dev:db_rebuild_full RAILS_ENV=development"
+      sh "pg_dump -c -O -c nedss_development > " + NEDSS_PROD_DIR + "/nedss_schema.sql"
+    end
+
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
       ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
+      ruby "-S rake nedss:deploy:create_db_config"
 
       config = RELEASE_DIRECTORY + '/WEB-INF/config'
       if !File.directory? RELEASE_DIRECTORY
@@ -160,6 +168,9 @@ namespace :nedss do
 
       File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
       File.copy('config/database.yml', config, true) 
+      File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
       # add time stamp
       sh "tar cf nedss-release.tar release/"
     end

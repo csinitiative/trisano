@@ -65,6 +65,17 @@ def create_structure
   return success
 end
 
+def set_locale
+  puts "Setting locale for full text search."
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
+  if success
+    puts "Successfully set locale for full text search."
+  else
+    puts "Setting locale failed."
+  end
+  return success
+end
+
 def create_user
   puts "Creating NEDSS user."
   success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@nedss_user} ENCRYPTED PASSWORD '#{@nedss_user_pwd}'\"")
@@ -126,5 +137,6 @@ end
 
 exit unless create_database
 exit unless create_structure
+exit unless set_locale
 exit unless create_user
 exit unless grant_privs
