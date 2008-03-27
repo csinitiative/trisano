@@ -23,7 +23,7 @@ namespace :nedss do
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
     # Override with env variable if you are running locally http://localhost:8080
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
-    RELEASE_DIRECTORY = 'release'
+    RELEASE_DIRECTORY = './release'
     NEDSS_PROD_DIR = 'script/production'
 
     desc "delete nedss war file and exploded directory from Tomcat"
@@ -160,21 +160,28 @@ namespace :nedss do
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
-      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
-      ruby "-S rake nedss:deploy:create_db_config"
-
       config = RELEASE_DIRECTORY + '/WEB-INF/config'
       if !File.directory? RELEASE_DIRECTORY
+        puts "adding directory tree #{config}"
+        FileUtils.mkdir_p(config)
+      else
+        puts "rm -rf #{RELEASE_DIRECTORY}"
+        FileUtils.rm_rf(RELEASE_DIRECTORY)
+        puts "adding directory tree #{config}"
         FileUtils.mkdir_p(config)
       end
+
+      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
+      ruby "-S rake nedss:deploy:create_db_config"
 
       File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
       File.copy('config/database.yml', config, true) 
       File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
-      # add time stamp
-      sh "tar cf nedss-release.tar release/"
+      t = Time.now
+      filename = "nedss-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar"
+      sh "tar cf #{filename} ./release"
     end
 
   end
