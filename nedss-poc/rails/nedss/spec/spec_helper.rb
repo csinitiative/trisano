@@ -41,6 +41,7 @@ end
 
 def mock_user
   @jurisdiction = mock_model(Entity)
+  @place = mock_model(Place)
 
   @user = mock_model(User)
   User.stub!(:find_by_uid).and_return(@user)
@@ -53,11 +54,10 @@ def mock_user
   @user.stub!(:initials).and_return("JJ")
   @user.stub!(:generational_qualifer).and_return("")
   @user.stub!(:is_admin?).and_return(true)
-  @user.stub!(:jurisdictions_for_privilege).and_return([@jurisdiction])
+  @user.stub!(:jurisdictions_for_privilege).and_return([@place])
   
   @role_membership = mock_model(RoleMembership)
   @role = mock_model(Role)
-  @place = mock_model(Place)
   
   @role.stub!(:role_name).and_return("administrator")
   @role_membership.stub!(:role).and_return(@role)

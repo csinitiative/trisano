@@ -62,7 +62,7 @@ namespace :nedss do
     end
     
     def update_locale_config(env)
-      sh "psql #{env} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\""
+      sh "psql #{env} -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\""
     end
 
     desc "Load codes and defauts into database"

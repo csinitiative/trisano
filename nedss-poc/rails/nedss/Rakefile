@@ -34,7 +34,8 @@ Rake::Task["db:test:clone_structure"].enhance {
   ENV['PGPASSWORD'] = abcs["test"]["password"].to_s if abcs["test"]["password"]
   `psql -U "#{abcs["test"]["username"]}" -f db/#{RAILS_ENV}_pg_ts_contents.sql #{abcs["test"]["database"]}`
   
-  Rake::Task["nedss:dev:update_test_locale_config"].invoke
+  # Rake::Task["nedss:dev:update_test_locale_config"].invoke
+  `psql -U "#{abcs["test"]["username"]}" -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\" #{abcs["test"]["database"]}`
   
   raise "Error loading Postgres full text contents" if $?.exitstatus == 1
 }

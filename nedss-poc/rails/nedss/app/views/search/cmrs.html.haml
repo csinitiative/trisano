@@ -68,8 +68,8 @@
         %select{ :name => "jurisdiction_id"}
           %option
           - for jurisdiction in @jurisdictions
-            %option{ :value => jurisdiction.id, :selected => jurisdiction.id == (params[:jurisdiction_id].to_i) ? "selected" : nil}
-              = "#{jurisdiction.current_place.name}"
+            %option{ :value => jurisdiction.entity_id, :selected => jurisdiction.entity_id == (params[:jurisdiction_id].to_i) ? "selected" : nil}
+              = "#{jurisdiction.name}"
           
       %br{ :clear => "all" }
       %span{ :class => "horiz" }

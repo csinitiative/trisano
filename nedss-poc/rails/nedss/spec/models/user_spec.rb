@@ -50,7 +50,7 @@ end
 
 describe User, "with admin role removed and investigator role added" do
   
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :places
   
   before(:each) do
     @user = users(:default_user)
@@ -85,7 +85,7 @@ describe User, "with admin role removed and investigator role added" do
   
    it "should have a juridiction in the Southeastern District for privilege view" do
      @user.jurisdictions_for_privilege(:view).length.should eql(1)
-     @user.jurisdictions_for_privilege(:view).first.should eql(entities(:Southeastern_District))
+     @user.jurisdictions_for_privilege(:view).first.name.should eql(places(:Southeastern_District).name)
    end 
 end
 

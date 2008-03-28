@@ -220,9 +220,9 @@ class Event < ActiveRecord::Base
       where_clause += "p3.jurisdiction_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
     else
       where_clause += " AND " unless where_clause.empty?
-      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view).collect {|j| j.id}
-      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update).collect {|j| j.id}
-      allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, id| str += "#{id}," }
+      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view).collect   {|j| j.entity_id}
+      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update).collect {|j| j.entity_id}
+      allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
       where_clause += "p3.jurisdiction_id IN (" + allowed_ids_str.chop + ")"
     end
     

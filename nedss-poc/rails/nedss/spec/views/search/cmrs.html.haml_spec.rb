@@ -100,9 +100,9 @@ describe "/search/cmrs.html.haml" do
   end
 
   def mock_jurisdiction
-    jurisdiction = mock_model(Entity)
-    jurisdiction.stub!(:id).and_return("1")
-    jurisdiction.stub!(:current_place).and_return(mock_place)
+    jurisdiction = mock_model(Place)
+    jurisdiction.stub!(:entity_id).and_return("1")
+    jurisdiction.stub!(:name).and_return("Weber-Morgan")
     jurisdiction
   end
 
