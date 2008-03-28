@@ -53,18 +53,16 @@ namespace :nedss do
     
     desc "update dev locale config"
     task :update_dev_locale_config do
-      update_locale_config("development")
+      update_locale_config("nedss_development")
     end
     
     desc "update test locale config"
     task :update_test_locale_config do
-      update_locale_config("test")
+      update_locale_config("nedss_test")
     end
     
     def update_locale_config(env)
-      config = ActiveRecord::Base.configurations[env]
-      ActiveRecord::Base.establish_connection(config)  
-      ActiveRecord::Base.connection.execute("update pg_ts_cfg set locale = '#{PG_LOCALE}' where ts_name = 'default';")
+      sh "psql #{env} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\""
     end
 
     desc "Load codes and defauts into database"
