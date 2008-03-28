@@ -15,11 +15,11 @@ class User < ActiveRecord::Base
   after_validation :clear_base_error
   
   def is_admin?
-    roles.detect { |role| role.role_name == "administrator" }.nil? ? false : true
+    roles.detect { |role| role.role_name.to_sym == :administrator }.nil? ? false : true
   end
   
   def is_investigator?
-    roles.detect { |role| role.role_name == "investigator" }.nil? ? false : true
+    roles.detect { |role| role.role_name.to_sym == :investigator }.nil? ? false : true
   end
   
   def has_role_in?(jurisdiction)
@@ -30,8 +30,8 @@ class User < ActiveRecord::Base
     entitlements.detect { |ent| ent.jurisdiction.id == jurisdiction.id }.nil? ? false : true
   end
   
-  def is_entitled_to_in?(privilege, jurisdiction)
-    entitlements.detect { |ent| ent.privilege_id == privilege.id && ent.jurisdiction_id == jurisdiction.id }.nil? ? false : true
+  def is_entitled_to_in?(privilege, jurisdiction_id)
+    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && ent.jurisdiction_id == jurisdiction_id }.nil? ? false : true
   end
   
   def jurisdictions_for_privilege(privilege)
@@ -39,14 +39,14 @@ class User < ActiveRecord::Base
     Place.jurisdictions_for_privilege_by_user_id(id, privilege)
   end
 
-  def entitlement_jurisdiction_ids
-    @entitlement_jurisdiction_ids ||= collect_entitlement_jurisdiction_ids
+  def jurisdiction_ids_for_privilege(privilege)
+    entitlements.collect { |ent| ent.jurisdiction_id if ent.privilege.priv_name.to_sym == privilege }.compact!
   end
   
   def admin_jurisdiction_ids
-    @admin_jurisdiction_ids ||= collect_admin_jurisdiction_ids
+    @admin_jurisdiction_ids ||= entitlements.collect { |e| e.jurisdiction_id if e.privilege.priv_name.to_sym == :administer}.compact!
   end
-    
+  
   def role_membership_attributes=(rm_attributes)
     seen_before = []
     rm_attributes.each do |attributes|
@@ -83,27 +83,10 @@ class User < ActiveRecord::Base
     Thread.current[:user]
   end
   
+  protected
+  
   def clear_base_error
     errors.delete(:role_memberships)
-  end
-  
-  private
-  
-  def collect_admin_jurisdiction_ids
-    admin_priv = Privilege.find_by_priv_name("administer")
-    ids = []
-    entitlements.each do |e| 
-      if e.privilege_id == admin_priv.id
-        ids << e.jurisdiction_id 
-      end
-    end
-    @admin_jurisdiction_ids = ids
-  end
-  
-  def collect_entitlement_jurisdiction_ids
-    ids =[]
-    entitlements.each { |e| ids << e.jurisdiction_id }
-    @entitlement_jurisdiction_ids = ids.uniq
   end
 
 end

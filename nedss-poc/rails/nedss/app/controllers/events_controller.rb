@@ -2,30 +2,31 @@ require "chronic"
 
 class EventsController < ApplicationController
 
+  before_filter :can_update?, :only => [:edit, :update, :destroy]
+  before_filter :can_view?, :only => [:show]
+  
   def auto_complete_for_event_reporting_agency
     entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
-                     :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
+      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
                        (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code IN ('H', 'L', 'C'))", entered_name.downcase + '%'],
-                     :order => "entity_id, created_at ASC, name ASC",
-                     :limit => 10
-              )
+      :order => "entity_id, created_at ASC, name ASC",
+      :limit => 10
+    )
     render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
   # GET /event
   # GET /event.xml
   def index
-    @events = Event.find(:all)
-    # The following filters on entitled jurisdictions, which shouldn't be enabled until jurisdiction is required
-    # @events = Event.find(:all, 
-    #   :include => :jurisdiction, 
-    #   :select => "jurisdiction.secondary_entity_id", 
-    #   :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.entitlement_jurisdiction_ids])
+    @events = Event.find(:all, 
+      :include => :jurisdiction, 
+      :select => "jurisdiction.secondary_entity_id", 
+      :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view)])
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @person_entities }
+      format.xml  { render :xml => @events }
       format.csv
     end
   end
@@ -37,7 +38,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @person }
+      format.xml  { render :xml => @event }
       format.csv
     end
   end
@@ -46,43 +47,42 @@ class EventsController < ApplicationController
   # GET /event/new.xml
   def new
     @event = Event.new(:event_onset_date        => Chronic.parse('today'), 
-                       :disease                 => {}, 
-                       :lab_result              => {},
-                       :active_patient          => { :active_primary_entity   => { :person => {}, 
-                                                                                   :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-                                                                                                           :primary_yn_id => Code.yes_id }, 
-                                                                                   :address => {}, 
-                                                                                   :telephone => {}
-                                                                                 }, :participations_treatment => {}},
-                       :active_reporting_agency => { :secondary_entity_id => nil,
-                                                     :active_secondary_entity => { :place => {},
-                                                                                   :entities_location => {}, 
-                                                                                   :address => {}, 
-                                                                                   :telephone => {}
-                                                                                 }
-                                                   },
-                       :active_reporter         => { :active_secondary_entity   => { :person => {}, 
-                                                                                     :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-                                                                                                             :primary_yn_id => Code.yes_id }, 
-                                                                                     :address => {}, 
-                                                                                     :telephone => {} 
-                                                                                   }
-                                                   },
-                       :active_jurisdiction     => {},
-                       :active_hospital         => { :hospitals_participation => {} }
-                      )
+      :disease                 => {}, 
+      :lab_result              => {},
+      :active_patient          => { :active_primary_entity   => { :person => {}, 
+          :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
+            :primary_yn_id => Code.yes_id }, 
+          :address => {}, 
+          :telephone => {}
+        }, :participations_treatment => {}},
+      :active_reporting_agency => { :secondary_entity_id => nil,
+        :active_secondary_entity => { :place => {},
+          :entities_location => {}, 
+          :address => {}, 
+          :telephone => {}
+        }
+      },
+      :active_reporter         => { :active_secondary_entity   => { :person => {}, 
+          :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
+            :primary_yn_id => Code.yes_id }, 
+          :address => {}, 
+          :telephone => {} 
+        }
+      },
+      :active_jurisdiction     => {},
+      :active_hospital         => { :hospitals_participation => {} }
+    )
                              
     prepopulate if !params[:from_search].nil?
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @person }
+      format.xml  { render :xml => @event }
     end
   end
 
   # GET /event/1/edit
   def edit
-    @event = Event.find(params[:id])
     if @event.active_patient.active_primary_entity.entities_location.nil?
       @event.active_patient.active_primary_entity.entities_location = { :entity_location_type_id => Code.unspecified_location_id, :primary_yn_id => Code.yes_id }
     end
@@ -92,7 +92,12 @@ class EventsController < ApplicationController
   # POST /event.xml
   def create
     @event = Event.new(params[:event])
-
+    
+    unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
+      return
+    end
+    
     respond_to do |format|
       if @event.save
         flash[:notice] = 'CMR was successfully created.'
@@ -108,7 +113,6 @@ class EventsController < ApplicationController
   # PUT /event/1
   # PUT /event/1.xml
   def update
-    @event = Event.find(params[:id])
 
     respond_to do |format|
       if @event.update_attributes(params[:event])
@@ -126,14 +130,6 @@ class EventsController < ApplicationController
   # DELETE /event/1.xml
   def destroy
     head :method_not_allowed
-    #TODO: Make this a soft delete.  Currently orphans all children
-    #@event = Event.find(params[:id])
-    #@event.destroy
-
-    #respond_to do |format|
-    #  format.html { redirect_to(cmrs_url) }
-    #  format.xml  { head :ok }
-    #end
   end
 
   def associations
@@ -175,11 +171,23 @@ class EventsController < ApplicationController
     @event.active_patient.active_primary_entity.address.county = Code.find(params[:county]) unless params[:county].blank?
     @event.active_jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.active_patient.active_primary_entity.person.birth_date = params[:birth_date]
-    
     @event.disease.disease_id = params[:disease]
-    
-    
-    
+  end
+  
+  def can_update?
+    @event = Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
+      return
+    end
+  end
+  
+  def can_view?
+    @event = Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(:view, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
+      return
+    end
   end
   
 end

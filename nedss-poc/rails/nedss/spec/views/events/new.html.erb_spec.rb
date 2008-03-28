@@ -11,7 +11,7 @@ describe "/cmrs/new.html.erb" do
     @primary_entity =  mock_person_entity
     @secondary_entity =  mock_person_entity
 
-    @active_jurisdiction = mock_model(Participation)
+    
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)
@@ -25,10 +25,10 @@ describe "/cmrs/new.html.erb" do
     
     @event.stub!(:active_patient).and_return(@participation)
     @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
-    @event.stub!(:active_jurisdiction).and_return(@active_jurisdiction)
+    
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
-#    @event.stub!(:current_treatment).and_return(@current_treatment)
+    #    @event.stub!(:current_treatment).and_return(@current_treatment)
 
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)
@@ -41,8 +41,8 @@ describe "/cmrs/new.html.erb" do
     @participation.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
     @secondary_entity.stub!(:place).and_return(@place)
     @secondary_entity.stub!(:person).and_return(@person)
-
-    @active_jurisdiction.stub!(:secondary_entity_id).and_return(1)
+    
+    
     @active_reporting_agency.stub!(:active_secondary_entity).and_return(@secondary_entity)
     @active_reporter.stub!(:active_secondary_entity).and_return(@secondary_entity)
     @active_hospital.stub!(:secondary_entity_id).and_return(13)

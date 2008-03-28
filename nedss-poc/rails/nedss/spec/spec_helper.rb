@@ -80,6 +80,7 @@ end
 def mock_event
   
   event = mock_model(Event)
+  
   event_status = mock_model(Code)
   imported_from = mock_model(Code)
   event_case_status =mock_model(Code)
@@ -90,10 +91,13 @@ def mock_event
   pregnant = mock_model(Code)
   specimen_source = mock_model(Code)
   tested_at_uphl_yn = mock_model(Code)
-
-  lab_result = mock_model(LabResult)
+  
   disease_event = mock_model(DiseaseEvent)
   disease = mock_model(Disease)
+  lab_result = mock_model(LabResult)
+  
+  active_jurisdiction = mock_model(Participation)
+  active_patient = mock_model(Participation)
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
@@ -106,7 +110,10 @@ def mock_event
   hospitalized.stub!(:code_description).and_return('Yes')
   died.stub!(:code_description).and_return('No')
   pregnant.stub!(:code_description).and_return('No')
-    
+  
+  active_jurisdiction.stub!(:secondary_entity_id).and_return(75)
+  active_patient.stub!(:active_primary_entity).and_return(1)
+   
   disease_event.stub!(:disease_id).and_return(1)
   disease_event.stub!(:hospital_id).and_return(13)
   disease_event.stub!(:hospitalized).and_return(hospitalized)
@@ -131,7 +138,9 @@ def mock_event
     
   lab_result.stub!(:tested_at_uphl_yn_id).and_return(1401)
   lab_result.stub!(:tested_at_uphl_yn).and_return(tested_at_uphl_yn)
-    
+  
+  event.stub!(:active_jurisdiction).and_return(active_jurisdiction)
+  event.stub!(:active_patient).and_return(active_patient)
   event.stub!(:record_number).and_return("2008537081")
   event.stub!(:event_name).and_return('Test')
   event.stub!(:event_onset_date).and_return("2008-02-19")

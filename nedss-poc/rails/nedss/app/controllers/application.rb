@@ -20,14 +20,15 @@ class ApplicationController < ActionController::Base
   protected
   
   def load_user
-    NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID) 
+    NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID)
   end
   
   def load_user_by_uid(uid)
     
     if uid.blank?
       logger.info "No UID is present"
-      redirect_to "/500.html"
+      log_request_info
+      render :text => "Internal application error: No UID is present. Please contact your administrator.", :status => 500
       return
     end
     
@@ -35,11 +36,19 @@ class ApplicationController < ActionController::Base
     
     if User.current_user.nil?
       logger.info "User not found by uid: " + uid
-      redirect_to "/500.html"
+      log_request_info
+      render :text => "Internal application error: User not found. Please contact your administrator.", :status => 500
       return
     end
     logger.info "User loaded: " + User.current_user.uid
     User.current_user
+  end
+  
+  def log_request_info
+    thread_id = Thread.current.object_id
+    request.env.each do |key, value|
+      logger.info "#{thread_id} -- #{key}: #{value}"
+    end      
   end
   
 end

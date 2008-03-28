@@ -32,9 +32,13 @@ describe AdminController do
       @user.stub!(:user_name).and_return("not_an_admin")
     end
     
-    it "should redirect to 403 error page" do
+    def do_get
       get :index
-      response.should redirect_to("/403.html")
+    end
+    
+    it "should be be a 403" do
+      do_get
+      response.response_code.should == 403
     end
     
   end
