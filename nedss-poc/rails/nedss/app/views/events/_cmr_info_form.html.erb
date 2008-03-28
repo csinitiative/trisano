@@ -33,7 +33,9 @@
       <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
         <span class="horiz">
           <%= j.label(:jurisdiction) %>
-          <%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name, {:include_blank => true}) %> 
+          <% jurisdiction_entities = User.current_user.jurisdictions_for_privilege(:update) %> 
+          <% jurisdiction_places = jurisdiction_entities.collect { |jd| jd.current_place } %>
+          <%= j.collection_select(:secondary_entity_id, jurisdiction_places, :entity_id, :name) %> 
         </span>
       <% end %>
       <span class="horiz">

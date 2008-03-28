@@ -66,6 +66,7 @@
       %span{ :class => "horiz" }
         %label Jurisdiction
         %select{ :name => "jurisdiction_id"}
+          %option
           - for jurisdiction in @jurisdictions
             %option{ :value => jurisdiction.id, :selected => jurisdiction.id == (params[:jurisdiction_id].to_i) ? "selected" : nil}
               = "#{jurisdiction.current_place.name}"
@@ -92,27 +93,24 @@
   %h3 Results
   %table{ :width => "100%", :cellpadding => "2" }
     %tr
-      %td
-        %b
-          Record Number
-      %td
-        %b
-          Name
-      %td
-        %b
-          Age / Birth Date
-      %td
-        %b
-          Gender
-      %td
-        %b
-          Disease
-      %td
-        %b
-          County
-      %td
-        %b
-          Onset Date
+      %th
+        Record Number
+      %th
+        Name
+      %th
+        Age / Birth Date
+      %th
+        Gender
+      %th
+        Disease
+      %th
+        City
+      %th
+        County
+      %th
+        Jurisdiction
+      %th
+        Onset Date
     - for cmr in @cmrs
       %tr
         %td
@@ -127,7 +125,11 @@
         %td
           = cmr.disease_name
         %td
+          = cmr.city
+        %td
           = cmr.county
+        %td
+          = cmr.jurisdiction_name
         %td
           = cmr.event_onset_date
 

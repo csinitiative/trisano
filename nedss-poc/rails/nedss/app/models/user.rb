@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   end
   
   def jurisdictions_for_privilege(privilege)
-    jurisdictions = entitlements.collect { |ent| ent.jurisdiction if ent.privilege.priv_name.to_sym == privilege }.compact!
+    entitlements.collect { |ent| ent.jurisdiction if ent.privilege.priv_name.to_sym == privilege }.compact!
   end
 
   def entitlement_jurisdiction_ids

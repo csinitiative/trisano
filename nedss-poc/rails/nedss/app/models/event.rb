@@ -217,7 +217,13 @@ class Event < ActiveRecord::Base
     if !options[:jurisdiction_id].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "p3.secondary_entity_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
+      where_clause += "p3.jurisdiction_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
+    else
+      where_clause += " AND " unless where_clause.empty?
+      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view).collect {|j| j.id}
+      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update).collect {|j| j.id}
+      allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, id| str += "#{id}," }
+      where_clause += "p3.jurisdiction_id IN (" + allowed_ids_str.chop + ")"
     end
     
     # Debt: The UI shows the user a format to use. Something a bit more robust
@@ -302,8 +308,8 @@ class Event < ActiveRecord::Base
            p3.event_onset_date,
            p3.primary_birth_gender_id AS birth_gender_id,
            p3.investigation_lhd_status_id,
-           p3.secondary_entity_id,
-           p3.secondary_entity_name, 
+           p3.jurisdiction_id,
+           p3.jurisdiction_name, 
            p3.vector,
            p3.created_at,
            c.code_description AS gender,
@@ -314,7 +320,7 @@ class Event < ActiveRecord::Base
            ( SELECT 
                     p1.event_id, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
-                    p1.investigation_lhd_status_id, p1.created_at, p2.secondary_entity_id, p2.secondary_entity_name
+                    p1.investigation_lhd_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
                     ( SELECT 
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
@@ -340,12 +346,15 @@ class Event < ActiveRecord::Base
                       LEFT OUTER JOIN 
                             diseases d ON disease_events.disease_id = d.id
                       WHERE  
-                            p.primary_entity_id IS NOT NULL AND p.secondary_entity_id IS NULL
+                            p.primary_entity_id IS NOT NULL 
+                      AND   p.secondary_entity_id IS NULL
                     ) AS p1
              FULL OUTER JOIN 
                    (
                      SELECT 
-                            secondary_entity_id, j.name as secondary_entity_name, p.event_id as event_id
+                            secondary_entity_id AS jurisdiction_id, 
+                            j.name AS jurisdiction_name,
+                            p.event_id AS event_id
                      FROM   
                             events e
                      INNER JOIN 
@@ -354,7 +363,8 @@ class Event < ActiveRecord::Base
                             codes c ON c.id = p.role_id
                      LEFT OUTER JOIN 
                            ( SELECT DISTINCT ON 
-                                    (entity_id) entity_id, name 
+                                    (entity_id) entity_id, 
+                                    name 
                              FROM 
                                     places 
                              ORDER BY 

@@ -3,9 +3,9 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "/cmrs/new.html.erb" do
 
   before(:each) do
-    
+    mock_user 
     @event = mock_event
-    
+     
     # Maybe move this all up to the common mocking helper
     @participation = mock_model(Participation)
     @primary_entity =  mock_person_entity
@@ -61,7 +61,6 @@ describe "/cmrs/new.html.erb" do
     @hospitals_participation.stub!(:admission_date).and_return(Date.parse("2008-02-15"))
     @hospitals_participation.stub!(:discharge_date).and_return(Date.parse("2009-02-15"))
 
-    
     assigns[:event] = @event
     
   end
