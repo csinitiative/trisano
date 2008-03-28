@@ -79,6 +79,9 @@ PrivilegesRole.transaction do
       jurisdiction_type_id])
     
   user = User.find_by_user_name('default_user')
+  mike = User.find_by_user_name('mike')
+  chuck = User.find_by_user_name('chuck')
+  davidjackson = User.find_by_user_name('davidjackson')
                   
   roles = Role.find(:all)
   privileges = Privilege.find(:all)
@@ -96,6 +99,9 @@ PrivilegesRole.transaction do
       
       # While, we're at it, grant the default user all roles for all jurisdictions
       user.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      mike.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      chuck.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      davidjackson.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
       
     end
   end
