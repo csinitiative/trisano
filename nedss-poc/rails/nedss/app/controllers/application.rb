@@ -20,7 +20,13 @@ class ApplicationController < ActionController::Base
   protected
   
   def load_user
-    NEDSS_UID.blank? ? load_user_by_uid(request.env["REMOTE_USER"]) : load_user_by_uid(NEDSS_UID)
+    if NEDSS_UID.blank?
+      logger.info "Attempting to locate user information on the request"
+      RAILS_ENV == "production" ? load_user_by_uid(request.env["uid"]) : load_user_by_uid(request.env["REMOTE_USER"])
+    else
+      logger.info "Using NEDSS user found in local environment variable"
+      load_user_by_uid(NEDSS_UID)
+    end
   end
   
   def load_user_by_uid(uid)

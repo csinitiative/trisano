@@ -77,8 +77,9 @@ Rails::Initializer.run do |config|
 end
 
 PG_LOCALE = ENV['PG_LOCALE'] ||= 'en_US' 
+
 if RAILS_ENV == "development" || RAILS_ENV == "test"
-  NEDSS_UID = ENV['NEDSS_UID'] if RAILS_ENV == "development" || RAILS_ENV == "test"
+  NEDSS_UID = ENV['NEDSS_UID']
 else
   NEDSS_UID = nil
 end
