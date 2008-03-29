@@ -15,7 +15,7 @@ class Code < ActiveRecord::Base
   end
 
   def self.unspecified_location_id
-   code = find(:first, :conditions => "code_name = 'location' and the_code = 'U'")
+   code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
    code.id unless code.nil?
   end
 end

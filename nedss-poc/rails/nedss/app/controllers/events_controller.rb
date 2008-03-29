@@ -46,25 +46,38 @@ class EventsController < ApplicationController
   # GET /event/new
   # GET /event/new.xml
   def new
-    @event = Event.new(:event_onset_date        => Chronic.parse('today'), 
-      :disease                 => {}, 
-      :lab_result              => {},
-      :active_patient          => { :active_primary_entity   => { :person => {}, 
-          :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id }, 
+    @event = Event.new(
+      :event_onset_date => Chronic.parse('today'), 
+      :disease          => {}, 
+      :lab_result       => {},
+      :active_patient   => { 
+        :active_primary_entity => { 
+          :person => {}, 
+          :entities_location => { 
+            :entity_location_type_id => Code.unspecified_location_id,
+            :primary_yn_id => Code.yes_id 
+          }, 
           :address => {}, 
           :telephone => {}
-        }, :participations_treatment => {}},
-      :active_reporting_agency => { :secondary_entity_id => nil,
-        :active_secondary_entity => { :place => {},
+        }, 
+        :participations_treatment => {}
+      },
+      :active_reporting_agency => { 
+        :secondary_entity_id => nil,
+        :active_secondary_entity => { 
+          :place => {},
           :entities_location => {}, 
           :address => {}, 
           :telephone => {}
         }
       },
-      :active_reporter         => { :active_secondary_entity   => { :person => {}, 
-          :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id }, 
+      :active_reporter => { 
+        :active_secondary_entity => { 
+          :person => {}, 
+          :entities_location => { 
+            :entity_location_type_id => Code.unspecified_location_id,
+            :primary_yn_id => Code.yes_id 
+          }, 
           :address => {}, 
           :telephone => {} 
         }
