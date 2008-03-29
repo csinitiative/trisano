@@ -43,6 +43,15 @@
   color: green;
 }
 
+#ft {
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 7px;
+  overflow: auto;
+  position: relative;
+  font-size: x-small;
+}
+
 .title A:link {text-decoration: none; color: #B9B9A0}
 .title A:visited {text-decoration: none; color: #B9B9A0}
 .title A:active {text-decoration: none; color: #B9B9A0}
