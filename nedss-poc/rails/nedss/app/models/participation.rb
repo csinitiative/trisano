@@ -17,7 +17,11 @@ class Participation < ActiveRecord::Base
   end
 
   def active_primary_entity=(attributes)
-    @active_primary_entity = Entity.new(attributes)
+    if new_record?
+      @active_primary_entity = Entity.new(attributes)
+    else
+      active_primary_entity.update_attributes(attributes)
+    end
   end
 
   def active_secondary_entity
@@ -25,7 +29,11 @@ class Participation < ActiveRecord::Base
   end
 
   def active_secondary_entity=(attributes)
-    @active_secondary_entity = Entity.new(attributes)
+    if new_record?
+      @active_secondary_entity = Entity.new(attributes)
+    else
+      active_secondary_entity.update_attributes(attributes)
+    end
   end
 
   def hospitals_participation

@@ -68,6 +68,7 @@ describe "/people/show.html.erb" do
     @entity.stub!(:current_locations).and_return([@location])
     @entity.stub!(:locations).and_return([@location])
     @entity.stub!(:races).and_return([@race])
+    @entity.stub!(:primary_entities_location).and_return(@entities_location)
 
     assigns[:entity] = @entity
     assigns[:locations] = Array.new
