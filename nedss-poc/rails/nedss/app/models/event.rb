@@ -185,7 +185,7 @@ class Event < ActiveRecord::Base
       if options[:gender] == "Unspecified"
         where_clause += "p3.primary_birth_gender_id IS NULL"
       else
-        where_clause += "p3.primary.birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
+        where_clause += "p3.primary_birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
       end
       
     end
