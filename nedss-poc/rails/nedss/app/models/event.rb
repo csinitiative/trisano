@@ -175,7 +175,7 @@ class Event < ActiveRecord::Base
     
     if !options[:disease].blank?
       issue_query = true
-      where_clause += "d.id = " + sanitize_sql(["%s", options[:disease]])
+      where_clause += "p3.disease_id = " + sanitize_sql(["%s", options[:disease]])
     end
     
     if !options[:gender].blank?
@@ -303,6 +303,7 @@ class Event < ActiveRecord::Base
            p3.primary_middle_name AS middle_name,
            p3.primary_last_name AS last_name,
            p3.primary_birth_date AS birth_date,
+           p3.disease_id,
            p3.disease_name,
            p3.primary_record_number AS record_number,
            p3.event_onset_date,
@@ -319,13 +320,13 @@ class Event < ActiveRecord::Base
     FROM 
            ( SELECT 
                     p1.event_id, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
-                    p1.primary_birth_date, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
+                    p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
                     p1.investigation_lhd_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
                     ( SELECT 
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
                              people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
-                             d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
+                             d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
                              e.\"investigation_LHD_status_id\" as investigation_lhd_status_id,
                              e.created_at
