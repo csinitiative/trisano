@@ -335,7 +335,12 @@ class Event < ActiveRecord::Base
                       INNER JOIN  
                              participations p on p.event_id = e.id
                       INNER JOIN 
-                             people on people.entity_id = p.primary_entity_id
+                             ( SELECT DISTINCT ON
+                                      (entity_id) *
+                               FROM
+                                      people
+                              ) AS people
+                                ON people.entity_id = p.primary_entity_id
                       LEFT OUTER JOIN 
                             ( SELECT DISTINCT ON 
                                      (event_id) * 
@@ -375,7 +380,13 @@ class Event < ActiveRecord::Base
                    ) AS p2 ON p1.event_id = p2.event_id
            ) AS p3
     LEFT OUTER JOIN 
-           entities_locations el ON el.entity_id = p3.primary_entity_id
+           ( SELECT DISTINCT ON 
+                    (entity_id, entity_location_type_id) *
+             FROM
+                    entities_locations
+             ORDER BY
+                    entity_id, entity_location_type_id, created_at DESC
+           ) AS el ON el.entity_id = p3.primary_entity_id
     LEFT OUTER JOIN 
            locations l ON l.id = el.location_id
     LEFT OUTER JOIN 

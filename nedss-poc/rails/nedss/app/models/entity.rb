@@ -11,7 +11,7 @@ class Entity < ActiveRecord::Base
   has_many :materials, :before_add => :set_entity_type
   #  has_one  :current_material, :class_name => 'Material', :order => 'created_at DESC'
 
-  has_many :entities_locations, :foreign_key => 'entity_id'
+  has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
 
   # TODO: SERIOUS DEBT, Nothing enforces just one primary location
@@ -81,11 +81,11 @@ class Entity < ActiveRecord::Base
 
   # Debt: Not sure I like this.
   def current_locations
-    locations.map do |l|
-      entity_location = entities_locations.find_by_location_id(l.id)
-      l.type = entity_location.entity_location_type.code_description
-      l.primary = entity_location.primary_yn.the_code == "Y" ? true : false
-      l
+    entities_locations.map do |el|
+      location = locations.find(el.location_id)
+      location.type = el.entity_location_type.code_description
+      location.primary = el.primary_yn.the_code == "Y" ? true : false
+      location
     end
   end
 
