@@ -57,11 +57,11 @@ class Person < ActiveRecord::Base
     end
     
     query = "SELECT people.entity_id, first_name, middle_name, last_name, birth_date, c.code_description as gender, co.code_description as county
-                  FROM (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people 
+                  FROM (SELECT DISTINCT ON(entity_id) * FROM people ORDER BY entity_id, created_at DESC) people
                     LEFT OUTER JOIN codes c on c.id = people.birth_gender_id
-                    LEFT OUTER JOIN entities_locations el on el.entity_id = people.entity_id
+                    LEFT OUTER JOIN (select distinct on (entity_id) * from entities_locations order by entity_id, created_at desc) el on el.entity_id = people.entity_id
                     LEFT OUTER JOIN locations l on l.id = el.location_id
-                    LEFT OUTER JOIN addresses a on a.location_id = l.id
+                    LEFT OUTER JOIN (select distinct on (location_id) * from addresses order by location_id, created_at desc) a on a.location_id = l.id
                     LEFT OUTER JOIN codes co on co.id = a.county_id
                   WHERE #{where_clause} ORDER BY #{order_by_clause}"
     
