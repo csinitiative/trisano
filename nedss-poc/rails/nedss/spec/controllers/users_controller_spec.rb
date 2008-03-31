@@ -304,19 +304,21 @@ describe UsersController do
       delete :destroy, :id => "1"
     end
 
-    it "should find the user requested" do
-      User.should_receive(:find).with("1").and_return(@user)
-      do_delete
-    end
+    # Uncomment the following 3 tests when deleting users is enabled
+    
+    # it "should find the user requested" do
+    #   User.should_receive(:find).with("1").and_return(@user)
+    #   do_delete
+    # end
   
-    it "should call destroy on the found user" do
-      @user.should_receive(:destroy)
-      do_delete
-    end
+    # it "should call destroy on the found user" do
+    #   @user.should_receive(:destroy)
+    #   do_delete
+    # end
   
-    it "should redirect to the users list" do
-      do_delete
-      response.should redirect_to(users_url)
-    end
+    # it "should redirect to the users list" do
+    #   do_delete
+    #   response.should redirect_to(users_url)
+    # end
   end
 end

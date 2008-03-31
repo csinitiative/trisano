@@ -75,12 +75,16 @@ class UsersController < AdminController
   # DELETE /users/1
   # DELETE /users/1.xml
   def destroy
-    @user = User.find(params[:id])
-    @user.destroy
+    # Delete the following line when deleting users is allowed
+    render :text => 'Deleting users is not yet implemented.', :status => 405
 
-    respond_to do |format|
-      format.html { redirect_to(users_url) }
-      format.xml  { head :ok }
-    end
+    # Uncomment and verify the following lines to enable user deletion
+    # @user = User.find(params[:id])
+    # @user.destroy
+    #
+    # respond_to do |format|
+    #   format.html { redirect_to(users_url) }
+    #   format.xml  { head :ok }
+    # end
   end
 end
