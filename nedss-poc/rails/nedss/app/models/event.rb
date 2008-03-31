@@ -10,8 +10,8 @@ class Event < ActiveRecord::Base
   belongs_to :outbreak_associated, :class_name => 'Code'
   belongs_to :investigation_LHD_status, :class_name => 'Code'
 
-  has_many :lab_results, :order => 'created_at', :dependent => :delete_all
-  has_many :disease_events, :order => 'created_at', :dependent => :delete_all
+  has_many :lab_results, :order => 'created_at ASC', :dependent => :delete_all
+  has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
 
   has_many :participations
 
@@ -40,7 +40,7 @@ class Event < ActiveRecord::Base
     if new_record?
       @disease = DiseaseEvent.new(attributes)
     else
-      disease.update_attributes(attributes) unless attributes.values_blank?
+      disease_events.build(attributes) unless attributes.values_blank?
     end
   end  
 
@@ -52,7 +52,7 @@ class Event < ActiveRecord::Base
     if new_record?
       @lab_result = LabResult.new(attributes)
     else
-      lab_result.update_attributes(attributes) unless attributes.values_blank?
+      lab_results.build(attributes) unless attributes.values_blank?
     end
   end
 
@@ -424,9 +424,9 @@ class Event < ActiveRecord::Base
   end
   
   def generate_mmwr
-    epi_dates = { :onsetdate => @disease.disease_onset_date, 
-      :diagnosisdate => @disease.date_diagnosed, 
-      :labresultdate => @lab_result.lab_test_date, 
+    epi_dates = { :onsetdate => @disease.nil? ? nil : @disease.disease_onset_date, 
+      :diagnosisdate => @disease.nil? ? nil : @disease.date_diagnosed, 
+      :labresultdate => @lab_result.nil? ? nil : @lab_result.lab_test_date, 
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
     

@@ -36,9 +36,9 @@
         </tr>
         <tr>
           <td><span class="label">Disease Onset Date:</span></td>
-          <td><%= @event.disease.disease_onset_date %></td>
+          <td><%= @event.disease.disease_onset_date unless @event.disease.disease.nil? %></td>
           <td><span class="label">Date Diagnosed:</span></td>
-          <td><%= @event.disease.date_diagnosed %></td>
+          <td><%= @event.disease.date_diagnosed unless @event.disease.disease.nil? %></td>
         </tr>
         <tr>
           <td><span class="label">Hospitalized:</span></td>
