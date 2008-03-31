@@ -39,21 +39,23 @@ describe "/entities/index.html.erb for people" do
     end
   end
 
-  it "should display a list of 'New' links" do
-    render "/entities/index.html.erb"
-    response.should have_tag("a[href=/entities/new?type=person]")
-    response.should have_tag("a[href=/entities/new?type=animal]")
-    response.should have_tag("a[href=/entities/new?type=material]")
-    response.should have_tag("a[href=/entities/new?type=place]")
-  end
+# Uncomment the next two tests when animals, materials, etc is implemented
 
-  it "should display a list of 'Index' links" do
-    render "/entities/index.html.erb"
-    response.should_not have_tag("a[href=/entities?type=person]")
-    response.should have_tag("a[href=/entities?type=animal]")
-    response.should have_tag("a[href=/entities?type=material]")
-    response.should have_tag("a[href=/entities?type=place]")
-  end
+#  it "should display a list of 'New' links" do
+#    render "/entities/index.html.erb"
+#    response.should have_tag("a[href=/entities/new?type=person]")
+#    response.should have_tag("a[href=/entities/new?type=animal]")
+#    response.should have_tag("a[href=/entities/new?type=material]")
+#    response.should have_tag("a[href=/entities/new?type=place]")
+#  end
+
+#  it "should display a list of 'Index' links" do
+#    render "/entities/index.html.erb"
+#    response.should_not have_tag("a[href=/entities?type=person]")
+#    response.should have_tag("a[href=/entities?type=animal]")
+#    response.should have_tag("a[href=/entities?type=material]")
+#    response.should have_tag("a[href=/entities?type=place]")
+#  end
 end
 
 describe "/entities/index.html.erb for animals" do

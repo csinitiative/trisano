@@ -69,13 +69,18 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.xml
   def destroy
-    @location = @entity.locations.find(params[:id])
-    @location.destroy
+    # Remove this line when delete enabled
+    render :text => 'It is not (yet) possible to delete a location', :status => 405
 
-    respond_to do |format|
-      format.html { redirect_to(entity_path(@entity)) }
-      format.xml  { head :ok }
-    end
+    # Uncomment and fix when delete is enabled
+    
+    # @location = @entity.locations.find(params[:id])
+    # @location.destroy
+
+    # respond_to do |format|
+    #   format.html { redirect_to(entity_path(@entity)) }
+    #   format.xml  { head :ok }
+    # end
   end
 
   private 

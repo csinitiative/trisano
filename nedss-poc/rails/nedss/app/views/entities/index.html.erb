@@ -14,14 +14,14 @@
   
   <br />
 
-  <% for type in @valid_types %>
-    <%= link_to 'New ' + type.capitalize, new_entity_path(:type => type) %> | 
-  <% end %>
+  <%# Uncomment the following loop when functionality is in place to add/edit animals etc. %>
+  <%# for type in @valid_types %>
+    <%#= link_to 'New ' + type.capitalize, new_entity_path(:type => type) %>
+  <%# end %>
 
+  <%= link_to 'New Person', new_entity_path(:type => 'person') %>
   <br />
 
-  <% for type in @valid_types %>
-    <%= link_to 'Export '+type.capitalize.pluralize+' to CSV', url_for(:action => 'index', :type => type, :format => 'csv') %> |
-  <% end %>
+  <%= link_to 'Export to CSV', url_for(:action => 'index', :type => 'person', :format => 'csv') %>
   <%= render :partial => 'entity_list', :locals => {:is_index => true} %>
 <% end %>
