@@ -37,6 +37,9 @@
   </fieldset>
 
   <fieldset class="vert">
+    <% p location_data %>
+        <% if location_data.entity_location_type_id.nil? then location_data.entity_location_type_id = Code.unspecified_location_id end %>
+        <% if location_data.primary_yn_id.nil? then location_data.primary_yn_id = Code.yes_id end %>
         <% agency_fields.fields_for(:entities_location, location_data, :builder => ExtendedFormBuilder) do |loc_fields| %>
           <%= loc_fields.hidden_field(:entity_location_type_id) %>
           <%= loc_fields.hidden_field(:primary_yn_id) %>

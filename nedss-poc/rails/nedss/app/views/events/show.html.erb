@@ -44,7 +44,7 @@
           <td><span class="label">Hospitalized:</span></td>
           <td><%= l @event.disease.hospitalized %></td>
           <td><span class="label">Hospital:</span></td>
-          <td><%= @event.hospital.secondary_entity.current_place.name unless @event.hospital.nil? or @event.hospital.secondary_entity.nil? %></td>
+          <td><%= @event.hospital.active_secondary_entity.place.name unless @event.hospital.nil? or @event.hospital.active_secondary_entity.nil? %></td>
         </tr>
         <tr>
           <td><span class="label">Admission Date:</span></td>
@@ -134,14 +134,14 @@
     <table>
       <tr>
         <td><span class="label">Name of Reporter:</span></td>
-        <td><%= @event.reporter.secondary_entity.current_person.first_name unless @event.reporter.nil? -%>
-        <%= @event.reporter.secondary_entity.current_person.last_name unless @event.reporter.nil? %></td>
+        <td><%= @event.reporter.active_secondary_entity.person.first_name unless @event.reporter.nil? -%>
+        <%= @event.reporter.active_secondary_entity.person.last_name unless @event.reporter.nil? %></td>
         <td><span class="label">Reporting Agency:</span></td>
-        <td><%= @event.reporting_agency.secondary_entity.current_place.name unless @event.reporting_agency.nil?%></td>
+        <td><%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%></td>
       </tr>
       <tr>
         <td><span class="label">Reporter Phone number:</span></td>
-        <td><% p = @event.reporter.secondary_entity.telephone unless @event.reporter.nil? %>
+        <td><% p = @event.reporter.active_secondary_entity.telephone unless @event.reporter.nil? %>
         <% if not p.nil? %>
           <%= fml " (", p.area_code, ") " if p.area_code -%>
           <%= phone_number(p.phone_number) -%>
@@ -180,7 +180,7 @@
         </tr>
         </tr>
           <td><span class="label">Jurisdiction:</span></td>
-          <td><%= @event.jurisdiction.secondary_entity.current_place.name unless @event.jurisdiction.nil?%></td>
+          <td><%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%></td>
           <td><span class="label">Event Name:</span></td>
           <td><%= @event.event_name %></td>  
         <tr>
