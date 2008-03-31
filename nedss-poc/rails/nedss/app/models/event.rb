@@ -339,6 +339,7 @@ class Event < ActiveRecord::Base
                                       (entity_id) *
                                FROM
                                       people
+                               ORDER BY entity_id, created_at DESC
                               ) AS people
                                 ON people.entity_id = p.primary_entity_id
                       LEFT OUTER JOIN 
