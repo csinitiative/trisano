@@ -381,11 +381,17 @@ class Event < ActiveRecord::Base
            ) AS p3
     LEFT OUTER JOIN 
            ( SELECT DISTINCT ON 
-                    (entity_id, entity_location_type_id) *
+                    (entity_id) entity_id, location_id
              FROM
-                    entities_locations
+                    entities_locations, codes
+             WHERE
+                    codes.code_name = 'yesno'  
+             AND
+                    codes.the_code = 'Y'
+             AND
+                    entities_locations.primary_yn_id = codes.id
              ORDER BY
-                    entity_id, entity_location_type_id, created_at DESC
+                    entity_id, created_at DESC
            ) AS el ON el.entity_id = p3.primary_entity_id
     LEFT OUTER JOIN 
            locations l ON l.id = el.location_id
