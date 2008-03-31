@@ -3,9 +3,9 @@ class Participation < ActiveRecord::Base
   belongs_to :primary_entity, :foreign_key => :primary_entity_id, :class_name => 'Entity'
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
-  has_many :hospitals_participations
-  has_many :participations_treatments
-  has_many :participations_risk_factors
+  has_many :hospitals_participations, :order => 'created_at ASC'
+  has_many :participations_treatments, :order => 'created_at ASC'
+  has_many :participations_risk_factors, :order => 'created_at ASC'
 
   validates_associated :primary_entity
   validates_associated :secondary_entity
