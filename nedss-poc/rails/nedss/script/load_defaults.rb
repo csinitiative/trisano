@@ -82,6 +82,8 @@ PrivilegesRole.transaction do
   mike = User.find_by_user_name('mike')
   chuck = User.find_by_user_name('chuck')
   davidjackson = User.find_by_user_name('davidjackson')
+  richard = User.find_by_user_name('Rkurzban')
+  ben = User.find_by_user_name('benjamingoodrich')
                   
   roles = Role.find(:all)
   privileges = Privilege.find(:all)
@@ -102,6 +104,8 @@ PrivilegesRole.transaction do
       mike.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
       chuck.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
       davidjackson.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      richard.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      ben.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
       
     end
   end
