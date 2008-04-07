@@ -1,6 +1,6 @@
 Story: CMR search user acceptance tests
 
-  As a user
+  As an investigator
   I want to search for CMRs
   So I can know if they are already in the system
 

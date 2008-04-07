@@ -26,10 +26,6 @@ steps_for(:search_uat) do
     add_person(first_name, last_name)
   end
 
-  When("I search with the transposed names $name") do |name|
-    get "/search/people?name=#{name}"
-  end
-  
   # This "when" must precede the following one
   When("I search for the person named $person, born $birthdate") do |person, birthdate|
       get "/search/people?name=#{person}&birth_date=#{birthdate}"
