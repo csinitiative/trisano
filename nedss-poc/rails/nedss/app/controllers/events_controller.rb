@@ -82,8 +82,8 @@ class EventsController < ApplicationController
           :telephone => {} 
         }
       },
-      :active_jurisdiction     => {},
-      :active_hospital         => { :hospitals_participation => {} }
+      :active_jurisdiction => {},
+      :active_hospital => { :hospitals_participation => {} }
     )
                              
     prepopulate if !params[:from_search].nil?

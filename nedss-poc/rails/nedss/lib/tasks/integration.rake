@@ -16,12 +16,10 @@ namespace :nedss do
       
       # Because of some strange error, this task has to be run after a successful spec run
       # and the following doesn't work yet
-#      ruby "-S rake db:drop RAILS_ENV=test"
-#      ruby "-S rake db:create RAILS_ENV=test"
-#      ruby "-S rake db:migrate RAILS_ENV=test"
-#      ruby "-S rake spec:db:fixtures:load RAILS_ENV=test"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes.rb RAILS_ENV=test"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb RAILS_ENV=test"
+
+      Rake::Task["db:test:prepare"].invoke
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
       ruby 'stories/integration/all.rb'
     end
     

@@ -1,78 +1,106 @@
 
 steps_for(:search_uat) do
+
+  # NOTE:  Similarly worded statements must appear in a certain order, most specific to least.
+  # These are highlighted below
+
+  Given("I am logged in as an investigator") do
+    ENV['NEDSS_UID'] = 'utah'
+  end
+
+  Given("a person named $first_name $last_name, born $birth_date, gender $gender, and residing in $county County is created") do |first_name, last_name, birth_date, gender, county|
+    add_person(first_name, last_name, birth_date, gender, county)
+  end
   
-    # This was done at great speed. Debt: 
-    #   DRY this up.
-    #   Figure out the scoping by scenarios
-    #     So the whens/thens can be reused
-    #     And story lines don't have to be unique
-    
-    When("I search for the known person '$person'") do |person|
-      get "/search/people?name=#{person}"
-    end
+  Given("no person named $first_name $last_name exists") do |first_name, last_name|
+    # Do nothing, ultimately should delete when delete is ready
+  end
+
+  # This "Given" must precede the following one
+  Given("a person named $first_name $last_name, born $birth_date is created") do |first_name, last_name, birth_date|
+    add_person(first_name, last_name, birth_date)
+  end
+
+  # This "Given" must follow the previous one
+  Given("a person named $first_name $last_name is created") do |first_name, last_name|
+    add_person(first_name, last_name)
+  end
+
+  When("I search with the transposed names $name") do |name|
+    get "/search/people?name=#{name}"
+  end
   
-    Then("known person '$person' should appear in the search results.") do |person|
-      # This needs to be refined, as the person will show up just because they are in the search fields of the response
-      # This is OK for now, as long as the search doesn't include a middle name, but the results do
-      response.should have_text(/#{person}/)
-    end
-    
-    Then("the birthdate '$birth_date' should appear in the search results.") do |birth_date|
-      # Get some more accurate parsing in here. Other fixture rows with identical birth dates could cause a false positive
-      response.should have_text(/#{birth_date}/)
-    end
-    
-    Then("the gender '$gender' should appear in the search results.") do |gender|
-      # Again, more specific parsing
-      response.should have_text(/#{gender}/)
-    end
-    
-    Then("the county '$county' should appear in the search results.") do |county|
-      # And again -- maybe parse out the result row and then just search that row in the cases that follow
-      response.should have_text(/#{county}/)
-    end
-    
-    When("I search for the non-existent person '$person'") do |person|
-      get "/search/people?name=#{person}"
-    end
-    
-    Then("non-existent person '$person' should not be returned.") do |person|
-      response.should have_text(/no results/)
-    end
-    
-    When("I search with the mispelled name '$name'") do |name|
-      get "/search/people?name=#{name}"
-    end
+  # This "when" must precede the following one
+  When("I search for the person named $person, born $birthdate") do |person, birthdate|
+      get "/search/people?name=#{person}&birth_date=#{birthdate}"
+  end
+
+  # This "when" must follow the preceding one
+  When("I search for $person") do |person|
+    get "/search/people?name=#{person}"
+  end
   
-    Then("the correctly spelled name of '$person' should appear in the search results.") do |name|
-      response.should have_text(/#{name}/)
-    end
+  Then("$person should not be returned") do |person|
+    response.should have_text(/no results/)
+  end
     
-    When("I search with the transposed names '$name'") do |name|
-      get "/search/people?name=#{name}"
+  # This "then" must precede the following one
+  Then("$value should appear in the search results as a link") do |value|
+    response.should_not have_text(/no results/)
+
+    response.should have_tag('table') do
+      with_tag('tr') do
+        with_tag('td') do
+          with_tag('a', /#{value}/)
+        end
+      end
     end
+  end
+
+  # This "then" must follow the preceding one
+  Then("$value should appear in the search results") do |value|
+    response.should_not have_text(/no results/)
+
+    response.should have_tag('table') do
+      with_tag('tr') do
+        with_tag('td', /#{value}/ )
+      end
+    end
+  end
+    
+end
+
+def add_person(first_name = nil, last_name = nil, birth_date = "01/01/1970", gender = "Unknown", county = "Beaver")
   
-    Then("the non-tranposed name of '$name' should appear in the search results.") do |name|
-      response.should have_text(/#{name}/)
-    end
-    
-    When("I search for the person by birthdate '$person' by the correct birthdate of '$birthdate'") do |person, birthdate|
-        get "/search/people?name=#{person}&birth_date=#{birthdate}"
-    end
-  
-    Then("known person by birthdate '$person' with correct birthdate '$birthdate' should appear in the search results.") do |person, birthdate|
-      # This needs to be refined, as the person and birthdate will show up just because they are in the search fields of the response
-      # This is OK for now, as long as the search doesn't include a middle name, but the results do
-      response.should have_text(/#{person}/) 
-      response.should have_text(/#{birthdate}/)
-    end
-    
-    When("I search for the person by correct name '$person' but the incorrect birthdate of '$birthdate'") do |person, birthdate|
-        get "/search/people?name=#{person}&birth_date=#{birthdate}"
-    end
-  
-    Then("known person by incorrect birthdate '$person' should not appear in the search results.") do |person|
-      response.should_not have_text(/#{person}/)
-    end
-    
+  # StoryRunner swallows errors in "givens", thus we wrap in an exception handler
+  begin
+    gender.capitalize!
+    county.capitalize!
+    birth_date = Date.parse(birth_date) unless birth_date.class == "Date"
+    county = Code.find_by_code_name_and_code_description("county", county)
+    county_id = county.id
+    birth_gender_id = Code.find_by_code_name_and_code_description("gender", gender).id
+
+    @entity = Entity.new(
+      { :entity_type => 'person',
+        :person => { 
+          :first_name => first_name,
+          :last_name => last_name,
+          :birth_date => birth_date,
+          :birth_gender_id => birth_gender_id
+        },
+        :entities_location => { 
+          :entity_location_type_id => Code.unspecified_location_id,
+          :primary_yn_id => Code.yes_id 
+        },
+        :address => {
+          :county_id => county_id
+        }
+      }
+    )
+
+    @entity.save!
+  rescue
+    p $!
+  end
 end

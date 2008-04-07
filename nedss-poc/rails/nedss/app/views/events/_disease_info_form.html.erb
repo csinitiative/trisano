@@ -32,7 +32,7 @@
 
     <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
       <span class="horiz">
-        <%= p.label(:hospital) %>
+        <%= p.label(:secondary_entity_id, "Hospital") %>
         <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
       </span>
 

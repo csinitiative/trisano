@@ -1,40 +1,57 @@
 Story: Search user acceptance tests
 
-  As a user
+  As an investigator
   I want to search for people
   So I can know if they are already in the system
 
   Scenario: Search for known users
     
-    When I search for the known person 'Karl Marks'
-    Then known person 'Karl S. Marks' should appear in the search results.
-    And the birthdate '1977-02-17' should appear in the search results.
-    And the gender 'Male' should appear in the search results.
-    And the county 'Salt Lake' should appear in the search results.
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977, gender male, and residing in Daggett County is created
+    When I search for Karl Marks
+
+    Then Karl Marks should appear in the search results as a link
+    And 31 / 1977-02-17 should appear in the search results
+    And Male should appear in the search results
+    And Daggett should appear in the search results
 
   Scenario: Search for users known not to exist
 
-    When I search for the non-existent person 'Xavier Xerces'
-    Then non-existent person 'Xavier Xerces' should not be returned.
+    Given I am logged in as an investigator
+    And no person named Xavier Xerces exists
+
+    When I search for Xavier Xerces
+    Then Xavier Xerces should not be returned
 
   Scenario: Search for users with their names slightly mis-spelled
 
-    When I search with the mispelled name 'Grocho Marks'
-    Then the correctly spelled name of 'Groucho Julius Marx' should appear in the search results.
+    Given I am logged in as an investigator
+    And a person named Karl Marks is created
+
+    When I search for Karl Marx
+    Then Karl Marks should appear in the search results as a link
 
   Scenario: Search for users with their first and last names transposed
 
-    When I search with the transposed names 'Marx Groucho'
-    Then the non-tranposed name of 'Groucho Julius Marx' should appear in the search results.
+    Given I am logged in as an investigator
+    And a person named Karl Marks is created
+
+    When I search for Marks Karl
+    Then Karl Marks should appear in the search results as a link
 
   Scenario: Search for users by correct birthdate
 
-    When I search for the person by birthdate 'Groucho Marx' by the correct birthdate of '10/2/1902'
-    Then known person by birthdate 'Groucho Julius Marx' with correct birthdate '10/2/1902' should appear in the search results.
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977 is created
+
+    When I search for the person named Karl Marks, born 02/17/1977
+    Then Karl Marks should appear in the search results as a link
+    And 1977-02-17 should appear in the search results
 
   Scenario: Search for users by incorrect birthdate
 
-    When I search for the person by correct name 'Groucho Marx' but the incorrect birthdate of '10/2/1903'
-    Then known person by incorrect birthdate 'Groucho Julius Marx' should not appear in the search results.
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977 is created
 
-
+    When I search for the person named Karl Marks, born 03/18/1978
+    Then Karl Marks should not be returned

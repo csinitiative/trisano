@@ -40,7 +40,7 @@
     - for person in @people
       %tr
         %td
-          = link_to("#{person.first_name} #{person.middle_name if !person.middle_name.blank?} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
+          = link_to("#{person.first_name} #{person.last_name}", { :controller => "entities", :action => "show", :id => person.entity_id })
         %td
           - if  !person.birth_date.blank?
             = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"

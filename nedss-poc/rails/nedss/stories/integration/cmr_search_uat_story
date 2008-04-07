@@ -6,23 +6,25 @@ Story: CMR search user acceptance tests
 
   Scenario: Search for known CMRs by disease
     
-    Given that the test database is populated with codes and defaults
-    When I search for all CMRs for the known person 'Karl Marks' with the disease 'Chicken Pox'
-    Then I should see at least one result with the person 'Karl S. Marks' and the disease 'Chicken Pox'
-    And the results should also include record number, age, county, and event date
+    Given I am logged in as an investigator
+    And a CMR is created in Davis County Health Department for a male named Karl Marks of Beaver county born 01/01/1970 and infected with Tetanus
+
+    When I search for CMRs for people named Karl Marks infected with Tetanus
+    Then the results should contain a record number, a link to Karl Marks, his age and the birth date 01/01/1970, gender male, county Beaver, disease tetanus, jurisdiction Davis County Health Department, and today's date
 
   Scenario: Search for known CMRs with starts-with search
-    
-    Given that the test database is populated with codes and defaults
 
-    When I search for all CMRs with the starts-with first name of 'K' and the last name starts-with of 'M'
-    Then I should see at least one result with the person 'Karl S. Marks'
+    Given I am logged in as an investigator
+    And a CMR is created in Davis County Health Department for a male named Karl Marks of Beaver county born 01/01/1970 and infected with Tetanus
 
-    When I search for all CMRs with the starts-with first name of 'K'
-    Then I should see at least one result with the person 'Karl S. Marks'
+    When I search for CMRs where first name starts with K and last name starts with M
+    Then I should see at least one result with the person Karl Marks
 
-    When I search for all CMRs with the starts-with last name of 'M'
-    Then I should see at least one result with the person 'Karl S. Marks'
+    When I search for CMRs where first name starts with K
+    Then I should see at least one result with the person Karl Marks
 
-    When I search for all CMRs with the full text name of 'Karl Marks' and the starts-with last name of 'Xyz'
+    When I search for CMRs where last name starts with M
+    Then I should see at least one result with the person Karl Marks
+
+    When I search for CMRs with a full text name of Karl Marks and a last name starting with Xyz
     Then the full text search should be ignored and no results should display
