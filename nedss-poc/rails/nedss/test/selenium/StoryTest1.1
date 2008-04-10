@@ -15,12 +15,27 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=CMR Search</td>
+	<td>link=View CMRs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Smoker</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Steve</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=People Search</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>sw_last_name</td>
+	<td>name</td>
 	<td>Smoker</td>
 </tr>
 <tr>
@@ -30,28 +45,18 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>2008000001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
 	<td>Steve Smoker</td>
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>sw_last_name</td>
+	<td>clickAndWait</td>
+	<td>link=CMR Search</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name</td>
-	<td>smooker stephen</td>
+	<td>Stephen Smoker</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -60,7 +65,17 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>2008000001</td>
+	<td>Steve Smoker</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>Stephen Smooker</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@type='submit']</td>
 	<td></td>
 </tr>
 <tr>
@@ -71,7 +86,7 @@
 <tr>
 	<td>type</td>
 	<td>name</td>
-	<td>chuck smokesalot</td>
+	<td>Stephen Smokesalot</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -86,7 +101,7 @@
 <tr>
 	<td>type</td>
 	<td>name</td>
-	<td>stephen smoker</td>
+	<td>Stephen </td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -95,18 +110,13 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>2008000001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Steve Smoker 	</td>
+	<td>Your search returned no results.</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>name</td>
-	<td>smooker</td>
+	<td>Steve</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -115,17 +125,72 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>2008000001</td>
+	<td>Steve Smoker</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Steve Smoker 	</td>
+	<td>type</td>
+	<td>name</td>
 	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>sw_first_name</td>
+	<td>smo</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>//input[@type='submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Your search returned no results. </td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>sw_first_name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>sw_last_name</td>
+	<td>smo</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@type='submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Steve Smoker</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>sw_last_name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Bear River Health Department</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>jurisdiction_id</td>
+	<td>label=Bear River Health Department</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@type='submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Bear River Health Department</td>
 	<td></td>
 </tr>
 
