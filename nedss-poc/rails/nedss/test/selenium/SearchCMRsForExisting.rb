@@ -1,7 +1,7 @@
 require "selenium"
 require "test/unit"
 
-class StoryTest1.1 < Test::Unit::TestCase
+class SearchCMRsForExisting < Test::Unit::TestCase
   def setup
     @verification_errors = []
     if $selenium
@@ -10,7 +10,7 @@ class StoryTest1.1 < Test::Unit::TestCase
       @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*firefox", "http://localhost:4444", 10000);
       @selenium.start
     end
-    @selenium.set_context("test_story_test1.1", "info")
+    @selenium.set_context("test_search_c_m_rs_for_existing", "info")
   end
   
   def teardown
@@ -18,7 +18,7 @@ class StoryTest1.1 < Test::Unit::TestCase
     assert_equal [], @verification_errors
   end
   
-  def test_story_test1.1
+  def test_search_c_m_rs_for_existing
     @selenium.open "/nedss/"
     @selenium.click "link=View CMRs"
     @selenium.wait_for_page_to_load "30000"
