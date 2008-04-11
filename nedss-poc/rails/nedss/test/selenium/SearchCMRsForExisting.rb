@@ -15,7 +15,7 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
       @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*firefox", NEDSS_URL, 10000);
       @selenium.start
     end
-    @selenium.set_context("test_search_c_m_rs_for_existing", "info")
+    @selenium.set_context("test_search_c_m_rs_for_existing")
   end
   
   def teardown
