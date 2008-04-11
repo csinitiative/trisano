@@ -1,13 +1,18 @@
-require "selenium"
-require "test/unit"
+require 'rubygems'
+require 'selenium'
+require 'test/unit'
 
 class SearchCMRsForExisting < Test::Unit::TestCase
+
+NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
+
+
   def setup
     @verification_errors = []
     if $selenium
       @selenium = $selenium
     else
-      @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*firefox", "http://localhost:4444", 10000);
+      @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*firefox", NEDSS_URL, 10000);
       @selenium.start
     end
     @selenium.set_context("test_search_c_m_rs_for_existing", "info")
