@@ -41,12 +41,12 @@
 <tr>
 	<td>type</td>
 	<td>event_active_patient__active_primary_entity__address_street_name</td>
-	<td>Street With a Very Long Name and Characters Like . !@*%)(-=432 street. How long is this field ? Holy crap it just goes on and on and on and on and on</td>
+	<td>Street With a Very Long Name</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>event_active_patient__active_primary_entity__address_unit_number</td>
-	<td>44444444444444444444444</td>
+	<td>4444</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -506,6 +506,16 @@
 <tr>
 	<td>click</td>
 	<td>//li[5]/a/em</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_reporter__active_secondary_entity__telephone_phone_number</td>
+	<td>5818888</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>event_submit</td>
 	<td></td>
 </tr>
 
