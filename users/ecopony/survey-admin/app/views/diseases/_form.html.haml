@@ -3,3 +3,10 @@
   %b Name
   %br
   = f.text_field :name
+
+%p
+  %b Program
+  %br
+  = f.collection_select(:program_id, Program.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+

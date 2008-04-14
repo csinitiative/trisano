@@ -6,7 +6,8 @@ describe "/diseases/new.html.erb" do
   before(:each) do
     @disease = mock_model(Disease)
     @disease.stub!(:new_record?).and_return(true)
-    @disease.stub!(:name).and_return("MyString")
+    @disease.stub!(:program_id).and_return(nil)
+    @disease.stub!(:name).and_return("Enterics")
     assigns[:disease] = @disease
   end
 

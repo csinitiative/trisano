@@ -5,7 +5,8 @@ describe "/diseases/edit.html.erb" do
   
   before do
     @disease = mock_model(Disease)
-    @disease.stub!(:name).and_return("MyString")
+    @disease.stub!(:name).and_return("Enterics")
+    @disease.stub!(:program_id).and_return(1)
     assigns[:disease] = @disease
   end
 
