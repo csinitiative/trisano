@@ -7,7 +7,11 @@
   = stylesheet_link_tag '../yui/build/reset-fonts-grids/reset-fonts-grids.css'
   = stylesheet_link_tag '../yui/build/base/base-min.css'
   = stylesheet_link_tag '../yui/build/assets/skins/sam/skin.css'
-  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/button/assets/skins/sam/button.css"> 
+
+  <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.5.1/build/button/assets/skins/sam/button.css">
+
+  = stylesheet_link_tag 'scaffold'
+  = stylesheet_link_tag 'main'
 
   <script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
   <script type="text/javascript" src="http://yui.yahooapis.com/2.5.1/build/element/element-beta-min.js"></script> 
@@ -21,23 +25,27 @@
 
   %div{:id => "doc", :class => "yui-t2"}
 
-    %div{:id => "hd"}
-      %h1 Survey Admin Tool
+    %div{:id => "hd", :class => "hd"}
+      %h2 Survey Admin Tool
 
     %div{:id => "bd"}
 
       %div{:id => "yui-main"}
 
         %div{:class => "yui-b"}
+          %br
           = yield
       
       %div{:class => "yui-b"}
-        Disease
+        %br
+        = link_to 'Disease', diseases_path
         %br
         Form
 
-    %div{:id => "ft"}
-      footer
+    %br
+    %br
+    %div{:id => "ft", :class => "ft"}
+      
 
 
   %script{:type => "text/javascript"}

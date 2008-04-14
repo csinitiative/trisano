@@ -1,0 +1,150 @@
+body {
+  background-color: #fff;
+  color: #333;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+}
+
+body, p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+
+th {
+  text-align: left;
+  font-weight: bold;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+fieldset.form
+{
+  border: 0 solid #FFFFFF;
+  border-top: 1px solid #000000;
+  margin: 0 0 1em 0;
+  padding: 0 1em 1em 1em;
+}
+
+fieldset.vert
+{
+  border: 0;
+  margin: 0 0 0em 0;
+  padding: 0 0em 0em 0em;
+}
+
+fieldset.radio
+{
+  margin: 1em 0 2em 0;
+}
+
+fieldset.radio input
+{
+  clear: both;
+  float: left;
+  width: auto;
+}
+
+fieldset.radio label
+{
+  font-weight: normal;
+}
+
+input
+{
+#  display: block;
+}
+
+input.submit
+{
+  clear: both;
+}
+
+label
+{
+  display: block;
+  margin: 1em 1em 0 0;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+select
+{
+  display: block;
+}
+
+.horiz
+{
+  display: block;
+  float: left;
+  margin: 0em 1em 0 0;
+}
+
+.vert
+{
+  display: block;
+}
+
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid gray;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+

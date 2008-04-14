@@ -1,0 +1,15 @@
+%h1 Editing disease
+
+= error_messages_for :disease
+
+- form_for(@disease) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+  
+  %p
+    = f.submit "Update"
+
+
+= link_to 'Show', @disease 
+|
+= link_to 'Back', diseases_path 
