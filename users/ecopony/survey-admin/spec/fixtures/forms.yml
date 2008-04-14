@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  description: MyString
+  jurisdiction_id: 1
+  disease_id: 1
+  status: 1
+
+two:
+  name: MyString
+  description: MyString
+  jurisdiction_id: 1
+  disease_id: 1
+  status: 1

@@ -1,0 +1,28 @@
+
+%p
+  %b Name
+  %br
+  = f.text_field :name
+
+%p
+  %b Description
+  %br
+  = f.text_field :description
+
+%p
+  %b Disease
+  %br
+  = f.collection_select(:disease_id, Disease.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+%p
+  %b Jurisdiction
+  %br
+  = f.collection_select(:jurisdiction_id, Jurisdiction.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+
+/ %p
+/  %b Status
+/  %br
+/  = f.collection_select(:status_id, Status.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+

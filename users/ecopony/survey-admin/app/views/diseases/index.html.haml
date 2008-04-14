@@ -4,11 +4,14 @@
 %table
   %tr
     %th Name
+    %th Program
     %th{:colspan => 3} Actions
   - for disease in @diseases
     %tr
       %td
         = h disease.name
+      %td
+        = h disease.program.name if !disease.program.nil?
       %td
         = link_to 'Show', disease
       %td

@@ -7,6 +7,10 @@
   %b Name: 
   =h @disease.name
 
+%p
+  %b Program: 
+  =h @disease.program.name if !@disease.program.nil?
+
 = link_to 'Edit', edit_disease_path(@disease)
 |
 = link_to 'Back', diseases_path

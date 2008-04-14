@@ -1,0 +1,20 @@
+
+%h1 
+  Form details: 
+  =@form.name
+
+%p
+  %b Name: 
+  =h @form.name
+
+%p
+  %b Disease: 
+  =h @form.disease.name
+
+%p
+  %b Jurisdiction: 
+  =h @form.jurisdiction.name
+
+= link_to 'Edit', edit_form_path(@form)
+|
+= link_to 'Back', forms_path
