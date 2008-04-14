@@ -1,0 +1,21 @@
+
+%h1 Listing jurisdictions
+
+%table
+  %tr
+    %th Name
+    %th{:colspan => 3} Actions
+  - for jurisdiction in @jurisdictions
+    %tr
+      %td
+        = h jurisdiction.name
+      %td
+        = link_to 'Show', jurisdiction
+      %td
+        = link_to 'Edit', edit_jurisdiction_path(jurisdiction)
+      %td
+        = link_to 'Destroy', jurisdiction, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New jurisdiction', new_jurisdiction_path

@@ -7,6 +7,14 @@
   = render :partial => 'form', :locals => { :f => f }
 
   %p
-    = f.submit "Create"
+    %span{:id => "submitbutton" }
+      %span{:class => "first-child"}
+        = f.submit "Create"
 
-= link_to 'Back', diseases_path 
+= link_to 'Back', diseases_path
+
+
+
+<script type="text/javascript">
+var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
+</script>

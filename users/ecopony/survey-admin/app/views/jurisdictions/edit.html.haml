@@ -1,8 +1,8 @@
-%h1 Editing disease
+%h1 Editing jurisdiction
 
-= error_messages_for :disease
+= error_messages_for :jurisdiction
 
-- form_for(@disease) do |f|
+- form_for(@jurisdiction) do |f|
 
   = render :partial => 'form', :locals => { :f => f }
   
@@ -12,16 +12,11 @@
         = f.submit "Update"
 
 
-= link_to 'Show', @disease 
+= link_to 'Show', @jurisdiction 
 |
-= link_to 'Back', diseases_path 
+= link_to 'Back', jurisdictions_path 
 
 %br
-
-%h3 Disease Investigation Forms
-
-
-
 
 
 <script type="text/javascript">
