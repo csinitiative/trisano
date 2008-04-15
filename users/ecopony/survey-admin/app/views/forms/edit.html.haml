@@ -26,31 +26,34 @@
   %legend
     Form Builder
 
-    
-    - for section in @form.sections
-      %table{:width => "100%"}
-        %tr{:bgcolor => "#ededed"}
-          %td
-            Section:
-            = section.name
-        - for group in section.groups
-          %tr
-            %td
-              Group: 
-              = group.name
-        %tr
-          %td
-            Add Group
-            |
-            Create New Group
+    %ul{:id => "section-list"}
+      
+      - for section in @form.sections
+        %li
+          %table{:width => "100%"}
+            %tr{:bgcolor => "#ededed"}
+              %td
+                Section:
+                = section.name
+            - for group in section.groups
+              %tr
+                %td
+                  Group: 
+                  = group.name
+            %tr
+              %td
+                Add Group
+                |
+                Create New Group
  
-    Add Section
+      Add Section
         
     
 
   - if @form.sections.blank?
     None.
 
+= sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')
 
 <script type="text/javascript">
 var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
