@@ -4,11 +4,11 @@
   =@disease.name
 
 %p
-  %b Name: 
+  %label Name: 
   =h @disease.name
 
 %p
-  %b Program: 
+  %label Program: 
   =h @disease.program.name if !@disease.program.nil?
 
 = link_to 'Edit', edit_disease_path(@disease)

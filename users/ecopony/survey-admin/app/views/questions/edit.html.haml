@@ -1,0 +1,23 @@
+%h1 Editing question
+
+= error_messages_for :question
+
+- form_for(@question) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+  
+  %p
+    %span{:id => "submitbutton" }
+      %span{:class => "first-child"}
+        = f.submit "Update"
+
+
+= link_to 'Show', @question 
+|
+= link_to 'Back', questions_path 
+
+%br
+
+<script type="text/javascript">
+var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
+</script>
