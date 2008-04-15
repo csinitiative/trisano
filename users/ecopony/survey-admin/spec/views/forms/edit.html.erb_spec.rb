@@ -5,8 +5,12 @@ describe "/forms/edit.html.erb" do
   
   before do
     
+    group = mock_model(Group)
+    group.stub!(:name).and_return("Standard Demographics")
+    
     section = mock_model(Section)
     section.stub!(:name).and_return("Tummy Ache Demographics")
+    section.stub!(:groups).and_return([group])
     
     @form = mock_model(Form)
     @form.stub!(:name).and_return("MyString")

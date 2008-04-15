@@ -26,16 +26,30 @@
   %legend
     Form Builder
 
-  - for section in @form.sections
-    %b
-      = section.name
-    %br
+    
+    - for section in @form.sections
+      %table{:width => "100%"}
+        %tr{:bgcolor => "#ededed"}
+          %td
+            Section:
+            = section.name
+        - for group in section.groups
+          %tr
+            %td
+              Group: 
+              = group.name
+        %tr
+          %td
+            Add Group
+            |
+            Create New Group
+ 
+    Add Section
+        
+    
 
   - if @form.sections.blank?
     None.
-
-      
-
 
 
 <script type="text/javascript">

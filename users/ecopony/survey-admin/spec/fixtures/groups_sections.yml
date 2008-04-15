@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  form_id: 1
+  group_id: 1
+  section_id: 1
+  position: 1
+
+two:
+  form_id: 1
+  group_id: 1
+  section_id: 1
+  position: 1
