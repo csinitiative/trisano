@@ -20,7 +20,11 @@
 
 %h3 Disease Investigation Forms
 
+- for form in @forms
+  = form.name
 
+- if @forms.blank?
+  None.
 
 
 

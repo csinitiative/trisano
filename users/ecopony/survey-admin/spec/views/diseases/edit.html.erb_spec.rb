@@ -7,7 +7,11 @@ describe "/diseases/edit.html.erb" do
     @disease = mock_model(Disease)
     @disease.stub!(:name).and_return("Enterics")
     @disease.stub!(:program_id).and_return(1)
+    
+    @forms = []
+    
     assigns[:disease] = @disease
+    assigns[:forms] = @forms
   end
 
   it "should render edit form" do

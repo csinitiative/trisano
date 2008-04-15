@@ -35,6 +35,7 @@ class DiseasesController < ApplicationController
   # GET /diseases/1/edit
   def edit
     @disease = Disease.find(params[:id])
+    @forms = Form.find(:all)
   end
 
   # POST /diseases
