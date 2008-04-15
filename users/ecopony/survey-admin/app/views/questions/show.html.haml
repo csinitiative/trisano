@@ -11,6 +11,10 @@
   %label Help: 
   =h @question.help
 
+%p
+  %label Type: 
+  =h @question.question_type.name
+
 = link_to 'Edit', edit_question_path(@question)
 |
 = link_to 'Back', questions_path

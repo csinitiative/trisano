@@ -8,3 +8,8 @@
   %label Help
   %br
   = f.text_field :help
+
+%p
+  %label Question type
+  %br
+  = f.collection_select(:question_type_id, QuestionType.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
