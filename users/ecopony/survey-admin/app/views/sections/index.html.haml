@@ -1,0 +1,24 @@
+
+%h1 Listing sections
+
+%table
+  %tr
+    %th Name
+    %th Form
+    %th{:colspan => 3} Actions
+  - for section in @sections
+    %tr
+      %td
+        = h section.name
+      %td
+        = h section.form.name if !section.form.nil?
+      %td
+        = link_to 'Show', section
+      %td
+        = link_to 'Edit', edit_section_path(section)
+      %td
+        = link_to 'Destroy', section, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New section', new_section_path

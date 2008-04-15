@@ -1,27 +1,27 @@
 
 %p
-  %b Name
+  %label Name
   %br
   = f.text_field :name
 
 %p
-  %b Description
+  %label Description
   %br
   = f.text_field :description
 
 %p
-  %b Disease
+  %label Disease
   %br
   = f.collection_select(:disease_id, Disease.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
 
 %p
-  %b Jurisdiction
+  %label Jurisdiction
   %br
   = f.collection_select(:jurisdiction_id, Jurisdiction.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
 
 
 / %p
-/  %b Status
+/  %label Status
 /  %br
 /  = f.collection_select(:status_id, Status.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
 

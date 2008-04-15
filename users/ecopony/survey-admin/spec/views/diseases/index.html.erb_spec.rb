@@ -12,7 +12,6 @@ describe "/diseases/index.html.erb" do
     disease_98.should_receive(:name).and_return("MyString")
     disease_98.stub!(:program).and_return(program)
     
-    
     disease_99 = mock_model(Disease)
     disease_99.should_receive(:name).and_return("MyString")
     disease_99.stub!(:program).and_return(program)
