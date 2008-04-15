@@ -26,6 +26,14 @@
   %legend
     Form Builder
 
+  - for section in @form.sections
+    %b
+      = section.name
+    %br
+
+  - if @form.sections.blank?
+    None.
+
       
 
 
