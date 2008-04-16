@@ -18,6 +18,24 @@ ul.white {
   list-style-type: none; color: #fff;
 }
 
+ul.draggableMenu {
+  list-style-type: none;
+  margin-left: 5px;
+  padding-left: 5px;
+}
+
+ul.draggableMenu li {
+  background-color: #fff;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: #efefef;
+  border-bottom-width: 0px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+}
+
 .hd {
   height: 36px;
   color: #B9B9A0;

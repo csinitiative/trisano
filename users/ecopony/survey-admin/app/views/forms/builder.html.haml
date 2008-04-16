@@ -1,39 +1,47 @@
 
-= link_to "Back to form", form_path(@form)
+= link_to "Back to form edit", edit_form_path(@form)
 
 %h2
   = @form.name
   Builder
 
-
-
 %table{:width => "100%"}
   %tr
-    %td
+    %td{:valign => "top"}
       %fieldset
         %legend
           Sections
-        %ul{:id => "section-list"}
+        %ul{:id => "section-list", :class => "draggableMenu"}
           - for section in @form.sections
             %li
               = section.name
  
         - if @form.sections.blank?
           None.
+          %br
+          %br
 
-    %td
+        Add Section
+    %td{:valign => "top"}
       %fieldset
         %legend
           Group
+        Select a section.
   %tr
-    %td
+    %td{:valign => "top"}
       %fieldset
         %legend
-          Question
-    %td
+          Questions
+        Select a group.
+    %td{:valign => "top"}
       %fieldset
         %legend
-          Answer
+          Answer Set
+        Select a question.
+
+%h2
+  = @form.name
+  Preview
 
 
 = sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')

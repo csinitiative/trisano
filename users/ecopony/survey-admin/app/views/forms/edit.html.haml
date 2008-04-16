@@ -18,57 +18,11 @@
 
     = link_to 'Show', @form 
     |
-    = link_to 'Back', forms_path 
+    = link_to 'Back', forms_path
+    |
+    = link_to 'Form Builder', builder_path(@form)
 
     %br
-
-%fieldset
-  %legend
-    Sections
-
-    %ul{:id => "section-list"}
-      
-      - for section in @form.sections
-        %li
-          %table{:width => "100%"}
-            %tr{:bgcolor => "#ededed"}
-              %td
-                Section:
-                = section.name
-            - for group in section.groups
-              %tr
-                %td
-                  Group: 
-                  = group.name
-            %tr
-              %td
-                Add Group
-                |
-                Create New Group
- 
-    - if @form.sections.blank?
-      None.
-      %br
-      %br
-
-    <a href="">Add Section</a>
-
-  %br
-  %br
-  
-
-
-  %fieldset
-    %legend
-      Groups
-
-        
-        
-    
-
-
-
-= sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')
 
 <script type="text/javascript">
 var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
