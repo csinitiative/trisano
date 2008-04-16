@@ -13,6 +13,13 @@ fieldset {
 legend {
 }
 
+
+ul {
+  list-style-type: none; color: #fff;
+}
+
+
+
 .hd {
   height: 36px;
   color: #B9B9A0;
