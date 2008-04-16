@@ -16,19 +16,24 @@
           - for section in @form.sections
             %li{:id => "name_#{section.id}"}
               = section.name
-              |
-              = show_groups_link "Show groups", section.groups
+              %small
+                %br
+                  = link_to_remote "Edit section name", :url => { :controller => "forms", :action => "short_section_edit", :id => section.id}
+                  |
+                  = show_groups_link "Show groups", section.groups
  
         - if @form.sections.blank?
           None.
           %br
           %br
 
-        Add Section
+        / = link_to_remote "Add Section", :url => { :controller => "forms", :action => "short_section_new", :id => section.form_id}
+        %div{:id => "section-mods"}
+          / = render :partial => 'sections/short_form', :locals => { :section => Section.new, :form_id => @form.id }
     %td{:valign => "top"}
       %fieldset
         %legend
-          Group
+          Groups
         %div{ :id => "groups" }
           Select a section
         %br

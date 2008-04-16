@@ -1,0 +1,18 @@
+
+= error_messages_for :section
+
+- remote_form_for(section) do |f|
+
+  %p
+  %label Section name
+  %br
+  = f.text_field :name
+  = f.hidden_field :form_id, {:value => form_id}
+
+  %span{:id => "sectionsubmitbutton" }
+    %span{:class => "first-child"}
+      = f.submit "Submit"
+
+<script type="text/javascript">
+var oButton = new YAHOO.widget.Button("sectionsubmitbutton", { type: "submit" } );
+</script>

@@ -102,4 +102,12 @@ class FormsController < ApplicationController
     render :text => "<span style='color: green'>Section sort successful</span>"
   end
   
+  def short_section_new
+    @section = Section.new(:form_id => params[:id])
+  end
+  
+  def short_section_edit
+    @section = Section.find(params[:id])
+  end
+  
 end
