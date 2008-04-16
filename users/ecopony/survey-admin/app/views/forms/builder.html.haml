@@ -1,0 +1,39 @@
+
+= link_to "Back to form", form_path(@form)
+
+%h2
+  = @form.name
+  Builder
+
+
+
+%table{:width => "100%"}
+  %tr
+    %td
+      %fieldset
+        %legend
+          Sections
+        %ul{:id => "section-list"}
+          - for section in @form.sections
+            %li
+              = section.name
+ 
+        - if @form.sections.blank?
+          None.
+
+    %td
+      %fieldset
+        %legend
+          Group
+  %tr
+    %td
+      %fieldset
+        %legend
+          Question
+    %td
+      %fieldset
+        %legend
+          Answer
+
+
+= sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')

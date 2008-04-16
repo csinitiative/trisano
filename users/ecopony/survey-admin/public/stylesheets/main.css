@@ -14,11 +14,9 @@ legend {
 }
 
 
-ul {
+ul.white {
   list-style-type: none; color: #fff;
 }
-
-
 
 .hd {
   height: 36px;

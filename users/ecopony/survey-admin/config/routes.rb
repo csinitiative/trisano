@@ -1,10 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
+  
   map.resources :answers
 
   map.resources :questions
 
   map.resources :question_types
-
 
   map.resources :groups
 
@@ -16,7 +18,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :jurisdictions
 
-  
   map.resources :diseases
 
   # The priority is based upon order of creation: first created -> highest priority.

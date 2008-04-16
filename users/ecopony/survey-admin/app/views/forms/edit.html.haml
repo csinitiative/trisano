@@ -24,9 +24,9 @@
 
 %fieldset
   %legend
-    Form Builder
+    Sections
 
-    %ul{:id => "section-list" }
+    %ul{:id => "section-list"}
       
       - for section in @form.sections
         %li
@@ -46,12 +46,27 @@
                 |
                 Create New Group
  
-    Add Section
+    - if @form.sections.blank?
+      None.
+      %br
+      %br
+
+    <a href="">Add Section</a>
+
+  %br
+  %br
+  
+
+
+  %fieldset
+    %legend
+      Groups
+
+        
         
     
 
-  - if @form.sections.blank?
-    None.
+
 
 = sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')
 
