@@ -1,3 +1,29 @@
+-- 1.5.3 (3 April 2008)
+  * New helper model_auto_completer_result.
+  * Yet another iteration through the docs.
+
+-- 1.5.2 (2 April 2008)
+  * Fixed bug that resulted in a corrupt text field if more than
+    once selection was done clicking with the mouse.
+  * More tests.
+
+-- 1.5.1 (1 April 2008)
+  * A bug fix in 1.5.0 introduced a regression, rollback.
+
+-- 1.5.0 (31 March 2008)
+  * Wrote semi-automated test suite
+  * New option :append_random_suffix to be able to turn random suffixes off
+  * New option :submit_on_return, alias of :send_on_return
+  * Marked :send_on_return as deprecated
+  * Documented dependency with auto_complete in Rails 2
+  * Updated copyright
+  * Added :url option to support named routes
+  * Revised and simplified documentation
+  * Fixed the way the macro auto_complete_belongs_to_for figures out the
+    class name of the association
+  * Fixed a bug that showed up when you selected two items with the mouse
+  * :submit_on_return no longer checks the browser
+
 -- 1.4.1 (5 May 2007)
   * Reworded some bits of the documentation.
 
