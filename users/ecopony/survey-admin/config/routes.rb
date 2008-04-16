@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :answer_sets
+
   
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
   
