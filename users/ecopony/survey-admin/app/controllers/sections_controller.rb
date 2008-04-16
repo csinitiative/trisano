@@ -47,9 +47,7 @@ class SectionsController < ApplicationController
         flash[:notice] = 'Section was successfully created.'
         format.html { redirect_to(@section) }
         format.xml  { render :xml => @section, :status => :created, :location => @section }
-        format.js {
-          p "fart"
-        }
+        format.js { @form = Form.find(@section.form_id)}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @section.errors, :status => :unprocessable_entity }

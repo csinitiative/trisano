@@ -27,7 +27,7 @@
           %br
           %br
 
-        / = link_to_remote "Add Section", :url => { :controller => "forms", :action => "short_section_new", :id => section.form_id}
+        = link_to_remote "Add Section", :url => { :controller => "forms", :action => "short_section_new", :id => section.form_id}
         %div{:id => "section-mods"}
           / = render :partial => 'sections/short_form', :locals => { :section => Section.new, :form_id => @form.id }
     %td{:valign => "top"}
