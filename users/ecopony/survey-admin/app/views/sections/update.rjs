@@ -1,4 +1,5 @@
 page.replace_html 'section-list', :partial => 'section', :collection => @form.sections
+page.replace_html 'section-mods', :partial => 'empty'
 page.visual_effect(:highlight, 'section-list')
 page.sortable('section-list', 
   :update => 'section-info', 
