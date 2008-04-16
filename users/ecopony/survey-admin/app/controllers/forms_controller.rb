@@ -91,4 +91,15 @@ class FormsController < ApplicationController
     end
   end
   
+  def section_sort
+    @sections = Section.find_all_by_form_id(params[:id], :order => :position)
+    
+    @sections.each do |section|
+      section.position = params['section-list'].index(section.id.to_s) + 1
+      section.save!
+    end
+    
+    render :text => "<span style='color: green'>Section sort successful</span>"
+  end
+  
 end

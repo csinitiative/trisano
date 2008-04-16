@@ -11,9 +11,10 @@
       %fieldset
         %legend
           Sections
+        %span{:id => 'section-info'}
         %ul{:id => "section-list", :class => "draggableMenu"}
           - for section in @form.sections
-            %li
+            %li{:id => "name_#{section.id}"}
               = section.name
               |
               = show_groups_link "Show groups", section.groups
@@ -32,6 +33,7 @@
           Select a section
         %br
         Add Group
+
   %tr
     %td{:valign => "top"}
       %fieldset
@@ -49,4 +51,6 @@
   Preview
 
 
-= sortable_element 'section-list', :url => {}, :complete => visual_effect(:highlight, 'section-list')
+= sortable_element 'section-list', :update => 'section-info', :complete => visual_effect(:highlight, 'section-list'), :url => { :action => "section_sort", :id => @form}
+
+
