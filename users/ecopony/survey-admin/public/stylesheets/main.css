@@ -73,7 +73,7 @@ ul.draggableMenu li {
   -moz-border-radius: 4px; border-radius: px;
 }
 
-.title A:link {text-decoration: none; color: #B9B9A0}
-.title A:visited {text-decoration: none; color: #B9B9A0}
-.title A:active {text-decoration: none; color: #B9B9A0}
-.title A:hover {text-decoration: none; color: #B9B9A0}
+A:link {color: #000}
+A:visited {color: #000}
+A:active {color: #000}
+A:hover {color: #000}

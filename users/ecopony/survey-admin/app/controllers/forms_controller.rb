@@ -83,13 +83,11 @@ class FormsController < ApplicationController
     end
   end
   
-  
   def builder
     @form = Form.find(params[:id])
 
     respond_to do |format|
       format.html { render :template => "forms/builder", :layout => "builder" }
-      format.xml  { render :xml => @form }
     end
   end
   
