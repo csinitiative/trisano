@@ -11,7 +11,7 @@
     - for question in group.questions
       = question.text
       %br
-          
-
-
-
+      - if !question.answer_set.nil?
+        - for answer in question.answer_set.answers
+          = answer.text
+          %br

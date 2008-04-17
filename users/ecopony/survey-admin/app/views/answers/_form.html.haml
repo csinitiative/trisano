@@ -3,3 +3,8 @@
   %label Text
   %br
   = f.text_field :text
+
+%p
+  %label Answer Set
+  %br
+  = f.collection_select(:answer_set_id, AnswerSet.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})

@@ -3,3 +3,8 @@
   %b Name
   %br
   = f.text_field :name
+
+%p
+  %label Question
+  %br
+  = f.collection_select(:question_id, Question.find(:all, :order => "text ASC"), :id, :text, {:include_blank => true})

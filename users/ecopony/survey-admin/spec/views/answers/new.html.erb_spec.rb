@@ -7,6 +7,7 @@ describe "/answers/new.html.erb" do
     @answer = mock_model(Answer)
     @answer.stub!(:new_record?).and_return(true)
     @answer.stub!(:text).and_return("MyString")
+    @answer.stub!(:answer_set_id).and_return(1)
     assigns[:answer] = @answer
   end
 

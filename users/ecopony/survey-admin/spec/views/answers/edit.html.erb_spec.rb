@@ -6,6 +6,7 @@ describe "/answers/edit.html.erb" do
   before do
     @answer = mock_model(Answer)
     @answer.stub!(:text).and_return("MyString")
+    @answer.stub!(:answer_set_id).and_return(1)
     assigns[:answer] = @answer
   end
 
