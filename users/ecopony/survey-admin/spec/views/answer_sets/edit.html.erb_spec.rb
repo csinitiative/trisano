@@ -10,7 +10,7 @@ describe "/answer_sets/edit.html.erb" do
   end
 
   it "should render edit form" do
-    render "/answer_sets/edit.html.erb"
+    render "/answer_sets/edit.html.haml"
     
     response.should have_tag("form[action=#{answer_set_path(@answer_set)}][method=post]") do
       with_tag('input#answer_set_name[name=?]', "answer_set[name]")

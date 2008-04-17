@@ -11,7 +11,7 @@ describe "/answer_sets/show.html.erb" do
   end
 
   it "should render attributes in <p>" do
-    render "/answer_sets/show.html.erb"
+    render "/answer_sets/show.html.haml"
     response.should have_text(/MyString/)
   end
 end

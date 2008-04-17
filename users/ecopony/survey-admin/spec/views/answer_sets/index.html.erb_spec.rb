@@ -13,7 +13,7 @@ describe "/answer_sets/index.html.erb" do
   end
 
   it "should render list of answer_sets" do
-    render "/answer_sets/index.html.erb"
+    render "/answer_sets/index.html.haml"
     response.should have_tag("tr>td", "MyString", 2)
   end
 end

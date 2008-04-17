@@ -11,7 +11,7 @@ describe "/answer_sets/new.html.erb" do
   end
 
   it "should render new form" do
-    render "/answer_sets/new.html.erb"
+    render "/answer_sets/new.html.haml"
     
     response.should have_tag("form[action=?][method=post]", answer_sets_path) do
       with_tag("input#answer_set_name[name=?]", "answer_set[name]")
