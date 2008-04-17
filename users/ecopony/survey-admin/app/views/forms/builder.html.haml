@@ -56,7 +56,7 @@
   Preview
 
 %div{:id => 'preview'}
-  = render :partial => 'preview', :locals => {:form => @form}
+  = render :partial => 'render', :locals => {:form => @form}
 
 = sortable_element 'section-list', :update => 'section-info', :complete => visual_effect(:highlight, 'section-list'), :url => { :action => "section_sort", :id => @form}
 

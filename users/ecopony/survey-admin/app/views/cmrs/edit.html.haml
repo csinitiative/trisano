@@ -1,0 +1,21 @@
+%h1 Editing CMR
+
+= error_messages_for :cmr
+
+- form_for(@cmr) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+  
+  %p
+    %span{:id => "submitbutton" }
+      %span{:class => "first-child"}
+        = f.submit "Update"
+
+
+= link_to 'Show', @cmr 
+|
+= link_to 'Back', cmrs_path 
+
+<script type="text/javascript">
+var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
+</script>

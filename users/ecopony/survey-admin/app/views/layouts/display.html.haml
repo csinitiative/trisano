@@ -19,14 +19,14 @@
  
   = javascript_include_tag :defaults
 
-  %title Survey Tool Admin
+  %title Survey
 
 %body{:class => "yui-skin-sam"}
 
-  %div{:id => "doc", :class => "yui-t2"}
+  %div{:id => "doc"}
 
     %div{:id => "hd", :class => "hd"}
-      %h2 Survey Admin Tool
+      %h2 Survey
 
     %div{:id => "bd"}
 
@@ -35,36 +35,10 @@
         %div{:class => "yui-b"}
           %br
           = yield
-      
-      %div{:class => "yui-b"}
-        %br
-        = link_to 'CMRs', cmrs_path
-        %br
-        = link_to 'Diseases', diseases_path
-        %br
-        = link_to 'Jurisdictions', jurisdictions_path
-        %br
-        = link_to 'Programs', programs_path
-        %br
-        = link_to 'Forms', forms_path
-        %br
-        = link_to 'Sections', sections_path
-        %br
-        = link_to 'Groups', groups_path
-        %br
-        = link_to 'Question Types', question_types_path
-        %br
-        = link_to 'Questions', questions_path
-        %br
-        = link_to 'Answer Sets', answer_sets_path
-        %br
-        = link_to 'Answers', answers_path
-
+        
     %br
     %br
     %div{:id => "ft", :class => "ft"}
-      
-
 
   %script{:type => "text/javascript"}
     = yield :bottom_script

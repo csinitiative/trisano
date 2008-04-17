@@ -1,8 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :answer_sets
+  map.resources :cmrs
 
   
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
+  map.builder 'forms/display/:id', :controller => 'forms', :action => 'display_form'
+  
+  map.resources :answer_sets
   
   map.resources :answers
 

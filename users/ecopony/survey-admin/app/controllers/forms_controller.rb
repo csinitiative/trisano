@@ -110,4 +110,16 @@ class FormsController < ApplicationController
     @section = Section.find(params[:id])
   end
   
+  def display_form
+    @form = Form.find(params[:id])
+
+    respond_to do |format|
+      format.html { render :template => "forms/display", :layout => "display" }
+    end
+  end
+  
+  def process_form
+    
+  end
+  
 end
