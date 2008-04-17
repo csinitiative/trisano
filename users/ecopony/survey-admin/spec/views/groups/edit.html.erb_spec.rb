@@ -7,6 +7,7 @@ describe "/groups/edit.html.erb" do
     @group = mock_model(Group)
     @group.stub!(:name).and_return("MyString")
     @group.stub!(:description).and_return("MyString")
+    @group.stub!(:section_id).and_return(1)
     assigns[:group] = @group
   end
 

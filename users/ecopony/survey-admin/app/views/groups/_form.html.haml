@@ -8,3 +8,8 @@
   %label Description
   %br
   = f.text_field :description
+
+%p
+  %label Section
+  %br
+  = f.collection_select(:section_id, Section.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})

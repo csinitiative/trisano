@@ -8,6 +8,7 @@ describe "/groups/new.html.erb" do
     @group.stub!(:new_record?).and_return(true)
     @group.stub!(:name).and_return("MyString")
     @group.stub!(:description).and_return("MyString")
+    @group.stub!(:section_id).and_return(1)
     assigns[:group] = @group
   end
 
