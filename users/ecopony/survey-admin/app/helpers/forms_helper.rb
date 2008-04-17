@@ -9,30 +9,21 @@ module FormsHelper
   def draw_form_element(question)
     
     if question.question_type.html_form_type == "input-text"
-      result = "<input type='text' name='' value='' />"
+      result = "<input type='text' name='question_#{question.id}' value='' />"
       
     elsif question.question_type.html_form_type == "select"
       
       if !question.answer_set.nil?
-        result = "<select>"
-      
-        # Data driven blank option here
+        result = "<select name='question_#{question.id}'>"
         
         question.answer_set.answers.each do |answer|
-          result += "<option>#{answer.text}</option>"
-        
-          
+          result += "<option value='#{answer.id}'>#{answer.text}</option>"
         end
-      
       
       result += "</select>"
       
       end
-      
-      
     end
-    
-    
     
     result
   end

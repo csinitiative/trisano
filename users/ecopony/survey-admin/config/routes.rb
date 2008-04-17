@@ -3,7 +3,8 @@ ActionController::Routing::Routes.draw do |map|
 
   
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
-  map.builder 'forms/display/:id', :controller => 'forms', :action => 'display_form'
+  map.display_form 'forms/display/:id', :controller => 'forms', :action => 'display_form'
+  map.process_form 'forms/process/:id', :controller => 'forms', :action => 'process_form'
   
   map.resources :answer_sets
   

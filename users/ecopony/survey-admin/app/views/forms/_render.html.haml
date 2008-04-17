@@ -2,6 +2,8 @@
 %h2
   = form.name
 
+  %input{:type => 'hidden', :name => 'cmr_id', :value => 1}
+
 - for section in form.sections
 
   %h3
@@ -11,7 +13,6 @@
     - for question in group.questions
       = question.text
       %br
-
       = draw_form_element(question)
 
 %br
