@@ -13,3 +13,8 @@
   %label Question type
   %br
   = f.collection_select(:question_type_id, QuestionType.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+%p
+  %label Group
+  %br
+  = f.collection_select(:group_id, Group.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})

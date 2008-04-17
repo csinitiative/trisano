@@ -1,0 +1,17 @@
+
+%h2
+  = form.name
+
+- for section in form.sections
+
+  %h3
+    = section.name
+
+  - for group in section.groups
+    - for question in group.questions
+      = question.text
+      %br
+          
+
+
+
