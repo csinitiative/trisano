@@ -6,8 +6,10 @@ describe "/question_types/index.html.erb" do
   before(:each) do
     question_type_98 = mock_model(QuestionType)
     question_type_98.should_receive(:name).and_return("MyString")
+    question_type_98.stub!(:html_form_type).and_return("input-text")
     question_type_99 = mock_model(QuestionType)
     question_type_99.should_receive(:name).and_return("MyString")
+    question_type_99.stub!(:html_form_type).and_return("input-text")
 
     assigns[:question_types] = [question_type_98, question_type_99]
   end

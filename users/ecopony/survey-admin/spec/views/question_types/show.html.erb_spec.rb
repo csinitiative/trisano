@@ -7,6 +7,7 @@ describe "/question_types/show.html.erb" do
     @question_type = mock_model(QuestionType)
     @question_type.stub!(:name).and_return("MyString")
     @question_type.stub!(:description).and_return("MyString")
+    @question_type.stub!(:html_form_type).and_return("input-text")
 
     assigns[:question_type] = @question_type
   end
