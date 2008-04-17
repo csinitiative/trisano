@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CMRRecordIDLogic</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CMRRecordIDLogic</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/nedss/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New CMR</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_last_name</td>
+	<td>Record</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_first_name</td>
+	<td>Number</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_middle_name</td>
+	<td>Test</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>event_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeText</td>
+	<td>//div[2]/fieldset/table/tbody/tr[1]/td[2]</td>
+	<td>recNum</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New CMR</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_last_name</td>
+	<td>Next</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_first_name</td>
+	<td>Record</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>event_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//li[2]/a/em</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeText</td>
+	<td>//div[2]/fieldset/table/tbody/tr[1]/td[2]</td>
+	<td>nextRecNum</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>${nextRecNum}-${recNum}</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>storedVars['recNum'].substr(0,4)==new Date().getFullYear()</td>
+	<td>true</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>storedVars['nextRecNum'].substr(0,4)==new Date().getFullYear()</td>
+	<td>true</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
