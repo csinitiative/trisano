@@ -1,10 +1,13 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :cmrs
 
-  
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
+  
+  # A public form is starting to look like a resource of its own
   map.display_form 'forms/display/:id', :controller => 'forms', :action => 'display_form'
   map.process_form 'forms/process/:id', :controller => 'forms', :action => 'process_form'
+  map.edit_form 'forms/edit/:id/:cmr_id', :controller => 'forms', :action => 'edit_form'
+  
+  map.resources :cmrs
   
   map.resources :answer_sets
   

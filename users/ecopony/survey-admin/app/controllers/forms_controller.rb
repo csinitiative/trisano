@@ -110,6 +110,10 @@ class FormsController < ApplicationController
     @section = Section.find(params[:id])
   end
   
+  #
+  # Investigator form handling -- maybe bust these out as a separate controller or resource
+  #
+  
   def display_form
     @form = Form.find(params[:id])
 
@@ -119,11 +123,19 @@ class FormsController < ApplicationController
   end
   
   def process_form
-    
     Form.save_responses(params)
     
     respond_to do |format|
       format.html { render :text => "Success"}
+    end
+  end
+  
+  def edit_form
+    @form = Form.find(params[:id])
+    @responses = Response.find_all_by_form_id_and_cmr_id(params[:id], params[:cmr_id])
+    
+    respond_to do |format|
+      format.html { render :template => "forms/display", :layout => "display" }
     end
   end
   
