@@ -116,6 +116,9 @@ class FormsController < ApplicationController
   
   def display_form
     @form = Form.find(params[:id])
+    
+    # Temporary
+    @responses = ""
 
     respond_to do |format|
       format.html { render :template => "forms/display", :layout => "display" }
