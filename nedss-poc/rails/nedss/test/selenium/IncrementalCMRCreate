@@ -239,6 +239,31 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>model_auto_completer_tf</td>
+	<td>Happy Jacks Health Store</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>event_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View CMRs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Jorgenson</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//li[6]/a/em</td>
 	<td></td>
@@ -309,14 +334,14 @@
 	<td>label=Yes</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//fieldset[2]/span[3]/img</td>
-	<td></td>
+	<td>type</td>
+	<td>event_active_hospital__hospitals_participation_admission_date</td>
+	<td>4/1/2008</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//span[4]/img</td>
-	<td></td>
+	<td>type</td>
+	<td>event_active_hospital__hospitals_participation_discharge_date</td>
+	<td>4/25/2008</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -335,22 +360,22 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Edit</td>
+	<td>link=Show</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//li[5]/a/em</td>
+	<td>verifyTextPresent</td>
+	<td>Jorgenson</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//li[4]/a/em</td>
+	<td>verifyTextPresent</td>
+	<td>Junglewood Court</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//li[3]/a/em</td>
+	<td>verifyTextPresent</td>
+	<td>(801) 581-1234 Ext. 1234</td>
 	<td></td>
 </tr>
 <tr>
@@ -359,8 +384,58 @@
 	<td></td>
 </tr>
 <tr>
+	<td>verifyTextPresent</td>
+	<td>AIDS</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Yes</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Brigham City Community Hospital</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>2008-04-01</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>2008-04-25</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//em</td>
+	<td>//li[3]/a/em</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Animal head</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//li[6]/a/em</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Salt Lake Valley Health Department</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View CMRs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Jorgenson</td>
 	<td></td>
 </tr>
 
