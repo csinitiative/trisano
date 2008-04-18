@@ -120,10 +120,7 @@ class FormsController < ApplicationController
   
   def process_form
     
-    @form = Form.find(params[:id])
-    
-    
-    
+    Form.save_responses(params)
     
     respond_to do |format|
       format.html { render :text => "Success"}
