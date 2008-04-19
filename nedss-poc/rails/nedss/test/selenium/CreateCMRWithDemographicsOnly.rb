@@ -3,8 +3,7 @@ require 'selenium'
 require 'test/unit'
 
 class CreateCMRWithDemographicsOnly < Test::Unit::TestCase
-
-NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
+ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
 
   def setup
     @verification_errors = []
@@ -33,10 +32,8 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.type "event_active_patient__active_primary_entity__address_city", "Hometown"
     @selenium.select "event_active_patient__active_primary_entity__address_state_id", "label=Texas"
     @selenium.select "event_active_patient__active_primary_entity__address_county_id", "label=Out-of-state"
-    @selenium.click "//img[@alt='Calendar']"
-    @selenium.select "//select[2]", "label=1989"
-    @selenium.click "//img[@alt='Calendar']"
-    @selenium.select "//select[2]", "label=1989"
+    @selenium.type "event_active_patient__active_primary_entity__person_birth_date", "4/1/1989"
+    @selenium.type "event_active_patient__active_primary_entity__person_date_of_death", "8/15/2009"
     @selenium.type "event_active_patient__active_primary_entity__person_approximate_age_no_birthday", "34"
     @selenium.type "event_active_patient__active_primary_entity__telephone_area_code", "333"
     @selenium.type "event_active_patient__active_primary_entity__telephone_phone_number", "555abcd"
@@ -96,7 +93,7 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.click "//input[@type='submit']"
     @selenium.wait_for_page_to_load "30000"
     begin
-        assert @selenium.is_text_present("19 / 1989-04-05")
+        assert @selenium.is_text_present("19 / 1989-04-01")
     rescue Test::Unit::AssertionFailedError
         @verification_errors << $!
     end
