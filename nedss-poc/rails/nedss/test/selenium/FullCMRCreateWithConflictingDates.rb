@@ -3,8 +3,7 @@ require 'selenium'
 require 'test/unit'
 
 class FullCMRCreateWithConflictingDates < Test::Unit::TestCase
-
-NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
+ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
 
   def setup
     @verification_errors = []
@@ -35,8 +34,8 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.type "event_active_patient__active_primary_entity__address_city", "Nowhere"
     @selenium.type "event_active_patient__active_primary_entity__address_city", "Provo"
     @selenium.type "event_active_patient__active_primary_entity__address_postal_code", "8462"
-    @selenium.click "//img[@alt='Calendar']"
-    @selenium.select "//select[2]", "label=1989"
+    @selenium.type "event_active_patient__active_primary_entity__person_birth_date", "5/8/1948"
+    @selenium.type "event_active_patient__active_primary_entity__person_date_of_death", "7/4/2008"
     @selenium.type "event_active_patient__active_primary_entity__person_approximate_age_no_birthday", "34"
     @selenium.click "//span[3]/img"
     @selenium.type "event_active_patient__active_primary_entity__telephone_area_code", "801"
@@ -68,15 +67,12 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.select "event_active_patient__active_primary_entity__person_primary_language_id", "label=Lao"
     @selenium.click "//li[2]/a/em"
     @selenium.select "event_disease_disease_id", "label=Cache Valley virus neuroinvasive disease"
-    @selenium.click "//img[@onclick='new CalendarDateSelect( $(this).previous(), {year_range:[2003, 2008]} );']"
-    @selenium.click "//fieldset[1]/span[3]/img"
-    @selenium.click "//fieldset[1]/span[3]/img"
-    @selenium.click "link=>"
-    @selenium.click "link=>"
+    @selenium.type "event_disease_disease_onset_date", "4/1/2008"
+    @selenium.type "event_disease_date_diagnosed", "4/4/2008"
     @selenium.select "event_disease_hospitalized_id", "label=Yes"
     @selenium.select "event_active_hospital_secondary_entity_id", "label=Orem Community Hospital"
-    @selenium.click "//fieldset[2]/span[3]/img"
-    @selenium.click "//span[4]/img"
+    @selenium.type "event_active_hospital__hospitals_participation_discharge_date", "4/29/2008"
+    @selenium.type "event_active_hospital__hospitals_participation_admission_date", "4/4/2008"
     @selenium.select "event_disease_died_id", "label=Yes"
     @selenium.select "event_imported_from_id", "label=Utah"
     @selenium.select "event_active_patient__participations_treatment_treatment_given_yn_id", "label=Yes"
@@ -85,15 +81,13 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.select "event_lab_result_specimen_source_id", "label=Blood & Stool"
     @selenium.click "//div[3]/fieldset/div/fieldset/span[3]/img"
     @selenium.select "event_lab_result_tested_at_uphl_yn_id", "label=Yes"
-    @selenium.click "//div[3]/fieldset/div/fieldset/span[4]/img"
+    @selenium.type "event_active_patient__participations_risk_factor_pregnancy_due_date", "9/1/2007"
     @selenium.click "//li[4]/a/em"
     @selenium.select "event_active_patient__participations_risk_factor_food_handler_id", "label=Yes"
     @selenium.select "event_active_patient__participations_risk_factor_healthcare_worker_id", "label=Yes"
     @selenium.select "event_active_patient__participations_risk_factor_group_living_id", "label=Yes"
     @selenium.select "event_active_patient__participations_risk_factor_day_care_association_id", "label=Yes"
     @selenium.select "event_active_patient__participations_risk_factor_pregnant_id", "label=Yes"
-    @selenium.click "//fieldset[2]/span[2]/img"
-    @selenium.select "//div[2]/select[1]", "label=June"
     @selenium.type "event_active_patient__participations_risk_factor_risk_factors", "He's a man!!!"
     @selenium.type "event_active_patient__participations_risk_factor_risk_factors_notes", "You can't be a pregnant man..."
     @selenium.click "//li[5]/a/em"
@@ -110,11 +104,11 @@ NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.c
     @selenium.select "event_outbreak_associated_id", "label=Yes"
     @selenium.click "//div[6]/fieldset/div/fieldset[2]/span[3]/img"
     @selenium.select "event_investigation_LHD_status_id", "label=Open"
-    @selenium.click "//span[5]/img"
-    @selenium.click "//fieldset[3]/span[2]/img"
+    @selenium.type "event_investigation_started_date", "4/1/2008"
+    @selenium.type "event_investigation_completed_LHD_date", "4/30/2008"
+    @selenium.type "event_first_reported_PH_date", "5/1/2008"
+    @selenium.type "event_review_completed_UDOH_date", "5/2/2008"
     @selenium.type "event_event_name", "Not sure what this field means"
-    @selenium.click "//fieldset[3]/span[2]/img"
-    @selenium.click "//div[6]/fieldset/div/fieldset[3]/span[3]/img"
     @selenium.click "event_submit"
     @selenium.wait_for_page_to_load "30000"
     begin
