@@ -14,6 +14,7 @@ class CmrsController < ApplicationController
   # GET /cmrs/1.xml
   def show
     @cmr = Cmr.find(params[:id])
+    @forms = Form.find(:all, :conditions => {:disease_id => @cmr.disease_id, :is_template => true,  :form_status_id => FormStatus.find_by_name("published").id})
 
     respond_to do |format|
       format.html # show.html.erb

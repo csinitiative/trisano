@@ -10,3 +10,11 @@
 = link_to 'Edit', edit_cmr_path(@cmr)
 |
 = link_to 'Back', cmrs_path
+
+%h1
+  Disease Forms
+
+- for form in @forms
+  = form.name
+  = link_to "Fill in form", display_form_path(form)
+  %br

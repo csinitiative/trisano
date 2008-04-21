@@ -153,7 +153,6 @@ class FormsController < ApplicationController
       format.html { redirect_to(@form) }
     end
 
-    
   end
   
 end

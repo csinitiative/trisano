@@ -23,7 +23,7 @@ describe FormsController do
     end
   
     it "should find all forms" do
-      Form.should_receive(:find).with(:all).and_return([@form])
+      Form.should_receive(:find).and_return([@form])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe FormsController do
     end
 
     it "should find all forms" do
-      Form.should_receive(:find).with(:all).and_return([@form])
+      Form.should_receive(:find).and_return([@form])
       do_get
     end
   

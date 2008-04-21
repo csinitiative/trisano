@@ -66,6 +66,11 @@ describe CmrsController do
 
     before(:each) do
       @cmr = mock_model(Cmr)
+      @cmr.stub!(:disease_id).and_return(1)
+      @forms = [mock_model(Form)]
+      form_status = mock_model(FormStatus)
+      form_status.stub!(:id).and_return(1)
+      FormStatus.stub!(:find_by_name).with("published").and_return(form_status)
       Cmr.stub!(:find).and_return(@cmr)
     end
   
@@ -98,6 +103,11 @@ describe CmrsController do
 
     before(:each) do
       @cmr = mock_model(Cmr, :to_xml => "XML")
+      @cmr.stub!(:disease_id).and_return(1)
+      @forms = [mock_model(Form)]
+      form_status = mock_model(FormStatus)
+      form_status.stub!(:id).and_return(1)
+      FormStatus.stub!(:find_by_name).with("published").and_return(form_status)
       Cmr.stub!(:find).and_return(@cmr)
     end
   

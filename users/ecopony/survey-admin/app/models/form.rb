@@ -1,6 +1,7 @@
 class Form < ActiveRecord::Base
   belongs_to :disease
   belongs_to :jurisdiction
+  belongs_to :form_status
   
   has_many :sections, :order => :position
   
@@ -84,7 +85,7 @@ class Form < ActiveRecord::Base
       
       published_form.form_status_id = FormStatus.find_by_name("live")
       published_form.save!
-      self.status = FormStatus.find_by_name("published")
+      self.form_status = FormStatus.find_by_name("published")
       self.save!
     
     rescue Exception => ex
