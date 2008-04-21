@@ -1,9 +1,21 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
-  description: MyString
+standard_demographics:
+  name: Standard Demographics
+  section_id: "1"
+  id: "1"
+  description: ""
+  position: "1"
 
-two:
-  name: MyString
-  description: MyString
+standard_lab:
+  name: Standard Lab Questions
+  section_id: "2"
+  id: "2"
+  description: ""
+  position: "1"
+
+standard_food_consumption:
+  name: Standard Food Consumption
+  section_id: "3"
+  id: "3"
+  description: ""
+  position: "1"

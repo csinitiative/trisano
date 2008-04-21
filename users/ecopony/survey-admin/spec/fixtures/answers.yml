@@ -1,7 +1,30 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  text: MyString
+yes_1:
+  text: "Yes"
+  answer_set_id: "1"
+  id: "1"
+  position: "1"
 
-two:
-  text: MyString
+no_1:
+  text: "No"
+  answer_set_id: "1"
+  id: "2"
+  position: "2"
+
+maybe_1:
+  text: Maybe
+  answer_set_id: "1"
+  id: "3"
+  position: "3"
+
+yes_2:
+  text: "Yes"
+  answer_set_id: "2"
+  id: "4"
+  position: "1"
+
+no_2:
+  text: "No"
+  answer_set_id: "2"
+  id: "5"
+  position: "2"

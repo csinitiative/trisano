@@ -1,7 +1,10 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
+yes_no_maybe:
+  id: "1"
+  name: Yes/No/Maybe
+  question_id: "2"
 
-two:
-  name: MyString
+yes_no:
+  id: "2"
+  name: Yes/No
+  question_id: "3"

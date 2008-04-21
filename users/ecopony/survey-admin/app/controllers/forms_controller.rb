@@ -112,6 +112,8 @@ class FormsController < ApplicationController
   
   #
   # Investigator form handling -- maybe bust these out as a separate controller or resource
+  # 
+  # Getting a little messy down below. Consider how to factor some bits out.
   #
   
   def display_form
@@ -140,6 +142,18 @@ class FormsController < ApplicationController
     respond_to do |format|
       format.html { render :template => "forms/display", :layout => "display" }
     end
+  end
+  
+  def publish
+    @form = Form.find(params[:id])
+    @form.publish
+    
+    respond_to do |format|
+      flash[:notice] = 'Form was successfully published.'
+      format.html { redirect_to(@form) }
+    end
+
+    
   end
   
 end

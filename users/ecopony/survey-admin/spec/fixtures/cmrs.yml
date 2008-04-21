@@ -1,11 +1,6 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
-  disease_id: 1
-  jurisdiction_id: 1
-
-two:
-  name: MyString
-  disease_id: 1
-  jurisdiction_id: 1
+test_cmr:
+  name: Test CMR
+  jurisdiction_id: "1"
+  id: "1"
+  disease_id: "1"

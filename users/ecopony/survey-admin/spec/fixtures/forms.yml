@@ -1,15 +1,10 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
-  description: MyString
-  jurisdiction_id: 1
-  disease_id: 1
-  status: 1
-
-two:
-  name: MyString
-  description: MyString
-  jurisdiction_id: 1
-  disease_id: 1
-  status: 1
+tummy_ache_investigation:
+  name: Tummy Ache Investigation
+  jurisdiction_id: "1"
+  is_template: 
+  id: "1"
+  form_status_id: 
+  template_form_id: 
+  description: For when the tummy is a-hurtin.
+  disease_id: "1"

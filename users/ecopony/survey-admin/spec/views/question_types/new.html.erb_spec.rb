@@ -9,6 +9,7 @@ describe "/question_types/new.html.erb" do
     @question_type.stub!(:name).and_return("MyString")
     @question_type.stub!(:description).and_return("MyString")
     @question_type.stub!(:html_form_type).and_return("input-text")
+    @question_type.stub!(:has_answer_set).and_return(true)
     assigns[:question_type] = @question_type
   end
 

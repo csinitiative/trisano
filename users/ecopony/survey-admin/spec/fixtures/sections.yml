@@ -1,9 +1,18 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
-  form_id: 1
+demographics:
+    form_id: "1"
+    name: Tummy Ache Demographics
+    id: "1"
+    position: "1"
+    
+lab:
+  form_id: "1"
+  name: Tummy Ache Lab
+  id: "2"
+  position: "2"
 
-two:
-  name: MyString
-  form_id: 1
+consumption:
+  form_id: "1"
+  name: Tummy Ache Food Consumption History
+  id: "3"
+  position: "3"

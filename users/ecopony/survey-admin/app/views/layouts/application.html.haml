@@ -34,17 +34,19 @@
 
         %div{:class => "yui-b"}
           %br
-          = yield
+          %p{:style => "color: green"}
+            = flash[:notice]
+            = yield
       
       %div{:class => "yui-b"}
         %br
         = link_to 'CMRs', cmrs_path
         %br
+        = link_to 'Programs', programs_path
+        %br
         = link_to 'Diseases', diseases_path
         %br
         = link_to 'Jurisdictions', jurisdictions_path
-        %br
-        = link_to 'Programs', programs_path
         %br
         = link_to 'Forms Statuses', form_statuses_path
         %br

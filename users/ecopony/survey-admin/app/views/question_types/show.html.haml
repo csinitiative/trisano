@@ -1,7 +1,7 @@
 
 %h1 
   Question type details: 
-  =@question_type.name
+  =h @question_type.name
 
 %p
   %b Name: 
@@ -10,6 +10,10 @@
 %p
   %b Description: 
   =h @question_type.description
+
+%p
+  %b Has answer set?
+  =h @question_type.has_answer_set.to_s.capitalize
 
 %p
   %b HTML Form Type: 

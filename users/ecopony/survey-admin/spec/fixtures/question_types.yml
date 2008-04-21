@@ -1,9 +1,16 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
-  description: MyString
 
-two:
-  name: MyString
-  description: MyString
+ multi_select: 
+  name: Multi-select
+  html_form_type: select
+  id: "1"
+  has_answer_set: t
+  description: ""
+
+
+ text_input: 
+  name: Text input
+  html_form_type: input-text
+  id: "2"
+  has_answer_set: f
+  description: ""

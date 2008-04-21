@@ -1,7 +1,8 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  name: MyString
+live:
+  name: live
+  id: "1"
 
-two:
-  name: MyString
+published:
+  name: published
+  id: "2"
