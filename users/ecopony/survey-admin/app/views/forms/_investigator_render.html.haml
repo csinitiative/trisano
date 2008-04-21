@@ -2,7 +2,7 @@
 %h2
   = form.name
 
-  %input{:type => 'hidden', :name => 'cmr_id', :value => 1}
+  %input{:type => 'hidden', :name => 'cmr_id', :value => params[:cmr_id]}
   %input{:type => 'hidden', :name => 'form_instance_id', :value => form.id }
 
 - for section in form.sections
