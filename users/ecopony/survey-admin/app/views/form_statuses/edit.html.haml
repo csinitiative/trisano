@@ -1,0 +1,24 @@
+%h1 Editing form status
+
+= error_messages_for :form_status
+
+- form_for(@form_status) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+  
+  %p
+    %span{:id => "submitbutton" }
+      %span{:class => "first-child"}
+        = f.submit "Update"
+
+
+= link_to 'Show', @form_status 
+|
+= link_to 'Back', form_statuses_path 
+
+%br
+
+
+<script type="text/javascript">
+var oButton = new YAHOO.widget.Button("submitbutton", { type: "submit" } );
+</script>

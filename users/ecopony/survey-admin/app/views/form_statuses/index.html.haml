@@ -1,0 +1,21 @@
+
+%h1 Listing form statuses
+
+%table
+  %tr
+    %th Name
+    %th{:colspan => 3} Actions
+  - for form_status in @form_statuses
+    %tr
+      %td
+        = h form_status.name
+      %td
+        = link_to 'Show', form_status
+      %td
+        = link_to 'Edit', edit_form_status_path(form_status)
+      %td
+        = link_to 'Destroy', form_status, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New form status', new_form_status_path
