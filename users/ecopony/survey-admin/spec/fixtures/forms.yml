@@ -2,7 +2,7 @@
 tummy_ache_investigation:
   name: Tummy Ache Investigation
   jurisdiction_id: "1"
-  is_template: 
+  is_template: t
   id: "1"
   form_status_id: 
   template_form_id: 

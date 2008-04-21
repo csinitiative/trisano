@@ -9,13 +9,13 @@ class Form < ActiveRecord::Base
   
   def self.save_responses(params)
     
-    form = Form.find(params[:id])
+    form = Form.find(params[:form_instance_id])
     
     form.sections.each do |section|
       section.groups.each do |group|
         group.questions.each do |question|
           
-          response = Response.new({:cmr_id => params[:cmr_id], :form_id => params[:id], :question_id => question.id})
+          response = Response.new({:cmr_id => params[:cmr_id], :form_id => params[:form_instance_id], :question_id => question.id})
           form_field_value = params["question_#{question.id}"]
           
           if question.answer_set.nil?

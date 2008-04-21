@@ -2,7 +2,7 @@ class FormsController < ApplicationController
   # GET /forms
   # GET /forms.xml
   def index
-    @forms = Form.find(:all)
+    @forms = Form.find(:all, :conditions => {:is_template => true})
 
     respond_to do |format|
       format.html # index.html.erb
@@ -117,7 +117,7 @@ class FormsController < ApplicationController
   #
   
   def display_form
-    @form = Form.find(params[:id])
+    @form = Form.find(:first, :conditions => {:template_form_id => params[:id], :form_status_id => FormStatus.find_by_name("live").id})
     
     # Temporary
     @responses = ""
