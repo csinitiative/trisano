@@ -117,10 +117,7 @@ class FormsController < ApplicationController
   #
   
   def display_form
-    @form = Form.find(:first, :conditions => {:template_form_id => params[:id], :form_status_id => FormStatus.find_by_name("live").id})
-    
-    # Temporary
-    @responses = ""
+    @form, @responses = Form.find_form_for_cmr(params)
 
     respond_to do |format|
       format.html { render :template => "forms/display", :layout => "display" }
@@ -135,18 +132,9 @@ class FormsController < ApplicationController
     end
   end
   
-  def edit_form
-    @form = Form.find(params[:id])
-    @responses = Response.find_all_by_form_id_and_cmr_id(params[:id], params[:cmr_id])
-    
-    respond_to do |format|
-      format.html { render :template => "forms/display", :layout => "display" }
-    end
-  end
-  
   def publish
     @form = Form.find(params[:id])
-    @form.publish
+    @form.publish!
     
     respond_to do |format|
       flash[:notice] = 'Form was successfully published.'

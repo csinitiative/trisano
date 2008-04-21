@@ -8,6 +8,24 @@ class Form < ActiveRecord::Base
   validates_presence_of :disease
   validates_presence_of :jurisdiction
   
+  def self.find_form_for_cmr(params)
+    
+    form = nil
+    responses = []
+    
+    filled_in_form = Response.find(:first, :select => "distinct form_id", :conditions => {:cmr_id => params[:cmr_id], :form_template_id => params[:id]})
+    
+    if filled_in_form.nil?
+      form = Form.find(:first, :conditions => {:template_form_id => params[:id], :form_status_id => FormStatus.find_by_name("live").id})
+    else
+      form = Form.find(filled_in_form.form_id)
+      responses = Response.find_all_by_form_id_and_cmr_id(filled_in_form.form_id, params[:cmr_id])
+    end
+    
+    return form, responses
+  end
+  
+  
   def self.save_responses(params)
     
     form = Form.find(params[:form_instance_id])
@@ -32,7 +50,7 @@ class Form < ActiveRecord::Base
     end
   end
   
-  def publish
+  def publish!
 
     begin
       
@@ -81,6 +99,14 @@ class Form < ActiveRecord::Base
             end
           end
         end
+      end
+      
+      live_status = FormStatus.find_by_name("live")
+      current_live_form = Form.find_by_template_form_id_and_form_status_id(self.id, live_status)
+      
+      if !current_live_form.nil?
+        current_live_form.form_status_id = 666
+        current_live_form.save!
       end
       
       published_form.form_status_id = FormStatus.find_by_name("live")

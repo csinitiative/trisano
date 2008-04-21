@@ -16,5 +16,5 @@
 
 - for form in @forms
   = form.name
-  = link_to "Fill in form", display_form_path(form)
+  = link_to "Fill in form", {:controller => "forms", :action => "display", :id => form.id, :cmr_id => @cmr.id}
   %br
