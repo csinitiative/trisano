@@ -16,7 +16,7 @@ class Form < ActiveRecord::Base
       section.groups.each do |group|
         group.questions.each do |question|
           
-          response = Response.new({:cmr_id => params[:cmr_id], :form_id => params[:form_instance_id], :question_id => question.id})
+          response = Response.new({:cmr_id => params[:cmr_id], :form_template_id => params[:id], :form_id => params[:form_instance_id], :question_id => question.id})
           form_field_value = params["question_#{question.id}"]
           
           if question.answer_set.nil?
