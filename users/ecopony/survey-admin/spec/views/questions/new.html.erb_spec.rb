@@ -10,6 +10,8 @@ describe "/questions/new.html.erb" do
     @question.stub!(:help).and_return("MyString")
     @question.stub!(:question_type_id).and_return("1")
     @question.stub!(:group_id).and_return("1")
+    @question.stub!(:condition).and_return("1")
+    @question.stub!(:follow_up_group_id).and_return("4")
     assigns[:question] = @question
   end
 

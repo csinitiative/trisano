@@ -19,3 +19,10 @@ standard_food_consumption:
   id: "3"
   description: ""
   position: "1"
+
+follow_up:
+  name: Follow Up Group
+  section_id: 
+  id: "4"
+  description: ""
+  position: "1"

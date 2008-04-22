@@ -82,6 +82,7 @@ class Form < ActiveRecord::Base
             published_question.text = question.text
             published_question.help = question.help
             published_question.question_type_id = question.question_type_id
+            published_question.condition = question.condition
             published_question.save!
             
             if published_question.question_type.has_answer_set == true

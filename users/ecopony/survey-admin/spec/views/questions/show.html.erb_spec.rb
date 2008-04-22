@@ -12,7 +12,7 @@ describe "/questions/show.html.erb" do
     @question.stub!(:text).and_return("MyString")
     @question.stub!(:help).and_return("MyString")
     @question.stub!(:question_type).and_return(question_type)
-
+    @question.stub!(:condition).and_return("1")
     assigns[:question] = @question
   end
 

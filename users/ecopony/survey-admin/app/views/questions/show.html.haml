@@ -15,6 +15,11 @@
   %label Type: 
   =h @question.question_type.name
 
+%p
+  %label Condition: 
+  =h @question.condition
+
+
 = link_to 'Edit', edit_question_path(@question)
 |
 = link_to 'Back', questions_path

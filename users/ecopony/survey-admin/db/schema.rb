@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 28) do
+ActiveRecord::Schema.define(:version => 30) do
 
   create_table "answer_sets", :force => true do |t|
     t.string   "name"
@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(:version => 28) do
     t.datetime "updated_at"
     t.integer  "group_id"
     t.integer  "position"
+    t.string   "condition"
+    t.integer  "follow_up_group_id"
   end
 
   create_table "responses", :force => true do |t|

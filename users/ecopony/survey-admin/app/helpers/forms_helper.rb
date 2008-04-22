@@ -71,6 +71,8 @@ module FormsHelper
       end
     end
     
+    result += "<div id='followup_#{question.id}'></div>"
+    
     result
   end
   

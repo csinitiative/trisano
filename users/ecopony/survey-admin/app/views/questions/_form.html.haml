@@ -18,3 +18,13 @@
   %label Group
   %br
   = f.collection_select(:group_id, Group.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})
+
+%p
+  %label Condition
+  %br
+  = f.text_field :condition
+
+%p
+  %label Follow-up Group
+  %br
+  = f.collection_select(:follow_up_group_id, Group.find(:all, :order => "name ASC"), :id, :name, {:include_blank => true})

@@ -6,6 +6,8 @@ address:
   id: "1"
   question_type_id: "2"
   position: "1"
+  condition: 
+  follow_up_group_id: 
 
 needle:
   help: ""
@@ -14,6 +16,8 @@ needle:
   id: "2"
   question_type_id: "1"
   position: "1"
+  condition: 
+  follow_up_group_id: 
 
 eat_fish:
   help: ""
@@ -22,6 +26,8 @@ eat_fish:
   id: "3"
   question_type_id: "1"
   position: "1"
+  condition: 
+  follow_up_group_id: 
 
 good_fish:
   help: ""
@@ -30,4 +36,6 @@ good_fish:
   id: "4"
   question_type_id: "2"
   position: "2"
+  condition: "Good"
+  follow_up_group_id: "4"
 

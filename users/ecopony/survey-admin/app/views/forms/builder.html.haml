@@ -5,7 +5,6 @@
   = @form.name
   Builder
 
-
 %fieldset
   %legend
     Sections
@@ -45,7 +44,6 @@
 
 = button_to "Publish", {:action => "publish", :id => @form.id, :confirm => "Are you sure?"}
 
-
 %h1
   = @form.name
   Preview
@@ -54,10 +52,6 @@
   = render :partial => 'render', :locals => {:form => @form}
 
 = sortable_element 'section-list', :update => 'section-info', :complete => visual_effect(:highlight, 'section-list'), :url => { :action => "section_sort", :id => @form}
-
-
-
-
 
 
 <script type="text/javascript">
