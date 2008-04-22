@@ -1,0 +1,14 @@
+
+%span{:id => 'question-info'}
+%ul{:id => "question-list", :class => "draggableMenu"}
+  - for question in questions
+    %li
+      = question.text
+      %small
+        %br
+        Edit question name
+        |
+        Show answers
+
+
+= sortable_element 'question-list', :update => 'question-info', :complete => visual_effect(:highlight, 'question-list'), :url => {}

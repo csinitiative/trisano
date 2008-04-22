@@ -5,49 +5,43 @@
   = @form.name
   Builder
 
-%table{:width => "100%"}
-  %tr
-    %td{:valign => "top"}
-      %fieldset
-        %legend
-          Sections
-        %span{:id => 'section-info'}
-        %ul{:id => "section-list", :class => "draggableMenu"}
-          - for section in @form.sections
-            %li{:id => "name_#{section.id}"}
-              = section.name
-              %small
-                %br
-                  = link_to_remote "Edit section name", :url => { :controller => "forms", :action => "short_section_edit", :id => section.id}
-                  |
-                  = show_groups_link "Show groups", section.groups
 
+%fieldset
+  %legend
+    Sections
+  %span{:id => 'section-info'}
+  %ul{:id => "section-list", :class => "draggableMenu"}
+    - for section in @form.sections
+      %li{:id => "name_#{section.id}"}
+        = section.name
+        %small
           %br
-          %br
+            = link_to_remote "Edit section name", :url => { :controller => "forms", :action => "short_section_edit", :id => section.id}
+            |
+            = show_groups_link "Show groups", section.groups
 
-        = link_to_remote "Add Section", :url => { :controller => "forms", :action => "short_section_new", :id => @form.id}
-        %div{:id => "section-mods"}
-          / = render :partial => 'sections/short_form', :locals => { :section => Section.new, :form_id => @form.id }
-    %td{:valign => "top"}
-      %fieldset
-        %legend
-          Groups
-        %div{ :id => "groups" }
-          Select a section
-        %br
-        Add Group
+  = link_to_remote "Add Section", :url => { :controller => "forms", :action => "short_section_new", :id => @form.id}
+  %div{:id => "section-mods"}
+    / = render :partial => 'sections/short_form', :locals => { :section => Section.new, :form_id => @form.id }
 
-  %tr
-    %td{:valign => "top"}
-      %fieldset
-        %legend
-          Questions
-        Select a group.
-    %td{:valign => "top"}
-      %fieldset
-        %legend
-          Answer Set
-        Select a question.
+%fieldset
+  %legend
+    Groups
+  %div{ :id => "groups" }
+    Select a section
+  %br
+  Add Group
+
+%fieldset
+  %legend
+    Questions
+  %div{ :id => "questions" }
+    Select a group.
+
+%fieldset
+  %legend
+    Answer Set
+  Select a question.
 
 = button_to "Publish", {:action => "publish", :id => @form.id, :confirm => "Are you sure?"}
 
@@ -60,6 +54,10 @@
   = render :partial => 'render', :locals => {:form => @form}
 
 = sortable_element 'section-list', :update => 'section-info', :complete => visual_effect(:highlight, 'section-list'), :url => { :action => "section_sort", :id => @form}
+
+
+
+
 
 
 <script type="text/javascript">

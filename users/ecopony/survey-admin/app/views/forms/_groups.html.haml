@@ -1,5 +1,14 @@
 
+%span{:id => 'group-info'}
+
 %ul{:id => "group-list", :class => "draggableMenu"}
   - for group in groups
     %li
       = group.name
+      %small
+        %br
+        Edit group name
+        |
+        = show_questions_link "Show questions", group.questions
+
+= sortable_element 'group-list', :update => 'group-info', :complete => visual_effect(:highlight, 'group-list'), :url => {}

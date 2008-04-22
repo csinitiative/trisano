@@ -6,6 +6,12 @@ module FormsHelper
     end
   end
   
+  def show_questions_link(name, questions)
+    link_to_function name do |page|
+      page.replace_html :questions, :partial => 'forms/questions', :object => questions
+    end
+  end
+  
   def draw_form_element(question)
     
     if question.question_type.html_form_type == "input-text"
