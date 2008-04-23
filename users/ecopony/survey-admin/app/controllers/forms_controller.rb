@@ -125,7 +125,8 @@ class FormsController < ApplicationController
   end
   
   def process_form
-    Form.save_responses(params)
+    @form = Form.find(params[:form_instance_id])
+    @form.save_responses!(params)
     
     respond_to do |format|
       format.html { render :text => "Success"}
@@ -143,20 +144,8 @@ class FormsController < ApplicationController
   end
   
   def process_conditional
-    
-    @group = nil
     @question_id = params[:question_id]
-    
-    # Temporary
-    @responses = nil
-    
-    question = Question.find(@question_id)
-    
-    if question.condition == params[:response]
-      @group = Group.find(question.follow_up_group_id)
-    end
-    
+    @group = Question.find(@question_id).process_conditional(params[:response])
   end
-  
   
 end

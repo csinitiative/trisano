@@ -19,7 +19,7 @@ module FormsHelper
       
     elsif question.question_type.html_form_type == "select"
       
-      if !question.answer_set.nil?
+      unless question.answer_set.nil?
         result = "<select name='question_#{question.id}'>"
         
         question.answer_set.answers.each do |answer|
@@ -34,11 +34,11 @@ module FormsHelper
   end
   
   # Duplicating just for expediency here
-  def draw_investigator_form_element(question, responses)
+  def draw_investigator_form_element(question, responses = nil)
     
     response = ""
     
-    if !responses.nil?
+    unless responses.nil?
       responses.each do |r|
         if r.question_id == question.id
           if question.answer_set.nil?
@@ -53,7 +53,7 @@ module FormsHelper
     if question.question_type.html_form_type == "input-text"
       result = "<input type='text' name='question_#{question.id}' value='#{response}' " 
 
-      if !question.follow_up_group_id.nil?
+      unless question.follow_up_group_id.nil?
         result += "onchange='sendConditionalRequest(this);'"
       end
         
@@ -61,10 +61,10 @@ module FormsHelper
       
     elsif question.question_type.html_form_type == "select"
       
-      if !question.answer_set.nil?
+      unless question.answer_set.nil?
         result = "<select name='question_#{question.id}'"
         
-        if !question.follow_up_group_id.nil?
+        unless question.follow_up_group_id.nil?
           result += "onchange='sendConditionalRequest(this);'"
         end
         

@@ -26,26 +26,10 @@ class Form < ActiveRecord::Base
   end
   
   
-  def self.save_responses(params)
-    
-    form = Form.find(params[:form_instance_id])
-    
-    form.sections.each do |section|
+  def save_responses!(params)
+    self.sections.each do |section|
       section.groups.each do |group|
-        group.questions.each do |question|
-          
-          response = Response.new({:cmr_id => params[:cmr_id], :form_template_id => params[:id], :form_id => params[:form_instance_id], :question_id => question.id})
-          form_field_value = params["question_#{question.id}"]
-          
-          if question.answer_set.nil?
-            response.response = form_field_value
-          else
-            response.answer_id = form_field_value.to_i
-          end
-          
-          response.save!
-          
-        end
+        save_group_responses(group, params)
       end
     end
   end
@@ -105,7 +89,7 @@ class Form < ActiveRecord::Base
       live_status = FormStatus.find_by_name("live")
       current_live_form = Form.find_by_template_form_id_and_form_status_id(self.id, live_status)
       
-      if !current_live_form.nil?
+      unless current_live_form.nil?
         current_live_form.form_status_id = 666
         current_live_form.save!
       end
@@ -124,6 +108,32 @@ class Form < ActiveRecord::Base
       # Get transactional
     end
     
+  end
+  
+  private
+  
+  def save_group_responses(group, params)
+    
+    group.questions.each do |question|
+
+      response = Response.new({:cmr_id => params[:cmr_id], :form_template_id => params[:id], :form_id => params[:form_instance_id], :question_id => question.id})
+      form_field_value = params["question_#{question.id}"]
+          
+      if question.question_type.has_answer_set
+        response.answer_id = form_field_value.to_i
+      else
+        response.response = form_field_value
+      end
+          
+      response.save!
+      
+      follow_up_group = question.process_conditional(response.value)
+      
+      unless follow_up_group.nil?
+        save_group_responses(follow_up_group, params)
+      end
+    
+    end
   end
   
 end
