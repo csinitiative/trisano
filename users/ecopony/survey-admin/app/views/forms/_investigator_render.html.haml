@@ -11,12 +11,6 @@
     = section.name
 
   - for group in section.groups
-    - for question in group.questions
-      = question.text
-      %br
-      = draw_investigator_form_element(question, responses)
-      %br
+    = draw_group_questions(group, responses)
 
 %br
-
-

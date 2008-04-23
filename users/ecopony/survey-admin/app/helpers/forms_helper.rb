@@ -12,6 +12,42 @@ module FormsHelper
     end
   end
   
+  def draw_group_questions(group, responses)
+    
+    result = ""
+    
+    group.questions.each do |question|
+      
+      response = ""
+    
+      unless responses.nil?
+        responses.each do |r|
+          if r.question_id == question.id
+            if question.answer_set.nil?
+              response = r.response
+            else
+              response = r.answer_id
+            end
+          end
+        end
+      end
+      
+      result += question.text
+      result += "<br/>"
+      result += draw_investigator_form_element(question, response)
+      result += "<br/>"
+      
+      follow_up_group = question.process_conditional(response)
+      
+      unless follow_up_group.nil?
+        result += draw_group_questions(follow_up_group, responses)
+      end
+      
+    end
+    
+    result
+  end
+  
   def draw_form_element(question)
     
     if question.question_type.html_form_type == "input-text"
@@ -34,21 +70,7 @@ module FormsHelper
   end
   
   # Duplicating just for expediency here
-  def draw_investigator_form_element(question, responses = nil)
-    
-    response = ""
-    
-    unless responses.nil?
-      responses.each do |r|
-        if r.question_id == question.id
-          if question.answer_set.nil?
-            response = r.response
-          else
-            response = r.answer_id
-          end
-        end
-      end
-    end
+  def draw_investigator_form_element(question, response = "")
     
     if question.question_type.html_form_type == "input-text"
       result = "<input type='text' name='question_#{question.id}' value='#{response}' " 
