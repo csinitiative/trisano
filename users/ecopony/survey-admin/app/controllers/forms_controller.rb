@@ -145,7 +145,7 @@ class FormsController < ApplicationController
   
   def process_conditional
     @question_id = params[:question_id]
-    @group = Question.find(@question_id).process_conditional(params[:response])
+    @group = Question.find(@question_id).process_conditional!(params)
   end
   
 end

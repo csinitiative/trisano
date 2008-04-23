@@ -25,7 +25,6 @@ class Form < ActiveRecord::Base
     return form, responses
   end
   
-  
   def save_responses!(params)
     self.sections.each do |section|
       section.groups.each do |group|
@@ -37,10 +36,8 @@ class Form < ActiveRecord::Base
   def publish!
 
     begin
-      
       # Look at the ordering of cloning activities to try mass assignment
       # Transactional
-      
       published_form = Form.new({:is_template => false, :template_form_id => self.id})
       published_form.name = self.name
       published_form.description = self.description
