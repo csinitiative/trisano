@@ -23,7 +23,7 @@ describe AnswerSetsController do
     end
   
     it "should find all answer_sets" do
-      AnswerSet.should_receive(:find).with(:all).and_return([@answer_set])
+      AnswerSet.should_receive(:find).and_return([@answer_set])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe AnswerSetsController do
     end
 
     it "should find all answer_sets" do
-      AnswerSet.should_receive(:find).with(:all).and_return([@answer_set])
+      AnswerSet.should_receive(:find).and_return([@answer_set])
       do_get
     end
   

@@ -2,7 +2,7 @@ class CmrsController < ApplicationController
   # GET /cmrs
   # GET /cmrs.xml
   def index
-    @cmrs = Cmr.find(:all)
+    @cmrs = Cmr.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb

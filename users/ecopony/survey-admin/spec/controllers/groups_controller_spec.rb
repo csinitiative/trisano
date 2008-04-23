@@ -23,7 +23,7 @@ describe GroupsController do
     end
   
     it "should find all groups" do
-      Group.should_receive(:find).with(:all).and_return([@group])
+      Group.should_receive(:find).and_return([@group])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe GroupsController do
     end
 
     it "should find all groups" do
-      Group.should_receive(:find).with(:all).and_return([@group])
+      Group.should_receive(:find).and_return([@group])
       do_get
     end
   

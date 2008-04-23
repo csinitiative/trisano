@@ -23,7 +23,7 @@ describe SectionsController do
     end
   
     it "should find all sections" do
-      Section.should_receive(:find).with(:all).and_return([@section])
+      Section.should_receive(:find).and_return([@section])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe SectionsController do
     end
 
     it "should find all sections" do
-      Section.should_receive(:find).with(:all).and_return([@section])
+      Section.should_receive(:find).and_return([@section])
       do_get
     end
   

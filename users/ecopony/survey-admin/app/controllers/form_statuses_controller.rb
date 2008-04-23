@@ -2,7 +2,7 @@ class FormStatusesController < ApplicationController
   # GET /form_statuses
   # GET /form_statuses.xml
   def index
-    @form_statuses = FormStatus.find(:all)
+    @form_statuses = FormStatus.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb

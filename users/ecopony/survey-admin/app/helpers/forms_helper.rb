@@ -1,14 +1,8 @@
 module FormsHelper
   
-  def show_groups_link(name, groups)
+  def show_link(name, entity_name, object)
     link_to_function name do |page|
-      page.replace_html :groups, :partial => 'forms/groups', :object => groups
-    end
-  end
-  
-  def show_questions_link(name, questions)
-    link_to_function name do |page|
-      page.replace_html :questions, :partial => 'forms/questions', :object => questions
+      page.replace_html entity_name, :partial => "forms/#{entity_name}", :object => object
     end
   end
   
@@ -33,7 +27,7 @@ module FormsHelper
       result += question.text
       result += "<br/>"
       result += draw_investigator_form_element(question, response)
-      result += "<br/>"
+      result += "<br/><br/>"
       
       follow_up_group = question.process_conditional(response)
       
@@ -91,7 +85,7 @@ module FormsHelper
     result
   end
   
-    def draw_form_element(question)
+  def draw_form_element(question)
     
     if question.question_type.html_form_type == "input-text"
       result = "<input type='text' name='question_#{question.id}' value='' />"

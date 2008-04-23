@@ -23,7 +23,7 @@ describe FormStatusesController do
     end
   
     it "should find all form_statuses" do
-      FormStatus.should_receive(:find).with(:all).and_return([@form_status])
+      FormStatus.should_receive(:find).and_return([@form_status])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe FormStatusesController do
     end
 
     it "should find all form_statuses" do
-      FormStatus.should_receive(:find).with(:all).and_return([@form_status])
+      FormStatus.should_receive(:find).and_return([@form_status])
       do_get
     end
   

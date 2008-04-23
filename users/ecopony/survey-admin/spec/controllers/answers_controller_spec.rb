@@ -23,7 +23,7 @@ describe AnswersController do
     end
   
     it "should find all answers" do
-      Answer.should_receive(:find).with(:all).and_return([@answer])
+      Answer.should_receive(:find).and_return([@answer])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe AnswersController do
     end
 
     it "should find all answers" do
-      Answer.should_receive(:find).with(:all).and_return([@answer])
+      Answer.should_receive(:find).and_return([@answer])
       do_get
     end
   

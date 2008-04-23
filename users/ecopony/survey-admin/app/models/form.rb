@@ -53,33 +53,7 @@ class Form < ActiveRecord::Base
         published_section.save!
         
         section.groups.each do |group|
-          published_group = Group.new({:section_id => published_section.id})
-          published_group.name = group.name
-          published_group.description = group.description
-          published_group.save!
-          
-          group.questions.each do |question|
-            published_question = Question.new({:group_id => published_group.id})
-            published_question.text = question.text
-            published_question.help = question.help
-            published_question.question_type_id = question.question_type_id
-            published_question.condition = question.condition
-            published_question.save!
-            
-            if published_question.question_type.has_answer_set == true
-              
-              published_answer_set = AnswerSet.new({:question_id => published_question.id})
-              published_answer_set.name = question.answer_set.name
-              published_answer_set.save!
-              
-              question.answer_set.answers.each do |answer|
-                published_answer = Answer.new({:answer_set_id => published_answer_set.id})
-                published_answer.text = answer.text
-                published_answer.save!
-              end
-              
-            end
-          end
+          publish_group(group, published_section)
         end
       end
       
@@ -131,6 +105,54 @@ class Form < ActiveRecord::Base
       end
     
     end
+  end
+  
+  def publish_group(group, published_section=nil)
+    
+    p "+++++++++++++Publishing Group++++++++++++++++"
+    p group.name
+    
+    published_group = Group.new
+    published_group.section_id = published_section.id unless published_section.nil?
+    published_group.name = group.name
+    published_group.description = group.description
+    published_group.save!
+          
+    group.questions.each do |question|
+      p "+++++++++++++Publishing Question++++++++++++++++"
+      p question.text
+      
+      published_question = Question.new({:group_id => published_group.id})
+      published_question.text = question.text
+      published_question.help = question.help
+      published_question.question_type_id = question.question_type_id
+      published_question.condition = question.condition
+      
+      unless question.follow_up_group_id.nil?
+        p "+++++++++++++We have a follow up++++++++++++++++"
+        p question.follow_up_group
+        p question.follow_up_group.name
+        published_question.follow_up_group_id = publish_group(question.follow_up_group)
+      end
+            
+      published_question.save!
+            
+      if published_question.question_type.has_answer_set == true
+              
+        published_answer_set = AnswerSet.new({:question_id => published_question.id})
+        published_answer_set.name = question.answer_set.name
+        published_answer_set.save!
+              
+        question.answer_set.answers.each do |answer|
+          published_answer = Answer.new({:answer_set_id => published_answer_set.id})
+          published_answer.text = answer.text
+          published_answer.save!
+        end
+              
+      end
+    end
+    
+    published_group.id
   end
   
 end

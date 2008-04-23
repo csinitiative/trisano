@@ -4,4 +4,4 @@
     %br
     = link_to_remote "Edit section name", :url => { :controller => "forms", :action => "short_section_edit", :id => section.id}
     |
-    = show_groups_link "Show groups", section.groups
+    = show_link "Show groups", "groups", section.groups

@@ -23,7 +23,7 @@ describe QuestionTypesController do
     end
   
     it "should find all question_types" do
-      QuestionType.should_receive(:find).with(:all).and_return([@question_type])
+      QuestionType.should_receive(:find).and_return([@question_type])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe QuestionTypesController do
     end
 
     it "should find all question_types" do
-      QuestionType.should_receive(:find).with(:all).and_return([@question_type])
+      QuestionType.should_receive(:find).and_return([@question_type])
       do_get
     end
   

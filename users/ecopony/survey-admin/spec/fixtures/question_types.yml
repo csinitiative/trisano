@@ -1,12 +1,10 @@
 
-
  multi_select: 
   name: Multi-select
   html_form_type: select
   id: "1"
   has_answer_set: t
   description: ""
-
 
  text_input: 
   name: Text input

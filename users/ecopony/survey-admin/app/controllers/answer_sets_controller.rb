@@ -2,7 +2,7 @@ class AnswerSetsController < ApplicationController
   # GET /answer_sets
   # GET /answer_sets.xml
   def index
-    @answer_sets = AnswerSet.find(:all)
+    @answer_sets = AnswerSet.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb

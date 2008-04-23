@@ -23,7 +23,7 @@ describe DiseasesController do
     end
   
     it "should find all diseases" do
-      Disease.should_receive(:find).with(:all).and_return([@disease])
+      Disease.should_receive(:find).and_return([@disease])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe DiseasesController do
     end
 
     it "should find all diseases" do
-      Disease.should_receive(:find).with(:all).and_return([@disease])
+      Disease.should_receive(:find).and_return([@disease])
       do_get
     end
   

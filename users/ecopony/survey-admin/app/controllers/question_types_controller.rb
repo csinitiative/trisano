@@ -2,7 +2,7 @@ class QuestionTypesController < ApplicationController
   # GET /question_types
   # GET /question_types.xml
   def index
-    @question_types = QuestionType.find(:all)
+    @question_types = QuestionType.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb

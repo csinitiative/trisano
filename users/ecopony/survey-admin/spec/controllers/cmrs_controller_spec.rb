@@ -23,7 +23,7 @@ describe CmrsController do
     end
   
     it "should find all cmrs" do
-      Cmr.should_receive(:find).with(:all).and_return([@cmr])
+      Cmr.should_receive(:find).and_return([@cmr])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe CmrsController do
     end
 
     it "should find all cmrs" do
-      Cmr.should_receive(:find).with(:all).and_return([@cmr])
+      Cmr.should_receive(:find).and_return([@cmr])
       do_get
     end
   

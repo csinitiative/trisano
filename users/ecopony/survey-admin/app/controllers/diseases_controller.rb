@@ -2,7 +2,7 @@ class DiseasesController < ApplicationController
   # GET /diseases
   # GET /diseases.xml
   def index
-    @diseases = Disease.find(:all)
+    @diseases = Disease.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb

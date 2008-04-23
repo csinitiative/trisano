@@ -23,7 +23,7 @@ describe QuestionsController do
     end
   
     it "should find all questions" do
-      Question.should_receive(:find).with(:all).and_return([@question])
+      Question.should_receive(:find).and_return([@question])
       do_get
     end
   
@@ -51,7 +51,7 @@ describe QuestionsController do
     end
 
     it "should find all questions" do
-      Question.should_receive(:find).with(:all).and_return([@question])
+      Question.should_receive(:find).and_return([@question])
       do_get
     end
   

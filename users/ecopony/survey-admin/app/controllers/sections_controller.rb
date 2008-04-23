@@ -2,7 +2,7 @@ class SectionsController < ApplicationController
   # GET /sections
   # GET /sections.xml
   def index
-    @sections = Section.find(:all)
+    @sections = Section.find(:all, :order => :id)
 
     respond_to do |format|
       format.html # index.html.erb
