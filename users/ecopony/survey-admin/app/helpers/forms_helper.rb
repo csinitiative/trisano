@@ -50,12 +50,11 @@ module FormsHelper
       end
     end
     
-    
     if question.question_type.html_form_type == "input-text"
       result = "<input type='text' name='question_#{question.id}' value='#{response}' " 
 
       if !question.follow_up_group_id.nil?
-        result += "onchange='doIt(this);'"
+        result += "onchange='sendConditionalRequest(this);'"
       end
         
       result += "/>"
@@ -66,7 +65,7 @@ module FormsHelper
         result = "<select name='question_#{question.id}'"
         
         if !question.follow_up_group_id.nil?
-          result += "onchange='" + remote_function(:url => {}) + "' "
+          result += "onchange='sendConditionalRequest(this);'"
         end
         
         result += ">"

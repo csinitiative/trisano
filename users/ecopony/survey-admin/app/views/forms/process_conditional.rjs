@@ -1,1 +1,5 @@
-page.replace_html "follow-up_#{@question_id}", :partial => 'forms/follow_up', :locals => {:group => @group, :responses => @responses}
+if @group.nil?
+  page.replace_html "follow-up_#{@question_id}", ""
+else
+  page.replace_html "follow-up_#{@question_id}", :partial => 'forms/follow_up', :locals => {:group => @group, :responses => @responses}
+end
