@@ -38,23 +38,38 @@ module FormsHelper
     
     response = ""
     
-    responses.each do |r|
-      if r.question_id == question.id
-        if question.answer_set.nil?
-          response = r.response
-        else
-          response = r.answer_id
+    if !responses.nil?
+      responses.each do |r|
+        if r.question_id == question.id
+          if question.answer_set.nil?
+            response = r.response
+          else
+            response = r.answer_id
+          end
         end
       end
     end
     
+    
     if question.question_type.html_form_type == "input-text"
-      result = "<input type='text' name='question_#{question.id}' value='#{response}' />"
+      result = "<input type='text' name='question_#{question.id}' value='#{response}' " 
+
+      if !question.follow_up_group_id.nil?
+        result += "onchange='doIt(this);'"
+      end
+        
+      result += "/>"
       
     elsif question.question_type.html_form_type == "select"
       
       if !question.answer_set.nil?
-        result = "<select name='question_#{question.id}'>"
+        result = "<select name='question_#{question.id}'"
+        
+        if !question.follow_up_group_id.nil?
+          result += "onchange='" + remote_function(:url => {}) + "' "
+        end
+        
+        result += ">"
         
         question.answer_set.answers.each do |answer|
           result += "<option value='#{answer.id}'"
@@ -71,7 +86,7 @@ module FormsHelper
       end
     end
     
-    result += "<div id='followup_#{question.id}'></div>"
+    result += "<div id='follow-up_#{question.id}'></div>"
     
     result
   end

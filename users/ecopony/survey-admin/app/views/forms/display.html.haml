@@ -1,5 +1,7 @@
 
 
+<div id='conditional-info'></div>
+
 - form_tag(process_form_path) do
 
   = render :partial => 'forms/investigator_render', :locals => {:form => @form, :responses => @responses}
@@ -8,4 +10,3 @@
 
   %button{:type => 'submit', :value => 'Submit'}
     Submit
-

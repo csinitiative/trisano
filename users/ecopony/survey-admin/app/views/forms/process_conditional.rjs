@@ -1,0 +1,1 @@
+page.replace_html "follow-up_#{@question_id}", :partial => 'forms/follow_up', :locals => {:group => @group, :responses => @responses}

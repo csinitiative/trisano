@@ -140,7 +140,23 @@ class FormsController < ApplicationController
       flash[:notice] = 'Form was successfully published.'
       format.html { redirect_to(@form) }
     end
-
   end
+  
+  def process_conditional
+    
+    @group = nil
+    @question_id = params[:question_id]
+    
+    # Temporary
+    @responses = nil
+    
+    question = Question.find(@question_id)
+    
+    if question.condition == params[:response]
+      @group = Group.find(question.follow_up_group_id)
+    end
+    
+  end
+  
   
 end
