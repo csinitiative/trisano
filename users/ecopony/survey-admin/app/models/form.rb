@@ -109,9 +109,6 @@ class Form < ActiveRecord::Base
   
   def publish_group(group, published_section=nil)
     
-    p "+++++++++++++Publishing Group++++++++++++++++"
-    p group.name
-    
     published_group = Group.new
     published_group.section_id = published_section.id unless published_section.nil?
     published_group.name = group.name
@@ -119,9 +116,6 @@ class Form < ActiveRecord::Base
     published_group.save!
           
     group.questions.each do |question|
-      p "+++++++++++++Publishing Question++++++++++++++++"
-      p question.text
-      
       published_question = Question.new({:group_id => published_group.id})
       published_question.text = question.text
       published_question.help = question.help
@@ -129,9 +123,6 @@ class Form < ActiveRecord::Base
       published_question.condition = question.condition
       
       unless question.follow_up_group_id.nil?
-        p "+++++++++++++We have a follow up++++++++++++++++"
-        p question.follow_up_group
-        p question.follow_up_group.name
         published_question.follow_up_group_id = publish_group(question.follow_up_group)
       end
             
