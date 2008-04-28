@@ -82,4 +82,8 @@ class FormsController < AdminController
       format.xml  { head :ok }
     end
   end
+  
+  def builder
+    # nothing here yet
+  end
 end

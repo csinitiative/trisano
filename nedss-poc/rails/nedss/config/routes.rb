@@ -1,16 +1,17 @@
 ActionController::Routing::Routes.draw do |map|
   
-  map.resources :forms
-
-  map.resources :users
+  map.home '', :controller => 'dashboard'
+  map.search 'search', :controller => 'search'
+  map.admin 'admin', :controller => 'admin'
+  map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
 
   map.resources :entities do |entity|
     entity.resources :locations
   end
+  
+  map.resources :forms
 
-  map.home '', :controller => 'dashboard'
-  map.search 'search', :controller => 'search'
-  map.admin 'admin', :controller => 'admin'
+  map.resources :users
 
   map.resources :cmrs, :controller => :events, 
                        :member => { :associations => :get, :add_association => :post }

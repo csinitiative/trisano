@@ -4,6 +4,7 @@ describe FormsController do
   describe "handling GET /forms" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return([@form])
     end
@@ -36,6 +37,7 @@ describe FormsController do
   describe "handling GET /forms.xml" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form, :to_xml => "XML")
       Form.stub!(:find).and_return(@form)
     end
@@ -65,6 +67,7 @@ describe FormsController do
   describe "handling GET /forms/1" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
     end
@@ -97,6 +100,7 @@ describe FormsController do
   describe "handling GET /forms/1.xml" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form, :to_xml => "XML")
       Form.stub!(:find).and_return(@form)
     end
@@ -126,6 +130,7 @@ describe FormsController do
   describe "handling GET /forms/new" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form)
       Form.stub!(:new).and_return(@form)
     end
@@ -163,6 +168,7 @@ describe FormsController do
   describe "handling GET /forms/1/edit" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
     end
@@ -195,6 +201,7 @@ describe FormsController do
   describe "handling POST /forms" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form, :to_param => "1")
       Form.stub!(:new).and_return(@form)
     end
@@ -236,6 +243,7 @@ describe FormsController do
   describe "handling PUT /forms/1" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form, :to_param => "1")
       Form.stub!(:find).and_return(@form)
     end
@@ -287,6 +295,7 @@ describe FormsController do
   describe "handling DELETE /forms/1" do
 
     before(:each) do
+      mock_user
       @form = mock_model(Form, :destroy => true)
       Form.stub!(:find).and_return(@form)
     end
