@@ -1,0 +1,16 @@
+
+%h1 
+  Form details: 
+  =@form.name
+
+%p
+  %b Name: 
+  =h @form.name
+
+%p
+  %b Description: 
+  =h @form.description
+
+= link_to 'Edit', edit_form_path(@form)
+|
+= link_to 'Back', forms_path

@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :forms
+
   map.resources :users
 
   map.resources :entities do |entity|

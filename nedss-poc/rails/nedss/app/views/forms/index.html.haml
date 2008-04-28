@@ -1,0 +1,24 @@
+
+%h1 Listing forms
+
+%table
+  %tr
+    %th Name
+    %th{:colspan => 4} Actions
+  - for form in @forms
+    %tr
+      %td
+        = h form.name
+      %td
+        / = link_to 'Builder', builder_path(form)
+        Builder
+      %td
+        = link_to 'Show', form
+      %td
+        = link_to 'Edit', edit_form_path(form)
+      %td
+        = link_to 'Destroy', form, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New form', new_form_path
