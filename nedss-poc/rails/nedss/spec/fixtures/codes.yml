@@ -284,17 +284,47 @@ case_status_discarded:
   the_code: "D"
   code_description: "Discarded"
 
-event_status_open:
+event_status_new:
   id: 1901
   code_name: "eventstatus"
-  the_code: "O"
-  code_description: "Open"
+  the_code: "N"
+  code_description: "New"
 
-event_status_closed:
+event_status_assigned:
   id: 1902
   code_name: "eventstatus"
-  the_code: "C"
-  code_description: "Closed"
+  the_code: "AJ"
+  code_description: "Assigned to Jurisdiction"
+
+event_status_under_investigation:
+  id: 1903
+  code_name: "eventstatus"
+  the_code: "UI"
+  code_description: "Under Investigation"
+
+event_status_investigation_complete:
+  id: 1904
+  code_name: "eventstatus"
+  the_code: "IC"
+  code_description: "Investigation Complete"
+
+event_status_assigned:
+  id: 1905
+  code_name: "eventstatus"
+  the_code: "RO"
+  code_description: "Reopened"
+
+event_status_assigned:
+  id: 1906
+  code_name: "eventstatus"
+  the_code: "AP1"
+  code_description: "Approved by LHD"
+
+event_status_assigned:
+  id: 1907
+  code_name: "eventstatus"
+  the_code: "AP2"
+  code_description: "Approved by State"
 
 event_type_ons:
   id: 2001

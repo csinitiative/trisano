@@ -412,6 +412,14 @@ class Event < ActiveRecord::Base
     find_by_sql(query) if issue_query
   end
 
+  def under_investigation?
+    true if event_status_id == Code.find_by_code_name_and_code_description("eventstatus", "Under Investigation").id
+  end
+
+  def reopened?
+    true if event_status_id == Code.find_by_code_name_and_code_description("eventstatus", "Reopened").id
+  end
+
   private
   
   def self.participation_code(description)
