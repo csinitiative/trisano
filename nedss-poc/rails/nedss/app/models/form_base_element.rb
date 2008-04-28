@@ -1,0 +1,2 @@
+class FormBaseElement < FormElement
+end

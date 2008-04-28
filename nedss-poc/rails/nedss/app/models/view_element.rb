@@ -1,0 +1,2 @@
+class ViewElement < FormElement
+end

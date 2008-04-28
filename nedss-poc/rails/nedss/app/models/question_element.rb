@@ -1,0 +1,2 @@
+class QuestionElement < FormElement
+end
