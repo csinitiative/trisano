@@ -26,6 +26,11 @@ describe FormsController do
     it "should map { :controller => 'forms', :action => 'destroy', :id => 1} to /forms/1" do
       route_for(:controller => "forms", :action => "destroy", :id => 1).should == "/forms/1"
     end
+    
+    it "should map { :controller => 'forms', :action => 'builder', :id => 1} to /forms/builder/1" do
+      route_for(:controller => "forms", :action => "builder", :id => 1).should == "/forms/builder/1"
+    end
+    
   end
 
   describe "route recognition" do
@@ -56,6 +61,10 @@ describe FormsController do
   
     it "should generate params { :controller => 'forms', action => 'destroy', id => '1' } from DELETE /forms/1" do
       params_from(:delete, "/forms/1").should == {:controller => "forms", :action => "destroy", :id => "1"}
+    end
+    
+    it "should generate params { :controller => 'forms', action => 'builder', id => '1' } from GET /forms/builder/1" do
+      params_from(:get, "/forms/builder/1").should == {:controller => "forms", :action => "builder", :id => "1"}
     end
   end
 end

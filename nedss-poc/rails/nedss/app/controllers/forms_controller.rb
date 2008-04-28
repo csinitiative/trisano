@@ -84,6 +84,11 @@ class FormsController < AdminController
   end
   
   def builder
-    # nothing here yet
+    @form = Form.find(params[:id])
+
+    respond_to do |format|
+      format.html { render :template => "forms/builder" }
+    end
   end
+  
 end

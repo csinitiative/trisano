@@ -319,4 +319,38 @@ describe FormsController do
       response.should redirect_to(forms_url)
     end
   end
+  
+  describe "handling GET /forms/builder/1" do
+
+    before(:each) do
+      mock_user
+      @form = mock_model(Form)
+      Form.stub!(:find).and_return(@form)
+    end
+  
+    def do_get
+      get :builder, :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should render builder template" do
+      do_get
+      response.should render_template('builder')
+    end
+  
+    it "should find the form requested" do
+      Form.should_receive(:find).and_return(@form)
+      do_get
+    end
+  
+    it "should assign the found Form for the view" do
+      do_get
+      assigns[:form].should equal(@form)
+    end
+  end
+  
 end
