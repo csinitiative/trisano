@@ -14,5 +14,5 @@
   = f.collection_select(:disease_id, Disease.find(:all, :order => "disease_name asc"), :id, :disease_name )
 
 %p
-  = f.label(:disease_id, "Show when jurisdiction is:")
+  = f.label(:jurisdiction_id, "Show when jurisdiction is:")
   = f.collection_select(:jurisdiction_id, Place.jurisdictions, :entity_id, :name, :include_blank => "All Jurisdictions" )
