@@ -9,7 +9,7 @@ class LabResult < ActiveRecord::Base
 
   def validate
     if !collection_date.blank? && !lab_test_date.blank?
-      errors.add(:lab_test_date, "cannot precede collection date") if Chronic.parse(lab_test_date) < Chronic.parse(collection_date)
+      errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
     end
   end
 end

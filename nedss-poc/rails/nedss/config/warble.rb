@@ -29,7 +29,7 @@ Warbler::Config.new do |config|
 
 #  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
-config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "chronic", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
+config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
 
 # Include all gems which are used by the web application
 # TODO Circle back to this - simpler way to configure gems rather than having to set each manuall

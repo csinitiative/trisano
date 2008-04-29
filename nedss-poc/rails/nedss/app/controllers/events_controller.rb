@@ -1,5 +1,3 @@
-require "chronic"
-
 class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy]
@@ -47,7 +45,7 @@ class EventsController < ApplicationController
   # GET /event/new.xml
   def new
     @event = Event.new(
-      :event_onset_date => Chronic.parse('today'), 
+      :event_onset_date => Date.today,
       :disease          => {}, 
       :lab_result       => {},
       :active_patient   => { 

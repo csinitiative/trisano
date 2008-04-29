@@ -10,7 +10,7 @@ class DiseaseEvent < ActiveRecord::Base
 
   def validate
     if !disease_onset_date.blank? && !date_diagnosed.blank?
-      errors.add(:date_diagnosed, "cannot precede onset date") if Chronic.parse(date_diagnosed) < Chronic.parse(disease_onset_date)
+      errors.add(:date_diagnosed, "cannot precede onset date") if date_diagnosed.to_date < disease_onset_date.to_date
     end
   end
 end

@@ -87,7 +87,7 @@ def add_event(jurisdiction, gender, first_name, last_name, county, birth_date, d
     birth_date = Date.parse(birth_date) unless birth_date.class == "Date"
 
     @event = Event.new(
-      :event_onset_date => Chronic.parse('today'), 
+      :event_onset_date => Date.today, 
       :disease          => { :disease_id => Disease.find_by_disease_name(disease).id },
       :active_patient   => { 
         :active_primary_entity => { 

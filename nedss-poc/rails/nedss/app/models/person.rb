@@ -1,5 +1,3 @@
-require 'chronic'
-
 class Person < ActiveRecord::Base
   belongs_to :birth_gender, :class_name => 'Code'
   belongs_to :ethnicity, :class_name => 'Code'
@@ -71,7 +69,7 @@ class Person < ActiveRecord::Base
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
-      errors.add(:date_of_death, "The date of death precedes birth date") if Chronic.parse(date_of_death) < Chronic.parse(birth_date)
+      errors.add(:date_of_death, "The date of death precedes birth date") if date_of_death.to_date < birth_date.to_date
     end
   end
   

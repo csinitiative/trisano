@@ -1,5 +1,3 @@
-require 'chronic'
-
 class Place < ActiveRecord::Base
   belongs_to :place_type, :class_name => 'Code'
   belongs_to :entity 
