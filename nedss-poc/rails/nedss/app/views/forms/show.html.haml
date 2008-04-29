@@ -11,6 +11,14 @@
   %b Description: 
   =h @form.description
 
+%p
+  %span.label Show for disease: 
+  =h @form.disease.disease_name
+
+%p
+  %span.label Show for jursidiction: 
+  =h @form.jurisdiction.nil? ? "All Jurisdictions" : @form.jurisdiction.current_place.name
+
 = link_to 'Edit', edit_form_path(@form)
 |
 = link_to 'Back', forms_path

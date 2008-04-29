@@ -4,6 +4,9 @@ class CreateForms < ActiveRecord::Migration
       t.string :name
       t.string :description
 
+      t.integer :disease_id
+      t.integer :jurisdiction_id
+
       t.timestamps
     end
   end

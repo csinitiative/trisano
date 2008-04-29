@@ -1,14 +1,23 @@
 
 %h1 Listing forms
 
-%table
+%table{:style => "border-spacing: 15px 5px"}
   %tr
     %th Name
+    %th Description
+    %th Disease
+    %th Jurisdiction
     %th{:colspan => 4} Actions
   - for form in @forms
     %tr
       %td
         = h form.name
+      %td
+        = h form.description
+      %td
+        = h form.disease.disease_name
+      %td
+        = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
       %td
         = link_to 'Builder', builder_path(form)
       %td
