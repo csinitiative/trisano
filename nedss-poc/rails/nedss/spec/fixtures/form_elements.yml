@@ -1,19 +1,163 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
-  form_id: 1
-  type: MyString
-  name: MyString
-  description: MyString
-  parent_id: 1
-  lft: 1
-  rgt: 1
+base:
+  name: 
+  form_id: "1"
+  lft: "1"
+  type: FormBaseElement
+  id: "1"
+  description: 
+  rgt: "32"
+  parent_id: 
+    
+default_view:
+  name: 
+  form_id: 
+  lft: "2"
+  type: ViewElement
+  id: "2"
+  description: 
+  rgt: "31"
+  parent_id: "1"
+    
+demographic_section:
+  name: Demographics
+  form_id: 
+  lft: "3"
+  type: SectionElement
+  id: "3"
+  description: 
+  rgt: "12"
+  parent_id: "2"
+ 
+demographic_group:
+  name: Standard Demographics
+  form_id: 
+  lft: "4"
+  type: GroupElement
+  id: "4"
+  description: 
+  rgt: "11"
+  parent_id: "3"
 
-two:
-  form_id: 1
-  type: MyString
-  name: MyString
-  description: MyString
-  parent_id: 1
-  lft: 1
-  rgt: 1
+demo_group_q1:
+  name: 
+  form_id: 
+  lft: "5"
+  type: QuestionElement
+  id: "5"
+  description: 
+  rgt: "6"
+  parent_id: "4"
+
+demo_group_q2:
+  name: 
+  form_id: 
+  lft: "7"
+  type: QuestionElement
+  id: "6"
+  description: 
+  rgt: "8"
+  parent_id: "4"
+
+demo_group_q3:
+  name: 
+  form_id: 
+  lft: "9"
+  type: QuestionElement
+  id: "7"
+  description: 
+  rgt: "10"
+  parent_id: "4"
+
+lab_section:
+  name: Lab
+  form_id: 
+  lft: "13"
+  type: SectionElement
+  id: "8"
+  description: 
+  rgt: "20"
+  parent_id: "2"
+
+lab_section_q1:
+  name: 
+  form_id: 
+  lft: "14"
+  type: QuestionElement
+  id: "9"
+  description: 
+  rgt: "15"
+  parent_id: "8"
+
+lab_section_q2:
+  name: 
+  form_id: 
+  lft: "16"
+  type: QuestionElement
+  id: "10"
+  description: 
+  rgt: "17"
+  parent_id: "8"
+
+lab_section_q3:
+  name: 
+  form_id: 
+  lft: "18"
+  type: QuestionElement
+  id: "11"
+  description: 
+  rgt: "19"
+  parent_id: "8"
+
+food_section:
+  name: Food Consumption History
+  form_id: 
+  lft: "21"
+  type: SectionElement
+  id: "12"
+  description: 
+  rgt: "30"
+  parent_id: "2"
+
+standard_food_group:
+  name: Standard Food History
+  form_id: 
+  lft: "22"
+  type: GroupElement
+  id: "13"
+  description: 
+  rgt: "27"
+  parent_id: "12"
+
+food_group_q1:
+  name: 
+  form_id: 
+  lft: "23"
+  type: QuestionElement
+  id: "14"
+  description: 
+  rgt: "24"
+  parent_id: "13"
+
+food_group_q2:
+  name: 
+  form_id: 
+  lft: "25"
+  type: QuestionElement
+  id: "15"
+  description: 
+  rgt: "26"
+  parent_id: "13"
+
+food_section_q1:
+  name: 
+  form_id: 
+  lft: "28"
+  type: QuestionElement
+  id: "16"
+  description: 
+  rgt: "29"
+  parent_id: "12"
+
+
