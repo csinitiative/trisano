@@ -4,3 +4,20 @@
 %h1
   = @form.name
   Builder
+
+- for view in @form.form_base_element.children
+
+  / Assuming only sections are children of view for now
+
+  %ul{:id => "section-list"}
+  - for section in view.children
+    %li{:id => "section_#{section.id}"}
+      = section.name
+      %br
+      %small
+        = link_to_remote "Add a question", :url => { :controller => "questions", :action => "new", :form_element_id => section.id}
+
+%div{:id => "section-mods"}
+  
+
+
