@@ -4,6 +4,10 @@
   <span id='investigation_show' onClick="Element.show('investigation_form'); Element.hide('investigation_show'); Element.show('investigation_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id ='investigation_form'>
-    <h1>FORM GOES HERE</h1>
+    <% if @investigation_forms.empty? %>
+      <h3>No investigation forms exist for <%#= @event.disease.disease.disease_name %></h3>
+    <% else %>
+      <h1>FORM GOES HERE</h1>
+    <% end %>
   </div>
 </fieldset>

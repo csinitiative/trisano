@@ -23,7 +23,7 @@ describe "/cmrs/edit.html.erb" do
 
     @place = mock_model(Place)
     @person = mock_model(Person)
-    
+
     @event.stub!(:active_patient).and_return(@participation)
     @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
     @event.stub!(:active_hospital).and_return(@active_hospital)
@@ -85,6 +85,18 @@ describe "/cmrs/edit.html.erb" do
 
   describe "the disesase investigation tab" do 
 
+    before(:each) do
+      @event.stub!(:under_investigation?).and_return(true)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+
+      @investigation_forms = [mock_model(Form)]
+      assigns[:investigation_forms] = @investigation_forms
+
+      @disease = mock_model(Disease)
+      @disease.stub!(:disease_name).and_return("Anthrax")
+      @disease_event = mock_model(DiseaseEvent, :null_object => true)
+    end
+
     it "should not render if CMR status is not 'under investigation or not reopened'" do
       @event.stub!(:under_investigation?).and_return(false)
       @event.stub!(:reopened?).and_return(false)
@@ -115,19 +127,12 @@ describe "/cmrs/edit.html.erb" do
       do_render
       response.should have_tag("div#investigation_form")
     end
-  end
 
-  describe "the disesase investigation form" do 
-    before(:each) do
-      @event.stub!(:under_investigation?).and_return(true)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-    end
-
-    it "should say 'no form available' if there is no form available" do
-      pending "Implement when we can start to render forms" do
-        assigns[:disease_form] = nil
+    describe "the disease investigation form" do 
+      it "should say 'no form available' if there is no form available" do
+        assigns[:investigation_forms] = []
         do_render
-        response.should have_text(/No investigation form is available for the disease/)
+        response.should have_text(/No investigation forms exist for/)
       end
     end
   end
