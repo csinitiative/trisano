@@ -7,7 +7,23 @@
     <% if @investigation_forms.empty? %>
       <h3>No investigation forms exist for <%#= @event.disease.disease.disease_name %></h3>
     <% else %>
-      <h1>FORM GOES HERE</h1>
+      <script type="text/javascript">
+        var formTabs = new YAHOO.widget.TabView("form_tabs");
+      </script>
+      <div id="form_tabs" class="yui-navset">
+        <ul id='tabs' class="yui-nav">
+          <% for f in @investigation_forms %>
+            <li class="selected"><a href="#form_<%= f.id -%>"><em><%= f.name %></em></a></li>
+          <% end %>
+        </ul>
+        <div class="yui-content">
+          <% for f in @investigation_forms %>
+            <div id="form_<%= f.id -%>">
+              <h3><%= f.description %></h3>
+            </div>
+          <% end %>
+        </div>
+      </div>
     <% end %>
   </div>
 </fieldset>

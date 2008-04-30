@@ -89,8 +89,10 @@ describe "/cmrs/edit.html.erb" do
       @event.stub!(:under_investigation?).and_return(true)
       @user.stub!(:is_entitled_to_in?).and_return(true)
 
-      @investigation_forms = [mock_model(Form)]
-      assigns[:investigation_forms] = @investigation_forms
+      @investigation_form = mock_model(Form)
+      @investigation_form.stub!(:name).and_return("A form name")
+      @investigation_form.stub!(:description).and_return("A form description")
+      assigns[:investigation_forms] = [@investigation_form]
 
       @disease = mock_model(Disease)
       @disease.stub!(:disease_name).and_return("Anthrax")
@@ -133,6 +135,22 @@ describe "/cmrs/edit.html.erb" do
         assigns[:investigation_forms] = []
         do_render
         response.should have_text(/No investigation forms exist for/)
+      end
+
+      it "should display a tab with the form name" do
+        do_render
+        response.should have_tag("ul#tabs") do
+          with_tag("li") do
+            with_tag("a[href=?]", "#form_#{@investigation_form.id}") do
+              with_tag("em", /#{@investigation_form.name}/)
+            end
+          end
+        end
+      end
+
+      it "should display the form description" do
+        do_render
+        response.should have_tag("h3", /#{@investigation_form.description}/)
       end
     end
   end
