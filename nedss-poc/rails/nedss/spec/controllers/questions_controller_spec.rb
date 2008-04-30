@@ -4,6 +4,7 @@ describe QuestionsController do
   describe "handling GET /questions" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question)
       Question.stub!(:find).and_return([@question])
     end
@@ -36,6 +37,7 @@ describe QuestionsController do
   describe "handling GET /questions.xml" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question, :to_xml => "XML")
       Question.stub!(:find).and_return(@question)
     end
@@ -65,6 +67,7 @@ describe QuestionsController do
   describe "handling GET /questions/1" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question)
       Question.stub!(:find).and_return(@question)
     end
@@ -97,6 +100,7 @@ describe QuestionsController do
   describe "handling GET /questions/1.xml" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question, :to_xml => "XML")
       Question.stub!(:find).and_return(@question)
     end
@@ -126,6 +130,7 @@ describe QuestionsController do
   describe "handling GET /questions/new" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question)
       Question.stub!(:new).and_return(@question)
     end
@@ -163,6 +168,7 @@ describe QuestionsController do
   describe "handling GET /questions/1/edit" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question)
       Question.stub!(:find).and_return(@question)
     end
@@ -195,6 +201,7 @@ describe QuestionsController do
   describe "handling POST /questions" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question, :to_param => "1")
       Question.stub!(:new).and_return(@question)
     end
@@ -236,6 +243,7 @@ describe QuestionsController do
   describe "handling PUT /questions/1" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question, :to_param => "1")
       Question.stub!(:find).and_return(@question)
     end
@@ -287,6 +295,7 @@ describe QuestionsController do
   describe "handling DELETE /questions/1" do
 
     before(:each) do
+      mock_user
       @question = mock_model(Question, :destroy => true)
       Question.stub!(:find).and_return(@question)
     end
