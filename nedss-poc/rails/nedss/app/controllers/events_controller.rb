@@ -94,9 +94,7 @@ class EventsController < ApplicationController
 
   # GET /event/1/edit
   def edit
-    if @event.active_patient.active_primary_entity.entities_location.nil?
-      @event.active_patient.active_primary_entity.entities_location = { :entity_location_type_id => Code.unspecified_location_id, :primary_yn_id => Code.yes_id }
-    end
+    @investigation_forms = Form.get_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id)
   end
 
   # POST /event

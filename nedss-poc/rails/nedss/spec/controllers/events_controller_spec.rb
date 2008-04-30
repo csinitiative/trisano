@@ -195,40 +195,42 @@ describe EventsController do
     end
   end
   
-  #    describe "handling GET /events/1/edit with update entitlement" do
-  #  
-  #      before(:each) do
-  #        mock_user
-  #        @event = mock_event
-  #        Event.stub!(:find).and_return(@event)
-  #        @user.stub!(:is_entitled_to_in?).with(:update, 75).and_return(true)
-  #      end
-  #    
-  #      def do_get
-  #        get :edit, :id => "75"
-  #      end
-  #  
-  #      it "should be successful" do
-  #        do_get
-  #        response.should be_success
-  #      end
-  #    
-  #      it "should render edit template" do
-  #        do_get
-  #        response.should render_template('edit')
-  #      end
-  #    
-  #      it "should find the event requested" do
-  #        Event.should_receive(:find).and_return(@event)
-  #        do_get
-  #      end
-  #    
-  #      it "should assign the found Event for the view" do
-  #        do_get
-  #        assigns[:event].should equal(@event)
-  #      end
-  #    end
-  #
+  describe "handling GET /events/1/edit with update entitlement" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @user.stub!(:is_entitled_to_in?).with(:update, 75).and_return(true)
+      @form = mock_model(Form)
+      Form.should_receive(:get_investigation_forms).with(1, 75).and_return(@form)
+    end
+  
+    def do_get
+      get :edit, :id => "75"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should render edit template" do
+      do_get
+      response.should render_template('edit')
+    end
+  
+    it "should find the event requested" do
+      Event.should_receive(:find).and_return(@event)
+      do_get
+    end
+  
+    it "should assign the found Event for the view" do
+      do_get
+      assigns[:event].should equal(@event)
+    end
+  end
+
   #  describe "handling POST /events" do
   #
   #    before(:each) do
