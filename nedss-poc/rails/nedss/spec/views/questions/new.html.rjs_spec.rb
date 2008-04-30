@@ -16,6 +16,7 @@ describe "/questions/new.rjs" do
     @question.stub!(:is_on_short_form).and_return(false)
     @question.stub!(:is_required).and_return(false)
     @question.stub!(:is_exportable).and_return(false)
+    @question.stub!(:parent_id).and_return(4)
     assigns[:question] = @question
   end
 

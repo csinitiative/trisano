@@ -1,0 +1,3 @@
+page.replace_html 'section-list', :partial => 'forms/section', :collection => @form.form_base_element.children[0].children
+page.replace_html 'section-mods', ""
+page.visual_effect(:highlight, 'section-list')

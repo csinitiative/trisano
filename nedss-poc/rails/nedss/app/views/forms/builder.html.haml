@@ -8,14 +8,17 @@
 - for view in @form.form_base_element.children
 
   %ul{:id => "section-list"}
-  - for section in view.children
-    %li{:id => "section_#{section.id}"}
-      = section.name
-      %br
-      %small
-        = link_to_remote "Add a question", :url => { :controller => "questions", :action => "new", :form_element_id => section.id}
+    - for section in view.children
+      %li{:id => "section_#{section.id}"}
+        = section.name
+        %ul
+          - for question_element in section.children
+            %li
+              = question_element.question.question_text
+            
+        %br
+        %small
+          = link_to_remote "Add a question", :url => { :controller => "questions", :action => "new", :form_element_id => section.id}
 
 %div{:id => "section-mods"}
   
-
-

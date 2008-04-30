@@ -133,10 +133,11 @@ describe QuestionsController do
       mock_user
       @question = mock_model(Question)
       Question.stub!(:new).and_return(@question)
+      @question.stub!(:parent_id=)
     end
   
     def do_get
-      get :new
+      get :new, :form_element_id => 4
     end
 
     it "should be successful" do

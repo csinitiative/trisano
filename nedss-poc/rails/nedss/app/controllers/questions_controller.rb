@@ -25,6 +25,7 @@ class QuestionsController < ApplicationController
   # GET /questions/new.xml
   def new
     @question = Question.new
+    @question.parent_id = params[:form_element_id]
   end
 
   # GET /questions/1/edit
@@ -42,6 +43,7 @@ class QuestionsController < ApplicationController
         flash[:notice] = 'Question was successfully created.'
         format.html { redirect_to(@question) }
         format.xml  { render :xml => @question, :status => :created, :location => @question }
+        format.js { @form = Form.find(@question.question_element.form_id)}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @question.errors, :status => :unprocessable_entity }

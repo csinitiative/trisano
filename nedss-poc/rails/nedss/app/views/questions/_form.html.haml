@@ -1,5 +1,49 @@
 
+
+= f.hidden_field :parent_id
+
 %p
   %label Question text
   %br
   = f.text_field :question_text
+
+  %label Help text
+  %br
+  = f.text_field :help_text
+
+  %label Data type
+  %br
+  = f.text_field :data_type
+
+  %label Size
+  %br
+  = f.text_field :size
+
+  %label Condition
+  %br
+  = f.text_field :condition
+
+  %label Display as
+  %br
+  = f.text_field :display_as
+
+  %label Is on the short form?
+  %br
+  = f.radio_button :is_on_short_form, "true"
+  Yes
+  = f.radio_button :is_on_short_form, "false"
+  No
+
+  %label Is required?
+  %br
+  = f.radio_button :is_required, "true"
+  Yes
+  = f.radio_button :is_required, "false"
+  No
+
+  %label Is exportable?
+  %br
+  = f.radio_button :is_exportable, "true"
+  Yes
+  = f.radio_button :is_exportable, "false"
+  No
