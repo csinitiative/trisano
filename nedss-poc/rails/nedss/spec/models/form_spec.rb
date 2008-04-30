@@ -17,6 +17,10 @@ describe Form do
       form_base_element.should_not be_nil
       default_view_element = form_base_element.children[0]
       default_view_element.should_not be_nil
+      default_view_element.name.should == "Default View"
+      default_section_element = default_view_element.children[0]
+      default_section_element.should_not be_nil
+      default_section_element.name.should == "Default Section"
     end
     
   end

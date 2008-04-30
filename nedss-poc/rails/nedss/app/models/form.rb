@@ -8,8 +8,10 @@ class Form < ActiveRecord::Base
   
   def initialize_form_elements
     form_base_element = FormBaseElement.create({:form_id => self.id})
-    default_view_element = ViewElement.create({:form_id => self.id})
+    default_view_element = ViewElement.create({:form_id => self.id, :name => "Default View"})
     form_base_element.add_child(default_view_element)
+    default_section_element = SectionElement.create({:form_id => self.id, :name => "Default Section"})
+    default_view_element.add_child(default_section_element)
   end
   
 end

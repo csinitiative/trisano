@@ -7,8 +7,6 @@
 
 - for view in @form.form_base_element.children
 
-  / Assuming only sections are children of view for now
-
   %ul{:id => "section-list"}
   - for section in view.children
     %li{:id => "section_#{section.id}"}
