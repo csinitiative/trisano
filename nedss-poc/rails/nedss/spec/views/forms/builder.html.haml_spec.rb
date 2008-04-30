@@ -19,9 +19,12 @@ describe "/forms/builder.html.haml" do
     @base_element.stub!(:children).and_return([@view_element])
     @view_element.stub!(:children).and_return([@section_element])
     @section_element.stub!(:name).and_return("Section Name")
+    @section_element.stub!(:children?).and_return(true)
     @section_element.stub!(:children).and_return([@question_element])
     @question_element.stub!(:question).and_return(@question)
+    @question_element.stub!(:children?).and_return(false)
     @question.stub!(:question_text).and_return("Que?")
+    @question.stub!(:data_type).and_return("single_line_input")
     
     assigns[:form] = @form
   end
@@ -34,4 +37,3 @@ describe "/forms/builder.html.haml" do
     
   end
 end
-

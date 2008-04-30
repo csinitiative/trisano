@@ -9,8 +9,8 @@
 
 - for view in @form.form_base_element.children
 
-  %ul{:id => "section-list"}
-    - for section in view.children
-      = render :partial => 'forms/section', :object => section
+  %ul{:id => "root-element-list"}
+    - for element in view.children
+      = render_element element
 
-%div{:id => "section-mods"}
+%div{:id => "builder-mods"}
