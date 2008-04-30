@@ -4,6 +4,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement)
       AnswerSetElement.stub!(:find).and_return([@answer_set_element])
     end
@@ -36,6 +37,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements.xml" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement, :to_xml => "XML")
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
@@ -65,6 +67,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements/1" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement)
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
@@ -97,6 +100,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements/1.xml" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement, :to_xml => "XML")
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
@@ -126,6 +130,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements/new" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement)
       AnswerSetElement.stub!(:new).and_return(@answer_set_element)
       @answer_set_element.stub!(:parent_element_id=)
@@ -165,6 +170,7 @@ describe AnswerSetElementsController do
   describe "handling GET /answer_set_elements/1/edit" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement)
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
@@ -197,6 +203,7 @@ describe AnswerSetElementsController do
   describe "handling POST /answer_set_elements" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement, :to_param => "1")
       AnswerSetElement.stub!(:new).and_return(@answer_set_element)
     end
@@ -238,6 +245,7 @@ describe AnswerSetElementsController do
   describe "handling PUT /answer_set_elements/1" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement, :to_param => "1")
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
@@ -289,6 +297,7 @@ describe AnswerSetElementsController do
   describe "handling DELETE /answer_set_elements/1" do
 
     before(:each) do
+      mock_user
       @answer_set_element = mock_model(AnswerSetElement, :destroy => true)
       AnswerSetElement.stub!(:find).and_return(@answer_set_element)
     end
