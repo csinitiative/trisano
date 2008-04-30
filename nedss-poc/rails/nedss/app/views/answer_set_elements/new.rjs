@@ -1,0 +1,1 @@
+page.replace_html 'builder-mods', :partial => 'answer_set_elements/new', :locals => {:answer_set_element => @answer_set_element}

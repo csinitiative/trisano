@@ -23,8 +23,11 @@ describe "/forms/builder.html.haml" do
     @section_element.stub!(:children).and_return([@question_element])
     @question_element.stub!(:question).and_return(@question)
     @question_element.stub!(:children?).and_return(false)
+    @question_element.stub!(:form_id).and_return(1)
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
+    
+     
     
     assigns[:form] = @form
   end

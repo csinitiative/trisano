@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+
+
   
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
@@ -12,6 +14,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :forms
 
   map.resources :questions
+  
+  map.resources :answer_set_elements
   
   map.resources :users
 

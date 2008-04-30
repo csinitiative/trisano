@@ -1,0 +1,9 @@
+
+= error_messages_for :answer_set_element
+
+- remote_form_for(answer_set_element) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+
+  %p
+    = f.submit "Create"
