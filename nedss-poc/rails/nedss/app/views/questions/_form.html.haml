@@ -13,7 +13,7 @@
 
   %label Data type
   %br
-  = f.text_field :data_type
+  = f.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"]], {:include_blank => true}) 
 
   %label Size
   %br
@@ -22,10 +22,6 @@
   %label Condition
   %br
   = f.text_field :condition
-
-  %label Display as
-  %br
-  = f.text_field :display_as
 
   %label Is on the short form?
   %br

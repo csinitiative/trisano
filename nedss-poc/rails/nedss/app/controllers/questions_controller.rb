@@ -47,6 +47,7 @@ class QuestionsController < ApplicationController
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @question.errors, :status => :unprocessable_entity }
+        format.js { render :action => "new" }
       end
     end
   end

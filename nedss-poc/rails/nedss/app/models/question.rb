@@ -6,6 +6,8 @@ class Question < ActiveRecord::Base
 
   before_create :initialize_form_elements
   
+  validates_presence_of :question_text, :data_type
+  
   def initialize_form_elements
     parent_element = FormElement.find(self.parent_id)
     question_element = QuestionElement.create(:form_id => parent_element.form_id)

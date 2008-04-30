@@ -1,3 +1,5 @@
 page.replace_html 'section-list', :partial => 'forms/section', :collection => @form.form_base_element.children[0].children
+page.replace_html 'builder-info', "<span style='color:green'>" + flash[:notice] + "</span>"
 page.replace_html 'section-mods', ""
 page.visual_effect(:highlight, 'section-list')
+flash[:notice] = ""
