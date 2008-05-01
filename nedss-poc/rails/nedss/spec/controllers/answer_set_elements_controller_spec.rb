@@ -211,7 +211,7 @@ describe AnswerSetElementsController do
     describe "with successful save" do
   
       def do_post
-        @answer_set_element.should_receive(:save).and_return(true)
+        @answer_set_element.should_receive(:save_and_add_to_form!).and_return(true)
         post :create, :answer_set_element => {}
       end
   
@@ -230,7 +230,7 @@ describe AnswerSetElementsController do
     describe "with failed save" do
 
       def do_post
-        @answer_set_element.should_receive(:save).and_return(false)
+        @answer_set_element.should_receive(:save_and_add_to_form!).and_return(false)
         post :create, :answer_set_element => {}
       end
   

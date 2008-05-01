@@ -133,7 +133,7 @@ describe QuestionsController do
       mock_user
       @question = mock_model(Question)
       Question.stub!(:new).and_return(@question)
-      @question.stub!(:parent_id=)
+      @question.stub!(:parent_element_id=)
     end
   
     def do_get

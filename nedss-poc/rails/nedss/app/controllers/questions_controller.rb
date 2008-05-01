@@ -25,7 +25,7 @@ class QuestionsController < ApplicationController
   # GET /questions/new.xml
   def new
     @question = Question.new
-    @question.parent_id = params[:form_element_id]
+    @question.parent_element_id = params[:form_element_id]
   end
 
   # GET /questions/1/edit
@@ -39,7 +39,7 @@ class QuestionsController < ApplicationController
     @question = Question.new(params[:question])
 
     respond_to do |format|
-      if @question.save_and_add_to_form!(params[:question][:parent_id])
+      if @question.save_and_add_to_form!(params[:question][:parent_element_id])
         flash[:notice] = 'Question was successfully created.'
         format.html { redirect_to(@question) }
         format.xml  { render :xml => @question, :status => :created, :location => @question }

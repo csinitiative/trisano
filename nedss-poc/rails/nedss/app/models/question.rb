@@ -2,7 +2,7 @@ class Question < ActiveRecord::Base
   
   belongs_to :question_element
   
-  attr_accessor :parent_id 
+  attr_accessor :parent_element_id
   
   validates_presence_of :question_text, :data_type
   

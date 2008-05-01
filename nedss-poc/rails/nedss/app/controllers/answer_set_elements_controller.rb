@@ -40,7 +40,7 @@ class AnswerSetElementsController < ApplicationController
     @answer_set_element = AnswerSetElement.new(params[:answer_set_element])
 
     respond_to do |format|
-      if @answer_set_element.save
+      if @answer_set_element.save_and_add_to_form!(params[:answer_set_element][:parent_element_id])
         flash[:notice] = 'Answer Set was successfully created.'
         format.html { redirect_to(@answer_set_element) }
         format.xml  { render :xml => @answer_set_element, :status => :created, :location => @answer_set_element }
