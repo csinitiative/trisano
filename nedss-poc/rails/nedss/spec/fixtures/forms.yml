@@ -4,3 +4,31 @@ test_form:
   name: Test Form
   id: "1"
   description: Testng
+
+anthrax_form_all_jurisdictions_1:
+  id: 2
+  name: "Anthrax Form 1"
+  description: "This is an Anthrax form."
+  disease_id: 1
+  jurisdiction_id:
+
+anthrax_form_all_jurisdictions_2:
+  id: 3
+  name: "Anthrax Form 2"
+  description: "This is another Anthrax form."
+  disease_id: 1
+  jurisdiction_id:
+
+anthrax_form_for_LHD_1:
+  id: 4
+  name: "Anthrax Form Local 1"
+  description: "This is an Anthrax form for Local 1."
+  disease_id: 1
+  jurisdiction_id: 1
+
+anthrax_form_for_LHD:
+  id: 5
+  name: "Anthrax Form Local 2"
+  description: "This is an Anthrax form for Local 2."
+  disease_id: 1
+  jurisdiction_id: 2

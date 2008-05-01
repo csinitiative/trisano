@@ -25,5 +25,23 @@ describe Form do
     
   end
   
-  
+  describe "the get_investigation_forms class method" do
+    fixtures :forms
+
+    it "should return three forms" do
+      forms = Form.get_investigation_forms(1, 1)
+      forms.length.should == 3
+    end
+
+    it "should return two global forms" do
+      forms = Form.get_investigation_forms(1, 1)
+      forms.collect { |form| form.jurisdiction_id.nil? } == 2
+    end
+
+    it "should return one jurisdiction specific form" do
+      forms = Form.get_investigation_forms(1, 1)
+      forms.collect { |form| not form.jurisdiction_id.nil? } == 1
+    end
+  end
+
 end
