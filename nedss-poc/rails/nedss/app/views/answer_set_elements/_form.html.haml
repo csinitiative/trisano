@@ -3,6 +3,12 @@
 = f.hidden_field :form_id
 
 %p
-  %label Name
+  %label Answer Set Name
   %br
   = f.text_field :name
+
+= add_answer_link "Add an answer"
+
+%div{ :id => "answer-mods" }
+  = render :partial => 'answer_set_elements/answer', :collection => @answer_set_element.answer_elements
+

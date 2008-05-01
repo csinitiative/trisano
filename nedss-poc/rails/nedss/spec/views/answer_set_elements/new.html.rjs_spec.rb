@@ -4,11 +4,16 @@ describe "/answer_set_elements/new.rjs" do
   include QuestionsHelper
   
   before(:each) do
+    answer_element = mock_model(AnswerElement)
+    answer_element.stub!(:name).and_return("Yes")
+    
     @answer_set_element = mock_model(AnswerSetElement)
     @answer_set_element.stub!(:new_record?).and_return(true)
     @answer_set_element.stub!(:form_id).and_return("1")
     @answer_set_element.stub!(:name).and_return("MyString")
     @answer_set_element.stub!(:parent_element_id).and_return(4)
+    @answer_set_element.stub!(:answer_elements).and_return([answer_element])
+
     assigns[:answer_set_element] = @answer_set_element
   end
 

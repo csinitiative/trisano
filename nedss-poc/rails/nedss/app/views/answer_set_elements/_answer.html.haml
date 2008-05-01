@@ -1,0 +1,6 @@
+
+%div{ :class => "answer-element" }
+
+  - fields_for "answer_set_element[answer_attributes][]", answer do |af|
+    = af.label(:name, "Answer")
+    = af.text_field :name
