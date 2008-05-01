@@ -89,9 +89,12 @@ describe "/cmrs/edit.html.erb" do
       @event.stub!(:under_investigation?).and_return(true)
       @user.stub!(:is_entitled_to_in?).and_return(true)
 
+      @form_base_element = mock_model(FormBaseElement, :null_object => true)
+
       @investigation_form = mock_model(Form)
       @investigation_form.stub!(:name).and_return("A form name")
       @investigation_form.stub!(:description).and_return("A form description")
+      @investigation_form.stub!(:form_base_element).and_return(@form_base_element)
       assigns[:investigation_forms] = [@investigation_form]
 
       @disease = mock_model(Disease)
@@ -150,7 +153,7 @@ describe "/cmrs/edit.html.erb" do
 
       it "should display the form description" do
         do_render
-        response.should have_tag("h3", /#{@investigation_form.description}/)
+        response.should have_tag("h2", /#{@investigation_form.description}/)
       end
     end
   end

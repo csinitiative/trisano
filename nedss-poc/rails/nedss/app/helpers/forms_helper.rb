@@ -47,7 +47,7 @@ module FormsHelper
     result += "<li id='question_" + element.id.to_s + "'>Question: "
     result += question.question_text
     
-    if ((question.data_type != "single_line_text" && question.data_type != "multi_line_text") && element.children? == false)
+    if ((question.data_type != :single_line_text && question.data_type != :multi_line_text) && element.children? == false)
       result += "<br/>"
       result += "<small><a href='#' onclick=\"new Ajax.Request('../../answer_set_elements/new?form_element_id=" + 
       element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add answer set</a></small>"

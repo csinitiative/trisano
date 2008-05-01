@@ -72,6 +72,7 @@ Rails::Initializer.run do |config|
     require "lib/soundex/Soundex.rb"
     require "lib/mmwr/mmwr.rb"
     require "lib/blankable.rb"
+    require "lib/extend_better_nested_set.rb"
   end
 
 end

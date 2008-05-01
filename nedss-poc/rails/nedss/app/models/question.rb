@@ -13,5 +13,9 @@ class Question < ActiveRecord::Base
     self.question_element_id = question_element.id
     self.save!
   end
+
+  def data_type
+    read_attribute("data_type").to_sym
+  end
   
 end

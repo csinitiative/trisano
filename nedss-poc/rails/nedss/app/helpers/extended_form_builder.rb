@@ -13,4 +13,47 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes ||= Code.find(:all, :order => 'sort_order')
     @codes.select {|code| code.code_name == code_name}
   end
+
+  def dynamic_question(question, answer_object, index) 
+    q = @template.content_tag(:span, :class => "horiz") do
+      @template.content_tag(:label) do
+        index = answer_object.id.nil? ? index : answer_object.id
+
+        html_options = {}
+        html_options[:index] = index
+# UNCOMMENT LATER
+#        additional_questions = ! question.additional_questions_value.blank?
+        additional_questions = false
+
+        if additional_questions
+          div_id = "additional_questions_for_question_#{question.id}"
+          text_answer_event = "if (this.value == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
+          select_answer_event = "if (this.options[this.selectedIndex].text == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
+         # A little more work is needed for multi-selects, but it's within range.  Skipping for now.
+        end
+
+        p question.data_type
+        input_element = case question.data_type
+        when :single_line_text
+          html_options[:size] = question.size
+          html_options[:onblur] = text_answer_event if additional_questions
+          text_field(:text_answer, html_options)
+        when :multi_line_text
+          html_options[:rows] = 3
+          html_options[:onblur] = text_answer_event if additional_questions
+          text_area(:text_answer, html_options)
+#        when :single_select
+#          html_options[:onchange] = select_answer_event if additional_questions
+#          collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
+#        when :multi_select
+#          html_options[:onchange] = select_answer_event if additional_questions
+#          html_options[:multiple] = true
+#          collection_select(:value_set_ids, question.value_sets, :id, :value, {}, html_options)
+        end
+
+        question.question_text + " " + input_element 
+      end
+    end
+    q + hidden_field(:question_id, :index => index)
+  end
 end

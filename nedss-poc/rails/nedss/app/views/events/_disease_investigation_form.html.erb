@@ -12,18 +12,40 @@
       </script>
       <div id="form_tabs" class="yui-navset">
         <ul id='tabs' class="yui-nav">
-          <% for f in @investigation_forms %>
-            <li class="selected"><a href="#form_<%= f.id -%>"><em><%= f.name %></em></a></li>
+          <% i = 0 %>
+          <% for _form in @investigation_forms %>
+            <% i += 1 %>
+            <li <%= 'class="selected"' if i == 1 -%>><a href="#form_<%= _form.id -%>"><em><%= _form.name %></em></a></li>
           <% end %>
         </ul>
         <div class="yui-content">
-          <% for f in @investigation_forms %>
-            <div id="form_<%= f.id -%>">
-              <h3><%= f.description %></h3>
+          <% for _form in @investigation_forms %>
+            <div id="form_<%= _form.id -%>">
+              <h2><%= _form.description %></h2>
+              <% section_open = false; index = 0 %>
+              <% _form.form_base_element.pre_order_walk do |element| %>
+
+              <% case element.class.name
+                 when "SectionElement" %>
+                   <% "</fieldset>" if section_open %>
+                   <% section_open = true %>
+                   <fieldset class="form_section">
+                     <legend><%= element.name -%></legend>
+                     <h3><%= element.description -%></h3>
+              <% when "QuestionElement" %>
+                  <%# @answer_object = @event.get_or_initialize_answer(question.id) %>
+                  <% @answer_object = SurveyAnswer.new %>
+                  <% f.fields_for(:answers, @answerquestion_object, :builder => ExtendedFormBuilder) do |answer_template| %>
+                    <%= answer_template.dynamic_question(element.question, @answer_object, index += 1) %>
+                  <% end  # fields_for %>
+                <% end  # case %>
+
+                <% "</fieldset>" if section_open %>
+              <% end  # element walk %>
             </div>
-          <% end %>
+          <% end  # forms loop %>
         </div>
       </div>
-    <% end %>
+    <% end  # if forms %>
   </div>
 </fieldset>
