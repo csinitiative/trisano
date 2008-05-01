@@ -4,9 +4,9 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../lib')
 
 require 'rubygems'
 require 'spec'
-require 'spec/ui'
+#require 'spec/ui'
 require File.dirname(__FILE__) + '/selenium'
-require 'spec/ui/selenium'
+#require 'spec/ui/selenium'
 
 Spec::Runner.configure do |config|
   
@@ -16,7 +16,7 @@ Spec::Runner.configure do |config|
   end
   
   config.after(:each) do
-    Spec::Ui::ScreenshotFormatter.instance.take_screenshot_of(@browser)
+#    Spec::Ui::ScreenshotFormatter.instance.take_screenshot_of(@browser)
   end
 
   config.after(:all) do
