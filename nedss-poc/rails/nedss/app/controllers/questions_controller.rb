@@ -39,7 +39,7 @@ class QuestionsController < ApplicationController
     @question = Question.new(params[:question])
 
     respond_to do |format|
-      if @question.save
+      if @question.save_and_add_to_form!(params[:question][:parent_id])
         flash[:notice] = 'Question was successfully created.'
         format.html { redirect_to(@question) }
         format.xml  { render :xml => @question, :status => :created, :location => @question }

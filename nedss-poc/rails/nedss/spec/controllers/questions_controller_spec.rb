@@ -210,7 +210,7 @@ describe QuestionsController do
     describe "with successful save" do
   
       def do_post
-        @question.should_receive(:save).and_return(true)
+        @question.should_receive(:save_and_add_to_form!).and_return(true)
         post :create, :question => {}
       end
   
@@ -229,7 +229,7 @@ describe QuestionsController do
     describe "with failed save" do
 
       def do_post
-        @question.should_receive(:save).and_return(false)
+        @question.should_receive(:save_and_add_to_form!).with(nil).and_return(false)
         post :create, :question => {}
       end
   
