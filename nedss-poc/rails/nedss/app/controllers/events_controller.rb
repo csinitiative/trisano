@@ -122,7 +122,6 @@ class EventsController < ApplicationController
   # PUT /event/1
   # PUT /event/1.xml
   def update
-
     respond_to do |format|
       if @event.update_attributes(params[:event])
         flash[:notice] = 'CMR was successfully updated.'

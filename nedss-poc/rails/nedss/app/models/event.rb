@@ -12,6 +12,7 @@ class Event < ActiveRecord::Base
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
 
   has_many :participations
+  has_many :answers
 
 # For reasons unknown code like the following won't work.
 # has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
@@ -41,6 +42,18 @@ class Event < ActiveRecord::Base
       disease_events.build(attributes) unless attributes.values_blank?
     end
   end  
+
+  def answers=(attributes)
+    if answers.empty?
+      answers.build(attributes.values)
+    else
+      answers.update(attributes.keys, attributes.values)
+    end
+  end
+
+  def get_or_initialize_answer(question_id)
+    answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
+  end
 
   def lab_result
     @lab_result ||= lab_results.last

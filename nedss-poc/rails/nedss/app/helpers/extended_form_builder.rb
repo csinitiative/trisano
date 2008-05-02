@@ -14,9 +14,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes.select {|code| code.code_name == code_name}
   end
 
-  def dynamic_question(question, answer_object, index) 
-    q = @template.content_tag(:span, :class => "horiz") do
-      @template.content_tag(:label) do
+  def dynamic_question(question_element, answer_object, index) 
+    question = question_element.question
+#    q = @template.content_tag(:span, :class => "horiz") do
+      q = @template.content_tag(:label) do
         index = answer_object.id.nil? ? index : answer_object.id
 
         html_options = {}
@@ -42,9 +43,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
           html_options[:rows] = 3
           html_options[:onblur] = text_answer_event if additional_questions
           text_area(:text_answer, html_options)
-#        when :single_select
-#          html_options[:onchange] = select_answer_event if additional_questions
-#          collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
+        when :drop_down
+          html_options[:onchange] = select_answer_event if additional_questions
+          # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
+          select(:text_answer, get_values(question_element), {}, html_options)
 #        when :multi_select
 #          html_options[:onchange] = select_answer_event if additional_questions
 #          html_options[:multiple] = true
@@ -53,7 +55,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
         question.question_text + " " + input_element 
       end
-    end
-    q + hidden_field(:question_id, :index => index)
+#    end
+    q + "\n" + hidden_field(:question_id, :index => index)
   end
+
+  def get_values(question_element)
+    question_element.children.find { |child| child.is_a?(ValueSetElement) }.children.collect { |value| value.name }
+  end
+
 end

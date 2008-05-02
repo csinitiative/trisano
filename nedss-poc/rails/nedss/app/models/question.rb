@@ -16,8 +16,8 @@ class Question < ActiveRecord::Base
     end
   end
 
-def data_type
-  read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
-end
+  def data_type
+    read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
+  end
   
 end
