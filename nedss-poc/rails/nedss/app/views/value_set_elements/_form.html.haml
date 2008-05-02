@@ -1,0 +1,14 @@
+
+= f.hidden_field :parent_element_id
+= f.hidden_field :form_id
+
+%p
+  %label Value Set Name
+  %br
+  = f.text_field :name
+
+= add_value_link "Add a value"
+
+%div{ :id => "value-mods" }
+  = render :partial => 'value_set_elements/value', :collection => @value_set_element.value_elements
+

@@ -10,10 +10,10 @@ module FormsHelper
       result += render_section(element)
     when "QuestionElement"
       result += render_question(element)
-    when "AnswerSetElement"
-      result += render_answer_set(element)
-    when "AnswerElement"
-      result += render_answer(element)
+    when "ValueSetElement"
+      result += render_value_set(element)
+    when "ValueElement"
+      result += render_value(element)
     end
     
     return result
@@ -52,8 +52,8 @@ module FormsHelper
     if ((question.data_type != :single_line_text && question.data_type != :multi_line_text && 
             question.data_type != :date && question.data_type != :phone) && element.children? == false)
       result += "<br/>"
-      result += "<small><a href='#' onclick=\"new Ajax.Request('../../answer_set_elements/new?form_element_id=" + 
-        element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add answer set</a></small>"
+      result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
+        element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
     end
     
     result += "</li>"
@@ -69,14 +69,14 @@ module FormsHelper
     result
   end
   
-  def render_answer_set(element)
+  def render_value_set(element)
     result = ""
     
-    result += "<li id='answer_set_" + element.id.to_s + "'>Answer Set: "
+    result += "<li id='value_set_" + element.id.to_s + "'>Value Set: "
     result += element.name
     
     if element.children?
-      result += "<ul id='answer_set_" + element.id.to_s + "_children'>"
+      result += "<ul id='value_set_" + element.id.to_s + "_children'>"
       element.children.each do |child|
         result += render_element(child)
       end
@@ -88,10 +88,10 @@ module FormsHelper
     result
   end
   
-  def render_answer(element)
+  def render_value(element)
     result = ""
     
-    result += "<li id='answer_" + element.id.to_s + "'>"
+    result += "<li id='value_" + element.id.to_s + "'>"
     result += element.name
     result += "</li>"
     

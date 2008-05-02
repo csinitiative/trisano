@@ -1,0 +1,6 @@
+
+%div{ :class => "value-element" }
+
+  - fields_for "value_set_element[value_attributes][]", value do |vf|
+    = vf.label(:name, "Value")
+    = vf.text_field :name

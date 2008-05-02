@@ -1,0 +1,15 @@
+%h1 Editing value set
+
+= error_messages_for :value_set_element
+
+
+- form_for(@value_set_element) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+
+  %p
+    = f.submit "Update"
+
+= link_to 'Show', @value_set_element 
+|
+= link_to 'Back', value_set_elements_path
