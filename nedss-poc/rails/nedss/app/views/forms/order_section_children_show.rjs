@@ -1,0 +1,1 @@
+page.replace_html 'builder-mods', :partial => 'forms/order_section_children', :locals => {:section => @section}

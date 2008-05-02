@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
   # POST /questions.xml
   def create
     @question = Question.new(params[:question])
-
+    
     respond_to do |format|
       if @question.save_and_add_to_form(params[:question][:parent_element_id])
         flash[:notice] = 'Question was successfully created.'

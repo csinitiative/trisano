@@ -27,15 +27,11 @@ describe "/forms/builder.html.haml" do
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
     
-     
-    
     assigns[:form] = @form
   end
 
   it "should have basic form info and links'" do
     render "/forms/builder.html.haml"
-    response.should have_text(/Builder/)
-    response.should have_text(/MyString/)
     response.should have_text(/Add a question/)
     
   end

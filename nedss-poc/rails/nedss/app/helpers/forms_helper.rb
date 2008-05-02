@@ -1,36 +1,43 @@
 module FormsHelper
   
-  def render_element(element)
+  def render_element(element, include_children=true)
     
     result = ""
     
     case element.class.name
       
     when "SectionElement"
-      result += render_section(element)
+      result += render_section(element, include_children)
     when "QuestionElement"
-      result += render_question(element)
+      result += render_question(element, include_children)
     when "ValueSetElement"
-      result += render_value_set(element)
+      result += render_value_set(element, include_children)
     when "ValueElement"
-      result += render_value(element)
+      result += render_value(element, include_children)
     end
     
     return result
   end
   
-  def render_section(element)
+  def render_section(element, include_children=true)
     
     result = ""
     
     result += "<li id='section_" + element.id.to_s + "'><b>"
     result += element.name
-    result += "</b></li>"
+    result += "</b>"
     
     if element.children?
+      result += "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show?form_element_id=" + 
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+    end
+    
+    result += "</li>"
+    
+    if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children'>"
       element.children.each do |child|
-        result += render_element(child)
+        result += render_element(child, include_children)
       end
       result += "</ul>"
     end
@@ -41,7 +48,7 @@ module FormsHelper
     result
   end
   
-  def render_question(element)
+  def render_question(element, include_children=true)
     
     result = ""
     question = element.question
@@ -49,7 +56,7 @@ module FormsHelper
     result += "<li id='question_" + element.id.to_s + "'>Question: "
     result += question.question_text
     
-    if ((question.data_type != :single_line_text && question.data_type != :multi_line_text && 
+    if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
             question.data_type != :date && question.data_type != :phone) && element.children? == false)
       result += "<br/>"
       result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
@@ -58,10 +65,10 @@ module FormsHelper
     
     result += "</li>"
     
-    if element.children?
+    if include_children && element.children?
       result += "<ul id='question_" + element.id.to_s + "_children'>"
       element.children.each do |child|
-        result += render_element(child)
+        result += render_element(child, include_children)
       end
       result += "</ul>"
     end
@@ -69,16 +76,16 @@ module FormsHelper
     result
   end
   
-  def render_value_set(element)
+  def render_value_set(element, include_children=true)
     result = ""
     
     result += "<li id='value_set_" + element.id.to_s + "'>Value Set: "
     result += element.name
     
-    if element.children?
+    if include_children && element.children?
       result += "<ul id='value_set_" + element.id.to_s + "_children'>"
       element.children.each do |child|
-        result += render_element(child)
+        result += render_element(child, include_children)
       end
       result += "</ul>"
     end
@@ -88,7 +95,7 @@ module FormsHelper
     result
   end
   
-  def render_value(element)
+  def render_value(element, include_children=true)
     result = ""
     
     result += "<li id='value_" + element.id.to_s + "'>"

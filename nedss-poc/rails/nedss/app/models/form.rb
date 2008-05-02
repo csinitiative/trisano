@@ -2,7 +2,7 @@ class Form < ActiveRecord::Base
   belongs_to :disease
   belongs_to :jurisdiction, :class_name => "Entity", :foreign_key => "jurisdiction_id"
   
-  has_one :form_base_element, :class_name => "FormElement"
+  has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   
   after_create :initialize_form_elements
   

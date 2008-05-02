@@ -1,16 +1,17 @@
 
+%table{:width => '100%', :cellpadding => '5', :cellspacing => '0'}
+  %tr
+    %td{:valign=>'top', :nowrap => ''}
+      %h3
+        Form Hierarchy
+      %div{:id => "builder-info"}
+    
+      - for view in @form.form_base_element.children
+
+        %ul{:id => "root-element-list"}
+          = render :partial => 'forms/root_elements', :locals => { :view => view }
+    %td{:width => '100%', :align => 'left', :valign => 'top'}
+      %div{:id => "builder-mods"}
+
+
 = link_to "Back to form edit", edit_form_path(@form)
-
-%h1
-  = @form.name
-  Builder
-
-%div{:id => "builder-info"}
-
-- for view in @form.form_base_element.children
-
-  %ul{:id => "root-element-list"}
-    - for element in view.children
-      = render_element element
-
-%div{:id => "builder-mods"}

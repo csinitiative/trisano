@@ -91,4 +91,16 @@ class FormsController < AdminController
     end
   end
   
+  def order_section_children_show
+    @section = FormElement.find(params[:form_element_id])
+  end
+  
+  def order_section_children
+    @section = FormElement.find(params[:id], :order => :lft)
+    
+    @section.children.each do |child|
+      child.move_to_position params['reorder-list'].index(child.id.to_s)
+    end
+  end
+  
 end
