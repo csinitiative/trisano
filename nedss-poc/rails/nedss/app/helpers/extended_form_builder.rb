@@ -33,7 +33,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
          # A little more work is needed for multi-selects, but it's within range.  Skipping for now.
         end
 
-        p question.data_type
         input_element = case question.data_type
         when :single_line_text
           html_options[:size] = question.size

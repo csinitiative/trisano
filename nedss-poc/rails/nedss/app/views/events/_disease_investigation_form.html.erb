@@ -27,7 +27,7 @@
               <% _form.form_base_element.pre_order_walk do |element| -%>
               <% case element.class.name
                  when "SectionElement" %>
-                   <% "</fieldset>" if section_open %>
+                   <%= "</fieldset>" if section_open %>
                    <% section_open = true %>
                    <fieldset class="form_section">
                      <legend><%= element.name -%></legend>
@@ -38,8 +38,8 @@
                     <%= answer_template.dynamic_question(element, @answer_object, index += 1) %>
                   <% end  # fields_for -%>
                 <% end  # case -%>
-                <% "</fieldset>" if section_open %>
               <% end  # element walk %>
+              <%= "</fieldset>" if section_open %>
             </div>
           <% end  # forms loop %>
         </div>

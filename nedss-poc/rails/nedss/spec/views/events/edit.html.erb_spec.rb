@@ -23,6 +23,7 @@ describe "/cmrs/edit.html.erb" do
 
     @place = mock_model(Place)
     @person = mock_model(Person)
+    @answer = mock_model(Answer)
 
     @event.stub!(:active_patient).and_return(@participation)
     @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
@@ -31,6 +32,7 @@ describe "/cmrs/edit.html.erb" do
 #    @event.stub!(:active_jurisdiction).and_return(@active_jurisdiction)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
+    @event.stub!(:get_or_initialize_answer).and_return(@answer)
     # @event.stub!(:current_treatment).and_return(@current_treatment)
 
     @place.stub!(:name).and_return("Joe's Lab")
@@ -38,6 +40,9 @@ describe "/cmrs/edit.html.erb" do
 
     @person.stub!(:first_name).and_return("Joe")
     @person.stub!(:last_name).and_return("Cool")
+
+    @answer.stub!(:text_answer).and_return("Whatever")
+    @answer.stub!(:question_id).and_return(1,2,3)
 
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
     @participation.stub!(:participations_treatment).and_return(@current_treatment)
@@ -89,17 +94,74 @@ describe "/cmrs/edit.html.erb" do
       @event.stub!(:under_investigation?).and_return(true)
       @user.stub!(:is_entitled_to_in?).and_return(true)
 
-      @form_base_element = mock_model(FormBaseElement, :null_object => true)
+      @form = mock_model(Form)
+      @base_element = mock_model(FormBaseElement)
+      @view_element = mock_model(ViewElement)
+      @section_element = mock_model(SectionElement)
 
-      @investigation_form = mock_model(Form)
-      @investigation_form.stub!(:name).and_return("A form name")
-      @investigation_form.stub!(:description).and_return("A form description")
-      @investigation_form.stub!(:form_base_element).and_return(@form_base_element)
-      assigns[:investigation_forms] = [@investigation_form]
+      @question_element_1 = mock_model(QuestionElement)
+      @question_element_2 = mock_model(QuestionElement)
+      @question_element_3 = mock_model(QuestionElement)
+      @question_1 = mock_model(Question)
+      @question_2 = mock_model(Question)
+      @question_3 = mock_model(Question)
+      @value_set = mock_model(ValueSetElement)
+      @value_1 = mock_model(ValueElement)
+      @value_2 = mock_model(ValueElement)
+
+      @form.stub!(:name).and_return("A form name")
+      @form.stub!(:description).and_return("A form description")
+      @form.stub!(:form_base_element).and_return(@base_element)
+    
+      @base_element.stub!(:children).and_return([@view_element])
+      @view_element.stub!(:children).and_return([@section_element])
+      @section_element.stub!(:name).and_return("Section Name")
+      @section_element.stub!(:description).and_return("Section Description")
+      @section_element.stub!(:children).and_return([@question_element_1, @question_element_2, @question_element_3])
+
+      @question_element_1.stub!(:question).and_return(@question_1)
+      @question_element_1.stub!(:form_id).and_return(1)
+      @question_element_1.stub!(:children).and_return([])
+
+      @question_element_2.stub!(:question).and_return(@question_2)
+      @question_element_2.stub!(:form_id).and_return(1)
+      @question_element_2.stub!(:children).and_return([])
+      
+      @question_element_3.stub!(:question).and_return(@question_3)
+      @question_element_3.stub!(:form_id).and_return(1)
+      @question_element_3.stub!(:children).and_return([@value_set])
+      
+      @value_set.stub!(:children).and_return([@value_1, @value_2])
+
+      @question_1.stub!(:question_text).and_return("Que?")
+      @question_1.stub!(:data_type).and_return(:single_line_text)
+      @question_1.stub!(:size).and_return(10)
+
+      @question_2.stub!(:question_text).and_return("Quoi?")
+      @question_2.stub!(:data_type).and_return(:multi_line_text)
+
+      @question_3.stub!(:question_text).and_return("Huh?")
+      @question_3.stub!(:data_type).and_return(:drop_down)
+
+      @value_1.stub!(:name).and_return("value 1")
+      @value_2.stub!(:name).and_return("value 2")
+
+      assigns[:investigation_forms] = [@form]
 
       @disease = mock_model(Disease)
       @disease.stub!(:disease_name).and_return("Anthrax")
       @disease_event = mock_model(DiseaseEvent, :null_object => true)
+    end
+
+    def initialize_full_form
+      @base_element.should_receive(:pre_order_walk).and_yield(@view_element).
+                                                    and_yield(@section_element).
+                                                    and_yield(@question_element_1).
+                                                    and_yield(@question_element_2).
+                                                    and_yield(@question_element_3)
+
+#      @view_element.stub!(:pre_order_walk).and_yield(@section_element)
+#      @section_element.stub!(:pre_oder_walk).and_yield(@question_element_1).
     end
 
     it "should not render if CMR status is not 'under investigation or not reopened'" do
@@ -107,30 +169,36 @@ describe "/cmrs/edit.html.erb" do
       @event.stub!(:reopened?).and_return(false)
       @user.stub!(:is_entitled_to_in?).and_return(true)
       do_render
-      response.should_not have_tag("div#investigation_form")
+      response.should_not have_tag("div#investigation_tab")
     end
 
     it "should not render if user does not have 'investigate' privilege" do
       @event.stub!(:under_investigation?).and_return(true)
       @user.stub!(:is_entitled_to_in?).and_return(false)
       do_render
-      response.should_not have_tag("div#investigation_form")
+      response.should_not have_tag("div#investigation_tab")
     end
 
     it "should render if CMR status is 'under investigation' and user has the 'investigate' privilege in the right jurisdiction" do
       @event.stub!(:under_investigation?).and_return(true)
       @event.stub!(:reopened?).and_return(false)
       @user.stub!(:is_entitled_to_in?).and_return(true)
+
+      initialize_full_form
+
       do_render
-      response.should have_tag("div#investigation_form")
+      response.should have_tag("div#investigation_tab")
     end
 
     it "should render if CMR status is 'reopened' and user has the 'investigate' privilege in the right jurisdiction" do
       @event.stub!(:under_investigation?).and_return(false)
       @event.stub!(:reopened?).and_return(true)
       @user.stub!(:is_entitled_to_in?).and_return(true)
+
+      initialize_full_form
+
       do_render
-      response.should have_tag("div#investigation_form")
+      response.should have_tag("div#investigation_tab")
     end
 
     describe "the disease investigation form" do 
@@ -141,19 +209,51 @@ describe "/cmrs/edit.html.erb" do
       end
 
       it "should display a tab with the form name" do
+
+        initialize_full_form
+
         do_render
         response.should have_tag("ul#tabs") do
           with_tag("li") do
-            with_tag("a[href=?]", "#form_#{@investigation_form.id}") do
-              with_tag("em", /#{@investigation_form.name}/)
+            with_tag("a[href=?]", "#form_#{@form.id}") do
+              with_tag("em", /#{@form.name}/)
             end
           end
         end
       end
 
       it "should display the form description" do
+
+        initialize_full_form
+
         do_render
-        response.should have_tag("h2", /#{@investigation_form.description}/)
+        response.should have_tag("h2", /#{@form.description}/)
+      end
+
+      it "should display all widget types, properly named" do
+
+        initialize_full_form
+
+        do_render
+
+        response.should have_tag("label", /#{@question_1.question_text}/) do
+          with_tag("input#?", /event_answers_\d+_text_answer/)
+          with_tag("input[name=?]", /event\[answers\]\[\d+\]\[text_answer\]/)
+        end
+
+        response.should have_tag("label", /#{@question_2.question_text}/) do
+          with_tag("textarea#?", /event_answers_\d+_text_answer/)
+          with_tag("textarea[name=?]", /event\[answers\]\[\d+\]\[text_answer\]/)
+        end
+
+        response.should have_tag("label", /#{@question_3.question_text}/) do
+          with_tag("select#?", /event_answers_\d+_text_answer/) do
+            with_tag("option", "value 1")
+            with_tag("option", "value 2")
+          end
+          with_tag("select[name=?]", /event\[answers\]\[\d+\]\[text_answer\]/)
+        end
+
       end
     end
   end
