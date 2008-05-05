@@ -20,10 +20,6 @@ module ActsAsAuditable
     end
 
     module InstanceMethods
-	def update_attributes(attributes)
-            self.attributes = attributes
-	    save
-	end
     end
 
 end
