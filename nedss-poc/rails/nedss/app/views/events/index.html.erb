@@ -12,7 +12,7 @@
   </thead>
   <% for event in @events %>
   <tr>
-    <% patient = event.active_patient.active_primary_entity.current_person %>
+    <% patient = event.active_patient.active_primary_entity.person %>
     <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
     <td><%= event.disease.disease.disease_name unless event.disease.disease.nil? %></td>
     <td><%= event.event_name %></td>

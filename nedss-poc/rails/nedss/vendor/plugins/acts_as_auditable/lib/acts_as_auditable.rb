@@ -13,9 +13,6 @@ module ActsAsAuditable
     end
 
     module SingletonMethods
-    end
-
-    module InstanceMethods
        def method_missing(method_id, *arguments)
           if match = /^find_(all_by|by)_([_a-zA-Z]\w*)$/.match(method_id.to_s)
             finder = determine_finder(match)
@@ -27,7 +24,7 @@ module ActsAsAuditable
               def self.#{method_id}(*args)
                 options = args.last.is_a?(Hash) ? args.pop : {}
                 attributes = construct_attributes_from_arguments([:#{attribute_names.join(',:')}], args)
-                finder_options = { :conditions => attributes, :order => 'created_by DESC' }
+                finder_options = { :conditions => attributes, :order => 'created_at DESC' }
                 validate_find_options(options)
                 set_readonly_option!(options)
 
@@ -55,7 +52,7 @@ module ActsAsAuditable
                   find_attributes = attributes = construct_attributes_from_arguments([:#{attribute_names.join(',:')}], args)
                 end
 
-                options = { :conditions => find_attributes, :order => 'created_by DESC' }
+                options = { :conditions => find_attributes, :order => 'created_at DESC' }
                 set_readonly_option!(options)
 
                 record = find_initial(options)
@@ -73,10 +70,11 @@ module ActsAsAuditable
             super
           end
         end
+    end
 
-        def update_attributes(attributes)
+    module InstanceMethods
+	def update_attributes(attributes)
             self.attributes = attributes
-	    breakpoint
 	    save
 	end
     end

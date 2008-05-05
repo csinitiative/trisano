@@ -1,6 +1,5 @@
 class Entity < ActiveRecord::Base
   has_many :people, :before_add => :set_entity_type
-  has_one  :current_person, :class_name => 'Person', :order => 'created_at DESC'
 
   has_many :places, :before_add => :set_entity_type
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
@@ -35,7 +34,7 @@ class Entity < ActiveRecord::Base
   after_save :save_location_info
 
   def person
-    @person || current_person
+    @person || Person.find_by_entity_id(self.id)
   end
 
   def person=(attributes)
