@@ -1,2 +1,3 @@
 require 'acts_as_auditable'
-#ActiveRecord::Base.send(:include, ActsAsAuditable)
+
+ActiveRecord::Base.send(:include, ActsAsAuditable)
