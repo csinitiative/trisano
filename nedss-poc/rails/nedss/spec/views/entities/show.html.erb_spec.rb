@@ -61,7 +61,7 @@ describe "/people/show.html.erb" do
 
     @entity = mock_model(Entity)
     @entity.stub!(:entity_type).and_return('person')
-    @entity.stub!(:current_person).and_return(@person)
+    @entity.stub!(:person).and_return(@person)
     @entity.stub!(:entities_location).and_return(@entities_location)
     @entity.stub!(:address).and_return(@address)
     @entity.stub!(:telephone).and_return(@phone)

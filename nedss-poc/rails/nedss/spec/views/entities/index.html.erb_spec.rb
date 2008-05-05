@@ -7,8 +7,8 @@ describe "/entities/index.html.erb for people" do
   before(:each) do
     person_98 = mock_model(Person, :entity_id => '1', :last_name => 'Marx', :first_name => 'Groucho')
     person_99 = mock_model(Person, :entity_id => '2', :last_name => 'Silvers', :first_name => 'Phil')
-    entity_98 = mock_model(Entity, :current_person => person_98)
-    entity_99 = mock_model(Entity, :current_person => person_99)
+    entity_98 = mock_model(Entity, :person => person_98)
+    entity_99 = mock_model(Entity, :person => person_99)
 
     assigns[:entities] = [entity_98, entity_99]
     assigns[:type] = 'person'

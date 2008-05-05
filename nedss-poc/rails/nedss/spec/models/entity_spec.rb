@@ -171,7 +171,7 @@ describe Entity, "with people fixtures loaded" do
     end
 
     it "should have one current person named groucho" do
-      entities(:Groucho).current_person.first_name.should eql("Groucho")
+      entities(:Groucho).person.first_name.should eql("Groucho")
     end
   end
 
@@ -182,11 +182,11 @@ describe Entity, "with people fixtures loaded" do
     end
 
     it "should have one current person named Phil" do
-      entities(:Silvers).current_person.first_name.should eql("Phil")
+      entities(:Silvers).person.first_name.should eql("Phil")
     end
 
     it "should have the same person for association proxy and custom attribute" do
-      entities(:Silvers).current_person.middle_name.should eql(entities(:Silvers).person.middle_name)
+      entities(:Silvers).person.middle_name.should eql(entities(:Silvers).person.middle_name)
     end
 
     it "the current instance should have a race of blank and white" do
