@@ -46,6 +46,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
           html_options[:onchange] = select_answer_event if additional_questions
           # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
           select(:text_answer, get_values(question_element), {}, html_options)
+        when :date
+          html_options[:onblur] = text_answer_event if additional_questions
+          calendar_date_select(:text_answer, html_options)
+          
 #        when :multi_select
 #          html_options[:onchange] = select_answer_event if additional_questions
 #          html_options[:multiple] = true

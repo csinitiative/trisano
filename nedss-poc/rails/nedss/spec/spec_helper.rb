@@ -95,6 +95,7 @@ def mock_event
   disease_event = mock_model(DiseaseEvent)
   disease = mock_model(Disease)
   lab_result = mock_model(LabResult)
+  answer = mock_model(Answer)
   
   active_jurisdiction = mock_model(Participation)
   active_patient = mock_model(Participation)
@@ -164,6 +165,7 @@ def mock_event
   event.stub!(:results_reported_to_clinician_date).and_return("2008-02-08")
   event.stub!(:MMWR_year).and_return("2008")
   event.stub!(:MMWR_week).and_return("7")
+  event.stub!(:answers).and_return([answer])
   event
 end
 

@@ -2,6 +2,7 @@ class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy]
   before_filter :can_view?, :only => [:show]
+  before_filter :get_investigation_forms, :only => [:edit, :update]
   
   def auto_complete_for_event_reporting_agency
     entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
@@ -94,7 +95,6 @@ class EventsController < ApplicationController
 
   # GET /event/1/edit
   def edit
-    @investigation_forms = Form.get_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id)
   end
 
   # POST /event
@@ -123,7 +123,9 @@ class EventsController < ApplicationController
   # PUT /event/1.xml
   def update
     respond_to do |format|
-      if @event.update_attributes(params[:event])
+      @event.attributes = params[:event]
+      if @event.save
+#      if @event.update_attributes(params[:event])
         flash[:notice] = 'CMR was successfully updated.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { head :ok }
@@ -183,7 +185,7 @@ class EventsController < ApplicationController
   end
   
   def can_update?
-    @event = Event.find(params[:id])
+    @event ||= Event.find(params[:id])
     unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
@@ -196,6 +198,11 @@ class EventsController < ApplicationController
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
     end
+  end
+
+  def get_investigation_forms
+    @event ||= Event.find(params[:id])
+    @investigation_forms = Form.get_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id)
   end
   
 end

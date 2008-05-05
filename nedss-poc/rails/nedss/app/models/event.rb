@@ -47,7 +47,7 @@ class Event < ActiveRecord::Base
     if answers.empty?
       answers.build(attributes.values)
     else
-      answers.update(attributes.keys, attributes.values)
+      p answers.update(attributes.keys, attributes.values)
     end
   end
 
@@ -468,6 +468,7 @@ class Event < ActiveRecord::Base
     errors.delete(:disease_events)
     errors.delete(:lab_results)
     errors.delete(:participations)
+    errors.delete(:answers)
   end
 
 end

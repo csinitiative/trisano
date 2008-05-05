@@ -7,6 +7,7 @@
 
 <%= error_messages_for :object => [@event.active_hospital.hospitals_participation] unless @event.active_hospital.nil? or @event.active_hospital.hospitals_participation.nil? %>
 <%= error_messages_for :object => [@event.active_reporting_agency.active_secondary_entity.place] unless @event.active_reporting_agency.nil? %>
+<%= error_messages_for :object => @event.answers unless @event.answers.nil? %>
 
 <script type="text/javascript">
 var myTabs = new YAHOO.widget.TabView("cmr_tabs");
