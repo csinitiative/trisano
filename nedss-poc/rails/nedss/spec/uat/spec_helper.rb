@@ -12,6 +12,7 @@ Spec::Runner.configure do |config|
   
   nedss_url = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   nedss_url = nedss_url.sub("//", "//utah:arches@")
+  #nedss_url += "/nedss/cmrs"
   
   config.before(:all) do
     p nedss_url
