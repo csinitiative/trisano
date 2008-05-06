@@ -32,8 +32,6 @@ module FormsHelper
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
     end
     
-    result += "</li>"
-    
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children'>"
       element.children.each do |child|
@@ -44,6 +42,8 @@ module FormsHelper
     
     result += "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+    
+    result += "</li>"
     
     result
   end
@@ -63,8 +63,6 @@ module FormsHelper
         element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
     end
     
-    result += "</li>"
-    
     if include_children && element.children?
       result += "<ul id='question_" + element.id.to_s + "_children'>"
       element.children.each do |child|
@@ -72,6 +70,8 @@ module FormsHelper
       end
       result += "</ul>"
     end
+    
+    result += "</li>"
     
     result
   end

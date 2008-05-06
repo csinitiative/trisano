@@ -10,8 +10,12 @@ require File.dirname(__FILE__) + '/selenium'
 
 Spec::Runner.configure do |config|
   
+  nedss_url = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
+  nedss_url = nedss_url.sub("//", "//utah:arches@")
+  
   config.before(:all) do
-    @browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox", "http://utah:arches@ut-nedss-dev.csinitiative.com", 10000)
+    p nedss_url
+    @browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox", nedss_url, 10000)
     @browser.start
   end
   
