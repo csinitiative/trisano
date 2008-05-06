@@ -1,12 +1,14 @@
 
-%h3
-  Add Value Set
+%div{:id => "new-value-set-form"}
 
-= error_messages_for :value_set_element
+  %h3
+    Add Value Set
 
-- remote_form_for(value_set_element) do |f|
+  = error_messages_for :value_set_element
 
-  = render :partial => 'form', :locals => { :f => f }
+  - remote_form_for(value_set_element) do |f|
 
-  %p
-    = f.submit "Create"
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Create"

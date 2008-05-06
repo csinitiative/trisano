@@ -1,12 +1,14 @@
 
-%h3
-  Add Question
+%div{:id => "new-question-form"}
 
-= error_messages_for :question
+  %h3
+    Add Question
 
-- remote_form_for(question) do |f|
+  = error_messages_for :question
 
-  = render :partial => 'form', :locals => { :f => f }
+  - remote_form_for(question) do |f|
 
-  %p
-    = f.submit "Create"
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Create"
