@@ -49,6 +49,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         when :date
           html_options[:onblur] = text_answer_event if additional_questions
           calendar_date_select(:text_answer, html_options)
+        when :phone
+          html_options[:size] = 14
+          html_options[:onblur] = text_answer_event if additional_questions
+          text_field(:text_answer, html_options)
           
 #        when :multi_select
 #          html_options[:onchange] = select_answer_event if additional_questions
