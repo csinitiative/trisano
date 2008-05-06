@@ -1,16 +1,20 @@
-require "selenium"
-require "test/unit"
+require 'rubygems'
+require 'selenium'
+require 'test/unit'
 
-class NewTest < Test::Unit::TestCase
+class FormBuilderAdminTest < Test::Unit::TestCase
+
+  NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
+
   def setup
     @verification_errors = []
     if $selenium
       @selenium = $selenium
     else
-      @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*chrome", "http://change-this-to-the-site-you-are-testing/", 10000);
+      @selenium = Selenium::SeleneseInterpreter.new("localhost", 4444, "*firefox", NEDSS_URL, 10000);
       @selenium.start
     end
-    @selenium.set_context("test_new")
+    @selenium.set_context("test_formbuilderadmin")
   end
   
   def teardown
@@ -19,7 +23,7 @@ class NewTest < Test::Unit::TestCase
   end
   
   def test_new
-    @selenium.open "/"
+    @selenium.open "/nedss/cmrs"
     @selenium.click "link=Forms"
     @selenium.wait_for_page_to_load "30000"
     @selenium.click "link=New form"

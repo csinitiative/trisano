@@ -6,7 +6,6 @@ class CmrSeleniumTests < Test::Unit::TestCase
 
   NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://utah:arches@ut-nedss-dev.csinitiative.com'
  
-
   def setup
     @verification_errors = []
     if $selenium
