@@ -47,7 +47,7 @@ class Event < ActiveRecord::Base
     if answers.empty?
       answers.build(attributes.values)
     else
-      p answers.update(attributes.keys, attributes.values)
+      answers.update(attributes.keys, attributes.values)
     end
   end
 
