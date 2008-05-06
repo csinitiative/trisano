@@ -8,11 +8,13 @@ class Question < ActiveRecord::Base
   
   def save_and_add_to_form(parent_element_id)
     if self.valid?
-      parent_element = FormElement.find(parent_element_id)
-      question_element = QuestionElement.create(:form_id => parent_element.form_id)
-      parent_element.add_child(question_element)
-      self.question_element_id = question_element.id
-      self.save
+      transaction do
+        parent_element = FormElement.find(parent_element_id)
+        question_element = QuestionElement.create(:form_id => parent_element.form_id)
+        parent_element.add_child(question_element)
+        self.question_element_id = question_element.id
+        self.save
+      end
     end
   end
 

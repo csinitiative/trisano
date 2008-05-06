@@ -21,12 +21,17 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # GET /value_set_elements/new
-  # GET /value_set_elements/new.xml
+  # Just used through RJS
   def new
+    begin
     @value_set_element = ValueSetElement.new
     @value_set_element.parent_element_id = params[:form_element_id]
     @value_set_element.form_id = params[:form_id]
+    rescue Exception => ex
+      logger.debug ex
+      flash[:notice] = 'Unable to display the value set form at this time.'
+      render :template => 'rjs-error'
+    end
   end
 
   # GET /value_set_elements/1/edit

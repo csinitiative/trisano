@@ -21,11 +21,17 @@ class QuestionsController < ApplicationController
     end
   end
 
-  # GET /questions/new
-  # GET /questions/new.xml
+  # Just used through RJS
   def new
-    @question = Question.new
-    @question.parent_element_id = params[:form_element_id]
+    begin
+      @question = Question.new
+      @question.parent_element_id = params[:form_element_id]
+    rescue Exception => ex
+      logger.info ex
+      flash[:notice] = 'Unable to display the new question form.'
+      render :template => 'rjs-error'
+    end
+    
   end
 
   # GET /questions/1/edit

@@ -92,14 +92,23 @@ class FormsController < AdminController
   end
   
   def order_section_children_show
-    @section = FormElement.find(params[:form_element_id])
+    begin
+      @section = FormElement.find(params[:form_element_id])
+    rescue Exception => ex
+      logger.debug ex
+      flash[:notice] = 'Unable to display the reordering form at this time.'
+      render :template => 'rjs-error'
+    end
   end
   
   def order_section_children
-    @section = FormElement.find(params[:id], :order => :lft)
-    
-    @section.children.each do |child|
-      child.move_to_position params['reorder-list'].index(child.id.to_s)
+    begin
+      @section = FormElement.find(params[:id], :order => :lft)
+      @section.reorder_children params['reorder-list']
+    rescue Exception => ex
+      logger.debug ex
+      flash[:notice] = 'An error occurred during the reordering process.'
+      render :template => 'rjs-error'
     end
   end
   

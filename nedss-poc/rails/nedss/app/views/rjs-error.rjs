@@ -1,0 +1,2 @@
+page.replace_html 'builder-mods', "<p style='color:red'>" + flash[:notice] + "</p>"
+flash[:notice] = ''
