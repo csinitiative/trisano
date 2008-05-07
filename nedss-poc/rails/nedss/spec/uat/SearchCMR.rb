@@ -4,12 +4,12 @@ describe 'User functionality for searching for existing users' do
 
   before(:each) do
     # The @browser is initialised in spec_helper.rb
-    @browser.open('http://utah:arches@ut-nedss-dev.csinitiative.com/nedss/')
+    #@browser.open('http://utah:arches@ut-nedss-dev.csinitiative.com/nedss/')
   end
 
   it 'should find a person named Steve Smoker when viewing all CMRs' do
-
-    @browser.click('link=View CMRs')
+    @browser.open "/nedss/cmrs"
+    #@browser.click('link=View CMRs')
     @browser.wait_for_page_to_load('30000')
     @browser.is_text_present('Smoker, Steve').should be_true
   end
@@ -20,7 +20,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Smoker')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000') 
-    @browser.is_text_present('Smoker, Steve').should be_true
+    @browser.is_text_present('Steve Smoker').should be_true
   end
   
   it 'should find a person named Steve Smoker when searching by Stephen Smoker' do
@@ -29,14 +29,14 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Stephen Smoker') 
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Smoker, Steve').should be_true
+    @browser.is_text_present('Steve Smoker').should be_true
   end
   
   it 'should find a person named Steve Smoker when searching by Stephen Smooker' do
     @browser.type('name', 'Stephen Smooker')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Smoker, Steve').should be_true
+    @browser.is_text_present('Steve Smoker').should be_true
   end
   
   it 'should not find anyone when searching by Stephen Smokesalot' do
@@ -57,7 +57,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Steve')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Smoker, Steve').should be_true
+    @browser.is_text_present('Steve Smoker').should be_true
   end
   
   it 'should not find anyone when searching by first name smo' do
@@ -73,7 +73,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('sw_last_name', 'smo')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Smoker, Steve').should be_true
+    @browser.is_text_present('Steve Smoker').should be_true
   end
   
   it 'Steve Smoker should be assigned to Bear River jurisdiction' do

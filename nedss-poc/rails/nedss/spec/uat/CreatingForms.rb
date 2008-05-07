@@ -1,16 +1,9 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Form creation page" do
-  before(:each) do
-    # The @browser is initialised in spec_helper.rb
-    @browser.open('http://utah:arches@ut-nedss-dev.csinitiative.com/nedss/')
-  end
 
-  after(:each) do
-    @browser.close
-  end
-  
   it 'should allow a user to create a basic form' do
+    @browser.open "/nedss/cmrs"
     @browser.click 'link=Forms'
     @browser.wait_for_page_to_load '30000'
     @browser.click 'link=New form'
