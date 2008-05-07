@@ -15,7 +15,6 @@ Spec::Runner.configure do |config|
   #nedss_url += "/nedss/cmrs"
   
   config.before(:all) do
-    p nedss_url
     @browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox", nedss_url, 10000)
     @browser.start
   end
@@ -25,7 +24,7 @@ Spec::Runner.configure do |config|
   end
 
   config.after(:all) do
-    @browser.kill! rescue nil
+    @browser.stop unless $browser
   end
 end
   
