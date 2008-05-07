@@ -23,7 +23,6 @@ class ValueSetElement < FormElement
         parent_element = FormElement.find(parent_element_id)
         parent_element.add_child(self)
       end
-      
     end
   end
   
