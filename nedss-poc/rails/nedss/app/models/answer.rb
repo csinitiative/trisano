@@ -14,11 +14,11 @@ class Answer < ActiveRecord::Base
   end
 
   def check_box_answer=(answer)
-    self.text_answer = answer.join("~")
+    self.text_answer = answer.join("\n")
   end
 
   def check_box_answer
-    self.text_answer.nil? ? [] : self.text_answer.split("~")
+    self.text_answer.nil? ? [] : self.text_answer.split("\n")
   end
 
   def required
