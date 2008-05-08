@@ -17,12 +17,14 @@ describe "/forms/index.html.haml" do
     form_98.should_receive(:description).and_return("Form for Anthrax")
     form_98.should_receive(:disease).twice.and_return(@disease)
     form_98.should_receive(:jurisdiction).twice.and_return(@entity)
+    form_98.stub!(:status).and_return('Not Published')
 
     form_99 = mock_model(Form)
     form_99.should_receive(:name).and_return("MyString")
     form_99.should_receive(:description).and_return("Form for Anthrax")
     form_99.should_receive(:disease).twice.and_return(@disease)
     form_99.should_receive(:jurisdiction).twice.and_return(@entity)
+    form_99.stub!(:status).and_return('Not Published')
 
     assigns[:forms] = [form_98, form_99]
   end

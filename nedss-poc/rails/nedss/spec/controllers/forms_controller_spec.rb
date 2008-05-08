@@ -24,7 +24,7 @@ describe FormsController do
     end
   
     it "should find all forms" do
-      Form.should_receive(:find).with(:all).and_return([@form])
+      Form.should_receive(:find).and_return([@form])
       do_get
     end
   
@@ -53,7 +53,7 @@ describe FormsController do
     end
 
     it "should find all forms" do
-      Form.should_receive(:find).with(:all).and_return([@form])
+      Form.should_receive(:find).and_return([@form])
       do_get
     end
   
@@ -209,7 +209,7 @@ describe FormsController do
     describe "with successful save" do
   
       def do_post
-        @form.should_receive(:save).and_return(true)
+        @form.should_receive(:create_and_initialize_form_elements).and_return(true)
         post :create, :form => {}
       end
   
@@ -228,7 +228,7 @@ describe FormsController do
     describe "with failed save" do
 
       def do_post
-        @form.should_receive(:save).and_return(false)
+        @form.should_receive(:create_and_initialize_form_elements).and_return(false)
         post :create, :form => {}
       end
   
@@ -432,6 +432,41 @@ describe FormsController do
       do_post
       response.should render_template('rjs-error')
     end
+  
+  end
+  
+  describe "handling POST /forms/publish" do
+
+    before(:each) do
+      mock_user
+      @form = mock_model(Form, :to_param => "1")
+      @published_form = mock_model(Form)
+      @form.stub!(:publish!).and_return(@published_form)
+      Form.stub!(:find).and_return(@form)
+    end
+  
+    def do_post
+      post :publish, :id => "1"
+    end
+
+    it "should be successful" do
+      pending
+      do_post
+      response.should be_success
+    end
+    
+    it "should render index template" do
+      do_post
+      response.should redirect_to(forms_path)
+    end
+    
+    it "should re-render the builder template in case of error" do
+      pending
+      @section.stub!(:publish!).and_raise(Exception)
+      do_post
+      response.should render_template('builder')
+    end
+
   
   end
   

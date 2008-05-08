@@ -19,6 +19,10 @@
   %span.label Show for jursidiction: 
   =h @form.jurisdiction.nil? ? "All Jurisdictions" : @form.jurisdiction.current_place.name
 
+%p
+  %b Status: 
+  =h @form.status
+
 = link_to 'Edit', edit_form_path(@form)
 |
 = link_to 'Back', forms_path

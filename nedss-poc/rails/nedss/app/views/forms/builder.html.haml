@@ -13,5 +13,9 @@
     %td{:width => '100%', :align => 'left', :valign => 'top'}
       %div{:id => "builder-mods"}
 
-
 = link_to "Back to form edit", edit_form_path(@form)
+
+%br
+%br
+
+= button_to "Publish", {:action => "publish", :id => @form.id}

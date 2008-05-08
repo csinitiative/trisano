@@ -1,7 +1,109 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-# one:
-#   column: value
-#
-# two:
-#   column: value
+demo_q1:
+  id: "1"
+  question_element_id: "5"
+  question_text: "Demo 1: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+demo_q2:
+  id: "2"
+  question_element_id: "6"
+  question_text: "Demo 2: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+demo_q3:
+  id: "3"
+  question_element_id: "7"
+  question_text: "Demo 3: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+lab_q1:
+  id: "4"
+  question_element_id: "9"
+  question_text: "Lab 1: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+lab_q2:
+  id: "5"
+  question_element_id: "10"
+  question_text: "Lab 2: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+lab_q3:
+  id: "6"
+  question_element_id: "11"
+  question_text: "Lab 3: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+food_q1:
+  id: "7"
+  question_element_id: "14"
+  question_text: "Food 1: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+food_q2:
+  id: "8"
+  question_element_id: "15"
+  question_text: "Food 2: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+food_q3:
+  id: "9"
+  question_element_id: "16"
+  question_text: "Food 3: "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  condition: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 

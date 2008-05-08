@@ -2,7 +2,7 @@ class FormsController < AdminController
   # GET /forms
   # GET /forms.xml
   def index
-    @forms = Form.find(:all)
+    @forms = Form.find(:all, :conditions => {:is_template => true})
 
     respond_to do |format|
       format.html # index.html.erb
@@ -43,7 +43,7 @@ class FormsController < AdminController
     @form = Form.new(params[:form])
 
     respond_to do |format|
-      if @form.save
+      if @form.create_and_initialize_form_elements
         flash[:notice] = 'Form was successfully created.'
         format.html { redirect_to(@form) }
         format.xml  { render :xml => @form, :status => :created, :location => @form }
@@ -87,6 +87,22 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
 
     respond_to do |format|
+      format.html { render :template => "forms/builder" }
+    end
+  end
+  
+  def publish
+    @form = Form.find(params[:id])
+    
+    begin
+      @form.publish!
+      respond_to do |format|
+        flash[:notice] = "Form was successfully published"
+        format.html { redirect_to forms_path }
+      end
+    rescue Exception => ex
+      logger.debug ex
+      flash[:notice] = "Unable to publish the form at this time"
       format.html { render :template => "forms/builder" }
     end
   end

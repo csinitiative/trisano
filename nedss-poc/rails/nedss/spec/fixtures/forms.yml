@@ -4,6 +4,10 @@ test_form:
   name: Test Form
   id: "1"
   description: Testng
+  version: 
+  is_template: true
+  disease_id: 1
+  jurisdiction_id: 1
 
 anthrax_form_all_jurisdictions_1:
   id: 2
