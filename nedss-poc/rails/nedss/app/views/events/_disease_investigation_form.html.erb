@@ -35,7 +35,7 @@
               <% when "QuestionElement" -%>
                   <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
                   <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-                    <%= answer_template.dynamic_question(element, @answer_object, index += 1) %>
+                      <%= answer_template.dynamic_question(element, index += 1) %>
                   <% end  # fields_for -%>
                 <% end  # case -%>
               <% end  # element walk %>

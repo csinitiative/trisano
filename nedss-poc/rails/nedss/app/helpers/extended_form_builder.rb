@@ -14,53 +14,63 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes.select {|code| code.code_name == code_name}
   end
 
-  def dynamic_question(question_element, answer_object, index) 
+  def dynamic_question(question_element, index) 
     question = question_element.question
 #    q = @template.content_tag(:span, :class => "horiz") do
-      q = @template.content_tag(:label) do
-        index = answer_object.id.nil? ? index : answer_object.id
+      index = @object.id.nil? ? index : @object.id
 
-        html_options = {}
-        html_options[:index] = index
+      html_options = {}
+      html_options[:index] = index
 # UNCOMMENT LATER
 #        additional_questions = ! question.additional_questions_value.blank?
-        additional_questions = false
+      additional_questions = false
 
-        if additional_questions
-          div_id = "additional_questions_for_question_#{question.id}"
-          text_answer_event = "if (this.value == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
-          select_answer_event = "if (this.options[this.selectedIndex].text == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
-         # A little more work is needed for multi-selects, but it's within range.  Skipping for now.
+      if additional_questions
+        div_id = "additional_questions_for_question_#{question.id}"
+        text_answer_event = "if (this.value == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
+        select_answer_event = "if (this.options[this.selectedIndex].text == '#{question.additional_questions_value}') { Effect.Appear('#{div_id}') } else { Effect.Fade('#{div_id}') }"
+       # A little more work is needed for multi-selects, but it's within range.  Skipping for now.
+      end
+
+      input_element = case question.data_type
+      when :single_line_text
+        html_options[:size] = question.size
+        html_options[:onblur] = text_answer_event if additional_questions
+        text_field(:text_answer, html_options)
+      when :multi_line_text
+        html_options[:rows] = 3
+        html_options[:onblur] = text_answer_event if additional_questions
+        text_area(:text_answer, html_options)
+      when :drop_down
+        html_options[:onchange] = select_answer_event if additional_questions
+        # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
+        select(:text_answer, get_values(question_element), {}, html_options)
+      when :check_box
+        name = @object_name + "[" + index.to_s + "][check_box_answer][]"
+        get_values(question_element).inject(check_boxes = "") do |check_boxes, value|
+          check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value)) + value
         end
-
-        input_element = case question.data_type
-        when :single_line_text
-          html_options[:size] = question.size
-          html_options[:onblur] = text_answer_event if additional_questions
-          text_field(:text_answer, html_options)
-        when :multi_line_text
-          html_options[:rows] = 3
-          html_options[:onblur] = text_answer_event if additional_questions
-          text_area(:text_answer, html_options)
-        when :drop_down
-          html_options[:onchange] = select_answer_event if additional_questions
-          # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
-          select(:text_answer, get_values(question_element), {}, html_options)
-        when :date
-          html_options[:onblur] = text_answer_event if additional_questions
-          calendar_date_select(:text_answer, html_options)
-        when :phone
-          html_options[:size] = 14
-          html_options[:onblur] = text_answer_event if additional_questions
-          text_field(:text_answer, html_options)
-          
+        check_boxes + @template.hidden_field_tag(name, "")
+      when :date
+        html_options[:onblur] = text_answer_event if additional_questions
+        calendar_date_select(:text_answer, html_options)
+      when :phone
+        html_options[:size] = 14
+        html_options[:onblur] = text_answer_event if additional_questions
+        text_field(:text_answer, html_options)
+        
 #        when :multi_select
 #          html_options[:onchange] = select_answer_event if additional_questions
 #          html_options[:multiple] = true
 #          collection_select(:value_set_ids, question.value_sets, :id, :value, {}, html_options)
-        end
+      end
 
-        question.question_text + " " + input_element 
+      q = if question.data_type == :check_box
+        @template.content_tag(:span, question.question_text, :class => "label") + " " + input_element
+      else
+        @template.content_tag(:label) do
+          question.question_text + " " + input_element
+        end
       end
 #    end
     q + "\n" + hidden_field(:question_id, :index => index)
