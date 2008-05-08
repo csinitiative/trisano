@@ -11,7 +11,7 @@ describe Form do
   
   describe "when created with create_and_initialize_form_elements" do
     
-    fixtures :forms, :form_elements
+    fixtures :forms, :form_elements, :questions
     
     it "should bootstrap the form element hierarchy" do
       @form.create_and_initialize_form_elements
@@ -37,7 +37,7 @@ describe Form do
   
   describe "when trying to call publish on a published instance" do
     
-    fixtures :forms, :form_elements
+    fixtures :forms, :form_elements, :questions
     
     it "should fail" do
       form_to_publish = Form.find(1)
