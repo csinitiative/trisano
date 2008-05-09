@@ -19,8 +19,8 @@
           <% end -%>
         </ul>
         <div class="yui-content">
+          <% index = 0 %>
           <% for @form_reference in @event.form_references %>
-            <% index = 0 %>
             <% _form = @form_reference.form %>
             <div id="form_<%= _form.id -%>">
               <% f.fields_for(:form_references, @form_reference, :builder => ExtendedFormBuilder) do |fr| %>
