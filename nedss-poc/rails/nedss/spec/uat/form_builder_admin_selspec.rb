@@ -53,10 +53,10 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_value_attributes__name")
-    @browser.type "value_set_element_value_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][1]", "No"
-    @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][2]", "Maybe"
+    wait_for_element_present("value_set_element_new_value_element_attributes__name")
+    @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
+    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
+    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Maybe"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Yes/No/Maybe").should be_true
@@ -65,9 +65,9 @@ describe 'Form Builder Admin' do
     @browser.type "value_set_element_name", "Yes/No"
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_value_attributes__name")
-    @browser.type "value_set_element_value_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][1]", "No"
+    wait_for_element_present("value_set_element_new_value_element_attributes__name")
+    @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
+    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")    
     @browser.click "link=Add value set"
@@ -75,9 +75,9 @@ describe 'Form Builder Admin' do
     @browser.type "value_set_element_name", "Yes/No"
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_value_attributes__name")
-    @browser.type "value_set_element_value_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][1]", "No"
+    wait_for_element_present("value_set_element_new_value_element_attributes__name")
+    @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
+    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
   end

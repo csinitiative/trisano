@@ -254,7 +254,7 @@ describe ValueSetElementsController do
 
       def do_put
         @value_set_element.should_receive(:update_attributes).and_return(true)
-        put :update, :id => "1"
+        put :update, :id => "1",  :value_set_element => {}
       end
 
       it "should find the value_set_element requested" do
@@ -283,7 +283,7 @@ describe ValueSetElementsController do
 
       def do_put
         @value_set_element.should_receive(:update_attributes).and_return(false)
-        put :update, :id => "1"
+        put :update, :id => "1", :value_set_element => {}
       end
 
       it "should re-render 'edit'" do

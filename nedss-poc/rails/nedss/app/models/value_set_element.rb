@@ -1,36 +1,53 @@
 class ValueSetElement < FormElement
   
+  has_many :value_elements, :class_name => "FormElement",  :foreign_key => :parent_id
+  after_update :save_all_value_elements
   attr_accessor :parent_element_id
-  
-  def value_elements
-    unless self.id.blank?
-      return self.children
-    else
-      return []
-    end
-  end
+
   
   def save_and_add_to_form(parent_element_id)
     if self.valid?
       transaction do
         self.save
-        unless @transient_value_elements.nil?
-          @transient_value_elements.each do |a|
-            a.save
-            self.add_child a
-          end
-        end
+        save_new_value_elements
         parent_element = FormElement.find(parent_element_id)
         parent_element.add_child(self)
       end
     end
   end
   
-  def value_attributes=(value_attributes)
-    @transient_value_elements = []
+  def new_value_element_attributes=(value_attributes)
+    @new_value_elements = []
     value_attributes.each do |attributes|
       value = ValueElement.new(attributes)
-      @transient_value_elements << value
+      @new_value_elements << value
+    end
+  end
+    
+  def existing_value_element_attributes=(value_attributes)
+    value_elements.reject(&:new_record?).each do |value_element|
+      attributes = value_attributes[value_element.id.to_s]
+      if attributes
+        value_element.attributes = attributes
+      else
+        value_elements.destroy(value_element)
+      end
+    end
+  end
+  
+  def save_all_value_elements
+    value_elements.each do |value_element|
+      value_element.save(false)
+    end
+    save_new_value_elements
+  end
+  
+  def save_new_value_elements
+    unless @new_value_elements.nil?
+      @new_value_elements.each do |a|
+        a.save
+        self.add_child a
+      end
     end
   end
   

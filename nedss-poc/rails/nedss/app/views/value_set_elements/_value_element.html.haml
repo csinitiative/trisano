@@ -1,0 +1,8 @@
+
+%div{ :class => "value-element" }
+
+  - fields_for_value_element(value_element)  do |vf|
+    = vf.label(:name, "Value")
+    = vf.text_field :name
+
+    = link_to_function "remove", "$(this).up('.value-element').remove()"

@@ -6,6 +6,11 @@ function mark_for_destroy(element) {
   $(element).up('.role_membership').hide(); 
 }
 
+function mark_value_for_destroy(element) { 
+  $(element).next('.should_destroy').value = 1 
+  $(element).up('.value-element').hide(); 
+}
+
 function setUpSearchFields() {
   if (document.getElementById("name").value.length > 0) {
     document.getElementById("sw_first_name").disabled = true;

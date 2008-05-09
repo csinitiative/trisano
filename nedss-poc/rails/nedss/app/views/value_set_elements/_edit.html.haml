@@ -1,0 +1,14 @@
+
+%div{:id => "new-value-set-form"}
+
+  %h3
+    Edit Value Set
+
+  = error_messages_for :value_set_element
+
+  - remote_form_for(value_set_element, :html => { :method => 'put' }) do |f|
+
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Update"

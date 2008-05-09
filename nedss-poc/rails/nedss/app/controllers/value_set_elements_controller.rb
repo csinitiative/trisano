@@ -61,6 +61,9 @@ class ValueSetElementsController < ApplicationController
   # PUT /value_set_elements/1
   # PUT /value_set_elements/1.xml
   def update
+    
+    params[:value_set_element][:existing_value_element_attributes] ||= {}
+    
     @value_set_element = ValueSetElement.find(params[:id])
 
     respond_to do |format|
@@ -68,9 +71,11 @@ class ValueSetElementsController < ApplicationController
         flash[:notice] = 'ValueSetElement was successfully updated.'
         format.html { redirect_to(@value_set_element) }
         format.xml  { head :ok }
+        format.js { @form = Form.find(@value_set_element.form_id)}
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @value_set_element.errors, :status => :unprocessable_entity }
+        format.js { render :action => "new" }
       end
     end
   end

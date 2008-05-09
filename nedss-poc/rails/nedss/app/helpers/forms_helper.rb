@@ -90,6 +90,8 @@ module FormsHelper
       result += "</ul>"
     end
     
+    result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+    
     result += "</li>"
     
     result

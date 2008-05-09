@@ -6,6 +6,7 @@ describe "/value_set_elements/new.rjs" do
   before(:each) do
     value_element = mock_model(ValueElement)
     value_element.stub!(:name).and_return("Yes")
+    value_element.stub!(:should_destroy).and_return("0")
     
     @value_set_element = mock_model(ValueSetElement)
     @value_set_element.stub!(:new_record?).and_return(true)
@@ -13,6 +14,9 @@ describe "/value_set_elements/new.rjs" do
     @value_set_element.stub!(:name).and_return("MyString")
     @value_set_element.stub!(:parent_element_id).and_return(4)
     @value_set_element.stub!(:value_elements).and_return([value_element])
+    
+    
+    
 
     assigns[:value_set_element] = @value_set_element
   end
