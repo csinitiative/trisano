@@ -34,7 +34,7 @@ describe "Form creation page" do
     @browser.is_text_present('This Form Is Not A Real Form At All, Just a Simple Test Form. I think this field ought to be larger.').should be_true
   
     #delete the form
-    @browser.click 'link=Destroy'
+    #@browser.click 'link=Destroy'
     pending do
       @browser.is_text_present('Form was successfully destroyed.').should be_true #not yet implemented...
     end

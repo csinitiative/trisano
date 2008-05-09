@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'User functionality for searching for existing users' do
 
+  #TODO its probably not a good idea to couple UAT test to the Smoke test (created Steve Smoker)
+
   it 'should find a person named Steve Smoker when viewing all CMRs' do
     @browser.open "/nedss/cmrs"
     @browser.click('link=View CMRs')
