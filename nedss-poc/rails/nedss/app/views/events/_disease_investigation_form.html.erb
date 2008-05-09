@@ -4,46 +4,51 @@
   <span id='investigation_show' onClick="Element.show('investigation_form'); Element.hide('investigation_show'); Element.show('investigation_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id ='investigation_form'>
-    <% if @investigation_forms.empty? %>
-      <h3>No investigation forms exist for <%#= @event.disease.disease.disease_name %></h3>
+    <% if @event.form_references.empty? %>
+      <h3>No investigation forms exist for <%= @event.disease.disease.disease_name %></h3>
     <% else %>
       <script type="text/javascript">
         var formTabs = new YAHOO.widget.TabView("form_tabs");
       </script>
       <div id="form_tabs" class="yui-navset">
-        <ul id='tabs' class="yui-nav">
+        <ul id='sub_form_tabs' class="yui-nav">
           <% i = 0 -%>
-          <% for _form in @investigation_forms -%>
+          <% for form_reference in @event.form_references -%>
             <% i += 1 %>
-            <li <%= 'class="selected"' if i == 1 -%>><a href="#form_<%= _form.id -%>"><em><%= _form.name %></em></a></li>
+            <li <%= 'class="selected"' if i == 1 -%>><a href="#form_<%= form_reference.form.id -%>"><em><%= form_reference.form.name %></em></a></li>
           <% end -%>
         </ul>
         <div class="yui-content">
-          <% index = 0 %>
-          <% for _form in @investigation_forms %>
+          <% for @form_reference in @event.form_references %>
+            <% index = 0 %>
+            <% _form = @form_reference.form %>
             <div id="form_<%= _form.id -%>">
+              <% f.fields_for(:form_references, @form_reference, :builder => ExtendedFormBuilder) do |fr| %>
+                <%= fr.hidden_field(:form_id, :index => @form_reference.id) %>
+              <% end %>
               <h2><%= _form.description %></h2>
               <% section_open = false -%>
               <% _form.form_base_element.pre_order_walk do |element| -%>
-              <% case element.class.name
-                 when "SectionElement" %>
-                   <%= "</fieldset>" if section_open %>
-                   <% section_open = true %>
-                   <fieldset class="form_section">
-                     <legend><%= element.name -%></legend>
-                     <h3><%= element.description -%></h3>
-              <% when "QuestionElement" -%>
-                  <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
-                  <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-                      <%= answer_template.dynamic_question(element, index += 1) %>
-                  <% end  # fields_for -%>
-                <% end  # case -%>
-              <% end  # element walk %>
+                <% case element.class.name
+                   when "sSectionElement" %>
+                     <%= "</fieldset>" if section_open %>
+                     <% section_open = true %>
+                     <fieldset class="form_section">
+                       <legend><%= element.name -%></legend>
+                       <h3><%= element.description -%></h3>
+                <% when "QuestionElement" -%>
+                    <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
+                    <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
+                        <%= answer_template.dynamic_question(element, index += 1) %>
+                    <% end -%>
+                    <p />
+                <% end -%>
+              <% end %>
               <%= "</fieldset>" if section_open %>
             </div>
-          <% end  # forms loop %>
+          <% end %>
         </div>
       </div>
-    <% end  # if forms %>
+    <% end %>
   </div>
 </fieldset>

@@ -12,6 +12,7 @@ class Event < ActiveRecord::Base
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
 
   has_many :participations
+  has_many :form_references
   has_many :answers
 
 # For reasons unknown code like the following won't work.
@@ -42,6 +43,17 @@ class Event < ActiveRecord::Base
       disease_events.build(attributes) unless attributes.values_blank?
     end
   end  
+
+  def form_references=(attributes)
+    p form_references
+    p form_references.count
+    p form_references.empty?
+    if form_references.empty?
+      form_references.build(attributes)
+    else
+      form_references.update(attributes.keys, attributes.values)
+    end
+  end
 
   def answers=(attributes)
     if answers.empty?

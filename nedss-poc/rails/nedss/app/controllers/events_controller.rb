@@ -2,7 +2,7 @@ class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy]
   before_filter :can_view?, :only => [:show]
-  before_filter :get_investigation_forms, :only => [:edit, :update]
+  before_filter :get_investigation_forms, :only => [:edit]
   
   def auto_complete_for_event_reporting_agency
     entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
@@ -202,7 +202,12 @@ class EventsController < ApplicationController
 
   def get_investigation_forms
     @event ||= Event.find(params[:id])
-    @investigation_forms = Form.get_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id)
+    if @event.form_references.empty?
+      i = -1
+      Form.get_published_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id).each do |form|
+        @event.form_references[i += 1] = FormReference.new(:form_id => form.id)
+      end
+    end
   end
   
 end

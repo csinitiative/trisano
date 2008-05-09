@@ -56,8 +56,8 @@ class Form < ActiveRecord::Base
     Form.find(:first, :conditions => {:template_id => self.id, :is_template => false}, :order => "version DESC")
   end
   
-  def self.get_investigation_forms(disease_id, jurisdiction_id)
-    find_all_by_disease_id(disease_id, :conditions => ["jurisdiction_id = ? OR jurisdiction_id IS NULL", jurisdiction_id])
+  def self.get_published_investigation_forms(disease_id, jurisdiction_id)
+    find_all_by_disease_id(disease_id, :conditions => ["(jurisdiction_id = ? OR jurisdiction_id IS NULL) AND status = 'Live'", jurisdiction_id], :order => "created_at ASC")
   end
 
   private
@@ -96,7 +96,7 @@ class Form < ActiveRecord::Base
     question_to_publish = Question.new({:question_element_id => published_question_element.id, 
         :question_text => template_question.question_text,
         :help_text => template_question.help_text,
-        :data_type => template_question.data_type,
+        :data_type => template_question.data_type_before_type_cast,
         :size => template_question.size,
         :condition => template_question.condition,
         :is_on_short_form => template_question.is_on_short_form,

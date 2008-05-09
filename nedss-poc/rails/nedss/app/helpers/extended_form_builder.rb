@@ -16,6 +16,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def dynamic_question(question_element, index) 
     question = question_element.question
+    p question
 #    q = @template.content_tag(:span, :class => "horiz") do
       index = @object.id.nil? ? index : @object.id
 
@@ -46,9 +47,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
         select(:text_answer, get_values(question_element), {}, html_options)
       when :check_box
+        i = 0
         name = @object_name + "[" + index.to_s + "][check_box_answer][]"
+        id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_check_box_answer_#{i += 1}"
         get_values(question_element).inject(check_boxes = "") do |check_boxes, value|
-          check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value)) + value
+          check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), :id => id) + value
         end
         check_boxes + @template.hidden_field_tag(name, "")
       when :date
