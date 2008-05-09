@@ -15,7 +15,6 @@ describe "/cmrs/edit.html.erb" do
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)
-#    @active_jurisdiction = mock_model(Participation)
     @current_treatment = mock_model(ParticipationsTreatment)
 
     @hospitals_participation = mock_model(HospitalsParticipation)
@@ -29,11 +28,9 @@ describe "/cmrs/edit.html.erb" do
     @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
-#    @event.stub!(:active_jurisdiction).and_return(@active_jurisdiction)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:get_or_initialize_answer).and_return(@answer)
-    # @event.stub!(:current_treatment).and_return(@current_treatment)
 
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)
@@ -146,7 +143,10 @@ describe "/cmrs/edit.html.erb" do
       @value_1.stub!(:name).and_return("value 1")
       @value_2.stub!(:name).and_return("value 2")
 
-      assigns[:investigation_forms] = [@form]
+      @form_reference = mock_model(FormReference)
+      @form_reference.stub!(:form).and_return(@form)
+      @form_reference.stub!(:form_id).and_return(1)
+      @event.stub!(:form_references).and_return([@form_reference])
 
       @disease = mock_model(Disease)
       @disease.stub!(:disease_name).and_return("Anthrax")
@@ -203,7 +203,7 @@ describe "/cmrs/edit.html.erb" do
 
     describe "the disease investigation form" do 
       it "should say 'no form available' if there is no form available" do
-        assigns[:investigation_forms] = []
+        @event.stub!(:form_references).and_return([])
         do_render
         response.should have_text(/No investigation forms exist for/)
       end
@@ -213,7 +213,7 @@ describe "/cmrs/edit.html.erb" do
         initialize_full_form
 
         do_render
-        response.should have_tag("ul#tabs") do
+        response.should have_tag("ul#sub_form_tabs") do
           with_tag("li") do
             with_tag("a[href=?]", "#form_#{@form.id}") do
               with_tag("em", /#{@form.name}/)

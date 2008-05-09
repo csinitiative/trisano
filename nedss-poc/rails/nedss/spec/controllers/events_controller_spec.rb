@@ -200,10 +200,14 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
+      @form_reference = mock_model(FormReference)
+      @form = mock_model(Form, :null_object => true)
+
       Event.stub!(:find).and_return(@event)
+      Form.should_receive(:get_published_investigation_forms).with(1, 75).and_return(@form)
+
       @user.stub!(:is_entitled_to_in?).with(:update, 75).and_return(true)
-      @form = mock_model(Form)
-      Form.should_receive(:get_investigation_forms).with(1, 75).and_return(@form)
+      @event.stub!(:form_references).and_return([])
     end
   
     def do_get

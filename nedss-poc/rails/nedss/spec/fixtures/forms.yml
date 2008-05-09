@@ -15,6 +15,7 @@ anthrax_form_all_jurisdictions_1:
   description: "This is an Anthrax form."
   disease_id: 1
   jurisdiction_id:
+  status: "Live"
 
 anthrax_form_all_jurisdictions_2:
   id: 3
@@ -22,6 +23,7 @@ anthrax_form_all_jurisdictions_2:
   description: "This is another Anthrax form."
   disease_id: 1
   jurisdiction_id:
+  status: "Live"
 
 anthrax_form_for_LHD_1:
   id: 4
@@ -29,6 +31,7 @@ anthrax_form_for_LHD_1:
   description: "This is an Anthrax form for Local 1."
   disease_id: 1
   jurisdiction_id: 1
+  status: "Live"
 
 anthrax_form_for_LHD:
   id: 5
@@ -36,3 +39,4 @@ anthrax_form_for_LHD:
   description: "This is an Anthrax form for Local 2."
   disease_id: 1
   jurisdiction_id: 2
+  status: "Live"
