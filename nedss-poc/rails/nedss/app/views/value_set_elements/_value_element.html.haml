@@ -1,5 +1,5 @@
 
-%div{ :class => "value-element" }
+%div{ :class => "value-element", :id => "value-element" }
 
   - fields_for_value_element(value_element)  do |vf|
     = vf.label(:name, "Value")

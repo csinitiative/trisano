@@ -90,6 +90,45 @@ describe 'Form Builder Admin' do
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
   end
   
+  it 'should edit a value set' do
+    
+    @browser.click "link=Edit value set"
+    wait_for_element_present("edit-value-set-form")
+    @browser.is_text_present("Edit Value Set").should be_true
+    
+    @browser.type "value_set_element_name", "Edited"
+    @browser.click "link=Remove"
+    @browser.click "link=Remove"
+    @browser.click "value_set_element_submit"
+    wait_for_element_not_present("edit-value-set-form")
+    @browser.is_text_present("Value Set: Edited").should be_true
+    @browser.click "link=Edit value set"
+    wait_for_element_present("edit-value-set-form")
+    
+    # Find a better way to sniff out the value we want to edit, XPath or some other method
+    @browser.type "document.forms[0].elements[4]", "Edited value"
+    
+    # Find a better way to sniff out the No radio button
+    @browser.check "document.forms[0].elements[6]"
+    
+    @browser.click "value_set_element_submit"
+    wait_for_element_not_present("edit-value-set-form")
+    
+    @browser.is_text_present("Edited value").should be_true
+    @browser.is_text_present("Maybe").should be_false
+    @browser.is_text_present("Inactive").should be_true
+    
+    @browser.click "link=Edit value set"
+    wait_for_element_present("edit-value-set-form")
+    @browser.click "link=Add a value"
+    wait_for_element_present("value_set_element_new_value_element_attributes__name")
+    @browser.type "value_set_element_new_value_element_attributes__name", "Added after value"
+    @browser.click "value_set_element_submit"
+    wait_for_element_not_present("edit-value-set-form")
+    @browser.is_text_present("Added after value").should be_true
+
+  end
+  
 end
 
 

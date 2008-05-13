@@ -148,3 +148,7 @@ div.progressBar div.background {
   width: 0%;
 }
 
+.inactive-value {
+    color: #999
+}
+
