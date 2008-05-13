@@ -4,5 +4,12 @@
   - fields_for_value_element(value_element)  do |vf|
     = vf.label(:name, "Value")
     = vf.text_field :name
+    = vf.label(:is_active, "Is active?")
+    = vf.radio_button :is_active, "true"
+    Yes
+    = vf.radio_button :is_active, "false"
+    No
 
-    = link_to_function "remove", "$(this).up('.value-element').remove()"
+    %br
+    %br
+    = link_to_function "Remove", "$(this).up('.value-element').remove()"

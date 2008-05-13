@@ -101,7 +101,9 @@ module FormsHelper
     result = ""
     
     result += "<li id='value_" + element.id.to_s + "'>"
+    result += "<font color='#999999'>" unless element.is_active
     result += element.name
+    result += "</font>" unless element.is_active
     result += "</li>"
     
     result

@@ -7,6 +7,7 @@ describe "/value_set_elements/new.rjs" do
     value_element = mock_model(ValueElement)
     value_element.stub!(:name).and_return("Yes")
     value_element.stub!(:should_destroy).and_return("0")
+    value_element.stub!(:is_active).and_return(true)
     
     @value_set_element = mock_model(ValueSetElement)
     @value_set_element.stub!(:new_record?).and_return(true)

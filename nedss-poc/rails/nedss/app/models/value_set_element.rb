@@ -2,8 +2,10 @@ class ValueSetElement < FormElement
   
   has_many :value_elements, :class_name => "FormElement",  :foreign_key => :parent_id
   after_update :save_all_value_elements
+  
+  validates_presence_of :name
+  
   attr_accessor :parent_element_id
-
   
   def save_and_add_to_form(parent_element_id)
     if self.valid?
@@ -35,20 +37,23 @@ class ValueSetElement < FormElement
     end
   end
   
+  private
+  
+  def save_new_value_elements
+    unless @new_value_elements.nil?
+      @new_value_elements.each do |a|
+        a.form_id = self.form_id
+        a.save
+        self.add_child a
+      end
+    end
+  end
+  
   def save_all_value_elements
     value_elements.each do |value_element|
       value_element.save(false)
     end
     save_new_value_elements
-  end
-  
-  def save_new_value_elements
-    unless @new_value_elements.nil?
-      @new_value_elements.each do |a|
-        a.save
-        self.add_child a
-      end
-    end
   end
   
 end
