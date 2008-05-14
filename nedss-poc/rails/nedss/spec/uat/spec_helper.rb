@@ -21,7 +21,7 @@ Spec::Runner.configure do |config|
   end
 
   config.after(:all) do
-    # @browser.stop unless $browser
+    @browser.stop unless $browser
   end
   
   def wait_for_element_present(name)

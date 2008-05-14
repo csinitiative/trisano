@@ -1,1 +1,1 @@
-page.replace_html 'root-element-list', :partial => 'forms/root_elements', :locals => {:view => @section.parent}
+page.replace_html 'root-element-list', :partial => 'forms/elements'

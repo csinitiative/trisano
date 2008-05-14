@@ -371,6 +371,7 @@ describe FormsController do
     end
   
     it "should render reorder_section_children template" do
+      
       do_get
       response.should render_template('forms/order_section_children_show')
     end
@@ -398,9 +399,12 @@ describe FormsController do
       mock_user
       @reorder_list = ["5", "6", "7"]
       @section = mock_model(SectionElement)
+      @form = mock_model(Form)
       reorder_ids = @reorder_list.collect {|id| id.to_i}
       @section.stub!(:reorder_children).with(reorder_ids)
+      @section.stub!(:form_id).and_return(1)
       FormElement.stub!(:find).and_return(@section)
+      Form.stub!(:find).and_return(@form)
     end
   
     def do_post

@@ -5,6 +5,4 @@
   - for element in section.children
     = render_element element, false
 
-
 = sortable_element 'reorder-list', :update => '', :complete => visual_effect(:highlight, 'reorder-list'), :url => { :action => 'order_section_children', :id => section.id}
-

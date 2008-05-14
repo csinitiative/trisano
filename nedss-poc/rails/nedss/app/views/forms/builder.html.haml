@@ -5,11 +5,13 @@
       %h3
         Form Hierarchy
       %div{:id => "builder-info"}
-    
-      - for view in @form.form_base_element.children
 
-        %ul{:id => "root-element-list"}
-          = render :partial => 'forms/root_elements', :locals => { :view => view }
+      %small
+        Add a core tab configuration
+
+      %ul{:id => "root-element-list"}
+        = render :partial => 'forms/elements'
+
     %td{:width => '100%', :align => 'left', :valign => 'top'}
       %div{:id => "builder-mods"}
 

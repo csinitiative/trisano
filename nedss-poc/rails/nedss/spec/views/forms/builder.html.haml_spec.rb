@@ -15,9 +15,10 @@ describe "/forms/builder.html.haml" do
     @form.stub!(:description).and_return("MyString")
     @form.stub!(:description).and_return("MyString")
     @form.stub!(:form_base_element).and_return(@base_element)
-    
     @base_element.stub!(:children).and_return([@view_element])
     @view_element.stub!(:children).and_return([@section_element])
+    @view_element.stub!(:name).and_return("Default View")
+    @view_element.stub!(:children?).and_return(true)
     @section_element.stub!(:name).and_return("Section Name")
     @section_element.stub!(:children?).and_return(true)
     @section_element.stub!(:children).and_return([@question_element])

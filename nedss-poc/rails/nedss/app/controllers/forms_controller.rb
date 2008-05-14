@@ -122,6 +122,7 @@ class FormsController < AdminController
       @section = FormElement.find(params[:id])
       reorder_ids = params['reorder-list'].collect {|id| id.to_i}
       @section.reorder_children reorder_ids
+      @form = Form.find(@section.form_id)
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'An error occurred during the reordering process.'
