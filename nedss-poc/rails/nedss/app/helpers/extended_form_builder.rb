@@ -49,8 +49,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       when :check_box
         i = 0
         name = @object_name + "[" + index.to_s + "][check_box_answer][]"
-        id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_check_box_answer_#{i += 1}"
         get_values(question_element).inject(check_boxes = "") do |check_boxes, value|
+          id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_check_box_answer_#{i += 1}"
           check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), :id => id) + value
         end
         check_boxes + @template.hidden_field_tag(name, "")
