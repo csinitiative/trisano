@@ -1,0 +1,14 @@
+
+%div{:id => "new-core-view-form"}
+
+  %h3
+    Add Core View Configuration
+
+  = error_messages_for :core_view_element
+
+  - remote_form_for(core_view_element) do |f|
+
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Create"

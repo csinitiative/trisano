@@ -4,7 +4,7 @@ class Form < ActiveRecord::Base
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   
-  def create_and_initialize_form_elements
+  def save_and_initialize_form_elements
     transaction do
       self.status = 'Not Published'
       self.is_template = true

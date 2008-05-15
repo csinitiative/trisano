@@ -209,7 +209,7 @@ describe FormsController do
     describe "with successful save" do
   
       def do_post
-        @form.should_receive(:create_and_initialize_form_elements).and_return(true)
+        @form.should_receive(:save_and_initialize_form_elements).and_return(true)
         post :create, :form => {}
       end
   
@@ -228,7 +228,7 @@ describe FormsController do
     describe "with failed save" do
 
       def do_post
-        @form.should_receive(:create_and_initialize_form_elements).and_return(false)
+        @form.should_receive(:save_and_initialize_form_elements).and_return(false)
         post :create, :form => {}
       end
   

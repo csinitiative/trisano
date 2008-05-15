@@ -205,13 +205,16 @@ describe ValueSetElementsController do
     before(:each) do
       mock_user
       @value_set_element = mock_model(ValueSetElement, :to_param => "1")
+      @value_set_element.stub!(:form_id).and_return(1)
       ValueSetElement.stub!(:new).and_return(@value_set_element)
     end
     
     describe "with successful save" do
   
       def do_post
+        @request.env["HTTP_ACCEPT"] = "application/javascript"
         @value_set_element.should_receive(:save_and_add_to_form).and_return(true)
+        Form.stub!(:find).with(1).and_return(mock_model(Form))
         post :create, :value_set_element => {}
       end
   
@@ -220,9 +223,9 @@ describe ValueSetElementsController do
         do_post
       end
 
-      it "should redirect to the new value_set_element" do
+      it "should render the create template" do
         do_post
-        response.should redirect_to(value_set_element_url("1"))
+        response.should render_template('create')
       end
       
     end
@@ -230,6 +233,7 @@ describe ValueSetElementsController do
     describe "with failed save" do
 
       def do_post
+        @request.env["HTTP_ACCEPT"] = "application/javascript"
         @value_set_element.should_receive(:save_and_add_to_form).and_return(false)
         post :create, :value_set_element => {}
       end

@@ -8,6 +8,8 @@ module FormsHelper
     
     when "ViewElement"
       result += render_view(element, include_children)
+    when "CoreViewElement"
+      result += render_core_view(element, include_children)
     when "SectionElement"
       result += render_section(element, include_children)
     when "QuestionElement"
@@ -42,6 +44,26 @@ module FormsHelper
     result
   end
   
+  def render_core_view(element, include_children)
+    result = ""
+    
+    result += "<li id='section_" + element.id.to_s + "'><b>"
+    result += element.name
+    result += "</b>"
+    
+    if include_children && element.children?
+      result += "<ul id='view_" + element.id.to_s + "_children'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+    end
+    
+    result += "</li>"
+    
+    result
+  end
+  
   def render_section(element, include_children=true)
     
     result = ""
@@ -52,7 +74,7 @@ module FormsHelper
     
     if element.children?
       result += "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
-      element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
     end
     
     if include_children && element.children?

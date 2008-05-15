@@ -17,10 +17,12 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :value_set_elements
   
+  map.resources :core_view_elements
+  
   map.resources :users
 
   map.resources :cmrs, :controller => :events, 
-                       :member => { :associations => :get, :add_association => :post }
+    :member => { :associations => :get, :add_association => :post }
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -43,7 +43,7 @@ class FormsController < AdminController
     @form = Form.new(params[:form])
 
     respond_to do |format|
-      if @form.create_and_initialize_form_elements
+      if @form.save_and_initialize_form_elements
         flash[:notice] = 'Form was successfully created.'
         format.html { redirect_to(@form) }
         format.xml  { render :xml => @form, :status => :created, :location => @form }

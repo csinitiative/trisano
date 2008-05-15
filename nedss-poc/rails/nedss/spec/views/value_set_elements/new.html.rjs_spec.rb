@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/value_set_elements/new.rjs" do
-  include QuestionsHelper
+  include ValueSetElementsHelper
   
   before(:each) do
     value_element = mock_model(ValueElement)
@@ -16,9 +16,6 @@ describe "/value_set_elements/new.rjs" do
     @value_set_element.stub!(:parent_element_id).and_return(4)
     @value_set_element.stub!(:value_elements).and_return([value_element])
     
-    
-    
-
     assigns[:value_set_element] = @value_set_element
   end
 

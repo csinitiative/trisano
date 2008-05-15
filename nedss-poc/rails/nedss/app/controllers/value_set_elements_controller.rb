@@ -24,9 +24,9 @@ class ValueSetElementsController < ApplicationController
   # Just used through RJS
   def new
     begin
-    @value_set_element = ValueSetElement.new
-    @value_set_element.parent_element_id = params[:form_element_id]
-    @value_set_element.form_id = params[:form_id]
+      @value_set_element = ValueSetElement.new
+      @value_set_element.parent_element_id = params[:form_element_id]
+      @value_set_element.form_id = params[:form_id]
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the value set form at this time.'
@@ -46,12 +46,10 @@ class ValueSetElementsController < ApplicationController
 
     respond_to do |format|
       if @value_set_element.save_and_add_to_form(params[:value_set_element][:parent_element_id])
-        flash[:notice] = 'Value Set was successfully created.'
-        format.html { redirect_to(@value_set_element) }
+        flash[:notice] = 'Value set was successfully created.'
         format.xml  { render :xml => @value_set_element, :status => :created, :location => @value_set_element }
         format.js { @form = Form.find(@value_set_element.form_id)}
       else
-        format.html { render :action => "new" }
         format.xml  { render :xml => @value_set_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }
       end
@@ -68,7 +66,7 @@ class ValueSetElementsController < ApplicationController
 
     respond_to do |format|
       if @value_set_element.update_attributes(params[:value_set_element])
-        flash[:notice] = 'ValueSetElement was successfully updated.'
+        flash[:notice] = 'Value set was successfully updated.'
         format.html { redirect_to(@value_set_element) }
         format.xml  { head :ok }
         format.js { @form = Form.find(@value_set_element.form_id)}

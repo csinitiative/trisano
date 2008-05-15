@@ -7,7 +7,7 @@
       %div{:id => "builder-info"}
 
       %small
-        Add a core tab configuration
+        = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_id => @form.id}, :method => :get)
 
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'

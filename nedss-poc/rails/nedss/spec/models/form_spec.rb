@@ -9,12 +9,12 @@ describe Form do
     @form.should be_valid
   end
   
-  describe "when created with create_and_initialize_form_elements" do
+  describe "when created with save_and_initialize_form_elements" do
     
     fixtures :forms, :form_elements, :questions
     
     it "should bootstrap the form element hierarchy" do
-      @form.create_and_initialize_form_elements
+      @form.save_and_initialize_form_elements
       form_base_element = @form.form_base_element
       form_base_element.should_not be_nil
       default_view_element = form_base_element.children[0]
@@ -26,7 +26,7 @@ describe Form do
     end
     
     it "should have a template's properties" do
-      @form.create_and_initialize_form_elements
+      @form.save_and_initialize_form_elements
       @form.is_template.should be_true
       @form.template_id.should be_nil
       @form.version.should be_nil
