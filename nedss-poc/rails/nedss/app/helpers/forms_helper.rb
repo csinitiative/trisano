@@ -48,8 +48,13 @@ module FormsHelper
     result = ""
     
     result += "<li id='section_" + element.id.to_s + "'><b>"
-    result += element.name
+    result += element.name + " Tab"
     result += "</b>"
+    
+    if element.children?
+      result += "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
+        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+    end
     
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
@@ -58,6 +63,9 @@ module FormsHelper
       end
       result += "</ul>"
     end
+    
+    result += "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
     
     result += "</li>"
     
