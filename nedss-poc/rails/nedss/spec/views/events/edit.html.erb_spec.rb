@@ -31,6 +31,7 @@ describe "/cmrs/edit.html.erb" do
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:get_or_initialize_answer).and_return(@answer)
+    @event.stub!(:form_references).and_return([])
 
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)

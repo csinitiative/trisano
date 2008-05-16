@@ -52,8 +52,7 @@ module FormsHelper
     result += "</b>"
     
     if element.children?
-      result += "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
-        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+      result += reorder_question_link(element)
     end
     
     if include_children && element.children?
@@ -64,8 +63,7 @@ module FormsHelper
       result += "</ul>"
     end
     
-    result += "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
-      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+    result += add_question_link(element)
     
     result += "</li>"
     
@@ -81,8 +79,7 @@ module FormsHelper
     result += "</b>"
     
     if element.children?
-      result += "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
-        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+      result += reorder_question_link(element)
     end
     
     if include_children && element.children?
@@ -93,8 +90,7 @@ module FormsHelper
       result += "</ul>"
     end
     
-    result += "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
-      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+    result += add_question_link(element)
     
     result += "</li>"
     
@@ -160,6 +156,18 @@ module FormsHelper
     result += "</li>"
     
     result
+  end
+  
+  private
+  
+  def add_question_link(element)
+    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+  end
+  
+  def reorder_question_link(element)
+    "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
+        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
   end
   
 end
