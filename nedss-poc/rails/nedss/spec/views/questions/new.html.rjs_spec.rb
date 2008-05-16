@@ -17,6 +17,8 @@ describe "/questions/new.rjs" do
     @question.stub!(:is_required).and_return(false)
     @question.stub!(:is_exportable).and_return(false)
     @question.stub!(:parent_element_id).and_return(4)
+    @question.stub!(:core_data).and_return("false")
+    @question.stub!(:is_core_data).and_return(false)
     assigns[:question] = @question
   end
 

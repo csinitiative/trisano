@@ -1,6 +1,7 @@
 
 
 = f.hidden_field :parent_element_id
+= f.hidden_field :core_data
 
 %p
   %label Question text
@@ -11,9 +12,16 @@
   / %br
   / = f.text_field :help_text
 
-  %label Data type
-  %br
-  = f.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
+  - if @question.core_data == "true"
+    %label Core Data Element
+    %br
+    - values = {}
+    - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
+    = f.select(:core_data_attr, values, {:include_blank => true}) 
+  - else
+    %label Data type
+    %br
+    = f.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
 
   / %label Size
   / %br

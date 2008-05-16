@@ -26,6 +26,7 @@ class QuestionsController < ApplicationController
     begin
       @question = Question.new
       @question.parent_element_id = params[:form_element_id]
+      @question.core_data = params[:core_data]
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to display the new question form.'
@@ -46,10 +47,13 @@ class QuestionsController < ApplicationController
     
     respond_to do |format|
       if @question.save_and_add_to_form(params[:question][:parent_element_id])
+        p @question.is_core_data
+        form_id = @question.is_core_data ? @question.core_data_element.form_id : @question.question_element.form_id
+        p form_id
         flash[:notice] = 'Question was successfully created.'
         format.html { redirect_to(@question) }
         format.xml  { render :xml => @question, :status => :created, :location => @question }
-        format.js { @form = Form.find(@question.question_element.form_id)}
+        format.js { @form = Form.find(form_id)}
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @question.errors, :status => :unprocessable_entity }

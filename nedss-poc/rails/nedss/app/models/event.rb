@@ -32,6 +32,13 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
+  def Event.exposed_attributes
+    {
+     "event.active_patient.active_primary_entity.person.birth_date" => {:type => "date", :name => "Patient Birth Date" },
+     "event.active_patient.active_primary_entity.person.last_name"  => {:type => "single_line_text", :name => "Patient Last Name" }
+    }
+  end
+
   def disease
     @disease ||= disease_events.last
   end
@@ -45,9 +52,6 @@ class Event < ActiveRecord::Base
   end  
 
   def form_references=(attributes)
-    p form_references
-    p form_references.count
-    p form_references.empty?
     if form_references.empty?
       form_references.build(attributes)
     else

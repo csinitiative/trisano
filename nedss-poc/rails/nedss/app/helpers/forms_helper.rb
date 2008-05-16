@@ -14,6 +14,8 @@ module FormsHelper
       result += render_section(element, include_children)
     when "QuestionElement"
       result += render_question(element, include_children)
+    when "CoreDataElement"
+      result += render_core_data(element, include_children)
     when "ValueSetElement"
       result += render_value_set(element, include_children)
     when "ValueElement"
@@ -91,7 +93,8 @@ module FormsHelper
     end
     
     result += add_question_link(element)
-    
+    result += add_core_data_link(element)
+
     result += "</li>"
     
     result
@@ -125,6 +128,16 @@ module FormsHelper
     result
   end
   
+  def render_core_data(element, include_children=true)
+    
+    question = element.question
+    result = "<li id='question_" + element.id.to_s + "'>Core Data: "
+    result += question.question_text
+    result += "</li>"
+    
+    result
+  end
+
   def render_value_set(element, include_children=true)
     result = ""
     
@@ -162,7 +175,12 @@ module FormsHelper
   
   def add_question_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
-      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+      element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+  end
+  
+  def add_core_data_link(element)
+    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
+      element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   
   def reorder_question_link(element)
