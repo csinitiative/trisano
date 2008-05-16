@@ -47,9 +47,7 @@ class QuestionsController < ApplicationController
     
     respond_to do |format|
       if @question.save_and_add_to_form(params[:question][:parent_element_id])
-        p @question.is_core_data
         form_id = @question.is_core_data ? @question.core_data_element.form_id : @question.question_element.form_id
-        p form_id
         flash[:notice] = 'Question was successfully created.'
         format.html { redirect_to(@question) }
         format.xml  { render :xml => @question, :status => :created, :location => @question }

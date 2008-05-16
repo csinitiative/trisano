@@ -82,8 +82,8 @@ class Form < ActiveRecord::Base
       
       child_to_publish.save
       published_node.add_child child_to_publish
-      
-      publish_question(child_to_publish, child) if child_to_publish.class.name == "QuestionElement"
+     
+      publish_question(child_to_publish, child) if (child_to_publish.class.name == "QuestionElement" || child_to_publish.class.name == "CoreDataElement")
       publish_children(child, child_to_publish) if child.children?
     end
     
@@ -97,13 +97,14 @@ class Form < ActiveRecord::Base
         :question_text => template_question.question_text,
         :help_text => template_question.help_text,
         :data_type => template_question.data_type_before_type_cast,
+        :core_data_attr => template_question.core_data_attr,
         :size => template_question.size,
         :condition => template_question.condition,
         :is_on_short_form => template_question.is_on_short_form,
         :is_required => template_question.is_required,
         :is_exportable => template_question.is_exportable
       })
-    
+   
     question_to_publish.save
   end
   

@@ -30,6 +30,15 @@ class Question < ActiveRecord::Base
   end
 
   def is_core_data
-    core_data == "true" ? true : false
+    a = if core_data.blank?
+      p "old"
+      p data_type
+      data_type.blank? ? true : false
+    else
+          p "new"
+      core_data == "true" ? true : false
+    end
+    p a
+    a
   end
 end
