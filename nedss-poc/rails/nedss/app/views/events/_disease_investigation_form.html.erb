@@ -19,7 +19,7 @@
           <% end -%>
         </ul>
         <div class="yui-content">
-          <% index = 0 %>
+          
           <% for @form_reference in @event.form_references %>
             <% _form = @form_reference.form %>
             <div id="form_<%= _form.id -%>">
@@ -37,10 +37,13 @@
                      <fieldset class="form_section">
                        <legend><%= element.name -%></legend>
                        <h3><%= element.description -%></h3>
+                <% when "CoreViewElement"
+                  # Debt: This will have to change
+                  break -%>
                 <% when "QuestionElement" -%>
                     <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
                     <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-                        <%= answer_template.dynamic_question(element, index += 1) %>
+                        <%= answer_template.dynamic_question(element, @form_index += 1) %>
                     <% end -%>
                     <p />
                   <%# when "CoreDataElement" -%>

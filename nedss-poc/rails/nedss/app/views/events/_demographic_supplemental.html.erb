@@ -1,42 +1,40 @@
 
-<% index = 0 %>
+
 <% for @form_reference in @event.form_references %>
   <% _form = @form_reference.form %>
   <div id="form_<%= _form.id -%>">
-    <% f.fields_for(:form_references, @form_reference, :builder => ExtendedFormBuilder) do |fr| %>
-      <%= fr.hidden_field(:form_id, :index => @form_reference.id) %>
-    <% end %>
+  
   
     <% has_fieldset = false %>
-
+  
     <% for element in _form.form_base_element.children %>
-
+  
       <% case element.class.name
       when "CoreViewElement" -%>
-
+  
         <% unless has_fieldset 
           has_fieldset = true -%>
-          
-            <fieldset>
-          <legend>Supplemental Questions</legend>
-          
-       <% end %>
-      
-        <% for question_element in element.children %>
-          <% @answer_object = @event.get_or_initialize_answer(question_element.question.id) -%>
-          <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-            <%= answer_template.dynamic_question(question_element, index += 1) %>
+            
+          <fieldset>
+            <legend>Supplemental Questions</legend>
+    
+          <% end %>
+    
+          <% for question_element in element.children %>
+            <% @answer_object = @event.get_or_initialize_answer(question_element.question.id) -%>
+            <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
+              <%= answer_template.dynamic_question(question_element, @form_index += 1) %>
+            <% end -%>
           <% end -%>
+    
+    
         <% end -%>
-
-
-      <% end -%>
-    <% end %>
-
-    <% if(has_fieldset) %>
-          </fieldset>
-          <br/>
-     <% end -%>
+      <% end %>
+    
+      <% if(has_fieldset) %>
+      </fieldset>
+      <br/>
+    <% end -%>
   </div>
 <% end %>
 
