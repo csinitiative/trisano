@@ -27,8 +27,8 @@ describe "Using Form Builder to manipulte core-data fields" do
 
       @browser.click "link=Add a core data element"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "DOB:"
-      @browser.select "question_core_data_attr", "label=Patient Birth Date"
+      @browser.type "question_question_text", "DOD:"
+      @browser.select "question_core_data_attr", "label=Patient Date of Death"
       @browser.click "question_submit"
       wait_for_element_not_present("new-question-form")
 
@@ -57,7 +57,7 @@ describe "Using Form Builder to manipulte core-data fields" do
     @browser.wait_for_page_to_load "30000"
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.type "event_active_patient__active_primary_entity__person__middle_name", "Quincy"
-    @browser.type "event_active_patient__active_primary_entity__person__birth_date", "02-28-1950"
+    @browser.type "event_active_patient__active_primary_entity__person__date_of_death", "02-28-1950"
     @browser.click "event_submit"
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("CMR was successfully updated").should be_true
@@ -68,6 +68,6 @@ describe "Using Form Builder to manipulte core-data fields" do
     @browser.wait_for_page_to_load "30000"
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.get_value("event_active_patient__active_primary_entity__person__middle_name").should eql("Quincy")
-    @browser.get_value("event_active_patient__active_primary_entity__person__birth_date").should eql("1950-02-28")
+    @browser.get_value("event_active_patient__active_primary_entity__person__date_of_death").should eql("1950-02-28")
   end
 end

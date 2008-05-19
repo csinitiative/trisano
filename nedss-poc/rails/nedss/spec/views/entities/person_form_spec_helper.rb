@@ -38,8 +38,8 @@ module PersonFormSpecHelper
           with_tag('option', 'English')
           with_tag('option', 'Spanish')
         end
-#        with_tag('input#entity_person_birth_date[name=?]', "entity[person][birth_date]")
-        with_tag('input#entity_person_date_of_death[name=?]', "entity[person][date_of_death]")
+        with_tag('input#entity_person_birth_date[name=?]', "entity[person][birth_date]")
+#        with_tag('input#entity_person_date_of_death[name=?]', "entity[person][date_of_death]")
       end
     end
   end
