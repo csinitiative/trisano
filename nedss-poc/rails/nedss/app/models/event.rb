@@ -34,8 +34,8 @@ class Event < ActiveRecord::Base
 
   def Event.exposed_attributes
     {
-     "event.active_patient.active_primary_entity.person.birth_date" => {:type => "date", :name => "Patient Birth Date" },
-     "event.active_patient.active_primary_entity.person.last_name"  => {:type => "single_line_text", :name => "Patient Last Name" }
+     "event[active_patient][active_primary_entity][person][birth_date]" => {:type => :date, :name => "Patient Birth Date" },
+     "event[active_patient][active_primary_entity][person][middle_name]"  => {:type => :single_line_text, :name => "Patient Middle Name" },
     }
   end
 

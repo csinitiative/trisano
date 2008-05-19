@@ -29,7 +29,6 @@
               <h2><%= _form.description %></h2>
               <% section_open = false -%>
               <% _form.form_base_element.pre_order_walk do |element| -%>
-                <% p element.class.name %>
                 <% case element.class.name
                    when "SectionElement" %>
                      <%= "</fieldset>" if section_open %>
@@ -46,8 +45,8 @@
                         <%= answer_template.dynamic_question(element, @form_index += 1) %>
                     <% end -%>
                     <p />
-                  <%# when "CoreDataElement" -%>
-                    <%#= render_core_data_element(element) %>
+                  <% when "CoreDataElement" -%>
+                    <%= render_core_data_element(element) %>
                 <% end -%>
               <% end %>
               <%= "</fieldset>" if section_open %>

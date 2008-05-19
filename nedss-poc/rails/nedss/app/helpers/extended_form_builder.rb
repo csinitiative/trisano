@@ -16,7 +16,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def dynamic_question(question_element, index) 
     question = question_element.question
-    p question
 #    q = @template.content_tag(:span, :class => "horiz") do
       index = @object.id.nil? ? index : @object.id
 

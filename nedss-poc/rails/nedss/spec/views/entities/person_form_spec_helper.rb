@@ -14,7 +14,7 @@ module PersonFormSpecHelper
       response.should have_tag("form") do
         with_tag("input#entity_person_last_name[name=?]", "entity[person][last_name]")
         with_tag('input#entity_person_first_name[name=?]', "entity[person][first_name]")
-        with_tag('input#entity_person_middle_name[name=?]', "entity[person][middle_name]")
+#        with_tag('input#entity_person_middle_name[name=?]', "entity[person][middle_name]")
         with_tag('select#entity_person_birth_gender_id[name=?]', "entity[person][birth_gender_id]") do
           with_tag('option', 'Male')
           with_tag('option', 'Female')
@@ -38,7 +38,7 @@ module PersonFormSpecHelper
           with_tag('option', 'English')
           with_tag('option', 'Spanish')
         end
-        with_tag('input#entity_person_birth_date[name=?]', "entity[person][birth_date]")
+#        with_tag('input#entity_person_birth_date[name=?]', "entity[person][birth_date]")
         with_tag('input#entity_person_date_of_death[name=?]', "entity[person][date_of_death]")
       end
     end

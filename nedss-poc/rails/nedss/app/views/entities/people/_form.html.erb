@@ -19,8 +19,8 @@
       <%= p.text_field(:first_name, :size => 25) %>
     </span>
     <span class="horiz">
-      <%= p.label(:middle_name) %>
-      <%= p.text_field(:middle_name, :size => 25) %>
+      <%#= p.label(:middle_name) %>
+      <%#= p.text_field(:middle_name, :size => 25) %>
     </span>
   <% end %>
 </fieldset>
@@ -43,8 +43,8 @@
   <legend>Age</legend>
   <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
     <span class="horiz">
-      <%= p.label(:birth_date, "Date of Birth") %>
-      <%= p.calendar_date_select(:birth_date, :year_range => 100.years.ago..0.years.from_now) %>
+      <%#= p.label(:birth_date, "Date of Birth") %>
+      <%#= p.calendar_date_select(:birth_date, :year_range => 100.years.ago..0.years.from_now) %>
     </span>
     <span class="horiz">
       <%= p.label(:approximate_age_no_birthday, "Age") %>
