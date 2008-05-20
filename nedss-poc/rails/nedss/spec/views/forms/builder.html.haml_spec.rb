@@ -27,6 +27,7 @@ describe "/forms/builder.html.haml" do
     @question_element.stub!(:form_id).and_return(1)
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
+    @question.stub!(:core_data).and_return(false)
     
     assigns[:form] = @form
   end

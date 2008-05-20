@@ -5,8 +5,8 @@ class Question < ActiveRecord::Base
   attr_accessor :parent_element_id
   
   validates_presence_of :question_text
-  validates_presence_of :data_type, :unless => :core_data 
-  validates_presence_of :core_data_attr, :if => :core_data 
+  validates_presence_of :data_type, :unless => :core_data
+  validates_presence_of :core_data_attr, :if => :core_data
   
   def save_and_add_to_form(parent_element_id)
     if self.valid?

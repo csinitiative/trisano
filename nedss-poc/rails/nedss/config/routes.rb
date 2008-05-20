@@ -21,6 +21,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :core_view_elements
   
+  map.resources :form_elements
+  
   map.resources :users
 
   map.resources :cmrs, :controller => :events, 

@@ -53,8 +53,8 @@ module FormsHelper
     result += element.name + " Tab"
     result += "</b>"
     
-    if element.children?
-      result += reorder_question_link(element)
+    if element.children.size > 1 && include_children
+      result += reorder_elements_link(element)
     end
     
     if include_children && element.children?
@@ -81,8 +81,8 @@ module FormsHelper
     result += element.name
     result += "</b>"
     
-    if element.children?
-      result += reorder_question_link(element)
+    if element.children.size > 1 && include_children
+      result += reorder_elements_link(element)
     end
     
     if include_children && element.children?
@@ -93,8 +93,8 @@ module FormsHelper
       result += "</ul>"
     end
     
-    result += add_question_link(element)
-    result += add_core_data_link(element)
+    result += add_question_link(element) if (include_children)
+    result += add_core_data_link(element) if (include_children)
 
     result += "</li>"
     
@@ -109,8 +109,10 @@ module FormsHelper
     result += "<li id='question_" + element.id.to_s + "'>Question: "
     result += question.question_text
     
+    result += "&nbsp;" + delete_question_link(element) if (include_children)
+    
     if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
-            question.data_type != :date && question.data_type != :phone) && element.children? == false)
+            question.data_type != :date && question.data_type != :phone && !question.core_data) && element.children? == false)
       result += "<br/>"
       result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
         element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
@@ -128,7 +130,7 @@ module FormsHelper
     
     result
   end
-  
+
   def render_value_set(element, include_children=true)
     result = ""
     
@@ -175,14 +177,19 @@ module FormsHelper
       element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
   end
   
+  def delete_question_link(element)
+    "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' name='delete-question'>Delete</a></small>"
+  end
+
   def add_core_data_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   
-  def reorder_question_link(element)
+  def reorder_elements_link(element)
     "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
-        element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder questions</a></small>"
+      element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder elements</a></small>"
   end
   
 end
