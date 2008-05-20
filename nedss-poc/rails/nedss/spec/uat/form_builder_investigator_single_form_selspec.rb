@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Form Builder Investigator Single Form" do
   
   it "should create a single test form" do
-    @browser.open "/nedss"
+    @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load "30000"
 
