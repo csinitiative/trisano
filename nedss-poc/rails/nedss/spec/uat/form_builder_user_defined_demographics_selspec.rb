@@ -57,7 +57,7 @@ describe 'Form Builder User-defined Demographics' do
     @browser.wait_for_page_to_load "30000"
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load "30000"
-    # @browser.get_value("input[class=demographic-supplemental]").should == "csi-employment"
+    @browser.get_value("css=input[class=demographic-supplemental]").should == "csi-employment"
   end
   
 end
