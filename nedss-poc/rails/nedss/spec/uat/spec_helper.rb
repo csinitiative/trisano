@@ -5,8 +5,10 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../lib')
 require 'rubygems'
 require 'spec'
 require File.dirname(__FILE__) + '/selenium'
+require File.dirname(__FILE__) + '/nedss_helper' 
 
 Spec::Runner.configure do |config|
+  include NedssHelper
   
   nedss_url = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   nedss_url = nedss_url.sub("//", "//utah:arches@")
@@ -21,7 +23,8 @@ Spec::Runner.configure do |config|
   end
 
   config.after(:all) do
-    @browser.stop unless $browser
+    @browser.stop unless $dont_kill_browser #in your test, if you don't want the browser to get killed
+                                            #set this variable to true
   end
   
   def wait_for_element_present(name)
