@@ -15,7 +15,7 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
     @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Out-of-state')
     @browser.type('event_active_patient__active_primary_entity__address_postal_code', '46060')
     @browser.type('event_active_patient__active_primary_entity__person_birth_date', '4/1/1989')
-    @browser.type('event_active_patient__active_primary_entity__person_date_of_death', '8/15/2009')
+    #@browser.type('event_active_patient__active_primary_entity__person_date_of_death', '8/15/2009')
     @browser.type('event_active_patient__active_primary_entity__person_approximate_age_no_birthday', '34')
     @browser.type('event_active_patient__active_primary_entity__telephone_area_code', '333')
     @browser.type('event_active_patient__active_primary_entity__telephone_phone_number', '5551212')
