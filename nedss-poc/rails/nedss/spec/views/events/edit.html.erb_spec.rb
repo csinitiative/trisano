@@ -160,9 +160,6 @@ describe "/cmrs/edit.html.erb" do
                                                     and_yield(@question_element_1).
                                                     and_yield(@question_element_2).
                                                     and_yield(@question_element_3)
-
-#      @view_element.stub!(:pre_order_walk).and_yield(@section_element)
-#      @section_element.stub!(:pre_oder_walk).and_yield(@question_element_1).
     end
 
     it "should not render if CMR status is not 'under investigation or not reopened'" do
@@ -216,7 +213,7 @@ describe "/cmrs/edit.html.erb" do
         do_render
         response.should have_tag("ul#sub_form_tabs") do
           with_tag("li") do
-            with_tag("a[href=?]", "#form_#{@form.id}") do
+            with_tag("a[href=?]", "#form_investigate_#{@form.id}") do
               with_tag("em", /#{@form.name}/)
             end
           end

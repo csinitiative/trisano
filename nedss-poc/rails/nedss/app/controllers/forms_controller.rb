@@ -93,7 +93,6 @@ class FormsController < AdminController
   
   def publish
     @form = Form.find(params[:id])
-    
     begin
       @form.publish!
       respond_to do |format|

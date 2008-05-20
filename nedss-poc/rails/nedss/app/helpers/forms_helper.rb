@@ -41,6 +41,8 @@ module FormsHelper
       result += "</ul>"
     end
     
+    result += add_section_link(element)
+
     result += "</li>"
     
     result
@@ -65,6 +67,7 @@ module FormsHelper
       result += "</ul>"
     end
     
+    result += add_section_link(element)
     result += add_question_link(element)
     
     result += "</li>"
@@ -173,6 +176,11 @@ module FormsHelper
   
   private
   
+  def add_section_link(element)
+    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a section</a></small>"
+  end
+
   def add_question_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 

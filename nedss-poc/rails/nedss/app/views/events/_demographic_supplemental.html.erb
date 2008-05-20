@@ -1,40 +1,38 @@
-
-
 <% for @form_reference in @event.form_references %>
   <% _form = @form_reference.form %>
-  <div id="form_<%= _form.id -%>">
-  
-  
-    <% has_fieldset = false %>
-  
+  <div id="form_demographic_<%= _form.id -%>">
     <% for element in _form.form_base_element.children %>
-  
-      <% case element.class.name
-      when "CoreViewElement" -%>
-  
-        <% unless has_fieldset 
-          has_fieldset = true -%>
-            
-          <fieldset>
-            <legend>Supplemental Questions</legend>
-    
-          <% end %>
-    
-          <% for question_element in element.children %>
-            <% @answer_object = @event.get_or_initialize_answer(question_element.question.id) -%>
-            <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-              <%= answer_template.dynamic_question(question_element, @form_index += 1, {:class => "demographic-supplemental"}) %>
-            <% end -%>
+      <% if element.class.name == "CoreViewElement" -%>
+        <%# ### DEBT.  Big time copy and paste from views/events/_disease_investigation_form.html.erb.  Factor out ### %>
+        <% section_ctr = 0 %>
+        <% section_open = false -%>
+        <% element.pre_order_walk do |element| -%>
+          <% case element.class.name
+             when "SectionElement" %>
+               <%= "</div></fieldset>" if section_open %>
+               <% section_open = true %>
+               <% section_ctr += 1; section_id = "section_demographic_#{section_ctr}"; hide_id = section_id + "_hide"; show_id = section_id + "_show" %>
+               <fieldset class="form_section">
+                 <legend><%= element.name -%>
+                   <span id='<%= hide_id %>' onClick="Element.hide('<%= section_id %>'); Element.hide('<%= hide_id %>'); Element.show('<%= show_id %>'); return false;">[Hide]</span>
+                   <span id='<%= show_id %>' onClick="Element.show('<%= section_id %>'); Element.hide('<%= show_id %>'); Element.show('<%= hide_id %>'); return false;" style="display: none;">[Show]</span>
+                 </legend>
+                 <div id='<%= section_id %>'>
+                 <h3><%= element.description -%></h3>
+          <% when "QuestionElement" -%>
+               <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
+               <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
+                 <%= answer_template.dynamic_question(question_element, @form_index += 1, {:class => "demographic-supplemental"}) %>
+               <% end -%>
+               <p />
+          <% when "CoreDataElement" -%>
+            <%= render_core_data_element(element) %>
           <% end -%>
-    
-    
         <% end -%>
       <% end %>
-    
-      <% if(has_fieldset) %>
-      </fieldset>
+      <%= "</div></fieldset>" if section_open %>
       <br/>
     <% end -%>
   </div>
 <% end %>
-
+    

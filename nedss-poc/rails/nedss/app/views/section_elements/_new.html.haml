@@ -1,0 +1,14 @@
+
+%div{:id => "new-section-form"}
+
+  %h3
+    Add Section Configuration
+
+  = error_messages_for :section_element
+
+  - remote_form_for(section_element) do |f|
+
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Create"

@@ -66,21 +66,21 @@ class Form < ActiveRecord::Base
     form_base_element = FormBaseElement.create({:form_id => self.id})
     default_view_element = ViewElement.create({:form_id => self.id, :name => "Default View"})
     form_base_element.add_child(default_view_element)
-    default_section_element = SectionElement.create({:form_id => self.id, :name => "Default Section"})
-    default_view_element.add_child(default_section_element)
+#    default_section_element = SectionElement.create({:form_id => self.id, :name => "Default Section"})
+#    default_view_element.add_child(default_section_element)
   end
   
   # Debt: Consider moving this to FormElement
   def publish_children(node_to_publish, published_node)
-    
     node_to_publish.children.each do |child|
+      puts "------->"
       child_to_publish = child.class.new
       child_to_publish.form_id = published_node.form_id
       
       child_to_publish.name = child.name unless child.name.nil?
       child_to_publish.description = child.description unless child.description.nil?
       
-      child_to_publish.save
+      child_to_publish.save!
       published_node.add_child child_to_publish
      
       publish_question(child_to_publish, child) if (child_to_publish.class.name == "QuestionElement" || child_to_publish.class.name == "CoreDataElement")

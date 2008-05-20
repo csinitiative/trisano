@@ -15,14 +15,14 @@
           <% i = section_ctr = 0 -%>
           <% for form_reference in @event.form_references -%>
             <% i += 1 %>
-            <li <%= 'class="selected"' if i == 1 -%>><a href="#form_<%= form_reference.form.id -%>"><em><%= form_reference.form.name %></em></a></li>
+            <li <%= 'class="selected"' if i == 1 -%>><a href="#form_investigate_<%= form_reference.form.id -%>"><em><%= form_reference.form.name %></em></a></li>
           <% end -%>
         </ul>
         <div class="yui-content">
           
           <% for @form_reference in @event.form_references %>
             <% _form = @form_reference.form %>
-            <div id="form_<%= _form.id -%>">
+            <div id="form_investigate_<%= _form.id -%>">
               <% f.fields_for(:form_references, @form_reference, :builder => ExtendedFormBuilder) do |fr| %>
                 <%= fr.hidden_field(:form_id, :index => @form_reference.id) %>
               <% end %>
@@ -33,7 +33,7 @@
                    when "SectionElement" %>
                      <%= "</div></fieldset>" if section_open %>
                      <% section_open = true %>
-                     <% section_ctr += 1; section_id = "section_#{section_ctr}"; hide_id = section_id + "_hide"; show_id = section_id + "_show" %>
+                     <% section_ctr += 1; section_id = "section_investigate_#{section_ctr}"; hide_id = section_id + "_hide"; show_id = section_id + "_show" %>
                      <fieldset class="form_section">
                        <legend><%= element.name -%>
                          <span id='<%= hide_id %>' onClick="Element.hide('<%= section_id %>'); Element.hide('<%= hide_id %>'); Element.show('<%= show_id %>'); return false;">[Hide]</span>
@@ -54,7 +54,7 @@
                     <%= render_core_data_element(element) %>
                 <% end -%>
               <% end %>
-              <%= "</fieldset>" if section_open %>
+              <%= "</div></fieldset>" if section_open %>
             </div>
           <% end %>
         </div>
