@@ -8,7 +8,6 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
     @browser.wait_for_page_to_load('30000')
     @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Record')
     @browser.type('event_active_patient__active_primary_entity__person_first_name', 'Number')
-    @browser.type('event_active_patient__active_primary_entity__person_middle_name', 'Test')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load('30000')
     recNum = @browser.get_text('//div[2]/fieldset/table/tbody/tr[1]/td[2]')
