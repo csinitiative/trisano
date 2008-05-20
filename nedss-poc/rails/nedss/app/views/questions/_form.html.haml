@@ -12,7 +12,7 @@
   / %br
   / = f.text_field :help_text
 
-  - if @question.core_data == "true"
+  - if @question.core_data
     %label Core Data Element
     %br
     - values = {}

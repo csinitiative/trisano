@@ -20,13 +20,15 @@
                  <div id='<%= section_id %>'>
                  <h3><%= element.description -%></h3>
           <% when "QuestionElement" -%>
-               <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
-               <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-                 <%= answer_template.dynamic_question(question_element, @form_index += 1, {:class => "demographic-supplemental"}) %>
+               <% if element.question.core_data %>
+                 <%= render_core_data_element(element) %>
+               <% else %>
+                 <% @answer_object = @event.get_or_initialize_answer(element.question.id) -%>
+                 <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
+                   <%= answer_template.dynamic_question(element, @form_index += 1, {:class => "demographic-supplemental"}) %>
+                 <% end -%>
                <% end -%>
                <p />
-          <% when "CoreDataElement" -%>
-            <%= render_core_data_element(element) %>
           <% end -%>
         <% end -%>
       <% end %>

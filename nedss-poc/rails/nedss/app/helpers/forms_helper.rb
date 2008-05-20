@@ -14,8 +14,6 @@ module FormsHelper
       result += render_section(element, include_children)
     when "QuestionElement"
       result += render_question(element, include_children)
-    when "CoreDataElement"
-      result += render_core_data(element, include_children)
     when "ValueSetElement"
       result += render_value_set(element, include_children)
     when "ValueElement"
@@ -131,16 +129,6 @@ module FormsHelper
     result
   end
   
-  def render_core_data(element, include_children=true)
-    
-    question = element.question
-    result = "<li id='question_" + element.id.to_s + "'>Core Data: "
-    result += question.question_text
-    result += "</li>"
-    
-    result
-  end
-
   def render_value_set(element, include_children=true)
     result = ""
     

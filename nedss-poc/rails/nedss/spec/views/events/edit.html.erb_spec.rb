@@ -134,12 +134,15 @@ describe "/cmrs/edit.html.erb" do
       @question_1.stub!(:question_text).and_return("Que?")
       @question_1.stub!(:data_type).and_return(:single_line_text)
       @question_1.stub!(:size).and_return(10)
+      @question_1.stub!(:core_data).and_return(false)
 
       @question_2.stub!(:question_text).and_return("Quoi?")
       @question_2.stub!(:data_type).and_return(:multi_line_text)
+      @question_2.stub!(:core_data).and_return(false)
 
       @question_3.stub!(:question_text).and_return("Huh?")
       @question_3.stub!(:data_type).and_return(:drop_down)
+      @question_3.stub!(:core_data).and_return(false)
 
       @value_1.stub!(:name).and_return("value 1")
       @value_2.stub!(:name).and_return("value 2")
