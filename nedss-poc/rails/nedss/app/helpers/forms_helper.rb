@@ -175,7 +175,8 @@ module FormsHelper
   
   def add_question_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
-      element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a question</a></small>"
+      element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
+      element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
   end
   
   def add_core_data_link(element)

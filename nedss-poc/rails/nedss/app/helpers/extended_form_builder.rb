@@ -14,12 +14,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes.select {|code| code.code_name == code_name}
   end
 
-  def dynamic_question(question_element, index) 
+  def dynamic_question(question_element, index, html_options = {}) 
     question = question_element.question
 #    q = @template.content_tag(:span, :class => "horiz") do
       index = @object.id.nil? ? index : @object.id
 
-      html_options = {}
       html_options[:index] = index
 # UNCOMMENT LATER
 #        additional_questions = ! question.additional_questions_value.blank?

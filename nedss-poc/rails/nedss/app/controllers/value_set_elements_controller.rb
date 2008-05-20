@@ -73,7 +73,7 @@ class ValueSetElementsController < ApplicationController
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @value_set_element.errors, :status => :unprocessable_entity }
-        format.js { render :action => "new" }
+        format.js { render :action => "edit" }
       end
     end
   end

@@ -1,5 +1,5 @@
 page.replace_html 'root-element-list', :partial => 'forms/elements'
-page.replace_html 'builder-info', "<span style='color:green'>" + flash[:notice] + "</span>"
+page.replace_html 'builder-info', "<span style='color:green'>" + flash[:notice] + "</span><input type='hidden' name='new_node_id' value='" + @question.question_element.id.to_s + "'/>"
 page.replace_html 'builder-mods', ""
 page.visual_effect(:highlight, 'root-element-list')
 flash[:notice] = ""

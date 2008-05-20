@@ -23,7 +23,7 @@
           <% for question_element in element.children %>
             <% @answer_object = @event.get_or_initialize_answer(question_element.question.id) -%>
             <% f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template| %>
-              <%= answer_template.dynamic_question(question_element, @form_index += 1) %>
+              <%= answer_template.dynamic_question(question_element, @form_index += 1, {:class => "demographic-supplemental"}) %>
             <% end -%>
           <% end -%>
     
