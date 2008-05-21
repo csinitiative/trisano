@@ -99,6 +99,7 @@ describe "Form Builder Investigator Single Form" do
   end
 
   it "should save entered data." do
+    pending "until we figure out how to guarantee dynamic field names"
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.type "event_answers_1_text_answer", "One"
     @browser.type "event_answers_2_text_answer", "Two"
@@ -112,6 +113,7 @@ describe "Form Builder Investigator Single Form" do
   end
 
   it "should maintain values on edit" do
+    pending "until we figure out how to guarantee dynamic field names"
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load "30000"
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
