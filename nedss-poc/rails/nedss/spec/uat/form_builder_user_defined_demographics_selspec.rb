@@ -19,7 +19,7 @@ describe 'Form Builder User-defined Demographics' do
     @browser.select "core_view_element_name", "label=Demographics"
     @browser.click "core_view_element_submit"
     wait_for_element_not_present("new-core-view-form")
-    @browser.click("name=add-question index=1")
+    @browser.click("name=add-question")
     wait_for_element_present("new-question-form")
     @browser.type "question_question_text", "Current employer:"
     @browser.select "question_data_type", "label=Single line text"
