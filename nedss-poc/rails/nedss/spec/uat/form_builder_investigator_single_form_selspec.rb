@@ -18,11 +18,16 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Form Builder"
       @browser.wait_for_page_to_load "30000"
 
+      @browser.click "link=Add a section"
+      wait_for_element_present("new-section-form")
+      @browser.type "section_element_name", "Section 1"
+      @browser.click "section_element_submit"
+      wait_for_element_not_present("new-section-form")
+
       @browser.click "link=Add a question"
       wait_for_element_present("new-question-form")
       @browser.type "question_question_text", "Single-line text"
       @browser.select "question_data_type", "label=Single line text"
-      @browser.type "question_size", "5"
       @browser.click "question_submit"
       wait_for_element_not_present("new-question-form")
       @browser.click "link=Add a question"
@@ -43,10 +48,10 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Add a value"
       @browser.click "link=Add a value"
       @browser.click "link=Add a value"
-      wait_for_element_present("value_set_element_value_attributes__name")
-      @browser.type "value_set_element_value_attributes__name", "Value One"
-      @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][1]", "Value Two"
-      @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][2]", "Value Three"
+      wait_for_element_present("value_set_element_new_value_element_attributes__name")
+      @browser.type "value_set_element_new_value_element_attributes__name", "Value One"
+      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Value Two"
+      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Value Three"
       @browser.click "value_set_element_submit"
       wait_for_element_not_present("new-value-set-form")
       @browser.click "link=Add a question"
@@ -61,10 +66,10 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Add a value"
       @browser.click "link=Add a value"
       @browser.click "link=Add a value"
-      wait_for_element_present("value_set_element_value_attributes__name")
-      @browser.type "value_set_element_value_attributes__name", "First Value"
-      @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][1]", "Second Value"
-      @browser.type "document.forms[0].elements['value_set_element[value_attributes][][name]'][2]", "Third Value"
+      wait_for_element_present("value_set_element_new_value_element_attributes__name")
+      @browser.type "value_set_element_new_value_element_attributes__name", "First Value"
+      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Second Value"
+      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Third Value"
       @browser.click "value_set_element_submit"
       wait_for_element_not_present("new-value-set-form")
       @browser.click "//input[@value='Publish']"
