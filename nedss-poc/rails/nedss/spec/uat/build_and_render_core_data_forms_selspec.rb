@@ -18,6 +18,12 @@ describe "Using Form Builder to manipulte core-data fields" do
       @browser.click "link=Form Builder"
       @browser.wait_for_page_to_load "30000"
 
+      @browser.click "link=Add a section"
+      wait_for_element_present("new-section-form")
+      @browser.type "section_element_name", "Section 1"
+      @browser.click "section_element_submit"
+      wait_for_element_not_present("new-section-form")
+
       @browser.click "link=Add a core data element"
       wait_for_element_present("new-question-form")
       @browser.type "question_question_text", "Middle Name:"
