@@ -26,21 +26,21 @@ describe "Form Builder Investigator Single Form" do
 
       @browser.click "link=Add a question"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "Single-line text"
-      @browser.select "question_data_type", "label=Single line text"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "Single-line text"
+      @browser.select "question_element_question_attributes_data_type", "label=Single line text"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
       @browser.click "link=Add a question"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "Multi-line text"
-      @browser.select "question_data_type", "label=Multi-line text"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "Multi-line text"
+      @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
       @browser.click "link=Add a question"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "Drop Down"
-      @browser.select "question_data_type", "label=Drop-down select list"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "Drop Down"
+      @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
       @browser.click "link=Add value set"
       wait_for_element_present("new-value-set-form")
@@ -56,9 +56,9 @@ describe "Form Builder Investigator Single Form" do
       wait_for_element_not_present("new-value-set-form")
       @browser.click "link=Add a question"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "Check boxes"
-      @browser.select "question_data_type", "label=Checkboxes"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "Check boxes"
+      @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
       @browser.click "link=Add value set"
       wait_for_element_present("new-value-set-form")

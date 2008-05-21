@@ -104,6 +104,7 @@ module FormsHelper
   def render_question(element, include_children=true)
     
     result = ""
+    
     question = element.question
     
     result += "<li id='question_" + element.id.to_s + "'>Question: "
@@ -172,7 +173,7 @@ module FormsHelper
   end
 
   def add_question_link(element)
-    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
+    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
       element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
   end
@@ -181,9 +182,9 @@ module FormsHelper
     "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' name='delete-question'>Delete</a></small>"
   end
-
+  
   def add_core_data_link(element)
-    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../questions/new?form_element_id=" + 
+    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   

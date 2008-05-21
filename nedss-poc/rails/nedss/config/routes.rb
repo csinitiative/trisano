@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-
+  
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
   map.admin 'admin', :controller => 'admin'
@@ -13,7 +13,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :forms
 
-  map.resources :questions
+  map.resources :question_elements
   
   map.resources :section_elements
 

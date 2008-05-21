@@ -27,30 +27,30 @@ describe 'Form Builder Admin' do
   it 'should add four questions' do    
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Did you go into the tall grass?"
-    @browser.select "question_data_type", "label=Drop-down select list"
-    @browser.click "question_submit"    
+    @browser.type "question_element_question_attributes_question_text", "Did you go into the tall grass?"
+    @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
+    @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Did you go into the tall grass?").should be_true
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Did you see the tick that got you?"
-    @browser.select "question_data_type", "label=Radio buttons"
-    @browser.click "question_submit"
+    @browser.type "question_element_question_attributes_question_text", "Did you see the tick that got you?"
+    @browser.select "question_element_question_attributes_data_type", "label=Radio buttons"
+    @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Did you see the tick that got you?").should be_true
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Describe the tick."
-    @browser.select "question_data_type", "label=Multi-line text"
-    @browser.click "question_submit"    
+    @browser.type "question_element_question_attributes_question_text", "Describe the tick."
+    @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
+    @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Describe the tick.").should be_true
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Could you describe the tick?"
-    @browser.select "question_data_type", "label=Radio buttons"
-    @browser.click "question_submit"    
+    @browser.type "question_element_question_attributes_question_text", "Could you describe the tick?"
+    @browser.select "question_element_question_attributes_data_type", "label=Radio buttons"
+    @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Could you describe the tick?").should be_true
   end
@@ -92,7 +92,7 @@ describe 'Form Builder Admin' do
   end
   
   it 'should reorder the last two questions' do
-    @browser.click "link=Reorder questions"
+    @browser.click "link=Reorder elements"
     wait_for_element_present("reorder-list")
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
     @browser.drag_and_drop "//ul[@id='reorder-list']/li[4]", "0,-20"

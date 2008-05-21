@@ -4,9 +4,9 @@
   %h3
     Add Question
 
-  = error_messages_for :question
+  = error_messages_for :question_element
 
-  - remote_form_for(question) do |f|
+  - remote_form_for(question_element) do |f|
 
     = render :partial => 'form', :locals => { :f => f }
 

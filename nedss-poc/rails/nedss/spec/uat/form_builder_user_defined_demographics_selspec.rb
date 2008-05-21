@@ -21,15 +21,15 @@ describe 'Form Builder User-defined Demographics' do
     wait_for_element_not_present("new-core-view-form")
     @browser.click("name=add-question")
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Current employer:"
-    @browser.select "question_data_type", "label=Single line text"
-    @browser.click "question_submit"
+    @browser.type "question_element_question_attributes_question_text", "Current employer:"
+    @browser.select "question_element_question_attributes_data_type", "label=Single line text"
+    @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
-    @browser.type "question_question_text", "Standard question?"
-    @browser.select "question_data_type", "label=Single line text"
-    @browser.click "question_submit"
+    @browser.type "question_element_question_attributes_question_text", "Standard question?"
+    @browser.select "question_element_question_attributes_data_type", "label=Single line text"
+    @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.click "//input[@value='Publish']"
     @browser.wait_for_page_to_load "30000"

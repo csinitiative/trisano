@@ -8,4 +8,45 @@ describe QuestionElement do
   it "should be valid" do
     @question_element.should be_valid
   end
+  
+  describe "when created with 'save and add to form'" do
+    
+    it "should bootstrap the question" do
+      section_element = SectionElement.create({:form_id => 1, :name => "Section 1"})
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => section_element.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.should_not be_nil
+      retrieved_question_element.question.question_text.should eql("Did you eat the fish?")
+    end
+    
+    it "should fail if the associated question is not valid" do
+      section_element = SectionElement.create({:form_id => 1, :name => "Section 1"})
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => section_element.id,
+          :question_attributes => {:data_type => "single_line_text"}
+        })
+      
+      saved = question_element.save_and_add_to_form
+      saved.should be_nil
+      
+      begin
+        retrieved_question_element = FormElement.find(question_element.id)
+      rescue
+        # No-op
+      ensure
+        retrieved_question_element.should be_nil
+      end
+    end
+    
+  end
+  
 end
