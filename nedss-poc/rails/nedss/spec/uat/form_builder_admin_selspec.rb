@@ -15,6 +15,15 @@ describe 'Form Builder Admin' do
     @browser.wait_for_page_to_load "30000"
   end
   
+  it 'should add a section' do    
+    @browser.click "link=Add a section"
+    wait_for_element_present("new-section-form")
+    @browser.type "section_element_name", "Section 1"
+    @browser.click "section_element_submit"
+    wait_for_element_not_present("new-section-form")
+    @browser.is_text_present("Section configuration was successfully created.").should be_true
+  end
+
   it 'should add four questions' do    
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
