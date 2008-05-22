@@ -2,86 +2,103 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'User functionality for searching for existing users' do
 
-  #TODO its probably not a good idea to couple UAT test to the Smoke test (created Steve Smoker)
-
-  it 'should find a person named Steve Smoker when viewing all CMRs' do
+  it 'should find or add Charles Chuckles in Provo, Utah county' do
     @browser.open "/nedss/cmrs"
     @browser.click('link=View CMRs')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Smoker, Steve').should be_true
+    if !@browser.is_text_present('Chuckles')
+      @browser.click('link=New CMR')
+      @browser.wait_for_page_to_load('30000')
+      @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Chuckles')
+      @browser.type('event_active_patient__active_primary_entity__person_first_name', 'Charles')
+      @browser.type('event_active_patient__active_primary_entity__address_city', 'Provo')
+      @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
+      @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
+      @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84602')
+      @browser.click('event_submit')
+      @browser.wait_for_page_to_load('30000')
+    end
+  end
+
+  it 'should find a person named Charles Chuckles when viewing all CMRs' do
+    @browser.open "/nedss/cmrs"
+    @browser.click('link=View CMRs')
+    @browser.wait_for_page_to_load('30000')
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
   
-  it 'should find a person named Steve Smoker when searching by Smoker' do
+  it 'should find a person named Charles Chuckles when searching by Chuckles' do
     @browser.click('link=People Search')
     @browser.wait_for_page_to_load('30000') 
-    @browser.type('name', 'Smoker')
+    @browser.type('name', 'Chuckles')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000') 
-    @browser.is_text_present('Steve Smoker').should be_true
+    @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'should find a person named Steve Smoker when searching by Stephen Smoker' do
+  it 'should find a person named Charles Chuckles when searching by Charlie Chuckles' do
     @browser.click('link=CMR Search')
     @browser.wait_for_page_to_load('30000')
-    @browser.type('name', 'Stephen Smoker') 
+    @browser.type('name', 'Charlie Chuckles') 
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Steve Smoker').should be_true
+    @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'should find a person named Steve Smoker when searching by Stephen Smooker' do
-    @browser.type('name', 'Stephen Smooker')
+  it 'should find a person named Charles Chuckles when searching by Charles' do
+    @browser.type('name', 'Charles')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Steve Smoker').should be_true
+    @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'should not find anyone when searching by Stephen Smokesalot' do
-    @browser.type('name', 'Stephen Smokesalot')
+  it 'should not find anyone when searching by Charlie Chuckface' do
+    @browser.type('name', 'Charlie Chuckface')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
     @browser.is_text_present('Your search returned no results.').should be_true
   end
     
-  it 'should not find anyone when searching by Stephen' do
-    @browser.type('name', 'Stephen')
+  it 'should not find anyone when searching by Charlie' do
+    @browser.type('name', 'Charlie')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
     @browser.is_text_present('Your search returned no results.').should be_true
   end
   
-  it 'should find a person named Steve Smoker when searching by Steve' do
-    @browser.type('name', 'Steve')
+  it 'should find a person named Charles Chuckles when searching by Chuckles' do
+    @browser.type('name', 'Chuckles')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Steve Smoker').should be_true
+    @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'should not find anyone when searching by first name smo' do
+  it 'should not find anyone when searching by first name chu' do
     @browser.type('name', '')
-    @browser.type 'sw_first_name', 'smo'
+    @browser.type 'sw_first_name', 'chu'
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
     @browser.is_text_present('Your search returned no results.').should be_true
   end
   
-  it 'should find a person named Steve Smoker when searching by last name smo' do
+  it 'should find a person named Charles Chuckles when searching by last name chu' do
     @browser.type('sw_first_name', '')
-    @browser.type('sw_last_name', 'smo')
+    @browser.type('sw_last_name', 'chu')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
-    @browser.is_text_present('Steve Smoker').should be_true
+    @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'Steve Smoker should be assigned to Bear River jurisdiction' do
+  it 'Charles Chuckles should be assigned to Bear River jurisdiction' do
     @browser.type('sw_last_name', '')
     @browser.is_text_present('Bear River Health Department').should be_true
   end
 
-  it 'should find Steve Smoker when searching by Bear River jurisdiction' do  
+  it 'should find Charles Chuckles when searching by Bear River jurisdiction' do  
     @browser.select('jurisdiction_id', 'label=Bear River Health Department')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load('30000')
+    @browser.is_text_present('Charles Chuckles').should be_true
     @browser.is_text_present('Bear River Health Department').should be_true
   end
 end
