@@ -36,7 +36,8 @@ class Form < ActiveRecord::Base
             :is_template => false, :template_id => self.id })
        
         base_to_publish = self.form_base_element
-        published_base = FormBaseElement.create({:form_id => published_form.id})
+        tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+        published_base = FormBaseElement.create({:form_id => published_form.id, :tree_id => tree_id})
         publish_children(base_to_publish, published_base)
       
         unless self.status == 'Published'
@@ -63,8 +64,9 @@ class Form < ActiveRecord::Base
   private
   
   def initialize_form_elements
-    form_base_element = FormBaseElement.create({:form_id => self.id})
-    default_view_element = ViewElement.create({:form_id => self.id, :name => "Default View"})
+    tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+    form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
+    default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
     form_base_element.add_child(default_view_element)
 #    default_section_element = SectionElement.create({:form_id => self.id, :name => "Default Section"})
 #    default_view_element.add_child(default_section_element)
@@ -75,6 +77,7 @@ class Form < ActiveRecord::Base
     node_to_publish.children.each do |child|
       child_to_publish = child.class.new
       child_to_publish.form_id = published_node.form_id
+      child_to_publish.tree_id = published_node.tree_id
       
       child_to_publish.name = child.name unless child.name.nil?
       child_to_publish.description = child.description unless child.description.nil?

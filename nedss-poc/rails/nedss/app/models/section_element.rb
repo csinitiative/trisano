@@ -9,6 +9,7 @@ class SectionElement < FormElement
       transaction do
         parent_element = FormElement.find(parent_element_id)
         self.form_id = parent_element.form_id
+        self.tree_id = parent_element.tree_id
         self.save
         parent_element.add_child(self)
       end

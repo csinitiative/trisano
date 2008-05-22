@@ -1,5 +1,5 @@
 class FormElement < ActiveRecord::Base
-  acts_as_nested_set :scope => :form_id
+  acts_as_nested_set :scope => :tree_id
   belongs_to :form
   
   def destroy_with_dependencies

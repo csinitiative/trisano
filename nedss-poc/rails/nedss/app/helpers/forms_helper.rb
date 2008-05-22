@@ -110,10 +110,11 @@ module FormsHelper
     result += "<li id='question_" + element.id.to_s + "'>Question: "
     result += question.question_text
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + library_link(element) if (include_children)
     
-    if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
-            question.data_type != :date && question.data_type != :phone && !question.core_data) && element.children? == false)
+#    if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
+#            question.data_type != :date && question.data_type != :phone && !question.core_data) && element.children? == false)
+    if include_children && element.is_multi_valued_and_empty?
       result += "<br/>"
       result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
         element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
@@ -166,7 +167,25 @@ module FormsHelper
   end
   
   private
-  
+
+  def library_link(element)
+    # Don't display link for core data elements
+    unless element.question.core_data?
+      # Don't display link if question can have value set but does not.
+      unless element.is_multi_valued_and_empty?
+        result = "&nbsp;|&nbsp;<small>"
+        unless element.in_library?
+          result += "<a href='#' onclick=\"new Ajax.Request('../../question_elements/" + element.id.to_s + 
+          "/to_library', {asynchronous:true, evalScripts:true, method:'post'}); return false;\">Copy to Library</a>"
+        else
+          result += "Copied to libary"
+        end
+        return result += "</small>"
+      end
+    end
+    ""
+  end
+
   def add_section_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a section</a></small>"
@@ -178,7 +197,7 @@ module FormsHelper
       element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
   end
   
-    def edit_question_link(element)
+  def edit_question_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/" + element.id.to_s + 
       "/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" class='edit-question' name='edit-question'>Edit</a></small>"
   end
@@ -187,7 +206,7 @@ module FormsHelper
     "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' name='delete-question'>Delete</a></small>"
   end
-  
+
   def add_core_data_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"

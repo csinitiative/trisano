@@ -43,6 +43,7 @@ class ValueSetElement < FormElement
     unless @new_value_elements.nil?
       @new_value_elements.each do |a|
         a.form_id = self.form_id
+        a.tree_id = self.tree_id
         a.save
         self.add_child a
       end

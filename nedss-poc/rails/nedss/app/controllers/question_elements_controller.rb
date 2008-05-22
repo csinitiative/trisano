@@ -69,4 +69,16 @@ class QuestionElementsController < ApplicationController
   def destroy
     render :text => 'Deletion handled by form elements.', :status => 405
   end
+
+  def to_library
+    @question_element = QuestionElement.find(params[:id])
+    if @question_element.add_to_library
+      flash[:notice] = 'Question successfully added to library.'
+      @form = Form.find(@question_element.form_id)
+      render :action => "create"
+    else
+      flash[:notice] = 'Unable to copy question to library.'
+      render :template => 'rjs-error'
+    end
+  end
 end
