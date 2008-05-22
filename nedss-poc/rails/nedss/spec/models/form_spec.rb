@@ -63,6 +63,10 @@ describe Form do
       form_to_publish.status.should eql("Published")
     end
     
+     it "should give the base form element a tree id" do
+       pending
+    end
+    
     it "should make a copy of itself and give the copy published version properties" do
       form_to_publish = Form.find(1)
       published_form = form_to_publish.publish!

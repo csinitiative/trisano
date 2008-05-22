@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Form Builder Admin' do
-
+  
   it 'should create a new form and allow navigation to builder' do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load "30000"
     @browser.click "link=New form"
     @browser.wait_for_page_to_load "30000"
-    @browser.type "form_name", "African Tick Bite Test"
+    @browser.type "form_name", NedssHelper.get_unique_name(4) + " UAT"
     @browser.click "form_submit"
     @browser.wait_for_page_to_load "30000"
     @browser.click "link=Form Builder"
@@ -35,14 +35,14 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Did you see the tick that got you?"
-    @browser.select "question_element_question_attributes_data_type", "label=Radio buttons"
+    @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Did you see the tick that got you?").should be_true
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Describe the tick."
-    @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
+    @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Describe the tick.").should be_true
@@ -138,6 +138,23 @@ describe 'Form Builder Admin' do
 
   end
   
+#  it 'should publish' do
+#    @browser.click "//input[@value='Publish']"
+#    @browser.wait_for_page_to_load "30000"
+#    @browser.is_text_present("Form was successfully published").should be_true
+#  end
+  
+#  it 'should have generated a form in the investigator view' do
+#    @browser.click "link=New CMR"
+#    @browser.wait_for_page_to_load "30000"
+#    @browser.is_text_present("Did you go into the tall grass?").should be_true
+#  end
+  
+  
+  # Go over to the invetigator side and look for a question
+  # Come back to the Form builder, delete and re-publish
+  # Go back and look again
+  # Should be gone
 end
 
 

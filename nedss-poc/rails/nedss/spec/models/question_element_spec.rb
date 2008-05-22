@@ -9,6 +9,14 @@ describe QuestionElement do
     @question_element.should be_valid
   end
   
+  it "should determine if it is multi-valued" do
+    pending
+  end
+  
+  it "should determine if it is multi-valued and empty" do
+    pending
+  end
+  
   describe "when created with 'save and add to form'" do
     
     it "should bootstrap the question" do
@@ -45,6 +53,26 @@ describe QuestionElement do
       ensure
         retrieved_question_element.should be_nil
       end
+    end
+    
+    it "should be receive a tree id" do
+      pending
+    end
+    
+  end
+  
+  describe "when added to the library" do
+    
+    it "should have a tree id" do
+      pending
+    end
+    
+    it "should be be a template" do
+      pending
+    end
+    
+    it "should be a copy of the question it was created from" do
+      pending
     end
     
   end

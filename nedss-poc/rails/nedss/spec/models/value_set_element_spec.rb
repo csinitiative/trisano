@@ -21,5 +21,9 @@ describe ValueSetElement do
       question_element.children[0].id.should == @value_set_element.id 
     end
     
+    it "should be receive a tree id" do
+      pending
+    end
+    
   end
 end

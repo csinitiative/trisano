@@ -11,4 +11,12 @@ describe Question do
     @question.should be_valid
   end
   
+  it "should determine if it is multi-valued" do
+    pending
+  end
+  
+  it "should determine if it is multi-valued and empty" do
+    pending
+  end
+  
 end
