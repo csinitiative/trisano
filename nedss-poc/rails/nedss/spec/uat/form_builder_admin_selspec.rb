@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Form Builder Admin' do
   
+  $dont_kill_browser = true
+  
   it 'should create a new form and allow navigation to builder' do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
@@ -42,14 +44,14 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Describe the tick."
-    @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
+    @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Describe the tick.").should be_true
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Could you describe the tick?"
-    @browser.select "question_element_question_attributes_data_type", "label=Radio buttons"
+    @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Could you describe the tick?").should be_true
@@ -78,7 +80,7 @@ describe 'Form Builder Admin' do
     @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
     @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
-    wait_for_element_not_present("new-value-set-form")    
+    wait_for_element_not_present("new-value-set-form")
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Yes/No"
@@ -95,7 +97,7 @@ describe 'Form Builder Admin' do
     @browser.click "link=Reorder elements"
     wait_for_element_present("reorder-list")
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
-    @browser.drag_and_drop "//ul[@id='reorder-list']/li[4]", "0,-20"
+    @browser.drag_and_drop "//ul[@id='reorder-list']/li[4]", "0,-80"
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
   end
   
@@ -138,17 +140,17 @@ describe 'Form Builder Admin' do
 
   end
   
-#  it 'should publish' do
-#    @browser.click "//input[@value='Publish']"
-#    @browser.wait_for_page_to_load "30000"
-#    @browser.is_text_present("Form was successfully published").should be_true
-#  end
+  it 'should publish' do
+    @browser.click "//input[@value='Publish']"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Form was successfully published").should be_true
+  end
   
-#  it 'should have generated a form in the investigator view' do
-#    @browser.click "link=New CMR"
-#    @browser.wait_for_page_to_load "30000"
-#    @browser.is_text_present("Did you go into the tall grass?").should be_true
-#  end
+  it 'should have generated a form in the investigator view' do
+    @browser.click "link=New CMR"
+    @browser.wait_for_page_to_load "30000"
+    # @browser.is_text_present("Did you go into the tall grass?").should be_true
+  end
   
   
   # Go over to the invetigator side and look for a question

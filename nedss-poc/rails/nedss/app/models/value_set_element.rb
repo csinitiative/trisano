@@ -10,9 +10,10 @@ class ValueSetElement < FormElement
   def save_and_add_to_form(parent_element_id)
     if self.valid?
       transaction do
+        parent_element = FormElement.find(parent_element_id)
+        self.tree_id = parent_element.tree_id
         self.save
         save_new_value_elements
-        parent_element = FormElement.find(parent_element_id)
         parent_element.add_child(self)
       end
     end

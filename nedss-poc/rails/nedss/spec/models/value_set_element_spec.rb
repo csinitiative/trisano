@@ -13,7 +13,7 @@ describe ValueSetElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the question provided" do
-      question_element = QuestionElement.create({:form_id => 1})
+      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
       @value_set_element.form_id = question_element.form_id
       @value_set_element.save_and_add_to_form(question_element.id) 
       @value_set_element.parent_id.should_not be_nil
@@ -22,7 +22,11 @@ describe ValueSetElement do
     end
     
     it "should be receive a tree id" do
-      pending
+      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
+      @value_set_element.form_id = question_element.form_id
+      @value_set_element.save_and_add_to_form(question_element.id) 
+      @value_set_element.tree_id.should_not be_nil
+      @value_set_element.tree_id.should eql(question_element.tree_id)
     end
     
   end
