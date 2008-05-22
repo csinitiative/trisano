@@ -1,0 +1,1 @@
+page.replace_html 'builder-mods', :partial => 'question_elements/edit', :locals => {:question_element => @question_element}

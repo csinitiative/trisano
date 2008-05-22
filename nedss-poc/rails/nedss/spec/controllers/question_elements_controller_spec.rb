@@ -254,6 +254,7 @@ describe QuestionElementsController do
     before(:each) do
       mock_user
       @question_element = mock_model(QuestionElement, :to_param => "1")
+      @question_element.stub!(:form_id).and_return(1)
       QuestionElement.stub!(:find).and_return(@question_element)
     end
     
@@ -261,6 +262,7 @@ describe QuestionElementsController do
 
       def do_put
         @question_element.should_receive(:update_attributes).and_return(true)
+        Form.stub!(:find).with(1).and_return(mock_model(Form))
         put :update, :id => "1"
       end
 
@@ -279,9 +281,9 @@ describe QuestionElementsController do
         assigns(:question_element).should equal(@question_element)
       end
 
-      it "should redirect to the question_element" do
+      it "should render the update view" do
         do_put
-        response.should redirect_to(question_element_url("1"))
+        response.should render_template('update')
       end
 
     end

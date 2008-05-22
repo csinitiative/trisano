@@ -10,13 +10,3 @@
     %br
     = q.text_field :question_text
 
-    - if @question_element.question.core_data
-      %label Core Data Element
-      %br
-      - values = {}
-      - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
-      = q.select(:core_data_attr, values, {:include_blank => true}) 
-    - else
-      %label Data type
-      %br
-      = q.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 

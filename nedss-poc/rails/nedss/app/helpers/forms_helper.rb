@@ -110,7 +110,7 @@ module FormsHelper
     result += "<li id='question_" + element.id.to_s + "'>Question: "
     result += question.question_text
     
-    result += "&nbsp;" + delete_question_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) if (include_children)
     
     if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
             question.data_type != :date && question.data_type != :phone && !question.core_data) && element.children? == false)
@@ -176,6 +176,11 @@ module FormsHelper
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
       element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
+  end
+  
+    def edit_question_link(element)
+    "<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/" + element.id.to_s + 
+      "/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" class='edit-question' name='edit-question'>Edit</a></small>"
   end
   
   def delete_question_link(element)

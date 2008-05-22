@@ -41,36 +41,29 @@ class QuestionElementsController < ApplicationController
     @question_element = QuestionElement.find(params[:id])
   end
 
-  # POST /question_elements
-  # POST /question_elements.xml
   def create
     @question_element = QuestionElement.new(params[:question_element])
 
-      if @question_element.save_and_add_to_form
-        form_id = @question_element.form_id
-        flash[:notice] = 'Question was successfully created.'
-        @form = Form.find(form_id)
-      else
-        render :action => "new" 
-      end
+    if @question_element.save_and_add_to_form
+      form_id = @question_element.form_id
+      flash[:notice] = 'Question was successfully created.'
+      @form = Form.find(form_id)
+    else
+      render :action => "new" 
+    end
 
   end
 
-  # PUT /question_elements/1
-  # PUT /question_elements/1.xml
   def update
     @question_element = QuestionElement.find(params[:id])
 
-    respond_to do |format|
-      if @question_element.update_attributes(params[:question_element])
-        flash[:notice] = 'QuestionElement was successfully updated.'
-        format.html { redirect_to(@question_element) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @question_element.errors, :status => :unprocessable_entity }
-      end
+    if @question_element.update_attributes(params[:question_element])
+      flash[:notice] = 'Question was successfully updated.'
+      @form = Form.find(@question_element.form_id)
+    else
+      render :action => "edit"
     end
+
   end
 
   def destroy

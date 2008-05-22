@@ -17,9 +17,15 @@ class QuestionElement < FormElement
     end
   end
 
+  def question_instance
+    @question_instance || question
+  end
+  
   def question_attributes=(question_attributes)
     if new_record?
       @question_instance = Question.new(question_attributes)
+    else
+      question_instance.update_attributes(question_attributes)
     end
   end
   
