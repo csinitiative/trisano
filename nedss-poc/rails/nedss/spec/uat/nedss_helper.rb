@@ -2,11 +2,12 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 module NedssHelper
   
-  # These methods only work from the form listing page
-  def edit_form(browser, name)
-    index = get_form_index(browser, name)
-    if index > 0 
-      browser.click "//a[contains(@href, '/nedss/forms/" + index.to_s + "/edit')]"
+  # Use click_resource methods from any standard resource index page
+  
+  def click_resource_edit(browser, resource, name)
+    id = get_resource_id(browser, name)
+    if id > 0 
+      browser.click "//a[contains(@href, '/nedss/" + resource + "/" + id.to_s + "/edit')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -14,10 +15,10 @@ module NedssHelper
     end
   end
   
-  def show_form(browser, name)
-    index = get_form_index(browser, name)
-    if index > 0 
-      browser.click "//a[contains(@href, '/nedss/forms/" + index.to_s + "')]"
+  def click_resource_show(browser, resource, name)
+    id = get_resource_id(browser, name)
+    if id > 0 
+      browser.click "//a[contains(@href, '/nedss/" + resource + "/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -25,10 +26,10 @@ module NedssHelper
     end
   end
   
-  def build_form(browser, name)
-    index = get_form_index(browser, name)
+  def click_build_form(browser, name)
+    id = get_resource_id(browser, name)
     if index > 0 
-      browser.click "//a[contains(@href, '/nedss/forms/builder/" + index.to_s + "')]"
+      browser.click "//a[contains(@href, '/nedss/forms/builder/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -48,7 +49,7 @@ module NedssHelper
     ret = get_random_word
     for i in 2..words
       ret = ret + " " + get_random_word
-    end    
+    end
     return ret
   end
   
@@ -59,16 +60,15 @@ module NedssHelper
     return wordlist[1 + rand(320)]
   end
   
-  def get_form_index(browser, name)
+  def get_resource_id(browser, name)
     htmlSource = browser.get_html_source
     #substring from name to the edit link
     pos1 = htmlSource.index(name)
     pos2 = htmlSource.index("/edit\"", pos1)-1
     pos3 = htmlSource.rindex("/", pos2)+1
-    row = htmlSource[pos3..pos2]
-    return row
+    id = htmlSource[pos3..pos2]
+    return id
   rescue => err
-    puts err
     return -1
   end
 end
