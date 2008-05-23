@@ -28,7 +28,7 @@ module NedssHelper
   
   def click_build_form(browser, name)
     id = get_resource_id(browser, name)
-    if index > 0 
+    if id > 0 
       browser.click "//a[contains(@href, '/nedss/forms/builder/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
@@ -67,7 +67,7 @@ module NedssHelper
     pos2 = htmlSource.index("/edit\"", pos1)-1
     pos3 = htmlSource.rindex("/", pos2)+1
     id = htmlSource[pos3..pos2]
-    return id
+    return id.to_i
   rescue => err
     return -1
   end

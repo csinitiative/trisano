@@ -204,7 +204,7 @@ module FormsHelper
   
   def delete_question_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' name='delete-question'>Delete</a></small>"
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>Delete</a></small>"
   end
 
   def add_core_data_link(element)

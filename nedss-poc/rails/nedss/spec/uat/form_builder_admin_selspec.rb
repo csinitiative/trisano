@@ -4,13 +4,22 @@ describe 'Form Builder Admin' do
   
   $dont_kill_browser = true
   
+  before(:all) do
+    @form_name = NedssHelper.get_unique_name(4) + " UAT"
+    @question_to_delete_id = ""
+  end
+  
+  after(:all) do
+    @form_name = nil
+  end
+  
   it 'should create a new form and allow navigation to builder' do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load "30000"
     @browser.click "link=New form"
     @browser.wait_for_page_to_load "30000"
-    @browser.type "form_name", NedssHelper.get_unique_name(4) + " UAT"
+    @browser.type "form_name", @form_name
     @browser.click "form_submit"
     @browser.wait_for_page_to_load "30000"
     @browser.click "link=Form Builder"
@@ -48,6 +57,9 @@ describe 'Form Builder Admin' do
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Describe the tick.").should be_true
+    
+    @question_to_delete_id = @browser.get_value("id=modified-element")
+    
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Could you describe the tick?"
@@ -55,9 +67,9 @@ describe 'Form Builder Admin' do
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Could you describe the tick?").should be_true
-  end
+  # end
   
-  it 'should add three value sets' do
+  # it 'should add three value sets' do
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Yes/No/Maybe"
@@ -91,17 +103,17 @@ describe 'Form Builder Admin' do
     @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
-  end
+  # end
   
-  it 'should reorder the last two questions' do
+  # it 'should reorder the last two questions' do
     @browser.click "link=Reorder elements"
     wait_for_element_present("reorder-list")
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
     @browser.drag_and_drop "//ul[@id='reorder-list']/li[4]", "0,-80"
     @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
-  end
+  # end
   
-  it 'should edit a value set' do
+  # it 'should edit a value set' do
     
     @browser.click "link=Edit value set"
     wait_for_element_present("edit-value-set-form")
@@ -138,23 +150,46 @@ describe 'Form Builder Admin' do
     wait_for_element_not_present("edit-value-set-form")
     @browser.is_text_present("Added after value").should be_true
 
-  end
+  # end
   
-  it 'should publish' do
+  # it 'should publish' do
     @browser.click "//input[@value='Publish']"
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Form was successfully published").should be_true
-  end
+  # end
   
-  it 'should have generated a form in the investigator view' do
+  # it 'should create a new CMR' do
     @browser.click "link=New CMR"
     @browser.wait_for_page_to_load "30000"
-    # @browser.is_text_present("Did you go into the tall grass?").should be_true
+    @browser.type "event_active_patient__active_primary_entity__person_last_name", "Test"
+    @browser.type "event_active_patient__active_primary_entity__person_first_name", "Guy"
+    @browser.click "//ul[@id='tabs']/li[2]/a/em"
+    @browser.select "event_disease_disease_id", "label=African Tick Bite Fever"
+    @browser.click "//ul[@id='tabs']/li[6]/a/em"
+    @browser.select "event_active_jurisdiction_secondary_entity_id", "label=Bear River Health Department"
+    @browser.select "event_event_status_id", "label=Under Investigation"
+    @browser.click "event_submit"
+    @browser.wait_for_page_to_load "30000"
+  # end
+  
+  # it 'should have generated a form in the investigator view' do
+    @browser.click "link=Edit"
+    @browser.wait_for_page_to_load "30000"
+    @browser.click "//a[contains(.,'Investigation')]"
+    @browser.click "//a[contains(.,'" + @form_name + "')]"
+    @browser.is_text_present("Describe the tick.").should be_true
+  # end
+  
+  # it 'should delete a question' do
+    @browser.click "link=Forms"
+    @browser.wait_for_page_to_load "30000"
+    NedssHelper.click_build_form(@browser, @form_name)
+    
+    @browser.click "id=delete-question-#{@question_to_delete_id}"
+    
   end
-  
-  
-  # Go over to the invetigator side and look for a question
-  # Come back to the Form builder, delete and re-publish
+
+  # re-publish
   # Go back and look again
   # Should be gone
 end
