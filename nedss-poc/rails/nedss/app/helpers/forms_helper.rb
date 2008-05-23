@@ -112,8 +112,6 @@ module FormsHelper
     
     result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + library_link(element) if (include_children)
     
-#    if (include_children && (question.data_type != :single_line_text && question.data_type != :multi_line_text && 
-#            question.data_type != :date && question.data_type != :phone && !question.core_data) && element.children? == false)
     if include_children && element.is_multi_valued_and_empty?
       result += "<br/>"
       result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
@@ -169,9 +167,7 @@ module FormsHelper
   private
 
   def library_link(element)
-    # Don't display link for core data elements
     unless element.question.core_data?
-      # Don't display link if question can have value set but does not.
       unless element.is_multi_valued_and_empty?
         result = "&nbsp;|&nbsp;<small>"
         unless element.in_library?
@@ -199,7 +195,8 @@ module FormsHelper
   
   def edit_question_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/" + element.id.to_s + 
-      "/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" class='edit-question' name='edit-question'>Edit</a></small>"
+      "/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" class='edit-question' id='edit-question-" + element.id.to_s + 
+      "'>Edit</a></small>"
   end
   
   def delete_question_link(element)
