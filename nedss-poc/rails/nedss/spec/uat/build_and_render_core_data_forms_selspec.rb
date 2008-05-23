@@ -26,16 +26,16 @@ describe "Using Form Builder to manipulte core-data fields" do
 
       @browser.click "link=Add a core data element"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "Middle Name:"
-      @browser.select "question_core_data_attr", "label=Patient Middle Name"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "Middle Name:"
+      @browser.select "question_element_question_attributes_core_data_attr", "label=Patient Middle Name"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
 
       @browser.click "link=Add a core data element"
       wait_for_element_present("new-question-form")
-      @browser.type "question_question_text", "DOD:"
-      @browser.select "question_core_data_attr", "label=Patient Date of Death"
-      @browser.click "question_submit"
+      @browser.type "question_element_question_attributes_question_text", "DOD:"
+      @browser.select "question_element_question_attributes_core_data_attr", "label=Patient Date of Death"
+      @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
 
       @browser.click "//input[@value='Publish']"
