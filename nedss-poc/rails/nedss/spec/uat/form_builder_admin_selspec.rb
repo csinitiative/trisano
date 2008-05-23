@@ -5,8 +5,9 @@ describe 'Form Builder Admin' do
   $dont_kill_browser = true
   
   before(:all) do
-    @form_name = NedssHelper.get_unique_name(4) + " UAT"
-    @question_to_delete_id = ""
+    @form_name = NedssHelper.get_unique_name(4) + " fb uat"
+    @question_to_delete_text = "Describe the tick " + NedssHelper.get_unique_name(4) + "fb uat" 
+    @cmr_last_name = NedssHelper.get_unique_name(2) + "fb uat" 
   end
   
   after(:all) do
@@ -52,11 +53,11 @@ describe 'Form Builder Admin' do
     @browser.is_text_present("Did you see the tick that got you?").should be_true
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
-    @browser.type "question_element_question_attributes_question_text", "Describe the tick."
+    @browser.type "question_element_question_attributes_question_text", @question_to_delete_text
     @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
     @browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Describe the tick.").should be_true
+    @browser.is_text_present(@question_to_delete_text).should be_true
     
     @question_to_delete_id = @browser.get_value("id=modified-element")
     
@@ -161,7 +162,7 @@ describe 'Form Builder Admin' do
   # it 'should create a new CMR' do
     @browser.click "link=New CMR"
     @browser.wait_for_page_to_load "30000"
-    @browser.type "event_active_patient__active_primary_entity__person_last_name", "Test"
+    @browser.type "event_active_patient__active_primary_entity__person_last_name", @cmr_last_name
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Guy"
     @browser.click "//ul[@id='tabs']/li[2]/a/em"
     @browser.select "event_disease_disease_id", "label=African Tick Bite Fever"
@@ -175,9 +176,12 @@ describe 'Form Builder Admin' do
   # it 'should have generated a form in the investigator view' do
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load "30000"
-    @browser.click "//a[contains(.,'Investigation')]"
-    @browser.click "//a[contains(.,'" + @form_name + "')]"
-    @browser.is_text_present("Describe the tick.").should be_true
+#     The following two lines are meant to navigate to the correct form tab. They
+#     aren't necessary since the is_text_present assertion that follows does not
+#     take into account what is visisble, it just looks at the full HTML source.
+#    @browser.click "//a[contains(.,'Investigation')]"
+#    @browser.click "//a[contains(.,'" + @form_name + "')]"
+    @browser.is_text_present(@question_to_delete_text).should be_true
   # end
   
   # it 'should delete a question' do
@@ -186,12 +190,21 @@ describe 'Form Builder Admin' do
     NedssHelper.click_build_form(@browser, @form_name)
     
     @browser.click "id=delete-question-#{@question_to_delete_id}"
+    wait_for_element_present("modified-element")
+    
+    @browser.click "//input[@value='Publish']"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Form was successfully published").should be_true
+    
+    @browser.click "link=View CMRs"
+    @browser.wait_for_page_to_load "30000"
+    NedssHelper.click_resource_edit(@browser, "cmrs", @cmr_last_name)
+#    @browser.click "//a[contains(.,'Investigation')]"
+#    @browser.click "//a[contains(.,'" + @form_name + "')]"
+    @browser.is_text_present(@question_to_delete_text).should be_false
     
   end
 
-  # re-publish
-  # Go back and look again
-  # Should be gone
 end
 
 
