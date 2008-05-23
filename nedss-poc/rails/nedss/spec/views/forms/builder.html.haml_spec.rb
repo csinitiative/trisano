@@ -25,15 +25,17 @@ describe "/forms/builder.html.haml" do
     @question_element.stub!(:question).and_return(@question)
     @question_element.stub!(:children?).and_return(false)
     @question_element.stub!(:form_id).and_return(1)
+    @question_element.stub!(:is_multi_valued_and_empty?).and_return(false)
+    @question_element.stub!(:in_library?).and_return(false)
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
     @question.stub!(:core_data).and_return(false)
+    @question.stub!(:core_data?).and_return(false)
     
     assigns[:form] = @form
   end
 
   it "should have basic form info and links'" do
-    pending "blowing up for reasons I can't puzzle out."
     render "/forms/builder.html.haml"
     response.should have_text(/Add a question/)
     

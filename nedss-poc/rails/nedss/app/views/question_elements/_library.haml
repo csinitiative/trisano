@@ -1,0 +1,12 @@
+%h3 Question Library
+
+%ul
+- for form_element in FormElement.roots
+  - next unless form_element.form_id.blank?
+  - if form_element.is_a? QuestionElement
+    - q_string = form_element.question.question_text 
+    - q_string += ": " + form_element.question.data_type_before_type_cast.humanize
+    - form_element.pre_order_walk do |element|
+      - q_string += ": " + element.name + ": " if element.is_a? ValueSetElement
+      - q_string += element.name + ", " if element.is_a? ValueElement
+  %li=q_string

@@ -12,8 +12,11 @@
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'
 
-    %td{:width => '100%', :align => 'left', :valign => 'top'}
+    %td{:width => '50%', :align => 'left', :valign => 'top'}
       %div{:id => "builder-mods"}
+
+    %td{:width => '50%', :align => 'left', :valign => 'top'}
+      %div{:id => "builder-library"}
 
 = link_to "Back to form edit", edit_form_path(@form)
 
