@@ -21,11 +21,18 @@ class QuestionElement < FormElement
   def add_to_library
     transaction do
       tree_id = QuestionElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-      qe = QuestionElement.new
-      qe.tree_id = tree_id
-      qe.is_template = true
-      qe.question = self.question.clone
-      qe.save
+#      qe = QuestionElement.new
+#      qe.tree_id = tree_id
+#      qe.is_template = true
+#      qe.question = self.question.clone
+#      qe.save
+      self.pre_order_walk do |element|
+        e = element.clone
+        e.tree_id = tree_id
+        e.is_template=true
+        e.question = element.question.clone if element.is_a? QuestionElement
+        e.save!
+      end
       self.update_attribute(:in_library, true)
     end
   end
