@@ -1,5 +1,5 @@
 #!/bin/bash
-export PATH=/usr/lib/firefox:$PATH
+export PATH=$SELENIUM_GRID_FIREFOX:$PATH
 
 if [ "$SELENIUM_GRID_HEADLESS" = "true" ]; then
   echo "[Starting X virtual frame buffer]"

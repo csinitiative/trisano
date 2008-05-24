@@ -29,9 +29,14 @@ namespace :nedss do
     task :run => [:report_dir] do
       require './lib/selenium_grid/multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
-      runner = MultiProcessSpecRunner.new(5)
+      runner = MultiProcessSpecRunner.new(6)
       runner.run(Dir['/home/mike/projects/ut-nedss/spec/uat/*_selspec.rb'])
       puts "[complete]"
+    end
+
+    desc "display grid hub console"
+    task :console do
+      sh "firefox http://localhost:4444/console"
     end
 
     desc "display grid run results"
