@@ -11,12 +11,12 @@ namespace :nedss do
    
     desc "start selenium grid"
     task :startgrid do     
-      sh "./script/startselgrid.sh &"
+      sh "./script/start_selenium_grid.sh &"
     end
 
     desc "stop selenium grid"
     task :stopgrid do      
-      sh "./script/stopselgrid.sh &"
+      sh "./script/stop_selenium_grid.sh &"
     end
 
     desc "Run all and then display results"
