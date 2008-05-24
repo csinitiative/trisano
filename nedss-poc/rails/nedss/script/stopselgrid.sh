@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/usr/lib/firefox:$PATH
 
-if [ "$HEADLESS" = "true" ]; then
+if [ "$SELENIUM_GRID_HEADLESS" = "true" ]; then
   echo "[Stopping X virtual frame buffer]"
   killall Xvfb
 else
@@ -12,5 +12,5 @@ fi
 echo "[Stopping Selenium Grid Hub]"
 ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile hub:stop & 
 sleep 2
-echo "[Stopping Selenium Grid RCs - port range: $PORTS]"
-ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile rc:stop_all PORTS="$PORTS" & 
+echo "[Stopping Selenium Grid RCs - port range: $SELENIUM_GRID_PORTS]"
+ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile rc:stop_all PORTS="$SELENIUM_GRID_PORTS" & 

@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/usr/lib/firefox:$PATH
 
-if [ "$HEADLESS" = "true" ]; then
+if [ "$SELENIUM_GRID_HEADLESS" = "true" ]; then
   echo "[Starting X virtual frame buffer]"
   Xvfb :99 -ac &
   export DISPLAY=:99
@@ -13,5 +13,5 @@ fi
 echo "[Starting Selenium Grid Hub]"
 ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile hub:start & 
 sleep 5
-echo "[Starting Selenium Grid RCs - port range: $PORTS]"
-ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile rc:start_all PORTS="$PORTS" ENVIRONMENT="*firefox" &  
+echo "[Starting Selenium Grid RCs - port range: $SELENIUM_GRID_PORTS]"
+ruby -S rake -f $SELENIUM_GRID_HOME/Rakefile rc:start_all PORTS="$SELENIUM_GRID_PORTS" ENVIRONMENT="*firefox" &  
