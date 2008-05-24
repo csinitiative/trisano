@@ -1,7 +1,5 @@
 require 'rake'
-#require 'spec'
 require 'rubygems'
-#require 'spec/rake/spectask'
 
 namespace :nedss do
 
@@ -12,32 +10,50 @@ namespace :nedss do
     SELENIUM_GRID_HOME = ENV['SELENIUM_GRID_HOME'] ||= '/opt/selenium-grid-1.0'
    
     desc "start selenium grid"
-    task :startgrid do
-     
-      sh "./script/startselgrid.sh"
+    task :startgrid do     
+      sh "./script/startselgrid.sh &"
     end
 
     desc "stop selenium grid"
-    task :stopgrid do
-      
-      sh "./script/stopselgrid.sh"
+    task :stopgrid do      
+      sh "./script/stopselgrid.sh &"
     end
 
-    desc("Run all behaviors in parallel spawing multiple processes")
+    desc "Run all and then display results"
+    task :runresults do
+      Rake::Task["nedss:selenium:run"].invoke
+      Rake::Task["nedss:selenium:results"].invoke
+    end
+
+    desc "Run all behaviors in parallel spawing multiple processes"
     task :run => [:report_dir] do
       require './lib/selenium_grid/multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
       runner = MultiProcessSpecRunner.new(5)
-
       runner.run(Dir['/home/mike/projects/ut-nedss/spec/uat/*_selspec.rb'])
-
+      puts "[complete]"
     end
 
+    desc "display grid run results"
+    task :results do
+      sh "firefox ./selenium_reports/Aggregated-Selenium-Report.html"
+    end
+
+    desc "resets the selenium reports dir"
     task :report_dir do
       mkdir_p "./selenium_reports"
       rm_f "./selenium_reports/*.html"
     end
 
+    desc "displays the active grid processes"
+    task :ps do
+      sh "ps -aef | grep thoughtworks"
+    end
+
+    desc "tail the selenium hub log"
+    task :hublog do
+      sh "tail -f #{SELENIUM_GRID_HOME}/log/hub.log"
+    end
     
   end
   
