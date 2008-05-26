@@ -42,15 +42,27 @@ module NedssHelper
   def click_add_question_to_section(browser, section)
     s_id = get_section_id(browser, section)
     browser.click("add-question-" + s_id)
-    @browser.wait_for_element_present("new-question-form")
+    puts "Clicked on add"
+    sleep 2 #TODO replacing the wait below until it works properly
+    #@browser.wait_for_element_present("new-question-form") #This is taking 60seconds - it's not working
   end
   
   #TODO
-  def click_question_on_section(browser, question, action)
+  def click_question(browser, question, action)
     case action
     when "edit"
+      q_id = get_question_id(browser, question)
+      browser.click("edit-question-" + q_id.to_s)
+      puts "Clicked on edit"
+      sleep 2 #TODO replacing the wait below until it works properly
+      #browser.wait_for_element_present("edit-question-form")
     when "delete"
+      q_id = get_question_id(browser, question)
+      browser.click("delete-question-" + q_id.to_s)
+      puts "Clicked on delete"
+      sleep 2 #TODO - should probably replace this with the element name, if there is one
     when "Add value set"
+      #TODO
     else #TODO - this is an error
     end
   end
@@ -92,9 +104,13 @@ module NedssHelper
     return ret
   end
   
-  #TODO
   def get_question_id(browser, name)
-    return 6
+    htmlSource = browser.get_html_source
+    pos2 = htmlSource.index(name)
+    pos1 = htmlSource.rindex("question_", pos2) + 9
+    pos3 = htmlSource.rindex("\"", pos2) -1
+    ret = htmlSource[pos1..pos3]
+    return ret
   end
   
   def get_random_word

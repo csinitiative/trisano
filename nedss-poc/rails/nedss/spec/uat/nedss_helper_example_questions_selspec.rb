@@ -6,6 +6,7 @@ describe "Form builder admin" do
     @s2_name = NedssHelper.get_unique_name(4)
     @q_name = NedssHelper.get_unique_name(25)
     @q2_name = NedssHelper.get_unique_name(15)
+    @q_edit_name = NedssHelper.get_unique_name(35)
   end
   before(:each) do
     #put any setup tasks here
@@ -59,7 +60,8 @@ describe "Form builder admin" do
     @browser.type "question_element_question_attributes_question_text", @q_name
     @browser.select "question_element_question_attributes_data_type", "label=Phone Number"
     @browser.click "question_element_submit"
-    @browser.wait_for_element_not_present("new-question-form")
+    sleep 2
+    #@browser.wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   
@@ -68,12 +70,27 @@ describe "Form builder admin" do
     @browser.type "question_element_question_attributes_question_text", @q2_name
     @browser.select "question_element_question_attributes_data_type", "label=Phone Number"
     @browser.click "question_element_submit"
-    @browser.wait_for_element_not_present("new-question-form")
+    sleep 2
+    #@browser.wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   
-  it "should allow admin to edit questions on the section"
-  it "should allow admin to delete questions from the section"
+  it "should allow admin to edit the first question" do
+    NedssHelper.click_question(@browser, @q_name, "edit")
+    @browser.type "question_element_question_attributes_question_text", @q_edit_name
+    @browser.click "question_element_submit"
+    sleep 2
+    #@browser.wait_for_element_not_present("new-question-form")
+    @browser.is_text_present("Question was successfully updated.").should be true
+    @browser.is_text_present(@q_edit_name).should be true
+    @browser.is_text_present(@q_name).should be false
+  end
+  
+  it "should allow admin to delete the second question from the section" do
+    NedssHelper.click_question(@browser, @q2_name, "delete")
+    @browser.is_text_present(@q2_name).should be false
+  end
+  
   it "should allow admin to copy questions to the form library"  
     
 end
