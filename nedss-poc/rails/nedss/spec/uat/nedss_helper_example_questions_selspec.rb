@@ -85,7 +85,7 @@ describe "Form builder admin" do
     @browser.is_text_present(@q_edit_name).should be true
     @browser.is_text_present(@q_name).should be false
   end
-  
+  
   it "should allow admin to delete the second question from the section" do
     NedssHelper.click_question(@browser, @q2_name, "delete")
     @browser.is_text_present(@q2_name).should be false
