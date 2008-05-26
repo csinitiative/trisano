@@ -1,6 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
   
-  #$browser = true
   describe 'User functionality for searching for CMRs by city and county' do
     
     it 'should find or add Chuckles in Provo, Utah county' do
