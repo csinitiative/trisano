@@ -43,7 +43,7 @@ module NedssHelper
     s_id = get_section_id(browser, section)
     browser.click("add-question-" + s_id)
     sleep 2 #TODO replacing the wait below until it works properly
-    #@browser.wait_for_element_present("new-question-form") #This is taking 60seconds - it's not working
+    #@wait_for_element_present("new-question-form") #This is taking 60seconds - it's not working
   end
   
   #TODO
@@ -53,7 +53,7 @@ module NedssHelper
       q_id = get_question_id(browser, question)
       browser.click("edit-question-" + q_id.to_s)
       sleep 2 #TODO replacing the wait below until it works properly
-      #browser.wait_for_element_present("edit-question-form")
+      #wait_for_element_present("edit-question-form")
     when "delete"
       q_id = get_question_id(browser, question)
       browser.click("delete-question-" + q_id.to_s)
