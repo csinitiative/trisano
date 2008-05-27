@@ -7,6 +7,7 @@ describe 'Form Builder Admin' do
     @question_to_delete_text = "Describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_edit_text = "Can you describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_edit_modified_text = "Can you describe the tick edited " + NedssHelper.get_unique_name(4) + " fb uat" 
+    @question_to_inactivate_text = "Did you see the tick that got you " + NedssHelper.get_unique_name(4) + " fb uat" 
     @cmr_last_name = NedssHelper.get_unique_name(2) + " fb uat" 
   end
   
@@ -52,11 +53,14 @@ describe 'Form Builder Admin' do
     @browser.is_text_present("Did you go into the tall grass?").should be_true
     @browser.click "link=Add a question"
     wait_for_element_present("new-question-form")
-    @browser.type "question_element_question_attributes_question_text", "Did you see the tick that got you?"
+    @browser.type "question_element_question_attributes_question_text", @question_to_inactivate_text
     @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Did you see the tick that got you?").should be_true
+    @browser.is_text_present(@question_to_inactivate_text).should be_true
+    
+    @question_to_inactivate_id = @browser.get_value("id=modified-element")
+    
     @browser.click "link=Add a question"    
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", @question_to_delete_text
@@ -173,6 +177,7 @@ describe 'Form Builder Admin' do
 
     @browser.is_text_present(@question_to_delete_text).should be_true
     @browser.is_text_present(@question_to_edit_text).should be_true
+    @browser.is_text_present(@question_to_inactivate_text).should be_true
     @browser.is_text_present(@question_to_edit_modified_text).should be_false
     
     @browser.click "link=Forms"
@@ -190,6 +195,12 @@ describe 'Form Builder Admin' do
     @browser.is_text_present(@question_to_edit_text).should be_false
     @browser.is_text_present(@question_to_edit_modified_text).should be_true
     
+    @browser.click "id=edit-question-#{@question_to_inactivate_id}"
+     wait_for_element_present("edit-question-form")
+    @browser.click "question_element_is_active_false"
+    @browser.click "question_element_submit"    
+    wait_for_element_not_present("edit-question-form")
+    
     @browser.click "//input[@value='Publish']"
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Form was successfully published").should be_true
@@ -199,6 +210,7 @@ describe 'Form Builder Admin' do
     NedssHelper.click_resource_edit(@browser, "cmrs", @cmr_last_name)
     @browser.is_text_present(@question_to_delete_text).should be_false
     @browser.is_text_present(@question_to_edit_text).should be_false
+    @browser.is_text_present(@question_to_inactivate_text).should be_false
     @browser.is_text_present(@question_to_edit_modified_text).should be_true
     
   end
