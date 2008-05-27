@@ -107,8 +107,11 @@ module FormsHelper
     
     question = element.question
     
-    result += "<li id='question_" + element.id.to_s + "'>Question: "
-    result += question.question_text
+    result += "<li id='question_" + element.id.to_s + "'>"
+
+    result += "<span class='inactive-question'>" unless element.is_active
+    result += "Question: " + question.question_text
+    result += "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
     
     result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + library_link(element) if (include_children)
     

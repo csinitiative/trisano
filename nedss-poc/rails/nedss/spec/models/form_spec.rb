@@ -63,8 +63,8 @@ describe Form do
       form_to_publish.status.should eql("Published")
     end
     
-     it "should give the base form element a tree id" do
-       pending
+    it "should give the base form element a tree id" do
+      pending
     end
     
     it "should make a copy of itself and give the copy published version properties" do
@@ -173,6 +173,30 @@ describe Form do
       
       demo_q1.question.should_not be_nil
       demo_q1.question.question_text.should eql(questions(:demo_q1).question_text)
+    end
+    
+    it "should not make a copy of the inactive questions" do
+      form_to_publish = Form.find(1)
+      
+      default_view = form_to_publish.form_base_element.children[0]
+      demo_section = default_view.children[0]
+      demo_group = demo_section.children[0]
+      demo_q1 = demo_group.children[0]
+      
+      demo_q1.question.question_text.should eql(questions(:demo_q1).question_text)
+      demo_q1.is_active = false
+      demo_q1.save
+      
+      published_form = form_to_publish.publish!
+      
+      default_view = published_form.form_base_element.children[0]
+      demo_section = default_view.children[0]
+      demo_group = demo_section.children[0]
+      demo_q1 = demo_group.children[0]
+      
+      demo_q1.question.should_not be_nil
+      demo_q1.question.question_text.should_not eql(questions(:demo_q1).question_text)
+      demo_q1.question.question_text.should eql(questions(:demo_q2).question_text)
     end
     
   end
