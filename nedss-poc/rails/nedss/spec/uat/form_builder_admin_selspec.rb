@@ -12,6 +12,10 @@ describe 'Form Builder Admin' do
   
   after(:all) do
     @form_name = nil
+    @question_to_delete_text = nil
+    @question_to_edit_text = nil
+    @question_to_edit_modified_text = nil
+    @cmr_last_name = nil
   end
   
   it 'should create a new form and allow navigation to builder' do

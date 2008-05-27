@@ -30,7 +30,7 @@ namespace :nedss do
       require './lib/selenium_grid/multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
       runner = MultiProcessSpecRunner.new(6)
-      runner.run(Dir['/home/mike/projects/ut-nedss/spec/uat/*_selspec.rb'])
+      runner.run(Dir['./spec/uat/*_selspec.rb'])
       puts "[complete]"
     end
 

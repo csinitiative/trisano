@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 module NedssHelper
   #Define constants for standard resources
-  Form = "forms"
+  FORM = "forms"
   
   # Use click_resource methods from any standard resource index page
   
