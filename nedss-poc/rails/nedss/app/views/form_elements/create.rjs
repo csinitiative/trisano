@@ -2,6 +2,5 @@ page.replace_html 'root-element-list', :partial => 'forms/elements'
 page.replace_html 'builder-info', "<span style='color:green'>" + flash[:notice] + "</span>" +
   "<input type='hidden' id='modified-element' name='deleted-element-id' value='" + @form_element.id.to_s + "'/>"
 page.replace_html 'builder-mods', ""
-page.replace_html 'builder-library', ""
 page.visual_effect(:highlight, 'root-element-list')
 flash[:notice] = ""

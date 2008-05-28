@@ -1,7 +1,15 @@
 
 %table{:width => '100%', :cellpadding => '5', :cellspacing => '0'}
   %tr
-    %td{:valign=>'top', :nowrap => ''}
+    %td{:width => '40%', :align => 'left', :valign => 'top'}
+      %h3
+        Element Library
+      %div{:id => "builder-library"}
+
+      %ul{:id => "root-element-list"}
+        = render :partial => 'forms/library_elements'
+
+    %td{:width => '40%', :valign=>'top', :nowrap => ''}
       %h3
         Form Hierarchy
       %div{:id => "builder-info"}
@@ -11,16 +19,11 @@
 
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'
+        %br
+        %br
+        = button_to "Publish", {:action => "publish", :id => @form.id}
 
-    %td{:width => '50%', :align => 'left', :valign => 'top'}
+    %td{:width => '20%', :align => 'left', :valign => 'top'}
       %div{:id => "builder-mods"}
 
-    %td{:width => '50%', :align => 'left', :valign => 'top'}
-      %div{:id => "builder-library"}
-
 = link_to "Back to form edit", edit_form_path(@form)
-
-%br
-%br
-
-= button_to "Publish", {:action => "publish", :id => @form.id}
