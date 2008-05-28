@@ -174,7 +174,7 @@ module FormsHelper
       unless element.is_multi_valued_and_empty?
         result = "&nbsp;|&nbsp;<small>"
         unless element.in_library?
-          result += "<a href='#' onclick=\"new Ajax.Request('../../question_elements/" + element.id.to_s + 
+          result += "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
           "/to_library', {asynchronous:true, evalScripts:true, method:'post'}); return false;\">Copy to Library</a>"
         else
           result += "Copied to libary"

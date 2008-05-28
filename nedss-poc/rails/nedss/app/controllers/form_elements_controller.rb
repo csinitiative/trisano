@@ -84,4 +84,15 @@ class FormElementsController < ApplicationController
     end
   end
   
+  def to_library
+    @form_element = FormElement.find(params[:id])
+    if @form_element.add_to_library
+      flash[:notice] = "#{@form_element.type.humanize} successfully copied to library."
+      @form = Form.find(@form_element.form_id)
+      render :action => "create"
+    else
+      flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
+      render :template => 'rjs-error'
+    end
+  end
 end
