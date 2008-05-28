@@ -22,6 +22,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :core_view_elements
   
+  map.resources :view_elements
+  
   map.resources :form_elements, :member => { :to_library => :post }
 
   map.resources :users

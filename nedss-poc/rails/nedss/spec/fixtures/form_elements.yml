@@ -11,7 +11,7 @@ base:
   parent_id: 
     
 default_view:
-  name: 
+  name: Default View
   form_id: "1"
   lft: "2"
   type: ViewElement

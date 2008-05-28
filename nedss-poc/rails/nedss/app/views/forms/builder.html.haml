@@ -6,7 +6,7 @@
         Element Library
       %div{:id => "builder-library"}
 
-      %ul{:id => "root-element-list"}
+      %ul{:id => "library-element-list"}
         = render :partial => 'forms/library_elements'
 
     %td{:width => '40%', :valign=>'top', :nowrap => ''}
@@ -16,6 +16,8 @@
 
       %small
         = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_id => @form.id}, :method => :get)
+        &nbsp;|&nbsp;
+        = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_id => @form.id}, :method => :get)
 
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'

@@ -1,0 +1,1 @@
+page.replace_html 'builder-mods', :partial => 'view_elements/new', :locals => {:view_element => @view_element}

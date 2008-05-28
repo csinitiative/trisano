@@ -1,6 +1,5 @@
 class CoreViewElementsController < ApplicationController
-  # GET /core_view_elements
-  # GET /core_view_elements.xml
+
   def index
     @core_view_elements = CoreViewElement.find(:all)
 
@@ -10,8 +9,6 @@ class CoreViewElementsController < ApplicationController
     end
   end
 
-  # GET /core_view_elements/1
-  # GET /core_view_elements/1.xml
   def show
     @core_view_element = CoreViewElement.find(params[:id])
 
@@ -21,7 +18,6 @@ class CoreViewElementsController < ApplicationController
     end
   end
 
-  # Just used through RJS
   def new
     begin
       @core_view_element = CoreViewElement.new
@@ -33,7 +29,6 @@ class CoreViewElementsController < ApplicationController
     end
   end
 
-  # GET /core_view_elements/1/edit
   def edit
     @core_view_element = CoreViewElement.find(params[:id])
   end
@@ -53,8 +48,6 @@ class CoreViewElementsController < ApplicationController
     end
   end
 
-  # PUT /core_view_elements/1
-  # PUT /core_view_elements/1.xml
   def update
     @core_view_element = CoreViewElement.find(params[:id])
 
@@ -70,8 +63,6 @@ class CoreViewElementsController < ApplicationController
     end
   end
 
-  # DELETE /core_view_elements/1
-  # DELETE /core_view_elements/1.xml
   def destroy
     @core_view_element = CoreViewElement.find(params[:id])
     @core_view_element.destroy
