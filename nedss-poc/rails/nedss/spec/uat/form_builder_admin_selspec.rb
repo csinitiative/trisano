@@ -89,8 +89,8 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a value"
     wait_for_element_present("value_set_element_new_value_element_attributes__name")
     @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Maybe"
+    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
+    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Maybe"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Yes/No/Maybe").should be_true
@@ -101,7 +101,7 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a value"
     wait_for_element_present("value_set_element_new_value_element_attributes__name")
     @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
+    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
     @browser.click "link=Add value set"
@@ -111,7 +111,7 @@ describe 'Form Builder Admin' do
     @browser.click "link=Add a value"
     wait_for_element_present("value_set_element_new_value_element_attributes__name")
     @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-    @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
+    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
 
@@ -134,11 +134,8 @@ describe 'Form Builder Admin' do
     @browser.click "link=Edit value set"
     wait_for_element_present("edit-value-set-form")
     
-    # Find a better way to sniff out the value we want to edit, XPath or some other method
-    @browser.type "document.forms[0].elements[4]", "Edited value"
-    
-    # Find a better way to sniff out the No radio button
-    @browser.check "document.forms[0].elements[6]"
+    @browser.type "document.forms['value-set-element-edit-form'].elements[4]", "Edited value"
+    @browser.check "document.forms['value-set-element-edit-form'].elements[6]"
     
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("edit-value-set-form")

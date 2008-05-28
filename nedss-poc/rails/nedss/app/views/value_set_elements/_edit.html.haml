@@ -6,7 +6,7 @@
 
   = error_messages_for :value_set_element
 
-  - remote_form_for(value_set_element, :html => { :method => 'put' }) do |f|
+  - remote_form_for(value_set_element, :html => { :method => 'put', :name => 'value-set-element-edit-form'}) do |f|
 
     = render :partial => 'form', :locals => { :f => f }
 
