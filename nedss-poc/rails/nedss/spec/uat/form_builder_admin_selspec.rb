@@ -156,7 +156,7 @@ describe 'Form Builder Admin' do
     wait_for_element_not_present("edit-value-set-form")
     @browser.is_text_present("Added after value").should be_true
 
-    @browser.click "//input[@value='Publish']"
+    @browser.click '//input[@value="Publish"]'
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Form was successfully published").should be_true
 
