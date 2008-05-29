@@ -5,15 +5,13 @@
       %h3
         Element Library
       %div{:id => "builder-library"}
-        - form_tag("../../form_elements/search", :method => :get) do
 
-          %label
-            Filter Library
-            = text_field_tag :lib_filter
+        %label
+          Filter Library
+          = text_field_tag :lib_filter
       
         = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
 
-        /%div{:id => "library_drop_area", :style => "background-color: red, margin-bottom: 10px"}
         %ul{:id => "library-element-list", :style => "border: solid 1px; background: #ededed; padding-bottom: 3em"}
           = render :partial => 'forms/library_elements'
 
