@@ -193,7 +193,8 @@ module FormsHelper
 
   def add_section_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
-      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">Add a section</a></small>"
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-section-" + 
+      element.id.to_s + "' class='add-section' name='add-section'>Add a section</a></small>"
   end
 
   def add_question_link(element)
