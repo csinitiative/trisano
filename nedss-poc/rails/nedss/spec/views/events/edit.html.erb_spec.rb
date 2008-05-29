@@ -10,7 +10,7 @@ describe "/cmrs/edit.html.erb" do
     @participation = mock_model(Participation)
     @primary_entity =  mock_person_entity
     @secondary_entity =  mock_person_entity
-#    @jurisdiction_entity = mock_model(Entity, :to_param => '1')
+    #    @jurisdiction_entity = mock_model(Entity, :to_param => '1')
     
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
@@ -49,8 +49,8 @@ describe "/cmrs/edit.html.erb" do
     @secondary_entity.stub!(:person).and_return(@person)
     
     @active_reporting_agency.stub!(:active_secondary_entity).and_return(@secondary_entity)
-#    @active_jurisdiction.stub!(:active_secondary_entity).and_return(@jurisdiction)
-#    @active_jurisdiction.stub!(:secondary_entity_id).and_return('1')
+    #    @active_jurisdiction.stub!(:active_secondary_entity).and_return(@jurisdiction)
+    #    @active_jurisdiction.stub!(:secondary_entity_id).and_return('1')
 
     @active_reporter.stub!(:active_secondary_entity).and_return(@secondary_entity)
     @active_hospital.stub!(:secondary_entity_id).and_return(13)
@@ -158,11 +158,20 @@ describe "/cmrs/edit.html.erb" do
     end
 
     def initialize_full_form
-      @base_element.should_receive(:pre_order_walk).and_yield(@view_element).
-                                                    and_yield(@section_element).
-                                                    and_yield(@question_element_1).
-                                                    and_yield(@question_element_2).
-                                                    and_yield(@question_element_3)
+      @base_element.stub!(:pre_order_walk).and_yield(@view_element).
+        and_yield(@section_element).
+        and_yield(@question_element_1).
+        and_yield(@question_element_2).
+        and_yield(@question_element_3)
+      @base_element.should_receive(:children_count_by_type).and_return(1)
+      @base_element.should_receive(:children_by_type).and_return([@view_element])
+       
+      @view_element.stub!(:pre_order_walk).and_yield(@section_element).
+        and_yield(@question_element_1).
+        and_yield(@question_element_2).
+        and_yield(@question_element_3)
+       
+       
     end
 
     it "should not render if CMR status is not 'under investigation or not reopened'" do
@@ -209,16 +218,14 @@ describe "/cmrs/edit.html.erb" do
         response.should have_text(/No investigation forms exist for/)
       end
 
-      it "should display a tab with the form name" do
+      it "should display a list of forms" do
 
         initialize_full_form
 
         do_render
-        response.should have_tag("ul#sub_form_tabs") do
+        response.should have_tag("ul#investigation_form_list") do
           with_tag("li") do
-            with_tag("a[href=?]", "#form_investigate_#{@form.id}") do
-              with_tag("em", /#{@form.name}/)
-            end
+            with_tag("a[href=?]", "#")
           end
         end
       end
@@ -228,7 +235,7 @@ describe "/cmrs/edit.html.erb" do
         initialize_full_form
 
         do_render
-        response.should have_tag("h2", /#{@form.description}/)
+        response.should have_tag("h2", /#{@form.name}/)
       end
 
       it "should display all widget types, properly named" do

@@ -6,6 +6,19 @@ function mark_for_destroy(element) {
   $(element).up('.role_membership').hide(); 
 }
 
+function toggle_investigator_forms(id_to_show) {
+  
+  id_to_hide = $("active_form").value
+  id_to_hide = "form_investigate_" + id_to_hide
+  
+  $("active_form").value = id_to_show
+  id_to_show = "form_investigate_" + id_to_show
+
+  $(id_to_hide).hide()
+  $(id_to_show).show()
+  
+}
+
 function setUpSearchFields() {
   if (document.getElementById("name").value.length > 0) {
     document.getElementById("sw_first_name").disabled = true;
