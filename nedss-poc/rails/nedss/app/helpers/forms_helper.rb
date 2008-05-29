@@ -106,14 +106,17 @@ module FormsHelper
     result = ""
     
     question = element.question
+    question_id = "question_#{element.id}"
     
-    result += "<li id='question_" + element.id.to_s + "'>"
+    result += "<li class='question-item' id='#{question_id}'>"
 
-    result += "<span class='inactive-question'>" unless element.is_active
+    css_class = element.is_active? ? "question" : "inactive-question"
+    result += "<span class='#{css_class}'>"
     result += "Question: " + question.question_text
-    result += "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
+    result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
+    result += "</span>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + library_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) if (include_children)
     
     if include_children && element.is_multi_valued_and_empty?
       result += "<br/>"
@@ -130,6 +133,8 @@ module FormsHelper
     end
     
     result += "</li>"
+
+    result += draggable_element question_id, :ghosting => true, :revert => true
     
     result
   end
@@ -169,6 +174,7 @@ module FormsHelper
   
   private
 
+  # Delete this when all else is working
   def library_link(element)
     unless element.question.core_data?
       unless element.is_multi_valued_and_empty?

@@ -11,11 +11,13 @@
             Filter Library
             = text_field_tag :lib_filter
       
-      = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
+        = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
 
-      %ul{:id => "library-element-list"}
-        = render :partial => 'forms/library_elements'
+        /%div{:id => "library_drop_area", :style => "background-color: red, margin-bottom: 10px"}
+        %ul{:id => "library-element-list", :style => "border: solid 1px; background: #ededed; padding-bottom: 3em"}
+          = render :partial => 'forms/library_elements'
 
+      = drop_receiving_element("library-element-list", :update => "library-element-list", :accept => 'question-item', :hoverclass => "library-drop-active", :url => {:action => 'to_library'})
     %td{:width => '40%', :valign=>'top', :nowrap => ''}
       %h3
         Form Hierarchy
@@ -28,8 +30,8 @@
 
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'
-        %br
-        %br
+
+      /= sortable_element("root-element-list",    :containment => ["root-element-list", "library-element-list"], :constraint => false, :ghosting => true, :revert => true, :dropOnEmpty => true, :url => { :controller => 'form_elements', :action => 'to_library'})
       = button_to "Publish", {:action => "publish", :id => @form.id}
 
     %td{:width => '20%', :align => 'left', :valign => 'top'}

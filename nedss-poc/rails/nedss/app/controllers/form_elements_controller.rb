@@ -84,23 +84,11 @@ class FormElementsController < ApplicationController
     end
   end
   
-  def to_library
-    @form_element = FormElement.find(params[:id])
-    if @form_element.add_to_library
-      flash[:notice] = "#{@form_element.type.humanize} successfully copied to library."
-      @form = Form.find(@form_element.form_id)
-      render :action => "create"
-    else
-      flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
-      render :template => 'rjs-error'
-    end
-  end
-
   def filter_elements
     if params[:filter_by].blank?
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     else
-      @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT question_element_id FROM questions WHERE question_text LIKE '%#{params[:filter_by]}%')")
+      @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT question_element_id FROM questions WHERE question_text ILIKE '%#{params[:filter_by]}%')")
     end
     p @library_elements
     render :partial => "forms/library_elements"

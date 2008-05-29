@@ -1,9 +1,12 @@
-%ul
-- for form_element in @library_elements
-  - if form_element.is_a? QuestionElement
-    - q_string = form_element.question.question_text 
-    - q_string += ": " + form_element.question.data_type_before_type_cast.humanize
-    - form_element.pre_order_walk do |element|
-      - q_string += ": " + element.name + ": " if element.is_a? ValueSetElement
-      - q_string += element.name + ", " if element.is_a? ValueElement
-  %li=q_string
+- if @library_elements.empty?
+  %br
+  Drag Form Elements Here To Add To Library.
+- else
+  - for form_element in @library_elements
+    - if form_element.is_a? QuestionElement
+      - q_string = form_element.question.question_text 
+      - q_string += ": " + form_element.question.data_type_before_type_cast.humanize
+      - form_element.pre_order_walk do |element|
+        - q_string += ": " + element.name + ": " if element.is_a? ValueSetElement
+        - q_string += element.name + ", " if element.is_a? ValueElement
+    %li=q_string

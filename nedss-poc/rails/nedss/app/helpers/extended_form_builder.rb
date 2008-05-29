@@ -78,8 +78,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def get_values(question_element)
-    p question_element
-    question_element.children.find { |child| p child; child.is_a?(ValueSetElement) }.children.collect { |value| value.name }
+    question_element.children.find { |child| child.is_a?(ValueSetElement) }.children.collect { |value| value.name }
   end
 
 end

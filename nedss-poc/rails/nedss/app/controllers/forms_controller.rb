@@ -131,4 +131,17 @@ class FormsController < AdminController
     end
   end
   
+  def to_library
+    element_id = params[:id].split("_")[1]
+    @form_element = FormElement.find(element_id)
+    if @form_element.add_to_library
+      flash[:notice] = "#{@form_element.type.humanize} successfully copied to library."
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      render :partial => "library_elements"
+    else
+      flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
+      render :template => 'rjs-error'
+    end
+  end
+
 end
