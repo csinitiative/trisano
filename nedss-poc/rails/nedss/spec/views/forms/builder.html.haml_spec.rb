@@ -28,12 +28,15 @@ describe "/forms/builder.html.haml" do
     @question_element.stub!(:is_multi_valued_and_empty?).and_return(false)
     @question_element.stub!(:in_library?).and_return(false)
     @question_element.stub!(:is_active).and_return(true)
+    @question_element.stub!(:pre_order_walk).and_yield(nil)
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
+    @question.stub!(:data_type_before_type_cast).and_return("single_line_input")
     @question.stub!(:core_data).and_return(false)
     @question.stub!(:core_data?).and_return(false)
     
     assigns[:form] = @form
+    assigns[:library_elements] = [@question_element]
   end
 
   it "should have basic form info and links'" do

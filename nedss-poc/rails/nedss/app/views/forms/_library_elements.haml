@@ -1,5 +1,5 @@
 %ul
-- for form_element in FormElement.roots(:conditions => ["form_id IS NULL"])
+- for form_element in @library_elements
   - if form_element.is_a? QuestionElement
     - q_string = form_element.question.question_text 
     - q_string += ": " + form_element.question.data_type_before_type_cast.humanize

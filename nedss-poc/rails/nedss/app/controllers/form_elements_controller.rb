@@ -95,4 +95,14 @@ class FormElementsController < ApplicationController
       render :template => 'rjs-error'
     end
   end
+
+  def filter_elements
+    if params[:filter_by].blank?
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+    else
+      @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT question_element_id FROM questions WHERE question_text LIKE '%#{params[:filter_by]}%')")
+    end
+    p @library_elements
+    render :partial => "forms/library_elements"
+  end
 end

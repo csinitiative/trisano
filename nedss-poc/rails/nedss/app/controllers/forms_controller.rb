@@ -85,6 +85,7 @@ class FormsController < AdminController
   
   def builder
     @form = Form.find(params[:id])
+    @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
 
     respond_to do |format|
       format.html { render :template => "forms/builder" }
