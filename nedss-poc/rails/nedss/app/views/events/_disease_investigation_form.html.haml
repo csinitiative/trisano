@@ -25,7 +25,7 @@
             %div{:id => "form_investigate_#{form.id}", :style => "display: none;"}
               %h2
                 = form_reference.form.name
-
+                
               - f.fields_for(:form_references, form_reference, :builder => ExtendedFormBuilder) do |fr|
                 = fr.hidden_field(:form_id, :index => form_reference.id)
 
@@ -55,3 +55,8 @@
                             
               - else
                 = render_investigator_view(form.form_base_element.children_by_type("ViewElement").first, f)
+              
+              %div{:align => "right"}
+                %small
+                  Version 
+                  = form_reference.form.version

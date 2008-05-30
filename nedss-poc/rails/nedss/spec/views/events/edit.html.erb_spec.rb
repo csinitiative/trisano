@@ -110,24 +110,29 @@ describe "/cmrs/edit.html.erb" do
       @form.stub!(:name).and_return("A form name")
       @form.stub!(:description).and_return("A form description")
       @form.stub!(:form_base_element).and_return(@base_element)
+      @form.stub!(:version).and_return(1)
     
       @base_element.stub!(:children).and_return([@view_element])
       @view_element.stub!(:children).and_return([@section_element])
       @section_element.stub!(:name).and_return("Section Name")
       @section_element.stub!(:description).and_return("Section Description")
       @section_element.stub!(:children).and_return([@question_element_1, @question_element_2, @question_element_3])
+      @section_element.stub!(:level).and_return(2)
 
       @question_element_1.stub!(:question).and_return(@question_1)
       @question_element_1.stub!(:form_id).and_return(1)
       @question_element_1.stub!(:children).and_return([])
+      @question_element_1.stub!(:level).and_return(3)
 
       @question_element_2.stub!(:question).and_return(@question_2)
       @question_element_2.stub!(:form_id).and_return(1)
       @question_element_2.stub!(:children).and_return([])
+      @question_element_2.stub!(:level).and_return(3)
       
       @question_element_3.stub!(:question).and_return(@question_3)
       @question_element_3.stub!(:form_id).and_return(1)
       @question_element_3.stub!(:children).and_return([@value_set])
+      @question_element_3.stub!(:level).and_return(3)
       
       @value_set.stub!(:children).and_return([@value_1, @value_2])
 
@@ -158,18 +163,12 @@ describe "/cmrs/edit.html.erb" do
     end
 
     def initialize_full_form
-      @base_element.stub!(:pre_order_walk).and_yield(@view_element).
-        and_yield(@section_element).
-        and_yield(@question_element_1).
-        and_yield(@question_element_2).
-        and_yield(@question_element_3)
+
       @base_element.should_receive(:children_count_by_type).and_return(1)
       @base_element.should_receive(:children_by_type).and_return([@view_element])
+      @view_element.should_receive(:full_set).and_return([@section_element, @question_element_1,@question_element_2, @question_element_3])
        
-      @view_element.stub!(:pre_order_walk).and_yield(@section_element).
-        and_yield(@question_element_1).
-        and_yield(@question_element_2).
-        and_yield(@question_element_3)
+
        
        
     end

@@ -34,6 +34,7 @@ module FormsHelper
     end
     
     result += add_section_link(element)
+    result += add_question_link(element)
 
     result += "</li>"
     
