@@ -12,10 +12,10 @@
       
         = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
 
-        %ul{:id => "library-element-list", :style => "border: solid 1px; background: #ededed; padding-bottom: 3em"}
+        %ul{:id => "library-element-list"}
           = render :partial => 'forms/library_elements'
 
-      = drop_receiving_element("library-element-list", :update => "library-element-list", :accept => 'question-item', :hoverclass => "library-drop-active", :url => {:action => 'to_library'})
+      = drop_receiving_element("library-element-list", :update => "library-element-list", :accept => 'question-item', :hoverclass => 'library-drop-active', :complete => visual_effect(:highlight, 'library-element-list'), :url => {:action => 'to_library'})
     %td{:width => '40%', :valign=>'top', :nowrap => ''}
       %h3
         Form Hierarchy

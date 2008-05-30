@@ -156,6 +156,14 @@ div.progressBar div.background {
     color: #999
 }
 
-ul.library-drop-active {
-  background-color: #B9D3EE;
+#library-element-list, #root-element-list {
+  border: solid 1px;
+  border-color: #e5e5e5;
+  background: #f5f5f5;
+  padding: 2em;
+  margin-right: 2em;
+}
+
+.library-drop-active {
+  background: #b9d3ee;
 }
