@@ -53,8 +53,8 @@ describe 'Form Builder Admin' do
   it 'should do all this stuff...' do
     
     add_questions
+    reorder_elements
     add_value_sets
-    reorder_questions
     edit_value_sets
     add_and_populate_tab
     publish
@@ -146,12 +146,14 @@ def add_value_sets
   wait_for_element_not_present("new-value-set-form")
 end
 
-def reorder_questions
-  @browser.click "link=Reorder elements"
-  wait_for_element_present("reorder-list")
-  @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
-  @browser.drag_and_drop "//ul[@id='reorder-list']/li[4]", "0,-80"
-  @browser.get_eval("nodes = window.document.getElementById(\"reorder-list\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
+def reorder_elements
+  @browser.set_speed(500)
+  reorderable_section = @browser.get_value("id=question-section")
+  @browser.get_eval("nodes = window.document.getElementById(\"#{reorderable_section}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
+  @browser.drag_and_drop "//ul[@id='#{reorderable_section}']/li[4]", "0,-20"
+  sleep(2)
+  @browser.get_eval("nodes = window.document.getElementById(\"#{reorderable_section}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
+  @browser.set_speed(0)
 end
 
 def edit_value_sets
@@ -169,6 +171,7 @@ def edit_value_sets
   wait_for_element_present("edit-value-set-form")
     
   @browser.type "document.forms['value-set-element-edit-form'].elements[4]", "Edited value"
+  sleep(5)
   @browser.check "document.forms['value-set-element-edit-form'].elements[6]"
     
   @browser.click "value_set_element_submit"

@@ -91,6 +91,8 @@ module FormsHelper
       end
       result += "</ul>"
       result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
+      result += "<input type='hidden' id='question-section' name='question-section-id' value='section_#{element.id}_children'/>"
+
     end
     
     result += add_question_link(element) if (include_children)
