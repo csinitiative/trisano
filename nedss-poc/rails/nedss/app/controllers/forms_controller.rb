@@ -107,20 +107,11 @@ class FormsController < AdminController
     end
   end
   
-  def order_section_children_show
-    begin
-      @section = FormElement.find(params[:form_element_id])
-    rescue Exception => ex
-      logger.debug ex
-      flash[:notice] = 'Unable to display the reordering form at this time.'
-      render :template => 'rjs-error'
-    end
-  end
-  
   def order_section_children
     begin
       @section = FormElement.find(params[:id])
-      reorder_ids = params['reorder-list'].collect {|id| id.to_i}
+      section_name, section_items = params.find { |k, v| k =~ /children$/ }
+      reorder_ids = section_items.collect {|id| id.to_i}
       @section.reorder_children reorder_ids
       flash[:notice] = 'The form elements were successfully reordered.'
       @form = Form.find(@section.form_id)
@@ -135,11 +126,23 @@ class FormsController < AdminController
     element_id = params[:id].split("_")[1]
     @form_element = FormElement.find(element_id)
     if @form_element.add_to_library
-      flash[:notice] = "#{@form_element.type.humanize} successfully copied to library."
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :partial => "library_elements"
     else
       flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
+      render :template => 'rjs-error'
+    end
+  end
+
+  def from_library
+    parent_id = params[:id]
+    lib_element_id = params[:lib_element_id]
+    @form_element = FormElement.find(parent_id)
+    if @form_element.copy_from_library(lib_element_id)
+      @form = Form.find(@form_element.form_id)
+      render :partial => "elements"
+    else
+      flash[:notice] = "Unable to copy element to form."
       render :template => 'rjs-error'
     end
   end

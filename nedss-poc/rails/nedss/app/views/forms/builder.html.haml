@@ -1,4 +1,3 @@
-
 %table{:width => '100%', :cellpadding => '5', :cellspacing => '0'}
   %tr
     %td{:width => '40%', :align => 'left', :valign => 'top'}
@@ -29,7 +28,6 @@
       %ul{:id => "root-element-list"}
         = render :partial => 'forms/elements'
 
-      /= sortable_element("root-element-list",    :containment => ["root-element-list", "library-element-list"], :constraint => false, :ghosting => true, :revert => true, :dropOnEmpty => true, :url => { :controller => 'form_elements', :action => 'to_library'})
       = button_to "Publish", {:action => "publish", :id => @form.id}
 
     %td{:width => '20%', :align => 'left', :valign => 'top'}

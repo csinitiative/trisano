@@ -2,34 +2,27 @@ module FormsHelper
   
   def render_element(element, include_children=true)
     
-    result = ""
-    
     case element.class.name
-    
     when "ViewElement"
-      result += render_view(element, include_children)
+      render_view(element, include_children)
     when "CoreViewElement"
-      result += render_core_view(element, include_children)
+      render_core_view(element, include_children)
     when "SectionElement"
-      result += render_section(element, include_children)
+      render_section(element, include_children)
     when "QuestionElement"
-      result += render_question(element, include_children)
+      render_question(element, include_children)
     when "ValueSetElement"
-      result += render_value_set(element, include_children)
+      render_value_set(element, include_children)
     when "ValueElement"
-      result += render_value(element, include_children)
+      render_value(element, include_children)
     end
-    
-    return result
+
   end
   
   def render_view(element, include_children=true)
     
-    result = ""
-    
-    result += "<li id='section_" + element.id.to_s + "'><b>"
-    result += element.name
-    result += "</b>"
+    li_html_id = get_li_html_id(element.id)
+    result = section_preamble(li_html_id, element.name)
     
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
@@ -37,21 +30,26 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
+      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
     end
     
     result += add_section_link(element)
 
     result += "</li>"
     
-    result
+    result += drop_receiving_element(li_html_id, 
+                                     :update => "root-element-list", 
+                                     :accept => 'lib-question-item', 
+                                     :hoverclass => 'library-drop-active', 
+                                     :complete => visual_effect(:highlight, 'root-element-list'), 
+                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+                                     :url => {:action => 'from_library', :id => element.id})
   end
   
   def render_core_view(element, include_children)
-    result = ""
-    
-    result += "<li id='section_" + element.id.to_s + "'><b>"
-    result += element.name + " Tab"
-    result += "</b>"
+
+    li_html_id = get_li_html_id(element.id)
+    result = section_preamble(li_html_id, element.name)
     
     if element.children.size > 1 && include_children
       result += reorder_elements_link(element)
@@ -63,6 +61,7 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
+      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
     end
     
     result += add_section_link(element)
@@ -70,27 +69,27 @@ module FormsHelper
     
     result += "</li>"
     
-    result
+    result += drop_receiving_element(li_html_id, 
+                                     :update => "root-element-list", 
+                                     :accept => 'lib-question-item', 
+                                     :hoverclass => 'library-drop-active', 
+                                     :complete => visual_effect(:highlight, 'root-element-list'), 
+                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+                                     :url => {:action => 'from_library', :id => element.id})
   end
   
   def render_section(element, include_children=true)
-    
-    result = ""
-    
-    result += "<li id='section_" + element.id.to_s + "'><b>"
-    result += element.name
-    result += "</b>"
-    
-    if element.children.size > 1 && include_children
-      result += reorder_elements_link(element)
-    end
-    
+
+    li_html_id = get_li_html_id(element.id)
+    result = section_preamble(li_html_id, element.name)
+
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
       result += "</ul>"
+      result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
     end
     
     result += add_question_link(element) if (include_children)
@@ -98,7 +97,14 @@ module FormsHelper
 
     result += "</li>"
     
-    result
+    result += drop_receiving_element(li_html_id, 
+                                     :update => "root-element-list", 
+                                     :accept => 'lib-question-item', 
+                                     :hoverclass => 'library-drop-active', 
+                                     :complete => visual_effect(:highlight, 'root-element-list'), 
+                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+                                     :url => {:action => 'from_library', :id => element.id})
+
   end
   
   def render_question(element, include_children=true)
@@ -135,14 +141,10 @@ module FormsHelper
     result += "</li>"
 
     result += draggable_element question_id, :ghosting => true, :revert => true
-    
-    result
   end
 
   def render_value_set(element, include_children=true)
-    result = ""
-    
-    result += "<li id='value_set_" + element.id.to_s + "'>Value Set: "
+    result =  "<li id='value_set_" + element.id.to_s + "'>Value Set: "
     result += element.name
     
     if include_children && element.children?
@@ -156,20 +158,14 @@ module FormsHelper
     result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
     
     result += "</li>"
-    
-    result
   end
   
   def render_value(element, include_children=true)
-    result = ""
-    
-    result += "<li id='value_" + element.id.to_s + "'>"
+    result =  "<li id='value_" + element.id.to_s + "'>"
     result += "<span class='inactive-value'>" unless element.is_active
     result += element.name
     result += "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
     result += "</li>"
-    
-    result
   end
   
   private
@@ -224,4 +220,11 @@ module FormsHelper
       element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder elements</a></small>"
   end
   
+  def section_preamble(html_id, content)
+    "<li id='#{html_id}'><b>#{content}</b>"
+  end
+  
+  def get_li_html_id(id)
+   "section_#{id}"
+  end
 end

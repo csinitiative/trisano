@@ -13,7 +13,6 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :forms
 
-  # Will likely also want a :collection => { :library => :any } for accessing all questions in library
   map.resources :question_elements
   
   map.resources :section_elements
@@ -24,7 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :view_elements
   
-  map.resources :form_elements, :member => { :to_library => :post }
+  map.resources :form_elements, :member => { :to_library => :post }, :member => { :from_library => :post }
 
   map.resources :users
 

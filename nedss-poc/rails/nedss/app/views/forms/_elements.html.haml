@@ -1,2 +1,4 @@
-- for element in @form.form_base_element.children
-  = render_element element
+%div{:id => "form_children"}
+  - for element in @form.form_base_element.children
+    = render_element element
+= sortable_element("form_children", :url => { :action => 'order_section_children', :id => @form.form_base_element.id})
