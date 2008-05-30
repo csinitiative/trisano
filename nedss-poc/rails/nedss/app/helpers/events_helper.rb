@@ -28,11 +28,14 @@ module EventsHelper
     
     view.full_set.each do |element|
       
-      result += close_container(element_levels[element.level]) if element_levels.has_key?(element.level) 
-      result += open_container(element)
+      result += close_section if (element_levels.has_key?(element.level) && element_levels[element.level].is_a?(SectionElement))
       element_levels[element.level] = element
       
-      if element.class.name == "QuestionElement"
+      case element.class.name
+        
+      when "SectionElement"
+        result += open_section(element)
+      when "QuestionElement"
         if element.question.core_data
           result += render_core_data_element(element)
         else
@@ -45,18 +48,12 @@ module EventsHelper
       
     end
     
+    result += close_section if element_levels[2].is_a?(SectionElement)
+    
     result
   end
   
   private
-  
-  def open_container(element)
-    element.class.name == "SectionElement" ? open_section(element) : ""
-  end
-  
-  def close_container(element)
-    element.class.name == "SectionElement" ? close_section : ""
-  end
   
   def open_section(element)
     result = "<br/>"
