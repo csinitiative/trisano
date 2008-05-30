@@ -46,7 +46,7 @@ class FormElement < ActiveRecord::Base
       e.save!
       parent.add_child e unless parent.nil?
       node_to_copy.children.each do |child|
-        copy_children(child, e, tree_id)
+        copy_children(child, e, form_id, tree_id, is_template)
       end
       e
   end
