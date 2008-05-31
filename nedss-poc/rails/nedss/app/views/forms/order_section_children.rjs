@@ -1,3 +1,3 @@
 page.replace_html 'root-element-list', :partial => 'forms/elements'
-page.replace_html 'builder-info', "<span style='color:green'>" + flash[:notice] + "</span>"
+page.replace_html 'builder-mods', "<span style='color:green'>" + flash[:notice] + "</span>"
 flash[:notice] = ""

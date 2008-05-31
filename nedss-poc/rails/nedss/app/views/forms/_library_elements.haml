@@ -12,3 +12,5 @@
         - q_string += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement
     %li{:id => "lib_question_item_#{form_element.id}", :class => "lib-question-item"}=q_string
     = draggable_element "lib_question_item_#{form_element.id}", :ghosting => true, :revert => true 
+    - unless @new_lib_element.nil?
+      %input{:type => 'hidden', :id => 'most-recently-added-element', :name => 'most-recently-added-element', :value => @new_lib_element.id}

@@ -24,18 +24,18 @@ module FormsHelper
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element.name)
     
+    result += add_section_link(element, "tab")
+    result += add_question_link(element, "tab")
+
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
+      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
-    result += add_section_link(element)
-    result += add_question_link(element)
-
     result += "</li>"
     
     result += drop_receiving_element(li_html_id, 
@@ -44,7 +44,7 @@ module FormsHelper
                                      :hoverclass => 'library-drop-active', 
                                      :complete => visual_effect(:highlight, 'root-element-list'), 
                                      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:action => 'from_library', :id => element.id})
+                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
   end
   
   def render_core_view(element, include_children)
@@ -62,11 +62,11 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
+      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
-    result += add_section_link(element)
-    result += add_question_link(element)
+    result += add_section_link(element, "tab")
+    result += add_question_link(element, "tab")
     
     result += "</li>"
     
@@ -76,7 +76,7 @@ module FormsHelper
                                      :hoverclass => 'library-drop-active', 
                                      :complete => visual_effect(:highlight, 'root-element-list'), 
                                      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:action => 'from_library', :id => element.id})
+                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
   end
   
   def render_section(element, include_children=true)
@@ -90,13 +90,12 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :action => 'order_section_children', :id => element.id})
-      result += "<input type='hidden' id='question-section' name='question-section-id' value='section_#{element.id}_children'/>"
+      result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
 
     end
     
-    result += add_question_link(element) if (include_children)
-    result += add_core_data_link(element) if (include_children)
+    result += add_question_link(element, "section") if (include_children)
+    # result += add_core_data_link(element) if (include_children)
 
     result += "</li>"
     
@@ -106,8 +105,10 @@ module FormsHelper
                                      :hoverclass => 'library-drop-active', 
                                      :complete => visual_effect(:highlight, 'root-element-list'), 
                                      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:action => 'from_library', :id => element.id})
+                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
 
+    # For UAT purposes
+    result += "<input type='hidden' id='drop-receiving-section' name='drop-receiving-section' value='#{li_html_id}'/>"
   end
   
   def render_question(element, include_children=true)
@@ -158,7 +159,7 @@ module FormsHelper
       result += "</ul>"
     end
     
-    result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+    result += "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
     
     result += "</li>"
   end
@@ -173,33 +174,16 @@ module FormsHelper
   
   private
 
-  # Delete this when all else is working
-  def library_link(element)
-    unless element.question.core_data?
-      unless element.is_multi_valued_and_empty?
-        result = "&nbsp;|&nbsp;<small>"
-        unless element.in_library?
-          result += "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-          "/to_library', {asynchronous:true, evalScripts:true, method:'post'}); return false;\">Copy to Library</a>"
-        else
-          result += "Copied to libary"
-        end
-        return result += "</small>"
-      end
-    end
-    ""
-  end
-
-  def add_section_link(element)
-    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
+  def add_section_link(element, trailing_text)
+    "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-section-" + 
-      element.id.to_s + "' class='add-section' name='add-section'>Add a section</a></small>"
+      element.id.to_s + "' class='add-section' name='add-section'>Add section to #{trailing_text}</a></small>"
   end
 
-  def add_question_link(element)
-    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
+  def add_question_link(element, trailing_text)
+    "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
-      element.id.to_s + "' class='add-question' name='add-question'>Add a question</a></small>"
+      element.id.to_s + "' class='add-question' name='add-question'>Add question to #{trailing_text}</a></small>"
   end
   
   def edit_question_link(element)

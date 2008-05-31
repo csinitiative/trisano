@@ -9,6 +9,7 @@ describe 'Form Builder Admin' do
     @question_to_edit_text = "Can you describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_edit_modified_text = "Can you describe the tick edited " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_inactivate_text = "Did you see the tick that got you " + NedssHelper.get_unique_name(4) + " fb uat" 
+    @question_to_add_to_library_text = "Drag this to the library " + NedssHelper.get_unique_name(4) + " fb uat" 
     
     @user_defined_tab_text = "User-defined tab " + NedssHelper.get_unique_name(3) + " fb uat"
     @user_defined_tab_section_text = "User-defined tab section " + NedssHelper.get_unique_name(3) + " fb uat"
@@ -38,24 +39,17 @@ describe 'Form Builder Admin' do
     @browser.wait_for_page_to_load "30000"
   end
   
-  it 'should add a section' do    
-    @browser.click "link=Add a section"
-    wait_for_element_present("new-section-form")
-    @browser.type "section_element_name", "Section 1"
-    @browser.click "section_element_submit"
-    wait_for_element_not_present("new-section-form")
-    @browser.is_text_present("Section configuration was successfully created.").should be_true
-  end
-
   # Debt: The remaining examples had to be combined into one in order to have access
   # to saved IDs across what used to be separate examples.
   # The methods provide some segmentation of all of the activities of the large example.
   it 'should do all this stuff...' do
     
+    add_a_section
     add_questions
     reorder_elements
     add_value_sets
     edit_value_sets
+    to_and_from_library
     add_and_populate_tab
     publish
     
@@ -71,15 +65,26 @@ describe 'Form Builder Admin' do
   end
 end
 
+def add_a_section
+  @browser.click "link=Add section to tab"
+  wait_for_element_present("new-section-form")
+  @browser.type "section_element_name", "Section 1"
+  @browser.click "section_element_submit"
+  wait_for_element_not_present("new-section-form")
+  @browser.is_text_present("Section configuration was successfully created.").should be_true
+
+  @reorderable_section_id = "section_#{@browser.get_value("id=modified-element")}_children"
+end
+
 def add_questions
-  @browser.click "link=Add a question"
+  @browser.click "link=Add question to section"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", "Did you go into the tall grass?"
   @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
   @browser.click "question_element_submit"    
   wait_for_element_not_present("new-question-form")
   @browser.is_text_present("Did you go into the tall grass?").should be_true
-  @browser.click "link=Add a question"
+  @browser.click "link=Add question to section"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_inactivate_text
   @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
@@ -89,7 +94,7 @@ def add_questions
     
   @question_to_inactivate_id = @browser.get_value("id=modified-element")
     
-  @browser.click "link=Add a question"    
+  @browser.click "link=Add question to section"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_delete_text
   @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
@@ -99,7 +104,7 @@ def add_questions
     
   @question_to_delete_id = @browser.get_value("id=modified-element")
     
-  @browser.click "link=Add a question"    
+  @browser.click "link=Add question to section"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_edit_text
   @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
@@ -147,13 +152,11 @@ def add_value_sets
 end
 
 def reorder_elements
-  @browser.set_speed(500)
-  reorderable_section = @browser.get_value("id=question-section")
-  @browser.get_eval("nodes = window.document.getElementById(\"#{reorderable_section}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
-  @browser.drag_and_drop "//ul[@id='#{reorderable_section}']/li[4]", "0,-20"
+  p "nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem"
+  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
+  @browser.drag_and_drop "//ul[@id='#{@reorderable_section_id}']/li[4]", "0,-40"
   sleep(2)
-  @browser.get_eval("nodes = window.document.getElementById(\"#{reorderable_section}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
-  @browser.set_speed(0)
+  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
 end
 
 def edit_value_sets
@@ -213,11 +216,33 @@ def add_and_populate_tab
   @browser.click "id=add-question-#{@tab_section_element_id}"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", @user_defined_tab_question_text
-  @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
+  @browser.select "question_element_question_attributes_data_type", "label=Single line text"
   @browser.click "question_element_submit"    
   wait_for_element_not_present("new-question-form")
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
-  
+end
+
+def to_and_from_library
+  @browser.click "link=Add question to tab"
+  wait_for_element_present("new-question-form")
+  @browser.type "question_element_question_attributes_question_text", @question_to_add_to_library_text
+  @browser.select "question_element_question_attributes_data_type", "label=Single line text"
+  @browser.click "question_element_submit"    
+  wait_for_element_not_present("new-question-form")
+
+  question_to_drag_id = @browser.get_value("id=modified-element")
+
+  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
+
+  @browser.drag_and_drop_to_object("question_#{question_to_drag_id}", "library-element-list")
+  sleep(2)
+  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2
+
+  question_to_drag_id = @browser.get_value("id=most-recently-added-element")
+
+  @browser.drag_and_drop_to_object("lib_question_item_#{question_to_drag_id}", @browser.get_value("id=drop-receiving-section"))
+  sleep(2)
+  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 3
 end
 
 def publish

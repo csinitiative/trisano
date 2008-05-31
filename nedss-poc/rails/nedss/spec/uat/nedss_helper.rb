@@ -90,6 +90,10 @@ module NedssHelper
     return ret
   end
   
+  def num_times_text_appears(browser, text)
+    browser.get_body_text.scan(/#{text}/).size
+  end
+
   private
   
   def get_section_id(browser, name)
