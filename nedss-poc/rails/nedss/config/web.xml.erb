@@ -69,7 +69,9 @@
 
 	<!-- Allow all requests to go to the files servlet first -->
 	<servlet-mapping>
-		<servlet-name><%= webxml.servlet_name || 'files' %></servlet-name>
+                <!-- Changed by Pete Lacey till whatever is broken is fixed -->
+                <!-- <servlet-name><%= webxml.servlet_name || 'files' %></servlet-name> -->
+                <servlet-name>'files'</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 

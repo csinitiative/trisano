@@ -42,7 +42,7 @@ describe "/forms/builder.html.haml" do
 
   it "should have basic form info and links'" do
     render "/forms/builder.html.haml"
-    response.should have_text(/Add a question/)
+    response.should have_text(/Add question to tab/)
     
   end
 end
