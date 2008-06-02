@@ -1,4 +1,3 @@
 page.replace_html 'root-element-list', :partial => 'forms/elements'
-page.replace_html 'builder-mods', "<span style='color:green'>" + flash[:notice] + "</span>"
 page.visual_effect(:highlight, 'root-element-list')
 flash[:notice] = ""

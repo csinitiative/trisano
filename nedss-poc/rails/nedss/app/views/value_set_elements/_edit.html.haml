@@ -1,9 +1,6 @@
 
 %div{:id => "edit-value-set-form"}
 
-  %h3
-    Edit Value Set
-
   = error_messages_for :value_set_element
 
   - remote_form_for(value_set_element, :html => { :method => 'put', :name => 'value-set-element-edit-form'}) do |f|
@@ -12,3 +9,5 @@
 
     %p
       = f.submit "Update"
+      &nbsp;&nbsp;
+      = link_to_function "Close", "$('value-set-mods-#{@value_set_element.id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.id}'))"

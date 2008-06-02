@@ -28,6 +28,7 @@ module FormsHelper
     
     result += add_section_link(element, "tab")
     result += add_question_link(element, "tab")
+
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
@@ -73,6 +74,9 @@ module FormsHelper
     result += add_section_link(element, "tab")
     result += add_question_link(element, "tab")
     
+    result += "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+
     result += "</li>"
     
     result += drop_receiving_element(li_html_id, 
@@ -101,6 +105,7 @@ module FormsHelper
     
     result += add_question_link(element, "section") if (include_children)
     # result += add_core_data_link(element) if (include_children)
+
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     result += "</li>"
@@ -127,18 +132,17 @@ module FormsHelper
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
     result += "Question: " + question.question_text
+    result += "&nbsp;&nbsp;<small>(" + question.data_type_before_type_cast.humanize + ")</small>"
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element)  if (include_children)
-    result += "<div id='question-mods-" + element.id.to_s + "'></div>" if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element) if (include_children)
     
-    if include_children && element.is_multi_valued_and_empty?
-      result += "<br/>"
-      result += "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
-        element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
-    end
-    
+    result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
+
     if include_children && element.children?
       result += "<ul id='question_" + element.id.to_s + "_children'>"
       element.children.each do |child|
@@ -163,14 +167,15 @@ module FormsHelper
     result += element.name
     
     if include_children && element.children?
+      result += "&nbsp;" + edit_value_set_link(element)
+      result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
+
       result += "<ul id='value_set_" + element.id.to_s + "_children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
       result += "</ul>"
     end
-    
-    result += "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
     
     result += "</li>"
   end
@@ -212,6 +217,15 @@ module FormsHelper
     "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-" + 
       element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up</a></small>"
+  end
+
+  def add_value_set_link(element)
+    "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
+      element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
+  end
+
+  def edit_value_set_link(element)
+    "&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
 
   def add_core_data_link(element)

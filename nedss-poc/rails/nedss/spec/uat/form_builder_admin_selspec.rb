@@ -152,7 +152,6 @@ def add_value_sets
 end
 
 def reorder_elements
-  p "nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem"
   @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
   @browser.drag_and_drop "//ul[@id='#{@reorderable_section_id}']/li[4]", "0,-40"
   sleep(2)
@@ -162,14 +161,12 @@ end
 def edit_value_sets
   @browser.click "link=Edit value set"
   wait_for_element_present("edit-value-set-form")
-  @browser.is_text_present("Edit Value Set").should be_true
-    
+  @browser.is_element_present("edit-value-set-form").should be_true
   @browser.type "value_set_element_name", "Edited"
   @browser.click "link=Remove"
   @browser.click "link=Remove"
   @browser.click "value_set_element_submit"
   wait_for_element_not_present("edit-value-set-form")
-  @browser.is_text_present("Value Set: Edited").should be_true
   @browser.click "link=Edit value set"
   wait_for_element_present("edit-value-set-form")
     
