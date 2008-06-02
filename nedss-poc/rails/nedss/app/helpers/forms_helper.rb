@@ -11,6 +11,8 @@ module FormsHelper
       render_section(element, include_children)
     when "QuestionElement"
       render_question(element, include_children)
+    when "FollowUpElement"
+      render_follow_up_element(element, include_children)
     when "ValueSetElement"
       render_value_set(element, include_children)
     when "ValueElement"
@@ -40,12 +42,12 @@ module FormsHelper
     result += "</li>"
     
     result += drop_receiving_element(li_html_id, 
-                                     :update => "root-element-list", 
-                                     :accept => 'lib-question-item', 
-                                     :hoverclass => 'library-drop-active', 
-                                     :complete => visual_effect(:highlight, 'root-element-list'), 
-                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
+      :update => "root-element-list", 
+      :accept => 'lib-question-item', 
+      :hoverclass => 'library-drop-active', 
+      :complete => visual_effect(:highlight, 'root-element-list'), 
+      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
 
   end
   
@@ -73,12 +75,12 @@ module FormsHelper
     result += "</li>"
     
     result += drop_receiving_element(li_html_id, 
-                                     :update => "root-element-list", 
-                                     :accept => 'lib-question-item', 
-                                     :hoverclass => 'library-drop-active', 
-                                     :complete => visual_effect(:highlight, 'root-element-list'), 
-                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
+      :update => "root-element-list", 
+      :accept => 'lib-question-item', 
+      :hoverclass => 'library-drop-active', 
+      :complete => visual_effect(:highlight, 'root-element-list'), 
+      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
   end
   
   def render_section(element, include_children=true)
@@ -102,12 +104,12 @@ module FormsHelper
     result += "</li>"
     
     result += drop_receiving_element(li_html_id, 
-                                     :update => "root-element-list", 
-                                     :accept => 'lib-question-item', 
-                                     :hoverclass => 'library-drop-active', 
-                                     :complete => visual_effect(:highlight, 'root-element-list'), 
-                                     :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-                                     :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
+      :update => "root-element-list", 
+      :accept => 'lib-question-item', 
+      :hoverclass => 'library-drop-active', 
+      :complete => visual_effect(:highlight, 'root-element-list'), 
+      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
+      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
 
     # For UAT purposes
     result += "<input type='hidden' id='drop-receiving-section' name='drop-receiving-section' value='#{li_html_id}'/>"
@@ -128,7 +130,7 @@ module FormsHelper
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element)  if (include_children)
     
     if include_children && element.is_multi_valued_and_empty?
       result += "<br/>"
@@ -149,6 +151,12 @@ module FormsHelper
     result += draggable_element question_id, :ghosting => true, :revert => true
   end
 
+  def render_follow_up_element(element, include_children=true)
+    result = ""
+    # result += "follow up<br/>"
+    result
+  end
+  
   def render_value_set(element, include_children=true)
     result =  "<li id='value_set_" + element.id.to_s + "'>Value Set: "
     result += element.name
@@ -198,6 +206,12 @@ module FormsHelper
     "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>Delete</a></small>"
   end
+  
+  def add_follow_up_link(element)
+    "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=" + 
+      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-" + 
+      element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up</a></small>"
+  end
 
   def add_core_data_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
@@ -218,6 +232,6 @@ module FormsHelper
   end
   
   def get_li_html_id(id)
-   "section_#{id}"
+    "section_#{id}"
   end
 end

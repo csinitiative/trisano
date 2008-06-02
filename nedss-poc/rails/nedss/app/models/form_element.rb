@@ -12,11 +12,11 @@ class FormElement < ActiveRecord::Base
   end
   
   def children_count_by_type(type_name)
-    FormElement.calculate(:count, :type, :conditions => ["type = ? and tree_id = ?", type_name, self.tree_id])
+    FormElement.calculate(:count, :type, :conditions => ["parent_id = ? and tree_id = ? and type = ?", self.id, self.tree_id, type_name])
   end
   
   def children_by_type(type_name)
-    FormElement.find(:all, :conditions => ["type = ? and parent_id = ?", type_name, self.id], :order => :lft)
+    FormElement.find(:all, :conditions =>["parent_id = ? and tree_id = ? and type = ?", self.id, self.tree_id, type_name], :order => :lft)
   end
   
   # DEBT! Should make publish and add_to_library the same code

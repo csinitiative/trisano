@@ -10,12 +10,4 @@ class Question < ActiveRecord::Base
     read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
   end
 
-#  def is_multi_valued?
-#    question.data_type == :drop_down || question.data_type == :radio_button || question.data_type == :check_box
-#  end
-
-#  def is_multi_valued_and_empty?
-#    is_multi_valued? && (element.children? == false)
-#  end
-
 end

@@ -1,0 +1,14 @@
+
+%div{:id => "new-follow-up-form"}
+
+  %h3
+    Add follow up
+
+  = error_messages_for :follow_up_element
+
+  - remote_form_for(follow_up_element) do |f|
+
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit "Create"

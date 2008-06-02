@@ -7,7 +7,6 @@ demo_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -19,7 +18,6 @@ demo_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -31,7 +29,6 @@ demo_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -43,7 +40,6 @@ lab_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -55,7 +51,6 @@ lab_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -67,7 +62,6 @@ lab_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -79,7 +73,6 @@ food_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -91,7 +84,6 @@ food_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 
@@ -103,7 +95,6 @@ food_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  condition: 
   is_on_short_form: 
   is_required: 
   is_exportable: 

@@ -10,11 +10,52 @@ describe QuestionElement do
   end
   
   it "should determine if it is multi-valued" do
-    pending
+    
+    question_element = QuestionElement.new({:question_attributes => {:data_type => "single_line_text"}})
+    question_element.is_multi_valued?.should be_false
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "multi_line_text"}})
+    question_element.is_multi_valued?.should be_false
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "drop_down"}})
+    question_element.is_multi_valued?.should be_true
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "radio_button"}})
+    question_element.is_multi_valued?.should be_true
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "check_box"}})
+    question_element.is_multi_valued?.should be_true
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "date"}})
+    question_element.is_multi_valued?.should be_false
+    
+    question_element.update_attributes({:question_attributes => {:data_type => "phone"}})
+    question_element.is_multi_valued?.should be_false
+    
   end
   
   it "should determine if it is multi-valued and empty" do
-    pending
+    
+    question_element = QuestionElement.new({:tree_id => 1})
+    question = Question.new({:data_type => "drop_down", :question_text => "Was it fishy"})
+    question_element.question = question
+    question_element.save
+
+    question_element.is_multi_valued?.should be_true
+    question_element.is_multi_valued_and_empty?.should be_true
+    
+    follow_up_element = FollowUpElement.new({:tree_id => 1, :name => "Follow it", :condition => "Yes"})
+    follow_up_element.save
+    question_element.add_child(follow_up_element)
+    
+    question_element.is_multi_valued_and_empty?.should be_true
+    
+    value_set_element = ValueSetElement.new({:tree_id => 1, :name => "Y/N"})
+    value_set_element.save
+    question_element.add_child(value_set_element)
+
+    question_element.is_multi_valued_and_empty?.should be_false
+    
   end
   
   describe "when created with 'save and add to form'" do

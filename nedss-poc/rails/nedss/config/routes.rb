@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :follow_up_elements
+
   
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'

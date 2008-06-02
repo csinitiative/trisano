@@ -35,7 +35,7 @@ class QuestionElement < FormElement
   end
 
   def is_multi_valued_and_empty?
-    is_multi_valued? && (children? == false)
+    is_multi_valued? && (children_count_by_type("ValueSetElement") == 0)
   end
   
 end

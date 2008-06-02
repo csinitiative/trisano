@@ -222,7 +222,7 @@ describe ViewElementsController do
         do_post
       end
 
-      it "should redirect to the new view_element" do
+      it "should render the create template" do
         do_post
         response.should render_template('create')
       end
