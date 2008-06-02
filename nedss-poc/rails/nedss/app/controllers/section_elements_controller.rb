@@ -43,7 +43,6 @@ class SectionElementsController < ApplicationController
 
     respond_to do |format|
       if @section_element.save_and_add_to_form
-        flash[:notice] = 'Section configuration was successfully created.'
         format.xml  { render :xml => @section_element, :status => :created, :location => @section_element }
         format.js { @form = Form.find(@section_element.form_id)}
       else

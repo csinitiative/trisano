@@ -22,10 +22,11 @@ module FormsHelper
   def render_view(element, include_children=true)
     
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element.name)
+    result = section_preamble(li_html_id, element)
     
     result += add_section_link(element, "tab")
     result += add_question_link(element, "tab")
+    result += "<div id='section-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
@@ -45,12 +46,13 @@ module FormsHelper
                                      :complete => visual_effect(:highlight, 'root-element-list'), 
                                      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
                                      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
+
   end
   
   def render_core_view(element, include_children)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element.name)
+    result = section_preamble(li_html_id, element)
     
     if element.children.size > 1 && include_children
       result += reorder_elements_link(element)
@@ -82,7 +84,7 @@ module FormsHelper
   def render_section(element, include_children=true)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element.name)
+    result = section_preamble(li_html_id, element)
 
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children'>"
@@ -207,8 +209,12 @@ module FormsHelper
       element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder elements</a></small>"
   end
   
-  def section_preamble(html_id, content)
-    "<li id='#{html_id}'><b>#{content}</b>"
+  def section_preamble(html_id, element)
+# Enable and fix url arguments when time for in place editing
+#    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
+    editable_content= element.name
+
+    "<li id='#{html_id}'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)

@@ -1,1 +1,3 @@
+page.visual_effect(:blind_down, 'builder-mods')
+# page.show 'builder-mods'
 page.replace_html 'builder-mods', :partial => 'view_elements/new', :locals => {:view_element => @view_element}

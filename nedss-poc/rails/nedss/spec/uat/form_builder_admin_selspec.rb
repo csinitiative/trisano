@@ -71,7 +71,7 @@ def add_a_section
   @browser.type "section_element_name", "Section 1"
   @browser.click "section_element_submit"
   wait_for_element_not_present("new-section-form")
-  @browser.is_text_present("Section configuration was successfully created.").should be_true
+  @browser.is_text_present("Section 1").should be_true
 
   @reorderable_section_id = "section_#{@browser.get_value("id=modified-element")}_children"
 end
@@ -209,7 +209,7 @@ def add_and_populate_tab
   @browser.type "section_element_name", @user_defined_tab_section_text
   @browser.click "section_element_submit"
   wait_for_element_not_present("new-section-form")
-  @browser.is_text_present("Section configuration was successfully created.").should be_true
+  @browser.is_text_present(@user_defined_tab_text).should be_true
 
   @tab_section_element_id = @browser.get_value("id=modified-element")
 
