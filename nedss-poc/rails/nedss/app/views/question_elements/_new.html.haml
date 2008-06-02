@@ -1,9 +1,6 @@
 
 %div{:id => "new-question-form"}
 
-  %h3
-    Add Question
-
   = error_messages_for :question_element
 
   - remote_form_for(question_element) do |f|
@@ -24,3 +21,5 @@
 
     %p
       = f.submit "Create"
+      &nbsp;&nbsp;
+      = link_to_function "Close", "$('question-mods-#{@question_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.parent_element_id}'))"

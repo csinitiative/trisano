@@ -1,8 +1,5 @@
 %div{:id => "edit-question-form"}
 
-  %h3
-    Edit Question
-
   = error_messages_for :question_element
 
   - remote_form_for(question_element) do |f|
@@ -11,3 +8,5 @@
 
     %p
       = f.submit "Update"
+      &nbsp;&nbsp;
+      = link_to_function "Close", "$('question-mods-#{@question_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.id}'))"

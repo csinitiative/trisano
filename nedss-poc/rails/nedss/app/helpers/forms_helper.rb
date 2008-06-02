@@ -29,6 +29,7 @@ module FormsHelper
     result += add_section_link(element, "tab")
     result += add_question_link(element, "tab")
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
@@ -100,6 +101,7 @@ module FormsHelper
     
     result += add_question_link(element, "section") if (include_children)
     # result += add_core_data_link(element) if (include_children)
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     result += "</li>"
     
@@ -117,12 +119,10 @@ module FormsHelper
   
   def render_question(element, include_children=true)
     
-    result = ""
-    
     question = element.question
     question_id = "question_#{element.id}"
     
-    result += "<li class='question-item' id='#{question_id}'>"
+    result = "<li class='question-item' id='#{question_id}'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -131,6 +131,7 @@ module FormsHelper
     result += "</span>"
     
     result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element)  if (include_children)
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>" if (include_children)
     
     if include_children && element.is_multi_valued_and_empty?
       result += "<br/>"

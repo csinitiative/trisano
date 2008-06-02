@@ -46,7 +46,6 @@ class QuestionElementsController < ApplicationController
 
     if @question_element.save_and_add_to_form
       form_id = @question_element.form_id
-      flash[:notice] = 'Question was successfully created.'
       @form = Form.find(form_id)
     else
       render :action => "new" 

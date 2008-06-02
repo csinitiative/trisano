@@ -1,5 +1,5 @@
+page.visual_effect(:blind_up, "question-mods-#{@question_element.id}")
 page.replace_html 'root-element-list', :partial => 'forms/elements'
-page.replace_html 'builder-mods', "<span style='color:green'>" + flash[:notice] + "</span>" +
-  "<input type='hidden' id='modified-element' name='updated-element-id' value='" + @question_element.id.to_s + "'/>"
+page.replace_html 'builder-mods', "<input type='hidden' id='modified-element' name='updated-element-id' value='" + @question_element.id.to_s + "'/>"
 page.visual_effect(:highlight, 'root-element-list')
 flash[:notice] = ""
