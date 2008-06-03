@@ -98,3 +98,25 @@ food_q3:
   is_on_short_form: 
   is_required: 
   is_exportable: 
+
+second_tab_q:
+  id: "10"
+  question_element_id: "18"
+  question_text: "Second tab question? "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 
+
+second_tab_follow_up_q:
+  id: "11"
+  question_element_id: "20"
+  question_text: "Second tab follow up? "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 

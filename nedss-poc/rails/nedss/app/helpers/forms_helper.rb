@@ -12,7 +12,7 @@ module FormsHelper
     when "QuestionElement"
       render_question(element, include_children)
     when "FollowUpElement"
-      render_follow_up_element(element, include_children)
+      render_follow_up_container(element, include_children)
     when "ValueSetElement"
       render_value_set(element, include_children)
     when "ValueElement"
@@ -136,7 +136,7 @@ module FormsHelper
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_container_link(element) if (include_children)
     
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
 
@@ -156,9 +156,25 @@ module FormsHelper
     result += draggable_element question_id, :ghosting => true, :revert => true
   end
 
-  def render_follow_up_element(element, include_children=true)
-    result = ""
-    # result += "follow up<br/>"
+  def render_follow_up_container(element, include_children=true)
+    
+    result = "<li class='follow-up-item' id='#{element.id}'>Follow up for: '#{element.condition}'"
+    
+    if include_children && element.children?
+      result += "<ul id='follow_up_" + element.id.to_s + "_children'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+      result += sortable_element("follow_up_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+    end
+    
+    result += add_question_link(element, "follow up container") if (include_children)
+    
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    
+    result += "</li>"
+    
     result
   end
   
@@ -213,10 +229,10 @@ module FormsHelper
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>Delete</a></small>"
   end
   
-  def add_follow_up_link(element)
+  def add_follow_up_container_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-" + 
-      element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up</a></small>"
+      element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up container</a></small>"
   end
 
   def add_value_set_link(element)

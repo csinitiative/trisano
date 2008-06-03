@@ -3,6 +3,7 @@
 base:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "1"
   type: FormBaseElement
   id: "1"
@@ -13,6 +14,7 @@ base:
 default_view:
   name: Default View
   form_id: "1"
+  tree_id: "1"
   lft: "2"
   type: ViewElement
   id: "2"
@@ -23,6 +25,7 @@ default_view:
 demographic_section:
   name: Demographics
   form_id: "1"
+  tree_id: "1"
   lft: "3"
   type: SectionElement
   id: "3"
@@ -33,6 +36,7 @@ demographic_section:
 demographic_group:
   name: Standard Demographics
   form_id: "1"
+  tree_id: "1"
   lft: "4"
   type: GroupElement
   id: "4"
@@ -43,6 +47,7 @@ demographic_group:
 demo_group_q1:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "5"
   type: QuestionElement
   id: "5"
@@ -53,6 +58,7 @@ demo_group_q1:
 demo_group_q2:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "7"
   type: QuestionElement
   id: "6"
@@ -63,6 +69,7 @@ demo_group_q2:
 demo_group_q3:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "9"
   type: QuestionElement
   id: "7"
@@ -73,6 +80,7 @@ demo_group_q3:
 lab_section:
   name: Lab
   form_id: "1"
+  tree_id: "1"
   lft: "13"
   type: SectionElement
   id: "8"
@@ -83,6 +91,7 @@ lab_section:
 lab_section_q1:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "14"
   type: QuestionElement
   id: "9"
@@ -93,6 +102,7 @@ lab_section_q1:
 lab_section_q2:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "16"
   type: QuestionElement
   id: "10"
@@ -103,6 +113,7 @@ lab_section_q2:
 lab_section_q3:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "18"
   type: QuestionElement
   id: "11"
@@ -113,6 +124,7 @@ lab_section_q3:
 food_section:
   name: Food Consumption History
   form_id: "1"
+  tree_id: "1"
   lft: "21"
   type: SectionElement
   id: "12"
@@ -123,6 +135,7 @@ food_section:
 standard_food_group:
   name: Standard Food History
   form_id: "1"
+  tree_id: "1"
   lft: "22"
   type: GroupElement
   id: "13"
@@ -133,6 +146,7 @@ standard_food_group:
 food_group_q1:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "23"
   type: QuestionElement
   id: "14"
@@ -143,6 +157,7 @@ food_group_q1:
 food_group_q2:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "25"
   type: QuestionElement
   id: "15"
@@ -153,6 +168,7 @@ food_group_q2:
 food_section_q1:
   name: 
   form_id: "1"
+  tree_id: "1"
   lft: "28"
   type: QuestionElement
   id: "16"
@@ -160,4 +176,48 @@ food_section_q1:
   rgt: "29"
   parent_id: "12"
 
+second_tab:
+  name: Second Tab
+  form_id: "1"
+  tree_id: "1"
+  lft: "32"
+  type: ViewElement
+  id: "17"
+  description: 
+  rgt: "39"
+  parent_id: "1"
+
+second_tab_q:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "33"
+  type: QuestionElement
+  id: "18"
+  description: 
+  rgt: "38"
+  parent_id: "17"
+
+second_tab_follow_up_container:
+  name: 2nd tab Follow-up
+  form_id: "1"
+  tree_id: "1"
+  lft: "34"
+  type: FollowUpElement
+  id: "19"
+  description: 
+  rgt: "37"
+  parent_id: "18"
+  condition: "Yes"
+
+second_tab_follow_up_q:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "35"
+  type: QuestionElement
+  id: "20"
+  description: 
+  rgt: "36"
+  parent_id: "19"
 
