@@ -42,6 +42,7 @@ class FormElement < ActiveRecord::Base
       e.is_template = is_template
       e.name = node_to_copy.name
       e.description = node_to_copy.description
+      e.condition = node_to_copy.condition
       e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
       e.save!
       parent.add_child e unless parent.nil?

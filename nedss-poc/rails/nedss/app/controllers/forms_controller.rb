@@ -126,7 +126,6 @@ class FormsController < AdminController
     element_id = params[:id].split("_")[1]
     @form_element = FormElement.find(element_id)
 
-    # @new_lib_element is used for UAT testing
     if @new_lib_element = @form_element.add_to_library
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :partial => "library_elements"

@@ -102,20 +102,4 @@ describe QuestionElement do
     
   end
   
-  describe "when added to the library" do
-    
-    it "should have a tree id" do
-      pending
-    end
-    
-    it "should be be a template" do
-      pending
-    end
-    
-    it "should be a copy of the question it was created from" do
-      pending
-    end
-    
-  end
-  
 end
