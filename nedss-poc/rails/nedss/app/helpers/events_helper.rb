@@ -28,13 +28,14 @@ module EventsHelper
     
     view.full_set.each do |element|
       
-      result += close_section if (element_levels.has_key?(element.level) && element_levels[element.level].is_a?(SectionElement))
-      element_levels[element.level] = element
+      result += close_containers(element_levels, element)
       
       case element.class.name
         
       when "SectionElement"
         result += open_section(element)
+      when "FollowUpElement"
+        result += open_follow_up(element)
       when "QuestionElement"
         if element.question.core_data
           result += render_core_data_element(element)
@@ -48,12 +49,44 @@ module EventsHelper
       
     end
     
-    result += close_section if element_levels[2].is_a?(SectionElement)
+    result += close_containers(element_levels)
     
     result
   end
   
   private
+  
+  def close_containers(element_levels, element = nil)
+    result = ""
+    to_close = {}
+    
+    if (element)
+      element_levels.each { |key, value|  to_close[key] = value if (key >= element.level && 
+            (value.is_a?(SectionElement) || value.is_a?(FollowUpElement)))  }
+      element_levels[element.level] = element
+      element_levels.delete_if {|key, value| key > element.level}
+    else
+      to_close = element_levels
+    end
+    
+    to_close.sort.reverse_each {|element_to_close| result += close_container(element_to_close[1])}
+    
+    result
+  end
+  
+  def close_container(element)
+    result = ""
+    
+    case element.class.name
+      
+    when "SectionElement"
+      result += close_section
+    when "FollowUpElement"
+      result += close_follow_up
+    end
+    
+    result
+  end
   
   def open_section(element)
     result = "<br/>"
@@ -71,6 +104,14 @@ module EventsHelper
   
   def close_section
     "</div></fieldset><br/>"
+  end
+  
+  def open_follow_up(element)
+    result = "<div style='display: none;'>"
+  end
+  
+  def close_follow_up
+    result = "</div>"
   end
   
 end
