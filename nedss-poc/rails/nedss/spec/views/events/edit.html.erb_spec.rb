@@ -123,16 +123,19 @@ describe "/cmrs/edit.html.erb" do
       @question_element_1.stub!(:form_id).and_return(1)
       @question_element_1.stub!(:children).and_return([])
       @question_element_1.stub!(:level).and_return(3)
-
+      @question_element_1.stub!(:children_by_type).and_return([])
+      
       @question_element_2.stub!(:question).and_return(@question_2)
       @question_element_2.stub!(:form_id).and_return(1)
       @question_element_2.stub!(:children).and_return([])
       @question_element_2.stub!(:level).and_return(3)
+      @question_element_2.stub!(:children_by_type).and_return([])
       
       @question_element_3.stub!(:question).and_return(@question_3)
       @question_element_3.stub!(:form_id).and_return(1)
       @question_element_3.stub!(:children).and_return([@value_set])
       @question_element_3.stub!(:level).and_return(3)
+      @question_element_3.stub!(:children_by_type).and_return([])
       
       @value_set.stub!(:children).and_return([@value_1, @value_2])
 

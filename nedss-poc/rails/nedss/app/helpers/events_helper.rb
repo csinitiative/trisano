@@ -107,11 +107,19 @@ module EventsHelper
   end
   
   def open_follow_up(element)
-    result = "<div style='display: none;'>"
+    # Debt? May be some way to get this without having to do another query
+    answer = Answer.find_by_event_id_and_question_id(@event.id, element.parent.question.id)
+    if (answer.nil? || answer.text_answer != element.condition)
+      display = "none"
+    else
+      display = "inline"
+    end
+    
+   "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
   end
   
   def close_follow_up
-    result = "</div>"
+    "</div>"
   end
   
 end

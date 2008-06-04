@@ -19,6 +19,19 @@ function toggle_investigator_forms(id_to_show) {
   
 }
 
+function process_follow_up_conditions(input, conditions) {
+  
+  conditions_array = conditions.split(",")
+  
+  for (var i = 0; i < conditions_array.length; i = i+2) {
+    if (conditions_array[i] == input.value) {
+      $("follow_up_investigate_" + conditions_array[i+1]).show()
+    } else {
+      $("follow_up_investigate_" + conditions_array[i+1]).hide()
+    }
+  }
+}
+
 function setUpSearchFields() {
   if (document.getElementById("name").value.length > 0) {
     document.getElementById("sw_first_name").disabled = true;
@@ -42,8 +55,8 @@ function checkNameSearchFields(field) {
     }
   }
   else if (field.id == "sw_first_name" || field.id == "sw_last_name") {
-     first = document.getElementById("sw_first_name");
-     last = document.getElementById("sw_last_name");
+    first = document.getElementById("sw_first_name");
+    last = document.getElementById("sw_last_name");
      
     if (first.value.length > 0 || last.value.length > 0) {
       document.getElementById("name").disabled = true;
