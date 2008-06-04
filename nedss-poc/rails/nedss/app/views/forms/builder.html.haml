@@ -1,5 +1,5 @@
 %div{:id => "formbuilder-container"}
-  %div{:class => "container"}
+  %div{:id => "library-container", :class => "container"}
     %div{:class => "container-header"}
       %h3
         Element Library
@@ -10,29 +10,29 @@
         
       = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
 
-    %div{:class => "library-items"}
+    %div{:id => "library-body", :class => "container-body"}
       %ul{:id => "library-element-list"}
         = render :partial => 'forms/library_elements'
 
-    = drop_receiving_element("library-element-list", :update => "library-element-list", :accept => 'question-item', :hoverclass => 'library-drop-active', :complete => visual_effect(:highlight, 'library-element-list'), :url => {:action => 'to_library'})
+    = drop_receiving_element("library-body", :update => "library-element-list", :accept => 'question-item', :hoverclass => 'library-drop-active', :complete => visual_effect(:highlight, 'library-element-list'), :url => {:action => 'to_library'})
 
-  %div{:class => "container"}
+  %div{:id => "form-container", :class => "container"}
     %div{:class => "container-header"}
       %h3
         Form Hierarchy
 
       = button_to "Publish", {:action => "publish", :id => @form.id}
 
-    %div{:class => "library-items"}
+    %div{:id => "form-body", :class => "container-body"}
 
       %small{:style => "#float: right"}
         -#= link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_id => @form.id}, :method => :get)
-        -# &nbsp;|&nbsp;
+        &nbsp;&nbsp;
         = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_id => @form.id}, :method => :get)
       %br
 
       %div{:id => "builder-mods"}
 
-      %ul{:id => "root-element-list"}
+      %ul{:id => "root-element-list", :class => "scrollable"}
         = render :partial => 'forms/elements'
 

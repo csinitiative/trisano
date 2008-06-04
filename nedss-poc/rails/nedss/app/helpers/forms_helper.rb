@@ -93,6 +93,12 @@ module FormsHelper
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element)
 
+    result += add_question_link(element, "section") if (include_children)
+    # Uncomment (and make current) when core data back in scope
+    # result += add_core_data_link(element) if (include_children)
+
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children'>"
       element.children.each do |child|
@@ -102,11 +108,6 @@ module FormsHelper
       result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
 
     end
-    
-    result += add_question_link(element, "section") if (include_children)
-    # result += add_core_data_link(element) if (include_children)
-
-    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     result += "</li>"
     
