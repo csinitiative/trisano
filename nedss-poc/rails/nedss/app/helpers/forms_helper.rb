@@ -26,7 +26,7 @@ module FormsHelper
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element)
     result += "</li>"
-    
+
     result += add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
@@ -43,6 +43,7 @@ module FormsHelper
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
+    result
   end
   
   def render_core_view(element, include_children)
@@ -207,7 +208,7 @@ module FormsHelper
   end
 
   def add_to_library_link(element)
-    "<small>" + link_to_remote("Copy to library", :url => {:controller => "forms", :action => "to_library", :form_element_id => element.id}, :before => visual_effect(:pulsate, "question_#{element.id}")) +"</small>"
+    "<small>" + link_to_remote("Copy to library", :url => {:controller => "question_elements", :action => "open_library", :form_element_id => element.id}) +"</small>"
   end
 
   def add_value_set_link(element)
