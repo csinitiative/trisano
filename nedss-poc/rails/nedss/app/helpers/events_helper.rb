@@ -75,7 +75,7 @@ module EventsHelper
     result
   end
   
-  def render_investigator_question(element, f, disabled=false)
+  def render_investigator_question(element, f)
     result = ""
     current_answer_text = ""
     
@@ -94,24 +94,25 @@ module EventsHelper
 
     if follow_ups.size > 0
       follow_ups.each do |child|
-        disabled = true
+        
+        child.disabled = true
         unless current_answer_text.nil?
           if (current_answer_text == child.condition)
-            disabled = false
+            child.disabled = false
           end
         end
         
-        result += render_investigator_follow_up(child, f, disabled)
+        result += render_investigator_follow_up(child, f)
       end
     end
     
     result
   end
   
-  def render_investigator_follow_up(element, f, disabled=false)
+  def render_investigator_follow_up(element, f)
     result = ""
     
-    display = disabled ? "none" : "inline"
+    display = element.disabled? ? "none" : "inline"
     
     result += "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
     
@@ -119,7 +120,8 @@ module EventsHelper
     
     if questions.size > 0
       questions.each do |child|
-        result += render_investigator_question(child, f, disabled)
+        child.disabled = element.disabled?
+        result += render_investigator_question(child, f)
       end
     end
     

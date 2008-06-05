@@ -15,8 +15,8 @@ class Event < ActiveRecord::Base
   has_many :form_references
   has_many :answers
 
-# For reasons unknown code like the following won't work.
-# has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
+  # For reasons unknown code like the following won't work.
+  # has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
 
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
@@ -34,8 +34,8 @@ class Event < ActiveRecord::Base
 
   def Event.exposed_attributes
     {
-     "event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient Date of Death" },
-     "event[active_patient][active_primary_entity][person][middle_name]"   => {:type => :single_line_text, :name => "Patient Middle Name" },
+      "event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient Date of Death" },
+      "event[active_patient][active_primary_entity][person][middle_name]"   => {:type => :single_line_text, :name => "Patient Middle Name" },
     }
   end
 
@@ -59,7 +59,14 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def answers=(attributes)
+  def answers=(attributes)    
+    attributes.each do |answer_element|
+      attribute_hash = answer_element[1]
+      if (attribute_hash[:disabled] == "true")
+        attribute_hash[:text_answer] = ""
+      end        
+    end
+      
     if answers.empty?
       answers.build(attributes.values)
     else

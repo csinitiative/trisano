@@ -26,22 +26,29 @@ function process_follow_up_conditions(input, conditions) {
   for (var i = 0; i < conditions_array.length; i = i+2) {
     if (conditions_array[i] == input.value) {
       $("follow_up_investigate_" + conditions_array[i+1]).show()
-      
       children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
-      
-      for (var j = 0; j < children.length; j++) {
-        // children[j].disabled = false;
-      }
-      
+      toggle_answer_active(children, "false")
     } else {
       $("follow_up_investigate_" + conditions_array[i+1]).hide()
-
       children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
+      toggle_answer_active(children, "true")
       
-      for (var j = 0; j < children.length; j++) {
-        // children[j].disabled = true;
-      }
     }
+  }
+}
+
+function toggle_answer_active(children, value) {
+  for (var k = 0; k < children.length; k++) {
+
+    if (children[k].id && children[k].id.indexOf("_disabled") > 0) {
+      children[k].value = value
+    }
+    
+    if (children[k].id && children[k].id.indexOf("follow_up_investigate") == 0) {
+      //alert(children[k].id)
+      toggle_answer_active(children[k].childNodes, value)
+    }
+    
   }
 }
 
