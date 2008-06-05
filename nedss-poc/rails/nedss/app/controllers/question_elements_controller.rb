@@ -28,6 +28,8 @@ class QuestionElementsController < ApplicationController
       @question_element.question = Question.new
       @question_element.parent_element_id = params[:form_element_id]
       @question_element.question.core_data = params[:core_data] == "true" ? true : false
+      
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to display the new question form.'

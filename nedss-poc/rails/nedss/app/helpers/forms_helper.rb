@@ -25,8 +25,10 @@ module FormsHelper
     
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element)
+    result += "</li>"
     
     result += add_section_link(element, "tab")
+    result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
 
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
@@ -38,29 +40,16 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+      result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
-    result += "</li>"
-    
-    result += drop_receiving_element(li_html_id, 
-      :update => "root-element-list", 
-      :accept => 'lib-question-item', 
-      :hoverclass => 'library-drop-active', 
-      :complete => visual_effect(:highlight, 'root-element-list'), 
-      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
-
   end
   
   def render_core_view(element, include_children)
 
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element)
-    
-    if element.children.size > 1 && include_children
-      result += reorder_elements_link(element)
-    end
+    result += "</li>"
     
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children'>"
@@ -68,30 +57,22 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("view_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+      result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
     result += add_section_link(element, "tab")
+    result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
     
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
-
-    result += "</li>"
-    
-    result += drop_receiving_element(li_html_id, 
-      :update => "root-element-list", 
-      :accept => 'lib-question-item', 
-      :hoverclass => 'library-drop-active', 
-      :complete => visual_effect(:highlight, 'root-element-list'), 
-      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
   end
   
   def render_section(element, include_children=true)
 
     li_html_id = get_li_html_id(element.id)
     result = section_preamble(li_html_id, element)
+    result += "</li>"
 
     result += add_question_link(element, "section") if (include_children)
     # Uncomment (and make current) when core data back in scope
@@ -100,27 +81,15 @@ module FormsHelper
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='section_" + element.id.to_s + "_children'>"
+      result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("section_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-
+      result += sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
-
-    result += "</li>"
     
-    result += drop_receiving_element(li_html_id, 
-      :update => "root-element-list", 
-      :accept => 'lib-question-item', 
-      :hoverclass => 'library-drop-active', 
-      :complete => visual_effect(:highlight, 'root-element-list'), 
-      :with => "'lib_element_id=' + encodeURIComponent(element.id.split('_').last())",
-      :url => {:controller => 'forms', :action => 'from_library', :id => element.id})
-
-    # For UAT purposes
-    result += "<input type='hidden' id='drop-receiving-section' name='drop-receiving-section' value='#{li_html_id}'/>"
+    result
   end
   
   def render_question(element, include_children=true)
@@ -128,7 +97,7 @@ module FormsHelper
     question = element.question
     question_id = "question_#{element.id}"
     
-    result = "<li class='question-item' id='#{question_id}'>"
+    result = "<li class='sortable' id='#{question_id}'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -136,8 +105,9 @@ module FormsHelper
     result += "&nbsp;&nbsp;<small>(" + question.data_type_before_type_cast.humanize + ")</small>"
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
+    result += "</li>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_container_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_container_link(element) + "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)
     
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
 
@@ -152,9 +122,9 @@ module FormsHelper
       result += "</ul>"
     end
     
-    result += "</li>"
+    result
 
-    result += draggable_element question_id, :ghosting => true, :revert => true
+    # result += draggable_element question_id, :revert => true
   end
 
   def render_follow_up_container(element, include_children=true)
@@ -167,7 +137,7 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("follow_up_#{element.id}_children", :constraint => false, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+      result += sortable_element("follow_up_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
     result += add_question_link(element, "follow up container") if (include_children)
@@ -208,13 +178,13 @@ module FormsHelper
   private
 
   def add_section_link(element, trailing_text)
-    "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
+    "<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-section-" + 
       element.id.to_s + "' class='add-section' name='add-section'>Add section to #{trailing_text}</a></small>"
   end
 
   def add_question_link(element, trailing_text)
-    "&nbsp;&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
+    "<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
       element.id.to_s + "' class='add-question' name='add-question'>Add question to #{trailing_text}</a></small>"
   end
@@ -236,13 +206,17 @@ module FormsHelper
       element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up container</a></small>"
   end
 
+  def add_to_library_link(element)
+    "<small>" + link_to_remote("Copy to library", :url => {:controller => "forms", :action => "to_library", :form_element_id => element.id}, :before => visual_effect(:pulsate, "question_#{element.id}")) +"</small>"
+  end
+
   def add_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
       element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
   end
 
   def edit_value_set_link(element)
-    "&nbsp;<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+    "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
 
   def add_core_data_link(element)
@@ -250,17 +224,12 @@ module FormsHelper
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   
-  def reorder_elements_link(element)
-    "<br/><small><a href='#' onclick=\"new Ajax.Request('../../forms/order_section_children_show/" + 
-      element.id.to_s + "', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Reorder elements</a></small>"
-  end
-  
   def section_preamble(html_id, element)
 # Enable and fix url arguments when time for in place editing
 #    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
     editable_content= element.name
 
-    "<li id='#{html_id}'><b>#{editable_content}</b>"
+    "<li id='#{html_id}', class='sortable'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)

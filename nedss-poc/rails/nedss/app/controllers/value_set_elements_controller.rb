@@ -46,7 +46,6 @@ class ValueSetElementsController < ApplicationController
 
     respond_to do |format|
       if @value_set_element.save_and_add_to_form(params[:value_set_element][:parent_element_id])
-        flash[:notice] = 'Value set was successfully created.'
         format.xml  { render :xml => @value_set_element, :status => :created, :location => @value_set_element }
         format.js { @form = Form.find(@value_set_element.form_id)}
       else
@@ -66,7 +65,6 @@ class ValueSetElementsController < ApplicationController
 
     respond_to do |format|
       if @value_set_element.update_attributes(params[:value_set_element])
-        flash[:notice] = 'Value set was successfully updated.'
         format.html { redirect_to(@value_set_element) }
         format.xml  { head :ok }
         format.js { @form = Form.find(@value_set_element.form_id)}

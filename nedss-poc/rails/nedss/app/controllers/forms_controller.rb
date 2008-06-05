@@ -85,7 +85,6 @@ class FormsController < AdminController
   
   def builder
     @form = Form.find(params[:id])
-    @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
 
     respond_to do |format|
       format.html { render :template => "forms/builder" }
@@ -123,12 +122,15 @@ class FormsController < AdminController
   end
   
   def to_library
-    element_id = params[:id].split("_")[1]
-    @form_element = FormElement.find(element_id)
+    @form_element = FormElement.find(params[:form_element_id])
 
     if @new_lib_element = @form_element.add_to_library
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
-      render :partial => "library_elements"
+      render(:update) do |page| 
+        page.replace_html("question-mods-#{@form_element.id}", "<span class='success-message'>Successfully added element to library</span>"); 
+        page.delay(3) { 
+          page.replace_html("question-mods-#{@form_element.id}", ""); 
+        }
+      end
     else
       flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
       render :template => 'rjs-error'
@@ -136,9 +138,9 @@ class FormsController < AdminController
   end
 
   def from_library
-    parent_id = params[:id]
+    form_element_id = params[:form_element_id]
     lib_element_id = params[:lib_element_id]
-    @form_element = FormElement.find(parent_id)
+    @form_element = FormElement.find(form_element_id)
     if @form_element.copy_from_library(lib_element_id)
       @form = Form.find(@form_element.form_id)
       render :partial => "elements"

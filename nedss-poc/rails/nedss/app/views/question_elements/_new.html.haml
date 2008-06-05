@@ -1,25 +1,39 @@
+%div{:class => "fb-inplace-container"} 
+  %div{:id => "new-question-form", :class => "fb-inplace-form"}
 
-%div{:id => "new-question-form"}
+    = error_messages_for :question_element
 
-  = error_messages_for :question_element
+    %h4 Add a new question
+    - remote_form_for(question_element) do |f|
 
-  - remote_form_for(question_element) do |f|
+      = render :partial => 'form', :locals => { :f => f }
 
-    = render :partial => 'form', :locals => { :f => f }
+      - f.fields_for("question_attributes", @question_element.question)  do |q|
+        - if @question_element.question.core_data
+          %label Core Data Element
+          %br
+          - values = {}
+          - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
+          = q.select(:core_data_attr, values, {:include_blank => true}) 
+        - else
+          %label Data type
+          %br
+          = q.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
 
-    - f.fields_for("question_attributes", @question_element.question)  do |q|
-      - if @question_element.question.core_data
-        %label Core Data Element
-        %br
-        - values = {}
-        - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
-        = q.select(:core_data_attr, values, {:include_blank => true}) 
-      - else
-        %label Data type
-        %br
-        = q.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
+      %p
+        = f.submit "Create"
 
-    %p
-      = f.submit "Create"
-      &nbsp;&nbsp;
-      = link_to_function "Close", "$('question-mods-#{@question_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.parent_element_id}'))"
+  %div{:id => "library-container"}
+    %div{:class => "container-header"}
+      %h4 Add a question from the library
+
+      %label
+        Filter Library
+        = text_field_tag :lib_filter
+          
+      = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
+
+    %div{:id => "library-body", :class => "container-body"}
+      %ul{:id => "library-element-list"}
+        = render :partial => 'forms/library_elements'
+  = link_to_function "Close", "$('question-mods-#{@question_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.parent_element_id}'))"

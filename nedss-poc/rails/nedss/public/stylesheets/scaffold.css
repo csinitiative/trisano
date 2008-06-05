@@ -156,24 +156,16 @@ div.progressBar div.background {
     color: #999
 }
 
+.success-message {
+  color: green;
+}
+
+#============
+
 #formbuilder-container {
-  height: 600px;
-}
-
-.container {
-  width: 47%;
-  padding-right: 1em;
-}
-
-#library-container {
-  position: fixed;
-}
-
-#form-container {
-  float: right
-}
-
-.container-header {
+  height: 625px;
+  width: 95%;
+  padding: 1em;
 }
 
 .container-body {
@@ -183,7 +175,29 @@ div.progressBar div.background {
   margin-top: 1em;
 }
 
+.fb-inplace-container {
+  width: 80%;
+  border: 1px solid;
+  background: #e6e6fa;
+  padding: 1em;
+  margin: 1em;
+  overflow: hidden;
+}
+
+.fb-inplace-form {
+  width: 20%;
+  float: left;
+}
+
+#library-container {
+  width: 75%;
+  float: left;
+  margin-left: 1em;
+}
+
 #library-body {
+  height: 175px;
+  overflow: auto;
 }
 
 #library-element-list {
@@ -195,10 +209,6 @@ div.progressBar div.background {
 .scrollable {
   overflow: auto;
   overflow-x: hidden;
-}
-
-.library-drop-active {
-  background: #AFEEEE;
 }
 
 form.inplaceeditor-form input[type="submit"] { /* The submit button */
