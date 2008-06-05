@@ -24,71 +24,36 @@ module EventsHelper
   
   def render_investigator_view(view, f)
     result = ""
-    element_levels = {}
     
-    view.full_set.each do |element|
-      
-      result += close_containers(element_levels, element)
-      
-      case element.class.name
-        
-      when "SectionElement"
-        result += open_section(element)
-      when "FollowUpElement"
-        result += open_follow_up(element)
-      when "QuestionElement"
-        if element.question.core_data
-          result += render_core_data_element(element)
-        else
-          @answer_object = @event.get_or_initialize_answer(element.question.id)
-          result += f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            answer_template.dynamic_question(element, @form_index += 1)
-          end
-        end
-      end
-      
+    dfe = view.disconnected_form_element
+    
+    dfe.children_of(view).each do |element|
+      result += render_investigator_element(dfe, element, f)
     end
-    
-    result += close_containers(element_levels)
     
     result
   end
+  
   
   private
   
-  def close_containers(element_levels, element = nil)
-    result = ""
-    to_close = {}
-    
-    if (element)
-      element_levels.each { |key, value|  to_close[key] = value if (key >= element.level && 
-            (value.is_a?(SectionElement) || value.is_a?(FollowUpElement)))  }
-      element_levels[element.level] = element
-      element_levels.delete_if {|key, value| key > element.level}
-    else
-      to_close = element_levels
-    end
-    
-    to_close.sort.reverse_each {|element_to_close| result += close_container(element_to_close[1])}
-    
-    result
-  end
-  
-  def close_container(element)
+  def render_investigator_element(dfe, element, f)
     result = ""
     
     case element.class.name
-      
+   
     when "SectionElement"
-      result += close_section
+      result += render_investigator_section(dfe, element, f)
+    when "QuestionElement"
+      result += render_investigator_question(dfe, element, f)
     when "FollowUpElement"
-      result += close_follow_up
+      result += render_investigator_follow_up(dfe, element, f)
     end
     
     result
   end
   
-  def open_section(element)
+  def render_investigator_section(dfe, element, f)
     result = "<br/>"
     section_id = "section_investigate_#{element.id}";
     hide_id = section_id + "_hide";
@@ -99,27 +64,71 @@ module EventsHelper
     result += "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
     result += "</legend>"
     result += "<div id='#{section_id}'>"
+    
+    section_children = dfe.children_of(element)
+    
+    if section_children.size > 0
+      section_children.each do |child|
+        result += render_investigator_element(dfe, child, f)
+      end
+    end
+    
+    result += "</div></fieldset><br/>"
+    
     result
   end
   
-  def close_section
-    "</div></fieldset><br/>"
-  end
-  
-  def open_follow_up(element)
-    # Debt? May be some way to get this without having to do another query
-    answer = Answer.find_by_event_id_and_question_id(@event.id, element.parent.question.id)
-    if (answer.nil? || answer.text_answer != element.condition)
-      display = "none"
+  def render_investigator_question(dfe, element, f, disabled=false)
+    result = ""
+    current_answer_text = ""
+    
+    if element.question.core_data
+      result += render_core_data_element(element)
     else
-      display = "inline"
+      @answer_object = @event.get_or_initialize_answer(element.question.id)
+      current_answer_text = @answer_object.text_answer
+     
+      result += f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+        answer_template.dynamic_question(element, @form_index += 1)
+      end
     end
     
-   "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
+    follow_ups = dfe.children_of_by_type(element, "FollowUpElement")
+
+    if follow_ups.size > 0
+      follow_ups.each do |child|
+        disabled = true
+        unless current_answer_text.nil?
+          if (current_answer_text == child.condition)
+            disabled = false
+          end
+        end
+        
+        result += render_investigator_follow_up(dfe, child, f, disabled)
+      end
+    end
+    
+    result
   end
   
-  def close_follow_up
-    "</div>"
+  def render_investigator_follow_up(dfe, element, f, disabled=false)
+    result = ""
+    
+    display = disabled ? "none" : "inline"
+    
+    result += "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
+    
+    questions = dfe.children_of(element)
+    
+    if questions.size > 0
+      questions.each do |child|
+        result += render_investigator_question(dfe, child, f, disabled)
+      end
+    end
+    
+    result += "</div>"
+    
+    result
   end
   
 end

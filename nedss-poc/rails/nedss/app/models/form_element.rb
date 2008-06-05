@@ -52,4 +52,8 @@ class FormElement < ActiveRecord::Base
       e
   end
   
+  def disconnected_form_element
+    @disconnected_form_element ||= DisconnectedFormElement.new(self)
+  end
+  
 end

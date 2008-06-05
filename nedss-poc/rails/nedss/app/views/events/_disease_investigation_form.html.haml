@@ -52,9 +52,10 @@
                     - for view in form.form_base_element.children_by_type("ViewElement")
                       %div{:id => "ut_#{view.id}"}
                         = render_investigator_view(view, f)
+                        
                             
               - else
-                = render_investigator_view(form.form_base_element.children_by_type("ViewElement").first, f)
+                = render_investigator_view(view, f)
               
               %div{:align => "right"}
                 %small

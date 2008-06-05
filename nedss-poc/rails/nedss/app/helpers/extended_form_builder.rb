@@ -20,6 +20,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
     html_options[:index] = index
 
+    # Debt: Is this issuing an extra query? We have children in memory already.
     follow_ups = question_element.children_by_type("FollowUpElement")
 
     if(follow_ups.size > 0)

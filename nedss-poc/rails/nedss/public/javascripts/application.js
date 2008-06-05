@@ -26,8 +26,21 @@ function process_follow_up_conditions(input, conditions) {
   for (var i = 0; i < conditions_array.length; i = i+2) {
     if (conditions_array[i] == input.value) {
       $("follow_up_investigate_" + conditions_array[i+1]).show()
+      
+      children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
+      
+      for (var j = 0; j < children.length; j++) {
+        // children[j].disabled = false;
+      }
+      
     } else {
       $("follow_up_investigate_" + conditions_array[i+1]).hide()
+
+      children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
+      
+      for (var j = 0; j < children.length; j++) {
+        // children[j].disabled = true;
+      }
     }
   }
 }
