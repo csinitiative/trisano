@@ -25,35 +25,32 @@ module EventsHelper
   def render_investigator_view(view, f)
     result = ""
     
-    dfe = view.disconnected_form_element
-    
-    dfe.children_of(view).each do |element|
-      result += render_investigator_element(dfe, element, f)
+    view.cached_children.each do |element|
+      result += render_investigator_element(element, f)
     end
     
     result
   end
   
-  
   private
   
-  def render_investigator_element(dfe, element, f)
+  def render_investigator_element(element, f)
     result = ""
     
     case element.class.name
    
     when "SectionElement"
-      result += render_investigator_section(dfe, element, f)
+      result += render_investigator_section(element, f)
     when "QuestionElement"
-      result += render_investigator_question(dfe, element, f)
+      result += render_investigator_question(element, f)
     when "FollowUpElement"
-      result += render_investigator_follow_up(dfe, element, f)
+      result += render_investigator_follow_up(element, f)
     end
     
     result
   end
   
-  def render_investigator_section(dfe, element, f)
+  def render_investigator_section(element, f)
     result = "<br/>"
     section_id = "section_investigate_#{element.id}";
     hide_id = section_id + "_hide";
@@ -65,11 +62,11 @@ module EventsHelper
     result += "</legend>"
     result += "<div id='#{section_id}'>"
     
-    section_children = dfe.children_of(element)
+    section_children = element.cached_children
     
     if section_children.size > 0
       section_children.each do |child|
-        result += render_investigator_element(dfe, child, f)
+        result += render_investigator_element(child, f)
       end
     end
     
@@ -78,7 +75,7 @@ module EventsHelper
     result
   end
   
-  def render_investigator_question(dfe, element, f, disabled=false)
+  def render_investigator_question(element, f, disabled=false)
     result = ""
     current_answer_text = ""
     
@@ -93,7 +90,7 @@ module EventsHelper
       end
     end
     
-    follow_ups = dfe.children_of_by_type(element, "FollowUpElement")
+    follow_ups = element.cached_children_by_type("FollowUpElement")
 
     if follow_ups.size > 0
       follow_ups.each do |child|
@@ -104,25 +101,25 @@ module EventsHelper
           end
         end
         
-        result += render_investigator_follow_up(dfe, child, f, disabled)
+        result += render_investigator_follow_up(child, f, disabled)
       end
     end
     
     result
   end
   
-  def render_investigator_follow_up(dfe, element, f, disabled=false)
+  def render_investigator_follow_up(element, f, disabled=false)
     result = ""
     
     display = disabled ? "none" : "inline"
     
     result += "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
     
-    questions = dfe.children_of(element)
+    questions = element.cached_children
     
     if questions.size > 0
       questions.each do |child|
-        result += render_investigator_question(dfe, child, f, disabled)
+        result += render_investigator_question(child, f, disabled)
       end
     end
     

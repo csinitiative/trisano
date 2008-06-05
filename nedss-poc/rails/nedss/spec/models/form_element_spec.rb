@@ -119,3 +119,35 @@ describe "Quesiton FormElement when added to library" do
   end
     
 end
+
+describe "cached form elements" do
+  
+  before(:each) do
+    @form_base_element = FormBaseElement.create(:tree_id => 1, :form_id => 1, :name => "base")
+    @view_element = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view")
+    @view_element2 = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view 2")
+    @section_element = SectionElement.create(:tree_id => 1, :form_id => 1, :name => "section")
+    
+    @form_base_element.add_child(@view_element)
+    @form_base_element.add_child(@view_element2)
+    @form_base_element.add_child(@section_element)
+  end
+  
+  it "should count children" do
+    @form_base_element.cached_children_count.should == 3
+  end
+  
+  it "should count children by type" do
+    @form_base_element.cached_children_count_by_type("ViewElement").should == 2
+    @form_base_element.cached_children_count_by_type("SectionElement").should == 1
+  end
+    
+  it "should return children by type" do
+    view_children = @form_base_element.cached_children_by_type("ViewElement")
+    view_children.size.should == 2
+    view_children[0].is_a?(ViewElement).should be_true
+  end
+  
+end
+
+

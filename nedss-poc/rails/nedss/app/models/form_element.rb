@@ -36,24 +36,53 @@ class FormElement < ActiveRecord::Base
 
   # Returns root node of the copied tree
   def copy_children(node_to_copy, parent, form_id, tree_id, is_template)
-      e = node_to_copy.class.new
-      e.form_id = form_id
-      e.tree_id = tree_id
-      e.is_template = is_template
-      e.name = node_to_copy.name
-      e.description = node_to_copy.description
-      e.condition = node_to_copy.condition
-      e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
-      e.save!
-      parent.add_child e unless parent.nil?
-      node_to_copy.children.each do |child|
-        copy_children(child, e, form_id, tree_id, is_template)
-      end
-      e
+    e = node_to_copy.class.new
+    e.form_id = form_id
+    e.tree_id = tree_id
+    e.is_template = is_template
+    e.name = node_to_copy.name
+    e.description = node_to_copy.description
+    e.condition = node_to_copy.condition
+    e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
+    e.save!
+    parent.add_child e unless parent.nil?
+    node_to_copy.children.each do |child|
+      copy_children(child, e, form_id, tree_id, is_template)
+    end
+    e
   end
   
-  def disconnected_form_element
-    @disconnected_form_element ||= DisconnectedFormElement.new(self)
+  def full_set_cache
+    @full_set_cache ||= self.full_set
   end
+  
+  def cached_children
+    full_set_cache.collect { |node| if (node.parent_id == self.id)
+        node
+      end
+    }.compact
+  end
+  
+  def cached_children_by_type(type)
+    full_set_cache.collect { |node| if (node.parent_id == self.id && node.type == type)
+        node
+      end
+    }.compact
+  end
+  
+  def cached_children_count
+    full_set_cache.collect { |node| if (node.parent_id == self.id)
+        node
+      end
+    }.compact.size
+  end
+  
+  def cached_children_count_by_type(type)
+    full_set_cache.collect { |node| if (node.parent_id == self.id && node.type == type)
+        node
+      end
+    }.compact.size
+  end
+  
   
 end
