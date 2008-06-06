@@ -53,11 +53,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
       check_boxes + @template.hidden_field_tag(name, "")
     when :radio_button
-      i =0
+      i = 0
       name = @object_name + "[" + index.to_s + "][radio_button_answer][]"
       get_values(question_element).inject(radio_buttons = "") do |radio_buttons, value|
         id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_radio_button_answer_#{i += 1}" 
-        radio_buttons += @template.radio_button_tag($object_name, value, @object.radio_button_answer.include?(value)) + value
+        radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), :id => id) + value
       end
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
