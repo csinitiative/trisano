@@ -18,14 +18,16 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Form Builder"
       @browser.wait_for_page_to_load "30000"
 
-      @browser.click "link=Add a section"
-      wait_for_element_present("new-section-form")
+      @browser.click "link=Add section to tab"
+      #wait_for_element_present("new-section-form")
+      sleep 3 #waiting for section text box to load
       @browser.type "section_element_name", "Section 1"
       @browser.click "section_element_submit"
       wait_for_element_not_present("new-section-form")
 
-      @browser.click "link=Add a question"
-      wait_for_element_present("new-question-form")
+      @browser.click "link=Add question to section"
+      #wait_for_element_present("new-question-form")
+      sleep 3 
       @browser.type "question_element_question_attributes_question_text", "Single-line text"
       @browser.select "question_element_question_attributes_data_type", "label=Single line text"
       @browser.click "question_element_submit"
@@ -95,7 +97,8 @@ describe "Form Builder Investigator Single Form" do
   it "should render one form." do
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load "30000"
-    @browser.get_xpath_count("//ul[@id='sub_form_tabs']/li").should eql("1")
+    @browser.is_text_present("Investigation").should be_true
+    #@browser.get_xpath_count("//ul[@id='investigation_tab']/li").should eql("1")
   end
 
   it "should save entered data." do
@@ -124,4 +127,5 @@ describe "Form Builder Investigator Single Form" do
     @browser.is_checked("event_answers__4_check_box_answer_2").should be_true
     @browser.is_checked("event_answers__4_check_box_answer_3").should be_true
   end
+
 end
