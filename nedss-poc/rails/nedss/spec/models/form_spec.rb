@@ -172,7 +172,6 @@ describe Form do
       second_tab_follow_up = second_tab_q.children[0]
       second_tab_follow_up.class.name.should eql("FollowUpElement")
       second_tab_follow_up.form_id.should eql(published_form.id)
-      second_tab_follow_up.name.should eql(form_elements(:second_tab_follow_up_container).name)
       second_tab_follow_up.condition.should eql(form_elements(:second_tab_follow_up_container).condition)
       
       second_tab_follow_up_q = second_tab_follow_up.children[0]

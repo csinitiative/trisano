@@ -4,7 +4,6 @@ describe FollowUpElement do
   before(:each) do
     @follow_up_element = FollowUpElement.new
     @follow_up_element.form_id = 1
-    @follow_up_element.name = "Follow up"
     @follow_up_element.condition = "Yes"
   end
 

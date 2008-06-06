@@ -199,7 +199,7 @@ second_tab_q:
   parent_id: "17"
 
 second_tab_follow_up_container:
-  name: 2nd tab Follow-up
+  name: 
   form_id: "1"
   tree_id: "1"
   lft: "34"
