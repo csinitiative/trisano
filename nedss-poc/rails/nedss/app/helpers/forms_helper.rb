@@ -35,7 +35,7 @@ module FormsHelper
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children'>"
+      result += "<ul id='view_" + element.id.to_s + "_children', style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -53,7 +53,7 @@ module FormsHelper
     result += "</li>"
     
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children'>"
+      result += "<ul id='view_" + element.id.to_s + "_children', :style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -98,7 +98,7 @@ module FormsHelper
     question = element.question
     question_id = "question_#{element.id}"
     
-    result = "<li class='sortable' id='#{question_id}'>"
+    result = "<li class='sortable' id='#{question_id}', style='clear: both;'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -208,7 +208,7 @@ module FormsHelper
   end
 
   def add_to_library_link(element)
-    "<small>" + link_to_remote("Copy to library", :url => {:controller => "question_elements", :action => "open_library", :form_element_id => element.id}) +"</small>"
+    "<small>" + link_to_remote("Copy to library", :url => {:controller => "group_elements", :action => "new", :form_element_id => element.id}) +"</small>"
   end
 
   def add_value_set_link(element)
@@ -230,7 +230,7 @@ module FormsHelper
 #    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
     editable_content= element.name
 
-    "<li id='#{html_id}', class='sortable'><b>#{editable_content}</b>"
+    "<li id='#{html_id}', class='sortable', style='clear: both'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)

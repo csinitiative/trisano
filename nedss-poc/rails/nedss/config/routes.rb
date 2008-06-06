@@ -17,6 +17,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :question_elements
   
+  map.resources :group_elements
+
   map.resources :section_elements
 
   map.resources :value_set_elements

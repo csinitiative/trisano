@@ -85,12 +85,18 @@ class FormElementsController < ApplicationController
   end
   
   def filter_elements
+    @reference_element_id = params[:reference_element_id]
+    direction = params[:direction]
+
     if params[:filter_by].blank?
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     else
-      @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT question_element_id FROM questions WHERE question_text ILIKE '%#{params[:filter_by]}%')")
+      if direction == "to_library"
+        @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE '%#{params[:filter_by]}%'")
+      else
+        @library_elements = FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT question_element_id FROM questions WHERE question_text ILIKE '%#{params[:filter_by]}%')")
+      end
     end
-    p @library_elements
-    render :partial => "forms/library_elements"
+    render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym}
   end
 end

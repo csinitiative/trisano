@@ -1,9 +1,9 @@
 %div{:id => "formbuilder-container"}
-  %div{:class => "container-header"}
+  %div{:id => "formbuilder-header"}
 
     = button_to "Publish", {:action => "publish", :id => @form.id}
 
-  %div{:id => "form-body", :class => "container-body"}
+  %div{:id => "formbuilder-body"}
 
     %small{:style => "#float: right"}
       -#= link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_id => @form.id}, :method => :get)

@@ -20,10 +20,15 @@ class FormElement < ActiveRecord::Base
   end
   
   # DEBT! Should make publish and add_to_library the same code
-  def add_to_library
+  def add_to_library(group_element)
     transaction do
-      tree_id = FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-      copy_children(self, nil, nil, tree_id, true)
+      if group_element.nil?
+        tree_id = FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+        copy_children(self, nil, nil, tree_id, true)
+      else
+        tree_id = group_element.tree_id
+        copy_children(self, group_element, nil, tree_id, true)
+      end
     end
   end
 

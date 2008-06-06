@@ -1,10 +1,10 @@
-%div{:class => "fb-inplace-container"} 
-  %div{:id => "new-question-form", :class => "fb-inplace-form"}
+%div{:id => "fb-inplace-container", :class => "fb-container"} 
+  %div{:id => "new-question-form", :class => 'fb-inplace-form'}
 
     = error_messages_for :question_element
 
     %h4 Add a new question
-    - remote_form_for(question_element) do |f|
+    - remote_form_for(@question_element) do |f|
 
       = render :partial => 'form', :locals => { :f => f }
 
@@ -23,17 +23,6 @@
       %p
         = f.submit "Create"
 
-  %div{:id => "library-container"}
-    %div{:class => "container-header"}
-      %h4 Add a question from the library
+  = render :partial => "forms/library", :locals => {:direction => :from_library}
 
-      %label
-        Filter Library
-        = text_field_tag :lib_filter
-          
-      = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements' }, :with => "'filter_by='+encodeURIComponent(value)")
-
-    %div{:id => "library-body", :class => "container-body"}
-      %ul{:id => "library-element-list"}
-        = render :partial => 'forms/library_elements'
-  = link_to_function "Close", "$('question-mods-#{@question_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.parent_element_id}'))"
+  = link_to_function "Close", "$('question-mods-#{@reference_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element_id}'))"
