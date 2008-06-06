@@ -21,6 +21,14 @@ class Answer < ActiveRecord::Base
     self.text_answer.nil? ? [] : self.text_answer.split("\n")
   end
 
+  def radio_button_answer=(answer)
+    self.text_answer = answer.join("\n")
+  end
+
+  def radio_button_answer
+    self.text_answer.nil? ? [] : self.text_answer.split("\n")
+  end
+
   def required
     question.is_required
   end
