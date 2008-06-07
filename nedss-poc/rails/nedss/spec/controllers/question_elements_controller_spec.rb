@@ -318,4 +318,62 @@ describe QuestionElementsController do
     end
   end
   
+  describe "handling POST /question_elements/process_conditional" do
+
+    before(:each) do
+      mock_user
+      @event = mock_model(Event)
+      @follow_up = mock_model(FollowUpElement)
+      @question_element = mock_model(QuestionElement, :to_param => "1")
+      QuestionElement.stub!(:find).and_return(@question_element)
+      Event.stub!(:find).and_return(@event)
+    end
+  
+    describe "with successful condition processing" do
+    
+      def do_post
+        post :process_condition, :question_element_id => "1", :response => "Yes", :event_id => "1"
+      end
+      
+      it "should be successful" do
+        @question_element.stub!(:process_condition).and_return(@follow_up)
+        do_post
+        response.should be_success
+      end
+      
+      it "should assign the follow up group for the view" do
+        @question_element.stub!(:process_condition).and_return(@follow_up)
+        do_post
+        assigns(:follow_up).should equal(@follow_up)
+      end
+    
+      it "should assign the event for the view to use to build form fields" do
+        @question_element.stub!(:process_condition).and_return(@follow_up)
+        do_post
+        assigns(:event).should equal(@event)
+      end
+      
+      it "should render the process_condition rjs template" do
+        @question_element.stub!(:process_condition).and_return(@follow_up)
+        do_post
+        response.should render_template('process_condition')
+      end
+    
+    end
+    
+    describe "with unsuccessful condition processing" do
+      def do_post
+        post :process_condition, :question_element_id => "1", :response => "Yes", :event_id => "1"
+      end
+    
+      it "should render rjs failure template" do
+        @question_element.stub!(:process_condition).and_raise(Exception)
+        do_post
+        response.should render_template('rjs-error')
+      end
+    
+    end
+
+  end
+  
 end

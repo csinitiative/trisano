@@ -19,37 +19,8 @@ function toggle_investigator_forms(id_to_show) {
   
 }
 
-function process_follow_up_conditions(input, conditions) {
-  
-  conditions_array = conditions.split(",")
-  
-  for (var i = 0; i < conditions_array.length; i = i+2) {
-    if (conditions_array[i] == input.value) {
-      $("follow_up_investigate_" + conditions_array[i+1]).show()
-      children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
-      toggle_answer_active(children, "false")
-    } else {
-      $("follow_up_investigate_" + conditions_array[i+1]).hide()
-      children = $("follow_up_investigate_" + conditions_array[i+1]).childNodes
-      toggle_answer_active(children, "true")
-      
-    }
-  }
-}
-
-function toggle_answer_active(children, value) {
-  for (var k = 0; k < children.length; k++) {
-
-    if (children[k].id && children[k].id.indexOf("_disabled") > 0) {
-      children[k].value = value
-    }
-    
-    if (children[k].id && children[k].id.indexOf("follow_up_investigate") == 0) {
-      //alert(children[k].id)
-      toggle_answer_active(children[k].childNodes, value)
-    }
-    
-  }
+function sendConditionRequest(element, event_id, question_element_id) {
+  new Ajax.Request('../../question_elements/process_condition?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {asynchronous:true, evalScripts:true})
 }
 
 function setUpSearchFields() {

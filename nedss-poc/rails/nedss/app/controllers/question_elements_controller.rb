@@ -1,6 +1,5 @@
 class QuestionElementsController < ApplicationController
-  # GET /question_elements
-  # GET /question_elements.xml
+
   def index
     @question_elements = QuestionElement.find(:all)
 
@@ -10,8 +9,6 @@ class QuestionElementsController < ApplicationController
     end
   end
 
-  # GET /question_elements/1
-  # GET /question_elements/1.xml
   def show
     @question_element = QuestionElement.find(params[:id])
 
@@ -21,7 +18,6 @@ class QuestionElementsController < ApplicationController
     end
   end
 
-  # Just used through RJS
   def new
     begin
       @question_element = QuestionElement.new
@@ -38,7 +34,6 @@ class QuestionElementsController < ApplicationController
     end
   end
 
-  # GET /question_elements/1/edit
   def edit
     @question_element = QuestionElement.find(params[:id])
   end
@@ -70,7 +65,7 @@ class QuestionElementsController < ApplicationController
   def destroy
     render :text => 'Deletion handled by form elements.', :status => 405
   end
-
+  
   def open_library
     begin
       @reference_element_id = params[:form_element_id]
@@ -85,6 +80,19 @@ class QuestionElementsController < ApplicationController
       flash[:notice] = 'Unable to display the library.'
       render :template => 'rjs-error'
     end
+  end
+  
+  def process_condition
+    begin
+      @question_element_id = params[:question_element_id]
+      @follow_up = QuestionElement.find(@question_element_id).process_condition(params, params[:event_id])
+      @event = params[:event_id].blank? ? Event.new : Event.find(params[:event_id])
+    rescue Exception => ex
+      logger.info ex
+      flash[:notice] = 'Unable to process conditional logic for follow up questions.'
+      render :template => 'rjs-error'
+    end
+    
   end
 
 end

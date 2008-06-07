@@ -17,6 +17,36 @@ class QuestionElement < FormElement
       end
     end
   end
+  
+  def process_condition(answer, event_id)
+    result = nil
+    
+    follow_ups = self.children_by_type("FollowUpElement")
+    
+    if (answer.is_a? Answer)
+      condition = answer.text_answer
+    else
+      condition = answer[:response]
+    end
+    
+    follow_ups.each do |follow_up|
+      if (follow_up.condition == condition)
+        result = follow_up
+      else
+        unless (event_id.blank?)
+          question_elements_to_delete = QuestionElement.find(:all, :include => :question,
+            :conditions => ["lft > ? and rgt < ? and tree_id = ?", follow_up.lft, follow_up.rgt, follow_up.tree_id])
+          
+          question_elements_to_delete.each do |question_element|
+            answer = Answer.find_by_event_id_and_question_id(event_id, question_element.question.id)
+            answer.destroy unless answer.nil?
+          end
+        end
+      end
+    end
+    
+    result
+  end
 
   def question_instance
     @question_instance || question

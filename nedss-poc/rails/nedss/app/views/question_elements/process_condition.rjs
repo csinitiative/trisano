@@ -1,0 +1,5 @@
+if @follow_up.nil?
+  page.replace_html "follow_up_investigate_#{@question_element_id}", ""
+else
+  page.replace_html "follow_up_investigate_#{@question_element_id}", :partial => 'events/follow_up', :locals => {:follow_up => @follow_up}
+end

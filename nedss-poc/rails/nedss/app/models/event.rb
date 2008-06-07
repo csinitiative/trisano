@@ -59,19 +59,16 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def answers=(attributes)    
-    attributes.each do |answer_element|
-      attribute_hash = answer_element[1]
-      if (attribute_hash[:disabled] == "true")
-        attribute_hash[:text_answer] = ""
-      end        
-    end
-      
+  def answers=(attributes)      
     if answers.empty?
       answers.build(attributes.values)
     else
       answers.update(attributes.keys, attributes.values)
     end
+  end
+  
+  def new_answers=(attributes)
+    answers.build(attributes)
   end
 
   def get_or_initialize_answer(question_id)

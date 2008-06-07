@@ -76,35 +76,42 @@ module EventsHelper
   end
   
   def render_investigator_question(element, f)
-    result = ""
-    current_answer_text = ""
+    
+    result = "<div id='question_investigate_#{element.id}'>"
     
     if element.question.core_data
       result += render_core_data_element(element)
     else
+      
       @answer_object = @event.get_or_initialize_answer(element.question.id)
-      current_answer_text = @answer_object.text_answer
      
-      result += f.fields_for(:answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        answer_template.dynamic_question(element, @form_index += 1)
-      end
-    end
-    
-    follow_ups = element.cached_children_by_type("FollowUpElement")
-
-    if follow_ups.size > 0
-      follow_ups.each do |child|
-        
-        child.disabled = true
-        unless current_answer_text.nil?
-          if (current_answer_text == child.condition)
-            child.disabled = false
+      if (f.nil?)
+        result += fields_for(@event) do |f|
+          f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+            answer_template.dynamic_question(element, "")
           end
         end
-        
-        result += render_investigator_follow_up(child, f)
+      else
+        prefix = @answer_object.new_record? ? "new_answers" : "answers"
+        index = @answer_object.new_record? ? "" : @form_index += 1
+        result += f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          answer_template.dynamic_question(element, index)
+        end
       end
+
     end
+    
+    follow_up_group = element.process_condition(@answer_object, @event.id)
+      
+    unless follow_up_group.nil?
+      result += "<div id='follow_up_investigate_#{element.id}'>"
+      result += render_investigator_follow_up(follow_up_group, f)
+      result += "</div>"
+    else
+      result += "<div id='follow_up_investigate_#{element.id}'/>"
+    end
+    
+    result += "</div>"
     
     result
   end
@@ -112,20 +119,13 @@ module EventsHelper
   def render_investigator_follow_up(element, f)
     result = ""
     
-    display = element.disabled? ? "none" : "inline"
-    
-    result += "<div style='display: #{display};' id='follow_up_investigate_#{element.id}'>"
-    
     questions = element.cached_children
     
     if questions.size > 0
       questions.each do |child|
-        child.disabled = element.disabled?
         result += render_investigator_question(child, f)
       end
     end
-    
-    result += "</div>"
     
     result
   end

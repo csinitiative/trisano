@@ -15,6 +15,9 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def dynamic_question(question_element, index, html_options = {}) 
+        
+    event_id = (@object.nil? || @object.event_id.blank?) ? "" : @object.event_id
+    
     question = question_element.question
     index = @object.id.nil? ? index : @object.id
 
@@ -27,18 +30,18 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       conditions = []
       follow_ups.each { |follow_up| conditions << "#{follow_up.condition},#{follow_up.id}"}
       conditions = conditions.join(",")
-      text_answer_event = "process_follow_up_conditions(this, '#{conditions}')"
-      select_answer_event = "process_follow_up_conditions(this, '#{conditions}')"
+      text_answer_event = "sendConditionRequest(this, '#{event_id}', '#{question_element.id}');"
+      select_answer_event = "sendConditionRequest(this, '#{event_id}', '#{question_element.id}');"
     end
 
     input_element = case question.data_type
     when :single_line_text
       html_options[:size] = question.size
-      html_options[:onblur] = text_answer_event if follow_ups
+      html_options[:onchange] = text_answer_event if follow_ups
       text_field(:text_answer, html_options)
     when :multi_line_text
       html_options[:rows] = 3
-      html_options[:onblur] = text_answer_event if follow_ups
+      html_options[:onchange] = text_answer_event if follow_ups
       text_area(:text_answer, html_options)
     when :drop_down
       html_options[:onchange] = select_answer_event if follow_ups
@@ -61,11 +64,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
-      html_options[:onblur] = text_answer_event if follow_ups
+      html_options[:onchange] = text_answer_event if follow_ups
       calendar_date_select(:text_answer, html_options)
     when :phone
       html_options[:size] = 14
-      html_options[:onblur] = text_answer_event if follow_ups
+      html_options[:onchange] = text_answer_event if follow_ups
       text_field(:text_answer, html_options)
         
     end
