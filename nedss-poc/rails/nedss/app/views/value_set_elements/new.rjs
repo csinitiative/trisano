@@ -1,2 +1,2 @@
 page.replace_html "value-set-mods-#{@value_set_element.parent_element_id}", :partial => 'value_set_elements/new', :locals => {:value_set_element => @value_set_element}
-page.visual_effect(:blind_down, "value-set-mods-#{@value_set_element.parent_element_id}")
+page.visual_effect(:blind_down, "value-set-mods-#{@value_set_element.parent_element_id}", :duration => 0.1)

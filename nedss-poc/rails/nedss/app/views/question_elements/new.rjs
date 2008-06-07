@@ -1,3 +1,3 @@
 page.hide "question-mods-#{@reference_element_id}"
 page.replace_html "question-mods-#{@reference_element_id}", :partial => 'question_elements/new'
-page.visual_effect(:blind_down, "question-mods-#{@reference_element_id}")
+page.visual_effect(:blind_down, "question-mods-#{@reference_element_id}", :duration => 0.1)
