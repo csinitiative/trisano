@@ -51,11 +51,4 @@ class Answer < ActiveRecord::Base
     end
   end
   
-  def disabled=(value)
-    @disabled = value
-  end
-  
-  def disabled
-    @disabled ||= false
-  end
 end

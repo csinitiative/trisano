@@ -81,8 +81,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
       
-    q + "\n" + hidden_field(:question_id, :index => index) + 
-      hidden_field(:disabled, :index => index, :value => question_element.disabled?) 
+    q + "\n" + hidden_field(:question_id, :index => index)
   end
 
   def get_values(question_element)

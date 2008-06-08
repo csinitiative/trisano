@@ -21,6 +21,7 @@ class QuestionElement < FormElement
   def process_condition(answer, event_id)
     result = nil
     
+    # Debt: This could go against the cache
     follow_ups = self.children_by_type("FollowUpElement")
     
     if (answer.is_a? Answer)
@@ -34,6 +35,7 @@ class QuestionElement < FormElement
         result = follow_up
       else
         unless (event_id.blank?)
+          # Debt: We could add a method that does this against the cache
           question_elements_to_delete = QuestionElement.find(:all, :include => :question,
             :conditions => ["lft > ? and rgt < ? and tree_id = ?", follow_up.lft, follow_up.rgt, follow_up.tree_id])
           
