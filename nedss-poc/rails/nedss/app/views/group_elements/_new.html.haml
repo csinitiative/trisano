@@ -1,0 +1,14 @@
+%div{:id => "fb-inplace-container", :class => "fb-container"}
+  %div{:id => "new-group-form", :class => 'fb-inplace-form'}
+
+    = error_messages_for :group_element
+    
+    %h4 Add a new group
+    - remote_form_for(@group_element) do |f|
+      = render :partial => 'form', :locals => { :f => f }
+      %p
+        = f.submit "Create"
+
+  = render :partial => "forms/library", :locals => {:direction => :to_library}
+
+  = link_to_function "Close", "$('question-mods-#{@reference_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element_id}'))"
