@@ -229,6 +229,18 @@ div.progressBar div.background {
   overflow-x: hidden;
 }
 
+.fb-tab {
+  color: blue;
+}
+
+.fb-section {
+  color: crimson;
+}
+
+.fb-group {
+  color: forestgreen;
+}
+
 form.inplaceeditor-form input[type="submit"] { /* The submit button */
   margin-left:1em;
 }

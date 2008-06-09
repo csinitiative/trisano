@@ -9,6 +9,8 @@ module FormsHelper
       render_core_view(element, include_children)
     when "SectionElement"
       render_section(element, include_children)
+    when "GroupElement"
+      render_group(element, include_children)
     when "QuestionElement"
       render_question(element, include_children)
     when "FollowUpElement"
@@ -24,7 +26,7 @@ module FormsHelper
   def render_view(element, include_children=true)
     
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element)
+    result = section_preamble(li_html_id, element, 'tab')
     result += "</li>"
 
     result += add_section_link(element, "tab")
@@ -49,7 +51,7 @@ module FormsHelper
   def render_core_view(element, include_children)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element)
+    result = section_preamble(li_html_id, element, 'tab')
     result += "</li>"
     
     if include_children && element.children?
@@ -72,7 +74,7 @@ module FormsHelper
   def render_section(element, include_children=true)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element)
+    result = section_preamble(li_html_id, element, 'section')
     result += "</li>"
 
     result += add_question_link(element, "section") if (include_children)
@@ -92,7 +94,25 @@ module FormsHelper
     
     result
   end
-  
+
+  def render_group(element, include_children=true)
+
+    li_html_id = get_li_html_id(element.id)
+    result = section_preamble(li_html_id, element, "group")
+    result += "</li>"
+
+    if include_children && element.children?
+      result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+      result += sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+    end
+    
+    result
+  end
+ 
   def render_question(element, include_children=true)
     
     question = element.question
@@ -225,12 +245,12 @@ module FormsHelper
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   
-  def section_preamble(html_id, element)
+  def section_preamble(html_id, element, type)
 # Enable and fix url arguments when time for in place editing
 #    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
     editable_content= element.name
 
-    "<li id='#{html_id}', class='sortable', style='clear: both'><b>#{editable_content}</b>"
+    "<li id='#{html_id}', class='fb-#{type}', style='clear: both'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)
