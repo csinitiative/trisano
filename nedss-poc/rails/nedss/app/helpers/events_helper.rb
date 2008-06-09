@@ -124,7 +124,7 @@ module EventsHelper
       result += render_investigator_follow_up(follow_up_group, f)
       result += "</div>"
     else
-      result += "<div id='follow_up_investigate_#{element.id}'/>"
+      result += "<div id='follow_up_investigate_#{element.id}'></div>"
     end
     
     result += "</div>"
