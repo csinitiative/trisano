@@ -1,0 +1,2 @@
+class CmrsWestController < ApplicationController
+end

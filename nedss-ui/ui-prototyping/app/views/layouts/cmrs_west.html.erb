@@ -50,9 +50,6 @@
 <br/>
 
 
-<% if @boolean_example %>
-
-
 <b>Admin</b><br/>
   
 <%= link_to 'Admin Home', :controller => "cmrs", :action => "index" %><br/>
@@ -63,16 +60,15 @@
 <br/>
 <br/>
 
-<small>User: <%= @user.name %><br/></small>
-
-<% end %>
-
+<small>User: <%= @user_name %><br/></small>
 
 </div>
 
 <div class="bd" id="bd"><!--body-->
 
 <p style="color: green"><%= flash[:notice] %></p>
+
+<h1>West Coast</h1>
 
 <%= yield  %>
 
