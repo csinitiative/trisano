@@ -250,7 +250,7 @@ module FormsHelper
 #    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
     editable_content= element.name
 
-    "<li id='#{html_id}', class='fb-#{type}', style='clear: both'><b>#{editable_content}</b>"
+    "<li id='#{html_id}', class='sortable fb-#{type}', style='clear: both;'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)

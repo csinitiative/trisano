@@ -1,3 +1,4 @@
-page.replace_html 'library-element-list', :partial => 'forms/library_elements'
-page.visual_effect(:highlight, 'library-element-list')
+page.replace_html 'root-element-list', :partial => 'forms/elements'
+page.replace_html 'builder-mods', "<input type='hidden' id='modified-element' name='created-element-id' value='" + @section_element.id.to_s + "'/>"
+page.visual_effect(:highlight, 'root-element-list')
 flash[:notice] = ""

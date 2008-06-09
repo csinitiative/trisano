@@ -1,3 +1,2 @@
-page.hide "question-mods-#{@reference_element_id}"
-page.replace_html "question-mods-#{@reference_element_id}", :partial => 'group_elements/new'
-page.visual_effect(:blind_down, "question-mods-#{@reference_element_id}")
+page.replace_html "section-mods-#{@section_element.parent_element_id}", :partial => 'section_elements/new', :locals => {:section_element => @section_element}
+page.visual_effect(:blind_down, "section-mods-#{@section_element.parent_element_id}", :duration => 0.1)
