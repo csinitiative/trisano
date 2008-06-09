@@ -41,6 +41,8 @@ module EventsHelper
    
     when "SectionElement"
       result += render_investigator_section(element, f)
+    when "GroupElement"
+      result += render_investigator_group(element, f)
     when "QuestionElement"
       result += render_investigator_question(element, f)
     when "FollowUpElement"
@@ -75,6 +77,20 @@ module EventsHelper
     result
   end
   
+  def render_investigator_group(element, f)
+    result = ""
+
+    section_children = element.cached_children
+    
+    if section_children.size > 0
+      section_children.each do |child|
+        result += render_investigator_element(child, f)
+      end
+    end
+
+    result
+  end
+
   def render_investigator_question(element, f)
     
     result = "<div id='question_investigate_#{element.id}'>"
