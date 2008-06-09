@@ -3,5 +3,49 @@
 %h2
   Prototyping Application
 
+<script type="text/javascript">
+var myTabs = new YAHOO.widget.TabView("cmr_tabs");
+</script>
+
+%div{:id => "cmr_tabs", :class => "yui-navset"}
+  %ul{:id => 'tabs', :class => "yui-nav"}
+    %li{:class => "selected"}
+      %a{:href => "#demographic_tab"}
+        %em Demographic Information
+    %li
+      %a{:href => "#clinical_tab"}
+        %em Clinical Information
+    %li
+      %a{:href => "#lab_info_tab"}
+        %em Laboratory Information
+    %li
+      %a{:href => "#epi_tab"}
+        %em Epidemiological Information
+    %li
+      %a{:href => "#reporting_tab"}
+        %em Reporting Information
+    %li
+      %a{:href => "#administrative_tab"}
+        %em Administrative
+    %li
+      %a{:href => "#investigation_tab"}
+        %em Investigation
+
+  %div{:class => "yui-content"}
+    %div{:id => "demographic_tab"}
+      = render :partial => 'demographics', :locals => { :user => @user}
+    %div{:id => "clinical_tab"}
+      Clinical
+    %div{:id => "lab_info_tab"}
+      Lab info
+    %div{:id => "epi_tab"}
+      EPI
+    %div{:id => "reporting_tab"}
+      Reporting
+    %div{:id => "administrative_tab"}
+      Admin
+    %div{:id => "investigation_tab"}
+      Investigation
+
 %br
 %br
