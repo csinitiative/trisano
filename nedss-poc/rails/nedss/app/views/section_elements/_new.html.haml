@@ -1,9 +1,14 @@
-%div{:id => "new-section-form"}
+%div{:id => "fb-inplace-container", :class => "fb-container"}
+  %div{:id => "new-group-form", :class => 'fb-inplace-form'}
 
-  = error_messages_for :section_element
+    = error_messages_for :group_element
+    
+    %h4 Add a new group
+    - remote_form_for(@group_element) do |f|
+      = render :partial => 'form', :locals => { :f => f }
+      %p
+        = f.submit "Create"
 
-  - remote_form_for(section_element) do |f|
-    = render :partial => 'form', :locals => { :f => f }
-    = f.submit "Create"
-    &nbsp;&nbsp;
-    = link_to_function "Close", "$('section-mods-#{@section_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('section-mods-#{@section_element.parent_element_id}'))"
+  = render :partial => "forms/library", :locals => {:direction => :to_library}
+
+  = link_to_function "Close", "$('question-mods-#{@reference_element_id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element_id}'))"
