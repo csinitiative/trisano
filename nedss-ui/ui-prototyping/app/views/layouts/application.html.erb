@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <title>UT-NEDSS</title>
+  <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'main' %>
+<!-- Dependencies -->
+<!-- Sam Skin CSS for TabView -->
+  <%= stylesheet_link_tag '../yui/build/tabview/assets/skins/sam/tabview.css'%>
+
+<!-- JavaScript Dependencies for Tabview: -->
+  <%= javascript_include_tag '../yui/build/yahoo-dom-event/yahoo-dom-event.js'%>
+  <%= javascript_include_tag '../yui/build/element/element-beta-min.js'%>
+
+<!-- Source file for TabView -->
+  <%= javascript_include_tag '../yui/build/tabview/tabview-min.js' %>
+
+  <%= javascript_include_tag :defaults %>
+  <%= calendar_date_select_includes %>
+
+  <!--<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.4.1/build/reset-fonts-grids/reset-fonts-grids.css"> -->
+
+</head>
+<body class="yui-skin-sam">
+
+
+<div id="doc"><!--doc, doc2, doc3, or doc4; controls overall pg width-->
+<div class="hd" id="hd"><!--header / masthead -->
+
+<a href="<%= home_path -%>"><%= image_tag("logo.gif", :border => 0) -%></a>
+
+</div>
+
+<div id="nav">
+
+<br/>
+
+<%= link_to 'Home', :controller => "cmrs", :action => "index" %><br/>
+<%= link_to 'View CMRs', :controller => "cmrs", :action => "index" %><br/>
+<%= link_to 'New CMR', :controller => "cmrs", :action => "index" %><br/>
+
+<br/>
+<b>Search</b><br/>
+<%= link_to 'People Search', :controller => "cmrs", :action => "index" %><br/>
+<%= link_to 'CMR Search', :controller => "cmrs", :action => "index" %><br/>
+<br/>
+
+
+<b>Admin</b><br/>
+  
+<%= link_to 'Admin Home', :controller => "cmrs", :action => "index" %><br/>
+<%= link_to 'Forms', :controller => "cmrs", :action => "index" %><br/>
+<%= link_to 'Users', :controller => "cmrs", :action => "index" %><br/>
+
+
+<br/>
+<br/>
+
+<small>User: <%= @user_name %><br/></small>
+
+</div>
+
+<div class="bd" id="bd"><!--body-->
+
+<p style="color: green"><%= flash[:notice] %></p>
+
+<%= yield  %>
+
+</div>
+<div id="ft"><!--footer-->
+
+
+</div>
+
+</body>
+</html>

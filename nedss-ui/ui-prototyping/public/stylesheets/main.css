@@ -1,0 +1,56 @@
+.label {
+  font-size: 90%;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.hd {
+  height: 73px;
+  background-image: url(../images/repeat.gif);
+  background-repeat: repeat-x;
+  padding-left: 30px;
+  padding-top: 0px;
+}
+
+.hd .title {
+  margin: 0;
+}
+
+#nav {
+  float: left;
+  padding-right: 10px;
+}
+
+#nav ul {
+  text-decoration: none;
+}
+
+#nav li {
+  list-style-type: none;
+}
+
+.bd {
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 7px;
+  overflow: auto;
+  position: relative;
+}
+
+.highlight {
+  color: green;
+}
+
+#ft {
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 7px;
+  overflow: auto;
+  position: relative;
+  font-size: x-small;
+}
+
+.title A:link {text-decoration: none; color: #B9B9A0}
+.title A:visited {text-decoration: none; color: #B9B9A0}
+.title A:active {text-decoration: none; color: #B9B9A0}
+.title A:hover {text-decoration: none; color: #B9B9A0}
