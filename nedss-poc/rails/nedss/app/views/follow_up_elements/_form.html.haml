@@ -1,7 +1,13 @@
 
 = f.hidden_field :parent_element_id
+= f.hidden_field :core_data
 
 %p
   %label Condition
   %br
   = f.text_field :condition
+
+- if (@follow_up_element.core_data)
+  %label Core data element
+  %br
+  = f.text_field :core_path

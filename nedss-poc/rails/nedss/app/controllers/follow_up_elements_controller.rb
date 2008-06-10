@@ -22,6 +22,7 @@ class FollowUpElementsController < ApplicationController
     begin
       @follow_up_element = FollowUpElement.new
       @follow_up_element.parent_element_id = params[:form_element_id]
+      @follow_up_element.core_data = params[:core_data]
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the follow up form at this time.'

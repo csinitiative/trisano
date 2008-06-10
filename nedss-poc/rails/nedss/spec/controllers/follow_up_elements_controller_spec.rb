@@ -134,6 +134,7 @@ describe FollowUpElementsController do
       @follow_up_element = mock_model(FollowUpElement)
       FollowUpElement.stub!(:new).and_return(@follow_up_element)
       @follow_up_element.stub!(:parent_element_id=)
+      @follow_up_element.stub!(:core_data=)
     end
   
     def do_get
