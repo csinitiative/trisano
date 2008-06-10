@@ -29,14 +29,14 @@ describe 'Form Builder Admin' do
   it 'should create a new form and allow navigation to builder' do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=New form"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.type "form_name", @form_name
     @browser.click "form_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Form Builder"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
   end
   
   # Debt: The remaining examples had to be combined into one in order to have access
@@ -244,13 +244,13 @@ end
 
 def publish
   @browser.click '//input[@value="Publish"]'
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
   @browser.is_text_present("Form was successfully published").should be_true
 end
 
 def validate_investigator_rendering
   @browser.click "link=New CMR"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
   @browser.type "event_active_patient__active_primary_entity__person_last_name", @cmr_last_name
   @browser.type "event_active_patient__active_primary_entity__person_first_name", "Guy"
   @browser.click "//ul[@id='tabs']/li[2]/a/em"
@@ -259,10 +259,10 @@ def validate_investigator_rendering
   @browser.select "event_active_jurisdiction_secondary_entity_id", "label=Bear River Health Department"
   @browser.select "event_event_status_id", "label=Under Investigation"
   @browser.click "event_submit"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
 
   @browser.click "link=Edit"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
 
   @browser.is_text_present(@question_to_delete_text).should be_true
   @browser.is_text_present(@question_to_edit_text).should be_true
@@ -276,7 +276,7 @@ end
 
 def navigate_to_form_edit
   @browser.click "link=Forms"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
   NedssHelper.click_build_form(@browser, @form_name)
 end
 
@@ -301,7 +301,7 @@ end
 
 def revalidate_investigator_rendering
   @browser.click "link=View CMRs"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
   NedssHelper.click_resource_edit(@browser, "cmrs", @cmr_last_name)
   @browser.is_text_present(@question_to_delete_text).should be_false
   @browser.is_text_present(@question_to_edit_text).should be_false

@@ -18,20 +18,20 @@ describe "Form builder admin" do
     @browser.open "/nedss/"
     
     @browser.click "link=Forms"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     
     @browser.click "link=New form"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     f_name = NedssHelper.get_unique_name(4)
     @browser.type "form_name", f_name
     @browser.click "form_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Form was successfully created.").should be true    
   end
   
   it "should allow admin to edit the form" do
     @browser.click "link=Form Builder"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present(" Form Hierarchy").should be true
   end
   

@@ -4,8 +4,29 @@ module NedssHelper
   #Define constants for standard resources
   FORM = "forms"
   
-  # Use click_resource methods from any standard resource index page
+  #Use click_core_tab to change tabs in CMR views
+  def click_core_tab(browser, tab_name)
+    case tab_name
+      when "Demographics"
+        browser.click('//li[1]/a/em')
+      when "Clinical"
+        browser.click('//li[2]/a/em')
+      when "Laboratory"
+        browser.click('//li[3]/a/em')
+      when "Epidemiological"
+        browser.click('//li[4]/a/em')
+      when "Reporting"
+        browser.click('//li[5]/a/em')
+      when "Administrative"
+        browser.click('//li[6]/a/em')
+      when "Investigation"
+        browser.click('//li[7]/a/em')
+      else
+        puts("TAB NOT FOUND: " + tab_name)
+      end
+  end
   
+  # Use click_resource methods from any standard resource index page
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0 

@@ -7,14 +7,14 @@ describe "Administrator functionality to create questions" do
   it "should be able to create questions with a free-text answer" do
       @browser.open "/nedss/"
       @browser.click "link=Forms"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.click "link=New form"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.type "form_name", "African Tick Bite Fever"
       @browser.select_frame "relative=up"
       @browser.type "form_description", "Questions related to African Tick Bite Fever patients. These questions are important because they help us determine whether the tick is still in the United States or if they got the bite elsewhere, got sick and came here."
       @browser.click "form_submit"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       pending "For some reason these calls are returning false on this page even though I can see the text" do
         @browser.is_text_present("Form details: African Tick Bite Fever").should be_true
         @browser.is_text_present("Name: African Tick Bite Fever").should be_true
@@ -24,9 +24,9 @@ describe "Administrator functionality to create questions" do
         @browser.is_text_present("Status: Not Published").should be_true
       end
       @browser.click "link=Form Builder"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.click "link=Add a question"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.type "question_question_text", "Were you in the United States when you first became ill?"
       @browser.select "question_data_type", "label=Single line text"
       @browser.type "question_size", "3"
@@ -63,7 +63,7 @@ describe "Administrator functionality to create questions" do
       @browser.is_text_present("Question: If yes, what city were you in?").should be_true
       @browser.is_text_present("Question: If no, what country were you in?").should be_true
       @browser.click "//input[@value='Publish']"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present("Form was successfully published").should be_true
   end
   

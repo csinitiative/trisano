@@ -5,7 +5,7 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
   it 'should create a person with all the demographics information' do
     @browser.open "/nedss/cmrs"
     @browser.click('link=New CMR')
-    @browser.wait_for_page_to_load('30000')
+    @browser.wait_for_page_to_load($load_time)
     @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Christiansen')
     @browser.type('event_active_patient__active_primary_entity__person_first_name', 'David')
     @browser.type('event_active_patient__active_primary_entity__address_street_number', '123')
@@ -23,9 +23,9 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
     @browser.add_selection('event_active_patient__active_primary_entity_race_ids', 'label=White')
     @browser.select('event_active_patient__active_primary_entity__person_primary_language_id', 'label=Hmong')
     @browser.click('event_submit')
-    @browser.wait_for_page_to_load('30000')
+    @browser.wait_for_page_to_load($load_time)
     puts('Attempting to submit')
-    @browser.wait_for_page_to_load('30000')
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully created.').should be_true
     
     @browser.is_text_present('Christiansen').should be_true

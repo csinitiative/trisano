@@ -5,18 +5,18 @@ describe "Form Builder Investigator Single Form" do
   it "should create a single test form" do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     unless @browser.is_text_present "Single_Form_Test"
       @browser.click "link=New form"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.type "form_name", "Single_Form_Test"
       @browser.type "form_description", "First AIDS Form"
       @browser.select "form_disease_id", "label=AIDS"
       @browser.click "form_submit"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.click "link=Form Builder"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
 
       @browser.click "link=Add section to tab"
       #wait_for_element_present("new-section-form")
@@ -75,14 +75,14 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "value_set_element_submit"
       wait_for_element_not_present("new-value-set-form")
       @browser.click "//input[@value='Publish']"
-      @browser.wait_for_page_to_load "30000"
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present("Form was successfully published").should be_true
     end
   end
 
   it "Should create a test CMR" do
     @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Doe"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "John"
     @browser.click "//ul[@id='tabs']/li[2]/a/em"
@@ -90,13 +90,13 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "//ul[@id='tabs']/li[6]/a/em"
     @browser.select "event_event_status_id", "label=Under Investigation"
     @browser.click "event_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("CMR was successfully created").should be_true
   end
 
   it "should render one form." do
     @browser.click "link=Edit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Investigation").should be_true
     #@browser.get_xpath_count("//ul[@id='investigation_tab']/li").should eql("1")
   end
@@ -111,14 +111,14 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "event_answers__4_check_box_answer_2"
     @browser.click "event_answers__4_check_box_answer_3"
     @browser.click "event_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("CMR was successfully updated").should be_true
   end
 
   it "should maintain values on edit" do
     pending "until we figure out how to guarantee dynamic field names"
     @browser.click "link=Edit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.get_value("event_answers_1_text_answer").should eql("One")
     @browser.get_value("event_answers_2_text_answer").should eql("Two")

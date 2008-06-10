@@ -6,14 +6,14 @@ describe 'Form Builder User-defined Demographics' do
   it 'should create a new form with a new demographic question' do
     @browser.open "/nedss/forms"
     @browser.click "link=New form"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.type "form_name", "Demo graphics User Defined Question"
     @browser.select "form_disease_id", "label=Yellow fever"
     @browser.select "form_jurisdiction_id", "label=Central Utah Public Health Department"
     @browser.click "form_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Form Builder"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Add a core tab configuration"
     wait_for_element_present("new-core-view-form")
     @browser.select "core_view_element_name", "label=Demographics"
@@ -32,12 +32,12 @@ describe 'Form Builder User-defined Demographics' do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.click "//input[@value='Publish']"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
   end
   
   it 'should create a new CMR' do
     @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Yellow"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Demo"
     @browser.click "//ul[@id='tabs']/li[2]/a/em"
@@ -46,17 +46,17 @@ describe 'Form Builder User-defined Demographics' do
     @browser.select "event_active_jurisdiction_secondary_entity_id", "label=Central Utah Public Health Department"
     @browser.select "event_event_status_id", "label=Under Investigation"
     @browser.click "event_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
   end
   
   it 'should allow form answers to be saved' do
     @browser.click "link=Edit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.type "event_answers_1_text_answer", "csi-employment"
     @browser.click "event_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Edit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.get_value("css=input[class=demographic-supplemental]").should == "csi-employment"
   end
   

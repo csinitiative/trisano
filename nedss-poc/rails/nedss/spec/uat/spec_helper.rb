@@ -1,6 +1,7 @@
 # You don't need to tweak the $LOAD_PATH if you have RSpec and Spec::Ui installed as gems
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../../rspec/lib')
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../lib')
+$load_time = ENV['NEDSS_PAGE_LOAD'] ||= '30000'
 
 require 'rubygems'
 require 'spec'
@@ -12,7 +13,7 @@ Spec::Runner.configure do |config|
   
   nedss_url = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   nedss_url = nedss_url.sub("//", "//utah:arches@")
-  
+    
   config.before(:all) do
     @browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox", nedss_url, 10000)
     @browser.start

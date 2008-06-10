@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     
     it 'should have links to all the sub-pages' do
       @browser.open "/nedss/cmrs"
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       #First check for all the links that should be there
       @browser.is_text_present('View CMRs').should be_true
       @browser.is_text_present('New CMR').should be_true
@@ -29,49 +29,49 @@ require File.dirname(__FILE__) + '/spec_helper'
 
     it 'should navigate successfully to the home page' do    
       @browser.click 'link=UT-NEDSS Utah - National Electronic Disease Surveillance System'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('UT-NEDSS Home').should be_true
     end
     
     it 'should navigate successfully to the Admin page' do
       @browser.click 'link=Admin Home'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('UT-NEDSS Admin Console').should be_true
     end
     
     it 'should navigate successfully to the People Search page' do
       @browser.click 'link=People Search'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('People Search').should be_true
     end
     
     it 'should navigate successfully to the CMR Search page' do
       @browser.click 'link=CMR Search'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('CMR Search').should be_true
     end
     
     it 'should navigate successfully to the View CMRs page' do
       @browser.click 'link=View CMRs'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing Confidential Morbidity Reports').should be_true
     end
     
     it 'should navigate successfully to the New CMR page' do
       @browser.click 'link=New CMR'
-      @browser.wait_for_page_to_load '30000'
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('New Confidential Morbidity Report').should be_true
     end
     
     it 'should navigate successfully to the Forms page' do
       @browser.click 'link=Forms'
-      @browser.wait_for_page_to_load('30000')
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing forms').should be_true
     end
     
     it 'should navigate successfully to the Users page' do
       @browser.click('link=Users')
-      @browser.wait_for_page_to_load('30000')
+      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing users').should be_true
     end
   end
