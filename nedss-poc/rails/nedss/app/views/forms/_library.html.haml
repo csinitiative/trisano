@@ -12,5 +12,5 @@
     = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element_id, :direction => direction }, :with => "'filter_by='+encodeURIComponent(value)")
 
   %div{:id => "library-body"}
-    %ul{:id => "library-element-list"}
+    %ul{:id => "library-element-list-#{@reference_element_id}"}
       = render :partial => 'forms/library_elements', :locals => {:direction => direction}

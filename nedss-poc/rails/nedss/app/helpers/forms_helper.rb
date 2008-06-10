@@ -26,12 +26,12 @@ module FormsHelper
   def render_view(element, include_children=true)
     
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element, 'tab')
-    result += "</li>"
 
-    result += add_section_link(element, "tab")
+    result = "<li id='#{li_html_id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
+    result += "</li>"
 
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
@@ -51,7 +51,7 @@ module FormsHelper
   def render_core_view(element, include_children)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element, 'tab')
+    result = "<li id='#{li_html_id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
     result += "</li>"
     
     if include_children && element.children?
@@ -74,12 +74,12 @@ module FormsHelper
   def render_section(element, include_children=true)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element, 'section')
-    result += "</li>"
 
-    result += add_question_link(element, "section") if (include_children)
+    result = "<li id='#{li_html_id}', class='sortable fb-section', style='clear: both;'><b>#{element.name}</b>"
+    result += "&nbsp;" + add_question_link(element, "section") if (include_children)
     # Uncomment (and make current) when core data back in scope
     # result += add_core_data_link(element) if (include_children)
+    result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
@@ -98,8 +98,7 @@ module FormsHelper
   def render_group(element, include_children=true)
 
     li_html_id = get_li_html_id(element.id)
-    result = section_preamble(li_html_id, element, "group")
-    result += "</li>"
+    result = "<li id='#{li_html_id}', class='sortable fb-group', style='clear: both;'><b>#{element.name}</b></li>"
 
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
@@ -118,7 +117,7 @@ module FormsHelper
     question = element.question
     question_id = "question_#{element.id}"
     
-    result = "<li class='sortable' id='#{question_id}', style='clear: both;'>"
+    result = "<li id='#{question_id}', class='sortable', style='clear: both;'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -126,11 +125,11 @@ module FormsHelper
     result += "&nbsp;&nbsp;<small>(" + question.data_type_before_type_cast.humanize + ")</small>"
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
-    result += "</li>"
     
     result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_container_link(element) + "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)
     
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+    result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
@@ -243,14 +242,6 @@ module FormsHelper
   def add_core_data_link(element)
     "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
-  end
-  
-  def section_preamble(html_id, element, type)
-# Enable and fix url arguments when time for in place editing
-#    editable_content = editable_content_tag(:span, element, 'name', true, {:url => url_for(:controller => "view_elements", :action => "update", :form_id => element.form_id)})
-    editable_content= element.name
-
-    "<li id='#{html_id}', class='sortable fb-#{type}', style='clear: both;'><b>#{editable_content}</b>"
   end
   
   def get_li_html_id(id)

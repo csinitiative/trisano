@@ -1,6 +1,6 @@
 -# Default group
 - if direction == :to_library
-  - q_string = link_to_remote("No Group", :update => "library-element-list", :complete => visual_effect(:highlight, 'library-element-list'), :url => {:controller => "forms", :action => "to_library", :group_element_id => "root", :reference_element_id => @reference_element_id})
+  - q_string = link_to_remote("No Group", :update => "library-element-list-#{@reference_element_id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element_id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => "root", :reference_element_id => @reference_element_id})
 - else
   - q_string = "No Group"
 
@@ -28,7 +28,7 @@
   - next if form_element.is_a? QuestionElement
 
   - if direction == :to_library
-    - q_string = link_to_remote("Click to add question to group: #{form_element.name}", :update => "library-element-list", :complete => visual_effect(:highlight, 'library-element-list'), :url => {:controller => "forms", :action => "to_library", :group_element_id => form_element.id, :reference_element_id => @reference_element_id})
+    - q_string = link_to_remote("Click to add question to group: #{form_element.name}", :update => "library-element-list-#{@reference_element_id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element_id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => form_element.id, :reference_element_id => @reference_element_id})
   - else
     - q_string = link_to_remote("Click to add all questions in group: #{form_element.name}", :update => "root-element-list", :complete => visual_effect(:highlight, 'root-element-list'), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element_id, :lib_element_id => form_element.id})
   %li{:id => "lib_group_item_#{form_element.id}", :class => "lib-question-item"}=q_string
