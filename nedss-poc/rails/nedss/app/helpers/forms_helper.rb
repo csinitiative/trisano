@@ -132,6 +132,7 @@ module FormsHelper
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
     result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
@@ -160,7 +161,7 @@ module FormsHelper
       result += sortable_element("follow_up_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
-    result += add_question_link(element, "follow up container") if (include_children)
+    result += " " + add_question_link(element, "follow up container") if (include_children)
     
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     
