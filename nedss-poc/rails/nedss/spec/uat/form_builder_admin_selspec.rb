@@ -1,15 +1,17 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
+# $dont_kill_browser = true
+
 describe 'Form Builder Admin' do
   
   before(:all) do
     @form_name = NedssHelper.get_unique_name(4) + " fb uat"
     
+    @question_to_add_to_library_text = "Was this added to the library " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_delete_text = "Describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_edit_text = "Can you describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_edit_modified_text = "Can you describe the tick edited " + NedssHelper.get_unique_name(4) + " fb uat" 
     @question_to_inactivate_text = "Did you see the tick that got you " + NedssHelper.get_unique_name(4) + " fb uat" 
-    @question_to_add_to_library_text = "Drag this to the library " + NedssHelper.get_unique_name(4) + " fb uat" 
     
     @user_defined_tab_text = "User-defined tab " + NedssHelper.get_unique_name(3) + " fb uat"
     @user_defined_tab_section_text = "User-defined tab section " + NedssHelper.get_unique_name(3) + " fb uat"
@@ -44,12 +46,13 @@ describe 'Form Builder Admin' do
   # The methods provide some segmentation of all of the activities of the large example.
   it 'should do all this stuff...' do
     
+    to_and_from_library_no_group
+    to_and_from_library_new_group
     add_a_section
     add_questions
     reorder_elements
     add_value_sets
     edit_value_sets
-    to_and_from_library
     add_and_populate_tab
     publish
     
@@ -152,10 +155,10 @@ def add_value_sets
 end
 
 def reorder_elements
-  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "false"
-  @browser.drag_and_drop "//ul[@id='#{@reorderable_section_id}']/li[4]", "0,-40"
+  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").getElementsByTagName('li'); firstItem =nodes[0].id.toString().substring(9); secondItem =nodes[1].id.toString().substring(9); firstItem > secondItem").should == "false"
+  @browser.drag_and_drop "//ul[@id='#{@reorderable_section_id}']/li[2]", "0,-40"
   sleep(2)
-  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").childNodes; thirdItem =nodes[2].id.toString().substring(9); fourthItem =nodes[3].id.toString().substring(9); thirdItem > fourthItem").should == "true"
+  @browser.get_eval("nodes = window.document.getElementById(\"#{@reorderable_section_id}\").getElementsByTagName('li'); firstItem =nodes[0].id.toString().substring(9); secondItem =nodes[1].id.toString().substring(9); firstItem > secondItem").should == "true"
 end
 
 def edit_value_sets
@@ -219,7 +222,7 @@ def add_and_populate_tab
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
 end
 
-def to_and_from_library
+def to_and_from_library_no_group
   @browser.click "link=Add question to tab"
   wait_for_element_present("new-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_add_to_library_text
@@ -227,19 +230,32 @@ def to_and_from_library
   @browser.click "question_element_submit"    
   wait_for_element_not_present("new-question-form")
 
-  question_to_drag_id = @browser.get_value("id=modified-element")
-
   NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
-
-  @browser.drag_and_drop_to_object("question_#{question_to_drag_id}", "library-element-list")
+  @browser.click "link=Copy to library"
+  wait_for_element_present("new-group-form")
+  @browser.click "link=No Group"
   sleep(2)
   NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2
+  @browser.click "link=Close"
 
-  question_to_drag_id = @browser.get_value("id=most-recently-added-element")
-
-  @browser.drag_and_drop_to_object("lib_question_item_#{question_to_drag_id}", @browser.get_value("id=drop-receiving-section"))
+  @browser.click "link=Add question to tab"
+  wait_for_element_present("new-question-form")
+  @browser.click "link=#{@question_to_add_to_library_text}"
   sleep(2)
-  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 3
+  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2 #library closed or would be 3
+end
+
+def to_and_from_library_new_group
+  group_name = NedssHelper.get_unique_name(3)
+  @browser.click "link=Copy to library"
+  wait_for_element_present("new-group-form")
+  @browser.type "group_element_name", group_name
+  @browser.click "group_element_submit"    
+  sleep(2)
+  @browser.click "link=Add question to: #{group_name}"
+  sleep(2)
+  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 4
+  @browser.click "link=Close"
 end
 
 def publish

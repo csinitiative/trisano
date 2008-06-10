@@ -1,3 +1,3 @@
-page.replace_html "library-element-list-#{@reference_element_id}", :partial => 'forms/library_elements'
+page.replace_html "library-element-list-#{@reference_element_id}", :partial => 'forms/library_elements', :locals => {:direction => :to_library}
 page.visual_effect(:highlight, "library-element-list-#{@reference_element_id}")
 flash[:notice] = ""
