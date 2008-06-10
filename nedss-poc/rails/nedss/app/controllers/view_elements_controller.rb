@@ -21,7 +21,7 @@ class ViewElementsController < ApplicationController
   def new
     begin
       @view_element = ViewElement.new
-      @view_element.form_id = params[:form_id]
+      @view_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the tab form at this time.'

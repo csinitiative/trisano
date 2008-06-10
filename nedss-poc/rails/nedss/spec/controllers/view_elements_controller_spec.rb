@@ -133,7 +133,7 @@ describe ViewElementsController do
       mock_user
       @view_element = mock_model(ViewElement)
       ViewElement.stub!(:new).and_return(@view_element)
-      @view_element.stub!(:form_id=)
+      @view_element.stub!(:parent_element_id=)
     end
   
     def do_get

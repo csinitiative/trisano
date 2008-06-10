@@ -2,6 +2,19 @@ class FormElement < ActiveRecord::Base
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
   
+  # Generic save_and_add_to_form. Sub-classes with special needs override.
+  def save_and_add_to_form
+    if self.valid?
+      transaction do
+        parent_element = FormElement.find(parent_element_id)
+        self.tree_id = parent_element.tree_id
+        self.form_id = parent_element.form_id
+        self.save
+        parent_element.add_child(self)
+      end
+    end
+  end
+  
   def destroy_with_dependencies
     transaction do
       if (self.class.name == "QuestionElement")

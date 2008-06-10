@@ -14,7 +14,7 @@ module FormsHelper
     when "QuestionElement"
       render_question(element, include_children)
     when "FollowUpElement"
-      render_follow_up_container(element, include_children)
+      render_follow_up(element, include_children)
     when "ValueSetElement"
       render_value_set(element, include_children)
     when "ValueElement"
@@ -31,9 +31,12 @@ module FormsHelper
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
+    result += "&nbsp;|&nbsp;"
+    result += add_follow_up_link(element, "tab", true)
     result += "</li>"
 
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
@@ -77,8 +80,6 @@ module FormsHelper
 
     result = "<li id='#{li_html_id}', class='sortable fb-section', style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
-    # Uncomment (and make current) when core data back in scope
-    # result += add_core_data_link(element) if (include_children)
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
@@ -126,7 +127,7 @@ module FormsHelper
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
     
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_container_link(element) + "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element) + "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)
     
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
     result += "</li>"
@@ -144,11 +145,10 @@ module FormsHelper
     end
     
     result
-
-    # result += draggable_element question_id, :revert => true
+    
   end
 
-  def render_follow_up_container(element, include_children=true)
+  def render_follow_up(element, include_children=true)
     
     result = "<li class='follow-up-item' id='#{element.id}'>Follow up for: '#{element.condition}'"
     
@@ -174,10 +174,12 @@ module FormsHelper
     result =  "<li id='value_set_" + element.id.to_s + "'>Value Set: "
     result += element.name
     
-    if include_children && element.children?
+    if include_children
       result += "&nbsp;" + edit_value_set_link(element)
       result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
-
+    end
+    
+    if include_children && element.children?
       result += "<ul id='value_set_" + element.id.to_s + "_children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
@@ -221,12 +223,19 @@ module FormsHelper
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>Delete</a></small>"
   end
   
-  def add_follow_up_container_link(element)
-    "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=" + 
-      element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-" + 
-      element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up container</a></small>"
+  def add_follow_up_link(element, trailing_text = "", core_data = false)
+    result = "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=" + element.id.to_s 
+    
+    result +=  "&core_data=true" if (core_data)
+    
+    result += "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-" + 
+      element.id.to_s + "' class='add-follow-up' name='add-follow-up'>Add follow up"
+    
+    result += " to " + trailing_text unless trailing_text.empty?
+    
+    result += "</a></small>"
   end
-
+  
   def add_to_library_link(element)
     "<small>" + link_to_remote("Copy to library", :url => {:controller => "group_elements", :action => "new", :form_element_id => element.id}) +"</small>"
   end
@@ -238,11 +247,6 @@ module FormsHelper
 
   def edit_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
-  end
-
-  def add_core_data_link(element)
-    "<br /><small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
-      element.id.to_s + "&core_data=true" + "', {asynchronous:true, evalScripts:true}); return false;\">Add a core data element</a></small>"
   end
   
   def get_li_html_id(id)

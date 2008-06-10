@@ -16,7 +16,7 @@ describe ViewElement do
     it "should be a child of the form's base" do
       form = Form.new
       form.save_and_initialize_form_elements
-      @view_element.form_id = form.id
+      @view_element.parent_element_id = form.form_base_element.id
       @view_element.save_and_add_to_form
       @view_element.parent_id.should_not be_nil
       form.form_base_element.children[1].id.should == @view_element.id
@@ -25,7 +25,7 @@ describe ViewElement do
     it "should be receive a tree id" do
       form = Form.new
       form.save_and_initialize_form_elements
-      @view_element.form_id = form.id
+      @view_element.parent_element_id = form.form_base_element.id
       @view_element.save_and_add_to_form
       @view_element.tree_id.should_not be_nil
       @view_element.tree_id.should eql(form.form_base_element.tree_id)
