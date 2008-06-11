@@ -24,7 +24,6 @@ Spec::Runner.configure do |config|
   # names with your fixtures.
   #
   # config.global_fixtures = :table_a, :table_b
-  config.global_fixtures = :codes
   #
   # If you declare global fixtures, be aware that they will be declared
   # for all of your examples, even those that don't use them.
@@ -80,6 +79,7 @@ end
 def mock_event
   
   event = mock_model(Event)
+  person = mock_person_entity
   
   event_status = mock_model(Code)
   imported_from = mock_model(Code)
@@ -99,6 +99,7 @@ def mock_event
   
   active_jurisdiction = mock_model(Participation)
   active_patient = mock_model(Participation)
+  active_contact = mock_model(Participation)
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
@@ -114,6 +115,7 @@ def mock_event
   
   active_jurisdiction.stub!(:secondary_entity_id).and_return(75)
   active_patient.stub!(:active_primary_entity).and_return(1)
+  active_contact.stub!(:active_secondary_entity).and_return(person)
    
   disease_event.stub!(:disease_id).and_return(1)
   disease_event.stub!(:hospital_id).and_return(13)
@@ -142,6 +144,8 @@ def mock_event
   
   event.stub!(:active_jurisdiction).and_return(active_jurisdiction)
   event.stub!(:active_patient).and_return(active_patient)
+  event.stub!(:active_contacts).and_return([active_contact])
+  event.stub!(:new_contact).and_return(active_contact)
   event.stub!(:record_number).and_return("2008537081")
   event.stub!(:event_name).and_return('Test')
   event.stub!(:event_onset_date).and_return("2008-02-19")

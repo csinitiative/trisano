@@ -158,7 +158,7 @@ describe Entity, "with associated location and person via custom attributes" do
 end
 
 describe Entity, "with people fixtures loaded" do
-  fixtures :entities, :people, :people_races
+  fixtures :entities, :people, :people_races, :codes
 
   it "should have 7 records" do
     Entity.should have(7).records

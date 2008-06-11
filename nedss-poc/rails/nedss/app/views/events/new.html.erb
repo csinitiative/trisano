@@ -15,15 +15,16 @@
 var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </script> 
 
-<span id='disable_tabs' onClick="myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','epi_tab','reporting_tab','administrative_tab'].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;">[Disable Tabs]</span>
-<span id='enable_tabs' onClick="myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab','epi_tab','reporting_tab','administrative_tab','enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;" style='display: none;'>[Enable Tabs]</span>
+<span id='disable_tabs' onClick="myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab', 'contacts-tab', 'epi_tab','reporting_tab','administrative_tab'].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;">[Disable Tabs]</span>
+<span id='enable_tabs' onClick="myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab', 'contacts-tab', 'epi_tab','reporting_tab','administrative_tab','enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;" style='display: none;'>[Enable Tabs]</span>
 <div id="cmr_tabs" class="yui-navset">
   <ul class="yui-nav" id='tabs'>
-    <li class="selected"><a href="#demographic_tab"><em>Demographic Information</em></a></li>
-    <li><a href="#clinical_tab"><em>Clinical Information</em></a></li>
-    <li><a href="#lab_info_tab"><em>Laboratory Information</em></a></li>
-    <li><a href="#epi_tab"><em>Epidemiological Information</em></a></li>
-    <li><a href="#reporting_tab"><em>Reporting Information</em></a></li>
+    <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
+    <li><a href="#clinical_tab"><em>Clinical</em></a></li>
+    <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
+    <li><a href="#contacts_tab"><em>Contacts</em></a></li>
+    <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
+    <li><a href="#reporting_tab"><em>Reporting</em></a></li>
     <li><a href="#administrative_tab"><em>Administrative</em></a></li>
   </ul>
 
@@ -36,21 +37,12 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
         </div>
       <% end %>
     <% end %>
-    <div id="clinical_tab">
-      <%= render :partial => 'disease_info_form', :locals => { :f => event_form } %>
-    </div>
-    <div id="lab_info_tab">
-      <%= render :partial => 'lab_info_form', :locals => {:f => event_form} %>
-    </div>
-    <div id="epi_tab">
-      <%= render :partial => 'epidemiological_form', :locals => {:f => event_form} %>
-    </div>
-    <div id="reporting_tab">
-      <%= render :partial => 'reporting_agency', :locals => {:f => event_form} %>
-    </div>
-    <div id="administrative_tab">
-      <%= render :partial => 'cmr_info_form', :locals => {:f => event_form} %>
-    </div>
+    <div id="clinical_tab"><%= render :partial => 'disease_info_form', :locals => { :f => event_form } %></div>
+    <div id="lab_info_tab"><%= render :partial => 'lab_info_form', :locals => {:f => event_form} %></div>
+    <div id="contacts_tab"><%= render :partial => 'contacts_form', :locals => {:f => event_form} %></div>
+    <div id="epi_tab"><%= render :partial => 'epidemiological_form', :locals => {:f => event_form} %></div>
+    <div id="reporting_tab"><%= render :partial => 'reporting_agency', :locals => {:f => event_form} %></div>
+    <div id="administrative_tab"><%= render :partial => 'cmr_info_form', :locals => {:f => event_form} %></div>
     <%= event_form.submit "Create" %>
   </div>
 <% end %>

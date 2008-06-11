@@ -45,6 +45,11 @@ Rake::Task["db:create:all"].enhance {
   Rake::Task["nedss:dev:update_locale_configs"].invoke
 }
 
+Rake::Task["db:test:prepare"].enhance {
+  ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
+  ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
+}
+
 # The following could be a bit more dry/dynamic
 Rake::Task["db:create"].enhance {
   case ENV['RAILS_ENV']

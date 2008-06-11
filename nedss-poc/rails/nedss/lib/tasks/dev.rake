@@ -20,6 +20,7 @@ namespace :nedss do
        ruby "-S rake db:create:all"
        ruby "-S rake db:migrate"
        Rake::Task["nedss:dev:load_codes_and_defaults"].invoke
+       Rake::Task["db:test:prepare"].invoke
     end
     
     desc "full rebuild of all databases for the build server"
@@ -69,6 +70,10 @@ namespace :nedss do
     task :load_codes_and_defaults => [:load_codes, :load_defaults] do
     end
 
+    desc "Load codes and defauts into database"
+    task :load_codes_and_defaults_test => [:load_codes_test, :load_defaults_test] do
+    end
+
     desc "Load codes into database"
     task :load_codes do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes.rb"
@@ -78,6 +83,7 @@ namespace :nedss do
     task :load_defaults do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb"
     end
+
   end
   
 end

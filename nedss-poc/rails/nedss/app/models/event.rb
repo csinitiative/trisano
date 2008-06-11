@@ -24,6 +24,8 @@ class Event < ActiveRecord::Base
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
+  has_many :contacts, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
+
   validates_date :event_onset_date
 
   before_validation_on_create :save_associations
@@ -103,6 +105,28 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def active_contacts
+    @active_contacts || contacts
+  end
+
+  def new_contact
+    @new_contact || self.new_contact = {}
+  end
+
+  def new_contact=(attributes)
+    if attributes.empty?
+      @new_contact = Participation.new(attributes) 
+      @new_contact.role_id = Event.participation_code('Contact')
+      @new_contact.active_secondary_entity = {}
+      @new_contact
+    else
+      unless attributes.values_blank?
+        attributes[:role_id] = Event.participation_code('Contact')
+        contacts.create(attributes)
+      end
+    end
+  end
+
   def active_hospital
     @active_hospital || hospital
   end

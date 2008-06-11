@@ -451,3 +451,9 @@ participant_treatment:
   code_name: "participant"
   the_code: "TW"
   code_description: "Treated With"
+
+participant_contact:
+  id: 2307
+  code_name: "participant"
+  the_code: "CO"
+  code_description: "Contact"
