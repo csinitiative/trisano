@@ -16,11 +16,21 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def dynamic_question(question_element, index, html_options = {}) 
         
-    event_id = (@object.nil? || @object.event_id.blank?) ? "" : @object.event_id
-    
     question = question_element.question
-    index = @object.id.nil? ? index : @object.id
 
+    # Selection-type elements must have a value set
+    if [:drop_down, :check_box, :radio_button].include? question.data_type 
+      if question_element.children.empty?
+        return ""
+      else
+        if question_element.children.first.children.empty?
+          return ""
+        end
+      end
+    end
+
+    event_id = (@object.nil? || @object.event_id.blank?) ? "" : @object.event_id
+    index = @object.id.nil? ? index : @object.id
     html_options[:index] = index
 
     # Debt: Is this issuing an extra query? We have children in memory already.
@@ -70,7 +80,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       html_options[:size] = 14
       html_options[:onchange] = text_answer_event if follow_ups
       text_field(:text_answer, html_options)
-        
     end
 
     q = if question.data_type == :check_box || question.data_type == :radio_button
