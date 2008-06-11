@@ -125,16 +125,53 @@ describe "cached form elements" do
   before(:each) do
     @form_base_element = FormBaseElement.create(:tree_id => 1, :form_id => 1, :name => "base")
     @view_element = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view")
-    @view_element2 = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view 2")
+    @view_element_2 = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view 2")
     @section_element = SectionElement.create(:tree_id => 1, :form_id => 1, :name => "section")
     
     @form_base_element.add_child(@view_element)
-    @form_base_element.add_child(@view_element2)
+    @form_base_element.add_child(@view_element_2)
     @form_base_element.add_child(@section_element)
+    
+    @question_element_1 = QuestionElement.create(:tree_id => 1, :form_id => 1)
+    @question_element_2 = QuestionElement.create(:tree_id => 1, :form_id => 1)
+    @question_element_3 = QuestionElement.create(:tree_id => 1, :form_id => 1)
+    
+    @section_element.add_child(@question_element_1)
+    @section_element.add_child(@question_element_2)
+    @section_element.add_child(@question_element_3)
+    
+    @follow_up = FollowUpElement.create(:tree_id => 1, :form_id => 1, :condition => "Yes", :core_path => "event[something]")
+    @follow_up_q1 = QuestionElement.create(:tree_id => 1, :form_id => 1)
+    
+    @question_element_1.add_child(@follow_up)
+    @follow_up.add_child(@follow_up_q1)
+    
   end
   
   it "should count children" do
     @form_base_element.cached_children_count.should == 3
+  end
+  
+  it "should return children" do
+    cached_children = @form_base_element.cached_children
+    cached_children.is_a?(Array).should be_true
+    cached_children.size.should == 3
+    cached_children[0].is_a?(ViewElement).should be_true
+  end
+  
+  it "should return all children" do
+    @form_base_element.reload
+    cached_children = @form_base_element.all_cached_children
+    cached_children.is_a?(Array).should be_true
+    cached_children.size.should == 8
+  end
+  
+  it "should return all children by filter" do
+    @form_base_element.reload
+    cached_children = @form_base_element.all_cached_follow_ups_by_core_path("event[something]")
+    cached_children.is_a?(Array).should be_true
+    cached_children.size.should == 1
+    cached_children[0].is_a?(FollowUpElement).should be_true
   end
   
   it "should count children by type" do

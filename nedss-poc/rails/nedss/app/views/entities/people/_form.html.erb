@@ -19,8 +19,8 @@
       <%= p.text_field(:first_name, :size => 25) %>
     </span>
     <span class="horiz">
-      <%#= p.label(:middle_name) %>
-      <%#= p.text_field(:middle_name, :size => 25) %>
+      <%= p.label(:middle_name) %>
+      <%= p.text_field(:middle_name, :size => 25) %>
     </span>
   <% end %>
 </fieldset>
@@ -51,8 +51,8 @@
       <%= p.text_field(:approximate_age_no_birthday, :size => 3) %>
     </span>
     <span class="horiz">
-      <%#= p.label(:date_of_death) %>
-      <%#= p.calendar_date_select(:date_of_death, :year_range => 100.years.ago..0.years.from_now) %>
+      <%= p.label(:date_of_death) %>
+      <%= p.calendar_date_select(:date_of_death, :year_range => 100.years.ago..0.years.from_now) %>
     </span>
   <% end %>
 </fieldset>
@@ -69,7 +69,7 @@
   <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
     <span class="horiz">
       <%= p.label(:birth_gender) %>
-      <%= p.dropdown_code_field(:birth_gender_id, 'gender', {}) %>
+      <%= p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event) %>
     </span>
     <span class="horiz">
       <%= p.label(:ethnicity) %>

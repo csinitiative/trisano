@@ -161,7 +161,7 @@ describe Form do
       
       second_tab = published_form_base.children[1]
       second_tab.form_id.should eql(published_form.id)
-      second_tab.children_count.should eql(1)
+      second_tab.children_count.should eql(2)
       
       second_tab_q = second_tab.children[0]
       second_tab_q.class.name.should eql("QuestionElement")
@@ -179,6 +179,18 @@ describe Form do
       second_tab_follow_up_q.form_id.should eql(published_form.id)
       second_tab_follow_up_q.name.should be_nil
       second_tab_follow_up_q.question.should_not be_nil
+      
+      second_tab_core_follow_up = second_tab.children[1]
+      second_tab_core_follow_up.class.name.should eql("FollowUpElement")
+      second_tab_core_follow_up.form_id.should eql(published_form.id)
+      second_tab_core_follow_up.condition.should eql(form_elements(:second_tab_core_follow_up).condition)
+      second_tab_core_follow_up.core_path.should eql(form_elements(:second_tab_core_follow_up).core_path)
+      
+      second_tab_core_follow_up_q = second_tab_core_follow_up.children[0]
+      second_tab_core_follow_up_q.class.name.should eql("QuestionElement")
+      second_tab_core_follow_up_q.form_id.should eql(published_form.id)
+      second_tab_core_follow_up_q.name.should be_nil
+      second_tab_core_follow_up_q.question.should_not be_nil
       
     end
     

@@ -8,6 +8,7 @@ describe "/people/new.html.erb" do
 
   def do_render
     assigns[:valid_types] = ['person', 'animal', 'place', 'material']
+    
     render "/entities/new.html.erb"
   end
 
@@ -23,15 +24,15 @@ describe "/people/new.html.erb" do
     end
   end
 
-# Uncomment this test when places, animals, etc. is implemented
+  # Uncomment this test when places, animals, etc. is implemented
 
-#  it "should link back to various indexes" do
-#    do_render
-#    response.should have_tag("a[href=/entities?type=person]")
-#    response.should have_tag("a[href=/entities?type=animal]")
-#    response.should have_tag("a[href=/entities?type=material]")
-#    response.should have_tag("a[href=/entities?type=place]")
-#  end
+  #  it "should link back to various indexes" do
+  #    do_render
+  #    response.should have_tag("a[href=/entities?type=person]")
+  #    response.should have_tag("a[href=/entities?type=animal]")
+  #    response.should have_tag("a[href=/entities?type=material]")
+  #    response.should have_tag("a[href=/entities?type=place]")
+  #  end
 
 end
 

@@ -120,3 +120,14 @@ second_tab_follow_up_q:
   is_on_short_form: 
   is_required: 
   is_exportable: 
+
+second_tab_core_follow_up_q:
+  id: "12"
+  question_element_id: "22"
+  question_text: "Second tab core follow up? "
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  is_on_short_form: 
+  is_required: 
+  is_exportable: 

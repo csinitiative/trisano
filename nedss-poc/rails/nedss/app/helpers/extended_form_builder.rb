@@ -1,7 +1,25 @@
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
-  def dropdown_code_field(attribute, code_name, *args)
-    self.collection_select(attribute, codes(code_name), :id, :code_description, *args)
+  def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
+    
+    unless (@object.nil? || event.nil?)
+      
+      # Debt: Duplicating this logic
+      can_investigate = ((event.under_investigation? or event.reopened?) and User.current_user.is_entitled_to_in?(:investigate, event.active_jurisdiction.secondary_entity_id) and !event.disease.disease_id.nil? )
+
+      if (can_investigate && !event.form_references.nil?)
+
+        event.form_references.each do |form_reference|
+          if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
+              p "Include event handler"
+              break
+          end
+        end
+      end
+    end
+
+    self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
+
   end
 
   def multi_select_code_field(attribute, code_name, options, html_options)

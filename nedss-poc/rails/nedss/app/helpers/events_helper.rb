@@ -80,10 +80,10 @@ module EventsHelper
   def render_investigator_group(element, f)
     result = ""
 
-    section_children = element.cached_children
+    group_children = element.cached_children
     
-    if section_children.size > 0
-      section_children.each do |child|
+    if group_children.size > 0
+      group_children.each do |child|
         result += render_investigator_element(child, f)
       end
     end

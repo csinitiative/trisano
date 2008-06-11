@@ -4,8 +4,14 @@ module PersonFormSpecHelper
 
     before(:each) do
       @entity = mock_person_entity
+      @event = mock_event
+      @event.stub!(:under_investigation?).and_return(false)
+      @event.stub!(:reopened?).and_return(false)
+      
+      
       assigns[:entity] = @entity
       assigns[:type] = 'person'
+      assigns[:event] = @event
     end
   
     it "should render the form elements" do

@@ -81,6 +81,7 @@ class Form < ActiveRecord::Base
         child_to_publish.name = child.name unless child.name.nil?
         child_to_publish.description = child.description unless child.description.nil?
         child_to_publish.condition = child.condition unless child.condition.nil?
+        child_to_publish.core_path = child.core_path unless child.core_path.nil?
       
         child_to_publish.save!
         published_node.add_child child_to_publish

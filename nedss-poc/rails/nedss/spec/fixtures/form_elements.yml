@@ -184,7 +184,7 @@ second_tab:
   type: ViewElement
   id: "17"
   description: 
-  rgt: "39"
+  rgt: "43"
   parent_id: "1"
 
 second_tab_q:
@@ -220,4 +220,29 @@ second_tab_follow_up_q:
   description: 
   rgt: "36"
   parent_id: "19"
+
+second_tab_core_follow_up:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "39"
+  type: FollowUpElement
+  id: "21"
+  description: 
+  rgt: "42"
+  parent_id: "17"
+  condition: "Yes"
+  core_path: "event[active_patient][active_primary_entity][person][birth_gender_id]"
+
+second_tab_core_follow_up_q:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "40"
+  type: QuestionElement
+  id: "22"
+  description: 
+  rgt: "41"
+  parent_id: "21"
+
 

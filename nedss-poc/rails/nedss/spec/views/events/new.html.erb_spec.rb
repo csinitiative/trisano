@@ -29,6 +29,9 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
     #    @event.stub!(:current_treatment).and_return(@current_treatment)
+    @event.stub!(:under_investigation?).and_return(false)
+    @event.stub!(:reopened?).and_return(false)
+    
 
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)

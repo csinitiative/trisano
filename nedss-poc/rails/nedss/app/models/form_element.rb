@@ -102,4 +102,20 @@ class FormElement < ActiveRecord::Base
     }.compact.size
   end
   
+  def all_cached_children
+    full_set_cache.collect { |node|
+      if (node.lft > self.lft && node.rgt < self.rgt)
+        node
+      end
+    }.compact
+  end
+  
+  def all_cached_follow_ups_by_core_path(core_path)
+    full_set_cache.collect { |node|
+      if ((node.core_path == core_path) && (node.type == "FollowUpElement") && (node.lft > self.lft) && (node.rgt < self.rgt))
+        node
+      end
+    }.compact
+  end
+  
 end

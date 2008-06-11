@@ -33,7 +33,7 @@ end
 
 
 describe Location, "with fixtures loaded" do
-  fixtures :locations, :addresses, :entities, :entities_locations
+  fixtures :codes, :locations, :addresses, :entities, :entities_locations
 
   it "Phil Silvers should have two work addresses" do
     locations(:silvers_work_address).should have(2).addresses
