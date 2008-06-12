@@ -122,7 +122,7 @@ class Event < ActiveRecord::Base
     else
       unless attributes.values_blank?
         attributes[:role_id] = Event.participation_code('Contact')
-        contacts.create(attributes)
+        contacts.build(attributes)
       end
     end
   end
