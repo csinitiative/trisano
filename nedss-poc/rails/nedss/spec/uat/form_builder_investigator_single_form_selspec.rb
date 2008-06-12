@@ -32,13 +32,13 @@ describe "Form Builder Investigator Single Form" do
       @browser.select "question_element_question_attributes_data_type", "label=Single line text"
       @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
-      @browser.click "link=Add a question"
+      @browser.click "link=Add question to section"
       wait_for_element_present("new-question-form")
       @browser.type "question_element_question_attributes_question_text", "Multi-line text"
       @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
       @browser.click "question_element_submit"
       wait_for_element_not_present("new-question-form")
-      @browser.click "link=Add a question"
+      @browser.click "link=Add question to section"
       wait_for_element_present("new-question-form")
       @browser.type "question_element_question_attributes_question_text", "Drop Down"
       @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
@@ -52,11 +52,11 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Add a value"
       wait_for_element_present("value_set_element_new_value_element_attributes__name")
       @browser.type "value_set_element_new_value_element_attributes__name", "Value One"
-      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Value Two"
-      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Value Three"
+      @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Value Two"
+      @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Value Three"
       @browser.click "value_set_element_submit"
       wait_for_element_not_present("new-value-set-form")
-      @browser.click "link=Add a question"
+      @browser.click "link=Add question to section"
       wait_for_element_present("new-question-form")
       @browser.type "question_element_question_attributes_question_text", "Check boxes"
       @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
@@ -70,8 +70,8 @@ describe "Form Builder Investigator Single Form" do
       @browser.click "link=Add a value"
       wait_for_element_present("value_set_element_new_value_element_attributes__name")
       @browser.type "value_set_element_new_value_element_attributes__name", "First Value"
-      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Second Value"
-      @browser.type "document.forms[0].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Third Value"
+      @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Second Value"
+      @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Third Value"
       @browser.click "value_set_element_submit"
       wait_for_element_not_present("new-value-set-form")
       @browser.click "//input[@value='Publish']"
@@ -95,7 +95,7 @@ describe "Form Builder Investigator Single Form" do
   end
 
   it "should render one form." do
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Investigation").should be_true
     #@browser.get_xpath_count("//ul[@id='investigation_tab']/li").should eql("1")
@@ -117,7 +117,7 @@ describe "Form Builder Investigator Single Form" do
 
   it "should maintain values on edit" do
     pending "until we figure out how to guarantee dynamic field names"
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.get_value("event_answers_1_text_answer").should eql("One")

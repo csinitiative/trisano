@@ -277,7 +277,7 @@ def validate_investigator_rendering
   @browser.click "event_submit"
   @browser.wait_for_page_to_load($load_time)
 
-  @browser.click "link=Edit"
+  @browser.click "edit_cmr_link"
   @browser.wait_for_page_to_load($load_time)
 
   @browser.is_text_present(@question_to_delete_text).should be_true

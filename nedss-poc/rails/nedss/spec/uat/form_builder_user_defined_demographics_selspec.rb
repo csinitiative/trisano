@@ -50,12 +50,12 @@ describe 'Form Builder User-defined Demographics' do
   end
   
   it 'should allow form answers to be saved' do
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "event_answers_1_text_answer", "csi-employment"
     @browser.click "event_submit"
     @browser.wait_for_page_to_load($load_time)
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.get_value("css=input[class=demographic-supplemental]").should == "csi-employment"
   end

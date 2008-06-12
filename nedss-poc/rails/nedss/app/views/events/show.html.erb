@@ -242,7 +242,7 @@
     </fieldset>
   </div>
 </div>
-<%= link_to 'Edit', edit_cmr_path(@event) %> |
+<%= link_to 'Edit', edit_cmr_path(@event), :id => "edit_cmr_link" %> |
 <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |
 <%= link_to 'Back', cmrs_path %>
 

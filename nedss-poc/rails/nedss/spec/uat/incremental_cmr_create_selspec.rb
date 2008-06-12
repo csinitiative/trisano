@@ -11,26 +11,32 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Jorgenson')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Contacts is invalid').should be_true
+    @browser.is_text_present('Jorgenson').should be_true
+    @browser.is_text_present('CMR was successfully created.').should be_true
+    @browser.is_text_present('No contacts have been reported for this case').should be_true
+
+    @browser.click('edit_cmr_link')
+    @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Contacts")
     @browser.type('event_new_contact__active_secondary_entity__person_last_name', 'Smurfette')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load($load_time)    
     
-    @browser.is_text_present('Jorgenson').should be_true
+    @browser.is_text_present('CMR was successfully updated.').should be_true
     @browser.is_text_present('Smurfette').should be_true
-   @browser.is_text_present('CMR was successfully created.').should be_true
+    @browser.is_text_present('No contacts have been reported for this case').should_not be_true
       
+    @browser.click('edit_cmr_link')
     @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('Smurfette').should be_true # Now in list of entered contacts
     NedssHelper.click_core_tab(@browser, "Demographics")
-    @browser.click('link=Edit')
     @browser.type('event_active_patient__active_primary_entity__address_street_name', 'Junglewood Court')
              
     @browser.click('event_submit')
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     @browser.type 'event_active_patient__active_primary_entity__telephone_area_code', '801'
     @browser.type 'event_active_patient__active_primary_entity__telephone_phone_number', '581'
@@ -40,7 +46,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Clinical")
     @browser.select 'event_disease_disease_id', 'label=AIDS'
@@ -48,7 +54,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Laboratory")
     @browser.select 'event_lab_result_specimen_source_id', 'label=Animal head'
@@ -56,7 +62,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Laboratory")
     NedssHelper.click_core_tab(@browser, "Clinical")
@@ -65,7 +71,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Reporting")
     @browser.type 'model_auto_completer_tf', 'Happy Jacks Health Store'
@@ -73,7 +79,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Administrative")
     @browser.select 'event_active_jurisdiction_secondary_entity_id', 'label=Salt Lake Valley Health Department'
@@ -81,7 +87,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Clinical")
     @browser.select 'event_active_hospital_secondary_entity_id', 'label=Brigham City Community Hospital'
@@ -89,7 +95,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('CMR was successfully updated.').should be_true
 
-    @browser.click 'link=Edit'
+    @browser.click 'edit_cmr_link'
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Clinical")
     @browser.select 'event_disease_hospitalized_id', 'label=Yes'

@@ -59,7 +59,7 @@ describe "Using Form Builder to manipulte core-data fields" do
   end
 
   it "should render and save core-data fields" do
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.type "event_active_patient__active_primary_entity__person__middle_name", "Quincy"
@@ -70,7 +70,7 @@ describe "Using Form Builder to manipulte core-data fields" do
   end
 
   it "should maintain values on re-edit" do
-    @browser.click "link=Edit"
+    @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.get_value("event_active_patient__active_primary_entity__person__middle_name").should eql("Quincy")
