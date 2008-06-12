@@ -20,6 +20,8 @@ describe "NedssHelper tab navigation" do
     @browser.select("event_event_status_id", "label=Under Investigation")
     NedssHelper.click_core_tab(@browser, "Demographics")
     @browser.is_text_present("Person Information").should be_true
+    NedssHelper.click_core_tab(@browser, "Contacts")
+    @browser.is_text_present("Add a New Contact").should be_true
     @browser.type("event_active_patient__active_primary_entity__person_last_name", "Tester")
     @browser.type("event_active_patient__active_primary_entity__person_first_name", "Tab")
     @browser.click("event_submit")

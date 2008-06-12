@@ -13,14 +13,16 @@ module NedssHelper
         browser.click('//li[2]/a/em')
       when "Laboratory"
         browser.click('//li[3]/a/em')
-      when "Epidemiological"
+      when "Contacts"
         browser.click('//li[4]/a/em')
-      when "Reporting"
+      when "Epidemiological"
         browser.click('//li[5]/a/em')
-      when "Administrative"
+      when "Reporting"
         browser.click('//li[6]/a/em')
-      when "Investigation"
+      when "Administrative"
         browser.click('//li[7]/a/em')
+      when "Investigation"
+        browser.click('//li[8]/a/em')
       else
         puts("TAB NOT FOUND: " + tab_name)
       end

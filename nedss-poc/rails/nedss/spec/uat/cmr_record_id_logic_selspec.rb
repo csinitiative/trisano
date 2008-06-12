@@ -19,7 +19,7 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
     @browser.type('event_active_patient__active_primary_entity__person_first_name', 'Record')
     @browser.click('event_submit')
     @browser.wait_for_page_to_load($load_time)
-    @browser.click('//li[2]/a/em')
+    NedssHelper.click_core_tab(@browser, "Clinical")
     
     nextRecNum = @browser.get_text('//div[2]/fieldset/table/tbody/tr[1]/td[2]')
     puts "Second record ID is " + nextRecNum
