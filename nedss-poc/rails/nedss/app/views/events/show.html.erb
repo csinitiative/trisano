@@ -98,20 +98,24 @@
     </fieldset>
   </div>
 
-  <div id="lab_info_tab">
+  <div id="contacts-tab">
     <fieldset>
-      <legend>Laboratory Information</legend>  
-      <table cellpadding="2">
-        <%- for contact in @event.active_contacts %>
-          <%- entity = contact.active_secondary_entity %>
-          <%- person = entity.person %>
-          <tr>
-            <td><%= person.last_name + ", " + person.first_name %></td>
-            <td><%= link_to 'Show', entity %></td>
-            <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
-          </tr>
-        <% end %>
-      </table>
+      <legend>Contact Information</legend>  
+      <%- if @event.active_contacts.empty? %>
+        <h3>No contacts have been reported for this case</h3>
+      <%- else %>
+        <table cellpadding="2">
+          <%- for contact in @event.active_contacts %>
+            <%- entity = contact.active_secondary_entity %>
+            <%- person = entity.person %>
+            <tr>
+              <td><%= person.last_name + ", " + person.first_name %></td>
+              <td><%= link_to 'Show', entity %></td>
+              <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
     </fieldset>
   </div>
 

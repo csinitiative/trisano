@@ -127,6 +127,7 @@ namespace :nedss do
         form.add_field!("event[active_jurisdiction][secondary_entity_id]", "")
 
         page = agent.submit form      
+        raise "POST content invalid" unless (page/"//#errorExplanation").empty?
                
         puts "smoke test success"
       rescue => error

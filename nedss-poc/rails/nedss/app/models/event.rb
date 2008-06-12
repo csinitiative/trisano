@@ -120,7 +120,7 @@ class Event < ActiveRecord::Base
       @new_contact.active_secondary_entity = {}
       @new_contact
     else
-      unless attributes.values_blank?
+      unless attributes[:active_secondary_entity][:person][:last_name].blank?
         attributes[:role_id] = Event.participation_code('Contact')
         contacts.build(attributes)
       end
