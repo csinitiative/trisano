@@ -1,31 +1,34 @@
 <% f.fields_for(:address, address, :builder => ExtendedFormBuilder) do |a| %>
+
+  <%- event = event.nil? ? nil : event %>
+
   <fieldset class="vert">
   <span class="horiz">
     <%= a.label(:street_number) %>
-    <%= a.text_field(:street_number, :size => 10) %>
+    <%= a.core_text_field(:street_number, {:size => 10}, event) %>
   </span>
   <span class="horiz">
     <%= a.label(:street_name) %>
-    <%= a.text_field(:street_name, :size => 50) %>
+    <%= a.core_text_field(:street_name, {:size => 50}, event) %>
   </span>
   <span class="horiz">
     <%= a.label(:unit_number) %>
-    <%= a.text_field(:unit_number, :size => 10) %>
+    <%= a.core_text_field(:unit_number, {:size => 10}, event) %>
   </span>
   </fieldset>
 
   <fieldset class="vert">
   <span class="horiz">
     <%= a.label(:city, "City") %>
-    <%= a.text_field(:city, :size => 30) %>
+    <%= a.core_text_field(:city, {:size => 30}, event) %>
   </span>
   <span class="horiz">
     <%= a.label(:state_id, "State") %>
-    <%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}) %>
+    <%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {}, event) %>
   </span>
   <span class="horiz">
     <%= a.label(:county_id, "County") %>
-    <%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %>
+    <%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {}, event) %>
   </span>
   <!---
   <span class="horiz">
@@ -35,7 +38,7 @@
   -->
   <span class="horiz">
     <%= a.label(:postal_code, "Zip code") %>
-    <%= a.text_field(:postal_code, :size => 7) %>
+    <%= a.core_text_field(:postal_code, {:size => 7}, event) %>
   </span>
   </fieldset>
 <% end %>

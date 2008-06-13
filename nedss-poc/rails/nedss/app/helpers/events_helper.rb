@@ -155,7 +155,12 @@ module EventsHelper
       core_path_with_dots = element.core_path.sub("event[", "").gsub(/\]/, "").gsub(/\[/, ".")
       core_value = @event
       core_path_with_dots.split(".").each do |method|
-        core_value = core_value.send(method)
+        begin
+          core_value = core_value.send(method)
+        rescue
+          break
+        end
+        
       end
 
       if (element.condition == core_value.to_s)

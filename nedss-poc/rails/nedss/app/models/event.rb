@@ -34,13 +34,6 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
-  def Event.exposed_attributes
-    {
-      "event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient Date of Death" },
-      "event[active_patient][active_primary_entity][person][middle_name]"   => {:type => :single_line_text, :name => "Patient Middle Name" },
-    }
-  end
-
   def disease
     @disease ||= disease_events.last
   end
@@ -482,6 +475,32 @@ class Event < ActiveRecord::Base
         self.form_references[i += 1] = FormReference.new(:form_id => form.id)
       end
     end
+  end
+  
+  def Event.exposed_attributes
+    {
+      "event[active_patient][active_primary_entity][person][last_name]" => {:type => :single_line_text, :name => "Patient last name" },
+      "event[active_patient][active_primary_entity][person][first_name]" => {:type => :single_line_text, :name => "Patient first name" },
+      "event[active_patient][active_primary_entity][person][middle_name]" => {:type => :single_line_text, :name => "Patient middle name" },
+      "event[active_patient][active_primary_entity][address][street_number]" => {:type => :single_line_text, :name => "Patient street number" },
+      "event[active_patient][active_primary_entity][address][street_name]" => {:type => :single_line_text, :name => "Patient street name" },
+      "event[active_patient][active_primary_entity][address][unit_number]" => {:type => :single_line_text, :name => "Patient unit number" },
+      "event[active_patient][active_primary_entity][address][city]" => {:type => :single_line_text, :name => "Patient city" },
+      "event[active_patient][active_primary_entity][address][state_id]" => {:type => :single_line_text, :name => "Patient state" },
+      "event[active_patient][active_primary_entity][address][county_id]" => {:type => :single_line_text, :name => "Patient county" },
+      "event[active_patient][active_primary_entity][address][postal_code]" => {:type => :single_line_text, :name => "Patient zip code" },
+      "event[active_patient][active_primary_entity][person][birth_date]" => {:type => :date, :name => "Patient date of Birth" },
+      "event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => {:type => :single_line_text, :name => "Patient age" },
+      "event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient date of death" },
+      "event[active_patient][active_primary_entity][telephone][area_code]" => {:type => :single_line_text, :name => "Patient area code" },
+      "event[active_patient][active_primary_entity][telephone][phone_number]" => {:type => :single_line_text, :name => "Patient phone number" },
+      "event[active_patient][active_primary_entity][telephone][extension]" => {:type => :single_line_text, :name => "Patient extension" },
+      "event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Patient birth gender" },
+      "event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Patient ethnicity" },
+      "event[active_patient][active_primary_entity][person][primary_language_id]" => {:type => :single_line_text, :name => "Patient primary language" }
+      
+      # "event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
+    }
   end
 
   private

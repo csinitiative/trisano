@@ -1,22 +1,21 @@
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
+  def core_text_field(attribute, options = {}, event =nil)
+    change_event = core_follow_up_event(attribute, event)
+    options[:onchange] = change_event unless change_event.blank?
+    text_field(attribute, options)
+  end
+  
+  def core_calendar_date_select(attribute, options = {}, event =nil)
+    change_event = core_follow_up_event(attribute, event)
+    options[:onchange] = change_event unless change_event.blank?
+    calendar_date_select(attribute, options)
+  end
+  
   def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
     
-    unless (@object.nil? || event.nil?)
-      
-      # Debt: Duplicating this logic
-      can_investigate = ((event.under_investigation? or event.reopened?) and User.current_user.is_entitled_to_in?(:investigate, event.active_jurisdiction.secondary_entity_id) and !event.disease.disease_id.nil? )
-
-      if (can_investigate && !event.form_references.nil?)        
-        event.form_references.each do |form_reference|
-          if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
-              html_options[:onchange] = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
-              break
-          end
-        end
-      end
-    end
-
+    change_event = core_follow_up_event(attribute, event)
+    html_options[:onchange] = change_event unless change_event.blank?
     self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
 
   end
@@ -112,6 +111,27 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def get_values(question_element)
     question_element.children.find { |child| child.is_a?(ValueSetElement) }.children.collect { |value| value.name }
+  end
+  
+  private
+  
+  def core_follow_up_event(attribute, event)
+    result = ""
+    
+    unless (@object.nil? || event.nil?)
+      # Debt: Duplicating this logic
+      can_investigate = ((event.under_investigation? or event.reopened?) and User.current_user.is_entitled_to_in?(:investigate, event.active_jurisdiction.secondary_entity_id) and !event.disease.disease_id.nil? )
+
+      if (can_investigate && !event.form_references.nil?)        
+        event.form_references.each do |form_reference|
+          if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
+              result = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
+              break
+          end
+        end
+      end
+    end
+    return result
   end
 
 end

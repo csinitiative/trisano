@@ -82,10 +82,9 @@ class FollowUpElementsController < ApplicationController
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to process conditional logic for follow up questions.'
+      @error_message_div = "follow-up-error"
       render :template => 'rjs-error'
     end
-    
-    
   end
   
 end

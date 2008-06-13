@@ -44,6 +44,8 @@ describe FollowUpElement do
       @event.jurisdiction = participations(:marks_jurisdiction)
       @event.save(false)
       
+      @no_follow_up_answer = Answer.create(:event_id => @event.id, :question_id => questions(:second_tab_core_follow_up_q).id, :text_answer => "YES!")
+      
     end
     
     it "should return follow-up element with a 'show' attribute for matching core path with matching condition" do
@@ -88,11 +90,34 @@ describe FollowUpElement do
     end
     
     it "should delete answers to questions that no longer apply" do
-      pending "Will implement as code is implemented"
+      params = {}
+      
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:response] = "no match"
+      
+      follow_ups = FollowUpElement.process_core_condition(params)
+      
+      begin
+        deleted_existing_answer = Answer.find(@no_follow_up_answer.id)
+      rescue
+        # No-op
+      ensure
+        deleted_existing_answer.should be_nil
+      end
+      
     end
     
     it "should not delete answers if conditions apply" do
-      pending "Will implement as code is implemented"
+      params = {}
+      
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:response] = form_elements(:second_tab_core_follow_up).condition
+      
+      follow_ups = FollowUpElement.process_core_condition(params)
+      
+      Answer.find(@no_follow_up_answer.id).should_not be_nil
     end
     
   end

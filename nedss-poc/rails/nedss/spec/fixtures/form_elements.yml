@@ -231,7 +231,7 @@ second_tab_core_follow_up:
   description: 
   rgt: "42"
   parent_id: "17"
-  condition: "Yes"
+  condition: "3"
   core_path: "event[active_patient][active_primary_entity][person][birth_gender_id]"
 
 second_tab_core_follow_up_q:
@@ -244,6 +244,9 @@ second_tab_core_follow_up_q:
   description: 
   rgt: "41"
   parent_id: "21"
+
+
+
 
 anthrax_form_all_jurisdictions_1_base:
   name: 

@@ -1,2 +1,4 @@
-page.replace_html 'builder-mods', "<p style='color:red'>" + flash[:notice] + "</p>"
+@error_message_div = "builder-mods" if @error_message_div.blank?
+
+page.replace_html @error_message_div, "<p style='color:red'>" + flash[:notice] + "</p>"
 flash[:notice] = ''

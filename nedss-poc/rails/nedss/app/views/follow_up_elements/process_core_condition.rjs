@@ -8,3 +8,5 @@ unless @follow_ups.blank?
     end 
   end
 end
+
+page.replace_html "follow-up-error", ""

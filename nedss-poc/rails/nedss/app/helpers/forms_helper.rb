@@ -150,8 +150,16 @@ module FormsHelper
 
   def render_follow_up(element, include_children=true)
     
-    result = "<li class='follow-up-item' id='#{element.id}'>Follow up for: '#{element.condition}'"
+    result = "<li class='follow-up-item' id='#{element.id}'>"
     
+    if (element.core_path.blank?)
+      result +=  "Follow"
+    else
+      result +=  "Core follow"
+    end
+    
+    result += " up for: '#{element.condition}'"
+        
     if include_children && element.children?
       result += "<ul id='follow_up_" + element.id.to_s + "_children'>"
       element.children.each do |child|
