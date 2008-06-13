@@ -23,6 +23,10 @@ function sendConditionRequest(element, event_id, question_element_id) {
   new Ajax.Request('../../question_elements/process_condition?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {asynchronous:true, evalScripts:true})
 }
 
+function sendCoreConditionRequest(element, event_id, core_path) {
+  new Ajax.Request('../../follow_up_elements/process_core_condition?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {asynchronous:true, evalScripts:true})
+}
+
 function setUpSearchFields() {
   if (document.getElementById("name").value.length > 0) {
     document.getElementById("sw_first_name").disabled = true;

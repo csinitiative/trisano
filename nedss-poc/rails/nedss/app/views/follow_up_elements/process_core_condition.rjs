@@ -1,0 +1,10 @@
+unless @follow_ups.blank?
+  @follow_ups.each do |follow_up|
+    if (follow_up[0] == "hide")
+      page.replace_html "follow_up_investigate_#{follow_up[1].id}", ""
+    else
+      page.replace_html "follow_up_investigate_#{follow_up[1].id}",  
+        :partial => 'events/core_follow_up', :locals => {:follow_up => follow_up[1]}
+    end 
+  end
+end

@@ -7,11 +7,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       # Debt: Duplicating this logic
       can_investigate = ((event.under_investigation? or event.reopened?) and User.current_user.is_entitled_to_in?(:investigate, event.active_jurisdiction.secondary_entity_id) and !event.disease.disease_id.nil? )
 
-      if (can_investigate && !event.form_references.nil?)
-
+      if (can_investigate && !event.form_references.nil?)        
         event.form_references.each do |form_reference|
           if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
-              p "Include event handler"
+              html_options[:onchange] = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
               break
           end
         end

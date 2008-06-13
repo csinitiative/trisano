@@ -9,6 +9,10 @@ describe Form do
     @form.should be_valid
   end
   
+  it "should return the most recent published version" do
+    pending
+  end
+  
   describe "when created with save_and_initialize_form_elements" do
     
     fixtures :forms, :form_elements, :questions
@@ -250,12 +254,13 @@ describe Form do
     
   end
   
+  
   describe "the get_investigation_forms class method" do
     fixtures :forms
 
     it "should return four forms" do
       forms = Form.get_published_investigation_forms(1, 1)
-      forms.length.should == 3
+      forms.length.should == 4
     end
 
     it "should return two global forms" do

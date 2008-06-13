@@ -32,4 +32,69 @@ describe FollowUpElement do
     
   end
   
+  describe "when processing conditional logic for core follow ups'" do
+    
+    fixtures :codes, :participations, :places, :diseases, :disease_events, :forms, :form_elements, :questions
+    
+    before(:each) do
+      
+      # Debt: Building and saving an event because the fixture-driven event is not currently valid (rake fails loading event fixtures)
+      @event = Event.new
+      @event.disease_events << disease_events(:marks_chicken_pox)
+      @event.jurisdiction = participations(:marks_jurisdiction)
+      @event.save(false)
+      
+    end
+    
+    it "should return follow-up element with a 'show' attribute for matching core path with matching condition" do
+      params = {}
+      
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:response] = form_elements(:second_tab_core_follow_up).condition
+      
+      follow_ups = FollowUpElement.process_core_condition(params)
+      
+      # Debt: The magic container for core follow ups needs to go probably
+      follow_ups[0][0].should eql("show")
+      follow_ups[0][1].is_a?(FollowUpElement).should be_true
+      
+    end
+    
+    it "should return follow-up element with a 'hide' attribute for matching core path without a matching condition" do
+      params = {}
+      
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:response] = "no match"
+      
+      follow_ups = FollowUpElement.process_core_condition(params)
+      
+      # Debt: The magic container for core follow ups needs to go probably
+      follow_ups[0][0].should eql("hide")
+      follow_ups[0][1].is_a?(FollowUpElement).should be_true
+    end
+    
+    it "should return no follow-up elements without a matching core path or matching condition" do
+      params = {}
+      
+      params[:event_id] = @event.id
+      params[:core_path] = "no match"
+      params[:response] = "no match"
+      
+      follow_ups = FollowUpElement.process_core_condition(params)
+      
+      follow_ups.empty?.should be_true
+    end
+    
+    it "should delete answers to questions that no longer apply" do
+      pending "Will implement as code is implemented"
+    end
+    
+    it "should not delete answers if conditions apply" do
+      pending "Will implement as code is implemented"
+    end
+    
+  end
+  
 end

@@ -15,8 +15,6 @@ class EventsController < ApplicationController
     render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
-  # GET /event
-  # GET /event.xml
   def index
     @events = Event.find(:all, 
       :include => :jurisdiction, 
@@ -30,8 +28,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /event/1
-  # GET /event/1.xml
   def show
     @event = Event.find(params[:id])
 
@@ -42,8 +38,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /event/new
-  # GET /event/new.xml
   def new
     @event = Event.new(
       :event_onset_date => Date.today,
@@ -93,12 +87,9 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /event/1/edit
   def edit
   end
 
-  # POST /event
-  # POST /event.xml
   def create
     @event = Event.new(params[:event])
     
@@ -119,13 +110,10 @@ class EventsController < ApplicationController
     end
   end
 
-  # PUT /event/1
-  # PUT /event/1.xml
   def update
     respond_to do |format|
       @event.attributes = params[:event]
       if @event.save
-#      if @event.update_attributes(params[:event])
         flash[:notice] = 'CMR was successfully updated.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { head :ok }
@@ -136,8 +124,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # DELETE /event/1
-  # DELETE /event/1.xml
   def destroy
     head :method_not_allowed
   end
@@ -163,7 +149,6 @@ class EventsController < ApplicationController
   end
 
   def find_unassociated_people
-    # If I weren't gonna rip this out, I'd do it in SQL
     all_people = PersonEntity.find_all
     participants = @event.participations.map { |p| p.person_entity.id }
     all_people.select { |p| not participants.include?(p.id) }
@@ -202,12 +187,7 @@ class EventsController < ApplicationController
 
   def get_investigation_forms
     @event ||= Event.find(params[:id])
-    if @event.form_references.empty?
-      i = -1
-      Form.get_published_investigation_forms(@event.disease.disease_id, @event.active_jurisdiction.secondary_entity_id).each do |form|
-        @event.form_references[i += 1] = FormReference.new(:form_id => form.id)
-      end
-    end
+    @event.get_investigation_forms
   end
   
 end

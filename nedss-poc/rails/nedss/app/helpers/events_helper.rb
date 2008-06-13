@@ -95,28 +95,23 @@ module EventsHelper
     
     result = "<div id='question_investigate_#{element.id}'>"
     
-    if element.question.core_data
-      result += render_core_data_element(element)
-    else
-      
-      @answer_object = @event.get_or_initialize_answer(element.question.id)
+    @answer_object = @event.get_or_initialize_answer(element.question.id)
      
-      if (f.nil?)
-        result += fields_for(@event) do |f|
-          f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            answer_template.dynamic_question(element, "")
-          end
-        end
-      else
-        prefix = @answer_object.new_record? ? "new_answers" : "answers"
-        index = @answer_object.new_record? ? "" : @form_index += 1
-        result += f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          answer_template.dynamic_question(element, index)
+    if (f.nil?)
+      result += fields_for(@event) do |f|
+        f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          answer_template.dynamic_question(element, "")
         end
       end
-
+    else
+      prefix = @answer_object.new_record? ? "new_answers" : "answers"
+      index = @answer_object.new_record? ? "" : @form_index += 1
+      result += f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+        answer_template.dynamic_question(element, index)
+      end
     end
-    
+
+    # Debt: Re-retrieving something already in the tree; just need to look at the kids
     follow_up_group = element.process_condition(@answer_object, @event.id)
       
     unless follow_up_group.nil?
@@ -135,6 +130,11 @@ module EventsHelper
   def render_investigator_follow_up(element, f)
     result = ""
     
+    unless element.core_path.blank?
+      result += render_investigator_core_follow_up(element, f) unless element.core_path.blank?
+      return result
+    end
+    
     questions = element.cached_children
     
     if questions.size > 0
@@ -142,6 +142,40 @@ module EventsHelper
         result += render_investigator_question(child, f)
       end
     end
+
+    result
+  end
+  
+  def render_investigator_core_follow_up(element, f, ajax_render =false)
+    result = ""
+    
+    include_children = false
+    
+    unless (ajax_render)
+      core_path_with_dots = element.core_path.sub("event[", "").gsub(/\]/, "").gsub(/\[/, ".")
+      core_value = @event
+      core_path_with_dots.split(".").each do |method|
+        core_value = core_value.send(method)
+      end
+
+      if (element.condition == core_value.to_s)
+        include_children = true
+      end
+    end
+    
+    result += "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
+    
+    if (include_children || ajax_render)
+      questions = element.cached_children
+    
+      if questions.size > 0
+        questions.each do |child|
+          result += render_investigator_question(child, f)
+        end
+      end
+    end
+
+    result += "</div>" unless ajax_render
     
     result
   end

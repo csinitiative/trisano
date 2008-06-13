@@ -74,4 +74,18 @@ class FollowUpElementsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def process_core_condition
+    begin
+      @follow_ups = FollowUpElement.process_core_condition(params)
+      @event = params[:event_id].blank? ? Event.new : Event.find(params[:event_id])
+    rescue Exception => ex
+      logger.info ex
+      flash[:notice] = 'Unable to process conditional logic for follow up questions.'
+      render :template => 'rjs-error'
+    end
+    
+    
+  end
+  
 end

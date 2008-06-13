@@ -8,7 +8,7 @@ base:
   type: FormBaseElement
   id: "1"
   description: 
-  rgt: "32"
+  rgt: "44"
   parent_id: 
     
 default_view:
@@ -245,4 +245,46 @@ second_tab_core_follow_up_q:
   rgt: "41"
   parent_id: "21"
 
+anthrax_form_all_jurisdictions_1_base:
+  name: 
+  form_id: "2"
+  tree_id: "2"
+  lft: "1"
+  type: FormBaseElement
+  id: "23"
+  description: 
+  rgt: "2"
+  parent_id: 
 
+anthrax_form_all_jurisdictions_2_base:
+  name: 
+  form_id: "3"
+  tree_id: "3"
+  lft: "1"
+  type: FormBaseElement
+  id: "24"
+  description: 
+  rgt: "2"
+  parent_id: 
+
+anthrax_form_for_LHD_1_base:
+  name: 
+  form_id: "4"
+  tree_id: "4"
+  lft: "1"
+  type: FormBaseElement
+  id: "25"
+  description: 
+  rgt: "2"
+  parent_id: 
+
+anthrax_form_for_LHD_base:
+  name: 
+  form_id: "5"
+  tree_id: "5"
+  lft: "1"
+  type: FormBaseElement
+  id: "26"
+  description: 
+  rgt: "2"
+  parent_id: 
