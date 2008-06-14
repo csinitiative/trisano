@@ -1,0 +1,15 @@
+%fieldset
+  %legend 
+    Laboratory Information
+    %span{:id => 'lab_info_hide', :onClick => "Element.hide('lab_info_form'); Element.hide('lab_info_hide'); Element.show('lab_info_show'); return false;"} [Hide]
+    %span{:id => 'lab_info_show', :onClick => "Element.show('lab_info_form'); Element.hide('lab_info_show'); Element.show('lab_info_hide'); return false;", :style => "display: none;"} [Show]
+
+  - if @event.new_record?
+    - f.fields_for(:lab_result, @event.lab_result, :builder => ExtendedFormBuilder) do |lab|
+      = render :partial => "lab_results/form", :locals => { :lab => lab }
+  - else
+    %div{:id => 'lab-result-list'}
+      = render :partial => "lab_results/index"
+
+    %br
+      = link_to_remote_redbox("New Lab Result", :url => new_cmr_lab_result_path(@event), :method => :get)

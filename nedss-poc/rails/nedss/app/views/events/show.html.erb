@@ -79,20 +79,7 @@
       <legend>Laboratory Information</legend>  
       <table cellpadding="2">
         <tr>
-          <td><span class="label">Lab Result:</span></td>
-          <td><%= @event.lab_result.lab_result_text %></td>
-          <td><span class="label">Specimen Source:</span></td>
-          <td><%= l @event.lab_result.specimen_source %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Collection Date:</span></td>
-          <td><%= @event.lab_result.collection_date %></td>
-          <td><span class="label">Lab Test Date:</span></td>
-          <td><%= @event.lab_result.lab_test_date %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Tested at UPHL lab:</span></td>
-          <td><%= l @event.lab_result.tested_at_uphl_yn %></td>
+          <td><%= render :partial => "lab_results/index" %></td>
         </tr>
       </table>
     </fieldset>

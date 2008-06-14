@@ -31,6 +31,7 @@ describe "/cmrs/new.html.erb" do
     #    @event.stub!(:current_treatment).and_return(@current_treatment)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
+    @event.stub!(:lab_results).and_return([])
     
 
     @place.stub!(:name).and_return("Joe's Lab")

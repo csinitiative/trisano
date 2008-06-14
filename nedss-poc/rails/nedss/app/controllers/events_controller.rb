@@ -42,7 +42,6 @@ class EventsController < ApplicationController
     @event = Event.new(
       :event_onset_date => Date.today,
       :disease          => {}, 
-      :lab_result       => {},
       :active_patient   => { 
         :active_primary_entity => { 
           :person => {}, 

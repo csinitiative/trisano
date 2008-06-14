@@ -1,0 +1,19 @@
+- if @event.lab_results.empty?
+  %h3 No lab results have been recorded for this case
+- else
+  %table
+    %tr
+      %th Lab Result
+      %th Specimen Source
+      %th Collection Date
+      %th Lab Test Date
+      %th UPHL Lab
+
+    - for result in @event.lab_results
+      %tr
+        %td=result.lab_result_text
+        %td=l result.specimen_source
+        %td=result.collection_date
+        %td=result.lab_test_date
+        %td=l result.tested_at_uphl_yn
+

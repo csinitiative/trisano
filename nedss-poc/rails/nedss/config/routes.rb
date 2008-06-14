@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :follow_up_elements
 
+  map.resources :follow_up_elements
   
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
@@ -31,8 +31,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
 
-  map.resources :cmrs, :controller => :events, 
-    :member => { :associations => :get, :add_association => :post }
+  map.resources :cmrs, :controller => :events do |cmr|
+    cmr.resources :lab_results
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
 

@@ -1,0 +1,18 @@
+%div{:id => 'lab_info_form'}
+  %fieldset{:class => "form"}
+    %legend Lab Results
+    %span{:class => "horiz"}
+      = lab.label(:lab_result_text, "Lab Result")
+      = lab.text_field(:lab_result_text, :size => 20)
+    %span{:class => "horiz"}
+      = lab.label(:specimen_source_id, "Specimen Source")
+      = lab.dropdown_code_field(:specimen_source_id, "specimen", {})
+    %span{:class => "horiz"}
+      = lab.label(:collection_date)
+      = lab.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
+    %span{:class => "horiz"}
+      = lab.label(:lab_test_date)
+      = lab.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
+    %span{:class => "horiz"}
+      = lab.label(:tested_at_uphl_yn_id, "Tested at UPHL Lab")
+      = lab.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {})

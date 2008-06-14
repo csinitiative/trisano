@@ -71,15 +71,11 @@ class Event < ActiveRecord::Base
   end
 
   def lab_result
-    @lab_result ||= lab_results.last
+    @lab_result ||= LabResult.new
   end
 
   def lab_result=(attributes)
-    if new_record?
-      @lab_result = LabResult.new(attributes)
-    else
-      lab_results.build(attributes) unless attributes.values_blank?
-    end
+    lab_results.build(attributes) unless attributes.values_blank?
   end
 
   ### Participations
