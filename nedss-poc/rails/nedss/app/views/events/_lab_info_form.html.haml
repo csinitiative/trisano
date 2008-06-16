@@ -8,8 +8,7 @@
     - f.fields_for(:lab_result, @event.lab_result, :builder => ExtendedFormBuilder) do |lab|
       = render :partial => "lab_results/form", :locals => { :lab => lab }
   - else
-    %div{:id => 'lab-result-list'}
-      = render :partial => "lab_results/index"
+    = render :partial => "lab_results/index"
 
     %br
       = link_to_remote_redbox("New Lab Result", :url => new_cmr_lab_result_path(@event), :method => :get)

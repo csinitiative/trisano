@@ -28,13 +28,13 @@ class LabResultsController < ApplicationController
   # GET /lab_results/new.xml
   def new
     @lab_result = LabResult.new
-
     render :layout => false
   end
 
   # GET /lab_results/1/edit
   def edit
-    @lab_result = LabResult.find(params[:id])
+    @lab_result = @event.lab_results.find(params[:id])
+    render :layout => false
   end
 
   # POST /lab_results
@@ -58,16 +58,17 @@ class LabResultsController < ApplicationController
   # PUT /lab_results/1
   # PUT /lab_results/1.xml
   def update
-    @lab_result = LabResult.find(params[:id])
+    @lab_result = @event.lab_results.find(params[:id])
 
-    respond_to do |format|
-      if @lab_result.update_attributes(params[:lab_result])
-        flash[:notice] = 'LabResult was successfully updated.'
-        format.html { redirect_to(@lab_result) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @lab_result.errors, :status => :unprocessable_entity }
+    if @lab_result.update_attributes(params[:lab_result])
+      render(:update) do |page|
+        page.replace_html "lab-result-list", :partial => 'lab_results/index'
+        page.call "RedBox.close"
+      end
+    else
+      # This will do for now.
+      render(:update) do |page|
+        page.call "alert", "Validation failed: #{@lab_result.errors.full_messages}"
       end
     end
   end
