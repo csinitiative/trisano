@@ -55,23 +55,13 @@ describe "Form builder admin" do
     @browser.is_text_present("Section configuration was successfully created.").should be true 
   end
   
-  it "should allow admin to add a question to the second section" do  
-    NedssHelper.click_add_question_to_section(@browser, @s2_name)
-    @browser.type "question_element_question_attributes_question_text", @q_name
-    @browser.select "question_element_question_attributes_data_type", "label=Phone Number"
-    @browser.click "question_element_submit"
-    sleep 2
-    #wait_for_element_not_present("new-question-form")
+  it "should allow admin to add a question to the second section" do
+    NedssHelper.add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   
-  it "should allow admin to add another question to the second section" do  
-    NedssHelper.click_add_question_to_section(@browser, @s2_name)
-    @browser.type "question_element_question_attributes_question_text", @q2_name
-    @browser.select "question_element_question_attributes_data_type", "label=Phone Number"
-    @browser.click "question_element_submit"
-    sleep 2
-    #wait_for_element_not_present("new-question-form")
+  it "should allow admin to add another question to the second section" do
+    NedssHelper.add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   

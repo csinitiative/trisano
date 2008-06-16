@@ -24,10 +24,8 @@ module FormsHelper
   end
   
   def render_view(element, include_children=true)
-    
-    li_html_id = get_li_html_id(element.id)
 
-    result = "<li id='#{li_html_id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='view_#{element.id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
@@ -53,8 +51,7 @@ module FormsHelper
   
   def render_core_view(element, include_children)
 
-    li_html_id = get_li_html_id(element.id)
-    result = "<li id='#{li_html_id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='core_view_#{element.id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
     result += "</li>"
     
     if include_children && element.children?
@@ -75,10 +72,9 @@ module FormsHelper
   end
   
   def render_section(element, include_children=true)
+    
 
-    li_html_id = get_li_html_id(element.id)
-
-    result = "<li id='#{li_html_id}', class='sortable fb-section', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='section_#{element.id}', class='sortable fb-section', style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
     result += "</li>"
 
@@ -98,8 +94,7 @@ module FormsHelper
 
   def render_group(element, include_children=true)
 
-    li_html_id = get_li_html_id(element.id)
-    result = "<li id='#{li_html_id}', class='sortable fb-group', style='clear: both;'><b>#{element.name}</b></li>"
+    result = "<li id='group_#{element.id}', class='sortable fb-group', style='clear: both;'><b>#{element.name}</b></li>"
 
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
@@ -150,7 +145,7 @@ module FormsHelper
 
   def render_follow_up(element, include_children=true)
     
-    result = "<li class='follow-up-item' id='#{element.id}'>"
+    result = "<li class='follow-up-item' id='follow_up_#{element.id}'>"
     
     if (element.core_path.blank?)
       result +=  "Follow"
@@ -256,8 +251,5 @@ module FormsHelper
   def edit_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
-  
-  def get_li_html_id(id)
-    "section_#{id}"
-  end
+
 end

@@ -100,14 +100,14 @@ module EventsHelper
     if (f.nil?)
       result += fields_for(@event) do |f|
         f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          answer_template.dynamic_question(element, "")
+          answer_template.dynamic_question(element, "", {:id => "investigator_answer_#{element.id}"})
         end
       end
     else
       prefix = @answer_object.new_record? ? "new_answers" : "answers"
       index = @answer_object.new_record? ? "" : @form_index += 1
       result += f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        answer_template.dynamic_question(element, index)
+        answer_template.dynamic_question(element, index, {:id => "investigator_answer_#{element.id}"})
       end
     end
 

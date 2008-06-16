@@ -29,16 +29,7 @@ describe 'Form Builder Admin' do
   end
   
   it 'should create a new form and allow navigation to builder' do
-    @browser.open "/nedss/cmrs"
-    @browser.click "link=Forms"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click "link=New form"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.type "form_name", @form_name
-    @browser.click "form_submit"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click "link=Form Builder"
-    @browser.wait_for_page_to_load($load_time)
+    NedssHelper.create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
   end
   
   # Debt: The remaining examples had to be combined into one in order to have access
@@ -54,15 +45,13 @@ describe 'Form Builder Admin' do
     add_value_sets
     edit_value_sets
     add_and_populate_tab
-    publish
-    
+    NedssHelper.publish_form(@browser)
+    @browser.is_text_present("Form was successfully published").should be_true
     validate_investigator_rendering
-    
     navigate_to_form_edit
     delete_edit_and_inactivate_questions
-    
-    publish
-    
+    NedssHelper.publish_form(@browser)
+    @browser.is_text_present("Form was successfully published").should be_true
     revalidate_investigator_rendering
 
   end
@@ -80,39 +69,20 @@ def add_a_section
 end
 
 def add_questions
-  @browser.click "link=Add question to section"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", "Did you go into the tall grass?"
-  @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
-  @browser.click "question_element_submit"    
-  wait_for_element_not_present("new-question-form")
+  NedssHelper.add_question_to_section(@browser, "Section 1", "Did you go into the tall grass?", "Drop-down select list")
   @browser.is_text_present("Did you go into the tall grass?").should be_true
-  @browser.click "link=Add question to section"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", @question_to_inactivate_text
-  @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
-  @browser.click "question_element_submit"
-  wait_for_element_not_present("new-question-form")
+  
+  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_inactivate_text, "Drop-down select list")
   @browser.is_text_present(@question_to_inactivate_text).should be_true
     
   @question_to_inactivate_id = @browser.get_value("id=modified-element")
-    
-  @browser.click "link=Add question to section"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", @question_to_delete_text
-  @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
-  @browser.click "question_element_submit"    
-  wait_for_element_not_present("new-question-form")
+  
+  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_delete_text, "Multi-line text")
   @browser.is_text_present(@question_to_delete_text).should be_true
     
   @question_to_delete_id = @browser.get_value("id=modified-element")
-    
-  @browser.click "link=Add question to section"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", @question_to_edit_text
-  @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
-  @browser.click "question_element_submit"    
-  wait_for_element_not_present("new-question-form")
+  
+  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_edit_text, "Drop-down select list")
   @browser.is_text_present(@question_to_edit_text).should be_true
     
   @question_to_edit_id = @browser.get_value("id=modified-element")
@@ -213,23 +183,13 @@ def add_and_populate_tab
 
   @tab_section_element_id = @browser.get_value("id=modified-element")
 
-  @browser.click "id=add-question-#{@tab_section_element_id}"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", @user_defined_tab_question_text
-  @browser.select "question_element_question_attributes_data_type", "label=Single line text"
-  @browser.click "question_element_submit"    
-  wait_for_element_not_present("new-question-form")
+  NedssHelper.add_question_to_section(@browser, @user_defined_tab_section_text, @user_defined_tab_question_text, "Single line text")
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
 end
 
 def to_and_from_library_no_group
-  @browser.click "link=Add question to tab"
-  wait_for_element_present("new-question-form")
-  @browser.type "question_element_question_attributes_question_text", @question_to_add_to_library_text
-  @browser.select "question_element_question_attributes_data_type", "label=Single line text"
-  @browser.click "question_element_submit"    
-  wait_for_element_not_present("new-question-form")
-
+  
+  NedssHelper.add_question_to_view(@browser, "Default View", @question_to_add_to_library_text, "Single line text")
   NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
   @browser.click "link=Copy to library"
   wait_for_element_present("new-group-form")
@@ -258,28 +218,10 @@ def to_and_from_library_new_group
   @browser.click "link=Close"
 end
 
-def publish
-  @browser.click '//input[@value="Publish"]'
-  @browser.wait_for_page_to_load($load_time)
-  @browser.is_text_present("Form was successfully published").should be_true
-end
-
-def validate_investigator_rendering
-  @browser.click "link=New CMR"
-  @browser.wait_for_page_to_load($load_time)
-  @browser.type "event_active_patient__active_primary_entity__person_last_name", @cmr_last_name
-  @browser.type "event_active_patient__active_primary_entity__person_first_name", "Guy"
-  @browser.click "//ul[@id='tabs']/li[2]/a/em"
-  @browser.select "event_disease_disease_id", "label=African Tick Bite Fever"
-  @browser.click "//ul[@id='tabs']/li[6]/a/em"
-  @browser.select "event_active_jurisdiction_secondary_entity_id", "label=Bear River Health Department"
-  @browser.select "event_event_status_id", "label=Under Investigation"
-  @browser.click "event_submit"
-  @browser.wait_for_page_to_load($load_time)
-
+def validate_investigator_rendering  
+  NedssHelper.create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
   @browser.click "edit_cmr_link"
   @browser.wait_for_page_to_load($load_time)
-
   @browser.is_text_present(@question_to_delete_text).should be_true
   @browser.is_text_present(@question_to_edit_text).should be_true
   @browser.is_text_present(@question_to_inactivate_text).should be_true
@@ -287,7 +229,6 @@ def validate_investigator_rendering
   @browser.is_text_present(@user_defined_tab_text).should be_true
   @browser.is_text_present(@user_defined_tab_section_text).should be_true
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
-  
 end
 
 def navigate_to_form_edit
