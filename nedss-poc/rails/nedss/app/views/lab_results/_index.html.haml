@@ -17,4 +17,4 @@
           %td=result.collection_date
           %td=result.lab_test_date
           %td=l result.tested_at_uphl_yn
-          %td=link_to_remote_redbox("Edit", :url => edit_cmr_lab_result_path(@event, result), :method => :get)
+          %td=link_to_remote_redbox("Edit lab result", {:url => edit_cmr_lab_result_path(@event, result), :method => :get}, :id => "edit-lab-result-#{result.id}-link")
