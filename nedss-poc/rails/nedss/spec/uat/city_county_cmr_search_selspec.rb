@@ -52,13 +52,13 @@ require File.dirname(__FILE__) + '/spec_helper'
       end
     end
     
-    it 'should find or add Smurfette in Provo, Utah county' do  
+    it 'should find or add Gidget in Provo, Utah county' do  
       @browser.click('link=View CMRs')
       @browser.wait_for_page_to_load($load_time)
-      if !@browser.is_text_present('Smurfette')
+      if !@browser.is_text_present('Gidget')
         @browser.click('link=New CMR')
         @browser.wait_for_page_to_load($load_time)
-        @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Smurfette')
+        @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Gidget')
         @browser.type('event_active_patient__active_primary_entity__address_city', 'Orem')
         @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
         @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
@@ -68,7 +68,7 @@ require File.dirname(__FILE__) + '/spec_helper'
       end
     end
    
-    it 'should find chuckles and Papa Smurf and not Joker or Smurfette when it searches in city = Provo' do
+    it 'should find chuckles and Papa Smurf and not Joker or Gidget when it searches in city = Provo' do
       @browser.click('link=CMR Search')
       @browser.wait_for_page_to_load($load_time)
       @browser.type('name=city', 'Provo')
@@ -78,7 +78,7 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.is_text_present('Papa Smurf').should be_true
     end
    
-    it 'should find Joker and Smurfette and not chuckles or Papa Smurf when it searches in city = Orem' do
+    it 'should find Joker and Gidget and not chuckles or Papa Smurf when it searches in city = Orem' do
 
       pending("appears to be some dependency between tests? Passes with a clean db, but not in grid")
 
@@ -88,12 +88,12 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Joker').should be_true
-      @browser.is_text_present('Smurfette').should be_true
+      @browser.is_text_present('Gidget').should be_true
       @browser.is_text_present('chuckles').should be_false
       @browser.is_text_present('Smurf, Papa').should be_false
     end
    
-    it 'should find chuckles, Joker, Smurfette, and Papa Smurf when it searches in county = Utah' do
+    it 'should find chuckles, Joker, Gidget, and Papa Smurf when it searches in county = Utah' do
       pending("appears to be some dependency between tests? Passes with a clean db, but not in grid")
       @browser.click('link=CMR Search')
       @browser.wait_for_page_to_load($load_time)
@@ -104,7 +104,7 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.is_text_present('chuckles').should be_true
       @browser.is_text_present('Joker').should be_true
       @browser.is_text_present('Papa Smurf').should be_true
-      @browser.is_text_present('Smurfette').should be_true
+      @browser.is_text_present('Gidget').should be_true
     end
     
     it 'should not find chuckles, Joker, Smurfette, or Papa Smurf when it searches in city = Weber' do

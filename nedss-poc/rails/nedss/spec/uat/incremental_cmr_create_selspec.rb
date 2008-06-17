@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
   
-  $dont_kill_browser = true
-  
   describe 'User functionality for creating and saving CMRs' do
 
   it 'should allow the user to save CMR incrementally without losing data' do

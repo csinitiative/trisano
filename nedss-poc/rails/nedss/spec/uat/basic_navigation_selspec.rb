@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-  
+
   describe 'The UT-NEDSS home page' do 
     
     it 'should have links to all the sub-pages' do
@@ -15,12 +15,9 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.is_text_present('Users').should be_true
     end
     
-    it 'should have labels describing the home page' do
+    it 'should have a logo on the home page' do
       #Then check for the various text lables on the home page
-      #@browser.is_text_present('Welcome to the UT-NEDSS National Electronic Disease Surveillance System').should be_true
-      #@browser.is_text_present('UT-NEDSS Home').should be_true
-      #@browser.is_text_present('UT-NEDSS Utah - National Electronic Disease Surveillance System').should be_true
-      #@browser.is_text_present('UT-NEDSS Home').should be_true
+      @browser.is_element_present('//img[@alt=\'Logo\']').should be_true
     end
     
     it 'should correctly identify the user' do
@@ -28,7 +25,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
 
     it 'should navigate successfully to the home page' do    
-      @browser.click 'link=UT-NEDSS Utah - National Electronic Disease Surveillance System'
+      @browser.click '//img[@alt=\'Logo\']'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('UT-NEDSS Home').should be_true
     end

@@ -8,7 +8,5 @@ require File.dirname(__FILE__) + '/spec_helper'
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("UT-NEDSS Admin Console")
   end
-  
-  it 'should let you do something' 
 end
 
