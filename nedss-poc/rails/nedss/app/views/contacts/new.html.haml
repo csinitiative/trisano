@@ -6,6 +6,6 @@
   - fields_for(@contact, :builder => ExtendedFormBuilder) do |contact|
     = render :partial => "entities/people/form", :locals => { :f => contact, :entity_data => @contact, :event => @event }
 
-  = submit_to_remote("person-save-button", "Save", :submit => "person_form", :url => cmr_contact_path(@event, @contact))
+  = submit_to_remote("person-save-button", "Save", :submit => "person_form", :url => cmr_contacts_path(@event))
   &nbsp;&nbsp;
   = link_to_close_redbox "Cancel"

@@ -27,13 +27,6 @@ class ContactsController < ApplicationController
   # GET /lab_results/new
   # GET /lab_results/new.xml
   def new
-#    @contact = Participation.new(:role_id => Event.participation_code('Contact'),
-#                                 :active_secondary_entity => { :person => {},
-#                                                               :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-#                                                                                       :primary_yn_id => Code.yes_id }
-#                                                             }
-#                                ) 
-    
     @contact = Entity.new(:person => {},
                           :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
                                                   :primary_yn_id => Code.yes_id }
@@ -43,7 +36,7 @@ class ContactsController < ApplicationController
 
   # GET /lab_results/1/edit
   def edit
-    @participations_treatment = @event.active_patient.participations_treatments.find(params[:id])
+    @contact = @event.contacts.find(params[:id])
     render :layout => false
   end
 
@@ -60,7 +53,7 @@ class ContactsController < ApplicationController
     else
       # This will do for now.
       render(:update) do |page|
-        page.call "alert", "Validation failed: #{@participations_treatments.errors.full_messages}"
+        page.call "alert", "Validation failed: #{@contact.active_secondary_entity.person.errors.full_messages}"
       end
     end
   end
@@ -68,17 +61,17 @@ class ContactsController < ApplicationController
   # PUT /lab_results/1
   # PUT /lab_results/1.xml
   def update
-    @participations_treatment = @event.active_patient.participations_treatments.find(params[:id])
+    @contact = @event.contacts.find(params[:id])
 
-    if @participations_treatment.update_attributes(params[:participations_treatment])
+    if @contact.active_secondary_entity.update_attributes(params[:entity])
       render(:update) do |page|
-        page.replace_html "treatment-list", :partial => 'index'
+        page.replace_html "contact-list", :partial => 'index'
         page.call "RedBox.close"
       end
     else
       # This will do for now.
       render(:update) do |page|
-        page.call "alert", "Validation failed: #{@participations_treatments.errors.full_messages}"
+        page.call "alert", "Validation failed: #{@contact.active_secondary_entity.person.errors.full_messages}"
       end
     end
   end

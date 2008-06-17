@@ -1,7 +1,7 @@
 - if @event.lab_results.empty?
   %h3 No lab results have been recorded for this case
 - else
-  %table
+  %table{:class => "tabular"}
     %tr
       %th Lab Result
       %th Specimen Source
