@@ -34,6 +34,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs, :controller => :events do |cmr|
     cmr.resources :lab_results
     cmr.resources :treatments
+    cmr.resources :contacts
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

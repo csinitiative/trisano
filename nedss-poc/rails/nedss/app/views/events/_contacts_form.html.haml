@@ -1,17 +1,10 @@
-- unless @event.active_contacts.empty?
-  %h3 Existing Contacts
-  %table
-    - for contact in @event.active_contacts
-      - entity = contact.active_secondary_entity
-      - person = entity.person
-      %tr
-        %td= person.last_name + ", " + person.first_name
-        %td= link_to 'Show', entity
-        %td= link_to 'Edit', edit_entity_path(entity)
+- if @event.new_record?
+  - f.fields_for(:contact, @event.contact, :builder => ExtendedFormBuilder) do |contact_fields|
+    - contact_fields.fields_for(:active_secondary_entity, @event.contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_contact|
+      = render :partial => "entities/people/form", :locals => { :f => new_contact, :entity_data => @event.contact.active_secondary_entity }
 - else
-  %h4 None
+  %div{:id => 'contact-list'}
+    = render :partial => "contacts/index"
 
-%h3 Add a New Contact
-- f.fields_for(:new_contact, @event.new_contact, :builder => ExtendedFormBuilder) do |contact_fields|
-  - contact_fields.fields_for(:active_secondary_entity, @event.new_contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_contact|
-    = render :partial => "entities/people/form", :locals => { :f => new_contact, :entity_data => @event.new_contact.active_secondary_entity }
+  %br
+    = link_to_remote_redbox("New Contact", :url => new_cmr_contact_path(@event), :method => :get)

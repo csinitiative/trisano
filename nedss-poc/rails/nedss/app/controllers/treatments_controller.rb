@@ -2,43 +2,43 @@ class TreatmentsController < ApplicationController
 
   before_filter :get_cmr
 
-  # GET /lab_results
-  # GET /lab_results.xml
+  # GET /treatments
+  # GET /treatments.xml
   def index
-    @lab_results = LabResult.find(:all)
+    @treatments = Treatment.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @lab_results }
+      format.xml  { render :xml => @treatments }
     end
   end
 
-  # GET /lab_results/1
-  # GET /lab_results/1.xml
+  # GET /treatments/1
+  # GET /treatments/1.xml
   def show
-    @lab_result = LabResult.find(params[:id])
+    @treatment = Treatment.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @lab_result }
+      format.xml  { render :xml => @treatment }
     end
   end
 
-  # GET /lab_results/new
-  # GET /lab_results/new.xml
+  # GET /treatments/new
+  # GET /treatments/new.xml
   def new
     @participations_treatment = ParticipationsTreatment.new
     render :layout => false
   end
 
-  # GET /lab_results/1/edit
+  # GET /treatments/1/edit
   def edit
     @participations_treatment = @event.active_patient.participations_treatments.find(params[:id])
     render :layout => false
   end
 
-  # POST /lab_results
-  # POST /lab_results.xml
+  # POST /treatments
+  # POST /treatments.xml
   def create
     @participations_treatment = ParticipationsTreatment.new(params[:participations_treatment])
 
@@ -55,8 +55,8 @@ class TreatmentsController < ApplicationController
     end
   end
 
-  # PUT /lab_results/1
-  # PUT /lab_results/1.xml
+  # PUT /treatments/1
+  # PUT /treatments/1.xml
   def update
     @participations_treatment = @event.active_patient.participations_treatments.find(params[:id])
 
@@ -73,14 +73,14 @@ class TreatmentsController < ApplicationController
     end
   end
 
-  # DELETE /lab_results/1
-  # DELETE /lab_results/1.xml
+  # DELETE /treatments/1
+  # DELETE /treatments/1.xml
   def destroy
-    @lab_result = LabResult.find(params[:id])
-    @lab_result.destroy
+    @treatment = Treatment.find(params[:id])
+    @treatment.destroy
 
     respond_to do |format|
-      format.html { redirect_to(lab_results_url) }
+      format.html { redirect_to(treatments_url) }
       format.xml  { head :ok }
     end
   end

@@ -1,0 +1,21 @@
+- if @event.contacts.empty?
+  %h3 No contacts have been recorded for this case
+- else
+  %table
+    %tr
+      %th Last Name
+      %th First Name
+      %th Birth Date
+      %th Age
+      %th Approximate Age (if no birth date)
+      %th Gender
+
+    - for contact in @event.contacts
+      - person = contact.active_secondary_entity.person
+      %tr
+        %td=person.last_name
+        %td=person.first_name
+        %td=person.birth_date
+        %td=calculate_age(person.birth_date) unless person.birth_date.blank?
+        %td=person.approximate_age_no_birthday
+        %td=l person.birth_gender

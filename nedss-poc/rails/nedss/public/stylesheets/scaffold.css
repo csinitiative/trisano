@@ -253,6 +253,18 @@ div.progressBar div.background {
   text-align: left;
 }
 
+.large-modal-dialog {
+  width: 65%;
+  height: 750px;
+  position: absolute; 
+  top: 25px; 
+  left: 15%; 
+  background: #edf5ff; 
+  border: solid 3px; 
+  padding: 10px; 
+  text-align: left;
+}
+
 form.inplaceeditor-form input[type="submit"] { /* The submit button */
   margin-left:1em;
 }

@@ -94,25 +94,14 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def active_contacts
-    @active_contacts || contacts
+  def contact
+    @contact ||= Participation.new( :role_id => Event.participation_code('Contact'), :active_secondary_entity => {}) 
   end
 
-  def new_contact
-    @new_contact || self.new_contact = {}
-  end
-
-  def new_contact=(attributes)
-    if attributes.empty?
-      @new_contact = Participation.new(attributes) 
-      @new_contact.role_id = Event.participation_code('Contact')
-      @new_contact.active_secondary_entity = {}
-      @new_contact
-    else
-      unless attributes[:active_secondary_entity][:person][:last_name].blank?
-        attributes[:role_id] = Event.participation_code('Contact')
-        contacts.build(attributes)
-      end
+  def contact=(attributes)
+    unless attributes[:active_secondary_entity][:person][:last_name].blank?
+      attributes[:role_id] = Event.participation_code('Contact')
+      contacts.build(attributes)
     end
   end
 
