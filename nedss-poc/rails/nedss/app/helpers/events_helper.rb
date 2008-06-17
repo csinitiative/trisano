@@ -25,8 +25,10 @@ module EventsHelper
   def render_investigator_view(view, f)
     result = ""
     
-    view.cached_children.each do |element|
-      result += render_investigator_element(element, f)
+    form_elements_cache = FormElementCache.new(view)
+    
+    form_elements_cache.children.each do |element|
+      result += render_investigator_element(form_elements_cache, element, f)
     end
     
     result
@@ -34,25 +36,25 @@ module EventsHelper
   
   private
   
-  def render_investigator_element(element, f)
+  def render_investigator_element(form_elements_cache, element, f)
     result = ""
     
     case element.class.name
    
     when "SectionElement"
-      result += render_investigator_section(element, f)
+      result += render_investigator_section(form_elements_cache, element, f)
     when "GroupElement"
-      result += render_investigator_group(element, f)
+      result += render_investigator_group(form_elements_cache, element, f)
     when "QuestionElement"
-      result += render_investigator_question(element, f)
+      result += render_investigator_question(form_elements_cache, element, f)
     when "FollowUpElement"
-      result += render_investigator_follow_up(element, f)
+      result += render_investigator_follow_up(form_elements_cache, element, f)
     end
     
     result
   end
   
-  def render_investigator_section(element, f)
+  def render_investigator_section(form_elements_cache, element, f)
     result = "<br/>"
     section_id = "section_investigate_#{element.id}";
     hide_id = section_id + "_hide";
@@ -64,11 +66,11 @@ module EventsHelper
     result += "</legend>"
     result += "<div id='#{section_id}'>"
     
-    section_children = element.cached_children
+    section_children = form_elements_cache.children(element)
     
     if section_children.size > 0
       section_children.each do |child|
-        result += render_investigator_element(child, f)
+        result += render_investigator_element(form_elements_cache, child, f)
       end
     end
     
@@ -77,21 +79,21 @@ module EventsHelper
     result
   end
   
-  def render_investigator_group(element, f)
+  def render_investigator_group(form_elements_cache, element, f)
     result = ""
 
-    group_children = element.cached_children
+    group_children = form_elements_cache.children(element)
     
     if group_children.size > 0
       group_children.each do |child|
-        result += render_investigator_element(child, f)
+        result += render_investigator_element(form_elements_cache, child, f)
       end
     end
 
     result
   end
 
-  def render_investigator_question(element, f)
+  def render_investigator_question(form_elements_cache, element, f)
     
     result = "<div id='question_investigate_#{element.id}'>"
     
@@ -100,14 +102,14 @@ module EventsHelper
     if (f.nil?)
       result += fields_for(@event) do |f|
         f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          answer_template.dynamic_question(element, "", {:id => "investigator_answer_#{element.id}"})
+          answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
         end
       end
     else
       prefix = @answer_object.new_record? ? "new_answers" : "answers"
       index = @answer_object.new_record? ? "" : @form_index += 1
       result += f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        answer_template.dynamic_question(element, index, {:id => "investigator_answer_#{element.id}"})
+        answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
       end
     end
 
@@ -116,7 +118,7 @@ module EventsHelper
       
     unless follow_up_group.nil?
       result += "<div id='follow_up_investigate_#{element.id}'>"
-      result += render_investigator_follow_up(follow_up_group, f)
+      result += render_investigator_follow_up(form_elements_cache, follow_up_group, f)
       result += "</div>"
     else
       result += "<div id='follow_up_investigate_#{element.id}'></div>"
@@ -127,31 +129,32 @@ module EventsHelper
     result
   end
   
-  def render_investigator_follow_up(element, f)
+  def render_investigator_follow_up(form_elements_cache, element, f)
     result = ""
     
     unless element.core_path.blank?
-      result += render_investigator_core_follow_up(element, f) unless element.core_path.blank?
+      result += render_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
       return result
     end
     
-    questions = element.cached_children
+    questions = form_elements_cache.children(element)
     
     if questions.size > 0
       questions.each do |child|
-        result += render_investigator_question(child, f)
+        result += render_investigator_question(form_elements_cache, child, f)
       end
     end
 
     result
   end
   
-  def render_investigator_core_follow_up(element, f, ajax_render =false)
+  def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     result = ""
     
     include_children = false
     
     unless (ajax_render)
+      # Debt: Replace with shorter eval technique
       core_path_with_dots = element.core_path.sub("event[", "").gsub(/\]/, "").gsub(/\[/, ".")
       core_value = @event
       core_path_with_dots.split(".").each do |method|
@@ -171,11 +174,11 @@ module EventsHelper
     result += "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
     
     if (include_children || ajax_render)
-      questions = element.cached_children
+      questions = form_elements_cache.children(element)
     
       if questions.size > 0
         questions.each do |child|
-          result += render_investigator_question(child, f)
+          result += render_investigator_question(form_elements_cache, child, f)
         end
       end
     end

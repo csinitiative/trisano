@@ -4,6 +4,7 @@ require 'hpricot'
 describe 'Form Builder User-defined Demographics' do
   
   it 'should create a new form with a new demographic question' do
+    pending "Until we get back to this functionality"
     @browser.open "/nedss/forms"
     @browser.click "link=New form"
     @browser.wait_for_page_to_load($load_time)
@@ -36,6 +37,7 @@ describe 'Form Builder User-defined Demographics' do
   end
   
   it 'should create a new CMR' do
+    pending "Until we get back to this functionality"
     @browser.click "link=New CMR"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Yellow"
@@ -50,6 +52,7 @@ describe 'Form Builder User-defined Demographics' do
   end
   
   it 'should allow form answers to be saved' do
+    pending "Until we get back to this functionality"
     @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "event_answers_1_text_answer", "csi-employment"

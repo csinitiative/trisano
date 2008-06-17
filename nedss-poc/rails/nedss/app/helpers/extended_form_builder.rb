@@ -30,16 +30,17 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @codes.select {|code| code.code_name == code_name}
   end
 
-  def dynamic_question(question_element, index, html_options = {}) 
+  def dynamic_question(form_elements_cache, question_element, index, html_options = {}) 
         
     question = question_element.question
 
+    # Defect: These need to filter on value sets so as not to be thrown off by follow ups
     # Selection-type elements must have a value set
     if [:drop_down, :check_box, :radio_button].include? question.data_type 
-      if question_element.children.empty?
+      if form_elements_cache.children(question_element).empty?
         return ""
       else
-        if question_element.children.first.children.empty?
+        if form_elements_cache.children(form_elements_cache.children(question_element).first).empty?
           return ""
         end
       end
@@ -49,8 +50,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     index = @object.id.nil? ? index : @object.id
     html_options[:index] = index
 
-    # Debt: Is this issuing an extra query? We have children in memory already.
-    follow_ups = question_element.children_by_type("FollowUpElement")
+    follow_ups = form_elements_cache.children_by_type("FollowUpElement", question_element)
 
     if(follow_ups.size > 0)
       conditions = []
@@ -72,11 +72,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :drop_down
       html_options[:onchange] = select_answer_event if follow_ups
       # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
-      select(:text_answer, get_values(question_element), {}, html_options)
+      select(:text_answer, get_values(form_elements_cache, question_element), {}, html_options)
     when :check_box
       i = 0
       name = @object_name + "[" + index.to_s + "][check_box_answer][]"
-      get_values(question_element).inject(check_boxes = "") do |check_boxes, value|
+      get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value|
         id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_check_box_answer_#{i += 1}"
         check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), :id => id) + value
       end
@@ -84,7 +84,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :radio_button
       i = 0
       name = @object_name + "[" + index.to_s + "][radio_button_answer][]"
-      get_values(question_element).inject(radio_buttons = "") do |radio_buttons, value|
+      get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value|
         id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_radio_button_answer_#{i += 1}" 
         radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), :id => id) + value
       end
@@ -109,8 +109,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     q + "\n" + hidden_field(:question_id, :index => index)
   end
 
-  def get_values(question_element)
-    question_element.children.find { |child| child.is_a?(ValueSetElement) }.children.collect { |value| value.name }
+  def get_values(form_elements_cache, question_element)
+    form_elements_cache.children(form_elements_cache.children(question_element).find { |child| child.is_a?(ValueSetElement) }).collect { |value| value.name }
   end
   
   private
