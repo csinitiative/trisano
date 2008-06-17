@@ -45,7 +45,7 @@ class Participation < ActiveRecord::Base
   end 
   
   def participations_treatment
-    @participations_treatment ||= ParticipationsTreatments.new
+    @participations_treatment ||= ParticipationsTreatment.new
   end
 
   def participations_treatment=(attributes)
