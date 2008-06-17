@@ -52,7 +52,6 @@ class EventsController < ApplicationController
           :address => {}, 
           :telephone => {}
         }, 
-        :participations_treatment => {}
       },
       :active_reporting_agency => { 
         :secondary_entity_id => nil,

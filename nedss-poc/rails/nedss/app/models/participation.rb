@@ -45,11 +45,11 @@ class Participation < ActiveRecord::Base
   end 
   
   def participations_treatment
-    @participations_treatment ||= participations_treatments.last
+    @participations_treatment ||= ParticipationsTreatments.new
   end
 
   def participations_treatment=(attributes)
-    participations_treatments.build(attributes)
+    participations_treatments.build(attributes) unless attributes.values_blank?
   end  
 
   def participations_risk_factor
