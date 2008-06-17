@@ -1,0 +1,11 @@
+%div{:class => "modal-dialog"}
+  %h1 New treatment
+
+  = error_messages_for :treatment
+
+  - fields_for(@participations_treatment, :builder => ExtendedFormBuilder) do |ct|
+    = render :partial => "form", :locals => { :ct => ct }
+
+  = submit_to_remote("treatment-save-button", "Save", :submit => "treatment-form", :url => cmr_treatment_path(@event, @participations_treatment))
+  &nbsp;&nbsp;
+  = link_to_close_redbox "Cancel"

@@ -64,13 +64,15 @@
           <td><span class="label">Imported From:</span></td>
           <td><%= l @event.imported_from %></td>
         </tr>
-        <tr>
-          <td><span class="label">Treatment Given:</span></td>
-          <td><%= l @event.active_patient.participations_treatment.treatment_given_yn unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
-          <td><span class="label">Treatment:</span></td>
-          <td><%= @event.active_patient.participations_treatment.treatment unless @event.active_patient.nil? or @event.active_patient.participations_treatment.nil? %></td>
-        </tr>
       </table>
+      <fieldset>
+        <legend>Treatment Information</legend>  
+        <table cellpadding="2">
+          <tr>
+            <td><div id='treatment-list'><%= render :partial => "treatments/index" %></div></td>
+          </tr>
+        </table>
+      </fieldset>
     </fieldset>
   </div>
 

@@ -11,7 +11,6 @@ describe "/cmrs/new.html.erb" do
     @primary_entity =  mock_person_entity
     @secondary_entity =  mock_person_entity
 
-    
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)
@@ -33,7 +32,6 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:lab_results).and_return([])
     
-
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)
 
@@ -43,6 +41,7 @@ describe "/cmrs/new.html.erb" do
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
     @participation.stub!(:participations_treatment).and_return(@current_treatment)
     @participation.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
+    @participation.stub!(:participations_treatments).and_return([])
     @secondary_entity.stub!(:place).and_return(@place)
     @secondary_entity.stub!(:person).and_return(@person)
     
