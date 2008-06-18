@@ -1,13 +1,12 @@
 - if @event.contacts.empty?
   %h3 No contacts have been recorded for this case
 - else
+  %div{:id => "contact-detail", :style => "position: fixed; right: 50px"}
   %table{:class => "tabular"}
     %tr
       %th Last Name
       %th First Name
       %th Birth Date
-      %th Age
-      %th Approximate Age (if no birth date)
       %th Gender
 
     - for contact in @event.contacts
@@ -16,7 +15,6 @@
         %td=person.last_name
         %td=person.first_name
         %td=person.birth_date
-        %td=calculate_age(person.birth_date) unless person.birth_date.blank?
-        %td=person.approximate_age_no_birthday
         %td=l person.birth_gender
         %td=link_to_remote_redbox("Edit contact", {:url => edit_cmr_contact_path(@event, contact), :method => :get}, :id => "edit-contact-#{contact.id}-link")
+        %td=link_to_remote("Show detail", {:url => cmr_contact_path(@event, contact), :method => :get}, :id => "show-contact-#{contact.id}-link")

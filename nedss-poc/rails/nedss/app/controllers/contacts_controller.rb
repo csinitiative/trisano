@@ -5,7 +5,7 @@ class ContactsController < ApplicationController
   # GET /contacts
   # GET /contacts.xml
   def index
-    @contacts = FIX THIS LabResult.find(:all)
+    @contacts = @event.contacts.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,12 +16,16 @@ class ContactsController < ApplicationController
   # GET /contacts/1
   # GET /contacts/1.xml
   def show
-    @contact = FIX THIS LabResult.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @contact }
+    @contact = @event.contacts.find(params[:id])
+    render(:update) do |page|
+      page.show "contact-detail"
+      page.replace_html "contact-detail", :partial => 'show'
     end
+
+    # respond_to do |format|
+    #   format.html # show.html.erb
+    #   format.xml  { render :xml => @contact }
+    # end
   end
 
   # GET /contacts/new
