@@ -175,7 +175,7 @@ def mock_event
 end
 
 def mock_person_entity
-  person = mock_model(Person)
+  person = mock_model(Person, :errors => stub("errors", :count => 0, :null_object => true))
   person.stub!(:entity_id).and_return("1")
   person.stub!(:last_name).and_return("Marx")
   person.stub!(:first_name).and_return("Groucho")

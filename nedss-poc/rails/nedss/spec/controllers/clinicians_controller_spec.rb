@@ -81,7 +81,6 @@ describe CliniciansController do
       @event = mock_event
       @clinician = mock_model(Participation, :to_param => "1")
       @person = mock_person_entity
-      @errors.stub!(:full_messages).and_return([])
       @clinician.stub!(:active_secondary_entity).and_return(@person)
       @clinicians = []
       Event.stub!(:find).and_return(@event)
@@ -116,11 +115,10 @@ describe CliniciansController do
         post :create, :clinician => {}
       end
   
-      it "should send down some RJS with an alert" do
-        pending "Failing on the full_messages call"
+      it "should not replace any content with RJS" do
         do_post
-        # Debt: See about getting this to be more specific
-        response.should have_rjs
+        # Debt: Any matchers for just doing a call?
+        response.should_not have_rjs
       end
       
     end
@@ -173,11 +171,10 @@ describe CliniciansController do
         put :update, :id => "1"
       end
 
-      it "should send down some RJS with an alert" do
-        pending "Failing on the full_messages call"
+      it "should not replace any content with RJS" do
         do_put
-        # Debt: See about getting this to be more specific
-        response.should have_rjs
+        # Debt: Any matchers for just doing a call?
+        response.should_not have_rjs
       end
 
     end
