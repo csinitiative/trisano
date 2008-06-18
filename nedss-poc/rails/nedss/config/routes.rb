@@ -1,7 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :follow_up_elements
-  
   map.home '', :controller => 'dashboard'
   map.search 'search', :controller => 'search'
   map.admin 'admin', :controller => 'admin'
@@ -28,6 +26,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :view_elements
   
   map.resources :form_elements, :member => { :to_library => :post }, :member => { :from_library => :post }
+  
+  map.resources :follow_up_elements
 
   map.resources :users
 
@@ -35,6 +35,7 @@ ActionController::Routing::Routes.draw do |map|
     cmr.resources :lab_results
     cmr.resources :treatments
     cmr.resources :contacts
+    cmr.resources :clinicians
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

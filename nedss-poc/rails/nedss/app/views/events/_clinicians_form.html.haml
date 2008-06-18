@@ -1,0 +1,10 @@
+- if @event.new_record?
+  - f.fields_for(:clinician, @event.clinician, :builder => ExtendedFormBuilder) do |clinician_fields|
+    - clinician_fields.fields_for(:active_secondary_entity, @event.clinician.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_clinician|
+      = render :partial => "entities/people/form", :locals => { :f => new_clinician, :entity_data => @event.clinician.active_secondary_entity }
+- else
+  %div{:id => 'clinicians-list'}
+    = render :partial => "clinicians/index"
+
+  %br
+    = link_to_remote_redbox("New Clinician", :url => new_cmr_clinician_path(@event), :method => :get)

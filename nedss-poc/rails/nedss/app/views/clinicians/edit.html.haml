@@ -1,0 +1,11 @@
+%div{:class => "large-modal-dialog"}
+  %h1 Editing clinician
+
+  = error_messages_for :clinician
+
+  = fields_for(@clinician.active_secondary_entity, :builder => ExtendedFormBuilder) do |clinician|
+    = render :partial => "entities/people/form", :locals => { :f => clinician, :entity_data => @clinician.active_secondary_entity, :event => @event }
+  = submit_to_remote("person-save-button", "Save", :submit => "person_form", :url => cmr_clinician_path(@event, @clinician), :method => :put)
+
+  &nbsp;&nbsp;
+  = link_to_close_redbox "Cancel"

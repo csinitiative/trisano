@@ -10,22 +10,20 @@ class Event < ActiveRecord::Base
 
   has_many :lab_results, :order => 'created_at ASC', :dependent => :delete_all
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
-
   has_many :participations
   has_many :form_references
   has_many :answers
-
-  # For reasons unknown code like the following won't work.
-  # has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Event.participation_code('Interested Party')]
-
+  has_many :contacts, :class_name => 'Participation',  
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
+  has_many :clinicians, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
+  
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
-
-  has_many :contacts, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
-
+  
   validates_date :event_onset_date
 
   before_validation_on_create :save_associations
@@ -102,6 +100,17 @@ class Event < ActiveRecord::Base
     unless attributes[:active_secondary_entity][:person][:last_name].blank?
       attributes[:role_id] = Event.participation_code('Contact')
       contacts.build(attributes)
+    end
+  end
+  
+  def clinician
+    clinician ||= Participation.new( :role_id => Event.participation_code('Treated By'), :active_secondary_entity => {}) 
+  end
+
+  def clinician=(attributes)
+    unless attributes[:active_secondary_entity][:person][:last_name].blank?
+      attributes[:role_id] = Event.participation_code('Treated By')
+      clinicians.build(attributes)
     end
   end
 

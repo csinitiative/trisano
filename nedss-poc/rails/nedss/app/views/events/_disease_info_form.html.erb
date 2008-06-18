@@ -1,84 +1,89 @@
 <fieldset>
   <legend>Disease Information
-  <span id='disease_info_hide' onClick="Element.hide('disease_info_form'); Element.hide('disease_info_hide'); Element.show('disease_info_show'); return false;">[Hide]</span>
-  <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;">[Show]</span>
+    <span id='disease_info_hide' onClick="Element.hide('disease_info_form'); Element.hide('disease_info_hide'); Element.show('disease_info_show'); return false;">[Hide]</span>
+    <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id ='disease_info_form'>
-
-  <fieldset class="form">
-    <legend>Disease</legend>
-    <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
-      <span class="horiz">
-        <%= d.label(:disease_id, "Disease") %>
-        <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
-      </span>
-      <span class="horiz">
-        <%= d.label(:disease_onset_date, "Onset date") %>
-        <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
-      <span class="horiz">
-        <%= d.label(:date_diagnosed) %>
-        <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
-  </fieldset>
-
-  <fieldset class="form">
-    <legend>Hospitalization</legend>
-      <span class="horiz">
-        <%= d.label(:hospitalized_id, "Hospitalized") %>
-        <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
-      </span>
-    <% end %>
-
-    <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
-      <span class="horiz">
-        <%= p.label(:secondary_entity_id, "Hospital") %>
-        <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
-      </span>
-
-      <% hospital_data = @event.active_hospital.nil? ? HospitalsParticipation.new : @event.active_hospital.hospitals_participation %> 
-      <% p.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp| %>
+    
+    <fieldset class="form">
+      <legend>Disease</legend>
+      <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
         <span class="horiz">
-          <%= hp.label(:admission_date) %>
-          <%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %>
+          <%= d.label(:disease_id, "Disease") %>
+          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
         </span>
         <span class="horiz">
-          <%= hp.label(:discharge_date) %>
-          <%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %>
+          <%= d.label(:disease_onset_date, "Onset date") %>
+          <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
+        </span>
+        <span class="horiz">
+          <%= d.label(:date_diagnosed) %>
+          <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
+        </span>
+      </fieldset>
+    
+      <fieldset class="form">
+        <legend>Hospitalization</legend>
+        <span class="horiz">
+          <%= d.label(:hospitalized_id, "Hospitalized") %>
+          <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
         </span>
       <% end %>
-    <% end %>
-  </fieldset>
-
-  <fieldset class="form">
-    <legend>Status</legend>
-    <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
-      <span class="horiz">
-        <%= d.label(:died_id) %>
-        <%= d.dropdown_code_field(:died_id, 'yesno', {}) %>
-      </span>
-      <span class="horiz">
-        <%= f.label(:imported_from_id) %>
-        <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
-      </span>
-    <% end %>
-  </fieldset>
-
-  <fieldset class="form">
-    <legend>Treatement Information</legend>
-    <% if @event.new_record? %>
-      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
-        <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
-          <%= render :partial => "treatments/form", :locals => { :ct => ct } %>
+      
+      <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
+        <span class="horiz">
+          <%= p.label(:secondary_entity_id, "Hospital") %>
+          <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
+        </span>
+      
+        <% hospital_data = @event.active_hospital.nil? ? HospitalsParticipation.new : @event.active_hospital.hospitals_participation %> 
+        <% p.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp| %>
+          <span class="horiz">
+            <%= hp.label(:admission_date) %>
+            <%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %>
+          </span>
+          <span class="horiz">
+            <%= hp.label(:discharge_date) %>
+            <%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %>
+          </span>
         <% end %>
       <% end %>
-    <% else %>
-      <div id='treatment-list'>
-        <%= render :partial => "treatments/index" %>
-      </div>
-      <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
-    <% end %>
-  </fieldset>
-        
+    </fieldset>
+    
+    <fieldset class="form">
+      <legend>Status</legend>
+      <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
+        <span class="horiz">
+          <%= d.label(:died_id) %>
+          <%= d.dropdown_code_field(:died_id, 'yesno', {}) %>
+        </span>
+        <span class="horiz">
+          <%= f.label(:imported_from_id) %>
+          <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
+        </span>
+      <% end %>
+    </fieldset>
+    
+    <fieldset class="form">
+      <legend>Treatments</legend>
+      <% if @event.new_record? %>
+        <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
+          <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
+            <%= render :partial => "treatments/form", :locals => { :ct => ct } %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div id='treatment-list'>
+          <%= render :partial => "treatments/index" %>
+        </div>
+        <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
+      <% end %>
+    </fieldset>
+    
+    <fieldset class="form">
+      <legend>Clinicians</legend>
+      <%= render :partial => "events/clinicians_form", :locals => {:f => f} %>
+    </fieldset>
+    
   </div>
 </fieldset>

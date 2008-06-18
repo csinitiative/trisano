@@ -27,53 +27,7 @@
   </div>
 
   <div id="clinical_tab">
-    <fieldset>
-      <legend>Clinical Information</legend>  
-      <table cellpadding="2">
-        <tr>
-          <td><span class="label">Record Number:</span></td>
-          <td><%= @event.record_number %></td>
-          <td><span class="label">Disease:</span></td>
-          <td><%= @event.disease.disease.disease_name unless @event.disease.disease.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Disease Onset Date:</span></td>
-          <td><%= @event.disease.disease_onset_date unless @event.disease.disease.nil? %></td>
-          <td><span class="label">Date Diagnosed:</span></td>
-          <td><%= @event.disease.date_diagnosed unless @event.disease.disease.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Hospitalized:</span></td>
-          <td><%= l @event.disease.hospitalized %></td>
-          <td><span class="label">Hospital:</span></td>
-          <td><%= @event.hospital.active_secondary_entity.place.name unless @event.hospital.nil? or @event.hospital.active_secondary_entity.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Admission Date:</span></td>
-          <td><%= @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
-          <td><span class="label">Discharge Date:</span></td>
-          <td><%= @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Died:</span></td>
-          <td><%= l @event.disease.died %></td>
-          <td><span class="label">Date of Death:</span></td>
-          <td><%= patient_entity.person.date_of_death %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Imported From:</span></td>
-          <td><%= l @event.imported_from %></td>
-        </tr>
-      </table>
-      <fieldset>
-        <legend>Treatment Information</legend>  
-        <table cellpadding="2">
-          <tr>
-            <td><div id='treatment-list'><%= render :partial => "treatments/index" %></div></td>
-          </tr>
-        </table>
-      </fieldset>
-    </fieldset>
+    <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity }%>
   </div>
 
   <div id="lab_info_tab">

@@ -32,6 +32,7 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:lab_results).and_return([])
     @event.stub!(:contacts).and_return([])
+    @event.stub!(:clinicians).and_return([])
     
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)

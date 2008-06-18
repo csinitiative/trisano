@@ -457,3 +457,9 @@ participant_contact:
   code_name: "participant"
   the_code: "CO"
   code_description: "Contact"
+
+participant_clinician:
+  id: 2308
+  code_name: "participant"
+  the_code: "TB"
+  code_description: "Treated By"

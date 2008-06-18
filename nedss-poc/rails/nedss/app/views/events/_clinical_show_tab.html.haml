@@ -1,0 +1,90 @@
+
+%fieldset
+  %legend Clinical
+
+  %table{:cellpadding => '2'}
+    %tr
+      %td
+        %span{:class => 'label'}
+          Record Number:
+      %td
+        = @event.record_number
+      %td
+        %span{:class => 'label'}
+          Disease:
+      %td
+        = @event.disease.disease.disease_name unless @event.disease.disease.nil?
+    %tr
+      %td
+        %span{:class => 'label'}
+          Disease Onset Date:
+      %td
+        = @event.disease.disease_onset_date unless @event.disease.disease.nil?
+      %td
+        %span{:class => 'label'}
+          Date Diagnosed:
+      %td
+        = @event.disease.date_diagnosed unless @event.disease.disease.nil?
+    %tr
+      %td
+        %span{:class => 'label'}
+          Hospitalized:
+      %td
+        = l @event.disease.hospitalized
+      %td
+        %span{:class => 'label'}
+          Hospital:
+      %td
+        = @event.hospital.active_secondary_entity.place.name unless @event.hospital.nil? or @event.hospital.active_secondary_entity.nil?
+    %tr
+      %td
+        %span{:class => 'label'}
+          Admission Date:
+      %td
+        = @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil?
+      %td
+        %span{:class => 'label'}
+          Discharge Date:
+      %td
+        = @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil?
+    %tr
+      %td
+        %span{:class => 'label'}
+          Died:
+      %td
+        = l @event.disease.died
+      %td
+        %span{:class => 'label'}
+          Date of Death:
+      %td
+        = entity_data.person.date_of_death
+    %tr
+      %td
+        %span{:class => 'label'}
+          Imported From:
+      %td
+        = l @event.imported_from
+      %td
+        &nbsp;
+      %td
+        &nbsp;
+
+  %fieldset
+    %legend
+      Treatments  
+    %table{:cellpadding => '2'}
+      %tr
+        %td
+          %div{:id => 'treatment-list'}
+            = render :partial => 'treatments/index'
+
+  %fieldset
+    %legend
+      Clinicians  
+    %table{:cellpadding => '2'}
+      %tr
+        %td
+          %div{:id => 'clinicians-list'}
+            = render :partial => 'clinicians/index'
+
+
