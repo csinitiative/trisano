@@ -243,6 +243,7 @@ describe LabResultsController do
   end
 
   def set_up_local_mocks
+    mock_user
     @lab_result = mock_model(LabResult, :to_param => "1", :errors => stub("errors", :count => 0, :null_object => true))
 
     @lab_results = mock(Array, :null_object => :true)
