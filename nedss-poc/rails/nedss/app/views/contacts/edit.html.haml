@@ -1,7 +1,7 @@
 %div{:class => "large-modal-dialog"}
   %h1 Editing contact
 
-  = error_messages_for :participations_treatment
+  = error_messages_for :contact
 
   = fields_for(@contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |contact|
     = render :partial => "entities/people/form", :locals => { :f => contact, :entity_data => @contact.active_secondary_entity, :event => @event }

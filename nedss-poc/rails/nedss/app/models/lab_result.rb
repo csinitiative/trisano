@@ -4,6 +4,8 @@ class LabResult < ActiveRecord::Base
 
   belongs_to :event
 
+  validates_presence_of :lab_result_text 
+
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
 

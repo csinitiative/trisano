@@ -2,30 +2,30 @@ class ContactsController < ApplicationController
 
   before_filter :get_cmr
 
-  # GET /lab_results
-  # GET /lab_results.xml
+  # GET /contacts
+  # GET /contacts.xml
   def index
-    @lab_results = LabResult.find(:all)
+    @contacts = FIX THIS LabResult.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @lab_results }
+      format.xml  { render :xml => @contacts }
     end
   end
 
-  # GET /lab_results/1
-  # GET /lab_results/1.xml
+  # GET /contacts/1
+  # GET /contacts/1.xml
   def show
-    @lab_result = LabResult.find(params[:id])
+    @contact = FIX THIS LabResult.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @lab_result }
+      format.xml  { render :xml => @contact }
     end
   end
 
-  # GET /lab_results/new
-  # GET /lab_results/new.xml
+  # GET /contacts/new
+  # GET /contacts/new.xml
   def new
     @contact = Entity.new(:person => {},
                           :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
@@ -34,14 +34,14 @@ class ContactsController < ApplicationController
     render :layout => false
   end
 
-  # GET /lab_results/1/edit
+  # GET /contacts/1/edit
   def edit
     @contact = @event.contacts.find(params[:id])
     render :layout => false
   end
 
-  # POST /lab_results
-  # POST /lab_results.xml
+  # POST /contacts
+  # POST /contacts.xml
   def create
     @contact = Participation.new(:role_id => Event.participation_code('Contact'), :active_secondary_entity => params[:entity])
 
@@ -58,8 +58,8 @@ class ContactsController < ApplicationController
     end
   end
 
-  # PUT /lab_results/1
-  # PUT /lab_results/1.xml
+  # PUT /contacts/1
+  # PUT /contacts/1.xml
   def update
     @contact = @event.contacts.find(params[:id])
 
@@ -76,14 +76,14 @@ class ContactsController < ApplicationController
     end
   end
 
-  # DELETE /lab_results/1
-  # DELETE /lab_results/1.xml
+  # DELETE /contacts/1
+  # DELETE /contacts/1.xml
   def destroy
-    @lab_result = LabResult.find(params[:id])
-    @lab_result.destroy
+    @contact = FIX THIS LabResult.find(params[:id])
+    @contact.destroy
 
     respond_to do |format|
-      format.html { redirect_to(lab_results_url) }
+      format.html { redirect_to(contacts_url) }
       format.xml  { head :ok }
     end
   end

@@ -5,7 +5,7 @@ class LabResultsController < ApplicationController
   # GET /lab_results
   # GET /lab_results.xml
   def index
-    @lab_results = LabResult.find(:all)
+    @lab_results = @event.lab_results.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,7 +16,7 @@ class LabResultsController < ApplicationController
   # GET /lab_results/1
   # GET /lab_results/1.xml
   def show
-    @lab_result = LabResult.find(params[:id])
+    @lab_result = @event.lab_results.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -76,13 +76,7 @@ class LabResultsController < ApplicationController
   # DELETE /lab_results/1
   # DELETE /lab_results/1.xml
   def destroy
-    @lab_result = LabResult.find(params[:id])
-    @lab_result.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(lab_results_url) }
-      format.xml  { head :ok }
-    end
+    head :method_not_allowed
   end
 
   private
