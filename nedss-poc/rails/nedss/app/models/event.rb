@@ -73,7 +73,7 @@ class Event < ActiveRecord::Base
   end
 
   def lab_result=(attributes)
-    lab_results.build(attributes) unless attributes.values_blank?
+    lab_results.build(attributes) unless attributes[:lab_result_text].blank?
   end
 
   ### Participations
