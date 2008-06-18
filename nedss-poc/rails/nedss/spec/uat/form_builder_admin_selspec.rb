@@ -5,19 +5,19 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Form Builder Admin' do
   
   before(:all) do
-    @form_name = NedssHelper.get_unique_name(4) + " fb uat"
+    @form_name = get_unique_name(4) + " fb uat"
     
-    @question_to_add_to_library_text = "Was this added to the library " + NedssHelper.get_unique_name(4) + " fb uat" 
-    @question_to_delete_text = "Describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
-    @question_to_edit_text = "Can you describe the tick " + NedssHelper.get_unique_name(4) + " fb uat" 
-    @question_to_edit_modified_text = "Can you describe the tick edited " + NedssHelper.get_unique_name(4) + " fb uat" 
-    @question_to_inactivate_text = "Did you see the tick that got you " + NedssHelper.get_unique_name(4) + " fb uat" 
+    @question_to_add_to_library_text = "Was this added to the library " + get_unique_name(4) + " fb uat" 
+    @question_to_delete_text = "Describe the tick " + get_unique_name(4) + " fb uat" 
+    @question_to_edit_text = "Can you describe the tick " + get_unique_name(4) + " fb uat" 
+    @question_to_edit_modified_text = "Can you describe the tick edited " + get_unique_name(4) + " fb uat" 
+    @question_to_inactivate_text = "Did you see the tick that got you " + get_unique_name(4) + " fb uat" 
     
-    @user_defined_tab_text = "User-defined tab " + NedssHelper.get_unique_name(3) + " fb uat"
-    @user_defined_tab_section_text = "User-defined tab section " + NedssHelper.get_unique_name(3) + " fb uat"
-    @user_defined_tab_question_text = "User-defined tab questoin " + NedssHelper.get_unique_name(3) + " fb uat" 
+    @user_defined_tab_text = "User-defined tab " + get_unique_name(3) + " fb uat"
+    @user_defined_tab_section_text = "User-defined tab section " + get_unique_name(3) + " fb uat"
+    @user_defined_tab_question_text = "User-defined tab questoin " + get_unique_name(3) + " fb uat" 
     
-    @cmr_last_name = NedssHelper.get_unique_name(2) + " fb uat"
+    @cmr_last_name = get_unique_name(2) + " fb uat"
   end
   
   after(:all) do
@@ -29,7 +29,7 @@ describe 'Form Builder Admin' do
   end
   
   it 'should create a new form and allow navigation to builder' do
-    NedssHelper.create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
+    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
   end
   
   # Debt: The remaining examples had to be combined into one in order to have access
@@ -45,12 +45,12 @@ describe 'Form Builder Admin' do
     add_value_sets
     edit_value_sets
     add_and_populate_tab
-    NedssHelper.publish_form(@browser)
+    publish_form(@browser)
     @browser.is_text_present("Form was successfully published").should be_true
     validate_investigator_rendering
     navigate_to_form_edit
     delete_edit_and_inactivate_questions
-    NedssHelper.publish_form(@browser)
+    publish_form(@browser)
     @browser.is_text_present("Form was successfully published").should be_true
     revalidate_investigator_rendering
 
@@ -69,20 +69,20 @@ def add_a_section
 end
 
 def add_questions
-  NedssHelper.add_question_to_section(@browser, "Section 1", "Did you go into the tall grass?", "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", "Did you go into the tall grass?", "Drop-down select list")
   @browser.is_text_present("Did you go into the tall grass?").should be_true
   
-  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_inactivate_text, "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", @question_to_inactivate_text, "Drop-down select list")
   @browser.is_text_present(@question_to_inactivate_text).should be_true
     
   @question_to_inactivate_id = @browser.get_value("id=modified-element")
   
-  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_delete_text, "Multi-line text")
+  add_question_to_section(@browser, "Section 1", @question_to_delete_text, "Multi-line text")
   @browser.is_text_present(@question_to_delete_text).should be_true
     
   @question_to_delete_id = @browser.get_value("id=modified-element")
   
-  NedssHelper.add_question_to_section(@browser, "Section 1", @question_to_edit_text, "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", @question_to_edit_text, "Drop-down select list")
   @browser.is_text_present(@question_to_edit_text).should be_true
     
   @question_to_edit_id = @browser.get_value("id=modified-element")
@@ -183,30 +183,30 @@ def add_and_populate_tab
 
   @tab_section_element_id = @browser.get_value("id=modified-element")
 
-  NedssHelper.add_question_to_section(@browser, @user_defined_tab_section_text, @user_defined_tab_question_text, "Single line text")
+  add_question_to_section(@browser, @user_defined_tab_section_text, @user_defined_tab_question_text, "Single line text")
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
 end
 
 def to_and_from_library_no_group
   
-  NedssHelper.add_question_to_view(@browser, "Default View", @question_to_add_to_library_text, "Single line text")
-  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
+  add_question_to_view(@browser, "Default View", @question_to_add_to_library_text, "Single line text")
+  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
   @browser.click "link=Copy to library"
   wait_for_element_present("new-group-form")
   @browser.click "link=No Group"
   sleep(2)
-  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2
+  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2
   @browser.click "link=Close"
 
   @browser.click "link=Add question to tab"
   wait_for_element_present("new-question-form")
   @browser.click "link=#{@question_to_add_to_library_text}"
   sleep(2)
-  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2 #library closed or would be 3
+  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2 #library closed or would be 3
 end
 
 def to_and_from_library_new_group
-  group_name = NedssHelper.get_unique_name(3)
+  group_name = get_unique_name(3)
   @browser.click "link=Copy to library"
   wait_for_element_present("new-group-form")
   @browser.type "group_element_name", group_name
@@ -214,12 +214,12 @@ def to_and_from_library_new_group
   sleep(2)
   @browser.click "link=Add question to: #{group_name}"
   sleep(2)
-  NedssHelper.num_times_text_appears(@browser, @question_to_add_to_library_text).should == 4
+  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 4
   @browser.click "link=Close"
 end
 
 def validate_investigator_rendering  
-  NedssHelper.create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
+  create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
   @browser.click "edit_cmr_link"
   @browser.wait_for_page_to_load($load_time)
   @browser.is_text_present(@question_to_delete_text).should be_true
@@ -234,7 +234,7 @@ end
 def navigate_to_form_edit
   @browser.click "link=Forms"
   @browser.wait_for_page_to_load($load_time)
-  NedssHelper.click_build_form(@browser, @form_name)
+  click_build_form(@browser, @form_name)
 end
 
 def delete_edit_and_inactivate_questions
@@ -259,7 +259,7 @@ end
 def revalidate_investigator_rendering
   @browser.click "link=View CMRs"
   @browser.wait_for_page_to_load($load_time)
-  NedssHelper.click_resource_edit(@browser, "cmrs", @cmr_last_name)
+  click_resource_edit(@browser, "cmrs", @cmr_last_name)
   @browser.is_text_present(@question_to_delete_text).should be_false
   @browser.is_text_present(@question_to_edit_text).should be_false
   @browser.is_text_present(@question_to_inactivate_text).should be_false
