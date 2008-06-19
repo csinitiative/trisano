@@ -1,5 +1,6 @@
 %div{:style => "background: #e6e6fa; border: solid 2px; padding: 5px; z-index: 100"}
-  %span{:style => "color: blue; position: absolute; top: 10px; right: 10px ;", :onClick => "Element.hide('contact-detail'); return true;"} Close
+  %a{:style => "position: absolute; top: 10px; right: 10px ;", :onClick => "Element.hide('contact-detail'); return true;", :href => "#"} Close
+  -# %span{:style => "color: blue; position: absolute; top: 10px; right: 10px ;", :onClick => "Element.hide('contact-detail'); return true;"} Close
   %h1 Showing contacts
   = render :partial => "entities/people/show", :locals => { :entity_data => @contact.active_secondary_entity }
 
