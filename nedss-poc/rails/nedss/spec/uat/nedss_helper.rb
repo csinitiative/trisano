@@ -11,8 +11,7 @@ module NedssHelper
   GROUP_ID_PREFIX = "group_"
   QUESTION_ID_PREFIX = "question_"
   FOLLOW_UP_ID_PREFIX = "follow_up_"
-  LAB_RESULT_ID_PREFIX = "edit_lab_result_link"
-  
+    
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
   #Use click_core_tab to change tabs in CMR views
@@ -41,23 +40,9 @@ module NedssHelper
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
   def click_link_by_order(browser, element_id_prefix, order)
-    case element_id_prefix
-    when LAB_RESULT_ID_PREFIX
-      element_id = get_element_id_by_order(browser, element_id_prefix, order)
-      puts "\nElement ID: "+ element_id.to_s + "\n"
-      browser.click("edit-lab-result-" + element_id.to_s + "-link")
-    else
-      puts("Clicking links by order not implemented yet for " ) 
-    end
-  end
-  
-  #Use get_element_id_by_order to get the id of the Nth element in a list of elements of the same element type
-  def get_element_id_by_order(browser, element_id_prefix, order)
-    html_source = browser.get_html_source()
-    #loop over the source, finding all the "Edit lab result" indexes
-    #grab the nth one, based on order
-    #return it
-    return 2 #TODO
+    links = browser.get_all_links
+    links.delete_if{|link| link.index(element_id_prefix) == nil}
+    browser.click(links[order])
   end
   
   # Use click_resource methods from any standard resource index page
