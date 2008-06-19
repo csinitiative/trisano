@@ -18,3 +18,8 @@
         %td=l person.birth_gender
         %td=link_to_remote_redbox("Edit contact", {:url => edit_cmr_contact_path(@event, contact), :method => :get}, :id => "edit-contact-#{contact.id}-link")
         %td=link_to_remote("Show detail", {:url => cmr_contact_path(@event, contact), :method => :get}, :id => "show-contact-#{contact.id}-link")
+        - case_id = contact.active_secondary_entity.case_id
+        - if case_id.nil?
+          %td=link_to_remote("Start a CMR for this contact", :url => promote_entity_path(contact.active_secondary_entity, :event_id => @event.id))
+        - else
+          %td=link_to("Edit contact's CMR", edit_cmr_path(:id => case_id))

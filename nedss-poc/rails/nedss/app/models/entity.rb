@@ -88,6 +88,41 @@ class Entity < ActiveRecord::Base
     end
   end
 
+  def case_id
+    primary_entity = Participation.find_by_primary_entity_id(id)
+    case_id = primary_entity.event_id unless primary_entity.nil?
+    case_id.nil? ? nil : case_id
+  end
+
+  def promote_to_case(event)
+
+    patient = Participation.new
+    patient.primary_entity = self
+    patient.role_id = Event.participation_code('Interested Party')
+
+    jurisdiction = Participation.new
+    jurisdiction.secondary_entity = event.active_jurisdiction.secondary_entity
+    jurisdiction.role_id = Event.participation_code('Jurisdiction') 
+
+    contact = Participation.new
+    contact.secondary_entity = event.active_patient.primary_entity
+    contact.role_id = Event.participation_code('Contact')
+
+    disease_event = DiseaseEvent.new
+    disease_event.disease = event.disease.disease
+
+    cmr = Event.new
+    cmr.event_onset_date = Date.today
+    cmr.event_status_id = Code.find_by_code_name_and_code_description('eventstatus', "New").id
+    cmr.event_case_status_id = Code.find_by_code_name_and_code_description('case', "Suspect").id
+    cmr.participations << patient
+    cmr.participations << jurisdiction
+    cmr.participations << contact
+    cmr.disease_events << disease_event
+    cmr.save(false)
+
+  end
+
   private
 
   def validate

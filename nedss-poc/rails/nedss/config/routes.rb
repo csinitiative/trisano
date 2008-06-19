@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.order_section_children_show 'forms/order_section_children_show/:form_element_id', :controller => 'forms', :action => 'order_section_children_show'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
 
-  map.resources :entities do |entity|
+  map.resources :entities, :member => { :promote => :post } do |entity|
     entity.resources :locations
   end
   
