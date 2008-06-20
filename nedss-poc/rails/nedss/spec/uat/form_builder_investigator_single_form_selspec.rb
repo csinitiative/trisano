@@ -4,13 +4,12 @@ describe "Form Builder Investigator Single Form" do
   
   before(:all) do
     @form_name = NedssHelper.get_unique_name(4)
-  end
-  
-  it "should create a single test form" do
     @browser.open "/nedss/cmrs"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load($load_time)
-
+  end
+  
+  it "should create a single test form" do
     @browser.click "link=New form"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "form_name", @form_name
@@ -20,7 +19,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Form Builder"
     @browser.wait_for_page_to_load($load_time)
-
+  end
+  
+  it "should add a section to the forms tab" do
     @browser.click "link=Add section to tab"
     #wait_for_element_present("new-section-form")
     sleep 3 #waiting for section text box to load
@@ -28,7 +29,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "section_element_submit"
     wait_for_element_not_present("new-section-form")
     @browser.is_text_present("Section 1").should be_true
-
+  end
+  
+  it "should add a single-line text question to the section" do
     @browser.click "link=Add question to section"
     #wait_for_element_present("new-question-form")
     sleep 3 
@@ -37,7 +40,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Single-line text").should be_true
-    
+  end
+  
+  it "should add a multi-line text question to the section" do  
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Multi-line text"
@@ -45,7 +50,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Multi-line text").should be_true
-    
+  end
+  
+  it "should add a drop down question to the section" do  
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Drop Down"
@@ -53,6 +60,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Drop Down").should be_true
+  end
+
+  it "should add a value set to the drop down question" do    
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Drop down values"
@@ -70,7 +80,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.is_text_present("Value Three").should be_true
     @browser.is_text_present("Value Two").should be_true
     @browser.is_text_present("Value One").should be_true
-      
+  end
+  
+  it "should add a check box question to the section" do
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Check boxes"
@@ -78,6 +90,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Check boxes").should be_true
+  end
+  
+  it "should add a value set to the check box question" do
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Check box values"
@@ -94,7 +109,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.is_text_present("First Value").should be_true
     @browser.is_text_present("Second Value").should be_true
     @browser.is_text_present("Third Value").should be_true
-
+  end
+  
+  it "should add a drop down question to the section with no answer set" do
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Drop Down with no value set"
@@ -102,7 +119,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Drop Down with no value set").should be_true
-    
+  end
+  
+  it "should add a drop down question to the section with an answer set but no answer values" do
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Drop down with null value set"
@@ -110,13 +129,16 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Question: Drop down with null value set").should be_true
+    
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Value set with no values"
     @browser.click "value_set_element_submit"
     wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Value set with no values").should be_true
-    
+  end
+  
+  it "should publish the form" do
     @browser.click "//input[@value='Publish']"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Form was successfully published").should be_true

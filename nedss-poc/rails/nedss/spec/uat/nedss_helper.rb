@@ -45,6 +45,12 @@ module NedssHelper
     browser.click(links[order])
   end
   
+  def type_field_by_order(browser, element_id_prefix, order, value)
+    fields = browser.get_all_fields
+    fields.delete_if{|field| field.index(element_id_prefix) == nil}
+    browser.type(field[order], value)
+  end
+  
   # Use click_resource methods from any standard resource index page
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
