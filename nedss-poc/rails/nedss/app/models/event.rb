@@ -96,7 +96,7 @@ class Event < ActiveRecord::Base
   def active_patient
     @active_patient || patient
   end
-
+  
   def active_patient=(attributes)
     if new_record?
       @active_patient = Participation.new(attributes)

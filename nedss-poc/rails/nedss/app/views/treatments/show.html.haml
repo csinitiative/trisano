@@ -1,0 +1,14 @@
+-# Quick and dirty since "show" is not really part of the app, but I want a direct URL call to work
+
+%h3 Treatment
+
+%b Treatment Given:
+=l @participations_treatment.treatment_given_yn || "Not recorded"
+%br
+%br
+
+%b Treatment:
+=@participations_treatment.treatment
+%br
+
+=link_to_remote_redbox("Edit treatment", {:url => edit_cmr_treatment_path(@event, @participations_treatment), :method => :get}, :id => "edit-treatment-#{@participations_treatment.id}-link")

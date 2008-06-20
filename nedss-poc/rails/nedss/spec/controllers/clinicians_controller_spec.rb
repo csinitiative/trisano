@@ -102,8 +102,7 @@ describe CliniciansController do
 
       it "should replace the clinicians list" do
         do_post
-        # Debt: See about getting this to be more specific
-        response.should have_rjs
+        response.should have_rjs(:replace_html, "clinicians-list")
       end
     end
     
@@ -117,8 +116,8 @@ describe CliniciansController do
   
       it "should not replace any content with RJS" do
         do_post
-        # Debt: Any matchers for just doing a call?
-        response.should_not have_rjs
+        response.should have_text(/alert/) 
+        response.should have_text(/Validation failed/) 
       end
       
     end
@@ -158,8 +157,7 @@ describe CliniciansController do
 
       it "should replace the clinicians list" do
         do_put
-        # Debt: See about getting this to be more specific
-        response.should have_rjs
+        response.should have_rjs(:replace_html, "clinicians-list")
       end
 
     end
@@ -173,8 +171,8 @@ describe CliniciansController do
 
       it "should not replace any content with RJS" do
         do_put
-        # Debt: Any matchers for just doing a call?
-        response.should_not have_rjs
+        response.should have_text(/alert/) 
+        response.should have_text(/Validation failed/) 
       end
 
     end

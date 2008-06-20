@@ -153,9 +153,9 @@ describe LabResultsController do
         do_post
       end
 
-      it "should update display" do
+      it "should update lab-result list" do
         do_post
-        # Look up how to check for Ajax responses
+        response.should have_rjs(:replace_html, "lab-result-list")
       end
       
     end
@@ -167,9 +167,10 @@ describe LabResultsController do
         post :create, :lab_result => {}, :cmr_id => "1"
       end
   
-      it "should leave them where they are" do
+      it "should send javascript alert" do
         do_post
-        # Look up how to check for Ajax responses
+        response.should have_text(/alert/) 
+        response.should have_text(/Validation failed/) 
       end
       
     end
@@ -204,9 +205,9 @@ describe LabResultsController do
         assigns(:lab_result).should equal(@lab_result)
       end
 
-      it "should redirect to the lab_result" do
+      it "should update the lab_result list" do
         do_put
-        # look up how to check for Ajax responses
+        response.should have_rjs(:replace_html, "lab-result-list")
       end
 
     end
@@ -218,9 +219,10 @@ describe LabResultsController do
         put :update, :id => "1", :cmr_id => "1"
       end
 
-      it "should re-render 'edit'" do
+      it "should send javascript alert" do
         do_put
-        # look up how to check for Ajax responses
+        response.should have_text(/alert/) 
+        response.should have_text(/Validation failed/) 
       end
 
     end
