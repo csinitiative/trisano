@@ -183,6 +183,8 @@ def mock_person_entity
   person.stub!(:birth_date).and_return(Date.parse('1902-10-2'))
   person.stub!(:date_of_death).and_return(Date.parse('1970-4-21'))
   person.stub!(:birth_gender_id).and_return(1)
+  person.stub!(:birth_gender).and_return(nil)
+  person.stub!(:case_id).and_return(1)
   person.stub!(:ethnicity_id).and_return(101)
   person.stub!(:primary_language_id).and_return(301)
   person.stub!(:approximate_age_no_birthday).and_return(50)

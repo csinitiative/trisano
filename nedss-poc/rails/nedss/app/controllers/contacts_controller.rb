@@ -51,7 +51,7 @@ class ContactsController < ApplicationController
 
     if (@event.contacts << @contact)
       render(:update) do |page|
-        page.replace_html "contact-list", :partial => 'index'
+        page.replace_html "contact-list", :partial => 'contacts/index'
         page.call "RedBox.close"
       end
     else
@@ -69,7 +69,7 @@ class ContactsController < ApplicationController
 
     if @contact.active_secondary_entity.update_attributes(params[:entity])
       render(:update) do |page|
-        page.replace_html "contact-list", :partial => 'index'
+        page.replace_html "contact-list", :partial => 'contacts/index'
         page.call "RedBox.close"
       end
     else
