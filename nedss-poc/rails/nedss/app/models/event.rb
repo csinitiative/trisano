@@ -63,6 +63,20 @@ class Event < ActiveRecord::Base
   def new_answers=(attributes)
     answers.build(attributes)
   end
+  
+  def new_checkboxes=(attributes)
+    attributes.each do |key, value|
+      answer = Answer.new(:question_id => key, :check_box_answer => value[:check_box_answer])
+      answers << answer
+    end
+  end
+  
+  def new_radio_buttons=(attributes)
+    attributes.each do |key, value|
+      answer = Answer.new(:question_id => key, :radio_button_answer => value[:radio_button_answer])
+      answers << answer
+    end
+  end
 
   def get_or_initialize_answer(question_id)
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }

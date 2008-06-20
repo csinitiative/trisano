@@ -74,18 +74,36 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
       select(:text_answer, get_values(form_elements_cache, question_element), {}, html_options)
     when :check_box
+      
+      if @object.new_record?
+        field_name = "event[new_checkboxes]"
+        field_index = question.id.to_s
+      else
+        field_name = @object_name
+        field_index = index.to_s
+      end
+      
       i = 0
-      name = @object_name + "[" + index.to_s + "][check_box_answer][]"
+      name = field_name + "[" + field_index + "][check_box_answer][]"
       get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value|
-        id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_check_box_answer_#{i += 1}"
+        id = @object_name.gsub(/[\[\]]/, "_") + "_" + field_index + "_check_box_answer_#{i += 1}"
         check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), :id => id) + value
       end
-      check_boxes + @template.hidden_field_tag(name, "")
+      check_boxes += @template.hidden_field_tag(name, "")
     when :radio_button
+      
+      if @object.new_record?
+        field_name = "event[new_radio_buttons]"
+        field_index = question.id.to_s
+      else
+        field_name = @object_name
+        field_index = index.to_s
+      end
+      
       i = 0
-      name = @object_name + "[" + index.to_s + "][radio_button_answer][]"
+      name = field_name + "[" + field_index + "][radio_button_answer][]"
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value|
-        id = @object_name.gsub(/[\[\]]/, "_") + "_" + index.to_s + "_radio_button_answer_#{i += 1}" 
+        id = @object_name.gsub(/[\[\]]/, "_") + "_" + field_index + "_radio_button_answer_#{i += 1}" 
         radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), :id => id) + value
       end
       radio_buttons += @template.hidden_field_tag(name, "")
@@ -98,15 +116,21 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options)
     end
 
-    q = if question.data_type == :check_box || question.data_type == :radio_button
-      @template.content_tag(:span, question.question_text, :class => "label") + " " + input_element
+    result = ""
+    
+    if question.data_type == :check_box || question.data_type == :radio_button
+      result += @template.content_tag(:span, question.question_text, :class => "label") + " " + input_element
+      
+      result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
+      
     else
-      @template.content_tag(:label) do
+      result += @template.content_tag(:label) do
         question.question_text + " " + input_element
       end
+      result += "\n" + hidden_field(:question_id, :index => index)
     end
-      
-    q + "\n" + hidden_field(:question_id, :index => index)
+
+    result
   end
 
   def get_values(form_elements_cache, question_element)
