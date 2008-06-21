@@ -3,14 +3,13 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Using Form Builder to manipulte core-data fields" do
   before(:all) do
     @form_name = NedssHelper.get_unique_name(4)
+    @browser.open "/nedss/"
   end
   
   it "should create a form using core data fields" do
     pending "Won't work until core data fields through form_builder gets re-visited"
-    @browser.open "/nedss/"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load($load_time)
-
     @browser.click "link=New form"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "form_name", @form_name

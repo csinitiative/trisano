@@ -1,11 +1,13 @@
 require File.dirname(__FILE__) + '/spec_helper'
   
   describe 'User functionality for searching for CMRs by city and county' do
+    before(:all) do
+      @browser.open "/nedss/"
+      @browser.click "link=Forms"
+      @browser.wait_for_page_to_load($load_time)
+    end
     
     it 'should find or add Chuckles in Provo, Utah county' do
-      @browser.open "/nedss/cmrs"
-      @browser.click('link=View CMRs')
-      @browser.wait_for_page_to_load($load_time)
       if !@browser.is_text_present('chuckles')
         @browser.click('link=New CMR')
         @browser.wait_for_page_to_load($load_time)
