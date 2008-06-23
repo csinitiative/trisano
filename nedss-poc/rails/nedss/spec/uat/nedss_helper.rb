@@ -14,6 +14,22 @@ module NedssHelper
     
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
+  #Use create_cmr to build a CMR from a hash of field names and values (field names are indexes)
+  #TODO modify to act directly on database
+  #TODO this only works for text fields. It needs to wrok for drop-downs too 
+  def create_cmr(browser, value_hash)
+    fields = browser.get_all_fields
+    value_hash.each_pair do |key, value|
+      if fields.index(key) != nil
+        browser.type(key, value) 
+      else
+        browser.select(key,"label=" + value)
+      end
+    end
+    browser.click('event_submit')
+    browser.wait_for_page_to_load($load_time)
+  end
+  
   #Use click_core_tab to change tabs in CMR views
   def click_core_tab(browser, tab_name)
     case tab_name

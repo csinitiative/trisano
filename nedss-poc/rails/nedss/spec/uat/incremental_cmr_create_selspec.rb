@@ -3,10 +3,10 @@ require File.dirname(__FILE__) + '/spec_helper'
   
   before(:all) do
     @last_name = NedssHelper.get_unique_name(1)
+    @browser.open "/nedss/cmrs"
   end
   
   it 'should save a CMR with just a last name' do
-    @browser.open "/nedss/cmrs"
     @browser.click('link=New CMR')
     @browser.wait_for_page_to_load($load_time)
     @browser.type('event_active_patient__active_primary_entity__person_last_name', @last_name)
