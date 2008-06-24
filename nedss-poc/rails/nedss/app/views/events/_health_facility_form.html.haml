@@ -1,0 +1,16 @@
+- if @event.new_record?
+
+  - if health_facility.role_id == Event.participation_code('Diagnosed At')
+    - hf_fields = :diagnosing_health_facility
+  - else
+    - hf_fields = :hospitalized_health_facility
+    
+  - f.fields_for(hf_fields, @event.hospitalized_health_facility, :builder => ExtendedFormBuilder) do |hhf_form|
+    = render :partial => "health_facilities/form", :locals => { :hf_form => hhf_form, :health_facility => health_facility }
+- else
+  %div{:id => "#{refresh_list}"}
+    = render :partial => "health_facilities/index", :locals => { :health_facilities => health_facilities, :refresh_list => refresh_list }
+
+  %br
+  = link_to_remote_redbox("New health facility", :url => { :controller => "health_facilities", :action => "new", :cmr_id => @event.id, :role_id => "#{health_facility.role_id}"}, :method => :get)
+

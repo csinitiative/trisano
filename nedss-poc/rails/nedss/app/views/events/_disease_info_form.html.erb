@@ -23,31 +23,28 @@
       </fieldset>
     
       <fieldset class="form">
+        <legend>Diagnosis</legend>
+        <%= render :partial => 'health_facility_form', :locals => { :f => f,
+          :health_facility => @event.diagnosing_health_facility,
+          :health_facilities => @event.diagnosing_health_facilities,
+          :refresh_list => 'diagnosing-health-facilities-list'}%>
+      </fieldset>
+    
+      <fieldset class="form">
         <legend>Hospitalization</legend>
-        <span class="horiz">
+        <span class="vert">
           <%= d.label(:hospitalized_id, "Hospitalized") %>
           <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
         </span>
       <% end %>
+                              
+      <br/>
       
-      <% f.fields_for(:active_hospital, @event.active_hospital, :builder => ExtendedFormBuilder) do |p| %>
-        <span class="horiz">
-          <%= p.label(:secondary_entity_id, "Hospital") %>
-          <%= p.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}) %>
-        </span>
-      
-        <% hospital_data = @event.active_hospital.nil? ? HospitalsParticipation.new : @event.active_hospital.hospitals_participation %> 
-        <% p.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp| %>
-          <span class="horiz">
-            <%= hp.label(:admission_date) %>
-            <%= hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now) %>
-          </span>
-          <span class="horiz">
-            <%= hp.label(:discharge_date) %>
-            <%= hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now) %>
-          </span>
-        <% end %>
-      <% end %>
+      <%= render :partial => 'health_facility_form', :locals => { :f => f, 
+        :health_facility => @event.hospitalized_health_facility,
+        :health_facilities => @event.hospitalized_health_facilities,
+        :refresh_list => 'hospitalized-health-facilities-list'}%>
+                                    
     </fieldset>
     
     <fieldset class="form">

@@ -463,3 +463,10 @@ participant_clinician:
   code_name: "participant"
   the_code: "TB"
   code_description: "Treated By"
+
+participant_diagnosing_health_facility:
+  id: 2309
+  code_name: "participant"
+  the_code: "DA"
+  code_description: "Diagnosed At"
+  sort_order: 55

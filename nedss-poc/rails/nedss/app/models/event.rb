@@ -17,6 +17,10 @@ class Event < ActiveRecord::Base
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
+  has_many :hospitalized_health_facilities, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
+  has_many :diagnosing_health_facilities, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id]
   
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
@@ -118,7 +122,7 @@ class Event < ActiveRecord::Base
   end
   
   def clinician
-    clinician ||= Participation.new( :role_id => Event.participation_code('Treated By'), :active_secondary_entity => {}) 
+    @clinician ||= Participation.new( :role_id => Event.participation_code('Treated By'), :active_secondary_entity => {}) 
   end
 
   def clinician=(attributes)
@@ -127,27 +131,29 @@ class Event < ActiveRecord::Base
       clinicians.build(attributes)
     end
   end
-
-  def active_hospital
-    @active_hospital || hospital
+  
+  def hospitalized_health_facility
+    @hospitalized_health_facility ||= Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
   end
 
-  def active_hospital=(attributes)
-    if new_record?
-      @active_hospital = Participation.new(attributes)
-      @active_hospital.role_id = Event.participation_code('Hospitalized At')
-    else
-      unless attributes.values_blank?
-        if active_hospital.nil?
-          attributes[:role_id] = Event.participation_code('Hospitalized At')
-          self.create_hospital(attributes)
-        else
-          active_hospital.update_attributes(attributes)
-        end
-      end
+  def hospitalized_health_facility=(attributes)
+    unless attributes[:secondary_entity_id].blank?
+      attributes[:role_id] = Event.participation_code('Hospitalized At')
+      hospitalized_health_facilities.build(attributes)
     end
   end
+  
+  def diagnosing_health_facility
+    @diagnosing_health_facility ||= Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
+  end
 
+  def diagnosing_health_facility=(attributes)
+    unless attributes[:secondary_entity_id].blank?
+      attributes[:role_id] = Event.participation_code('Diagnosed At')
+      diagnosing_health_facilities.build(attributes)
+    end
+  end
+  
   def active_jurisdiction
     @active_jurisdiction || jurisdiction
   end
@@ -538,7 +544,6 @@ class Event < ActiveRecord::Base
     participations << @active_patient
     disease_events << @disease unless Utilities::model_empty?(@disease)
     lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
-    participations << @active_hospital unless @active_hospital.secondary_entity_id.blank? and Utilities::model_empty?(@active_hospital.hospitals_participation)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
     participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
     participations << @active_reporter unless Utilities::model_empty?(@active_reporter.active_secondary_entity.person)

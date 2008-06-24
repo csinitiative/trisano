@@ -36,6 +36,7 @@ ActionController::Routing::Routes.draw do |map|
     cmr.resources :treatments
     cmr.resources :contacts
     cmr.resources :clinicians
+    cmr.resources :health_facilities
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

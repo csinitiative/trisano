@@ -2,6 +2,44 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CliniciansController do
   
+  describe "handling GET /clinicians" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+    end
+  
+    def do_get
+      get :index, :cmr_id => "1"
+    end
+  
+    it "should always return HTTP Response Code: Method not allowed" do
+      do_get
+      response.headers["Status"].should == "405 Method Not Allowed"
+    end
+    
+  end
+  
+  describe "handling GET /lab_results/1" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+    end
+  
+    def do_get
+      get :show, :cmr_id => "1", :id => "1"
+    end
+
+    it "should always return HTTP Response Code: Method not allowed" do
+      do_get
+      response.headers["Status"].should == "405 Method Not Allowed"
+    end
+  
+  end
+  
   describe "handling GET /clinicians/new" do
 
     before(:each) do
@@ -175,6 +213,24 @@ describe CliniciansController do
         response.should have_text(/Validation failed/) 
       end
 
+    end
+  end
+  
+  describe "handling DELETE /clinicians/1" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+    end
+  
+    def do_delete
+      delete :destroy, :id => "1", :cmr_id => "1"
+    end
+
+    it "should always return HTTP Response Code: Method not allowed" do
+      do_delete
+      response.headers["Status"].should == "405 Method Not Allowed"
     end
   end
 

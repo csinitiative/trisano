@@ -3,11 +3,11 @@ class CliniciansController < ApplicationController
   before_filter :get_cmr
 
   def index
-    # No-op -- Debt? Return status code
+    head :method_not_allowed
   end
 
   def show
-    # No-op -- Debt? Return status code
+    head :method_not_allowed
   end
 
   def new
@@ -54,7 +54,7 @@ class CliniciansController < ApplicationController
   end
 
   def destroy
-    # No-op -- Debt? Return status code
+    head :method_not_allowed
   end
   
   private

@@ -123,7 +123,6 @@ namespace :nedss do
         form.add_field!("event[active_patient][active_primary_entity][person][primary_language_id]", "")
         form.add_field!("event[active_patient][active_primary_entity][address][state_id]", "")
         form.add_field!("event[active_patient][active_primary_entity][address][county_id]", "")
-        form.add_field!("event[active_hospital][secondary_entity_id]", "")
         form.add_field!("event[active_jurisdiction][secondary_entity_id]", "")
 
         page = agent.submit form      

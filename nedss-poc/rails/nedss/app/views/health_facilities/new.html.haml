@@ -1,0 +1,13 @@
+%div{:class => "large-modal-dialog"}
+  %h1 New health facility
+
+  = error_messages_for :health_facility
+
+  %div{:id => 'health_facility_form'}
+    - fields_for(:health_facility, @health_facility, :builder => ExtendedFormBuilder) do |hf_form|
+      = render :partial => 'health_facilities/form', :locals => { :health_facility => @health_facility, :hf_form => hf_form }
+
+  %p
+    = submit_to_remote("health-facility-save-button", "Save", :submit => "health_facility_form", :url => cmr_health_facility_path(@event, @health_facility))
+    &nbsp;&nbsp;
+    = link_to_close_redbox "Cancel"

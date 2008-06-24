@@ -27,12 +27,21 @@ describe "/cmrs/new.html.erb" do
     
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
-    #    @event.stub!(:current_treatment).and_return(@current_treatment)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:lab_results).and_return([])
     @event.stub!(:contacts).and_return([])
     @event.stub!(:clinicians).and_return([])
+    
+    @diagnosing_health_facility = mock_model(Participation)
+    @diagnosing_health_facility.stub!(:role_id).and_return(199)
+    @event.stub!(:diagnosing_health_facility).and_return(@diagnosing_health_facility)
+    @event.stub!(:diagnosing_health_facilities).and_return([])
+    
+    @hospitalization_health_facility = mock_model(Participation)
+    @hospitalization_health_facility.stub!(:role_id).and_return(190)
+    @event.stub!(:hospitalized_health_facility).and_return(@hospitalization_health_facility)
+    @event.stub!(:hospitalized_health_facilities).and_return([])
     
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)

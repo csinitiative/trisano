@@ -7,7 +7,6 @@
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.address] unless @event.active_patient.active_primary_entity.address.nil? %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.telephone] unless @event.active_patient.active_primary_entity.telephone.nil? %>
 
-<%= error_messages_for :object => [@event.active_hospital.hospitals_participation] unless @event.active_hospital.nil? or @event.active_hospital.hospitals_participation.nil? %>
 <%= error_messages_for :object => [@event.active_reporting_agency.active_secondary_entity.place] unless @event.active_reporting_agency.nil? %>
 <%= error_messages_for :object => @event.answers unless @event.answers.nil? %>
 

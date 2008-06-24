@@ -1,0 +1,15 @@
+- if health_facilities.blank?
+  %h3 No health facilities have been recorded for this case
+- else
+  %table{:class => "tabular"}
+    %tr
+      %th Name
+
+    - for health_facility in health_facilities
+      - place = health_facility.secondary_entity.place
+      %tr
+        %td= place.name
+
+        %td=link_to_remote_redbox("Edit health facility", { :url => { :controller => "health_facilities", :action => "edit", :cmr_id => @event.id, :id => health_facility.id, :role_id => "#{health_facility.role_id}"}, :method => :get}, :id => "edit-health-facility-#{health_facility.id}-link")
+
+

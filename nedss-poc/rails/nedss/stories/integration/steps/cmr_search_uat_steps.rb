@@ -128,8 +128,7 @@ def add_event(jurisdiction, gender, first_name, last_name, county, birth_date, d
           :address => {}, 
           :telephone => {} 
       }
-      },
-      :active_hospital => { :hospitals_participation => {} }
+      }
     )
 
     @event.save!

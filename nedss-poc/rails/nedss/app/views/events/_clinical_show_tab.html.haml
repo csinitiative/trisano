@@ -32,21 +32,9 @@
       %td
         = l @event.disease.hospitalized
       %td
-        %span{:class => 'label'}
-          Hospital:
+        &nbsp;
       %td
-        = @event.hospital.active_secondary_entity.place.name unless @event.hospital.nil? or @event.hospital.active_secondary_entity.nil?
-    %tr
-      %td
-        %span{:class => 'label'}
-          Admission Date:
-      %td
-        = @event.hospital.hospitals_participation.admission_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil?
-      %td
-        %span{:class => 'label'}
-          Discharge Date:
-      %td
-        = @event.hospital.hospitals_participation.discharge_date unless @event.hospital.nil? or @event.hospital.hospitals_participation.nil?
+        &nbsp;
     %tr
       %td
         %span{:class => 'label'}
@@ -68,6 +56,24 @@
         &nbsp;
       %td
         &nbsp;
+
+  %fieldset
+    %legend
+      Diagnosing Health Facilities  
+    %table{:cellpadding => '2'}
+      %tr
+        %td
+          %div{:id => 'diagnosing-health-facilities-list'}
+            = render :partial => 'health_facilities/index', :locals => { :refresh_list => 'diagnosing-health-facilities-list', :health_facilities => @event.diagnosing_health_facilities }
+
+  %fieldset
+    %legend
+      Hospitalized Health Facilities  
+    %table{:cellpadding => '2'}
+      %tr
+        %td
+          %div{:id => 'hospitalized-health-facilities-list'}
+            = render :partial => 'health_facilities/index', :locals => { :refresh_list => 'hospitalized-health-facilities-list', :health_facilities => @event.hospitalized_health_facilities }
 
   %fieldset
     %legend

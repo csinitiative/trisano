@@ -1,0 +1,15 @@
+
+= hf_form.hidden_field(:role_id)
+= hf_form.label(:secondary_entity_id, "Health facility")
+= hf_form.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true})
+
+- if health_facility.role_id == Event.participation_code('Hospitalized At')
+
+  - hospital_data = health_facility.hospitals_participation.nil? ? HospitalsParticipation.new : health_facility.hospitals_participation
+
+  = hf_form.fields_for(:hospitals_participation, hospital_data, :builder => ExtendedFormBuilder) do |hp|
+    = hp.label(:admission_date)
+    = hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now)
+
+    = hp.label(:discharge_date)
+    = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now)
