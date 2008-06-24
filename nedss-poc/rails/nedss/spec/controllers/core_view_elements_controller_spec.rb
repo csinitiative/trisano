@@ -133,7 +133,7 @@ describe CoreViewElementsController do
       mock_user
       @core_view_element = mock_model(CoreViewElement)
       CoreViewElement.stub!(:new).and_return(@core_view_element)
-      @core_view_element.stub!(:form_id=)
+      @core_view_element.stub!(:parent_element_id=)
     end
   
     def do_get

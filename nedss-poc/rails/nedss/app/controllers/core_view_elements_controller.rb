@@ -21,7 +21,7 @@ class CoreViewElementsController < ApplicationController
   def new
     begin
       @core_view_element = CoreViewElement.new
-      @core_view_element.form_id = params[:form_id]
+      @core_view_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the core tab form  at this time.'

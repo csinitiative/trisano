@@ -1,0 +1,6 @@
+- for @form_reference in @event.form_references
+  - _form = @form_reference.form
+  %div{ :id => "form_demographic_#{_form.id}" }
+    - for element in _form.form_base_element.children do
+      - if element.class.name == "CoreViewElement"
+        = render_investigator_view(element, f)

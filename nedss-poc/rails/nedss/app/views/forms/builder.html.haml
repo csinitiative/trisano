@@ -6,7 +6,8 @@
   %div{:id => "formbuilder-body"}
 
     %small{:style => "#float: right"}
-      -#= link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_id => @form.id}, :method => :get)
+      &nbsp;&nbsp;
+      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.form_base_element.id}, :method => :get)
       &nbsp;&nbsp;
       = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.form_base_element.id}, :method => :get)
     %br

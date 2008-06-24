@@ -6,4 +6,4 @@
     = render :partial => 'form', :locals => { :f => f }
     = f.submit "Create"
     &nbsp;&nbsp;
-    = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'))"
+    = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
