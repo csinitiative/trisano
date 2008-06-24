@@ -133,7 +133,7 @@ describe CoreViewElementsController do
       mock_user
       @core_view_element = mock_model(CoreViewElement)
       CoreViewElement.stub!(:new).and_return(@core_view_element)
-      @core_view_element.stub!(:parent_element_id=)
+      @core_view_element.stub!(:available_core_views).and_return([])
     end
   
     def do_get
@@ -234,6 +234,7 @@ describe CoreViewElementsController do
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @core_view_element.should_receive(:save_and_add_to_form).and_return(false)
+        @core_view_element.stub!(:available_core_views).and_return([])
         post :create, :core_view_element => {}
       end
   

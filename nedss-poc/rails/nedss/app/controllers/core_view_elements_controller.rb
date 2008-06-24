@@ -20,8 +20,8 @@ class CoreViewElementsController < ApplicationController
 
   def new
     begin
-      @core_view_element = CoreViewElement.new
-      @core_view_element.parent_element_id = params[:form_element_id]
+      @core_view_element = CoreViewElement.new(:parent_element_id => params[:form_element_id])
+      @available_core_views = @core_view_element.available_core_views
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the core tab form  at this time.'
@@ -35,7 +35,7 @@ class CoreViewElementsController < ApplicationController
   
   def create
     @core_view_element = CoreViewElement.new(params[:core_view_element])
-
+    
     respond_to do |format|
       if @core_view_element.save_and_add_to_form
         flash[:notice] = 'Core tab configuration was successfully created.'
@@ -43,7 +43,10 @@ class CoreViewElementsController < ApplicationController
         format.js { @form = Form.find(@core_view_element.form_id)}
       else
         format.xml  { render :xml => @core_view_element.errors, :status => :unprocessable_entity }
-        format.js { render :action => "new" }
+        format.js { 
+          @available_core_views = @core_view_element.available_core_views
+          render :action => "new"
+        }
       end
     end
   end

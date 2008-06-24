@@ -4,4 +4,4 @@
 %p
   %label Core Tab
   %br
-  = f.select(:name, [["Demographics", "Demographics"]], {:include_blank => true}) 
+  = f.select(:name, @available_core_views, {:include_blank => true}) 
