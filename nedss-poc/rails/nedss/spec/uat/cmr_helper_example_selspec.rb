@@ -1,9 +1,18 @@
 require File.dirname(__FILE__) + '/spec_helper' 
-$dont_kill_browser = true
+#$dont_kill_browser = true
 
-describe "cmr_helper_example_selspec" do 
-  before(:all) do
-    @fields = {# Here are all the patient fields, all of which are tested...
+describe "cmr helper example" do 
+  before(:each) do
+    #put any setup tasks here
+  end
+  
+  before(:each) do
+    #put any setup tasks here
+  end
+  
+  it "should create a cmr from a hash of field names and values" do 
+    @cmr_fields = {
+              # Patient fields
               "event_active_patient__active_primary_entity__person_last_name" => NedssHelper.get_unique_name(1),
               "event_active_patient__active_primary_entity__person_first_name" => NedssHelper.get_unique_name(1),
               "event_active_patient__active_primary_entity__person_middle_name" => NedssHelper.get_unique_name(1),
@@ -32,10 +41,12 @@ describe "cmr_helper_example_selspec" do
               "event_disease_died_id" => "Yes",
               "event_imported_from_id" => "Utah",
               #Hospital fields
-              "event_active_hospital__hospitals_participation_admission_date" => "1/1/1974",
-              "event_active_hospital__hospitals_participation_discharge_date" => "1/1/1974",
+              "event_hospitalized_health_facility__hospitals_participation_admission_date" => "1/1/1974",
+              "event_hospitalized_health_facility__hospitals_participation_discharge_date" => "1/1/1974",
               "event_disease_hospitalized_id" => "Yes",
-              "event_active_hospital_secondary_entity_id" => "Alta View Hospital",
+              "event_hospitalized_health_facility_secondary_entity_id" => "Alta View Hospital",
+              #Diagnosis field
+              "event_diagnosing_health_facility_secondary_entity_id" => "Alta View Hospital",
               #Treatment fields
               "event_active_patient__participations_treatment_treatment_given_yn_id" => "Yes",
               "event_active_patient__participations_treatment_treatment" => NedssHelper.get_unique_name(1),
@@ -117,19 +128,25 @@ describe "cmr_helper_example_selspec" do
               "event_first_reported_PH_date" => "1/1/1974",
               "event_review_completed_UDOH_date" => "1/1/1974"             
              }
-    
-  end
-  
-  before(:each) do
-    #put any setup tasks here
-  end
-  
-  it "should create a cmr from a hash of field names and values" do 
     @browser.open("/nedss/forms")
     @browser.click("link=New CMR")
     @browser.wait_for_page_to_load($load_time)
-    NedssHelper.set_fields(@browser, @fields)
+    NedssHelper.set_fields(@browser, @cmr_fields)
     @browser.click('event_submit')
     @browser.wait_for_page_to_load($load_time)
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
