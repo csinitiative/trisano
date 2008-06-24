@@ -59,7 +59,7 @@ module NedssHelper
   def click_link_by_order(browser, element_id_prefix, order)
     links = browser.get_all_links
     links.delete_if{|link| link.index(element_id_prefix) == nil}
-    browser.click(links[order])
+    browser.click(links[order-1])
   end
   
   def type_field_by_order(browser, element_id_prefix, order, value)

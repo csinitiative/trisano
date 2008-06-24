@@ -4,11 +4,19 @@
   %table{:class => "tabular"}
     %tr
       %th Name
+      - if refresh_list.include?("hospitalized")
+        %th Admission Date
+        %th Discharge Date
 
     - for health_facility in health_facilities
       - place = health_facility.secondary_entity.place
       %tr
         %td= place.name
+        - if refresh_list.include?("hospitalized")
+          %td
+            = health_facility.hospitals_participation.admission_date unless health_facility.hospitals_participation.nil?
+          %td
+            = health_facility.hospitals_participation.discharge_date unless health_facility.hospitals_participation.nil?
 
         %td=link_to_remote_redbox("Edit health facility", { :url => { :controller => "health_facilities", :action => "edit", :cmr_id => @event.id, :id => health_facility.id, :role_id => "#{health_facility.role_id}"}, :method => :get}, :id => "edit-health-facility-#{health_facility.id}-link")
 

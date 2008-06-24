@@ -35,6 +35,15 @@ describe Entity do
       end
     end
   end
+  
+  it "should return a case id" do
+    pending 
+  end
+  
+  it "should promote to case" do
+    pending 
+  end
+  
 end
 
 describe Entity, "with associated person via custom 'person' attribute (i.e. nested hash)" do

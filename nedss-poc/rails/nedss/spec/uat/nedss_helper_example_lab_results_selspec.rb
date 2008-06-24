@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "nedss_helper_example_lab_results_selspec" do 
 
   before(:all) do
-    @cmr_name = NedssHelper.get_unique_name(1)  
+    @cmr_name = get_unique_name(1)  
   end
   
   before(:each) do
@@ -42,6 +42,6 @@ describe "nedss_helper_example_lab_results_selspec" do
   end
   
   it "should click the second lab result" do
-    NedssHelper.click_link_by_order(@browser, "edit-lab-result", 2)
+    click_link_by_order(@browser, "edit-lab-result", 2)
   end
 end

@@ -42,7 +42,7 @@ class HealthFacilitiesController < ApplicationController
     
     if (health_facility_association << @health_facility)
       render(:update) do |page|
-        page.replace_html refresh_list, :partial => 'health_facilities/index', :locals => { :health_facilities => health_facility_association }
+        page.replace_html refresh_list, :partial => 'health_facilities/index', :locals => { :health_facilities => health_facility_association, :refresh_list => refresh_list }
         page.call "RedBox.close"
       end
     else
@@ -64,7 +64,7 @@ class HealthFacilitiesController < ApplicationController
 
     if @health_facility.update_attributes(params[:health_facility])
       render(:update) do |page|
-        page.replace_html refresh_list, :partial => 'health_facilities/index', :locals => { :health_facilities => health_facility_association }
+        page.replace_html refresh_list, :partial => 'health_facilities/index', :locals => { :health_facilities => health_facility_association, :refresh_list => refresh_list }
         page.call "RedBox.close"
       end
     else

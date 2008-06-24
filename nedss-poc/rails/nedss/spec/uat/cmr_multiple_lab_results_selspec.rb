@@ -8,7 +8,7 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.wait_for_page_to_load($load_time)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Jones"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Indiana"
-    @browser.click "//ul[@id='tabs']/li[3]/a/em"
+    click_core_tab(@browser, "Laboratory")
     @browser.type "event_lab_result_lab_result_text", "Positive"
     @browser.select "event_lab_result_specimen_source_id", "label=Abcess"
     @browser.type "event_lab_result_collection_date", "June 3, 2008"
@@ -25,7 +25,7 @@ describe 'Adding multiple lab results to a CMR' do
   end
 
   it "should allow editing a lab result from the CMR's show mode" do
-    @browser.click "//ul[@id='tabs']/li[3]/a/em"
+    click_core_tab(@browser, "Laboratory")
     @browser.click "link=Edit lab result"
     sleep(3)
     # @browser.wait_for_element_present("lab_info_form")
@@ -39,7 +39,7 @@ describe 'Adding multiple lab results to a CMR' do
   it "should allow editing a lab result from the CMR's edit mode" do
     @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
-    @browser.click "//ul[@id='tabs']/li[3]/a/em"
+    click_core_tab(@browser, "Laboratory")
     @browser.click "link=Edit lab result"
     sleep(3)
     # @browser.wait_for_element_present("lab_info_form")
