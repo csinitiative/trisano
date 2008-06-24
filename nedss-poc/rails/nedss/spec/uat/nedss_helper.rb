@@ -14,9 +14,12 @@ module NedssHelper
     
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
-  #Use create_cmr to build a CMR from a hash of field names and values (field names are indexes)
-  #TODO modify to act directly on database
-  #TODO this only works for text fields. It needs to wrok for drop-downs too 
+#  Use set_fields after you navigate to any location by passing in a hash of 
+#  fields and values and this method will set them all. It will work for 
+#  updating existing items or creating new ones. cmr_helper_example shows how 
+#  to create a complete CMR with the helper. The hash created in this example 
+#  could be helpful for other tests. Note that this method does not submit 
+#  for you. 
   def set_fields(browser, value_hash)
     fields = browser.get_all_fields
     value_hash.each_pair do |key, value|
