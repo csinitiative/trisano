@@ -1,6 +1,6 @@
 class ExternalCodesController < ApplicationController
     def index
-        @external_codes = ExternalCode.find(:all)
+        @external_codes = ExternalCode.find(:all, :conditions => "current = TRUE")
 	respond_to do |format|
             format.html
 	    format.xml

@@ -13,6 +13,7 @@ Code.transaction do
         c = ExternalCode.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
                                                               :the_code => code['the_code'], 
                                                               :code_description => code['code_description'],
+							      :current => TRUE,
                                                               :sort_order => code['sort_order'])
     end
     c.attributes = code unless c.new_record?
