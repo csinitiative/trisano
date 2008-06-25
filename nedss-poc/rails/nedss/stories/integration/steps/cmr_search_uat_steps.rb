@@ -95,14 +95,14 @@ def add_event(jurisdiction, gender, first_name, last_name, county, birth_date, d
             :first_name => first_name,
             :last_name => last_name,
             :birth_date => birth_date,
-            :birth_gender_id => Code.find_by_code_name_and_code_description("gender", gender).id
+            :birth_gender_id => ExternalCode.find_by_code_name_and_code_description("gender", gender).id
           },
           :entities_location => { 
-            :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id 
+            :entity_location_type_id => ExternalCode.unspecified_location_id,
+            :primary_yn_id => ExternalCode.yes_id 
           },
           :address => {
-            :county_id => Code.find_by_code_name_and_code_description("county", county).id
+            :county_id => ExternalCode.find_by_code_name_and_code_description("county", county).id
           }
         }
       },
@@ -122,8 +122,8 @@ def add_event(jurisdiction, gender, first_name, last_name, county, birth_date, d
         :active_secondary_entity => { 
           :person => {}, 
           :entities_location => { 
-            :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id 
+            :entity_location_type_id => ExternalCode.unspecified_location_id,
+            :primary_yn_id => ExternalCode.yes_id 
           }, 
           :address => {}, 
           :telephone => {} 

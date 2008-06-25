@@ -73,9 +73,9 @@ def add_person(first_name = nil, last_name = nil, birth_date = "01/01/1970", gen
     gender.capitalize!
     county.capitalize!
     birth_date = Date.parse(birth_date) unless birth_date.class == "Date"
-    county = Code.find_by_code_name_and_code_description("county", county)
+    county = ExternalCode.find_by_code_name_and_code_description("county", county)
     county_id = county.id
-    birth_gender_id = Code.find_by_code_name_and_code_description("gender", gender).id
+    birth_gender_id = ExternalCode.find_by_code_name_and_code_description("gender", gender).id
 
     @entity = Entity.new(
       { :entity_type => 'person',
@@ -86,8 +86,8 @@ def add_person(first_name = nil, last_name = nil, birth_date = "01/01/1970", gen
           :birth_gender_id => birth_gender_id
         },
         :entities_location => { 
-          :entity_location_type_id => Code.unspecified_location_id,
-          :primary_yn_id => Code.yes_id 
+          :entity_location_type_id => ExternalCode.unspecified_location_id,
+          :primary_yn_id => ExternalCode.yes_id 
         },
         :address => {
           :county_id => county_id
