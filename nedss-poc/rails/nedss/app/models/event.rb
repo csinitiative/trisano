@@ -446,13 +446,13 @@ class Event < ActiveRecord::Base
            ( SELECT DISTINCT ON 
                     (entity_id) entity_id, location_id
              FROM
-                    entities_locations, codes
+                    entities_locations, external_codes
              WHERE
-                    codes.code_name = 'yesno'  
+                    external_codes.code_name = 'yesno'  
              AND
-                    codes.the_code = 'Y'
+                    external_codes.the_code = 'Y'
              AND
-                    entities_locations.primary_yn_id = codes.id
+                    entities_locations.primary_yn_id = external_codes.id
              ORDER BY
                     entity_id, created_at DESC
            ) AS el ON el.entity_id = p3.primary_entity_id
@@ -461,9 +461,9 @@ class Event < ActiveRecord::Base
     LEFT OUTER JOIN 
            addresses a ON a.location_id = l.id
     LEFT OUTER JOIN 
-           codes co ON co.id = a.county_id
+           external_codes co ON co.id = a.county_id
     LEFT OUTER JOIN 
-           codes c ON c.id = p3.primary_birth_gender_id
+           external_codes c ON c.id = p3.primary_birth_gender_id
     LEFT OUTER JOIN 
            codes cs ON cs.id = p3.investigation_lhd_status_id
     WHERE 

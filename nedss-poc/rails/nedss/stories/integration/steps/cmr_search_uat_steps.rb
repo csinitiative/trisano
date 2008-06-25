@@ -85,7 +85,7 @@ def add_event(jurisdiction, gender, first_name, last_name, county, birth_date, d
     gender.capitalize!
     county.capitalize!
     birth_date = Date.parse(birth_date) unless birth_date.class == "Date"
-
+    breakpoint
     @event = Event.new(
       :event_onset_date => Date.today, 
       :disease          => { :disease_id => Disease.find_by_disease_name(disease).id },
