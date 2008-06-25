@@ -228,7 +228,6 @@ class Event < ActiveRecord::Base
 
   # Debt: Consolidate sanitize_sql calls where possible
   def self.find_by_criteria(*args)
-    
     options = args.extract_options!
     fulltext_terms = []
     where_clause = ""
@@ -454,7 +453,7 @@ class Event < ActiveRecord::Base
              AND
                     entities_locations.primary_yn_id = external_codes.id
              ORDER BY
-                    entity_id, created_at DESC
+                    entity_id, entities_locations.created_at DESC
            ) AS el ON el.entity_id = p3.primary_entity_id
     LEFT OUTER JOIN 
            locations l ON l.id = el.location_id
