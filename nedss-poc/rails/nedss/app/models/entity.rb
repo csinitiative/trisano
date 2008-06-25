@@ -38,8 +38,12 @@ class Entity < ActiveRecord::Base
   end
 
   def person=(attributes)
-    @person = Person.new(attributes)
-    set_entity_type(@person)
+    if @new_record
+        @person = Person.new(attributes)
+    else
+        person.update_attributes(attributes)
+    end
+    set_entity_type(person)
   end  
 
    # Debt: Remove this when the associations are correct on user.rb.
