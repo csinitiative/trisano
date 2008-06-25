@@ -39,6 +39,8 @@ ActionController::Routing::Routes.draw do |map|
     cmr.resources :health_facilities
   end
 
+  map.resources :codes, :controller => :external_codes, 
+    :member => { :associations => :get, :add_association => :post }
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
