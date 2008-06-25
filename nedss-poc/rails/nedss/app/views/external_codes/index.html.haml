@@ -1,0 +1,16 @@
+%h1 Listing Codes
+
+%table{:width => '50%'}
+  %tr
+    %th Code Description
+    %th Code Type
+    %th Code
+  - for code in @external_codes
+  %tr
+    %td
+      = code.code_description
+    %td
+      = code.code_name
+    %td
+      = code.the_code
+  - end
