@@ -1,6 +1,6 @@
 class ExternalCodesController < ApplicationController
     def index
-        @external_codes = ExternalCode.find(:all, :conditions => "current = TRUE")
+        @external_codes = ExternalCode.find(:all, :conditions => "next_ver is NULL", :order => "code_name")
 	respond_to do |format|
             format.html
 	    format.xml
@@ -48,12 +48,22 @@ class ExternalCodesController < ApplicationController
 	respond_to do |format|
 	    if @external_code.update_attributes(params[:external_code])
                 flash[:notice] = "Code was successfully updated"
-	        format.html {redirect_to code_path}
+	        format.html {redirect_to code_path(@external_code.next_ver)}
 	        format.xml {head :ok}
 	    else
                 format.html {render :action => "edit"}
 		format.xml {render :xml => @external_code.errors, :status => :unprocessable_entity}
 	    end
+	end
+    end
+
+    def destroy
+        @external_code = ExternalCode.find(params[:id])
+	@external_code.destroy
+
+	respond_to do |format|
+            format.html { redirect_to(codes_url) }
+	    format.xml  { head :ok }
 	end
     end
 end

@@ -30,7 +30,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if(!@external_codes.member?(code_name))
         @codes ||= Code.find(:all, :order => 'sort_order')
     else
-        @codes ||= ExternalCode.find(:all, :order => 'sort_order', :conditions => "current = TRUE")
+        @codes ||= ExternalCode.find(:all, :order => 'sort_order')
     end
     @codes.select {|code| code.code_name == code_name}
   end

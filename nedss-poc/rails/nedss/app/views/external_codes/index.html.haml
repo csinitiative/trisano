@@ -15,6 +15,7 @@
       = code.the_code
     %td
       = link_to("Edit", edit_code_path(code))
+      = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
       = link_to("Show", code_path(code))
   - end
 = link_to("Create New Code", new_code_path)
