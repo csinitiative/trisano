@@ -8,7 +8,7 @@
       <% f.fields_for(:entities_location, location_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
         <%= el.hidden_field(:entity_id) %>
         <% if location_data.entities_location.nil? %>
-          <% location_data.entities_location = { :entity_location_type_id => Code.unspecified_location_id, :primary_yn_id => Code.yes_id } %>
+          <% location_data.entities_location = { :entity_location_type_id => ExternalCode.unspecified_location_id, :primary_yn_id => ExternalCode.yes_id } %>
         <% end %>
         <tr>
           <td>

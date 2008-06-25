@@ -3,9 +3,9 @@ class Event < ActiveRecord::Base
 
   belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'Code'
-  belongs_to :imported_from, :class_name => 'Code'
+  belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :event_case_status, :class_name => 'Code'
-  belongs_to :outbreak_associated, :class_name => 'Code'
+  belongs_to :outbreak_associated, :class_name => 'ExternalCode'
   belongs_to :investigation_LHD_status, :class_name => 'Code'
 
   has_many :lab_results, :order => 'created_at ASC', :dependent => :delete_all

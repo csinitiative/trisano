@@ -17,11 +17,11 @@ class Entity < ActiveRecord::Base
   has_one :primary_entities_location, 
           :class_name => 'EntitiesLocation', 
           :foreign_key => 'entity_id', 
-          :conditions => [ "primary_yn_id = ?", Code.yes_id ],
+          :conditions => [ "primary_yn_id = ?", ExternalCode.yes_id ],
           :order => 'created_at DESC'
 
   has_and_belongs_to_many :races, 
-    :class_name => 'Code', 
+    :class_name => 'ExternalCode', 
     :join_table => 'people_races', 
     :association_foreign_key => 'race_id', 
     :order => 'code_description'
