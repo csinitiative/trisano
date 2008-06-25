@@ -36,12 +36,12 @@ class SearchController < ApplicationController
     @last_name = ""
     @birth_date = ""
     @diseases = Disease.find(:all, :order => "disease_name")
-    @genders = Code.find(:all, 
+    @genders = ExternalCode.find(:all, 
                          :order => "id", 
                          :select => "id, code_description", 
                          :conditions => "code_name = 'gender'" )
 
-    @genders << Code.new(:id => "U", :code_description => "Unspecified")
+    @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
     
     @investigation_statuses = Code.find(:all,
                                         :order => "id",
@@ -50,7 +50,7 @@ class SearchController < ApplicationController
 
     @investigation_statuses << Code.new(:id => "U", :code_description => "Unspecified")
     
-    @counties = Code.find(:all,
+    @counties = ExternalCode.find(:all,
                           :order => "id",
                           :select => "id, code_description",
                           :conditions => "code_name = 'county'")
