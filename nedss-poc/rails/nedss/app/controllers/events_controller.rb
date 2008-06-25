@@ -46,8 +46,8 @@ class EventsController < ApplicationController
         :active_primary_entity => { 
           :person => {}, 
           :entities_location => { 
-            :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id 
+            :entity_location_type_id => ExternalCode.unspecified_location_id,
+            :primary_yn_id => ExternalCode.yes_id 
           }, 
           :address => {}, 
           :telephone => {}
@@ -66,8 +66,8 @@ class EventsController < ApplicationController
         :active_secondary_entity => { 
           :person => {}, 
           :entities_location => { 
-            :entity_location_type_id => Code.unspecified_location_id,
-            :primary_yn_id => Code.yes_id 
+            :entity_location_type_id => ExternalCode.unspecified_location_id,
+            :primary_yn_id => ExternalCode.yes_id 
           }, 
           :address => {}, 
           :telephone => {} 
@@ -158,9 +158,9 @@ class EventsController < ApplicationController
     @event.active_patient.active_primary_entity.person.first_name = params[:first_name]
     @event.active_patient.active_primary_entity.person.middle_name = params[:middle_name]
     @event.active_patient.active_primary_entity.person.last_name = params[:last_name]
-    @event.active_patient.active_primary_entity.person.birth_gender = Code.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
+    @event.active_patient.active_primary_entity.person.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
     @event.active_patient.active_primary_entity.address.city = params[:city]
-    @event.active_patient.active_primary_entity.address.county = Code.find(params[:county]) unless params[:county].blank?
+    @event.active_patient.active_primary_entity.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.active_jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.active_patient.active_primary_entity.person.birth_date = params[:birth_date]
     @event.disease.disease_id = params[:disease]
