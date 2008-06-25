@@ -10,11 +10,6 @@ acts_as_auditable
    code.id unless code.nil?
   end
 
-  def self.other_place_type_id
-   code = find(:first, :conditions => "code_name = 'placetype' and the_code = 'O'")
-   code.id unless code.nil?
-  end
-
   def self.unspecified_location_id
    code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
    code.id unless code.nil?

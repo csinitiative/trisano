@@ -32,8 +32,8 @@ class ContactsController < ApplicationController
   # GET /contacts/new.xml
   def new
     @contact = Entity.new(:person => {},
-                          :entities_location => { :entity_location_type_id => Code.unspecified_location_id,
-                                                  :primary_yn_id => Code.yes_id }
+                          :entities_location => { :entity_location_type_id => ExternalCode.unspecified_location_id,
+                                                  :primary_yn_id => ExternalCode.yes_id }
                          ) 
     render :layout => false
   end
