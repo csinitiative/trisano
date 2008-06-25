@@ -13,6 +13,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :forms
 
+  map.resources :external_codes
+
   map.resources :question_elements
   
   map.resources :group_elements
@@ -39,8 +41,8 @@ ActionController::Routing::Routes.draw do |map|
     cmr.resources :health_facilities
   end
 
-  map.resources :codes, :controller => :external_codes, 
-    :member => { :associations => :get, :add_association => :post }
+  map.resources :codes, :controller => :external_codes
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

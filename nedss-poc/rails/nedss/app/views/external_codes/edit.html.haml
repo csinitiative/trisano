@@ -1,0 +1,6 @@
+- form_for(@external_code, code_path(@external_code), :builder => ExtendedFormBuilder) do |code_form|
+  %label Code
+  = code_form.text_field :the_code
+  %label Description
+  = code_form.text_field :code_description
+  = code_form.submit "Update"
