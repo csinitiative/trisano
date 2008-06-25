@@ -1,8 +1,8 @@
 class Person < ActiveRecord::Base
   acts_as_auditable
-  belongs_to :birth_gender, :class_name => 'Code'
-  belongs_to :ethnicity, :class_name => 'Code'
-  belongs_to :primary_language, :class_name => 'Code'
+  belongs_to :birth_gender, :class_name => 'ExternalCode'
+  belongs_to :ethnicity, :class_name => 'ExternalCode'
+  belongs_to :primary_language, :class_name => 'ExternalCode'
   belongs_to :entity 
 
   validates_presence_of :last_name

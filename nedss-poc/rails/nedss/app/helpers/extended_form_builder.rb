@@ -26,7 +26,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    @codes ||= Code.find(:all, :order => 'sort_order')
+    @external_codes = {"gender", "ethnicity", "state", "county","specimen","imported","yesno","location", "language","race"}
+    if(!@external_codes.member?(code_name))
+        @codes ||= Code.find(:all, :order => 'sort_order')
+    else
+        @codes ||= ExternalCode.find(:all, :order => 'sort_order', :conditions => "current = TRUE")
+    end
     @codes.select {|code| code.code_name == code_name}
   end
 

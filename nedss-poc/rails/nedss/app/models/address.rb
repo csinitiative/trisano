@@ -1,8 +1,8 @@
 class Address < ActiveRecord::Base
   belongs_to :location
-  belongs_to :county, :class_name => 'Code'
-  belongs_to :district, :class_name => 'Code'
-  belongs_to :state, :class_name => 'Code'
+  belongs_to :county, :class_name => 'ExternalCode'
+  belongs_to :district, :class_name => 'ExternalCode'
+  belongs_to :state, :class_name => 'ExternalCode'
 
   protected
   def validate
