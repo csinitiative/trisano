@@ -26,12 +26,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    if(!is_external_code?(code_name))
-        @codes ||= Code.find(:all, :order => 'sort_order')
+    if(is_external_code?(code_name))
+        @external_codes = ExternalCode.find(:all, :order => 'sort_order')
+        @ret = @external_codes.select {|code| code.code_name == code_name}
     else
-        @codes ||= ExternalCode.find(:all, :order => 'sort_order')
+        @codes = Code.find(:all, :order => 'sort_order')
+        @ret = @codes.select {|code| code.code_name == code_name}
     end
-    @codes.select {|code| code.code_name == code_name}
+    @ret
   end
 
   def dynamic_question(form_elements_cache, question_element, index, html_options = {}) 
@@ -142,10 +144,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
   
   private
+
   def is_external_code?(code_name)
+    breakpoint
     @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race"]
-    @external_codes.each {|external_code| return TRUE if code_name == external_code}
+    @external_codes.each {|ec| return TRUE if ec == code_name}
+    return FALSE
   end
+
   def core_follow_up_event(attribute, event)
     result = ""
     
