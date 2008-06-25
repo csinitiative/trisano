@@ -7,6 +7,14 @@ class ExternalCodesController < ApplicationController
 	end
     end
 
+    def show
+        @external_code = ExternalCode.find(params[:id])
+	respond_to do |format|
+            format.html
+	    format.xml
+	end
+    end
+
     def edit
         @external_code = ExternalCode.find(params[:id])
     end
@@ -16,7 +24,7 @@ class ExternalCodesController < ApplicationController
 	respond_to do |format|
 	    if @external_code.update_attributes(params[:external_code])
                 flash[:notice] = "Code was successfully updated"
-	        format.html {redirect_to(@external_code)}
+	        format.html {redirect_to code_path}
 	        format.xml {head :ok}
 	    else
                 format.html {render :action => "edit"}

@@ -1,0 +1,22 @@
+%h1= "Showing Code: #{@external_code.code_description}"
+
+%fieldset
+  %legend Code Information
+  %table{:width => '50%'}
+    %tr
+      %td
+        %span.label Code Description:
+      %td
+        = @external_code.code_description
+    %tr
+      %td
+        %span.label Code Type:
+      %td
+        = @external_code.code_name
+    %tr
+      %td
+        %span.label Code:
+      %td
+        = @external_code.the_code
+= link_to "Return to Code List", codes_path
+= link_to "Edit Code", edit_code_path(@external_code)
