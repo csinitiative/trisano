@@ -26,8 +26,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    @external_codes = {"gender", "ethnicity", "state", "county","specimen","imported","yesno","location", "language","race"}
-    if(!@external_codes.member?(code_name))
+    if(!is_external_code?(code_name))
         @codes ||= Code.find(:all, :order => 'sort_order')
     else
         @codes ||= ExternalCode.find(:all, :order => 'sort_order')
@@ -143,7 +142,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
   
   private
-  
+  def is_external_code?(code_name)
+    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race"]
+    @external_codes.each {|external_code| return TRUE if code_name == external_code}
+  end
   def core_follow_up_event(attribute, event)
     result = ""
     

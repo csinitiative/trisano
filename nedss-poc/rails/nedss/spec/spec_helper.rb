@@ -24,7 +24,7 @@ Spec::Runner.configure do |config|
   # names with your fixtures.
   #
   # config.global_fixtures = :table_a, :table_b
-  config.global_fixtures = :codes
+  config.global_fixtures = :codes, :external_codes
   #
   # If you declare global fixtures, be aware that they will be declared
   # for all of your examples, even those that don't use them.
@@ -83,15 +83,15 @@ def mock_event
   person = mock_person_entity
   
   event_status = mock_model(Code)
-  imported_from = mock_model(Code)
+  imported_from = mock_model(ExternalCode)
   event_case_status =mock_model(Code)
   outbreak_associated = mock_model(Code)
   investigation_LHD_status = mock_model(Code)
-  hospitalized = mock_model(Code)
-  died = mock_model(Code)
-  pregnant = mock_model(Code)
-  specimen_source = mock_model(Code)
-  tested_at_uphl_yn = mock_model(Code)
+  hospitalized = mock_model(ExternalCode)
+  died = mock_model(ExternalCode)
+  pregnant = mock_model(ExternalCode)
+  specimen_source = mock_model(ExternalCode)
+  tested_at_uphl_yn = mock_model(ExternalCode)
   
   disease_event = mock_model(DiseaseEvent)
   disease = mock_model(Disease)

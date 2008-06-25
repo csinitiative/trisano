@@ -1,6 +1,6 @@
 module PersonFormSpecHelper
   describe "a person form", :shared => true do
-    fixtures :codes
+    fixtures :codes, :external_codes
 
     before(:each) do
       @entity = mock_person_entity

@@ -167,7 +167,7 @@ describe Entity, "with associated location and person via custom attributes" do
 end
 
 describe Entity, "with people fixtures loaded" do
-  fixtures :entities, :people, :people_races, :codes
+  fixtures :entities, :people, :people_races, :codes, :external_codes
 
   it "should have 7 records" do
     Entity.should have(7).records
@@ -199,8 +199,8 @@ describe Entity, "with people fixtures loaded" do
     end
 
     it "the current instance should have a race of blank and white" do
-      entities(:Silvers).races.first.should eql(codes(:race_black))
-      entities(:Silvers).races.last.should eql(codes(:race_white))
+      entities(:Silvers).races.first.should eql(external_codes(:race_black))
+      entities(:Silvers).races.last.should eql(external_codes(:race_white))
     end
   end
 

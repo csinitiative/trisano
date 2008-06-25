@@ -52,11 +52,11 @@ describe Person, "with first and last names" do
 end
 
 describe Person, "with associated codes" do
-  fixtures :codes
+  fixtures :external_codes
 
   before(:each) do
-    @ethnicity = Code.find_by_code_name('ethnicity')
-    @gender = Code.find_by_code_name('gender')
+    @ethnicity = ExternalCode.find_by_code_name('ethnicity')
+    @gender = ExternalCode.find_by_code_name('gender')
     @person = Person.create(:last_name => 'Lacey', :ethnicity => @ethnicity, :birth_gender => @gender)
   end
 
@@ -90,7 +90,7 @@ describe Person, "with dates of birth and/or death" do
 end
 
 describe Person, "loaded from fixtures" do
-  fixtures :people, :codes
+  fixtures :people, :external_codes
 
   it "should have a non-empty collection of people" do
     Person.find(:all).should_not be_empty
@@ -106,14 +106,14 @@ describe Person, "loaded from fixtures" do
   end
 
   it "should have an ethnicity of other" do
-    people(:groucho_marx).ethnicity.should eql(codes(:ethnicity_other))
+    people(:groucho_marx).ethnicity.should eql(external_codes(:ethnicity_other))
   end
 
   it "should have a birth_gender of male" do
-    people(:groucho_marx).birth_gender.should eql(codes(:gender_male))
+    people(:groucho_marx).birth_gender.should eql(external_codes(:gender_male))
   end
 
   it "should have a primary language of Spanish" do
-    people(:groucho_marx).primary_language.should eql(codes(:language_spanish))
+    people(:groucho_marx).primary_language.should eql(external_codes(:language_spanish))
   end
 end

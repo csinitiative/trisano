@@ -73,21 +73,21 @@ describe "/search/cmrs.html.haml" do
   end
   
   def mock_gender
-    gender = mock_model(Code)
+    gender = mock_model(ExternalCode)
     gender.stub!(:id).and_return("1")
     gender.stub!(:code_description).and_return("Male")
     gender
   end
 
   def mock_city
-    city = mock_model(Code)
+    city = mock_model(ExternalCode)
     city.stub!(:id).and_return("1")
     city.stub!(:code_description).and_return("Provo")
     city
   end
 
   def mock_county
-    county = mock_model(Code)
+    county = mock_model(ExternalCode)
     county.stub!(:id).and_return("1")
     county.stub!(:code_description).and_return("Salt Lake")
     county
@@ -107,7 +107,7 @@ describe "/search/cmrs.html.haml" do
   end
 
   def mock_district
-    district = mock_model(Code)
+    district = mock_model(ExternalCode)
     district.stub!(:id).and_return("1")
     district.stub!(:code_description).and_return("Alpine")
     district

@@ -6,8 +6,8 @@ describe "/people/show.html.erb" do
   
   before(:each) do
 
-    @gender = @ethnicity = @race = @language = @yesno = mock_model(Code)
-    @state = @county = @district = mock_model(Code)
+    @gender = @ethnicity = @race = @language = @yesno = mock_model(ExternalCode)
+    @state = @county = @district = mock_model(ExternalCode)
 
     @gender.stub!(:code_description).and_return('Male')
     @ethnicity.stub!(:code_description).and_return('Hispanic')
