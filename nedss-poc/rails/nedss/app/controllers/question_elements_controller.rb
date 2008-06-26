@@ -28,6 +28,7 @@ class QuestionElementsController < ApplicationController
       @reference_element = FormElement.find(params[:form_element_id])
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
+      p ex
       logger.info ex
       flash[:notice] = 'Unable to display the new question form.'
       render :template => 'rjs-error'
