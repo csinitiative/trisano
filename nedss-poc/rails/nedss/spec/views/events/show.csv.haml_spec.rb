@@ -5,9 +5,9 @@ describe "/events/show.csv.haml" do
 
     @event_1 = mock_model(Event)
     @event_type = mock_model(Code)
-    @event_status = mock_model(Code)
+    @event_status = mock_model(ExternalCode)
     @imported_from = mock_model(ExternalCode)
-    @event_case_status =mock_model(Code)
+    @event_case_status =mock_model(ExternalCode)
     @outbreak_associated = mock_model(Code)
     @investigation_LHD_status = mock_model(Code)
     @hospitalized = mock_model(ExternalCode)

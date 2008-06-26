@@ -117,8 +117,8 @@ class Entity < ActiveRecord::Base
 
     cmr = Event.new
     cmr.event_onset_date = Date.today
-    cmr.event_status_id = Code.find_by_code_name_and_code_description('eventstatus', "New").id
-    cmr.event_case_status_id = Code.find_by_code_name_and_code_description('case', "Suspect").id
+    cmr.event_status_id = ExternalCode.find_by_code_name_and_code_description('eventstatus', "New").id
+    cmr.event_case_status_id = ExternalCode.find_by_code_name_and_code_description('case', "Suspect").id
     cmr.participations << patient
     cmr.participations << jurisdiction
     cmr.participations << contact

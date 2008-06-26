@@ -2,11 +2,11 @@ class Event < ActiveRecord::Base
   include Blankable
 
   belongs_to :event_type, :class_name => 'Code'
-  belongs_to :event_status, :class_name => 'Code'
+  belongs_to :event_status, :class_name => 'ExternalCode'
   belongs_to :imported_from, :class_name => 'ExternalCode'
-  belongs_to :event_case_status, :class_name => 'Code'
+  belongs_to :event_case_status, :class_name => 'ExternalCode'
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
-  belongs_to :investigation_LHD_status, :class_name => 'Code'
+  belongs_to :investigation_LHD_status, :class_name => 'ExternalCode'
 
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
   has_many :participations
@@ -526,11 +526,11 @@ class Event < ActiveRecord::Base
   end
 
   def under_investigation?
-    true if event_status_id == Code.find_by_code_name_and_code_description("eventstatus", "Under Investigation").id
+    true if event_status_id == ExternalCode.find_by_code_name_and_code_description("eventstatus", "Under Investigation").id
   end
 
   def reopened?
-    true if event_status_id == Code.find_by_code_name_and_code_description("eventstatus", "Reopened").id
+    true if event_status_id == ExternalCode.find_by_code_name_and_code_description("eventstatus", "Reopened").id
   end
   
   def get_investigation_forms

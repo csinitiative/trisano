@@ -12,6 +12,10 @@ class UpdateCodesForeignKeys < ActiveRecord::Migration
       remove_foreign_key(:clinicals, :lab_yn)
       add_foreign_key(:clinicals, :test_public_health_lab_id, :external_codes)
 
+      #clusters
+      remove_foreign_key(:clusters, :cluster_status)
+      add_foreign_key(:clusters, :cluster_status_id, :external_codes)
+
       #disease_events
       remove_foreign_key(:disease_events, :died)
       add_foreign_key(:disease_events, :died_id, :external_codes)
@@ -31,6 +35,10 @@ class UpdateCodesForeignKeys < ActiveRecord::Migration
       #events
       remove_foreign_key(:events, :imported_from)
       add_foreign_key(:events, :imported_from_id, :external_codes)
+      remove_foreign_key(:events, :event_case_status)
+      add_foreign_key(:events, :event_case_status_id, :external_codes)
+      remove_foreign_key(:events, :event_status)
+      add_foreign_key(:events, :event_status_id, :external_codes)
 
       #lab_results
       remove_foreign_key(:lab_results, :specimensourceid)
@@ -74,6 +82,10 @@ class UpdateCodesForeignKeys < ActiveRecord::Migration
       remove_foreign_key(:clinicals, :test_public_health_lab_id)
       add_foreign_key(:clinicals, :lab_yn, :codes)
 
+      #clusters
+      remove_foreign_key(:clusters, :cluster_status_id)
+      add_foreign_key(:cluserts, :cluster_status, :external_codes)
+
       #disease_events
       remove_foreign_key(:disease_events, :died_id)
       add_foreign_key(:disease_events, :died, :codes)
@@ -93,6 +105,10 @@ class UpdateCodesForeignKeys < ActiveRecord::Migration
       #events
       remove_foreign_key(:events, :imported_from_id)
       add_foreign_key(:events, :imported_from, :codes)
+      remove_foreign_key(:events, :event_case_status_id)
+      add_foreign_key(:events, :event_case_status, :external_codes)
+      remove_foreign_key(:events, :event_status_id)
+      add_foreign_key(:events, :event_status, :external_codes)
 
       #lab_results
       remove_foreign_key(:lab_results, :specimen_source_id)

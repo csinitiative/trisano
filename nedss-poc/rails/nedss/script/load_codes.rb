@@ -4,7 +4,7 @@ codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/codes.yml"
 # Can't simply delete all and insert as the delete may trigger a FK constraint
 Code.transaction do
   codes.each do |code|
-    if(code['code_name'] == 'placetype' || code['code_name'] == 'investigation' || code['code_name'] == 'case' || code['code_name'] == 'eventstatus' || code['code_name'] == 'participant')
+    if(code['code_name'] == 'placetype' || code['code_name'] == 'investigation' || code['code_name'] == 'participant')
         c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
                                                               :the_code => code['the_code'], 
                                                               :code_description => code['code_description'],
