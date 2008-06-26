@@ -10,10 +10,12 @@ describe "/cmrs/new.html.erb" do
     @participation = mock_model(Participation)
     @primary_entity =  mock_person_entity
     @secondary_entity =  mock_person_entity
+    @place_entity = mock_model(Entity)
 
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)
+    @lab = mock_model(Participation)
     @current_treatment = mock_model(ParticipationsTreatment)
 
     @hospitals_participation = mock_model(HospitalsParticipation)
@@ -21,15 +23,20 @@ describe "/cmrs/new.html.erb" do
 
     @place = mock_model(Place)
     @person = mock_model(Person)
+
+    @place_entity.stub!(:places).and_return([@place])
     
+    @lab.stub!(:secondary_entity).and_return(@place_entity)
+    @lab.stub!(:lab_results).and_return([])
+
     @event.stub!(:active_patient).and_return(@participation)
     @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
     
+    @event.stub!(:labs).and_return([@lab])
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:active_reporter).and_return(@active_reporter)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
-    @event.stub!(:lab_results).and_return([])
     @event.stub!(:contacts).and_return([])
     @event.stub!(:clinicians).and_return([])
     
@@ -45,11 +52,14 @@ describe "/cmrs/new.html.erb" do
     
     @place.stub!(:name).and_return("Joe's Lab")
     @place.stub!(:entity_id).and_return(1)
+    @place.stub!(:entity_id).and_return(1)
+    @place.stub!(:id=).and_return(1)
 
     @person.stub!(:first_name).and_return("Joe")
     @person.stub!(:last_name).and_return("Cool")
 
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
+    @participation.stub!(:secondary_entity).and_return(@secondary_entity)
     @participation.stub!(:participations_treatment).and_return(@current_treatment)
     @participation.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
     @participation.stub!(:participations_treatments).and_return([])

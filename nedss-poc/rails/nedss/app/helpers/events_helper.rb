@@ -34,6 +34,12 @@ module EventsHelper
     result
   end
   
+  def add_lab_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "labs", :partial => 'lab' , :object => Participation.lab_object_tree
+    end
+  end
+
   private
   
   def render_investigator_element(form_elements_cache, element, f)

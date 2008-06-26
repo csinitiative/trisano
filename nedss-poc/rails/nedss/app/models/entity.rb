@@ -1,7 +1,7 @@
 class Entity < ActiveRecord::Base
   has_many :people, :before_add => :set_entity_type
 
-  has_many :places, :before_add => :set_entity_type
+  has_many :places, :order => 'created_at ASC', :before_add => :set_entity_type
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
   has_many :animals, :before_add => :set_entity_type
@@ -38,7 +38,7 @@ class Entity < ActiveRecord::Base
   end
 
   def person=(attributes)
-    if @new_record
+    if new_record?
         @person = Person.new(attributes)
     else
         person.update_attributes(attributes)

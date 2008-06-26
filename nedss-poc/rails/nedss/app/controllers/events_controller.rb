@@ -39,6 +39,8 @@ class EventsController < ApplicationController
   end
 
   def new
+    # Debt:  Get rid of this monstrosity and replace with #build calls here in the controller.
+    #        Get rid of corresponding setters
     @event = Event.new(
       :event_onset_date => Date.today,
       :disease          => {}, 
@@ -75,7 +77,10 @@ class EventsController < ApplicationController
       },
       :active_jurisdiction => {}
     )
-                             
+
+    # Push this into the model
+    lab = @event.labs << Participation.lab_object_tree
+    
     prepopulate if !params[:from_search].nil?
 
     respond_to do |format|
@@ -85,9 +90,12 @@ class EventsController < ApplicationController
   end
 
   def edit
+    # Via filters above #can_update? is called which loads up @event with the found event.
+    # Nothing to do here.
   end
 
   def create
+    # params[:event].delete("active_reporter") if params[:event][:active_reporter][:active_secondary_entity][:person].values_blank?
     @event = Event.new(params[:event])
     
     unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
@@ -108,9 +116,10 @@ class EventsController < ApplicationController
   end
 
   def update
+    params[:event][:existing_lab_attributes] ||= {}
+
     respond_to do |format|
-      @event.attributes = params[:event]
-      if @event.save
+      if @event.update_attributes(params[:event])
         flash[:notice] = 'CMR was successfully updated.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { head :ok }
@@ -125,32 +134,6 @@ class EventsController < ApplicationController
     head :method_not_allowed
   end
 
-  def associations
-    @event = Event.find(params[:id])
-    @people = find_unassociated_people
-  end
-
-  def add_association
-    @event = Event.find(params[:id])
-    association = Participation.new
-    association.primary_entity_id = params[:person]
-    respond_to do |format|
-      if @event.participations << association
-        flash[:notice] = 'Association has been added.'
-        format.html { redirect_to(cmr_url(@event)) }
-      else
-        @people = find_unassociated_people
-        format.html { render :action => "associations" }
-      end
-    end
-  end
-
-  def find_unassociated_people
-    all_people = PersonEntity.find_all
-    participants = @event.participations.map { |p| p.person_entity.id }
-    all_people.select { |p| not participants.include?(p.id) }
-  end
-  
   private
   
   def prepopulate

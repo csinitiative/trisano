@@ -34,7 +34,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
 
   map.resources :cmrs, :controller => :events do |cmr|
-    cmr.resources :lab_results
     cmr.resources :treatments
     cmr.resources :contacts
     cmr.resources :clinicians

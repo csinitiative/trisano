@@ -101,6 +101,7 @@ def mock_event
   active_jurisdiction = mock_model(Participation)
   active_patient = mock_model(Participation)
   active_contact = mock_model(Participation)
+  lab = mock_model(Participation)
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
@@ -143,6 +144,7 @@ def mock_event
   lab_result.stub!(:tested_at_uphl_yn_id).and_return(1401)
   lab_result.stub!(:tested_at_uphl_yn).and_return(tested_at_uphl_yn)
   
+  event.stub!(:labs).and_return([lab])
   event.stub!(:active_jurisdiction).and_return(active_jurisdiction)
   event.stub!(:active_patient).and_return(active_patient)
   event.stub!(:active_contacts).and_return([active_contact])
@@ -184,7 +186,6 @@ def mock_person_entity
   person.stub!(:date_of_death).and_return(Date.parse('1970-4-21'))
   person.stub!(:birth_gender_id).and_return(1)
   person.stub!(:birth_gender).and_return(nil)
-  person.stub!(:case_id).and_return(1)
   person.stub!(:ethnicity_id).and_return(101)
   person.stub!(:primary_language_id).and_return(301)
   person.stub!(:approximate_age_no_birthday).and_return(50)

@@ -1,9 +1,11 @@
 <h1>New Confidential Morbidity Report</h1>
 
-<%# Debt: Figure out how to merge these all together. %>
-<%# TODO: Add all other objects %>
+<%# Debt: Get rid of all these error_message_for methods.  Use something like this technique to pull all error messages up to the parent. %>
+<%# http://pastie.org/165073 %>
 
-<%= error_messages_for :object => [@event, @event.disease, @event.lab_result, @event.active_patient.active_primary_entity.person] %>
+<%# Deby: DRY up the new and edit views.  Too much repetition %>
+
+<%= error_messages_for :object => [@event, @event.disease, @event.active_patient.active_primary_entity.person] %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.entities_location] unless @event.active_patient.active_primary_entity.entities_location.nil? %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.address] unless @event.active_patient.active_primary_entity.address.nil? %>
 <%= error_messages_for :object => [@event.active_patient.active_primary_entity.telephone] unless @event.active_patient.active_primary_entity.telephone.nil? %>

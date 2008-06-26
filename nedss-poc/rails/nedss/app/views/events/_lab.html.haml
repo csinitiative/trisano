@@ -1,0 +1,41 @@
+%div{:class => 'lab'}
+  - new_or_existing = lab.new_record? ? 'new' : 'existing'
+  - prefix = "event[#{new_or_existing}_lab_attributes]"
+  - prefix_with_array = "#{prefix}[]"
+
+  -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.
+  -# I think this is fixed in Rails 2.1+
+  - lab.secondary_entity.places.last.id = lab.id
+
+  -# The call to #last is there to support "auditing."  It can be changed to "current_place" (with appropriate changes elsewhere), 
+  -# but explicit for now in anticipation of acts_as_auditable, when it can just be dripped
+  - fields_for(prefix_with_array, lab.secondary_entity.places.last, :builder => ExtendedFormBuilder) do |lab_fields|
+    %span{:class => "horiz", :style => "clear: both;"}
+      = lab_fields.label(:name, "Lab Name")
+      = lab_fields.text_field(:name, :size => 20)
+
+  - for lab_result in lab.lab_results
+    -# Same hack as above
+    - lab_result_id = lab_result.id
+    - lab_result.id = lab.id
+
+    - fields_for(prefix_with_array, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
+      = hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:lab_result_text, "Lab Result")
+        = lab_result_fields.text_field(:lab_result_text, :size => 20)
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:specimen_source_id, "Specimen Source")
+        = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:collection_date)
+        = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:lab_test_date)
+        = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:tested_at_uphl_yn_id, "Tested at UPHL Lab")
+        = lab_result_fields.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {})
+
+      %span{:class => "horiz", :style => "margin-top: 30px"}
+        = link_to_function "Remove" , "$(this).up('.lab').remove()"

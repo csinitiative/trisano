@@ -2,7 +2,7 @@ class LabResult < ActiveRecord::Base
   belongs_to :specimen_source, :class_name => 'ExternalCode'
   belongs_to :tested_at_uphl_yn, :class_name => 'ExternalCode'
 
-  belongs_to :event
+  belongs_to :participation
 
   validates_presence_of :lab_result_text 
 

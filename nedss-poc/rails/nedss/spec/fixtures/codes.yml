@@ -252,3 +252,9 @@ participant_diagnosing_health_facility:
   the_code: "DA"
   code_description: "Diagnosed At"
   sort_order: 55
+
+participant_testing_lab:
+  id: 2310
+  code_name: "participant"
+  the_code: "EB"
+  code_description: "Tested By"

@@ -8,15 +8,18 @@ class Event < ActiveRecord::Base
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
   belongs_to :investigation_LHD_status, :class_name => 'Code'
 
-  has_many :lab_results, :order => 'created_at ASC', :dependent => :delete_all
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
   has_many :participations
   has_many :form_references
   has_many :answers
+
   has_many :contacts, :class_name => 'Participation',  
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
+  has_many :labs, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
+    :order => 'created_at ASC'
   has_many :hospitalized_health_facilities, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_many :diagnosing_health_facilities, :class_name => 'Participation', 
@@ -29,10 +32,12 @@ class Event < ActiveRecord::Base
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
   
   validates_date :event_onset_date
+  validates_associated :labs
 
   before_validation_on_create :save_associations
   after_validation :clear_base_error
   
+  after_update :save_labs
   before_save :generate_mmwr
   before_create :set_record_number
 
@@ -86,14 +91,6 @@ class Event < ActiveRecord::Base
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  def lab_result
-    @lab_result ||= LabResult.new
-  end
-
-  def lab_result=(attributes)
-    lab_results.build(attributes) unless attributes[:lab_result_text].blank?
-  end
-
   ### Participations
   # For all secondary (non-patient) participations this code will ultimately need to populate the primary_entity field with the patient's ID.
   
@@ -132,6 +129,48 @@ class Event < ActiveRecord::Base
     end
   end
   
+  # Currently creating "new" labs every time.  Will be changed soon to auto-complete functionality
+  def new_lab_attributes=(lab_attributes)
+    lab_attributes.each do |attributes|
+      next if attributes[:name].blank?
+      lab = labs.build(:role_id => Event.participation_code('Tested By'))
+      lab_entity = lab.build_secondary_entity
+      lab_entity.places.build( {"name" => attributes.delete("name")} )
+      # We'll want this soon, but...
+      attributes.delete("lab_result_id")
+      lab.lab_results.build(attributes)
+    end
+  end
+  
+  def existing_lab_attributes=(lab_attributes)
+    labs.reject(&:new_record?).each do |lab|
+      attributes = lab_attributes[lab.id.to_s]
+      if attributes
+        # Handling "auditing" needs here.  Later push this into Places model.
+        lab.secondary_entity.places << Place.new( {"name" => attributes.delete("name")} )
+
+        # We'll want this soon, but...
+        attributes.delete("lab_result_id")
+        # "Auditing" not "turned on" for lab_results
+        lab.lab_results.first.attributes = attributes
+      else
+        # Array (not activerecord) deletion.  Make this a soft delete when we get to it
+        labs.delete(lab)
+      end
+    end
+  end
+
+#  def lab
+#    @lab ||= Participation.new( :role_id => Event.participation_code('Tested By'), :active_secondary_entity => {}) 
+#  end
+
+#  def lab=(attributes)
+#    unless attributes[:active_secondary_entity][:place][:name].blank?
+#      attributes[:role_id] = Event.participation_code('Tested By')
+#      labs.build(attributes)
+#    end
+#  end
+
   def hospitalized_health_facility
     @hospitalized_health_facility ||= Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
   end
@@ -531,7 +570,7 @@ class Event < ActiveRecord::Base
   def generate_mmwr
     epi_dates = { :onsetdate => @disease.nil? ? nil : @disease.disease_onset_date, 
       :diagnosisdate => @disease.nil? ? nil : @disease.date_diagnosed, 
-      :labresultdate => @lab_result.nil? ? nil : @lab_result.lab_test_date, 
+#      :labresultdate => @lab.lab_result.nil? ? nil : @lab.lab_result.lab_test_date, 
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
     
@@ -542,15 +581,24 @@ class Event < ActiveRecord::Base
   def save_associations
     participations << @active_patient
     disease_events << @disease unless Utilities::model_empty?(@disease)
-    lab_results << @lab_result unless Utilities::model_empty?(@lab_result)
+#    participations << @lab unless @lab.secondary_entity_id.blank? and Utilities::model_empty?(@lab.lab_result)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
     participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
-    participations << @active_reporter unless Utilities::model_empty?(@active_reporter.active_secondary_entity.person)
+    # participations << @active_reporter unless Utilities::model_empty?(@active_reporter.active_secondary_entity.person)
+    participations << @active_reporter unless @active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?
+  end
+
+  def save_labs
+    labs.each do |lab|
+      lab.save
+      lab.lab_results.each do |lab_result|
+        lab_result.save(false)
+      end
+    end
   end
 
   def clear_base_error
     errors.delete(:disease_events)
-    errors.delete(:lab_results)
     errors.delete(:participations)
     errors.delete(:answers)
   end
