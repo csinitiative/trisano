@@ -1,21 +1,25 @@
 %h1 Listing Codes
 
-%table{:width => '50%'}
-  %tr
-    %th Code Description
-    %th Code Type
-    %th Code
-  - for code in @external_codes
-  %tr
-    %td
-      = code.code_description
-    %td
-      = code.code_name
-    %td
-      = code.the_code
-    %td
-      = link_to("Edit", edit_code_path(code))
-      = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
-      = link_to("Show", code_path(code))
-  - end
+- for code_type in @code_types
+%fieldset
+  %legend= code_type.code_name.capitalize
+  %table{:width => '50%'}
+    %tr
+      %th Code Description
+      %th Code Type
+      %th Code
+    - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
+    %tr
+      %td
+        = code.code_description
+      %td
+        = code.code_name
+      %td
+        = code.the_code
+      %td
+        = link_to("Edit", edit_code_path(code))
+        = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
+        = link_to("Show", code_path(code))
+    -end
+- end
 = link_to("Create New Code", new_code_path)
