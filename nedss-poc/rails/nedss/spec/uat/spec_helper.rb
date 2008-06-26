@@ -6,7 +6,7 @@ $load_time = ENV['NEDSS_PAGE_LOAD'] ||= '30000'
 require 'rubygems'
 require 'spec'
 require File.dirname(__FILE__) + '/selenium'
-require File.dirname(__FILE__) + '/nedss_helper' 
+require File.dirname(__FILE__) + '/nedss_helper'
 
 Spec::Runner.configure do |config|
   include NedssHelper

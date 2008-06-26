@@ -4,6 +4,16 @@ module NedssHelper
   #Define constants for standard resources
   FORM = "forms"
   
+  # Constants for the tab names
+  DEMOGRAPHICS = "Demographics"
+  CLINICAL = "Clinical"
+  LABORATORY = "Laboratory"
+  CONTACTS = "Contacts"
+  EPI = "Epidemiological"
+  REPORTING = "Reporting"
+  ADMIN = "Administrative"
+  INVESTIGATION = "Investigation"
+  
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
@@ -14,12 +24,22 @@ module NedssHelper
     
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
-#  Use set_fields after you navigate to any location by passing in a hash of 
-#  fields and values and this method will set them all. It will work for 
-#  updating existing items or creating new ones. cmr_helper_example shows how 
-#  to create a complete CMR with the helper. The hash created in this example 
-#  could be helpful for other tests. Note that this method does not submit 
-#  for you. 
+  TAB_ELEMENT_IDS_BY_NAME = {
+    DEMOGRAPHICS => "demographic_tab",
+     CLINICAL => "clinical_tab",
+     LABORATORY => "lab_info_tab",
+     CONTACTS => "contacts-tab",
+     EPI => "epi_tab",
+     REPORTING => "reporting_tab",
+     ADMIN => "administrative_tab"
+  }
+
+  #  Use set_fields after you navigate to any location by passing in a hash of 
+  #  fields and values and this method will set them all. It will work for 
+  #  updating existing items or creating new ones. cmr_helper_example shows how 
+  #  to create a complete CMR with the helper. The hash created in this example 
+  #  could be helpful for other tests. Note that this method does not submit 
+  #  for you. 
   def set_fields(browser, value_hash)
     fields = browser.get_all_fields
     value_hash.each_pair do |key, value|
@@ -34,25 +54,35 @@ module NedssHelper
   #Use click_core_tab to change tabs in CMR views
   def click_core_tab(browser, tab_name)
     case tab_name
-    when "Demographics"
+    when DEMOGRAPHICS
       browser.click('//li[1]/a/em')
-    when "Clinical"
+    when CLINICAL
       browser.click('//li[2]/a/em')
-    when "Laboratory"
+    when LABORATORY
       browser.click('//li[3]/a/em')
-    when "Contacts"
+    when CONTACTS
       browser.click('//li[4]/a/em')
-    when "Epidemiological"
+    when EPI
       browser.click('//li[5]/a/em')
-    when "Reporting"
+    when REPORTING
       browser.click('//li[6]/a/em')
-    when "Administrative"
+    when ADMIN
       browser.click('//li[7]/a/em')
-    when "Investigation"
+    when INVESTIGATION
       browser.click('//li[8]/a/em')
     else
       puts("TAB NOT FOUND: " + tab_name)
     end
+  end
+  
+  def edit_cmr(browser)
+    @browser.click "edit_cmr_link"
+    @browser.wait_for_page_to_load($load_time)
+  end
+  
+  def save_cmr(browser)
+    browser.click "event_submit"
+    browser.wait_for_page_to_load($load_time)
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
@@ -106,9 +136,9 @@ module NedssHelper
     browser.click "link=New CMR"
     browser.wait_for_page_to_load($load_time)
     browser.type "event_active_patient__active_primary_entity__person_last_name", last_name
-    click_core_tab(browser, "Clinical")
+    click_core_tab(browser, CLINICAL)
     browser.select "event_disease_disease_id", "label=#{disease_label}"
-    click_core_tab(browser, "Administrative")
+    click_core_tab(browser, ADMIN)
     browser.select "event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
     browser.select "event_event_status_id", "label=Under Investigation"
     browser.click "event_submit"
@@ -158,6 +188,14 @@ module NedssHelper
   # Takes the name of the view to which the follow-up should be added and the follow-up's attributes.
   def add_core_follow_up_to_view(browser, element_name, condition, core_label)
     add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
+  end
+  
+  def add_core_tab_configuration(browser, core_view_name)
+    browser.click("link=Add a core tab configuration")
+    wait_for_element_present("new-core-view-form", browser)
+    browser.select("core_view_element_name", "label=#{core_view_name}")
+    browser.click("core_view_element_submit")
+    wait_for_element_not_present("new-core-view-form", browser)
   end
   
   def publish_form(browser)
@@ -212,8 +250,28 @@ module NedssHelper
   def num_times_text_appears(browser, text)
     browser.get_body_text.scan(/#{text}/).size
   end
+  
+  def assert_tab_contains_question(browser, tab_name, question_text)
+    html_source = browser.get_html_source
+    question_position = html_source.index(question_text)
+    id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position)
+    id_end_position = html_source.index("\"", id_start_position) -1
+    answer_input_element_id = html_source[id_start_position..id_end_position]
+    tab_element_id = TAB_ELEMENT_IDS_BY_NAME[tab_name]
+    assert_contains(browser, tab_element_id, answer_input_element_id)
+  end
 
   private
+  
+  def assert_contains(browser, container_element, element)
+    begin
+      result = browser.get_eval("window.document.getElementById(\"#{element}\").descendantOf(\"#{container_element}\")")
+    rescue
+      result = false
+    end
+    
+    return (result == "true") ? true : false
+  end
   
   def add_question_to_element(browser, element_name, element_id_prefix, question_text, data_type_label, is_active)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)

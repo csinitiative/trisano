@@ -17,7 +17,7 @@ describe 'Form Builder Admin' do
     @user_defined_tab_section_text = "User-defined tab section " + get_unique_name(3) + " fb uat"
     @user_defined_tab_question_text = "User-defined tab questoin " + get_unique_name(3) + " fb uat" 
     
-    @cmr_last_name = get_unique_name(2) + " fb uat"
+    @cmr_last_name = get_unique_name(1) + " fb uat"
   end
   
   after(:all) do

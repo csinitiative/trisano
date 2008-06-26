@@ -6,7 +6,7 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
   
   before(:all) do
     @form_name = get_unique_name(2) + " fu-uat"
-    @cmr_last_name = get_unique_name(2) + " fu-uat"
+    @cmr_last_name = get_unique_name(1) + " fu-uat"
     @original_question_text = get_unique_name(2)  + " question fu-uat"
     @follow_up_question_text = get_unique_name(2)  + " question fu-uat"
     @follow_up_answer =  get_unique_name(2)  + " answer fu-uat"    
