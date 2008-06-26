@@ -131,6 +131,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      @section_element = mock_model(SectionElement)
       @question_element = mock_model(QuestionElement)
       @question = mock_model(Question)
       @question.stub!(:is_core_data).and_return(false)
@@ -140,6 +141,7 @@ describe QuestionElementsController do
       @question_element.stub!(:question=)
       @question_element.stub!(:question).and_return(@question)
       QuestionElement.stub!(:new).and_return(@question_element)
+      FormElement.stub!(:find).and_return(@section_element)
     end
   
     def do_get
