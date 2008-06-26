@@ -25,7 +25,7 @@ module FormsHelper
   
   def render_view(element, include_children=true)
 
-    result = "<li id='view_#{element.id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
@@ -38,7 +38,7 @@ module FormsHelper
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children', style='clear: both'>"
+      result += "<ul id='view_" + element.id.to_s + "_children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -51,7 +51,7 @@ module FormsHelper
   
   def render_core_view(element, include_children)
 
-    result = "<li id='core_view_#{element.id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='core_view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
     
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
@@ -60,7 +60,7 @@ module FormsHelper
     result += "</li>"
     
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children', :style='clear: both'>"
+      result += "<ul id='view_" + element.id.to_s + "_children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -75,14 +75,14 @@ module FormsHelper
   def render_section(element, include_children=true)
     
 
-    result = "<li id='section_#{element.id}', class='sortable fb-section', style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
+      result += "<ul id='section_" + element.id.to_s + "_children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -95,10 +95,10 @@ module FormsHelper
 
   def render_group(element, include_children=true)
 
-    result = "<li id='group_#{element.id}', class='sortable fb-group', style='clear: both;'><b>#{element.name}</b></li>"
+    result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b></li>"
 
     if include_children && element.children?
-      result += "<ul id='section_" + element.id.to_s + "_children', style='clear: both'>"
+      result += "<ul id='section_" + element.id.to_s + "_children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -114,7 +114,7 @@ module FormsHelper
     question = element.question
     question_id = "question_#{element.id}"
     
-    result = "<li id='#{question_id}', class='sortable', style='clear: both;'>"
+    result = "<li id='#{question_id}' class='sortable' style='clear: both;'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -146,7 +146,7 @@ module FormsHelper
 
   def render_follow_up(element, include_children=true)
     
-    result = "<li class='follow-up-item' id='follow_up_#{element.id}'>"
+    result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
     
     if (element.core_path.blank?)
       result +=  "Follow"

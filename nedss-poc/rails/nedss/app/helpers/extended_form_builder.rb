@@ -146,7 +146,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   private
 
   def is_external_code?(code_name)
-    breakpoint
     @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race"]
     @external_codes.each {|ec| return TRUE if ec == code_name}
     return FALSE
