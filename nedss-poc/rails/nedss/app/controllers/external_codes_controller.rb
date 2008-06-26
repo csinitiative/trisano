@@ -1,6 +1,6 @@
 class ExternalCodesController < ApplicationController
     def index
-        @external_codes = ExternalCode.find(:all, :conditions => "next_ver is NULL", :order => "code_name")
+        @external_codes = ExternalCode.find(:all, :conditions => "next_ver is NULL", :order => "sort_order")
 	@code_types = ExternalCode.find(:all,:select => "DISTINCT code_name", :order => "code_name")
 	respond_to do |format|
             format.html
