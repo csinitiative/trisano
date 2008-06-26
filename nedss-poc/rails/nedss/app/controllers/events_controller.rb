@@ -15,6 +15,17 @@ class EventsController < ApplicationController
     render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
+  def auto_complete_for_lab_name
+    entered_name = params[:event][:new_lab_attributes].first[:name]
+    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
+      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
+                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", entered_name.downcase + '%'],
+      :order => "entity_id, created_at ASC, name ASC",
+      :limit => 10
+    )
+    render :inline => '<ul><% for item in @items %><li id="lab_name_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
+  end
+
   def index
     @events = Event.find(:all, 
       :include => :jurisdiction, 

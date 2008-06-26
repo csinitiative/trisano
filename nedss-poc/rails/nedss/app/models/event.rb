@@ -129,47 +129,60 @@ class Event < ActiveRecord::Base
     end
   end
   
-  # Currently creating "new" labs every time.  Will be changed soon to auto-complete functionality
   def new_lab_attributes=(lab_attributes)
     lab_attributes.each do |attributes|
       next if attributes[:name].blank?
-      lab = labs.build(:role_id => Event.participation_code('Tested By'))
-      lab_entity = lab.build_secondary_entity
-      lab_entity.places.build( {"name" => attributes.delete("name")} )
-      # We'll want this soon, but...
-      attributes.delete("lab_result_id")
+
+      lab_entity_id = attributes.delete("lab_entity_id")
+      lab_name = attributes.delete("name")
+      lab = nil
+
+      # If lab_entity_id has a value then the place already exists
+      unless lab_entity_id.blank?
+        # Check to see if there's an existing participation for the lab
+        # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
+        lab = labs.detect { |lab| lab.secondary_entity_id == lab_entity_id.to_i }
+
+        # Participation does not exist, create one and link to existing lab
+        if lab.nil?
+          lab = labs.build(:role_id => Event.participation_code('Tested By'))
+          lab.secondary_entity_id = lab_entity_id
+        else
+          # participation already exists, do nothing
+        end
+      else
+        # New lab. Create participation, entity, and place, linking each to the next
+        lab = labs.build(:role_id => Event.participation_code('Tested By'))
+        lab_entity = lab.build_secondary_entity
+        lab_entity.places.build( {"name" => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+      end
+
+      # Build a new lab_result and associate with the participation
       lab.lab_results.build(attributes)
     end
   end
   
+  # We're not allowing editing lab names, just lab results
   def existing_lab_attributes=(lab_attributes)
-    labs.reject(&:new_record?).each do |lab|
-      attributes = lab_attributes[lab.id.to_s]
-      if attributes
-        # Handling "auditing" needs here.  Later push this into Places model.
-        lab.secondary_entity.places << Place.new( {"name" => attributes.delete("name")} )
 
-        # We'll want this soon, but...
-        attributes.delete("lab_result_id")
-        # "Auditing" not "turned on" for lab_results
-        lab.lab_results.first.attributes = attributes
-      else
-        # Array (not activerecord) deletion.  Make this a soft delete when we get to it
-        labs.delete(lab)
+    # loop through all lab participations and their lab_results, ignoring any just added by new_lab_attributes
+    labs.reject(&:new_record?).each do |lab|
+      lab.lab_results.reject(&:new_record?).each do |lab_result|
+
+        # Note the "id" here is the lab_result ID, not the lab ID as in new_lab_attributes
+        # If there are attributes for that ID, then the lab result has not been deleted, update the attributes in memory
+        attributes = lab_attributes[lab_result.id.to_s]
+        if attributes
+          lab_result.attributes = attributes
+        else
+          # Array (not activerecord) deletion.  Make this a soft delete when we get to it
+          lab.lab_results.delete(lab_result)
+
+          # TODO: Delete the participation if no more lab results
+        end
       end
     end
   end
-
-#  def lab
-#    @lab ||= Participation.new( :role_id => Event.participation_code('Tested By'), :active_secondary_entity => {}) 
-#  end
-
-#  def lab=(attributes)
-#    unless attributes[:active_secondary_entity][:place][:name].blank?
-#      attributes[:role_id] = Event.participation_code('Tested By')
-#      labs.build(attributes)
-#    end
-#  end
 
   def hospitalized_health_facility
     @hospitalized_health_facility ||= Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 

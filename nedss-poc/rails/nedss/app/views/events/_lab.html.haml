@@ -9,18 +9,26 @@
 
   -# The call to #last is there to support "auditing."  It can be changed to "current_place" (with appropriate changes elsewhere), 
   -# but explicit for now in anticipation of acts_as_auditable, when it can just be dripped
-  - fields_for(prefix_with_array, lab.secondary_entity.places.last, :builder => ExtendedFormBuilder) do |lab_fields|
-    %span{:class => "horiz", :style => "clear: both;"}
-      = lab_fields.label(:name, "Lab Name")
-      = lab_fields.text_field(:name, :size => 20)
+  - lab_place = lab.secondary_entity.places.last
 
   - for lab_result in lab.lab_results
-    -# Same hack as above
-    - lab_result_id = lab_result.id
-    - lab_result.id = lab.id
+    - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
+      %div{:style => "width: 15%; margin-right: 1em; float: left; clear: both;"}
+        = lab_fields.label(:name, "Lab Name")
+
+        -# If lab exist do not allow editing of lab name
+        - if lab.new_record?
+          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => false, :action => 'auto_complete_for_lab_name'}, { :size => 25 }, { :skip_style => false }
+        - else
+          = lab_place.name
+  
+    -# Same hack as above, but with a twist: for new records, index on lab.id.  For existing records index on lab_result.id
+    - if lab.new_record?
+      -# lab_result_id = lab_result.id
+      - lab_result.id = lab.id
 
     - fields_for(prefix_with_array, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
-      = hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
+      =# hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
       %span{:class => "horiz"}
         = lab_result_fields.label(:lab_result_text, "Lab Result")
         = lab_result_fields.text_field(:lab_result_text, :size => 20)
