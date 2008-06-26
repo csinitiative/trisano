@@ -12,4 +12,8 @@
       %td
         %span.label Code Type:
       %td= code_form.text_field :code_name
+    %tr
+      %td
+        %span.label Sort Order:
+      %td= code_form.text_field :sort_order
   = code_form.submit "Create"

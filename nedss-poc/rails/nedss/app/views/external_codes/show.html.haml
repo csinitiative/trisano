@@ -18,5 +18,10 @@
         %span.label Code:
       %td
         = @external_code.the_code
+    %tr
+      %td
+        %span.label Sort Order:
+      %td
+        = @external_code.sort_order
 = link_to "Return to Code List", codes_path
 = link_to "Edit Code", edit_code_path(@external_code)
