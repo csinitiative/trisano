@@ -1,6 +1,5 @@
 class FormElementsController < ApplicationController
-  # GET /form_elements
-  # GET /form_elements.xml
+
   def index
     @form_elements = FormElement.find(:all)
 
@@ -10,8 +9,6 @@ class FormElementsController < ApplicationController
     end
   end
 
-  # GET /form_elements/1
-  # GET /form_elements/1.xml
   def show
     @form_element = FormElement.find(params[:id])
 
@@ -21,8 +18,6 @@ class FormElementsController < ApplicationController
     end
   end
 
-  # GET /form_elements/new
-  # GET /form_elements/new.xml
   def new
     @form_element = FormElement.new
 
@@ -32,13 +27,10 @@ class FormElementsController < ApplicationController
     end
   end
 
-  # GET /form_elements/1/edit
   def edit
     @form_element = FormElement.find(params[:id])
   end
 
-  # POST /form_elements
-  # POST /form_elements.xml
   def create
     @form_element = FormElement.new(params[:form_element])
 
@@ -54,8 +46,6 @@ class FormElementsController < ApplicationController
     end
   end
 
-  # PUT /form_elements/1
-  # PUT /form_elements/1.xml
   def update
     @form_element = FormElement.find(params[:id])
 
@@ -85,7 +75,7 @@ class FormElementsController < ApplicationController
   end
   
   def filter_elements
-    @reference_element_id = params[:reference_element_id]
+    @reference_element = FormElement.find(params[:reference_element_id])
     direction = params[:direction]
 
     if params[:filter_by].blank?

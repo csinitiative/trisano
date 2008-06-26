@@ -143,7 +143,7 @@ describe QuestionElementsController do
     end
   
     def do_get
-      get :new
+      get :new, :form_element_id => 1
     end
 
     it "should be successful" do

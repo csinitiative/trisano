@@ -1,6 +1,5 @@
 class ValueSetElementsController < ApplicationController
-  # GET /value_set_elements
-  # GET /value_set_elements.xml
+
   def index
     @value_set_elements = ValueSetElement.find(:all)
 
@@ -10,8 +9,6 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # GET /value_set_elements/1
-  # GET /value_set_elements/1.xml
   def show
     @value_set_element = ValueSetElement.find(params[:id])
 
@@ -21,7 +18,6 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # Just used through RJS
   def new
     begin
       @value_set_element = ValueSetElement.new
@@ -34,13 +30,10 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # GET /value_set_elements/1/edit
   def edit
     @value_set_element = ValueSetElement.find(params[:id])
   end
 
-  # POST /value_set_elements
-  # POST /value_set_elements.xml
   def create
     @value_set_element = ValueSetElement.new(params[:value_set_element])
 
@@ -55,8 +48,6 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # PUT /value_set_elements/1
-  # PUT /value_set_elements/1.xml
   def update
     
     params[:value_set_element][:existing_value_element_attributes] ||= {}
@@ -76,8 +67,6 @@ class ValueSetElementsController < ApplicationController
     end
   end
 
-  # DELETE /value_set_elements/1
-  # DELETE /value_set_elements/1.xml
   def destroy
     @value_set_element = ValueSetElement.find(params[:id])
     @value_set_element.destroy

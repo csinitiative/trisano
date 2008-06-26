@@ -25,7 +25,7 @@ class QuestionElementsController < ApplicationController
       @question_element.parent_element_id = params[:form_element_id]
       @question_element.question.core_data = params[:core_data] == "true" ? true : false
       
-      @reference_element_id = params[:form_element_id]
+      @reference_element = FormElement.find(params[:form_element_id])
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.info ex
@@ -65,23 +65,7 @@ class QuestionElementsController < ApplicationController
   def destroy
     render :text => 'Deletion handled by form elements.', :status => 405
   end
-  
-  def open_library
-    begin
-      @reference_element_id = params[:form_element_id]
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
-      render(:update) do |page|
-        page.hide "question-mods-#{@reference_element_id}"
-        page.replace_html "question-mods-#{@reference_element_id}", :partial => 'forms/library_open'
-        page.visual_effect(:blind_down, "question-mods-#{@reference_element_id}")
-      end
-    rescue Exception => ex
-      logger.info ex
-      flash[:notice] = 'Unable to display the library.'
-      render :template => 'rjs-error'
-    end
-  end
-  
+    
   def process_condition
     begin
       @question_element_id = params[:question_element_id]

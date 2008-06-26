@@ -21,7 +21,7 @@ module ApplicationHelper
   end
   
   def calculate_age(date)
-   (Date.today - date).to_i / 365
+    (Date.today - date).to_i / 365
   end
 
   def editable_content_tag(elemtype, obj, prop, editable, options = {}, editOptions = {}, ajaxOptions = {})
@@ -35,8 +35,8 @@ module ApplicationHelper
     ajops = jsonify ajaxOptions
 
     tg = content_tag  elemtype, 
-                      obj.send(prop),
-                      options = options
+      obj.send(prop),
+      options = options
 
     if editable then
       tg += "
@@ -52,12 +52,12 @@ module ApplicationHelper
       tg += "         </script>\n"
 
     end
-end
+  end
 
-#stupid helper helper to convert a hash into a JSON options list
-# (without the encompasing {}'s or any type of recursion
-#Is there a rails API function that does this? 
-def jsonify hsh
+  #stupid helper helper to convert a hash into a JSON options list
+  # (without the encompasing {}'s or any type of recursion
+  #Is there a rails API function that does this? 
+  def jsonify hsh
     str = ''
     first = true
     hsh.each do |k,v|
@@ -71,4 +71,14 @@ def jsonify hsh
     str
   end
 
+  def replacement_elements(element)
+    if (element.is_a?(InvestigatorViewElementContainer) || element.ancestors[1].is_a?(InvestigatorViewElementContainer))
+      replace_element = 'root-element-list'
+      replace_partial =  'forms/elements'
+    else
+      replace_element = 'core-element-list'
+      replace_partial =  'forms/core_elements'
+    end
+    return replace_element, replace_partial
+  end
 end

@@ -1,6 +1,5 @@
 class FormsController < AdminController
-  # GET /forms
-  # GET /forms.xml
+
   def index
     @forms = Form.find(:all, :conditions => {:is_template => true})
 
@@ -10,8 +9,6 @@ class FormsController < AdminController
     end
   end
 
-  # GET /forms/1
-  # GET /forms/1.xml
   def show
     @form = Form.find(params[:id])
 
@@ -21,8 +18,6 @@ class FormsController < AdminController
     end
   end
 
-  # GET /forms/new
-  # GET /forms/new.xml
   def new
     @form = Form.new
 
@@ -32,13 +27,10 @@ class FormsController < AdminController
     end
   end
 
-  # GET /forms/1/edit
   def edit
     @form = Form.find(params[:id])
   end
 
-  # POST /forms
-  # POST /forms.xml
   def create
     @form = Form.new(params[:form])
 
@@ -54,8 +46,6 @@ class FormsController < AdminController
     end
   end
 
-  # PUT /forms/1
-  # PUT /forms/1.xml
   def update
     @form = Form.find(params[:id])
 
@@ -71,8 +61,6 @@ class FormsController < AdminController
     end
   end
 
-  # DELETE /forms/1
-  # DELETE /forms/1.xml
   def destroy
     @form = Form.find(params[:id])
     @form.destroy
@@ -127,9 +115,10 @@ class FormsController < AdminController
     else
       @group_element = FormElement.find(params[:group_element_id])
     end
+    
     @question_element = FormElement.find(params[:reference_element_id])
-    @reference_element_id = params[:reference_element_id]
-
+    @reference_element = @question_element
+    
     if @question_element.add_to_library(@group_element)
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :partial => "forms/library_elements", :locals => {:direction => :to_library}
@@ -145,7 +134,8 @@ class FormsController < AdminController
     @form_element = FormElement.find(form_element_id)
     if @form_element.copy_from_library(lib_element_id)
       @form = Form.find(@form_element.form_id)
-      render :partial => "elements"
+      replace_partial = (@form_element.ancestors[1].is_a?(InvestigatorViewElementContainer)) ?  'forms/elements' : 'forms/core_elements'
+      render :partial => replace_partial
     else
       flash[:notice] = "Unable to copy element to form."
       render :template => 'rjs-error'

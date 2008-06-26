@@ -52,6 +52,11 @@ module FormsHelper
   def render_core_view(element, include_children)
 
     result = "<li id='core_view_#{element.id}', class='sortable fb-tab', style='clear: both;'><b>#{element.name}</b>"
+    
+    result += "&nbsp;" + add_section_link(element, "tab")
+    result += "&nbsp;|&nbsp;"
+    result += add_question_link(element, "tab")
+    
     result += "</li>"
     
     if include_children && element.children?
@@ -62,10 +67,6 @@ module FormsHelper
       result += "</ul>"
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
-    
-    result += add_section_link(element, "tab")
-    result += "&nbsp;|&nbsp;"
-    result += add_question_link(element, "tab")
     
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"

@@ -9,8 +9,8 @@
       Filter Library
       = text_field_tag :lib_filter
 
-    = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element_id, :direction => direction }, :with => "'filter_by='+encodeURIComponent(value)")
+    = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction }, :with => "'filter_by='+encodeURIComponent(value)")
 
   %div{:id => "library-body"}
-    %ul{:id => "library-element-list-#{@reference_element_id}"}
+    %ul{:id => "library-element-list-#{@reference_element.id}"}
       = render :partial => 'forms/library_elements', :locals => {:direction => direction}

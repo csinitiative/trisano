@@ -17,4 +17,4 @@
       - unless @available_core_views.empty?
         = f.submit "Create"
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
+      = link_to_function "Close", "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"

@@ -5,15 +5,23 @@
 
   %div{:id => "formbuilder-body"}
 
-    %small{:style => "#float: right"}
-      &nbsp;&nbsp;
-      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.form_base_element.id}, :method => :get)
-      &nbsp;&nbsp;
-      = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.form_base_element.id}, :method => :get)
+    %b Investigator Form Elements
     %br
+    %small{:style => "#float: right"}
+      = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get)
 
     %div{:id => "builder-mods"}
 
     %ul{:id => "root-element-list"}
       = render :partial => 'forms/elements'
+
+    %b Core Form Elements
+    %br
+    %small{:style => "#float: right"}
+      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get)
+
+    %div{:id => "core-builder-mods"}
+
+    %ul{:id => "core-element-list"}
+      = render :partial => 'forms/core_elements'
 

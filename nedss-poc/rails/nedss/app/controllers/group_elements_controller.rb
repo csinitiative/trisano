@@ -1,6 +1,5 @@
 class GroupElementsController < ApplicationController
-  # GET /group_elements
-  # GET /group_elements.xml
+
   def index
     @group_elements = GroupElement.find(:all)
 
@@ -10,8 +9,6 @@ class GroupElementsController < ApplicationController
     end
   end
 
-  # GET /group_elements/1
-  # GET /group_elements/1.xml
   def show
     @group_elements = GroupElement.find(params[:id])
 
@@ -21,12 +18,10 @@ class GroupElementsController < ApplicationController
     end
   end
 
-  # Just used through RJS
   def new
     begin
       @group_element = GroupElement.new
-      @reference_element_id = params[:reference_element_id]
-      @reference_element_id = params[:form_element_id]
+      @reference_element = FormElement.find(params[:form_element_id])      
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.debug ex
@@ -35,14 +30,13 @@ class GroupElementsController < ApplicationController
     end
   end
 
-  # GET /group_elements/1/edit
   def edit
     @group_element = GroupElement.find(params[:id])
   end
   
   def create
     @group_element = GroupElement.new(params[:group_element])
-    @reference_element_id = params[:reference_element_id]
+    @reference_element = FormElement.find(params[:reference_element_id])      
 
     begin
       @group_element.save_and_add_to_form
@@ -54,8 +48,6 @@ class GroupElementsController < ApplicationController
     end
   end
 
-  # PUT /group_elements/1
-  # PUT /group_elements/1.xml
   def update
     @group_element = GroupElement.find(params[:id])
 
@@ -71,8 +63,6 @@ class GroupElementsController < ApplicationController
     end
   end
 
-  # DELETE /group_elements/1
-  # DELETE /group_elements/1.xml
   def destroy
     @group_element = GroupElement.find(params[:id])
     @group_element.destroy

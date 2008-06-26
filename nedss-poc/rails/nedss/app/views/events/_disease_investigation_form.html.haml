@@ -29,14 +29,14 @@
               - f.fields_for(:form_references, form_reference, :builder => ExtendedFormBuilder) do |fr|
                 = fr.hidden_field(:form_id, :index => form_reference.id)
 
-              - if (form.form_base_element.children_count_by_type("ViewElement") > 1)
+              - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
                 - has_multiple_user_defined_tabs = true
                 %script{:type => "text/javascript"}
                   = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{form.id}\");"
                 %div{:id => "user_defined_tabs_#{form.id}", :class => "yui-navset"}
                   %ul{:id => "user_defined_tab_list_#{form.id}", :class => "yui-nav"}
                     -  view_count = 0
-                    - for view in form.form_base_element.children_by_type("ViewElement")
+                    - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
                       - view_count += 1
                       - if view_count == 1
                         %li{:class => "selected"}
@@ -49,13 +49,13 @@
                             %em
                               = view.name
                   %div{:class => "yui-content"}
-                    - for view in form.form_base_element.children_by_type("ViewElement")
+                    - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
                       %div{:id => "ut_#{view.id}"}
                         = render_investigator_view(view, f)
                         
                             
               - else
-                = render_investigator_view(form.form_base_element.children[0], f)
+                = render_investigator_view(form.investigator_view_elements_container.children[0], f)
               
               %div{:align => "right"}
                 %small

@@ -4,6 +4,14 @@ class Form < ActiveRecord::Base
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   
+  def investigator_view_elements_container
+    form_base_element.children[0]
+  end
+  
+  def core_view_elements_container
+    form_base_element.children[1]
+  end
+  
   def save_and_initialize_form_elements
     transaction do
       self.status = 'Not Published'
@@ -66,8 +74,15 @@ class Form < ActiveRecord::Base
   def initialize_form_elements
     tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
     form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
+    
+    investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+    core_view_element_container = CoreViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+    
+    form_base_element.add_child(investigator_view_element_container)
+    form_base_element.add_child(core_view_element_container)
+    
     default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
-    form_base_element.add_child(default_view_element)
+    investigator_view_element_container.add_child(default_view_element)
   end
   
   # Debt: Consider moving this to FormElement

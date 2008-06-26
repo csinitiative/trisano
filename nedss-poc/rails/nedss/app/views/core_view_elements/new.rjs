@@ -1,2 +1,2 @@
-page.replace_html 'builder-mods', :partial => 'core_view_elements/new', :locals => {:core_view_element => @core_view_element}
-page.visual_effect(:blind_down, 'builder-mods', :duration => 0.1)
+page.replace_html 'core-builder-mods', :partial => 'core_view_elements/new', :locals => {:core_view_element => @core_view_element}
+page.visual_effect(:blind_down, 'core-builder-mods', :duration => 0.1)

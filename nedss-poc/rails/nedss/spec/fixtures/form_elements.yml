@@ -8,205 +8,227 @@ base:
   type: FormBaseElement
   id: "1"
   description: 
-  rgt: "44"
+  rgt: "48"
   parent_id: 
+
+investigator_container:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "2"
+  type: InvestigatorViewElementContainer
+  id: "27"
+  description: 
+  rgt: "45"
+  parent_id: "1"
+
+core_container:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "46"
+  type: CoreViewElementContainer
+  id: "28"
+  description: 
+  rgt: "47"
+  parent_id: "1"
     
 default_view:
   name: Default View
   form_id: "1"
   tree_id: "1"
-  lft: "2"
+  lft: "3"
   type: ViewElement
   id: "2"
   description: 
-  rgt: "31"
-  parent_id: "1"
+  rgt: "32"
+  parent_id: "27"
     
 demographic_section:
   name: Demographics
   form_id: "1"
   tree_id: "1"
-  lft: "3"
+  lft: "4"
   type: SectionElement
   id: "3"
   description: 
-  rgt: "12"
+  rgt: "13"
   parent_id: "2"
  
 demographic_group:
   name: Standard Demographics
   form_id: "1"
   tree_id: "1"
-  lft: "4"
+  lft: "5"
   type: GroupElement
   id: "4"
   description: 
-  rgt: "11"
+  rgt: "12"
   parent_id: "3"
 
 demo_group_q1:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "5"
+  lft: "6"
   type: QuestionElement
   id: "5"
   description: 
-  rgt: "6"
+  rgt: "7"
   parent_id: "4"
 
 demo_group_q2:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "7"
+  lft: "8"
   type: QuestionElement
   id: "6"
   description: 
-  rgt: "8"
+  rgt: "9"
   parent_id: "4"
 
 demo_group_q3:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "9"
+  lft: "10"
   type: QuestionElement
   id: "7"
   description: 
-  rgt: "10"
+  rgt: "11"
   parent_id: "4"
 
 lab_section:
   name: Lab
   form_id: "1"
   tree_id: "1"
-  lft: "13"
+  lft: "14"
   type: SectionElement
   id: "8"
   description: 
-  rgt: "20"
+  rgt: "21"
   parent_id: "2"
 
 lab_section_q1:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "14"
+  lft: "15"
   type: QuestionElement
   id: "9"
   description: 
-  rgt: "15"
+  rgt: "16"
   parent_id: "8"
 
 lab_section_q2:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "16"
+  lft: "17"
   type: QuestionElement
   id: "10"
   description: 
-  rgt: "17"
+  rgt: "18"
   parent_id: "8"
 
 lab_section_q3:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "18"
+  lft: "19"
   type: QuestionElement
   id: "11"
   description: 
-  rgt: "19"
+  rgt: "20"
   parent_id: "8"
 
 food_section:
   name: Food Consumption History
   form_id: "1"
   tree_id: "1"
-  lft: "21"
+  lft: "22"
   type: SectionElement
   id: "12"
   description: 
-  rgt: "30"
+  rgt: "31"
   parent_id: "2"
 
 standard_food_group:
   name: Standard Food History
   form_id: "1"
   tree_id: "1"
-  lft: "22"
+  lft: "23"
   type: GroupElement
   id: "13"
   description: 
-  rgt: "27"
+  rgt: "28"
   parent_id: "12"
 
 food_group_q1:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "23"
+  lft: "24"
   type: QuestionElement
   id: "14"
   description: 
-  rgt: "24"
+  rgt: "25"
   parent_id: "13"
 
 food_group_q2:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "25"
+  lft: "26"
   type: QuestionElement
   id: "15"
   description: 
-  rgt: "26"
+  rgt: "27"
   parent_id: "13"
 
 food_section_q1:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "28"
+  lft: "29"
   type: QuestionElement
   id: "16"
   description: 
-  rgt: "29"
+  rgt: "30"
   parent_id: "12"
 
 second_tab:
   name: Second Tab
   form_id: "1"
   tree_id: "1"
-  lft: "32"
+  lft: "33"
   type: ViewElement
   id: "17"
   description: 
-  rgt: "43"
-  parent_id: "1"
+  rgt: "44"
+  parent_id: "27"
 
 second_tab_q:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "33"
+  lft: "34"
   type: QuestionElement
   id: "18"
   description: 
-  rgt: "38"
+  rgt: "39"
   parent_id: "17"
 
 second_tab_follow_up_container:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "34"
+  lft: "35"
   type: FollowUpElement
   id: "19"
   description: 
-  rgt: "37"
+  rgt: "38"
   parent_id: "18"
   condition: "Yes"
 
@@ -214,22 +236,22 @@ second_tab_follow_up_q:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "35"
+  lft: "36"
   type: QuestionElement
   id: "20"
   description: 
-  rgt: "36"
+  rgt: "37"
   parent_id: "19"
 
 second_tab_core_follow_up:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "39"
+  lft: "40"
   type: FollowUpElement
   id: "21"
   description: 
-  rgt: "42"
+  rgt: "43"
   parent_id: "17"
   condition: "3"
   core_path: "event[active_patient][active_primary_entity][person][birth_gender_id]"
@@ -238,13 +260,12 @@ second_tab_core_follow_up_q:
   name: 
   form_id: "1"
   tree_id: "1"
-  lft: "40"
+  lft: "41"
   type: QuestionElement
   id: "22"
   description: 
-  rgt: "41"
+  rgt: "42"
   parent_id: "21"
-
 
 
 

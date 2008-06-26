@@ -1,6 +1,8 @@
+- replace_element, replace_partial = replacement_elements(@reference_element)
+
 -# Default group
 - if direction == :to_library
-  - q_string = link_to_remote("No Group", :update => "library-element-list-#{@reference_element_id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element_id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => "root", :reference_element_id => @reference_element_id})
+  - q_string = link_to_remote("No Group", :update => "library-element-list-#{@reference_element.id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element.id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => "root", :reference_element_id => @reference_element.id})
 - else
   - q_string = "No Group"
 
@@ -14,7 +16,7 @@
     - if direction == :to_library
       - q_string = form_element.question.question_text
     -else
-      - q_string = link_to_remote(form_element.question.question_text, :update => "root-element-list", :complete => visual_effect(:highlight, 'root-element-list'), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element_id, :lib_element_id => form_element.id})
+      - q_string = link_to_remote(form_element.question.question_text, :update => "#{replace_element}", :complete => visual_effect(:highlight, "#{replace_element}"), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element.id, :lib_element_id => form_element.id})
 
     - q_string += "&nbsp;&nbsp;<small>" + form_element.question.data_type_before_type_cast.humanize + "</small>"
     - form_element.pre_order_walk do |element|
@@ -28,9 +30,9 @@
   - next if form_element.is_a? QuestionElement
 
   - if direction == :to_library
-    - q_string = link_to_remote("Add question to: #{form_element.name}", :update => "library-element-list-#{@reference_element_id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element_id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => form_element.id, :reference_element_id => @reference_element_id})
+    - q_string = link_to_remote("Add question to: #{form_element.name}", :update => "library-element-list-#{@reference_element.id}", :complete => visual_effect(:highlight, "library-element-list-#{@reference_element.id}"), :url => {:controller => "forms", :action => "to_library", :group_element_id => form_element.id, :reference_element_id => @reference_element.id})
   - else
-    - q_string = link_to_remote("Click to add all questions in group: #{form_element.name}", :update => "root-element-list", :complete => visual_effect(:highlight, 'root-element-list'), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element_id, :lib_element_id => form_element.id})
+    - q_string = link_to_remote("Click to add all questions in group: #{form_element.name}", :update => "#{replace_element}", :complete => visual_effect(:highlight, "#{replace_element}"), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element.id, :lib_element_id => form_element.id})
   %li{:id => "lib_group_item_#{form_element.id}", :class => "lib-question-item"}=q_string
 
   -# children of this group, i.e. questions
@@ -40,7 +42,7 @@
       - if direction == :to_library
         - q_string = form_element.question.question_text
       -else
-        - q_string = link_to_remote(form_element.question.question_text, :update => "root-element-list", :complete => visual_effect(:highlight, 'root-element-list'), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element_id, :lib_element_id => form_element.id})
+        - q_string = link_to_remote(form_element.question.question_text, :update => "#{replace_element}", :complete => visual_effect(:highlight, "#{replace_element}"), :url => {:controller => "forms", :action => "from_library", :reference_element_id => @reference_element.id, :lib_element_id => form_element.id})
 
       - q_string += "&nbsp;&nbsp;<small>" + form_element.question.data_type_before_type_cast.humanize + "</small>"
       - form_element.pre_order_walk do |element|

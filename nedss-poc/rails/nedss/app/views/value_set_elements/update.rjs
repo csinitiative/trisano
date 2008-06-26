@@ -1,3 +1,4 @@
-page.replace_html 'root-element-list', :partial => 'forms/elements'
-page.visual_effect(:highlight, 'root-element-list')
+replace_element, replace_partial = replacement_elements(@value_set_element)
+page.replace_html replace_element, :partial => replace_partial
+page.visual_effect(:highlight, replace_element)
 flash[:notice] = ""

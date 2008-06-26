@@ -21,7 +21,16 @@ describe Form do
       @form.save_and_initialize_form_elements
       form_base_element = @form.form_base_element
       form_base_element.should_not be_nil
-      default_view_element = form_base_element.children[0]
+      
+      investigator_view_element_container = form_base_element.children[0]
+      investigator_view_element_container.should_not be_nil
+      investigator_view_element_container.type.should == "InvestigatorViewElementContainer"
+      
+      core_view_element_container = form_base_element.children[1]
+      core_view_element_container.should_not be_nil
+      core_view_element_container.type.should == "CoreViewElementContainer"
+      
+      default_view_element = investigator_view_element_container.children[0]
       default_view_element.should_not be_nil
       default_view_element.name.should == "Default View"
     end
@@ -32,6 +41,22 @@ describe Form do
       @form.template_id.should be_nil
       @form.version.should be_nil
       @form.status.should eql("Not Published")
+    end
+    
+  end
+  
+  describe "when using container convenience methods" do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    it "should return the investigator view element container" do
+      @form.save_and_initialize_form_elements
+      @form.investigator_view_elements_container.id.should eql(@form.form_base_element.children[0].id)
+    end
+    
+    it "should return the core view element container" do
+      @form.save_and_initialize_form_elements
+      @form.core_view_elements_container.id.should eql(@form.form_base_element.children[1].id)
     end
     
   end
@@ -54,7 +79,7 @@ describe Form do
       error_message.should eql("Cannot publish an already published version")
       
     end
-    
+
   end
   
   describe "when first published" do
@@ -89,7 +114,17 @@ describe Form do
       published_form_base = published_form.form_base_element
       published_form_base.children_count.should eql(2)
       
-      default_view = published_form_base.children[0]
+      investigator_view_element_container = published_form_base.children[0]
+      investigator_view_element_container.form_id.should eql(published_form.id)
+      investigator_view_element_container.class.name.should eql("InvestigatorViewElementContainer")
+      investigator_view_element_container.children_count.should eql(2)
+      
+      core_view_element_container = published_form_base.children[1]
+      core_view_element_container.form_id.should eql(published_form.id)
+      core_view_element_container.class.name.should eql("CoreViewElementContainer")
+      core_view_element_container.children_count.should eql(0)
+      
+      default_view = investigator_view_element_container.children[0]
       default_view.form_id.should eql(published_form.id)
       default_view.children_count.should eql(3)
       
@@ -163,7 +198,7 @@ describe Form do
       food_q3.form_id.should eql(published_form.id)
       food_q3.name.should be_nil
       
-      second_tab = published_form_base.children[1]
+      second_tab = investigator_view_element_container.children[1]
       second_tab.form_id.should eql(published_form.id)
       second_tab.children_count.should eql(2)
       
@@ -202,7 +237,7 @@ describe Form do
       form_to_publish = Form.find(1)
       published_form = form_to_publish.publish!
       
-      default_view = published_form.form_base_element.children[0]
+      default_view = published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       
@@ -215,7 +250,7 @@ describe Form do
     it "should not make a copy of the inactive questions" do
       form_to_publish = Form.find(1)
       
-      default_view = form_to_publish.form_base_element.children[0]
+      default_view = form_to_publish.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       demo_q1 = demo_group.children[0]
@@ -226,7 +261,7 @@ describe Form do
       
       published_form = form_to_publish.publish!
       
-      default_view = published_form.form_base_element.children[0]
+      default_view = published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       demo_q1 = demo_group.children[0]
@@ -253,7 +288,6 @@ describe Form do
     end
     
   end
-  
   
   describe "the get_investigation_forms class method" do
     fixtures :forms
