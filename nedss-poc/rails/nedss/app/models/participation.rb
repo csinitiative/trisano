@@ -46,14 +46,6 @@ class Participation < ActiveRecord::Base
     end
   end
 
-#  def lab_result
-#    @lab_result ||= LabResults.new
-#  end
-
-#  def lab_result=(attributes)
-#    lab_results.build(attributes) unless attributes.values_blank?
-#  end  
-
   def hospitals_participation
     @hospitals_participation ||= hospitals_participations.last
   end

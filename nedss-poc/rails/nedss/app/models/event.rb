@@ -265,12 +265,12 @@ class Event < ActiveRecord::Base
       @active_reporter = Participation.new(attributes)
       @active_reporter.role_id = Event.participation_code('Reported By')
     else
-      unless attributes.values_blank?
+      unless attributes[:active_secondary_entity][:person][:last_name].blank? and attributes[:active_secondary_entity][:person][:first_name].blank?
         if active_reporter.nil?
           attributes[:role_id] = Event.participation_code('Reported By')
           self.create_reporter(attributes)
         else
-          active_reporter.update_attributes(attributes)
+          active_reporter.update_attributes(attributes) 
         end
       end
     end
@@ -603,7 +603,7 @@ class Event < ActiveRecord::Base
 
   def save_labs
     labs.each do |lab|
-      lab.save
+      lab.save(false)
       lab.lab_results.each do |lab_result|
         lab_result.save(false)
       end
@@ -612,7 +612,7 @@ class Event < ActiveRecord::Base
 
   def clear_base_error
     errors.delete(:disease_events)
-    errors.delete(:participations)
+#    errors.delete(:participations)
     errors.delete(:answers)
   end
 
