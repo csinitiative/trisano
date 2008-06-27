@@ -32,7 +32,7 @@
       <legend>Investigation</legend>
       <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
         <span class="horiz">
-          <%= j.label(:secondary_entity_id, "Jurisdiction") %>
+          <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
           <% jurisdictions = User.current_user.jurisdictions_for_privilege(:update) %> 
           <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
         </span>

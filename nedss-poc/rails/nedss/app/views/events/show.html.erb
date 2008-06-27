@@ -128,7 +128,7 @@
           <td><%= @event.MMWR_week %></td>
         </tr>
         </tr>
-          <td><span class="label">Jurisdiction:</span></td>
+          <td><span class="label">Jurisdiction responsible for investigation:</span></td>
           <td><%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%></td>
           <td><span class="label">Event Name:</span></td>
           <td><%= @event.event_name %></td>  
