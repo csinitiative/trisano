@@ -28,9 +28,9 @@ class Entity < ActiveRecord::Base
 
   attr_protected :entity_type
   validates_presence_of :entity_type
+  validates_associated :people
 
   before_validation :save_entity_associations
-  after_validation :clear_base_error
   after_save :save_location_info
 
   def person
@@ -159,9 +159,4 @@ class Entity < ActiveRecord::Base
     end
   end
 
-  def clear_base_error
-    errors.delete(:people)
-    errors.delete(:telephone)
-    errors.delete(:address)
-  end
 end

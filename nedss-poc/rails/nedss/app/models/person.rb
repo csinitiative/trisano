@@ -1,5 +1,5 @@
 class Person < ActiveRecord::Base
-  acts_as_auditable
+  # acts_as_auditable
   belongs_to :birth_gender, :class_name => 'ExternalCode'
   belongs_to :ethnicity, :class_name => 'ExternalCode'
   belongs_to :primary_language, :class_name => 'ExternalCode'

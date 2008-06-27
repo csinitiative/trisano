@@ -7,6 +7,7 @@
     
     <fieldset class="form">
       <legend>Disease</legend>
+      <%= error_messages_for :object => @event.disease %>
       <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
         <span class="horiz">
           <%= d.label(:disease_id, "Disease") %>

@@ -35,7 +35,6 @@ class Event < ActiveRecord::Base
   validates_associated :labs
 
   before_validation_on_create :save_associations
-  after_validation :clear_base_error
   
   after_update :save_labs
   before_save :generate_mmwr
@@ -103,6 +102,7 @@ class Event < ActiveRecord::Base
       @active_patient = Participation.new(attributes)
       @active_patient.role_id = Event.participation_code('Interested Party')
     else
+      # This is a bug!  Should be building these up in memory so they are subject to validation and transactions
       active_patient.update_attributes(attributes)
     end
   end
@@ -221,6 +221,7 @@ class Event < ActiveRecord::Base
           attributes[:role_id] = Event.participation_code('Jurisdiction')
           self.create_jurisdiction(attributes)
         else
+          # Bug!
           active_jurisdiction.update_attributes(attributes)
         end
       end
@@ -250,6 +251,7 @@ class Event < ActiveRecord::Base
           attributes[:role_id] = Event.participation_code('Reporting Agency')
           self.create_reporting_agency(attributes)
         else
+          # Bug!
           active_reporting_agency.update_attributes(attributes)
         end
       end
@@ -270,6 +272,7 @@ class Event < ActiveRecord::Base
           attributes[:role_id] = Event.participation_code('Reported By')
           self.create_reporter(attributes)
         else
+          # Bug!
           active_reporter.update_attributes(attributes) 
         end
       end
@@ -591,13 +594,12 @@ class Event < ActiveRecord::Base
     self.MMWR_year = mmwr.mmwr_year
   end
 
+  # DEBT: Replace these one by one as we switch to the multi-model process used by lab results
   def save_associations
     participations << @active_patient
     disease_events << @disease unless Utilities::model_empty?(@disease)
-#    participations << @lab unless @lab.secondary_entity_id.blank? and Utilities::model_empty?(@lab.lab_result)
     participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
     participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
-    # participations << @active_reporter unless Utilities::model_empty?(@active_reporter.active_secondary_entity.person)
     participations << @active_reporter unless @active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?
   end
 
@@ -608,12 +610,6 @@ class Event < ActiveRecord::Base
         lab_result.save(false)
       end
     end
-  end
-
-  def clear_base_error
-    errors.delete(:disease_events)
-#    errors.delete(:participations)
-    errors.delete(:answers)
   end
 
 end

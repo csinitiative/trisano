@@ -1,3 +1,4 @@
+<%= error_messages_for :object => address %>
 <% f.fields_for(:address, address, :builder => ExtendedFormBuilder) do |a| %>
 
   <%- event = event.nil? ? nil : event %>

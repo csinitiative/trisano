@@ -8,6 +8,7 @@
     <%= f.hidden_field(:entity_type) %>
     <%- event = event.nil? ? nil : event %>
 
+    <%= error_messages_for :object => entity_data.person %>
     <fieldset class="form">
       <legend>Name</legend>
       <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
