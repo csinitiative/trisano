@@ -29,17 +29,14 @@ def setup_data_is_correct
 end
 
 def export_users
-  user_file_name = "users.sql"
-  
-  puts "exporting users"  
-  shell_script_output = `pg_dump -a -t users -t roles -t privileges -t privileges_roles #{@postgres_nedss_db} > #{user_file_name}`
-  puts shell_script_output
-  
-  if File.file? user_file_name   
-    puts user_file_name + " created. SUCCESS"
-  else
-    puts user_file_name + " not found. FAILURE"
-  end
+  # Export tables one at a time - I tried exporting to one file, but ran into foreign key constraints so fell back to this.  
+  puts "exporting user related tables"  
+  system("pg_dump -a -t privileges #{@postgres_nedss_db} > priv.sql")
+  system("pg_dump -a -t roles #{@postgres_nedss_db} > roles.sql")
+  system("pg_dump -a -t users #{@postgres_nedss_db} > users.sql")
+  system("pg_dump -a -t entitlements #{@postgres_nedss_db} > entitlements.sql")
+  system("pg_dump -a -t privileges_roles #{@postgres_nedss_db} > privileges_roles.sql")
+  system("pg_dump -a -t role_memberships #{@postgres_nedss_db} > role_memberships.sql")
 end
 
 puts ""
