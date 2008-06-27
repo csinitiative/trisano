@@ -82,27 +82,4 @@ module ApplicationHelper
     return replace_element, replace_partial
   end
 
-  module ActiveRecord::Validations::ClassMethods
-    def _validates_associated(*associations)
-      associations.each do |association|
-        class_eval do
-          validates_each(associations) do |record, associate_name, value|
-            p record, associate_name, value
-            p "---------------------------"
-            associates = record.send(associate_name)
-            associates = [associates] unless associates.respond_to?('each')
-            associates.each do |associate|
-              if associate && !associate.valid?
-                associate.errors.each do |key, value|
-                  record.errors.add(key, value)
-                end
-              end
-            end
-            record.errors.delete associate_name
-          end
-        end
-      end
-    end
-  end
-
 end
