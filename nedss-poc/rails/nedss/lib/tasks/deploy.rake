@@ -175,10 +175,12 @@ namespace :nedss do
       ruby "-S rake nedss:deploy:create_db_config"
 
       File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
-      File.copy('config/database.yml', config, true) 
       File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/import_users.rb', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/export_users.rb', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/database.yml', config, true) 
       t = Time.now
       filename = "nedss-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar"
       sh "tar cf #{filename} ./release"

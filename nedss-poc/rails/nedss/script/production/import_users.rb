@@ -43,7 +43,10 @@ def get_input_from_user(prompt, default)
   end
 end
 
-def export_users 
+def import_users 
+  puts "deleting contents of user tables."
+  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f delete_users.sql")
+  
   puts "importing users tables."
   system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f priv.sql")
   system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f roles.sql")
@@ -68,4 +71,4 @@ while true
   break
 end
 
-exit unless export_users
+exit unless import_users
