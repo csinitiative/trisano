@@ -96,10 +96,6 @@ describe Person, "loaded from fixtures" do
     Person.find(:all).should_not be_empty
   end
 
-  it "should have five record" do
-    Person.should have(5).records
-  end
-
   it "should find an existing person" do
     person = Person.find(people(:groucho_marx).id)
     person.should eql(people(:groucho_marx))

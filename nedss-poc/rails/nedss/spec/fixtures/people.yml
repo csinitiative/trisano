@@ -89,3 +89,11 @@ johnson_on_marks_event:
   created_at: <%= Time.now.to_s :db %>
   vector: '''j500'':3 ''j525'':4 ''john'':1 ''johnson'':2'
 
+lab_guy:
+  id: 6
+  entity_id: 101
+  age_type_id: 
+  last_name: "Labguy"
+  first_name: "Joe"
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>

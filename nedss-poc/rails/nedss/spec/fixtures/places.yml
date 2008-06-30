@@ -21,3 +21,9 @@ Southeastern_District:
   short_name: "SED"
   place_type_id: 2202
   entity_id: 75
+
+Existing_Lab_One:
+  id: 100
+  name: "Existing Lab One"
+  place_type_id: 2203
+  entity_id: 100 

@@ -169,10 +169,6 @@ end
 describe Entity, "with people fixtures loaded" do
   fixtures :entities, :people, :people_races, :codes, :external_codes
 
-  it "should have 7 records" do
-    Entity.should have(7).records
-  end
-
   describe "and a single instance of Grocuho Marx" do
 
     it "should have a total of one person" do

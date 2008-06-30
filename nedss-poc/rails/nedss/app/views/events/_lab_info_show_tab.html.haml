@@ -1,20 +1,24 @@
 %fieldset
   %legend Laboratory Information
-  %table{:class => 'tabular'}
-    %tr
-      %th Lab Name
-      %th Lab Result
-      %th Specimen Source
-      %th Collection Date
-      %th Lab Test Date
-      %th Tested at UPHL Lab
 
-    - for lab in @event.labs
-      - for lab_result in lab.lab_results
-        %tr
-          %td= lab.secondary_entity.places.last.name
-          %td= lab_result.lab_result_text
-          %td= l lab_result.specimen_source
-          %td= lab_result.collection_date
-          %td= lab_result.lab_test_date
-          %td= l lab_result.tested_at_uphl_yn
+  - if @event.labs.empty?
+    %h3 No lab results have been recorded for this event
+  - else
+    %table{:class => 'tabular'}
+      %tr
+        %th Lab Name
+        %th Lab Result
+        %th Specimen Source
+        %th Collection Date
+        %th Lab Test Date
+        %th Tested at UPHL Lab
+
+      - for lab in @event.labs
+        - for lab_result in lab.lab_results
+          %tr
+            %td= lab.secondary_entity.places.last.name
+            %td= lab_result.lab_result_text
+            %td= l lab_result.specimen_source
+            %td= lab_result.collection_date
+            %td= lab_result.lab_test_date
+            %td= l lab_result.tested_at_uphl_yn

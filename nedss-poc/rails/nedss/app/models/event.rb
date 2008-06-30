@@ -131,7 +131,7 @@ class Event < ActiveRecord::Base
   
   def new_lab_attributes=(lab_attributes)
     lab_attributes.each do |attributes|
-      next if attributes[:name].blank?
+      next if attributes["name"].blank?
 
       lab_entity_id = attributes.delete("lab_entity_id")
       lab_name = attributes.delete("name")
@@ -145,16 +145,16 @@ class Event < ActiveRecord::Base
 
         # Participation does not exist, create one and link to existing lab
         if lab.nil?
-          lab = labs.build(:role_id => Event.participation_code('Tested By'))
+          lab = labs.build("role_id" => Event.participation_code('Tested By'))
           lab.secondary_entity_id = lab_entity_id
         else
           # participation already exists, do nothing
         end
       else
         # New lab. Create participation, entity, and place, linking each to the next
-        lab = labs.build(:role_id => Event.participation_code('Tested By'))
+        lab = labs.build("role_id" => Event.participation_code('Tested By'))
         lab_entity = lab.build_secondary_entity
-        lab_entity.places.build( {"name" => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+        lab_entity.places.build( {"name" => lab_name, "place_type_id" => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
       end
 
       # Build a new lab_result and associate with the participation
@@ -598,13 +598,17 @@ class Event < ActiveRecord::Base
   def save_associations
     participations << @active_patient
     disease_events << @disease unless Utilities::model_empty?(@disease)
-    participations << @active_jurisdiction unless @active_jurisdiction.secondary_entity_id.blank?
-    participations << @active_reporting_agency unless @active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?
-    participations << @active_reporter unless @active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?
+    participations << @active_jurisdiction unless (@active_jurisdiction.nil? or @active_jurisdiction.secondary_entity_id.blank?)
+    participations << @active_reporting_agency unless (@active_reporting_agency.nil? or (@active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?))
+    participations << @active_reporter unless (@active_reporter.nil? or (@active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?))
   end
 
   def save_labs
     labs.each do |lab|
+      if lab.lab_results.length == 0
+        lab.destroy
+        next
+      end
       lab.save(false)
       lab.lab_results.each do |lab_result|
         lab_result.save(false)

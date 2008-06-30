@@ -106,7 +106,6 @@ class EventsController < ApplicationController
   end
 
   def create
-    # params[:event].delete("active_reporter") if params[:event][:active_reporter][:active_secondary_entity][:person].values_blank?
     @event = Event.new(params[:event])
     
     unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
