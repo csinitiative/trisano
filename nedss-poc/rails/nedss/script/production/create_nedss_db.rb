@@ -1,21 +1,27 @@
-def get_setup_data
-  @postgres_dir = get_input_from_user("Enter the absolute path to the directory containing the PostgreSQL psql client", "/usr/bin")
-  @host = get_input_from_user("Enter the server name on which PostgreSQL is running", "localhost")
-  @port = get_input_from_user("Enter the TCP port on which the PostgreSQL database is listening", 5432)
-  @username = get_input_from_user("Enter the name of a database user with sufficient privileges to create databases and users", "postgres")
-  @password = get_input_from_user("Enter the password of the privileged user", "")
-  @database = get_input_from_user("Enter the name of a database to create for NEDSS production use. Must NOT already exist!", "nedss_prod")
-  @nedss_user = get_input_from_user("Enter the name of the user that NEDSS will connect to the database as.  Must NOT already exist!", "nedss")
-  @nedss_user_pwd = get_input_from_user("Enter the password of the NEDSS user", "")
+require 'yaml'
 
-  @psql = @postgres_dir += "/psql"
+def get_setup_data
+  config = YAML::load_file "./config.yml"
+    
+  @postgres_dir = config['postgres_dir']
+  @host = config['host']
+  @port = config['port']
+  @username = config['priv_uname']
+  @password = config['priv_passwd']
+  @database = config['database']
+  @nedss_user = config['nedss_uname']
+  @nedss_user_pwd = config['nedss_user_passwd']
+
+  @psql = @postgres_dir + "/psql"
   ENV["PGPASSWORD"] = @password
+  
 end
 
 def setup_data_is_correct 
   puts 
   puts "The following information has been collected"
   puts 
+  puts "PostgreSQL client location = #{@postgres_dir}"
   puts "PostgreSQL host server = #{@host}"
   puts "PostgreSQL TCP listen port = #{@port}"
   puts "Database name = #{@database}"

@@ -1,21 +1,28 @@
-def get_setup_data
-  @postgres_dir = "/usr/bin"
-  @host = "localhost"
-  @port = 5432
-  @username = "mike"
-  @password = "password"
-  @database = "nedss_prod"
-  @nedss_user = "nedss_prod_user"
-  @nedss_user_pwd = "password"
+require 'yaml'
+require 'fileutils'
 
-  @pgdump = @postgres_dir += "/pg_dump"
+def get_setup_data
+  config = YAML::load_file "./config.yml"
+    
+  @postgres_dir = config['postgres_dir']
+  @host = config['host']
+  @port = config['port']
+  @username = config['priv_uname']
+  @password = config['priv_passwd']
+  @database = config['database']
+  @nedss_user = config['nedss_uname']
+  @nedss_user_pwd = config['nedss_user_passwd']
+
+  @pgdump = @postgres_dir + "/pg_dump"
   ENV["PGPASSWORD"] = @password
+  
 end
 
 def setup_data_is_correct 
   puts 
   puts "The following information has been collected"
   puts 
+  puts "PostgreSQL client location = #{@postgres_dir}"
   puts "PostgreSQL host server = #{@host}"
   puts "PostgreSQL TCP listen port = #{@port}"
   puts "Database name = #{@database}"
@@ -46,20 +53,22 @@ end
 def export_users
   # Export tables one at a time - I tried exporting to one file, but ran into foreign key constraints so fell back to this.  
   puts "exporting user related tables"  
-  #system("pg_dump -a -t privileges #{@postgres_nedss_db} > priv.sql")
-  #system("pg_dump -a -t roles #{@postgres_nedss_db} > roles.sql")
-  #system("pg_dump -a -t users #{@postgres_nedss_db} > users.sql")
-  #system("pg_dump -a -t entitlements #{@postgres_nedss_db} > entitlements.sql")
-  #system("pg_dump -a -t privileges_roles #{@postgres_nedss_db} > privileges_roles.sql")
-  #system("pg_dump -a -t role_memberships #{@postgres_nedss_db} > role_memberships.sql")
   
+  dump_dir = "./db-dump"
+  if !File.directory? dump_dir
+    puts "adding directory #{dump_dir}"
+    FileUtils.mkdir_p(dump_dir)
+  end  
   
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > priv.sql")
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > roles.sql")
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > users.sql")
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > entitlements.sql")
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > privileges_roles.sql")
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > role_memberships.sql")
+  t = Time.now
+  full_dump_file = "full_dump_-" + t.strftime("%m-%d-%Y-%I%M%p") + ".sql"
+  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/#{full_dump_file}")
+  system("#{@pgdump} -a -t privileges -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/priv.sql")
+  system("#{@pgdump} -a -t roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/roles.sql")
+  system("#{@pgdump} -a -t users -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/users.sql")
+  system("#{@pgdump} -a -t entitlements -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/entitlements.sql")
+  system("#{@pgdump} -a -t privileges_roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/privileges_roles.sql")
+  system("#{@pgdump} -a -t role_memberships -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/role_memberships.sql")
 end
 
 puts ""

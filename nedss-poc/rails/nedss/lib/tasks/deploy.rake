@@ -160,15 +160,10 @@ namespace :nedss do
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
-      config = RELEASE_DIRECTORY + '/WEB-INF/config'
+            
       if !File.directory? RELEASE_DIRECTORY
-        puts "adding directory tree #{config}"
-        FileUtils.mkdir_p(config)
-      else
-        puts "rm -rf #{RELEASE_DIRECTORY}"
-        FileUtils.rm_rf(RELEASE_DIRECTORY)
-        puts "adding directory tree #{config}"
-        FileUtils.mkdir_p(config)
+        puts "adding directory #{RELEASE_DIRECTORY}"
+        FileUtils.mkdir(RELEASE_DIRECTORY)
       end
 
       ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
@@ -177,10 +172,13 @@ namespace :nedss do
       File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/delete_users.sql', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/import_users.rb', RELEASE_DIRECTORY, true) 
       File.copy(NEDSS_PROD_DIR + '/export_users.rb', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/database.yml', config, true) 
+      File.copy(NEDSS_PROD_DIR + '/create_war_file.rb', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/config.yml', RELEASE_DIRECTORY, true) 
+      File.copy(NEDSS_PROD_DIR + '/README.txt', RELEASE_DIRECTORY, true) 
       t = Time.now
       filename = "nedss-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar"
       sh "tar cf #{filename} ./release"

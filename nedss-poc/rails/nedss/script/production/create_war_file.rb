@@ -1,4 +1,7 @@
 require 'yaml'
+require 'fileutils'
+
+WEB_APP_DIR = './WEB-INF/config'
 
 def get_setup_data
   config = YAML::load_file "./config.yml"
@@ -49,25 +52,51 @@ def get_input_from_user(prompt, default)
   end
 end
 
-def import_users 
-  puts "deleting contents of user tables."
+def create_web_app_dir  
+  if !File.directory? WEB_APP_DIR
+    puts "adding directory tree #{WEB_APP_DIR}"
+    FileUtils.mkdir_p(WEB_APP_DIR)
+  end
+end
+
+def create_web_xml
+  puts "creating web.xml"
   
-  dump_dir = "./db-dump"
-    
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f delete_users.sql")
+  # create dir structure 
+  # save .yml with settings from config.yml to database.yml
+  # creating the .war  
   
-  puts "importing users tables."
-  puts "#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/priv.sql"
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/priv.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/roles.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/users.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/entitlements.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/privileges_roles.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/role_memberships.sql")
+  db_config = { 'production' => 
+      { 'adapter' => 'postgresql', 
+      'encoding' => 'unicode', 
+      'database' => @database, 
+      'username' => @nedss_user, 
+      'password' => @nedss_user_pwd,
+      'host' => @host, 
+      'port' => @port
+    }      
+  }
+  
+  File.open(WEB_APP_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }
+
+end
+
+def create_war_file
+  system("jar uf nedss.war #{WEB_APP_DIR}/database.yml")
+end
+
+def create_war
+  create_web_app_dir
+  create_web_xml
+  create_war_file
+  
+  puts "creating .war file"
+  
+
 end
 
 puts ""
-puts "* This script will export users from NEDSS. It has been tested with R1 and R2."
+puts "* This script will create a .war file with the proper database settings. It has been tested with R1 and R2."
 puts ""
 server_machine = get_input_from_user "Are you ready to proceed (y/n)?", "y"
 exit if server_machine.downcase == "n"
@@ -81,4 +110,4 @@ while true
   break
 end
 
-exit unless import_users
+exit unless create_war
