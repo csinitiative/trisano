@@ -58,3 +58,9 @@ Rake::Task["db:create"].enhance {
     raise "tsearch not installed in this environment -- only dev and test supported"
   end
 }
+
+Rake::Task["db:test:prepare"].enhance {
+  puts "Loading fixtures..."
+  ruby "-S rake spec:db:fixtures:load FIXTURES=codes RAILS_ENV=test"
+}
+

@@ -14,7 +14,7 @@ describe Event do
     }
   }
 
-  fixtures :events, :participations, :entities, :places, :people, :lab_results
+  fixtures :events, :participations, :entities, :places, :people, :lab_results, :codes
 
   describe "handling new labs and lab results" do
 
