@@ -47,4 +47,4 @@
         = lab_result_fields.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {})
 
       %span{:class => "horiz", :style => "margin-top: 30px"}
-        = link_to_function "Remove" , "$(this).up('.lab').remove()"
+        = link_to_function "Remove" , "$(this).up('.lab').remove()", {:id => "remove_lab_result_link"}

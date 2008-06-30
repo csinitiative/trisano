@@ -95,7 +95,7 @@ module NedssHelper
   def type_field_by_order(browser, element_id_prefix, order, value)
     fields = browser.get_all_fields
     fields.delete_if{|field| field.index(element_id_prefix) == nil}
-    browser.type(field[order], value)
+    browser.type(fields[order], value)
   end
   
   # Use click_resource methods from any standard resource index page
