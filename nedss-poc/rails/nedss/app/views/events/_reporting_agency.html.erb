@@ -53,7 +53,7 @@
         <% agency_fields.fields_for(:telephone, telephone_data, :builder => ExtendedFormBuilder) do |phone_fields| %>
           <span class="horiz">
             <%= phone_fields.label(:area_code) %>
-            <%= phone_fields.text_field(:area_code, :size => 3) %>
+            <%= phone_fields.text_field(:area_code, :size => 3, :maxlength => 3, :class => 'autotab') %>
           </span>
           <span class="horiz">
             <%= phone_fields.label(:phone_number) %>

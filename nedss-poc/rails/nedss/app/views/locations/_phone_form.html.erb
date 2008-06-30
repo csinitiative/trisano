@@ -5,7 +5,7 @@
 
   <span class="horiz">
     <%= t.label(:area_code) %>
-    <%= t.core_text_field(:area_code, {:size => 3}, event) %>
+    <%= t.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, event) %>
   </span>
   <span class="horiz">
     <%= t.label(:phone_number) %>
