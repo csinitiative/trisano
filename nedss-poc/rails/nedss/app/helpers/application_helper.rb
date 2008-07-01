@@ -81,5 +81,13 @@ module ApplicationHelper
     end
     return replace_element, replace_partial
   end
+  
+  def current_user_name
+    if (User.current_user.last_name.blank? || User.current_user.first_name.blank?)
+      User.current_user.user_name
+    else
+      "#{User.current_user.first_name} #{User.current_user.last_name}"
+    end
+  end
 
 end
