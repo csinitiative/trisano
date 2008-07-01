@@ -1,4 +1,4 @@
-class CmrsController < ApplicationController
+class FormController < ApplicationController
   def index
     @boolean_example = true
     @user_name = "User"
