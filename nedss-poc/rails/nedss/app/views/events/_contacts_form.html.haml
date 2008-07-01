@@ -1,10 +1,19 @@
-- if @event.new_record?
-  - f.fields_for(:contact, @event.contact, :builder => ExtendedFormBuilder) do |contact_fields|
-    - contact_fields.fields_for(:active_secondary_entity, @event.contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_contact|
-      = render :partial => "entities/people/form", :locals => { :f => new_contact, :entity_data => @event.contact.active_secondary_entity }
-- else
-  %div{:id => 'contact-list'}
-    = render :partial => "contacts/index"
+%fieldset
+  %legend 
+    Contacts
+    %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"} [Hide]
+    %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
 
-  %br
-  = link_to_remote_redbox("New Contact", :url => new_cmr_contact_path(@event), :method => :get)
+    %div{:id => "contacts"}
+
+
+      - if @event.new_record?
+        - f.fields_for(:contact, @event.contact, :builder => ExtendedFormBuilder) do |contact_fields|
+          - contact_fields.fields_for(:active_secondary_entity, @event.contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_contact|
+            = render :partial => "entities/people/form", :locals => { :f => new_contact, :entity_data => @event.contact.active_secondary_entity }
+      - else
+        %div{:id => 'contact-list'}
+          = render :partial => "contacts/index"
+
+        %br
+        = link_to_remote_redbox("New Contact", :url => new_cmr_contact_path(@event), :method => :get)

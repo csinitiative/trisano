@@ -38,7 +38,7 @@ module FormsHelper
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children' style='clear: both'>"
+      result += "<ul id='view_" + element.id.to_s + "_children'  class='fb-tab-children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -60,7 +60,7 @@ module FormsHelper
     result += "</li>"
     
     if include_children && element.children?
-      result += "<ul id='view_" + element.id.to_s + "_children' style='clear: both'>"
+      result += "<ul id='view_" + element.id.to_s + "_children' class='fb-tab-children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -82,7 +82,7 @@ module FormsHelper
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='section_" + element.id.to_s + "_children' style='clear: both'>"
+      result += "<ul id='section_" + element.id.to_s + "_children' class='fb-section-children' style='clear: both'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end

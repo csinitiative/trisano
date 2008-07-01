@@ -248,6 +248,15 @@ div.progressBar div.background {
 
 .fb-section {
   color: crimson;
+  border-bottom: 1px solid;
+  border-color: #ededed;
+  background: #fff;
+}
+
+.fb-section-children {
+  padding-left: 2em;
+  border-color: #708090;
+  background: #fff;
 }
 
 .fb-group {
