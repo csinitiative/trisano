@@ -7,7 +7,7 @@ body {
 
 #hd {
   height: 73px;
-  background: url(../../images/repeat.gif);
+  background: url(../images/repeat.gif);
   background-repeat: repeat-x; }
 
 
@@ -39,6 +39,12 @@ body {
 #main {
   margin-top: 10px;
   letter-spacing: 0px; }
+  #main .highlight {
+    color: green; }
+  #main .label {
+    font-size: 90%;
+    font-weight: bold;
+    white-space: nowrap; }
   #main .title {
     font-size: 14px;
     font-weight: light;
