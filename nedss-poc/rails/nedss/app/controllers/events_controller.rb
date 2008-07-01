@@ -46,6 +46,7 @@ class EventsController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @event }
       format.csv
+      format.print
     end
   end
 

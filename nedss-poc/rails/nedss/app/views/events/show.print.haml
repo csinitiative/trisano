@@ -1,0 +1,109 @@
+= stylesheet_link_tag 'print'
+
+%div{:class => "printable"}
+  %div{:class => "header"}
+    %div{:class => "left"}
+      %h1 Utah Public Health
+      %h2= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?
+      %h2 Address of Local Health Department
+      %h3
+        %i Phone: (801) xxx-xxxx    Confidential Fax (801) xxx-xxxx
+      %h3
+        %i= Date.today.strftime("%B %d, %Y")
+    %div{:class => "right"}
+      = image_tag("udoh_logo.png")
+
+  %div{:class => "sub-header"}
+    %div{:class => "left"}
+      = @event.disease.disease.nil? ? "Disease not specified" : @event.disease.disease.disease_name
+    %div{:class => "right"}
+      Confidential Case Report
+
+  %div{:id => "demographics"}
+    %span{:class => "section-header"} Demographic Information
+  %br
+
+    - entity = @event.active_patient.active_primary_entity
+    - patient = entity.person
+
+    %div{:id => "patient_name"}
+      %span{:class => "print-label"} Name:
+      %span{:class => "print-value"}
+        = "#{patient.last_name}, #{patient.first_name} #{patient.middle_name}" 
+
+    - entities_location = entity.entities_location
+
+    %div{:id => "patient_address"}
+      %span{:class => "print-label"} Address:
+
+      - unless entities_location.nil?
+        - address = entities_location.location.current_address
+
+        - unless address.nil?
+          %span{:class => "print-value"}
+            = "#{address.street_number} #{address.street_name}"
+            = ",&nbsp; Unit: #{address.unit_number}" unless address.unit_number.blank?
+          %span{:class => "print-value"}
+            = "#{address.city}," unless address.city.empty?
+            = "#{l address.state}&nbsp;&nbsp;#{address.postal_code}"
+          %span{:class => "print-value"}
+            = "#{l address.county} County" unless address.county.blank?
+        - else
+          %span{:class => "print-value"} Not available
+      - else
+        %span{:class => "print-value"} Not available
+
+    %div{:id => "patient_age"}
+      %span{:class => "print-label"} Birth Date:
+      %span{:class => "print-value"}
+        - if patient.birth_date.blank?
+          Unspecified
+        - else
+          = "#{patient.birth_date}"
+
+      - if patient.approximate_age_no_birthday.blank?
+        %span{:class => "print-label"} Age:
+        %span{:class => "print-value"}
+          - if patient.birth_date.blank?
+            Unknown
+          - else
+            = "#{ calculate_age(patient.birth_date)}"
+      - else
+        %span{:class => "print-label"} Approximate Age (birth date unknown):
+        %span{:class => "print-value"}
+          = "#{patient.approximate_age_no_birthday}"
+
+    %div{:id => "patient_phone"}
+      %span{:class => "print-label"} Telephone:
+      - unless entities_location.nil?
+        - phone = entities_location.location.current_phone
+
+        - unless phone.nil?
+          %span{:class => "print-value"}
+            = fml "(", phone.area_code, ") " 
+            = phone_number(phone.phone_number)
+            = fml " Ext. ", phone.extension, ""
+        - else
+          %span{:class => "print-value"} Not available
+      - else
+        %span{:class => "print-value"} Not available
+
+    %div{:id => "patient_attributes"}
+      %span{:class => "print-label"} Birth Gender:
+      %span{:class => "print-value"}
+        = "#{l patient.birth_gender}" 
+      %span{:class => "print-label"} Primary Language:
+      %span{:class => "print-value"}
+        = "#{l patient.primary_language}" 
+      %span{:class => "print-label"} Race:
+      %span{:class => "print-value"}
+        - i = 0
+        - for race in entity.races
+          = " and " unless i == 0 
+          = l race
+          - i += 1
+        - if i == 0
+          Unknown
+      %span{:class => "print-label"} Ethnicity:
+      %span{:class => "print-value"}
+        = "#{l patient.ethnicity }"

@@ -1,0 +1,62 @@
+.printable {
+  background-color: white;
+  font-family: arial;
+  font-size: 18px;
+  width: 60%;
+  border: solid 1px;
+  padding: 1em;
+}
+
+.printable .header {
+  line-height: 60%;
+}
+
+.printable .header .left {
+  float: left;
+  width: 80%;
+}
+
+.printable .header .right {
+  float: left;
+}
+
+.printable .sub-header {
+  clear: both;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.printable .sub-header .left {
+  float: left;
+  width: 45%;
+  border: solid 1px;
+  padding: 1em;
+  margin-bottom: 10px;
+}
+
+.printable .sub-header .right {
+  float: left;
+  width: 45%;
+  border: solid 1px;
+  padding: 1em;
+  margin-bottom: 10px;
+}
+
+.printable .section-header {
+  clear: both;
+  display: block;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: black;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: 18px;
+  color: white;
+}
+
+.printable .print-label {}
+
+.printable .print-value {}
