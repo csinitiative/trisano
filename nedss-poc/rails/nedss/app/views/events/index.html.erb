@@ -20,6 +20,7 @@
     <td><%= l event.event_status %></td>
     <td><%= link_to 'Show', cmr_path(event) %></td>
     <td><%= link_to 'Edit', edit_cmr_path(event) %></td>
+    <td><%= link_to 'Print', formatted_cmr_path(event, "print") , :target => "_blank" %></td>
   </tr>
   <% end %>
 </table>

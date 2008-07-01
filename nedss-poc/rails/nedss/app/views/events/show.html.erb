@@ -180,6 +180,7 @@
 </div>
 <%= link_to 'Edit', edit_cmr_path(@event), :id => "edit_cmr_link" %> |
 <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |
+<%= link_to 'Print', formatted_cmr_path(@event, "print") , :target => "_blank" %> |
 <%= link_to 'Back', cmrs_path %>
 
 <%#= link_to 'Add an association', associations_event_path(@event) %>

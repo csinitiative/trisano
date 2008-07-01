@@ -21,89 +21,123 @@
 
   %div{:id => "demographics"}
     %span{:class => "section-header"} Demographic Information
-  %br
 
     - entity = @event.active_patient.active_primary_entity
     - patient = entity.person
 
+    %br
     %div{:id => "patient_name"}
-      %span{:class => "print-label"} Name:
-      %span{:class => "print-value"}
-        = "#{patient.last_name}, #{patient.first_name} #{patient.middle_name}" 
+      %div{:class => "three-valued-row"}
+        %div{:class => "left"}
+          %span{:class => "print-label"} Last Name:
+          %span{:class => "print-value"}
+            = "#{patient.last_name}"
+        %div{:class => "left"}
+          %span{:class => "print-label"} First Name:
+          %span{:class => "print-value"}
+            = "#{patient.first_name}"
+        %div{:class => "right"}
+          %span{:class => "print-label"} Middle Name:
+          %span{:class => "print-value"}
+            = "#{patient.middle_name}" 
 
     - entities_location = entity.entities_location
+    - no_location = entities_location.nil?
+    - address = entities_location.location.current_address unless no_location
+    - no_address = no_location || address.nil?
 
     %div{:id => "patient_address"}
-      %span{:class => "print-label"} Address:
+      %div{:class => "three-valued-row"}
+        %div{:class => "left"}
+          %span{:class => "print-label"} Address:
+          - unless no_address
+            %span{:class => "print-value"}
+              = "#{address.street_number} #{address.street_name}"
+              = ",&nbsp; Unit: #{address.unit_number}" unless address.unit_number.blank?
+        %div{:class => "left"}
+          %span{:class => "print-label"} City:
+          - unless no_address
+            %span{:class => "print-value"}
+              = "#{address.city}"
+        %div{:class => "right"}
+          %span{:class => "print-label"} State:
+          - unless no_address
+            %span{:class => "print-value"}
+              = "#{l address.state}"
 
-      - unless entities_location.nil?
-        - address = entities_location.location.current_address
-
-        - unless address.nil?
-          %span{:class => "print-value"}
-            = "#{address.street_number} #{address.street_name}"
-            = ",&nbsp; Unit: #{address.unit_number}" unless address.unit_number.blank?
-          %span{:class => "print-value"}
-            = "#{address.city}," unless address.city.empty?
-            = "#{l address.state}&nbsp;&nbsp;#{address.postal_code}"
-          %span{:class => "print-value"}
-            = "#{l address.county} County" unless address.county.blank?
-        - else
-          %span{:class => "print-value"} Not available
-      - else
-        %span{:class => "print-value"} Not available
+      %div{:class => "three-valued-row"}
+        %div{:class => "left"}
+          %span{:class => "print-label"} County:
+          - unless no_address
+            %span{:class => "print-value"}
+              = "#{l address.county}"
+        %div{:class => "left"}
+          %span{:class => "print-label"} Zip:
+          - unless no_address
+            %span{:class => "print-value"}
+              = "#{address.postal_code}"
 
     %div{:id => "patient_age"}
-      %span{:class => "print-label"} Birth Date:
-      %span{:class => "print-value"}
-        - if patient.birth_date.blank?
-          Unspecified
-        - else
-          = "#{patient.birth_date}"
+      %div{:class => "three-valued-row"}
+        <hr/><br/>
+        %div{:class => "left"}
+          %span{:class => "print-label"} DOB:
+          %span{:class => "print-value"}
+            = "#{patient.birth_date}"
+        %div{:class => "left"}
+          %span{:class => "print-label"} Age:
+          %span{:class => "print-value"}
+            = "#{ calculate_age(patient.birth_date)}" unless patient.birth_date.blank?
+        %div{:class => "right"}
+          %span{:class => "print-label"} Approximate Age
+          %span{:class => "print-value"}
+            = "#{patient.approximate_age_no_birthday}"
 
-      - if patient.approximate_age_no_birthday.blank?
-        %span{:class => "print-label"} Age:
-        %span{:class => "print-value"}
-          - if patient.birth_date.blank?
-            Unknown
-          - else
-            = "#{ calculate_age(patient.birth_date)}"
-      - else
-        %span{:class => "print-label"} Approximate Age (birth date unknown):
-        %span{:class => "print-value"}
-          = "#{patient.approximate_age_no_birthday}"
+    - entities_location = entity.telephone_entities_location
+    - no_location = entities_location.nil?
+    - phone = entity.primary_phone_entities_location.location.current_phone unless no_location
+    - p "HEY"
+    - p phone
+    - no_phone = no_location || phone.nil?
 
     %div{:id => "patient_phone"}
-      %span{:class => "print-label"} Telephone:
-      - unless entities_location.nil?
-        - phone = entities_location.location.current_phone
-
-        - unless phone.nil?
-          %span{:class => "print-value"}
-            = fml "(", phone.area_code, ") " 
-            = phone_number(phone.phone_number)
-            = fml " Ext. ", phone.extension, ""
-        - else
-          %span{:class => "print-value"} Not available
-      - else
-        %span{:class => "print-value"} Not available
+      %div{:class => "three-valued-row"}
+        <hr/><br/>
+        %div{:class => "left"}
+          %span{:class => "print-label"} Phone #1:
+          - unless no_phone
+            %span{:class => "print-value"}
+              = fml "(", phone.area_code, ") " 
+              = phone_number(phone.phone_number)
+              = fml " Ext. ", phone.extension, ""
+        -# Revisit when we can collect more than one phone number
+        %div{:class => "left"}
+          %span{:class => "print-label"} Phone #2:
+        %div{:class => "right"}
+          %span{:class => "print-label"} Phone #3:
 
     %div{:id => "patient_attributes"}
-      %span{:class => "print-label"} Birth Gender:
-      %span{:class => "print-value"}
-        = "#{l patient.birth_gender}" 
-      %span{:class => "print-label"} Primary Language:
-      %span{:class => "print-value"}
-        = "#{l patient.primary_language}" 
-      %span{:class => "print-label"} Race:
-      %span{:class => "print-value"}
-        - i = 0
-        - for race in entity.races
-          = " and " unless i == 0 
-          = l race
-          - i += 1
-        - if i == 0
-          Unknown
-      %span{:class => "print-label"} Ethnicity:
-      %span{:class => "print-value"}
-        = "#{l patient.ethnicity }"
+      %div{:class => "three-valued-row"}
+        <hr/><br/>
+        %div{:class => "left"}
+          %span{:class => "print-label"} Birth Gender:
+          %span{:class => "print-value"}
+            = "#{l patient.birth_gender}" 
+        %div{:class => "left"}
+          %span{:class => "print-label"} Primary Language:
+          %span{:class => "print-value"}
+            = "#{l patient.primary_language}" 
+        %div{:class => "right"}
+          %span{:class => "print-label"} Ethnicity:
+          %span{:class => "print-value"}
+            = "#{l patient.ethnicity }"
+
+      %div{:class => "three-valued-row"}
+        %div{:class => "left"}
+          %span{:class => "print-label"} Race:
+          %span{:class => "print-value"}
+            - i = 0
+            - for race in entity.races
+              = " and " unless i == 0 
+              = l race
+              - i += 1

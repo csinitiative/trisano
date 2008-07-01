@@ -1,10 +1,11 @@
 .printable {
   background-color: white;
-  font-family: arial;
-  font-size: 18px;
+  font-family: arial, sans-serif;
+  font-size: 16px;
   width: 60%;
   border: solid 1px;
   padding: 1em;
+  overflow: auto;
 }
 
 .printable .header {
@@ -25,6 +26,7 @@
   font-size: 22px;
   font-weight: bold;
   text-align: center;
+  padding-top: 1em;
 }
 
 .printable .sub-header .left {
@@ -57,6 +59,22 @@
   color: white;
 }
 
+.printable .three-valued-row {
+  clear: both;
+}
+
+.printable .three-valued-row .left {
+  width: 33%;
+  float: left;
+}
+
+.printable .three-valued-row .right {
+  width: 33%;
+  float: right;
+}
+
 .printable .print-label {}
 
-.printable .print-value {}
+.printable .print-value {
+  font-weight: bold;
+}
