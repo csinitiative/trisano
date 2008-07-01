@@ -9,6 +9,11 @@ acts_as_auditable
    code = find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
    code.id unless code.nil?
   end
+  
+  def self.no_id
+   code = find(:first, :conditions => "code_name = 'yesno' and the_code = 'N'")
+   code.id unless code.nil?
+  end
 
   def self.unspecified_location_id
    code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")

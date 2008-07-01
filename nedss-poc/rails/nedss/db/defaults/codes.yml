@@ -1034,3 +1034,37 @@
   the_code: "DA"
   code_description: "Diagnosed At"
   sort_order: 60
+  
+  ### PHONE LOCATION TYPES ###
+
+- code_name: "telephonelocationtype"
+  the_code: "UNK"
+  code_description: "Unknown"
+  sort_order: 1
+  
+- code_name: "telephonelocationtype"
+  the_code: "HT"
+  code_description: "Home"
+  sort_order: 5
+ 
+- code_name: "telephonelocationtype"
+  the_code: "WT"
+  code_description: "Work"
+  sort_order: 10
+
+- code_name: "telephonelocationtype"
+  the_code: "MT"
+  code_description: "Mobile"
+  sort_order: 15
+  
+    ### LOCATION TYPES ###
+  
+- code_name: "locationtype"
+  code_name: "locationtype"
+  the_code: "ALT"
+  code_description: "Address Location Type"
+
+- code_name: "locationtype"
+  code_name: "locationtype"
+  the_code: "TLT"
+  code_description: "Telephone Location Type"

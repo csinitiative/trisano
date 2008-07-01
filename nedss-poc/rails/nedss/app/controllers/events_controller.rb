@@ -60,8 +60,14 @@ class EventsController < ApplicationController
           :person => {}, 
           :entities_location => { 
             :entity_location_type_id => ExternalCode.unspecified_location_id,
-            :primary_yn_id => ExternalCode.yes_id 
-          }, 
+            :primary_yn_id => ExternalCode.yes_id,
+            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Address Location Type").id
+          },
+          :telephone_entities_location => { 
+            :entity_location_type_id => ExternalCode.find_by_code_name_and_code_description('telephonelocationtype', "Unknown").id, 
+            :primary_yn_id => ExternalCode.no_id,
+            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
+          },
           :address => {}, 
           :telephone => {}
         }, 
@@ -80,8 +86,14 @@ class EventsController < ApplicationController
           :person => {}, 
           :entities_location => { 
             :entity_location_type_id => ExternalCode.unspecified_location_id,
-            :primary_yn_id => ExternalCode.yes_id 
-          }, 
+            :primary_yn_id => ExternalCode.yes_id,
+            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Address Location Type").id
+          },
+          :telephone_entities_location => { 
+            :entity_location_type_id => ExternalCode.find_by_code_name_and_code_description('telephonelocationtype', "Unknown").id, 
+            :primary_yn_id => ExternalCode.no_id,
+            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
+          },
           :address => {}, 
           :telephone => {} 
         }

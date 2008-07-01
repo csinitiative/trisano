@@ -200,6 +200,13 @@ def mock_person_entity
   entities_location.stub!(:entity_id).and_return("1")
   entities_location.stub!(:entity_location_type_id).and_return("1302")
   entities_location.stub!(:primary_yn_id).and_return("1402")
+  entities_location.stub!(:location_type_id).and_return("22")
+  
+  telephone_entities_location = mock_model(EntitiesLocation)
+  telephone_entities_location.stub!(:entity_id).and_return("1")
+  telephone_entities_location.stub!(:entity_location_type_id).and_return("2311")
+  telephone_entities_location.stub!(:primary_yn_id).and_return("1401")
+  telephone_entities_location.stub!(:location_type_id).and_return("23")
 
   address = mock_model(Address)
   address.stub!(:street_number).and_return("123")
@@ -219,6 +226,7 @@ def mock_person_entity
   entity.stub!(:entity_type).and_return('person')
   entity.stub!(:person).and_return(person)
   entity.stub!(:entities_location).and_return(entities_location)
+  entity.stub!(:telephone_entities_location).and_return(telephone_entities_location)
   entity.stub!(:address).and_return(address)
   entity.stub!(:telephone).and_return(phone)
   entity.stub!(:race_ids).and_return([201])

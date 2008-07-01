@@ -45,31 +45,47 @@ describe "/people/show.html.erb" do
     @phone.stub!(:area_code).and_return("212")
     @phone.stub!(:phone_number).and_return("555-1212")
     @phone.stub!(:extension).and_return("9999")
-
-    @location = mock_model(Location)
-    @location.stub!(:entities_locations).and_return([@entites_location])
-    @location.stub!(:current_address).and_return(@address)
-    @location.stub!(:current_phone).and_return(@phone)
-    @location.stub!(:primary?).and_return(true)
-    @location.stub!(:type).and_return('Work')
+    
+    @address_location = mock_model(Location)
+    @address_location.stub!(:entities_locations).and_return([@entites_location])
+    @address_location.stub!(:current_address).and_return(@address)
+    @address_location.stub!(:primary?).and_return(true)
+    @address_location.stub!(:type).and_return('Work')
+    @address_location.stub!(:current_phone).and_return(nil)
+    
+    @telephone_location = mock_model(Location)
+    @telephone_location.stub!(:entities_locations).and_return([@telephone_entities_location])
+    @telephone_location.stub!(:current_phone).and_return(@phone)
+    @telephone_location.stub!(:primary?).and_return(false)
+    @telephone_location.stub!(:type).and_return('Unknown')
 
     @entities_location = mock_model(EntitiesLocation)
     @entities_location.stub!(:entity_id).and_return("1")
     @entities_location.stub!(:entity_location_type_id).and_return("1302")
     @entities_location.stub!(:primary_yn_id).and_return("1402")
-    @entities_location.stub!(:location).and_return(@location)
+    @entities_location.stub!(:location).and_return(@address_location)
+    
+    @telephone_entities_location = mock_model(EntitiesLocation)
+    @telephone_entities_location.stub!(:entity_id).and_return("1")
+    @telephone_entities_location.stub!(:entity_location_type_id).and_return("2311")
+    @telephone_entities_location.stub!(:primary_yn_id).and_return("1401")
+    @telephone_entities_location.stub!(:location).and_return(@telephone_location)
 
     @entity = mock_model(Entity)
     @entity.stub!(:entity_type).and_return('person')
     @entity.stub!(:person).and_return(@person)
     @entity.stub!(:entities_location).and_return(@entities_location)
+    @entity.stub!(:telephone_entities_location).and_return(@telephone_entities_location)
+    
+    
     @entity.stub!(:address).and_return(@address)
     @entity.stub!(:telephone).and_return(@phone)
-    @entity.stub!(:current_locations).and_return([@location])
-    @entity.stub!(:locations).and_return([@location])
+    @entity.stub!(:current_locations).and_return([@address_location])
+    @entity.stub!(:locations).and_return([@address_location, @telephone_location])
     @entity.stub!(:races).and_return([@race])
     @entity.stub!(:primary_entities_location).and_return(@entities_location)
-
+    @entity.stub!(:primary_phone_entities_location).and_return(@telephone_entities_location)
+    
     assigns[:entity] = @entity
     assigns[:locations] = Array.new
     assigns[:type] = 'person'

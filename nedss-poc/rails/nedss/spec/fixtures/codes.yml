@@ -174,3 +174,15 @@ participant_testing_lab:
   code_name: "participant"
   the_code: "EB"
   code_description: "Tested By"
+
+address_location_type:
+  id: 2311
+  code_name: "locationtype"
+  the_code: "ALT"
+  code_description: "Address Location Type"
+
+telephone_location_type:
+  id: 2312
+  code_name: "locationtype"
+  the_code: "TLT"
+  code_description: "Telephone Location Type"

@@ -1,8 +1,15 @@
-<%= error_messages_for :object => telephone %>
-<% f.fields_for(:telephone, telephone, :builder => ExtendedFormBuilder) do |t| %>
+<%= error_messages_for :object => entity_data.telephone %>
 
-  <%- event = event.nil? ? nil : event %>
+<%- event = event.nil? ? nil : event %>
 
+<% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
+  <span class="horiz">
+    <%= el.label(:entity_location_type_id, "Phone type") %>
+    <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, event) %>
+  </span>
+<% end %>
+
+<% f.fields_for(:telephone, entity_data.telephone, :builder => ExtendedFormBuilder) do |t| %>
   <span class="horiz">
     <%= t.label(:area_code) %>
     <%= t.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, event) %>

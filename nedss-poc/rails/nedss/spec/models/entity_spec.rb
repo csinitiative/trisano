@@ -77,6 +77,7 @@ describe Entity, "with associated location and person via custom attributes" do
   before(:each) do
     @entity = Entity.new( :person => {:last_name => 'Fields'},
                           :entities_location => {:entity_location_type_id => 1302, :primary_yn_id => 1402 },
+                          :telephone_entities_location => {:entity_location_type_id => 2105, :primary_yn_id => 1401 },
                           :address => { :street_name => "Pine St.", :street_number => "123" },
                           :telephone => { :area_code => '212', :phone_number => '5551212'} )
   end
@@ -114,12 +115,12 @@ describe Entity, "with associated location and person via custom attributes" do
       @entity.save.should be_true
     end
 
-    it "should add one new row to the entities_location table" do
-      lambda { @entity.save }.should change { EntitiesLocation.count }.by(1)
+    it "should add two new rows to the entities_location table" do
+      lambda { @entity.save }.should change { EntitiesLocation.count }.by(2)
     end
 
-    it "should add one new row to the location table" do
-      lambda { @entity.save }.should change { Location.count }.by(1)
+    it "should add two new rows to the location table" do
+      lambda { @entity.save }.should change { Location.count }.by(2)
     end
 
     it "should add one new row to the address table" do

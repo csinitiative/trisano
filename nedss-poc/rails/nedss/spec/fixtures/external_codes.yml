@@ -317,3 +317,31 @@ imported_from_other_state:
   code_name: "imported"
   the_code: "US"
   code_description: "Other U.S. State"
+
+telephonelocationtype_unknown:
+  id: 2105
+  code_name: "telephonelocationtype"
+  the_code: "UNK"
+  code_description: "Unknown"
+  sort_order: 1
+
+telephonelocationtype_home:
+  id: 2106
+  code_name: "telephonelocationtype"
+  the_code: "HT"
+  code_description: "Home"
+  sort_order: 5
+
+telephonelocationtype_work:
+  id: 2107
+  code_name: "telephonelocationtype"
+  the_code: "WT"
+  code_description: "Work"
+  sort_order: 10
+
+telephonelocationtype_mobile:
+  id: 2108
+  code_name: "telephonelocationtype"
+  the_code: "MT"
+  code_description: "Mobile"
+  sort_order: 15

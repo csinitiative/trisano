@@ -61,10 +61,6 @@
         <%= f.text_field(:event_name, :size => 25) %>
       </span>
       <span class="horiz">
-        <%= f.label(:first_reported_PH_date, "Date submitted to UDOH") %>
-        <%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
-      <span class="horiz">
         <%= f.label(:review_completed_UDOH_date, "Date review completed by UDOH") %>
         <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
       </span>

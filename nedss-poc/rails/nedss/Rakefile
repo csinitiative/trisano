@@ -60,7 +60,6 @@ Rake::Task["db:create"].enhance {
 }
 
 Rake::Task["db:test:prepare"].enhance {
-  puts "Loading fixtures..."
   ruby "-S rake spec:db:fixtures:load FIXTURES=codes RAILS_ENV=test"
 }
 

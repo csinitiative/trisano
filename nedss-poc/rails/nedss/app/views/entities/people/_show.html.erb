@@ -1,8 +1,14 @@
 <% e = entity_data %>
 <% p = entity_data.person %>
+
 <% unless entity_data.entities_location.nil? %>
-  <% l = entity_data.primary_entities_location.location; a = l.current_address; t = l.current_phone %>
+  <% l = entity_data.primary_entities_location.location; a = l.current_address; %>
 <% end %>
+
+<% unless entity_data.telephone_entities_location.nil? %>
+  <% telephone_location = entity_data.primary_phone_entities_location.location; telephone = telephone_location.current_phone %>
+<% end %>
+
 
 <fieldset>
 <legend> Person Information/Demographics</legend>  
@@ -43,10 +49,10 @@
   </tr>
   <tr>
     <td colspan="6"><span class="label"><%= l.type unless l.nil?%> Phone: <%= " (Primary) " if l.primary? unless l.nil? -%></span>
-  <% unless t.nil? %>
-    <%= fml "(", t.area_code, ") " if t.area_code -%>
-<%= phone_number(t.phone_number) -%>
-<%= fml " Ext. ", t.extension, "" if t.extension -%>
+  <% unless telephone.nil? %>
+    <%= fml "(", telephone.area_code, ") " if telephone.area_code -%>
+<%= phone_number(telephone.phone_number) -%>
+<%= fml " Ext. ", telephone.extension, "" if telephone.extension -%>
   <% end %>
     </td>
   </tr>

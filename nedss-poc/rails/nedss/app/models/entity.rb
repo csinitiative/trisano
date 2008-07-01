@@ -15,11 +15,18 @@ class Entity < ActiveRecord::Base
 
   # TODO: SERIOUS DEBT, Nothing enforces just one primary location
   has_one :primary_entities_location, 
-          :class_name => 'EntitiesLocation', 
-          :foreign_key => 'entity_id', 
-          :conditions => [ "primary_yn_id = ?", ExternalCode.yes_id ],
-          :order => 'created_at DESC'
-
+    :class_name => 'EntitiesLocation', 
+    :foreign_key => 'entity_id', 
+    :conditions => [ "primary_yn_id = ?", ExternalCode.yes_id ],
+    :order => 'created_at DESC'
+  
+  # Just grabbing the most recent phone here. Not supporting multiples yet.
+  has_one :primary_phone_entities_location, 
+    :class_name => 'EntitiesLocation', 
+    :foreign_key => 'entity_id', 
+    :conditions => [ "location_type_id = ?", Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id],
+    :order => 'created_at DESC'
+  
   has_and_belongs_to_many :races, 
     :class_name => 'ExternalCode', 
     :join_table => 'people_races', 
@@ -39,16 +46,16 @@ class Entity < ActiveRecord::Base
 
   def person=(attributes)
     if new_record?
-        @person = Person.new(attributes)
+      @person = Person.new(attributes)
     else
-        person.update_attributes(attributes)
+      person.update_attributes(attributes)
     end
     set_entity_type(person)
   end  
 
-   # Debt: Remove this when the associations are correct on user.rb.
-   # The role view uses this accessor to get a place name in a
-   # collection_select.
+  # Debt: Remove this when the associations are correct on user.rb.
+  # The role view uses this accessor to get a place name in a
+  # collection_select.
   def place
     @place || current_place
   end
@@ -64,8 +71,16 @@ class Entity < ActiveRecord::Base
 
   def entities_location=(attributes)
     @entities_location = EntitiesLocation.new(attributes)
-  end  
+  end
+  
+  def telephone_entities_location
+    @telephone_entities_location || primary_phone_entities_location
+  end
 
+  def telephone_entities_location=(attributes)
+    @telephone_entities_location = EntitiesLocation.new(attributes)
+  end
+  
   def address
     @address || (primary_entities_location.nil? ? nil : primary_entities_location.location.address)
   end
@@ -75,7 +90,7 @@ class Entity < ActiveRecord::Base
   end  
 
   def telephone
-    @telephone || (primary_entities_location.nil? ? nil : primary_entities_location.location.telephone)
+    @telephone || (primary_phone_entities_location.nil? ? nil : primary_phone_entities_location.location.telephone)
   end
 
   def telephone=(attributes)
@@ -150,13 +165,20 @@ class Entity < ActiveRecord::Base
   end
 
   def save_location_info
-    if not (Utilities::model_empty?(@address) and Utilities::model_empty?(@telephone))
-      entities_location.entity_id = id
+    unless Utilities::model_empty?(@address)
+       entities_location.entity_id = id
       a_attrs = @address.nil?   ? {} : @address.attributes
-      t_attrs = @telephone.nil? ? {} : @telephone.attributes
-      l= Location.new(:entities_location => entities_location.attributes, :address => a_attrs, :telephone => t_attrs)
-      l.save
+      address_location = Location.new(:entities_location => entities_location.attributes, :address => a_attrs)
+      address_location.save
     end
+    
+    unless Utilities::model_empty?(@telephone)
+       telephone_entities_location.entity_id = id
+       t_attrs = @telephone.nil? ? {} : @telephone.attributes
+       telephone_location = Location.new(:entities_location => telephone_entities_location.attributes, :telephone => t_attrs)    
+       telephone_location.save
+    end
+    
   end
 
 end
