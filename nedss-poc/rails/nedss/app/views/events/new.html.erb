@@ -11,8 +11,8 @@
 var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </script> 
 
-<span id='disable_tabs' onClick="myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab', 'contacts-tab', 'epi_tab','reporting_tab','administrative_tab'].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;">[Disable Tabs]</span>
-<span id='enable_tabs' onClick="myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); ['demographic_tab','clinical_tab','lab_info_tab', 'contacts-tab', 'epi_tab','reporting_tab','administrative_tab','enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;" style='display: none;'>[Enable Tabs]</span>
+<%=  tab_toggler(false) %>
+
 <div id="cmr_tabs" class="yui-navset">
   <ul class="yui-nav" id='tabs'>
     <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
