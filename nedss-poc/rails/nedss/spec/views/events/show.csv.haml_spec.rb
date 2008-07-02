@@ -4,6 +4,15 @@ describe "/events/show.csv.haml" do
   before(:each) do
 
     @event_1 = mock_model(Event)
+    @lab = mock_model(Participation)
+    @lab_result = mock_model(LabResult)
+
+    @event_1.stub!(:labs).and_return([@lab])
+
+    [].stub!(:empty?).and_return(false)
+    @lab.stub!(:lab_results).and_return([@lab_result])
+    @lab.stub!(:each).and_yield(@lab_result)
+
     @event_type = mock_model(Code)
     @event_status = mock_model(ExternalCode)
     @imported_from = mock_model(ExternalCode)
@@ -17,11 +26,11 @@ describe "/events/show.csv.haml" do
     @tested_at_uphl_yn = mock_model(ExternalCode)
     @pregant = mock_model(ExternalCode)
 
-    @lab_result = mock_model(LabResult)
     @disease_event = mock_model(DiseaseEvent)
     @disease_mock = mock_model(Disease)
     @active_patient = mock_model(Participation)
     @participations_risk_factor = mock_model(ParticipationsRiskFactor)
+
 
     @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
     @event_type.stub!(:code_description).and_return('ONS')
@@ -40,6 +49,7 @@ describe "/events/show.csv.haml" do
     @disease_event.stub!(:disease_onset_date).and_return("2008-02-13")
     @specimen_source.stub!(:code_description).and_return('Tissue')
     @tested_at_uphl_yn.stub!(:code_description).and_return('Yes')
+
     @lab_result.stub!(:specimen_source).and_return(@specimen_source)
     @lab_result.stub!(:lab_result_text).and_return("Positive")
     @lab_result.stub!(:collection_date).and_return("2008-02-14")
