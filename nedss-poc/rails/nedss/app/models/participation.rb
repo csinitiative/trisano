@@ -59,7 +59,7 @@ class Participation < ActiveRecord::Base
   end
 
   def participations_treatment=(attributes)
-    participations_treatments.build(attributes) unless attributes.values_blank?
+    participations_treatments.build(attributes) unless attributes[:treatment].blank?
   end  
 
   def participations_risk_factor
@@ -73,7 +73,7 @@ class Participation < ActiveRecord::Base
   private
 
   def save_associations
-    self.primary_entity = active_primary_entity unless Utilities::model_empty?(active_primary_entity)
-    self.secondary_entity = active_secondary_entity unless Utilities::model_empty?(active_secondary_entity)
+    self.primary_entity = @active_primary_entity unless Utilities::model_empty?(@active_primary_entity)
+    self.secondary_entity = @active_secondary_entity unless Utilities::model_empty?(@active_secondary_entity)
   end
 end
