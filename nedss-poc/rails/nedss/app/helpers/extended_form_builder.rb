@@ -40,13 +40,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         
     question = question_element.question
 
-    # Defect: These need to filter on value sets so as not to be thrown off by follow ups
-    # Selection-type elements must have a value set
     if [:drop_down, :check_box, :radio_button].include? question.data_type 
       if form_elements_cache.children(question_element).empty?
         return ""
       else
-        if form_elements_cache.children(form_elements_cache.children(question_element).first).empty?
+       if form_elements_cache.children(form_elements_cache.children_by_type("ValueSetElement", question_element).first).empty?
           return ""
         end
       end
