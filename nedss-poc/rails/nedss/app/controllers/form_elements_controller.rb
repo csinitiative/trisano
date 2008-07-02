@@ -36,7 +36,7 @@ class FormElementsController < ApplicationController
 
     respond_to do |format|
       if @form_element.save
-        flash[:notice] = 'FormElement was successfully created.'
+        flash[:notice] = 'Form element was successfully created.'
         format.html { redirect_to(@form_element) }
         format.xml  { render :xml => @form_element, :status => :created, :location => @form_element }
       else
@@ -65,7 +65,9 @@ class FormElementsController < ApplicationController
     begin
       @form_element = FormElement.find(params[:id])
       @form_element.destroy_with_dependencies
-      flash[:notice] = 'The form element was successfully deleted.'
+      # Debt: This is a generic method but only question deletion goes through it, so the error message here is
+      # specific to question deletion.
+      flash[:notice] = 'The question was successfully deleted.'
       @form = Form.find(@form_element.form_id)
     rescue Exception => ex
       logger.debug ex
