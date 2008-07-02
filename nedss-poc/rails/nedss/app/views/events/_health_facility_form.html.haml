@@ -2,10 +2,12 @@
 
   - if health_facility.role_id == Event.participation_code('Diagnosed At')
     - hf_fields = :diagnosing_health_facility
+    - hf_object = @event.diagnosing_health_facility
   - else
     - hf_fields = :hospitalized_health_facility
+    - hf_object = @event.hospitalized_health_facility
     
-  - f.fields_for(hf_fields, @event.hospitalized_health_facility, :builder => ExtendedFormBuilder) do |hhf_form|
+  - f.fields_for(hf_fields, hf_object, :builder => ExtendedFormBuilder) do |hhf_form|
     = render :partial => "health_facilities/form", :locals => { :hf_form => hhf_form, :health_facility => health_facility }
 - else
   %div{:id => "#{refresh_list}"}
