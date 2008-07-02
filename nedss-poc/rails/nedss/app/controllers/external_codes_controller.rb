@@ -1,4 +1,4 @@
-class ExternalCodesController < ApplicationController
+class ExternalCodesController < AdminController
     def index
         @external_codes = ExternalCode.find(:all, :conditions => "next_ver is NULL", :order => "sort_order")
 	@code_types = ExternalCode.find(:all,:select => "DISTINCT code_name", :order => "code_name")
