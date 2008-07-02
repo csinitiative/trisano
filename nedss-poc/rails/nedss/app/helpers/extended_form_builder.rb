@@ -113,11 +113,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
       html_options[:onchange] = text_answer_event if follow_ups
-      calendar_date_select(:text_answer, html_options)
+        calendar_date_select(:text_answer, html_options)
     when :phone
       html_options[:size] = 14
       html_options[:onchange] = text_answer_event if follow_ups
-      text_field(:text_answer, html_options)
+      text_field(:text_answer, html_options) + "&nbsp;<small>10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999</small>"
     end
 
     result = ""

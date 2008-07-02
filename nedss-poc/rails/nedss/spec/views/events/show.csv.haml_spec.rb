@@ -71,7 +71,6 @@ describe "/events/show.csv.haml" do
     @event_1.stub!(:event_name).and_return('Test')
     @event_1.stub!(:event_onset_date).and_return("2008-02-19")
     @event_1.stub!(:disease).and_return(@disease_event)
-    @event_1.stub!(:lab_result).and_return(@lab_result)
     @event_1.stub!(:event_type).and_return(@event_type)
     @event_1.stub!(:event_status).and_return(@event_status)
     @event_1.stub!(:imported_from).and_return(@imported_from)
