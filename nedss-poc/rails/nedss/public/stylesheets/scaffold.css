@@ -188,7 +188,8 @@ div.progressBar div.background {
   background: #f5f5f5;
   margin-top: 1em;
   padding-left: 1em;
-  padding-top: 1em;
+  padding-right: 1em;
+  padding-top: .5em;
 }
 
 .fb-container {

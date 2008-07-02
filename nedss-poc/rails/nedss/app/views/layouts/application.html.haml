@@ -9,10 +9,10 @@
 
     / Sam Skin CSS for TabView
     = stylesheet_link_tag '../yui/build/tabview/assets/skins/sam/tabview.css'
-    = stylesheet_link_tag '../yui/build/button/assets/skins/sam/button.css' 
+    / = stylesheet_link_tag '../yui/build/button/assets/skins/sam/button.css' 
 
     / Menu Stylesheet (required for creating buttons of type "menu" and "split")
-    = stylesheet_link_tag '../yui/build/menu/assets/skins/sam/menu.css'
+    / = stylesheet_link_tag '../yui/build/menu/assets/skins/sam/menu.css'
 
     / JavaScript Dependencies for Tabview
     = javascript_include_tag '../yui/build/yahoo-dom-event/yahoo-dom-event.js'
@@ -54,7 +54,7 @@
               = link_to 'CMRS', cmrs_path
               |
               - if User.current_user.is_admin?
-                = link_to 'FORM', forms_path
+                = link_to 'FORMS', forms_path
                 |
               = link_to 'SEARCH', search_path
               - if User.current_user.is_admin?
