@@ -114,7 +114,7 @@ class Event < ActiveRecord::Base
   def contact=(attributes)
     unless attributes[:active_secondary_entity][:person][:last_name].blank?
       attributes[:role_id] = Event.participation_code('Contact')
-      contacts.build(attributes)
+      @contact = contacts.build(attributes)
     end
   end
   
@@ -125,7 +125,7 @@ class Event < ActiveRecord::Base
   def clinician=(attributes)
     unless attributes[:active_secondary_entity][:person][:last_name].blank?
       attributes[:role_id] = Event.participation_code('Treated By')
-      clinicians.build(attributes)
+      @clinician = clinicians.build(attributes)
     end
   end
   
@@ -185,24 +185,24 @@ class Event < ActiveRecord::Base
   end
 
   def hospitalized_health_facility
-    @hospitalized_health_facility ||= Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
+    @hospitalized_health_facility || Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
   end
 
   def hospitalized_health_facility=(attributes)
     unless attributes[:secondary_entity_id].blank?
       attributes[:role_id] = Event.participation_code('Hospitalized At')
-      hospitalized_health_facilities.build(attributes)
+      @hospitalized_health_facility = hospitalized_health_facilities.build(attributes)
     end
   end
   
   def diagnosing_health_facility
-    @diagnosing_health_facility ||= Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
+    @diagnosing_health_facility || Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
   end
 
   def diagnosing_health_facility=(attributes)
     unless attributes[:secondary_entity_id].blank?
       attributes[:role_id] = Event.participation_code('Diagnosed At')
-      diagnosing_health_facilities.build(attributes)
+      @diagnosing_health_facility = diagnosing_health_facilities.build(attributes)
     end
   end
   

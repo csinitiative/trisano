@@ -51,7 +51,7 @@ class Participation < ActiveRecord::Base
   end
 
   def hospitals_participation=(attributes)
-    hospitals_participations.build(attributes)
+    @hospitals_participation = hospitals_participations.build(attributes)
   end 
   
   def participations_treatment
@@ -59,7 +59,7 @@ class Participation < ActiveRecord::Base
   end
 
   def participations_treatment=(attributes)
-    participations_treatments.build(attributes) unless attributes[:treatment].blank?
+    @participations_treatment = participations_treatments.build(attributes) unless attributes[:treatment].blank?
   end  
 
   def participations_risk_factor
@@ -67,7 +67,7 @@ class Participation < ActiveRecord::Base
   end
 
   def participations_risk_factor=(attributes)
-    participations_risk_factors.build(attributes)
+    @participations_risk_factor = participations_risk_factors.build(attributes)
   end  
 
   private
