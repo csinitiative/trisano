@@ -10,4 +10,4 @@
     %p
       = f.submit "Create"
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'))"
+      = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"

@@ -9,4 +9,4 @@
     %p
       = f.submit "Update"
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('question-mods-#{@question_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.id}'))"
+      = link_to_function "Close", "$('question-mods-#{@question_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.id}'), { duration: 0.1 })"

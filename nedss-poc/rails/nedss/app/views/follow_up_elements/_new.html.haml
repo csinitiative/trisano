@@ -13,4 +13,4 @@
     %p
       = f.submit "Create"
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('follow-up-mods-#{@follow_up_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('follow-up-mods-#{@follow_up_element.parent_element_id}'))"
+      = link_to_function "Close", "$('follow-up-mods-#{@follow_up_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('follow-up-mods-#{@follow_up_element.parent_element_id}'), { duration: 0.1 })"
