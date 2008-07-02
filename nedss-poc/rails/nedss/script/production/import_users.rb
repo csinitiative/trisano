@@ -31,8 +31,9 @@ def setup_data_is_correct
   puts "NEDSS user's password = #{@nedss_user_pwd}"
 
   puts
-  repeat = get_input_from_user("Is the above information correct (y/n)?", "y")
-  repeat.downcase == "y" ? false : true
+  proceed = get_input_from_user("Is the above information correct (y/n)?", "y")
+  puts "Please update the config.yml with the proper settings and run the script again." if proceed.downcase == "n"
+  exit if proceed.downcase == "n"
 end
 
 def get_input_from_user(prompt, default)
@@ -50,20 +51,47 @@ def get_input_from_user(prompt, default)
 end
 
 def import_users 
-  puts "deleting contents of user tables."
-  
   dump_dir = "./db-dump"
-    
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f delete_users.sql")
+  
+  puts "deleting contents of user tables."    
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f delete_users.sql")
+  unless success
+    puts "existing users deletion failed."
+    return success
+  end  
   
   puts "importing users tables."
-  puts "#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/priv.sql"
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/priv.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/roles.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/users.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/entitlements.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/privileges_roles.sql")
-  system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/role_memberships.sql")
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/priv.sql")
+  unless success
+    puts "privileges table import failed."
+    return success
+  end
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/roles.sql")
+  unless success
+    puts "roles table import failed."
+    return success
+  end
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/users.sql")
+  unless success
+    puts "users table import failed."
+    return success
+  end  
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/entitlements.sql")
+  unless success
+    puts "entitlements table import failed."
+    return success
+  end  
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/privileges_roles.sql")
+  unless success
+    puts "privileges_roles table import failed."
+    return success
+  end  
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f #{dump_dir}/role_memberships.sql")
+  unless success
+    puts "role_memberships table import failed."
+    return success
+  end    
+  puts "Successfully imported users"
 end
 
 puts ""

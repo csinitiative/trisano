@@ -32,8 +32,9 @@ def setup_data_is_correct
   puts "NEDSS user's password = #{@nedss_user_pwd}"
 
   puts
-  repeat = get_input_from_user("Is the above information correct (y/n)?", "y")
-  repeat.downcase == "y" ? false : true
+  proceed = get_input_from_user("Is the above information correct (y/n)?", "y")
+  puts "Please update the config.yml with the proper settings and run the script again." if proceed.downcase == "n"
+  exit if proceed.downcase == "n"
 end
 
 def get_input_from_user(prompt, default)
@@ -62,13 +63,44 @@ def export_users
   
   t = Time.now
   full_dump_file = "full_dump_-" + t.strftime("%m-%d-%Y-%I%M%p") + ".sql"
-  system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/#{full_dump_file}")
-  system("#{@pgdump} -a -t privileges -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/priv.sql")
-  system("#{@pgdump} -a -t roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/roles.sql")
-  system("#{@pgdump} -a -t users -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/users.sql")
-  system("#{@pgdump} -a -t entitlements -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/entitlements.sql")
-  system("#{@pgdump} -a -t privileges_roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/privileges_roles.sql")
-  system("#{@pgdump} -a -t role_memberships -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/role_memberships.sql")
+  success = system("#{@pgdump} -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/#{full_dump_file}")
+  unless success
+    puts "Full database dump failed."
+    return success
+  end
+  success = system("#{@pgdump} -a -t privileges -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/priv.sql")  
+  unless success
+    puts "privileges table dump failed"
+    return success
+  end
+  success = system("#{@pgdump} -a -t roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/roles.sql")
+  unless success
+    puts "roles table dump failed"
+    return success
+  end  
+  success = system("#{@pgdump} -a -t users -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/users.sql")
+  unless success
+    puts "users table dump failed"
+    return success
+  end  
+  success = system("#{@pgdump} -a -t entitlements -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/entitlements.sql")
+  unless success
+    puts "entitlements table dump failed"
+    return success
+  end  
+  success = system("#{@pgdump} -a -t privileges_roles -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/privileges_roles.sql")
+  unless success
+    puts "privileges_roles table dump failed"
+    return success
+  end  
+  success = system("#{@pgdump} -a -t role_memberships -U #{@username} -h #{@host} -p #{@port} #{@database} > #{dump_dir}/role_memberships.sql")
+  unless success
+    puts "role_memberships table dump failed"
+    return success
+  end  
+  puts "User export success" if success  
+  
+  return success
 end
 
 puts ""
