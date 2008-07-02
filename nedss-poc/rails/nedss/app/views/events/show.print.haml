@@ -96,8 +96,6 @@
     - entities_location = entity.telephone_entities_location
     - no_location = entities_location.nil?
     - phone = entity.primary_phone_entities_location.location.current_phone unless no_location
-    - p "HEY"
-    - p phone
     - no_phone = no_location || phone.nil?
 
     %div{:id => "patient_phone"}
@@ -141,3 +139,49 @@
               = " and " unless i == 0 
               = l race
               - i += 1
+
+  %div{:id => "clinical"}
+    %span{:class => "section-header"} Clinical Information
+
+    %br
+    %div{:id => "clinician-names"}
+      %div{:class => "three-valued-row"}
+        - if @event.clinicians.empty?
+          %span{:class => "print-label"} Clinican Information:
+          %span{:class => "print-value"}
+            No clinicians have been recorded for this case
+        - else
+          - count = 0
+          - for clinician in @event.clinicians
+            - phone = nil
+            - break if count == 3
+            - count += 1
+            - person = clinician.active_secondary_entity.person
+            %div{:class => "left"}
+              %span{:class => "print-label"} Clinican First Name:
+              %span{:class => "print-value"}
+                = person.first_name
+            %div{:class => "left"}
+              %span{:class => "print-label"} Last Name:
+              %span{:class => "print-value"}
+                = person.last_name
+            %div{:class => "right"}
+              %span{:class => "print-label"} Phone:
+              - entities_location = clinician.active_secondary_entity.telephone_entities_location
+              - no_location = entities_location.nil?
+              - phone = clinician.active_secondary_entity.primary_phone_entities_location.location.current_phone unless no_location
+              - no_phone = no_location || phone.nil?
+              - unless no_phone
+                %span{:class => "print-value"}
+                  = fml "(", phone.area_code, ") " 
+                  = phone_number(phone.phone_number)
+                  = fml " Ext. ", phone.extension, ""
+
+    %br
+    %div{:id => "clinician-names"}
+      %div{:class => "three-valued-row"}
+        <hr/><br/>
+        %div{:class => "left"}
+          %span{:class => "print-label"} Was patient hospitalized:
+          %span{:class => "print-value"}
+            = l @event.disease.hospitalized

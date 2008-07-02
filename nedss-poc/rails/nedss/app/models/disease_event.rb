@@ -1,6 +1,6 @@
 class DiseaseEvent < ActiveRecord::Base
-  belongs_to :hospitalized, :class_name => 'Code'
-  belongs_to :died, :class_name => 'Code'
+  belongs_to :hospitalized, :class_name => 'ExternalCode'
+  belongs_to :died, :class_name => 'ExternalCode'
 
   belongs_to :event
   belongs_to :disease
