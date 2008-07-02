@@ -1,12 +1,16 @@
 <fieldset>
-  <legend>Administrative Information
+  <legend>Administrative Information 
     <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
     <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id='cmr_info_form'>
     <% if not @event.record_number.blank? %>
-      <span class="label">Record number</span>
-      <%= @event.record_number %>
+      <span class="label">Record number:</span> <%= @event.record_number %>
+    <% end %>
+
+    <% if not @event.MMWR_year.blank? %>
+      <span class="label">MMWR year:</span> <%= @event.MMWR_year %>
+      <span class="label">MMWR week:</span> <%= @event.MMWR_week %>
     <% end %>
     <p/>
     <fieldset class="form">

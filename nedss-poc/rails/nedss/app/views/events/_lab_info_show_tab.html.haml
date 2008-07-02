@@ -6,12 +6,12 @@
   - else
     %table{:class => 'tabular'}
       %tr
-        %th Lab Name
-        %th Lab Result
-        %th Specimen Source
-        %th Collection Date
-        %th Lab Test Date
-        %th Tested at UPHL Lab
+        %th Lab name
+        %th Lab result
+        %th Specimen source
+        %th Collection date
+        %th Lab test date
+        %th Tested at UPHL lab
 
       - for lab in @event.labs
         - for lab_result in lab.lab_results

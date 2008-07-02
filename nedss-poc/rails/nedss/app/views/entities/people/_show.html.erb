@@ -14,11 +14,11 @@
 <legend> Person Information</legend>  
 <table cellpadding="2">
   <tr>
-    <td><span class="label">Last Name:</span></td>
+    <td><span class="label">Last name:</span></td>
     <td><%= p.last_name %></td>
-    <td><span class="label">First Name:</span></td>
+    <td><span class="label">First name:</span></td>
     <td><%= p.first_name %></td>
-    <td><span class="label">Middle Name:</span></td>
+    <td><span class="label">Middle name:</span></td>
     <td><%= p.middle_name %></td>
   </tr>
 
@@ -37,13 +37,13 @@
     </td>
   </tr>
   <tr>
-    <td><span class="label">Birth Date:</span></td>
+    <td><span class="label">Birth date:</span></td>
     <td><%= p.birth_date %></td>
     <% if not p.birth_date.blank? %>
       <td><span class="label">Age:</span></td>
       <td><%= calculate_age(p.birth_date) %></td>
     <% elsif not p.approximate_age_no_birthday.blank?  %>
-      <td><span class="label">Approximage Age:</span></td>
+      <td><span class="label">Approximage age:</span></td>
       <td><%= p.approximate_age_no_birthday %></td>
     <% end %>
   </tr>
@@ -57,9 +57,9 @@
     </td>
   </tr>
   <tr>
-    <td><span class="label">Birth Gender:</span></td>
+    <td><span class="label">Birth gender:</span></td>
     <td><%= l p.birth_gender %></td>
-    <td><span class="label">Primary Language:</span></td>
+    <td><span class="label">Primary language:</span></td>
     <td><%= l p.primary_language %></td>
   </tr>
   <tr>

@@ -6,23 +6,18 @@
     %tr
       %td
         %span{:class => 'label'}
-          Record Number:
-      %td
-        = @event.record_number
-      %td
-        %span{:class => 'label'}
           Disease:
       %td
         = @event.disease.disease.disease_name unless @event.disease.disease.nil?
     %tr
       %td
         %span{:class => 'label'}
-          Disease Onset Date:
+          Disease onset date:
       %td
         = @event.disease.disease_onset_date unless @event.disease.disease.nil?
       %td
         %span{:class => 'label'}
-          Date Diagnosed:
+          Date diagnosed:
       %td
         = @event.disease.date_diagnosed unless @event.disease.disease.nil?
     %tr
@@ -43,13 +38,13 @@
         = l @event.disease.died
       %td
         %span{:class => 'label'}
-          Date of Death:
+          Date of death:
       %td
         = entity_data.person.date_of_death
     %tr
       %td
         %span{:class => 'label'}
-          Imported From:
+          Imported from:
       %td
         = l @event.imported_from
       %td
@@ -59,7 +54,7 @@
 
   %fieldset
     %legend
-      Diagnosing Health Facilities  
+      Diagnosing health facilities  
     %table{:cellpadding => '2'}
       %tr
         %td
@@ -68,7 +63,7 @@
 
   %fieldset
     %legend
-      Hospitalized Health Facilities  
+      Hospitalized health facilities  
     %table{:cellpadding => '2'}
       %tr
         %td

@@ -31,10 +31,10 @@
     - fields_for(prefix_with_array, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
       =# hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
       %span{:class => "horiz"}
-        = lab_result_fields.label(:lab_result_text, "Lab Result")
+        = lab_result_fields.label(:lab_result_text, "Lab result")
         = lab_result_fields.text_field(:lab_result_text, :size => 20)
       %span{:class => "horiz"}
-        = lab_result_fields.label(:specimen_source_id, "Specimen Source")
+        = lab_result_fields.label(:specimen_source_id, "Specimen source")
         = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
       %span{:class => "horiz"}
         = lab_result_fields.label(:collection_date)
@@ -43,7 +43,7 @@
         = lab_result_fields.label(:lab_test_date)
         = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
       %span{:class => "horiz"}
-        = lab_result_fields.label(:tested_at_uphl_yn_id, "Tested at UPHL Lab")
+        = lab_result_fields.label(:tested_at_uphl_yn_id, "Tested at UPHL lab")
         = lab_result_fields.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {})
 
       %span{:class => "horiz", :style => "margin-top: 30px"}

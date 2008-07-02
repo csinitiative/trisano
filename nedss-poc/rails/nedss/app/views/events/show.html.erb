@@ -49,27 +49,27 @@
     <legend>Epidemiological Information</legend>  
     <table>
       <tr>
-        <td><span class="label">Food Handler:</span></td>
+        <td><span class="label">Food handler:</span></td>
         <td><%= l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        <td><span class="label">Healthcare Worker:</span></td>
+        <td><span class="label">Healthcare worker:</span></td>
         <td><%= l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
       </tr>
       <tr>
-        <td><span class="label">Group Living:</span></td>
+        <td><span class="label">Group living:</span></td>
         <td><%= l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        <td><span class="label">Day Care Association:</span></td>
+        <td><span class="label">Day care association:</span></td>
         <td><%= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
       </tr>
       <tr>
         <td><span class="label">Pregnant:</span></td>
         <td><%= l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        <td><span class="label">Pregnancy Due Date:</span></td>
+        <td><span class="label">Pregnancy due date:</span></td>
         <td><%= @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
       </tr>
       <tr>
-        <td><span class="label">Risk Factors:</span></td>
+        <td><span class="label">Risk factors:</span></td>
         <td><%= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        <td><span class="label">Risk Factor Notes:</span></td>
+        <td><span class="label">Risk factor notes:</span></td>
         <td><%= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
       </tr>
     </table>
@@ -81,14 +81,14 @@
     <legend>Reporting Information</legend>
     <table>
       <tr>
-        <td><span class="label">Name of Reporter:</span></td>
+        <td><span class="label">Name of reporter:</span></td>
         <td><%= @event.reporter.active_secondary_entity.person.first_name unless @event.reporter.nil? -%>
         <%= @event.reporter.active_secondary_entity.person.last_name unless @event.reporter.nil? %></td>
-        <td><span class="label">Reporting Agency:</span></td>
+        <td><span class="label">Reporting agency:</span></td>
         <td><%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%></td>
       </tr>
       <tr>
-        <td><span class="label">Reporter Phone number:</span></td>
+        <td><span class="label">Reporter phone number:</span></td>
         <td><% p = @event.reporter.active_secondary_entity.telephone unless @event.reporter.nil? %>
           <% if not p.nil? %>
             <%= fml " (", p.area_code, ") " if p.area_code -%>
@@ -99,7 +99,7 @@
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td><span class="label">Date Results Reported to Clinician:</span></td>
+        <td><span class="label">Date results reported to Clinician:</span></td>
         <td><%= @event.results_reported_to_clinician_date %></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -119,42 +119,46 @@
 <legend>Administrative Information</legend>  
 <table cellpadding="2">
   <tr>
-    <td><span class="label">Event Onset Date:</span></td>
+    <td><span class="label">Record number:</span></td>
+    <td><%= @event.record_number %></td>
+  </tr>  
+  <tr>
+    <td><span class="label">MMWR year:</span></td>
+    <td><%= @event.MMWR_year %></td>
+    <td><span class="label">MMWR week:</span></td>
+    <td><%= @event.MMWR_week %></td>
+  </tr>
+  
+  <tr>
+    <td><span class="label">Event onset date:</span></td>
     <td><%= @event.event_onset_date %></td>
-    <td><span class="label">Event Case Status:</span></td>
+    <td><span class="label">Event case status:</span></td>
     <td><%= l @event.event_case_status %></td>
   </tr>
   <tr>
-    <td><span class="label">Outbreak Associated:</span></td>
+    <td><span class="label">Outbreak associated:</span></td>
     <td><%= l @event.outbreak_associated %></td>
-    <td><span class="label">Outbreak Name:</span></td>
+    <td><span class="label">Outbreak name:</span></td>
     <td><%= @event.outbreak_name %></td>
-  </tr>
-  <tr>
-    <td><span class="label">MMWR Year:</span></td>
-    <td><%= @event.MMWR_year %></td>
-    <td><span class="label">MMWR Week:</span></td>
-    <td><%= @event.MMWR_week %></td>
-  </tr>
   </tr>
   <td><span class="label">Jurisdiction responsible for investigation:</span></td>
   <td><%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%></td>
-  <td><span class="label">Event Name:</span></td>
+  <td><span class="label">Event name:</span></td>
   <td><%= @event.event_name %></td>  
   <tr>
-    <td><span class="label">Event Status:</span></td>
+    <td><span class="label">Event status:</span></td>
     <td><%= l @event.event_status %></td>
-    <td><span class="label">Date Investigation Started:</span></td>
+    <td><span class="label">Date investigation started:</span></td>
     <td><%= @event.investigation_started_date %></td>
   </tr>
   <tr>
-    <td><span class="label">LHD Investigation Status:</span></td>
+    <td><span class="label">LHD investigation status:</span></td>
     <td><%= l @event.investigation_LHD_status %></td>
-    <td><span class="label">Date Invesitgation Completed:</span></td>
+    <td><span class="label">Date invesitgation completed:</span></td>
     <td><%= @event.investigation_completed_LHD_date %></td>
   </tr>
   <tr>
-    <td><span class="label">Date Review Completed by UDOH:</span></td>
+    <td><span class="label">Date review completed by UDOH:</span></td>
     <td><%= @event.review_completed_UDOH_date %></td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
