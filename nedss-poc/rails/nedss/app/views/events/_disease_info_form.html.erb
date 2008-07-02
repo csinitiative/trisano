@@ -24,7 +24,7 @@
       </fieldset>
     
       <fieldset class="form">
-        <legend>Diagnosis</legend>
+        <legend>Diagnosing Health Facilities</legend>
         <%= render :partial => 'health_facility_form', :locals => { :f => f,
           :health_facility => @event.diagnosing_health_facility,
           :health_facilities => @event.diagnosing_health_facilities,
@@ -32,7 +32,7 @@
       </fieldset>
     
       <fieldset class="form">
-        <legend>Hospitalization</legend>
+        <legend>Hospitalized Health Facilities</legend>
         <span class="vert">
           <%= d.label(:hospitalized_id, "Hospitalized") %>
           <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
