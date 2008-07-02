@@ -6,13 +6,11 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.open "/nedss/cmrs"
       @browser.wait_for_page_to_load($load_time)
       #First check for all the links that should be there
-      @browser.is_text_present('View CMRs').should be_true
-      @browser.is_text_present('New CMR').should be_true
-      @browser.is_text_present('People Search').should be_true
-      @browser.is_text_present('CMR Search').should be_true
-      @browser.is_text_present('Admin Home').should be_true
-      @browser.is_text_present('Forms').should be_true
-      @browser.is_text_present('Users').should be_true
+      @browser.is_text_present('CMRS').should be_true
+      @browser.is_text_present('NEW CMR').should be_true
+      @browser.is_text_present('SEARCH').should be_true
+      @browser.is_text_present('ADMIN').should be_true
+      @browser.is_text_present('FORMS').should be_true
     end
     
     it 'should have a logo on the home page' do
@@ -21,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should correctly identify the user' do
-      @browser.is_text_present('User: default_user').should be_true
+      @browser.is_text_present('default_user').should be_true
     end
 
     it 'should navigate successfully to the home page' do    
@@ -31,42 +29,50 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should navigate successfully to the Admin page' do
-      @browser.click 'link=Admin Home'
+      @browser.click 'link=ADMIN'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('UT-NEDSS Admin Console').should be_true
     end
     
     it 'should navigate successfully to the People Search page' do
+      @browser.click 'link=SEARCH'
+      @browser.wait_for_page_to_load($load_time)
       @browser.click 'link=People Search'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('People Search').should be_true
     end
     
     it 'should navigate successfully to the CMR Search page' do
+      @browser.click 'link=SEARCH'
+      @browser.wait_for_page_to_load($load_time)
       @browser.click 'link=CMR Search'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('CMR Search').should be_true
     end
     
     it 'should navigate successfully to the View CMRs page' do
-      @browser.click 'link=View CMRs'
+      @browser.click 'link=CMRS'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing Confidential Morbidity Reports').should be_true
     end
     
     it 'should navigate successfully to the New CMR page' do
-      @browser.click 'link=New CMR'
+      @browser.click 'link=NEW CMR'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('New Confidential Morbidity Report').should be_true
     end
     
     it 'should navigate successfully to the Forms page' do
+      @browser.click 'link=ADMIN'
+      @browser.wait_for_page_to_load($load_time)
       @browser.click 'link=Forms'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing forms').should be_true
     end
     
     it 'should navigate successfully to the Users page' do
+      @browser.click 'link=ADMIN'
+      @browser.wait_for_page_to_load($load_time)
       @browser.click('link=Users')
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Listing users').should be_true
