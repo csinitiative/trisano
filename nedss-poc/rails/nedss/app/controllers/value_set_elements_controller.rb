@@ -76,4 +76,20 @@ class ValueSetElementsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  # Debt: Maybe this should move to a value_controller. Putting here for expediency.
+  def toggle_value
+    begin
+      @value_element = ValueElement.find(params[:value_element_id])
+      @value_element.toggle(:is_active)
+      @value_element.save!
+      @form = Form.find(@value_element.form_id)
+    rescue Exception => ex
+      p ex
+      logger.debug ex
+      flash[:notice] = 'Unable to toggle the value at this time.'
+      render :template => 'rjs-error'
+    end
+  end
+  
 end

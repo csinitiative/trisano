@@ -199,7 +199,7 @@ module FormsHelper
     result += "<span class='inactive-value'>" unless element.is_active
     result += element.name
     result += "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
-    result += "</li>"
+    result += " " + toggle_value_link(element) +"</li>"
   end
   
   private
@@ -251,6 +251,18 @@ module FormsHelper
 
   def edit_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+  end
+  
+  def toggle_value_link(element)
+    result = "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/toggle_value/" + element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\">"
+    
+    if (element.is_active)
+      result += "Inactivate"
+    else
+      result += "Activate"
+    end
+    
+    result += "</a></small>"
   end
 
 end

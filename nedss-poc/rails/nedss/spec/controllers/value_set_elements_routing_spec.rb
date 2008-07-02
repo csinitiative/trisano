@@ -26,6 +26,10 @@ describe ValueSetElementsController do
     it "should map { :controller => 'value_set_elements', :action => 'destroy', :id => 1} to /value_set_elements/1" do
       route_for(:controller => "value_set_elements", :action => "destroy", :id => 1).should == "/value_set_elements/1"
     end
+    
+    it "should map { :controller => 'value_set_elements', :action => 'toggle_value', :value_element_id => 1} to /value_set_elements/toggle_value/1" do
+      route_for(:controller => "value_set_elements", :action => "toggle_value", :value_element_id => 1).should == "/value_set_elements/toggle_value/1"
+    end
   end
 
   describe "route recognition" do
@@ -56,6 +60,10 @@ describe ValueSetElementsController do
   
     it "should generate params { :controller => 'value_set_elements', action => 'destroy', id => '1' } from DELETE /value_set_elements/1" do
       params_from(:delete, "/value_set_elements/1").should == {:controller => "value_set_elements", :action => "destroy", :id => "1"}
+    end
+    
+    it "should generate params { :controller => 'value_set_elements', action => 'toggle_value', value_element_id => '1' } from POST /value_set_elements/toggle_value/1" do
+      params_from(:post, "/value_set_elements/toggle_value/1").should == {:controller => "value_set_elements", :action => "toggle_value", :value_element_id => "1"}
     end
   end
 end

@@ -325,4 +325,58 @@ describe ValueSetElementsController do
       response.should redirect_to(value_set_elements_url)
     end
   end
+  
+  describe "handling POST /value_set_elements/toggle_value/1 with successful save" do
+
+    before(:each) do
+      mock_user
+      @value_element = mock_model(ValueElement)
+      ValueElement.stub!(:find).and_return(@value_element)
+      @value_element.stub!(:toggle)
+      @value_element.stub!(:save!)
+      @value_element.stub!(:form_id).and_return(1)
+      Form.stub!(:find).with(1).and_return(mock_model(Form))
+    end
+  
+    def do_post
+      @request.env["HTTP_ACCEPT"] = "application/javascript"
+      post :toggle_value, :value_element_id => "1"
+    end
+
+    it "should find the value_set_element requested" do
+      ValueElement.should_receive(:find).with("1").and_return(@value_element)
+      do_post
+    end
+    
+    it "should render the toggle_value template" do
+      do_post
+      response.should render_template('toggle_value')
+    end
+
+  end
+  
+    describe "handling POST /value_set_elements/toggle_value/1 with failed save" do
+
+    before(:each) do
+      mock_user
+      @value_element = mock_model(ValueElement)
+      ValueElement.stub!(:find).and_return(@value_element)
+      @value_element.stub!(:toggle)
+      @value_element.stub!(:save!).and_raise(Exception)
+      @value_element.stub!(:form_id).and_return(1)
+      Form.stub!(:find).with(1).and_return(mock_model(Form))
+    end
+  
+    def do_post
+      @request.env["HTTP_ACCEPT"] = "application/javascript"
+      post :toggle_value, :value_element_id => "1"
+    end
+    
+    it "should render the toggle_value template" do
+      do_post
+      response.should render_template('rjs-error')
+    end
+
+  end
+  
 end
