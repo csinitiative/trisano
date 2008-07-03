@@ -59,7 +59,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the lab result' do
     edit_cmr(@browser)
     click_core_tab(@browser, "Laboratory")
-    @browser.click("link=New Lab Result")
+    @browser.click("link=Add a lab result")
     sleep 3
     @browser.type('lab_result_lab_result_text', 'Positive')
     @browser.select 'lab_result_specimen_source_id', 'label=Animal head'
