@@ -21,6 +21,14 @@ describe Entity do
       @entity.entity_type.should eql('person')
     end
 
+    it "should return nil calling case_id on unsaved records" do
+      @entity.case_id.should == nil
+    end
+    
+    it "should raise an error when calling promot_to_case on unsaved records" do
+      lambda { @entity.promote_to_case(Event.new) }.should raise_error(RuntimeError)
+    end
+
     describe "where person is not valid" do
       it "should not save" do
         # @person has no last_name and thus is not valid
@@ -36,13 +44,6 @@ describe Entity do
     end
   end
   
-  it "should return a case id" do
-    pending 
-  end
-  
-  it "should promote to case" do
-    pending 
-  end
   
 end
 
@@ -168,7 +169,7 @@ describe Entity, "with associated location and person via custom attributes" do
 end
 
 describe Entity, "with people fixtures loaded" do
-  fixtures :entities, :people, :people_races, :codes, :external_codes
+  fixtures :entities, :people, :people_races, :codes, :external_codes, :events
 
   describe "and a single instance of Grocuho Marx" do
 
@@ -178,6 +179,24 @@ describe Entity, "with people fixtures loaded" do
 
     it "should have one current person named groucho" do
       entities(:Groucho).person.first_name.should eql("Groucho")
+    end
+
+    it "should not have a case_id" do
+      entities(:Groucho).case_id.should == nil
+    end
+
+    it "should be promotable to a case" do
+      entities(:Groucho).promote_to_case(events(:marks_cmr)).should be_true
+    end
+  end
+
+  describe "and an entity that is the primary on a case" do
+    it "should have a case_id" do
+      entities(:Marks).case_id.should_not be_nil
+    end
+
+    it "should not be promotable to a case" do
+      lambda { entities(:Marks).promote_to_case(events(:marks_cmr)) }.should raise_error(RuntimeError)
     end
   end
 

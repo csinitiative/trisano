@@ -108,12 +108,15 @@ class Entity < ActiveRecord::Base
   end
 
   def case_id
+    return nil if new_record?
     primary_entity = Participation.find_by_primary_entity_id(id)
     case_id = primary_entity.event_id unless primary_entity.nil?
     case_id.nil? ? nil : case_id
   end
 
   def promote_to_case(event)
+    raise "Entity not saved" if new_record?
+    raise "Already a case" unless case_id.nil?
 
     patient = Participation.new
     patient.primary_entity = self
@@ -139,7 +142,6 @@ class Entity < ActiveRecord::Base
     cmr.participations << contact
     cmr.disease_events << disease_event
     cmr.save(false)
-
   end
 
   private
