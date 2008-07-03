@@ -4,60 +4,89 @@
     <span id='address_info_show' onClick="Element.show('address_info_form'); Element.hide('address_info_show'); Element.show('address_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>  
   <div id='address_info_form'>
-    <table cellpadding="2">
-      <% f.fields_for(:entities_location, location_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
-        <%= el.hidden_field(:entity_id) %>
-        <% if location_data.entities_location.nil? %>
-          <% location_data.entities_location = { :entity_location_type_id => ExternalCode.unspecified_location_id, :primary_yn_id => ExternalCode.yes_id } %>
-        <% end %>
-        <tr>
-          <td>
-            <%= el.label(:entity_location_type_id, "Location type") %>
-            <%= el.dropdown_code_field(:entity_location_type_id, 'location', {}) %>
-          </td>
-          <td>
-            <%= el.label(:primary_yn_id, "Primary location") %>
-            <%= el.dropdown_code_field(:primary_yn_id, 'yesno', {}) %>
-          </td>
-        </tr>
+    
+    
+    <% f.fields_for(:entities_location, location_data.entities_location, :builder => ExtendedFormBuilder) do |el| %>
+      <%= el.hidden_field(:entity_id) %>
+      <% if location_data.entities_location.nil? %>
+        <% location_data.entities_location = { :entity_location_type_id => ExternalCode.unspecified_location_id, :primary_yn_id => ExternalCode.yes_id } %>
       <% end %>
-    </table>
-
-    <br />
-
-    <table cellpadding="2">
-      <% f.fields_for(:address, location_data.address, :builder => ExtendedFormBuilder) do |a| %>
-        <tr>
-          <td><%= a.label(:street_number) %></td>
-          <td><%= a.text_field(:street_number, :size => 10) %></td>
-          <td><%= a.label(:street_name) %></td>
-          <td><%= a.text_field(:street_name, :size => 50) %></td>
-          <td><%= a.label(:unit_number) %></td>
-          <td><%= a.text_field(:unit_number, :size => 10) %></td>
-        </tr>
-        <tr>
-          <td><%= a.label(:city) %></td>
-          <td><%= a.text_field(:city, :size => 30) %></td>
-          <td><%= a.label(:state) %></td>
-          <td><%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}) %></td>
-          <td><%= a.label(:postal_code) %></td>
-          <td><%= a.text_field(:postal_code, :size => 7) %></td>
-        </tr>
-        <tr>
-          <td><%= a.label(:county) %></td>
-          <td><%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %></td>
-        </tr>
-      <% end %>
-      <% f.fields_for(:telephone, location_data.telephone, :builder => ExtendedFormBuilder) do |t| %>
-        <tr>
-          <td><%= t.label(:area_code) %>
-            <%= t.text_field(:area_code, :size => 3) %></td>
-          <td><%= t.label(:phone_number) %>
-            <%= t.text_field(:phone_number, :size => 8) %>9999999 or 999-9999</td>
-          <td><%= t.label(:extension) %>
-            <%= t.text_field(:extension, :size => 6) %></td>
-        <tr>
-      <% end %>
-    </table>
+      
+      <span class="horiz">
+        <%= el.label(:entity_location_type_id, "Location type") %>
+        <%= el.dropdown_code_field(:entity_location_type_id, 'location', {}) %>
+      </span>
+    
+      <span class="horiz">
+        <%= el.label(:primary_yn_id, "Primary location") %>
+        <%= el.dropdown_code_field(:primary_yn_id, 'yesno', {}) %>
+      </span>
+    
+    <% end %>
+                 
+    <br clear="all"/>
+    
+    <% f.fields_for(:address, location_data.address, :builder => ExtendedFormBuilder) do |a| %>
+      <span class="horiz">
+        <%= a.label(:street_number) %>
+        <%= a.text_field(:street_number, :size => 10) %>
+      </span>
+      <span class="horiz">
+        <%= a.label(:street_name) %>
+        <%= a.text_field(:street_name, :size => 50) %>
+      </span>
+      <span class="horiz">
+        <%= a.label(:unit_number) %>
+        <%= a.text_field(:unit_number, :size => 10) %>
+      </span>
+    
+      <br clear="all"/>
+    
+      <span class="horiz">
+        <%= a.label(:city) %>
+        <%= a.text_field(:city, :size => 30) %>
+      </span>
+    
+      <span class="horiz">
+        <%= a.label(:state) %>
+        <%= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}) %>
+      </span>
+    
+      <span class="horiz">
+        <%= a.label(:postal_code) %>
+        <%= a.text_field(:postal_code, :size => 7) %>
+      </span>
+    
+      <br clear="all"/>
+    
+      <span class="horiz">
+        <%= a.label(:county) %>
+        <%= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}) %>
+      </span>
+    
+    <% end %>
+    
+    <br clear="all"/>
+    
+    <% f.fields_for(:telephone, location_data.telephone, :builder => ExtendedFormBuilder) do |t| %>
+    
+      <span class="horiz">
+        <%= t.label(:area_code) %>
+        <%= t.text_field(:area_code, :size => 3) %>
+      </span>
+    
+      <span class="horiz">
+        <%= t.label(:phone_number) %>
+        <%= t.text_field(:phone_number, :size => 8) %>9999999 or 999-9999
+      </span>
+    
+      <span class="horiz">
+        <%= t.label(:extension) %>
+        <%= t.text_field(:extension, :size => 6) %>
+      </span>
+    
+    
+    <% end %>
+    
   </div>
 </fieldset>
