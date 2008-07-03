@@ -9,8 +9,33 @@ describe Form do
     @form.should be_valid
   end
   
-  it "should return the most recent published version" do
-    pending
+  describe "when retrieving published forms" do
+
+    fixtures :forms
+
+    it "should return only forms for the specified disease and jurisdiction" do
+      f = Form.get_published_investigation_forms(1, 1)
+      f.length.should == 4
+      f.each do |d| 
+        d.disease_id.should == 1
+        d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
+      end
+
+      f = Form.get_published_investigation_forms(2, 2)
+      f.length.should == 1
+      f.each do |d|  
+        d.disease_id.should == 2
+        d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+      end
+
+      # Forms applicable to all jurisidictions
+      f = Form.get_published_investigation_forms(1, 99)
+      f.length.should == 3
+      f.each { |d| d.jurisdiction_id.should == nil }
+
+      # No such disease
+      Form.get_published_investigation_forms(99, 1).length.should == 0
+    end
   end
   
   describe "when created with save_and_initialize_form_elements" do
@@ -86,158 +111,153 @@ describe Form do
     
     fixtures :forms, :form_elements, :questions
     
+    before(:each) do
+      @form_to_publish = Form.find(1)
+      @published_form = @form_to_publish.publish!
+    end
+
     it "should give itself published status" do
-      form_to_publish = Form.find(1)
-      published_form = form_to_publish.publish!
-      form_to_publish.status.should eql("Published")
+      @form_to_publish.status.should eql("Published")
     end
     
     it "should give the base form element a tree id" do
-      pending
+      @published_form.form_base_element.tree_id.should_not be_nil
     end
     
     it "should make a copy of itself and give the copy published version properties" do
-      form_to_publish = Form.find(1)
-      published_form = form_to_publish.publish!
-      published_form.should_not be_nil
-      published_form.version.should eql(1)
-      published_form.is_template.should be_false
-      published_form.template_id.should eql(form_to_publish.id)
-      published_form.status.should eql("Live")
+      @published_form.should_not be_nil
+      @published_form.version.should eql(1)
+      @published_form.is_template.should be_false
+      @published_form.template_id.should eql(@form_to_publish.id)
+      @published_form.status.should eql("Live")
     end
     
     it "should make a copy of the entire form element tree" do
-      form_to_publish = Form.find(1)
-      published_form = form_to_publish.publish!
-      
-      published_form.form_base_element.should_not be_nil
-      published_form_base = published_form.form_base_element
+      @published_form.form_base_element.should_not be_nil
+      published_form_base = @published_form.form_base_element
       published_form_base.children_count.should eql(2)
       
       investigator_view_element_container = published_form_base.children[0]
-      investigator_view_element_container.form_id.should eql(published_form.id)
+      investigator_view_element_container.form_id.should eql(@published_form.id)
       investigator_view_element_container.class.name.should eql("InvestigatorViewElementContainer")
       investigator_view_element_container.children_count.should eql(2)
       
       core_view_element_container = published_form_base.children[1]
-      core_view_element_container.form_id.should eql(published_form.id)
+      core_view_element_container.form_id.should eql(@published_form.id)
       core_view_element_container.class.name.should eql("CoreViewElementContainer")
       core_view_element_container.children_count.should eql(0)
       
       default_view = investigator_view_element_container.children[0]
-      default_view.form_id.should eql(published_form.id)
+      default_view.form_id.should eql(@published_form.id)
       default_view.children_count.should eql(3)
       
       demo_section = default_view.children[0]
       demo_section.class.name.should eql("SectionElement")
-      demo_section.form_id.should eql(published_form.id)
+      demo_section.form_id.should eql(@published_form.id)
       demo_section.name.should eql(form_elements(:demographic_section).name)
       
       demo_group = demo_section.children[0]
       demo_group.class.name.should eql("GroupElement")
-      demo_group.form_id.should eql(published_form.id)
+      demo_group.form_id.should eql(@published_form.id)
       demo_group.name.should eql(form_elements(:demographic_group).name)
       
       demo_q1 = demo_group.children[0]
       demo_q1.class.name.should eql("QuestionElement")
-      demo_q1.form_id.should eql(published_form.id)
+      demo_q1.form_id.should eql(@published_form.id)
       demo_q1.name.should be_nil
       
       demo_q2 = demo_group.children[1]
       demo_q2.class.name.should eql("QuestionElement")
-      demo_q2.form_id.should eql(published_form.id)
+      demo_q2.form_id.should eql(@published_form.id)
       demo_q2.name.should be_nil
       
       demo_q3 = demo_group.children[2]
       demo_q3.class.name.should eql("QuestionElement")
-      demo_q3.form_id.should eql(published_form.id)
+      demo_q3.form_id.should eql(@published_form.id)
       demo_q3.name.should be_nil
       
       lab_section = default_view.children[1]
       lab_section.class.name.should eql("SectionElement")
-      lab_section.form_id.should eql(published_form.id)
+      lab_section.form_id.should eql(@published_form.id)
       lab_section.name.should eql(form_elements(:lab_section).name)
       
       lab_q1 = lab_section.children[0]
       lab_q1.class.name.should eql("QuestionElement")
-      lab_q1.form_id.should eql(published_form.id)
+      lab_q1.form_id.should eql(@published_form.id)
       lab_q1.name.should be_nil
       
       lab_q2 = lab_section.children[1]
       lab_q2.class.name.should eql("QuestionElement")
-      lab_q2.form_id.should eql(published_form.id)
+      lab_q2.form_id.should eql(@published_form.id)
       lab_q2.name.should be_nil
       
       lab_q3 = lab_section.children[2]
       lab_q3.class.name.should eql("QuestionElement")
-      lab_q3.form_id.should eql(published_form.id)
+      lab_q3.form_id.should eql(@published_form.id)
       lab_q3.name.should be_nil
       
       food_section = default_view.children[2]
       food_section.class.name.should eql("SectionElement")
-      food_section.form_id.should eql(published_form.id)
+      food_section.form_id.should eql(@published_form.id)
       food_section.name.should eql(form_elements(:food_section).name)
       
       food_group = food_section.children[0]
       food_group.class.name.should eql("GroupElement")
-      food_group.form_id.should eql(published_form.id)
+      food_group.form_id.should eql(@published_form.id)
       food_group.name.should eql(form_elements(:standard_food_group).name)
       
       food_q1 = food_group.children[0]
       food_q1.class.name.should eql("QuestionElement")
-      food_q1.form_id.should eql(published_form.id)
+      food_q1.form_id.should eql(@published_form.id)
       food_q1.name.should be_nil
       
       food_q2 = food_group.children[1]
       food_q2.class.name.should eql("QuestionElement")
-      food_q2.form_id.should eql(published_form.id)
+      food_q2.form_id.should eql(@published_form.id)
       food_q2.name.should be_nil
       
       food_q3 = food_section.children[1]
       food_q3.class.name.should eql("QuestionElement")
-      food_q3.form_id.should eql(published_form.id)
+      food_q3.form_id.should eql(@published_form.id)
       food_q3.name.should be_nil
       
       second_tab = investigator_view_element_container.children[1]
-      second_tab.form_id.should eql(published_form.id)
+      second_tab.form_id.should eql(@published_form.id)
       second_tab.children_count.should eql(2)
       
       second_tab_q = second_tab.children[0]
       second_tab_q.class.name.should eql("QuestionElement")
-      second_tab_q.form_id.should eql(published_form.id)
+      second_tab_q.form_id.should eql(@published_form.id)
       second_tab_q.name.should be_nil
       second_tab_q.question.should_not be_nil
       
       second_tab_follow_up = second_tab_q.children[0]
       second_tab_follow_up.class.name.should eql("FollowUpElement")
-      second_tab_follow_up.form_id.should eql(published_form.id)
+      second_tab_follow_up.form_id.should eql(@published_form.id)
       second_tab_follow_up.condition.should eql(form_elements(:second_tab_follow_up_container).condition)
       
       second_tab_follow_up_q = second_tab_follow_up.children[0]
       second_tab_follow_up_q.class.name.should eql("QuestionElement")
-      second_tab_follow_up_q.form_id.should eql(published_form.id)
+      second_tab_follow_up_q.form_id.should eql(@published_form.id)
       second_tab_follow_up_q.name.should be_nil
       second_tab_follow_up_q.question.should_not be_nil
       
       second_tab_core_follow_up = second_tab.children[1]
       second_tab_core_follow_up.class.name.should eql("FollowUpElement")
-      second_tab_core_follow_up.form_id.should eql(published_form.id)
+      second_tab_core_follow_up.form_id.should eql(@published_form.id)
       second_tab_core_follow_up.condition.should eql(form_elements(:second_tab_core_follow_up).condition)
       second_tab_core_follow_up.core_path.should eql(form_elements(:second_tab_core_follow_up).core_path)
       
       second_tab_core_follow_up_q = second_tab_core_follow_up.children[0]
       second_tab_core_follow_up_q.class.name.should eql("QuestionElement")
-      second_tab_core_follow_up_q.form_id.should eql(published_form.id)
+      second_tab_core_follow_up_q.form_id.should eql(@published_form.id)
       second_tab_core_follow_up_q.name.should be_nil
       second_tab_core_follow_up_q.question.should_not be_nil
       
     end
     
     it "should make a copy of the question instances" do
-      form_to_publish = Form.find(1)
-      published_form = form_to_publish.publish!
-      
-      default_view = published_form.investigator_view_elements_container.children[0]
+      default_view = @published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       
@@ -248,9 +268,7 @@ describe Form do
     end
     
     it "should not make a copy of the inactive questions" do
-      form_to_publish = Form.find(1)
-      
-      default_view = form_to_publish.investigator_view_elements_container.children[0]
+      default_view = @form_to_publish.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       demo_q1 = demo_group.children[0]
@@ -259,7 +277,7 @@ describe Form do
       demo_q1.is_active = false
       demo_q1.save
       
-      published_form = form_to_publish.publish!
+      published_form = @form_to_publish.publish!
       
       default_view = published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]

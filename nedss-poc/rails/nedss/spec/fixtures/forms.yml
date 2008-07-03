@@ -41,3 +41,11 @@ anthrax_form_for_LHD:
   disease_id: 1
   jurisdiction_id: 2
   status: "Live"
+
+aids_form_for_LHD:
+  id: 6
+  name: "Aids Form Local 1"
+  description: "This is an AIDS form for Local 1."
+  disease_id: 2
+  jurisdiction_id: 2
+  status: "Live"
