@@ -12,6 +12,9 @@ describe "/search/people.html.haml" do
   end
   
   it "should show results when results are present" do
+    entity = mock_model(Entity)
+    entity.stub!(:case_id).and_return(1)
+
     person = mock_model(Person)
     person.stub!(:first_name).and_return("John")
     person.stub!(:middle_name).and_return("J.")
@@ -20,6 +23,7 @@ describe "/search/people.html.haml" do
     person.stub!(:gender).and_return("Male")
     person.stub!(:county).and_return("Salt Lake")
     person.stub!(:birth_date).and_return(nil)
+    person.stub!(:entity).and_return(entity)
     assigns[:people] = [person]
     do_render
     response.should have_tag("h3", "Results")
