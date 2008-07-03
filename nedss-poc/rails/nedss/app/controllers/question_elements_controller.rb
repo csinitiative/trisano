@@ -1,5 +1,7 @@
 class QuestionElementsController <  AdminController
 
+  skip_before_filter :check_role, :only => :process_condition
+
   def index
     @question_elements = QuestionElement.find(:all)
 
