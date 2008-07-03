@@ -27,11 +27,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def codes(code_name)
     if(is_external_code?(code_name))
-        @external_codes = ExternalCode.find(:all, :order => 'sort_order')
-        @ret = @external_codes.select {|code| code.code_name == code_name}
+      @external_codes = ExternalCode.find(:all, :order => 'sort_order')
+      @ret = @external_codes.select {|code| code.code_name == code_name}
     else
-        @codes = Code.find(:all, :order => 'sort_order')
-        @ret = @codes.select {|code| code.code_name == code_name}
+      @codes = Code.find(:all, :order => 'sort_order')
+      @ret = @codes.select {|code| code.code_name == code_name}
     end
     @ret
   end
@@ -44,7 +44,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       if form_elements_cache.children(question_element).empty?
         return ""
       else
-       if form_elements_cache.children(form_elements_cache.children_by_type("ValueSetElement", question_element).first).empty?
+        value_set = form_elements_cache.children_by_type("ValueSetElement", question_element).first
+        if (value_set.nil? || form_elements_cache.children(value_set).empty?)
           return ""
         end
       end
@@ -118,7 +119,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
       html_options[:onchange] = text_answer_event if follow_ups
-        calendar_date_select(:text_answer, html_options)
+      calendar_date_select(:text_answer, html_options)
     when :phone
       html_options[:size] = 14
       html_options[:onchange] = text_answer_event if follow_ups
@@ -164,8 +165,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       if (can_investigate && !event.form_references.nil?)        
         event.form_references.each do |form_reference|
           if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
-              result = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
-              break
+            result = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
+            break
           end
         end
       end
