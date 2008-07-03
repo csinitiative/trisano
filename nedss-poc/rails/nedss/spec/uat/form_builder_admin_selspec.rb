@@ -6,7 +6,7 @@ describe 'Form Builder Admin' do
   
   before(:all) do
     @form_name = get_unique_name(4) + " fb uat"
-    
+
     @question_to_add_to_library_text = "Was this added to the library " + get_unique_name(4) + " fb uat" 
     @question_to_delete_text = "Describe the tick " + get_unique_name(4) + " fb uat" 
     @question_to_edit_text = "Can you describe the tick " + get_unique_name(4) + " fb uat" 
@@ -220,8 +220,7 @@ end
 
 def validate_investigator_rendering  
   create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
-  @browser.click "edit_cmr_link"
-  @browser.wait_for_page_to_load($load_time)
+  edit_cmr(@browser)
   @browser.is_text_present(@question_to_delete_text).should be_true
   @browser.is_text_present(@question_to_edit_text).should be_true
   @browser.is_text_present(@question_to_inactivate_text).should be_true
@@ -232,8 +231,7 @@ def validate_investigator_rendering
 end
 
 def navigate_to_form_edit
-  @browser.click "link=Forms"
-  @browser.wait_for_page_to_load($load_time)
+  click_nav_forms(@browser)
   click_build_form(@browser, @form_name)
 end
 
@@ -257,8 +255,7 @@ def delete_edit_and_inactivate_questions
 end
 
 def revalidate_investigator_rendering
-  @browser.click "link=View CMRs"
-  @browser.wait_for_page_to_load($load_time)
+  click_nav_cmrs(@browser)
   click_resource_edit(@browser, "cmrs", @cmr_last_name)
   @browser.is_text_present(@question_to_delete_text).should be_false
   @browser.is_text_present(@question_to_edit_text).should be_false

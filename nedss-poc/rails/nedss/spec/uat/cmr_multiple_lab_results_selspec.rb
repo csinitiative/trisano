@@ -1,13 +1,12 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Adding multiple lab results to a CMR' do
   
   it "should allow adding new lab results to a new CMR" do
     @browser.open "/nedss/cmrs"
-    @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(@browser)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Jones"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Indiana"
 
@@ -21,8 +20,7 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][name]'][1]", "Lab Two"
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][lab_result_text]'][1]", "Negative"
 
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
 
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present('Jones').should be_true
@@ -33,8 +31,7 @@ describe 'Adding multiple lab results to a CMR' do
   end
 
   it "should allow removing a lab result" do
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser)
     @browser.click "remove_lab_result_link"
     @browser.click "event_submit"
     sleep(3)
@@ -42,8 +39,7 @@ describe 'Adding multiple lab results to a CMR' do
   end
 
   it "should allow editing lab results" do
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser)
     click_core_tab(@browser, "Laboratory")
     type_field_by_order(@browser, "event_existing_lab_attributes", 0, "Uncertain")
     @browser.click "event_submit"

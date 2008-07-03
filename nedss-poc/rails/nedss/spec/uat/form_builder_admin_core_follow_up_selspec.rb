@@ -24,9 +24,7 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
     add_question_to_follow_up(@browser, "Core follow up for: '2'", @follow_up_question_text, "Single line text")
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
-    
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser)
     @browser.is_text_present(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition
@@ -47,20 +45,17 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
 
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present(@follow_up_answer).should be_true
     
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser)
     
     # Enter an answer that does not meet the follow-up condition
     @browser.select("event_active_patient__active_primary_entity__person_birth_gender_id", "label=Male")
     click_core_tab(@browser, "Investigation") # This click triggers the onChange that triggers the condition processing
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
     
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present(@follow_up_answer).should be_false
     
   end

@@ -90,6 +90,11 @@ module NedssHelper
     browser.wait_for_page_to_load($load_time)
   end
   
+  def click_nav_forms(browser)
+    browser.click 'link=FORMS'
+    browser.wait_for_page_to_load($load_time)
+  end
+  
   def click_nav_admin(browser)
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
@@ -165,16 +170,14 @@ module NedssHelper
   end
   
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label)
-    browser.click "link=New CMR"
-    browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(browser)
     browser.type "event_active_patient__active_primary_entity__person_last_name", last_name
     click_core_tab(browser, CLINICAL)
     browser.select "event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
     browser.select "event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
     browser.select "event_event_status_id", "label=Under Investigation"
-    browser.click "event_submit"
-    browser.wait_for_page_to_load($load_time)
+    save_cmr(browser)
   end
   
   def answer_investigator_question(browser, question_text, answer)
@@ -184,7 +187,7 @@ module NedssHelper
   
   def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label)
     browser.open "/nedss/cmrs"
-    browser.click "link=Forms"
+    browser.click "link=FORMS"
     browser.wait_for_page_to_load($load_time)
     browser.click "link=New form"
     browser.wait_for_page_to_load($load_time)

@@ -4,15 +4,13 @@ describe 'Adding multiple treatments to a CMR' do
   
   it "should allow a single treatment to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
-    @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(@browser)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Smith"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Jersey"
     click_core_tab(@browser, "Clinical")
     @browser.select "event_active_patient__participations_treatment_treatment_given_yn_id", "label=Yes"
     @browser.type "event_active_patient__participations_treatment_treatment", "Leeches"
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present('Leeches').should be_true
   end
 
@@ -29,8 +27,7 @@ describe 'Adding multiple treatments to a CMR' do
   end
 
   it "should allow editing a treatment from the CMR's edit mode" do
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
     @browser.click "link=Edit treatment"
     sleep(3)

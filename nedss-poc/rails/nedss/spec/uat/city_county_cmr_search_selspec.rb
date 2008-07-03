@@ -3,9 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
   describe 'User functionality for searching for CMRs by city and county' do
     before(:all) do
       @browser.open "/nedss/"
-      click_nav_admin(@browser)
-      @browser.click "link=Forms"
-      @browser.wait_for_page_to_load($load_time)
+      click_nav_forms(@browser)
     end
     
     it 'should find or add Chuckles in Provo, Utah county' do

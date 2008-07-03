@@ -6,16 +6,14 @@ describe 'Adding multiple hospitalized health facilities to a CMR' do
   
   it "should allow a single hospitalized health facility to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
-    @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(@browser)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Hospitalized-HF"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "Johnny"
     click_core_tab(@browser, "Clinical")
     @browser.select "event_hospitalized_health_facility_secondary_entity_id", "label=Garfield Memorial Hospital"
     @browser.type "event_hospitalized_health_facility__hospitals_participation_admission_date", "June 24, 2008"
     @browser.type "event_hospitalized_health_facility__hospitals_participation_discharge_date", "June 25, 2008"
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present('Hospitalized-HF').should be_true
     @browser.is_text_present('Garfield Memorial Hospital').should be_true

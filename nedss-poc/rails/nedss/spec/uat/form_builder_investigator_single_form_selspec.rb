@@ -3,10 +3,9 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe "Form Builder Investigator Single Form" do
   
   before(:all) do
-    @form_name = NedssHelper.get_unique_name(4)
+    @form_name = get_unique_name(4)
     @browser.open "/nedss/cmrs"
-    @browser.click "link=Forms"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_forms(@browser)
   end
   
   it "should create a single test form" do
