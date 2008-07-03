@@ -1,4 +1,4 @@
-class FollowUpElementsController < ApplicationController
+class FollowUpElementsController <  AdminController
 
   def index
     @follow_up_elements = FollowUpElement.find(:all)

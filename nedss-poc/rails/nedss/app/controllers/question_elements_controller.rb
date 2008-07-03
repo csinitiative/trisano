@@ -1,4 +1,4 @@
-class QuestionElementsController < ApplicationController
+class QuestionElementsController <  AdminController
 
   def index
     @question_elements = QuestionElement.find(:all)

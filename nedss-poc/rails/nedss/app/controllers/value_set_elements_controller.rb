@@ -1,4 +1,4 @@
-class ValueSetElementsController < ApplicationController
+class ValueSetElementsController <  AdminController
 
   def index
     @value_set_elements = ValueSetElement.find(:all)

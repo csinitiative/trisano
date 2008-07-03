@@ -1,4 +1,4 @@
-class ViewElementsController < ApplicationController
+class ViewElementsController < AdminController
 
   def index
     @view_elements = ViewElement.find(:all)

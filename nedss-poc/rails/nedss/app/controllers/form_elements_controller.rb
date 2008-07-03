@@ -1,4 +1,4 @@
-class FormElementsController < ApplicationController
+class FormElementsController <  AdminController
 
   def index
     @form_elements = FormElement.find(:all)

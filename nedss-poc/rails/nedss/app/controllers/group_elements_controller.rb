@@ -1,4 +1,4 @@
-class GroupElementsController < ApplicationController
+class GroupElementsController <  AdminController
 
   def index
     @group_elements = GroupElement.find(:all)

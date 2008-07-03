@@ -1,4 +1,4 @@
-class SectionElementsController < ApplicationController
+class SectionElementsController <  AdminController
   # GET /section_elements
   # GET /section_elements.xml
   def index
