@@ -3,9 +3,16 @@ body
     :family verdana, arial, helvetica, sans-serif
     :size 12px
     :line-height 18px
+    :color #333
   :background-color #fff
   :margin 0 auto
     
+body, p, ol, ul
+  :font
+    :family verdana, arial, helvetica, sans-serif
+    :size 13px
+    :line-height 18px
+  
 #hd
   :height 73px
   :background url(../images/repeat.gif)
@@ -22,15 +29,17 @@ body
   :letter-spacing 1px
   .user
     :font
-      :size 14px
+      :size 12px
     :color #fff
+    :text-transform uppercase
   .area
     :font
-      :family arial, helvetica, sans-serif
+      :family helvetica, arial, sans-serif
       :size 11px
+    :color #69f
     a
       :color #fff
-      :font-weight bold
+      :font-weight normal
       :text-decoration none
       &:hover
         :color #fff
@@ -44,8 +53,7 @@ body
 
 #main
   :margin
-    :top 10px
-  :letter-spacing 0px
+    :top 8px
   .highlight
     :color green
   .label
@@ -54,12 +62,48 @@ body
     :white-space nowrap
   .title
     :font
-      :size 14px
+      :family helvetica, sans-serif
+      :size 12px
       :weight light
     :color #666
-    :padding 5px 0px 12px 0px
+    :text-transform uppercase
+    :letter-spacing 0px
+    :padding 5px 0px 0px 0px
+  .name
+    :font
+      :family helvetica, sans-serif
+      :size 18px
+      :weight light
+    :color #333
+    :letter-spacing 0px
+    :padding 4px 0px 0px 0px
   .tools
-    :padding 5px 0px 12px 0px
+    :font
+      :family helvetica, sans-serif
+      :size 11px
+      :weight light
+    :color #999
+    :padding 4px 0px 0px 0px
+    :text
+      :align left
+    a
+      :color #c00
+      :font-weight bold
+      :text-decoration none
+      &:hover
+        :color #000
+        :font-weight bold
+        :text-decoration underline
+      &:visited
+        :color #c00
+        :font-weight bold
+        :text-decoration none
+      &:active
+        :color #c00
+        :font-weight bold
+        :text-decoration none
+  .tools2
+    :padding 4px 0px 0px 0px
     :text
       :align right
   .fill

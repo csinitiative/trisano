@@ -1,4 +1,6 @@
-<h1>Show Confidential Morbidity Report</h1>
+<span class="title">CONFIDENTIAL MORBIDITY REPORT</span><br/>
+<span class="name"><%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%></span>
+<br/>
 
 <script type="text/javascript">
   var myTabs = new YAHOO.widget.TabView("cmr_tabs");

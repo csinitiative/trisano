@@ -1,5 +1,6 @@
-<h1>Editing Confidential Morbidity Report</h1>
-
+<span class="title">CONFIDENTIAL MORBIDITY REPORT</span><br/>
+<span class="name"><%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%></span>
+<br/>
 <% @form_index = 0 %>
 
 <%= error_messages_for :object => @event %>
