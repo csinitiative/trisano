@@ -122,10 +122,13 @@ module FormsHelper
     result += "&nbsp;&nbsp;<small>(" + question.data_type_before_type_cast.humanize + ")</small>"
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
-    
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element) + "&nbsp;|&nbsp;" + add_follow_up_link(element) + "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)
-    
+
+    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element)
+    # Debt: Disabling follow ups on checkboxes for now
+    result += "&nbsp;|&nbsp;" + add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box") 
+    result += "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)  
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+    
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
