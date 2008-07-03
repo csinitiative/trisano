@@ -104,6 +104,24 @@ describe Event do
         @event = Event.new(event_hash.merge(new_lab_hash_1))
       end
 
+      it "should be invalid" do
+        @event.should_not be_valid
+      end
+    end
+
+    describe "receiving a lab result with no lab and no result text" do
+
+      before(:each) do
+        new_lab_hash_1 = {
+          "new_lab_attributes" => 
+            [
+              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>""}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_lab_hash_1))
+      end
+
+
       it "should do nothing" do
         @event.should be_valid
         @event.labs.should be_empty

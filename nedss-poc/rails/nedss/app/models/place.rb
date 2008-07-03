@@ -2,6 +2,8 @@ class Place < ActiveRecord::Base
   belongs_to :place_type, :class_name => 'Code'
   belongs_to :entity 
 
+  validates_presence_of :name
+
   # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.
   def self.hospitals
     find_all_by_place_type_id(Code.find_by_code_name_and_the_code('placetype', 'H').id, :order => 'name')
