@@ -26,12 +26,12 @@ module NedssHelper
   
   TAB_ELEMENT_IDS_BY_NAME = {
     DEMOGRAPHICS => "demographic_tab",
-     CLINICAL => "clinical_tab",
-     LABORATORY => "lab_info_tab",
-     CONTACTS => "contacts-tab",
-     EPI => "epi_tab",
-     REPORTING => "reporting_tab",
-     ADMIN => "administrative_tab"
+    CLINICAL => "clinical_tab",
+    LABORATORY => "lab_info_tab",
+    CONTACTS => "contacts-tab",
+    EPI => "epi_tab",
+    REPORTING => "reporting_tab",
+    ADMIN => "administrative_tab"
   }
 
   #  Use set_fields after you navigate to any location by passing in a hash of 
@@ -75,14 +75,46 @@ module NedssHelper
     end
   end
   
+  def click_nav_new_cmr(browser)
+    browser.click 'link=NEW CMR'
+    browser.wait_for_page_to_load($load_time)
+  end
+  
+  def click_nav_cmrs(browser)
+    browser.click 'link=CMRS'
+    browser.wait_for_page_to_load($load_time)
+  end
+  
+  def click_nav_search(browser)
+    browser.click 'link=SEARCH'
+    browser.wait_for_page_to_load($load_time)
+  end
+  
+  def click_nav_admin(browser)
+    browser.click 'link=ADMIN'
+    browser.wait_for_page_to_load($load_time)
+  end
+  
   def edit_cmr(browser)
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    browser.click "edit_cmr_link"
+    browser.wait_for_page_to_load($load_time)
   end
   
   def save_cmr(browser)
     browser.click "event_submit"
     browser.wait_for_page_to_load($load_time)
+  end
+  
+  def navigate_to_people_search(browser)
+    click_nav_search(browser)
+    @browser.click('link=People Search')
+    @browser.wait_for_page_to_load($load_time)
+  end
+  
+  def navigate_to_cmr_search(browser)
+    click_nav_search(browser)
+    @browser.click('link=CMR Search')
+    @browser.wait_for_page_to_load($load_time)
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type

@@ -18,8 +18,7 @@ describe 'Adding multiple contacts to a CMR' do
   
   it "should allow a single contact to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
-    @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(@browser)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "multi-contact"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "test"
     @browser.select "event_disease_disease_id", "label=AIDS"
@@ -32,8 +31,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "event_contact__active_secondary_entity__address_street_name", "Main St."
     @browser.type "event_contact__active_secondary_entity__telephone_area_code", "212"
     @browser.type "event_contact__active_secondary_entity__telephone_phone_number", "5551212"
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present(@original_last_name).should be_true
   end
@@ -80,7 +78,7 @@ describe 'Adding multiple contacts to a CMR' do
 
   it "should allow for showing of contact information" do
     click_core_tab(@browser, "Contacts")
-    click_link_by_order(@browser, "show-contact", 1)
+    click_link_by_order(@browser, "show-contact", 2)
     sleep(3)
     @browser.is_text_present("Showing contacts").should be_true
     @browser.is_text_present("123").should be_true
@@ -91,7 +89,7 @@ describe 'Adding multiple contacts to a CMR' do
   end
 
   it "shold allow a contact to made into a CMR" do
-    click_link_by_order(@browser, "start-contact-cmr-link", 1)
+    click_link_by_order(@browser, "start-contact-cmr-link", 2)
     sleep(3)
     @browser.is_text_present("Edit contact's CMR").should be_true
     @browser.click "link=Edit contact's CMR"
