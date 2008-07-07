@@ -15,11 +15,10 @@ class Participation < ActiveRecord::Base
   before_validation :save_associations
 
   def self.lab_object_tree
-    lab = Participation.new
-    lab_lab_result = lab.lab_results.build
-    lab_entity = lab.build_secondary_entity
-    lab_entity_place = lab_entity.places.build
-    lab
+    lab_participation = Participation.new
+    lab_participation.lab_results.build
+    lab_participation.build_place(:lab)
+    lab_participation
   end
 
   def active_primary_entity
@@ -69,6 +68,10 @@ class Participation < ActiveRecord::Base
   def participations_risk_factor=(attributes)
     @participations_risk_factor = participations_risk_factors.build(attributes)
   end  
+
+  def build_place(place_type)
+    self.secondary_entity = Entity.build_place(place_type)
+  end
 
   private
 

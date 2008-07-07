@@ -37,7 +37,7 @@ describe Event do
 
       it "should add a new lab" do
         lambda {@event.save}.should change {Place.count}.by(1)
-        @event.labs.first.secondary_entity.places.first.name.should == "New Lab One"
+        @event.labs.first.secondary_entity.thingy.name.should == "New Lab One"
       end
 
       it "should add a new lab result" do
@@ -143,7 +143,7 @@ describe Event do
 
       it "should create one new lab" do
         lambda {@event.save}.should change {Place.count}.by(1)
-        @event.labs.first.secondary_entity.places.first.name.should == "New Lab One"
+        @event.labs.first.secondary_entity.thingy.name.should == "New Lab One"
       end
       
       it "should create two new lab results" do

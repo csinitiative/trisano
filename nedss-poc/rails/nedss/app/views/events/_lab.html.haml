@@ -5,11 +5,16 @@
 
   -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.
   -# I think this is fixed in Rails 2.1+
-  - lab.secondary_entity.places.last.id = lab.id
+  -###  - lab.secondary_entity.places.last.id = lab.id
+  - p lab
+  - p lab.secondary_entity
+  - p lab.secondary_entity.thingy
+  - lab.secondary_entity.thingy.id = lab.id
 
   -# The call to #last is there to support "auditing."  It can be changed to "current_place" (with appropriate changes elsewhere), 
   -# but explicit for now in anticipation of acts_as_auditable, when it can just be dripped
-  - lab_place = lab.secondary_entity.places.last
+  -###  - lab_place = lab.secondary_entity.places.last
+  - lab_place = lab.secondary_entity.thingy
 
   - for lab_result in lab.lab_results
     - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|

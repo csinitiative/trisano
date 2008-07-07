@@ -1,14 +1,12 @@
 class Entity < ActiveRecord::Base
   has_many :people, :before_add => :set_entity_type
 
+  #GF DELETE THESE WHEN DONE WITH REFACTORING
   has_many :places, :order => 'created_at ASC', :before_add => :set_entity_type
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
-  has_many :animals, :before_add => :set_entity_type
-  #  has_one  :current_animal, :class_name => 'Animal', :order => 'created_at DESC'
-
-  has_many :materials, :before_add => :set_entity_type
-  #  has_one  :current_material, :class_name => 'Material', :order => 'created_at DESC'
+  #GF CHANGE THINGY TO PLACE WHEN REFACTORING COMPLETE
+  has_one :thingy, :class_name => "Place"
 
   has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
@@ -40,6 +38,16 @@ class Entity < ActiveRecord::Base
   before_validation :save_entity_associations
   after_save :save_location_info
 
+  class << self
+    def build_place(place_type)
+      e = Entity.new
+      e.entity_type = "place"
+      ### CHANGE THINGY TO PLACE WHEN DONE WITH REFACTORING
+      e.thingy = Place.build_place(:lab)
+      e
+    end
+  end
+
   def person
     @person || Person.find_by_entity_id(self.id)
   end
@@ -56,6 +64,8 @@ class Entity < ActiveRecord::Base
   # Debt: Remove this when the associations are correct on user.rb.
   # The role view uses this accessor to get a place name in a
   # collection_select.
+  #
+  #GF REMOVE THESE TWO METHODS WHEN REFACTROING COMPLETE
   def place
     @place || current_place
   end
@@ -147,18 +157,26 @@ class Entity < ActiveRecord::Base
   private
 
   def validate
+    # Uncomment when person is factored in
+    # Extend when animal and material support is added
+    # errors.add_to_base("Entity must be associated to a person or place") if place.nil and person.nil
+
     errors.add(:address) unless @address.valid? unless Utilities::model_empty?(@address)
     errors.add(:telephone) unless @telephone.valid? unless Utilities::model_empty?(@telephone)
   end
 
+  ### REMOVE WHEN REFACTORING COMPLETE
   def set_entity_type(record)
     self.entity_type = record.class.name.downcase
   end
 
+  ### REMOVE WHEN REFACTORING COMPLETE
   def save_entity_associations
     case entity_type
     when "person"
       people << @person unless @person.nil?
+     
+    ### REMOVE WHEN REFACTORING COMPLETE
     when "place"
       places << @place unless @place.nil?
 
