@@ -446,14 +446,55 @@ describe FormsController do
       post :to_library, :group_element_id => "root", :reference_element_id => "1"
     end
 
-     it "should render library elements partial on success" do
-       @question_reference.stub!(:add_to_library).and_return(true)
+    it "should render library elements partial on success" do
+      @question_reference.stub!(:add_to_library).and_return(true)
       do_post
       response.should render_template('forms/_library_elements')
     end
     
     it "should render rjs error template on failure" do
       @question_reference.stub!(:add_to_library).and_return(false)
+      do_post
+      response.should render_template('rjs-error')
+    end
+  end
+  
+  describe "handling POST /question_elements/from_library" do
+    
+    before(:each) do
+      mock_user
+      @form = mock_model(Form)
+      @form_element = mock_model(FormElement)
+      @string = mock(String)
+      @string.stub!(:humanize).and_return("")
+      @form_element.stub!(:type).and_return(@string)
+      @form_element.stub!(:form_id).and_return("1")
+      FormElement.stub!(:find).and_return(@form_element)
+      Form.stub!(:find).and_return(@form)
+    end
+    
+    def do_post
+      post :from_library, :reference_element_id => "1", :lib_element_id => "2"
+    end
+
+    it "should render forms/_elements partial on success with the investigator view branch of the form tree" do
+      @ancestors = [nil, InvestigatorViewElementContainer.new]
+      @form_element.stub!(:ancestors).and_return(@ancestors)
+      @form_element.stub!(:copy_from_library).with("2").and_return(true)
+      do_post
+      response.should render_template('forms/_elements')
+    end
+    
+    it "should render forms/_core_elements partial on success with the core view branch of the form tree" do
+      @ancestors = [nil, CoreViewElementContainer.new]
+      @form_element.stub!(:ancestors).and_return(@ancestors)
+      @form_element.stub!(:copy_from_library).with("2").and_return(true)
+      do_post
+      response.should render_template('forms/_core_elements')
+    end
+    
+    it "should render rjs error template on failure" do
+      @form_element.stub!(:copy_from_library).with("2").and_return(false)
       do_post
       response.should render_template('rjs-error')
     end
