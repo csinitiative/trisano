@@ -8,7 +8,7 @@ class Place < ActiveRecord::Base
 
     def build_place(place_type)
 
-      # TODO: Select all placetype codes from db, cache, and apply.  Remove case statement.
+      # TODO: TGF: Select all placetype codes from db, cache, and apply.  Remove case statement.
       case place_type
       when :lab
         Place.new( :place_type => Code.find_by_code_name_and_the_code('placetype', 'L'))

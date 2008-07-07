@@ -5,15 +5,16 @@ describe Entity do
     @entity = Entity.new
   end
 
-  describe "with no associations (people, places, etc.)" do
-    it "should be invalid" do
-      pending "Unpend when person support is factored in"
-    end
-  end
+  #TODO: TGF:  Implment when ready
+  # describe "with no associations (people, places, etc.)" do
+  #   it "should be invalid" do
+  #     pending "Unpend when person support is factored in"
+  #   end
+  # end
 
   describe "with an association" do
     it "should be valid to build manually" do
-      #GF CHANGE THIS BACK TO build_place WHEN ALL IS DONE
+      #TODO: TGF CHANGE THIS BACK TO build_place WHEN ALL IS DONE
       @entity.build_thingy(:name => "Whatever")
       @entity.entity_type = "place"
       @entity.should be_valid

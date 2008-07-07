@@ -1,11 +1,11 @@
 class Entity < ActiveRecord::Base
   has_many :people, :before_add => :set_entity_type
 
-  #GF DELETE THESE WHEN DONE WITH REFACTORING
+  #TODO: TGF DELETE THESE WHEN DONE WITH REFACTORING
   has_many :places, :order => 'created_at ASC', :before_add => :set_entity_type
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
-  #GF CHANGE THINGY TO PLACE WHEN REFACTORING COMPLETE
+  #TODO: TGF CHANGE THINGY TO PLACE WHEN REFACTORING COMPLETE
   has_one :thingy, :class_name => "Place"
 
   has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
@@ -42,7 +42,7 @@ class Entity < ActiveRecord::Base
     def build_place(place_type)
       e = Entity.new
       e.entity_type = "place"
-      ### CHANGE THINGY TO PLACE WHEN DONE WITH REFACTORING
+      #TODO: TGF CHANGE THINGY TO PLACE WHEN DONE WITH REFACTORING
       e.thingy = Place.build_place(:lab)
       e
     end
@@ -65,7 +65,7 @@ class Entity < ActiveRecord::Base
   # The role view uses this accessor to get a place name in a
   # collection_select.
   #
-  #GF REMOVE THESE TWO METHODS WHEN REFACTROING COMPLETE
+  #TODO: TGF REMOVE THESE TWO METHODS WHEN REFACTROING COMPLETE
   def place
     @place || current_place
   end
@@ -165,18 +165,18 @@ class Entity < ActiveRecord::Base
     errors.add(:telephone) unless @telephone.valid? unless Utilities::model_empty?(@telephone)
   end
 
-  ### REMOVE WHEN REFACTORING COMPLETE
+  #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
   def set_entity_type(record)
     self.entity_type = record.class.name.downcase
   end
 
-  ### REMOVE WHEN REFACTORING COMPLETE
+  #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
   def save_entity_associations
     case entity_type
     when "person"
       people << @person unless @person.nil?
      
-    ### REMOVE WHEN REFACTORING COMPLETE
+    #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
     when "place"
       places << @place unless @place.nil?
 

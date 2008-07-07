@@ -25,7 +25,7 @@ describe "/cmrs/new.html.erb" do
     @person = mock_model(Person)
 
     @place_entity.stub!(:places).and_return([@place])
-    #GF REPLACE thingy WITH place WHEN READY
+    #TODO: TGF REPLACE thingy WITH place WHEN READY
     @place_entity.stub!(:thingy).and_return(@place)
     
     @lab.stub!(:secondary_entity).and_return(@place_entity)

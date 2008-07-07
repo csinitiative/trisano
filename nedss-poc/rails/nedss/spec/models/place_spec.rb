@@ -26,9 +26,9 @@ describe Place do
       p.place_type.should eql(codes(:place_type_lab))
     end
 
-    it "should thrown an exception for illegal place types" do
-      pending "Implement this."
-    end
+    #TODO: TGF: Impleent this
+    # it "should thrown an exception for illegal place types" do
+    # end
   end
 
   # The following tests are for basic activerecord functionality that would not ordinarily be tested.
