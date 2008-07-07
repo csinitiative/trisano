@@ -1,5 +1,11 @@
-<span class="title">CONFIDENTIAL MORBIDITY REPORT</span><br/>
-<br/>
+<% content_for :title do %>
+  CONFIDENTIAL MORBIDITY REPORT
+<% end %>
+
+<% content_for :tools do %>
+  <%= link_to 'Back to list', cmrs_path %>
+<% end %>
+
 
 <%# Debt: Get rid of all these error_message_for methods.  Use something like this technique to pull all error messages up to the parent. %>
 <%# http://pastie.org/165073 %>
@@ -47,4 +53,4 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </div>
 
 <br />
-<%= link_to 'Back', cmrs_path %>
+

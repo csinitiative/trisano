@@ -40,7 +40,7 @@
   %body.yui-skin-sam
     #hd
       .container
-        .span-7.push-1
+        .span-7.append-1
           #logo
             %a{:href => home_path}
               = image_tag("logo.gif", :border => 0)
@@ -63,7 +63,19 @@
 
     .container
       #main
-        .span-22.push-1
+        .span-12.prepend-1
+          .title
+            = yield :title
+          .name
+            = yield :name
+          .tools
+            = yield :tools
+            
+        .span-10.append-1.last
+          .tools2
+            = yield :tools_two
+            
+        .span-22.prepend-1
           %p{:style => "color: green"}
             = flash[:notice]
           = yield

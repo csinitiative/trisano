@@ -305,21 +305,6 @@ describe QuestionElementsController do
     end
   end
   
-  describe "handling POST /question_elements/to_library" do
-
-    before(:each) do
-      mock_user
-    end
-
-    it "should be successful" do
-      pending
-    end
-    
-    it "should render create template" do
-      pending
-    end
-  end
-  
   describe "handling POST /question_elements/process_conditional" do
 
     before(:each) do

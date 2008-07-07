@@ -36,7 +36,7 @@ steps_for(:prepopulate_cmr_uat) do
   
   Then("the new CMR view displays") do
     response.should render_template(:new)
-    response.should have_text(/New Confidential Morbidity Report/)
+    response.should have_text(/CONFIDENTIAL MORBIDITY REPORT/)
   end
   
   Then("$first_name should display in the first name field") do |first_name|

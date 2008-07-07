@@ -1,10 +1,20 @@
-<span class="title">CONFIDENTIAL MORBIDITY REPORT</span><br/>
-<span class="name"><%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%></span>
-<br/>
+<% content_for :title do %>
+  CONFIDENTIAL MORBIDITY REPORT
+<% end %>
+
+<% content_for :name do %>
+  <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
+<% end %>
+
+<% content_for :tools do %>
+  <%= link_to 'Show', cmr_path(@event) %> |
+  <%= link_to 'Back to list', cmrs_path %>
+<% end %>
+
+
 <% @form_index = 0 %>
 
 <%= error_messages_for :object => @event %>
-
 
 <% can_investigate = ( (@event.under_investigation? or @event.reopened?) and User.current_user.is_entitled_to_in?(:investigate, @event.active_jurisdiction.secondary_entity_id) and !@event.disease.disease_id.nil? ) %>
 
@@ -80,12 +90,9 @@
       <% if can_investigate %>
         <div id="investigation_tab"><p><%= render :partial => 'disease_investigation_form', :locals => {:f => event_form} %></p></div>
       <% end %>
-        
+            
     </div>
     <%= event_form.submit "Update" %>
   <% end %>
-    
+      
 </div>
-
-<%= link_to 'Show', cmr_path(@event) %> |
-<%= link_to 'Back', cmrs_path %>

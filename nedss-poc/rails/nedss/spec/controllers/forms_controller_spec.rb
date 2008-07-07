@@ -477,4 +477,32 @@ describe FormsController do
 
   end
   
+  describe "handling POST /question_elements/to_library" do
+    
+    before(:each) do
+      mock_user
+      @question_reference = mock_model(QuestionElement)
+      @string = mock(String)
+      @string.stub!(:humanize).and_return("")
+      @question_reference.stub!(:type).and_return(@string)
+      FormElement.stub!(:find).and_return(@question_reference)
+    end
+    
+    def do_post
+      post :to_library, :group_element_id => "root", :reference_element_id => "1"
+    end
+
+     it "should render library elements partial on success" do
+       @question_reference.stub!(:add_to_library).and_return(true)
+      do_post
+      response.should render_template('forms/_library_elements')
+    end
+    
+    it "should render rjs error template on failure" do
+      @question_reference.stub!(:add_to_library).and_return(false)
+      do_post
+      response.should render_template('rjs-error')
+    end
+  end
+  
 end

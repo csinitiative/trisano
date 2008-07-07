@@ -125,7 +125,7 @@ class FormsController < AdminController
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :partial => "forms/library_elements", :locals => {:direction => :to_library}
     else
-      flash[:notice] = "Unable to copy #{@form_element.type.humanzie} to library."
+      flash[:notice] = "Unable to copy #{@question_element.type.humanize} to library."
       render :template => 'rjs-error'
     end
   end

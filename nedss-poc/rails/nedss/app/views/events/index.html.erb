@@ -1,31 +1,42 @@
-<h1>Listing Confidential Morbidity Reports</h1>
+<% content_for :title do %>
+  CONFIDENTIAL MORBIDITY REPORT
+<% end %>
+
+<% content_for :name do %>
+  Existing Reports
+<% end %>
+
+<% content_for :tools do %>
+  <%= link_to 'New Morbidity Report', new_cmr_path %> |  <%= link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv') %>
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
+<% end %>
 
 <table class='tabular'> 
   <thead>
-  <tr>
-    <th>Patient Name</th>
-    <th>Disease</th>
-    <th>Event Name</th>
-    <th>Event Onset Date</th>
-    <th>Event Status</th>
-  </tr>
+    <tr>
+      <th>Patient Name</th>
+      <th>Disease</th>
+      <th>Event Name</th>
+      <th>Event Onset Date</th>
+      <th>Event Status</th>
+    </tr>
   </thead>
   <% for event in @events %>
-  <tr>
-    <% patient = event.active_patient.active_primary_entity.person %>
-    <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
-    <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
-    <td><%= event.event_name %></td>
-    <td><%= event.event_onset_date %></td>
-    <td><%= l event.event_status %></td>
-    <td><%= link_to 'Show', cmr_path(event) %></td>
-    <td><%= link_to 'Edit', edit_cmr_path(event) %></td>
-    <td><%= link_to 'Print', formatted_cmr_path(event, "print") , :target => "_blank" %></td>
-  </tr>
+    <tr>
+      <% patient = event.active_patient.active_primary_entity.person %>
+      <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
+      <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
+      <td><%= event.event_name %></td>
+      <td><%= event.event_onset_date %></td>
+      <td><%= l event.event_status %></td>
+      <td><%= link_to 'Show', cmr_path(event) %></td>
+      <td><%= link_to 'Edit', edit_cmr_path(event) %></td>
+      <td><%= link_to 'Print', formatted_cmr_path(event, "print") , :target => "_blank" %></td>
+    </tr>
   <% end %>
 </table>
 
 <br />
-
-<%= link_to 'New Morbidity Report', new_cmr_path %>
-<%= link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv') %>
