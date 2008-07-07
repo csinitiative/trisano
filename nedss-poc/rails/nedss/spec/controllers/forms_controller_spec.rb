@@ -353,52 +353,6 @@ describe FormsController do
     end
   end
   
-  # Most of this can be removed.  Still want to verify or alter error handling
-  describe "handling GET /forms/order_section_children_show" do
-
-    before(:each) do
-      mock_user
-      @section = mock_model(SectionElement)
-      FormElement.stub!(:find).and_return(@section)
-    end
-  
-    def do_get
-      get :order_section_children_show, :form_element_id => "3"
-    end
-
-    it "should be successful" do
-      pending "Will remove soon"
-      do_get
-      response.should be_success
-    end
-  
-    it "should render reorder_section_children template" do
-      pending "Will remove soon"
-      
-      do_get
-      response.should render_template('forms/order_section_children_show')
-    end
-  
-    it "should find the section requested" do
-      pending "Will remove soon"
-      FormElement.should_receive(:find).with("3").and_return(@section)
-      do_get
-    end
-  
-    it "should assign the found section for the view" do
-      pending "Will remove soon"
-      do_get
-      assigns[:section].should equal(@section)
-    end
-    
-    it "should render error template in case of error" do
-      pending "Will rework soon"
-      FormElement.stub!(:find).and_raise(Exception)
-      do_get
-      response.should render_template('rjs-error')
-    end
-  end
-  
   describe "handling POST /forms/order_section_children" do
 
     before(:each) do
