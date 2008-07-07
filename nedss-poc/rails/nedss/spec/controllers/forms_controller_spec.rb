@@ -456,33 +456,25 @@ describe FormsController do
       mock_user
       @form = mock_model(Form, :to_param => "1")
       @published_form = mock_model(Form)
-      @form.stub!(:publish!).and_return(@published_form)
       Form.stub!(:find).and_return(@form)
     end
   
     def do_post
       post :publish, :id => "1"
     end
-
-    it "should be successful" do
-      pending
-      do_post
-      response.should be_success
-    end
     
-    it "should render index template" do
+    it "should re-direct to forms index on success" do
+      @form.stub!(:publish!).and_return(@published_form)
       do_post
       response.should redirect_to(forms_path)
     end
     
-    it "should re-render the builder template in case of error" do
-      pending
-      @section.stub!(:publish!).and_raise(Exception)
+    it "should re-render the builder template on failure" do
+      @form.stub!(:publish!).and_raise(Exception)
       do_post
       response.should render_template('builder')
     end
 
-  
   end
   
 end

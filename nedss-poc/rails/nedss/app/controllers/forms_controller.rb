@@ -90,7 +90,9 @@ class FormsController < AdminController
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = "Unable to publish the form at this time"
-      format.html { render :template => "forms/builder" }
+      respond_to do |format|
+        format.html { render :template => "forms/builder" }
+      end
     end
   end
   
