@@ -10,14 +10,13 @@
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
-%table{:style => "border-spacing: 15px 5px"}
+%table{ :class => 'tabular' }
   %tr
     %th Name
     %th Description
     %th Disease
     %th Jurisdiction
     %th Status
-    %th{:colspan => 3} Actions
   - for form in @forms
     %tr
       %td
@@ -30,11 +29,11 @@
         = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
       %td
         = h form.status
-      %td
+      %td{:nowrap => ""}
         = link_to 'Builder', builder_path(form)
-      %td
+        |
         = link_to 'Show', form
-      %td
+        |
         = link_to 'Edit', edit_form_path(form)
 
 %br

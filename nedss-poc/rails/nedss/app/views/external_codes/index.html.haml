@@ -1,9 +1,19 @@
-%h1 Listing Codes
+- content_for :title do
+  Code Admin
+
+- content_for :name do
+  Codes
+
+- content_for :tools do
+  = link_to 'New code', new_external_code_path
+
+- content_for :tools_two do
+  = button_to("Create new code", {:action => "new"}, { :method => :get })
 
 - for code_type in @code_types
 %fieldset
   %legend= code_type.code_name.capitalize
-  %table{:width => '50%'}
+  %table{ :class => 'tabular' }
     %tr
       %th Code Description
       %th Code Type
@@ -22,4 +32,4 @@
         = link_to("Show", code_path(code))
     -end
 - end
-= link_to("Create New Code", new_code_path)
+

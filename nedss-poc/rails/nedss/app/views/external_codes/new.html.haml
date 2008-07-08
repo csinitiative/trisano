@@ -1,19 +1,32 @@
-- form_for(@external_code, :builder => ExtendedFormBuilder) do |code_form|
-  %table{:width => "50%"}
-    %tr
-      %td
-        %span.label Code:
-      %td= code_form.text_field :the_code
-    %tr
-      %td
-        %span.label Description:
-      %td= code_form.text_field :code_description
-    %tr
-      %td
-        %span.label Code Type:
-      %td= code_form.text_field :code_name
-    %tr
-      %td
-        %span.label Sort Order:
-      %td= code_form.text_field :sort_order
-  = code_form.submit "Create"
+- content_for :title do
+  Code Admin
+
+- content_for :name do
+  New code
+
+- content_for :tools do
+  = link_to 'Back', codes_path
+
+- form_for(@external_code, :builder => ExtendedFormBuilder) do |f|
+
+  %span{ :class => "vert" }
+    = f.label(:the_code, "Code")
+    = f.text_field :the_code
+
+  %span{ :class => "vert" }
+    = f.label(:code_description, "Description")
+    = f.text_field :code_description
+
+  %span{ :class => "vert" }
+    = f.label(:code_name, "Code Type")
+    = f.text_field :code_name
+
+  %span{ :class => "vert" }
+    = f.label(:sort_order, "Sort Order")
+    = f.text_field :sort_order
+
+  %br
+ 
+  = f.submit "Create"
+
+%br

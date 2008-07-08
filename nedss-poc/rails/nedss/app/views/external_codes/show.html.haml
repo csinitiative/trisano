@@ -1,8 +1,18 @@
-%h1= "Showing Code: #{@external_code.code_description}"
+- content_for :title do
+  Code Admin
+
+- content_for :name do
+  = "Code details: #{@external_code.code_description}"
+
+- content_for :tools do
+  = link_to "Return to Code List", codes_path
+  |
+  = link_to "Edit Code", edit_code_path(@external_code)
+
 
 %fieldset
   %legend Code Information
-  %table{:width => '50%'}
+  %table
     %tr
       %td
         %span.label Code Description:
@@ -23,5 +33,5 @@
         %span.label Sort Order:
       %td
         = @external_code.sort_order
-= link_to "Return to Code List", codes_path
-= link_to "Edit Code", edit_code_path(@external_code)
+
+%br
