@@ -2,6 +2,10 @@
   CONFIDENTIAL MORBIDITY REPORT
 <% end %>
 
+<% content_for :name do %>
+  New CMR
+<% end %>
+
 <% content_for :tools do %>
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>

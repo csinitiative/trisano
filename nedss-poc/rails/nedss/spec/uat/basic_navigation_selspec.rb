@@ -29,7 +29,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     
     it 'should navigate successfully to the Admin page' do
       click_nav_admin(@browser)
-      @browser.is_text_present('UT-NEDSS Admin Console').should be_true
+      @browser.is_text_present('Admin Console').should be_true
     end
     
     it 'should navigate successfully to the People Search page' do
@@ -48,26 +48,26 @@ require File.dirname(__FILE__) + '/spec_helper'
     
     it 'should navigate successfully to the View CMRs page' do
       click_nav_cmrs(@browser)
-      @browser.is_text_present('Listing Confidential Morbidity Reports').should be_true
+      @browser.is_text_present('Existing Reports').should be_true
     end
     
     it 'should navigate successfully to the New CMR page' do
       click_nav_new_cmr(@browser)
-      @browser.is_text_present('New Confidential Morbidity Report').should be_true
+      @browser.is_text_present('New CMR').should be_true
     end
     
     it 'should navigate successfully to the Forms page' do
       click_nav_admin(@browser)
       @browser.click 'link=Forms'
       @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('Listing forms').should be_true
+      @browser.is_text_present('Forms').should be_true
     end
     
     it 'should navigate successfully to the Users page' do
       click_nav_admin(@browser)
       @browser.click('link=Users')
       @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('Listing users').should be_true
+      @browser.is_text_present('Users').should be_true
     end
   end
 

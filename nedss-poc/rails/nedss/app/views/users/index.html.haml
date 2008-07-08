@@ -1,15 +1,25 @@
-%h1 Listing users
+- content_for :title do
+  User Admin
 
-%table{ :cellpadding => "2" }
+- content_for :name do
+  Users
+
+- content_for :tools do
+  = link_to 'New user', new_user_path
+
+- content_for :tools_two do
+  = button_to("Create new user", {:action => "new"}, { :method => :get })
+
+
+%table{ :class => 'tabular' }
   %tr
-    %td
-      %b UID
-    %td
-      %b User name
-    %td
-      %b Full name
-    %td
-      &nbsp;
+    %th
+      UID
+    %th
+      User name
+    %th
+      Full name
+
   - for user in @users
     %tr
       %td
@@ -25,5 +35,3 @@
         -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
 
 %br
-
-= link_to 'New user', new_user_path

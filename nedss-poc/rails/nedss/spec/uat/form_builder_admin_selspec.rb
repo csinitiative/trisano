@@ -144,12 +144,12 @@ def edit_value_sets
   wait_for_element_present("edit-value-set-form")
     
   @browser.type "document.forms['value-set-element-edit-form'].elements[4]", "Edited value"
-  sleep(5)
-  @browser.check "document.forms['value-set-element-edit-form'].elements[6]"
     
   @browser.click "value_set_element_submit"
   wait_for_element_not_present("edit-value-set-form")
-    
+  
+  @browser.click "link=Inactivate"
+  sleep(2)
   @browser.is_text_present("Edited value").should be_true
   @browser.is_text_present("Maybe").should be_false
   @browser.is_text_present("Inactive").should be_true

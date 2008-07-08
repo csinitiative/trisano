@@ -28,7 +28,7 @@ module NedssHelper
     DEMOGRAPHICS => "demographic_tab",
     CLINICAL => "clinical_tab",
     LABORATORY => "lab_info_tab",
-    CONTACTS => "contacts-tab",
+    CONTACTS => "contacts_tab",
     EPI => "epi_tab",
     REPORTING => "reporting_tab",
     ADMIN => "administrative_tab"

@@ -1,4 +1,16 @@
-%h1 Editing form
+- content_for :title do
+  Form Builder
+
+- content_for :name do
+  Edit 
+  = @form.name
+
+- content_for :tools do
+  = link_to 'Show', @form 
+  |
+  = link_to 'Back', forms_path
+  |
+  = link_to 'Form Builder', builder_path(@form)
 
 = error_messages_for :form
 
@@ -10,9 +22,5 @@
   %p
     = f.submit "Update"
 
-= link_to 'Show', @form 
-|
-= link_to 'Back', forms_path
-|
-= link_to 'Form Builder', builder_path(@form)
+
 

@@ -94,7 +94,6 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present("Edit contact's CMR").should be_true
     @browser.click "link=Edit contact's CMR"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Editing Confidential Morbidity Report").should be_true
     @browser.get_value("event_active_patient__active_primary_entity__person_last_name").should == @original_last_name
     @browser.get_value("event_active_patient__active_primary_entity__person_first_name").should == "multi-contact"
     @browser.get_value("event_active_patient__active_primary_entity__address_street_number").should == "123"

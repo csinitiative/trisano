@@ -1,5 +1,14 @@
+- content_for :title do
+  User Admin
 
-%h1 Show User
+- content_for :name do
+  User details:  
+  = @user.user_name
+
+- content_for :tools do
+  = link_to 'Edit', edit_user_path(@user)
+  |
+  = link_to 'Back', users_path
 
 %fieldset
   %legend
@@ -34,6 +43,5 @@
 
 = render :partial => 'roles'
 
-= link_to 'Edit', edit_user_path(@user)
-= link_to 'Back', users_path
+
 

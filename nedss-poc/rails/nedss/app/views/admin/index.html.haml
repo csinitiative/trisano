@@ -1,9 +1,16 @@
-%h2
-  UT-NEDSS Admin Console
+- content_for :title do
+  Admin Console
 
-= link_to 'Forms', forms_path
-%br
-= link_to 'Users', users_path
-%br
-= link_to 'Codes', codes_path
+- content_for :name do
+  Dashboard
 
+- content_for :tools do
+  = link_to 'Forms', forms_path
+  |
+  = link_to 'Users', users_path
+  |
+  = link_to 'Codes', codes_path
+
+%br
+%br
+%br

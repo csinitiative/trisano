@@ -1,7 +1,16 @@
+- content_for :title do
+  Form Builder
 
-%h1 
-  Form details: 
-  =@form.name
+- content_for :name do
+  Form details:  
+  = @form.name
+
+- content_for :tools do
+  = link_to 'Edit', edit_form_path(@form)
+  |
+  = link_to 'Back', forms_path
+  |
+  = link_to 'Form Builder', builder_path(@form)
 
 %p
   %b Name: 
@@ -23,8 +32,3 @@
   %b Status: 
   =h @form.status
 
-= link_to 'Edit', edit_form_path(@form)
-|
-= link_to 'Back', forms_path
-|
-= link_to 'Form Builder', builder_path(@form)

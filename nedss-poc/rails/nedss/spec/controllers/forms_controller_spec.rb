@@ -465,9 +465,6 @@ describe FormsController do
       mock_user
       @form = mock_model(Form)
       @form_element = mock_model(FormElement)
-      @string = mock(String)
-      @string.stub!(:humanize).and_return("")
-      @form_element.stub!(:type).and_return(@string)
       @form_element.stub!(:form_id).and_return("1")
       FormElement.stub!(:find).and_return(@form_element)
       Form.stub!(:find).and_return(@form)

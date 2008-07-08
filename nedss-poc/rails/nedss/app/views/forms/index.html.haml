@@ -1,5 +1,14 @@
+- content_for :title do
+  Form Builder
 
-%h1 Listing forms
+- content_for :name do
+  Forms
+
+- content_for :tools do
+  = link_to 'New form', new_form_path
+
+- content_for :tools_two do
+  = button_to("Create new form", {:action => "new"}, { :method => :get })
 
 %table{:style => "border-spacing: 15px 5px"}
   %tr
@@ -30,4 +39,3 @@
 
 %br
 
-= link_to 'New form', new_form_path

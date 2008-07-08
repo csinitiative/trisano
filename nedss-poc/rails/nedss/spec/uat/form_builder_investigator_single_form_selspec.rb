@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
+
 #$dont_kill_browser = true
+
 describe "Form Builder Investigator Single Form" do
   
   before(:all) do
