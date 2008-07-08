@@ -295,6 +295,14 @@ module NedssHelper
     tab_element_id = TAB_ELEMENT_IDS_BY_NAME[tab_name]
     assert_contains(browser, tab_element_id, answer_input_element_id)
   end
+  
+  def get_record_number(browser)
+    html_source = browser.get_html_source
+    text_position = html_source.index("Record number:")
+    record_number_start_position = html_source.index(Time.now.year.to_s, text_position)
+    record_number_end_position = html_source.index("</td>", record_number_start_position) -1
+    html_source[record_number_start_position..record_number_end_position]
+  end
 
   private
   
