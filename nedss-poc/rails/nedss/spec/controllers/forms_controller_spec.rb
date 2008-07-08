@@ -368,35 +368,30 @@ describe FormsController do
     end
   
     def do_post
-      post :order_section_children, :id => "3", 'reorder-list' => @reorder_list
+      post :order_section_children, :id => "3", 'parents-children' => @reorder_list
     end
 
     it "should be successful" do
-      pending "Will rework soon"
       do_post
       response.should be_success
     end
   
     it "should render reorder_section_children template" do
-      pending "Will rework soon"
       do_post
       response.should render_template('forms/order_section_children')
     end
   
     it "should find the section requested" do
-      pending "Will rework soon"
       FormElement.should_receive(:find).with("3").and_return(@section)
       do_post
     end
     
     it "should call reorder_children on the found section" do
-      pending "Will rework soon"
       @section.should_receive(:reorder_children)
       do_post
     end
     
     it "should render error template in case of error" do
-      pending "Will rework soon"
       @section.stub!(:reorder_children).and_raise(Exception)
       do_post
       response.should render_template('rjs-error')
