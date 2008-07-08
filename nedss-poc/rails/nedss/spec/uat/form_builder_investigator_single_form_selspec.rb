@@ -146,23 +146,20 @@ describe "Form Builder Investigator Single Form" do
   end
 
   it "Should create a test CMR" do
-    @browser.click "link=New CMR"
-    @browser.wait_for_page_to_load($load_time)
+    click_nav_new_cmr(@browser)
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "Doe"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "John"
-    @browser.click_core_tab(@browser, "Clinical")
+    click_core_tab(@browser, "Clinical")
     @browser.select "event_disease_disease_id", "label=Amebiasis"
-    @browser.click_core_tab(@browser, "Administrative")
+    click_core_tab(@browser, "Administrative")
     @browser.select "event_event_status_id", "label=Under Investigation"
-    @browser.click "event_submit"
-    @browser.wait_for_page_to_load($load_time)
+    save_cmr(@browser)
     @browser.is_text_present("CMR was successfully created").should be_true
   end
 
   it "should render the form with all the valid questions" do
-    @browser.click "edit_cmr_link"
+    edit_cmr(@browser)
     @browser.click_core_tab(@browser, "Investigation")
-    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Investigation").should be_true
     @browser.is_text_present(@form_name).should be_true
     @browser.click("link=" + @form_name)
