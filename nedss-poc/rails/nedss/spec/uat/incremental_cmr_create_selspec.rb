@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-  # $dont_kill_browser = true
+ # $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -61,15 +61,13 @@ describe 'User functionality for creating and saving CMRs' do
     click_core_tab(@browser, "Laboratory")
     @browser.click("link=Add a lab result")
     sleep 3
-    @browser.type('lab_result_lab_result_text', 'Positive')
-    @browser.select 'lab_result_specimen_source_id', 'label=Animal head'
-    @browser.click 'lab_result_lab_result_text'
-    @browser.click 'save-button'
-    sleep 3
-    @browser.is_text_present('Animal head').should be_true
-    @browser.is_text_present('Positive').should be_true
+    @browser.type('model_auto_completer_tf', 'Lab')
+    @browser.type('event_new_lab_attributes__lab_result_text', 'Positive')
+    @browser.select 'event_new_lab_attributes__specimen_source_id', 'label=Animal head'
     save_cmr(@browser)
     @browser.is_text_present('CMR was successfully updated.').should be_true
+    @browser.is_text_present('Animal head').should be_true
+    @browser.is_text_present('Positive').should be_true
   end
   
   it 'should save the treatment info' do
