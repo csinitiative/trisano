@@ -34,19 +34,10 @@ class Entity < ActiveRecord::Base
   attr_protected :entity_type
   validates_presence_of :entity_type
   validates_associated :people
+  validates_associated :thingy
 
   before_validation :save_entity_associations
   after_save :save_location_info
-
-  class << self
-    def build_place(place_type)
-      e = Entity.new
-      e.entity_type = "place"
-      #TODO: TGF CHANGE THINGY TO PLACE WHEN DONE WITH REFACTORING
-      e.thingy = Place.build_place(:lab)
-      e
-    end
-  end
 
   def person
     @person || Person.find_by_entity_id(self.id)

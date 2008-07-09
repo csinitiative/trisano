@@ -19,11 +19,6 @@ describe Entity do
       @entity.entity_type = "place"
       @entity.should be_valid
     end
-
-    it "should be valid when using the helper" do
-      entity = Entity.build_place(:lab) 
-      entity.should be_valid
-    end
   end
 
   describe "without any associations" do

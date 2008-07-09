@@ -20,17 +20,6 @@ describe Place do
     end
   end
 
-  describe "the build_place class method" do
-    it "should create a Place and set place_type" do
-      p = Place.build_place(:lab)
-      p.place_type.should eql(codes(:place_type_lab))
-    end
-
-    #TODO: TGF: Impleent this
-    # it "should thrown an exception for illegal place types" do
-    # end
-  end
-
   # The following tests are for basic activerecord functionality that would not ordinarily be tested.
   # They are here in anticipation of acts_as_auditable
 
@@ -86,10 +75,20 @@ describe Place do
     end
   end
 
-  describe "additional tests" do
-    it "should include tests for helper methods that return hospitals, jurisidictions, etc." do
-      pending
+  describe "class method" do
+    it "hospitals should return a list of hospitals" do
+      h = Place.hospitals
+      h.length.should == 2
+      h[0].should == places(:AVH)
+      h[1].should == places(:BRVH)
+    end
+
+    it "jurisdictions should return a list of jurisdictions" do
+      h = Place.jurisdictions
+      h.length.should == 1
+      h[0].should == places(:Southeastern_District)
     end
   end
+
 end
 

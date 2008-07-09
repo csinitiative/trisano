@@ -103,7 +103,7 @@ class EventsController < ApplicationController
     )
 
     # Push this into the model
-    lab = @event.labs << Participation.lab_object_tree
+    @event.labs << Participation.new_lab_participation
     
     prepopulate if !params[:from_search].nil?
 

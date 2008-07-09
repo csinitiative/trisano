@@ -36,7 +36,7 @@ module EventsHelper
   
   def add_lab_link(name)
     link_to_function name do |page|
-      page.insert_html :bottom, "labs", :partial => 'lab' , :object => Participation.lab_object_tree
+      page.insert_html :bottom, "labs", :partial => 'lab' , :object => Participation.new_lab_participation
     end
   end
 

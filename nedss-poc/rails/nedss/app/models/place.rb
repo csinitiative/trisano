@@ -6,15 +6,6 @@ class Place < ActiveRecord::Base
 
   class << self
 
-    def build_place(place_type)
-
-      # TODO: TGF: Select all placetype codes from db, cache, and apply.  Remove case statement.
-      case place_type
-      when :lab
-        Place.new( :place_type => Code.find_by_code_name_and_the_code('placetype', 'L'))
-      end
-    end
-
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.
     def hospitals
       find_all_by_place_type_id(Code.find_by_code_name_and_the_code('placetype', 'H').id, :order => 'name')
@@ -52,9 +43,4 @@ class Place < ActiveRecord::Base
       find_by_sql(query)
     end
   end
-
-  def is_hospital?
-    place_type_id == Code.find_by_code_name_and_code_description('placetype', 'Hospital').id
-  end
-
 end

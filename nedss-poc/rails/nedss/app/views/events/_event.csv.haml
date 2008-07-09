@@ -1,5 +1,5 @@
 - if event.labs.empty?
-  - event.labs << Participation.lab_object_tree
+  - event.labs << Participation.new_lab_participation
 
 - for lab in event.labs
   - if lab.lab_results.empty?

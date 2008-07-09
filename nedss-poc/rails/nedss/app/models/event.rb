@@ -135,30 +135,37 @@ class Event < ActiveRecord::Base
 
       lab_entity_id = attributes.delete("lab_entity_id")
       lab_name = attributes.delete("name")
-      lab = nil
+      lab_name = nil if lab_name.blank?
+      lab_participation = nil
 
       # If lab_entity_id has a value then the place already exists
       unless lab_entity_id.blank?
         # Check to see if there's an existing participation for the lab
         # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
-        lab = labs.detect { |lab| lab.secondary_entity_id == lab_entity_id.to_i }
+        lab_participation = labs.detect { |lab| lab.secondary_entity_id == lab_entity_id.to_i }
 
         # Participation does not exist, create one and link to existing lab
-        if lab.nil?
-          lab = labs.build("role_id" => Event.participation_code('Tested By'))
-          lab.secondary_entity_id = lab_entity_id
+        if lab_participation.nil?
+          lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
+          lab_participation.secondary_entity_id = lab_entity_id
         else
           # participation already exists, do nothing
         end
       else
         # New lab. Create participation, entity, and place, linking each to the next
-        lab = labs.build("role_id" => Event.participation_code('Tested By'))
-        lab_entity = lab.build_secondary_entity
-        lab_entity.places.build( {"name" => lab_name, "place_type_id" => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+        lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
+        p lab_participation
+        lab_entity = lab_participation.build_secondary_entity
+        lab_entity.entity_type = "place"
+        p lab_entity
+        p lab_participation.secondary_entity
+        lab_entity.build_thingy( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+
+        p lab_participation.secondary_entity.thingy
       end
 
       # Build a new lab_result and associate with the participation
-      lab.lab_results.build(attributes)
+      lab_participation.lab_results.build(attributes)
     end
   end
   
