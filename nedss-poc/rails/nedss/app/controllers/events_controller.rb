@@ -104,6 +104,8 @@ class EventsController < ApplicationController
 
     # Push this into the model
     @event.labs << Participation.new_lab_participation
+    @event.hospitalized_health_facilities << Participation.new_hospital_participation
+    @event.diagnosing_health_facilities << Participation.new_diagnostic_participation
     
     prepopulate if !params[:from_search].nil?
 
@@ -140,6 +142,8 @@ class EventsController < ApplicationController
 
   def update
     params[:event][:existing_lab_attributes] ||= {}
+    params[:event][:existing_hospital_attributes] ||= {}
+    params[:event][:existing_diagnostic_attributes] ||= {}
 
     respond_to do |format|
       if @event.update_attributes(params[:event])

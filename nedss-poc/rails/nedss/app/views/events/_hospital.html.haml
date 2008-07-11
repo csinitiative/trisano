@@ -1,0 +1,27 @@
+- hospital.hospitals_participation = HospitalsParticipation.new if hospital.hospitals_participation.nil?
+
+%div{:style => "clear: both;"}
+  = error_messages_for :object => hospital.hospitals_participation
+
+%div{:class => 'hospital'}
+  - new_or_existing = hospital.new_record? ? 'new' : 'existing'
+  - prefix = "event[#{new_or_existing}_hospital_attributes][]"
+
+  - fields_for(prefix, hospital, :builder => ExtendedFormBuilder) do |hospital_fields|
+    %span{:class => "horiz"}
+      = hospital_fields.label(:secondary_entity_id, "Health facility")
+      = hospital_fields.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true})
+
+  - hospital.hospitals_participation.id = hospital.id
+
+  - fields_for(prefix, hospital.hospitals_participation, :builder => ExtendedFormBuilder) do |hp|
+    %span{:class => "horiz"}
+      = hp.label(:admission_date)
+      = hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+
+    %span{:class => "horiz"}
+      = hp.label(:discharge_date)
+      = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+
+    %span{:class => "horiz", :style => "margin-top: 30px"}
+      = link_to_function "Remove" , "$(this).up('.hospital').remove()", {:id => "remove_hospital_result_link"}

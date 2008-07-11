@@ -13,30 +13,33 @@ class Event < ActiveRecord::Base
   has_many :form_references
   has_many :answers
 
-  has_many :contacts, :class_name => 'Participation',  
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
-  has_many :clinicians, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
   has_many :labs, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
     :order => 'created_at ASC'
   has_many :hospitalized_health_facilities, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id],
+    :order => 'created_at ASC'
   has_many :diagnosing_health_facilities, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id]
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id],
+    :order => 'created_at ASC'
+  has_many :contacts, :class_name => 'Participation',  
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
+  has_many :clinicians, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
 
   has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
-  has_one :hospital, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
   validates_date :event_onset_date
   validates_associated :labs
+  validates_associated :hospitalized_health_facilities
+  validates_associated :diagnosing_health_facilities
 
   before_validation_on_create :save_associations
   
-  after_update :save_labs
+  after_update :save_multiples
   before_save :generate_mmwr
   before_create :set_record_number
 
@@ -129,6 +132,54 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def new_hospital_attributes=(hospital_attributes)
+    return if hospital_attributes.values_blank?
+    hospital_attributes.each do |attributes|
+      hospital_participation = hospitalized_health_facilities.build(:role_id => Event.participation_code('Hospitalized At'))
+      # Hospitals are a drop down of existing places, not an autocomplete.  Just assgn.
+      hospital_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
+      hospital_participation.build_hospitals_participation(attributes) unless attributes.values_blank?
+    end
+  end
+
+  def existing_hospital_attributes=(hospital_attributes)
+    hospitalized_health_facilities.reject(&:new_record?).each do |hospital|
+      attributes = hospital_attributes[hospital.id.to_s]
+      if attributes
+        hospital.secondary_entity_id = attributes.delete("secondary_entity_id")
+        unless attributes.values_blank?
+          if hospital.hospitals_participation.nil?
+            hospital.hospitals_participation = HospitalsParticipation.new(attributes)
+          else
+            hospital.hospitals_participation.attributes = attributes
+          end
+        end
+      else
+        hospitalized_health_facilities.delete(hospital)
+      end
+    end
+  end
+
+  def new_diagnostic_attributes=(diagnostic_attributes)
+    return if diagnostic_attributes.values_blank?
+    diagnostic_attributes.each do |attributes|
+      diagnostic_participation = diagnosing_health_facilities.build(:role_id => Event.participation_code('Diagnosed At'))
+      # Diagnostic facilities are a drop down of existing places, not an autocomplete.  Just assgn.
+      diagnostic_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
+    end
+  end
+
+  def existing_diagnostic_attributes=(diagnostic_attributes)
+    diagnosing_health_facilities.reject(&:new_record?).each do |diagnostic|
+      attributes = diagnostic_attributes[diagnostic.id.to_s]
+      if attributes
+        diagnostic.secondary_entity_id = attributes.delete("secondary_entity_id")
+      else
+        diagnosing_health_facilities.delete(diagnostic)
+      end
+    end
+  end
+
   def new_lab_attributes=(lab_attributes)
     lab_attributes.each do |attributes|
       next if attributes["name"].blank? and attributes["lab_result_text"].blank?
@@ -154,14 +205,9 @@ class Event < ActiveRecord::Base
       else
         # New lab. Create participation, entity, and place, linking each to the next
         lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-        p lab_participation
         lab_entity = lab_participation.build_secondary_entity
         lab_entity.entity_type = "place"
-        p lab_entity
-        p lab_participation.secondary_entity
-        lab_entity.build_thingy( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
-
-        p lab_participation.secondary_entity.thingy
+        lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
       end
 
       # Build a new lab_result and associate with the participation
@@ -184,34 +230,21 @@ class Event < ActiveRecord::Base
         else
           # Array (not activerecord) deletion.  Make this a soft delete when we get to it
           lab.lab_results.delete(lab_result)
-
-          # TODO: Delete the participation if no more lab results
         end
       end
     end
   end
 
-  def hospitalized_health_facility
-    @hospitalized_health_facility || Participation.new( :role_id => Event.participation_code('Hospitalized At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
-  end
+#  def diagnosing_health_facility
+#    @diagnosing_health_facility || Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
+#  end
 
-  def hospitalized_health_facility=(attributes)
-    unless attributes[:secondary_entity_id].blank?
-      attributes[:role_id] = Event.participation_code('Hospitalized At')
-      @hospitalized_health_facility = hospitalized_health_facilities.build(attributes)
-    end
-  end
-  
-  def diagnosing_health_facility
-    @diagnosing_health_facility || Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
-  end
-
-  def diagnosing_health_facility=(attributes)
-    unless attributes[:secondary_entity_id].blank?
-      attributes[:role_id] = Event.participation_code('Diagnosed At')
-      @diagnosing_health_facility = diagnosing_health_facilities.build(attributes)
-    end
-  end
+#  def diagnosing_health_facility=(attributes)
+#    unless attributes[:secondary_entity_id].blank?
+#      attributes[:role_id] = Event.participation_code('Diagnosed At')
+#      @diagnosing_health_facility = diagnosing_health_facilities.build(attributes)
+#    end
+#  end
   
   def active_jurisdiction
     @active_jurisdiction || jurisdiction
@@ -610,7 +643,7 @@ class Event < ActiveRecord::Base
     participations << @active_reporter unless (@active_reporter.nil? or (@active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?))
   end
 
-  def save_labs
+  def save_multiples
     labs.each do |lab|
       if lab.lab_results.length == 0
         lab.destroy
@@ -620,6 +653,15 @@ class Event < ActiveRecord::Base
       lab.lab_results.each do |lab_result|
         lab_result.save(false)
       end
+    end
+
+    hospitalized_health_facilities.each do |hospital|
+      hospital.save(false)
+      hospital.hospitals_participation.save(false) unless hospital.hospitals_participation.nil?
+    end
+
+    diagnosing_health_facilities.each do |diagnostic|
+      diagnostic.save(false)
     end
   end
 

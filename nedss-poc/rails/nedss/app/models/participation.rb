@@ -4,22 +4,39 @@ class Participation < ActiveRecord::Base
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
   has_many :lab_results, :order => 'created_at ASC', :dependent => :destroy
-  has_many :hospitals_participations, :order => 'created_at ASC'
+  #TGF: Remove auditing (has_many) for now.
+  has_one :hospitals_participation, :dependent => :destroy
   has_many :participations_treatments, :order => 'created_at ASC'
   has_many :participations_risk_factors, :order => 'created_at ASC'
 
   validates_associated :primary_entity
   validates_associated :secondary_entity
   validates_associated :lab_results
+  validates_associated :hospitals_participation
 
   before_validation :save_associations
 
   class << self
     def new_lab_participation
-      lab_participation = Participation.new
+      lab_participation = Participation.new_place_participation
       lab_participation.lab_results.build
-      lab_participation.build_secondary_entity.build_thingy
       lab_participation
+    end
+
+    def new_hospital_participation
+      hospital_participation = Participation.new_place_participation
+      hospital_participation.build_hospitals_participation
+      hospital_participation
+    end
+
+    def new_diagnostic_participation
+      Participation.new_place_participation
+    end
+
+    def new_place_participation
+      place_participation = Participation.new
+      place_participation.build_secondary_entity.build_place_temp
+      place_participation
     end
   end
 
@@ -47,14 +64,6 @@ class Participation < ActiveRecord::Base
     end
   end
 
-  def hospitals_participation
-    @hospitals_participation ||= hospitals_participations.last
-  end
-
-  def hospitals_participation=(attributes)
-    @hospitals_participation = hospitals_participations.build(attributes)
-  end 
-  
   def participations_treatment
     @participations_treatment ||= ParticipationsTreatment.new
   end

@@ -1,0 +1,14 @@
+%div{:style => "clear: both;"}
+
+%div{:class => 'diagnostic'}
+  - new_or_existing = diagnostic.new_record? ? 'new' : 'existing'
+  - prefix = "event[#{new_or_existing}_diagnostic_attributes][]"
+
+  - fields_for(prefix, diagnostic, :builder => ExtendedFormBuilder) do |diagnostic_fields|
+    %span{:class => "horiz"}
+      = diagnostic_fields.label(:secondary_entity_id, "Diagnosing facility")
+      / Currently diagnosing facilities are hospitals
+      = diagnostic_fields.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true})
+
+    %span{:class => "horiz", :style => "margin-top: 30px"}
+      = link_to_function "Remove" , "$(this).up('.diagnostic').remove()", {:id => "remove_diagnostic_result_link"}

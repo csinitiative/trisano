@@ -102,6 +102,8 @@ def mock_event
   active_patient = mock_model(Participation)
   active_contact = mock_model(Participation)
   lab = mock_model(Participation)
+  diagnostic = mock_model(Participation)
+  hospital = mock_model(Participation)
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
@@ -145,6 +147,8 @@ def mock_event
   lab_result.stub!(:tested_at_uphl_yn).and_return(tested_at_uphl_yn)
   
   event.stub!(:labs).and_return([lab])
+  event.stub!(:diagnosing_health_facilities).and_return([diagnostic])
+  event.stub!(:hospitalized_health_facilities).and_return([hospital])
   event.stub!(:active_jurisdiction).and_return(active_jurisdiction)
   event.stub!(:active_patient).and_return(active_patient)
   event.stub!(:active_contacts).and_return([active_contact])

@@ -25,27 +25,34 @@
     
       <fieldset class="form">
         <legend>Diagnosing Health Facilities</legend>
-        <%= render :partial => 'health_facility_form', :locals => { :f => f,
-          :health_facility => @event.diagnosing_health_facility,
-          :health_facilities => @event.diagnosing_health_facilities,
-          :refresh_list => 'diagnosing-health-facilities-list'}%>
+        <div id="diagnostics">
+          <% if @event.diagnosing_health_facilities.empty? %>
+            <h3>No diagnosing facilities have been recorded for this event</h3>
+          <% else %>
+            <%= render :partial => "diagnostic", :collection => @event.diagnosing_health_facilities %>
+          <% end %>
+        </div>
+
+        <p style="clear: both; padding-top: 20px"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
       </fieldset>
-    
+
       <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
-        <span class="vert">
-          <%= d.label(:hospitalized_id, "Hospitalized") %>
-          <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
-        </span>
+        <div id="hospitals">
+          <% if @event.hospitalized_health_facilities.empty? %>
+            <h3>No hospitals have been recorded for this event</h3>
+          <% else %>
+            <%= d.label(:hospitalized_id, "Hospitalized") %>
+            <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
+            <%= render :partial => "hospital", :collection => @event.hospitalized_health_facilities %>
+          <% end %>
+        </div>
+
+        <p style="clear: both; padding-top: 20px"> <%= add_hospital_link "Add a hospital" %> </p>
       <% end %>
                               
       <br/>
       
-      <%= render :partial => 'health_facility_form', :locals => { :f => f, 
-        :health_facility => @event.hospitalized_health_facility,
-        :health_facilities => @event.hospitalized_health_facilities,
-        :refresh_list => 'hospitalized-health-facilities-list'}%>
-                                    
     </fieldset>
     
     <fieldset class="form">

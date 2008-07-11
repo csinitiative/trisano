@@ -94,6 +94,7 @@ namespace :nedss do
         people_url = NEDSS_URL + '/nedss/entities?type=person'
         puts people_url
 
+        Hpricot.buffer_size = 32768
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new 
         agent.basic_auth('utah', 'arches')

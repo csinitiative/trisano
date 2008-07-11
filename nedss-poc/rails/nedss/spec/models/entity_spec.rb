@@ -15,7 +15,7 @@ describe Entity do
   describe "with an association" do
     it "should be valid to build manually" do
       #TODO: TGF CHANGE THIS BACK TO build_place WHEN ALL IS DONE
-      @entity.build_thingy(:name => "Whatever")
+      @entity.build_place_temp(:name => "Whatever")
       @entity.entity_type = "place"
       @entity.should be_valid
     end

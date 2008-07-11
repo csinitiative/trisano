@@ -1,4 +1,3 @@
-
 %fieldset
   %legend Clinical Information
 
@@ -55,20 +54,39 @@
   %fieldset
     %legend
       Diagnosing health facilities  
-    %table{:cellpadding => '2'}
-      %tr
-        %td
-          %div{:id => 'diagnosing-health-facilities-list'}
-            = render :partial => 'health_facilities/index', :locals => { :refresh_list => 'diagnosing-health-facilities-list', :health_facilities => @event.diagnosing_health_facilities }
+    - if @event.diagnosing_health_facilities.empty?
+      %h3 No diganosing health facilities have been recorded for this event
+    - else
+      %table{:class => 'tabular'}
+        %tr
+          %th Diagnosing health facility
+
+        - for diagnostic in @event.diagnosing_health_facilities
+          %tr
+            %td= diagnostic.secondary_entity.place_temp.name
 
   %fieldset
     %legend
       Hospitalized health facilities  
-    %table{:cellpadding => '2'}
-      %tr
-        %td
-          %div{:id => 'hospitalized-health-facilities-list'}
-            = render :partial => 'health_facilities/index', :locals => { :refresh_list => 'hospitalized-health-facilities-list', :health_facilities => @event.hospitalized_health_facilities }
+    - if @event.hospitalized_health_facilities.empty?
+      %h3 No hospitalized health facilities have been recorded for this event
+    - else
+      %table{:class => 'tabular'}
+        %tr
+          %th Hospitalized health facility
+          %th Admission date
+          %th Discharge date
+
+        - for hospital in @event.hospitalized_health_facilities
+          %tr
+            %td= hospital.secondary_entity.place_temp.name
+            - if hospital.hospitals_participation.nil?
+              %td
+              %td
+            - else
+              %td= hospital.hospitals_participation.admission_date
+              %td= hospital.hospitals_participation.discharge_date
+
 
   %fieldset
     %legend

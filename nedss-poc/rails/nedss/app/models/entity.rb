@@ -6,7 +6,7 @@ class Entity < ActiveRecord::Base
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
   #TODO: TGF CHANGE THINGY TO PLACE WHEN REFACTORING COMPLETE
-  has_one :thingy, :class_name => "Place"
+  has_one :place_temp, :class_name => "Place"
 
   has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
@@ -34,7 +34,7 @@ class Entity < ActiveRecord::Base
   attr_protected :entity_type
   validates_presence_of :entity_type
   validates_associated :people
-  validates_associated :thingy
+  validates_associated :place_temp
 
   before_validation :save_entity_associations
   after_save :save_location_info

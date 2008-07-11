@@ -1,5 +1,5 @@
 %div{:style => "clear: both;"}
-  = error_messages_for :object => lab.secondary_entity.thingy
+  = error_messages_for :object => lab.secondary_entity.place_temp
 %div{:class => 'lab'}
   - new_or_existing = lab.new_record? ? 'new' : 'existing'
   - prefix = "event[#{new_or_existing}_lab_attributes]"
@@ -8,12 +8,12 @@
   -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.
   -# I think this is fixed in Rails 2.1+
   -###  - lab.secondary_entity.places.last.id = lab.id
-  - lab.secondary_entity.thingy.id = lab.id
+  - lab.secondary_entity.place_temp.id = lab.id
 
   -# The call to #last is there to support "auditing."  It can be changed to "current_place" (with appropriate changes elsewhere), 
   -# but explicit for now in anticipation of acts_as_auditable, when it can just be dripped
   -###  - lab_place = lab.secondary_entity.places.last
-  - lab_place = lab.secondary_entity.thingy
+  - lab_place = lab.secondary_entity.place_temp
 
   - for lab_result in lab.lab_results
     - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|

@@ -40,6 +40,18 @@ module EventsHelper
     end
   end
 
+  def add_hospital_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "hospitals", :partial => 'hospital' , :object => Participation.new_hospital_participation
+    end
+  end
+
+  def add_diagnostic_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "diagnostics", :partial => 'diagnostic' , :object => Participation.new_diagnostic_participation
+    end
+  end
+
   private
   
   def render_investigator_element(form_elements_cache, element, f)

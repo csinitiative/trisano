@@ -37,7 +37,6 @@ ActionController::Routing::Routes.draw do |map|
     cmr.resources :treatments
     cmr.resources :contacts
     cmr.resources :clinicians
-    cmr.resources :health_facilities
   end
 
   map.resources :codes, :controller => :external_codes
