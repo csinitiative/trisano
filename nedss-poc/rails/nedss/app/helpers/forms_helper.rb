@@ -51,7 +51,7 @@ module FormsHelper
   
   def render_core_view(element, include_children)
 
-    result = "<li id='core_view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
+    result = "<li id='core_view_#{element.id}' class='fb-tab' style='clear: both;'><b>#{element.name}</b>"
     
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
@@ -74,7 +74,6 @@ module FormsHelper
   
   def render_section(element, include_children=true)
     
-
     result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
     result += "</li>"

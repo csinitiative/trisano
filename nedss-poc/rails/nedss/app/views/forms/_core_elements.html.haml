@@ -1,4 +1,3 @@
 %div{:id => "core_form_children"}
   - for element in @form.core_view_elements_container.children
     = render_element element
-= sortable_element("core_form_children", :url => { :action => 'order_section_children', :id => @form.core_view_elements_container.id})
