@@ -133,8 +133,8 @@ class Event < ActiveRecord::Base
   end
   
   def new_hospital_attributes=(hospital_attributes)
-    return if hospital_attributes.values_blank?
     hospital_attributes.each do |attributes|
+      next if hospital_attributes.values_blank?
       hospital_participation = hospitalized_health_facilities.build(:role_id => Event.participation_code('Hospitalized At'))
       # Hospitals are a drop down of existing places, not an autocomplete.  Just assgn.
       hospital_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
@@ -161,8 +161,8 @@ class Event < ActiveRecord::Base
   end
 
   def new_diagnostic_attributes=(diagnostic_attributes)
-    return if diagnostic_attributes.values_blank?
     diagnostic_attributes.each do |attributes|
+      next if diagnostic_attributes.values_blank?
       diagnostic_participation = diagnosing_health_facilities.build(:role_id => Event.participation_code('Diagnosed At'))
       # Diagnostic facilities are a drop down of existing places, not an autocomplete.  Just assgn.
       diagnostic_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
@@ -235,17 +235,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-#  def diagnosing_health_facility
-#    @diagnosing_health_facility || Participation.new( :role_id => Event.participation_code('Diagnosed At'), :active_secondary_entity => { :place => {} }, :hospitals_participation => {}) 
-#  end
-
-#  def diagnosing_health_facility=(attributes)
-#    unless attributes[:secondary_entity_id].blank?
-#      attributes[:role_id] = Event.participation_code('Diagnosed At')
-#      @diagnosing_health_facility = diagnosing_health_facilities.build(attributes)
-#    end
-#  end
-  
   def active_jurisdiction
     @active_jurisdiction || jurisdiction
   end
