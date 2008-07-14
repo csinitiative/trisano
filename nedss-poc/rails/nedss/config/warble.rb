@@ -25,21 +25,22 @@ Warbler::Config.new do |config|
   # config.gems = ["ActiveRecord-JDBC", "jruby-openssl"]
   # config.gems << "tzinfo"
 
-#  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "jruby-openssl", "rest-open-uri", "postgres-pr"]
+  #  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "hpricot", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
-#  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
+  #  config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "activerecord-jdbc-adapter", "chronic", "hoe", "jruby-openssl", "rest-open-uri", "postgres-pr"]
 
-config.gems = ["rails", "activesupport", "activeresource", "activerecord", "actionpack", "actionmailer", "hoe", "hpricot", "rest-open-uri", "postgres-pr"]
+  config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr"]
+  config.gems['rails'] = "2.0.2"
 
-# Include all gems which are used by the web application
-# TODO Circle back to this - simpler way to configure gems rather than having to set each manuall
-# See http://wiki.jruby.org/wiki/Warbler
-#require "#{RAILS ROOT}/config/boot"
-#BUILD_GEMS = %w(warbler rake rcov)
-#for gem in Gem.loaded_specs.values
-#  next if BUILD_GEMS.include?(gem.name)
-#  config.gems[gem.name] = gem.version.version
-#end
+  # Include all gems which are used by the web application
+  # TODO Circle back to this - simpler way to configure gems rather than having to set each manuall
+  # See http://wiki.jruby.org/wiki/Warbler
+  #require "#{RAILS ROOT}/config/boot"
+  #BUILD_GEMS = %w(warbler rake rcov)
+  #for gem in Gem.loaded_specs.values
+  #  next if BUILD_GEMS.include?(gem.name)
+  #  config.gems[gem.name] = gem.version.version
+  #end
 
   # Include gem dependencies not mentioned specifically
   config.gem_dependencies = true

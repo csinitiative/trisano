@@ -2,7 +2,6 @@
   "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-
 	<context-param>
 		<param-name>jruby.standalone</param-name>
 		<param-value><%= webxml.standalone %></param-value>
@@ -68,8 +67,11 @@
 	</servlet>
 
 	<!-- Allow all requests to go to the files servlet first -->
+        <% servlet_name = Warbler::VERSION < "0.9.9" ? 
+                                             webxml.servlet_name : 
+                                             webxml.context_params['servlet_name'] %>
 	<servlet-mapping>
-                <servlet-name><%= webxml.servlet_name || 'files' %></servlet-name>
+                <servlet-name><%= servlet_name || 'files' %></servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
