@@ -10,9 +10,16 @@
     %br
     = q.text_field :question_text
 
+  %p
+    %label Short name:
+    %br
+    = q.text_field :short_name
+
   = f.label(:is_active, "Is active?")
   = f.radio_button :is_active, "true"
   Yes
   = f.radio_button :is_active, "false"
   No
+
+
 

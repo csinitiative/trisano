@@ -265,6 +265,7 @@ describe Form do
       
       demo_q1.question.should_not be_nil
       demo_q1.question.question_text.should eql(questions(:demo_q1).question_text)
+      demo_q1.question.short_name.should eql(questions(:demo_q1).short_name)
     end
     
     it "should not make a copy of the inactive questions" do

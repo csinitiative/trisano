@@ -21,7 +21,7 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
   it 'should handle core follow-ups.' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     add_core_follow_up_to_view(@browser, "Default View", "2", "Patient birth gender")
-    add_question_to_follow_up(@browser, "Core follow up for: '2'", @follow_up_question_text, "Single line text")
+    add_question_to_follow_up(@browser, "Core follow up for: '2'", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     edit_cmr(@browser)

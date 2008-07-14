@@ -38,6 +38,7 @@ describe "/forms/builder.html.haml" do
     @question_element.stub!(:pre_order_walk).and_yield(nil)
     @question.stub!(:question_text).and_return("Que?")
     @question.stub!(:data_type).and_return("single_line_input")
+    @question.stub!(:short_name).and_return("")
     @question.stub!(:data_type_before_type_cast).and_return("single_line_input")
     @question.stub!(:core_data).and_return(false)
     @question.stub!(:core_data?).and_return(false)

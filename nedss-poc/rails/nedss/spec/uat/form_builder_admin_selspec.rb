@@ -69,20 +69,20 @@ def add_a_section
 end
 
 def add_questions
-  add_question_to_section(@browser, "Section 1", "Did you go into the tall grass?", "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", {:question_text => "Did you go into the tall grass?", :data_type => "Drop-down select list"})
   @browser.is_text_present("Did you go into the tall grass?").should be_true
   
-  add_question_to_section(@browser, "Section 1", @question_to_inactivate_text, "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_inactivate_text, :data_type => "Drop-down select list"})
   @browser.is_text_present(@question_to_inactivate_text).should be_true
     
   @question_to_inactivate_id = @browser.get_value("id=modified-element")
   
-  add_question_to_section(@browser, "Section 1", @question_to_delete_text, "Multi-line text")
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_delete_text, :data_type => "Multi-line text"})
   @browser.is_text_present(@question_to_delete_text).should be_true
     
   @question_to_delete_id = @browser.get_value("id=modified-element")
   
-  add_question_to_section(@browser, "Section 1", @question_to_edit_text, "Drop-down select list")
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_edit_text, :data_type => "Drop-down select list"})
   @browser.is_text_present(@question_to_edit_text).should be_true
     
   @question_to_edit_id = @browser.get_value("id=modified-element")
@@ -183,13 +183,13 @@ def add_and_populate_tab
 
   @tab_section_element_id = @browser.get_value("id=modified-element")
 
-  add_question_to_section(@browser, @user_defined_tab_section_text, @user_defined_tab_question_text, "Single line text")
+  add_question_to_section(@browser, @user_defined_tab_section_text, {:question_text => @user_defined_tab_question_text, :data_type => "Single line text"})
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
 end
 
 def to_and_from_library_no_group
   
-  add_question_to_view(@browser, "Default View", @question_to_add_to_library_text, "Single line text")
+  add_question_to_view(@browser, "Default View", {:question_text => @question_to_add_to_library_text, :data_type => "Single line text"})
   num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
   @browser.click "link=Copy to library"
   wait_for_element_present("new-group-form")

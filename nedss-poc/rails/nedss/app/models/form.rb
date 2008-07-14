@@ -113,6 +113,7 @@ class Form < ActiveRecord::Base
     
     question_to_publish = Question.new({:question_element_id => published_question_element.id, 
         :question_text => template_question.question_text,
+        :short_name => template_question.short_name,
         :help_text => template_question.help_text,
         :data_type => template_question.data_type_before_type_cast,
         :core_data => template_question.core_data,

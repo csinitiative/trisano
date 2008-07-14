@@ -200,19 +200,19 @@ module NedssHelper
     browser.wait_for_page_to_load($load_time)
   end
   
-  # Takes the name of the tab to which the question should be added and the question's attributes.
-  def add_question_to_view(browser, element_name, question_text, data_type_label, is_active=true)
-    add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_text, data_type_label, is_active)
+  # Takes the name of the tab to which the question should be added and the question's attributes.  
+  def add_question_to_view(browser, element_name, question_attributes = {})
+    add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
   end
   
   # Takes the name of the section to which the question should be added and the question's attributes.
-  def add_question_to_section(browser, element_name, question_text, data_type_label, is_active=true)
-    add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_text, data_type_label, is_active)
+  def add_question_to_section(browser, element_name, question_attributes = {})
+    add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
   end
   
   # Takes the name of the follow-up container to which the question should be added and the question's attributes.
-  def add_question_to_follow_up(browser, element_name, question_text, data_type_label, is_active=true)
-    add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_text, data_type_label, is_active)
+  def add_question_to_follow_up(browser, element_name, question_attributes = {})
+    add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
@@ -316,13 +316,14 @@ module NedssHelper
     return (result == "true") ? true : false
   end
   
-  def add_question_to_element(browser, element_name, element_id_prefix, question_text, data_type_label, is_active)
+  def add_question_to_element(browser, element_name, element_id_prefix, question_attributes)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
     browser.click("add-question-#{element_id}")
     wait_for_element_present("new-question-form", browser)
-    browser.type("question_element_question_attributes_question_text", question_text)
-    browser.select("question_element_question_attributes_data_type", "label=#{data_type_label}")
-    browser.click("question_element_is_active_#{is_active.to_s}")
+    browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
+    browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}")
+    browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
+    browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
   end

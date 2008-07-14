@@ -118,7 +118,9 @@ module FormsHelper
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
     result += "Question: " + question.question_text
-    result += "&nbsp;&nbsp;<small>(" + question.data_type_before_type_cast.humanize + ")</small>"
+    result += "&nbsp;&nbsp;<small>(" 
+    result += "#{question.short_name}, " unless question.short_name.blank?
+    result += question.data_type_before_type_cast.humanize + ")</small>"
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
 

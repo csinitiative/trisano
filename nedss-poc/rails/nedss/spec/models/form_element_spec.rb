@@ -69,7 +69,7 @@ describe "Quesiton FormElement when added to library" do
   
   before(:each) do
     @form_element = QuestionElement.create(:tree_id => 1, :form_id => 1)
-    @question = Question.create({:question_text => "Que?", :data_type => "single_line_text"})
+    @question = Question.create({:question_text => "Que?", :data_type => "single_line_text", :short_name => "que_q" })
     @form_element.question = @question
     
   end
@@ -95,6 +95,7 @@ describe "Quesiton FormElement when added to library" do
     @library_question.question.should_not be_nil
     @library_question.question.question_text.should eql(@question.question_text)
     @library_question.question.data_type.should eql(@question.data_type)
+    @library_question.question.short_name.should eql(@question.short_name)
   end
     
   it "the copy should have follow up questions" do
