@@ -214,6 +214,9 @@ describe QuestionElementsController do
       @question_element = mock_model(QuestionElement, :to_param => "1")
       @question_element.stub!(:form_id).and_return(1)
       QuestionElement.stub!(:new).and_return(@question_element)
+      
+      @question_element.stub!(:parent_element_id).and_return(1)
+      FormElement.stub!(:roots).and_return(nil)
     end
     
     describe "with successful save" do

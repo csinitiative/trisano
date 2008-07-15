@@ -47,6 +47,8 @@ class QuestionElementsController <  AdminController
       form_id = @question_element.form_id
       @form = Form.find(form_id)
     else
+      @reference_element = FormElement.find(@question_element.parent_element_id)
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :action => "new" 
     end
 
