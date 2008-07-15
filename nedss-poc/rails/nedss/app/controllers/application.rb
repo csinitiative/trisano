@@ -30,12 +30,22 @@ class ApplicationController < ActionController::Base
         logger.info "Using HTTP_UID header"
         load_user_by_uid(request.headers["HTTP_UID"])
       else
-        logger.info "Using REMOTE_USER"
-        load_user_by_uid(request.env["REMOTE_USER"])
+        if session[:user_id].nil?
+          logger.info "Using REMOTE_USER"
+          load_user_by_uid(request.env["REMOTE_USER"])
+        else
+          logger.info "Using session information"
+          load_user_by_uid(session[:user_id])
+        end
       end
     else
-      logger.info "Using NEDSS user found in local environment variable"
-      load_user_by_uid(NEDSS_UID)
+      if session[:user_id].nil?
+        logger.info "Using NEDSS user found in local environment variable"
+        load_user_by_uid(NEDSS_UID)
+      else
+        logger.info "Using user set in session"
+        load_user_by_uid(session[:user_id])
+      end
     end
   end
   
@@ -64,6 +74,7 @@ class ApplicationController < ActionController::Base
   def log_request_info
     thread_id = Thread.current.object_id
     request.env.each do |key, value|
+      
       logger.info "#{thread_id} -- #{key}: #{value}"
     end      
   end

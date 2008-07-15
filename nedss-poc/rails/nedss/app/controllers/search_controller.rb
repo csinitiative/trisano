@@ -56,7 +56,7 @@ class SearchController < ApplicationController
                           :conditions => "code_name = 'county'")
 
     
-    @jurisdictions = User.current_user.jurisdictions_for_privilege(:view)
+    @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
     
     begin
      if not params.values_blank?

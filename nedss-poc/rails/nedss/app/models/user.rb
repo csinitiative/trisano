@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name
-  validates_length_of :uid, :maximum => 9
+  validates_length_of :uid, :maximum => 50
   
   after_update :save_role_memberships
   after_validation :clear_base_error
@@ -34,6 +34,10 @@ class User < ActiveRecord::Base
     entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && ent.jurisdiction_id == jurisdiction_id }.nil? ? false : true
   end
   
+  def is_entitled_to?(privilege)
+    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege }.nil? ? false : true
+  end
+
   def jurisdictions_for_privilege(privilege)
     # entitlements.collect { |ent| ent.jurisdiction.current_place if ent.privilege.priv_name.to_sym == privilege }.compact!
     Place.jurisdictions_for_privilege_by_user_id(id, privilege)

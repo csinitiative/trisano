@@ -30,7 +30,7 @@ class EventsController < ApplicationController
     @events = Event.find(:all, 
       :include => :jurisdiction, 
       :select => "jurisdiction.secondary_entity_id", 
-      :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view)])
+      :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -51,6 +51,11 @@ class EventsController < ApplicationController
   end
 
   def new
+    unless User.current_user.is_entitled_to?(:create_event)
+      render :text => "Permission denied: You do not have privileges to create a CMR", :status => 403
+      return
+    end
+
     # Debt:  Get rid of this monstrosity and replace with #build calls here in the controller.
     #        Get rid of corresponding setters
     @event = Event.new(
@@ -119,8 +124,8 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event])
     
-    unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
+    unless User.current_user.is_entitled_to_in?(:create_event, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403
       return
     end
     
@@ -157,6 +162,19 @@ class EventsController < ApplicationController
     head :method_not_allowed
   end
 
+  # This action is for development/testing purposes only.  This is not a "real" login action
+  def change_user
+    if RAILS_ENV == "production"
+      render :text => "Action not available", :status => 403
+    else
+      session[:user_id] = params[:user_id]
+      User.current_user = User.find_by_uid(params[:user_id])
+      
+      render(:update) do |page|
+        page.replace_html("user_name", :inline => "<%= User.current_user.user_name %>")
+      end
+    end
+  end
   private
   
   def prepopulate
@@ -174,7 +192,7 @@ class EventsController < ApplicationController
   
   def can_update?
     @event ||= Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:update, @event.active_jurisdiction.secondary_entity_id)
+    unless User.current_user.is_entitled_to_in?(:update_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
     end
@@ -182,7 +200,7 @@ class EventsController < ApplicationController
   
   def can_view?
     @event = Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:view, @event.active_jurisdiction.secondary_entity_id)
+    unless User.current_user.is_entitled_to_in?(:view_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
     end

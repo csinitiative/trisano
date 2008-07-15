@@ -10,7 +10,7 @@ describe EventsController do
       mock_user
       @event = mock_event
       Event.stub!(:find).and_return([@event])
-      @user.stub!(:jurisdiction_ids_for_privilege).with(:view).and_return([75])
+      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
     end
   
     def do_get
@@ -74,7 +74,7 @@ describe EventsController do
       mock_user
       @event = mock_event
       Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view, 75).and_return(true)
+      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
     end
   
     def do_get
@@ -108,7 +108,7 @@ describe EventsController do
       mock_user
       @event = mock_event
       Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view, 75).and_return(false)
+      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
     end
   
     def do_get
@@ -163,6 +163,7 @@ describe EventsController do
       mock_user
       @event = mock_event
       Event.stub!(:new).and_return(@event)
+      @user.stub!(:is_entitled_to?).with(:create_event).and_return(true)
     end
     
     def do_get
@@ -207,7 +208,7 @@ describe EventsController do
       @event.stub!(:get_investigation_forms).and_return([@form])
       
 
-      @user.stub!(:is_entitled_to_in?).with(:update, 75).and_return(true)
+      @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
       @event.stub!(:form_references).and_return([])
     end
   

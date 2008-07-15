@@ -107,9 +107,8 @@ namespace :nedss do
 
         puts "POST CMR"
         new_event_url = NEDSS_URL + '/nedss/cmrs/new'
-        
         page = agent.get(new_event_url)
-        form = page.forms.first
+        form = page.forms[1]
         #form.fields.each { |f| puts f.name }
 
         # Set minimal values
@@ -127,7 +126,7 @@ namespace :nedss do
         form.add_field!("event[active_jurisdiction][secondary_entity_id]", "")
 
         page = agent.submit form      
-        raise "POST content invalid" unless (page/"//#errorExplanation").empty?
+        raise "POST content invalid" unless (page.search("//#errorExplanation")).empty?
                
         puts "smoke test success"
       rescue => error

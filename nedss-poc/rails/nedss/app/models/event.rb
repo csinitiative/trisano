@@ -365,8 +365,8 @@ class Event < ActiveRecord::Base
       where_clause += "p3.jurisdiction_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
     else
       where_clause += " AND " unless where_clause.empty?
-      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view).collect   {|j| j.entity_id}
-      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update).collect {|j| j.entity_id}
+      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
+      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
       allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
       where_clause += "p3.jurisdiction_id IN (" + allowed_ids_str.chop + ")"
     end
@@ -558,13 +558,10 @@ class Event < ActiveRecord::Base
   end
 
   def under_investigation?
-    true if event_status_id == ExternalCode.find_by_code_name_and_code_description("eventstatus", "Under Investigation").id
+    investigation_codes = ExternalCode.find_by_sql("SELECT id from external_codes WHERE code_name = 'eventstatus' and the_code IN ('UI', 'IC', 'RO-MGR')").collect { |code| code.id }
+    true if investigation_codes.include?(event_status_id)
   end
 
-  def reopened?
-    true if event_status_id == ExternalCode.find_by_code_name_and_code_description("eventstatus", "Reopened").id
-  end
-  
   def get_investigation_forms
     if self.form_references.empty?
       return if self.disease.nil? || self.disease.disease_id.blank?

@@ -47,7 +47,14 @@
         .span-12.push-3.last
           #nav
             .user
-              = current_user_name
+              - if RAILS_ENV == "production"
+                = current_user_name
+              - else 
+                - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
+                = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
+                %span{:id => "user_name"}= current_user_name
+                = select_tag("user_id", options_for_select(users, current_user_name), :onchange => "this.form.onsubmit()")
+                </form>
             .area
               = link_to 'NEW CMR', new_cmr_path
               |

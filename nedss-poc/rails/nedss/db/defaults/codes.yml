@@ -895,33 +895,58 @@
   sort_order: 5
 
 - code_name: "eventstatus"
-  the_code: "ASG"
-  code_description: "Assigned to Jursidiction"
+  the_code: "ASGD-LHD"
+  code_description: "Assigned to Local Health Dept."
   sort_order: 10
+
+- code_name: "eventstatus"
+  the_code: "ACPTD-LHD"
+  code_description: "Accepted by Local Health Dept."
+  sort_order: 15
+
+- code_name: "eventstatus"
+  the_code: "RJCTD-LHD"
+  code_description: "Rejected by Local Health Dept."
+  sort_order: 20
+
+- code_name: "eventstatus"
+  the_code: "ASGD-INV"
+  code_description: "Assigned to Investigator."
+  sort_order: 25
 
 - code_name: "eventstatus"
   the_code: "UI"
   code_description: "Under Investigation"
-  sort_order: 15
+  sort_order: 30
+
+- code_name: "eventstatus"
+  the_code: "RJCTD-INV"
+  code_description: "Rejected by Investigator."
+  sort_order: 35
 
 - code_name: "eventstatus"
   the_code: "IC"
   code_description: "Investigation Complete"
-  sort_order: 20
+  sort_order: 40
 
 - code_name: "eventstatus"
-  the_code: "RO"
-  code_description: "Reopened"
+  the_code: "RO-MGR"
+  code_description: "Reopened by Manager"
   sort_order: 25
 
 - code_name: "eventstatus"
-  the_code: "APP"
+  the_code: "APP-LHD"
   code_description: "Approved by LHD"
   sort_order: 30
 
 - code_name: "eventstatus"
-  the_code: "CLO"
+  the_code: "CLOSED"
   code_description: "Approved by State"
+  sort_order: 35
+
+- code_name: "eventstatus"
+  the_code: "RO-STATE"
+  code_description: "Reopened by State"
   sort_order: 35
 
   ### IMPORTED FROM LOCATIONS ###

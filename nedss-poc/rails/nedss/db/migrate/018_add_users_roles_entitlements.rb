@@ -110,7 +110,7 @@ class AddUsersRolesEntitlements < ActiveRecord::Migration
     drop_table :privileges
     drop_table :entitlements
     drop_table :roles
-    drop_table :users_roles
-    drop_table :roles_privileges
+    drop_table :role_memberships
+    drop_table :privileges_roles
   end
 end

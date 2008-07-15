@@ -112,3 +112,53 @@ PrivilegesRole.transaction do
 end
 
 
+# TODO: Make this smarter when it comes to production
+User.transaction do
+
+  data_entry_tech = User.find_by_user_name('data_entry_tech')
+  surveillance_mgr = User.find_by_user_name('surveillance_mgr')
+  investigator = User.find_by_user_name('investigator')
+  lhd_manager = User.find_by_user_name('lhd_manager')
+  state_manager = User.find_by_user_name('state_manager')
+
+  bear_river = Place.find_by_name("Bear River Health Department").entity_id
+
+  create_event = Privilege.find_by_priv_name("create_event").id
+  view_event = Privilege.find_by_priv_name("view_event").id
+  update_event = Privilege.find_by_priv_name("update_event").id
+  route_event_to_lhd = Privilege.find_by_priv_name("route_event_to_lhd").id
+  accept_event_for_lhd = Privilege.find_by_priv_name("accept_event_for_lhd").id
+  route_event_to_investigator = Privilege.find_by_priv_name("route_event_to_investigator").id
+  accept_event_for_investigation = Privilege.find_by_priv_name("accept_event_for_investigation").id
+  investigate_event = Privilege.find_by_priv_name("investigate_event").id
+  approve_event_at_lhd = Privilege.find_by_priv_name("approve_event_at_lhd").id
+  approve_event_at_state = Privilege.find_by_priv_name("approve_event_at_state").id
+
+  data_entry_tech.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
+  data_entry_tech.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
+  data_entry_tech.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
+  data_entry_tech.entitlements << Entitlement.new(:privilege_id => route_event_to_lhd, :jurisdiction_id => bear_river)
+
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => accept_event_for_lhd, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => route_event_to_investigator, :jurisdiction_id => bear_river)
+
+  investigator.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => accept_event_for_investigation, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => investigate_event, :jurisdiction_id => bear_river)
+
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_lhd, :jurisdiction_id => bear_river)
+
+  state_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
+  state_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
+  state_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
+  state_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_state, :jurisdiction_id => bear_river)
+
+end
