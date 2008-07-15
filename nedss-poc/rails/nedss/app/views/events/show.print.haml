@@ -15,7 +15,7 @@
 
   %div{:class => "sub-header"}
     %div{:class => "left"}
-      = @event.disease.disease.nil? ? "Disease not specified" : @event.disease.disease.disease_name
+      = (@event.disease.nil? || @event.disease.disease.nil?) ? "Disease not specified" : @event.disease.disease.disease_name
     %div{:class => "right"}
       Confidential Case Report
 
@@ -184,4 +184,4 @@
         %div{:class => "left"}
           %span{:class => "print-label"} Was patient hospitalized:
           %span{:class => "print-value"}
-            = l @event.disease.hospitalized
+            = l(@event.disease.hospitalized) unless @event.disease.nil?

@@ -15,6 +15,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
     
     change_event = core_follow_up_event(attribute, event)
+    options[:include_blank] = true unless options[:include_blank] == "false"
     html_options[:onchange] = change_event unless change_event.blank?
     self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
 

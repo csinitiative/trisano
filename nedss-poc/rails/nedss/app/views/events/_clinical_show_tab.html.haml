@@ -7,24 +7,24 @@
         %span{:class => 'label'}
           Disease:
       %td
-        = @event.disease.disease.disease_name unless @event.disease.disease.nil?
+        = @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
     %tr
       %td
         %span{:class => 'label'}
           Disease onset date:
       %td
-        = @event.disease.disease_onset_date unless @event.disease.disease.nil?
+        = @event.disease.disease_onset_date unless @event.disease.nil? || @event.disease.disease.nil?
       %td
         %span{:class => 'label'}
           Date diagnosed:
       %td
-        = @event.disease.date_diagnosed unless @event.disease.disease.nil?
+        = @event.disease.date_diagnosed unless @event.disease.nil? || @event.disease.disease.nil?
     %tr
       %td
         %span{:class => 'label'}
           Hospitalized:
       %td
-        = l @event.disease.hospitalized
+        = l @event.disease.hospitalized unless @event.disease.nil?
       %td
         &nbsp;
       %td
@@ -34,7 +34,7 @@
         %span{:class => 'label'}
           Died:
       %td
-        = l @event.disease.died
+        = l @event.disease.died unless @event.disease.nil?
       %td
         %span{:class => 'label'}
           Date of death:

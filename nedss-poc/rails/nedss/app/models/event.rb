@@ -567,6 +567,7 @@ class Event < ActiveRecord::Base
   
   def get_investigation_forms
     if self.form_references.empty?
+      return if self.disease.nil? || self.disease.disease_id.blank?
       i = -1
       Form.get_published_investigation_forms(self.disease.disease_id, self.active_jurisdiction.secondary_entity_id).each do |form|
         self.form_references[i += 1] = FormReference.new(:form_id => form.id)

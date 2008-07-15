@@ -21,7 +21,7 @@
       <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
         <% entity_data    = @event.active_reporter.nil? ? Entity.new    : @event.active_reporter.active_secondary_entity %>
         <% reporter_data  = @event.active_reporter.nil? ? Person.new    : @event.active_reporter.active_secondary_entity.person %>
-        
+      
         <% telephone_data  = @event.active_reporter.nil? ? EntitiesLocation.new  : @event.active_reporter.active_secondary_entity.telephone_entities_location %>
       
         <%= error_messages_for :object => reporter_data %>
@@ -43,7 +43,6 @@
       
           <%= error_messages_for :object => telephone_data %>
       
-          <% if telephone_data.entity_location_type_id.nil? then telephone_data.entity_location_type_id = ExternalCode.find_by_code_name_and_code_description('telephonelocationtype', "Unknown").id end %>
           <% if telephone_data.primary_yn_id.nil? then telephone_data.primary_yn_id = ExternalCode.no_id end %>
           <% if telephone_data.location_type_id.nil? then telephone_data.location_type_id = Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id end %>
           <% agency_fields.fields_for(:telephone_entities_location, telephone_data, :builder => ExtendedFormBuilder) do |el| %>

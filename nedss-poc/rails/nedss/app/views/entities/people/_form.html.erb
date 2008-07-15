@@ -69,7 +69,6 @@
       
       <% if entity_data.telephone_entities_location.nil?
         entity_data.telephone_entities_location = {
-          :entity_location_type_id => ExternalCode.find_by_code_name_and_code_description('telephonelocationtype', "Unknown").id, 
           :primary_yn_id => ExternalCode.no_id,
           :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
         }
