@@ -19,10 +19,13 @@
                 %li
                   = link_to_function "#{form_reference.form.name}", "toggle_investigator_forms(\"#{form_reference.form.id}\")"
         %td{:width => '80%', :align => 'left'}
+          - form_count = 0
           - for form_reference in @event.form_references
+            - form_count += 1
             - form = form_reference.form
+            - display_style = (form_count == 1) ? "inline" : "none"
             
-            %div{:id => "form_investigate_#{form.id}", :style => "display: none;"}
+            %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style};"}
               %h2
                 = form_reference.form.name
                 
