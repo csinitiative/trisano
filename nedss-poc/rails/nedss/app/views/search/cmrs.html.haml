@@ -91,6 +91,10 @@
 
 - if !@cmrs.blank?
   %h3 Results
+  %div{ :class => 'tools' }
+    %a{ :href => search_path } New Search
+    |
+    = link_to('Export to CSV', params.merge(:format => 'csv'))
   %table{ :width => "100%", :cellpadding => "2" }
     %tr
       %th

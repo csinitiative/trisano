@@ -95,4 +95,13 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Charles Chuckles').should be_true
     @browser.is_text_present('Bear River Health Department').should be_true
   end
+
+  it 'should find Charles and present export as csv link' do
+    navigate_to_cmr_search(@browser)
+    @browser.type('name', 'Charles')
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Export to CSV').should be_true
+  end
 end

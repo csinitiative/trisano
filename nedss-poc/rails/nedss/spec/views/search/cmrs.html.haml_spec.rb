@@ -49,6 +49,10 @@ describe "/search/cmrs.html.haml" do
 
     do_render
     response.should have_tag("h3", "Results")
+    response.should have_tag("div.tools") do
+      with_tag('a', "New Search")
+      with_tag('a', "Export to CSV")
+    end
   end
   
   it "should show message when no results are present" do

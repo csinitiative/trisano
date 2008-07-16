@@ -1,7 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.home '', :controller => 'dashboard'
-  map.search 'search', :controller => 'search'
+  map.with_options :controller => 'search' do |search|
+    search.search_cmrs   'search/cmrs',         :action => 'cmrs'
+    search.cmrs_format   'search/cmrs.:format', :action => 'cmrs'
+    search.search_people 'search/people',       :action => 'people'
+    search.search        'search'
+  end   
   map.admin 'admin', :controller => 'admin'
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'

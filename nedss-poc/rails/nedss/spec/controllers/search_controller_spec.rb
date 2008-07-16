@@ -1,5 +1,35 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+shared_examples_for "search cmrs with parameters" do
+  
+  it "should be successful" do
+    do_get 
+    response.should be_success
+  end
+  
+  it "should build a list of diseases" do
+    do_get
+    assigns[:diseases].should == ([@diseases])
+  end
+  
+  it "should execute a search" do
+    Event.should_receive(:find_by_criteria).and_return([@event])
+    do_get
+  end
+  
+  it "should assign the found CMRs for the view" do
+    do_get
+    assigns[:cmrs].should == ([@event])
+  end
+  
+  it "should render cmrs template" do
+    do_get
+    response.should render_template('cmrs')
+  end
+  
+end
+
+
 describe SearchController do
   
   describe "handling GET /search" do
@@ -58,12 +88,13 @@ describe SearchController do
       get :people, :name => "Johnson"
     end
   
+  
     it "should be successful" do
       do_get
       response.should be_success
     end
     
-     it "should execute a search" do
+    it "should execute a search" do
       Person.should_receive(:find_by_ts).and_return([@person])
       do_get
     end
@@ -72,12 +103,12 @@ describe SearchController do
       do_get
       assigns[:people].should == ([@person])
     end
-
+    
     it "should render people template" do
       do_get
       response.should render_template('people')
     end
-
+    
   end
   
   describe "handling GET /search/cmrs" do
@@ -96,7 +127,7 @@ describe SearchController do
       do_get
       assigns[:diseases].should == ([@diseases])
     end
-  
+    
     it "should be successful" do
       do_get
       response.should be_success
@@ -106,7 +137,7 @@ describe SearchController do
       do_get
       response.should render_template('cmrs')
     end
-
+    
   end
   
   describe "handling GET /search/cmrs with search parameters" do
@@ -123,30 +154,31 @@ describe SearchController do
     def do_get
       get :cmrs, :disease => 2
     end
+
+    it_should_behave_like "search cmrs with parameters"
   
-    it "should be successful" do
-      do_get 
-      response.should be_success
-    end
+  end
+  
+  describe "handling GET /search/cmrs with params as csv" do
     
-    it "should build a list of diseases" do
-      do_get
-      assigns[:diseases].should == ([@diseases])
+    before(:each) do
+      mock_user
+      @event = mock_model(Event)
+      Event.stub!(:find_by_criteria).and_return([@event])
+      
+      @diseases = mock_model(Disease)
+      Disease.stub!(:find).and_return([@diseases])
     end
-    
-    it "should execute a search" do
-      Event.should_receive(:find_by_criteria).and_return([@event])
-      do_get
+
+    def do_get
+      get :cmrs, :disease => 2, :format => 'csv'
     end
-    
-    it "should assign the found CMRs for the view" do
+
+    it_should_behave_like "search cmrs with parameters"
+
+    it "should return csv mime type" do
       do_get
-      assigns[:cmrs].should == ([@event])
-    end
-    
-    it "should render cmrs template" do
-      do_get
-      response.should render_template('cmrs')
+      response.headers['type'].should match(/^text\/csv/)
     end
 
   end

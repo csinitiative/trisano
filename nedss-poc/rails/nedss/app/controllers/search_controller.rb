@@ -114,7 +114,7 @@ class SearchController < ApplicationController
               end
             end
             
-       end
+        end
     rescue Exception => ex
       flash[:error] = "There was a problem with your search criteria"
       
@@ -127,6 +127,13 @@ class SearchController < ApplicationController
         flash[:error] += "</ul>"
       end
     end      
+
+    
+    respond_to do |format|
+      format.html
+      format.csv { render :layout => false }
+    end
+
   end
   
   def auto_complete_model_for_city
