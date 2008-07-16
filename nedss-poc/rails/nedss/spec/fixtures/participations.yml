@@ -76,3 +76,18 @@ Lab_Guy_Tested_By:
   primary_entity_id:
   created_at: <%= Time.now.to_s :db %> 
   event_id: 1
+
+Patient_Without_Disease:
+  id: 9
+  event_id: 3
+  role_id: 2301
+  primary_entity_id: 101
+  created_at: <%= Time.now.to_s :db %> 
+
+patient_without_disease_jurisdiction:
+  id: 10
+  event_id: 3
+  role_id: 2305
+  secondary_entity_id: 75
+  primary_entity_id: 
+  created_at: <%= Time.now.to_s :db %> 

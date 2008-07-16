@@ -22,3 +22,7 @@ marks_cmr:
 under_investigation_cmr:
   id: 2
   event_status_id: !str 1904
+
+no_disease_cmr:
+  id: 3
+  event_status_id: 1901

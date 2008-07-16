@@ -131,8 +131,10 @@ class Entity < ActiveRecord::Base
     contact.secondary_entity = event.active_patient.primary_entity
     contact.role_id = Event.participation_code('Contact')
 
-    disease_event = DiseaseEvent.new
-    disease_event.disease = event.disease.disease
+    unless event.disease.nil?
+      disease_event = DiseaseEvent.new
+      disease_event.disease = event.disease.disease
+    end
 
     cmr = Event.new
     cmr.event_onset_date = Date.today
@@ -141,7 +143,7 @@ class Entity < ActiveRecord::Base
     cmr.participations << patient
     cmr.participations << jurisdiction
     cmr.participations << contact
-    cmr.disease_events << disease_event
+    cmr.disease_events << disease_event unless event.disease.nil?
     cmr.save(false)
   end
 

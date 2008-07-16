@@ -185,7 +185,7 @@ describe Entity, "with associated location and person via custom attributes" do
 end
 
 describe Entity, "with people fixtures loaded" do
-  fixtures :entities, :people, :people_races, :codes, :external_codes, :events
+  fixtures :entities, :people, :people_races, :codes, :external_codes, :events, :participations, :disease_events, :diseases
 
   describe "and a single instance of Grocuho Marx" do
 
@@ -213,6 +213,12 @@ describe Entity, "with people fixtures loaded" do
 
     it "should not be promotable to a case" do
       lambda { entities(:Marks).promote_to_case(events(:marks_cmr)) }.should raise_error(RuntimeError)
+    end
+  end
+
+  describe "an entity without a disease specified" do
+    it "should allow contacts to be promoted to cases without error" do
+      entities(:Johnson).promote_to_case(events(:no_disease_cmr)).should be_true
     end
   end
 
