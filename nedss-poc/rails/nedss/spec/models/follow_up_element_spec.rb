@@ -11,6 +11,12 @@ describe FollowUpElement do
     @follow_up_element.should be_valid
   end
   
+  it "should be valid for core follow ups" do
+    @follow_up_element.core_data = "true"
+    @follow_up_element.core_path = "some.path"
+    @follow_up_element.should be_valid
+  end
+  
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the question provided" do

@@ -7,7 +7,7 @@
   %br
   = f.text_field :condition
 
-- if (@follow_up_element.core_data)
+- if (@follow_up_element.core_data == "true")
   %label Core data element
   %br
   - values = {}
