@@ -68,11 +68,11 @@ Rails::Initializer.run do |config|
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README 
   config.after_initialize do
     ValidatesDateTime.us_date_format = true
-    require "lib/active_record/errors.rb"
-    require "lib/soundex/Soundex.rb"
-    require "lib/mmwr/mmwr.rb"
-    require "lib/blankable.rb"
-    require "lib/extend_better_nested_set.rb"
+    require "active_record/errors.rb"
+    require "soundex/Soundex.rb"
+    require "mmwr/mmwr.rb"
+    require "blankable.rb"
+    require "extend_better_nested_set.rb"
   end
 
 end

@@ -73,7 +73,7 @@ def create_web_xml
 end
 
 def create_war_file
-  puts "adding web.xml to nedss.war"
+  puts "adding database.yml to nedss.war"
   system("jar uf nedss.war #{WEB_APP_DIR}/database.yml")
 end
 
