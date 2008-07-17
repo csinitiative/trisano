@@ -41,7 +41,6 @@ class Place < ActiveRecord::Base
                 places.name"
 
       jurisdictions = find_by_sql(query)
-      jurisdictions
       unassigned = jurisdictions.find { |jurisdiction| jurisdiction.name == "Unassigned" }
       jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
       jurisdictions
