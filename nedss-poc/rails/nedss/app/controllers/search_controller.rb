@@ -31,6 +31,11 @@ class SearchController < ApplicationController
     flash[:error] = ""
     error_details = []
     
+    @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
+    if @jurisdictions.nil?
+      error_details << "You do not have view permissions in any jurisdiction"
+    end
+
     @first_name = ""
     @middle_name = ""
     @last_name = ""
@@ -55,9 +60,6 @@ class SearchController < ApplicationController
                           :select => "id, code_description",
                           :conditions => "code_name = 'county'")
 
-    
-    @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
-    
     begin
      if not params.values_blank?
         

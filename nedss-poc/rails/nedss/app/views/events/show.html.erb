@@ -6,10 +6,9 @@
   <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
 <% end %>
 
+<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
 <% content_for :tools do %>
-  <%= link_to 'Edit', edit_cmr_path(@event), :id => "edit_cmr_link" %> |
-  <%= link_to 'Export to CSV', cmr_path(@event)+'.csv' %> |
-  <%= link_to 'Print', formatted_cmr_path(@event, "print") , :target => "_blank" %> |
+  <%= basic_controls(@event, jurisdiction) %> |
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>
 

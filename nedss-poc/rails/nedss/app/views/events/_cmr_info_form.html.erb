@@ -43,15 +43,11 @@
       <% end %>
       <span class="horiz">
         <%= f.label(:event_status_id) %>
-        <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {}) %>
+        <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {:include_blank => false}) %>
       </span>
       <span class="horiz">
         <%= f.label(:investigation_started_date, "Date investigation started") %>
         <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
-      <span class="horiz">
-        <%= f.label(:investigation_LHD_status_id, "LHD investigation status") %>
-        <%= f.dropdown_code_field(:investigation_LHD_status_id, 'investigation', {}) %>
       </span>
       <span class="horiz">
         <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>

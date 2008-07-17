@@ -7,11 +7,11 @@
 <% end %>
 
 <% content_for :tools do %>
-  <%= link_to 'New Morbidity Report', new_cmr_path %> |  <%= link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv') %>
+  <%= new_cmr_link 'New Morbidity Report' %> |  <%= link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv') %>
 <% end %>
 
 <% content_for :tools_two do %>
-  <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
+  <%= button_to "Create New Morbidity Report" %>
 <% end %>
 
 <table class='tabular'> 
@@ -19,22 +19,25 @@
     <tr>
       <th>Patient Name</th>
       <th>Disease</th>
-      <th>Event Name</th>
-      <th>Event Onset Date</th>
+      <th>Created Date</th>
       <th>Event Status</th>
+      <th>Jurisdiction</th>
     </tr>
   </thead>
   <% for event in @events %>
     <tr>
       <% patient = event.active_patient.active_primary_entity.person %>
+      <% jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place %></td>
       <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
       <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
-      <td><%= event.event_name %></td>
       <td><%= event.event_onset_date %></td>
       <td><%= l event.event_status %></td>
-      <td><%= link_to 'Show', cmr_path(event) %></td>
-      <td><%= link_to 'Edit', edit_cmr_path(event) %></td>
-      <td><%= link_to 'Print', formatted_cmr_path(event, "print") , :target => "_blank" %></td>
+      <td><%= jurisdiction.name %></td>
+    </tr>
+    <tr>
+      <td colspan='2' style='border: 0'><%= routing_controls(event, jurisdiction) %></td>
+      <td colspan='2' style='border: 0;'><span class='tools'><%= basic_controls(event, jurisdiction) %></span></td>
+      <td colspan='1' style='border: 0;'><%= state_controls(event, jurisdiction) %></td>
     </tr>
   <% end %>
 </table>

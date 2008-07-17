@@ -17,7 +17,7 @@ body, p, ol, ul {
 .tabular td {
   border: 1px solid #C1DAD7;
   background: #fff;
-  padding: 6px 6px 6px 12px;
+  padding: 3px 3px 3px 9px;
   color: #191970;
 }
 
@@ -27,7 +27,7 @@ body, p, ol, ul {
   letter-spacing: 1px;
   text-align: left;
   text-transform: uppercase;
-  padding: 6px 6px 6px 12px;
+  padding: 3px 3px 3px 9px;
 }
 
 pre {

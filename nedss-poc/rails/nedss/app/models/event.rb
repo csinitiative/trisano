@@ -572,6 +572,17 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def route_to_jurisdiction(jurisdiction_id)
+    transaction do
+      active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
+      update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
+    end
+  end
+
+  def change_state(new_state)
+    update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', new_state).id)
+  end
+
   def Event.exposed_attributes
     {
       "event[active_patient][active_primary_entity][person][last_name]" => {:type => :single_line_text, :name => "Patient last name" },

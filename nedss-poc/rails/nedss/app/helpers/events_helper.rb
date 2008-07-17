@@ -52,6 +52,66 @@ module EventsHelper
     end
   end
 
+  def basic_controls(event, jurisdiction)
+    controls = link_to('Show', cmr_path(event)) + " | "
+    controls += (link_to('Edit', edit_cmr_path(event)) + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+    controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
+    controls += link_to('Export to CSV', cmr_path(@event)+'.csv')
+  end
+
+  def state_controls(event, jurisdiction)
+    controls = ""
+    if User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
+      controls += form_tag(state_cmr_path(event))
+      controls += "<span>Accept CMR&nbsp;</span>" 
+      controls += hidden_field_tag('state_to_change', 'accept_event_for_lhd')
+      controls += select_tag("new_state", options_for_select({'Accept' => 'ACPTD-LHD', 'Reject' => 'RJCTD-LHD'}), :onchange => "this.form.submit()")
+      controls += "</form>"
+    end
+    if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-INV").id)
+      controls += "TBD: &nbsp;&nbsp;" + "Accept/Reject for investigation"
+    end
+    if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "UI").id)
+      controls += "TBD: &nbsp;&nbsp;" + "Mark investigation complete"
+    end
+    if User.current_user.is_entitled_to_in?(:approve_event_at_lhd, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "IC").id)
+      controls += "TBD: &nbsp;&nbsp;" + "Approve and send to state"
+    end
+    if User.current_user.is_entitled_to_in?(:approve_event_at_state, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "APP-LHD").id)
+      controls += "TBD: &nbsp;&nbsp;" + "Approve and close"
+    end
+    controls
+  end
+
+  def routing_controls(event, jurisdiction)
+    controls = ""
+    if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, jurisdiction.entity_id)
+      jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
+      controls += form_tag(jurisdiction_cmr_path(event))
+      controls += "<span>Route to:&nbsp;</span>" 
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :name), :onchange => "this.form.submit()")
+      controls += "</form>"
+    end
+    if User.current_user.is_entitled_to_in?(:route_event_to_investigator, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id)
+      controls += "TO BE DONE:&nbsp;&nbsp;" + "Route to investigator"
+    end
+    controls
+  end
+
+  def new_cmr_link(text)
+    link_to(text, new_cmr_path) if User.current_user.is_entitled_to?(:create_event)
+  end
+
+  def new_cmr_button(text)
+    button_to(text, {:action => "new"}, { :method => :get }) if User.current_user.is_entitled_to?(:create_event)
+  end
+
   private
   
   def render_investigator_element(form_elements_cache, element, f)

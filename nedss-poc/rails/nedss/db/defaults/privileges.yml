@@ -1,7 +1,7 @@
 - "create_event"
 - "view_event"
 - "update_event"
-- "route_event_to_lhd"
+- "route_event_to_any_lhd"
 - "accept_event_for_lhd"
 - "route_event_to_investigator"
 - "accept_event_for_investigation"

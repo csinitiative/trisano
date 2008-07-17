@@ -38,11 +38,16 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
 
-  map.resources :cmrs, :controller => :events do |cmr|
-    cmr.resources :treatments
-    cmr.resources :contacts
-    cmr.resources :clinicians
-  end
+#  map.resources :cmrs, :controller => :events :member => { :jurisdiction => :post } do |cmr|
+#    cmr.resources :treatments
+#    cmr.resources :contacts
+#    cmr.resources :clinicians
+#  end
+
+  map.resources :cmrs, 
+                :controller => :events,
+                :member => { :state => :post, :jurisdiction => :post },
+                :has_many => [:treatments, :contacts, :clinicians]
 
   map.resources :codes, :controller => :external_codes
 

@@ -162,6 +162,56 @@ class EventsController < ApplicationController
     head :method_not_allowed
   end
 
+  # Route an event from one jurisdiction to another
+  def jurisdiction
+ 
+    @event = Event.find(params[:id])
+
+    # user cannot route events _from_ a jurisdiction for which they do not have the 'route_event_to_any_lhd' privilege
+    unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have sufficent privileges to route events from this jurisdiction", :status => 403
+      return
+    end
+
+    # user cannot route events _to_ a jurisdiction for which they do not have the 'create_event' privilege
+    p params[:jurisdiction_id]
+    unless User.current_user.is_entitled_to_in?(:create_event, params[:jurisdiction_id])
+      render :text => "Permission denied: You do not have sufficent privileges to route events to this jurisdiction", :status => 403
+      return
+    end
+
+    if @event.route_to_jurisdiction(params[:jurisdiction_id])
+      @events = Event.find(:all, 
+        :include => :jurisdiction, 
+        :select => "jurisdiction.secondary_entity_id", 
+        :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
+      redirect_to cmrs_path
+    else
+      flash[:notice] = 'Unable to route CMR.'
+      redirect_to cmrs_path
+    end
+  end
+
+  def state
+    @event = Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(params[:state_to_change].to_sym, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403
+      return
+    end
+
+    if @event.change_state(params[:new_state])
+      @events = Event.find(:all, 
+        :include => :jurisdiction, 
+        :select => "jurisdiction.secondary_entity_id", 
+        :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
+      redirect_to cmrs_path
+    else
+      flash[:notice] = 'Unable to change state of CMR.'
+      redirect_to cmrs_path
+    end
+
+  end
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"

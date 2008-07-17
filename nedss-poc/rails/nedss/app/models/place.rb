@@ -18,7 +18,7 @@ class Place < ActiveRecord::Base
     def jurisdictions_for_privilege_by_user_id(user_id, privilege)
       query = "
         SELECT
-                places.entity_id, places.name
+                places.id, places.entity_id, places.name
         FROM
                 users,
                 entitlements,
@@ -40,7 +40,11 @@ class Place < ActiveRecord::Base
         ORDER BY
                 places.name"
 
-      find_by_sql(query)
+      jurisdictions = find_by_sql(query)
+      jurisdictions
+      unassigned = jurisdictions.find { |jurisdiction| jurisdiction.name == "Unassigned" }
+      jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
+      jurisdictions
     end
   end
 end

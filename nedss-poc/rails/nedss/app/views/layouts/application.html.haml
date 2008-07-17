@@ -53,7 +53,7 @@
                 - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
                 = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
                 %span{:id => "user_name"}= current_user_name
-                = select_tag("user_id", options_for_select(users, current_user_name), :onchange => "this.form.onsubmit()")
+                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
                 </form>
             .area
               = link_to 'NEW CMR', new_cmr_path
@@ -70,7 +70,7 @@
 
     .container
       #main
-        .span-12.prepend-1
+        .span-12
           .title
             = yield :title
           .name
@@ -78,11 +78,11 @@
           .tools
             = yield :tools
             
-        .span-10.append-1.last
+        .span-11.append-1.last
           .tools2
             = yield :tools_two
             
-        .span-22.prepend-1
+        .span-24
           %p{:style => "color: green"}
             = flash[:notice]
           = yield

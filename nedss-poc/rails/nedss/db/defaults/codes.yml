@@ -911,7 +911,7 @@
 
 - code_name: "eventstatus"
   the_code: "ASGD-INV"
-  code_description: "Assigned to Investigator."
+  code_description: "Assigned to Investigator"
   sort_order: 25
 
 - code_name: "eventstatus"
@@ -921,7 +921,7 @@
 
 - code_name: "eventstatus"
   the_code: "RJCTD-INV"
-  code_description: "Rejected by Investigator."
+  code_description: "Rejected by Investigator"
   sort_order: 35
 
 - code_name: "eventstatus"

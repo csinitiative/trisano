@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   end
   
   def is_entitled_to_in?(privilege, jurisdiction_id)
-    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && ent.jurisdiction_id == jurisdiction_id }.nil? ? false : true
+    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && ent.jurisdiction_id == jurisdiction_id.to_i }.nil? ? false : true
   end
   
   def is_entitled_to?(privilege)

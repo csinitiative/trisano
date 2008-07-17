@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "/search/cmrs.html.haml" do
   
   def do_render
+    mock_user
     render "/search/cmrs.html.haml"
   end
   

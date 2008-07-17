@@ -1,4 +1,3 @@
-
 marks_interested_party:
   comment: 
   role_id: !str 2301
