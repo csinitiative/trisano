@@ -21,7 +21,6 @@ describe EventsHelper do
     @imported_from = mock_model(ExternalCode)
     @event_case_status =mock_model(ExternalCode)
     @outbreak_associated = mock_model(Code)
-    @investigation_LHD_status = mock_model(Code)
     @hospitalized = mock_model(ExternalCode)
     @died = mock_model(ExternalCode)
     @pregnant = mock_model(ExternalCode)
@@ -41,7 +40,6 @@ describe EventsHelper do
     @imported_from.stub!(:code_description).and_return('Utah')
     @event_case_status.stub!(:code_description).and_return('Confirmed')
     @outbreak_associated.stub!(:code_description).and_return('Yes')
-    @investigation_LHD_status.stub!(:code_description).and_return('Closed')
     @hospitalized.stub!(:code_description).and_return('Yes')
     @died.stub!(:code_description).and_return('No')
     @pregnant.stub!(:code_description).and_return('Yes')
@@ -80,7 +78,6 @@ describe EventsHelper do
     @event_1.stub!(:event_case_status).and_return(@event_case_status)
     @event_1.stub!(:outbreak_associated).and_return(@outbreak_associated)
     @event_1.stub!(:outbreak_name).and_return("Test Outbreak")
-    @event_1.stub!(:investigation_LHD_status).and_return(@investigation_LHD_status)
     @event_1.stub!(:investigation_started_date).and_return("2008-02-05")
     @event_1.stub!(:investigation_completed_LHD_date).and_return("2008-02-08")
     @event_1.stub!(:review_completed_UDOH_date).and_return("2008-02-11")
@@ -92,11 +89,11 @@ describe EventsHelper do
   end
 
   it "should render csv data for 1 event" do
-    render_event_csv(@event_1).should include(%q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7))
+    render_event_csv(@event_1).should include(%q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7))
   end
 
   it "should render a header column" do
-    render_core_data_headers.should include(%q(record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week))
+    render_core_data_headers.should include(%q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week))
   end
 
   it "should replace commas with spaces to avoid creating fake columns" do

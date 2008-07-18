@@ -6,7 +6,6 @@ class Event < ActiveRecord::Base
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :event_case_status, :class_name => 'ExternalCode'
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
-  belongs_to :investigation_LHD_status, :class_name => 'ExternalCode'
 
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
   has_many :participations
@@ -335,15 +334,10 @@ class Event < ActiveRecord::Base
       
     end
     
-    if !options[:investigation_status].blank?
+    if !options[:event_status].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-
-      if options[:investigation_status] == "Unspecified"
-        where_clause += "p3.investigation_LHD_status_id IS NULL"
-      else
-        where_clause += "p3.investigation_LHD_status_id = " + sanitize_sql(["%s", options[:investigation_status]])
-      end
+      where_clause += "p3.event_status_id = " + sanitize_sql(["%s", options[:event_status]])
       
     end
     
@@ -453,27 +447,27 @@ class Event < ActiveRecord::Base
            p3.primary_record_number AS record_number,
            p3.event_onset_date,
            p3.primary_birth_gender_id AS birth_gender_id,
-           p3.investigation_lhd_status_id,
+           p3.event_status_id,
            p3.jurisdiction_id,
            p3.jurisdiction_name, 
            p3.vector,
            p3.created_at,
            c.code_description AS gender,
-           cs.code_description AS lhd_investigation_status, 
+           cs.code_description AS event_status, 
            a.city, 
            co.code_description AS county
     FROM 
            ( SELECT 
                     p1.event_id, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
-                    p1.investigation_lhd_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
+                    p1.event_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
                     ( SELECT 
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
                              people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
                              d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
-                             e.\"investigation_LHD_status_id\" as investigation_lhd_status_id,
+                             e.event_status_id as event_status_id,
                              e.created_at
                       FROM   
                              events e
@@ -548,7 +542,7 @@ class Event < ActiveRecord::Base
     LEFT OUTER JOIN 
            external_codes c ON c.id = p3.primary_birth_gender_id
     LEFT OUTER JOIN 
-           codes cs ON cs.id = p3.investigation_lhd_status_id
+           codes cs ON cs.id = p3.event_status_id
     WHERE 
            #{where_clause}
     ORDER BY 

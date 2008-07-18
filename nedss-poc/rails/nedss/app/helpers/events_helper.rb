@@ -269,7 +269,7 @@ module EventsHelper
   
   # Headers for csv output
   def render_core_data_headers
-    %q(record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week)
+    %q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week)
   end
     
   def render_event_csv(event)
@@ -285,14 +285,13 @@ module EventsHelper
           fields << event.record_number.to_s.gsub(/,/,' ')
           fields << event.event_name.to_s.gsub(/,/, ' ')
           fields << event.event_onset_date.to_s.gsub(/,/,' ')
-          fields << event.disease.disease.disease_name.to_s.gsub(/,/,' ') unless event.disease.nil? || event.disease.disease.nil?
+          fields << ((event.disease.nil? || event.disease.disease.nil?) ? "," : event.disease.disease.disease_name.to_s.gsub(/,/,' '))
           fields << l(event.event_type).to_s.gsub(/,/,' ')
-          fields << l(event.event_status).to_s.gsub(/,/,' ')
           fields << l(event.imported_from).to_s.gsub(/,/,' ')
           fields << l(event.event_case_status).to_s.gsub(/,/,' ')
           fields << l(event.outbreak_associated).to_s.gsub(/,/,' ')
           fields << event.outbreak_name.to_s.gsub(/,/,' ')
-          fields << l(event.investigation_LHD_status).to_s.gsub(/,/,' ')
+          fields << l(event.event_status).to_s.gsub(/,/,' ')
           fields << event.investigation_started_date.to_s.gsub(/,/,' ')
           fields << event.investigation_completed_LHD_date.to_s.gsub(/,/,' ')
           fields << event.review_completed_UDOH_date.to_s.gsub(/,/,' ')

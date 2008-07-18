@@ -46,11 +46,11 @@
               %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
                 = "#{gender.code_description}"
         %div{ :class => "horiz" }
-          %label Investigation Status
-          %select{ :name => "investigation_status"}
+          %label Event Status
+          %select{ :name => "event_status"}
             %option
-            - for status in @investigation_statuses
-              %option{ :value => status.id, :selected => status.id == (params[:investigation_status].to_i) ? "selected" : nil}
+            - for status in @event_statuses
+              %option{ :value => status.id, :selected => status.id == (params[:event_status].to_i) ? "selected" : nil}
                 = "#{status.code_description}"
         %br{ :clear => "all" }
         %div{ :class => "horiz" }
@@ -137,7 +137,7 @@
           %td
             = cmr.event_onset_date
 
-- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:investigation_status].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_id].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
+- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:event_status].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_id].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
 
   %span
     Your search returned no results.

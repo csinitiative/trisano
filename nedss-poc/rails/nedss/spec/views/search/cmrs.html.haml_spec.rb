@@ -13,7 +13,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:cities] = [mock_gender]
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
-    assigns[:investigation_statuses] = [mock_investigation_status]
+    assigns[:event_statuses] = [mock_event_status]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
   end
@@ -35,7 +35,7 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:county).and_return("Salt Lake")
     cmr.stub!(:district).and_return("Alpine")
     cmr.stub!(:county).and_return("Salt Lake")
-    cmr.stub!(:investigation_LHD_status_id).and_return("Not Yet Opened")
+    cmr.stub!(:event_status_id).and_return(1)
     cmr.stub!(:jurisdiction_name).and_return("Weber-Morgan Health District")
 
     assigns[:cmrs] = [cmr]
@@ -46,7 +46,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
-    assigns[:investigation_statuses] = [mock_investigation_status]
+    assigns[:event_statuses] = [mock_event_status]
 
     do_render
     response.should have_tag("h3", "Results")
@@ -65,7 +65,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
-    assigns[:investigation_statuses] = [mock_investigation_status]
+    assigns[:event_statuses] = [mock_event_status]
     do_render
     response.should have_text(/Your search returned no results./)
   end
@@ -118,10 +118,10 @@ describe "/search/cmrs.html.haml" do
     district
   end
 
-  def mock_investigation_status
-    status = mock_model(Code)
-    status.stub!(:id).and_return("1702")
-    status.stub!(:code_description).and_return("Not Yet Opened")
+  def mock_event_status
+    status = mock_model(ExternalCode)
+    status.stub!(:id).and_return("1904")
+    status.stub!(:code_description).and_return("Investigation Complete")
     status
   end
 end

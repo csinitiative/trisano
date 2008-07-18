@@ -446,7 +446,6 @@ module NedssHelper
               "event_outbreak_associated_id" => "Yes",
               #"event_active_jurisdiction_secondary_entity_id" => "Out of State",
               "event_event_status_id" => "Investigation Complete",
-              "event_investigation_LHD_status_id" => "Open",
               "event_event_onset_date" => "1/1/1974",
               "event_outbreak_name" => NedssHelper.get_unique_name(1),
               "event_investigation_started_date" => "1/1/1974",

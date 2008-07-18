@@ -48,13 +48,11 @@ class SearchController < ApplicationController
 
     @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
     
-    @investigation_statuses = Code.find(:all,
+    @event_statuses = ExternalCode.find(:all,
                                         :order => "id",
-					:select => "id, code_description",
-					:conditions => "code_name = 'investigation'")
+				        :select => "id, code_description",
+				        :conditions => "code_name = 'eventstatus'")
 
-    @investigation_statuses << Code.new(:id => "U", :code_description => "Unspecified")
-    
     @counties = ExternalCode.find(:all,
                           :order => "id",
                           :select => "id, code_description",
@@ -98,7 +96,7 @@ class SearchController < ApplicationController
                                        :gender => params[:gender],
                                        :sw_last_name => params[:sw_last_name],
                                        :sw_first_name => params[:sw_first_name],
-                                       :investigation_status => params[:investigation_status],
+                                       :event_status => params[:event_status],
                                        :birth_date => @birth_date,
                                        :entered_on_start => entered_on_start,
                                        :entered_on_end => entered_on_end,

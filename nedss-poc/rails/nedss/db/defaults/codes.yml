@@ -828,28 +828,6 @@
   code_description: "Unknown"
   sort_order: 1
 
-  ### INVESTIGATION STATUSES ###
-
-- code_name: "investigation"
-  the_code: "UNK"
-  code_description: "Unknown"
-  sort_order: 1
-
-- code_name: "investigation"
-  the_code: "NYO"
-  code_description: "Not Yet Open"
-  sort_order: 5
-
-- code_name: "investigation"
-  the_code: "O"
-  code_description: "Open"
-  sort_order: 10
-
-- code_name: "investigation"
-  the_code: "C"
-  code_description: "Closed"
-  sort_order: 15
-
   ### CASE STATUSES ###
 
 - code_name: "case"
