@@ -932,22 +932,22 @@
 - code_name: "eventstatus"
   the_code: "RO-MGR"
   code_description: "Reopened by Manager"
-  sort_order: 25
+  sort_order: 45
 
 - code_name: "eventstatus"
   the_code: "APP-LHD"
   code_description: "Approved by LHD"
-  sort_order: 30
+  sort_order: 50
 
 - code_name: "eventstatus"
   the_code: "CLOSED"
   code_description: "Approved by State"
-  sort_order: 35
+  sort_order: 55
 
 - code_name: "eventstatus"
   the_code: "RO-STATE"
   code_description: "Reopened by State"
-  sort_order: 35
+  sort_order: 60
 
   ### IMPORTED FROM LOCATIONS ###
   

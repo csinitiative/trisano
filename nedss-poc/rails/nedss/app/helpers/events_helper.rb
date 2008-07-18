@@ -67,8 +67,7 @@ module EventsHelper
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
       controls += form_tag(state_cmr_path(event))
       controls += "<span>Accept CMR&nbsp;</span>" 
-      controls += hidden_field_tag('state_to_change', 'accept_event_for_lhd')
-      controls += select_tag("new_state", options_for_select({'Accept' => 'ACPTD-LHD', 'Reject' => 'RJCTD-LHD'}), :onchange => "this.form.submit()")
+      controls += select_tag("state", options_for_select({'Accept' => 'ACPTD-LHD', 'Reject' => 'RJCTD-LHD'}), :onchange => "this.form.submit()")
       controls += "</form>"
     end
     if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 

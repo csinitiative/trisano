@@ -27,3 +27,10 @@ Existing_Lab_One:
   name: "Existing Lab One"
   place_type_id: 2203
   entity_id: 100 
+
+Davis_County:
+  id: 101
+  name: "Davis County"
+  short_name: "Davis"
+  place_type_id: 2202
+  entity_id: 102

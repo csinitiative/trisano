@@ -572,10 +572,16 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def route_to_jurisdiction(jurisdiction_id)
+  def route_to_jurisdiction(jurisdiction)
+    jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
+    jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
+    jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
     transaction do
+      proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
+      raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
       active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
       update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
+      reload # Any existing references to this object won't see these changes without this
     end
   end
 

@@ -33,3 +33,7 @@ Existing_Lab_One:
 Lab_Guy:
   id: 101
   entity_type: "person"
+
+Davis_County:
+  id: 102
+  entity_type: "place"

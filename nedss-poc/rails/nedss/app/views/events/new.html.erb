@@ -10,10 +10,6 @@
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>
 
-
-<%# Debt: Get rid of all these error_message_for methods.  Use something like this technique to pull all error messages up to the parent. %>
-<%# http://pastie.org/165073 %>
-
 <%# Deby: DRY up the new and edit views.  Too much repetition %>
 
 <%= error_messages_for :object => @event %>

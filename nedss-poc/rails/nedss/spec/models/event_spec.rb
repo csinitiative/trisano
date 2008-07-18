@@ -233,4 +233,35 @@ describe Event do
 
   end
 
+  describe "Routing an event" do
+
+    before(:each) do
+      @event = Event.find(events(:marks_cmr).id)
+    end
+
+    describe "with legitimate parameters" do
+      it "should not raise an exception" do
+        lambda { @event.route_to_jurisdiction(entities(:Davis_County)) }.should_not raise_error()
+      end
+
+      it "should change the jurisdiction and set status to 'assigned to LHD'" do
+        @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Southeastern_District).name
+        @event.event_status.should eql(external_codes(:event_status_new))
+        @event.route_to_jurisdiction(entities(:Davis_County).id)
+        @event.event_status_id.should eql(external_codes(:event_status_assigned_lhd).id)
+        @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Davis_County).name
+      end
+    end
+
+    describe "with bad parameters" do
+      it "should raise an error if passed in a non-existant place" do
+        lambda { @event.route_to_jurisdiction(99999) }.should raise_error()
+      end
+
+      it "should raise an error if passed in a place that is not a jurisdction" do
+        lambda { @event.route_to_jurisdiction(entities(:AVH)) }.should raise_error()
+      end
+    end
+  end
+
 end

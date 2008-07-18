@@ -10,15 +10,21 @@
 <% content_for :tools do %>
   <%= basic_controls(@event, jurisdiction) %> |
   <%= link_to 'Back to list', cmrs_path %>
+  <br />
+  Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
 
 <% content_for :tools_two do %>
   <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
+  <br />
+  <%= routing_controls(@event, jurisdiction) %>
 <% end %>
 
 <script type="text/javascript">
   var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </script>
+
+<%= error_messages_for :object => @event %>
 
 <%=  tab_toggler(true) %>
 

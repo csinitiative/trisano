@@ -24,6 +24,7 @@ investigation_status_closed:
   the_code: "C"
   code_description: "Closed"
 
+# >>> These look like legacy codes, should probably be removed
 event_type_ons:
   id: 2001
   code_name: "eventtype"
@@ -59,6 +60,8 @@ event_type_un:
   code_name: "eventtype"
   the_code: "UN"
   code_description: "RS"
+
+# <<<
 
 imported_from_unknown:
   id: 2101

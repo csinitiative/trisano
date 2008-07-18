@@ -85,8 +85,7 @@ describe Place do
 
     it "jurisdictions should return a list of jurisdictions" do
       h = Place.jurisdictions
-      h.length.should == 1
-      h[0].should == places(:Southeastern_District)
+      h.length.should == 2
     end
   end
 
