@@ -1,4 +1,4 @@
-= render :partial => "header"
+= render_core_data_headers
 
 - for event in @events
-  = render :partial => "event", :locals => {:event => event}
+  = render_event_csv event

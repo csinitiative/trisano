@@ -1,3 +1,5 @@
+require 'csv'
+
 module EventsHelper
   def render_core_data_element(element)
     question = element.question
@@ -56,7 +58,7 @@ module EventsHelper
     controls = link_to('Show', cmr_path(event)) + " | "
     controls += (link_to('Edit', edit_cmr_path(event)) + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
-    controls += link_to('Export to CSV', cmr_path(@event)+'.csv')
+    controls += link_to('Export to CSV', cmr_path(event) + '.csv')
   end
 
   def state_controls(event, jurisdiction)
@@ -266,4 +268,55 @@ module EventsHelper
     result
   end
   
+  # Headers for csv output
+  def render_core_data_headers
+    %q(record_number,event_name,event_onset_date,disease,event_type,event_status,imported_from,event_case_status,outbreak_associated,outbreak_name,investigation_LHD_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week)
+  end
+    
+  def render_event_csv(event)
+    str = ''
+    return str unless event
+        
+    event.labs << Participation.new_lab_participation if event.labs.empty?
+    CSV::Writer.generate(str) do |writer|
+      event.labs.each do |lab|
+        lab.lab_results << LabResult.new if lab.lab_results.empty?
+        lab.lab_results.each do |lab_result|        
+          fields = []
+          fields << event.record_number.to_s.gsub(/,/,' ')
+          fields << event.event_name.to_s.gsub(/,/, ' ')
+          fields << event.event_onset_date.to_s.gsub(/,/,' ')
+          fields << event.disease.disease.disease_name.to_s.gsub(/,/,' ') unless event.disease.nil? || event.disease.disease.nil?
+          fields << l(event.event_type).to_s.gsub(/,/,' ')
+          fields << l(event.event_status).to_s.gsub(/,/,' ')
+          fields << l(event.imported_from).to_s.gsub(/,/,' ')
+          fields << l(event.event_case_status).to_s.gsub(/,/,' ')
+          fields << l(event.outbreak_associated).to_s.gsub(/,/,' ')
+          fields << event.outbreak_name.to_s.gsub(/,/,' ')
+          fields << l(event.investigation_LHD_status).to_s.gsub(/,/,' ')
+          fields << event.investigation_started_date.to_s.gsub(/,/,' ')
+          fields << event.investigation_completed_LHD_date.to_s.gsub(/,/,' ')
+          fields << event.review_completed_UDOH_date.to_s.gsub(/,/,' ')
+          fields << event.first_reported_PH_date.to_s.gsub(/,/,' ')
+          fields << event.results_reported_to_clinician_date.to_s.gsub(/,/,' ')
+          fields << event.disease.disease_onset_date.to_s.gsub(/,/,' ')  unless event.disease.nil?
+          fields << event.disease.date_diagnosed.to_s.gsub(/,/,' ')  unless event.disease.nil?
+          fields << l(event.disease.hospitalized).to_s.gsub(/,/,' ') unless event.disease.nil?
+          fields << l(event.disease.died).to_s.gsub(/,/,' ') unless event.disease.nil?
+          fields << l(event.active_patient.participations_risk_factor.pregnant).to_s.gsub(/,/,' ')
+          fields << event.active_patient.participations_risk_factor.pregnancy_due_date.to_s.gsub(/,/,' ')
+          fields << l(lab_result.specimen_source).to_s.gsub(/,/,' ')
+          fields << lab_result.lab_result_text.to_s.gsub(/,/,' ')
+          fields << lab_result.collection_date.to_s.gsub(/,/,' ')
+          fields << lab_result.lab_test_date.to_s.gsub(/,/,' ')
+          fields << l(lab_result.tested_at_uphl_yn).to_s.gsub(/,/,' ')
+          fields << event.MMWR_year.to_s.gsub(/,/,' ')
+          fields << event.MMWR_week.to_s.gsub(/,/,' ')
+          writer << fields
+        end
+      end
+    end
+    str
+  end
+    
 end
