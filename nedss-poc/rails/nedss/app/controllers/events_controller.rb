@@ -181,10 +181,6 @@ class EventsController < ApplicationController
 
     begin
       @event.route_to_jurisdiction(params[:jurisdiction_id])
-      @events = Event.find(:all, 
-        :include => :jurisdiction, 
-        :select => "jurisdiction.secondary_entity_id", 
-        :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
       redirect_to request.env["HTTP_REFERER"]
     rescue Exception => ex
       @event.errors.add_to_base('Unable to route CMR: ' + ex.message)

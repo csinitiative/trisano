@@ -358,4 +358,52 @@ describe EventsController do
   #      response.should redirect_to(events_url)
   #    end
   #  end
+
+  describe "handling JURISDICTION requests /events/1/jurisdiction" do
+    before(:each) do
+      mock_user
+      @user.stub!(:is_entitled_to_in?).with(:route_event_to_any_lhd, 1).and_return(true)
+      @user.stub!(:is_entitled_to_in?).with(:create_event, "2").and_return(true)
+      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
+
+      @jurisdiction = mock_model(Participation)
+      @jurisdiction.stub!(:secondary_entity_id).and_return(1)
+
+      @event = mock_model(Event, :to_param => "1")
+      @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
+      Event.stub!(:find).and_return(@event)
+    end
+
+    describe "with successful routing" do
+      def do_route_event
+        request.env['HTTP_REFERER'] = "/some_path"
+        @event.should_receive(:route_to_jurisdiction).and_return(true)
+        post :jurisdiction, :id => "1", :jurisdiction_id => "2"
+      end
+      
+      it "should find the event requested" do
+        Event.should_receive(:find).with("1").and_return(@event)
+        do_route_event
+      end
+      
+      it "should redirect to the where it was called from" do
+        do_route_event
+        response.should redirect_to("http://test.host/some_path")
+      end
+    end
+
+    describe "with failed routing" do
+      def do_route_event
+        request.env['HTTP_REFERER'] = "/some_path"
+        @event.errors.should_receive(:add_to_base)
+        @event.should_receive(:route_to_jurisdiction).and_raise()
+        post :jurisdiction, :id => "1", :jurisdiction_id => "2"
+      end
+
+      it "should render the show view" do
+        do_route_event
+        response.should render_template('show')
+      end
+    end
+  end
 end
