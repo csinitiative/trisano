@@ -83,17 +83,17 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Charles Chuckles').should be_true
   end
   
-  it 'Charles Chuckles should be assigned to Bear River jurisdiction' do
+  it 'Charles Chuckles should be assigned to Unassigned jurisdiction' do
     @browser.type('sw_last_name', '')
-    @browser.is_text_present('Bear River Health Department').should be_true
+    @browser.is_text_present('Unassigned').should be_true
   end
 
   it 'should find Charles Chuckles when searching by Bear River jurisdiction' do  
-    @browser.select('jurisdiction_id', 'label=Bear River Health Department')
+    @browser.select('jurisdiction_id', 'label=Unassigned')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('Charles Chuckles').should be_true
-    @browser.is_text_present('Bear River Health Department').should be_true
+    @browser.is_text_present('Unassigned').should be_true
   end
 
   it 'should find Charles and present export as csv link' do
