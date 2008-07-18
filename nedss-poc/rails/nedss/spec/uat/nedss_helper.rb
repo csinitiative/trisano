@@ -51,7 +51,7 @@ module NedssHelper
           browser.select(key,"label=" + value)
         rescue StandardError => err
           puts err
-          if err == "Specified element is not a Select (has no options)"
+          if err == "Specified element is not a Select (has no options)"
             #This is usually because the element is the name of a auto-complete field
             browser.type(key, value)
           else
@@ -232,6 +232,13 @@ module NedssHelper
     browser.wait_for_page_to_load($load_time)
   end
   
+  def switch_user(browser, user_id)
+    browser.select("user_id", "label=#{user_id}")
+    sleep(2)  
+    browser.refresh
+    browser.wait_for_page_to_load "30000"
+  end
+
   # Takes the name of the tab to which the question should be added and the question's attributes.  
   def add_question_to_view(browser, element_name, question_attributes = {})
     add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
