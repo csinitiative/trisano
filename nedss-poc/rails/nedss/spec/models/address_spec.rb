@@ -19,4 +19,15 @@ describe Address do
     @address.street_name = "Main St."
     @address.should be_valid
   end
+
+  it "should return a number and street value" do
+    address = Address.new(:street_number => "123",
+                          :street_name => "Main")
+    address.number_and_street.should == '123 Main'
+  end
+
+  it "should return a state name" do
+    address = Address.new(:state => ExternalCode.new(:code_description => 'Utah'))
+    address.state_name.should == 'Utah'
+  end
 end

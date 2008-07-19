@@ -67,6 +67,18 @@ class Person < ActiveRecord::Base
     find_by_sql(query) if issue_query
   end
 
+  def full_name
+    "#{self.first_name} #{self.last_name}".strip
+  end
+
+  def telephone
+    self.entity.telephone
+  end
+
+  def address
+    self.entity.address
+  end
+
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?

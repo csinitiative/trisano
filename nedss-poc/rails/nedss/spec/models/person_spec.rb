@@ -49,6 +49,13 @@ describe Person, "with first and last names" do
     @person.last_name_soundex.should eql(Text::Soundex.soundex(last_name))
   end
 
+  it "should have full name 'Robert Ford'" do
+    first_name = 'Robert'
+    last_name = 'Ford'
+    person = Person.new(:last_name => last_name, :first_name => first_name)
+    person.full_name.should == 'Robert Ford'
+  end
+
 end
 
 describe Person, "with associated codes" do

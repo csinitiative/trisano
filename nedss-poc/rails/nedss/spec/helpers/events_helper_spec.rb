@@ -17,6 +17,28 @@ describe EventsHelper do
     mock
   end
 
+  def mock_clinician
+    address = mock(Address)
+    address.stub!(:number_and_street).and_return('777 Some Address')
+    address.stub!(:unit_number).and_return('21')
+    address.stub!(:city).and_return('Some City')
+    address.stub!(:postal_code).and_return('77777')
+    address.stub!(:county_name).and_return('Some County')
+    address.stub!(:state_name).and_return('Utah')
+    address.stub!(:district_name).and_return('Some District')
+    phone = mock(Telephone)
+    phone.stub!(:simple_format).and_return('(555)555-5555')
+    person = mock(Person)    
+    person.stub!(:full_name).and_return('Joe Clinic')
+    person.stub!(:telephone).and_return(phone)
+    person.stub!(:address).and_return(address)
+    entity = mock(Entity)
+    entity.stub!(:person).and_return(person)
+    mock = mock(Participation)
+    mock.stub!(:active_secondary_entity).and_return(entity)
+    mock
+  end
+
   def mock_event
     @event_1 = mock_model(Event)
     @lab = mock_model(Participation)
@@ -99,6 +121,7 @@ describe EventsHelper do
     @event_1.stub!(:MMWR_year).and_return("2008")
     @event_1.stub!(:MMWR_week).and_return("7")
     @event_1.stub!(:active_patient).and_return(@active_patient)
+    @event_1.stub!(:clinicians).and_return([mock_clinician])
   end
 
   def mock_event_no_disease
@@ -107,11 +130,11 @@ describe EventsHelper do
   end
 
   def expected_record
-    %Q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n)
+    %Q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,Joe Clinic,(555)555-5555,777 Some Address,21,Some City,77777,Some County,Utah,Some District,2008,7\n)
   end
   
   def expected_record_no_disease
-    %Q(2008537081,Test,2008-02-19,,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,,,,,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n)
+    %Q(2008537081,Test,2008-02-19,,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,,,,,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,Joe Clinic,(555)555-5555,777 Some Address,21,Some City,77777,Some County,Utah,Some District,2008,7\n)
   end
 
   it "should render csv data for 1 event" do
@@ -125,9 +148,8 @@ describe EventsHelper do
   end
 
   it "should render a header column" do
-    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week).split(',')
+    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,clinician_name,clinician_phone,clinician_street,clinician_unit,clinician_city,clinician_postal_code,clinician_county,clinician_state,clinician_district,MMWR_year,MMWR_week).split(',')
     result = render_core_data_headers.split(',')
-    result.length.should == expected.length
     result.should == expected
   end
 

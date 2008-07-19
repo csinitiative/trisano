@@ -7,6 +7,16 @@ class Telephone < ActiveRecord::Base
 
   before_save :strip_dash_from_phone
 
+  # A basic (###) ###-#### Ext. # format for phone numbers
+  def simple_format
+    number = ''
+    number << "(#{self.area_code}) " if self.area_code
+    number << self.phone_number
+    number << " Ext. #{self.extension}" if self.extension
+    number.strip
+  end
+
+
   protected
   def validate
     if attributes.all? {|k, v| v.blank?}
@@ -17,4 +27,5 @@ class Telephone < ActiveRecord::Base
   def strip_dash_from_phone
     phone_number.gsub!(/-/, '')
   end
+
 end

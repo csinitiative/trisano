@@ -1,4 +1,5 @@
 require 'csv'
+require 'ostruct'
 
 module EventsHelper
   def render_core_data_element(element)
@@ -296,6 +297,15 @@ module EventsHelper
        collection_date
        lab_test_date
        tested_at_uphl_yn
+       clinician_name
+       clinician_phone
+       clinician_street
+       clinician_unit
+       clinician_city
+       clinician_postal_code
+       clinician_county
+       clinician_state
+       clinician_district
        MMWR_year
        MMWR_week).join(',')
   end
@@ -305,6 +315,7 @@ module EventsHelper
     return str unless event
         
     event.labs << Participation.new_lab_participation if event.labs.empty?
+    clinician = first_clinician(event)
     CSV::Writer.generate(str) do |writer|
       event.labs.each do |lab|
         lab.lab_results << LabResult.new if lab.lab_results.empty?
@@ -337,6 +348,9 @@ module EventsHelper
           fields << lab_result.collection_date.to_s.gsub(/,/,' ')
           fields << lab_result.lab_test_date.to_s.gsub(/,/,' ')
           fields << l(lab_result.tested_at_uphl_yn).to_s.gsub(/,/,' ')
+          fields << clinician.full_name
+          fields << (clinician.telephone ? clinician.telephone.simple_format : nil)
+          fill_clinician_address(fields, clinician)
           fields << event.MMWR_year.to_s.gsub(/,/,' ')
           fields << event.MMWR_week.to_s.gsub(/,/,' ')
           writer << fields
@@ -358,5 +372,23 @@ module EventsHelper
     return '' if current_place.nil?
     current_place.name || ''
   end
-    
+
+  def first_clinician(event)
+    participation = event.clinicians.first
+    if participation
+      result = participation.active_secondary_entity.person
+    end
+    result ||= OpenStruct.new(Hash.new(''))
+  end
+
+  def fill_clinician_address(fields, clinician)
+    address = clinician.address || OpenStruct.new
+    fields << address.number_and_street
+    fields << address.unit_number
+    fields << address.city
+    fields << address.postal_code
+    fields << address.county_name
+    fields << address.state_name
+    fields << address.district_name
+  end
 end
