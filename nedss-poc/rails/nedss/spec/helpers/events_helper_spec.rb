@@ -5,7 +5,19 @@ describe EventsHelper do
 
   include ApplicationHelper
 
-  before(:each) do    
+  def mock_lab_place
+    mock = mock(Place)
+    mock.should_receive(:name).at_least(1).and_return('Some Lab')
+    mock
+  end
+
+  def mock_lab_entity
+    mock = mock(Entity)
+    mock.stub!(:current_place).and_return(mock_lab_place)
+    mock
+  end
+
+  def mock_event
     @event_1 = mock_model(Event)
     @lab = mock_model(Participation)
     @lab_result = mock_model(LabResult)
@@ -13,6 +25,7 @@ describe EventsHelper do
     @event_1.stub!(:labs).and_return([@lab])
 
     [].stub!(:empty?).and_return(false)
+    @lab.stub!(:secondary_entity).and_return(mock_lab_entity)
     @lab.stub!(:lab_results).and_return([@lab_result])
     @lab.stub!(:each).and_yield(@lab_result)
 
@@ -88,16 +101,40 @@ describe EventsHelper do
     @event_1.stub!(:active_patient).and_return(@active_patient)
   end
 
+  def mock_event_no_disease
+    mock_event
+    @event_1.stub!(:disease).and_return(nil)
+  end
+
+  def expected_record
+    %Q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n)
+  end
+  
+  def expected_record_no_disease
+    %Q(2008537081,Test,2008-02-19,,ONS,Open,Utah,Confirmed,Yes,Test Outbreak,Closed,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,,,,,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7\n)
+  end
+
   it "should render csv data for 1 event" do
-    render_event_csv(@event_1).should include(%q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Tissue,Positive,2008-02-14,2008-02-15,Yes,2008,7))
+    mock_event
+    render_event_csv(@event_1).should include(expected_record)
+  end
+
+  it "should not exclude disease fields if disease is nil" do
+    mock_event_no_disease
+    render_event_csv(@event_1).should include(expected_record_no_disease)
   end
 
   it "should render a header column" do
-    render_core_data_headers.should include(%q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week))
+    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week).split(',')
+    result = render_core_data_headers.split(',')
+    result.length.should == expected.length
+    result.should == expected
   end
 
   it "should replace commas with spaces to avoid creating fake columns" do
+    mock_event
     render_event_csv(@event_1).should_not include('Bubonic,Plague')
   end
+
 
 end

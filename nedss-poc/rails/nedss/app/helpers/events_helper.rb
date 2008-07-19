@@ -269,7 +269,35 @@ module EventsHelper
   
   # Headers for csv output
   def render_core_data_headers
-    %q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,MMWR_year,MMWR_week)
+    %w(record_number
+       event_name
+       event_onset_date
+       disease
+       event_type
+       imported_from
+       event_case_status
+       outbreak_associated
+       outbreak_name
+       event_status
+       investigation_started_date
+       investigation_completed_LHD_date
+       review_completed_UDOH_date
+       first_reported_PH_date
+       results_reported_to_clinician_date
+       disease_onset_date
+       date_diagnosed
+       hospitalized
+       died
+       pregnant
+       pregnancy_due_date
+       laboratory_name
+       specimen_source
+       lab_result_text
+       collection_date
+       lab_test_date
+       tested_at_uphl_yn
+       MMWR_year
+       MMWR_week).join(',')
   end
     
   def render_event_csv(event)
@@ -285,7 +313,7 @@ module EventsHelper
           fields << event.record_number.to_s.gsub(/,/,' ')
           fields << event.event_name.to_s.gsub(/,/, ' ')
           fields << event.event_onset_date.to_s.gsub(/,/,' ')
-          fields << ((event.disease.nil? || event.disease.disease.nil?) ? "," : event.disease.disease.disease_name.to_s.gsub(/,/,' '))
+          fields << ((event.disease.nil? || event.disease.disease.nil?) ? nil : event.disease.disease.disease_name.to_s.gsub(/,/,' '))
           fields << l(event.event_type).to_s.gsub(/,/,' ')
           fields << l(event.imported_from).to_s.gsub(/,/,' ')
           fields << l(event.event_case_status).to_s.gsub(/,/,' ')
@@ -297,12 +325,13 @@ module EventsHelper
           fields << event.review_completed_UDOH_date.to_s.gsub(/,/,' ')
           fields << event.first_reported_PH_date.to_s.gsub(/,/,' ')
           fields << event.results_reported_to_clinician_date.to_s.gsub(/,/,' ')
-          fields << event.disease.disease_onset_date.to_s.gsub(/,/,' ')  unless event.disease.nil?
-          fields << event.disease.date_diagnosed.to_s.gsub(/,/,' ')  unless event.disease.nil?
-          fields << l(event.disease.hospitalized).to_s.gsub(/,/,' ') unless event.disease.nil?
-          fields << l(event.disease.died).to_s.gsub(/,/,' ') unless event.disease.nil?
+          fields << (event.disease.nil? ? nil : event.disease.disease_onset_date.to_s.gsub(/,/,' '))
+          fields << (event.disease.nil? ? nil : event.disease.date_diagnosed.to_s.gsub(/,/,' '))
+          fields << (event.disease.nil? ? nil : l(event.disease.hospitalized).to_s.gsub(/,/,' ')) 
+          fields << (event.disease.nil? ? nil : l(event.disease.died).to_s.gsub(/,/,' '))
           fields << l(event.active_patient.participations_risk_factor.pregnant).to_s.gsub(/,/,' ')
           fields << event.active_patient.participations_risk_factor.pregnancy_due_date.to_s.gsub(/,/,' ')
+          fields << lab_name(lab).gsub(/,/,' ')
           fields << l(lab_result.specimen_source).to_s.gsub(/,/,' ')
           fields << lab_result.lab_result_text.to_s.gsub(/,/,' ')
           fields << lab_result.collection_date.to_s.gsub(/,/,' ')
@@ -315,6 +344,19 @@ module EventsHelper
       end
     end
     str
+  end
+
+  private
+  
+  #Debt: I think this should be done from a method on Participation
+  #(Law of Demeter), but that probably begins the discussion of single
+  #table inheritance.
+  def lab_name(lab_participation)
+    entity = lab_participation.secondary_entity
+    return '' if entity.nil?
+    current_place = entity.current_place
+    return '' if current_place.nil?
+    current_place.name || ''
   end
     
 end
