@@ -10,13 +10,13 @@ Warbler::Config.new do |config|
   # config.includes = FileList["db"]
 
   # Additional files/directories to exclude
-  # config.excludes = FileList["lib/tasks/*"]
 
   # Additional Java .jar files to include.  Note that if .jar files are placed
   # in lib (and not otherwise excluded) then they need not be mentioned here
   # JRuby and Goldspike are pre-loaded in this list.  Be sure to include your
   # own versions if you directly set the value
   # config.java_libs += FileList["lib/java/*.jar"]
+  config.java_libs.reject! {|lib| lib =~ /jruby-complete|goldspike/ }
 
   # Loose Java classes and miscellaneous files to be placed in WEB-INF/classes.
   # config.java_classes = FileList["target/classes/**.*"]
