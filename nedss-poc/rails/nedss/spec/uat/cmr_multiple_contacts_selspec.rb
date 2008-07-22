@@ -50,8 +50,6 @@ describe 'Adding multiple contacts to a CMR' do
   
   it "should allow editing a contact from the CMR's edit mode, changing last name back to the original version" do
     edit_cmr(@browser).should be_true
-    sleep(10)
-    #@browser.wait_for_page_to_load($load_time)
     click_core_tab(@browser, "Contacts")
     @browser.click "link=Edit contact"
     sleep(3)
