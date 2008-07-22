@@ -50,31 +50,29 @@ module NedssHelper
         begin
           browser.select(key,"label=" + value)
         rescue StandardError => err
-          puts err
-          if err == "Specified element is not a Select (has no options)"
+          #TODO - Make this work for auto-complete fields by using the name instead of the ID in a type command
+          #The problem with using the name is that it won't show up as a field in get_all_fields, and it won't be selectable
+          #I'm trying to do something in the rescue block to detect the error from trying to select it.
+#          if err == "Specified element is not a Select (has no options)"
             #This is usually because the element is the name of a auto-complete field
-            browser.type(key, value)
-          else
+#            browser.type(key, value)
+#          else
             puts("WARNING: Field " + key + " not found. Value not set.")
-          end
+#          end
         end
       end
     end
   end
   
-  #TODO Check for link first and navigate to home page if not found, then click new
-  def click_new_cmr(browser)
-    browser.click("link=NEW CMR")
-  end
-  
   # Use get_full_cmr to create a cmr with every field filled in (excludes repeating elements)
   # It uses random words for text fields
   def create_cmr_from_hash(browser, cmr_hash)
-    click_new_cmr(browser)
+    click_nav_new_cmr(browser)
     browser.wait_for_page_to_load($load_time)
     set_fields(browser,cmr_hash)
     browser.click('event_submit')
     browser.wait_for_page_to_load($load_time)
+    return save_cmr(browser)
   end
   
   # Use get_full_cmr to create a cmr with only the last name filled in
@@ -110,48 +108,77 @@ module NedssHelper
   def click_nav_new_cmr(browser)
     browser.click 'link=NEW CMR'
     browser.wait_for_page_to_load($load_time)
+    return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
+            browser.is_text_present("New CMR") and
+            browser.is_element_present("link=Back to list") and
+            browser.is_element_present("disable_tabs"))
   end
   
   def click_nav_cmrs(browser)
     browser.click 'link=CMRS'
     browser.wait_for_page_to_load($load_time)
+    return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
+            browser.is_text_present("Existing Reports") and
+            browser.is_element_present("link=New Morbidity Report") and
+            browser.is_element_present("link=Export To CSV")) 
   end
   
   def click_nav_search(browser)
     browser.click 'link=SEARCH'
     browser.wait_for_page_to_load($load_time)
+    return (browser.is_element_present("link=People Search") and
+            browser.is_element_present("link=CMR Search"))  
   end
   
   def click_nav_forms(browser)
     browser.click 'link=FORMS'
     browser.wait_for_page_to_load($load_time)
+    return (browser.is_text_present("Form Builder") and
+            browser.is_text_present("Forms") and
+            browser.is_element_present("link=New form"))   
   end
   
   def click_nav_admin(browser)
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Admin Console") and
+           browser.is_text_present("Dashboard") and
+           browser.is_element_present("link=Forms") and
+           browser.is_element_present("link=Users") and
+           browser.is_element_present("link=Codes")) 
   end
   
   def edit_cmr(browser)
-    browser.click "edit_cmr_link"
+    browser.click "link=Edit"
     browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Person Information") and
+           browser.is_text_present("Street number"))
   end
   
   def save_cmr(browser)
     browser.click "event_submit"
     browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("CMR was successfully created.") or
+           browser.is_text_present("CMR was successfully updated."))
   end
   
   def navigate_to_people_search(browser)
     click_nav_search(browser)
     @browser.click('link=People Search')
     @browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("People Search") and 
+           browser.is_text_present("Name") and
+           browser.is_text_present("Date of birth"))
   end
   
   def navigate_to_cmr_search(browser)
     click_nav_search(browser)
     @browser.click('link=CMR Search')
     @browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("CMR Search") and 
+           browser.is_text_present("By name") and
+           browser.is_text_present("Additional criteria") and
+           browser.is_text_present("Date or year of birth"))
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
@@ -228,8 +255,16 @@ module NedssHelper
     browser.select "form_jurisdiction_id", "label=#{jurisdiction_label}"
     browser.click "form_submit"
     browser.wait_for_page_to_load($load_time)
+    if browser.is_text_present("Form was successfully created.") != true 
+      raise("Form creation failed")
+    end
     browser.click "link=Form Builder"
     browser.wait_for_page_to_load($load_time)
+    if browser.is_text_present("Investigator Form Elements") 
+      return true
+    else
+      return false
+    end
   end
   
   def switch_user(browser, user_id)
@@ -486,6 +521,11 @@ module NedssHelper
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
+    if browser.is_text_present 
+      return true
+    else
+      return false      
+    end
   end
   
   def add_follow_up_to_element(browser, element_name, element_id_prefix, condition, core_label=nil)

@@ -8,58 +8,58 @@ require File.dirname(__FILE__) + '/spec_helper'
     
     it 'should find or add Chuckles in Provo, Utah county' do
       if !@browser.is_text_present('chuckles')
-        click_nav_new_cmr(@browser)
+        click_nav_new_cmr(@browser).should be_true
         @browser.type('event_active_patient__active_primary_entity__person_last_name', 'chuckles')
         @browser.type('event_active_patient__active_primary_entity__address_city', 'Provo')
         @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
         @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
         @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84602')
-        save_cmr(@browser)
+        save_cmr(@browser).should be_true
       end
     end
   
     it 'should find or add Joker in Orem, Utah county' do
-      click_nav_cmrs(@browser)
+      click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Joker')
-         click_nav_new_cmr(@browser)
+        click_nav_new_cmr(@browser).should be_true
         @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Joker')
         @browser.type('event_active_patient__active_primary_entity__address_city', 'Orem')
         @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
         @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
         @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84606')
-        save_cmr(@browser)
+        save_cmr(@browser).should be_true
       end
     end
     
     it 'should find or add Papa Smurf in Provo, Utah county' do
-      click_nav_cmrs(@browser)
+      click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Smurf, Papa')
-         click_nav_new_cmr(@browser)
+        click_nav_new_cmr(@browser).should be_true
         @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Smurf')
         @browser.type('event_active_patient__active_primary_entity__person_first_name', 'Papa')
         @browser.type('event_active_patient__active_primary_entity__address_city', 'Provo')
         @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
         @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
         @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84602')
-        save_cmr(@browser)
+        save_cmr(@browser).should be_true
       end
     end
     
     it 'should find or add Gidget in Provo, Utah county' do  
-      click_nav_cmrs(@browser)
+      click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Gidget')
-         click_nav_new_cmr(@browser)
+        click_nav_new_cmr(@browser).should be_true
         @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Gidget')
         @browser.type('event_active_patient__active_primary_entity__address_city', 'Orem')
         @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
         @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
         @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84606')
-        save_cmr(@browser)
+        save_cmr(@browser).should be_true
       end
     end
    
     it 'should find chuckles and Papa Smurf and not Joker or Gidget when it searches in city = Provo' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Provo')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -69,7 +69,7 @@ require File.dirname(__FILE__) + '/spec_helper'
    
     it 'should find Joker and Gidget and not chuckles or Papa Smurf when it searches in city = Orem' do
       pending("appears to be some dependency between tests? Passes with a clean db, but not in grid")
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Orem')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -81,7 +81,7 @@ require File.dirname(__FILE__) + '/spec_helper'
    
     it 'should find chuckles, Joker, Gidget, and Papa Smurf when it searches in county = Utah' do
       pending("appears to be some dependency between tests? Passes with a clean db, but not in grid")
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', '')
       @browser.select('county', 'label=Utah')
       @browser.click('//input[@type=\'submit\']')
@@ -93,7 +93,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfette, or Papa Smurf when it searches in city = Weber' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Weber')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -101,7 +101,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfett, or Papa Smurf when it searches in city = Brigham City' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Brigham City')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -109,7 +109,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfett, or Papa Smurf when it searches in city = Manti' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Manti')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -117,7 +117,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfett, or Papa Smurf when it searches in city = Delta' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', 'Delta')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)
@@ -125,7 +125,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfett, or Papa Smurf when it searches in county = Daggett' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.type('name=city', '')
       @browser.select('county', 'label=Daggett')
       @browser.click('//input[@type=\'submit\']')
@@ -134,7 +134,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should not find chuckles, Joker, Smurfett, or Papa Smurf when it searches in county = Garfield' do
-      navigate_to_cmr_search(@browser)
+      navigate_to_cmr_search(@browser).should be_true
       @browser.select('county', 'label=Garfield')
       @browser.click('//input[@type=\'submit\']')
       @browser.wait_for_page_to_load($load_time)

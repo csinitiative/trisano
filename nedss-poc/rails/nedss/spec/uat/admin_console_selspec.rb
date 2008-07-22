@@ -6,8 +6,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
   it 'should load successfully' do
     @browser.open "/nedss/cmrs"
-    click_nav_admin(@browser)
-    @browser.is_text_present("UT-NEDSS Admin Console")
+    click_nav_admin(@browser).should be_true
   end
 end
 

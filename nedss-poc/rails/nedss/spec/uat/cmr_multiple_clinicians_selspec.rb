@@ -18,12 +18,12 @@ describe 'Adding multiple clinicians to a CMR' do
   
   it "should allow a single clinician to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
-    click_nav_new_cmr(@browser)
+    click_nav_new_cmr(@browser).should be_true
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "multi-clinician"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "test"
     @browser.type "event_clinician__active_secondary_entity__person_last_name", @original_last_name
     @browser.type "event_clinician__active_secondary_entity__person_first_name", "multi-clinician"
-    save_cmr(@browser)
+    save_cmr(@browser).should be_true
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present(@original_last_name).should be_true
   end
@@ -41,7 +41,7 @@ describe 'Adding multiple clinicians to a CMR' do
   end
   
   it "should allow editing a clinician from the CMR's edit mode, changing last name back to the original version" do
-    @browser.click "edit_cmr_link"
+    edit_cmr(@browser).should be_true
     @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Edit clinician"
     sleep(3)

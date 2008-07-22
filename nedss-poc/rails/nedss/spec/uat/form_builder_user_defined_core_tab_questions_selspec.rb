@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder user-defined, core-tab questions' do
   
-  # $dont_kill_browser = true
+  $dont_kill_browser = true
   
   before(:all) do
     @form_name = get_unique_name(2)  + " ud-fu-uat"
@@ -58,7 +58,7 @@ describe 'form builder user-defined, core-tab questions' do
   
     
   it 'should create a new form with user-defined, core-tab questions' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
+    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions").should be_true
       
     add_core_tab_configuration(@browser, DEMOGRAPHICS)
     add_question_to_view(@browser, DEMOGRAPHICS, {:question_text =>@demo_question_text, :data_type => "Single line text"})

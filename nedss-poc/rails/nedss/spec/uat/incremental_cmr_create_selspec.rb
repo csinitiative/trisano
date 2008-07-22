@@ -9,15 +9,14 @@ describe 'User functionality for creating and saving CMRs' do
   end
   
   it 'should save a CMR with just a last name' do
-    click_nav_new_cmr(@browser)
+    click_nav_new_cmr(@browser).should be_true
     @browser.type('event_active_patient__active_primary_entity__person_last_name', @last_name)
-    save_cmr(@browser)
+    save_cmr(@browser).should be_true
     @browser.is_text_present(@last_name).should be_true
-    @browser.is_text_present('CMR was successfully created.').should be_true
   end
   
   it 'should save the contact information' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Contacts")
     @browser.click("link=New Contact")
     #@browser.waitforelementpresent("new-contact-form")
@@ -26,52 +25,48 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.click('person-save-button')
     sleep 3
     @browser.is_text_present('Smurfette').should be_true
-    save_cmr(@browser)
+    save_cmr(@browser).should be_true
   end
   
   it 'should save the street name' do    
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Demographics")
     @browser.type('event_active_patient__active_primary_entity__address_street_name', 'Junglewood Court')
              
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
   
   it 'should save the phone number' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     @browser.type 'event_active_patient__active_primary_entity__telephone_area_code', '801'
     @browser.type 'event_active_patient__active_primary_entity__telephone_phone_number', '581'
     @browser.type 'event_active_patient__active_primary_entity__telephone_extension', '1234'
     @browser.type 'event_active_patient__active_primary_entity__telephone_phone_number', '5811234'
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
   
   it 'should save the disease info' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Clinical")
     @browser.select 'event_disease_disease_id', 'label=AIDS'
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
   
   it 'should save the lab result' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Laboratory")
     @browser.click("link=Add a lab result")
     sleep 3
     @browser.type('model_auto_completer_tf', 'Lab')
     @browser.type('event_new_lab_attributes__lab_result_text', 'Positive')
     @browser.select 'event_new_lab_attributes__specimen_source_id', 'label=Animal head'
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
     @browser.is_text_present('Animal head').should be_true
     @browser.is_text_present('Positive').should be_true
   end
   
   it 'should save the treatment info' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Clinical")
     @browser.click("link=New Treatment")
     sleep 3
@@ -79,24 +74,21 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.type('participations_treatment_treatment_given_yn_id', 'Leaches')
     @browser.click 'treatment-save-button'
     sleep 3
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
   
   it 'should save the reporting info' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Reporting")
     @browser.type 'model_auto_completer_tf', 'Happy Jacks Health Store'
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
 
   it 'should save administrative info' do
-    edit_cmr(@browser)
+    edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Administrative")
     @browser.select 'event_active_jurisdiction_secondary_entity_id', 'label=Salt Lake Valley Health Department'
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully updated.').should be_true
+    save_cmr(@browser).should be_true
   end
   
   it 'should still have all the data present' do
