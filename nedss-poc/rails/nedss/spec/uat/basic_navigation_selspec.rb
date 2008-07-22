@@ -28,43 +28,37 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should navigate successfully to the Admin page' do
-      click_nav_admin(@browser)
-      @browser.is_text_present('Admin Console').should be_true
+      click_nav_admin(@browser).should be_true
     end
     
     it 'should navigate successfully to the People Search page' do
-      click_nav_search(@browser)
+      click_nav_search(@browser).should be_true
       @browser.click 'link=People Search'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('People Search').should be_true
     end
     
     it 'should navigate successfully to the CMR Search page' do
-      click_nav_search(@browser)
+      click_nav_search(@browser).should be_true
       @browser.click 'link=CMR Search'
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('CMR Search').should be_true
     end
     
     it 'should navigate successfully to the View CMRs page' do
-      click_nav_cmrs(@browser)
-      @browser.is_text_present('Existing Reports').should be_true
+      click_nav_cmrs(@browser).should be_true
     end
     
     it 'should navigate successfully to the New CMR page' do
-      click_nav_new_cmr(@browser)
-      @browser.is_text_present('New CMR').should be_true
+      click_nav_new_cmr(@browser).should be_true
     end
     
     it 'should navigate successfully to the Forms page' do
-      click_nav_admin(@browser)
-      @browser.click 'link=Forms'
-      @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('Forms').should be_true
+      click_nav_forms(@browser).should be_true
     end
     
     it 'should navigate successfully to the Users page' do
-      click_nav_admin(@browser)
+      click_nav_admin(@browser).should be_true
       @browser.click('link=Users')
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Users').should be_true
