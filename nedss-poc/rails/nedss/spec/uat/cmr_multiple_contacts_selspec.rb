@@ -18,7 +18,7 @@ describe 'Adding multiple contacts to a CMR' do
   
   it "should allow a single contact to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
-    click_nav_new_cmr(@browser)
+    click_nav_new_cmr(@browser).should be_true
     @browser.type "event_active_patient__active_primary_entity__person_last_name", "multi-contact"
     @browser.type "event_active_patient__active_primary_entity__person_first_name", "test"
     @browser.select "event_disease_disease_id", "label=AIDS"
@@ -31,8 +31,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "event_contact__active_secondary_entity__address_street_name", "Main St."
     @browser.type "event_contact__active_secondary_entity__telephone_area_code", "212"
     @browser.type "event_contact__active_secondary_entity__telephone_phone_number", "5551212"
-    save_cmr(@browser)
-    @browser.is_text_present('CMR was successfully created.').should be_true
+    save_cmr(@browser).should be_true
     @browser.is_text_present(@original_last_name).should be_true
   end
 
@@ -50,8 +49,9 @@ describe 'Adding multiple contacts to a CMR' do
   end
   
   it "should allow editing a contact from the CMR's edit mode, changing last name back to the original version" do
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser).should be_true
+    sleep(10)
+    #@browser.wait_for_page_to_load($load_time)
     click_core_tab(@browser, "Contacts")
     @browser.click "link=Edit contact"
     sleep(3)

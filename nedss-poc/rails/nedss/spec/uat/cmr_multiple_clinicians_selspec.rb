@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Adding multiple clinicians to a CMR' do
   
-  # $dont_kill_browser = true
+  $dont_kill_browser = true
   
   before(:all) do
     @original_last_name = get_unique_name(2) + " mc"
@@ -39,10 +39,11 @@ describe 'Adding multiple clinicians to a CMR' do
     @browser.is_text_present(@edited_last_name).should be_true
     @browser.is_text_present(@original_last_name).should be_false
   end
-  
+
   it "should allow editing a clinician from the CMR's edit mode, changing last name back to the original version" do
     edit_cmr(@browser).should be_true
-    @browser.wait_for_page_to_load($load_time)
+    sleep(10)
+    #@browser.wait_for_page_to_load($load_time)
     @browser.click "link=Edit clinician"
     sleep(3)
     # @browser.wait_for_element_present("person_form")
