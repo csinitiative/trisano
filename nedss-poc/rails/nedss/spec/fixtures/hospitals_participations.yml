@@ -1,10 +1,7 @@
-
-
 marks_hospitals_participation:
   id: !str 1
   participation_id: !str 3
   hospital_record_number: 
+  admission_date: 
   discharge_date: 
   created_at: <%= Time.now.to_s :db %>
-  admission_date: 
-

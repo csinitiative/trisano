@@ -38,6 +38,7 @@
 
       <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
+        <%= error_messages_for :object => @event.hospitalized_health_facilities %>
         <div id="hospitals">
           <% if @event.hospitalized_health_facilities.empty? %>
             <h3>No hospitals have been recorded for this event</h3>

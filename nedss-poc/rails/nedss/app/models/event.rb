@@ -14,13 +14,16 @@ class Event < ActiveRecord::Base
 
   has_many :labs, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
-    :order => 'created_at ASC'
+    :order => 'created_at ASC',
+    :dependent => :destroy
   has_many :hospitalized_health_facilities, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id],
-    :order => 'created_at ASC'
+    :order => 'created_at ASC',
+    :dependent => :destroy
   has_many :diagnosing_health_facilities, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id],
-    :order => 'created_at ASC'
+    :order => 'created_at ASC',
+    :dependent => :destroy
   has_many :contacts, :class_name => 'Participation',  
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
   has_many :clinicians, :class_name => 'Participation', 
@@ -133,7 +136,7 @@ class Event < ActiveRecord::Base
   
   def new_hospital_attributes=(hospital_attributes)
     hospital_attributes.each do |attributes|
-      next if hospital_attributes.values_blank?
+      next if attributes.values_blank?
       hospital_participation = hospitalized_health_facilities.build(:role_id => Event.participation_code('Hospitalized At'))
       # Hospitals are a drop down of existing places, not an autocomplete.  Just assgn.
       hospital_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
@@ -161,7 +164,7 @@ class Event < ActiveRecord::Base
 
   def new_diagnostic_attributes=(diagnostic_attributes)
     diagnostic_attributes.each do |attributes|
-      next if diagnostic_attributes.values_blank?
+      next if attributes.values_blank?
       diagnostic_participation = diagnosing_health_facilities.build(:role_id => Event.participation_code('Diagnosed At'))
       # Diagnostic facilities are a drop down of existing places, not an autocomplete.  Just assgn.
       diagnostic_participation.secondary_entity_id = attributes.delete("secondary_entity_id")

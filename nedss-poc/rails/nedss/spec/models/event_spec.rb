@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Event do
+  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
   event_hash = {
     "event_onset_date" => "June 28, 2008",
@@ -13,8 +14,6 @@ describe Event do
       }
     }
   }
-
-  fixtures :events, :participations, :entities, :places, :people, :lab_results, :codes
 
   describe "handling new labs and lab results" do
 
@@ -233,6 +232,203 @@ describe Event do
 
   end
 
+  describe "handling new hospitals" do
+
+    describe "receiving a hospital and hospitalization dates" do
+
+      before(:each) do
+        new_hospital_hash = {
+          "new_hospital_attributes" => 
+            [
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16"}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_hospital_hash))
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(2)
+        @event.participations.find_by_role_id(codes(:participant_hospitalized_at).id).should_not be_nil
+      end
+
+      it "should add hospitalization dates to hospitals_participation table " do
+        lambda {@event.save}.should change {HospitalsParticipation.count}.by(1)
+        @event.hospitalized_health_facilities.first.hospitals_participation.admission_date.should == Date.parse("2008-07-15")
+        @event.hospitalized_health_facilities.first.hospitals_participation.discharge_date.should == Date.parse("2008-07-16")
+      end
+    end
+
+    describe "receiving a hospital with no hospitalization dates" do
+
+      before(:each) do
+        new_hospital_hash = {
+          "new_hospital_attributes" => 
+            [
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => ""}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_hospital_hash))
+      end
+
+      it "should be valid" do
+        @event.should be_valid
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(2)
+        @event.participations.find_by_role_id(codes(:participant_hospitalized_at).id).should_not be_nil
+      end
+
+      it "should not add any rows to hospitals_participation table " do
+        lambda {@event.save}.should_not change {HospitalsParticipation.count}
+      end
+    end
+
+    describe "receiving a hospital and out of order hospitalization dates" do
+
+      before(:each) do
+        new_hospital_hash = {
+          "new_hospital_attributes" => 
+            [
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15"}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_hospital_hash))
+      end
+
+      it "should be invalid" do
+        @event.should_not be_valid
+      end
+
+    end
+
+    describe "receiving hospitalization dates but no hospital" do
+
+      before(:each) do
+        new_hospital_hash = {
+          "new_hospital_attributes" => 
+            [
+              {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_hospital_hash))
+      end
+
+      it "should make the participation invalid" do
+        @event.hospitalized_health_facilities.first.should_not be_valid
+        @event.hospitalized_health_facilities.first.should have(1).error_on(:base)
+      end
+
+    end
+
+    describe "receiving new, empty hospitalization data" do
+
+      before(:each) do
+        new_hospital_hash = {
+          "new_hospital_attributes" =>
+          [
+            { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => ""}
+          ]
+        }
+        @event = Event.new(event_hash.merge(new_hospital_hash))
+      end
+
+      it "should do nothing" do
+        @event.should be_valid
+        @event.hospitalized_health_facilities.should be_empty
+      end
+
+    end
+
+  end
+
+  describe "receiving existing hospitalization data" do
+
+    describe "receiving edited hospitalization data" do
+      before(:each) do
+        @existing_hospital_hash = {
+          "existing_hospital_attributes" => { "#{participations(:marks_hospitalized_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"} }
+        }
+        @event = Event.find(events(:marks_cmr).id)
+      end
+
+      it "should update the existing hospital" do
+        lambda {@event.update_attributes(@existing_hospital_hash)}.should_not change {Participation.count + HospitalsParticipation.count}
+        @event.hospitalized_health_facilities.first.secondary_entity.current_place.name.should == "Bear River Valley Hospital"
+        @event.hospitalized_health_facilities.first.hospitals_participation.admission_date.should == Date.parse("2008-07-14")
+        @event.hospitalized_health_facilities.first.hospitals_participation.discharge_date.should == Date.parse("2008-07-15")
+      end
+    end
+
+    describe "receiving empty hospitalization data" do
+
+      before(:each) do
+        @existing_hospital_hash = {
+          "existing_hospital_attributes" => {}
+        }
+        @event = Event.find(events(:marks_cmr).id)
+      end
+
+      it "should delete existing hospital participation and hospitalization dates" do
+        lambda {@event.update_attributes(@existing_hospital_hash)}.should change {HospitalsParticipation.count + Participation.count}.by(-2)
+      end
+
+    end
+
+  end
+
+  describe "handling diagnosing facilities" do
+
+    describe "receiving a new diagnosing facility" do
+
+      before(:each) do
+        new_diagnostic_hash = {
+          "new_diagnostic_attributes" => 
+            [
+              {"secondary_entity_id" => places(:AVH).id}
+            ]
+        }
+        @event = Event.new(event_hash.merge(new_diagnostic_hash))
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(2)
+        @event.participations.find_by_role_id(codes(:participant_diagnosing_health_facility).id).should_not be_nil
+      end
+
+    end
+
+    describe "receiving an edited diagnosing facility" do
+      before(:each) do
+        @existing_diagnostic_hash = {
+          "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"} }
+        }
+        @event = Event.find(events(:marks_cmr).id)
+      end
+
+      it "should update the existing diagnosing facility" do
+        lambda {@event.update_attributes(@existing_diagnostic_hash)}.should_not change {Participation.count}
+        @event.diagnosing_health_facilities.first.secondary_entity.current_place.name.should == "Bear River Valley Hospital"
+      end
+    end
+
+    describe "receiving empty diagnostic data" do
+
+      before(:each) do
+        @existing_diagnostic_hash = {
+          "existing_diagnostic_attributes" => {}
+        }
+        @event = Event.find(events(:marks_cmr).id)
+      end
+
+      it "should delete existing diagnosing facility participation" do
+        lambda {@event.update_attributes(@existing_diagnostic_hash)}.should change {Participation.count}.by(-1)
+      end
+
+    end
+
+  end
+
   describe "Routing an event" do
 
     before(:each) do
@@ -262,6 +458,7 @@ describe Event do
         lambda { @event.route_to_jurisdiction(entities(:AVH)) }.should raise_error()
       end
     end
+
   end
 
 end

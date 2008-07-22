@@ -37,6 +37,11 @@ Spec::Runner.configure do |config|
   # config.mock_with :mocha
   # config.mock_with :flexmock
   # config.mock_with :rr
+
+  config.before(:each) do
+    full_example_description = "#{self.class.description} #{@method_name}"
+    RAILS_DEFAULT_LOGGER.info("\n\n#{full_example_description}\n#{'-' * (full_example_description.length)}")
+  end
 end
 
 def mock_user

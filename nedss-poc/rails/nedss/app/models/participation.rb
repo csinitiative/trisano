@@ -82,6 +82,12 @@ class Participation < ActiveRecord::Base
 
   private
 
+  def validate
+    if !hospitals_participation.nil? and secondary_entity.nil?
+      errors.add_to_base("Hospital can not be blank if hospitalization dates are given.")
+    end
+  end
+
   def save_associations
     self.primary_entity = @active_primary_entity unless Utilities::model_empty?(@active_primary_entity)
     self.secondary_entity = @active_secondary_entity unless Utilities::model_empty?(@active_secondary_entity)
