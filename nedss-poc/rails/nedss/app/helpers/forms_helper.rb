@@ -153,12 +153,13 @@ module FormsHelper
     result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
     
     if (element.core_path.blank?)
-      result +=  "Follow"
+      result +=  "Follow up, "
     else
-      result +=  "Core follow"
+      result +=  "Core follow up, "
     end
     
-    result += " up for: '#{element.condition}'"
+    result += "Condition: '#{element.condition}'"
+    result += ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" unless (element.core_path.blank?)
         
     if include_children && element.children?
       result += "<ul id='follow_up_" + element.id.to_s + "_children'>"
