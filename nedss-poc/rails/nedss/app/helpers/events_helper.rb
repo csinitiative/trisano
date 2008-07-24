@@ -57,7 +57,7 @@ module EventsHelper
 
   def basic_controls(event, jurisdiction)
     controls = link_to('Show', cmr_path(event)) + " | "
-    controls += (link_to('Edit', edit_cmr_path(event)) + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+    controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
     controls += link_to('Export to CSV', cmr_path(event) + '.csv')
   end

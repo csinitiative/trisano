@@ -1,6 +1,4 @@
-%div{:style => "clear: both;"}
-
-%div{:class => 'diagnostic'}
+%div{:class => 'diagnostic', :style => "clear: both;"}
   - new_or_existing = diagnostic.new_record? ? 'new' : 'existing'
   - prefix = "event[#{new_or_existing}_diagnostic_attributes][]"
 
