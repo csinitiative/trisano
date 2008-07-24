@@ -256,7 +256,7 @@ module NedssHelper
     browser.click "form_submit"
     browser.wait_for_page_to_load($load_time)
     if browser.is_text_present("Form was successfully created.") != true 
-      raise("Form creation failed")
+      return(false)
     end
     browser.click "link=Form Builder"
     browser.wait_for_page_to_load($load_time)

@@ -19,7 +19,7 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
   end
   
   it 'should handle core follow-ups.' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
+    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions").should be_true
     add_core_follow_up_to_view(@browser, "Default View", "2", "Patient birth gender")
     add_question_to_follow_up(@browser, "Core follow up for: '2'", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
     publish_form(@browser)
