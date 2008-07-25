@@ -521,7 +521,7 @@ module NedssHelper
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
-    if browser.is_text_present 
+    if browser.is_text_present(question_attributes[:question_text])
       return true
     else
       return false      
