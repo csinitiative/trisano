@@ -236,12 +236,17 @@ module NedssHelper
     click_core_tab(browser, ADMIN)
     browser.select "event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
     browser.select "event_event_status_id", "label=Under Investigation"
-    save_cmr(browser)
+    return save_cmr(browser)
   end
   
   def answer_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_answer_id(browser, question_text)
-    browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer)
+    begin
+      browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
+    rescue
+      return false
+    end
+    return true
   end
   
   def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label)
@@ -273,27 +278,27 @@ module NedssHelper
 
   # Takes the name of the tab to which the question should be added and the question's attributes.  
   def add_question_to_view(browser, element_name, question_attributes = {})
-    add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
+    return add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
   end
   
   # Takes the name of the section to which the question should be added and the question's attributes.
   def add_question_to_section(browser, element_name, question_attributes = {})
-    add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
+    return add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
   end
   
   # Takes the name of the follow-up container to which the question should be added and the question's attributes.
   def add_question_to_follow_up(browser, element_name, question_attributes = {})
-    add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
+    return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
   def add_follow_up_to_question(browser, question_text, condition)
-    add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)
+    return add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)
   end
   
   # Takes the name of the view to which the follow-up should be added and the follow-up's attributes.
   def add_core_follow_up_to_view(browser, element_name, condition, core_label)
-    add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
+    return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
   end
   
   def add_core_tab_configuration(browser, core_view_name)
@@ -307,6 +312,7 @@ module NedssHelper
   def publish_form(browser)
     browser.click '//input[@value="Publish"]'
     browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Form was successfully published "))
   end
   
   #TODO

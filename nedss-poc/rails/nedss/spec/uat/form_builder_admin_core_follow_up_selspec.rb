@@ -59,5 +59,4 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
     @browser.is_text_present(@follow_up_answer).should be_false
     
   end
-    
 end
