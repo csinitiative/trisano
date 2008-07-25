@@ -260,11 +260,7 @@ module NedssHelper
     end
     browser.click "link=Form Builder"
     browser.wait_for_page_to_load($load_time)
-    if browser.is_text_present("Investigator Form Elements") 
-      return true
-    else
-      return false
-    end
+    return browser.is_text_present("Investigator Form Elements") 
   end
   
   def switch_user(browser, user_id)
@@ -272,6 +268,7 @@ module NedssHelper
     sleep(2)  
     browser.refresh
     browser.wait_for_page_to_load "30000"
+    return(browser.is_text_present(user_id))
   end
 
   # Takes the name of the tab to which the question should be added and the question's attributes.  
