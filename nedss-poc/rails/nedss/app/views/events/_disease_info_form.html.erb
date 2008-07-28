@@ -32,10 +32,10 @@
             <%= render :partial => "diagnostic", :collection => @event.diagnosing_health_facilities %>
           <% end %>
         </div>
-
+      
         <p style="clear: both; padding-top: 20px"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
       </fieldset>
-
+    
       <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
         <%= error_messages_for :object => @event.hospitalized_health_facilities %>
@@ -48,10 +48,10 @@
             <%= render :partial => "hospital", :collection => @event.hospitalized_health_facilities %>
           <% end %>
         </div>
-
+      
         <p style="clear: both; padding-top: 20px"> <%= add_hospital_link "Add a hospital" %> </p>
       <% end %>
-                              
+                                                
       <br/>
       
     </fieldset>
@@ -63,12 +63,24 @@
           <%= d.label(:died_id) %>
           <%= d.dropdown_code_field(:died_id, 'yesno', {}) %>
         </span>
-        <span class="horiz">
-          <%= f.label(:imported_from_id) %>
-          <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
-        </span>
       <% end %>
-
+      
+      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
+        <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+          <% current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person| %>
+            <span class="horiz">
+              <%= person.label(:date_of_death) %>
+              <%= person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event) %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+                  
+      <span class="horiz">
+        <%= f.label(:imported_from_id) %>
+        <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
+      </span>
+      
       <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |ap| %>
         <% ap.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
           <span class="horiz">
@@ -81,7 +93,7 @@
           </span>
         <% end %>
       <% end %>
-      
+                        
     </fieldset>
     
     <fieldset class="form">

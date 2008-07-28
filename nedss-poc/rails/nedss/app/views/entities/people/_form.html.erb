@@ -57,10 +57,6 @@
           <%= p.label(:approximate_age_no_birthday, "Age") %>
           <%= p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event) %>
         </span>
-        <span class="horiz">
-          <%= p.label(:date_of_death) %>
-          <%= p.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, event) %>
-        </span>
       <% end %>
     </fieldset>
     
