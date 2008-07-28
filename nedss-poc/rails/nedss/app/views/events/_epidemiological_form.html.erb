@@ -29,14 +29,6 @@
           <fieldset class="vert">
             <legend>Other</legend>
             <span class="horiz">
-              <%= rf.label(:pregnant_id) %>
-              <%= rf.dropdown_code_field(:pregnant_id, 'yesno', {}) %>
-            </span>
-            <span class="horiz">
-              <%= rf.label(:pregnancy_due_date) %>
-              <%= rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..0.years.from_now) %>
-            </span>
-            <span class="horiz">
               <%= rf.label(:risk_factors) %>
               <%= rf.text_field(:risk_factors, :size => 25) %>
             </span>

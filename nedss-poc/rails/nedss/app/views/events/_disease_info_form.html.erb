@@ -68,6 +68,20 @@
           <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
         </span>
       <% end %>
+
+      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |ap| %>
+        <% ap.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
+          <span class="horiz">
+            <%= rf.label(:pregnant_id) %>
+            <%= rf.dropdown_code_field(:pregnant_id, 'yesno', {}) %>
+          </span>
+          <span class="horiz">
+            <%= rf.label(:pregnancy_due_date) %>
+            <%= rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..0.years.from_now) %>
+          </span>
+        <% end %>
+      <% end %>
+      
     </fieldset>
     
     <fieldset class="form">

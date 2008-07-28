@@ -42,6 +42,17 @@
         = entity_data.person.date_of_death
     %tr
       %td
+        %span{:class => "label"}
+          Pregnant
+      %td
+        = l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+      %td
+        %span{:class => "label"}
+          Pregnancy due date:
+      %td
+        = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    %tr
+      %td
         %span{:class => 'label'}
           Imported from:
       %td
