@@ -276,7 +276,7 @@ module EventsHelper
        disease
        event_type
        imported_from
-       event_case_status
+       UDOH_case_status
        outbreak_associated
        outbreak_name
        event_status

@@ -148,7 +148,7 @@ describe EventsHelper do
   end
 
   it "should render a header column" do
-    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,event_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,clinician_name,clinician_phone,clinician_street,clinician_unit,clinician_city,clinician_postal_code,clinician_county,clinician_state,clinician_district,MMWR_year,MMWR_week).split(',')
+    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,UDOH_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,clinician_name,clinician_phone,clinician_street,clinician_unit,clinician_city,clinician_postal_code,clinician_county,clinician_state,clinician_district,MMWR_year,MMWR_week).split(',')
     result = render_core_data_headers.split(',')
     result.should == expected
   end
