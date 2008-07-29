@@ -81,6 +81,7 @@ describe "/cmrs/new.html.erb" do
     @participations_risk_factor.stub!(:day_care_association_id).and_return(1402)
     @participations_risk_factor.stub!(:pregnant_id).and_return(1402)
     @participations_risk_factor.stub!(:pregnancy_due_date).and_return(Date.parse('2009-10-02'))
+    @participations_risk_factor.stub!(:occupation).and_return('Programmer')
     @participations_risk_factor.stub!(:risk_factors).and_return("Obese")
     @participations_risk_factor.stub!(:risk_factors_notes).and_return("300 lbs")
     

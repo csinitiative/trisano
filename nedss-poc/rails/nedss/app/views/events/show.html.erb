@@ -83,6 +83,10 @@
           <td><%= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
         </tr>
         <tr>
+          <td><span class="label">Occupation:</span></td>
+          <td><%= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
+        </tr>
+        <tr>
           <td><span class="label">Risk factors:</span></td>
           <td><%= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
           <td><span class="label">Risk factor notes:</span></td>

@@ -25,8 +25,13 @@
               <%= rf.label(:day_care_association_id) %>
               <%= rf.dropdown_code_field(:day_care_association_id, 'yesno') %>
             </span>
+            <span class="horiz">
+              <%= rf.label(:occupation) %>
+              <%= rf.text_field(:occupation, :size => 25) %>
+            </span>
           </fieldset>
-          <fieldset class="vert">
+          <br />
+          <fieldset class="form">
             <legend>Other</legend>
             <span class="horiz">
               <%= rf.label(:risk_factors) %>

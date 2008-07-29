@@ -71,7 +71,7 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.click("link=New Treatment")
     sleep 3
     @browser.select 'participations_treatment_treatment_given_yn_id', 'label=Yes'
-    @browser.type('participations_treatment_treatment_given_yn_id', 'Leaches')
+    @browser.type('participations_treatment_treatment_given', 'Leaches')
     @browser.click 'treatment-save-button'
     sleep 3
     save_cmr(@browser).should be_true
@@ -98,7 +98,7 @@ describe 'User functionality for creating and saving CMRs' do
     
     click_core_tab(@browser, "Clinical")
     @browser.is_text_present('AIDS').should be_true
-    @browser.is_text_present('Yes').should be_true
+    @browser.is_text_present('Leaches').should be_true
     
     click_core_tab(@browser, "Laboratory")
     @browser.is_text_present('Animal head').should be_true
@@ -107,6 +107,6 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.is_text_present('Salt Lake Valley Health Department').should be_true
     
     click_core_tab(@browser, "Contacts")
-    @browser.is_text_present('AIDS').should be_true
+    @browser.is_text_present('Smurfette').should be_true
   end
 end
