@@ -1,5 +1,6 @@
 .container {
-  width: 950px;
+  position: relative;
+  width: 90%;
   margin: 0 auto; }
 
 .showgrid {

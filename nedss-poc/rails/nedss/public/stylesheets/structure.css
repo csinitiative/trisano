@@ -1,0 +1,70 @@
+#logo {
+  position: absolute;
+  height: 61px;
+  top: 0px;
+  left: 0px; }
+
+#nav_top {
+  position: relative;
+  top: 10px;
+  align: right;
+  text-align: right;
+  letter-spacing: 1px; }
+
+#nav_bar {
+  position: relative;
+  height: 60px;
+  top: 15px;
+  background: url(../images/repeat.gif);
+  background-repeat: repeat-x;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 0px 0px 0px; }
+
+#system {
+  position: absolute;
+  top: 3px;
+  left: 0px; }
+
+#action {
+  position: relative;
+  top: 0px;
+  align: right;
+  text-align: right;
+  letter-spacing: 1px; }
+
+#main {
+  position: relative;
+  margin-top: 10px; }
+  #main .highlight {
+    color: green; }
+  #main .label {
+    font-size: 90%;
+    font-weight: bold;
+    white-space: nowrap; }
+  #main .fill {
+    font-family: arial;
+    font-size: 12px;
+    padding: 20px 20px 20px 20px; }
+    #main .fill a {
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none; }
+      #main .fill a:hover {
+        color: #fff;
+        text-decoration: underline; }
+      #main .fill a:visited {
+        color: #fff;
+        font-weight: normal; }
+      #main .fill a:active {
+        color: #fff;
+        font-weight: normal; }
+
+#nav_right {
+  width: 130px;
+  background-color: blue;
+  color: #fff;
+  float: right; }
+
+#ft {
+  font-size: x-small; }

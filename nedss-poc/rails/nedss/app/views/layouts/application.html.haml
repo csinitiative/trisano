@@ -3,9 +3,10 @@
   %head
     %title UT-NEDSS
 
-    = stylesheet_link_tag 'scaffold'
-    = stylesheet_link_tag 'zone'
     = stylesheet_link_tag 'grid'
+    = stylesheet_link_tag 'structure'
+    = stylesheet_link_tag 'typography'
+    = stylesheet_link_tag 'scaffold'
 
     / Sam Skin CSS for TabView
     = stylesheet_link_tag '../yui/build/tabview/assets/skins/sam/tabview.css'
@@ -38,61 +39,55 @@
     = javascript_include_tag 'autotab'
 
   %body.yui-skin-sam
-    #hd
-      .container
-        .span-7.append-1
-          #logo
-            %a{:href => home_path}
-              = image_tag("logo.gif", :border => 0)
-        .span-12.push-3.last
-          #nav
-            .user
-              - if RAILS_ENV == "production"
-                = current_user_name
-              - else 
-                - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
-                = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
-                %span{:id => "user_name"}= current_user_name + ":"
-                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
-                </form>
-            .area
-              - if User.current_user.is_entitled_to?(:create_event)
-                = link_to 'NEW CMR', new_cmr_path
-                |
-              = link_to 'CMRS', cmrs_path
-              |
-              - if User.current_user.is_admin?
-                = link_to 'FORMS', forms_path
-                |
-              = link_to 'SEARCH', search_path
-              - if User.current_user.is_admin?
-                |
-                = link_to 'ADMIN', admin_path
-
     .container
-      #main
-        .span-12
+      #logo
+        %a{:href => home_path}
+          = image_tag("logo.gif", :border => 0)
+      #nav_top
+        .area
+          - if User.current_user.is_entitled_to?(:create_event)
+            = link_to 'NEW CMR', new_cmr_path
+            |
+          = link_to 'CMRS', cmrs_path
+          |
+          - if User.current_user.is_admin?
+            = link_to 'FORMS', forms_path
+            |
+          = link_to 'SEARCH', search_path
+          - if User.current_user.is_admin?
+            |
+            = link_to 'ADMIN', admin_path
+        .user
+          - if RAILS_ENV == "production"
+            = current_user_name
+          - else 
+            - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
+            = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
+            %span{:id => "user_name"}= current_user_name + ":"
+            = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
+            </form>
+
+    #nav_bar
+      .container
+        #system
           .title
             = yield :title
-          .name
-            = yield :name
-          .tools
-            = yield :tools
-            
-        .span-11.append-1.last
-          .tools2
+        #action
+          .area
             = yield :tools_two
-            
-        .span-24
-          %p{:style => "color: green"}
-            = flash[:notice]
-          = yield
 
     .container
+      .name
+        = yield :name
+      .tools
+        = yield :tools
+        %p{:style => "color: green"}
+          = flash[:notice]
+        = yield
+              
+    .container
       #ft
-        .span-22.push-1
-          %hr
-          %b Release 2 Pilot Feedback:
-          %a{:href => 'https://ut-nedss.csinitiative.net/wiki/Release2PilotFeedback'} Wiki
-          %a{:href => 'mailto:r2feedback@ut-nedss.csinitiative.net'}Email List
-
+        %hr
+        %b Release 2 Pilot Feedback:
+        %a{:href => 'https://ut-nedss.csinitiative.net/wiki/Release2PilotFeedback'} Wiki
+        %a{:href => 'mailto:r2feedback@ut-nedss.csinitiative.net'}Email List
