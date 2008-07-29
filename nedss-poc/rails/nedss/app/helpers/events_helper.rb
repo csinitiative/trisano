@@ -307,7 +307,15 @@ module EventsHelper
        clinician_state
        clinician_district
        MMWR_year
-       MMWR_week).join(',')
+       MMWR_week
+       contact_city
+       contact_county
+       contact_zip
+       contact_age
+       contact_birth_gender
+       contact_ethnicity
+       contact_race
+       contact_primary_language).join(',')
   end
     
   def render_event_csv(event)
@@ -316,6 +324,7 @@ module EventsHelper
         
     event.labs << Participation.new_lab_participation if event.labs.empty?
     clinician = first_clinician(event)
+    contact = first_contact(event)
     CSV::Writer.generate(str) do |writer|
       event.labs.each do |lab|
         lab.lab_results << LabResult.new if lab.lab_results.empty?
@@ -353,6 +362,7 @@ module EventsHelper
           fill_clinician_address(fields, clinician)
           fields << event.MMWR_year.to_s.gsub(/,/,' ')
           fields << event.MMWR_week.to_s.gsub(/,/,' ')
+          fill_contact_info(fields, contact)
           writer << fields
         end
       end
@@ -373,12 +383,22 @@ module EventsHelper
     current_place.name || ''
   end
 
+  # TODO: STI
   def first_clinician(event)
     participation = event.clinicians.first
     if participation
       result = participation.active_secondary_entity.person
     end
-    result ||= OpenStruct.new(Hash.new(''))
+    result || OpenStruct.new(Hash.new(''))
+  end
+
+  # TODO: STI
+  def first_contact(event)
+    participation = event.contacts.first
+    if participation
+      person = participation.active_secondary_entity.person
+    end
+    person || OpenStruct.new(Hash.new(''))
   end
 
   def fill_clinician_address(fields, clinician)
@@ -390,5 +410,17 @@ module EventsHelper
     fields << address.county_name
     fields << address.state_name
     fields << address.district_name
+  end
+
+  def fill_contact_info(fields, contact)
+    address = contact.address || OpenStruct.new
+    fields << address.city
+    fields << address.county_name
+    fields << address.postal_code
+    fields << contact.age
+    fields << contact.birth_gender_description
+    fields << contact.ethnicity_description
+    fields << contact.race_description
+    fields << contact.primary_language_description
   end
 end

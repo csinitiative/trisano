@@ -94,6 +94,18 @@ describe Person, "with dates of birth and/or death" do
     person = Person.new(:last_name => 'Lacey', :birth_date => "2007-12-31", :date_of_death => "2008-12-30")
     person.should be_valid
   end
+
+  it "should calculate an age if birth_date is not blank" do
+    person = Person.new(:last_name => 'Entwistle', :birth_date => 10.years.ago)
+    person.age.should == 10
+  end
+  
+
+  it "should not calculate an age if the birth_date is blank" do
+    person = Person.new(:last_name => 'Entwistle')
+    person.age.should be_nil
+  end
+    
 end
 
 describe Person, "loaded from fixtures" do
@@ -119,4 +131,45 @@ describe Person, "loaded from fixtures" do
   it "should have a primary language of Spanish" do
     people(:groucho_marx).primary_language.should eql(external_codes(:language_spanish))
   end
+
+  it "should look up the birth gender description" do
+    people(:groucho_marx).birth_gender_description.should eql('Male')
+  end
+    
+  it "should look up the ethnicity description" do
+    people(:groucho_marx).ethnicity_description.should eql('Other')
+  end
+
+  it "should look up the primary language description" do
+    people(:groucho_marx).primary_language_description.should eql('Spanish')
+  end
+end
+
+describe Person, "with one or more races" do
+  fixtures :external_codes  
+
+  it "should look up the race description" do
+    entity = mock(Entity)
+    entity.stub!(:races).and_return([external_codes(:race_white)])
+    person = Person.new(:last_name => 'Entwistle')
+    person.stub!(:entity).and_return(entity)
+    person.race_description.should eql('White')
+  end
+
+  it "should build a race description if several races" do
+    entity = mock(Entity)
+    entity.stub!(:races).and_return([external_codes(:race_white), external_codes(:race_asian), external_codes(:race_indian)])
+    person = Person.new(:last_name => 'Entwistle')
+    person.stub!(:entity).and_return(entity)
+    person.race_description.should eql('White, Asian and American Indian')
+  end
+
+  it "should not be an error to have no race" do
+    entity = mock(Entity)
+    entity.stub!(:races).and_return([])    
+    person = Person.new(:last_name => 'Entwistle')
+    person.stub!(:entity).and_return(entity)
+    person.race_description.should be_nil
+  end
+
 end

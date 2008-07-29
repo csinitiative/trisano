@@ -79,6 +79,33 @@ class Person < ActiveRecord::Base
     self.entity.address
   end
 
+  def age
+    (Date.today - self.birth_date.to_date).to_i / 365 unless self.birth_date.blank?
+  end
+
+  def birth_gender_description
+    birth_gender.code_description unless birth_gender.blank?
+  end
+
+  def ethnicity_description
+    ethnicity.code_description unless ethnicity.blank?
+  end
+
+  def primary_language_description
+    primary_language.code_description unless primary_language.blank?
+  end
+
+  # Builds a presentable description of the person's race.
+  def race_description
+    unless entity.blank? || entity.races.empty?
+      races = entity.races.collect {|race| race.code_description}
+      return races.first unless races.size > 1
+      description = races.join(', ')
+      description[description.rindex(','), 1] = ' and'
+      description
+    end  
+  end
+
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
