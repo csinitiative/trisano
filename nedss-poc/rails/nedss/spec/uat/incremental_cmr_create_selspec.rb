@@ -71,7 +71,7 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.click("link=New Treatment")
     sleep 3
     @browser.select 'participations_treatment_treatment_given_yn_id', 'label=Yes'
-    @browser.type('participations_treatment_treatment_given', 'Leaches')
+    @browser.type('participations_treatment_treatment', 'Leaches')
     @browser.click 'treatment-save-button'
     sleep 3
     save_cmr(@browser).should be_true
