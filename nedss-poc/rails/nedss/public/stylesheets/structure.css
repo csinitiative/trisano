@@ -1,37 +1,23 @@
-#logo {
-  position: absolute;
-  height: 61px;
-  top: 0px;
-  left: 0px; }
-
-#nav_top {
+#head {
   position: relative;
-  top: 10px;
-  align: right;
-  text-align: right;
-  letter-spacing: 1px; }
+  height: 68px;
+  background-color: #e5e5e5; }
 
-#nav_bar {
+#bar {
   position: relative;
   height: 60px;
-  top: 15px;
   background: url(../images/repeat.gif);
-  background-repeat: repeat-x;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 6px 0px 0px 0px; }
+  background-repeat: repeat-x; }
 
-#system {
+#left {
   position: absolute;
-  top: 3px;
+  top: 0px;
   left: 0px; }
 
-#action {
+#right {
   position: relative;
-  top: 0px;
   align: right;
-  text-align: right;
-  letter-spacing: 1px; }
+  text-align: right; }
 
 #main {
   position: relative;

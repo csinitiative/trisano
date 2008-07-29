@@ -1,24 +1,26 @@
-.area {
+.areas {
   font-family: helvetica, arial, sans-serif;
   font-size: 11px;
-  color: #06C; }
-  .area a {
+  color: #ccc;
+  padding: 10px 0px 5px 0px;
+  letter-spacing: 1px; }
+  .areas a {
     color: #06C;
     font-weight: normal;
     text-decoration: none; }
-    .area a:hover {
+    .areas a:hover {
       color: 06C;
       text-decoration: underline; }
-    .area a:visited {
+    .areas a:visited {
       color: #06C;
       font-weight: normal; }
-    .area a:active {
+    .areas a:active {
       color: #06C;
       font-weight: normal; }
 
 .user {
   font-size: 10px;
-  color: #ccc;
+  color: #666;
   text-transform: uppercase; }
 
 .title {
@@ -26,7 +28,13 @@
   font-size: 12px;
   font-weight: light;
   text-align: left;
-  color: #fff; }
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 9px 0px 0px 0px; }
+
+.action {
+  padding: 8px 0px 0px 0px; }
 
 .name {
   font-family: helvetica, sans-serif;

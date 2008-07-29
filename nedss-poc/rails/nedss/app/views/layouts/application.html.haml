@@ -39,43 +39,42 @@
     = javascript_include_tag 'autotab'
 
   %body.yui-skin-sam
-    .container
-      #logo
-        %a{:href => home_path}
-          = image_tag("logo.gif", :border => 0)
-      #nav_top
-        .area
-          - if User.current_user.is_entitled_to?(:create_event)
-            = link_to 'NEW CMR', new_cmr_path
-            |
-          = link_to 'CMRS', cmrs_path
-          |
-          - if User.current_user.is_admin?
-            = link_to 'FORMS', forms_path
-            |
-          = link_to 'SEARCH', search_path
-          - if User.current_user.is_admin?
-            |
-            = link_to 'ADMIN', admin_path
-        .user
-          - if RAILS_ENV == "production"
-            = current_user_name
-          - else 
-            - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
-            = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
-            %span{:id => "user_name"}= current_user_name + ":"
-            = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
-            </form>
-
-    #nav_bar
+    #head
       .container
-        #system
+        #left
+          %a{:href => home_path}
+            = image_tag("logo.png", :border => 0)
+        #right
+          .areas
+            - if User.current_user.is_entitled_to?(:create_event)
+              = link_to 'NEW CMR', new_cmr_path
+              |
+            = link_to 'CMRS', cmrs_path
+            |
+            - if User.current_user.is_admin?
+              = link_to 'FORMS', forms_path
+              |
+            = link_to 'SEARCH', search_path
+            - if User.current_user.is_admin?
+              |
+              = link_to 'ADMIN', admin_path
+          .user
+            - if RAILS_ENV == "production"
+              = current_user_name
+            - else 
+              - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
+              = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
+              %span{:id => "user_name"}= current_user_name + ":"
+              = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
+              </form>
+    #bar
+      .container
+        #left
           .title
             = yield :title
-        #action
-          .area
+        #right
+          .action
             = yield :tools_two
-
     .container
       .name
         = yield :name
@@ -84,7 +83,6 @@
         %p{:style => "color: green"}
           = flash[:notice]
         = yield
-              
     .container
       #ft
         %hr
