@@ -14,24 +14,24 @@ describe Form do
     fixtures :forms
 
     it "should return only forms for the specified disease and jurisdiction" do
-      f = Form.get_published_investigation_forms(1, 1)
-      f.length.should == 4
-      f.each do |d| 
+      form = Form.get_published_investigation_forms(1, 1)
+      form.length.should == 4
+      form.each do |d| 
         d.disease_id.should == 1
         d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
       end
 
-      f = Form.get_published_investigation_forms(2, 2)
-      f.length.should == 1
-      f.each do |d|  
+      form = Form.get_published_investigation_forms(2, 2)
+      form.length.should == 1
+      form.each do |d|  
         d.disease_id.should == 2
         d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
       end
 
       # Forms applicable to all jurisidictions
-      f = Form.get_published_investigation_forms(1, 99)
-      f.length.should == 3
-      f.each { |d| d.jurisdiction_id.should == nil }
+      form = Form.get_published_investigation_forms(1, 99)
+      form.length.should == 3
+      form.each { |d| d.jurisdiction_id.should == nil }
 
       # No such disease
       Form.get_published_investigation_forms(99, 1).length.should == 0
@@ -54,6 +54,10 @@ describe Form do
       core_view_element_container = form_base_element.children[1]
       core_view_element_container.should_not be_nil
       core_view_element_container.type.should == "CoreViewElementContainer"
+      
+      core_field_element_container = form_base_element.children[2]
+      core_field_element_container.should_not be_nil
+      core_field_element_container.type.should == "CoreFieldElementContainer"
       
       default_view_element = investigator_view_element_container.children[0]
       default_view_element.should_not be_nil
@@ -135,7 +139,7 @@ describe Form do
     it "should make a copy of the entire form element tree" do
       @published_form.form_base_element.should_not be_nil
       published_form_base = @published_form.form_base_element
-      published_form_base.children_count.should eql(2)
+      published_form_base.children_count.should eql(3)
       
       investigator_view_element_container = published_form_base.children[0]
       investigator_view_element_container.form_id.should eql(@published_form.id)

@@ -12,6 +12,10 @@ class Form < ActiveRecord::Base
     form_base_element.children[1]
   end
   
+  def core_field_elements_container
+    form_base_element.children[2]
+  end
+  
   def save_and_initialize_form_elements
     transaction do
       self.status = 'Not Published'
@@ -77,9 +81,11 @@ class Form < ActiveRecord::Base
     
     investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
     core_view_element_container = CoreViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+    core_field_element_container = CoreFieldElementContainer.create({:form_id => self.id, :tree_id => tree_id })
     
     form_base_element.add_child(investigator_view_element_container)
     form_base_element.add_child(core_view_element_container)
+    form_base_element.add_child(core_field_element_container)
     
     default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
     investigator_view_element_container.add_child(default_view_element)

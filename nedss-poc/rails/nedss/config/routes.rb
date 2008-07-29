@@ -1,12 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
-
+  
   map.home '', :controller => 'dashboard'
+  
   map.with_options :controller => 'search' do |search|
     search.search_cmrs   'search/cmrs',         :action => 'cmrs'
     search.cmrs_format   'search/cmrs.:format', :action => 'cmrs'
     search.search_people 'search/people',       :action => 'people'
     search.search        'search'
-  end   
+  end
+  
   map.admin 'admin', :controller => 'admin'
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
@@ -30,6 +32,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :core_view_elements
   
+  map.resources :core_field_elements
+  
   map.resources :view_elements
   
   map.resources :form_elements, :member => { :to_library => :post }, :member => { :from_library => :post }
@@ -37,13 +41,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :follow_up_elements
 
   map.resources :users
-
-#  map.resources :cmrs, :controller => :events :member => { :jurisdiction => :post } do |cmr|
-#    cmr.resources :treatments
-#    cmr.resources :contacts
-#    cmr.resources :clinicians
-#  end
-
+  
   map.resources :cmrs, 
                 :controller => :events,
                 :member => { :state => :post, :jurisdiction => :post },

@@ -8,7 +8,7 @@ base:
   type: FormBaseElement
   id: "1"
   description: 
-  rgt: "48"
+  rgt: "50"
   parent_id: 
 
 investigator_container:
@@ -31,6 +31,17 @@ core_container:
   id: "28"
   description: 
   rgt: "47"
+  parent_id: "1"
+
+core_field_container:
+  name: 
+  form_id: "1"
+  tree_id: "1"
+  lft: "48"
+  type: CoreFieldElementContainer
+  id: "29"
+  description: 
+  rgt: "49"
   parent_id: "1"
     
 default_view:
