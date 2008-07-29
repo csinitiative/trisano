@@ -69,12 +69,10 @@
   code_description: "Native Hawaiian / Pacific Islander"
   sort_order: 30
 
-# Removing race unknown as UI currently uses a multi-select.  In which case selecting nothing is unknown.
-#
-#-  code_name: "race"
-#   the_code:  "UNK"
-#   code_description: "Unknown"
-#   sort_order: 1
+-  code_name: "race"
+   the_code:  "UNK"
+   code_description: "Unknown"
+   sort_order: 1
 
   ### LANGUAGE ###
   
@@ -449,6 +447,11 @@
   the_code:  "OR"
   code_description: "Oregon"
   sort_order: 235
+
+- code_name: "state"
+  the_code:  "OOC"
+  code_description: "Out of Country"
+  sort_order: 237
 
 - code_name: "state"
   the_code:  "PW"
