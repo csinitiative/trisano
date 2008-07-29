@@ -692,6 +692,11 @@
   code_description: "Mobile"
   sort_order: 15
 
+- code_name: "location"
+  the_code:  "PAGE"
+  code_description: "Pager"
+  sort_order: 20
+
   ### YES/NO VALUES ###
   
 - code_name: "yesno"
@@ -1062,6 +1067,11 @@
   the_code: "MT"
   code_description: "Mobile"
   sort_order: 15
+  
+- code_name: "telephonelocationtype"
+  the_code: "PAGE"
+  code_description: "Pager"
+  sort_order: 20
   
     ### LOCATION TYPES ###
   
