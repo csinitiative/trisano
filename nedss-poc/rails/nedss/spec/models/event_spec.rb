@@ -240,7 +240,7 @@ describe Event do
         new_hospital_hash = {
           "new_hospital_attributes" => 
             [
-              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16"}
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16", "medical_record_number" => "1234"}
             ]
         }
         @event = Event.new(event_hash.merge(new_hospital_hash))
@@ -251,10 +251,11 @@ describe Event do
         @event.participations.find_by_role_id(codes(:participant_hospitalized_at).id).should_not be_nil
       end
 
-      it "should add hospitalization dates to hospitals_participation table " do
+      it "should add hospitalization dates and medical record number to hospitals_participation table " do
         lambda {@event.save}.should change {HospitalsParticipation.count}.by(1)
         @event.hospitalized_health_facilities.first.hospitals_participation.admission_date.should == Date.parse("2008-07-15")
         @event.hospitalized_health_facilities.first.hospitals_participation.discharge_date.should == Date.parse("2008-07-16")
+        @event.hospitalized_health_facilities.first.hospitals_participation.medical_record_number.should == "1234"
       end
     end
 
@@ -264,7 +265,7 @@ describe Event do
         new_hospital_hash = {
           "new_hospital_attributes" => 
             [
-              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => ""}
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
             ]
         }
         @event = Event.new(event_hash.merge(new_hospital_hash))
@@ -290,7 +291,7 @@ describe Event do
         new_hospital_hash = {
           "new_hospital_attributes" => 
             [
-              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15"}
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15", "medical_record_number" => ""}
             ]
         }
         @event = Event.new(event_hash.merge(new_hospital_hash))
@@ -308,7 +309,7 @@ describe Event do
         new_hospital_hash = {
           "new_hospital_attributes" => 
             [
-              {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"}
+              {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"}
             ]
         }
         @event = Event.new(event_hash.merge(new_hospital_hash))
@@ -327,7 +328,7 @@ describe Event do
         new_hospital_hash = {
           "new_hospital_attributes" =>
           [
-            { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => ""}
+            { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
           ]
         }
         @event = Event.new(event_hash.merge(new_hospital_hash))
@@ -347,7 +348,7 @@ describe Event do
     describe "receiving edited hospitalization data" do
       before(:each) do
         @existing_hospital_hash = {
-          "existing_hospital_attributes" => { "#{participations(:marks_hospitalized_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"} }
+          "existing_hospital_attributes" => { "#{participations(:marks_hospitalized_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"} }
         }
         @event = Event.find(events(:marks_cmr).id)
       end
@@ -357,6 +358,7 @@ describe Event do
         @event.hospitalized_health_facilities.first.secondary_entity.current_place.name.should == "Bear River Valley Hospital"
         @event.hospitalized_health_facilities.first.hospitals_participation.admission_date.should == Date.parse("2008-07-14")
         @event.hospitalized_health_facilities.first.hospitals_participation.discharge_date.should == Date.parse("2008-07-15")
+        @event.hospitalized_health_facilities.first.hospitals_participation.medical_record_number.should == "1234"
       end
     end
 
@@ -401,7 +403,7 @@ describe Event do
     describe "receiving an edited diagnosing facility" do
       before(:each) do
         @existing_diagnostic_hash = {
-          "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15"} }
+          "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}"} }
         }
         @event = Event.find(events(:marks_cmr).id)
       end

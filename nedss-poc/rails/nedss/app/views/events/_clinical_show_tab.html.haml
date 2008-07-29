@@ -87,6 +87,7 @@
           %th Hospitalized health facility
           %th Admission date
           %th Discharge date
+          %th Medical Record Number
 
         - for hospital in @event.hospitalized_health_facilities
           %tr
@@ -94,9 +95,11 @@
             - if hospital.hospitals_participation.nil?
               %td
               %td
+              %td
             - else
               %td= hospital.hospitals_participation.admission_date
               %td= hospital.hospitals_participation.discharge_date
+              %td= hospital.hospitals_participation.medical_record_number
 
 
   %fieldset

@@ -84,7 +84,7 @@ class Participation < ActiveRecord::Base
 
   def validate
     if !hospitals_participation.nil? and secondary_entity.nil?
-      errors.add_to_base("Hospital can not be blank if hospitalization dates are given.")
+      errors.add_to_base("Hospital can not be blank if hospitalization dates or medical record number are given.")
     end
   end
 

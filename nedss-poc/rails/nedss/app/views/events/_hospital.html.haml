@@ -23,5 +23,9 @@
       = hp.label(:discharge_date)
       = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
 
+    %span{:class => "horiz"}
+      = hp.label(:medical_record_number, "Medical Record Number:")
+      = hp.text_field(:medical_record_number, :size => 20)
+
     %span{:class => "horiz", :style => "margin-top: 30px"}
       = link_to_function "Remove" , "$(this).up('.hospital').remove()", {:id => "remove_hospital_result_link"}
