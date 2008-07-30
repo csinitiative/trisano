@@ -20,8 +20,12 @@
         <%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
       </span>
       <span class="horiz">
-        <%= f.label(:event_case_status_id, "UDOH case status") %>
-        <%= f.dropdown_code_field(:event_case_status_id, 'case', {}) %>
+        <%= f.label(:lhd_case_status_id, "LHD case status") %>
+        <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:udoh_case_status_id, "UDOH case status") %>
+        <%= f.dropdown_code_field(:udoh_case_status_id, 'case', {}) %>
       </span>
       <span class="horiz">
         <%= f.label(:outbreak_associated_id, "Outbreak associated") %>

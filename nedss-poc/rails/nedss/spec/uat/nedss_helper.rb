@@ -485,7 +485,8 @@ module NedssHelper
               "event_results_reported_to_clinician_date" => "1/1/1974",
               "model_auto_completer_tf" => NedssHelper.get_unique_name(2), #This is the reporting agency field...
               #Administrative fields
-              "event_event_case_status_id" => "Confirmed",
+              "event_udoh_case_status_id" => "Confirmed",
+              "event_lhd_case_status_id" => "Confirmed",
               "event_outbreak_associated_id" => "Yes",
               #"event_active_jurisdiction_secondary_entity_id" => "Out of State",
               "event_event_status_id" => "Investigation Complete",

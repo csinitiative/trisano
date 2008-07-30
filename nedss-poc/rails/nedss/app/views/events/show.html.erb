@@ -141,6 +141,8 @@
         <tr>
           <td><span class="label">Record number:</span></td>
           <td><%= @event.record_number %></td>
+          <td><span class="label">Event onset date:</span></td>
+          <td><%= @event.event_onset_date %></td>
         </tr>  
         <tr>
           <td><span class="label">MMWR year:</span></td>
@@ -150,10 +152,10 @@
         </tr>
         
         <tr>
-          <td><span class="label">Event onset date:</span></td>
-          <td><%= @event.event_onset_date %></td>
+          <td><span class="label">LHD case status:</span></td>
+          <td><%= l @event.lhd_case_status %></td>
           <td><span class="label">UDOH case status:</span></td>
-          <td><%= l @event.event_case_status %></td>
+          <td><%= l @event.udoh_case_status %></td>
         </tr>
         <tr>
           <td><span class="label">Outbreak associated:</span></td>

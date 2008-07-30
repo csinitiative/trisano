@@ -336,7 +336,7 @@ module EventsHelper
           fields << ((event.disease.nil? || event.disease.disease.nil?) ? nil : event.disease.disease.disease_name.to_s.gsub(/,/,' '))
           fields << l(event.event_type).to_s.gsub(/,/,' ')
           fields << l(event.imported_from).to_s.gsub(/,/,' ')
-          fields << l(event.event_case_status).to_s.gsub(/,/,' ')
+          fields << l(event.udoh_case_status).to_s.gsub(/,/,' ')
           fields << l(event.outbreak_associated).to_s.gsub(/,/,' ')
           fields << event.outbreak_name.to_s.gsub(/,/,' ')
           fields << l(event.event_status).to_s.gsub(/,/,' ')
