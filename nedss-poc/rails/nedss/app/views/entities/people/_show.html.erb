@@ -58,8 +58,10 @@
     </td>
   </tr>
   <tr>
-    <td><span class="label">Email:</span></td>
-    <td colspan='4'><%= telephone.email_address %></td>
+    <% unless telephone.nil? %>
+      <td><span class="label">Email:</span></td>
+      <td colspan='4'><%= telephone.email_address %></td>
+    <% end %>
   </tr>
   <tr>
     <td><span class="label">Birth gender:</span></td>
