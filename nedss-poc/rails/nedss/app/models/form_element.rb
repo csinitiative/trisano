@@ -2,7 +2,8 @@ class FormElement < ActiveRecord::Base
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
   
-  # Generic save_and_add_to_form. Sub-classes with special needs override.
+  # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
+  # post-saving activities in the transaction
   def save_and_add_to_form
     if self.valid?
       transaction do
@@ -10,6 +11,7 @@ class FormElement < ActiveRecord::Base
         self.tree_id = parent_element.tree_id
         self.form_id = parent_element.form_id
         self.save
+        yield if block_given?
         parent_element.add_child(self)
       end
     end

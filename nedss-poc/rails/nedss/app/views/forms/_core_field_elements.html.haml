@@ -1,0 +1,3 @@
+%div{:id => "core_field_form_children"}
+  - for element in @form.core_field_elements_container.children
+    = render_element element

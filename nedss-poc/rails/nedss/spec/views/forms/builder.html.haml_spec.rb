@@ -8,6 +8,7 @@ describe "/forms/builder.html.haml" do
     @base_element = mock_model(FormBaseElement)
     @investigator_view_element_container = mock_model(InvestigatorViewElementContainer)
     @core_view_element_container = mock_model(CoreViewElementContainer)
+    @core_field_element_container = mock_model(CoreFieldElementContainer)
     @view_element = mock_model(ViewElement)
     @section_element = mock_model(SectionElement)
     @question_element = mock_model(QuestionElement)
@@ -19,6 +20,7 @@ describe "/forms/builder.html.haml" do
     @form.stub!(:form_base_element).and_return(@base_element)
     @form.stub!(:investigator_view_elements_container).and_return(@investigator_view_element_container)
     @form.stub!(:core_view_elements_container).and_return(@core_view_element_container)
+    @form.stub!(:core_field_elements_container).and_return(@core_view_element_container)
     
     @core_view_element_container.stub!(:children).and_return([@view_element])
     @investigator_view_element_container.stub!(:children).and_return([])

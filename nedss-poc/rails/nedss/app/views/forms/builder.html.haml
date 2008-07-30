@@ -37,3 +37,13 @@
     %ul{:id => "core-element-list"}
       = render :partial => 'forms/core_elements'
 
+    %b Core Field Elements
+    %br
+    %small{:style => "#float: right"}
+      = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get)
+
+    %div{:id => "core-field-builder-mods"}
+
+    %ul{:id => "core-field-element-list"}
+      = render :partial => 'forms/core_field_elements'
+

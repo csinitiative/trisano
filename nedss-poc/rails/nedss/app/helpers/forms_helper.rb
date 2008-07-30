@@ -7,6 +7,8 @@ module FormsHelper
       render_view(element, include_children)
     when "CoreViewElement"
       render_core_view(element, include_children)
+    when "CoreFieldElement"
+      render_core_field(element, include_children)
     when "SectionElement"
       render_section(element, include_children)
     when "GroupElement"
@@ -49,7 +51,7 @@ module FormsHelper
     result
   end
   
-  def render_core_view(element, include_children)
+  def render_core_view(element, include_children=true)
 
     result = "<li id='core_view_#{element.id}' class='fb-tab' style='clear: both;'><b>#{element.name}</b>"
     
@@ -69,6 +71,26 @@ module FormsHelper
     end
     
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+  end
+  
+  def render_core_field(element, include_children=true)
+
+    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
+    
+    result += " " +add_question_link(element, "core field")
+    
+    result += "</li>"
+    
+    if include_children && element.children?
+      result += "<ul id='core_field_" + element.id.to_s + "_children' class='fb-core-field-children' style='clear: both'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+      result += sortable_element("core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+    end
+    
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
   end
   

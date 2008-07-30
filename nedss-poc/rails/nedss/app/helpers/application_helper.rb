@@ -54,7 +54,7 @@ module ApplicationHelper
     end
   end
 
-  #stupid helper helper to convert a hash into a JSON options list
+  #Converts a hash into a JSON options list
   # (without the encompasing {}'s or any type of recursion
   #Is there a rails API function that does this? 
   def jsonify hsh
@@ -75,9 +75,12 @@ module ApplicationHelper
     if (element.is_a?(InvestigatorViewElementContainer) || element.ancestors[1].is_a?(InvestigatorViewElementContainer))
       replace_element = 'root-element-list'
       replace_partial =  'forms/elements'
-    else
+    elsif (element.is_a?(CoreViewElementContainer) || element.ancestors[1].is_a?(CoreViewElementContainer))
       replace_element = 'core-element-list'
       replace_partial =  'forms/core_elements'
+    else
+      replace_element = 'core-field-element-list'
+      replace_partial =  'forms/core_field_elements'
     end
     return replace_element, replace_partial
   end
