@@ -23,7 +23,7 @@ describe Event do
         new_lab_hash_1 = {
           "new_lab_attributes" => 
             [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"}
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
             ]
         }
         @event = Event.new(event_hash.merge(new_lab_hash_1))
@@ -42,6 +42,8 @@ describe Event do
       it "should add a new lab result" do
         lambda {@event.save}.should change {LabResult.count}.by(1)
         @event.labs.first.lab_results.first.lab_result_text.should == "New Lab One Result"
+        @event.labs.first.lab_results.first.test_type.should == "Urinalysis"
+        @event.labs.first.lab_results.first.interpretation.should == "Healthy"
       end
     end
 
@@ -108,13 +110,13 @@ describe Event do
       end
     end
 
-    describe "receiving a lab result with no lab and no result text" do
+    describe "receiving a lab result with no lab and no lab result information" do
 
       before(:each) do
         new_lab_hash_1 = {
           "new_lab_attributes" => 
             [
-              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>""}
+              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
             ]
         }
         @event = Event.new(event_hash.merge(new_lab_hash_1))

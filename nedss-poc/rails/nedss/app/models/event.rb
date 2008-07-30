@@ -185,7 +185,7 @@ class Event < ActiveRecord::Base
 
   def new_lab_attributes=(lab_attributes)
     lab_attributes.each do |attributes|
-      next if attributes["name"].blank? and attributes["lab_result_text"].blank?
+      next if attributes.values_blank?
 
       lab_entity_id = attributes.delete("lab_entity_id")
       lab_name = attributes.delete("name")

@@ -36,8 +36,14 @@
     - fields_for(prefix_with_array, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
       =# hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
       %span{:class => "horiz"}
+        = lab_result_fields.label(:test_type)
+        = lab_result_fields.text_field(:test_type, :size => 20)
+      %span{:class => "horiz"}
         = lab_result_fields.label(:lab_result_text, "Lab result")
         = lab_result_fields.text_field(:lab_result_text, :size => 20)
+      %span{:class => "horiz"}
+        = lab_result_fields.label(:interpretation)
+        = lab_result_fields.text_field(:interpretation, :size => 20)
       %span{:class => "horiz"}
         = lab_result_fields.label(:specimen_source_id, "Specimen source")
         = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
