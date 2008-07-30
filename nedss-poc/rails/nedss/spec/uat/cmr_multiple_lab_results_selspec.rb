@@ -15,10 +15,14 @@ describe 'Adding multiple lab results to a CMR' do
     sleep(1)
 
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][name]'][0]", "Lab One"
+    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][test_type]'][0]", "Urinalysis"
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][lab_result_text]'][0]", "Positive"
+    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][interpretation]'][0]", "Healthy"
 
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][name]'][1]", "Lab Two"
+    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][test_type]'][1]", "Blood Test"
     @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][lab_result_text]'][1]", "Negative"
+    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][interpretation]'][1]", "Sickly"
 
     save_cmr(@browser).should be_true
 
@@ -27,6 +31,10 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.is_text_present('Positive').should be_true
     @browser.is_text_present('Lab Two').should be_true
     @browser.is_text_present('Negative').should be_true
+    @browser.is_text_present('Urinalysis').should be_true
+    @browser.is_text_present('Blood Test').should be_true
+    @browser.is_text_present('Healthy').should be_true
+    @browser.is_text_present('Sickly').should be_true
   end
 
   it "should allow removing a lab result" do
