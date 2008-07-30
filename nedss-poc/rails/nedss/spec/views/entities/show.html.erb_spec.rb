@@ -45,6 +45,7 @@ describe "/people/show.html.erb" do
     @phone.stub!(:area_code).and_return("212")
     @phone.stub!(:phone_number).and_return("555-1212")
     @phone.stub!(:extension).and_return("9999")
+    @phone.stub!(:email_address).and_return("billg@microsoft.com")
     
     @address_location = mock_model(Location)
     @address_location.stub!(:entities_locations).and_return([@entites_location])

@@ -231,6 +231,7 @@ def mock_person_entity
   phone.stub!(:area_code).and_return("212")
   phone.stub!(:phone_number).and_return("5551212")
   phone.stub!(:extension).and_return("4444")
+  phone.stub!(:email_address).and_return("billg@microsoft.com")
 
   entity = mock_model(Entity, :to_param => '1')
   entity.stub!(:entity_type).and_return('person')

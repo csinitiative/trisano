@@ -22,4 +22,10 @@
     <%= t.label(:extension) %>
     <%= t.core_text_field(:extension, {:size => 6}, event) %>
   </span>
+  <fieldset class="vert">
+    <span style="horiz">
+      <%= t.label(:email_address) %>
+      <%= t.core_text_field(:email_address, {}, event) %>
+    </span>
+  </fieldset>
 <% end %>
