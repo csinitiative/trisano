@@ -8,7 +8,7 @@ describe "lab results helper" do
       "lab_result_specimen_source_id" => "Cervical Swab",
       "lab_result_collection_date" => "5/12/2008",
       "lab_result_lab_test_date" => "5/15/2008",
-      "lab_result_tested_at_uphl_yn_id" => "Yes"
+      "lab_result_specimen_sent_to_uphl_yn_id" => "Yes"
     }
     @browser.open("/nedss/cmrs")
     @browser.click("link=Edit")

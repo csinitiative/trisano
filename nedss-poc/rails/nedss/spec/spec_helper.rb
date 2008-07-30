@@ -97,7 +97,7 @@ def mock_event
   died = mock_model(ExternalCode)
   pregnant = mock_model(ExternalCode)
   specimen_source = mock_model(ExternalCode)
-  tested_at_uphl_yn = mock_model(ExternalCode)
+  specimen_sent_to_uphl_yn = mock_model(ExternalCode)
   
   disease_event = mock_model(DiseaseEvent)
   disease = mock_model(Disease)
@@ -141,7 +141,7 @@ def mock_event
   disease_event.stub!(:pregnancy_due_date).and_return("")
     
   specimen_source.stub!(:code_description).and_return('Tissue')
-  tested_at_uphl_yn.stub!(:code_description).and_return('Yes')
+  specimen_sent_to_uphl_yn.stub!(:code_description).and_return('Yes')
     
   lab_result.stub!(:specimen_source_id).and_return(1501)
   lab_result.stub!(:specimen_source).and_return(specimen_source)
@@ -149,8 +149,8 @@ def mock_event
   lab_result.stub!(:collection_date).and_return("2008-02-14")
   lab_result.stub!(:lab_test_date).and_return("2008-02-15")
     
-  lab_result.stub!(:tested_at_uphl_yn_id).and_return(1401)
-  lab_result.stub!(:tested_at_uphl_yn).and_return(tested_at_uphl_yn)
+  lab_result.stub!(:specimen_sent_to_uphl_yn_id).and_return(1401)
+  lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(specimen_sent_to_uphl_yn)
   
   event.stub!(:labs).and_return([lab])
   event.stub!(:diagnosing_health_facilities).and_return([diagnostic])

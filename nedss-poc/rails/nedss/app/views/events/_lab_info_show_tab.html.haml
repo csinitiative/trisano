@@ -13,7 +13,7 @@
         %th Specimen source
         %th Collection date
         %th Lab test date
-        %th Tested at UPHL lab
+        %th Specimen sent to UPHL?
 
       - for lab in @event.labs
         - for lab_result in lab.lab_results
@@ -25,4 +25,4 @@
             %td= l lab_result.specimen_source
             %td= lab_result.collection_date
             %td= lab_result.lab_test_date
-            %td= l lab_result.tested_at_uphl_yn
+            %td= l lab_result.specimen_sent_to_uphl_yn

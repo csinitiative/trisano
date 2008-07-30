@@ -80,7 +80,7 @@ describe EventsHelper do
     @died = mock_model(ExternalCode)
     @pregnant = mock_model(ExternalCode)
     @specimen_source = mock_model(ExternalCode)
-    @tested_at_uphl_yn = mock_model(ExternalCode)
+    @specimen_sent_to_uphl_yn = mock_model(ExternalCode)
     @pregant = mock_model(ExternalCode)
 
     @disease_event = mock_model(DiseaseEvent)
@@ -105,13 +105,13 @@ describe EventsHelper do
     @disease_event.stub!(:date_diagnosed).and_return("2008-02-15")
     @disease_event.stub!(:disease_onset_date).and_return("2008-02-13")
     @specimen_source.stub!(:code_description).and_return('Tissue')
-    @tested_at_uphl_yn.stub!(:code_description).and_return('Yes')
+    @specimen_sent_to_uphl_yn.stub!(:code_description).and_return('Yes')
 
     @lab_result.stub!(:specimen_source).and_return(@specimen_source)
     @lab_result.stub!(:lab_result_text).and_return("Positive")
     @lab_result.stub!(:collection_date).and_return("2008-02-14")
     @lab_result.stub!(:lab_test_date).and_return("2008-02-15")
-    @lab_result.stub!(:tested_at_uphl_yn).and_return(@tested_at_uphl_yn)
+    @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(@specimen_sent_to_uphl_yn)
 
 #    @participations_risk_factor.stub!(:food_handler_id).and_return(1402)
 #    @participations_risk_factor.stub!(:group_living_id).and_return(1402)
@@ -276,7 +276,7 @@ describe EventsHelper do
        lab_result_text
        collection_date
        lab_test_date
-       tested_at_uphl_yn
+       specimen_sent_to_uphl_yn
        clinician_name
        clinician_phone
        clinician_street

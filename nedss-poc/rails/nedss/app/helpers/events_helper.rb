@@ -296,7 +296,7 @@ module EventsHelper
        lab_result_text
        collection_date
        lab_test_date
-       tested_at_uphl_yn
+       specimen_sent_to_uphl_yn
        clinician_name
        clinician_phone
        clinician_street
@@ -356,7 +356,7 @@ module EventsHelper
           fields << lab_result.lab_result_text.to_s.gsub(/,/,' ')
           fields << lab_result.collection_date.to_s.gsub(/,/,' ')
           fields << lab_result.lab_test_date.to_s.gsub(/,/,' ')
-          fields << l(lab_result.tested_at_uphl_yn).to_s.gsub(/,/,' ')
+          fields << l(lab_result.specimen_sent_to_uphl_yn).to_s.gsub(/,/,' ')
           fields << clinician.full_name
           fields << (clinician.telephone ? clinician.telephone.simple_format : nil)
           fill_clinician_address(fields, clinician)

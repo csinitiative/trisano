@@ -442,7 +442,7 @@ module NedssHelper
               #lab result fields
               "event[new_lab_attributes][][name]" => NedssHelper.get_unique_name(2),
               "event_new_lab_attributes__specimen_source_id" => "Blood",
-              "event_new_lab_attributes__tested_at_uphl_yn_id" => "Yes",
+              "event_new_lab_attributes__specimen_sent_to_uphl_yn_id" => "Yes",
               "event_new_lab_attributes__lab_result_text" => NedssHelper.get_unique_name(1),
               "event_new_lab_attributes__collection_date" => "1/1/1974",
               "event_new_lab_attributes__lab_test_date" => "1/1/1974",

@@ -54,8 +54,8 @@
         = lab_result_fields.label(:lab_test_date)
         = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
       %span{:class => "horiz"}
-        = lab_result_fields.label(:tested_at_uphl_yn_id, "Tested at UPHL lab")
-        = lab_result_fields.dropdown_code_field(:tested_at_uphl_yn_id, "yesno", {})
+        = lab_result_fields.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
+        = lab_result_fields.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
 
       %span{:class => "horiz", :style => "margin-top: 30px"}
         = link_to_function "Remove" , "$(this).up('.lab').remove()", {:id => "remove_lab_result_link"}

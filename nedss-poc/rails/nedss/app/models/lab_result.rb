@@ -1,6 +1,6 @@
 class LabResult < ActiveRecord::Base
   belongs_to :specimen_source, :class_name => 'ExternalCode'
-  belongs_to :tested_at_uphl_yn, :class_name => 'ExternalCode'
+  belongs_to :specimen_sent_to_uphl_yn, :class_name => 'ExternalCode'
 
   belongs_to :participation
 
