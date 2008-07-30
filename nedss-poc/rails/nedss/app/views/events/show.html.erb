@@ -92,6 +92,10 @@
           <td><span class="label">Risk factor notes:</span></td>
           <td><%= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
         </tr>
+        <tr>
+          <td><span class="label"> Imported from:</span></td>
+          <td><%= l @event.imported_from %></td>
+        </tr>
       </table>
     </fieldset>
   </div>

@@ -51,16 +51,6 @@
           Pregnancy due date:
       %td
         = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-    %tr
-      %td
-        %span{:class => 'label'}
-          Imported from:
-      %td
-        = l @event.imported_from
-      %td
-        &nbsp;
-      %td
-        &nbsp;
 
   %fieldset
     %legend

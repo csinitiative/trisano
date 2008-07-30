@@ -74,15 +74,8 @@
             </span>
           <% end %>
         <% end %>
-      <% end %>
                   
-      <span class="horiz">
-        <%= f.label(:imported_from_id) %>
-        <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
-      </span>
-      
-      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |ap| %>
-        <% ap.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
+        <% patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
           <span class="horiz">
             <%= rf.label(:pregnant_id) %>
             <%= rf.dropdown_code_field(:pregnant_id, 'yesno', {}) %>
