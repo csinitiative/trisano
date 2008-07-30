@@ -19,4 +19,8 @@ acts_as_auditable
    code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
    code.id unless code.nil?
   end
+
+  def event_under_investigation?
+    'eventstatus'.eql?(code_name) && ['UI', 'IC', 'RO-MGR'].include?(the_code)
+  end
 end

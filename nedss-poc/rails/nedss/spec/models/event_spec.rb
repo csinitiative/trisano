@@ -429,7 +429,7 @@ describe Event do
 
     end
 
-  end
+  end  
 
   describe "Routing an event" do
 
@@ -463,4 +463,32 @@ describe Event do
 
   end
 
+  describe "under investigation" do
+    fixtures :external_codes
+
+    it "should not be under investigation in the default state" do
+      event = Event.new
+      event.should_not be_under_investigation
+    end
+
+    it "should not be under investigation if it is new" do
+      event = Event.new(:event_status => external_codes(:event_status_new))
+      event.should_not be_under_investigation
+    end
+
+    it "should be under investigation if set to under investigation" do
+      event = Event.new :event_status => external_codes(:event_status_under_investigation)
+      event.should be_under_investigation
+    end
+
+    it "should be under investigation if reopened by manager" do
+      event = Event.new :event_status => external_codes(:event_status_reopened_manager)
+      event.should be_under_investigation
+    end
+
+    it "should be under investigation if investigation is complete" do
+      event = Event.new :event_status => external_codes(:event_status_investigation_complete)
+      event.should be_under_investigation
+    end
+  end
 end

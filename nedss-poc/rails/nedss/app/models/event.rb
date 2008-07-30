@@ -555,8 +555,7 @@ class Event < ActiveRecord::Base
   end
 
   def under_investigation?
-    investigation_codes = ExternalCode.find_by_sql("SELECT id from external_codes WHERE code_name = 'eventstatus' and the_code IN ('UI', 'IC', 'RO-MGR')").collect { |code| code.id }
-    true if investigation_codes.include?(event_status_id)
+    event_status.event_under_investigation? unless event_status.nil?
   end
 
   def get_investigation_forms
