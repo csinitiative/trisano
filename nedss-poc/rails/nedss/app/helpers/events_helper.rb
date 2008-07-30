@@ -272,7 +272,7 @@ module EventsHelper
   def render_core_data_headers
     %w(record_number
        event_name
-       event_onset_date
+       record_created_date
        disease
        event_type
        imported_from

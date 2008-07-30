@@ -4,7 +4,6 @@ describe Event do
   fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
   event_hash = {
-    "event_onset_date" => "June 28, 2008",
     "active_patient" => {
       "active_primary_entity" => {
         "entity_type"=>"person", 
@@ -493,4 +492,13 @@ describe Event do
       event.should be_under_investigation
     end
   end
+
+  describe "Saving an event" do
+    it "should generate an event onset date set to today" do
+      event = Event.new(event_hash)
+      event.save.should be_true
+      event.event_onset_date.should == Date.today
+    end
+  end
+    
 end

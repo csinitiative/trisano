@@ -35,12 +35,12 @@ class Event < ActiveRecord::Base
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
-  validates_date :event_onset_date
+   validates_date :event_onset_date
   validates_associated :labs
   validates_associated :hospitalized_health_facilities
   validates_associated :diagnosing_health_facilities
 
-  before_validation_on_create :save_associations
+  before_validation_on_create :save_associations, :set_event_onset_date
   
   after_update :save_multiples
   before_save :generate_mmwr
@@ -634,6 +634,11 @@ class Event < ActiveRecord::Base
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
   end
+
+  def set_event_onset_date
+    self.event_onset_date = Date.today
+  end
+
 
   # DEBT: Replace these one by one as we switch to the multi-model process used by lab results
   def save_associations

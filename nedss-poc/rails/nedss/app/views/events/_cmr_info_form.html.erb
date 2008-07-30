@@ -12,13 +12,12 @@
       <span class="label">MMWR year:</span> <%= @event.MMWR_year %>
       <span class="label">MMWR week:</span> <%= @event.MMWR_week %>
     <% end %>
+    <br />
+    <span class="label">Date record created:</span>
+    <%= @event.event_onset_date %>
     <p/>
     <fieldset class="form">
       <legend>Case / Outbreak</legend>
-      <span class="horiz">
-        <%= f.label(:event_onset_date) %>
-        <%= f.calendar_date_select(:event_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
-      </span>
       <span class="horiz">
         <%= f.label(:lhd_case_status_id, "LHD case status") %>
         <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>

@@ -252,7 +252,7 @@ describe EventsHelper do
   def expected_headers_array
     %w(record_number
        event_name
-       event_onset_date
+       record_created_date
        disease
        event_type
        imported_from
