@@ -153,11 +153,149 @@ describe EventsHelper do
   end
 
   def expected_record
-    %Q(2008537081,Test,2008-02-19,Bubonic Plague,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,2008-02-13,2008-02-15,Yes,No,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,Joe Clinic,(555)555-5555,777 Some Address,21,Some City,77777,Some County,Utah,Some District,2008,7,Newton Falls,Summit,55555,11,Male,Not latino,White,English\n)
+    ['2008537081',
+     'Test,2008-02-19',
+     'Bubonic Plague',
+     'ONS',
+     'Utah',
+     'Confirmed',
+     'Yes',
+     'Test Outbreak',
+     'Open',
+     '2008-02-05',
+     '2008-02-08',
+     '2008-02-11',
+     '2008-02-07',
+     '2008-02-08',
+     '2008-02-13',
+     '2008-02-15',
+     'Yes',
+     'No',
+     'Yes',
+     '2008-10-12',
+     'Some Lab',
+     'Tissue',
+     'Positive',
+     '2008-02-14',
+     '2008-02-15',
+     'Yes',
+     'Joe Clinic',
+     '(555)555-5555',
+     '777 Some Address',
+     '21',
+     'Some City',
+     '77777',
+     'Some County',
+     'Utah',
+     'Some District',
+     '2008',
+     '7',
+     'Newton Falls',
+     'Summit',
+     '55555',
+     '11',
+     'Male',
+     'Not latino',
+     'White',
+     'English'].join(',') + "\n"
   end
   
   def expected_record_no_disease
-    %Q(2008537081,Test,2008-02-19,,ONS,Utah,Confirmed,Yes,Test Outbreak,Open,2008-02-05,2008-02-08,2008-02-11,2008-02-07,2008-02-08,,,,,Yes,2008-10-12,Some Lab,Tissue,Positive,2008-02-14,2008-02-15,Yes,Joe Clinic,(555)555-5555,777 Some Address,21,Some City,77777,Some County,Utah,Some District,2008,7,Newton Falls,Summit,55555,11,Male,Not latino,White,English\n)
+    ['2008537081',
+     'Test',
+     '2008-02-19',
+     nil,
+     'ONS',
+     'Utah',
+     'Confirmed',
+     'Yes',
+     'Test Outbreak',
+     'Open',
+     '2008-02-05',
+     '2008-02-08',
+     '2008-02-11',
+     '2008-02-07',
+     '2008-02-08',
+     nil,
+     nil,
+     nil,
+     nil,
+     'Yes',
+     '2008-10-12',
+     'Some Lab',
+     'Tissue',
+     'Positive',
+     '2008-02-14',
+     '2008-02-15',
+     'Yes',
+     'Joe Clinic',
+     '(555)555-5555',
+     '777 Some Address',
+     '21',
+     'Some City',
+     '77777',
+     'Some County',
+     'Utah',
+     'Some District',
+     '2008',
+     '7',
+     'Newton Falls',
+     'Summit',
+     '55555',
+     '11',
+     'Male',
+     'Not latino',
+     'White',
+     'English'].join(',') + "\n"
+  end
+
+  def expected_headers_array
+    %w(record_number
+       event_name
+       event_onset_date
+       disease
+       event_type
+       imported_from
+       UDOH_case_status
+       outbreak_associated
+       outbreak_name
+       event_status
+       investigation_started_date
+       investigation_completed_LHD_date
+       review_completed_UDOH_date
+       first_reported_PH_date
+       results_reported_to_clinician_date
+       disease_onset_date
+       date_diagnosed
+       hospitalized
+       died
+       pregnant
+       pregnancy_due_date
+       laboratory_name
+       specimen_source
+       lab_result_text
+       collection_date
+       lab_test_date
+       tested_at_uphl_yn
+       clinician_name
+       clinician_phone
+       clinician_street
+       clinician_unit
+       clinician_city
+       clinician_postal_code
+       clinician_county
+       clinician_state
+       clinician_district
+       MMWR_year
+       MMWR_week
+       contact_city
+       contact_county
+       contact_zip
+       contact_age
+       contact_birth_gender
+       contact_ethnicity
+       contact_race
+       contact_primary_language)
   end
 
   it "should render csv data for 1 event" do
@@ -171,9 +309,8 @@ describe EventsHelper do
   end
 
   it "should render a header column" do
-    expected = %Q(record_number,event_name,event_onset_date,disease,event_type,imported_from,UDOH_case_status,outbreak_associated,outbreak_name,event_status,investigation_started_date,investigation_completed_LHD_date,review_completed_UDOH_date,first_reported_PH_date,results_reported_to_clinician_date,disease_onset_date,date_diagnosed,hospitalized,died,pregnant,pregnancy_due_date,laboratory_name,specimen_source,lab_result_text,collection_date,lab_test_date,tested_at_uphl_yn,clinician_name,clinician_phone,clinician_street,clinician_unit,clinician_city,clinician_postal_code,clinician_county,clinician_state,clinician_district,MMWR_year,MMWR_week,contact_city,contact_county,contact_zip,contact_age,contact_birth_gender,contact_ethnicity,contact_race,contact_primary_language).split(',')
     result = render_core_data_headers.split(',')
-    result.should == expected
+    result.should == expected_headers_array
   end
 
   it "should replace commas with spaces to avoid creating fake columns" do
