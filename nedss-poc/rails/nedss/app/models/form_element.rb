@@ -120,4 +120,13 @@ class FormElement < ActiveRecord::Base
     }.compact
   end
   
+  def all_cached_field_configs_by_core_path(core_path)
+    full_set_cache.collect { |node|
+      if ((node.core_path == core_path) && (node.type == "CoreFieldElement") && (node.lft > self.lft) && (node.rgt < self.rgt))
+        node
+      end
+    }.compact
+  end
+  
+  
 end

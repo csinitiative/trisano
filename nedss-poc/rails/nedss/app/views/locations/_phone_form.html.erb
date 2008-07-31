@@ -10,22 +10,22 @@
 <% end %>
 
 <% f.fields_for(:telephone, entity_data.telephone, :builder => ExtendedFormBuilder) do |t| %>
-  <span class="horiz">
+  <% core_element :area_code, t, :horiz do %>
     <%= t.label(:area_code) %>
     <%= t.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, event) %>
-  </span>
-  <span class="horiz">
+  <% end %>
+  <% core_element :phone_number, t, :horiz do %>
     <%= t.label(:phone_number) %>
     <%= t.core_text_field(:phone_number, {:size => 8}, event) %>
-  </span>
-  <span class="horiz">
+  <% end %>
+  <% core_element :extension, t, :horiz do %>
     <%= t.label(:extension) %>
     <%= t.core_text_field(:extension, {:size => 6}, event) %>
-  </span>
+  <% end %>
   <fieldset class="vert">
-    <span style="horiz">
+    <% core_element :email_address, t, :horiz do %>
       <%= t.label(:email_address) %>
       <%= t.core_text_field(:email_address, {}, event) %>
-    </span>
+    <% end %>
   </fieldset>
 <% end %>

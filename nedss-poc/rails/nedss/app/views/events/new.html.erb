@@ -32,6 +32,7 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   </ul>
 
 <% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder) do |event_form| %>
+  <%  @event_form = event_form %>
   <div class="yui-content">
     <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
       <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>

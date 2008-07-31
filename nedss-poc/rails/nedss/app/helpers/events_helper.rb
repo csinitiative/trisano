@@ -2,6 +2,21 @@ require 'csv'
 require 'ostruct'
 
 module EventsHelper
+  
+  def core_element(attribute, form_builder, css_class, &block)
+    concat("<span class='#{css_class}'>", block.binding)
+    yield
+    concat("</span>", block.binding)
+    unless (@event.nil? || @event.form_references.nil?)        
+      @event.form_references.each do |form_reference|
+        configs = form_reference.form.form_base_element.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
+        configs.each do |config|
+          concat(render_investigator_view(config, @event_form), block.binding)
+        end
+      end
+    end
+  end
+  
   def render_core_data_element(element)
     question = element.question
     field_name = question.core_data_attr

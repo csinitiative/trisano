@@ -183,6 +183,7 @@ def mock_event
   event.stub!(:MMWR_year).and_return("2008")
   event.stub!(:MMWR_week).and_return("7")
   event.stub!(:answers).and_return([answer])
+  event.stub!(:form_references).and_return([])
   event
 end
 

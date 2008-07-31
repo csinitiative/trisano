@@ -21,7 +21,6 @@ describe FormElement do
     
     @form_base_element.children_count_by_type("ViewElement").should == 2
     @form_base_element.children_count_by_type("SectionElement").should == 1
-    
   end
     
   it "should return children by type" do
@@ -128,10 +127,12 @@ describe "cached form elements" do
     @view_element = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view")
     @view_element_2 = ViewElement.create(:tree_id => 1, :form_id => 1, :name => "view 2")
     @section_element = SectionElement.create(:tree_id => 1, :form_id => 1, :name => "section")
+    @core_field_config = CoreFieldElement.create(:tree_id => 1, :form_id => 1, :core_path => "event[something]", :name => "name")
     
     @form_base_element.add_child(@view_element)
     @form_base_element.add_child(@view_element_2)
     @form_base_element.add_child(@section_element)
+    @form_base_element.add_child(@core_field_config)
     
     @question_element_1 = QuestionElement.create(:tree_id => 1, :form_id => 1)
     @question_element_2 = QuestionElement.create(:tree_id => 1, :form_id => 1)
@@ -150,13 +151,15 @@ describe "cached form elements" do
   end
   
   it "should count children" do
-    @form_base_element.cached_children_count.should == 3
+    @form_base_element.reload
+    @form_base_element.cached_children_count.should == 4
   end
   
   it "should return children" do
+    @form_base_element.reload
     cached_children = @form_base_element.cached_children
     cached_children.is_a?(Array).should be_true
-    cached_children.size.should == 3
+    cached_children.size.should == 4
     cached_children[0].is_a?(ViewElement).should be_true
   end
   
@@ -164,15 +167,23 @@ describe "cached form elements" do
     @form_base_element.reload
     cached_children = @form_base_element.all_cached_children
     cached_children.is_a?(Array).should be_true
-    cached_children.size.should == 8
+    cached_children.size.should == 9
   end
   
-  it "should return all children by filter" do
+  it "should return all core follow ups by core path" do
     @form_base_element.reload
     cached_children = @form_base_element.all_cached_follow_ups_by_core_path("event[something]")
     cached_children.is_a?(Array).should be_true
     cached_children.size.should == 1
     cached_children[0].is_a?(FollowUpElement).should be_true
+  end
+  
+  it "should return all core field configs by core path" do
+    @form_base_element.reload
+    cached_children = @form_base_element.all_cached_field_configs_by_core_path("event[something]")
+    cached_children.is_a?(Array).should be_true
+    cached_children.size.should == 1
+    cached_children[0].is_a?(CoreFieldElement).should be_true
   end
   
   it "should count children by type" do

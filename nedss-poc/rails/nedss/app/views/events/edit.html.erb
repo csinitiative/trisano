@@ -41,6 +41,7 @@
   </ul>
   
   <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+    <%  @event_form = event_form %>
     <div class="yui-content">
       <div id="demographic_tab">
         <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>

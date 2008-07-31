@@ -1,5 +1,5 @@
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
-
+  
   def core_text_field(attribute, options = {}, event =nil)
     change_event = core_follow_up_event(attribute, event)
     options[:onchange] = change_event unless change_event.blank?
@@ -127,7 +127,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options) + "&nbsp;<small>10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999</small>"
     end
 
-    result = ""
+    result = "<span class='vert'>"
     
     if question.data_type == :check_box || question.data_type == :radio_button
       result += @template.content_tag(:span, question.question_text, :class => "label") + " " + input_element
@@ -136,10 +136,13 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       
     else
       result += @template.content_tag(:label) do
-        question.question_text + " " + input_element
+        question.question_text 
       end
+      result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
     end
+    
+    result += "</span>"
 
     result
   end

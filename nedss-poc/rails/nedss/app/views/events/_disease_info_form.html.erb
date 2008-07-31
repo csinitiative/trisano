@@ -68,10 +68,10 @@
       <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
         <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
           <% current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person| %>
-            <span class="horiz">
+            <% core_element :date_of_death, person, :horiz do %>
               <%= person.label(:date_of_death) %>
               <%= person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event) %>
-            </span>
+            <% end %>
           <% end %>
         <% end %>
                   

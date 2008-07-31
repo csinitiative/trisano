@@ -12,18 +12,22 @@
     <fieldset class="form">
       <legend>Name</legend>
       <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
-        <span class="horiz">
+      
+        <% core_element :last_name, p, :horiz do %>
           <%= p.label(:last_name) %>
           <%= p.core_text_field(:last_name, {:size => 25}, event) %>
-        </span>
-        <span class="horiz">
+        <% end %>
+      
+        <% core_element :first_name, p, :horiz do %>
           <%= p.label(:first_name) %>
           <%= p.core_text_field(:first_name, {:size => 25}, event) %>
-        </span>
-        <span class="horiz">
+        <% end %>
+      
+        <% core_element :middle_name, p, :horiz do %>
           <%= p.label(:middle_name) %>
           <%= p.core_text_field(:middle_name, {:size => 25}, event) %>
-        </span>
+        <% end %>
+      
       <% end %>
     </fieldset>
     
@@ -49,14 +53,17 @@
     <fieldset class="form">
       <legend>Age</legend>
       <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
-        <span class="horiz">
+      
+        <% core_element :birth_date, p, :horiz do %>
           <%= p.label(:birth_date, "Date of Birth") %>
           <%= p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event) %>
-        </span>
-        <span class="horiz">
+        <% end %>
+      
+        <% core_element :approximate_age_no_birthday, p, :horiz do %>
           <%= p.label(:approximate_age_no_birthday, "Age") %>
           <%= p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event) %>
-        </span>
+        <% end %>
+      
       <% end %>
     </fieldset>
     
@@ -68,37 +75,37 @@
           :primary_yn_id => ExternalCode.no_id,
           :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
         }
-       end %>
+      end %>
       <% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
         <%= el.hidden_field(:entity_id) %>
         <%= el.hidden_field(:primary_yn_id) %>
         <%= el.hidden_field(:location_type_id) %>
       
-          <%= render :partial => 'locations/phone_form', :locals => { :f => f, :entity_data => entity_data, :event => event  } %>
-        <% end %>
-      </fieldset>
+        <%= render :partial => 'locations/phone_form', :locals => { :f => f, :entity_data => entity_data, :event => event  } %>
+      <% end %>
+    </fieldset>
     
-      <fieldset class="form">
-        <legend>Demographics</legend>
-        <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
-          <span class="horiz">
-            <%= p.label(:birth_gender) %>
-            <%= p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event) %>
-          </span>
-          <span class="horiz">
-            <%= p.label(:ethnicity) %>
-            <%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event) %>
-          </span>
-          <span class="horiz">
-            <%= f.label(:race) %>
-            <%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %>
-          </span>
-          <span class="horiz">
-            <%= p.label(:primary_language) %>
-            <%= p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event) %>
-          </span>
+    <fieldset class="form">
+      <legend>Demographics</legend>
+      <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+        <% core_element :birth_gender_id, p, :horiz do %>
+          <%= p.label(:birth_gender) %>
+          <%= p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event) %>
         <% end %>
-      </fieldset>
+        <% core_element :ethnicity_id, p, :horiz do %>
+          <%= p.label(:ethnicity) %>
+          <%= p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event) %>
+        <% end %>
+        <span class="horiz">
+          <%= f.label(:race) %>
+          <%= f.multi_select_code_field(:race_ids, 'race', {}, {}) %>
+        </span>
+        <% core_element :primary_language_id, p, :horiz do %>
+          <%= p.label(:primary_language) %>
+          <%= p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event) %>
+        <% end %>
+      <% end %>
+    </fieldset>
     
-    </div>
-  </fieldset>
+  </div>
+</fieldset>
