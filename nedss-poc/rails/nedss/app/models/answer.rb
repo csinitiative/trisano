@@ -50,5 +50,8 @@ class Answer < ActiveRecord::Base
       end
     end
   end
-  
+
+  def short_name
+    question.short_name unless question.nil? || question.short_name.blank?
+  end
 end

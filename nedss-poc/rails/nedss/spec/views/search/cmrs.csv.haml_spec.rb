@@ -9,8 +9,7 @@ describe "search/cmrs.csv.haml" do
 
   it "should render a csv template of events" do
     template.should_receive(:find_event).twice.and_return mock(Event)
-    template.should_receive(:render_core_data_headers).exactly(1).times
-    template.should_receive(:render_event_csv).exactly(2).times
+    template.should_receive(:render_events_csv).exactly(1).times.and_yield(nil).and_yield(nil)
     render "search/cmrs.csv.haml"
   end
 

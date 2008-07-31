@@ -1,3 +1,1 @@
-= render_core_data_headers
-- for record in @cmrs
-  = render_event_csv find_event(record)
+= render_events_csv(@cmrs) {|cmr| find_event(cmr)}

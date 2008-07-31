@@ -8,8 +8,7 @@ describe "/events/show.csv.haml" do
   end
 
   it "should render a csv event template" do
-    template.should_receive(:render_core_data_headers).exactly(1).times
-    template.should_receive(:render_event_csv).exactly(1).times
+    template.should_receive(:render_events_csv).exactly(1).times
     render "events/show.csv.haml"
   end
 

@@ -5,6 +5,16 @@ describe EventsHelper do
 
   include ApplicationHelper
 
+  def mock_answers    
+    answers = []
+    answers << Answer.new(:text_answer => 'Numero uno')
+    answers << Answer.new(:text_answer => 'No short name')
+    answers << Answer.new(:text_answer => 'No (answer three)')    
+    answers[0].stub!(:short_name).and_return('short_name_1')
+    answers[2].stub!(:short_name).and_return('short_name_3')
+    answers
+  end
+
   def mock_lab_place
     mock = mock(Place)
     mock.should_receive(:name).at_least(1).and_return('Some Lab')
@@ -145,6 +155,8 @@ describe EventsHelper do
     @event_1.stub!(:active_patient).and_return(@active_patient)
     @event_1.stub!(:clinicians).and_return([mock_clinician])
     @event_1.stub!(:contacts).and_return([mock_contact])
+    @event_1.stub!(:answers).and_return(mock_answers)
+    @event_1.stub!(:respond_to?).with(:each).and_return(false)
   end
 
   def mock_event_no_disease
@@ -197,7 +209,9 @@ describe EventsHelper do
      'Male',
      'Not latino',
      'White',
-     'English'].join(',') + "\n"
+     'English',
+     'Numero uno',
+     'No (answer three)'].join(',') + "\n"
   end
   
   def expected_record_no_disease
@@ -246,7 +260,9 @@ describe EventsHelper do
      'Male',
      'Not latino',
      'White',
-     'English'].join(',') + "\n"
+     'English',
+     'Numero uno',
+     'No (answer three)'].join(',') + "\n"
   end
 
   def expected_headers_array
@@ -295,28 +311,36 @@ describe EventsHelper do
        contact_birth_gender
        contact_ethnicity
        contact_race
-       contact_primary_language)
+       contact_primary_language
+       short_name_1
+       short_name_3)
   end
 
   it "should render csv data for 1 event" do
     mock_event
-    render_event_csv(@event_1).should include(expected_record)
+    render_events_csv(@event_1).should include(expected_record)
   end
 
   it "should not exclude disease fields if disease is nil" do
     mock_event_no_disease
-    render_event_csv(@event_1).should include(expected_record_no_disease)
+    render_events_csv(@event_1).should include(expected_record_no_disease)
   end
 
-  it "should render a header column" do
-    result = render_core_data_headers.split(',')
-    result.should == expected_headers_array
+  it "should render a header row" do
+    mock_event
+    exporter = Exporters::Csv::Event.new
+    exporter.export_event(@event_1)
+    exporter.headers.should == expected_headers_array
   end
 
   it "should replace commas with spaces to avoid creating fake columns" do
     mock_event
-    render_event_csv(@event_1).should_not include('Bubonic,Plague')
+    render_events_csv(@event_1).should_not include('Bubonic,Plague')
   end
 
-
+  it "should use the Event Csv export class" do
+    mock_event
+    Exporters::Csv::Event.export(@event_1).should include(expected_record)
+  end
+  
 end

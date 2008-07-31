@@ -73,6 +73,7 @@ Rails::Initializer.run do |config|
     require "mmwr/mmwr.rb"
     require "blankable.rb"
     require "extend_better_nested_set.rb"
+    require 'export/csv'
   end
 
 end
