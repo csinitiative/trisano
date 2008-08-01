@@ -65,9 +65,6 @@ class FormElementsController <  AdminController
     begin
       @form_element = FormElement.find(params[:id])
       @form_element.destroy_with_dependencies
-      # Debt: This is a generic method but only question deletion goes through it, so the error message here is
-      # specific to question deletion.
-      flash[:notice] = 'The question was successfully deleted.'
       @form = Form.find(@form_element.form_id)
     rescue Exception => ex
       logger.debug ex

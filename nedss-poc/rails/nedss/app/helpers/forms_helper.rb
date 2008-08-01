@@ -33,6 +33,7 @@ module FormsHelper
     result += add_question_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_follow_up_link(element, "tab", true)
+    result += "&nbsp;|&nbsp;" + delete_view_link(element)
     result += "</li>"
 
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
@@ -58,6 +59,7 @@ module FormsHelper
     result += "&nbsp;" + add_section_link(element, "tab")
     result += "&nbsp;|&nbsp;"
     result += add_question_link(element, "tab")
+    result += "&nbsp;|&nbsp;" + delete_view_link(element)
     
     result += "</li>"
     
@@ -98,6 +100,7 @@ module FormsHelper
     
     result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
+    result += "&nbsp;|&nbsp;" + delete_section_link(element)
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
@@ -146,11 +149,12 @@ module FormsHelper
     result += "&nbsp;<i>(Inactive)</i>" unless element.is_active
     result += "</span>"
 
-    result += "&nbsp;" + edit_question_link(element) + "&nbsp;|&nbsp;" + delete_question_link(element)
+    result += "&nbsp;" + edit_question_link(element) 
     # Debt: Disabling follow ups on checkboxes for now
     result += "&nbsp;|&nbsp;" + add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box") 
     result += "&nbsp;|&nbsp;" + add_to_library_link(element) if (include_children)  
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+    result += "&nbsp;|&nbsp;" + delete_question_link(element)
     
     result += "</li>"
 
@@ -206,9 +210,13 @@ module FormsHelper
     result += element.name
     
     if include_children
-      result += "&nbsp;" + edit_value_set_link(element)
-      result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
+      result += "&nbsp;" + edit_value_set_link(element)  
     end
+    
+    result += "&nbsp;|&nbsp;" + delete_value_set_link(element)
+    
+    result += "<div id='value-set-mods-" + element.id.to_s + "'></div>" if include_children
+
     
     if include_children && element.children?
       result += "<ul id='value_set_" + element.id.to_s + "_children'>"
@@ -230,11 +238,22 @@ module FormsHelper
   end
   
   private
+  
+  def delete_view_link(element)
+    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-view' id='delete-view-" + element.id.to_s + "'>" + 
+      image_tag("delete.png", :border => 0, :alt => "Delete Tab") + "</a>"
+  end
 
   def add_section_link(element, trailing_text)
     "<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/new?form_element_id=" + 
       element.id.to_s + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-section-" + 
       element.id.to_s + "' class='add-section' name='add-section'>Add section to #{trailing_text}</a></small>"
+  end
+  
+  def delete_section_link(element)
+    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-section' id='delete-section-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Section") + "</a>"
   end
 
   def add_question_link(element, trailing_text)
@@ -250,8 +269,8 @@ module FormsHelper
   end
   
   def delete_question_link(element)
-    "<small><a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>Delete</a></small>"
+    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a>"
   end
   
   def add_follow_up_link(element, trailing_text = "", core_data = false)
@@ -278,6 +297,12 @@ module FormsHelper
 
   def edit_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+  end
+  
+    def delete_value_set_link(element)
+    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-value-set' id='delete-value-set-" + element.id.to_s + "'>" + 
+      image_tag("delete.png", :border => 0, :alt => "Delete Value Set") + "</a>"
   end
   
   def toggle_value_link(element)

@@ -21,6 +21,7 @@ module NedssHelper
   GROUP_ID_PREFIX = "group_"
   QUESTION_ID_PREFIX = "question_"
   FOLLOW_UP_ID_PREFIX = "follow_up_"
+  VALUE_SET_ID_PREFIX = "value_set_"
     
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
@@ -53,12 +54,12 @@ module NedssHelper
           #TODO - Make this work for auto-complete fields by using the name instead of the ID in a type command
           #The problem with using the name is that it won't show up as a field in get_all_fields, and it won't be selectable
           #I'm trying to do something in the rescue block to detect the error from trying to select it.
-#          if err == "Specified element is not a Select (has no options)"
-            #This is usually because the element is the name of a auto-complete field
-#            browser.type(key, value)
-#          else
-            puts("WARNING: Field " + key + " not found. Value not set.")
-#          end
+          #          if err == "Specified element is not a Select (has no options)"
+          #This is usually because the element is the name of a auto-complete field
+          #            browser.type(key, value)
+          #          else
+          puts("WARNING: Field " + key + " not found. Value not set.")
+          #          end
         end
       end
     end
@@ -109,57 +110,57 @@ module NedssHelper
     browser.click 'link=NEW CMR'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
-            browser.is_text_present("New CMR") and
-            browser.is_element_present("link=Back to list") and
-            browser.is_element_present("disable_tabs"))
+        browser.is_text_present("New CMR") and
+        browser.is_element_present("link=Back to list") and
+        browser.is_element_present("disable_tabs"))
   end
   
   def click_nav_cmrs(browser)
     browser.click 'link=CMRS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
-            browser.is_text_present("Existing Reports") and
-            browser.is_element_present("link=New Morbidity Report") and
-            browser.is_element_present("link=Export To CSV")) 
+        browser.is_text_present("Existing Reports") and
+        browser.is_element_present("link=New Morbidity Report") and
+        browser.is_element_present("link=Export To CSV")) 
   end
   
   def click_nav_search(browser)
     browser.click 'link=SEARCH'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_element_present("link=People Search") and
-            browser.is_element_present("link=CMR Search"))  
+        browser.is_element_present("link=CMR Search"))  
   end
   
   def click_nav_forms(browser)
     browser.click 'link=FORMS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("Form Builder") and
-            browser.is_text_present("Forms") and
-            browser.is_element_present("link=New form"))   
+        browser.is_text_present("Forms") and
+        browser.is_element_present("link=New form"))   
   end
   
   def click_nav_admin(browser)
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Admin Console") and
-           browser.is_text_present("Dashboard") and
-           browser.is_element_present("link=Forms") and
-           browser.is_element_present("link=Users") and
-           browser.is_element_present("link=Codes")) 
+        browser.is_text_present("Dashboard") and
+        browser.is_element_present("link=Forms") and
+        browser.is_element_present("link=Users") and
+        browser.is_element_present("link=Codes")) 
   end
   
   def edit_cmr(browser)
     browser.click "link=Edit"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Person Information") and
-           browser.is_text_present("Street number"))
+        browser.is_text_present("Street number"))
   end
   
   def save_cmr(browser)
     browser.click "event_submit"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("CMR was successfully created.") or
-           browser.is_text_present("CMR was successfully updated."))
+        browser.is_text_present("CMR was successfully updated."))
   end
   
   def navigate_to_people_search(browser)
@@ -167,8 +168,8 @@ module NedssHelper
     @browser.click('link=People Search')
     @browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("People Search") and 
-           browser.is_text_present("Name") and
-           browser.is_text_present("Date of birth"))
+        browser.is_text_present("Name") and
+        browser.is_text_present("Date of birth"))
   end
   
   def navigate_to_cmr_search(browser)
@@ -176,9 +177,9 @@ module NedssHelper
     @browser.click('link=CMR Search')
     @browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("CMR Search") and 
-           browser.is_text_present("By name") and
-           browser.is_text_present("Additional criteria") and
-           browser.is_text_present("Date or year of birth"))
+        browser.is_text_present("By name") and
+        browser.is_text_present("Additional criteria") and
+        browser.is_text_present("Date or year of birth"))
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
@@ -275,6 +276,33 @@ module NedssHelper
     browser.wait_for_page_to_load "30000"
     return(browser.is_text_present(user_id))
   end
+  
+  def add_view(browser, name)
+    browser.click("link=Add a tab")
+    wait_for_element_present("new-view-form")
+    browser.type("view_element_name", name)
+    browser.click("view_element_submit")
+    wait_for_element_not_present("new-view-form")
+    if browser.is_text_present(name)
+      return browser.get_value("id=modified-element")
+    else
+      return false
+    end
+  end
+  
+  def add_section_to_view(browser, view_name, section_name)
+    element_id = get_form_element_id(browser, view_name, VIEW_ID_PREFIX)
+    browser.click("add-section-#{element_id}")
+    wait_for_element_present("new-section-form", browser)
+    browser.type("section_element_name", section_name)
+    browser.click("section_element_submit")
+    wait_for_element_not_present("new-section-form", browser)
+    if browser.is_text_present(section_name)
+      return browser.get_value("id=modified-element")
+    else
+      return false      
+    end
+  end
 
   # Takes the name of the tab to which the question should be added and the question's attributes.  
   def add_question_to_view(browser, element_name, question_attributes = {})
@@ -307,6 +335,40 @@ module NedssHelper
     browser.select("core_view_element_name", "label=#{core_view_name}")
     browser.click("core_view_element_submit")
     wait_for_element_not_present("new-core-view-form", browser)
+  end
+  
+  # The delete helpers that follow could be dried up a bit, passing through to a single
+  # delete_element method, but that would probably involve synching up the ids used 
+  # on the action links so they use underscores instead of dashes as separators:
+  #    * Use delete_question_34 instead of delete-question-34 in the views
+  #    * Then utilize the element prefix constants to dry things up
+  
+  # Deletes the view with the name provided
+  def delete_view(browser, name)
+    element_id = get_form_element_id(browser, name, VIEW_ID_PREFIX)
+    browser.click("delete-view-#{element_id}")
+    return(browser.is_text_present("delete-view-#{element_id}"))
+  end
+  
+  # Deletes the section with the name provided
+  def delete_section(browser, name)
+    element_id = get_form_element_id(browser, name, SECTION_ID_PREFIX)
+    browser.click("delete-section-#{element_id}")
+    return(browser.is_text_present("delete-section-#{element_id}"))
+  end
+  
+  # Deletes the question with the name provided
+  def delete_question(browser, name)
+    element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
+    browser.click("delete-question-#{element_id}")
+    return(browser.is_text_present("delete-question-#{element_id}"))
+  end
+  
+  # Deletes the value set with the name provided
+  def delete_value_set(browser, name)
+    element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
+    browser.click("delete-value-set-#{element_id}")
+    return(browser.is_text_present("delete-value-set-#{element_id}"))
   end
   
   def publish_form(browser)
@@ -383,89 +445,89 @@ module NedssHelper
 
   def get_full_cmr_hash()
     @cmr_fields = {
-              # Patient fields
-              "event_active_patient__active_primary_entity__person_last_name" => get_unique_name(1),
-              "event_active_patient__active_primary_entity__person_first_name" => get_unique_name(1),
-              "event_active_patient__active_primary_entity__person_middle_name" => get_unique_name(1),
-              "event_active_patient__active_primary_entity__address_street_number" => "123",
-              "event_active_patient__active_primary_entity__address_street_name" => get_unique_name(1),
-              "event_active_patient__active_primary_entity__address_unit_number" => "2",
-              "event_active_patient__active_primary_entity__address_city" => get_unique_name(1),
-              "event_active_patient__active_primary_entity__address_postal_code" => "84601",
-              "event_active_patient__active_primary_entity__person_birth_date" => "1/1/1974",
-              "event_active_patient__active_primary_entity__person_approximate_age_no_birthday" => "22",
-              "event_active_patient__active_primary_entity__person_date_of_death" => "1/1/1974",
-              "event_active_patient__active_primary_entity__telephone_area_code" => "801",
-              "event_active_patient__active_primary_entity__telephone_phone_number" => "555-7894",
-              "event_active_patient__active_primary_entity__telephone_extension" => "147",
-              "event_active_patient__active_primary_entity__person_birth_gender_id" => "Female",
-              "event_active_patient__active_primary_entity__person_ethnicity_id" => "Not Hispanic or Latino",
-              "event_active_patient__active_primary_entity__person_primary_language_id" => "Hmong",
-              "event_active_patient__active_primary_entity_race_ids" => "Asian",
-              "event_active_patient__active_primary_entity__address_county_id" => "Beaver",
-              "event_active_patient__active_primary_entity__address_state_id" => "Utah",
-             #Disease fields
-              "event_disease_disease_onset_date" => "1/1/1974",
-              "event_disease_date_diagnosed" => "1/1/1974",
-              "event_disease_disease_id" => "Amebiasis",
-              #Status fields
-              "event_disease_died_id" => "Yes",
-              "event_imported_from_id" => "Utah",
-              #Hospital fields
-              "event_new_hospital_attributes__admission_date" => "1/1/1974",
-              "event_new_hospital_attributes__discharge_date" => "1/1/1974",
-              "event_new_hospital_attributes__secondary_entity_id" => "Ashley Regional Medical Center",
-              "event_disease_hospitalized_id" => "Yes",
-              #Diagnosis field
-              "event_new_diagnostic_attributes__secondary_entity_id" => "Alta View Hospital",
-              #Treatment fields
-              "event_active_patient__participations_treatment_treatment_given_yn_id" => "Yes",
-              "event_active_patient__participations_treatment_treatment" => NedssHelper.get_unique_name(1),
-              #Clinician fields
-              "event_clinician__active_secondary_entity__person_last_name" => NedssHelper.get_unique_name(1),
-              "event_clinician__active_secondary_entity__person_first_name" => NedssHelper.get_unique_name(1),
-              "event_clinician__active_secondary_entity__person_middle_name" => NedssHelper.get_unique_name(1),
-              "event_clinician__active_secondary_entity__address_street_number" => "456",
-              "event_clinician__active_secondary_entity__address_street_name" => NedssHelper.get_unique_name(1),
-              "event_clinician__active_secondary_entity__address_unit_number" => "5141",
-              "event_clinician__active_secondary_entity__address_city" => NedssHelper.get_unique_name(1),
-              "event_clinician__active_secondary_entity__address_postal_code" => "84602",
-              "event_clinician__active_secondary_entity__person_birth_date" => "1/1/1974",
-              "event_clinician__active_secondary_entity__person_approximate_age_no_birthday" => "55",
-              "event_clinician__active_secondary_entity__telephone_area_code" => "501",
-              "event_clinician__active_secondary_entity__telephone_phone_number" => "555-1645",
-              "event_clinician__active_secondary_entity__telephone_extension" => "1645",
-              "event_clinician__active_secondary_entity__person_birth_gender_id" => "Female",
-              "event_clinician__active_secondary_entity__person_ethnicity_id" => "Hispanic or Latino",
-              "event_clinician__active_secondary_entity_race_ids" => "American Indian",
-              "event_clinician__active_secondary_entity__person_primary_language_id" => "Japanese",
-              #lab result fields
-              "event[new_lab_attributes][][name]" => NedssHelper.get_unique_name(2),
-              "event_new_lab_attributes__specimen_source_id" => "Blood",
-              "event_new_lab_attributes__specimen_sent_to_uphl_yn_id" => "Yes",
-              "event_new_lab_attributes__lab_result_text" => NedssHelper.get_unique_name(1),
-              "event_new_lab_attributes__collection_date" => "1/1/1974",
-              "event_new_lab_attributes__lab_test_date" => "1/1/1974",
-              #contact fields
-              "event_contact__active_secondary_entity__address_state_id" => "Alaska",
-              "event_contact__active_secondary_entity__address_county_id" => "Davis",
-              "event_contact__active_secondary_entity__person_birth_gender_id" => "Female",
-              "event_contact__active_secondary_entity__person_ethnicity_id" => "Not Hispanic or Latino",
-              "event_contact__active_secondary_entity_race_ids" => "American Indian",
-              "event_contact__active_secondary_entity__person_primary_language_id" => "Italian",
-              "event_contact__active_secondary_entity__person_last_name" => NedssHelper.get_unique_name(1),
-              "event_contact__active_secondary_entity__person_first_name" => NedssHelper.get_unique_name(1),
-              "event_contact__active_secondary_entity__person_middle_name" => NedssHelper.get_unique_name(1),
-              "event_contact__active_secondary_entity__address_street_number" => "7845",
-              "event_contact__active_secondary_entity__address_street_name" => NedssHelper.get_unique_name(1),
-              "event_contact__active_secondary_entity__address_unit_number" => "7788",
-              "event_contact__active_secondary_entity__address_city" => NedssHelper.get_unique_name(1),
-              "event_contact__active_secondary_entity__address_postal_code" => "87484",
-              "event_contact__active_secondary_entity__person_birth_date" => "1/1/1974",
-              "event_contact__active_secondary_entity__person_approximate_age_no_birthday" => "64",
-              "event_contact__active_secondary_entity__telephone_area_code" => "840",
-              "event_contact__active_secondary_entity__telephone_phone_number" => "555-7457",
-              "event_contact__active_secondary_entity__telephone_extension" => "4557"}#,
+      # Patient fields
+      "event_active_patient__active_primary_entity__person_last_name" => get_unique_name(1),
+      "event_active_patient__active_primary_entity__person_first_name" => get_unique_name(1),
+      "event_active_patient__active_primary_entity__person_middle_name" => get_unique_name(1),
+      "event_active_patient__active_primary_entity__address_street_number" => "123",
+      "event_active_patient__active_primary_entity__address_street_name" => get_unique_name(1),
+      "event_active_patient__active_primary_entity__address_unit_number" => "2",
+      "event_active_patient__active_primary_entity__address_city" => get_unique_name(1),
+      "event_active_patient__active_primary_entity__address_postal_code" => "84601",
+      "event_active_patient__active_primary_entity__person_birth_date" => "1/1/1974",
+      "event_active_patient__active_primary_entity__person_approximate_age_no_birthday" => "22",
+      "event_active_patient__active_primary_entity__person_date_of_death" => "1/1/1974",
+      "event_active_patient__active_primary_entity__telephone_area_code" => "801",
+      "event_active_patient__active_primary_entity__telephone_phone_number" => "555-7894",
+      "event_active_patient__active_primary_entity__telephone_extension" => "147",
+      "event_active_patient__active_primary_entity__person_birth_gender_id" => "Female",
+      "event_active_patient__active_primary_entity__person_ethnicity_id" => "Not Hispanic or Latino",
+      "event_active_patient__active_primary_entity__person_primary_language_id" => "Hmong",
+      "event_active_patient__active_primary_entity_race_ids" => "Asian",
+      "event_active_patient__active_primary_entity__address_county_id" => "Beaver",
+      "event_active_patient__active_primary_entity__address_state_id" => "Utah",
+      #Disease fields
+      "event_disease_disease_onset_date" => "1/1/1974",
+      "event_disease_date_diagnosed" => "1/1/1974",
+      "event_disease_disease_id" => "Amebiasis",
+      #Status fields
+      "event_disease_died_id" => "Yes",
+      "event_imported_from_id" => "Utah",
+      #Hospital fields
+      "event_new_hospital_attributes__admission_date" => "1/1/1974",
+      "event_new_hospital_attributes__discharge_date" => "1/1/1974",
+      "event_new_hospital_attributes__secondary_entity_id" => "Ashley Regional Medical Center",
+      "event_disease_hospitalized_id" => "Yes",
+      #Diagnosis field
+      "event_new_diagnostic_attributes__secondary_entity_id" => "Alta View Hospital",
+      #Treatment fields
+      "event_active_patient__participations_treatment_treatment_given_yn_id" => "Yes",
+      "event_active_patient__participations_treatment_treatment" => NedssHelper.get_unique_name(1),
+      #Clinician fields
+      "event_clinician__active_secondary_entity__person_last_name" => NedssHelper.get_unique_name(1),
+      "event_clinician__active_secondary_entity__person_first_name" => NedssHelper.get_unique_name(1),
+      "event_clinician__active_secondary_entity__person_middle_name" => NedssHelper.get_unique_name(1),
+      "event_clinician__active_secondary_entity__address_street_number" => "456",
+      "event_clinician__active_secondary_entity__address_street_name" => NedssHelper.get_unique_name(1),
+      "event_clinician__active_secondary_entity__address_unit_number" => "5141",
+      "event_clinician__active_secondary_entity__address_city" => NedssHelper.get_unique_name(1),
+      "event_clinician__active_secondary_entity__address_postal_code" => "84602",
+      "event_clinician__active_secondary_entity__person_birth_date" => "1/1/1974",
+      "event_clinician__active_secondary_entity__person_approximate_age_no_birthday" => "55",
+      "event_clinician__active_secondary_entity__telephone_area_code" => "501",
+      "event_clinician__active_secondary_entity__telephone_phone_number" => "555-1645",
+      "event_clinician__active_secondary_entity__telephone_extension" => "1645",
+      "event_clinician__active_secondary_entity__person_birth_gender_id" => "Female",
+      "event_clinician__active_secondary_entity__person_ethnicity_id" => "Hispanic or Latino",
+      "event_clinician__active_secondary_entity_race_ids" => "American Indian",
+      "event_clinician__active_secondary_entity__person_primary_language_id" => "Japanese",
+      #lab result fields
+      "event[new_lab_attributes][][name]" => NedssHelper.get_unique_name(2),
+      "event_new_lab_attributes__specimen_source_id" => "Blood",
+      "event_new_lab_attributes__specimen_sent_to_uphl_yn_id" => "Yes",
+      "event_new_lab_attributes__lab_result_text" => NedssHelper.get_unique_name(1),
+      "event_new_lab_attributes__collection_date" => "1/1/1974",
+      "event_new_lab_attributes__lab_test_date" => "1/1/1974",
+      #contact fields
+      "event_contact__active_secondary_entity__address_state_id" => "Alaska",
+      "event_contact__active_secondary_entity__address_county_id" => "Davis",
+      "event_contact__active_secondary_entity__person_birth_gender_id" => "Female",
+      "event_contact__active_secondary_entity__person_ethnicity_id" => "Not Hispanic or Latino",
+      "event_contact__active_secondary_entity_race_ids" => "American Indian",
+      "event_contact__active_secondary_entity__person_primary_language_id" => "Italian",
+      "event_contact__active_secondary_entity__person_last_name" => NedssHelper.get_unique_name(1),
+      "event_contact__active_secondary_entity__person_first_name" => NedssHelper.get_unique_name(1),
+      "event_contact__active_secondary_entity__person_middle_name" => NedssHelper.get_unique_name(1),
+      "event_contact__active_secondary_entity__address_street_number" => "7845",
+      "event_contact__active_secondary_entity__address_street_name" => NedssHelper.get_unique_name(1),
+      "event_contact__active_secondary_entity__address_unit_number" => "7788",
+      "event_contact__active_secondary_entity__address_city" => NedssHelper.get_unique_name(1),
+      "event_contact__active_secondary_entity__address_postal_code" => "87484",
+      "event_contact__active_secondary_entity__person_birth_date" => "1/1/1974",
+      "event_contact__active_secondary_entity__person_approximate_age_no_birthday" => "64",
+      "event_contact__active_secondary_entity__telephone_area_code" => "840",
+      "event_contact__active_secondary_entity__telephone_phone_number" => "555-7457",
+      "event_contact__active_secondary_entity__telephone_extension" => "4557"}#,
 =begin               #epidemiological fields
               "event_active_patient__participations_risk_factor_food_handler_id" => "Yes",
               "event_active_patient__participations_risk_factor_healthcare_worker_id" => "Yes",
@@ -523,7 +585,7 @@ module NedssHelper
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
     if browser.is_text_present(question_attributes[:question_text])
-      return true
+      return browser.get_value("id=modified-element")
     else
       return false      
     end
@@ -538,7 +600,7 @@ module NedssHelper
     browser.click "follow_up_element_submit"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
-  
+    
   def get_form_element_id(browser, name, element_id_prefix)
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
