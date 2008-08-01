@@ -1,7 +1,21 @@
+body
+  :background-color #fff
+  :color #333
+  :margin-left 0px
+  :margin-top 0px
+  :margin-right 0px
+  :margin-bottom 0px
+  :margin 0px
+
+body, p, ol, ul
+  :font-family verdana, arial, helvetica, sans-serif
+  :font-size 12px
+  :line-height 18px
+
 #head
   :position relative
   :height 68px
-  :background-color #e5e5e5
+  :background-color #ececec
 
 #bar
   :position relative
@@ -9,51 +23,18 @@
   :background url(../images/repeat.gif)
   :background-repeat repeat-x
     
-#left
+.left
   :position absolute
+  :align right
   :top 0px
   :left 0px
+  :z-index 700
   
-#right
+.right
   :position relative
   :align right
   :text
     :align right
-    
-#main
-  :position relative
-  :margin
-    :top 10px
-  .highlight
-    :color green
-  .label
-    :font-size 90%
-    :font-weight bold
-    :white-space nowrap
-  .fill
-    :font
-      :family arial
-      :size 12px
-    :padding 20px 20px 20px 20px
-    a
-      :color #fff
-      :font-weight bold
-      :text-decoration none
-      &:hover
-        :color #fff
-        :text-decoration underline
-      &:visited
-        :color #fff
-        :font-weight normal
-      &:active
-        :color #fff
-        :font-weight normal
-  
-#nav_right
-  :width 130px
-  :background-color blue
-  :color #fff
-  :float right
   
 #ft
   :font-size x-small 
