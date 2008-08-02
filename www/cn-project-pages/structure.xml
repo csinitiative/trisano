@@ -22,13 +22,13 @@
     <id>4465</id>
     <name>Configure</name>
     <directory>Configure</directory>
-    <ordinal>5</ordinal>
+    <ordinal>4</ordinal>
   </page>
   <page>
     <id>4466</id>
     <name>Help</name>
     <directory>Help</directory>
-    <ordinal>6</ordinal>
+    <ordinal>5</ordinal>
   </page>
 </structure>
 
