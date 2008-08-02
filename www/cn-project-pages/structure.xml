@@ -16,25 +16,25 @@
     <id>4463</id>
     <name>Work products</name>
     <directory>Work products</directory>
-    <ordinal>4</ordinal>
+    <ordinal>3</ordinal>
   </page>
   <page>
     <id>4464</id>
     <name>Key metrics</name>
     <directory>Key metrics</directory>
-    <ordinal>5</ordinal>
+    <ordinal>4</ordinal>
   </page>
   <page>
     <id>4465</id>
     <name>Configure</name>
     <directory>Configure</directory>
-    <ordinal>6</ordinal>
+    <ordinal>5</ordinal>
   </page>
   <page>
     <id>4466</id>
     <name>Help</name>
     <directory>Help</directory>
-    <ordinal>7</ordinal>
+    <ordinal>6</ordinal>
   </page>
 </structure>
 
