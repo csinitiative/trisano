@@ -1,187 +1,44 @@
 = stylesheet_link_tag 'print'
 
-%div{:class => "printable"}
-  %div{:class => "header"}
-    %div{:class => "left"}
+.printable
+  .header
+    .left
       %h1 Utah Public Health
       %h2= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?
       %h2 Address of Local Health Department
       %h3
-        %i Phone: (801) xxx-xxxx    Confidential Fax (801) xxx-xxxx
+        %i Phone: (801) xxx-xxxx &nbsp; &nbsp; Confidential Fax: (801) xxx-xxxx
       %h3
         %i= Date.today.strftime("%B %d, %Y")
-    %div{:class => "right"}
+    .right
       = image_tag("udoh_logo.png")
 
-  %div{:class => "sub-header"}
-    %div{:class => "left"}
+  .sub-header
+    .left
       = (@event.disease.nil? || @event.disease.disease.nil?) ? "Disease not specified" : @event.disease.disease.disease_name
-    %div{:class => "right"}
+    .right
       Confidential Case Report
 
-  %div{:id => "demographics"}
-    %span{:class => "section-header"} Demographic Information
+  #demographics
+    = render :partial => 'events/demographic_show_print.html.haml'
 
-    - entity = @event.active_patient.active_primary_entity
-    - patient = entity.person
+  #clinical
+    = render :partial => 'events/clinical_show_print.html.haml'
 
-    %br
-    %div{:id => "patient_name"}
-      %div{:class => "three-valued-row"}
-        %div{:class => "left"}
-          %span{:class => "print-label"} Last Name:
-          %span{:class => "print-value"}
-            = "#{patient.last_name}"
-        %div{:class => "left"}
-          %span{:class => "print-label"} First Name:
-          %span{:class => "print-value"}
-            = "#{patient.first_name}"
-        %div{:class => "right"}
-          %span{:class => "print-label"} Middle Name:
-          %span{:class => "print-value"}
-            = "#{patient.middle_name}" 
+  #laboratory
+    = render :partial => 'events/laboratory_show_print.html.haml'
 
-    - entities_location = entity.entities_location
-    - no_location = entities_location.nil?
-    - address = entities_location.location.current_address unless no_location
-    - no_address = no_location || address.nil?
+  #contacts
+    = render :partial => 'events/contacts_show_print.html.haml'
 
-    %div{:id => "patient_address"}
-      %div{:class => "three-valued-row"}
-        %div{:class => "left"}
-          %span{:class => "print-label"} Address:
-          - unless no_address
-            %span{:class => "print-value"}
-              = "#{address.street_number} #{address.street_name}"
-              = ",&nbsp; Unit: #{address.unit_number}" unless address.unit_number.blank?
-        %div{:class => "left"}
-          %span{:class => "print-label"} City:
-          - unless no_address
-            %span{:class => "print-value"}
-              = "#{address.city}"
-        %div{:class => "right"}
-          %span{:class => "print-label"} State:
-          - unless no_address
-            %span{:class => "print-value"}
-              = "#{l address.state}"
+  #epidemiological
+    = render :partial => 'events/epidemiological_show_print.html.haml'
 
-      %div{:class => "three-valued-row"}
-        %div{:class => "left"}
-          %span{:class => "print-label"} County:
-          - unless no_address
-            %span{:class => "print-value"}
-              = "#{l address.county}"
-        %div{:class => "left"}
-          %span{:class => "print-label"} Zip:
-          - unless no_address
-            %span{:class => "print-value"}
-              = "#{address.postal_code}"
+  #reporting
+    = render :partial => 'events/reporting_show_print.html.haml'
 
-    %div{:id => "patient_age"}
-      %div{:class => "three-valued-row"}
-        <hr/><br/>
-        %div{:class => "left"}
-          %span{:class => "print-label"} DOB:
-          %span{:class => "print-value"}
-            = "#{patient.birth_date}"
-        %div{:class => "left"}
-          %span{:class => "print-label"} Age:
-          %span{:class => "print-value"}
-            = "#{ calculate_age(patient.birth_date)}" unless patient.birth_date.blank?
-        %div{:class => "right"}
-          %span{:class => "print-label"} Approximate Age
-          %span{:class => "print-value"}
-            = "#{patient.approximate_age_no_birthday}"
+  #administrative
+    = render :partial => 'events/administrative_show_print.html.haml'
 
-    - entities_location = entity.telephone_entities_location
-    - no_location = entities_location.nil?
-    - phone = entity.primary_phone_entities_location.location.current_phone unless no_location
-    - no_phone = no_location || phone.nil?
-
-    %div{:id => "patient_phone"}
-      %div{:class => "three-valued-row"}
-        <hr/><br/>
-        %div{:class => "left"}
-          %span{:class => "print-label"} Phone #1:
-          - unless no_phone
-            %span{:class => "print-value"}
-              = fml "(", phone.area_code, ") " 
-              = phone_number(phone.phone_number)
-              = fml " Ext. ", phone.extension, ""
-        -# Revisit when we can collect more than one phone number
-        %div{:class => "left"}
-          %span{:class => "print-label"} Phone #2:
-        %div{:class => "right"}
-          %span{:class => "print-label"} Phone #3:
-
-    %div{:id => "patient_attributes"}
-      %div{:class => "three-valued-row"}
-        <hr/><br/>
-        %div{:class => "left"}
-          %span{:class => "print-label"} Birth Gender:
-          %span{:class => "print-value"}
-            = "#{l patient.birth_gender}" 
-        %div{:class => "left"}
-          %span{:class => "print-label"} Primary Language:
-          %span{:class => "print-value"}
-            = "#{l patient.primary_language}" 
-        %div{:class => "right"}
-          %span{:class => "print-label"} Ethnicity:
-          %span{:class => "print-value"}
-            = "#{l patient.ethnicity }"
-
-      %div{:class => "three-valued-row"}
-        %div{:class => "left"}
-          %span{:class => "print-label"} Race:
-          %span{:class => "print-value"}
-            - i = 0
-            - for race in entity.races
-              = " and " unless i == 0 
-              = l race
-              - i += 1
-
-  %div{:id => "clinical"}
-    %span{:class => "section-header"} Clinical Information
-
-    %br
-    %div{:id => "clinician-names"}
-      %div{:class => "three-valued-row"}
-        - if @event.clinicians.empty?
-          %span{:class => "print-label"} Clinican Information:
-          %span{:class => "print-value"}
-            No clinicians have been recorded for this case
-        - else
-          - count = 0
-          - for clinician in @event.clinicians
-            - phone = nil
-            - break if count == 3
-            - count += 1
-            - person = clinician.active_secondary_entity.person
-            %div{:class => "left"}
-              %span{:class => "print-label"} Clinican First Name:
-              %span{:class => "print-value"}
-                = person.first_name
-            %div{:class => "left"}
-              %span{:class => "print-label"} Last Name:
-              %span{:class => "print-value"}
-                = person.last_name
-            %div{:class => "right"}
-              %span{:class => "print-label"} Phone:
-              - entities_location = clinician.active_secondary_entity.telephone_entities_location
-              - no_location = entities_location.nil?
-              - phone = clinician.active_secondary_entity.primary_phone_entities_location.location.current_phone unless no_location
-              - no_phone = no_location || phone.nil?
-              - unless no_phone
-                %span{:class => "print-value"}
-                  = fml "(", phone.area_code, ") " 
-                  = phone_number(phone.phone_number)
-                  = fml " Ext. ", phone.extension, ""
-
-    %br
-    %div{:id => "clinician-names"}
-      %div{:class => "three-valued-row"}
-        <hr/><br/>
-        %div{:class => "left"}
-          %span{:class => "print-label"} Was patient hospitalized:
-          %span{:class => "print-value"}
-            = l(@event.disease.hospitalized) unless @event.disease.nil?
+  #investigation
+    = render :partial => 'events/investigation_show_print.html.haml'

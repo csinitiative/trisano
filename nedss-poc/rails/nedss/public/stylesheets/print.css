@@ -14,11 +14,12 @@
 
 .printable .header .left {
   float: left;
-  width: 80%;
+  width: 75%;
 }
 
 .printable .header .right {
   float: left;
+  width: 25%;
 }
 
 .printable .sub-header {
@@ -31,15 +32,15 @@
 
 .printable .sub-header .left {
   float: left;
-  width: 45%;
+  width: 43.5%;
   border: solid 1px;
   padding: 1em;
   margin-bottom: 10px;
 }
 
 .printable .sub-header .right {
-  float: left;
-  width: 45%;
+  float: right;
+  width: 43.5%;
   border: solid 1px;
   padding: 1em;
   margin-bottom: 10px;
@@ -60,6 +61,21 @@
   color: white;
 }
 
+.printable .subsection-header {
+  clear: both;
+  display: block;
+  width: 100%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-top: 1em;
+  background: black;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  font-size: 14px;
+  color: white;
+}
+
 .printable .three-valued-row {
   clear: both;
 }
@@ -72,6 +88,25 @@
 .printable .three-valued-row .right {
   width: 33%;
   float: right;
+}
+
+.printable .three-valued-row .short {
+  width: 20%;
+  float: left;
+}
+
+.printable .three-valued-row .long {
+  width: 40%;
+  float: left;
+}
+
+.printable .three-valued-row .double {
+  width: 66%;
+  float: left;
+}
+
+.printable .three-valued-row .full {
+  float: left;
 }
 
 .printable .print-label {}

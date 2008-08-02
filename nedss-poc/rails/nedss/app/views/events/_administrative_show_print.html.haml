@@ -1,0 +1,107 @@
+%span.section-header Administrative Information
+%br
+#records
+  .three-valued-row
+    .long
+      %span.print-label
+        Record number:
+      %span.print-value
+        = @event.record_number 
+    .long
+      %span.print-label
+        Date record created:
+      %td
+        = @event.event_onset_date
+#MMWR
+  .three-valued-row
+    %hr
+    %br
+    .long
+      %span.print-label
+        MMWR year:
+      %span.print-value
+        = @event.MMWR_year 
+    .long
+      %span.print-label
+        MMWR week:
+      %span.print-value
+        = @event.MMWR_week 
+#status
+  .three-valued-row
+    %hr
+    %br
+    .long
+      %span.print-label
+        LHD case status:
+      %span.print-value
+        = l @event.lhd_case_status 
+    .long
+      %span.print-label
+        UDOH case status:
+      %span.print-value
+        = l @event.udoh_case_status 
+
+#outbreak
+  .three-valued-row
+    %hr
+    %br
+    .long
+      %span.print-label
+        Outbreak associated:
+      %span.print-value
+        = l @event.outbreak_associated 
+    .long
+      %span.print-label
+        Outbreak name:
+      %span.print-value
+        = @event.outbreak_name 
+
+#jurisdiction
+  .three-valued-row
+    %hr
+    %br
+    .full
+      %span.print-label
+        Jurisdiction responsible for investigation:
+      %span.print-value
+        = @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?
+
+#event
+  .three-valued-row
+    %hr
+    %br
+    .left
+      %span.print-label
+        Event name:
+      %span.print-value
+        = @event.event_name 
+    .double
+      %span.print-label
+        Event status:
+      %span.print-value
+        = l @event.event_status 
+
+#investigation
+  .three-valued-row
+    %hr
+    %br
+    .long
+      %span.print-label
+        Date investigation started:
+      %span.print-value
+        = @event.investigation_started_date 
+    .long
+      %span.print-label
+        Date invesitgation completed:
+      %span.print-value
+        = @event.investigation_completed_LHD_date
+
+#review
+  .three-valued-row
+    %hr
+    %br
+    .full
+      %span.print-label
+        Date review completed by UDOH:
+      %span.print-value
+        = @event.review_completed_UDOH_date 

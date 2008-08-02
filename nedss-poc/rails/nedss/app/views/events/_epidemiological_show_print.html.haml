@@ -1,0 +1,57 @@
+%span.section-header Epidemiological Information
+
+- factor = @event.active_patient.participations_risk_factor
+
+%br
+#service-industry
+  .three-valued-row
+    .left
+      %span.print-label
+        Food handler:
+      %span.print-value
+        = l factor.food_handler unless factor.nil?
+    .double
+      %span.print-label
+        Healthcare worker:
+      %span.print-value
+        = l factor.healthcare_worker unless factor.nil? 
+
+#living
+  .three-valued-row
+    %hr
+    %br
+    .left
+      %span.print-label
+        Group living:
+      %span.print-value
+        = l factor.group_living unless factor.nil?
+    .double
+      %span.print-label
+        Day care association:
+      %span.print-value
+        = l factor.day_care_association unless factor.nil?
+
+#occupation
+  .three-valued-row
+    %hr
+    %br
+    .left
+      %span.print-label
+        Occupation:
+      %span.print-value
+        = factor.occupation unless factor.nil?
+
+#risks
+  .three-valued-row
+    %hr
+    %br
+    .left
+      %span.print-label
+        Risk factors:
+      %span.print-value
+        = factor.risk_factors unless factor.nil?
+    .double
+      %span.print-label
+        Risk factor notes:
+      %span.print-value
+        = factor.risk_factors_notes unless factor.nil?
