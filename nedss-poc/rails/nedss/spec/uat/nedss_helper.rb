@@ -17,6 +17,7 @@ module NedssHelper
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
+  CORE_FIELD_ID_PREFIX = "core_field_"
   SECTION_ID_PREFIX = "section_"
   GROUP_ID_PREFIX = "group_"
   QUESTION_ID_PREFIX = "question_"
@@ -319,6 +320,11 @@ module NedssHelper
     return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
+  # Takes the name of the core field confg to which the question should be added and the question's attributes.
+  def add_question_to_core_field_config(browser, element_name, question_attributes = {})
+     return add_question_to_element(browser, element_name, CORE_FIELD_ID_PREFIX, question_attributes)
+  end
+  
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
   def add_follow_up_to_question(browser, question_text, condition)
     return add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)
@@ -359,6 +365,14 @@ module NedssHelper
     browser.select("core_view_element_name", "label=#{core_view_name}")
     browser.click("core_view_element_submit")
     wait_for_element_not_present("new-core-view-form", browser)
+  end
+  
+  def add_core_field_config(browser, core_field_name)
+    browser.click("link=Add a core field configuration")
+    wait_for_element_present("new-core-field-form", browser)
+    browser.select("core_field_element_core_path", "label=#{core_field_name}")
+    browser.click("core_field_element_submit")
+    wait_for_element_not_present("new-core-field-form", browser)
   end
   
   # The delete helpers that follow could be dried up a bit, passing through to a single
@@ -609,7 +623,7 @@ module NedssHelper
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
     if browser.is_text_present(question_attributes[:question_text])
-      return browser.get_value("id=modified-element")
+      return true
     else
       return false      
     end
