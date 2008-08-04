@@ -329,6 +329,30 @@ module NedssHelper
     return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
   end
   
+  # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
+  def add_value_set_to_question(browser, question_text, value_set_name, value_one, value_two, value_three)
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-value-set-#{element_id}")
+    wait_for_element_present("new-value-set-form", browser)
+    browser.type "value_set_element_name", value_set_name
+    browser.click "link=Add a value"
+    browser.click "link=Add a value"
+    browser.click "link=Add a value"
+    wait_for_element_present("value_set_element_new_value_element_attributes__name")
+    browser.type "value_set_element_new_value_element_attributes__name", value_one
+    browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", value_two
+    browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", value_three
+    browser.click "value_set_element_submit"
+    wait_for_element_not_present("new-value-set-form")
+    browser.is_text_present(value_set_name).should be_true
+    
+    if browser.is_text_present(value_set_name)
+      return true
+    else
+      return false      
+    end
+  end
+  
   def add_core_tab_configuration(browser, core_view_name)
     browser.click("link=Add a core tab configuration")
     wait_for_element_present("new-core-view-form", browser)
