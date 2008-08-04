@@ -18,7 +18,7 @@ class FollowUpElement < FormElement
         investigation_forms << form_reference.form
       end
     end
-    
+
     investigation_forms.each do |form|
       form.form_base_element.all_cached_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
 

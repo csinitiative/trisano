@@ -32,6 +32,7 @@ class FormsController < AdminController
   end
 
   def create
+    p params
     @form = Form.new(params[:form])
 
     respond_to do |format|
@@ -47,6 +48,7 @@ class FormsController < AdminController
   end
 
   def update
+    params[:form][:disease_ids] ||= []
     @form = Form.find(params[:id])
 
     respond_to do |format|

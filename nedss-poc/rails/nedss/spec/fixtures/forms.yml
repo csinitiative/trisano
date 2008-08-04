@@ -6,46 +6,48 @@ test_form:
   description: Testng
   version: 
   is_template: true
-  disease_id: 1
   jurisdiction_id:
   status: "Live"
 
 anthrax_form_all_jurisdictions_1:
   id: 2
   name: "Anthrax Form 1"
-  description: "This is an Anthrax form."
-  disease_id: 1
+  description: "Anthrax form for all jurisdictions."
   jurisdiction_id:
   status: "Live"
 
 anthrax_form_all_jurisdictions_2:
   id: 3
   name: "Anthrax Form 2"
-  description: "This is another Anthrax form."
-  disease_id: 1
+  description: "Another Anthrax form for all jurisdictions."
   jurisdiction_id:
   status: "Live"
 
 anthrax_form_for_LHD_1:
   id: 4
-  name: "Anthrax Form Local 1"
-  description: "This is an Anthrax form for Local 1."
-  disease_id: 1
+  name: "Anthrax Form 1, Jurisdicition 1"
+  description: "Anthrax form for jurisdiction 1."
   jurisdiction_id: 1
   status: "Live"
 
-anthrax_form_for_LHD:
+anthrax_form_for_LHD_2:
   id: 5
-  name: "Anthrax Form Local 2"
-  description: "This is an Anthrax form for Local 2."
-  disease_id: 1
+  name: "Anthrax Form 2, Jurisdiction 2"
+  description: "Anthrax form for jurisdiction 2."
   jurisdiction_id: 2
   status: "Live"
 
-aids_form_for_LHD:
+aids_form_for_LHD_2:
   id: 6
-  name: "Aids Form Local 1"
-  description: "This is an AIDS form for Local 1."
-  disease_id: 2
+  name: "Aids Form 1, jurisidiction 2"
+  description: "AIDS form for jurisdiction 2."
   jurisdiction_id: 2
+  status: "Live"
+
+checken_pox_TB_form_for_LHD_2:
+  id: 7
+  name: "Chicken Pox and Tuberculosis form 1, jurisdiction 2."
+  description: "Chicken pox and tuberculosis form for jurisdiction 1."
+  jurisdiction_id: 2
+  is_template: true
   status: "Live"

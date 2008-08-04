@@ -252,7 +252,7 @@ describe FormsController do
 
       def do_put
         @form.should_receive(:update_attributes).and_return(true)
-        put :update, :id => "1"
+        put :update, :id => "1", :form => {:disease_ids => [1] }
       end
 
       it "should find the form requested" do
@@ -281,7 +281,7 @@ describe FormsController do
 
       def do_put
         @form.should_receive(:update_attributes).and_return(false)
-        put :update, :id => "1"
+        put :update, :id => "1", :form => {:disease_ids => [1] }
       end
 
       it "should re-render 'edit'" do

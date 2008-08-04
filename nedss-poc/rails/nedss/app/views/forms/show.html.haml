@@ -13,22 +13,24 @@
   = link_to 'Form Builder', builder_path(@form)
 
 %p
-  %b Name: 
+  %span.label Name: 
   =h @form.name
 
 %p
-  %b Description: 
+  %span.label Description: 
   =h @form.description
 
 %p
-  %span.label Show for disease: 
-  =h @form.disease.disease_name
+  %span.label Show for diseases: 
+  %ul
+    - @form.diseases.each do |disease|
+      %li= h disease.disease_name
 
 %p
   %span.label Show for jursidiction: 
   =h @form.jurisdiction.nil? ? "All Jurisdictions" : @form.jurisdiction.current_place.name
 
 %p
-  %b Status: 
+  %span.label Status: 
   =h @form.status
 

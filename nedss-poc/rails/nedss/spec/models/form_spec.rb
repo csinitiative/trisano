@@ -9,38 +9,9 @@ describe Form do
     @form.should be_valid
   end
   
-  describe "when retrieving published forms" do
-
-    fixtures :forms
-
-    it "should return only forms for the specified disease and jurisdiction" do
-      form = Form.get_published_investigation_forms(1, 1)
-      form.length.should == 4
-      form.each do |d| 
-        d.disease_id.should == 1
-        d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
-      end
-
-      form = Form.get_published_investigation_forms(2, 2)
-      form.length.should == 1
-      form.each do |d|  
-        d.disease_id.should == 2
-        d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
-      end
-
-      # Forms applicable to all jurisidictions
-      form = Form.get_published_investigation_forms(1, 99)
-      form.length.should == 3
-      form.each { |d| d.jurisdiction_id.should == nil }
-
-      # No such disease
-      Form.get_published_investigation_forms(99, 1).length.should == 0
-    end
-  end
-  
   describe "when created with save_and_initialize_form_elements" do
     
-    fixtures :forms, :form_elements, :questions
+    # fixtures :forms, :form_elements, :questions
     
     it "should bootstrap the form element hierarchy" do
       @form.save_and_initialize_form_elements
@@ -63,7 +34,7 @@ describe Form do
       default_view_element.should_not be_nil
       default_view_element.name.should == "Default View"
     end
-    
+
     it "should have a template's properties" do
       @form.save_and_initialize_form_elements
       @form.is_template.should be_true
@@ -71,9 +42,80 @@ describe Form do
       @form.version.should be_nil
       @form.status.should eql("Not Published")
     end
-    
+
+    describe "and associating a form with one or more diseases" do
+
+      fixtures :diseases
+
+      it "should allow a form to be associated with one disease" do
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ] )
+        lambda { form.save_and_initialize_form_elements }.should_not raise_error()
+        form = Form.find(form.id)
+        form.diseases.length.should == 1
+        form.diseases[0].id.should == diseases(:chicken_pox).id
+      end
+
+      it "should allow a form to be associated with multiple diseases" do
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ] )
+        lambda { form.save_and_initialize_form_elements }.should_not raise_error()
+        form = Form.find(form.id)
+        form.diseases.length.should == 2
+        form.diseases[0].id.should == diseases(:chicken_pox).id
+        form.diseases[1].id.should == diseases(:tuberculosis).id
+      end
+
+    end
   end
-  
+
+  describe "when retrieving published forms" do
+
+    fixtures :forms, :diseases_forms
+
+    it "should return only forms for the specified disease and jurisdiction" do
+      form = Form.get_published_investigation_forms(3, 1)
+      form.length.should == 4
+      form.each do |d| 
+        d.disease_ids.should == [3]
+        d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
+      end
+
+      form = Form.get_published_investigation_forms(4, 2)
+      form.length.should == 1
+      form.each do |d|  
+        d.disease_ids.should == [4]
+        d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+      end
+    end
+
+    it "should return forms applicable to all jurisdictions even if given jurisdiction is not found" do
+      form = Form.get_published_investigation_forms(3, 99)
+      form.length.should == 3
+      form.each { |d| d.jurisdiction_id.should == nil }
+    end
+
+    it "should return no form if the disease is not found" do
+      Form.get_published_investigation_forms(99, 1).length.should == 0
+    end
+
+    describe "and a form is associated with multiple disease" do
+      it "should return only forms for the specified disease and jurisdiction" do
+        form = Form.get_published_investigation_forms(1, 2)
+        form.length.should == 2
+        form.each do |d| 
+          d.disease_ids.should == [1]
+          d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+        end
+
+        form = Form.get_published_investigation_forms(2, 2)
+        form.length.should == 1
+        form.each do |d| 
+          d.disease_ids.should == [2]
+          d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+        end
+      end
+    end
+  end
+
   describe "when using container convenience methods" do
     
     fixtures :forms, :form_elements, :questions
@@ -104,16 +146,13 @@ describe Form do
       rescue RuntimeError => error
         error_message = error.message
       end
-      
       error_message.should eql("Cannot publish an already published version")
-      
     end
-
   end
   
   describe "when first published" do
     
-    fixtures :forms, :form_elements, :questions
+    fixtures :forms, :form_elements, :questions, :diseases_forms, :diseases
     
     before(:each) do
       @form_to_publish = Form.find(1)
@@ -294,6 +333,17 @@ describe Form do
       demo_q1.question.question_text.should eql(questions(:demo_q2).question_text)
     end
     
+    it "should associate the published form with the same diseases as the original form." do
+      # One disease
+      @published_form.disease_ids.length.should == @form_to_publish.disease_ids.length
+      @published_form.disease_ids.sort.should == @form_to_publish.disease_ids.sort
+
+      # Two diseases
+      form_to_publish = forms(:checken_pox_TB_form_for_LHD_2)
+      published_form = form_to_publish.publish!
+      published_form.disease_ids.length.should == form_to_publish.disease_ids.length
+      published_form.disease_ids.sort.should == form_to_publish.disease_ids.sort
+    end
   end
   
   describe "when published a second time" do
@@ -312,23 +362,4 @@ describe Form do
     
   end
   
-  describe "the get_investigation_forms class method" do
-    fixtures :forms
-
-    it "should return four forms" do
-      forms = Form.get_published_investigation_forms(1, 1)
-      forms.length.should == 4
-    end
-
-    it "should return two global forms" do
-      forms = Form.get_published_investigation_forms(1, 1)
-      forms.collect { |form| form.jurisdiction_id.nil? } == 2
-    end
-
-    it "should return one jurisdiction specific form" do
-      forms = Form.get_published_investigation_forms(1, 1)
-      forms.collect { |form| not form.jurisdiction_id.nil? } == 1
-    end
-  end
-
 end

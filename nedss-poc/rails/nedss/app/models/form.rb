@@ -1,5 +1,5 @@
 class Form < ActiveRecord::Base
-  belongs_to :disease
+  has_and_belongs_to_many :diseases, :order => "disease_id"
   belongs_to :jurisdiction, :class_name => "Entity", :foreign_key => "jurisdiction_id"
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
@@ -43,9 +43,8 @@ class Form < ActiveRecord::Base
         end
       
         published_form = Form.create({:name => self.name, :description => self.description, 
-            :jurisdiction => self.jurisdiction, :disease => self.disease, 
-            :version => new_version_number, :status => 'Live', 
-            :is_template => false, :template_id => self.id })
+            :jurisdiction => self.jurisdiction, :version => new_version_number, 
+            :status => 'Live', :is_template => false, :template_id => self.id })
        
         base_to_publish = self.form_base_element
         tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
@@ -56,6 +55,9 @@ class Form < ActiveRecord::Base
           self.status = 'Published'
           self.save
         end
+
+        # Associate newly published form with the same diseases as current form
+        self.diseases.each { | disease | published_form.diseases << disease }
       end
     rescue Exception => ex
       logger.error ex
@@ -70,7 +72,14 @@ class Form < ActiveRecord::Base
   end
   
   def self.get_published_investigation_forms(disease_id, jurisdiction_id)
-    find_all_by_disease_id(disease_id, :conditions => ["(jurisdiction_id = ? OR jurisdiction_id IS NULL) AND status = 'Live'", jurisdiction_id], :order => "created_at ASC")
+    Form.find(:all,
+              :include => :diseases,
+              :conditions => ["diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+                              disease_id, jurisdiction_id ],
+              :order => "forms.created_at ASC"
+    )
+
+    # find_all_by_disease_id(disease_id, :conditions => ["(jurisdiction_id = ? OR jurisdiction_id IS NULL) AND status = 'Live'", jurisdiction_id], :order => "created_at ASC")
   end
 
   private

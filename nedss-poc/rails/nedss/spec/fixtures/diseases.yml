@@ -3,3 +3,15 @@
 chicken_pox:
   id: 1
   disease_name: "Chicken Pox"
+
+tuberculosis:
+  id: 2
+  disease_name: "Tuberculosis"
+
+anthrax:
+  id: 3
+  disease_name: "Anthrax"
+
+aids:
+  id: 4
+  disease_name: "AIDS"

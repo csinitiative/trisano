@@ -11,15 +11,7 @@ describe "Form Builder Investigator Single Form" do
   end
   
   it "should create a single test form" do
-    @browser.click "link=New form"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.type "form_name", @form_name
-    @browser.type "form_description", "First AIDS Form"
-    @browser.select "form_disease_id", "label=Amebiasis"
-    @browser.click "form_submit"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click "link=Form Builder"
-    @browser.wait_for_page_to_load($load_time)
+    create_new_form_and_go_to_builder(@browser, @form_name, "Amebiasis", "All Jurisdictions")
   end
   
   it "should add a section to the forms tab" do

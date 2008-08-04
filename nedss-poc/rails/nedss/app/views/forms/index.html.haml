@@ -14,7 +14,7 @@
   %tr
     %th Name
     %th Description
-    %th Disease
+    %th Diseases
     %th Jurisdiction
     %th Status
   - for form in @forms
@@ -24,7 +24,9 @@
       %td
         = h form.description
       %td
-        = h form.disease.disease_name unless form.disease.nil?
+        - form.diseases.each do |disease|
+          = h disease.disease_name
+          %br
       %td
         = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
       %td

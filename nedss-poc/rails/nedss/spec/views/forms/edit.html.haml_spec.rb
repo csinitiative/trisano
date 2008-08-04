@@ -17,6 +17,8 @@ describe "/forms/edit.html.haml" do
     @disease_2.stub!(:disease_name).and_return("Tetanus")
     Disease.should_receive(:find).and_return([@disease_1, @disease_2])
 
+    @form.stub!(:diseases).and_return([@disease_1])
+
     @jurisdiction_1 = mock_model(Place)
     @jurisdiction_1.stub!(:name).and_return("Summit")
     @jurisdiction_1.stub!(:entity_id).and_return("1")
@@ -34,16 +36,14 @@ describe "/forms/edit.html.haml" do
     response.should have_tag("form[action=#{form_path(@form)}][method=post]") do
       with_tag('input#form_name[name=?]', "form[name]")
       with_tag('input#form_description[name=?]', "form[description]")
-      with_tag("select#form_disease_id[name=?]", "form[disease_id]") do
-        # How to test which one's selected?
-        with_tag("option", "Anthrax")
-        with_tag("option", "Tetanus")
-      end
+      with_tag("input[type=checkbox]", 2) 
       with_tag("select#form_jurisdiction_id[name=?]", "form[jurisdiction_id]") do
         with_tag("option", "Summit")
         with_tag("option", "Davis")
       end
 
+    response.should have_text(/Anthrax/)
+    response.should have_text(/Tetanus/)
     end
   end
 end

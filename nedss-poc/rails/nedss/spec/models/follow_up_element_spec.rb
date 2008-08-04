@@ -28,7 +28,7 @@ describe FollowUpElement do
       question_element.children[0].id.should == @follow_up_element.id 
     end
     
-    it "should be receive a tree id" do
+    it "should receive a tree id" do
       question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
       @follow_up_element.parent_element_id = question_element.id
       @follow_up_element.save_and_add_to_form
@@ -40,7 +40,7 @@ describe FollowUpElement do
   
   describe "when processing conditional logic for core follow ups'" do
     
-    fixtures :external_codes, :codes, :participations, :places, :diseases, :disease_events, :forms, :form_elements, :questions
+    fixtures :external_codes, :codes, :participations, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
     
     before(:each) do
       

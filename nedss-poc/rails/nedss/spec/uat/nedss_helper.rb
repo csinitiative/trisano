@@ -258,7 +258,11 @@ module NedssHelper
     browser.click "link=New form"
     browser.wait_for_page_to_load($load_time)
     browser.type "form_name", form_name
-    browser.select "form_disease_id", "label=#{disease_label}"
+    if disease_label.respond_to?(:each)
+      disease_label.each { |label| browser.click(label.tr(" ", "_")) }
+    else
+      browser.click(disease_label.tr(" ", "_"))
+    end
     browser.select "form_jurisdiction_id", "label=#{jurisdiction_label}"
     browser.click "form_submit"
     browser.wait_for_page_to_load($load_time)

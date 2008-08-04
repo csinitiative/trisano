@@ -323,3 +323,14 @@ anthrax_form_for_LHD_base:
   description: 
   rgt: "2"
   parent_id: 
+
+base_for_second_form:
+  name: 
+  form_id: "7"
+  tree_id: "2"
+  lft: "1"
+  type: FormBaseElement
+  id: "100"
+  description: 
+  rgt: "50"
+  parent_id: 

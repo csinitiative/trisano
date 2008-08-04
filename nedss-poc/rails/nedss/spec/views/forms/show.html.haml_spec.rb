@@ -15,7 +15,7 @@ describe "/forms/show.html.haml" do
     @form = mock_model(Form)
     @form.stub!(:name).and_return("Anthrax Form")
     @form.stub!(:description).and_return("Questions to ask when disease is Anthrax")
-    @form.stub!(:disease).and_return(@disease)
+    @form.stub!(:diseases).and_return([@disease])
     @form.stub!(:jurisdiction).and_return(@entity)
     @form.stub!(:status).and_return('Not Published')
     
