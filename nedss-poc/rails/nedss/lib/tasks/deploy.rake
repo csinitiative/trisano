@@ -25,6 +25,8 @@ namespace :nedss do
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
     RELEASE_DIRECTORY = './release'
     NEDSS_PROD_DIR = 'script/production'
+    TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] 
+    TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] 
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
@@ -166,24 +168,30 @@ namespace :nedss do
         FileUtils.mkdir(RELEASE_DIRECTORY)
       end
 
-      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
+
       ruby "-S rake nedss:deploy:create_db_config"
 
-      File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/delete_users.sql', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/import_users.rb', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/export_users.rb', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/create_war_file.rb', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/config.yml', RELEASE_DIRECTORY, true) 
-      File.copy(NEDSS_PROD_DIR + '/README.txt', RELEASE_DIRECTORY, true) 
+      # File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/load_grant_function.sql', RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/nedss_schema.sql', RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/create_war_file.rb', RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/config.yml', RELEASE_DIRECTORY, true) 
+      # File.copy(NEDSS_PROD_DIR + '/README.txt', RELEASE_DIRECTORY, true) 
       t = Time.now
-      filename = "nedss-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar"
-      sh "tar cf #{filename} ./release"
+      tformated = t.strftime("%m-%d-%Y-%I%M%p")
+      filename = "trisano-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar.gz"
+      dist_dirname = TRISANO_DIST_DIR + "/" + tformated
+
+      FileUtils.mkdir_p(dist_dirname)
+      
+      sh "cp -R #{TRISANO_SVN_ROOT} #{dist_dirname}"
+
+      sh "find #{dist_dirname} -name .svn -print0 | xargs -0 rm -rf"
+
+      cd TRISANO_DIST_DIR
+      sh "tar cvzf #{filename} ./#{tformated}"
+
     end
-
   end
-
 end
