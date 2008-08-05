@@ -1,6 +1,6 @@
 %div{:class => 'diagnostic', :style => "clear: both;"}
   - new_or_existing = diagnostic.new_record? ? 'new' : 'existing'
-  - prefix = "event[#{new_or_existing}_diagnostic_attributes][]"
+  - prefix = "morbidity_event[#{new_or_existing}_diagnostic_attributes][]"
 
   - fields_for(prefix, diagnostic, :builder => ExtendedFormBuilder) do |diagnostic_fields|
     %span{:class => "horiz"}

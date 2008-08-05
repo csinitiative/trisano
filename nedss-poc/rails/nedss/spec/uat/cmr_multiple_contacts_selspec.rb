@@ -19,18 +19,18 @@ describe 'Adding multiple contacts to a CMR' do
   it "should allow a single contact to be saved with a new CMR" do
     @browser.open "/nedss/cmrs"
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "event_active_patient__active_primary_entity__person_last_name", "multi-contact"
-    @browser.type "event_active_patient__active_primary_entity__person_first_name", "test"
-    @browser.select "event_disease_disease_id", "label=AIDS"
-    @browser.select "event_active_jurisdiction_secondary_entity_id", "label=Davis County Health Department"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "multi-contact"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "test"
+    @browser.select "morbidity_event_disease_disease_id", "label=AIDS"
+    @browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=Davis County Health Department"
 
     click_core_tab(@browser, "Contacts")
-    @browser.type "event_contact__active_secondary_entity__person_last_name", @original_last_name
-    @browser.type "event_contact__active_secondary_entity__person_first_name", "multi-contact"
-    @browser.type "event_contact__active_secondary_entity__address_street_number", "123"
-    @browser.type "event_contact__active_secondary_entity__address_street_name", "Main St."
-    @browser.type "event_contact__active_secondary_entity__telephone_area_code", "212"
-    @browser.type "event_contact__active_secondary_entity__telephone_phone_number", "5551212"
+    @browser.type "morbidity_event_contact__active_secondary_entity__person_last_name", @original_last_name
+    @browser.type "morbidity_event_contact__active_secondary_entity__person_first_name", "multi-contact"
+    @browser.type "morbidity_event_contact__active_secondary_entity__address_street_number", "123"
+    @browser.type "morbidity_event_contact__active_secondary_entity__address_street_name", "Main St."
+    @browser.type "morbidity_event_contact__active_secondary_entity__telephone_area_code", "212"
+    @browser.type "morbidity_event_contact__active_secondary_entity__telephone_phone_number", "5551212"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@original_last_name).should be_true
   end
@@ -92,15 +92,15 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present("Edit contact's CMR").should be_true
     @browser.click "link=Edit contact's CMR"
     @browser.wait_for_page_to_load($load_time)
-    @browser.get_value("event_active_patient__active_primary_entity__person_last_name").should == @original_last_name
-    @browser.get_value("event_active_patient__active_primary_entity__person_first_name").should == "multi-contact"
-    @browser.get_value("event_active_patient__active_primary_entity__address_street_number").should == "123"
-    @browser.get_value("event_active_patient__active_primary_entity__address_street_name").should == "Main St."
-    @browser.get_value("event_active_patient__active_primary_entity__telephone_area_code").should == "212"
-    @browser.get_value("event_active_patient__active_primary_entity__telephone_phone_number").should == "5551212"
-    @browser.get_selected_label("event_disease_disease_id").should == "AIDS"
-    @browser.get_selected_label("event_active_jurisdiction_secondary_entity_id").should == "Davis County Health Department"
-    @browser.get_selected_label("event_active_jurisdiction_secondary_entity_id").should == "Davis County Health Department"
-    @browser.get_selected_label("event_event_case_status_id").should == "Suspect"
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__person_last_name").should == @original_last_name
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__person_first_name").should == "multi-contact"
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__address_street_number").should == "123"
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__address_street_name").should == "Main St."
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__telephone_area_code").should == "212"
+    @browser.get_value("morbidity_event_active_patient__active_primary_entity__telephone_phone_number").should == "5551212"
+    @browser.get_selected_label("morbidity_event_disease_disease_id").should == "AIDS"
+    @browser.get_selected_label("morbidity_event_active_jurisdiction_secondary_entity_id").should == "Davis County Health Department"
+    @browser.get_selected_label("morbidity_event_active_jurisdiction_secondary_entity_id").should == "Davis County Health Department"
+    @browser.get_selected_label("morbidity_event_udoh_case_status_id").should == "Suspect"
   end
 end

@@ -7,12 +7,12 @@ describe 'User functionality for searching for existing users' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Chuckles')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('event_active_patient__active_primary_entity__person_last_name', 'Chuckles')
-      @browser.type('event_active_patient__active_primary_entity__person_first_name', 'Charles')
-      @browser.type('event_active_patient__active_primary_entity__address_city', 'Provo')
-      @browser.select('event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-      @browser.select('event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-      @browser.type('event_active_patient__active_primary_entity__address_postal_code', '84602')
+      @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Chuckles')
+      @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'Charles')
+      @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Provo')
+      @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
+      @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
+      @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84602')
       save_cmr(@browser).should be_true
     end
   end

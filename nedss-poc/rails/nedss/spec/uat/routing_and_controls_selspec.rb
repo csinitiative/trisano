@@ -16,7 +16,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.is_text_present("New Morbidity Report").should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('event_active_patient__active_primary_entity__person_last_name', get_unique_name(2))
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', get_unique_name(2))
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("NEW CMR").should be_true

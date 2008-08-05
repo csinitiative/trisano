@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CoreFieldElement do
   before(:each) do
     @core_field_element = CoreFieldElement.new
-    @core_field_element.core_path = Event.exposed_attributes.keys[0]
+    @core_field_element.core_path = MorbidityEvent.exposed_attributes.keys[0]
   end
 
   it "should be valid" do
@@ -23,7 +23,7 @@ describe CoreFieldElement do
       @core_field_element.parent_element_id = form.form_base_element.id
       available_core_fields = @core_field_element.available_core_fields
       available_core_fields.size.should == 19
-      available_core_fields.flatten.include?(Event.exposed_attributes.keys[0]).should be_true
+      available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_true
     end
     
     it "should return only available core view names when some are in use" do
@@ -33,14 +33,14 @@ describe CoreFieldElement do
      
       patent_last_name_field_config = CoreFieldElement.new(
         :parent_element_id => base_element_id, 
-        :core_path => Event.exposed_attributes.keys[0]
+        :core_path => MorbidityEvent.exposed_attributes.keys[0]
       )
       patent_last_name_field_config.save_and_add_to_form
        
       @core_field_element.parent_element_id = base_element_id
       available_core_fields = @core_field_element.available_core_fields
       available_core_fields.size.should == 18
-      available_core_fields.flatten.include?(Event.exposed_attributes.keys[0]).should be_false
+      available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_false
     end
     
   end
@@ -62,7 +62,7 @@ describe CoreFieldElement do
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.save_and_add_to_form
       @core_field_element.reload
-      @core_field_element.name.should eql(Event.exposed_attributes[Event.exposed_attributes.keys[0]][:name])
+      @core_field_element.name.should eql(MorbidityEvent.exposed_attributes[MorbidityEvent.exposed_attributes.keys[0]][:name])
     end
     
     it "should override any name provided with the one in the exposed attributes" do
@@ -72,7 +72,7 @@ describe CoreFieldElement do
       @core_field_element.name = "name assigned"
       @core_field_element.save_and_add_to_form
       @core_field_element.reload
-      @core_field_element.name.should eql(Event.exposed_attributes[Event.exposed_attributes.keys[0]][:name])
+      @core_field_element.name.should eql(MorbidityEvent.exposed_attributes[MorbidityEvent.exposed_attributes.keys[0]][:name])
     end
     
     it "should receive a tree id" do

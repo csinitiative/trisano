@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Event do
+describe MorbidityEvent do
   fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
   event_hash = {
@@ -25,7 +25,7 @@ describe Event do
               { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
       it "should create a new participation linked to the event" do
@@ -55,7 +55,7 @@ describe Event do
               {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
         }
-        @event = Event.new(event_hash.merge(exisitng_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(exisitng_lab_hash_1))
       end
 
       it "should not create a new lab" do
@@ -82,7 +82,7 @@ describe Event do
               { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>""}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
       it "should be invalid" do
@@ -101,7 +101,7 @@ describe Event do
               { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"Whatever"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
       it "should be invalid" do
@@ -118,7 +118,7 @@ describe Event do
               { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
 
@@ -138,7 +138,7 @@ describe Event do
               { "lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
       it "should create one new lab" do
@@ -165,7 +165,7 @@ describe Event do
               {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_lab_hash_1))
+        @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
       end
 
       it "should not create any new labs" do
@@ -186,7 +186,7 @@ describe Event do
             ]
         }
         @new_lab_hash = event_hash.merge(existing_lab_hash_1)
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should not create any participations" do
@@ -207,7 +207,7 @@ describe Event do
         @existing_lab_hash_1 = {
           "existing_lab_attributes" => { "#{lab_results(:lab_guys_lab_result).id}" => {"lab_result_text"=>"Negative"}}
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should update the existing lab_result" do
@@ -222,7 +222,7 @@ describe Event do
         @existing_lab_hash_1 = {
           "existing_lab_attributes" => {}
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should delete existing lab results and participation" do
@@ -244,7 +244,7 @@ describe Event do
               {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16", "medical_record_number" => "1234"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_hospital_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
       end
 
       it "should create a new participation linked to the event" do
@@ -269,7 +269,7 @@ describe Event do
               {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
             ]
         }
-        @event = Event.new(event_hash.merge(new_hospital_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
       end
 
       it "should be valid" do
@@ -295,7 +295,7 @@ describe Event do
               {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15", "medical_record_number" => ""}
             ]
         }
-        @event = Event.new(event_hash.merge(new_hospital_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
       end
 
       it "should be invalid" do
@@ -313,7 +313,7 @@ describe Event do
               {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"}
             ]
         }
-        @event = Event.new(event_hash.merge(new_hospital_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
       end
 
       it "should make the participation invalid" do
@@ -332,7 +332,7 @@ describe Event do
             { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
           ]
         }
-        @event = Event.new(event_hash.merge(new_hospital_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
       end
 
       it "should do nothing" do
@@ -351,7 +351,7 @@ describe Event do
         @existing_hospital_hash = {
           "existing_hospital_attributes" => { "#{participations(:marks_hospitalized_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"} }
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should update the existing hospital" do
@@ -369,7 +369,7 @@ describe Event do
         @existing_hospital_hash = {
           "existing_hospital_attributes" => {}
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should delete existing hospital participation and hospitalization dates" do
@@ -391,7 +391,7 @@ describe Event do
               {"secondary_entity_id" => places(:AVH).id}
             ]
         }
-        @event = Event.new(event_hash.merge(new_diagnostic_hash))
+        @event = MorbidityEvent.new(event_hash.merge(new_diagnostic_hash))
       end
 
       it "should create a new participation linked to the event" do
@@ -406,7 +406,7 @@ describe Event do
         @existing_diagnostic_hash = {
           "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}"} }
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should update the existing diagnosing facility" do
@@ -421,7 +421,7 @@ describe Event do
         @existing_diagnostic_hash = {
           "existing_diagnostic_attributes" => {}
         }
-        @event = Event.find(events(:marks_cmr).id)
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
       end
 
       it "should delete existing diagnosing facility participation" do
@@ -435,7 +435,7 @@ describe Event do
   describe "Routing an event" do
 
     before(:each) do
-      @event = Event.find(events(:marks_cmr).id)
+      @event = MorbidityEvent.find(events(:marks_cmr).id)
     end
 
     describe "with legitimate parameters" do
@@ -468,34 +468,34 @@ describe Event do
     fixtures :external_codes
 
     it "should not be under investigation in the default state" do
-      event = Event.new
+      event = MorbidityEvent.new
       event.should_not be_under_investigation
     end
 
     it "should not be under investigation if it is new" do
-      event = Event.new(:event_status => external_codes(:event_status_new))
+      event = MorbidityEvent.new(:event_status => external_codes(:event_status_new))
       event.should_not be_under_investigation
     end
 
     it "should be under investigation if set to under investigation" do
-      event = Event.new :event_status => external_codes(:event_status_under_investigation)
+      event = MorbidityEvent.new :event_status => external_codes(:event_status_under_investigation)
       event.should be_under_investigation
     end
 
     it "should be under investigation if reopened by manager" do
-      event = Event.new :event_status => external_codes(:event_status_reopened_manager)
+      event = MorbidityEvent.new :event_status => external_codes(:event_status_reopened_manager)
       event.should be_under_investigation
     end
 
     it "should be under investigation if investigation is complete" do
-      event = Event.new :event_status => external_codes(:event_status_investigation_complete)
+      event = MorbidityEvent.new :event_status => external_codes(:event_status_investigation_complete)
       event.should be_under_investigation
     end
   end
 
   describe "Saving an event" do
     it "should generate an event onset date set to today" do
-      event = Event.new(event_hash)
+      event = MorbidityEvent.new(event_hash)
       event.save.should be_true
       event.event_onset_date.should == Date.today
     end

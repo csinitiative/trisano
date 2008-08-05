@@ -9,7 +9,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return([@event])
+      MorbidityEvent.stub!(:find).and_return([@event])
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
     end
   
@@ -28,7 +28,7 @@ describe EventsController do
     end
   
     it "should find all events" do
-      Event.should_receive(:find).and_return([@event])
+      MorbidityEvent.should_receive(:find).and_return([@event])
       do_get
     end
   
@@ -43,7 +43,7 @@ describe EventsController do
   #      before(:each) do
   #      mock_user
   #      @event = mock_event
-  #      Event.stub!(:find).and_return([@event])
+  #      MorbidityEvent.stub!(:find).and_return([@event])
   #      end
   #    
   #      def do_get
@@ -57,7 +57,7 @@ describe EventsController do
   #      end
   #  
   #    it "should find all events" do
-  #      Event.should_receive(:find).with(:all).and_return([@event])
+  #      MorbidityEvent.should_receive(:find).with(:all).and_return([@event])
   #      do_get
   #    end
   #    
@@ -73,7 +73,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
+      MorbidityEvent.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
     end
   
@@ -92,7 +92,7 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      Event.should_receive(:find).twice().with("75").and_return(@event)
+      MorbidityEvent.should_receive(:find).twice().with("75").and_return(@event)
       do_get
     end
   
@@ -107,7 +107,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
+      MorbidityEvent.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
     end
   
@@ -121,7 +121,7 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      Event.should_receive(:find).with("75").and_return(@event)
+      MorbidityEvent.should_receive(:find).with("75").and_return(@event)
       do_get
     end
   
@@ -131,8 +131,8 @@ describe EventsController do
   #
   #    before(:each) do
   #      mock_user
-  #      @event = mock_model(Event, :to_xml => "XML")
-  #      Event.stub!(:find).and_return([@event])
+  #      @event = mock_model(MorbidityEvent, :to_xml => "XML")
+  #      MorbidityEvent.stub!(:find).and_return([@event])
   #    end
   #  
   #    def do_get
@@ -146,7 +146,7 @@ describe EventsController do
   #    end
   #  
   #    it "should find the event requested" do
-  #      Event.should_receive(:find).with("1").and_return([@event])
+  #      MorbidityEvent.should_receive(:find).with("1").and_return([@event])
   #      do_get
   #    end
   #  
@@ -162,7 +162,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:new).and_return(@event)
+      MorbidityEvent.stub!(:new).and_return(@event)
       @user.stub!(:is_entitled_to?).with(:create_event).and_return(true)
     end
     
@@ -181,7 +181,7 @@ describe EventsController do
     end
     
     it "should create an new event" do
-      Event.should_receive(:new).and_return(@event)
+      MorbidityEvent.should_receive(:new).and_return(@event)
       do_get
     end
     
@@ -204,7 +204,7 @@ describe EventsController do
       @form_reference = mock_model(FormReference)
       @form = mock_model(Form, :null_object => true)
 
-      Event.stub!(:find).and_return(@event)
+      MorbidityEvent.stub!(:find).and_return(@event)
       @event.stub!(:get_investigation_forms).and_return([@form])
       
 
@@ -227,11 +227,11 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      Event.should_receive(:find).and_return(@event)
+      MorbidityEvent.should_receive(:find).and_return(@event)
       do_get
     end
   
-    it "should assign the found Event for the view" do
+    it "should assign the found MorbidityEvent for the view" do
       do_get
       assigns[:event].should equal(@event)
     end
@@ -241,8 +241,8 @@ describe EventsController do
   #
   #    before(:each) do
   #      mock_user
-  #      @event = mock_model(Event, :to_param => "1")
-  #      Event.stub!(:new).and_return(@event)
+  #      @event = mock_model(MorbidityEvent, :to_param => "1")
+  #      MorbidityEvent.stub!(:new).and_return(@event)
   #    end
   #    
   #    describe "with successful save" do
@@ -253,7 +253,7 @@ describe EventsController do
   #      end
   #  
   #      it "should create a new event" do
-  #        Event.should_receive(:new).with({}).and_return(@event)
+  #        MorbidityEvent.should_receive(:new).with({}).and_return(@event)
   #        do_post
   #      end
   #
@@ -283,8 +283,8 @@ describe EventsController do
   #
   #    before(:each) do
   #      mock_user
-  #      @event = mock_model(Event, :to_param => "1")
-  #      Event.stub!(:find).and_return(@event)
+  #      @event = mock_model(MorbidityEvent, :to_param => "1")
+  #      MorbidityEvent.stub!(:find).and_return(@event)
   #    end
   #    
   #    describe "with successful update" do
@@ -295,7 +295,7 @@ describe EventsController do
   #      end
   #
   #      it "should find the event requested" do
-  #        Event.should_receive(:find).with("1").and_return(@event)
+  #        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
   #        do_put
   #      end
   #
@@ -335,8 +335,8 @@ describe EventsController do
   #
   #    before(:each) do
   #      mock_user
-  #      @event = mock_model(Event, :destroy => true)
-  #      Event.stub!(:find).and_return(@event)
+  #      @event = mock_model(MorbidityEvent, :destroy => true)
+  #      MorbidityEvent.stub!(:find).and_return(@event)
   #    end
   #  
   #    def do_delete
@@ -344,7 +344,7 @@ describe EventsController do
   #    end
   #
   #    it "should find the event requested" do
-  #      Event.should_receive(:find).with("1").and_return(@event)
+  #      MorbidityEvent.should_receive(:find).with("1").and_return(@event)
   #      do_delete
   #    end
   #  
@@ -369,9 +369,9 @@ describe EventsController do
       @jurisdiction = mock_model(Participation)
       @jurisdiction.stub!(:secondary_entity_id).and_return(1)
 
-      @event = mock_model(Event, :to_param => "1")
+      @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
-      Event.stub!(:find).and_return(@event)
+      MorbidityEvent.stub!(:find).and_return(@event)
     end
 
     describe "with successful routing" do
@@ -382,7 +382,7 @@ describe EventsController do
       end
       
       it "should find the event requested" do
-        Event.should_receive(:find).with("1").and_return(@event)
+        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
         do_route_event
       end
       

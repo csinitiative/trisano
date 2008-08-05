@@ -7,11 +7,11 @@
     
     <fieldset class="vert">
       <span class="horiz">
-        <label for="event_active_reporting_agency__active_secondary_entity__place__name">Reporting Agency</label>
+        <label for="morbidity_event_active_reporting_agency__active_secondary_entity__place__name">Reporting Agency</label>
         
-        <%= model_auto_completer "event[active_reporting_agency][active_secondary_entity][place][name]", 
+        <%= model_auto_completer "morbidity_event[active_reporting_agency][active_secondary_entity][place][name]", 
           @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.name, 
-          "event[active_reporting_agency][secondary_entity_id]", 
+          "morbidity_event[active_reporting_agency][secondary_entity_id]", 
           @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.entity_id, 
           { :allow_free_text => true, :append_random_suffix => false, :action => 'auto_complete_for_event_reporting_agency'},
           { :size => 25 }, 

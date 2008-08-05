@@ -5,7 +5,7 @@ class EventsController < ApplicationController
   before_filter :get_investigation_forms, :only => [:edit]
   
   def auto_complete_for_event_reporting_agency
-    entered_name = params[:event][:active_reporting_agency][:active_secondary_entity][:place][:name]
+    entered_name = params[:morbidity_event][:active_reporting_agency][:active_secondary_entity][:place][:name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
       :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
                        (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code IN ('H', 'L', 'C'))", entered_name.downcase + '%'],
@@ -16,7 +16,7 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_lab_name
-    entered_name = params[:event][:new_lab_attributes].first[:name]
+    entered_name = params[:morbidity_event][:new_lab_attributes].first[:name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
       :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
                        (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", entered_name.downcase + '%'],
@@ -27,7 +27,7 @@ class EventsController < ApplicationController
   end
 
   def index
-    @events = Event.find(:all, 
+    @events = MorbidityEvent.find(:all, 
       :include => :jurisdiction, 
       :select => "jurisdiction.secondary_entity_id", 
       :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
@@ -40,7 +40,7 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = MorbidityEvent.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -58,7 +58,7 @@ class EventsController < ApplicationController
 
     # Debt:  Get rid of this monstrosity and replace with #build calls here in the controller.
     #        Get rid of corresponding setters
-    @event = Event.new(
+    @event = MorbidityEvent.new(
       :event_onset_date => Date.today,
       :disease          => {}, 
       :active_patient   => { 
@@ -122,14 +122,15 @@ class EventsController < ApplicationController
   end
 
   def create
-    @event = Event.new(params[:event])
-    
+    @event = MorbidityEvent.new(params[:morbidity_event])
+
     unless User.current_user.is_entitled_to_in?(:create_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403
       return
     end
     
     respond_to do |format|
+      # DEBT: Cycle back for contacts
       if @event.save
         flash[:notice] = 'CMR was successfully created.'
         format.html { redirect_to(cmr_url(@event)) }
@@ -142,12 +143,12 @@ class EventsController < ApplicationController
   end
 
   def update
-    params[:event][:existing_lab_attributes] ||= {}
-    params[:event][:existing_hospital_attributes] ||= {}
-    params[:event][:existing_diagnostic_attributes] ||= {}
+    params[:morbidity_event][:existing_lab_attributes] ||= {}
+    params[:morbidity_event][:existing_hospital_attributes] ||= {}
+    params[:morbidity_event][:existing_diagnostic_attributes] ||= {}
 
     respond_to do |format|
-      if @event.update_attributes(params[:event])
+      if @event.update_attributes(params[:morbidity_event])
         flash[:notice] = 'CMR was successfully updated.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { head :ok }
@@ -165,7 +166,7 @@ class EventsController < ApplicationController
   # Route an event from one jurisdiction to another
   def jurisdiction
  
-    @event = Event.find(params[:id])
+    @event = MorbidityEvent.find(params[:id])
 
     # user cannot route events _from_ a jurisdiction for which they do not have the 'route_event_to_any_lhd' privilege
     unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, @event.active_jurisdiction.secondary_entity_id)
@@ -189,7 +190,7 @@ class EventsController < ApplicationController
   end
 
   def state
-    @event = Event.find(params[:id])
+    @event = MorbidityEvent.find(params[:id])
 
     unless User.current_user.is_entitled_to_in?(params[:state_to_change].to_sym, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403
@@ -197,7 +198,7 @@ class EventsController < ApplicationController
     end
 
     if @event.change_state(params[:new_state])
-      @events = Event.find(:all, 
+      @events = MorbidityEvent.find(:all, 
         :include => :jurisdiction, 
         :select => "jurisdiction.secondary_entity_id", 
         :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
@@ -238,7 +239,7 @@ class EventsController < ApplicationController
   end
   
   def can_update?
-    @event ||= Event.find(params[:id])
+    @event ||= MorbidityEvent.find(params[:id])
     unless User.current_user.is_entitled_to_in?(:update_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
@@ -246,7 +247,7 @@ class EventsController < ApplicationController
   end
   
   def can_view?
-    @event = Event.find(params[:id])
+    @event = MorbidityEvent.find(params[:id])
     unless User.current_user.is_entitled_to_in?(:view_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
@@ -254,7 +255,7 @@ class EventsController < ApplicationController
   end
 
   def get_investigation_forms
-    @event ||= Event.find(params[:id])
+    @event ||= MorbidityEvent.find(params[:id])
     @event.get_investigation_forms
   end
   

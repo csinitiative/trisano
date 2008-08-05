@@ -5,8 +5,9 @@ class Entity < ActiveRecord::Base
   has_many :places, :order => 'created_at ASC', :before_add => :set_entity_type
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
-  #TODO: TGF CHANGE THINGY TO PLACE WHEN REFACTORING COMPLETE
+  #TODO: TGF CHANGE PLACE_TEMP TO PLACE WHEN REFACTORING COMPLETE
   has_one :place_temp, :class_name => "Place"
+  has_one :person_temp, :class_name => "Person"
 
   has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
@@ -136,7 +137,7 @@ class Entity < ActiveRecord::Base
       disease_event.disease = event.disease.disease
     end
 
-    cmr = Event.new
+    cmr = MorbidityEvent.new
     cmr.event_onset_date = Date.today
     cmr.event_status_id = ExternalCode.find_by_code_name_and_code_description('eventstatus', "New").id
     cmr.udoh_case_status_id = cmr.lhd_case_status_id = ExternalCode.find_by_code_name_and_code_description('case', "Suspect").id

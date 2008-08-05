@@ -114,18 +114,18 @@ namespace :nedss do
         #form.fields.each { |f| puts f.name }
 
         # Set minimal values
-        form['event[active_patient][active_primary_entity][person][first_name]'] = 'Steve'
-        form['event[active_patient][active_primary_entity][person][last_name]'] = 'Smoker'
+        form['morbidity_event[active_patient][active_primary_entity][person][first_name]'] = 'Steve'
+        form['morbidity_event[active_patient][active_primary_entity][person][last_name]'] = 'Smoker'
 
         # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
         # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
-        form.add_field!("event[disease][disease_id]", "")
-        form.add_field!("event[active_patient][active_primary_entity][person][birth_gender_id]", "")
-        form.add_field!("event[active_patient][active_primary_entity][person][ethnicity_id]", "")
-        form.add_field!("event[active_patient][active_primary_entity][person][primary_language_id]", "")
-        form.add_field!("event[active_patient][active_primary_entity][address][state_id]", "")
-        form.add_field!("event[active_patient][active_primary_entity][address][county_id]", "")
-        form.add_field!("event[active_jurisdiction][secondary_entity_id]", "")
+        form.add_field!("morbidity_event[disease][disease_id]", "")
+        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]", "")
+        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]", "")
+        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][primary_language_id]", "")
+        form.add_field!("morbidity_event[active_patient][active_primary_entity][address][state_id]", "")
+        form.add_field!("morbidity_event[active_patient][active_primary_entity][address][county_id]", "")
+        form.add_field!("morbidity_event[active_jurisdiction][secondary_entity_id]", "")
 
         page = agent.submit form      
         raise "POST content invalid" unless (page.search("//#errorExplanation")).empty?

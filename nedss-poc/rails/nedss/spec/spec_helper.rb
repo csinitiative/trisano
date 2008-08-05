@@ -85,7 +85,7 @@ end
 
 def mock_event
   
-  event = mock_model(Event)
+  event = mock_model(MorbidityEvent)
   person = mock_person_entity
   
   event_status = mock_model(ExternalCode)

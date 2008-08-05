@@ -45,7 +45,7 @@ describe FollowUpElement do
     before(:each) do
       
       # Debt: Building and saving an event because the fixture-driven event is not currently valid (rake fails loading event fixtures)
-      @event = Event.new
+      @event = MorbidityEvent.new
       @event.disease_events << disease_events(:marks_chicken_pox)
       @event.jurisdiction = participations(:marks_jurisdiction)
       @event.save(false)

@@ -32,7 +32,6 @@ class FormsController < AdminController
   end
 
   def create
-    p params
     @form = Form.new(params[:form])
 
     respond_to do |format|

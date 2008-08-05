@@ -7,22 +7,22 @@ describe 'Adding multiple lab results to a CMR' do
   it "should allow adding new lab results to a new CMR" do
     @browser.open "/nedss/cmrs"
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "event_active_patient__active_primary_entity__person_last_name", "Jones"
-    @browser.type "event_active_patient__active_primary_entity__person_first_name", "Indiana"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Jones"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Indiana"
 
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a lab result"
     sleep(1)
 
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][name]'][0]", "Lab One"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][test_type]'][0]", "Urinalysis"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][lab_result_text]'][0]", "Positive"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][interpretation]'][0]", "Healthy"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][name]'][0]", "Lab One"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][test_type]'][0]", "Urinalysis"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][lab_result_text]'][0]", "Positive"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][interpretation]'][0]", "Healthy"
 
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][name]'][1]", "Lab Two"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][test_type]'][1]", "Blood Test"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][lab_result_text]'][1]", "Negative"
-    @browser.type "document.forms['new_event'].elements['event[new_lab_attributes][][interpretation]'][1]", "Sickly"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][name]'][1]", "Lab Two"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][test_type]'][1]", "Blood Test"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][lab_result_text]'][1]", "Negative"
+    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][interpretation]'][1]", "Sickly"
 
     save_cmr(@browser).should be_true
 
@@ -47,7 +47,7 @@ describe 'Adding multiple lab results to a CMR' do
   it "should allow editing lab results" do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Laboratory")
-    type_field_by_order(@browser, "event_existing_lab_attributes", 0, "Uncertain")
+    type_field_by_order(@browser, "morbidity_event_existing_lab_attributes", 0, "Uncertain")
     save_cmr(@browser).should be_true
     @browser.is_text_present('Uncertain').should be_true
   end

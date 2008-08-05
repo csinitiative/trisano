@@ -82,7 +82,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :check_box
       
       if @object.new_record?
-        field_name = "event[new_checkboxes]"
+        field_name = "morbidity_event[new_checkboxes]"
         field_index = question.id.to_s
       else
         field_name = @object_name
@@ -100,7 +100,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :radio_button
       
       if @object.new_record?
-        field_name = "event[new_radio_buttons]"
+        field_name = "morbidity_event[new_radio_buttons]"
         field_index = question.id.to_s
       else
         field_name = @object_name

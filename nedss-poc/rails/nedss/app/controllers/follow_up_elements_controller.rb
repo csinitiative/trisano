@@ -78,7 +78,7 @@ class FollowUpElementsController <  AdminController
   def process_core_condition
     begin
       @follow_ups = FollowUpElement.process_core_condition(params)
-      @event = params[:event_id].blank? ? Event.new : Event.find(params[:event_id])
+      @event = params[:event_id].blank? ? MorbidityEvent.new : MorbidityEvent.find(params[:event_id])
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to process conditional logic for follow up questions.'

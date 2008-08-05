@@ -42,7 +42,7 @@ describe Entity do
     end
     
     it "should raise an error when calling promot_to_case on unsaved records" do
-      lambda { @entity.promote_to_case(Event.new) }.should raise_error(RuntimeError)
+      lambda { @entity.promote_to_case(MorbidityEvent.new) }.should raise_error(RuntimeError)
     end
 
     describe "where person is not valid" do

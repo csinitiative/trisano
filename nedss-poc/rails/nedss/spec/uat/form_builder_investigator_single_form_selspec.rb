@@ -139,12 +139,12 @@ describe "Form Builder Investigator Single Form" do
 
   it "Should create a test CMR" do
     click_nav_new_cmr(@browser)
-    @browser.type "event_active_patient__active_primary_entity__person_last_name", "Doe"
-    @browser.type "event_active_patient__active_primary_entity__person_first_name", "John"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Doe"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "John"
     click_core_tab(@browser, "Clinical")
-    @browser.select "event_disease_disease_id", "label=Amebiasis"
+    @browser.select "morbidity_event_disease_disease_id", "label=Amebiasis"
     click_core_tab(@browser, "Administrative")
-    @browser.select "event_event_status_id", "label=Under Investigation"
+    @browser.select "morbidity_event_event_status_id", "label=Under Investigation"
     save_cmr(@browser)
     @browser.is_text_present("CMR was successfully created").should be_true
   end
@@ -169,13 +169,13 @@ describe "Form Builder Investigator Single Form" do
   it "should save entered data." do
     pending "until we figure out how to guarantee dynamic field names"
     @browser.click_core_tab(@browser, "Investigation")
-    @browser.type "event_answers_1_text_answer", "One"
-    @browser.type "event_answers_2_text_answer", "Two"
-    @browser.select "event_answers_3_text_answer", "label=Value Three"
-    @browser.click "event_answers__4_check_box_answer_1"
-    @browser.click "event_answers__4_check_box_answer_2"
-    @browser.click "event_answers__4_check_box_answer_3"
-    @browser.click "event_submit"
+    @browser.type "morbidity_event_answers_1_text_answer", "One"
+    @browser.type "morbidity_event_answers_2_text_answer", "Two"
+    @browser.select "morbidity_event_answers_3_text_answer", "label=Value Three"
+    @browser.click "morbidity_event_answers__4_check_box_answer_1"
+    @browser.click "morbidity_event_answers__4_check_box_answer_2"
+    @browser.click "morbidity_event_answers__4_check_box_answer_3"
+    @browser.click "morbidity_event_submit"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("CMR was successfully updated").should be_true
   end
@@ -185,12 +185,12 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load($load_time)
     @browser.click_core_tab("Investigation")
-    @browser.get_value("event_answers_1_text_answer").should eql("One")
-    @browser.get_value("event_answers_2_text_answer").should eql("Two")
-    @browser.get_value("event_answers_3_text_answer").should eql("Value Three")
-    @browser.is_checked("event_answers__4_check_box_answer_1").should be_true
-    @browser.is_checked("event_answers__4_check_box_answer_2").should be_true
-    @browser.is_checked("event_answers__4_check_box_answer_3").should be_true
+    @browser.get_value("morbidity_event_answers_1_text_answer").should eql("One")
+    @browser.get_value("morbidity_event_answers_2_text_answer").should eql("Two")
+    @browser.get_value("morbidity_event_answers_3_text_answer").should eql("Value Three")
+    @browser.is_checked("morbidity_event_answers__4_check_box_answer_1").should be_true
+    @browser.is_checked("morbidity_event_answers__4_check_box_answer_2").should be_true
+    @browser.is_checked("morbidity_event_answers__4_check_box_answer_3").should be_true
   end
 
 end

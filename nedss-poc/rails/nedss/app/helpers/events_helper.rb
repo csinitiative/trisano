@@ -250,7 +250,7 @@ module EventsHelper
     
     unless (ajax_render)
       # Debt: Replace with shorter eval technique
-      core_path_with_dots = element.core_path.sub("event[", "").gsub(/\]/, "").gsub(/\[/, ".")
+      core_path_with_dots = element.core_path.sub("morbidity_event[", "").gsub(/\]/, "").gsub(/\[/, ".")
       core_value = @event
       core_path_with_dots.split(".").each do |method|
         begin

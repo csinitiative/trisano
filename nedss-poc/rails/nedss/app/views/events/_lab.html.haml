@@ -2,7 +2,7 @@
   = error_messages_for :object => lab.secondary_entity.place_temp
 %div{:class => 'lab'}
   - new_or_existing = lab.new_record? ? 'new' : 'existing'
-  - prefix = "event[#{new_or_existing}_lab_attributes]"
+  - prefix = "morbidity_event[#{new_or_existing}_lab_attributes]"
   - prefix_with_array = "#{prefix}[]"
 
   -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.

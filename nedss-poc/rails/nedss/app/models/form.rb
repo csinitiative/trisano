@@ -78,8 +78,6 @@ class Form < ActiveRecord::Base
                               disease_id, jurisdiction_id ],
               :order => "forms.created_at ASC"
     )
-
-    # find_all_by_disease_id(disease_id, :conditions => ["(jurisdiction_id = ? OR jurisdiction_id IS NULL) AND status = 'Live'", jurisdiction_id], :order => "created_at ASC")
   end
 
   private

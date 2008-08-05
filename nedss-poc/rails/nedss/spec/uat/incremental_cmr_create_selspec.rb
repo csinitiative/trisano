@@ -10,7 +10,7 @@ describe 'User functionality for creating and saving CMRs' do
   
   it 'should save a CMR with just a last name' do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('event_active_patient__active_primary_entity__person_last_name', @last_name)
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @last_name)
     save_cmr(@browser).should be_true
     @browser.is_text_present(@last_name).should be_true
   end
@@ -31,24 +31,24 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the street name' do    
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Demographics")
-    @browser.type('event_active_patient__active_primary_entity__address_street_name', 'Junglewood Court')
+    @browser.type('morbidity_event_active_patient__active_primary_entity__address_street_name', 'Junglewood Court')
              
     save_cmr(@browser).should be_true
   end
   
   it 'should save the phone number' do
     edit_cmr(@browser).should be_true
-    @browser.type 'event_active_patient__active_primary_entity__telephone_area_code', '801'
-    @browser.type 'event_active_patient__active_primary_entity__telephone_phone_number', '581'
-    @browser.type 'event_active_patient__active_primary_entity__telephone_extension', '1234'
-    @browser.type 'event_active_patient__active_primary_entity__telephone_phone_number', '5811234'
+    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_area_code', '801'
+    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_phone_number', '581'
+    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_extension', '1234'
+    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_phone_number', '5811234'
     save_cmr(@browser).should be_true
   end
   
   it 'should save the disease info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Clinical")
-    @browser.select 'event_disease_disease_id', 'label=AIDS'
+    @browser.select 'morbidity_event_disease_disease_id', 'label=AIDS'
     save_cmr(@browser).should be_true
   end
   
@@ -58,8 +58,8 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.click("link=Add a lab result")
     sleep 3
     @browser.type('model_auto_completer_tf', 'Lab')
-    @browser.type('event_new_lab_attributes__lab_result_text', 'Positive')
-    @browser.select 'event_new_lab_attributes__specimen_source_id', 'label=Animal head'
+    @browser.type('morbidity_event_new_lab_attributes__lab_result_text', 'Positive')
+    @browser.select 'morbidity_event_new_lab_attributes__specimen_source_id', 'label=Animal head'
     save_cmr(@browser).should be_true
     @browser.is_text_present('Animal head').should be_true
     @browser.is_text_present('Positive').should be_true
@@ -87,7 +87,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save administrative info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Administrative")
-    @browser.select 'event_active_jurisdiction_secondary_entity_id', 'label=Salt Lake Valley Health Department'
+    @browser.select 'morbidity_event_active_jurisdiction_secondary_entity_id', 'label=Salt Lake Valley Health Department'
     save_cmr(@browser).should be_true
   end
   

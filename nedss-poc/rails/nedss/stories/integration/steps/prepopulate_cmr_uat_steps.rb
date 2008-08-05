@@ -40,15 +40,15 @@ steps_for(:prepopulate_cmr_uat) do
   end
   
   Then("$first_name should display in the first name field") do |first_name|
-    response.should have_tag("input#event_active_patient__active_primary_entity__person_first_name[value=?]", first_name)
+    response.should have_tag("input#morbidity_event_active_patient__active_primary_entity__person_first_name[value=?]", first_name)
   end
   
   Then("$last_name should display in the last name field") do |last_name|
-    response.should have_tag("input#event_active_patient__active_primary_entity__person_last_name[value=?]", last_name)
+    response.should have_tag("input#morbidity_event_active_patient__active_primary_entity__person_last_name[value=?]", last_name)
   end
   
   Then("$birth_date should display in the birth date field") do |birth_date|
-    response.should have_tag("input#event_active_patient__active_primary_entity__person_birth_date[value=?]", birth_date)
+    response.should have_tag("input#morbidity_event_active_patient__active_primary_entity__person_birth_date[value=?]", birth_date)
   end
   
 end

@@ -5,7 +5,7 @@
 
 %div{:class => 'hospital'}
   - new_or_existing = hospital.new_record? ? 'new' : 'existing'
-  - prefix = "event[#{new_or_existing}_hospital_attributes][]"
+  - prefix = "morbidity_event[#{new_or_existing}_hospital_attributes][]"
 
   - fields_for(prefix, hospital, :builder => ExtendedFormBuilder) do |hospital_fields|
     %span{:class => "horiz"}

@@ -1,0 +1,2 @@
+class ContactEvent < Event
+end
