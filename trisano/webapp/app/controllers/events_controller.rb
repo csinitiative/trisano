@@ -240,6 +240,11 @@ class EventsController < ApplicationController
   
   def can_update?
     @event ||= MorbidityEvent.find(params[:id])
+    @can_investigate = (
+      (@event.under_investigation?) and 
+        User.current_user.is_entitled_to_in?(:investigate_event, @event.active_jurisdiction.secondary_entity_id) and 
+        (@event.disease && @event.disease.disease_id)
+    )
     unless User.current_user.is_entitled_to_in?(:update_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return

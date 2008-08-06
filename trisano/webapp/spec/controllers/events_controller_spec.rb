@@ -206,10 +206,7 @@ describe EventsController do
 
       MorbidityEvent.stub!(:find).and_return(@event)
       @event.stub!(:get_investigation_forms).and_return([@form])
-      
-
       @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
-      @event.stub!(:form_references).and_return([])
     end
   
     def do_get

@@ -163,13 +163,9 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     result = ""
     
     unless (@object.nil? || event.nil?)
-      # Debt: Duplicating this logic
-      # Called too often.  Move to controller?
-      can_investigate = ((event.under_investigation?) and User.current_user.is_entitled_to_in?(:investigate_event, event.active_jurisdiction.secondary_entity_id) and (event.disease && event.disease.disease_id) )
-
-      if (can_investigate && !event.form_references.nil?)        
+      if (@can_investigate && !event.form_references.nil?)        
         event.form_references.each do |form_reference|
-          if (form_reference.form.form_base_element.all_cached_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
+          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
             result = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
             break
           end

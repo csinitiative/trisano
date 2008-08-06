@@ -79,6 +79,7 @@ def mock_user
   
   @user.stub!(:role_memberships).and_return([@role_membership])
   @user.stub!(:admin_jurisdiction_ids).and_return([75])
+   @user.stub!(:is_entitled_to_in?).and_return(true)
   
   @user
 end
@@ -184,6 +185,7 @@ def mock_event
   event.stub!(:MMWR_week).and_return("7")
   event.stub!(:answers).and_return([answer])
   event.stub!(:form_references).and_return([])
+  event.stub!(:under_investigation?).and_return(true)
   event
 end
 
