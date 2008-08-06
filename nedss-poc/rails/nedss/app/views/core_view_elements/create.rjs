@@ -1,4 +1,0 @@
-page.replace_html 'core-element-list', :partial => 'forms/core_elements'
-page.replace_html 'core-builder-mods', "<span style='color:green'>" + flash[:notice] + "</span><input type='hidden' id='new_node_id' name='new_node_id' value='" + @core_view_element.id.to_s + "'/>"
-page.visual_effect(:highlight, 'core-element-list')
-flash[:notice] = ""

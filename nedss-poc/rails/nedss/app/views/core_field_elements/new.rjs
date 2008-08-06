@@ -1,2 +1,0 @@
-page.replace_html 'core-field-builder-mods', :partial => 'core_field_elements/new', :locals => {:core_field_element => @core_field_element}
-page.visual_effect(:blind_down, 'core-field-builder-mods', :duration => 0.1)

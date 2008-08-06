@@ -1,2 +1,0 @@
-page.replace_html "value-set-mods-#{@value_set_element.id}", :partial => 'value_set_elements/edit', :locals => {:value_set_element => @value_set_element}
-page.visual_effect(:blind_down, "value-set-mods-#{@value_set_element.id}", :duration => 0.1)

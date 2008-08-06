@@ -1,2 +1,0 @@
-class ContactEvent < Event
-end

@@ -1,9 +1,0 @@
-
-marks_current_treatment:
-  treatment_given_yn_id: !str 1402
-  treatment_date: 
-  id: !str 1
-  participation_id: !str 2
-  treatment_id: 
-  treatment: Bread and water
-  created_at: <%= Time.now.to_s :db %> 

@@ -1,2 +1,0 @@
-module CoreFieldElementsHelper
-end

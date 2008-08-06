@@ -1,2 +1,0 @@
-page.replace_html "follow-up-mods-#{@follow_up_element.parent_element_id}", :partial => 'follow_up_elements/new', :locals => {:follow_up_element => @follow_up_element}
-page.visual_effect(:blind_down, "follow-up-mods-#{@follow_up_element.parent_element_id}", :duration => 0.1)

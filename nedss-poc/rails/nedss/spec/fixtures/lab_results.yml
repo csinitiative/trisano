@@ -1,7 +1,0 @@
-lab_guys_lab_result:
-  id: 1
-  lab_result_text: "Positive"
-  test_type: "Blood test"
-  interpretation: "Sickly"
-  created_at: <%= Time.now.to_s :db %> 
-  participation_id: 8
