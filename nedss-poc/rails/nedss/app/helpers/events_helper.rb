@@ -9,9 +9,9 @@ module EventsHelper
     concat("</span>", block.binding)
     unless (@event.nil? || @event.form_references.nil?)        
       @event.form_references.each do |form_reference|
-        configs = form_reference.form.form_base_element.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
+        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
         configs.each do |config|
-          concat(render_investigator_view(config, @event_form), block.binding)
+          concat(render_investigator_view(config, @event_form, form_reference.form), block.binding)
         end
       end
     end
@@ -40,12 +40,12 @@ module EventsHelper
     
   end
   
-  def render_investigator_view(view, f)
+  def render_investigator_view(view, f, form=nil)
     result = ""
     
-    form_elements_cache = FormElementCache.new(view)
+    form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
     
-    form_elements_cache.children.each do |element|
+    form_elements_cache.children(view).each do |element|
       result += render_investigator_element(form_elements_cache, element, f)
     end
     
@@ -208,8 +208,7 @@ module EventsHelper
       end
     end
 
-    # Debt: Re-retrieving something already in the tree; just need to look at the kids
-    follow_up_group = element.process_condition(@answer_object, @event.id)
+    follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
       
     unless follow_up_group.nil?
       result += "<div id='follow_up_investigate_#{element.id}'>"

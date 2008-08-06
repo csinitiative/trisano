@@ -292,7 +292,9 @@ module FormsHelper
 
   def add_value_set_link(element)
     "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/new?form_element_id=" + 
-      element.id.to_s + "&form_id=" + element.form_id.to_s  + "', {asynchronous:true, evalScripts:true}); return false;\">Add value set</a></small>"
+      element.id.to_s + "&form_id=" + element.form_id.to_s  + 
+      "', {asynchronous:true, evalScripts:true}); return false;\" class='add-value-set' id='add-value-set-" + 
+      element.id.to_s + "'>Add value set</a></small>"
   end
 
   def edit_value_set_link(element)

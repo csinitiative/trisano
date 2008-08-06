@@ -35,7 +35,7 @@ class Event < ActiveRecord::Base
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
-   validates_date :event_onset_date
+  validates_date :event_onset_date
   validates_associated :labs
   validates_associated :hospitalized_health_facilities
   validates_associated :diagnosing_health_facilities
@@ -627,7 +627,7 @@ class Event < ActiveRecord::Base
   def generate_mmwr
     epi_dates = { :onsetdate => @disease.nil? ? nil : @disease.disease_onset_date, 
       :diagnosisdate => @disease.nil? ? nil : @disease.date_diagnosed, 
-#      :labresultdate => @lab.lab_result.nil? ? nil : @lab.lab_result.lab_test_date, 
+      #      :labresultdate => @lab.lab_result.nil? ? nil : @lab.lab_result.lab_test_date, 
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
     

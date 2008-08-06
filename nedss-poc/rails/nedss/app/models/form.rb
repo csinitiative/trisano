@@ -3,17 +3,22 @@ class Form < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => "Entity", :foreign_key => "jurisdiction_id"
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
+  has_many :form_elements, :include => [:question]
+  
+  def form_element_cache
+    @form_element_cache ||=  FormElementCache.new(form_base_element)
+  end
   
   def investigator_view_elements_container
-    form_base_element.children[0]
+    form_element_cache.children[0]
   end
   
   def core_view_elements_container
-    form_base_element.children[1]
+    form_element_cache.children[1]
   end
   
   def core_field_elements_container
-    form_base_element.children[2]
+    form_element_cache.children[2]
   end
   
   def save_and_initialize_form_elements
@@ -73,10 +78,10 @@ class Form < ActiveRecord::Base
   
   def self.get_published_investigation_forms(disease_id, jurisdiction_id)
     Form.find(:all,
-              :include => :diseases,
-              :conditions => ["diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
-                              disease_id, jurisdiction_id ],
-              :order => "forms.created_at ASC"
+      :include => :diseases,
+      :conditions => ["diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+        disease_id, jurisdiction_id ],
+      :order => "forms.created_at ASC"
     )
   end
 
@@ -124,7 +129,7 @@ class Form < ActiveRecord::Base
     
     template_question = template_question_element.question
     
-    question_to_publish = Question.new({:question_element_id => published_question_element.id, 
+    question_to_publish = Question.new({:form_element_id => published_question_element.id, 
         :question_text => template_question.question_text,
         :short_name => template_question.short_name,
         :help_text => template_question.help_text,

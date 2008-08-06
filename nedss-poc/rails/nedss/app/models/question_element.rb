@@ -1,5 +1,5 @@
 class QuestionElement < FormElement
-  has_one :question
+  has_one :question, :foreign_key => "form_element_id"
 
   attr_accessor :parent_element_id
   
@@ -10,11 +10,14 @@ class QuestionElement < FormElement
     super
   end
   
-  def process_condition(answer, event_id)
+  def process_condition(answer, event_id, form_elements_cache=nil)
     result = nil
     
-    # Debt: This could go against the cache
-    follow_ups = self.children_by_type("FollowUpElement")
+    if form_elements_cache.nil?
+      follow_ups = self.children_by_type("FollowUpElement")
+    else
+      follow_ups = form_elements_cache.children_by_type("FollowUpElement", self)
+    end
     
     if (answer.is_a? Answer)
       condition = answer.text_answer

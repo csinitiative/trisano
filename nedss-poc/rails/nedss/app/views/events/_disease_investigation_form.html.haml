@@ -54,11 +54,11 @@
                   %div{:class => "yui-content"}
                     - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
                       %div{:id => "ut_#{view.id}"}
-                        = render_investigator_view(view, f)
+                        = render_investigator_view(view, f, form)
                         
                             
               - else
-                = render_investigator_view(form.investigator_view_elements_container.children[0], f)
+                = render_investigator_view(form.investigator_view_elements_container.children[0], f, form)
               
               %div{:align => "right"}
                 %small

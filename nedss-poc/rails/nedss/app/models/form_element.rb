@@ -1,6 +1,7 @@
 class FormElement < ActiveRecord::Base
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
+  has_one :question
   
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
   # post-saving activities in the transaction
@@ -71,6 +72,8 @@ class FormElement < ActiveRecord::Base
     end
     e
   end
+  
+  # Debt: Remove the cache methods
   
   def full_set_cache
     @full_set_cache ||= self.full_set

@@ -1,6 +1,6 @@
 class Question < ActiveRecord::Base
   
-  belongs_to :question_element
+  belongs_to :question_element, :foreign_key => "form_element_id"
   
   validates_presence_of :question_text
   validates_presence_of :data_type, :unless => :core_data
