@@ -1,0 +1,381 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+case_status_unknown:
+  id: 1801
+  code_name: "case"
+  the_code: "U"
+  code_description: "Unknown"
+
+case_status_confirmed:
+  id: 1802
+  code_name: "case"
+  the_code: "C"
+  code_description: "Confirmed"
+
+case_status_probable:
+  id: 1803
+  code_name: "case"
+  the_code: "P"
+  code_description: "Probable"
+
+case_status_suspect:
+  id: 1804
+  code_name: "case"
+  the_code: "S"
+  code_description: "Suspect"
+
+case_status_notcase:
+  id: 1805
+  code_name: "case"
+  the_code: "NC"
+  code_description: "Not Case"
+
+case_status_chroniccarrier:
+  id: 1806
+  code_name: "case"
+  the_code: "CC"
+  code_description: "Chronic Carrier"
+
+case_status_discarded:
+  id: 1807
+  code_name: "case"
+  the_code: "D"
+  code_description: "Discarded"
+
+event_status_new:
+  id: 1901
+  code_name: "eventstatus"
+  the_code: "NEW"
+  code_description: "New"
+
+event_status_assigned_lhd:
+  id: 1902
+  code_name: "eventstatus"
+  the_code: "ASGD-LHD"
+  code_description: "Assigned to Local Health Dept."
+
+event_status_accepted_lhd:
+  id: 1903
+  code_name: "eventstatus"
+  the_code: "ACPTD-LHD"
+  code_description: "Accepted by Local Health Dept."
+
+event_status_investigation_complete:
+  id: 1904
+  code_name: "eventstatus"
+  the_code: "IC"
+  code_description: "Investigation Complete"
+
+event_status_rejected_lhd:
+  id: 1905
+  code_name: "eventstatus"
+  the_code: "RJCTD-LHD"
+  code_description: "Rejected by Local Health Dept."
+
+event_status_assigned_investigator:
+  id: 1906
+  code_name: "eventstatus"
+  the_code: "ASGD-INV"
+  code_description: "Assigned to Investigator"
+
+event_status_under_investigation:
+  id: 1907
+  code_name: "eventstatus"
+  the_code: "UI"
+  code_description: "Under Investigation"
+
+event_status_rejected_investigator:
+  id: 1908
+  code_name: "eventstatus"
+  the_code: "RJCTD-INV"
+  code_description: "Rejected by Investigator"
+
+event_status_investigation_complete:
+  id: 1909
+  code_name: "eventstatus"
+  the_code: "IC"
+  code_description: "Investigation Complete"
+
+event_status_reopened_manager:
+  id: 1910
+  code_name: "eventstatus"
+  the_code: "RO-MGR"
+  code_description: "Reopened by Manager"
+
+event_status_approved_lhd:
+  id: 1911
+  code_name: "eventstatus"
+  the_code: "APP-LHD"
+  code_description: "Approved by LHD"
+
+event_status_approved_state:
+  id: 1912
+  code_name: "eventstatus"
+  the_code: "CLOSED"
+  code_description: "Approved by State"
+
+event_status_reopened_state:
+  id: 1913
+  code_name: "eventstatus"
+  the_code: "RO-STATE"
+  code_description: "Reopened by State"
+
+#################################
+
+gender_male:
+  id: 1
+  code_name: "gender"
+  the_code:  "M"
+  code_description: "Male"
+
+gender_female:
+  id: 2
+  code_name: "gender"
+  the_code:  "F"
+  code_description: "Female"
+
+gender_unknown:
+  id: 3
+  code_name: "gender"
+  the_code:  "U"
+  code_description: "Unknown"
+
+ethnicity_hispanic:
+  id: 101
+  code_name: "ethnicity"
+  the_code:  "H"
+  code_description: "Hispanic or Latino"
+
+ethnicity_non_hispanic:
+  id: 102
+  code_name: "ethnicity"
+  the_code:  "NH"
+  code_description: "Not Hispanic or Latino"
+
+ethnicity_other:
+  id: 103
+  code_name: "ethnicity"
+  the_code:  "O"
+  code_description: "Other"
+
+ethnicity_unknown:
+  id: 104
+  code_name: "ethnicity"
+  the_code:  "U"
+  code_description: "Unknown"
+
+race_white:
+  id: 201
+  code_name: "race"
+  the_code:  "W"
+  code_description: "White"
+
+race_black:
+  id: 202
+  code_name: "race"
+  the_code:  "B"
+  code_description: "Black / African-American"
+
+race_indian:
+  id: 203
+  code_name: "race"
+  the_code:  "AA"
+  code_description: "American Indian"
+
+race_asian:
+  id: 204
+  code_name: "race"
+  the_code:  "A"
+  code_description: "Asian"
+
+race_alaskan:
+  id: 205
+  code_name: "race"
+  the_code:  "AK"
+  code_description: "Alaskan Native"
+
+race_hawaiian:
+  id: 206
+  code_name: "race"
+  the_code:  "H"
+  code_description: "Native Hawaiian / Pacific Islander"
+
+language_english:
+  id: 301
+  code_name: "language"
+  the_code:  "EN"
+  code_description: "English"
+
+language_spanish:
+  id: 302
+  code_name: "language"
+  the_code:  "ES"
+  code_description: "Spanish"
+
+state_utah:
+  id: 1001
+  code_name: "state"
+  the_code:  "UT"
+  code_description: "Utah"
+
+state_alabama:
+  id: 1002
+  code_name: "state"
+  the_code:  "AL"
+  code_description: "Alabama"
+
+state_alaska:
+  id: 1003
+  code_name: "state"
+  the_code:  "AK"
+  code_description: "Alaska"
+
+state_arizona:
+  id: 1004
+  code_name: "state"
+  the_code:  "AZ"
+  code_description: "Arizona"
+
+state_arkansas:
+  id: 1005
+  code_name: "state"
+  the_code:  "AR"
+  code_description: "Arkansas"
+
+county_salt_lake:
+  id: 1101
+  code_name: "county"
+  the_code:  "SL"
+  code_description: "Salt Lake"
+
+county_summit:
+  id: 1102
+  code_name: "county"
+  the_code:  "SU"
+  code_description: "Summit"
+
+district_alpine:
+  id: 1201
+  code_name: "district"
+  the_code:  "AL"
+  code_description: "Alpine"
+
+district_beaver:
+  id: 1202
+  code_name: "district"
+  the_code:  "BV"
+  code_description: "Beaver"
+
+location_home:
+  id: 1301
+  code_name: "location"
+  the_code:  "H"
+  code_description: "Home"
+
+location_work:
+  id: 1302
+  code_name: "location"
+  the_code:  "W"
+  code_description: "Work"
+
+location_unspecified:
+  id: 1303
+  code_name: "location"
+  the_code:  "U"
+  code_description: "Unspecified"
+
+location_mobile:
+  id: 1304
+  code_name: "location"
+  the_code:  "M"
+  code_description: "Mobile"
+
+yesno_unknown:
+  id: 1401
+  code_name: "yesno"
+  the_code: "U"
+  code_description: "Unknown"
+
+yesno_yes:
+  id: 1402
+  code_name: "yesno"
+  the_code: "Y"
+  code_description: "Yes"
+
+yesno_no:
+  id: 1403
+  code_name: "yesno"
+  the_code: "N"
+  code_description: "No"
+
+specimen_blood:
+  id: 1501
+  code_name: "specimen"
+  the_code: "B"
+  code_description: "Blood"
+
+specimen_urine:
+  id: 1502
+  code_name: "specimen"
+  the_code: "U"
+  code_description: "Urine"
+
+specimen_stool:
+  id: 1503
+  code_name: "specimen"
+  the_code: "S"
+  code_description: "Stool"
+
+specimen_tissue:
+  id: 1504
+  code_name: "specimen"
+  the_code: "T"
+  code_description: "Tissue"
+
+imported_from_unknown:
+  id: 2101
+  code_name: "imported"
+  the_code: "U"
+  code_description: "Unknown"
+
+imported_from_utah:
+  id: 2102
+  code_name: "imported"
+  the_code: "UT"
+  code_description: "Utah"
+
+imported_from_other_country:
+  id: 2103
+  code_name: "imported"
+  the_code: "F"
+  code_description: "Outside U.S."
+
+imported_from_other_state:
+  id: 2104
+  code_name: "imported"
+  the_code: "US"
+  code_description: "Other U.S. State"
+
+telephonelocationtype_unknown:
+  id: 2105
+  code_name: "telephonelocationtype"
+  the_code: "UNK"
+  code_description: "Unknown"
+
+telephonelocationtype_home:
+  id: 2106
+  code_name: "telephonelocationtype"
+  the_code: "HT"
+  code_description: "Home"
+
+telephonelocationtype_work:
+  id: 2107
+  code_name: "telephonelocationtype"
+  the_code: "WT"
+  code_description: "Work"
+
+telephonelocationtype_mobile:
+  id: 2108
+  code_name: "telephonelocationtype"
+  the_code: "MT"
+  code_description: "Mobile"

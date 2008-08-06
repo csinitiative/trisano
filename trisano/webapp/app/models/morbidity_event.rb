@@ -1,0 +1,2 @@
+class MorbidityEvent < Event
+end

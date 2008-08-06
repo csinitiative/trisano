@@ -1,0 +1,45 @@
+<% content_for :title do %>
+  CONFIDENTIAL MORBIDITY REPORT
+<% end %>
+
+<% content_for :name do %>
+  Existing Reports
+<% end %>
+
+<% content_for :tools do %>
+  <%= new_cmr_link 'New Morbidity Report' %> |  <%= link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv') %>
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= new_cmr_button "Create New Morbidity Report" %>
+<% end %>
+
+<table class='tabular'> 
+  <thead>
+    <tr>
+      <th>Patient Name</th>
+      <th>Disease</th>
+      <th>Created Date</th>
+      <th>Event Status</th>
+      <th>Jurisdiction</th>
+    </tr>
+  </thead>
+  <% for event in @events %>
+    <tr>
+      <% patient = event.active_patient.active_primary_entity.person %>
+      <% jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place %></td>
+      <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
+      <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
+      <td><%= event.event_onset_date %></td>
+      <td><%= l event.event_status %></td>
+      <td><%= jurisdiction.name %></td>
+    </tr>
+    <tr>
+      <td colspan='2' style='border: 0'><%= routing_controls(event, jurisdiction) %></td>
+      <td colspan='2' style='border: 0;'><span class='tools'><%= basic_controls(event, jurisdiction) %></span></td>
+      <td colspan='1' style='border: 0;'><%= state_controls(event, jurisdiction) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br />

@@ -1,0 +1,42 @@
+- content_for :title do
+  Form Builder
+
+- content_for :name do
+  Forms
+
+- content_for :tools do
+  = link_to 'New form', new_form_path
+
+- content_for :tools_two do
+  = button_to("Create new form", {:action => "new"}, { :method => :get })
+
+%table{ :class => 'tabular' }
+  %tr
+    %th Name
+    %th Description
+    %th Diseases
+    %th Jurisdiction
+    %th Status
+  - for form in @forms
+    %tr
+      %td
+        = h form.name
+      %td
+        = h form.description
+      %td
+        - form.diseases.each do |disease|
+          = h disease.disease_name
+          %br
+      %td
+        = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+      %td
+        = h form.status
+      %td{:nowrap => ""}
+        = link_to 'Builder', builder_path(form)
+        |
+        = link_to 'Show', form
+        |
+        = link_to 'Edit', edit_form_path(form)
+
+%br
+

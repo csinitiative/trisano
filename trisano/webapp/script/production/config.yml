@@ -1,0 +1,9 @@
+postgres_dir: /usr/bin # Location of Postgres client
+host: localhost # PostgreSQL host server 
+port: 5432 # PostgreSQL TCP listen port 
+database: nedss_prod # Database name
+priv_uname: postgres # Database privileged username
+priv_passwd: password # Privileged user's password 
+nedss_uname: nedss_prod_user # NEDSS username 
+nedss_user_passwd: password # NEDSS user's password
+

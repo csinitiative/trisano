@@ -1,0 +1,20 @@
+- content_for :title do
+  User Admin
+
+- content_for :name do
+  Edit 
+  = @user.user_name
+
+- content_for :tools do
+  = link_to 'Show', @user
+  |
+  = link_to 'Back', users_path
+
+= error_messages_for :object => [@user, @user.role_memberships]
+
+- form_for(@user) do |f|
+
+  = render :partial => 'form', :locals => { :f => f, :user_data => @user }
+
+  = f.submit "Update"
+

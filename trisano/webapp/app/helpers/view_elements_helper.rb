@@ -1,0 +1,2 @@
+module ViewElementsHelper
+end

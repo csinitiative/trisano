@@ -1,0 +1,11 @@
+%div{:class => "large-modal-dialog"}
+  %h1 New contact
+
+  = error_messages_for :contact
+
+  - fields_for(@contact, :builder => ExtendedFormBuilder) do |contact|
+    = render :partial => "entities/people/form", :locals => { :f => contact, :entity_data => @contact, :event => @event }
+
+  = submit_to_remote("person-save-button", "Save", :submit => "person_form", :url => cmr_contacts_path(@event))
+  &nbsp;&nbsp;
+  = link_to_close_redbox "Cancel"

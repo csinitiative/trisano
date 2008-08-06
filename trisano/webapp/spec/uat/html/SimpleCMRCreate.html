@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SimpleCMRCreate</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">SimpleCMRCreate</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/nedss/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New CMR</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>event_active_patient__active_primary_entity__person_last_name</td>
+	<td>Joker</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>event_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>CMR was successfully created.</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<h1>Editing <%= @type.capitalize %> </h1>
+
+<%= error_messages_for :entity %>
+
+<% form_for(@entity, :builder => ExtendedFormBuilder) do |f| %>
+  <p>
+    <%= render :partial => "#{@type.pluralize}/form", :locals => { :f => f, :entity_data => @entity, :event => @event } %>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @entity %>
+<%= render :partial => 'entity_list', :locals => {:is_index => false} %>

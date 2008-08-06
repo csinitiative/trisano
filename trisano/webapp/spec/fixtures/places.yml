@@ -1,0 +1,36 @@
+###############
+# Hospitals
+#
+AVH:
+  id: 2
+  name: "Alta View Hospital"
+  short_name: "AVH"
+  place_type_id: 2201
+  entity_id: 4
+
+BRVH:
+  id: 5
+  name: "Bear River Valley Hospital"
+  short_name: "BRVH"
+  place_type_id: 2201
+  entity_id: 7
+
+Southeastern_District:
+  id: 73
+  name: "Southeastern District"
+  short_name: "SED"
+  place_type_id: 2202
+  entity_id: 75
+
+Existing_Lab_One:
+  id: 100
+  name: "Existing Lab One"
+  place_type_id: 2203
+  entity_id: 100 
+
+Davis_County:
+  id: 101
+  name: "Davis County"
+  short_name: "Davis"
+  place_type_id: 2202
+  entity_id: 102

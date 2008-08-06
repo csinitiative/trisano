@@ -1,0 +1,5 @@
+replace_element, replace_partial = replacement_elements(@section)
+page.replace_html replace_element, :partial => replace_partial
+page.replace_html 'builder-mods', "<span style='color:green'>" + flash[:notice] + "</span>"
+page.visual_effect(:highlight, replace_element)
+flash[:notice] = ""

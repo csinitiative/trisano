@@ -1,0 +1,14 @@
+<h1>New <%= @type.capitalize %> </h1>
+
+<%= error_messages_for :object => [@entity, @entity.person, @entity.entities_location] %>
+<%= error_messages_for :object => [@entity.address] unless @entity.address.nil? %>
+<%= error_messages_for :object => [@entity.telephone] unless @entity.telephone.nil? %>
+
+<% form_for(@entity, :builder => ExtendedFormBuilder) do |f| %>
+  <p>
+    <%= render :partial => "#{@type.pluralize}/form", :locals => { :f => f, :entity_data => @entity, :event => @event } %>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= render :partial => 'entity_list', :locals => {:is_index => false} %>

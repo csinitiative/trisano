@@ -1,0 +1,53 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+test_form:
+  name: Test Form
+  id: "1"
+  description: Testng
+  version: 
+  is_template: true
+  jurisdiction_id:
+  status: "Live"
+
+anthrax_form_all_jurisdictions_1:
+  id: 2
+  name: "Anthrax Form 1"
+  description: "Anthrax form for all jurisdictions."
+  jurisdiction_id:
+  status: "Live"
+
+anthrax_form_all_jurisdictions_2:
+  id: 3
+  name: "Anthrax Form 2"
+  description: "Another Anthrax form for all jurisdictions."
+  jurisdiction_id:
+  status: "Live"
+
+anthrax_form_for_LHD_1:
+  id: 4
+  name: "Anthrax Form 1, Jurisdicition 1"
+  description: "Anthrax form for jurisdiction 1."
+  jurisdiction_id: 1
+  status: "Live"
+
+anthrax_form_for_LHD_2:
+  id: 5
+  name: "Anthrax Form 2, Jurisdiction 2"
+  description: "Anthrax form for jurisdiction 2."
+  jurisdiction_id: 2
+  status: "Live"
+
+aids_form_for_LHD_2:
+  id: 6
+  name: "Aids Form 1, jurisidiction 2"
+  description: "AIDS form for jurisdiction 2."
+  jurisdiction_id: 2
+  status: "Live"
+
+checken_pox_TB_form_for_LHD_2:
+  id: 7
+  name: "Chicken Pox and Tuberculosis form 1, jurisdiction 2."
+  description: "Chicken pox and tuberculosis form for jurisdiction 1."
+  jurisdiction_id: 2
+  is_template: true
+  status: "Live"

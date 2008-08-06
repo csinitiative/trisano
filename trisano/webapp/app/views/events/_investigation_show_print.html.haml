@@ -1,0 +1,12 @@
+%span.section-header Investigative Information
+- ran = nil
+#questions
+  - for answer in @event.answers
+    - unless ran.nil?
+      %br
+      %hr
+    %span.print-label
+      = answer.question.question_text
+    %span.print-value
+      = answer.text_answer
+    - ran = 1

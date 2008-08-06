@@ -1,0 +1,57 @@
+Story: Search user acceptance tests
+
+  As an investigator
+  I want to search for people
+  So I can know if they are already in the system
+
+  Scenario: Search for known users
+    
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977, gender male, and residing in Daggett County is created
+    When I search for Karl Marks
+
+    Then Karl Marks should appear in the search results as a link
+    And 31 / 1977-02-17 should appear in the search results
+    And Male should appear in the search results
+    And Daggett should appear in the search results
+
+  Scenario: Search for users known not to exist
+
+    Given I am logged in as an investigator
+    And no person named Xavier Xerces exists
+
+    When I search for Xavier Xerces
+    Then Xavier Xerces should not be returned
+
+  Scenario: Search for users with their names slightly mis-spelled
+
+    Given I am logged in as an investigator
+    And a person named Karl Marks is created
+
+    When I search for Karl Marx
+    Then Karl Marks should appear in the search results as a link
+
+  Scenario: Search for users with their first and last names transposed
+
+    Given I am logged in as an investigator
+    And a person named Karl Marks is created
+
+    When I search for Marks Karl
+    Then Karl Marks should appear in the search results as a link
+
+  Scenario: Search for users by correct birthdate
+
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977 is created
+
+    When I search for the person named Karl Marks, born 02/17/1977
+    Then Karl Marks should appear in the search results as a link
+    And 1977-02-17 should appear in the search results
+
+  Scenario: Search for users by incorrect birthdate
+
+    Given I am logged in as an investigator
+    And a person named Karl Marks, born 02/17/1977 is created
+
+    When I search for the person named Karl Marks, born 03/18/1978
+    Then Karl Marks should not be returned

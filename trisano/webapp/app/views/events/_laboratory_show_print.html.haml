@@ -1,0 +1,50 @@
+%span.section-header Laboratory Information
+%br
+- ran = nil
+- if @event.labs.empty?
+  %b No lab results have been recorded for this event
+- else
+  - for lab in @event.labs
+    - for lab_result in lab.lab_results
+      #lab
+        - unless ran.nil?
+          %br
+          %hr
+        .three-valued-row
+          .left
+            %span.print-label Lab name:
+            %span.print-value
+              = lab.secondary_entity.place_temp.name
+          .left
+            %span.print-label Test type:
+            %span.print-value
+              = lab_result.test_type
+      #test
+        .three-valued-row
+          .left
+            %span.print-label Lab result:
+            %span.print-value
+              = lab_result.lab_result_text
+          .left
+            %span.print-label Interpretation:
+            %span.print-value
+              = lab_result.interpretation
+          .right
+            %span.print-label Specimen source:
+            %span.print-value
+              = l lab_result.specimen_source
+      #collection
+        .three-valued-row
+          .left
+            %span.print-label Collection date:
+            %span.print-value
+              = lab_result.collection_date
+          .left
+            %span.print-label Lab test date:
+            %span.print-value
+              = lab_result.lab_test_date
+          .right
+            %span.print-label Specimen sent to UPHL:
+            %span.print-value
+              = l lab_result.specimen_sent_to_uphl_yn
+    - ran = 1

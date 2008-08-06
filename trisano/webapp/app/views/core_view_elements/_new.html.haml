@@ -1,0 +1,20 @@
+
+%div{:id => "new-core-view-form"}
+
+  %h3
+    Add Core View Configuration
+
+  = error_messages_for :core_view_element
+
+  - remote_form_for(core_view_element) do |f|
+    
+    - if @available_core_views.empty?
+      %b No core tabs are available. Use existing core tab configurations.
+    - else
+      = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      - unless @available_core_views.empty?
+        = f.submit "Create"
+      &nbsp;&nbsp;
+      = link_to_function "Close", "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"

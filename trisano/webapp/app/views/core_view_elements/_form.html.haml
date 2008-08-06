@@ -1,0 +1,7 @@
+
+= f.hidden_field :parent_element_id
+
+%p
+  %label Core Tab
+  %br
+  = f.select(:name, @available_core_views, {:include_blank => true}) 

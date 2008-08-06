@@ -1,0 +1,14 @@
+%fieldset
+  %legend 
+    Laboratory Information
+    %span{:id => 'lab_info_hide', :onClick => "Element.hide('labs'); Element.hide('lab_info_hide'); Element.show('lab_info_show'); return false;"} [Hide]
+    %span{:id => 'lab_info_show', :onClick => "Element.show('labs'); Element.hide('lab_info_show'); Element.show('lab_info_hide'); return false;", :style => "display: none;"} [Show]
+
+    %div{:id => "labs"}
+      - if @event.labs.empty?
+        %h3 No lab results have been recorded for this event
+      - else
+        = render :partial => "lab", :collection => @event.labs
+
+    %br{:style => "clear: both;"}
+    %p= add_lab_link "Add a lab result"

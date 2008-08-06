@@ -1,0 +1,141 @@
+%span.section-header Clinical Information
+%br
+#diagnosis
+  .three-valued-row
+    .left
+      %span.print-label Disease:
+      %span.print-value
+        = @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
+    .left
+      %span.print-label Disease onset date:
+      %span.print-value
+        = @event.disease.disease_onset_date unless @event.disease.nil? || @event.disease.disease.nil?
+    .right
+      %span.print-label Date diagnosed:
+      %span.print-value
+        = @event.disease.date_diagnosed unless @event.disease.nil? || @event.disease.disease.nil?
+
+#hospitalization
+  .three-valued-row
+    .right
+      %span.print-label Hospitalized:
+      %span.print-value
+        = l @event.disease.hospitalized unless @event.disease.nil?
+    .left
+      %span.print-label Died:
+      %span.print-value
+        = l @event.disease.died unless @event.disease.nil?
+    .right
+      %span.print-label Date of death:
+      %span.print-value
+        = @event.active_patient.active_primary_entity.person.date_of_death
+
+#pregnancy
+  .three-valued-row
+    %hr
+    %br
+    .left
+      %span.print-label Pregnant:
+      %span.print-value
+        = l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    .left
+      %span.print-label Pregnancy due date:
+      %span.print-value
+        = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+#records
+  .three-valued-row
+    %hr
+    %br
+    
+      %span.print-label Imported from:
+      %span.print-value
+        = l @event.imported_from
+
+#facilities
+%br
+  %span.subsection-header Diagnosing health facilities
+  - if @event.diagnosing_health_facilities.empty?
+    %b No diganosing health facilities have been recorded for this event
+  - else
+    %ul
+      - for diagnostic in @event.diagnosing_health_facilities
+        %li
+        = diagnostic.secondary_entity.place_temp.name
+
+  %span.subsection-header Hospitalized health facilities
+  %br
+  - if @event.hospitalized_health_facilities.empty?
+    %b No hospitalized health facilities have been recorded for this event
+  - else
+    .three-valued-row
+      .long
+        %span.print-label Hospitalized health facility
+      .short
+        %span.print-label Admission date
+      .short
+        %span.print-label Discharge date
+      .short
+        %span.print-label Record Number
+      %br
+      %hr
+      - for hospital in @event.hospitalized_health_facilities
+        .three-valued-row
+          .long
+            %span.print-value
+              = hospital.secondary_entity.place_temp.name
+          .short
+            %span.print-value
+              = hospital.hospitals_participation.admission_date unless hospital.hospitals_participation.nil?
+          .short
+            %span.print-value
+              = hospital.hospitals_participation.discharge_date unless hospital.hospitals_participation.nil?
+          .short
+            %span.print-value
+              = hospital.hospitals_participation.medical_record_number unless hospital.hospitals_participation.nil?
+
+#treatments
+  %span.subsection-header Treatments
+  %br
+    - if @event.active_patient.participations_treatments.empty?
+      %b No treatments have been recorded for this case
+    - else
+      .three-valued-row
+        %dif.left
+          %span.print-label Treatment
+        .left
+          %span.print-label Treatment Given
+        %br
+        %hr
+        - for treatment in @event.active_patient.participations_treatments
+          .three-valued-row
+            .left
+              %span.print-value
+                = treatment.treatment
+            .left
+              %span.print-value
+                = l treatment.treatment_given_yn
+
+#clinicians
+  %span.subsection-header Clinicians
+  %br
+  - if @event.clinicians.empty?
+    %b No clinicians have been recorded for this case
+  - else
+    .three-valued-row
+      .left
+        %span.print-label Last Name
+      .left
+        %span.print-label First Name
+      %br
+      %hr
+
+      - for clinician in @event.clinicians
+        - person = clinician.active_secondary_entity.person
+        .three-valued-row
+          .left
+            %span.print-value
+              = person.last_name
+          .left
+            %span.print-value
+              = person.first_name

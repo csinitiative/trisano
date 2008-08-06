@@ -1,0 +1,32 @@
+Story: Pre-populate new CMR from people search
+
+  As an investigator
+  I want to be able to start a new CMR with the data entered for a failed search
+  So I do not have to repeat data entry tasks
+
+  Scenario: Search for unknown person
+
+    Given I am logged in as an investigator
+    And no person named Xavier Xerces exists
+
+    When I search for the person named Xavier Xerces, born 03/18/1978
+    Then there should be a link to create a new CMR
+    
+    When I click the link to create a new CMR
+    Then the new CMR view displays
+    And Xavier should display in the first name field
+    And Xerces should display in the last name field
+    And March 18, 1978 should display in the birth date field
+
+  Scenario: Search for unknown CMR
+
+    Given I am logged in as an investigator
+    And no CMR for a person named Xavier Xerces exists
+
+    When I search for a CMR associated with the person Xavier Xerces
+    Then there should be a link to create a new CMR
+    
+    When I click the link to create a new CMR
+    Then the new CMR view displays
+    And Xavier should display in the first name field
+    And Xerces should display in the last name field

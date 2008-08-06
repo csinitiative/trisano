@@ -1,0 +1,72 @@
+<fieldset>
+  <legend>Administrative Information 
+    <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
+    <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
+  </legend>
+  <div id='cmr_info_form'>
+    <% if not @event.record_number.blank? %>
+      <span class="label">Record number:</span> <%= @event.record_number %>
+    <% end %>
+
+    <% if not @event.MMWR_year.blank? %>
+      <span class="label">MMWR year:</span> <%= @event.MMWR_year %>
+      <span class="label">MMWR week:</span> <%= @event.MMWR_week %>
+    <% end %>
+    <br />
+    <span class="label">Date record created:</span>
+    <%= @event.event_onset_date %>
+    <p/>
+    <fieldset class="form">
+      <legend>Case / Outbreak</legend>
+      <span class="horiz">
+        <%= f.label(:lhd_case_status_id, "LHD case status") %>
+        <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:udoh_case_status_id, "UDOH case status") %>
+        <%= f.dropdown_code_field(:udoh_case_status_id, 'case', {}) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
+        <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:outbreak_name, "Outbreak") %>
+        <%= f.text_field(:outbreak_name, :size => 25) %>
+      </span>
+    </fieldset>
+    <fieldset class="form">
+      <legend>Investigation</legend>
+      <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+        <span class="horiz">
+          <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
+          <% jurisdictions = User.current_user.jurisdictions_for_privilege(:update_event) %> 
+          <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+        </span>
+      <% end %>
+      <span class="horiz">
+        <%= f.label(:event_status_id) %>
+        <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {:include_blank => false}) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:investigation_started_date, "Date investigation started") %>
+        <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>
+        <%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
+    </fieldset>
+    <fieldset class="form">
+      <legend>Auditing</legend>
+      <span class="horiz">
+        <%= f.label(:event_name) %>
+        <%= f.text_field(:event_name, :size => 25) %>
+      </span>
+      <span class="horiz">
+        <%= f.label(:review_completed_UDOH_date, "Date review completed by UDOH") %>
+        <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
+      </span>
+    </fieldset>
+  </div>
+</fieldset>

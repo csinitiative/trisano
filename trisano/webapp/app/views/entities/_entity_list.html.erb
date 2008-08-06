@@ -1,0 +1,10 @@
+<p/>
+<%# Uncomment this loop when the functionality is in place to add/edit animals, places, etc.
+<%# for type in @valid_types %>
+  <%# next if type == @type && is_index %>
+  <%#= link_to type.pluralize.capitalize, entities_path(:type => type) %>
+<%# end %>
+
+<%# Remove the following line when the functionality is in place to add/edit animals, places, etc. %>
+<%= link_to 'People', entities_path(:type => 'person') %> | 
+<%= link_to 'Entities', entities_path %> |

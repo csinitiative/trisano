@@ -1,0 +1,84 @@
+<% e = entity_data %>
+<% p = entity_data.person %>
+
+<% unless entity_data.entities_location.nil? %>
+  <% l = entity_data.primary_entities_location.location; a = l.current_address; %>
+<% end %>
+
+<% unless entity_data.telephone_entities_location.nil? %>
+  <% telephone_location = entity_data.primary_phone_entities_location.location; telephone = telephone_location.current_phone %>
+<% end %>
+
+
+<fieldset>
+<legend> Person Information</legend>  
+<table cellpadding="2">
+  <tr>
+    <td><span class="label">Last name:</span></td>
+    <td><%= p.last_name %></td>
+    <td><span class="label">First name:</span></td>
+    <td><%= p.first_name %></td>
+    <td><span class="label">Middle name:</span></td>
+    <td><%= p.middle_name %></td>
+  </tr>
+
+  <tr> 
+    <td colspan="6"><span class="label"><%= l.type unless l.nil? %> Address: <%= " (Primary) " if l.primary? unless l.nil?-%></span>
+<% unless a.nil? %>
+<%= a.street_number -%>
+<%= fml " ", a.street_name, "" -%>
+<%= fml ", Unit: ", a.unit_number, "" -%>
+<%= fml ", ", a.city, "" -%>
+<%= fml ", ", l(a.state), "" -%>
+<%= fml ", ", a.postal_code, "" -%>
+<%= fml " : ", l(a.county), " county" -%>
+<%= fml " : ", l(a.district), " district" -%>
+<% end %>
+    </td>
+  </tr>
+  <tr>
+    <td><span class="label">Birth date:</span></td>
+    <td><%= p.birth_date %></td>
+    <% if not p.birth_date.blank? %>
+      <td><span class="label">Age:</span></td>
+      <td><%= calculate_age(p.birth_date) %></td>
+    <% elsif not p.approximate_age_no_birthday.blank?  %>
+      <td><span class="label">Approximage age:</span></td>
+      <td><%= p.approximate_age_no_birthday %></td>
+    <% end %>
+  </tr>
+  <tr>
+    <td><span class="label"><%= l.type unless l.nil?%> Phone: <%= " (Primary) " if l.primary? unless l.nil? -%></span></td>
+    <td colspan='4'>
+      <% unless telephone.nil? %>
+        <%= fml "(", telephone.area_code, ") " if telephone.area_code -%>
+        <%= phone_number(telephone.phone_number) -%>
+        <%= fml " Ext. ", telephone.extension, "" if telephone.extension -%>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <% unless telephone.nil? %>
+      <td><span class="label">Email:</span></td>
+      <td colspan='4'><%= telephone.email_address %></td>
+    <% end %>
+  </tr>
+  <tr>
+    <td><span class="label">Birth gender:</span></td>
+    <td><%= l p.birth_gender %></td>
+    <td><span class="label">Primary language:</span></td>
+    <td><%= l p.primary_language %></td>
+  </tr>
+  <tr>
+    <td><span class="label">Race:</span></td>
+    <td>
+      <% i = 0; for race in e.races %>
+        <%= " and " unless i == 0 %><%= l race %>
+        <% i += 1 %>
+      <% end %>
+    </td>
+    <td><span class="label">Ethnicity:</span></td>
+    <td><%= l p.ethnicity %></td>
+  </tr>
+</table>
+</fieldset>
