@@ -45,7 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs, 
                 :controller => :events,
                 :member => { :state => :post, :jurisdiction => :post },
-                :has_many => [:treatments, :contacts, :clinicians]
+                :has_many => [:treatments, :clinicians]
 
   map.resources :codes, :controller => :external_codes
 

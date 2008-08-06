@@ -432,6 +432,106 @@ describe MorbidityEvent do
 
   end  
 
+  describe "handling new contacts" do
+
+    describe "receiving one new contact" do
+
+      before(:each) do
+        new_contact_hash = {
+          "new_contact_attributes" => 
+            [
+              { "last_name"=>"Allen", "first_name"=>"Steve"}
+            ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(2)
+        @event.participations.find_by_role_id(codes(:participant_contact).id).should_not be_nil
+      end
+
+      it "should add a new contact" do
+        lambda {@event.save}.should change {Person.count}.by(2)
+        @event.contacts.first.secondary_entity.person_temp.last_name.should == "Allen"
+        @event.contacts.first.secondary_entity.person_temp.first_name.should == "Steve"
+      end
+    end
+
+    describe "receiving multiple new contacts" do
+
+      before(:each) do
+        new_contact_hash = {
+          "new_contact_attributes" => 
+            [
+              { "last_name"=>"Allen", "first_name"=>"Steve"},
+              { "last_name"=>"Burns", "first_name"=>"George"}
+            ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(3)
+        @event.participations.find_by_role_id(codes(:participant_contact).id).should_not be_nil
+      end
+
+      it "should add two new contacts" do
+        lambda {@event.save}.should change {Person.count}.by(3)
+      end
+    end
+
+    describe "receiving a contact with a first name but no last name" do
+
+      before(:each) do
+        new_contact_hash = {
+          "new_contact_attributes" => 
+            [
+              { "last_name"=>"", "first_name"=>"Steve"}
+            ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+      end
+
+      it "should be invalid" do
+        @event.should_not be_valid
+        @event.contacts.first.secondary_entity.person_temp.should have(1).error_on(:last_name)
+      end
+    end
+
+    describe "Receiving an edited contact" do
+      before(:each) do
+        @existing_contact_hash = {
+          "existing_contact_attributes" => { "#{entities(:Groucho).id}" => {"last_name" => "Marx", "first_name" => "Chico"} }
+        }
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
+      end
+
+      it "should update the existing contact" do
+        @event.contacts.first.secondary_entity.person_temp.first_name.should == "Groucho"
+        lambda {@event.update_attributes(@existing_contact_hash)}.should_not change {Participation.count}
+        @event.contacts.first.secondary_entity.person_temp.first_name.should == "Chico"
+        @event.contacts.first.secondary_entity.person_temp.last_name.should == "Marx"
+      end
+    end
+    
+    describe "receiving empty contact data" do
+
+      before(:each) do
+       @existing_contact_hash = {
+          "existing_contact_attributes" => {}
+        }
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
+      end
+
+      it "should delete existing contact" do
+        lambda {@event.update_attributes(@existing_contact_hash)}.should change {Participation.count}.by(-1)
+      end
+
+    end
+
+  end
+
   describe "Routing an event" do
 
     before(:each) do

@@ -1,7 +1,6 @@
 class Event < ActiveRecord::Base
   include Blankable
 
-  belongs_to :event_type, :class_name => 'Code'
   belongs_to :event_status, :class_name => 'ExternalCode'
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :lhd_case_status, :class_name => 'ExternalCode'
@@ -17,16 +16,22 @@ class Event < ActiveRecord::Base
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
     :order => 'created_at ASC',
     :dependent => :destroy
+
   has_many :hospitalized_health_facilities, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id],
     :order => 'created_at ASC',
     :dependent => :destroy
+
   has_many :diagnosing_health_facilities, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id],
     :order => 'created_at ASC',
     :dependent => :destroy
+
   has_many :contacts, :class_name => 'Participation',  
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id]
+    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id],
+    :order => 'created_at ASC',
+    :dependent => :destroy
+
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
 
@@ -39,6 +44,7 @@ class Event < ActiveRecord::Base
   validates_associated :labs
   validates_associated :hospitalized_health_facilities
   validates_associated :diagnosing_health_facilities
+  validates_associated :contacts
 
   before_validation_on_create :save_associations, :set_event_onset_date
   
@@ -113,17 +119,6 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def contact
-    @contact ||= Participation.new( :role_id => Event.participation_code('Contact'), :active_secondary_entity => {}) 
-  end
-
-  def contact=(attributes)
-    unless attributes[:active_secondary_entity][:person][:last_name].blank?
-      attributes[:role_id] = Event.participation_code('Contact')
-      @contact = contacts.build(attributes)
-    end
-  end
-  
   def clinician
     @clinician ||= Participation.new( :role_id => Event.participation_code('Treated By'), :active_secondary_entity => {}) 
   end
@@ -179,6 +174,27 @@ class Event < ActiveRecord::Base
         diagnostic.secondary_entity_id = attributes.delete("secondary_entity_id")
       else
         diagnosing_health_facilities.delete(diagnostic)
+      end
+    end
+  end
+
+  def new_contact_attributes=(contact_attributes)
+    contact_attributes.each do |attributes|
+      next if attributes.values_blank?
+      contact_participation = contacts.build(:role_id => Event.participation_code('Contact'))
+      contact_entity = contact_participation.build_secondary_entity
+      contact_entity.entity_type = "person"
+      contact_entity.build_person_temp( attributes )
+    end
+  end
+
+  def existing_contact_attributes=(contact_attributes)
+    contacts.reject(&:new_record?).each do |contact|
+      attributes = contact_attributes[contact.secondary_entity.person_temp.id.to_s]
+      if attributes
+        contact.secondary_entity.person_temp.attributes = attributes
+      else
+        contacts.delete(contact)
       end
     end
   end
@@ -668,6 +684,10 @@ class Event < ActiveRecord::Base
 
     diagnosing_health_facilities.each do |diagnostic|
       diagnostic.save(false)
+    end
+
+    contacts.each do |contact|
+      contact.secondary_entity.person_temp.save(false)
     end
   end
 

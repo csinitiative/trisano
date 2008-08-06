@@ -33,11 +33,22 @@ class Participation < ActiveRecord::Base
       Participation.new_place_participation
     end
 
+    def new_contact_participation
+      contact_participation = Participation.new_person_participation
+    end
+
     def new_place_participation
       place_participation = Participation.new
       place_participation.build_secondary_entity.build_place_temp
       place_participation
     end
+
+    def new_person_participation
+      person_participation = Participation.new
+      person_participation.build_secondary_entity.build_person_temp
+      person_participation
+    end
+
   end
 
   def active_primary_entity

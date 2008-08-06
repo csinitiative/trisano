@@ -1,0 +1,16 @@
+%fieldset
+  %legend Contact Information
+
+  - if @event.contacts.empty?
+    %h3 No contacts have been recorded for this event
+  - else
+    %table{:class => 'tabular'}
+      %tr
+        %th Last name
+        %th First name
+
+      - for contact in @event.contacts
+        - person = contact.secondary_entity.person_temp
+        %tr
+          %td= person.last_name
+          %td= person.first_name

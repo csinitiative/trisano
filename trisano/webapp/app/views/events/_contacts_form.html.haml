@@ -5,15 +5,10 @@
     %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
 
     %div{:id => "contacts"}
-
-
-      - if @event.new_record?
-        - f.fields_for(:contact, @event.contact, :builder => ExtendedFormBuilder) do |contact_fields|
-          - contact_fields.fields_for(:active_secondary_entity, @event.contact.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_contact|
-            = render :partial => "entities/people/form", :locals => { :f => new_contact, :entity_data => @event.contact.active_secondary_entity }
+      - if @event.contacts.empty?
+        %h3 No contacts have been recorded for this event
       - else
-        %div{:id => 'contact-list'}
-          = render :partial => "contacts/index"
+        = render :partial => "contact", :collection => @event.contacts
 
-        %br
-        = link_to_remote_redbox("New Contact", :url => new_cmr_contact_path(@event), :method => :get)
+    %br{:style => "clear: both;"}
+    %p= add_contact_link "Add a contact"

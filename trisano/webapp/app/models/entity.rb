@@ -36,6 +36,7 @@ class Entity < ActiveRecord::Base
   validates_presence_of :entity_type
   validates_associated :people
   validates_associated :place_temp
+  validates_associated :person_temp
 
   before_validation :save_entity_associations
   after_save :save_location_info

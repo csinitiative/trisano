@@ -70,6 +70,12 @@ module EventsHelper
     end
   end
 
+  def add_contact_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "contacts", :partial => 'contact' , :object => Participation.new_contact_participation
+    end
+  end
+
   def basic_controls(event, jurisdiction)
     controls = link_to('Show', cmr_path(event)) + " | "
     controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)

@@ -107,6 +107,7 @@ class EventsController < ApplicationController
     @event.labs << Participation.new_lab_participation
     @event.hospitalized_health_facilities << Participation.new_hospital_participation
     @event.diagnosing_health_facilities << Participation.new_diagnostic_participation
+    @event.contacts << Participation.new_contact_participation
     
     prepopulate if !params[:from_search].nil?
 
