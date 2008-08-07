@@ -196,9 +196,11 @@ module EventsHelper
 
   def render_investigator_question(form_elements_cache, element, f)
     
-    result = "<div id='question_investigate_#{element.id}'>"
+    question = element.question
+    question_style = question.style.blank? ? "vert" : question.style
+    result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
     
-    @answer_object = @event.get_or_initialize_answer(element.question.id)
+    @answer_object = @event.get_or_initialize_answer(question.id)
      
     if (f.nil?)
       result += fields_for(@event) do |f|
@@ -225,6 +227,8 @@ module EventsHelper
     end
     
     result += "</div>"
+    
+    result += "<br clear='all'/>" if question_style == "vert"
     
     result
   end

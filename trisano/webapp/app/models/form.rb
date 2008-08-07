@@ -137,9 +137,8 @@ class Form < ActiveRecord::Base
         :core_data => template_question.core_data,
         :core_data_attr => template_question.core_data_attr,
         :size => template_question.size,
-        :is_on_short_form => template_question.is_on_short_form,
-        :is_required => template_question.is_required,
-        :is_exportable => template_question.is_exportable
+         :is_required => template_question.is_required,
+        :style => template_question.style
       })
    
     question_to_publish.save

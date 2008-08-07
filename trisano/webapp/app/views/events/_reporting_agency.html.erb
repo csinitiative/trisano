@@ -51,7 +51,7 @@
             <%= el.hidden_field(:location_type_id) %>
             <span class="horiz">
               <%= el.label(:entity_location_type_id, "Phone type") %>
-              <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event) %>
+              <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event, @can_investigate) %>
             </span>
           <% end %>
       

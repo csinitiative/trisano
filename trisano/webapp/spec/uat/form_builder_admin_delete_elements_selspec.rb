@@ -5,15 +5,16 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Form Builder Admin Delete Element Functionality' do
   
   before(:all) do
-    @form_name = get_unique_name(2) + " fu-uat"
-    @cmr_last_name = get_unique_name(1) + " fu-uat"
-    @tab_name = get_unique_name(2)  + " tab fu-uat"
-    @section_name = get_unique_name(2)  + " section fu-uat"
-    @question_text = get_unique_name(2)  + " question fu-uat"
-    @value_set_question_text = get_unique_name(2)  + " question fu-uat"
-    @value_set_name = get_unique_name(2)  + " vs fu-uat"
-    @value_set_value_one = get_unique_name(2)  + " vsv fu-uat"
-    @value_set_value_two = get_unique_name(2)  + " vsv fu-uat"
+    @form_name = get_unique_name(2) + " d-uat"
+    @cmr_last_name = get_unique_name(1) + " d-uat"
+    @tab_name = get_unique_name(2)  + " tab d-uat"
+    @section_name = get_unique_name(2)  + " section d-uat"
+    @question_text = get_unique_name(2)  + " question d-uat"
+    @value_set_question_text = get_unique_name(2)  + " question d-uat"
+    @value_set_name = get_unique_name(2)  + " vs d-uat"
+    @value_set_value_one = get_unique_name(2)  + " vsv d-uat"
+    @value_set_value_two = get_unique_name(2)  + " vsv d-uat"
+    @value_set_value_three = get_unique_name(2)  + " vsv d-uat"
   end
   
   after(:all) do
@@ -26,28 +27,18 @@ describe 'Form Builder Admin Delete Element Functionality' do
     @value_set_name = nil
     @value_set_value_one = nil
     @value_set_value_two = nil
+    @value_set_value_three = nil
   end
   
-  it 'should handle standard follow-ups.' do
+  it 'should delete questions, tabs, sections, and value sets' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     
     add_view(@browser, @tab_name)
     add_section_to_view(@browser, "Default View", @section_name)
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
     add_question_to_view(@browser, "Default View", {:question_text => @value_set_question_text, :data_type => "Drop-down select list"})
-    
-    # Could use a value set helper
-    @browser.click "link=Add value set"
-    wait_for_element_present("new-value-set-form")
-    @browser.type "value_set_element_name", @value_set_name
-    @browser.click "link=Add a value"
-    @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_new_value_element_attributes__name")
-    @browser.type "value_set_element_new_value_element_attributes__name", @value_set_value_one
-    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]",@value_set_value_two
-    @browser.click "value_set_element_submit"
-    wait_for_element_not_present("new-value-set-form")
-    
+    add_value_set_to_question(@browser, @value_set_question_text, @value_set_name, @value_set_value_one, @value_set_value_two, @value_set_value_three) 
+
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     edit_cmr(@browser)

@@ -5,27 +5,27 @@
 <% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
   <span class="horiz">
     <%= el.label(:entity_location_type_id, "Phone type") %>
-    <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, event) %>
+    <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, event, @can_investigate) %>
   </span>
 <% end %>
 
 <% f.fields_for(:telephone, entity_data.telephone, :builder => ExtendedFormBuilder) do |t| %>
   <% core_element :area_code, t, :horiz do %>
     <%= t.label(:area_code) %>
-    <%= t.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, event) %>
+    <%= t.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, event, @can_investigate) %>
   <% end %>
   <% core_element :phone_number, t, :horiz do %>
     <%= t.label(:phone_number) %>
-    <%= t.core_text_field(:phone_number, {:size => 8}, event) %>
+    <%= t.core_text_field(:phone_number, {:size => 8}, event, @can_investigate) %>
   <% end %>
   <% core_element :extension, t, :horiz do %>
     <%= t.label(:extension) %>
-    <%= t.core_text_field(:extension, {:size => 6}, event) %>
+    <%= t.core_text_field(:extension, {:size => 6}, event, @can_investigate) %>
   <% end %>
   <fieldset class="vert">
     <% core_element :email_address, t, :horiz do %>
       <%= t.label(:email_address) %>
-      <%= t.core_text_field(:email_address, {}, event) %>
+      <%= t.core_text_field(:email_address, {}, event, @can_investigate) %>
     <% end %>
   </fieldset>
 <% end %>

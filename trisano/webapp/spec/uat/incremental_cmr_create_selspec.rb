@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
- # $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -18,7 +18,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the contact information' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Contacts")
-    @browser.click("link=New Contact")
+    @browser.click("link=Add a contact")
     #@browser.waitforelementpresent("new-contact-form")
     sleep 3
     @browser.type('entity_person_last_name', 'Smurfette')

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ # $dont_kill_browser = true
 
 describe 'Form Builder Admin Standard Follow-Up Functionality' do
   
@@ -48,8 +48,8 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     @browser.click("link=#{@form_name}")
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
-     
-    save_cmr(@browser)
+
+    save_cmr(@browser)    
     @browser.is_text_present(@follow_up_answer).should be_true
     
     edit_cmr(@browser)

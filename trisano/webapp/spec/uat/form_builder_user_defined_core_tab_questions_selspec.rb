@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder user-defined, core-tab questions' do
   
-  $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @form_name = get_unique_name(2)  + " ud-fu-uat"

@@ -7,9 +7,6 @@ demo_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable:
   short_name: "demo_q1"
 
 demo_q2:
@@ -19,9 +16,6 @@ demo_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "demo_q2"
 
 demo_q3:
@@ -31,9 +25,6 @@ demo_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "demo_q3"
 
 lab_q1:
@@ -43,9 +34,6 @@ lab_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "lab_q1"
 
 lab_q2:
@@ -55,9 +43,6 @@ lab_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "lab_q2"
 
 lab_q3:
@@ -67,9 +52,6 @@ lab_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "lab_31"
 
 food_q1:
@@ -79,9 +61,6 @@ food_q1:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable:
   short_name: "food_q1"
 
 food_q2:
@@ -91,9 +70,6 @@ food_q2:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "food_q2"
 
 food_q3:
@@ -103,9 +79,6 @@ food_q3:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "food_q3"
 
 second_tab_q:
@@ -115,9 +88,6 @@ second_tab_q:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "2nd_tab_q1"
 
 second_tab_follow_up_q:
@@ -127,9 +97,6 @@ second_tab_follow_up_q:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "2nd_tab_fu_q"
 
 second_tab_core_follow_up_q:
@@ -139,7 +106,4 @@ second_tab_core_follow_up_q:
   help_text: 
   data_type: "single_line_text"
   size: 
-  is_on_short_form: 
-  is_required: 
-  is_exportable: 
   short_name: "2nd_tab_core_fu_q"

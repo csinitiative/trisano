@@ -18,20 +18,19 @@
                   %input{:type => 'hidden', :id => 'active_form', :name => 'active_form', :value => "#{form_reference.form.id}"}
                 %li
                   = link_to_function "#{form_reference.form.name}", "toggle_investigator_forms(\"#{form_reference.form.id}\")"
-        %td{:width => '80%', :align => 'left'}
+        %td{:width => '80%', :align => 'left', :valign => 'top'}
           - form_count = 0
           - for form_reference in @event.form_references
             - form_count += 1
             - form = form_reference.form
             - display_style = (form_count == 1) ? "inline" : "none"
             
-            %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style};"}
-              %h2
-                = form_reference.form.name
-                
+            %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style}; vertical-align: top"}
               - f.fields_for(:form_references, form_reference, :builder => ExtendedFormBuilder) do |fr|
                 = fr.hidden_field(:form_id, :index => form_reference.id)
-
+              %span{:class => 'investigator-form-title'}
+                = form_reference.form.name
+              %br{:clear => 'all'}
               - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
                 - has_multiple_user_defined_tabs = true
                 %script{:type => "text/javascript"}
@@ -60,6 +59,7 @@
               - else
                 = render_investigator_view(form.investigator_view_elements_container.children[0], f, form)
               
+              %br{:clear => "all"}
               %div{:align => "right"}
                 %small
                   Version 

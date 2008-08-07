@@ -1,20 +1,19 @@
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   
-  def core_text_field(attribute, options = {}, event =nil)
-    change_event = core_follow_up_event(attribute, event)
+  def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
+    change_event = core_follow_up_event(attribute, event, can_investigate)
     options[:onchange] = change_event unless change_event.blank?
     text_field(attribute, options)
   end
   
-  def core_calendar_date_select(attribute, options = {}, event =nil)
-    change_event = core_follow_up_event(attribute, event)
+  def core_calendar_date_select(attribute, options = {}, event =nil, can_investigate =nil)
+    change_event = core_follow_up_event(attribute, event, can_investigate)
     options[:onchange] = change_event unless change_event.blank?
     calendar_date_select(attribute, options)
   end
   
-  def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
-    
-    change_event = core_follow_up_event(attribute, event)
+  def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil, can_investigate =nil)
+    change_event = core_follow_up_event(attribute, event, can_investigate)
     options[:include_blank] = true unless options[:include_blank] == false
     html_options[:onchange] = change_event unless change_event.blank?
     self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
@@ -127,10 +126,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options) + "&nbsp;<small>10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999</small>"
     end
 
-    result = "<span class='vert'>"
+    result = ""
     
     if question.data_type == :check_box || question.data_type == :radio_button
-      result += @template.content_tag(:span, question.question_text, :class => "label") + " " + input_element
+      result += @template.content_tag(:label, question.question_text) + " " + input_element
       
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       
@@ -142,8 +141,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       result += "\n" + hidden_field(:question_id, :index => index)
     end
     
-    result += "</span>"
-
     result
   end
 
@@ -159,11 +156,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return FALSE
   end
 
-  def core_follow_up_event(attribute, event)
+  def core_follow_up_event(attribute, event, can_investigate)
     result = ""
     
     unless (@object.nil? || event.nil?)
-      if (@can_investigate && !event.form_references.nil?)        
+      if (can_investigate && !event.form_references.nil?)        
         event.form_references.each do |form_reference|
           if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)
             result = "sendCoreConditionRequest(this, '#{event.id}', '#{@object_name}[#{attribute}]');"
