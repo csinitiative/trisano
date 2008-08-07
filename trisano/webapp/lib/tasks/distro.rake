@@ -1,11 +1,11 @@
-require 'ftools'
 require 'fileutils'
 require 'mechanize'
 require 'rexml/document'
 require 'rest-open-uri'
 require 'logger'
+require 'yaml'
 
-namespace :nedss do
+namespace :trisano do
   
   namespace :distro do
     WAR_FILE_NAME = 'nedss.war'
@@ -33,7 +33,15 @@ namespace :nedss do
 
     desc "Export the database"
     task :dump_db do
-
+      dirname = './dump'
+      if !File.directory? './dump'
+        puts "adding directory #{dirname}"
+        FileUtils.mkdir(dirname)
+      end      
+      
+      config = YAML::load_file "../distro/config.yml"
+      database = config['database']
+      sh "pg_dump -c -O -c #{database} > #{dirname}/#{database}-dump.sql"
     end
 
     desc "Package the application with the settings from config.yml"
