@@ -20,10 +20,10 @@
 
 .user {
   font-size: 10px;
-  color: #666;
+  color: #fff;
   text-transform: uppercase; }
 
-.title1 {
+.areas_title {
   font-family: helvetica, sans-serif;
   font-size: 12px;
   font-weight: light;
@@ -32,6 +32,26 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 9px 0px 0px 5px; }
+
+.tools_ingreenbar {
+  font-family: helvetica, arial, sans-serif;
+  font-size: 11px;
+  color: #ccc;
+  padding: 10px 0px 5px 0px;
+  letter-spacing: 1px; }
+  .tools_ingreenbar a {
+    color: #063;
+    font-weight: normal;
+    text-decoration: none; }
+    .tools_ingreenbar a:hover {
+      color: 063;
+      text-decoration: underline; }
+    .tools_ingreenbar a:visited {
+      color: #063;
+      font-weight: normal; }
+    .tools_ingreenbar a:active {
+      color: #063;
+      font-weight: normal; }
 
 .title2 {
   font-family: helvetica, sans-serif;
@@ -44,7 +64,7 @@
   padding: 6px 0px 0px 10px; }
 
 .action1 {
-  padding: 6px 0px 0px 0px; }
+  padding: 7px 0px 0px 0px; }
 
 .action2 {
   padding: 4px 10px 0px 0px; }
@@ -62,8 +82,7 @@
   font-size: 11px;
   font-weight: light;
   color: #999;
-  padding: 0px 0px 0px 0px;
-  text-align: left; }
+  padding: 0px 0px 0px 0px; }
   .tools a {
     color: #c00;
     font-weight: bold;
@@ -84,3 +103,29 @@
 .tools2 {
   padding: 0px 0px 0px 0px;
   text-align: right; }
+
+h3 {
+  font-family: helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  display: block;
+  padding: 0px 0px 0px 0px;
+  color: #333;
+  text-decoration: underline; }
+
+h4 {
+  font-family: helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  display: block;
+  padding: 0px 0px 0px 0px;
+  color: #333;
+  text-decoration: underline; }
+
+label {
+  font-family: helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  display: block;
+  padding: 0px 0px 0px 0px;
+  color: #333; }

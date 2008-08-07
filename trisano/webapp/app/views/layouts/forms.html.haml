@@ -9,18 +9,18 @@
     = stylesheet_link_tag 'scaffold'
 
     / Sam Skin CSS for TabView
-    = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview.css'
-    = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview-skin.css'
+    = stylesheet_link_tag '../yui/build/tabview/assets/skins/sam/tabview.css'
+    / = stylesheet_link_tag '../yui/build/button/assets/skins/sam/button.css' 
 
     / Menu Stylesheet (required for creating buttons of type "menu" and "split")
     / = stylesheet_link_tag '../yui/build/menu/assets/skins/sam/menu.css'
 
     / JavaScript Dependencies for Tabview
-    = javascript_include_tag '../yuinew/build/yahoo-dom-event/yahoo-dom-event.js'
-    = javascript_include_tag '../yuinew/build/element/element-beta-min.js'
+    = javascript_include_tag '../yui/build/yahoo-dom-event/yahoo-dom-event.js'
+    = javascript_include_tag '../yui/build/element/element-beta-min.js'
 
     / Source files
-    = javascript_include_tag '../yuinew/build/tabview/tabview-min.js'
+    = javascript_include_tag '../yui/build/tabview/tabview-min.js'
     / = javascript_include_tag '../yui/build/button/button-min.js'
     / = javascript_include_tag '../yui/build/tabview/ScrollTabView.js'
     = javascript_include_tag :defaults
@@ -75,15 +75,18 @@
           = yield :tools_two
     .container
       .name
-        = yield :name
+        = yield :title
       .tools
         = yield :tools
         %p{:style => "color: green"}
           = flash[:notice]
-      = yield
-    .container
-      #ft
-        %hr
-        %b Release 2 Pilot Feedback:
-        %a{:href => 'https://ut-nedss.csinitiative.net/wiki/Release2PilotFeedback'} Wiki
-        %a{:href => 'mailto:r2feedback@ut-nedss.csinitiative.net'}Email List
+      #rot
+        .left.title2
+          = yield :name
+        .right
+          .action2
+            = yield :tools_two
+      #main
+        .left.content
+          = yield
+        .right.nav
