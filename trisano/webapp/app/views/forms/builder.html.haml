@@ -20,7 +20,7 @@
     %b Investigator Form Elements
     %br
     %small{:style => "#float: right"}
-      = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get)
+      = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
 
     %div{:id => "builder-mods"}
 
@@ -30,7 +30,7 @@
     %b Core Form Elements
     %br
     %small{:style => "#float: right"}
-      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get)
+      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
 
     %div{:id => "core-builder-mods"}
 
@@ -40,7 +40,7 @@
     %b Core Field Elements
     %br
     %small{:style => "#float: right"}
-      = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get)
+      = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
 
     %div{:id => "core-field-builder-mods"}
 

@@ -20,7 +20,7 @@ class FollowUpElement < FormElement
     end
 
     investigation_forms.each do |form|
-      form.form_base_element.all_cached_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
+      form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
 
         if (params[:response] == follow_up.condition)
           # Debt: The magic container for core follow ups needs to go probably

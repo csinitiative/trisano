@@ -138,7 +138,7 @@ module FormsHelper
     question = element.question
     question_id = "question_#{element.id}"
     
-    result = "<li id='#{question_id}' class='sortable' style='clear: both;'>"
+    result = "<li id='#{question_id}' class='sortable fb-question' style='clear: both;'>"
 
     css_class = element.is_active? ? "question" : "inactive-question"
     result += "<span class='#{css_class}'>"
@@ -206,7 +206,7 @@ module FormsHelper
   end
   
   def render_value_set(element, include_children=true)
-    result =  "<li id='value_set_" + element.id.to_s + "'>Value Set: "
+    result =  "<li id='value_set_" + element.id.to_s + "' class='fb-value-set'>Value Set: "
     result += element.name
     
     if include_children
@@ -230,7 +230,7 @@ module FormsHelper
   end
   
   def render_value(element, include_children=true)
-    result =  "<li id='value_" + element.id.to_s + "'>"
+    result =  "<li id='value_" + element.id.to_s + "' class='fb-value'>"
     result += "<span class='inactive-value'>" unless element.is_active
     result += element.name
     result += "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
@@ -287,7 +287,12 @@ module FormsHelper
   end
   
   def add_to_library_link(element)
-    "<small>" + link_to_remote("Copy to library", :url => {:controller => "group_elements", :action => "new", :form_element_id => element.id}) +"</small>"
+    "<small>" + link_to_remote("Copy to library", 
+      :url => {
+        :controller => "group_elements", :action => "new", :form_element_id => element.id}, 
+      :html => {
+        :class => "fb-add-to-library"}
+    ) +"</small>"
   end
 
   def add_value_set_link(element)
@@ -298,7 +303,7 @@ module FormsHelper
   end
 
   def edit_value_set_link(element)
-    "<small><a href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
+    "<small><a class='fb-edit-value-set' href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
   
     def delete_value_set_link(element)
