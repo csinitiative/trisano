@@ -9,6 +9,10 @@ module FormsHelper
       render_core_view(element, include_children)
     when "CoreFieldElement"
       render_core_field(element, include_children)
+    when "BeforeCoreFieldElement"
+      render_before_core_field(element, include_children)
+    when "AfterCoreFieldElement"
+      render_after_core_field(element, include_children)
     when "SectionElement"
       render_section(element, include_children)
     when "GroupElement"
@@ -78,11 +82,7 @@ module FormsHelper
   
   def render_core_field(element, include_children=true)
 
-    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
-    
-    result += " " +add_question_link(element, "core field")
-    
-    result += "</li>"
+    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b></li>"
     
     if include_children && element.children?
       result += "<ul id='core_field_" + element.id.to_s + "_children' class='fb-core-field-children' style='clear: both'>"
@@ -90,10 +90,48 @@ module FormsHelper
         result += render_element(child, include_children)
       end
       result += "</ul>"
-      result += sortable_element("core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+    end
+    
+  end
+  
+  def render_before_core_field(element, include_children)
+    
+    result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
+    
+    result += "&nbsp;" + add_question_link(element, "before config")
+    
+    result += "</li>"
+    
+    if include_children && element.children?
+      result += "<ul id='before_core_field_" + element.id.to_s + "_children' class='fb-before-core-field-children' style='clear: both'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+      result += sortable_element("before_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+  end
+    
+  def render_after_core_field(element, include_children)
+    result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
+    
+    result += "&nbsp;" + add_question_link(element, "after config")
+    
+    result += "</li>"
+    
+    if include_children && element.children?
+      result += "<ul id='after_core_field_" + element.id.to_s + "_children' class='fb-after-core-field-children' style='clear: both'>"
+      element.children.each do |child|
+        result += render_element(child, include_children)
+      end
+      result += "</ul>"
+      result += sortable_element("after_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+    end
+    
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    
   end
   
   def render_section(element, include_children=true)
@@ -306,7 +344,7 @@ module FormsHelper
     "<small><a class='fb-edit-value-set' href='#' onclick=\"new Ajax.Request('../../value_set_elements/" + element.id.to_s + "/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
   
-    def delete_value_set_link(element)
+  def delete_value_set_link(element)
     "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-value-set' id='delete-value-set-" + element.id.to_s + "'>" + 
       image_tag("delete.png", :border => 0, :alt => "Delete Value Set") + "</a>"

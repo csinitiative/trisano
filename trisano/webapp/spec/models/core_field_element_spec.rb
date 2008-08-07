@@ -84,6 +84,16 @@ describe CoreFieldElement do
       @core_field_element.tree_id.should eql(form.form_base_element.tree_id)
     end
     
+    it "should bootstrap the before and after core field elements" do
+      form = Form.new
+      form.save_and_initialize_form_elements
+      @core_field_element.parent_element_id = form.core_field_elements_container.id
+      @core_field_element.save_and_add_to_form
+      @core_field_element.children.size.should eql(2)
+      @core_field_element.children[0].is_a?(BeforeCoreFieldElement).should be_true
+      @core_field_element.children[1].is_a?(AfterCoreFieldElement).should be_true
+    end
+    
   end
   
 end

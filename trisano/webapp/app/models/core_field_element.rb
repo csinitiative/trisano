@@ -6,7 +6,12 @@ class CoreFieldElement < FormElement
   
   def save_and_add_to_form
     self.name = Event.exposed_attributes[self.core_path][:name]
-    super
+    super do
+      before_core_field_element = BeforeCoreFieldElement.create(:tree_id => self.tree_id, :form_id => self.form_id)
+      after_core_field_element = AfterCoreFieldElement.create(:tree_id => self.tree_id, :form_id => self.form_id)
+      self.add_child(before_core_field_element)
+      self.add_child(after_core_field_element)
+    end
   end
   
   def available_core_fields

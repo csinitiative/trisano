@@ -4,17 +4,11 @@ require 'ostruct'
 module EventsHelper
   
   def core_element(attribute, form_builder, css_class, &block)
+    concat_core_field(:before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
     concat("</span>", block.binding)
-    unless (@event.nil? || @event.form_references.nil?)        
-      @event.form_references.each do |form_reference|
-        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
-        configs.each do |config|
-          concat(render_investigator_view(config, @event_form, form_reference.form), block.binding)
-        end
-      end
-    end
+    concat_core_field(:after, attribute, form_builder, block)
   end
   
   def render_core_data_element(element)
@@ -41,6 +35,7 @@ module EventsHelper
   end
   
   def render_investigator_view(view, f, form=nil)
+    return "" if view.nil?
     result = ""
     
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
@@ -136,6 +131,18 @@ module EventsHelper
   end
 
   private
+  
+  def concat_core_field(before_or_after, attribute, form_builder, block)
+    unless (@event.nil? || @event.form_references.nil?)        
+      @event.form_references.each do |form_reference|
+        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
+        configs.each do |config|
+          element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
+          concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
+        end
+      end
+    end
+  end
   
   def render_investigator_element(form_elements_cache, element, f)
     result = ""

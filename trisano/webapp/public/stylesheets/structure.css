@@ -166,6 +166,18 @@ body, p, ol, ul {
 .fb-core-field-children {
   padding: 0px 0px 12px 0px; }
 
+.fb-before-core-field {
+  color: #fff;
+  height: 23px;
+  background-color: #3265ce;
+  padding: 0px 0px 0px 10px; }
+
+.fb-after-core-field {
+  color: #fff;
+  height: 23px;
+  background-color: #3265ce;
+  padding: 0px 0px 0px 10px; }
+
 .sortable {
   border-color: #ccc; }
 

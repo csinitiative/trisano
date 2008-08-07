@@ -17,7 +17,8 @@ module NedssHelper
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
-  CORE_FIELD_ID_PREFIX = "core_field_"
+  BEFORE_CORE_FIELD_ID_PREFIX = "before_core_field_"
+  AFTER_CORE_FIELD_ID_PREFIX = "after_core_field_"
   SECTION_ID_PREFIX = "section_"
   GROUP_ID_PREFIX = "group_"
   QUESTION_ID_PREFIX = "question_"
@@ -324,9 +325,14 @@ module NedssHelper
     return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
-  # Takes the name of the core field confg to which the question should be added and the question's attributes.
-  def add_question_to_core_field_config(browser, element_name, question_attributes = {})
-     return add_question_to_element(browser, element_name, CORE_FIELD_ID_PREFIX, question_attributes)
+  # Takes the name of the before core field confg to which the question should be added and the question's attributes.
+  def add_question_to_before_core_field_config(browser, element_name, question_attributes = {})
+    return add_question_to_core_field_config(browser, element_name, BEFORE_CORE_FIELD_ID_PREFIX, question_attributes)
+  end
+  
+  # Takes the name of the after core field confg to which the question should be added and the question's attributes.
+  def add_question_to_after_core_field_config(browser, element_name, question_attributes = {})
+    return add_question_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, question_attributes)
   end
   
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
@@ -627,6 +633,15 @@ module NedssHelper
   
   def add_question_to_element(browser, element_name, element_id_prefix, question_attributes)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
+    fill_in_question_attributes(browser, element_id, question_attributes)
+  end
+  
+  def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
+    element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
+    fill_in_question_attributes(browser, element_id, question_attributes)
+  end
+  
+  def fill_in_question_attributes(browser, element_id, question_attributes)
     browser.click("add-question-#{element_id}")
     wait_for_element_present("new-question-form", browser)
     browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
@@ -658,6 +673,18 @@ module NedssHelper
     html_source = browser.get_html_source
     name_position = html_source.index(name)
     id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+    id_end_position = html_source.index("\"", id_start_position)-1
+    html_source[id_start_position..id_end_position]
+  end
+  
+  # Same as get_form_element_id except it doesn't do a reverse index looking for the start position.
+  # Core field configs are different in that the name of the main core field config preceeds the two
+  # containers for before and after configs.
+  def get_form_element_id_for_core_field(browser, name, element_id_prefix)
+    element_prefix_length = element_id_prefix.size
+    html_source = browser.get_html_source
+    name_position = html_source.index(name)
+    id_start_position = html_source.index("#{element_id_prefix}", name_position) + element_prefix_length
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
