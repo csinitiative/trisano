@@ -638,12 +638,20 @@ class Event < ActiveRecord::Base
       "morbidity_event[active_patient][active_primary_entity][person][birth_date]" => {:type => :date, :name => "Patient date of birth" },
       "morbidity_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => {:type => :single_line_text, :name => "Patient age" },
       "morbidity_event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient date of death" },
-      "morbidity_event[active_patient][active_primary_entity][telephone][area_code]" => {:type => :single_line_text, :name => "Patient area code" },
-      "morbidity_event[active_patient][active_primary_entity][telephone][phone_number]" => {:type => :single_line_text, :name => "Patient phone number" },
-      "morbidity_event[active_patient][active_primary_entity][telephone][extension]" => {:type => :single_line_text, :name => "Patient extension" },
       "morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Patient birth gender" },
       "morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Patient ethnicity" },
-      "morbidity_event[active_patient][active_primary_entity][person][primary_language_id]" => {:type => :single_line_text, :name => "Patient primary language" }
+      "morbidity_event[active_patient][active_primary_entity][person][primary_language_id]" => {:type => :single_line_text, :name => "Patient primary language" },
+
+      # Risk factors
+      "morbidity_event[active_patient][participations_risk_factor][pregnant_id]" => {:type => :drop_down, :name => "Pregnant" },
+      "morbidity_event[active_patient][participations_risk_factor][pregnancy_due_date]" => {:type => :date, :name => "    Pregnancy due date" },
+      "morbidity_event[active_patient][participations_risk_factor][food_handler_id]" => {:type => :drop_down, :name => "Food handler" },
+      "morbidity_event[active_patient][participations_risk_factor][healthcare_worker_id]" => {:type => :drop_down, :name => "Healthcare worker" },
+      "morbidity_event[active_patient][participations_risk_factor][group_living_id]" => {:type => :drop_down, :name => "Group living" },
+      "morbidity_event[active_patient][participations_risk_factor][day_care_association_id]" => {:type => :drop_down, :name => " Day care association" },
+      "morbidity_event[active_patient][participations_risk_factor][occupation]" => {:type => :single_line_text, :name => "Occupation" },
+      "morbidity_event[active_patient][participations_risk_factor][risk_factors]" => {:type => :single_line_text, :name => "Risk factors" },
+      "morbidity_event[active_patient][participations_risk_factor][risk_factors_notes]" => {:type => :multi_line_text, :name => "Risk factors notes" }
       
       # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
     }
@@ -675,7 +683,6 @@ class Event < ActiveRecord::Base
   def set_event_onset_date
     self.event_onset_date = Date.today
   end
-
 
   # DEBT: Replace these one by one as we switch to the multi-model process used by lab results
   def save_associations
