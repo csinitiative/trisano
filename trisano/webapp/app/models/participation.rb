@@ -49,6 +49,14 @@ class Participation < ActiveRecord::Base
       person_participation
     end
 
+    def new_patient_participation
+      patient = Participation.new
+      patient.build_primary_entity.build_person_temp      
+      patient.primary_entity.address = {}
+      patient.role_id = Code.interested_party.id
+      patient
+    end
+
   end
 
   def active_primary_entity

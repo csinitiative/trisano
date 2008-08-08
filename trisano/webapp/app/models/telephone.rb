@@ -10,9 +10,13 @@ class Telephone < ActiveRecord::Base
   # A basic (###) ###-#### Ext. # format for phone numbers
   def simple_format
     number = ''
-    number << "(#{self.area_code}) " if self.area_code
-    number << self.phone_number
-    number << " Ext. #{self.extension}" if self.extension
+    number << "(#{self.area_code}) " unless self.area_code.blank?
+    if phone_number.blank? || phone_number.include?('-')
+      number << phone_number
+    else
+      number << phone_number.insert(3, '-')
+    end
+    number << " Ext. #{self.extension}" unless self.extension.blank?
     number.strip
   end
 

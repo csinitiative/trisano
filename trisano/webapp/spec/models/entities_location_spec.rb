@@ -23,5 +23,6 @@ describe EntitiesLocation do
     it "A home join location should point to home location" do
       entities_locations(:silvers_joined_to_home_address).location_id.should eql(1)
     end
+
   end
 end

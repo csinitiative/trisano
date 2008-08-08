@@ -4,7 +4,7 @@
   = error_messages_for :clinician
 
   - fields_for(@clinician, :builder => ExtendedFormBuilder) do |clinician|
-    = render :partial => "entities/people/form", :locals => { :f => clinician, :entity_data => @clinician, :event => @event }
+    = render :partial => "entities/people/form", :locals => { :f => clinician, :entity_data => @clinician, :event => @event, :rendering_pt => false }
 
   = submit_to_remote("person-save-button", "Save", :submit => "person_form", :url => cmr_clinicians_path(@event))
   &nbsp;&nbsp;

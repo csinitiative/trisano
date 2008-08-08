@@ -47,21 +47,7 @@
       <td><%= p.approximate_age_no_birthday %></td>
     <% end %>
   </tr>
-  <tr>
-    <td><span class="label"><%= l.type unless l.nil?%> Phone: <%= " (Primary) " if l.primary? unless l.nil? -%></span></td>
-    <td colspan='4'>
-      <% unless telephone.nil? %>
-        <%= fml "(", telephone.area_code, ") " if telephone.area_code -%>
-        <%= phone_number(telephone.phone_number) -%>
-        <%= fml " Ext. ", telephone.extension, "" if telephone.extension -%>
-      <% end %>
-    </td>
-  </tr>
-  <tr>
-    <% unless telephone.nil? %>
-      <td><span class="label">Email:</span></td>
-      <td colspan='4'><%= telephone.email_address %></td>
-    <% end %>
+  <%= render :partial => 'entities/people/show_telephone', :collection => entity_data.telephone_entities_locations %>
   </tr>
   <tr>
     <td><span class="label">Birth gender:</span></td>

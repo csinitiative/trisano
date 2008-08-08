@@ -1,10 +1,13 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
   describe 'The UT-NEDSS home page' do 
-    
-    it 'should have links to all the sub-pages' do
+
+    before :each do
       @browser.open "/nedss/cmrs"
       @browser.wait_for_page_to_load($load_time)
+    end
+    
+    it 'should have links to all the sub-pages' do
       @browser.is_text_present('CMRS').should be_true
       @browser.is_text_present('NEW CMR').should be_true
       @browser.is_text_present('SEARCH').should be_true

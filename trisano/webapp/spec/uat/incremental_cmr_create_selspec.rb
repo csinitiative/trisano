@@ -38,10 +38,12 @@ describe 'User functionality for creating and saving CMRs' do
   
   it 'should save the phone number' do
     edit_cmr(@browser).should be_true
-    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_area_code', '801'
-    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_phone_number', '581'
-    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_extension', '1234'
-    @browser.type 'morbidity_event_active_patient__active_primary_entity__telephone_phone_number', '5811234'
+    @browser.click 'link=New Telephone / Email'
+    @browser.select 'morbidity_eveny_new_telephone_attributes__entity_location_type_id', 'label=Work'
+    @browser.type 'morbidity_event_new_telephone_attributes___area_code',   '801'
+    @browser.type 'morbidity_event_new_telephone_attributes__phone_number', '581'
+    @browser.type 'morbidity_event_new_telephone_attributes__extension',    '1234'
+    @browser.type 'morbidity_event_new_telephone_attributes__phone_number', '5811234'
     save_cmr(@browser).should be_true
   end
   

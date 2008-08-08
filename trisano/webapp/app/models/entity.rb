@@ -9,7 +9,7 @@ class Entity < ActiveRecord::Base
   has_one :place_temp, :class_name => "Place"
   has_one :person_temp, :class_name => "Person"
 
-  has_many :entities_locations, :foreign_key => 'entity_id', :select => 'DISTINCT ON (entity_location_type_id) *', :order => 'entity_location_type_id, created_at DESC'
+  has_many :entities_locations, :foreign_key => 'entity_id', :order => 'entity_location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
 
   # TODO: SERIOUS DEBT, Nothing enforces just one primary location
@@ -37,12 +37,13 @@ class Entity < ActiveRecord::Base
   validates_associated :people
   validates_associated :place_temp
   validates_associated :person_temp
+  validates_associated :entities_locations
 
   before_validation :save_entity_associations
   after_save :save_location_info
 
   def person
-    @person || Person.find_by_entity_id(self.id)
+    @person || Person.find_by_entity_id(self.id) || person_temp
   end
 
   def person=(attributes)
@@ -76,6 +77,12 @@ class Entity < ActiveRecord::Base
     @entities_location = EntitiesLocation.new(attributes)
   end
   
+  #TGF: support for multiple phones.
+  def telephone_entities_locations
+    telephone_location_type_ids = ExternalCode.telephone_location_type_ids
+    entities_locations.select {|el| telephone_location_type_ids.include? el.entity_location_type_id}
+  end
+
   def telephone_entities_location
     @telephone_entities_location || primary_phone_entities_location
   end

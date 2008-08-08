@@ -69,22 +69,31 @@
     
     <fieldset class="form">
       <legend>Telephone / Email</legend>
-      
-      <% if entity_data.telephone_entities_location.nil?
-        entity_data.telephone_entities_location = {
-          :primary_yn_id => ExternalCode.no_id,
-          :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
-        }
-      end %>
-      <% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
+      <% if rendering_pt -%>
+      <div id="phones">
+        <%= render :partial => 'telephone', :collection => entity_data.telephone_entities_locations %>
+      </div>
+      <% else -%>
+        <% if entity_data.telephone_entities_location.nil?
+             entity_data.telephone_entities_location = {
+               :primary_yn_id => ExternalCode.no_id,
+               :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
+             }
+           end %>
+        <% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
         <%= el.hidden_field(:entity_id) %>
         <%= el.hidden_field(:primary_yn_id) %>
         <%= el.hidden_field(:location_type_id) %>
       
         <%= render :partial => 'locations/phone_form', :locals => { :f => f, :entity_data => entity_data, :event => event  } %>
-      <% end %>
+      <% end -%>
+      <% end -%>
     </fieldset>
-    
+    <% if rendering_pt -%>
+    <p>
+      <%= add_new_telephone_link "New Telephone / Email" %>
+    </p>
+    <% end -%>
     <fieldset class="form">
       <legend>Demographics</legend>
       <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>

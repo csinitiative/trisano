@@ -1,9 +1,9 @@
 class Location < ActiveRecord::Base
-  has_many :entities_locations
+  has_many :entities_locations, :dependent => :destroy
   has_many :entities, :through => :entities_locations
   
   has_many :addresses
-  has_many :telephones
+  has_many :telephones, :dependent => :destroy, :order => 'created_at DESC'
 
   has_one :current_address, :class_name => 'Address', :order => 'created_at DESC'
   has_one :current_phone, :class_name => 'Telephone', :order => 'created_at DESC'
@@ -11,6 +11,8 @@ class Location < ActiveRecord::Base
   # Populated by PersonEntity to label as work, home, etc.
   attr_accessor :type
   attr_writer :primary
+
+  validates_associated :telephones
 
   # Need more validation against bad input, assumes a happy path
 
@@ -72,7 +74,7 @@ class Location < ActiveRecord::Base
   end
 
   def update_entities_locations
-    entities_location.save
+    entities_location.save if entities_location
   end
 
   def clear_base_error

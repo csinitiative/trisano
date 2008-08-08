@@ -61,21 +61,6 @@ class EventsController < ApplicationController
     @event = MorbidityEvent.new(
       :event_onset_date => Date.today,
       :disease          => {}, 
-      :active_patient   => { 
-        :active_primary_entity => { 
-          :person => {}, 
-          :entities_location => {
-            :primary_yn_id => ExternalCode.yes_id,
-            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Address Location Type").id
-          },
-          :telephone_entities_location => {
-            :primary_yn_id => ExternalCode.no_id,
-            :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
-          },
-          :address => {}, 
-          :telephone => {}
-        }, 
-      },
       :active_reporting_agency => { 
         :secondary_entity_id => nil,
         :active_secondary_entity => { 
@@ -108,7 +93,8 @@ class EventsController < ApplicationController
     @event.hospitalized_health_facilities << Participation.new_hospital_participation
     @event.diagnosing_health_facilities << Participation.new_diagnostic_participation
     @event.contacts << Participation.new_contact_participation
-    
+    @event.patient = Participation.new_patient_participation
+
     prepopulate if !params[:from_search].nil?
 
     respond_to do |format|
@@ -146,7 +132,8 @@ class EventsController < ApplicationController
   def update
     params[:morbidity_event][:existing_lab_attributes] ||= {}
     params[:morbidity_event][:existing_hospital_attributes] ||= {}
-    params[:morbidity_event][:existing_diagnostic_attributes] ||= {}
+    params[:morbidity_event][:existing_diagnostic_attributes] ||= {}    
+    params[:morbidity_event][:existing_telephone_attributes] ||= {}
 
     respond_to do |format|
       if @event.update_attributes(params[:morbidity_event])
@@ -228,14 +215,14 @@ class EventsController < ApplicationController
   
   def prepopulate
     # Perhaps include a message if we know the names were split out of a full text search
-    @event.active_patient.active_primary_entity.person.first_name = params[:first_name]
-    @event.active_patient.active_primary_entity.person.middle_name = params[:middle_name]
-    @event.active_patient.active_primary_entity.person.last_name = params[:last_name]
-    @event.active_patient.active_primary_entity.person.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
+    @event.active_patient.active_primary_entity.person_temp.first_name = params[:first_name]
+    @event.active_patient.active_primary_entity.person_temp.middle_name = params[:middle_name]
+    @event.active_patient.active_primary_entity.person_temp.last_name = params[:last_name]
+    @event.active_patient.active_primary_entity.person_temp.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
     @event.active_patient.active_primary_entity.address.city = params[:city]
     @event.active_patient.active_primary_entity.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.active_jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
-    @event.active_patient.active_primary_entity.person.birth_date = params[:birth_date]
+    @event.active_patient.active_primary_entity.person_temp.birth_date = params[:birth_date]
     @event.disease.disease_id = params[:disease]
   end
   

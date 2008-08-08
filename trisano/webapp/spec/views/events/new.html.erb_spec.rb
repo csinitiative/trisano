@@ -12,6 +12,8 @@ describe "/cmrs/new.html.erb" do
     @secondary_entity =  mock_person_entity
     @place_entity = mock_model(Entity)
 
+    @primary_entity.stub!(:telephone_entities_locations).and_return([])
+    
     @active_reporting_agency = mock_model(Participation)
     @active_reporter = mock_model(Participation)
     @active_hospital = mock_model(Participation)

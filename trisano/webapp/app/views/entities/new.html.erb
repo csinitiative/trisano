@@ -6,7 +6,7 @@
 
 <% form_for(@entity, :builder => ExtendedFormBuilder) do |f| %>
   <p>
-    <%= render :partial => "#{@type.pluralize}/form", :locals => { :f => f, :entity_data => @entity, :event => @event } %>
+    <%= render :partial => "#{@type.pluralize}/form", :locals => { :f => f, :entity_data => @entity, :event => @event, :rendering_pt => false } %>
     <%= f.submit "Create" %>
   </p>
 <% end %>

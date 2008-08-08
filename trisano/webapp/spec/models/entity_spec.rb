@@ -256,3 +256,24 @@ describe Entity, "with location fixtures loaded" do
     worked.should == 2
   end
 end
+
+describe Entity, "with multiple telephones" do
+  fixtures :entities, :entities_locations, :locations, :external_codes
+
+  it "should have no telephone entities locations" do
+    entities(:Silvers).telephone_entities_location.should be_nil
+  end
+
+  it "should be able to return all telephone entities locations" do
+    entities(:Silvers).telephone_entities_locations.should be_empty
+  end
+
+  it "should be able to build a list of telephone entites locations" do
+    entity = entities(:Silvers)
+    entity.entities_locations.build(:entity_location_type_id => ExternalCode.telephone_location_type_ids[0])
+    entity.save
+    entity.telephone_entities_locations.size.should == 1
+  end
+    
+end
+

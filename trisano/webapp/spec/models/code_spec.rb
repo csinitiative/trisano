@@ -8,4 +8,13 @@ describe Code do
   it "should be valid" do
     @code.should be_valid
   end
+
+  describe 'Interested Party' do
+    fixtures :codes
+
+    it 'should exist' do 
+      Code.interested_party.should_not be_nil
+    end
+
+  end
 end

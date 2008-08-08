@@ -30,6 +30,7 @@ describe "/people/show.html.erb" do
     @person.stub!(:ethnicity).and_return(@ethnicity)
     @person.stub!(:primary_language).and_return(@language)
     @person.stub!(:approximate_age_no_birthday).and_return(50)
+    @person.stub!(:telephone_entities_locations).and_return([])
 
     @address = mock_model(Address)
     @address.stub!(:street_number).and_return("123")
@@ -45,6 +46,7 @@ describe "/people/show.html.erb" do
     @phone.stub!(:area_code).and_return("212")
     @phone.stub!(:phone_number).and_return("555-1212")
     @phone.stub!(:extension).and_return("9999")
+    @phone.should_receive(:simple_format).and_return("(212) 555-1212 Ext. 9999")
     @phone.stub!(:email_address).and_return("billg@microsoft.com")
     
     @address_location = mock_model(Location)
@@ -65,11 +67,16 @@ describe "/people/show.html.erb" do
     @entities_location.stub!(:entity_location_type_id).and_return("1302")
     @entities_location.stub!(:primary_yn_id).and_return("1402")
     @entities_location.stub!(:location).and_return(@address_location)
+
+    @work_phone_entity_location_type = mock(ExternalCode)
+    @work_phone_entity_location_type.should_receive(:code_description).and_return('Work')
     
     @telephone_entities_location = mock_model(EntitiesLocation)
     @telephone_entities_location.stub!(:entity_id).and_return("1")
     @telephone_entities_location.stub!(:entity_location_type_id).and_return("2311")
+    @telephone_entities_location.stub!(:entity_location_type).and_return(@work_phone_entity_location_type)
     @telephone_entities_location.stub!(:primary_yn_id).and_return("1401")
+    @telephone_entities_location.stub!(:current_phone).and_return(@phone)
     @telephone_entities_location.stub!(:location).and_return(@telephone_location)
 
     @entity = mock_model(Entity)
@@ -86,6 +93,7 @@ describe "/people/show.html.erb" do
     @entity.stub!(:races).and_return([@race])
     @entity.stub!(:primary_entities_location).and_return(@entities_location)
     @entity.stub!(:primary_phone_entities_location).and_return(@telephone_entities_location)
+    @entity.stub!(:telephone_entities_locations).and_return([@telephone_entities_location])
     
     assigns[:entity] = @entity
     assigns[:locations] = Array.new

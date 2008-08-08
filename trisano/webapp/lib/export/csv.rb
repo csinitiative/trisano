@@ -20,7 +20,6 @@ module Exporters
            event_name
            record_created_date
            disease
-           event_type
            imported_from
            UDOH_case_status
            outbreak_associated
@@ -94,7 +93,6 @@ module Exporters
               fields << event.event_name.to_s.gsub(/,/, ' ')
               fields << event.event_onset_date.to_s.gsub(/,/,' ')
               fields << ((event.disease.nil? || event.disease.disease.nil?) ? nil : event.disease.disease.disease_name.to_s.gsub(/,/,' '))
-              fields << l(event.event_type).to_s.gsub(/,/,' ')
               fields << l(event.imported_from).to_s.gsub(/,/,' ')
               fields << l(event.udoh_case_status).to_s.gsub(/,/,' ')
               fields << l(event.outbreak_associated).to_s.gsub(/,/,' ')

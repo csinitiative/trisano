@@ -80,7 +80,6 @@ describe EventsHelper do
     @lab.stub!(:lab_results).and_return([@lab_result])
     @lab.stub!(:each).and_yield(@lab_result)
 
-    @event_type = mock_model(Code)
     @event_status = mock_model(ExternalCode)
     @imported_from = mock_model(ExternalCode)
     @udoh_case_status =mock_model(ExternalCode)
@@ -100,7 +99,6 @@ describe EventsHelper do
 
 
     @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
-    @event_type.stub!(:code_description).and_return('ONS')
     @event_status.stub!(:code_description).and_return('Open')
     @imported_from.stub!(:code_description).and_return('Utah')
     @udoh_case_status.stub!(:code_description).and_return('Confirmed')
@@ -168,7 +166,6 @@ describe EventsHelper do
     ['2008537081',
      'Test,2008-02-19',
      'Bubonic Plague',
-     'ONS',
      'Utah',
      'Confirmed',
      'Yes',
@@ -219,7 +216,6 @@ describe EventsHelper do
      'Test',
      '2008-02-19',
      nil,
-     'ONS',
      'Utah',
      'Confirmed',
      'Yes',
@@ -270,7 +266,6 @@ describe EventsHelper do
        event_name
        record_created_date
        disease
-       event_type
        imported_from
        UDOH_case_status
        outbreak_associated

@@ -188,6 +188,8 @@ def mock_event
   event.stub!(:answers).and_return([answer])
   event.stub!(:form_references).and_return([])
   event.stub!(:under_investigation?).and_return(true)
+  event.stub!(:patient=)
+  event.stub!(:telephone_entities_locations).and_return([])
   event
 end
 

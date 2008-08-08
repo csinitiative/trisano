@@ -38,7 +38,7 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
       <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
         <div id="demographic_tab">
           <%= render :partial => "entities/people/form", 
-            :locals => { :f => current_patient, :entity_data => @event.active_patient.active_primary_entity, :event => @event } %>
+            :locals => { :f => current_patient, :entity_data => @event.active_patient.active_primary_entity, :event => @event, :rendering_pt => true } %>
         </div>
       <% end %>
     <% end %>

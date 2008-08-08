@@ -1,0 +1,23 @@
+.phone
+  - new_or_existing = telephone.new_record? ? 'new' : 'existing'
+  - prefix = "morbidity_event[#{new_or_existing}_telephone_attributes][]"
+  - fields_for prefix, telephone, :builder => ExtendedFormBuilder do |telephone_form|
+    - core_element :entity_location_type_id, telephone_form, :horiz do
+      = telephone_form.label(:entty_location_type_id, "Phone type")
+      = telephone_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+    - core_element :area_code, telephone_form, :horiz do
+      = telephone_form.label(:area_code)
+      = telephone_form.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'})
+    - core_element :phone_number, telephone_form, :horiz do
+      = telephone_form.label(:phone_number)
+      = telephone_form.core_text_field(:phone_number, {:size => 8})
+    - core_element :extension, telephone_form, :horiz do
+      = telephone_form.label(:extension)
+      = telephone_form.core_text_field(:extension, {:size => 6})
+    %fieldset.vert
+      - core_element :email_address, telephone_form, :horiz do
+        = telephone_form.label(:email_address)
+        = telephone_form.core_text_field(:email_address, {})
+      %span.horiz
+        = telephone_form.label '&nbsp;'
+        = link_to_function image_tag("delete.png", :border => 0), "$(this).up('.phone').remove()"

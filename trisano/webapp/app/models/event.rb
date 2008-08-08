@@ -78,7 +78,7 @@ class Event < ActiveRecord::Base
     else
       answers.update(attributes.keys, attributes.values)
     end
-  end
+  end  
   
   def new_answers=(attributes)
     answers.build(attributes)
@@ -96,7 +96,7 @@ class Event < ActiveRecord::Base
       answer = Answer.new(:question_id => key, :radio_button_answer => value[:radio_button_answer])
       answers << answer
     end
-  end
+  end  
 
   def get_or_initialize_answer(question_id)
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
@@ -127,6 +127,27 @@ class Event < ActiveRecord::Base
     unless attributes[:active_secondary_entity][:person][:last_name].blank?
       attributes[:role_id] = Event.participation_code('Treated By')
       @clinician = clinicians.build(attributes)
+    end
+  end
+
+  def new_telephone_attributes=(phone_attributes)
+    phone_attributes.each do |attributes|
+      next if attributes.values_blank?
+      code = attributes.delete(:entity_location_type_id)
+      el = active_patient.active_primary_entity.entities_locations.build(:entity_location_type_id => code, :primary_yn_id => ExternalCode.no_id)
+      el.build_location.telephones.build(attributes)
+    end
+  end
+
+  def existing_telephone_attributes=(phone_attributes)
+    active_patient.active_primary_entity.entities_locations.reject(&:new_record?).each do |el|
+      attributes = phone_attributes[el.id.to_s]
+      if attributes
+        attributes.delete(:entity_location_type_id)
+        el.location.telephones.last.attributes = attributes
+      else
+        el.location.destroy
+      end
     end
   end
   
@@ -688,6 +709,15 @@ class Event < ActiveRecord::Base
 
     contacts.each do |contact|
       contact.secondary_entity.person_temp.save(false)
+    end
+
+    active_patient.save(false)
+    active_patient.active_primary_entity.save(false)
+
+    active_patient.active_primary_entity.telephone_entities_locations.each do |el|
+      el.save(false)           
+      el.location.save(false)
+      el.location.telephones.each {|t| t.save(false) unless t.frozen?}
     end
   end
 

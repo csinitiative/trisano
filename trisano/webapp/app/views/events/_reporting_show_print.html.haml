@@ -1,7 +1,7 @@
 %span.section-header Reporting Information
 %br
 
-- entity = @event.reporter.active_secondary_entity
+- entity = @event.reporter.active_secondary_entity if @event.reporter
 
 #reporter
   .three-valued-row

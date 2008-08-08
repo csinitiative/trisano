@@ -600,5 +600,17 @@ describe MorbidityEvent do
       event.event_onset_date.should == Date.today
     end
   end
+
+  describe "new telephone numbers" do
+    fixtures :external_codes
     
+    it "should add new entities locations to the patient" do     
+      event = MorbidityEvent.new(event_hash)
+      event.new_telephone_attributes = [{ :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s,
+                                          :area_code => '123',
+                                          :phone_number => '4567890'}]
+      event.save.should be_true
+      event.patient.primary_entity.entities_locations.size.should == 1
+    end
+  end
 end
