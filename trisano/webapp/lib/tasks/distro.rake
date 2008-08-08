@@ -20,6 +20,7 @@ namespace :trisano do
     RELEASE_DIRECTORY = './release'
     NEDSS_PROD_DIR = 'script/production'
     GEM_DIR = '/home/mike/gems'
+    WEB_APP_DIR = './WEB-INF/config'
 
     desc "Stop the web application"
     task :stop_app do
@@ -34,7 +35,7 @@ namespace :trisano do
     desc "Export the database"
     task :dump_db do
       dirname = './dump'
-      if !File.directory? './dump'
+      if !File.directory? dirname
         puts "adding directory #{dirname}"
         FileUtils.mkdir(dirname)
       end      
@@ -46,7 +47,41 @@ namespace :trisano do
 
     desc "Package the application with the settings from config.yml"
     task :package_app do
-      # just package, don't do all db stoofs
+      #TODO this could be simplified, but I wanted to make use of an old script that was working rather than redo now.
+      config = YAML::load_file "./config.yml"
+    
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      
+      puts "adding directory tree #{WEB_APP_DIR}"
+      FileUtils.mkdir_p(WEB_APP_DIR)      
+      
+      puts "creating web.xml"
+  
+      db_config = { 'production' => 
+          { 'adapter' => 'postgresql', 
+          'encoding' => 'unicode', 
+          'database' => database, 
+          'username' => nedss_user, 
+          'password' => nedss_user_pwd,
+          'host' => host, 
+          'port' => port
+        }      
+      }
+  
+      File.open(WEB_APP_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }              
+      
+      puts "creating .war deployment archive"
+      cd '../webapp/'
+      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
+      FileUtils.mv('nedss.war', '../distro')
+      
+      cd '../distro'
+      puts "adding database.yml to nedss.war"
+      system("jar uf nedss.war #{WEB_APP_DIR}/database.yml")
     end
 
     desc "Migrate the database up"
