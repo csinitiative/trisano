@@ -80,6 +80,8 @@
         = yield :tools
         %p{:style => "color: green"}
           = flash[:notice]
+      .watermark
+        = yield :watermark
       = yield
     .container
       #ft

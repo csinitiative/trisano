@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # Many specs are commented out. The mocking exercise is not a small undertaking.
 # Perhaps it can be chipped away at.
 
-describe EventsController do
+describe MorbidityEventsController do
   describe "handling GET /events" do
 
     before(:each) do
@@ -73,7 +73,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      MorbidityEvent.stub!(:find).and_return(@event)
+      Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
     end
   
@@ -92,7 +92,7 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      MorbidityEvent.should_receive(:find).twice().with("75").and_return(@event)
+      Event.should_receive(:find).once().with("75").and_return(@event)
       do_get
     end
   
@@ -107,7 +107,7 @@ describe EventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      MorbidityEvent.stub!(:find).and_return(@event)
+      Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
     end
   
@@ -121,7 +121,7 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      MorbidityEvent.should_receive(:find).with("75").and_return(@event)
+      Event.should_receive(:find).with("75").and_return(@event)
       do_get
     end
   
@@ -204,7 +204,7 @@ describe EventsController do
       @form_reference = mock_model(FormReference)
       @form = mock_model(Form, :null_object => true)
 
-      MorbidityEvent.stub!(:find).and_return(@event)
+      Event.stub!(:find).and_return(@event)
       @event.stub!(:get_investigation_forms).and_return([@form])
       @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
     end
@@ -224,7 +224,7 @@ describe EventsController do
     end
   
     it "should find the event requested" do
-      MorbidityEvent.should_receive(:find).and_return(@event)
+      Event.should_receive(:find).and_return(@event)
       do_get
     end
   

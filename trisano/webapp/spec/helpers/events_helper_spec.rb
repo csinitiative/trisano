@@ -136,7 +136,7 @@ describe EventsHelper do
     @event_1.stub!(:event_name).and_return('Test')
     @event_1.stub!(:event_onset_date).and_return("2008-02-19")
     @event_1.stub!(:disease).and_return(@disease_event)
-    @event_1.stub!(:event_type).and_return(@event_type)
+    @event_1.stub!(:type).and_return('MorbidityEvent')
     @event_1.stub!(:event_status).and_return(@event_status)
     @event_1.stub!(:imported_from).and_return(@imported_from)
     @event_1.stub!(:udoh_case_status).and_return(@udoh_case_status)
@@ -164,8 +164,10 @@ describe EventsHelper do
 
   def expected_record
     ['2008537081',
-     'Test,2008-02-19',
+     'Test',
+     '2008-02-19',
      'Bubonic Plague',
+     'MorbidityEvent',
      'Utah',
      'Confirmed',
      'Yes',
@@ -216,6 +218,7 @@ describe EventsHelper do
      'Test',
      '2008-02-19',
      nil,
+     'MorbidityEvent',
      'Utah',
      'Confirmed',
      'Yes',
@@ -266,6 +269,7 @@ describe EventsHelper do
        event_name
        record_created_date
        disease
+       event_type 
        imported_from
        UDOH_case_status
        outbreak_associated

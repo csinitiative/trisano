@@ -1,8 +1,8 @@
 %div{:style => "clear: both;"}
   = error_messages_for :object => lab.secondary_entity.place_temp
 %div{:class => 'lab'}
-  - new_or_existing = lab.new_record? ? 'new' : 'existing'
-  - prefix = "morbidity_event[#{new_or_existing}_lab_attributes]"
+  - new_or_existing = new_or_existing?(lab)
+  - prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes")
   - prefix_with_array = "#{prefix}[]"
 
   -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.
@@ -22,7 +22,7 @@
       - if lab.new_record?
         %div{:style => "clear: both;"}
           = lab_fields.label(:name, "Lab Name")
-          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => false, :action => 'auto_complete_for_lab_name'}, { :size => 25 }, { :skip_style => false }
+          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25 }, { :skip_style => false }
       - else
         %div{:style => "width: 15%; margin-top: 20px; font-weight: bold; clear: both;"}
           Lab Name: 

@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 
-describe "/events/show.csv.haml" do
+describe "/morbidity_events/show.csv.haml" do
 
   before(:each) do
     assigns[:event] = nil
@@ -9,7 +9,7 @@ describe "/events/show.csv.haml" do
 
   it "should render a csv event template" do
     template.should_receive(:render_events_csv).exactly(1).times
-    render "events/show.csv.haml"
+    render "morbidity_events/show.csv.haml"
   end
 
 end

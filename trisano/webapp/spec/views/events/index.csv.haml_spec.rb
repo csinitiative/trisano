@@ -9,7 +9,7 @@ describe "/events/index.csv.haml" do
 
   it "should render a csv template of events" do
     template.should_receive(:render_events_csv).exactly(1).times
-    render "events/index.csv.haml"
+    render "morbidity_events/index.csv.haml"
   end
 
 end

@@ -29,7 +29,7 @@
           <% if @event.diagnosing_health_facilities.empty? %>
             <h3>No diagnosing facilities have been recorded for this event</h3>
           <% else %>
-            <%= render :partial => "diagnostic", :collection => @event.diagnosing_health_facilities %>
+            <%= render :partial => "events/diagnostic", :collection => @event.diagnosing_health_facilities %>
           <% end %>
         </div>
       
@@ -45,7 +45,7 @@
           <% else %>
             <%= d.label(:hospitalized_id, "Hospitalized") %>
             <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
-            <%= render :partial => "hospital", :collection => @event.hospitalized_health_facilities %>
+            <%= render :partial => "events/hospital", :collection => @event.hospitalized_health_facilities %>
           <% end %>
         </div>
       

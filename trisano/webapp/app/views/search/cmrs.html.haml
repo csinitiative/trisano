@@ -118,7 +118,7 @@
       - for cmr in @cmrs
         %tr
           %td
-            = link_to("#{cmr.record_number}", { :controller => "events", :action => "show", :id => "#{cmr.event_id}" })
+            = link_to("#{cmr.record_number}", { :controller => "morbidity_events", :action => "show", :id => "#{cmr.event_id}" })
           %td
             = link_to("#{cmr.first_name} #{cmr.last_name}", { :controller => "entities", :action => "show", :id => "#{cmr.entity_id}" })
           %td
@@ -147,5 +147,5 @@
 
   / Move the query string building out to a helper, sniff out what isn't there so it's not so long
   - if User.current_user.is_entitled_to?(:create_event)
-    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
+    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
 

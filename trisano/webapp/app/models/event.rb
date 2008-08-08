@@ -679,7 +679,7 @@ class Event < ActiveRecord::Base
 
   # DEBT: Replace these one by one as we switch to the multi-model process used by lab results
   def save_associations
-    participations << @active_patient
+    participations << @active_patient unless @active_patient.nil?
     disease_events << @disease unless Utilities::model_empty?(@disease)
     participations << @active_jurisdiction unless (@active_jurisdiction.nil? or @active_jurisdiction.secondary_entity_id.blank?)
     participations << @active_reporting_agency unless (@active_reporting_agency.nil? or (@active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?))

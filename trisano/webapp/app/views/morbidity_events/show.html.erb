@@ -2,14 +2,18 @@
   CONFIDENTIAL MORBIDITY REPORT
 <% end %>
 
+<% content_for :watermark do %>
+  morbidity event
+<% end %>
+
 <% content_for :name do %>
   <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
 <% end %>
 
 <%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
 <% content_for :tools do %>
-  <%= basic_controls(@event, jurisdiction) %> |
-  <%= link_to 'Back to list', cmrs_path %>
+  <%= basic_morbidity_event_controls(@event, jurisdiction) %> |
+  <%= link_to 'Back to list of CMRs', cmrs_path %>
   <br />
   Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
@@ -60,37 +64,7 @@
   </div>
   
   <div id="epi_tab">
-    <fieldset>
-      <legend>Epidemiological Information</legend>  
-      <table>
-        <tr>
-          <td><span class="label">Food handler:</span></td>
-          <td><%= l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-          <td><span class="label">Healthcare worker:</span></td>
-          <td><%= l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Group living:</span></td>
-          <td><%= l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-          <td><span class="label">Day care association:</span></td>
-          <td><%= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Occupation:</span></td>
-          <td><%= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Risk factors:</span></td>
-          <td><%= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-          <td><span class="label">Risk factor notes:</span></td>
-          <td><%= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil? %></td>
-        </tr>
-        <tr>
-          <td><span class="label"> Imported from:</span></td>
-          <td><%= l @event.imported_from %></td>
-        </tr>
-      </table>
-    </fieldset>
+    <%= render :partial => "events/epidemiological_show_tab" %>
   </div>
   
   <div id="reporting_tab">

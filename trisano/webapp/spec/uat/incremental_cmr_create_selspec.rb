@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-  # $dont_kill_browser = true
+  $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -18,14 +18,11 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the contact information' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Contacts")
-    @browser.click("link=Add a contact")
-    #@browser.waitforelementpresent("new-contact-form")
-    sleep 3
-    @browser.type('entity_person_last_name', 'Smurfette')
-    @browser.click('person-save-button')
-    sleep 3
-    @browser.is_text_present('Smurfette').should be_true
+    @browser.click "link=Add a contact"
+    sleep(1)
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
     save_cmr(@browser).should be_true
+    @browser.is_text_present('Costello').should be_true
   end
   
   it 'should save the street name' do    
@@ -39,10 +36,8 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the phone number' do
     edit_cmr(@browser).should be_true
     @browser.click 'link=New Telephone / Email'
-    @browser.select 'morbidity_eveny_new_telephone_attributes__entity_location_type_id', 'label=Work'
-    @browser.type 'morbidity_event_new_telephone_attributes___area_code',   '801'
-    @browser.type 'morbidity_event_new_telephone_attributes__phone_number', '581'
-    @browser.type 'morbidity_event_new_telephone_attributes__extension',    '1234'
+    @browser.select 'morbidity_event_new_telephone_attributes__entity_location_type_id', 'label=Work'
+    @browser.type 'morbidity_event_new_telephone_attributes__area_code',   '801'
     @browser.type 'morbidity_event_new_telephone_attributes__phone_number', '5811234'
     save_cmr(@browser).should be_true
   end
@@ -96,7 +91,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should still have all the data present' do
     @browser.is_text_present(@last_name).should be_true
     @browser.is_text_present('Junglewood Court').should be_true
-    @browser.is_text_present('(801) 581-1234 Ext. 1234').should be_true
+    @browser.is_text_present('(801) 581-1234').should be_true
     
     click_core_tab(@browser, "Clinical")
     @browser.is_text_present('AIDS').should be_true

@@ -1,0 +1,34 @@
+%fieldset
+  %legend
+    Epidemiological Information
+  %table
+    %tr
+      %td
+        %span{:class => "label"} Food handler:
+      %td= l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+      %td
+        %span{:class => "label"} Healthcare worker:
+      %td= l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    %tr
+      %td
+        %span{:class => "label"} Group living:
+      %td= l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+      %td
+        %span{:class => "label"} Day care association:
+      %td= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    %tr
+      %td
+        %span{:class => "label"} Occupation:
+      %td= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    %tr
+      %td
+        %span{:class => "label"} Risk factors:
+      %td= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+      %td
+        %span{:class => "label"} Risk factor notes:
+      %td= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    %tr
+      %td
+        %span{:class => "label"} Imported from:
+      %td= l @event.imported_from

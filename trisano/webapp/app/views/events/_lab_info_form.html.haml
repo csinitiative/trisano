@@ -8,7 +8,7 @@
       - if @event.labs.empty?
         %h3 No lab results have been recorded for this event
       - else
-        = render :partial => "lab", :collection => @event.labs
+        = render :partial => "events/lab", :collection => @event.labs
 
     %br{:style => "clear: both;"}
     %p= add_lab_link "Add a lab result"

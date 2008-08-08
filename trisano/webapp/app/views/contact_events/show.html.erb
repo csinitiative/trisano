@@ -1,0 +1,69 @@
+<% content_for :title do %>
+  CONTACT EVENT
+<% end %>
+
+<% content_for :name do %>
+  <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
+<% end %>
+
+<% content_for :watermark do %>
+  contact event
+<% end %>
+
+<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
+<% content_for :tools do %>
+  <%= basic_contact_event_controls(@event, jurisdiction) %>
+  <br />
+  Assigned Jurisdiction: <%= jurisdiction.name %>
+<% end %>
+
+<script type="text/javascript">
+  var myTabs = new YAHOO.widget.TabView("cmr_tabs");
+</script>
+
+<%= error_messages_for :object => @event %>
+
+<%= tab_toggler(true) %>
+
+<div id="cmr_tabs" class="yui-navset">
+<ul class="yui-nav" id="tabs">
+  <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
+  <li><a href="#clinical_tab"><em>Clinical</em></a></li>
+  <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
+  <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
+  <li><a href="#investigation_tab"><em>Investigation</em></a></li>
+</ul>
+
+<div class="yui-content">
+  
+  <div id="demographic_tab">
+    <% patient_entity = @event.active_patient.active_primary_entity %>
+    <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
+  </div>
+  
+  <div id="clinical_tab">
+    <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity }%>
+  </div>
+  
+  <div id="lab_info_tab">
+    <%= render :partial => "events/lab_info_show_tab" %>
+  </div>
+  
+  <div id="epi_tab">
+    <%= render :partial => "events/epidemiological_show_tab" %>
+  </div>
+  
+  <div id="investigation_tab">
+    <fieldset>
+      <legend>Investigative Information</legend>  
+      <table cellpadding="2">
+        <% for answer in @event.answers %>
+          <tr>
+            <td><span class="label"><%= answer.question.question_text -%></span></td>
+            <td><%= answer.text_answer -%></td>
+          </tr>
+        <% end %>
+      </table>
+    </fieldset>
+  </div>
+</div>

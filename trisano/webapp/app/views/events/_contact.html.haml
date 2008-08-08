@@ -1,9 +1,8 @@
 %div{:style => "clear: both;"}
   = error_messages_for :object => contact.secondary_entity.person_temp
 %div{:class => 'contact'}
-  - new_or_existing = contact.new_record? ? 'new' : 'existing'
-  - prefix = "morbidity_event[#{new_or_existing}_contact_attributes][]"
-
+  - new_or_existing = new_or_existing?(contact)
+  - prefix = event_prefix_for_multi_models(new_or_existing, "_contact_attributes") + "[]"
   - contact_person = contact.secondary_entity.person_temp
 
   - fields_for(prefix, contact_person, :builder => ExtendedFormBuilder) do |contact_fields|

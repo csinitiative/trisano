@@ -8,7 +8,7 @@
       - if @event.contacts.empty?
         %h3 No contacts have been recorded for this event
       - else
-        = render :partial => "contact", :collection => @event.contacts
+        = render :partial => "events/contact", :collection => @event.contacts
 
     %br{:style => "clear: both;"}
     %p= add_contact_link "Add a contact"

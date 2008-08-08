@@ -14,3 +14,4 @@
         %tr
           %td= person.last_name
           %td= person.first_name
+          %td= link_to "Edit contact event", edit_contact_event_path(person.entity.case_id)

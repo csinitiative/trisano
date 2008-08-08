@@ -13,7 +13,7 @@
           @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.name, 
           "morbidity_event[active_reporting_agency][secondary_entity_id]", 
           @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.entity_id, 
-          { :allow_free_text => true, :append_random_suffix => false, :action => 'auto_complete_for_event_reporting_agency'},
+          { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'},
           { :size => 25 }, 
           { :skip_style => false } %>
       </span>

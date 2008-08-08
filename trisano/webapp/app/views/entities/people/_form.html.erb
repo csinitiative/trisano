@@ -71,7 +71,7 @@
       <legend>Telephone / Email</legend>
       <% if rendering_pt -%>
       <div id="phones">
-        <%= render :partial => 'telephone', :collection => entity_data.telephone_entities_locations %>
+        <%= render :partial => 'events/telephone', :collection => entity_data.telephone_entities_locations %>
       </div>
       <% else -%>
         <% if entity_data.telephone_entities_location.nil?

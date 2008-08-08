@@ -43,6 +43,9 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:contacts).and_return([])
     @event.stub!(:clinicians).and_return([])
+    event_type = 'MorbidityEvent'
+    event_type.stub!(:underscore).and_return(event_type.underscore)
+    @event.stub!(:type).and_return(event_type)
     
     @diagnosing_health_facility = mock_model(Participation)
     @diagnosing_health_facility.stub!(:role_id).and_return(199)
@@ -95,7 +98,7 @@ describe "/cmrs/new.html.erb" do
   end
   
   def do_render
-    render "/events/new.html.erb"
+    render "/morbidity_events/new.html.erb"
   end
 
   it "should render new event form" do

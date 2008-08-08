@@ -4,8 +4,8 @@
   = error_messages_for :object => hospital.hospitals_participation
 
 %div{:class => 'hospital'}
-  - new_or_existing = hospital.new_record? ? 'new' : 'existing'
-  - prefix = "morbidity_event[#{new_or_existing}_hospital_attributes][]"
+  - new_or_existing = new_or_existing?(hospital)
+  - prefix = event_prefix_for_multi_models(new_or_existing, "_hospital_attributes") + "[]"
 
   - fields_for(prefix, hospital, :builder => ExtendedFormBuilder) do |hospital_fields|
     %span{:class => "horiz"}

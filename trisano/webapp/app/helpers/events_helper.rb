@@ -47,35 +47,48 @@ module EventsHelper
     result
   end
   
+  def new_or_existing?(model)
+    model.new_record? ? 'new' : 'existing'
+  end
+
+  def event_prefix_for_multi_models(new_or_existing, attribute_name)
+    "#{@event.type.underscore}[#{new_or_existing}#{attribute_name}]"
+  end
+
   def add_lab_link(name)
     link_to_function name do |page|
-      page.insert_html :bottom, "labs", :partial => 'lab' , :object => Participation.new_lab_participation
+      page.insert_html :bottom, "labs", :partial => 'events/lab' , :object => Participation.new_lab_participation
     end
   end
 
   def add_hospital_link(name)
     link_to_function name do |page|
-      page.insert_html :bottom, "hospitals", :partial => 'hospital' , :object => Participation.new_hospital_participation
+      page.insert_html :bottom, "hospitals", :partial => 'events/hospital' , :object => Participation.new_hospital_participation
     end
   end
 
   def add_diagnostic_link(name)
     link_to_function name do |page|
-      page.insert_html :bottom, "diagnostics", :partial => 'diagnostic' , :object => Participation.new_diagnostic_participation
+      page.insert_html :bottom, "diagnostics", :partial => 'events/diagnostic' , :object => Participation.new_diagnostic_participation
     end
   end
 
   def add_contact_link(name)
     link_to_function name do |page|
-      page.insert_html :bottom, "contacts", :partial => 'contact' , :object => Participation.new_contact_participation
+      page.insert_html :bottom, "contacts", :partial => 'events/contact' , :object => Participation.new_contact_participation
     end
   end
 
-  def basic_controls(event, jurisdiction)
+  def basic_morbidity_event_controls(event, jurisdiction)
     controls = link_to('Show', cmr_path(event)) + " | "
     controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
     controls += link_to('Export to CSV', cmr_path(event) + '.csv')
+  end
+
+  def basic_contact_event_controls(event, jurisdiction)
+    controls = link_to('Show', contact_event_path(event)) + " | "
+    controls += (link_to('Edit', edit_contact_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
   end
 
   def state_controls(event, jurisdiction)
