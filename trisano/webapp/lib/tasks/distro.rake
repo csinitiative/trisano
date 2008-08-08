@@ -22,16 +22,6 @@ namespace :trisano do
     GEM_DIR = '/home/mike/gems'
     WEB_APP_DIR = './WEB-INF/config'
 
-    desc "Stop the web application"
-    task :stop_app do
-
-    end
-
-    desc "Start the web application"
-    task :start_app do
-
-    end
-
     desc "Export the database"
     task :dump_db do
       dirname = './dump'
@@ -86,18 +76,30 @@ namespace :trisano do
 
     desc "Migrate the database up"
     task :upgrade_db do
-
+      cd '../webapp/'
+      ruby "-S rake db:migrate RAILS_ENV=production"
     end
 
     desc "Migrate the database down."
     task :downgrade_db do
-
+     # could take variable past in and set VERSION?
+     # could squirell away the previous VERSION# in a .txt file or something?
     end
 
     desc "Deploy the web application"
     task :deploy_app do
-
+      puts "not yet implemented"
     end
+    
+    desc "Stop the web application"
+    task :stop_app do
+      puts "not yet implemented"
+    end
+
+    desc "Start the web application"
+    task :start_app do
+      puts "not yet implemented"
+    end    
 
 
   end
