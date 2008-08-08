@@ -39,14 +39,14 @@ namespace :trisano do
         FileUtils.mkdir(dirname)
       end      
       
-      config = YAML::load_file "../distro/config.yml"
+      config = YAML::load_file "./config.yml"
       database = config['database']
       sh "pg_dump -c -O -c #{database} > #{dirname}/#{database}-dump.sql"
     end
 
     desc "Package the application with the settings from config.yml"
     task :package_app do
-
+      # just package, don't do all db stoofs
     end
 
     desc "Migrate the database up"

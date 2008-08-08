@@ -2,7 +2,7 @@
 
 # install the .gem files that are required to run the system
 
-GEM_DIR=/home/mike/gems2
+GEM_DIR=../lib/gems/
 
 echo "installing gems"
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-openssl-0.2.3.gem

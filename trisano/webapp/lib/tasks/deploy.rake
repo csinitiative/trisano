@@ -168,8 +168,9 @@ namespace :nedss do
         FileUtils.mkdir(RELEASE_DIRECTORY)
       end
 
-
-      ruby "-S rake nedss:deploy:create_db_config"
+      
+      #ruby "-S rake nedss:deploy:create_db_config"
+      # TODO exclude tmp, log etc.
 
       # File.copy(WAR_FILE_NAME, RELEASE_DIRECTORY, true) 
       # File.copy(NEDSS_PROD_DIR + '/create_nedss_db.rb', RELEASE_DIRECTORY, true) 
