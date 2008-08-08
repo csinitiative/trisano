@@ -1,6 +1,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ContactEventsController do
+  before(:each) do
+    mock_user
+  end
+
   describe "handling GET /events" do
 
     before(:each) do
@@ -18,7 +22,6 @@ describe ContactEventsController do
   describe "handling GET /events/1 with view entitlement" do
 
     before(:each) do
-      mock_user
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
@@ -52,7 +55,6 @@ describe ContactEventsController do
   describe "handling GET /events/1 without view entitlement" do
 
     before(:each) do
-      mock_user
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
@@ -90,7 +92,6 @@ describe ContactEventsController do
   describe "handling GET /events/1/edit with update entitlement" do
 
     before(:each) do
-      mock_user
       @event = mock_event
       @form_reference = mock_model(FormReference)
       @form = mock_model(Form, :null_object => true)
@@ -128,7 +129,6 @@ describe ContactEventsController do
   #  describe "handling POST /events" do
   #
   #    before(:each) do
-  #      mock_user
   #      @event = mock_model(ContactEvent, :to_param => "1")
   #      ContactEvent.stub!(:new).and_return(@event)
   #    end
@@ -170,7 +170,6 @@ describe ContactEventsController do
   #  describe "handling PUT /events/1" do
   #
   #    before(:each) do
-  #      mock_user
   #      @event = mock_model(ContactEvent, :to_param => "1")
   #      ContactEvent.stub!(:find).and_return(@event)
   #    end
@@ -222,7 +221,6 @@ describe ContactEventsController do
   #  describe "handling DELETE /events/1" do
   #
   #    before(:each) do
-  #      mock_user
   #      @event = mock_model(ContactEvent, :destroy => true)
   #      ContactEvent.stub!(:find).and_return(@event)
   #    end

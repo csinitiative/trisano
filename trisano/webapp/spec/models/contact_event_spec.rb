@@ -60,7 +60,7 @@ describe ContactEvent do
         it "should have the same jurisdiction as the original contact" do
           @contact_event.participations.each do |participation|
             if participation.role_id == 2305 #jurisdiction
-              participation.secondary_entity_id.should == 1
+              participation.active_secondary_entity_id.should == 1
             end
           end
         end

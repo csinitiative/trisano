@@ -11,7 +11,6 @@ class EntitiesController < ApplicationController
   # GET /entities.xml
   def index
     @entities = Entity.find(:all, :conditions => @conditions)
-    p @entities
 
     respond_to do |format|
       format.html # index.html.erb
