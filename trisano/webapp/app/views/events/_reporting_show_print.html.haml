@@ -1,7 +1,7 @@
 %span.section-header Reporting Information
 %br
 
-- entity = @event.reporter.active_secondary_entity if @event.reporter
+- entity = @event.reporter.active_secondary_entity unless @event.reporter.nil?
 
 #reporter
   .three-valued-row
@@ -19,7 +19,6 @@
 
   .three-valued-row
     %hr
-    %br
     .double
       %span.print-label
         Reporter phone number:
@@ -32,7 +31,6 @@
 
   .three-valued-row
     %hr
-    %br
     .long
       %span.print-label
         Results reported to Clinician:
@@ -43,3 +41,5 @@
         First reported to public health:
       %span.print-value
         = @event.first_reported_PH_date
+  .three-valued-row
+    %hr

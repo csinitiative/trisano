@@ -1,36 +1,26 @@
-.printable {
-  background-color: white;
-  font-family: arial, sans-serif;
-  font-size: 16px;
-  width: 60%;
-  border: solid 1px;
-  padding: 1em;
-  overflow: auto;
-}
-
-.printable .header {
+.header {
   line-height: 60%;
 }
 
-.printable .header .left {
+.header .left {
   float: left;
   width: 75%;
 }
 
-.printable .header .right {
+.header .right {
   float: left;
   width: 25%;
 }
 
-.printable .sub-header {
+.sub-header {
   clear: both;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
   padding-top: 1em;
 }
 
-.printable .sub-header .left {
+.sub-header .left {
   float: left;
   width: 43.5%;
   border: solid 1px;
@@ -38,7 +28,7 @@
   margin-bottom: 10px;
 }
 
-.printable .sub-header .right {
+.sub-header .right {
   float: right;
   width: 43.5%;
   border: solid 1px;
@@ -46,71 +36,78 @@
   margin-bottom: 10px;
 }
 
-.printable .section-header {
+.section-header {
+  border: solid 1px;
+  font-weight: bold;
   clear: both;
   display: block;
   width: 100%;
   padding-top: 5px;
   padding-bottom: 5px;
   margin-top: 2em;
-  background: black;
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
   font-size: 18px;
-  color: white;
 }
 
-.printable .subsection-header {
+.subsection-header {
+  border: solid 1px;
+  font-weight: bold;
   clear: both;
   display: block;
   width: 100%;
   padding-top: 3px;
   padding-bottom: 3px;
   margin-top: 1em;
-  background: black;
   text-transform: uppercase;
   letter-spacing: 1px;
   text-align: center;
   font-size: 14px;
-  color: white;
 }
 
-.printable .three-valued-row {
+.three-valued-row {
   clear: both;
 }
 
-.printable .three-valued-row .left {
+.three-valued-row .left {
   width: 33%;
   float: left;
 }
 
-.printable .three-valued-row .right {
+.three-valued-row .right {
   width: 33%;
   float: right;
 }
 
-.printable .three-valued-row .short {
+.three-valued-row .short {
   width: 20%;
   float: left;
 }
 
-.printable .three-valued-row .long {
+.three-valued-row .long {
   width: 40%;
   float: left;
 }
 
-.printable .three-valued-row .double {
+.three-valued-row .double {
   width: 66%;
   float: left;
 }
 
-.printable .three-valued-row .full {
+.three-valued-row .full {
   float: left;
 }
 
-.printable .print-label {}
+.print-label {
+  font-size: 11px
+}
 
-.printable .print-value {
+.print-value {
+  font-size: 11px;
   font-weight: bold;
+}
+
+.brak {
+  page-break-before: always;
 }

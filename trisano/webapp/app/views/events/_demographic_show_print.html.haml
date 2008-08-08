@@ -26,6 +26,7 @@
 
 #patient_address
   .three-valued-row
+    %hr
     .left
       %span.print-label Address:
       - unless no_address
@@ -43,6 +44,7 @@
           = "#{l address.state}"
 
   .three-valued-row
+    %hr
     .left
       %span.print-label County:
       - unless no_address
@@ -57,7 +59,6 @@
 #patient_age
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label DOB:
       %span.print-value
@@ -79,7 +80,6 @@
 #patient_phone
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label Phone:
       - unless no_phone
@@ -97,7 +97,6 @@
 #patient_attributes
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label Birth Gender:
       %span.print-value
@@ -112,6 +111,7 @@
         = "#{l patient.ethnicity }"
 
   .three-valued-row
+    %hr
     .left
       %span.print-label Race:
       %span.print-value
@@ -120,3 +120,5 @@
           = " and " unless i == 0
           = l race
           - i += 1
+  .three-valued-row
+    %hr

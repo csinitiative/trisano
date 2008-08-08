@@ -10,12 +10,11 @@
     .long
       %span.print-label
         Date record created:
-      %td
+      %span.print-value
         = @event.event_onset_date
 #MMWR
   .three-valued-row
     %hr
-    %br
     .long
       %span.print-label
         MMWR year:
@@ -29,7 +28,6 @@
 #status
   .three-valued-row
     %hr
-    %br
     .long
       %span.print-label
         LHD case status:
@@ -44,7 +42,6 @@
 #outbreak
   .three-valued-row
     %hr
-    %br
     .long
       %span.print-label
         Outbreak associated:
@@ -59,7 +56,6 @@
 #jurisdiction
   .three-valued-row
     %hr
-    %br
     .full
       %span.print-label
         Jurisdiction responsible for investigation:
@@ -69,7 +65,6 @@
 #event
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label
         Event name:
@@ -84,7 +79,6 @@
 #investigation
   .three-valued-row
     %hr
-    %br
     .long
       %span.print-label
         Date investigation started:
@@ -99,9 +93,10 @@
 #review
   .three-valued-row
     %hr
-    %br
     .full
       %span.print-label
         Date review completed by UDOH:
       %span.print-value
         = @event.review_completed_UDOH_date 
+  .three-valued-row
+    %hr

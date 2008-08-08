@@ -17,7 +17,8 @@
 
 #hospitalization
   .three-valued-row
-    .right
+    %hr
+    .left
       %span.print-label Hospitalized:
       %span.print-value
         = l @event.disease.hospitalized unless @event.disease.nil?
@@ -33,7 +34,6 @@
 #pregnancy
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label Pregnant:
       %span.print-value
@@ -46,11 +46,11 @@
 #records
   .three-valued-row
     %hr
-    %br
-    
       %span.print-label Imported from:
       %span.print-value
         = l @event.imported_from
+  .three-valued-row
+    %hr
 
 #facilities
 %br
@@ -60,8 +60,8 @@
   - else
     %ul
       - for diagnostic in @event.diagnosing_health_facilities
-        %li
-        = diagnostic.secondary_entity.place_temp.name
+        %li.print-value
+          = diagnostic.secondary_entity.place_temp.name
 
   %span.subsection-header Hospitalized health facilities
   %br

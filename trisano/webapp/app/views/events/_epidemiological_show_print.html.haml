@@ -1,6 +1,6 @@
 %span.section-header Epidemiological Information
 
-- factor = @event.active_patient.participations_risk_factor
+- factor = @event.active_patient.participations_risk_factor unless @event.active_patient.nil?
 
 %br
 #service-industry
@@ -19,7 +19,6 @@
 #living
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label
         Group living:
@@ -34,7 +33,6 @@
 #occupation
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label
         Occupation:
@@ -44,7 +42,6 @@
 #risks
   .three-valued-row
     %hr
-    %br
     .left
       %span.print-label
         Risk factors:
@@ -55,3 +52,5 @@
         Risk factor notes:
       %span.print-value
         = factor.risk_factors_notes unless factor.nil?
+  .three-valued-row
+    %hr
