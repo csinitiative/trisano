@@ -40,7 +40,7 @@ class ContactEventsController < EventsController
     params[:contact_event][:existing_lab_attributes] ||= {}
     params[:contact_event][:existing_hospital_attributes] ||= {}
     params[:contact_event][:existing_diagnostic_attributes] ||= {}
-    params[:morbidity_event][:existing_telephone_attributes] ||= {}
+    params[:contact_event][:existing_telephone_attributes] ||= {}
 
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])

@@ -1,6 +1,6 @@
 .phone
-  - new_or_existing = telephone.new_record? ? 'new' : 'existing'
-  - prefix = "morbidity_event[#{new_or_existing}_telephone_attributes][]"
+  - new_or_existing = new_or_existing?(telephone)
+  - prefix = event_prefix_for_multi_models(new_or_existing, "_telephone_attributes") + "[]"
   - fields_for prefix, telephone, :builder => ExtendedFormBuilder do |telephone_form|
     - core_element :entity_location_type_id, telephone_form, :horiz do
       = telephone_form.label(:entty_location_type_id, "Phone type")
