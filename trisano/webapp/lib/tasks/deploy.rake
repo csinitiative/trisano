@@ -169,7 +169,7 @@ namespace :nedss do
       end
 
       
-      #ruby "-S rake nedss:deploy:create_db_config"
+      ruby "-S rake nedss:deploy:create_db_config"
       # TODO exclude tmp, log etc.
 
       t = Time.now
