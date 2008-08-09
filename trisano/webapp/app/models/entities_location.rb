@@ -5,7 +5,8 @@ class EntitiesLocation < ActiveRecord::Base
   belongs_to  :entity_location_type, :class_name => 'ExternalCode'
   belongs_to  :primary_yn, :class_name => 'ExternalCode'
 
-  # TGF - This causes a tall stack trace on update. Haven't sorted it out yet.
+  # TGR - Disabled for now because it keeps addresses from saving
+  # properly.
   # validates_associated :location
 
   # Should validate that entity_location_type and primary_yn are legitimate codes
@@ -37,5 +38,9 @@ class EntitiesLocation < ActiveRecord::Base
 
   def current_phone
     @current_phone ||= telephones.last if telephones.last
+  end
+
+  def current_phone_exists?
+    @current_phone.nil? ? false : true
   end
 end

@@ -21,9 +21,13 @@ acts_as_auditable
     code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
     code.id unless code.nil?
   end
+
+  def self.telephone_location_types
+    find_all_by_code_name('telephonelocationtype', :order => 'sort_order')
+  end
   
   def self.telephone_location_type_ids
-    find_all_by_code_name('telephonelocationtype').collect{|code| code.id}
+    telephone_location_types.collect{|code| code.id}
   end
 
   def event_under_investigation?

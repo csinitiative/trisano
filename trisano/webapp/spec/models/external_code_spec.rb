@@ -9,7 +9,7 @@ describe ExternalCode do
     @external_code.should be_valid
   end
 
-  describe 'telephone location types' do
+  describe 'telephone location type ids' do
     
     it 'should be able to provide a list of telephone location type ids' do
       ExternalCode.telephone_location_type_ids.should_not be_empty
@@ -20,5 +20,15 @@ describe ExternalCode do
       result.should be_true
     end
 
+  end
+
+  describe 'telephone location types' do
+    
+    it 'should return all telephone location types in sort order' do
+      location_types = ExternalCode.telephone_location_types
+      location_types.should_not be_empty
+      location_types.first.code_description.should == 'Unknown'
+    end
+ 
   end
 end

@@ -361,21 +361,25 @@ telephonelocationtype_unknown:
   code_name: "telephonelocationtype"
   the_code: "UNK"
   code_description: "Unknown"
+  sort_order: 5
 
 telephonelocationtype_home:
   id: 2106
   code_name: "telephonelocationtype"
   the_code: "HT"
   code_description: "Home"
+  sort_order: 10
 
 telephonelocationtype_work:
   id: 2107
   code_name: "telephonelocationtype"
   the_code: "WT"
   code_description: "Work"
+  sort_order: 15
 
 telephonelocationtype_mobile:
   id: 2108
   code_name: "telephonelocationtype"
   the_code: "MT"
   code_description: "Mobile"
+  sort_order: 20

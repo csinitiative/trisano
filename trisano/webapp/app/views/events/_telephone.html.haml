@@ -1,4 +1,5 @@
 .phone
+  = error_messages_for :object => telephone
   - new_or_existing = new_or_existing?(telephone)
   - prefix = event_prefix_for_multi_models(new_or_existing, "_telephone_attributes") + "[]"
   - fields_for prefix, telephone, :builder => ExtendedFormBuilder do |telephone_form|

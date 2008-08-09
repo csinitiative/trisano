@@ -577,6 +577,7 @@ describe MorbidityEvent do
       event.should_not be_under_investigation
     end
 
+
     it "should be under investigation if set to under investigation" do
       event = MorbidityEvent.new :event_status => external_codes(:event_status_under_investigation)
       event.should be_under_investigation
@@ -601,16 +602,66 @@ describe MorbidityEvent do
     end
   end
 
-  describe "new telephone numbers" do
-    fixtures :external_codes
+  describe "handling telephone numbers" do
+    fixtures :external_codes, :entities_locations, :locations, :addresses
     
-    it "should add new entities locations to the patient" do     
-      event = MorbidityEvent.new(event_hash)
-      event.new_telephone_attributes = [{ :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s,
-                                          :area_code => '123',
-                                          :phone_number => '4567890'}]
-      event.save.should be_true
-      event.patient.primary_entity.entities_locations.size.should == 1
+    describe "adding new telephone number" do
+      def new_telephone_hash
+        { :new_telephone_attributes =>  
+          [ { :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s,
+              :area_code => '123',
+              :phone_number => '4567890' } ] }
+      end
+      def create_event(event_hash)
+        h = new_telephone_hash 
+        yield h if block_given?
+        @event = MorbidityEvent.new(event_hash.merge(h))
+      end
+
+      it "should be able to add a new phone number " do           
+        create_event(event_hash)
+        lambda {@event.save}.should change {EntitiesLocation.count}.by(1)      
+        el = @event.patient.primary_entity.telephone_entities_locations[0]
+        el.entity_location_type.code_description == 'Unknown'
+        @event.should be_valid
+      end      
+
+# TODO: Restore this test when telephone validation is fixed
+#      it "should not save invalid phone numbers" do
+#        create_event(event_hash) { |h| h[:new_telephone_attributes][0][:area_code] = '32' }
+#        @event.should_not be_valid
+#      end
+      
+      it "should allow adding multiple new phone numbers" do
+        create_event(event_hash) do |h|
+          h[:new_telephone_attributes] << { 
+            :area_code => '330', 
+            :phone_number => '322-1234', 
+            :email_address => 'joe@bagadonuts.com', 
+            :entity_location_type_id => ExternalCode.telephone_location_type_ids[1] }
+          
+        end
+        lambda {@event.save}.should change {EntitiesLocation.count}.by(2)      
+        el = @event.patient.primary_entity.telephone_entities_locations[1]
+        @event.should be_valid
+        el.entity_location_type.code_description == 'Home'
+        el.area_code.should == '330'
+        el.phone_number.should == '3221234'
+        el.email_address.should == 'joe@bagadonuts.com'
+        el.current_phone.simple_format.should == '(330) 322-1234'
+      end
+
+      it "should allow adding phone numbers when editing cmrs" do
+        h = new_telephone_hash.merge(:existing_telephone_attributes => {})
+        event = events(:marks_cmr)
+        event.patient.should_not be_nil
+        event.patient.primary_entity.should_not be_nil
+        event.patient.primary_entity.entities_locations.size.should > 0
+        event.update_attributes(h)
+        event.should be_valid
+      end
+
     end
+
   end
 end

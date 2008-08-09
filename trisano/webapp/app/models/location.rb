@@ -13,6 +13,7 @@ class Location < ActiveRecord::Base
   attr_writer :primary
 
   validates_associated :telephones
+  validates_associated :addresses
 
   # Need more validation against bad input, assumes a happy path
 

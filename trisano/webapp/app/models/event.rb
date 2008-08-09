@@ -45,6 +45,7 @@ class Event < ActiveRecord::Base
   validates_associated :hospitalized_health_facilities
   validates_associated :diagnosing_health_facilities
   validates_associated :contacts
+  validates_associated :participations
 
   before_validation_on_create :save_associations, :set_event_onset_date
   
@@ -140,7 +141,7 @@ class Event < ActiveRecord::Base
   end
 
   def existing_telephone_attributes=(phone_attributes)
-    active_patient.active_primary_entity.entities_locations.reject(&:new_record?).each do |el|
+    active_patient.active_primary_entity.telephone_entities_locations.reject(&:new_record?).each do |el|
       attributes = phone_attributes[el.id.to_s]
       if attributes
         attributes.delete(:entity_location_type_id)
@@ -721,7 +722,7 @@ class Event < ActiveRecord::Base
     active_patient.save(false)
     active_patient.active_primary_entity.save(false)
 
-    active_patient.active_primary_entity.telephone_entities_locations.each do |el|
+    active_patient.active_primary_entity.entities_locations.each do |el|
       el.save(false)           
       el.location.save(false)
       el.location.telephones.each {|t| t.save(false) unless t.frozen?}
