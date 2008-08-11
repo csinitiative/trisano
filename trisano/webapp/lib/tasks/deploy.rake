@@ -23,10 +23,9 @@ namespace :nedss do
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
     # Override with env variable if you are running locally http://localhost:8080
     NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
-    RELEASE_DIRECTORY = './release'
     NEDSS_PROD_DIR = 'script/production'
-    TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] 
-    TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] 
+    TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] ||= '~/projects/trisano'
+    TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] ||= '~/trisano-dist'
 
     desc "delete nedss war file and exploded directory from Tomcat"
     task :deletewar do
@@ -162,12 +161,6 @@ namespace :nedss do
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
-            
-      if !File.directory? RELEASE_DIRECTORY
-        puts "adding directory #{RELEASE_DIRECTORY}"
-        FileUtils.mkdir(RELEASE_DIRECTORY)
-      end
-
       
       ruby "-S rake nedss:deploy:create_db_config"
       # TODO exclude tmp, log etc.
