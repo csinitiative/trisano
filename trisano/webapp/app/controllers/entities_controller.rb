@@ -94,22 +94,6 @@ class EntitiesController < ApplicationController
     #end
   end
 
-  def promote
-    @event = Event.find(params[:event_id]) if params[:event_id]
-    patient = Entity.find(params[:id])
-    respond_to do |format|
-      format.js do
-        if patient.promote_to_case(@event)
-          render(:update) do |page|
-            page.replace_html("contact-list", :partial => "contacts/index")
-          end
-        end
-      end
-      #fill this in if/when they ask for this functionality to be available from outside a CMR's context, such as search. }
-      format.html {}
-    end
-  end
-
   private
 
   def set_valid_types

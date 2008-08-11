@@ -41,10 +41,6 @@ describe Entity do
       @entity.case_id.should == nil
     end
     
-    it "should raise an error when calling promot_to_case on unsaved records" do
-      lambda { @entity.promote_to_case(MorbidityEvent.new) }.should raise_error(RuntimeError)
-    end
-
     describe "where person is not valid" do
       it "should not save" do
         # @person has no last_name and thus is not valid
@@ -200,25 +196,11 @@ describe Entity, "with people fixtures loaded" do
     it "should not have a case_id" do
       entities(:Groucho).case_id.should == nil
     end
-
-    it "should be promotable to a case" do
-      entities(:Groucho).promote_to_case(events(:marks_cmr)).should be_true
-    end
   end
 
   describe "and an entity that is the primary on a case" do
     it "should have a case_id" do
       entities(:Marks).case_id.should_not be_nil
-    end
-
-    it "should not be promotable to a case" do
-      lambda { entities(:Marks).promote_to_case(events(:marks_cmr)) }.should raise_error(RuntimeError)
-    end
-  end
-
-  describe "an entity without a disease specified" do
-    it "should allow contacts to be promoted to cases without error" do
-      entities(:Johnson).promote_to_case(events(:no_disease_cmr)).should be_true
     end
   end
 

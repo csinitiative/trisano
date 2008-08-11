@@ -124,38 +124,6 @@ class Entity < ActiveRecord::Base
     case_id.nil? ? nil : case_id
   end
 
-  def promote_to_case(event)
-    raise "Entity not saved" if new_record?
-    raise "Already a case" unless case_id.nil?
-
-    patient = Participation.new
-    patient.primary_entity = self
-    patient.role_id = Event.participation_code('Interested Party')
-
-    jurisdiction = Participation.new
-    jurisdiction.secondary_entity = event.active_jurisdiction.secondary_entity
-    jurisdiction.role_id = Event.participation_code('Jurisdiction') 
-
-    contact = Participation.new
-    contact.secondary_entity = event.active_patient.primary_entity
-    contact.role_id = Event.participation_code('Contact')
-
-    unless event.disease.nil?
-      disease_event = DiseaseEvent.new
-      disease_event.disease = event.disease.disease
-    end
-
-    cmr = MorbidityEvent.new
-    cmr.event_onset_date = Date.today
-    cmr.event_status_id = ExternalCode.find_by_code_name_and_code_description('eventstatus', "New").id
-    cmr.udoh_case_status_id = cmr.lhd_case_status_id = ExternalCode.find_by_code_name_and_code_description('case', "Suspect").id
-    cmr.participations << patient
-    cmr.participations << jurisdiction
-    cmr.participations << contact
-    cmr.disease_events << disease_event unless event.disease.nil?
-    cmr.save(false)
-  end
-
   private
 
   def validate
