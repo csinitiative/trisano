@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Adding multiple contacts to a CMR' do
   
@@ -31,8 +31,7 @@ describe 'Adding multiple contacts to a CMR' do
     edit_cmr(@browser)
     click_core_tab(@browser, "Contacts")
     @browser.click "remove_contact_link"
-    @browser.click "morbidity_event_submit"
-    sleep(3)
+    save_cmr(@browser).should be_true
     @browser.is_text_present('Costello').should_not be_true
   end
 
@@ -40,9 +39,35 @@ describe 'Adding multiple contacts to a CMR' do
     edit_cmr(@browser)
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "William"
-    @browser.click "morbidity_event_submit"
-    sleep(3)
+    save_cmr(@browser).should be_true
     @browser.is_text_present('William').should be_true
+  end
+
+  it "should allow for editing a contact event" do
+    # Kill three birds by editing the second contact created during an edit of the morbidity event.
+    edit_cmr(@browser)
+    click_core_tab(@browser, "Contacts")
+    @browser.click "link=Add a contact"
+    sleep(1)
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Laurel"
+    save_cmr(@browser).should be_true
+    click_core_tab(@browser, "Contacts")
+    @browser.is_text_present('Laurel').should be_true
+    @browser.click "//div[@id='contacts_tab']//table/tbody/tr[3]//a"
+    @browser.wait_for_page_to_load($load_time)
+    @browser.type "contact_event_active_patient__active_primary_entity__person_first_name", "Oliver"
+    @browser.type "contact_event_active_patient__active_primary_entity__address_street_number", "333"
+    @browser.type "contact_event_active_patient__active_primary_entity__address_street_name", "33rd Street"
+    click_core_tab(@browser, "Laboratory")
+    @browser.click "link=Add a lab result"
+    @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"
+    @browser.type "name=contact_event[new_lab_attributes][][lab_result_text]", "Positive"
+    save_contact_event(@browser).should be_true
+    @browser.is_text_present('Oliver').should be_true
+    @browser.is_text_present('333').should be_true
+    @browser.is_text_present('33rd Street').should be_true
+    @browser.is_text_present('Abbott Labs').should be_true
+    @browser.is_text_present('Positive').should be_true
   end
 
 end
