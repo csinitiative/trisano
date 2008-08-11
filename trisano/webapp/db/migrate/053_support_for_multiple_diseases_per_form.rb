@@ -18,7 +18,7 @@ class SupportForMultipleDiseasesPerForm < ActiveRecord::Migration
 
       # Store current form_id to disease_id mappings
       Form.find(:all).each do |form|
-        execute("INSERT INTO existing_disease_form_mappings (form_id, disease_id) VALUES (#{form.id}, #{form.disease_id})")
+        execute("INSERT INTO existing_disease_form_mappings (form_id, disease_id) VALUES (#{form.id}, #{form.disease_id})") unless form.disease_id.nil?
       end
 
       # drop disease_id
