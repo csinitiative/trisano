@@ -612,6 +612,7 @@ describe MorbidityEvent do
               :area_code => '123',
               :phone_number => '4567890' } ] }
       end
+
       def create_event(event_hash)
         h = new_telephone_hash 
         yield h if block_given?
@@ -624,6 +625,7 @@ describe MorbidityEvent do
         el = @event.patient.primary_entity.telephone_entities_locations[0]
         el.entity_location_type.code_description == 'Unknown'
         @event.should be_valid
+        el.current_phone.should_not be_nil
       end      
 
 # TODO: Restore this test when telephone validation is fixed
@@ -659,6 +661,16 @@ describe MorbidityEvent do
         event.patient.primary_entity.entities_locations.size.should > 0
         event.update_attributes(h)
         event.should be_valid
+      end
+
+      it "should not add the phone number if no telephone attributes are specified" do
+        create_event(event_hash) do |h|
+          h[:new_telephone_attributes] = 
+            [ { :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s } ]
+        end
+        lambda {@event.save}.should_not change {EntitiesLocation.count}.by(1)      
+        @event.patient.primary_entity.telephone_entities_locations.should be_empty
+        @event.should be_valid
       end
 
     end

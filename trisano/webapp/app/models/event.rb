@@ -133,8 +133,8 @@ class Event < ActiveRecord::Base
 
   def new_telephone_attributes=(phone_attributes)
     phone_attributes.each do |attributes|
-      next if attributes.values_blank?
       code = attributes.delete(:entity_location_type_id)
+      next if attributes.values_blank?
       el = active_patient.active_primary_entity.entities_locations.build(:entity_location_type_id => code, :primary_yn_id => ExternalCode.no_id)
       el.build_location.telephones.build(attributes)
     end

@@ -77,7 +77,7 @@ class Entity < ActiveRecord::Base
     @entities_location = EntitiesLocation.new(attributes)
   end
   
-  #TGF: support for multiple phones.
+  #TGR: support for multiple phones.
   def telephone_entities_locations
     telephone_location_type_ids = ExternalCode.telephone_location_type_ids
     entities_locations.select {|el| telephone_location_type_ids.include? el.entity_location_type_id}

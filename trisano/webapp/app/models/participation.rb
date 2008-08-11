@@ -4,7 +4,7 @@ class Participation < ActiveRecord::Base
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
   has_many :lab_results, :order => 'created_at ASC', :dependent => :destroy
-  #TGF: Remove auditing (has_many) for now.
+  #TGR: Remove auditing (has_many) for now.
   has_one :hospitals_participation, :dependent => :destroy
   has_many :participations_treatments, :order => 'created_at ASC'
   has_many :participations_risk_factors, :order => 'created_at ASC'
@@ -51,8 +51,10 @@ class Participation < ActiveRecord::Base
 
     def new_patient_participation
       patient = Participation.new
-      patient.build_primary_entity.build_person_temp      
+      patient.build_primary_entity.build_person_temp
       patient.primary_entity.address = {}
+      patient.primary_entity.entities_locations.build( 
+        :entity_location_type_id => ExternalCode.telephone_location_type_ids[0])
       patient.role_id = Code.interested_party.id
       patient
     end
