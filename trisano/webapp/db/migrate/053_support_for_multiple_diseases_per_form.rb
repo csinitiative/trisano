@@ -30,7 +30,7 @@ class SupportForMultipleDiseasesPerForm < ActiveRecord::Migration
       # Reapply earlier settings
       # The tuple returned by #each is an array where the zeroth element is the first column asked for etc.  Don't use an asterisk, column placement unpredicatble
       execute("SELECT form_id, disease_id from existing_disease_form_mappings").each do |mapping|
-        execute("INSERT INTO diseases_forms (form_id, disease_id) VALUES (#{mapping[1]}, #{mapping[2]})")
+        execute("INSERT INTO diseases_forms (form_id, disease_id) VALUES (#{mapping[0]}, #{mapping[1]})")
       end
     end
   end
