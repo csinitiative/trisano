@@ -162,8 +162,7 @@ namespace :nedss do
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
       
-      ruby "-S rake nedss:deploy:create_db_config"
-      # TODO exclude tmp, log etc.
+      #ruby "-S rake nedss:deploy:create_db_config"
 
       t = Time.now
       tformated = t.strftime("%m-%d-%Y-%I%M%p")
@@ -174,7 +173,16 @@ namespace :nedss do
 
       p "removing .svn directories"
       sh "find #{dist_dirname} -name .svn -print0 | xargs -0 rm -rf"
-
+      
+      # tried to get tar --exclude to work, but had no luck - bailing to a simpler approach
+      p "removing tmp directories"
+      cd dist_dirname
+      sh "rm -rf ./webapp/tmp"
+      sh "rm ./webapp/log/*.*"
+      sh "rm -rf ./webapp/nbproject"
+      sh "rm -rf ./distro/dump"
+      sh "rm ./distro/*.war"
+      
       cd TRISANO_DIST_DIR
       sh "tar cvzf #{filename} ./#{tformated}"
 
