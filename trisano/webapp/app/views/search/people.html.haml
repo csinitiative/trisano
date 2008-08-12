@@ -40,11 +40,16 @@
     - for person in @people
       %tr
         %td
-          - case_id = person.entity.case_id
-          - unless case_id.nil?
-            = link_to("#{person.first_name} #{person.last_name} (CMR)", cmr_path(:id => case_id), :id => "edit-person-cmr-link-#{person.entity_id}")
-          - else
-            = link_to("#{person.first_name} #{person.last_name} (person)", { :controller => "entities", :action => "show", :id => person.entity_id })
+          - event_type, event_id = get_event_type_and_id_from_person(person)
+          - unless event_type.nil?
+            / Case statements not working for some reason
+            - if event_type == MorbidityEvent
+              - path = cmr_path(event_id)
+              - html_id = "edit-person-cmr-link-#{event_id}"
+            - elsif event_type == ContactEvent
+              - path = contact_event_path(event_id)
+              - html_id = "edit-person-contact-link-#{event_id}"
+            = link_to("#{person.first_name} #{person.last_name} (#{event_type.to_s.underscore.humanize})", path, :id => html_id)
         %td
           - if  !person.birth_date.blank?
             = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"
