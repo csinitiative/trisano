@@ -162,7 +162,7 @@ namespace :nedss do
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
       
-      #ruby "-S rake nedss:deploy:create_db_config"
+      ruby "-S rake nedss:deploy:create_db_config"
 
       t = Time.now
       tformated = t.strftime("%m-%d-%Y-%I%M%p")
