@@ -25,6 +25,7 @@ describe ContactEventsController do
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('ContactEvent') 
     end
   
     def do_get
@@ -58,6 +59,7 @@ describe ContactEventsController do
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
+      @event.stub!(:read_attribute).and_return('ContactEvent') 
     end
   
     def do_get
@@ -75,7 +77,38 @@ describe ContactEventsController do
     end
   
   end
+
+  describe "handling GETting a real event of the wrong type" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+    end
   
+    def do_get
+      get :show, :id => "75"
+    end
+
+    it "should find the event requested" do
+      Event.should_receive(:find).with("75").and_return(@event)
+      do_get
+    end
+
+    it "should return a 404" do
+      do_get
+      response.response_code.should == 404
+    end
+
+    it "should render the public 404 page" do
+      do_get
+      response.should render_template("#{RAILS_ROOT}/public/404.html")
+    end
+
+  end
+
   describe "handling GET /events/new" do
   
     def do_get
@@ -99,6 +132,7 @@ describe ContactEventsController do
       Event.stub!(:find).and_return(@event)
       @event.stub!(:get_investigation_forms).and_return([@form])
       @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('ContactEvent') 
     end
   
     def do_get

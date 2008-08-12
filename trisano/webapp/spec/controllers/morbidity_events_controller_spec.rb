@@ -11,6 +11,7 @@ describe MorbidityEventsController do
       @event = mock_event
       MorbidityEvent.stub!(:find).and_return([@event])
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
   
     def do_get
@@ -75,6 +76,7 @@ describe MorbidityEventsController do
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
   
     def do_get
@@ -101,6 +103,37 @@ describe MorbidityEventsController do
       assigns[:event].should equal(@event)
     end
   end
+
+  describe "handling GETting a real event of the wrong type" do
+
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('ContactEvent') 
+    end
+  
+    def do_get
+      get :show, :id => "75"
+    end
+
+    it "should find the event requested" do
+      Event.should_receive(:find).with("75").and_return(@event)
+      do_get
+    end
+
+    it "should return a 404" do
+      do_get
+      response.response_code.should == 404
+    end
+
+    it "should render the public 404 page" do
+      do_get
+      response.should render_template("#{RAILS_ROOT}/public/404.html")
+    end
+
+  end
   
   describe "handling GET /events/1 without view entitlement" do
 
@@ -109,20 +142,21 @@ describe MorbidityEventsController do
       @event = mock_event
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
   
     def do_get
       get :show, :id => "75"
     end
 
-    it "should be be a 403" do
-      do_get
-      response.response_code.should == 403
-    end
-  
     it "should find the event requested" do
       Event.should_receive(:find).with("75").and_return(@event)
       do_get
+    end
+  
+    it "should be be a 403" do
+      do_get
+      response.response_code.should == 403
     end
   
   end
@@ -164,6 +198,7 @@ describe MorbidityEventsController do
       @event = mock_event
       MorbidityEvent.stub!(:new).and_return(@event)
       @user.stub!(:is_entitled_to?).with(:create_event).and_return(true)
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
     
     def do_get
@@ -207,6 +242,7 @@ describe MorbidityEventsController do
       Event.stub!(:find).and_return(@event)
       @event.stub!(:get_investigation_forms).and_return([@form])
       @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
+      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
   
     def do_get

@@ -30,6 +30,7 @@ class EventsController < ApplicationController
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
     end
+    reject_if_wrong_type(@event)
   end
   
   def can_view?
@@ -37,6 +38,16 @@ class EventsController < ApplicationController
     unless User.current_user.is_entitled_to_in?(:view_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
+    end
+    reject_if_wrong_type(@event)
+  end
+
+  def reject_if_wrong_type(event)
+    if event.read_attribute('type') != controller_name.classify
+      respond_to do |format|
+        format.html { render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return }
+        format.all { render :nothing => true, :status => 404 and return }
+      end
     end
   end
 
