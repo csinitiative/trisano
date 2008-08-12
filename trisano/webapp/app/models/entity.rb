@@ -9,7 +9,9 @@ class Entity < ActiveRecord::Base
   has_one :place_temp, :class_name => "Place"
   has_one :person_temp, :class_name => "Person"
 
-  has_many :entities_locations, :foreign_key => 'entity_id', :order => 'entity_location_type_id, created_at DESC'
+  has_many :entities_locations, :foreign_key => 'entity_id', 
+                                :select => "DISTINCT ON (entity_id, entity_location_type_id, primary_yn_id, location_type_id) *", 
+                                :order => 'entity_id, entity_location_type_id, primary_yn_id, location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
 
   # TODO: SERIOUS DEBT, Nothing enforces just one primary location
