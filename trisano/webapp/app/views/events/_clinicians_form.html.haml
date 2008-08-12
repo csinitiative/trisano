@@ -1,7 +1,7 @@
 - if @event.new_record?
   - f.fields_for(:clinician, @event.clinician, :builder => ExtendedFormBuilder) do |clinician_fields|
     - clinician_fields.fields_for(:active_secondary_entity, @event.clinician.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_clinician|
-      = render :partial => "entities/people/form", :locals => { :f => new_clinician, :entity_data => @event.clinician.active_secondary_entity, :rendering_pt => false }
+      = render :partial => "clinicians/form", :locals => { :f => new_clinician, :entity_data => @event.clinician.active_secondary_entity, :rendering_pt => false }
 - else
   %div{:id => 'clinicians-list'}
     = render :partial => "clinicians/index"

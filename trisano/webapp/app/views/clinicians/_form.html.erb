@@ -1,0 +1,62 @@
+<fieldset>
+  <legend>
+    Person Information
+  </legend>
+  <div id='person_form'>
+    
+    <%= f.hidden_field(:entity_type) %>
+    <%- event = event.nil? ? nil : event %>
+    
+    <%= error_messages_for :object => entity_data.person %>
+    <fieldset class="form">
+      <legend>Name</legend>
+      <% f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p| %>
+      
+        <% core_element :last_name, p, :horiz do %>
+          <%= p.label(:last_name) %>
+          <%= p.core_text_field(:last_name, {:size => 25}, event, @can_investigate) %>
+        <% end %>
+      
+        <% core_element :first_name, p, :horiz do %>
+          <%= p.label(:first_name) %>
+          <%= p.core_text_field(:first_name, {:size => 25}, event, @can_investigate) %>
+        <% end %>
+      
+        <% core_element :middle_name, p, :horiz do %>
+          <%= p.label(:middle_name) %>
+          <%= p.core_text_field(:middle_name, {:size => 25}, event, @can_investigate) %>
+        <% end %>
+      
+      <% end %>
+    </fieldset>
+    
+    <fieldset class="form">
+      <legend>Telephone / Email</legend>
+      <% if rendering_pt -%>
+      <div id="phones">
+        <%= render :partial => 'events/telephone', :collection => entity_data.telephone_entities_locations %>
+      </div>
+      <% else -%>
+        <% if entity_data.telephone_entities_location.nil?
+             entity_data.telephone_entities_location = {
+               :primary_yn_id => ExternalCode.no_id,
+               :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id
+             }
+           end %>
+        <% f.fields_for(:telephone_entities_location, entity_data.telephone_entities_location, :builder => ExtendedFormBuilder) do |el| %>
+        <%= el.hidden_field(:entity_id) %>
+        <%= el.hidden_field(:primary_yn_id) %>
+        <%= el.hidden_field(:location_type_id) %>
+      
+        <%= render :partial => 'locations/phone_form', :locals => { :f => f, :entity_data => entity_data, :event => event  } %>
+      <% end -%>
+      <% end -%>
+      <% if rendering_pt -%>
+      <p style="clear: both; padding-top: 20px">
+        <%= add_new_telephone_link "New Telephone / Email" %>
+      </p>
+      <% end -%>
+    </fieldset>
+        
+  </div>
+</fieldset>
