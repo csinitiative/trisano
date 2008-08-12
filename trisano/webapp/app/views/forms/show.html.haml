@@ -11,26 +11,41 @@
   = link_to 'Back', forms_path
   |
   = link_to 'Form Builder', builder_path(@form)
+  
+.name
+  Form Detail
+.tools
+  = link_to 'Back to Forms', forms_path
+  |
+  = link_to 'Create New Form', new_form_path
+  %p{:style => "color: green"}
+    = flash[:notice]
 
-%p
-  %span.label Name: 
-  =h @form.name
-
-%p
-  %span.label Description: 
-  =h @form.description
-
-%p
-  %span.label Show for diseases: 
-  %ul
-    - @form.diseases.each do |disease|
-      %li= h disease.disease_name
-
-%p
-  %span.label Show for jursidiction: 
-  =h @form.jurisdiction.nil? ? "All Jurisdictions" : @form.jurisdiction.current_place.name
-
-%p
-  %span.label Status: 
-  =h @form.status
-
+#rot
+  .left
+    %table.forms
+      %tr
+        %th Name
+        %th Description
+        %th Diseases
+        %th Jurisdiction
+        %th Status
+        %tr
+          %td
+            = h @form.name
+          %td
+            = h @form.description
+          %td
+            %ul
+              - @form.diseases.each do |disease|
+                %li.diseaselist= h disease.disease_name
+          %td
+            = h @form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+          %td
+            = h @form.status
+          %td
+  .right
+    %small
+      = link_to 'Edit', edit_form_path
+      |
+      = link_to 'Form Builder', builder_path(@form)

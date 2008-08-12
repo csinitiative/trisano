@@ -12,14 +12,45 @@
 - content_for :tools_two do
   = button_to "Publish", {:action => "publish", :id => @form.id}
 
-%div{:id => "formbuilder-container"}
-  %div{:id => "formbuilder-header"}
+.name
+  Form Builder
+.tools
+  = link_to 'Back to Forms', forms_path
+  |
+  = link_to 'Create New Form', new_form_path
+  %p{:style => "color: green"}
+    = flash[:notice]
 
-  %div{:id => "formbuilder-body"}
-
+#rot
+  %table.forms
+    %tr
+      %th Name
+      %th Description
+      %th Diseases
+      %th Jurisdiction
+      %th Status
+      %tr
+        %td
+          = h @form.name
+        %td
+          = h @form.description
+        %td
+          %ul
+            - @form.diseases.each do |disease|
+              %li.diseaselist= h disease.disease_name
+        %td
+          = h @form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+        %td
+          = h @form.status
+        %td
+  %small
+    = link_to 'Edit', edit_form_path
+  %br
+  %br
+  %formbuilder-body
     %b Investigator Form Elements
     %br
-    %small{:style => "#float: right"}
+    %small
       = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
 
     %div{:id => "builder-mods"}
@@ -46,4 +77,3 @@
 
     %ul{:id => "core-field-element-list"}
       = render :partial => 'forms/core_field_elements'
-

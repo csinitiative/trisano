@@ -5,6 +5,7 @@
 
     = stylesheet_link_tag 'grid'
     = stylesheet_link_tag 'structure'
+    = stylesheet_link_tag 'formbuilder'
     = stylesheet_link_tag 'typography'
     = stylesheet_link_tag 'scaffold'
 
@@ -74,19 +75,4 @@
         .right.action1
           = yield :tools_two
     .container
-      .name
-        = yield :title
-      .tools
-        = yield :tools
-        %p{:style => "color: green"}
-          = flash[:notice]
-      #rot
-        .left.title2
-          = yield :name
-        .right
-          .action2
-            = yield :tools_two
-      #main
-        .left.content
-          = yield
-        .right.nav
+      = yield

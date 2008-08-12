@@ -2,8 +2,6 @@
   = error_messages_for :question_element
   %div{:id => "new-question-form", :class => 'fb-inplace-form'}
 
-    %br{:clear => "all"}
-
     %h4 Add a new question
     - remote_form_for(@question_element) do |f|
 
@@ -23,7 +21,9 @@
 
       %p
         = f.submit "Create"
+        &nbsp;&nbsp;
+        = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
 
   = render :partial => "forms/library", :locals => {:direction => :from_library}
 
-  = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
+ 

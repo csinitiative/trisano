@@ -14,6 +14,14 @@
 
 = error_messages_for :form
 
+.name
+  Edit Form Detail
+.tools
+  = link_to 'Back to Forms', forms_path
+  |
+  = link_to 'Create New Form', new_form_path
+  %p{:style => "color: green"}
+    = flash[:notice]
 
 - form_for(@form) do |f|
 
