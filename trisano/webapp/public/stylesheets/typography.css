@@ -104,14 +104,6 @@
   padding: 0px 0px 0px 0px;
   text-align: right; }
 
-.watermark {
-  font-size: 65px;
-  text-transform: uppercase;
-  opacity: 0.1;
-  float: right;
-  z-index: -99
-}
-
 h3 {
   font-family: helvetica, sans-serif;
   font-size: 11px;

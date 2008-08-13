@@ -1,48 +1,74 @@
-table
+﻿table
   :border-collapse collapse
   :border-spacing 0
+  :width 100%
   
-.forms th
-  :font 
-    :family Verdana, Arial, Helvetica, sans-serif
-    :size 10px
-  :weight bold
-  :letter-spacing 1px
-  :text-align left
-  :text-transform uppercase
-  :padding 3px 3px 3px 9px
-  /:background-color #b4dc66
-.forms td
-  :font
-    :family Verdana, Arial, Helvetica, sans-serif
-    :size 12px
+.listingforms
+  th
+    :font 
+      :family Verdana, Arial, Helvetica, sans-serif
+      :size 10px
+    :weight bold
+    :letter-spacing 1px
+    :text-align left
+    :text-transform uppercase
+    :padding 3px 3px 3px 9px
+    :background-color #b4dc66
+  td
+    :font
+      :family Verdana, Arial, Helvetica, sans-serif
+      :size 12px
     :weight light
-  :color #666
-  :background #fff
-  :padding 3px 3px 3px 9px
-  :border dotted
-  :border-color #ccc
-  :border-width 1px 0px 1px 0px
-  :vertical-align top
+    :color #666
+    :background #fff
+    :padding 3px 3px 3px 9px
+    :border dotted
+    :border-color #ccc
+    :border-width 1px 0px 1px 0px
+    :vertical-align top
+  .forminformation
+    :width 35%
   
 .diseaselist
   :border none
-  /:border-color #ccc
   :border-width 0px 0px 0px 0px
-  
-#cmr_tabs
-  :padding 0px 0px 0px 200px
-  :list-style-position inside
-  :list-style-type square
-  :border solid
-  :border-width 1px 1px 1px 1px
 
-/#formbuilder-container
-/#formbuilder-header  
 #formbuilder-body
-  :width 80%
-  :overflow auto
-  :padding 0px 0px 0px 0px 
+  :padding 10px 20px 0px 0px
+  :margin-right 220px
+  
+#sidebar
+  :width 215px
+  :float right
+  :padding 20px 5px 0px 0px
+
+
+
+
+#buidler-mods
+#root-element-list
+  :padding 0px 0px 6px 0px
+  :background-color #fff
+  /:border-color #c00
+  /:border dotted
+  /:border-width 1px 1px 1px 0px
+#core-builder-mods
+#core-element-list
+  :padding 0px 0px 20px 0px
+  :background-color #fff
+  /:border-color #c00
+  /:border dotted
+  /:border-width 1px 1px 1px 1px
+#core-filed-builder-mods
+#core-field-element-list
+  :padding 0px 0px 20px 0px
+  :background-color #fff
+  /:border-color #c00
+  /:border dotted
+  /:border-width 1px 0px 0px 0px
+
+
+
 
 #fb-inplace-container
   :width 90%
@@ -123,7 +149,7 @@ table
 .fb-tab
   :color #333
   :height 23px
-  :background-color #4C88BE
+  :background-color #81c348
   :padding 0px 0px 0px 10px
   
 .fb-tab-children
@@ -142,11 +168,11 @@ table
 
 .fb-section
   :color #333
-  :background #8DC3E9
+  :background #b4dc66
   :padding 0px 0px 0px 10px
 
 .fb-section-children
-  :background #8DC3E9
+  /:background #8DC3E9
   :padding 0px 0px 6px 0px
   
 .fb-core-form
@@ -181,28 +207,6 @@ table
 
 .fb-group
   :color #093
-
-#buidler-mods
-#root-element-list
-  :padding 0px 0px 6px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 1px 1px 0px
-#core-builder-mods
-#core-element-list
-  :padding 0px 0px 20px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 1px 1px 1px
-#core-filed-builder-mods
-#core-field-element-list
-  :padding 0px 0px 20px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 0px 0px 0px
   
 #edit-question-form
   :padding 0px 0px 5px 18px
@@ -248,6 +252,44 @@ ul
   :padding 0px 0px 0px 0px
   
 li
-  :padding 4px 0px 4px 0px
-  :border dotted
-  :border-width 1px 0px 0px 0px
+  :margin 0px 0px 0px 0px
+  :padding 0px 0px 3px 0px
+  
+
+//typography
+  
+.formname
+  :font
+    :family helvetica, sans-serif
+    :size 18px
+    :weight light
+  :color #333
+  :letter-spacing 0px
+  :padding 6px 0px 3px 0px
+  
+.description
+  :font
+    :family helvetica, sans-serif
+    :size 12px
+    :weight light
+  :color #666
+  :letter-spacing 0px
+  :padding 0px 0px 4px 0px
+  
+.jurisdiction
+  :font
+    :family helvetica, sans-serif
+    :size 12px
+    :weight bold
+  :color #c00
+  :letter-spacing 0px
+  :padding 0px 0px 3px 0px
+  
+.status
+  :font
+    :family helvetica, sans-serif
+    :size 12px
+    :weight bold
+  :color #c00
+  :letter-spacing 0px
+  :padding 8px 0px 3px 0px

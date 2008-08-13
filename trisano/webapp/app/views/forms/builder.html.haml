@@ -1,5 +1,5 @@
 - content_for :title do
-  Form Builder
+  Forms
 
 - content_for :name do
   = @form.name
@@ -10,30 +10,31 @@
   = link_to 'Back to form details', @form 
 
 - content_for :tools_two do
-  = button_to "Publish", {:action => "publish", :id => @form.id}
+  = button_to("Create new form", {:action => "new"}, { :method => :get })
 
 .name
   Form Builder
 .tools
   = link_to 'Back to Forms', forms_path
-  |
-  = link_to 'Create New Form', new_form_path
   %p{:style => "color: green"}
     = flash[:notice]
-
 #rot
-  %table.forms
+  %table.listingforms
     %tr
-      %th Name
-      %th Description
+      %th.forminformation
+        Form Information
       %th Diseases
       %th Jurisdiction
-      %th Status
+      %th
       %tr
-        %td
-          = h @form.name
-        %td
-          = h @form.description
+        %td.forminformation
+          .formname
+            = h @form.name
+            %br
+          .description  
+            = h @form.description
+          .status
+            = h @form.status
         %td
           %ul
             - @form.diseases.each do |disease|
@@ -41,39 +42,25 @@
         %td
           = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
         %td
-          = h @form.status
-        %td
-  %small
-    = link_to 'Edit', edit_form_path(@form)
+          = link_to 'Edit', edit_form_path(@form)
   %br
-  %br
-  %formbuilder-body
+#rot
+  #formbuilder-body
     %b Investigator Form Elements
-    %br
-    %small
-      = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
-
     %div{:id => "builder-mods"}
-
+    %div{:id => "core-builder-mods"}
+    %div{:id => "core-field-builder-mods"}
     %ul{:id => "root-element-list"}
       = render :partial => 'forms/elements'
-
-    %b Core Form Elements
-    %br
-    %small{:style => "#float: right"}
-      = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
-
-    %div{:id => "core-builder-mods"}
-
     %ul{:id => "core-element-list"}
       = render :partial => 'forms/core_elements'
-
-    %b Core Field Elements
-    %br
-    %small{:style => "#float: right"}
-      = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
-
-    %div{:id => "core-field-builder-mods"}
-
     %ul{:id => "core-field-element-list"}
       = render :partial => 'forms/core_field_elements'
+#sidebar
+  = button_to "Publish", {:action => "publish", :id => @form.id}
+  
+  = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
+  %br
+  = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
+  %br
+  = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})

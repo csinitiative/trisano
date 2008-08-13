@@ -1,6 +1,6 @@
 - content_for :title do
-  Form Builder
-
+  Forms
+  
 - content_for :name do
   Form details:  
   = @form.name
@@ -11,6 +11,10 @@
   = link_to 'Back', forms_path
   |
   = link_to 'Form Builder', builder_path(@form)
+
+- content_for :tools_two do
+  = button_to("Create new form", {:action => "new"}, { :method => :get })
+
   
 .name
   Form Detail
@@ -20,32 +24,30 @@
   = link_to 'Create New Form', new_form_path
   %p{:style => "color: green"}
     = flash[:notice]
-
 #rot
-  .left
-    %table.forms
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Form Information
+      %th Diseases
+      %th Jurisdiction
+      %th
       %tr
-        %th Name
-        %th Description
-        %th Diseases
-        %th Jurisdiction
-        %th Status
-        %tr
-          %td
+        %td.forminformation
+          .formname
             = h @form.name
-          %td
+            %br
+          .description  
             = h @form.description
-          %td
-            %ul
-              - @form.diseases.each do |disease|
-                %li.diseaselist= h disease.disease_name
-          %td
-            = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
-          %td
+          .status
             = h @form.status
-          %td
-  .right
-    %small
-      = link_to 'Edit', edit_form_path(@form)
-      |
-      = link_to 'Form Builder', builder_path(@form)
+        %td
+          %ul
+            - @form.diseases.each do |disease|
+              %li.diseaselist= h disease.disease_name
+        %td
+          = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
+        %td
+          = link_to 'Edit', edit_form_path(@form)
+          |
+          = link_to 'Form Builder', builder_path(@form)

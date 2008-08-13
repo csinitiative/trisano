@@ -1,6 +1,6 @@
 - content_for :title do
-  Form Builder
-
+  Forms
+  
 - content_for :name do
   Edit 
   = @form.name
@@ -12,17 +12,18 @@
   |
   = link_to 'Form Builder', builder_path(@form)
 
+- content_for :tools_two do
+  = button_to("Create new form", {:action => "new"}, { :method => :get })
+
 = error_messages_for :form
 
 .name
   Edit Form Detail
 .tools
   = link_to 'Back to Forms', forms_path
-  |
-  = link_to 'Create New Form', new_form_path
   %p{:style => "color: green"}
     = flash[:notice]
-
+#rot
 - form_for(@form) do |f|
 
   = render :partial => 'form', :locals => { :f => f }

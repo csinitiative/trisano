@@ -1,5 +1,5 @@
 - content_for :title do
-  Form Builder
+  Forms
 
 - content_for :name do
   Forms
@@ -13,38 +13,37 @@
 .name
   Listing Forms
 .tools
-  = link_to 'Create New Form', new_form_path
+  %br
   %p{:style => "color: green"}
     = flash[:notice]
 #rot
-  .left
-    %table.forms
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Form Information
+      %th Diseases
+      %th Jurisdiction
+      %th
+    - for form in @forms
       %tr
-        %th Name
-        %th Description
-        %th Diseases
-        %th Jurisdiction
-        %th Status
-      - for form in @forms
-        %tr
-          %td
+        %td.forminformation
+          .formname
             = h form.name
-          %td
+            %br
+          .description
             = h form.description
-          %td
-            %ul
-              - form.diseases.each do |disease|
-                %li.diseaselist
-                  = h disease.disease_name
-          %td
-            = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
-          %td
+          .status
             = h form.status
-          %td{:nowrap => ""}
-            = link_to 'Builder', builder_path(form)
-            |
-            = link_to 'Show', form
-            |
-            = link_to 'Edit', edit_form_path(form)
-  .right
-    = yield :tools_two
+        %td
+          %ul
+            - form.diseases.each do |disease|
+              %li.diseaselist
+                = h disease.disease_name
+        %td
+          = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+        %td
+          = link_to 'Builder', builder_path(form)
+          |
+          = link_to 'Show', form
+          |
+          = link_to 'Edit', edit_form_path(form)
