@@ -278,8 +278,8 @@ module FormsHelper
   private
   
   def delete_view_link(element)
-    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-view' id='delete-view-" + element.id.to_s + "'>" + 
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-view' id='delete-view-" + element.id.to_s + "'>" + 
       image_tag("delete.png", :border => 0, :alt => "Delete Tab") + "</a>"
   end
 
@@ -290,8 +290,8 @@ module FormsHelper
   end
   
   def delete_section_link(element)
-    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-section' id='delete-section-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Section") + "</a>"
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-section' id='delete-section-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Section") + "</a>"
   end
 
   def add_question_link(element, trailing_text)
@@ -307,8 +307,8 @@ module FormsHelper
   end
   
   def delete_question_link(element)
-    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a>"
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a>"
   end
   
   def add_follow_up_link(element, trailing_text = "", core_data = false)
@@ -345,8 +345,8 @@ module FormsHelper
   end
   
   def delete_value_set_link(element)
-    "<a href='#' onclick=\"new Ajax.Request('../../form_elements/" + element.id.to_s + 
-      "', {asynchronous:true, evalScripts:true, method:'delete'}); return false;\" class='delete-value-set' id='delete-value-set-" + element.id.to_s + "'>" + 
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-value-set' id='delete-value-set-" + element.id.to_s + "'>" + 
       image_tag("delete.png", :border => 0, :alt => "Delete Value Set") + "</a>"
   end
   

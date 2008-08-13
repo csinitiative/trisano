@@ -402,6 +402,7 @@ module NedssHelper
   def delete_view(browser, name)
     element_id = get_form_element_id(browser, name, VIEW_ID_PREFIX)
     browser.click("delete-view-#{element_id}")
+    browser.get_confirmation()
     return(browser.is_text_present("delete-view-#{element_id}"))
   end
   
@@ -409,6 +410,7 @@ module NedssHelper
   def delete_section(browser, name)
     element_id = get_form_element_id(browser, name, SECTION_ID_PREFIX)
     browser.click("delete-section-#{element_id}")
+    browser.get_confirmation()   
     return(browser.is_text_present("delete-section-#{element_id}"))
   end
   
@@ -416,6 +418,7 @@ module NedssHelper
   def delete_question(browser, name)
     element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
     browser.click("delete-question-#{element_id}")
+    browser.get_confirmation()   
     return(browser.is_text_present("delete-question-#{element_id}"))
   end
   
@@ -423,6 +426,7 @@ module NedssHelper
   def delete_value_set(browser, name)
     element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
     browser.click("delete-value-set-#{element_id}")
+    browser.get_confirmation()   
     return(browser.is_text_present("delete-value-set-#{element_id}"))
   end
   
