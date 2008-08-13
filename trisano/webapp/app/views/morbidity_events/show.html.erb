@@ -44,11 +44,13 @@
   <li><a href="#investigation_tab"><em>Investigation</em></a></li>
 </ul>
 
+<% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+
 <div class="yui-content">
   
   <div id="demographic_tab">
     <% patient_entity = @event.active_patient.active_primary_entity %>
-    <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
+    <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
   </div>
   
   <div id="clinical_tab">
@@ -167,3 +169,5 @@
     </fieldset>
   </div>
 </div>
+
+<% end %>

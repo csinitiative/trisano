@@ -75,4 +75,12 @@ class FormElementCache
     }.question
   end
   
+  def answer(question_element, event)
+    event.answers.detect { |node| 
+      if node.question_id == question(question_element).id
+        node
+      end
+    }
+  end
+  
 end

@@ -10,6 +10,14 @@ module EventsHelper
     concat("</span>", block.binding)
     concat_core_field(:after, attribute, form_builder, block)
   end
+
+  def core_element_show(attribute, form_builder, css_class, &block)
+    concat_core_field_show(:before, attribute, form_builder, block)
+    concat("<span class='#{css_class}'>", block.binding)
+    yield
+    concat("</span>", block.binding)
+    concat_core_field_show(:after, attribute, form_builder, block)
+  end
   
   def render_core_data_element(element)
     question = element.question
@@ -42,6 +50,20 @@ module EventsHelper
     
     form_elements_cache.children(view).each do |element|
       result += render_investigator_element(form_elements_cache, element, f)
+    end
+    
+    result
+  end
+  
+  # Debt? Some duplication here of render_investigator_view
+  def show_investigator_view(view, f, form=nil)
+    return "" if view.nil?
+    result = ""
+    
+    form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
+    
+    form_elements_cache.children(view).each do |element|
+      result += show_investigator_element(form_elements_cache, element, f)
     end
     
     result
@@ -146,12 +168,25 @@ module EventsHelper
   private
   
   def concat_core_field(before_or_after, attribute, form_builder, block)
-    unless (@event.nil? || @event.form_references.nil?)        
+    unless (@can_investigate == false || @event.nil? || @event.form_references.nil?)
       @event.form_references.each do |form_reference|
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
         configs.each do |config|
           element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
           concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
+        end
+      end
+    end
+  end
+
+  # Debt? Some duplication of #concat_core_field
+  def concat_core_field_show(before_or_after, attribute, form_builder, block)
+    unless (@can_investigate == false || @event.nil? || @event.form_references.nil?)  
+      @event.form_references.each do |form_reference|
+        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
+        configs.each do |config|
+          element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
+          concat(show_investigator_view(element, @event_form, form_reference.form), block.binding)
         end
       end
     end
@@ -170,6 +205,19 @@ module EventsHelper
       result += render_investigator_question(form_elements_cache, element, f)
     when "FollowUpElement"
       result += render_investigator_follow_up(form_elements_cache, element, f)
+    end
+    
+    result
+  end
+  
+  # Show mode counterpart to #render_investigator_element
+  def show_investigator_element(form_elements_cache, element, f)
+    result = ""
+    
+    case element.class.name
+   
+    when "QuestionElement"
+      result += show_investigator_question(form_elements_cache, element, f)
     end
     
     result
@@ -250,6 +298,18 @@ module EventsHelper
     
     result += "<br clear='all'/>" if question_style == "vert"
     
+    result
+  end
+  
+  def show_investigator_question(form_elements_cache, element, f)
+    question = element.question
+    question_style = question.style.blank? ? "vert" : question.style
+    result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
+    result += "<label>#{question.question_text}</label>"
+    answer = form_elements_cache.answer(element, @event)
+    result += answer.text_answer unless answer.nil?
+    result += "</div>"
+    result += "<br clear='all'/>" if question_style == "vert"
     result
   end
   

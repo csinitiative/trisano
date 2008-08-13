@@ -21,11 +21,7 @@ class EventsController < ApplicationController
   
   def can_update?
     @event ||= Event.find(params[:id])
-    @can_investigate = (
-      (@event.under_investigation?) and 
-        User.current_user.is_entitled_to_in?(:investigate_event, @event.active_jurisdiction.secondary_entity_id) and 
-        (@event.disease && @event.disease.disease_id)
-    )
+    @can_investigate = can_investigate
     unless User.current_user.is_entitled_to_in?(:update_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
@@ -35,6 +31,7 @@ class EventsController < ApplicationController
   
   def can_view?
     @event = Event.find(params[:id])
+    @can_investigate = can_investigate
     unless User.current_user.is_entitled_to_in?(:view_event, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
@@ -54,6 +51,14 @@ class EventsController < ApplicationController
   def get_investigation_forms
     @event ||= Event.find(params[:id])
     @event.get_investigation_forms
+  end
+  
+  def can_investigate
+    (
+      (@event.under_investigation?) and 
+        User.current_user.is_entitled_to_in?(:investigate_event, @event.active_jurisdiction.secondary_entity_id) and 
+        (@event.disease && @event.disease.disease_id)
+    )
   end
   
 end

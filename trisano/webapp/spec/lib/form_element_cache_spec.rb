@@ -29,11 +29,20 @@ describe FormElementCache do
     @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
     @follow_up.add_child(@follow_up_q1)
     
+    
     @question_element_2 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
+    @question_2 = Question.new(:question_text => "Really?", :data_type => "Single-line text")
+    @question_element_2.question = @question_2
+    @question_2.save
     @section_element.add_child(@question_element_2)
     
     @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
     @section_element.add_child(@question_element_3)
+    
+    @event = Event.new(:id => 1)
+    @event.answers << @answer_1 = Answer.new(:event_id => 1, :question_id => @question.id, :text_answer => "What?")
+    @event.answers << @answer_2 = Answer.new(:event_id => 1, :question_id => @question_2.id, :text_answer => "Yes")
+    
     
     @form_element_cache = FormElementCache.new(@form_base_element)
     
@@ -91,6 +100,18 @@ describe FormElementCache do
     question.should_not be_nil
     question.question_text.should eql(@question_element_1.question.question_text)
     question.is_a?(Question).should be_true
+  end
+  
+  it "should return an answer to a question in the cache" do
+    answer = @form_element_cache.answer(@question_element_1, @event)
+    answer.should_not be_nil
+    answer.text_answer.should eql(@answer_1.text_answer)
+    answer.is_a?(Answer).should be_true
+    
+    answer = @form_element_cache.answer(@question_element_2, @event)
+    answer.should_not be_nil
+    answer.text_answer.should eql(@answer_2.text_answer)
+    answer.is_a?(Answer).should be_true
   end
   
 end

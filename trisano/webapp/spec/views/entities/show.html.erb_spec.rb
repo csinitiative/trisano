@@ -95,6 +95,9 @@ describe "/people/show.html.erb" do
     @entity.stub!(:primary_phone_entities_location).and_return(@telephone_entities_location)
     @entity.stub!(:telephone_entities_locations).and_return([@telephone_entities_location])
     
+    @event_form = mock(ExtendedFormBuilder)
+    
+    assigns[:event_form] = @event_form
     assigns[:entity] = @entity
     assigns[:locations] = Array.new
     assigns[:type] = 'person'
@@ -102,6 +105,7 @@ describe "/people/show.html.erb" do
   end
 
   it "should render attributes" do
+    pending "Local needed by included partial not found. How to assign this?"
     render "/entities/show.html.erb"
 
     response.should have_text(/#{@person.last_name}/)
