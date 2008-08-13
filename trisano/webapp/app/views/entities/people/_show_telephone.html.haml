@@ -1,12 +1,13 @@
-%tr
-  %td
-    %span.label
-      = show_telephone.entity_location_type.code_description + ":"
-  %td
-    = h(show_telephone.current_phone.simple_format)
-  %td
-    %span.label
-      - unless show_telephone.current_phone.email_address.blank?
-        Email:
-  %td
-    = h(show_telephone.current_phone.email_address)
+- if show_telephone.current_phone
+  %tr
+    %td
+      %span.label
+        = show_telephone.entity_location_type.code_description + ":"
+    %td
+      = h(show_telephone.current_phone.simple_format) 
+    %td
+      %span.label
+        - unless show_telephone.current_phone.email_address.blank?
+          Email:
+    %td
+      = h(show_telephone.current_phone.email_address)

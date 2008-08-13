@@ -46,7 +46,7 @@ describe "/people/show.html.erb" do
     @phone.stub!(:area_code).and_return("212")
     @phone.stub!(:phone_number).and_return("555-1212")
     @phone.stub!(:extension).and_return("9999")
-    @phone.should_receive(:simple_format).and_return("(212) 555-1212 Ext. 9999")
+    @phone.stub!(:simple_format).and_return("(212) 555-1212 Ext. 9999")
     @phone.stub!(:email_address).and_return("billg@microsoft.com")
     
     @address_location = mock_model(Location)
@@ -69,7 +69,7 @@ describe "/people/show.html.erb" do
     @entities_location.stub!(:location).and_return(@address_location)
 
     @work_phone_entity_location_type = mock(ExternalCode)
-    @work_phone_entity_location_type.should_receive(:code_description).and_return('Work')
+    @work_phone_entity_location_type.stub!(:code_description).and_return('Work')
     
     @telephone_entities_location = mock_model(EntitiesLocation)
     @telephone_entities_location.stub!(:entity_id).and_return("1")
@@ -97,11 +97,16 @@ describe "/people/show.html.erb" do
     
     @event_form = mock(ExtendedFormBuilder)
     
+    @event = mock(Event)
+    @event.stub!(:active_patient).and_return(@entity)
+
+    assigns[:event] = @event
     assigns[:event_form] = @event_form
     assigns[:entity] = @entity
     assigns[:locations] = Array.new
     assigns[:type] = 'person'
     assigns[:valid_types] = ['person', 'animal', 'place', 'material']
+    template.stub!(:event_form).and_return(@event_form)
   end
 
   it "should render attributes" do
@@ -128,6 +133,31 @@ describe "/people/show.html.erb" do
 
     response.should have_text(/#{@phone.area_code}/)
     response.should have_text(/#{@phone.phone_number}/)
+  end
+
+  it "should not throw nil exceptions on render" do
+    pending "We need to find a good way to mock FormBuilder"
+    @phone.should_not_receive(:simple_format)
+    @telephone_entities_location.stub!(:current_phone).and_return(nil)
+    render "/entities/show.html.erb"
+
+    response.should have_text(/#{@person.last_name}/)
+    response.should have_text(/#{@person.first_name}/)
+    response.should have_text(/#{@person.middle_name}/)
+    response.should have_text(/#{@person.birth_date}/)
+    response.should have_text(/#{@person.ethnicity.code_description}/)
+    response.should have_text(/#{@person.birth_gender.code_description}/)
+    response.should have_text(/#{@entity.races.first.code_description}/)
+    response.should have_text(/#{@person.primary_language.code_description}/)
+
+    response.should have_text(/Work/)
+    response.should have_text(/#{@address.street_number}/)
+    response.should have_text(/#{@address.street_name}/)
+    response.should have_text(/#{@address.unit_number}/)
+    response.should have_text(/#{@address.city}/)
+    response.should have_text(/#{@address.state.code_description}/)
+    response.should have_text(/#{@address.county.code_description}/)
+    response.should have_text(/#{@address.district.code_description}/)
   end
 end
 
