@@ -54,7 +54,7 @@
   </div>
   
   <div id="clinical_tab">
-    <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity }%>
+    <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form }%>
   </div>
   
   <div id="lab_info_tab">

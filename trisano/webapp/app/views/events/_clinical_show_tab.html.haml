@@ -29,28 +29,29 @@
         &nbsp;
       %td
         &nbsp;
-    %tr
-      %td
-        %span{:class => 'label'}
-          Died:
-      %td
-        = l @event.disease.died unless @event.disease.nil?
-      %td
-        %span{:class => 'label'}
-          Date of death:
-      %td
-        = entity_data.person.date_of_death
-    %tr
-      %td
-        %span{:class => "label"}
-          Pregnant
-      %td
+
+  %span{:class => 'horiz'}
+    %label
+      Died
+    = l @event.disease.died unless @event.disease.nil?
+
+  - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
+    - patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
+      - current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
+        - core_element_show :date_of_death, person_form, :vert do
+          = person_form.label(:date_of_death)
+          = entity_data.person.date_of_death
+
+  - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
+    - patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+      - core_element_show :pregnant_id, risk_factor_form, :horiz do
+        = risk_factor_form.label(:pregnant_id)
         = l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-      %td
-        %span{:class => "label"}
-          Pregnancy due date:
-      %td
+      - core_element_show :pregnancy_due_date, risk_factor_form, :horiz do
+        = risk_factor_form.label(:pregnancy_due_date)
         = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+  %br
 
   %fieldset
     %legend
