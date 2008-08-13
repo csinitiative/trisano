@@ -40,7 +40,6 @@
     - for person in @people
       %tr
         %td
-          - person
           - event_type, event_id = get_event_type_and_id_from_person(person)
           - unless event_type.nil?
             / Case statements not working for some reason

@@ -40,18 +40,6 @@ steps_for(:search_uat) do
     response.should have_text(/no results/)
   end
     
-  # This "then" must precede the following one
-  Then("$value should appear in the search results as a link") do |value|
-    response.should_not have_text(/no results/)
-
-    response.should have_tag('table') do
-      with_tag('tr') do
-        with_tag('td', /#{value}/)
-      end
-    end
-  end
-
-  # This "then" must follow the preceding one
   Then("$value should appear in the search results") do |value|
     response.should_not have_text(/no results/)
 

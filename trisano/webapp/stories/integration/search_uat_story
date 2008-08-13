@@ -10,7 +10,7 @@ Story: Search user acceptance tests
     And a person named Karl Marks, born 02/17/1977, gender male, and residing in Daggett County is created
     When I search for Karl Marks
 
-    Then Karl Marks should appear in the search results as a link
+    Then Karl Marks should appear in the search results
     And 31 / 1977-02-17 should appear in the search results
     And Male should appear in the search results
     And Daggett should appear in the search results
@@ -29,7 +29,7 @@ Story: Search user acceptance tests
     And a person named Karl Marks is created
 
     When I search for Karl Marx
-    Then Karl Marks should appear in the search results as a link
+    Then Karl Marks should appear in the search results
 
   Scenario: Search for users with their first and last names transposed
 
@@ -37,7 +37,7 @@ Story: Search user acceptance tests
     And a person named Karl Marks is created
 
     When I search for Marks Karl
-    Then Karl Marks should appear in the search results as a link
+    Then Karl Marks should appear in the search results
 
   Scenario: Search for users by correct birthdate
 
@@ -45,7 +45,7 @@ Story: Search user acceptance tests
     And a person named Karl Marks, born 02/17/1977 is created
 
     When I search for the person named Karl Marks, born 02/17/1977
-    Then Karl Marks should appear in the search results as a link
+    Then Karl Marks should appear in the search results
     And 1977-02-17 should appear in the search results
 
   Scenario: Search for users by incorrect birthdate
