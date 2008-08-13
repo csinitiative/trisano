@@ -14,6 +14,21 @@ describe "/forms/builder.html.haml" do
     @question_element = mock_model(QuestionElement)
     @question = mock_model(Question)
     
+    @place = mock_model(Place)
+    @place.stub!(:name).and_return("Davis")
+    @entity = mock_model(Entity)
+    @entity.stub!(:current_place).and_return(@place)
+    
+    @disease = mock_model(Disease)
+    @disease.stub!(:disease_name).and_return("Anthrax")
+    
+    @form = mock_model(Form)
+    @form.stub!(:name).and_return("Anthrax Form")
+    @form.stub!(:description).and_return("Questions to ask when disease is Anthrax")
+    @form.stub!(:diseases).and_return([@disease])
+    @form.stub!(:jurisdiction).and_return(@entity)
+    @form.stub!(:status).and_return('Not Published')
+    
     @form.stub!(:name).and_return("MyString")
     @form.stub!(:description).and_return("MyString")
     @form.stub!(:description).and_return("MyString")
@@ -21,6 +36,9 @@ describe "/forms/builder.html.haml" do
     @form.stub!(:investigator_view_elements_container).and_return(@investigator_view_element_container)
     @form.stub!(:core_view_elements_container).and_return(@core_view_element_container)
     @form.stub!(:core_field_elements_container).and_return(@core_view_element_container)
+
+    
+
     
     @core_view_element_container.stub!(:children).and_return([@view_element])
     @investigator_view_element_container.stub!(:children).and_return([])
