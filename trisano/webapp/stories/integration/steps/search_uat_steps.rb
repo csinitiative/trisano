@@ -46,9 +46,7 @@ steps_for(:search_uat) do
 
     response.should have_tag('table') do
       with_tag('tr') do
-        with_tag('td') do
-          with_tag('a', /#{value}/)
-        end
+        with_tag('td', /#{value}/)
       end
     end
   end

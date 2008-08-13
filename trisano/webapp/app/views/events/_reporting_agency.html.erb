@@ -19,11 +19,16 @@
       </span>
       
       <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
-        <% entity_data    = @event.active_reporter.nil? ? Entity.new    : @event.active_reporter.active_secondary_entity %>
-        <% reporter_data  = @event.active_reporter.nil? ? Person.new    : @event.active_reporter.active_secondary_entity.person %>
-      
-        <% telephone_data = @event.active_reporter.active_secondary_entity.telephone_entities_location %>
-        <% telephone_data = EntitiesLocation.new if telephone_data.nil? %>
+        <% if @event.active_reporter.nil? %>
+          <% entity_data = Entity.new %> 
+          <% reporter_data = Person.new %> 
+          <% telephone_data = EntitiesLocation.new %> 
+        <% else %>
+          <% entity_data = @event.active_reporter.active_secondary_entity %>
+          <% reporter_data = @event.active_reporter.active_secondary_entity.person %>
+          <% telephone_data = @event.active_reporter.active_secondary_entity.telephone_entities_location %>
+          <% telephone_data = EntitiesLocation.new if telephone_data.nil? %>
+        <% end %>
       
         <%= error_messages_for :object => reporter_data %>
       
