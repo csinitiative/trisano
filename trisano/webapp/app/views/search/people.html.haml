@@ -40,6 +40,7 @@
     - for person in @people
       %tr
         %td
+          - person
           - event_type, event_id = get_event_type_and_id_from_person(person)
           - unless event_type.nil?
             / Case statements not working for some reason
@@ -50,6 +51,8 @@
               - path = contact_event_path(event_id)
               - html_id = "edit-person-contact-link-#{event_id}"
             = link_to("#{person.first_name} #{person.last_name} (#{event_type.to_s.underscore.humanize})", path, :id => html_id)
+          - else
+            = "#{person.first_name} #{person.last_name} (No associated event)"
         %td
           - if  !person.birth_date.blank?
             = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"

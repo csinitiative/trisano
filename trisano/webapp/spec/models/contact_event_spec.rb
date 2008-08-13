@@ -2,10 +2,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ContactEvent do
 
+  fixtures :diseases
+
   describe "Initializing a new contact event from an existing morbidity event" do
 
     patient_attrs = {
-      :disease => { :disease_id => 1},
       "active_patient" => {
         "active_primary_entity" => {
           "entity_type"=>"person", 
@@ -28,10 +29,11 @@ describe ContactEvent do
       end
     end
 
-    describe "When event has one contact" do
+    describe "When event has one contact and a disease" do
       
       before(:each) do
-        contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ] }
+        contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
+                         :disease => {:disease_id => diseases(:chicken_pox).id} }
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
         @contact_events = ContactEvent.initialize_from_morbidity_event(event)
       end
@@ -74,8 +76,7 @@ describe ContactEvent do
         end
 
         it "should have the same disease as the original" do
-          # pending "This breaks on hudson"
-          @contact_event.disease.disease_id.should == 1
+          @contact_event.disease.disease_id.should == diseases(:chicken_pox).id
         end
       end
     end
