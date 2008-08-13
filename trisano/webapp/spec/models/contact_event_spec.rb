@@ -51,16 +51,15 @@ describe ContactEvent do
 
         it "should have a primary entity equal to the original contact" do
           @contact_event.participations.each do |participation|
-            if participation.role_id == 2301 #interested party
+            if participation.role_id == codes(:participant_interested_party)
               participation.primary_entity.person.last_name.should == "White"
             end
           end
         end
 
         it "should have the same jurisdiction as the original contact" do
-          pending "This breaks on hudson"
           @contact_event.participations.each do |participation|
-            if participation.role_id == 2305 #jurisdiction
+            if participation.role_id == codes(:participant_jurisdiction)
               participation.active_secondary_entity_id.should == 1
             end
           end
@@ -68,14 +67,14 @@ describe ContactEvent do
 
         it "should have the original patient as a contact" do
           @contact_event.participations.each do |participation|
-            if participation.role_id == 2307 #contact
+            if participation.role_id == codes(:participant_contact)
               participation.secondary_entity.person.last_name.should == "Green"
             end
           end
         end
 
         it "should have the same disease as the original" do
-          pending "This breaks on hudson"
+          # pending "This breaks on hudson"
           @contact_event.disease.disease_id.should == 1
         end
       end

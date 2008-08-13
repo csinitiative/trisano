@@ -13,6 +13,14 @@ describe 'User functionality for searching for existing users' do
       @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
       @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
       @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84602')
+
+      click_core_tab(@browser, "Contacts")
+      @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Laurel"
+      @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Charles"
+
+      click_core_tab(@browser, "Reporting")
+      @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_last_name", "Hardy"
+      @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_first_name", "Charles"
       save_cmr(@browser).should be_true
     end
   end
@@ -31,6 +39,16 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Charles Chuckles').should be_true
   end
   
+  it 'should find three people named Charles and display the relevant event type' do
+    navigate_to_people_search(@browser).should be_true
+    @browser.type('name', 'Charles')
+    @browser.click('//input[@type=\'submit\']')
+    @browser.wait_for_page_to_load($load_time) 
+    @browser.is_text_present('Charles Chuckles (Morbidity event)').should be_true
+    @browser.is_text_present('Charles Laurel (Contact event)').should be_true
+    @browser.is_text_present('Charles Hardy (No associated event)').should be_true
+  end
+
   it 'should find a person named Charles Chuckles when searching by Charlie Chuckles' do
     navigate_to_cmr_search(@browser).should be_true
     @browser.type('name', 'Charlie Chuckles') 
