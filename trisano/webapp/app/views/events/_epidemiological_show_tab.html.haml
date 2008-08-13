@@ -1,34 +1,42 @@
 %fieldset
   %legend
     Epidemiological Information
-  %table
-    %tr
-      %td
-        %span{:class => "label"} Food handler:
-      %td= l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-      %td
-        %span{:class => "label"} Healthcare worker:
-      %td= l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-    %tr
-      %td
-        %span{:class => "label"} Group living:
-      %td= l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-      %td
-        %span{:class => "label"} Day care association:
-      %td= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-    %tr
-      %td
-        %span{:class => "label"} Occupation:
-      %td= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-    %tr
-      %td
-        %span{:class => "label"} Risk factors:
-      %td= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-      %td
-        %span{:class => "label"} Risk factor notes:
-      %td= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-    %tr
-      %td
-        %span{:class => "label"} Imported from:
-      %td= l @event.imported_from
+  %fieldset{:class => 'form'}
+    %legend
+      Contact Oriented
+    
+    - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
+      - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+        - core_element_show :food_handler_id, risk_factor_form, :horiz do
+          = risk_factor_form.label(:food_handler_id)
+          = l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :healthcare_worker_id, risk_factor_form, :horiz do
+          = risk_factor_form.label(:healthcare_worker_id)
+          = l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :group_living_id, risk_factor_form, :horiz do
+          = risk_factor_form.label(:group_living_id)
+          = l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :day_care_association_id, risk_factor_form, :horiz do
+          = risk_factor_form.label(:day_care_association_id)
+          = l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :occupation, risk_factor_form, :horiz do
+          = risk_factor_form.label(:occupation)
+          = @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :risk_factors, risk_factor_form, :horiz do
+          = risk_factor_form.label(:risk_factors)
+          = @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+        - core_element_show :risk_factors_notes, risk_factor_form, :horiz do
+          = risk_factor_form.label(:risk_factors_notes)
+          = @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+    %span{:class => 'horiz'}
+      %label
+        Imported from
+      = l @event.imported_from

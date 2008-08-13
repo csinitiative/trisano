@@ -66,7 +66,7 @@
   </div>
   
   <div id="epi_tab">
-    <%= render :partial => "events/epidemiological_show_tab" %>
+    <%= render :partial => "events/epidemiological_show_tab", :locals => { :event_form => event_form }%>
   </div>
   
   <div id="reporting_tab">
