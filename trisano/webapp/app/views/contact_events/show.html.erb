@@ -34,36 +34,42 @@
   <li><a href="#investigation_tab"><em>Investigation</em></a></li>
 </ul>
 
+  <% form_for(@event, :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
 <div class="yui-content">
   
-  <div id="demographic_tab">
-    <% patient_entity = @event.active_patient.active_primary_entity %>
-    <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity } %>
-  </div>
+
   
-  <div id="clinical_tab">
-    <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity }%>
-  </div>
+    <div id="demographic_tab">
+      <% patient_entity = @event.active_patient.active_primary_entity %>
+      <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+    </div>
   
-  <div id="lab_info_tab">
-    <%= render :partial => "events/lab_info_show_tab" %>
-  </div>
+    <div id="clinical_tab">
+      <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+    </div>
   
-  <div id="epi_tab">
-    <%= render :partial => "events/epidemiological_show_tab" %>
-  </div>
+    <div id="lab_info_tab">
+      <%= render :partial => "events/lab_info_show_tab" %>
+    </div>
   
-  <div id="investigation_tab">
-    <fieldset>
-      <legend>Investigative Information</legend>  
-      <table cellpadding="2">
-        <% for answer in @event.answers %>
-          <tr>
-            <td><span class="label"><%= answer.question.question_text -%></span></td>
-            <td><%= answer.text_answer -%></td>
-          </tr>
-        <% end %>
-      </table>
-    </fieldset>
-  </div>
+    <div id="epi_tab">
+      <%= render :partial => "events/epidemiological_show_tab", :locals => { :event_form => event_form } %>
+    </div>
+  
+    <div id="investigation_tab">
+      <fieldset>
+        <legend>Investigative Information</legend>  
+        <table cellpadding="2">
+          <% for answer in @event.answers %>
+            <tr>
+              <td><span class="label"><%= answer.question.question_text -%></span></td>
+              <td><%= answer.text_answer -%></td>
+            </tr>
+          <% end %>
+        </table>
+      </fieldset>
+    </div>
+  
+
 </div>
+  <% end %>
