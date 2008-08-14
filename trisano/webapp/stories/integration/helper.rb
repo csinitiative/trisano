@@ -2,7 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require 'spec/rails/story_adapter'
 
-NEDSS_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
+TRISANO_URL = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
 
 dir = File.dirname(__FILE__)
 Dir[File.expand_path("#{dir}/steps/*.rb")].uniq.each do |file|

@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
       end
     else
       if session[:user_id].nil?
-        logger.info "Using NEDSS user found in local environment variable"
+        logger.info "Using TriSano user found in local environment variable"
         load_user_by_uid(TRISANO_UID)
       else
         logger.info "Using user set in session"

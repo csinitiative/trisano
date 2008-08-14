@@ -50,7 +50,7 @@ Rake::Task["db:create"].enhance {
   case ENV['RAILS_ENV']
   when "development"
     Rake::Task["trisano:dev:add_tsearch_to_dev"].invoke
-    Rake::Task["nedss:dev:update_dev_locale_config"].invoke
+    Rake::Task["trisano:dev:update_dev_locale_config"].invoke
   when "test"
     Rake::Task["trisano:dev:add_tsearch_to_test"].invoke
     Rake::Task["trisano:dev:update_test_locale_config"].invoke
