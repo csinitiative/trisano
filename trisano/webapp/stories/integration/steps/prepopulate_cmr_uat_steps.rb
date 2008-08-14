@@ -3,7 +3,7 @@ require 'hpricot'
 steps_for(:prepopulate_cmr_uat) do
   
   Given("I am logged in as an investigator") do
-    ENV['NEDSS_UID'] = 'utah'
+    ENV['TRISANO_UID'] = 'utah'
   end
 
   Given("no person named $first_name $last_name exists") do |first_name, last_name|

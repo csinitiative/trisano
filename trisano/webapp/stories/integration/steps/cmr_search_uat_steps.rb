@@ -1,7 +1,7 @@
 steps_for(:cmr_search_uat) do
   
   Given("I am logged in as an investigator") do
-    ENV['NEDSS_UID'] = 'utah'
+    ENV['TRISANO_UID'] = 'utah'
   end
 
   Given("a CMR is created in $jurisdiction for a $gender named $first_name $last_name of $county county born $birth_date and infected with $disease") do | jurisdiction, gender, first_name, last_name, county, birth_date, disease |

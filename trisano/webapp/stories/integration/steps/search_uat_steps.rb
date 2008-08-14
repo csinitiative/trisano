@@ -5,7 +5,7 @@ steps_for(:search_uat) do
   # These are highlighted below
 
   Given("I am logged in as an investigator") do
-    ENV['NEDSS_UID'] = 'utah'
+    ENV['TRISANO_UID'] = 'utah'
   end
 
   Given("a person named $first_name $last_name, born $birth_date, gender $gender, and residing in $county County is created") do |first_name, last_name, birth_date, gender, county|

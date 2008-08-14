@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   # 
   
   def load_user
-    if NEDSS_UID.blank?
+    if TRISANO_UID.blank?
       logger.info "Attempting to locate user information on the request"
       if RAILS_ENV == "production"
         logger.info "Using HTTP_UID header"
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
     else
       if session[:user_id].nil?
         logger.info "Using NEDSS user found in local environment variable"
-        load_user_by_uid(NEDSS_UID)
+        load_user_by_uid(TRISANO_UID)
       else
         logger.info "Using user set in session"
         load_user_by_uid(session[:user_id])

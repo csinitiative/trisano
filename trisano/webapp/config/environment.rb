@@ -81,7 +81,7 @@ end
 PG_LOCALE = ENV['PG_LOCALE'] ||= 'en_US' 
 
 if RAILS_ENV == "development" || RAILS_ENV == "test"
-  NEDSS_UID = ENV['NEDSS_UID']
+  TRISANO_UID = ENV['TRISANO_UID']
 else
-  NEDSS_UID = nil
+  TRISANO_UID = nil
 end
