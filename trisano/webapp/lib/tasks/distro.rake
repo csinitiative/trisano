@@ -57,8 +57,8 @@ namespace :trisano do
                 
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake nedss:deploy:buildwar RAILS_ENV=production basicauth=false"
-      FileUtils.mv('nedss.war', '../distro')
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=production basicauth=false"
+      FileUtils.mv('trisano.war', '../distro')
     end
 
     desc "Migrate the database"

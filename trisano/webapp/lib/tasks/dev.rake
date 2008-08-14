@@ -1,13 +1,8 @@
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
-
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-namespace :nedss do
+namespace :trisano do
 
   namespace :dev do
        
@@ -19,12 +14,12 @@ namespace :nedss do
        ruby "-S rake db:drop:all"
        ruby "-S rake db:create:all"
        ruby "-S rake db:migrate"
-       Rake::Task["nedss:dev:load_codes_and_defaults"].invoke
+       Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
        Rake::Task["db:test:prepare"].invoke
     end
     
     desc "full rebuild of all databases for the build server"
-    task :db_rebuild_full_for_build  => ['nedss:deploy:stoptomcat', 'db_rebuild_full'] do
+    task :db_rebuild_full_for_build  => ['trisano:deploy:stoptomcat', 'db_rebuild_full'] do
     end
     
     # Debt: DRY up the tsearch tasks. They could be a bit more dynamic

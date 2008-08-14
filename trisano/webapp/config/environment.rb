@@ -44,7 +44,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_nedss_session',
+    :session_key => '_trisano_session',
     :secret      => 'dec289bfea4950e50e37af2854f59c2a7a96c0a8d24ef218517b08a5790a272ae2b2ee0c2fe5aa18217a599b20b322c5596fd3983a42240aef4ce71a37102d41'
   }
 

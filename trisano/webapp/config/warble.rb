@@ -44,7 +44,7 @@ Warbler::Config.new do |config|
 
   # Name of the war file (without the .war) -- defaults to the basename
   # of RAILS_ROOT
-  config.war_name = "nedss"
+  config.war_name = "trisano"
 
   # True if the webapp has no external dependencies
   config.webxml.standalone = true

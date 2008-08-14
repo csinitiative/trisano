@@ -1,8 +1,7 @@
 class InitLabs < ActiveRecord::Migration
   def self.up
 #
-# This migration adds the laboratory and test results capability to the
-# UT-NEDSS database for the CMR in Release 1 Iteration 1. Disease plans
+# This migration adds the laboratory and test results capability to Release 1 Iteration 1. Disease plans
 # and LIMS integration will add additional tables and columns to flesh out
 # the data model.
 #

@@ -1,8 +1,7 @@
 class AddUsersRolesEntitlements < ActiveRecord::Migration
   def self.up
 #
-# This migration adds the basic user, role, and entitlement capabilities to the
-# UT-NEDSS database for the CMR in Release 1 Iteration 4. 
+# This migration adds the basic user, role, and entitlement capabilities Release 1 Iteration 4. 
 # Evan Bauer 14-Mar-2008
 # updated 21-Mar-2008
 #

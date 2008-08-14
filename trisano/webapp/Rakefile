@@ -41,8 +41,8 @@ Rake::Task["db:test:clone_structure"].enhance {
 }
 
 Rake::Task["db:create:all"].enhance {
-  Rake::Task["nedss:dev:add_tsearch"].invoke
-  Rake::Task["nedss:dev:update_locale_configs"].invoke
+  Rake::Task["trisano:dev:add_tsearch"].invoke
+  Rake::Task["trisano:dev:update_locale_configs"].invoke
 }
 
 # The following could be a bit more dry/dynamic

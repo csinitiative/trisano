@@ -2,7 +2,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-namespace :nedss do
+namespace :trisano do
 
   namespace :integration do
          
