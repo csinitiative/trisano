@@ -147,9 +147,9 @@ namespace :trisano do
       puts "build and redeploy success"
     end
     
-    desc "build and redeploy full: build and redeploy plus integration tests"
-    task :buildandredeployfull => [:buildandredeploy, 'trisano:integration:run_all'] do
-      puts "build, redeploy and integration test success"
+    desc "build and redeploy full: alias for build and redeploy"
+    task :buildandredeployfull => [:buildandredeploy] do
+      puts "build and redeploy"
     end
 
     desc "Create database configuration file"
