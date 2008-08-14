@@ -32,13 +32,13 @@ namespace :trisano do
     desc "add tsearch functions to dev"
     task :add_tsearch_to_dev do
       puts "adding tsearch to dev"
-      sh "psql nedss_development < db/tsearch2.sql"
+      sh "psql trisano_development < db/tsearch2.sql"
     end
     
     desc "add tsearch functions to test"
     task :add_tsearch_to_test do
       puts "adding tsearch to test"
-      sh "psql nedss_test < db/tsearch2.sql"
+      sh "psql trisano_test < db/tsearch2.sql"
     end
     
     # The locale tasks that follow probably could be dried up a bit more, as well
@@ -49,12 +49,12 @@ namespace :trisano do
     
     desc "update dev locale config"
     task :update_dev_locale_config do
-      update_locale_config("nedss_development")
+      update_locale_config("trisano_development")
     end
     
     desc "update test locale config"
     task :update_test_locale_config do
-      update_locale_config("nedss_test")
+      update_locale_config("trisano_test")
     end
     
     def update_locale_config(env)

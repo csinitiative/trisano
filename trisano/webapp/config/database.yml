@@ -11,7 +11,7 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: nedss_development
+  database: trisano_development
   username: nedss
   password: password
   host: localhost
@@ -38,7 +38,7 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: nedss_test
+  database: trisano_test
   username: nedss
   password: password
   host: localhost
@@ -47,7 +47,7 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: nedss_prod
+  database: trisano_prod
   username: nedss
   password: password
   host: localhost

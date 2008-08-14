@@ -22,7 +22,7 @@ namespace :trisano do
     TOMCAT_DEPLOYED_EXPLODED_WAR_DIR = TOMCAT_DEPLOY_DIR_NAME + '/' + 'trisano'
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
     # Override with env variable if you are running locally http://localhost:8080
-    TRISANO_URL = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
+    TRISANO_URL = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
     TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] ||= '~/projects/trisano'
     TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] ||= '~/trisano-dist'
 
@@ -155,7 +155,7 @@ namespace :trisano do
     desc "Create database configuration file"
     task :create_db_config do
       ruby "-S rake trisano:dev:db_rebuild_full RAILS_ENV=development"
-      sh "pg_dump -c -O -c nedss_development > ../distro/trisano_schema.sql"
+      sh "pg_dump -c -O -c trisano_development > ../distro/trisano_schema.sql"
     end
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"

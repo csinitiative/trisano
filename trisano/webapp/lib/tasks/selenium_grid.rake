@@ -1,7 +1,7 @@
 require 'rake'
 require 'rubygems'
 
-namespace :nedss do
+namespace :trisano do
 
   namespace :selenium do
       
@@ -21,8 +21,8 @@ namespace :nedss do
 
     desc "Run all and then display results"
     task :runresults do
-      Rake::Task["nedss:selenium:run"].invoke
-      Rake::Task["nedss:selenium:results"].invoke
+      Rake::Task["trisano:selenium:run"].invoke
+      Rake::Task["trisano:selenium:results"].invoke
     end
 
     desc "Run all behaviors in parallel spawing multiple processes"
