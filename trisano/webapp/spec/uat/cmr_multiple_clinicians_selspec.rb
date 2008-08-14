@@ -8,7 +8,7 @@ describe 'Adding multiple clinicians to a CMR' do
   #$dont_kill_browser = true
   
   before(:all) do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     @browser.wait_for_page_to_load($load_time)
     @original_last_name = get_unique_name(2) + " mc"
     @edited_last_name = get_unique_name(2) + " mc"

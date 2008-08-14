@@ -10,7 +10,7 @@ describe "lab results helper" do
       "lab_result_lab_test_date" => "5/15/2008",
       "lab_result_specimen_sent_to_uphl_yn_id" => "Yes"
     }
-    @browser.open("/nedss/cmrs")
+    @browser.open("/trisano/cmrs")
     @browser.click("link=Edit")
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=New Lab Result")

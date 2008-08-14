@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Sytem functionality for routing a CMR among jurisdictions' do
 
   it "should present all controls" do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     @browser.wait_for_page_to_load "30000"
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"

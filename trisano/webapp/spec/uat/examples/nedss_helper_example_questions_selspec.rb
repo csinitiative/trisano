@@ -15,7 +15,7 @@ describe "Form builder admin" do
   #$dont_kill_browser = true
   
   it "should allow admin to create a form" do 
-    @browser.open "/nedss/"
+    @browser.open "/trisano/"
     
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load($load_time)

@@ -12,7 +12,7 @@ describe "nedss_helper_example_lab_results_selspec" do
   end
   
   it "should create a CMR with 3 lab results" do 
-    @browser.open("/nedss/cmrs")
+    @browser.open("/trisano/cmrs")
     @browser.click("link=New CMR")
     @browser.wait_for_page_to_load($load_time)
     @browser.type("event_active_patient__active_primary_entity__person_last_name", @cmr_name)

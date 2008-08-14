@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Adding multiple diagnosing health facilities to a CMR' do
   
   it "should allow adding new health facilities to a new CMR" do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
     @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Diagnosing-HF"
     @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Johnny"

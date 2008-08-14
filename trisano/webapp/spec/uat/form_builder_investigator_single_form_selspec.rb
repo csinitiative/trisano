@@ -6,7 +6,7 @@ describe "Form Builder Investigator Single Form" do
   
   before(:all) do
     @form_name = get_unique_name(4)
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_forms(@browser)
   end
   

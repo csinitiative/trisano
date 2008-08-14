@@ -208,7 +208,7 @@ module NedssHelper
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0 
-      browser.click "//a[contains(@href, '/nedss/" + resource + "/" + id.to_s + "/edit')]"
+      browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -219,7 +219,7 @@ module NedssHelper
   def click_resource_show(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0 
-      browser.click "//a[contains(@href, '/nedss/" + resource + "/" + id.to_s + "')]"
+      browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -230,7 +230,7 @@ module NedssHelper
   def click_build_form(browser, name)
     id = get_resource_id(browser, name)
     if id > 0 
-      browser.click "//a[contains(@href, '/nedss/forms/builder/" + id.to_s + "')]"
+      browser.click "//a[contains(@href, '/trisano/forms/builder/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -260,7 +260,7 @@ module NedssHelper
   end
   
   def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label)
-    browser.open "/nedss/cmrs"
+    browser.open "/trisano/cmrs"
     browser.click "link=FORMS"
     browser.wait_for_page_to_load($load_time)
     browser.click "link=Create New Form"

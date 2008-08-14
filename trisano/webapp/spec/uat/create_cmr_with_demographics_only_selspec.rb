@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Sytem functionality for setting the record ID of a CMR' do
 
   it 'should create a person with all the demographics information' do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Christiansen')
     @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'David')

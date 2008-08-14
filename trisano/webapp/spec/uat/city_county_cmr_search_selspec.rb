@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
   
   describe 'User functionality for searching for CMRs by city and county' do
     before(:all) do
-      @browser.open "/nedss/"
+      @browser.open "/trisano/"
       click_nav_forms(@browser)
     end
     

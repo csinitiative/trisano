@@ -5,7 +5,7 @@ describe "test2" do
     #put any setup tasks here
   end
   it "describe what this thing should do here" do 
-    @browser.open "/nedss/"
+    @browser.open "/trisano/"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_resource_edit(@browser, "forms", "Marge Not There").should == -1

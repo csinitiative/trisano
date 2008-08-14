@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'System functionality for setting the record ID of a CMR' do
 
   it 'should create two CMRs in a row with sequential record numbers that start with the current year' do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Record')
     @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'Number')

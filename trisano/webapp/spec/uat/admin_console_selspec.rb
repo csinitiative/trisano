@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/spec_helper'
   # $dont_kill_browser = true
  
   it 'should load successfully' do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_admin(@browser).should be_true
   end
 end

@@ -5,7 +5,7 @@ describe 'User functionality for creating and saving CMRs' do
   
   before(:all) do
     @last_name = get_unique_name(1)
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
   end
   
   it 'should save a CMR with just a last name' do

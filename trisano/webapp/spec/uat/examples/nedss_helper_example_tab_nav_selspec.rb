@@ -4,7 +4,7 @@ describe "NedssHelper tab navigation" do
     #put any setup tasks here
   end
   it "should find each tab" do 
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     @browser.click("link=New CMR")
     @browser.wait_for_page_to_load($load_time)
     NedssHelper.click_core_tab(@browser, "Clinical")

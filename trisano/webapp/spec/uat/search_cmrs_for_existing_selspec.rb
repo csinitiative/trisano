@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for searching for existing users' do
 
   it 'should find or add Charles Chuckles in Provo, Utah county' do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Chuckles')
       click_nav_new_cmr(@browser).should be_true
@@ -26,7 +26,7 @@ describe 'User functionality for searching for existing users' do
   end
 
   it 'should find a person named Charles Chuckles when viewing all CMRs' do
-    @browser.open "/nedss/cmrs"
+    @browser.open "/trisano/cmrs"
     click_nav_cmrs(@browser).should be_true
     @browser.is_text_present('Chuckles, Charles').should be_true
   end
