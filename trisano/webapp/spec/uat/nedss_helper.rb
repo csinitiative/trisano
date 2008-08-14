@@ -263,7 +263,7 @@ module NedssHelper
     browser.open "/trisano/cmrs"
     browser.click "link=FORMS"
     browser.wait_for_page_to_load($load_time)
-    browser.click "link=Create New Form"
+    browser.click "//input[@value='Create new form']"
     browser.wait_for_page_to_load($load_time)
     browser.type "form_name", form_name
     if disease_label.respond_to?(:each)

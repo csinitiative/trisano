@@ -236,8 +236,7 @@ def navigate_to_form_edit
 end
 
 def delete_edit_and_inactivate_questions
-  @browser.click "id=delete-question-#{@question_to_delete_id}"
-  wait_for_element_present("modified-element")
+  delete_question(@browser, @question_to_delete_text)
     
   @browser.click "id=edit-question-#{@question_to_edit_id}"
   wait_for_element_present("edit-question-form")
