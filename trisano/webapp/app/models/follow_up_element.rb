@@ -5,6 +5,48 @@ class FollowUpElement < FormElement
   validates_presence_of :condition
   validates_presence_of :core_path, :if => Proc.new {|follow_up| follow_up.core_data == "true" }
   
+  def save_and_add_to_form
+    if self.valid?
+      unless condition_id.blank?
+        if (condition_id.to_i != 0)
+          self.condition = condition_id
+          self.is_condition_code = true
+        else
+          # Valid string will be 'code_description (code_name)'
+          begin
+            raise if condition_id.size != condition_id.index(")") +1
+            code_description_end = condition_id.index("(") - 2
+            code_description = condition_id[0..code_description_end]
+            code_name_end = condition_id.index(")") - 1
+            code_name = condition_id[code_description_end+3..code_name_end]
+            
+            code = ExternalCode.find_by_code_name_and_code_description(code_name, code_description)
+            raise if code.nil?
+            
+            self.condition = code.id
+            self.is_condition_code = true
+          rescue
+            self.condition = condition_id
+            self.is_condition_code = false
+          end
+        end
+      else
+        self.is_condition_code = false
+      end
+      
+      super
+    end
+
+  end
+  
+  def condition_id=(condition_id)
+    @condition_id = condition_id
+  end
+  
+  def condition_id
+    @condition_id
+  end
+  
   def self.process_core_condition(params)
     result = []
     investigation_forms = []

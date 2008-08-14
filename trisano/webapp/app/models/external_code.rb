@@ -1,5 +1,7 @@
 class ExternalCode < ActiveRecord::Base
-acts_as_auditable
+  # If this is removed, adjust the query below in #find_codes_for_autocomplete
+  # That query was a workaround for a defect in acts_as_auditable
+  acts_as_auditable
 
   def self.yes
     find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
@@ -29,9 +31,18 @@ acts_as_auditable
   def self.telephone_location_type_ids
     telephone_location_types.collect{|code| code.id}
   end
+  
+  # Debt: This query bypasses AR because of an issue in acts_as_audible where
+  # using an array in a condition was failing
+  def self.find_codes_for_autocomplete(condition, limit=10)
+    return [] if condition.nil?
+    condition = sanitize_sql(["%s", condition.downcase])
+    limit = sanitize_sql(["%s", limit])
+    find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' AND live is TRUE AND next_ver is NULL order by code_description limit #{limit};")
+  end
 
   def event_under_investigation?
     'eventstatus'.eql?(code_name) && ['UI', 'IC', 'RO-MGR'].include?(the_code)
   end
-
+  
 end

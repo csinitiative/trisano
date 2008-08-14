@@ -1,6 +1,5 @@
 replace_element, replace_partial = replacement_elements(@follow_up_element)
 page.replace_html replace_element, :partial => replace_partial
-page.replace_html 'builder-mods', "<span style='color:green'>" + flash[:notice] + "</span>" +
-  "<input type='hidden' id='modified-element' name='created-element-id' value='" + @follow_up_element.id.to_s + "'/>"
+page.replace_html 'builder-mods', "<input type='hidden' id='modified-element' name='created-element-id' value='" + @follow_up_element.id.to_s + "'/>"
 page.visual_effect(:highlight, replace_element)
 flash[:notice] = ""

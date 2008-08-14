@@ -217,12 +217,17 @@ module FormsHelper
     result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
     
     if (element.core_path.blank?)
-      result +=  "Follow up, "
+      result +=  "Follow up, Condition: '#{element.condition}'"
     else
       result +=  "Core follow up, "
+      if (element.is_condition_code)
+        code = ExternalCode.find(element.condition)
+        result +=  "Code condition: #{code.code_description} (#{code.code_name}) "
+      else
+        result +=  "String condition: #{element.condition}"
+      end
     end
     
-    result += "Condition: '#{element.condition}'"
     result += ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" unless (element.core_path.blank?)
         
     if include_children && element.children?

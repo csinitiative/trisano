@@ -1,21 +1,17 @@
 class FollowUpElementsController <  AdminController
 
+  def auto_complete_for_core_follow_up_conditions
+    condition = params[:follow_up_element][:condition]
+    @items = ExternalCode.find_codes_for_autocomplete(condition, 5)
+    render :inline => '<ul><% for item in @items %><li id="external_code_id_<%= item.id %>" class="fb-core-code-item"><%= h item.code_description %> (<%= h item.code_name %>)</li><% end %></ul>'
+  end
+  
   def index
-    @follow_up_elements = FollowUpElement.find(:all)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @follow_up_elements }
-    end
+    render :text => 'Method not supported.', :status => 405
   end
 
   def show
-    @follow_up_element = FollowUpElement.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @follow_up_element }
-    end
+    render :text => 'Method not supported.', :status => 405
   end
   
   def new
@@ -39,7 +35,6 @@ class FollowUpElementsController <  AdminController
 
     respond_to do |format|
       if @follow_up_element.save_and_add_to_form
-        flash[:notice] = 'Follow up container was successfully created.'
         format.xml  { render :xml => @follow_up_element, :status => :created, :location => @follow_up_element }
         format.js { @form = Form.find(@follow_up_element.form_id)}
       else
@@ -51,28 +46,11 @@ class FollowUpElementsController <  AdminController
 
 
   def update
-    @follow_up_element = FollowUpElement.find(params[:id])
-
-    respond_to do |format|
-      if @follow_up_element.update_attributes(params[:follow_up_element])
-        flash[:notice] = 'FollowUpElement was successfully updated.'
-        format.html { redirect_to(@follow_up_element) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @follow_up_element.errors, :status => :unprocessable_entity }
-      end
-    end
+    render :text => 'Method not supported.', :status => 405
   end
 
   def destroy
-    @follow_up_element = FollowUpElement.find(params[:id])
-    @follow_up_element.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(follow_up_elements_url) }
-      format.xml  { head :ok }
-    end
+    render :text => 'Deletion handled by form elements.', :status => 405
   end
   
   def process_core_condition
