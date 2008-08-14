@@ -1,5 +1,5 @@
 class ExternalCode < ActiveRecord::Base
-# acts_as_auditable
+acts_as_auditable
 
   def self.yes
     find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")

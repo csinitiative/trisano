@@ -16,10 +16,10 @@ class SearchController < ApplicationController
         people = Person.find_by_ts(:fulltext_terms => params[:name], :birth_date => params[:birth_date])
         
         unless people.empty?
-          @people = people.collect! do |person|
+          @people = people.collect do |person|
             event = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
             if event.nil?
-              type = "No associated type"
+              type = "No associated event"
               id = nil
             else
               type = event.type
@@ -35,7 +35,7 @@ class SearchController < ApplicationController
         
       end
     rescue
-      flash[:error] = "There was a problem with your search criteria. Please try again."
+      flash[:error] = "There was a problem with your search criteria. Please try again. #{$!}"
     end
         
   end

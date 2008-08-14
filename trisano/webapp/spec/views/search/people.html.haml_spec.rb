@@ -24,7 +24,7 @@ describe "/search/people.html.haml" do
     person.stub!(:county).and_return("Salt Lake")
     person.stub!(:birth_date).and_return(nil)
     person.stub!(:entity).and_return(entity)
-    assigns[:people] = [person]
+    assigns[:people] = [{:person => person, :event_type => "No associated event", :event_id => nil}]
     do_render
     response.should have_tag("h3", "Results")
   end

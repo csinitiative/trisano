@@ -79,15 +79,17 @@ describe SearchController do
   describe "handling GET /search/people with search parameters" do
   
      before(:each) do
-       mock_user
+      mock_user
       @person = mock_model(Person)
+      @person.stub!(:entity_id).and_return(1)
+      @person_hash = {:person => @person, :event_type => "No associated event", :event_id => nil}
       Person.stub!(:find_by_ts).and_return([@person])
+      Event.stub!(:find).and_return(nil)
     end
     
     def do_get
       get :people, :name => "Johnson"
     end
-  
   
     it "should be successful" do
       do_get
@@ -101,7 +103,7 @@ describe SearchController do
     
     it "should assign the found people for the view" do
       do_get
-      assigns[:people].should == ([@person])
+      assigns[:people].should == ([@person_hash])
     end
     
     it "should render people template" do
