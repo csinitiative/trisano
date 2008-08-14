@@ -101,9 +101,4 @@ module ApplicationHelper
     result
   end
 
-  def get_event_type_and_id_from_person(person)
-    e = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
-    return nil if e.nil?
-    [e.type, e.id]
-  end
 end

@@ -40,25 +40,24 @@
     - for person in @people
       %tr
         %td
-          - event_type, event_id = get_event_type_and_id_from_person(person)
-          - unless event_type.nil?
+          - unless person[:event_id].nil?
             / Case statements not working for some reason
-            - if event_type == MorbidityEvent
-              - path = cmr_path(event_id)
-              - html_id = "edit-person-cmr-link-#{event_id}"
-            - elsif event_type == ContactEvent
-              - path = contact_event_path(event_id)
-              - html_id = "edit-person-contact-link-#{event_id}"
-            = link_to("#{person.first_name} #{person.last_name} (#{event_type.to_s.underscore.humanize})", path, :id => html_id)
+            - if person[:event_type] == MorbidityEvent
+              - path = cmr_path(person[:event_id])
+              - html_id = "edit-person-cmr-link-#{person[:event_id]}"
+            - elsif person[:event_type] == ContactEvent
+              - path = contact_event_path(person[:event_id])
+              - html_id = "edit-person-contact-link-#{person[:event_id]}"
+            = link_to("#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})", path, :id => html_id)
           - else
-            = "#{person.first_name} #{person.last_name} (No associated event)"
+            = "#{person[:person].first_name} #{person[:person].last_name} (No associated event)"
         %td
-          - if  !person.birth_date.blank?
-            = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"
+          - if  !person[:person].birth_date.blank?
+            = "#{calculate_age person[:person].birth_date.to_date} / #{person[:person].birth_date}"
         %td
-          = person.gender
+          = person[:person].gender
         %td
-          = person.county
+          = person[:person].county
 
 - if @people.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:birth_date].blank?)
   <span>Your search returned no results.</span>

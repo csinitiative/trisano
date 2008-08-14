@@ -11,7 +11,7 @@ require File.dirname(__FILE__) + '/nedss_helper'
 Spec::Runner.configure do |config|
   include NedssHelper
   
-  nedss_url = ENV['NEDSS_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
+  nedss_url = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   nedss_url = nedss_url.sub("//", "//utah:arches@")
     
   config.before(:all) do

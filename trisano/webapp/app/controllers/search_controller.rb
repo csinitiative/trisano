@@ -13,8 +13,22 @@ class SearchController < ApplicationController
     
     begin
       if !params[:name].blank? || !params[:birth_date].blank?
-        @people = Person.find_by_ts(:fulltext_terms => params[:name], :birth_date => params[:birth_date])
+        people = Person.find_by_ts(:fulltext_terms => params[:name], :birth_date => params[:birth_date])
         
+        unless people.empty?
+          @people = people.collect! do |person|
+            event = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
+            if event.nil?
+              type = "No associated type"
+              id = nil
+            else
+              type = event.type
+              id = event.id
+            end
+            { :person => person, :event_type => type, :event_id => id }
+          end
+        end
+
         if !params[:name].blank? && @people.empty?
           parse_names_from_fulltext_search
         end
