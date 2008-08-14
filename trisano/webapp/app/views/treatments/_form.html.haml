@@ -1,9 +1,13 @@
 %div{:id => "treatment-form"}
-  %fieldset{:class => "form"}
+  %fieldset.form
     %legend Treatment
-    %span{:class => "horiz"}
+    - core_element :treatment_given_yn_id, ct, :horiz do
       = ct.label(:treatment_given_yn_id, "Treatment given")
       = ct.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
-    %span{:class => "horiz"}
+    - core_element :treatment, ct, :horiz do
       = ct.label(:treatment, "Treatment")
       = ct.text_field(:treatment, :size => 50)
+    - core_element :treatment_date, ct, :horiz do
+      = ct.label(:treatment_date, 'Date of Treatment')
+      = ct.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
+      

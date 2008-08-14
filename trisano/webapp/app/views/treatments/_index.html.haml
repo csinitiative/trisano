@@ -5,9 +5,11 @@
     %tr
       %th Treatment Given
       %th Treatment
+      %th Treatment Date
 
     - for treatment in @event.active_patient.participations_treatments
       %tr
         %td=l treatment.treatment_given_yn
-        %td=treatment.treatment
+        %td=h(treatment.treatment)
+        %td=h(treatment.treatment_date.strftime('%B %d, %Y'))
         %td=link_to_remote_redbox("Edit treatment", {:url => edit_cmr_treatment_path(@event, treatment), :method => :get}, :id => "edit-treatment-#{treatment.id}-link")
