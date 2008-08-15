@@ -310,33 +310,67 @@ describe FormElementsController do
   end
 
   describe "handling DELETE /form_elements/1" do
+    
+    describe "while handling form hierarchy deletes" do
+      before(:each) do
+        mock_user
+        @form_element = mock_model(FormElement, :destroy => true)
+        @form_element.stub!(:form_id).and_return(1)
+        @form_element.stub!(:destroy_with_dependencies).and_return(true)
+        FormElement.stub!(:find).and_return(@form_element)
+        Form.stub!(:find).and_return(mock_model(Form))
+      end
+  
+      def do_delete
+        delete :destroy, :id => "1"
+      end
 
-    before(:each) do
-      mock_user
-      @form_element = mock_model(FormElement, :destroy => true)
-      @form_element.stub!(:form_id).and_return(1)
-      @form_element.stub!(:destroy_with_dependencies).and_return(true)
-      FormElement.stub!(:find).and_return(@form_element)
-      Form.stub!(:find).and_return(mock_model(Form))
-    end
+      it "should find the form_element requested" do
+        FormElement.should_receive(:find).with("1").and_return(@form_element)
+        do_delete
+      end
   
-    def do_delete
-      delete :destroy, :id => "1"
+      it "should call destroy on the found form_element" do
+        @form_element.should_receive(:destroy_with_dependencies)
+        do_delete
+      end
+  
+      it "should render the delete template" do
+        do_delete
+        response.should render_template('form_elements/destroy')
+      end
     end
+    
+    describe "while handling library admin deletes" do
+      before(:each) do
+        mock_user
+        @form_element = mock_model(FormElement, :destroy => true)
+        @form_element.stub!(:form_id).and_return(nil)
+        @form_element.stub!(:destroy_with_dependencies).and_return(true)
+        @library_elements = []
+        FormElement.stub!(:find).and_return(@form_element)
+        FormElement.stub!(:roots).and_return(@library_elements)
+      end
+  
+      def do_delete
+        delete :destroy, :id => "1"
+      end
 
-    it "should find the form_element requested" do
-      FormElement.should_receive(:find).with("1").and_return(@form_element)
-      do_delete
-    end
+      it "should find the form_element requested" do
+        FormElement.should_receive(:find).with("1").and_return(@form_element)
+        do_delete
+      end
   
-    it "should call destroy on the found form_element" do
-      @form_element.should_receive(:destroy_with_dependencies)
-      do_delete
-    end
+      it "should call destroy on the found form_element" do
+        @form_element.should_receive(:destroy_with_dependencies)
+        do_delete
+      end
   
-    it "should render the delete template" do
-      do_delete
-      response.should render_template('form_elements/destroy')
+      it "should render the delete template" do
+        do_delete
+        response.should render_template('form_elements/destroy')
+      end
     end
+    
   end
 end

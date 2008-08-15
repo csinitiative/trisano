@@ -206,6 +206,7 @@ end
 
 def to_and_from_library_no_group
   
+  # Debt: This could be refactored to use the #add_question_to_library helper method
   add_question_to_view(@browser, "Default View", {:question_text => @question_to_add_to_library_text, :data_type => "Single line text"})
   num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
   @browser.click "link=Copy to library"
@@ -223,6 +224,8 @@ def to_and_from_library_no_group
 end
 
 def to_and_from_library_new_group
+  
+  # Debt: This could be refactored to use the #add_question_to_library helper method
   group_name = get_unique_name(3)
   @browser.click "link=Copy to library"
   wait_for_element_present("new-group-form")

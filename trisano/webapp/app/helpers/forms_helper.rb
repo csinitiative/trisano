@@ -351,7 +351,9 @@ module FormsHelper
       :url => {
         :controller => "group_elements", :action => "new", :form_element_id => element.id}, 
       :html => {
-        :class => "fb-add-to-library"}
+        :class => "fb-add-to-library",
+        :id => "add-element-to-library-#{element.id}"
+        }
     ) +"</small>"
   end
 

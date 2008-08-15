@@ -161,5 +161,15 @@ class FormsController < AdminController
       render :template => 'rjs-error'
     end
   end
+  
+  def open_library_admin
+    begin
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+    rescue Exception => ex
+      flash[:notice] = "Unable to open the library."
+      render :template => 'rjs-error'
+    end
+    
+  end
 
 end

@@ -88,8 +88,13 @@ module ApplicationHelper
     str
   end
 
+  # Determines which element to replace on the form builder interface, and which 
+  # partial to replace it with, based on the state of the element being updated.
   def replacement_elements(element)
-    if (element.is_a?(InvestigatorViewElementContainer) || element.ancestors[1].is_a?(InvestigatorViewElementContainer))
+    if (element.form_id.blank?)
+      replace_element = 'library-admin'
+      replace_partial =  'forms/library_admin'
+    elsif (element.is_a?(InvestigatorViewElementContainer) || element.ancestors[1].is_a?(InvestigatorViewElementContainer))
       replace_element = 'root-element-list'
       replace_partial =  'forms/elements'
     elsif (element.is_a?(CoreViewElementContainer) || element.ancestors[1].is_a?(CoreViewElementContainer))

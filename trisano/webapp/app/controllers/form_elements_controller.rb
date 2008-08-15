@@ -82,7 +82,15 @@ class FormElementsController <  AdminController
     begin
       @form_element = FormElement.find(params[:id])
       @form_element.destroy_with_dependencies
-      @form = Form.find(@form_element.form_id)
+      
+      # A missing form_id means an element in the library is being destroyed, 
+      # so the list of elements in the library must be rebuilt for the view (filter
+      # conditions are not preserved).
+      if (@form_element.form_id.blank?)
+        @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      else
+        @form = Form.find(@form_element.form_id)
+      end
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'An error occurred during the deletion process.'

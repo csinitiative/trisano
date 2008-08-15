@@ -61,6 +61,7 @@
   %br
 #rot
   #formbuilder-body
+    %div{:id => "library-admin"}
     %b Investigator Form Elements
     %div{:id => "builder-mods"}
     %div{:id => "core-builder-mods"}
@@ -79,3 +80,5 @@
   = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
   %br
   = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
+  %br
+  = link_to_remote("Open library", :url => {:controller => "forms", :action => "open_library_admin"}, :method => :get, :html => {:id => 'fb-open-library-admin'})

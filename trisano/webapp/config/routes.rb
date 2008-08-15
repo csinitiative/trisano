@@ -28,6 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.admin 'admin', :controller => 'admin'
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
+  map.open_library 'forms/open_library', :controller => 'forms', :action => 'open_library_admin'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
   map.toggle_value 'value_set_elements/toggle_value/:value_element_id', :controller => 'value_set_elements', :action => 'toggle_value'
 

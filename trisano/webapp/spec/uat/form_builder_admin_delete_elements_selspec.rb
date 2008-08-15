@@ -69,10 +69,10 @@ describe 'Form Builder Admin Delete Element Functionality' do
     click_nav_forms(@browser)
     click_build_form(@browser, @form_name)
     
-    delete_view(@browser, @tab_name)
-    delete_section(@browser, @section_name)
-    delete_question(@browser, @question_text)
-    delete_value_set(@browser, @value_set_name)
+    delete_view(@browser, @tab_name).should be_true
+    delete_section(@browser, @section_name).should be_true
+    delete_question(@browser, @question_text).should be_true
+    delete_value_set(@browser, @value_set_name).should be_true
     
     publish_form(@browser)
     click_nav_cmrs(@browser)

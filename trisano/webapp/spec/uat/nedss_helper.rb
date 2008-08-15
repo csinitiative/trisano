@@ -299,6 +299,13 @@ module NedssHelper
     return browser.is_text_present("Investigator Form Elements") 
   end
   
+  # Must be called from the builder view
+  def open_form_builder_library(browser)
+    browser.click("fb-open-library-admin")
+    wait_for_element_present("library-admin-container")
+    return(browser.is_text_present("Library Administration"))
+  end
+    
   def switch_user(browser, user_id)
     browser.select("user_id", "label=#{user_id}")
     sleep(2)  
@@ -409,6 +416,26 @@ module NedssHelper
     wait_for_element_not_present("new-core-field-form", browser)
   end
   
+  def add_question_to_library(browser, question_text, group_name=nil)
+    
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-element-to-library-#{element_id}")
+    wait_for_element_present("new-group-form")
+
+    if (group_name.nil?)
+      browser.click "link=No Group"
+    else
+      browser.type "group_element_name", group_name
+      browser.click "group_element_submit"  
+      sleep(2)
+      browser.click "link=Add question to: #{group_name}"
+    end
+   
+    sleep(2)
+    browser.click "link=Close"
+    # Debt: Find something to do an assertion off of
+  end
+  
   # The delete helpers that follow could be dried up a bit, passing through to a single
   # delete_element method, but that would probably involve synching up the ids used 
   # on the action links so they use underscores instead of dashes as separators:
@@ -420,7 +447,7 @@ module NedssHelper
     element_id = get_form_element_id(browser, name, VIEW_ID_PREFIX)
     browser.click("delete-view-#{element_id}")
     browser.get_confirmation()
-    return(browser.is_text_present("delete-view-#{element_id}"))
+    return(!browser.is_text_present("delete-view-#{element_id}"))
   end
   
   # Deletes the section with the name provided
@@ -428,7 +455,7 @@ module NedssHelper
     element_id = get_form_element_id(browser, name, SECTION_ID_PREFIX)
     browser.click("delete-section-#{element_id}")
     browser.get_confirmation()   
-    return(browser.is_text_present("delete-section-#{element_id}"))
+    return(!browser.is_text_present("delete-section-#{element_id}"))
   end
   
   # Deletes the question with the name provided
@@ -436,7 +463,7 @@ module NedssHelper
     element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
     browser.click("delete-question-#{element_id}")
     browser.get_confirmation()   
-    return(browser.is_text_present("delete-question-#{element_id}"))
+    return(!browser.is_text_present("delete-question-#{element_id}"))
   end
   
   # Deletes the value set with the name provided
@@ -444,7 +471,7 @@ module NedssHelper
     element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
     browser.click("delete-value-set-#{element_id}")
     browser.get_confirmation()   
-    return(browser.is_text_present("delete-value-set-#{element_id}"))
+    return(!browser.is_text_present("delete-value-set-#{element_id}"))
   end
   
   def publish_form(browser)

@@ -1,0 +1,63 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+-# Debt: This is a simplified version of what was in _library_elements at the time. Consider moving to a helper for
+-# testability and consolidation.
+
+%div{:id => 'library-admin-container'}
+  %b Library Administration
+  &nbsp;&nbsp;
+  = link_to_function "Close", "Effect.BlindUp($('library-admin-container'), { duration: 0.1 })", :id => 'fb-close-library-admin'
+
+  %h3 Ungrouped questions
+  %ul
+    - for form_element in @library_elements
+      - next if form_element.is_a? GroupElement
+      - q_string = form_element.question.question_text
+      - q_string += "&nbsp;&nbsp;<small>" + form_element.question.data_type_before_type_cast.humanize + "</small>"
+      - form_element.pre_order_walk do |element|
+        - q_string += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;" + element.name + "</small></em>: " if element.is_a? ValueSetElement
+        - q_string += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement
+
+      %li{:id => "question_#{form_element.id}", :class => "lib-admin-question-item"}
+        =q_string
+        &nbsp;&nbsp;
+        = delete_question_link(form_element)
+
+  %h3 Grouped questions
+  - for form_element in @library_elements
+    - next if form_element.is_a? QuestionElement
+    - q_string = "#{form_element.name}"
+    %li{:id => "lib_group_admin_item_#{form_element.id}", :class => "lib-admin-group-item"}
+      %b="Group: #{q_string}"
+
+    -# children of this group, i.e. questions
+    %ul
+    - for form_element in form_element.children
+      - q_string = form_element.question.question_text
+      - q_string += "&nbsp;&nbsp;<small>" + form_element.question.data_type_before_type_cast.humanize + "</small>"
+      - q_string += "&nbsp;&nbsp;"
+      - q_string += delete_question_link(form_element)
+      - form_element.pre_order_walk do |element|
+        - q_string += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;" + element.name + "</small></em>: " if element.is_a? ValueSetElement
+        - q_string += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement
+
+      %li{:id => "question_#{form_element.id}", :class => "lib-admin-question-item"}
+        =q_string
+        
+
+
+%br

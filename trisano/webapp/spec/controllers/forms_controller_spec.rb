@@ -443,7 +443,7 @@ describe FormsController do
 
   end
   
-  describe "handling POST /question_elements/to_library" do
+  describe "handling POST /forms/to_library" do
     
     before(:each) do
       mock_user
@@ -471,7 +471,7 @@ describe FormsController do
     end
   end
   
-  describe "handling POST /question_elements/from_library" do
+  describe "handling POST /forms/from_library" do
     
     before(:each) do
       mock_user
@@ -505,6 +505,37 @@ describe FormsController do
     it "should render rjs error template on failure" do
       @form_element.stub!(:copy_from_library).with("2").and_return(false)
       do_post
+      response.should render_template('rjs-error')
+    end
+  end
+  
+  describe "handling GET /forms/open_library_admin" do
+    
+    before(:each) do
+      mock_user
+      @library_elements = []
+
+    end
+    
+    def do_get
+      get :open_library_admin
+    end
+
+    it "should render the correct rjs template on success" do
+      FormElement.stub!(:roots).and_return(@library_elements)
+      do_get
+      response.should render_template('forms/open_library_admin')
+    end
+    
+    it "should assign the found elements for the view" do
+      FormElement.stub!(:roots).and_return(@library_elements)
+      do_get
+      assigns[:library_elements].should == @library_elements
+    end
+    
+    it "should render rjs error template on failure" do
+      FormElement.stub!(:roots).and_raise
+      do_get
       response.should render_template('rjs-error')
     end
   end
