@@ -29,26 +29,10 @@ class FollowUpElement < FormElement
           self.condition = condition_id
           self.is_condition_code = true
         else
-          # Valid string will be 'code_description (code_name)'
-          begin
-            raise if condition_id.size != condition_id.index(")") +1
-            code_description_end = condition_id.index("(") - 2
-            code_description = condition_id[0..code_description_end]
-            code_name_end = condition_id.index(")") - 1
-            code_name = condition_id[code_description_end+3..code_name_end]
-            
-            code = ExternalCode.find_by_code_name_and_code_description(code_name, code_description)
-            raise if code.nil?
-            
-            self.condition = code.id
-            self.is_condition_code = true
-          rescue
-            self.condition = condition_id
-            self.is_condition_code = false
-          end
+          parse_and_assign_condition_from_string(condition_id)
         end
       else
-        self.is_condition_code = false
+        parse_and_assign_condition_from_string(condition)
       end
       
       super
@@ -103,4 +87,29 @@ class FollowUpElement < FormElement
         
     result
   end
+  
+  private
+  
+  def parse_and_assign_condition_from_string(condition_value)
+    begin
+      condition_value = condition_value.strip
+      if (condition_value.index("Code: ") == 0)
+        code_description_end = condition_value.index("(") - 2
+        code_description = condition_value[6..code_description_end]
+        code_name_end = condition_value.index(")") - 1
+        code_name = condition_value[code_description_end+3..code_name_end]
+        code = ExternalCode.find_by_code_name_and_code_description(code_name, code_description)
+        raise "Code parsed from condition can't be found" if code.nil?
+        self.condition = code.id
+        self.is_condition_code = true
+      else
+        raise "Condition doesn't begin with the magic string"
+      end
+    rescue
+      self.condition = condition_value
+      self.is_condition_code = false
+    end
+  end
+  
+  
 end

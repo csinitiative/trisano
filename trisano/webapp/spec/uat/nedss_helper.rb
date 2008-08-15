@@ -691,7 +691,7 @@ module NedssHelper
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
     browser.click("add-follow-up-#{element_id}")
     wait_for_element_present("new-follow-up-form", browser)
-    browser.type "follow_up_element_condition", condition
+    browser.type "model_auto_completer_tf", condition
     browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
     browser.click "follow_up_element_submit"
     wait_for_element_not_present("new-follow-up-form", browser)

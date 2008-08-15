@@ -20,7 +20,7 @@ class FollowUpElementsController <  AdminController
   def auto_complete_for_core_follow_up_conditions
     condition = params[:follow_up_element][:condition]
     @items = ExternalCode.find_codes_for_autocomplete(condition, 5)
-    render :inline => '<ul><% for item in @items %><li id="external_code_id_<%= item.id %>" class="fb-core-code-item"><%= h item.code_description %> (<%= h item.code_name %>)</li><% end %></ul>'
+    render :inline => '<ul><% for item in @items %><li id="external_code_id_<%= item.id %>" class="fb-core-code-item">Code: <%= h item.code_description %> (<%= h item.code_name %>)</li><% end %></ul>'
   end
   
   def index

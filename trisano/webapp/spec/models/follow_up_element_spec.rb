@@ -73,7 +73,7 @@ describe FollowUpElement do
     it "should find and use a external code id for it's condition if a condition_id is present, but is a string that corresponds to an external code" do
       question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
       @follow_up_element.parent_element_id = question_element.id
-      @follow_up_element.condition_id = "#{@external_code.code_description} (#{@external_code.code_name})"
+      @follow_up_element.condition_id = "Code: #{@external_code.code_description} (#{@external_code.code_name})"
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql(@external_code.id.to_s)
       @follow_up_element.is_condition_code.should be_true
@@ -82,9 +82,9 @@ describe FollowUpElement do
     it "should use the condition_id string for the condition if no matching code can be found" do
       question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
       @follow_up_element.parent_element_id = question_element.id
-      @follow_up_element.condition_id = "#{@external_code.code_description} (some crazy code)"
+      @follow_up_element.condition_id = "Code: #{@external_code.code_description} (some crazy code)"
       @follow_up_element.save_and_add_to_form
-      @follow_up_element.condition.should eql("#{@external_code.code_description} (some crazy code)")
+      @follow_up_element.condition.should eql("Code: #{@external_code.code_description} (some crazy code)")
       @follow_up_element.is_condition_code.should be_false
     end
     
