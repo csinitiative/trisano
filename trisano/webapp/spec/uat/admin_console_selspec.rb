@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
   
-  describe 'The UT-NEDSS Admin Console' do
+  describe 'The TriSano Admin Console' do
     
   # $dont_kill_browser = true
  

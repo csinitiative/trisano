@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper' 
 
-module NedssHelper
+module TrisanoHelper
   #Define constants for standard resources
   FORM = "forms"
   
@@ -479,7 +479,6 @@ module NedssHelper
   def delete_core_field_config(browser, name)
     element_id = get_form_element_id(browser, name, CORE_FIELD_ID_PREFIX)
     browser.click("delete-core-field-#{element_id}")
-                         
     browser.get_confirmation()   
     return(!browser.is_text_present("delete-core-field-#{element_id}"))
   end

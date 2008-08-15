@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/spec_helper' 
 #$dont_kill_browser = true
 
-describe "nedss_helper_example_lab_results_selspec" do 
+describe "trisano_helper_example_lab_results_selspec" do 
 
   before(:all) do
     @cmr_name = get_unique_name(1)  

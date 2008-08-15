@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-  describe 'The UT-NEDSS home page' do 
+  describe 'The TriSano home page' do 
 
     before :each do
       @browser.open "/trisano/cmrs"
@@ -44,7 +44,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     it 'should navigate successfully to the home page' do    
       @browser.click '//img[@alt=\'Logo\']'
       @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('UT-NEDSS Home').should be_true
+      @browser.is_text_present('TriSano Home').should be_true
     end
     
     it 'should navigate successfully to the Admin page' do
