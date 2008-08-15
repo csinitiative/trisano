@@ -1,4 +1,4 @@
-**Contact Information**
+== Contact Information**
 
 TriSano
 http://www.trisano.org
@@ -11,13 +11,24 @@ Portland, OR 97258
 Phone: 503.295.7970
 Fax: 503.295.7789
 
-**License and Copyright Information regarding Dependant Third-Party Software**
+== Contributors
 
-TriSano is dependant on the following packages. They are known to be compatible with AGPLv3
+See CONTRIBUTORS file.
+
+== License
+
+See COPYING file.
+
+=== License and Copyright Information regarding Dependant Third-Party Software**
+
+TriSano is dependant on the following packages. They are known to be compatible with the TriSano
+license (See COPYING file).
 
 http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
 
 *Package*            *License*         *Copyright / Creator*
+ ruby                 Ruby License      Copyright (c) 1999-2007 Yukihiro "Matz" Matsumoto
+ JRuby                LGPL              See http://jruby.org for Copyright holders
  rails                MIT               Copyright © 2004 David Heinemeier Hansson
  jruby-openssl        BSD and MIT       Copyright (C) 2007 Ola Bini <ola.bini@gmail.com>
  hpricot              MIT               Copyright (c) 2006 why the lucky stiff
