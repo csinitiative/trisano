@@ -99,7 +99,11 @@ module FormsHelper
   
   def render_core_field(element, include_children=true)
 
-    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b></li>"
+    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
+
+    result += "&nbsp;&nbsp;" + delete_core_field_link(element)
+
+    result += "</li>"
     
     if include_children && element.children?
       result += "<ul id='core_field_" + element.id.to_s + "_children' class='fb-core-field-children' style='clear: both'>"
@@ -331,6 +335,11 @@ module FormsHelper
   def delete_question_link(element)
     "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-question' id='delete-question-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a>"
+  end
+  
+  def delete_core_field_link(element)
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-core-field' id='delete-core-field-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a>"
   end
   
   def add_follow_up_link(element, trailing_text = "", core_data = false)

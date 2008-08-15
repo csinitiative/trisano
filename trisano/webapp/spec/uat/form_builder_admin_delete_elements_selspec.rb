@@ -32,6 +32,8 @@ describe 'Form Builder Admin Delete Element Functionality' do
     @value_set_value_one = get_unique_name(2)  + " vsv d-uat"
     @value_set_value_two = get_unique_name(2)  + " vsv d-uat"
     @value_set_value_three = get_unique_name(2)  + " vsv d-uat"
+    @patient_last_name_before_question_text = get_unique_name(2)  + " cfb d-uat"
+    @patient_last_name_after_question_text = get_unique_name(2) + " cfa d-uat"
   end
   
   after(:all) do
@@ -45,9 +47,11 @@ describe 'Form Builder Admin Delete Element Functionality' do
     @value_set_value_one = nil
     @value_set_value_two = nil
     @value_set_value_three = nil
+    @patient_last_name_before_question_text = nil
+    @patient_last_name_after_question_text = nil
   end
   
-  it 'should delete questions, tabs, sections, and value sets' do
+  it 'should delete questions, tabs, sections, value sets and core fields' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     
     add_view(@browser, @tab_name)
@@ -55,6 +59,9 @@ describe 'Form Builder Admin Delete Element Functionality' do
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
     add_question_to_view(@browser, "Default View", {:question_text => @value_set_question_text, :data_type => "Drop-down select list"})
     add_value_set_to_question(@browser, @value_set_question_text, @value_set_name, @value_set_value_one, @value_set_value_two, @value_set_value_three) 
+    add_core_field_config(@browser, "Patient last name").should be_true
+    add_question_to_before_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_before_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_after_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_after_question_text, :data_type => "Single line text"}).should be_true
 
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
@@ -65,6 +72,8 @@ describe 'Form Builder Admin Delete Element Functionality' do
     @browser.is_text_present(@question_text).should be_true
     @browser.is_text_present(@value_set_value_one).should be_true
     @browser.is_text_present(@value_set_value_two).should be_true
+    @browser.is_text_present(@patient_last_name_before_question_text).should be_true
+    @browser.is_text_present(@patient_last_name_after_question_text).should be_true
     
     click_nav_forms(@browser)
     click_build_form(@browser, @form_name)
@@ -73,6 +82,7 @@ describe 'Form Builder Admin Delete Element Functionality' do
     delete_section(@browser, @section_name).should be_true
     delete_question(@browser, @question_text).should be_true
     delete_value_set(@browser, @value_set_name).should be_true
+    delete_core_field_config(@browser, "Patient last name").should be_true
     
     publish_form(@browser)
     click_nav_cmrs(@browser)
@@ -83,6 +93,8 @@ describe 'Form Builder Admin Delete Element Functionality' do
     @browser.is_text_present(@question_text).should be_false
     @browser.is_text_present(@value_set_value_one).should be_false
     @browser.is_text_present(@value_set_value_two).should be_false
+    @browser.is_text_present(@patient_last_name_before_question_text).should be_false
+    @browser.is_text_present(@patient_last_name_after_question_text).should be_false
     
   end
     

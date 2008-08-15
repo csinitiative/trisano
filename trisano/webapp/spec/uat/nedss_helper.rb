@@ -34,6 +34,7 @@ module NedssHelper
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
+  CORE_FIELD_ID_PREFIX = "core_field_"
   BEFORE_CORE_FIELD_ID_PREFIX = "before_core_field_"
   AFTER_CORE_FIELD_ID_PREFIX = "after_core_field_"
   SECTION_ID_PREFIX = "section_"
@@ -472,6 +473,15 @@ module NedssHelper
     browser.click("delete-value-set-#{element_id}")
     browser.get_confirmation()   
     return(!browser.is_text_present("delete-value-set-#{element_id}"))
+  end
+  
+  # Deletes the core field config with the name provided
+  def delete_core_field_config(browser, name)
+    element_id = get_form_element_id(browser, name, CORE_FIELD_ID_PREFIX)
+    browser.click("delete-core-field-#{element_id}")
+                         
+    browser.get_confirmation()   
+    return(!browser.is_text_present("delete-core-field-#{element_id}"))
   end
   
   def publish_form(browser)
