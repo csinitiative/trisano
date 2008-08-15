@@ -25,7 +25,7 @@ describe "test2" do
     @browser.open "/trisano/"
     @browser.click "link=Forms"
     @browser.wait_for_page_to_load($load_time)
-    NedssHelper.click_resource_edit(@browser, "forms", "Marge Not There").should == -1
-    NedssHelper.click_resource_show(@browser, "forms", NedssHelper.get_unique_name(4)).should == -1
+    click_resource_edit(@browser, "forms", "Marge Not There").should == -1
+    click_resource_show(@browser, "forms", get_unique_name(4)).should == -1
   end
 end

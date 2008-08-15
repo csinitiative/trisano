@@ -19,11 +19,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe "Form builder admin" do 
   before(:all) do
-    @s_name = NedssHelper.get_unique_name(4)
-    @s2_name = NedssHelper.get_unique_name(4)
-    @q_name = NedssHelper.get_unique_name(25)
-    @q2_name = NedssHelper.get_unique_name(15)
-    @q_edit_name = NedssHelper.get_unique_name(35)
+    @s_name = get_unique_name(4)
+    @s2_name = get_unique_name(4)
+    @q_name = get_unique_name(25)
+    @q2_name = get_unique_name(15)
+    @q_edit_name = get_unique_name(35)
   end
   before(:each) do
     #put any setup tasks here
@@ -39,7 +39,7 @@ describe "Form builder admin" do
     
     @browser.click "link=New form"
     @browser.wait_for_page_to_load($load_time)
-    f_name = NedssHelper.get_unique_name(4)
+    f_name = get_unique_name(4)
     @browser.type "form_name", f_name
     @browser.click "form_submit"
     @browser.wait_for_page_to_load($load_time)
@@ -73,17 +73,17 @@ describe "Form builder admin" do
   end
   
   it "should allow admin to add a question to the second section" do
-    NedssHelper.add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
+    add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   
   it "should allow admin to add another question to the second section" do
-    NedssHelper.add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
+    add_question_to_view(@browser, @s2_name, @q_name, "Phone Number")
     @browser.is_text_present("Question was successfully created.").should be true
   end
   
   it "should allow admin to edit the first question" do
-    NedssHelper.click_question(@browser, @q_name, "edit")
+    click_question(@browser, @q_name, "edit")
     @browser.type "question_element_question_attributes_question_text", @q_edit_name
     @browser.click "question_element_submit"
     sleep 2
@@ -94,7 +94,7 @@ describe "Form builder admin" do
   end
   
   it "should allow admin to delete the second question from the section" do
-    NedssHelper.click_question(@browser, @q2_name, "delete")
+    click_question(@browser, @q2_name, "delete")
     @browser.is_text_present("The form element was successfully deleted.").should be true
     @browser.is_text_present(@q2_name).should be false
   end
