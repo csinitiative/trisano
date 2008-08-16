@@ -89,5 +89,19 @@ class FormElement < ActiveRecord::Base
     end
     e
   end
+  
+  def self.filter_library(direction, filter_by=nil)
+    if filter_by.blank?
+      FormElement.roots(:conditions => ["form_id IS NULL"])
+    else
+      filter_by = sanitize_sql(["%s", filter_by])
+      if direction.to_sym == :to_library
+        FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE '%#{filter_by}%'")
+      else
+        FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT form_element_id FROM questions WHERE question_text ILIKE '%#{filter_by}%')")
+      end
+    end
+    
+  end
     
 end
