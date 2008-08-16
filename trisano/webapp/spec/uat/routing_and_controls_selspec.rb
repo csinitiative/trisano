@@ -42,14 +42,24 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
   end
 
   it "should create new CMRs in the unassigned jurisdiction" do
-    @browser.is_text_present("Assigned Jurisdiction: Unassigned").should be_true
+    @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
   end
 
   it "should allow routing to a new jurisdiction" do
     @browser.select "jurisdiction_id", "label=Bear River Health Department"
     @browser.wait_for_page_to_load "30000"
-    @browser.is_text_present("Assigned Jurisdiction: Bear River Health Department").should be_true
+    @browser.get_selected_label('jurisdiction_id').should == "Bear River Health Department"
+  end
+
+  it "should allow for accepting or rejecting routing assignent" do
+    @browser.is_checked("name=morbidity_event[event_status_id]").should be_false
     @browser.is_text_present("Assigned to Local Health Dept.").should be_true
+  end
+
+  it "should set event to 'accepted' when 'accept' is clicked" do
+    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Accepted by Local Health Dept.").should be_true
   end
 
   it "should not display routing controls for a less privileged user" do

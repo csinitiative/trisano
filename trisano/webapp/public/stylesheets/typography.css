@@ -80,8 +80,8 @@
 .tools {
   font-family: helvetica, sans-serif;
   font-size: 11px;
-  font-weight: light;
-  color: #999;
+  font-weight: bold;
+  color: #c00;
   padding: 0px 0px 0px 0px; }
   .tools a {
     color: #c00;

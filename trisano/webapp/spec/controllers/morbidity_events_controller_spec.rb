@@ -456,4 +456,75 @@ describe MorbidityEventsController do
       end
     end
   end
+
+  describe "handling STATE actions /events/1/state" do
+    before(:each) do
+      Event.stub!(:map_state_id_to_priv).and_return(:a_privilege)
+
+      mock_user
+      @user.stub!(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
+      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
+
+      @jurisdiction = mock_model(Participation)
+      @jurisdiction.stub!(:secondary_entity_id).and_return(1)
+
+      @event = mock_model(MorbidityEvent, :to_param => "1")
+      @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
+      @event.stub!(:update_attributes).and_return(true)
+      MorbidityEvent.stub!(:find).and_return(@event)
+    end
+
+    describe "with successful state change" do
+      def do_change_state
+        @event.should_receive(:update_attributes).and_return(true)
+        post :state, :id => "1", :morbidity_event => {}
+      end
+
+      it "should find the event requested" do
+        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
+        do_change_state
+      end
+      
+      it "should redirect to the event index page" do
+        do_change_state
+        response.should redirect_to(cmrs_path)
+      end
+    end
+
+    describe "with bad state argument" do
+      def do_change_state
+        Event.should_receive(:map_state_id_to_priv).and_return(nil)
+        post :state, :id => "1", :morbidity_event => {}
+      end
+
+      it "should respond with a 403" do
+        do_change_state
+        response.code.should == "403"
+      end
+    end
+
+    describe "with insufficent privileges" do
+      def do_change_state
+        @user.should_receive(:is_entitled_to_in?).with(:a_privilege, 1).and_return(false)
+        post :state, :id => "1", :morbidity_event => {}
+      end
+
+      it "should respond with a 403" do
+        do_change_state
+        response.code.should == "403"
+      end
+    end
+
+    describe "with a failed state change" do
+      def do_change_state
+        @event.should_receive(:update_attributes).and_return(false)
+        post :state, :id => "1", :morbidity_event => {}
+      end
+
+      it "should redirect to the event index page" do
+        do_change_state
+        response.should redirect_to(cmrs_path)
+      end
+    end
+  end
 end

@@ -34,7 +34,6 @@ class SearchController < ApplicationController
         
         unless people.empty?
           @people = people.collect do |person|
-            ActiveRecord::Base.connection.reconnect!
             event = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
             if event.nil?
               type = "No associated event"

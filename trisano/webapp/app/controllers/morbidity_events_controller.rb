@@ -198,12 +198,19 @@ class MorbidityEventsController < EventsController
   def state
     @event = MorbidityEvent.find(params[:id])
 
-    unless User.current_user.is_entitled_to_in?(params[:state_to_change].to_sym, @event.active_jurisdiction.secondary_entity_id)
+    priv_required = Event.map_state_id_to_priv(params[:morbidity_event][:event_status_id])
+
+    if priv_required.nil?
+      render :text => "Bad state", :status => 403
+      return
+    end
+
+    unless User.current_user.is_entitled_to_in?(priv_required, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403
       return
     end
 
-    if @event.change_state(params[:new_state])
+    if @event.update_attributes(params[:morbidity_event])
       @events = MorbidityEvent.find(:all, 
         :include => :jurisdiction, 
         :select => "jurisdiction.secondary_entity_id", 

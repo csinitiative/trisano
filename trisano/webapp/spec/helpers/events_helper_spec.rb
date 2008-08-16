@@ -332,31 +332,67 @@ describe EventsHelper do
        short_name_3)
   end
 
-  it "should render csv data for 1 event" do
-    mock_event
-    render_events_csv(@event_1).should include(expected_record)
+  describe "rendering csv output" do
+    it "should render csv data for 1 event" do
+      mock_event
+      render_events_csv(@event_1).should include(expected_record)
+    end
+
+    it "should not exclude disease fields if disease is nil" do
+      mock_event_no_disease
+      render_events_csv(@event_1).should include(expected_record_no_disease)
+    end
+
+    it "should render a header row" do
+      mock_event
+      exporter = Exporters::Csv::Event.new
+      exporter.export_event(@event_1)
+      exporter.headers.should == expected_headers_array
+    end
+
+    it "should replace commas with spaces to avoid creating fake columns" do
+      mock_event
+      render_events_csv(@event_1).should_not include('Bubonic,Plague')
+    end
+
+    it "should use the Event Csv export class" do
+      mock_event
+      Exporters::Csv::Event.export(@event_1).should include(expected_record)
+    end
   end
 
-  it "should not exclude disease fields if disease is nil" do
-    mock_event_no_disease
-    render_events_csv(@event_1).should include(expected_record_no_disease)
-  end
+  describe "the state_controls method" do
+    fixtures :external_codes
 
-  it "should render a header row" do
-    mock_event
-    exporter = Exporters::Csv::Event.new
-    exporter.export_event(@event_1)
-    exporter.headers.should == expected_headers_array
-  end
+    describe "when the event state is 'asssigned to LHD'" do
+      before(:each) do
+        mock_user
+        mock_event
+        @event_1.stub!(:event_status_id).and_return(external_codes(:event_status_assigned_lhd).id)
+        @jurisdiction = mock_model(Place)
+        @jurisdiction.stub!(:entity_id).and_return(1)
+        User.stub!(:current_user).and_return(@user)
+      end
 
-  it "should replace commas with spaces to avoid creating fake columns" do
-    mock_event
-    render_events_csv(@event_1).should_not include('Bubonic,Plague')
-  end
+      describe "and the user is allowed to accept an event" do
+        before(:each) do
+          @user.stub!(:is_entitled_to_in?).and_return(true)
+        end
+       
+        it "should return a properly constructed form that posts to the morbidity event's controller's state action" do
+          pending "There are serious difficulties testing Haml helpers in RSpec.  Pending till figured out."
+          form = state_controls(@event_1, @jurisdiction)
+          # form test here
+            # radio button test here
+        end
+          
+      end
 
-  it "should use the Event Csv export class" do
-    mock_event
-    Exporters::Csv::Event.export(@event_1).should include(expected_record)
+      describe "when the user is not allowed to accept an event" do
+      end
+    end
+   
+    # Repeat the above pattern as new state transitions are implemented
   end
-  
-end
+    
+  end

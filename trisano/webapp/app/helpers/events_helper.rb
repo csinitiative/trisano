@@ -132,11 +132,15 @@ module EventsHelper
 
   def state_controls(event, jurisdiction)
     controls = ""
+    p User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id)
+    p event.event_status_id
+    p ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id
     if User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
-      controls += form_tag(state_cmr_path(event))
-      controls += "<span>Accept CMR&nbsp;</span>" 
-      controls += select_tag("state", options_for_select({'Accept' => 'ACPTD-LHD', 'Reject' => 'RJCTD-LHD'}), :onchange => "this.form.submit()")
+      controls += form_remote_tag(:url => state_cmr_path(event))
+      Event.accept_reject_actions.each do | action |
+        controls += radio_button_tag("morbidity_event[event_status_id]", action.id, false, :onchange => "this.form.submit()") + action.code_description
+      end
       controls += "</form>"
     end
     if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 
@@ -158,15 +162,20 @@ module EventsHelper
     controls
   end
 
-  def routing_controls(event, jurisdiction)
+  def jurisdiction_routing_control(event, jurisdiction)
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, jurisdiction.entity_id)
       jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
       controls += form_tag(jurisdiction_cmr_path(event))
       controls += "<span>Route to:&nbsp;</span>" 
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :name), :onchange => "this.form.submit()")
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :name, jurisdiction.entity_id), :onchange => "this.form.submit()")
       controls += "</form>"
     end
+    controls
+  end
+
+  def investigator_routing_control(event, jurisdiction)
+    controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_investigator, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id)
       controls += "TO BE DONE:&nbsp;&nbsp;" + "Route to investigator"

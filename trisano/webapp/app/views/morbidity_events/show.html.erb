@@ -29,18 +29,24 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
 <% end %>
 
-<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
-<% content_for :tools do %>
-  <%= basic_morbidity_event_controls(@event, jurisdiction) %> |
-  <%= link_to 'Back to list of CMRs', cmrs_path %>
-  <br />
-  Assigned Jurisdiction: <%= jurisdiction.name %>
-<% end %>
-
 <% content_for :tools_two do %>
   <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
-  <br />
-  <%= routing_controls(@event, jurisdiction) %>
+<% end %>
+
+<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
+<% content_for :tools do %>
+  <div style='float: left; margin-top: 5px'>
+    <%= basic_morbidity_event_controls(@event, jurisdiction) %> |
+    <%= link_to 'Back to list of CMRs', cmrs_path %>
+  </div>
+<% end %>
+
+<% content_for :tools_three do %>
+  <div style='float: right'>
+    <div class='tools' style='float: left; margin-right: 2em'><%= jurisdiction_routing_control(@event, jurisdiction) %></div>
+    <div style='float: left; margin-top: 2px'><%= l @event.event_status %>:</div>
+    <div class='tools' style='float: left'><%= state_controls(@event, jurisdiction) %><%= investigator_routing_control(@event, jurisdiction) %></div>
+  </div>
 <% end %>
 
 <script type="text/javascript">

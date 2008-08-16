@@ -70,6 +70,33 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
+  class << self
+    def accept_reject_actions
+      ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
+        rv = false
+        case event_action.the_code
+        when 'ACPTD-LHD'
+          event_action.code_description = "Accept"
+          rv = true
+        when 'RJCTD-LHD'
+          event_action.code_description = "Reject"
+          rv = true
+        end
+        rv
+      end
+    end
+
+    def map_state_id_to_priv(state_id)
+      state = ExternalCode.find(state_id)
+      priv = nil
+      case state.the_code
+      when 'ACPTD-LHD', 'RJCTD-LHD'
+        priv = :accept_event_for_lhd
+      end
+      return priv
+    end
+  end
+
   def disease
     @disease ||= disease_events.last
   end
@@ -372,13 +399,13 @@ class Event < ActiveRecord::Base
   def self.find_by_criteria(*args)
     options = args.extract_options!
     fulltext_terms = []
-    where_clause = ""
+    where_clause = "p3.type = 'MorbidityEvent'"
     order_by_clause = "p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
     
     if !options[:disease].blank?
       issue_query = true
-      where_clause += "p3.disease_id = " + sanitize_sql(["%s", options[:disease]])
+      where_clause += " AND p3.disease_id = " + sanitize_sql(["%s", options[:disease]])
     end
     
     if !options[:gender].blank?
@@ -496,6 +523,7 @@ class Event < ActiveRecord::Base
     query = "
     SELECT 
            p3.event_id, 
+           p3.type, 
            p3.primary_entity_id AS entity_id,
            p3.primary_first_name AS first_name,
            p3.primary_middle_name AS middle_name,
@@ -517,7 +545,7 @@ class Event < ActiveRecord::Base
            co.code_description AS county
     FROM 
            ( SELECT 
-                    p1.event_id, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
+                    p1.event_id, p1.type, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
                     p1.event_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
@@ -526,7 +554,7 @@ class Event < ActiveRecord::Base
                              people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
                              d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
-                             e.event_status_id as event_status_id,
+                             e.event_status_id as event_status_id, e.type as type,
                              e.created_at
                       FROM   
                              events e
@@ -635,10 +663,6 @@ class Event < ActiveRecord::Base
       update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
       reload # Any existing references to this object won't see these changes without this
     end
-  end
-
-  def change_state(new_state)
-    update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', new_state).id)
   end
 
   def Event.exposed_attributes

@@ -47,16 +47,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <tr>
       <% patient = event.active_patient.active_primary_entity.person %>
       <% jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place %></td>
-      <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
+      <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%>
+        <br /><span class='tools'><%= basic_morbidity_event_controls(event, jurisdiction) %></span></td>
       <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
       <td><%= event.event_onset_date %></td>
-      <td><%= l event.event_status %></td>
-      <td><%= jurisdiction.name %></td>
-    </tr>
-    <tr>
-      <td colspan='2' style='border: 0'><%= routing_controls(event, jurisdiction) %></td>
-      <td colspan='2' style='border: 0;'><span class='tools'><%= basic_morbidity_event_controls(event, jurisdiction) %></span></td>
-      <td colspan='1' style='border: 0;'><%= state_controls(event, jurisdiction) %></td>
+      <td><%= l event.event_status %> 
+        <br /><span class='tools'><%= state_controls(event, jurisdiction) %><%= investigator_routing_control(event, jurisdiction) %></span></td>
+      <td><%= jurisdiction.name %>
+        <br /><span class='tools'><%= jurisdiction_routing_control(event, jurisdiction) %></span></td>
     </tr>
   <% end %>
 </table>

@@ -675,7 +675,7 @@ describe MorbidityEvent do
         event = events(:marks_cmr)
         event.patient.should_not be_nil
         event.patient.primary_entity.should_not be_nil
-        event.patient.primary_entity.entities_locations.size.should > 0
+#        event.patient.primary_entity.entities_locations.size.should > 0
         event.update_attributes(h)
         event.should be_valid
       end
@@ -693,4 +693,24 @@ describe MorbidityEvent do
     end
 
   end
+
+  describe "the accept_reject_actions() class method" do
+    it "should map accept and reject to an array of codes containing action words and status ids" do
+      actions = Event.accept_reject_actions
+
+      actions.class.should eql(Array)
+      actions[0].id.should == external_codes(:event_status_accepted_lhd).id
+      actions[0].code_description.should == "Accept"
+      actions[1].id.should == external_codes(:event_status_rejected_lhd).id
+      actions[1].code_description.should == "Reject"
+    end 
+  end
+
+  describe "the map_state_id_to_priv() class method" do
+    it "should return :accept_event_for_lhd when the state_id is ACPTD-LHD or RJCT-LHD" do
+      Event.map_state_id_to_priv(external_codes(:event_status_accepted_lhd)).should == :accept_event_for_lhd
+      Event.map_state_id_to_priv(external_codes(:event_status_rejected_lhd)).should == :accept_event_for_lhd
+    end
+  end
+
 end
