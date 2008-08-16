@@ -132,9 +132,6 @@ module EventsHelper
 
   def state_controls(event, jurisdiction)
     controls = ""
-    p User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id)
-    p event.event_status_id
-    p ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id
     if User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
       controls += form_remote_tag(:url => state_cmr_path(event))
