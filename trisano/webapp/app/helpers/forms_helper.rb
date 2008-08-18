@@ -84,6 +84,9 @@ module FormsHelper
     
     result += "</li>"
     
+    result += "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    
     if include_children && element.children?
       result += "<ul id='view_" + element.id.to_s + "_children' class='fb-tab-children' style='clear: both'>"
       element.children.each do |child|
@@ -93,8 +96,6 @@ module FormsHelper
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
-    result += "<div id='section-mods-" + element.id.to_s + "'></div>"
-    result += "<div id='question-mods-" + element.id.to_s + "'></div>"
   end
   
   def render_core_field(element, include_children=true)
@@ -222,7 +223,7 @@ module FormsHelper
     result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
-      result += "<ul id='question_" + element.id.to_s + "_children'>"
+      result += "<ul id='question_" + element.id.to_s + "_children' class='fb-question-children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
@@ -250,17 +251,17 @@ module FormsHelper
     end
     
     result += ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" unless (element.core_path.blank?)
+    
+    result += " " + add_question_link(element, "follow up container") if (include_children)
         
     if include_children && element.children?
-      result += "<ul id='follow_up_" + element.id.to_s + "_children'>"
+      result += "<ul id='follow_up_" + element.id.to_s + "_children' class='fb-follow-up-children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
       result += "</ul>"
       result += sortable_element("follow_up_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
-    
-    result += " " + add_question_link(element, "follow up container") if (include_children)
     
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     
@@ -283,7 +284,7 @@ module FormsHelper
 
     
     if include_children && element.children?
-      result += "<ul id='value_set_" + element.id.to_s + "_children'>"
+      result += "<ul id='value_set_" + element.id.to_s + "_children' class='fb-value-set-children'>"
       element.children.each do |child|
         result += render_element(child, include_children)
       end
