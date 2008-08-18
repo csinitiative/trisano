@@ -697,7 +697,8 @@ class Event < ActiveRecord::Base
 
       
       # Event-level fields
-      "morbidity_event[results_reported_to_clinician_date]" => {:type => :single_line_text, :name => "Results reported to clinician date"}
+      "morbidity_event[results_reported_to_clinician_date]" => {:type => :single_line_text, :name => "Results reported to clinician date"},
+      "morbidity_event[first_reported_PH_date]" => {:type => :single_line_text, :name => "Date first reported to public health"}
       # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
       
     }

@@ -115,16 +115,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <label>Agency</label>          
           <%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%>
         </span>
-        <span class="horiz">
-          <% core_element_show :results_reported_to_clinician_date, event_form, :horiz do -%>
-            <%= event_form.label(:results_reported_to_clinician_date) %>
-            <%= @event.results_reported_to_clinician_date %>
-          <% end -%>
-        </span>
-        <span class="horiz">
-          <label>Date first reported to public health</label>
+        <% core_element_show :results_reported_to_clinician_date, event_form, :horiz do -%>
+          <%= event_form.label(:results_reported_to_clinician_date) %>
+          <%= @event.results_reported_to_clinician_date %>
+        <% end -%>
+        <% core_element_show :first_reported_PH_date, event_form, :horiz do -%>
+          <%= event_form.label(:first_reported_PH_date, 'Date first reported to public health') %>
           <%= @event.first_reported_PH_date %>
-        </span>
+        <% end -%>
       </fieldset>
     </fieldset>
   </div>
