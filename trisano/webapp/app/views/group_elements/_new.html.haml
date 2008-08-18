@@ -24,6 +24,6 @@
       %p
         = f.submit "Create"
         &nbsp;&nbsp;
-        = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
+        = link_to_function "Close", "$('library-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('library-mods-#{@reference_element.id}'), { duration: 0.1 })"
 
-  = render :partial => "forms/library", :locals => {:direction => :to_library}
+  = render :partial => "forms/library", :locals => {:direction => :to_library, :type => @reference_element.type}

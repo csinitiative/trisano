@@ -509,7 +509,7 @@ describe FormsController do
     end
   end
   
-  describe "handling GET /forms/open_library_admin" do
+  describe "handling GET /forms/library_admin" do
     
     before(:each) do
       mock_user
@@ -518,13 +518,13 @@ describe FormsController do
     end
     
     def do_get
-      get :open_library_admin
+      get :library_admin
     end
 
     it "should render the correct rjs template on success" do
       FormElement.stub!(:roots).and_return(@library_elements)
       do_get
-      response.should render_template('forms/open_library_admin')
+      response.should render_template('forms/library_admin')
     end
     
     it "should assign the found elements for the view" do

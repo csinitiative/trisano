@@ -18,14 +18,14 @@
     - if direction == :to_library
       %h4 Select a group to copy to
     - else
-      %h4 Add a question from the library
+      %h4 Add an element from the library
       
     %label
       Filter Library
       = text_field_tag :lib_filter
 
-    = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list-#{@reference_element.id}", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction }, :with => "'filter_by='+encodeURIComponent(value)")
+    = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list-#{@reference_element.id}", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction, :type => type }, :with => "'filter_by='+encodeURIComponent(value)")
 
   %div{:id => "library-body"}
     %ul{:id => "library-element-list-#{@reference_element.id}"}
-      = render :partial => 'forms/library_elements', :locals => {:direction => direction}
+      = render :partial => 'forms/library_elements', :locals => {:direction => direction, :type => type}

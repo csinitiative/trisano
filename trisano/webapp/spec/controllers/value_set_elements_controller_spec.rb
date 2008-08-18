@@ -148,10 +148,12 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
+      @question_element = mock_model(QuestionElement)
       @value_set_element = mock_model(ValueSetElement)
       ValueSetElement.stub!(:new).and_return(@value_set_element)
       @value_set_element.stub!(:parent_element_id=)
       @value_set_element.stub!(:form_id=)
+      FormElement.stub!(:find).and_return(@question_element)
     end
   
     def do_get
@@ -372,7 +374,7 @@ describe ValueSetElementsController do
 
   end
   
-    describe "handling POST /value_set_elements/toggle_value/1 with failed save" do
+  describe "handling POST /value_set_elements/toggle_value/1 with failed save" do
 
     before(:each) do
       mock_user

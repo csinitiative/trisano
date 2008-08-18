@@ -220,6 +220,7 @@ module FormsHelper
     result += "</li>"
 
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    result += "<div id='library-mods-" + element.id.to_s + "'></div>"
     result += "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
     result += "<div id='value-set-mods-" + element.id.to_s + "'></div>"
 
@@ -276,11 +277,13 @@ module FormsHelper
     result += element.name
     
     if include_children
-      result += "&nbsp;" + edit_value_set_link(element)  
+      result += "&nbsp;" + edit_value_set_link(element)
+      result += "&nbsp;|&nbsp;" + add_to_library_link(element)
     end
     
     result += "&nbsp;|&nbsp;" + delete_value_set_link(element)
     
+    result += "<div id='library-mods-" + element.id.to_s + "'></div>" if include_children
     result += "<div id='value-set-mods-" + element.id.to_s + "'></div>" if include_children
 
     

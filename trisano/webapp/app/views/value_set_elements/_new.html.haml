@@ -13,15 +13,18 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:id => "new-value-set-form"}
 
+%div{:id => "fb-inplace-container", :class => "fb-container"} 
   = error_messages_for :value_set_element
+  %div{:id => "new-value-set-form", :class => 'fb-inplace-form'}
 
-  - remote_form_for(value_set_element, :html => {:name => 'value-set-element-new-form'}) do |f|
+    - remote_form_for(value_set_element, :html => {:name => 'value-set-element-new-form'}) do |f|
 
-    = render :partial => 'form', :locals => { :f => f }
+      = render :partial => 'form', :locals => { :f => f }
 
-    %p
-      = f.submit "Create"
-      &nbsp;&nbsp;
-      = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"
+      %p
+        = f.submit "Create"
+        &nbsp;&nbsp;
+        = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"
+
+  = render :partial => "forms/library", :locals => {:direction => :from_library, :type => :value_set_element}

@@ -85,20 +85,27 @@ class FormElement < ActiveRecord::Base
     e.save!
     parent.add_child e unless parent.nil?
     node_to_copy.children.each do |child|
-      copy_children(child, e, form_id, tree_id, is_template)
+      # Do not copy value sets in a group to non-questions
+      unless (child.is_a?(ValueSetElement) && child.parent.is_a?(GroupElement) && !self.is_a?(QuestionElement))
+        copy_children(child, e, form_id, tree_id, is_template)
+      end      
     end
     e
   end
   
-  def self.filter_library(direction, filter_by=nil)
-    if filter_by.blank?
+  def self.filter_library(options)
+    if options[:filter_by].blank?
       FormElement.roots(:conditions => ["form_id IS NULL"])
     else
-      filter_by = sanitize_sql(["%s", filter_by])
-      if direction.to_sym == :to_library
-        FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE '%#{filter_by}%'")
+      if options[:direction].to_sym == :to_library
+        FormElement.find_by_sql(["SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE ?", "%#{options[:filter_by]}%"])
       else
-        FormElement.find_by_sql("SELECT * FROM form_elements WHERE form_id IS NULL AND id IN (SELECT form_element_id FROM questions WHERE question_text ILIKE '%#{filter_by}%')")
+        raise Exception.new("No type specified for a from library filter") if options[:type].blank?
+        if (options[:type] == :question_element)
+          FormElement.find_by_sql(["SELECT * FROM form_elements WHERE form_id IS NULL AND type = ? AND id IN (SELECT form_element_id FROM questions WHERE question_text ILIKE ?)", options[:type].to_s.camelcase, "%#{options[:filter_by]}%"])
+        else
+          FormElement.find_by_sql(["SELECT * FROM form_elements WHERE form_id IS NULL AND type = ? AND name ILIKE ?", options[:type].to_s.camelcase, "%#{options[:filter_by]}%"])
+        end
       end
     end
     

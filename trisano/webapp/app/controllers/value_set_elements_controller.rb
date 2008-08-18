@@ -40,6 +40,9 @@ class ValueSetElementsController <  AdminController
       @value_set_element = ValueSetElement.new
       @value_set_element.parent_element_id = params[:form_element_id]
       @value_set_element.form_id = params[:form_id]
+      
+      @reference_element = FormElement.find(params[:form_element_id])
+      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the value set form at this time.'

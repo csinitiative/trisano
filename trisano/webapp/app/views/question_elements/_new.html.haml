@@ -39,6 +39,6 @@
         &nbsp;&nbsp;
         = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
 
-  = render :partial => "forms/library", :locals => {:direction => :from_library}
+  = render :partial => "forms/library", :locals => {:direction => :from_library, :type => :question_element}
 
  

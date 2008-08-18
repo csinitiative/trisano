@@ -99,9 +99,15 @@ class FormElementsController <  AdminController
   end
   
   def filter_elements
-    @reference_element = FormElement.find(params[:reference_element_id])
-    direction = params[:direction]
-    @library_elements = FormElement.filter_library(direction, params[:filter_by])
-    render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym}
+    begin
+      @reference_element = FormElement.find(params[:reference_element_id])
+      direction = params[:direction]
+      @library_elements = FormElement.filter_library(:direction => direction, :filter_by => params[:filter_by], :type => params[:type].to_sym)
+      render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym, :type => params[:type].to_sym}
+    rescue Exception => ex
+      logger.debug ex
+      flash[:notice] = 'An error occurred during the filtering process.'
+      render :template => 'rjs-error'
+    end
   end
 end
