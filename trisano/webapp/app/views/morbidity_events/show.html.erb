@@ -130,48 +130,62 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <div id="administrative_tab">
     <fieldset>
       <legend>Administrative Information</legend>  
-      <table cellpadding="2">
-        <tr>
-          <td><span class="label">Record number:</span></td>
-          <td><%= @event.record_number %></td>
-          <td><span class="label">Date record created:</span></td>
-          <td><%= @event.event_onset_date %></td>
-        </tr>  
-        <tr>
-          <td><span class="label">MMWR year:</span></td>
-          <td><%= @event.MMWR_year %></td>
-          <td><span class="label">MMWR week:</span></td>
-          <td><%= @event.MMWR_week %></td>
-        </tr>
-        
-        <tr>
-          <td><span class="label">LHD case status:</span></td>
-          <td><%= l @event.lhd_case_status %></td>
-          <td><span class="label">UDOH case status:</span></td>
-          <td><%= l @event.udoh_case_status %></td>
-        </tr>
-        <tr>
-          <td><span class="label">Outbreak associated:</span></td>
-          <td><%= l @event.outbreak_associated %></td>
-          <td><span class="label">Outbreak name:</span></td>
-          <td><%= @event.outbreak_name %></td>
-        </tr>
-        <td><span class="label">Jurisdiction responsible for investigation:</span></td>
-        <td><%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%></td>
-        <td><span class="label">Event name:</span></td>
-        <td><%= @event.event_name %></td>  
-        <tr>
-          <td><span class="label">Event status:</span></td>
-          <td><%= l @event.event_status %></td>
-          <td><span class="label">Date investigation started:</span></td>
-          <td><%= @event.investigation_started_date %></td>
-        </tr>
-          <td><span class="label">Date invesitgation completed:</span></td>
-          <td><%= @event.investigation_completed_LHD_date %></td>
-          <td><span class="label">Date review completed by UDOH:</span></td>
-          <td><%= @event.review_completed_UDOH_date %></td>
-        </tr>
-      </table>
+      <span class="horiz">
+        <label>Record number</label>
+        <%= @event.record_number %>
+      </span>
+      <span class="vert">
+        <label>Date record created</label>
+        <%= @event.event_onset_date %>
+      </span>
+      <span class="horiz">
+        <label>MMWR year</label>
+        <%= @event.MMWR_year %>
+      </span>
+      <span class="vert">
+        <label>MMWR week</label>
+        <%= @event.MMWR_week %>
+      </span>
+      <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
+        <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
+        <%= l @event.lhd_case_status %>
+      <% end -%>
+      <span class="vert">
+        <label>UDOH case status</label>
+        <%= l @event.udoh_case_status %>
+      </span>
+      <span class="horiz">
+        <label>Outbreak associated</label>
+        <%= l @event.outbreak_associated %>
+      </span>
+      <span class="vert">
+        <label>Outbreak name</label>
+        <%= @event.outbreak_name %>
+      </span>
+      <span class="horiz">
+        <label>Jurisdiction responsible for investigation</label>
+        <%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%>
+      </span>
+      <span class="vert">
+        <label>Event name</label>
+        <%= @event.event_name %>
+      </span>
+      <span class="horiz">
+        <label>Event status</label>
+        <%= l @event.event_status %>
+      </span>
+      <span class="vert">
+        <label>Date investigation started</label>
+        <%= @event.investigation_started_date %>
+      </span>
+      <span class="horiz">
+        <label>Date invesitgation completed</label>
+        <%= @event.investigation_completed_LHD_date %>
+      </span>
+      <span class="vert">
+        <label>Date review completed by UDOH</label>
+        <%= @event.review_completed_UDOH_date %>
+      </span>
     </fieldset>
   </div>
   
