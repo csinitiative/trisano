@@ -95,7 +95,8 @@ module FormsHelper
       result += "</ul>"
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
-    
+  
+  result  
   end
   
   def render_core_field(element, include_children=true)

@@ -696,6 +696,7 @@ describe MorbidityEvent do
 
   describe "the accept_reject_actions() class method" do
     it "should map accept and reject to an array of codes containing action words and status ids" do
+    pending
       actions = Event.accept_reject_actions
 
       actions.class.should eql(Array)

@@ -34,46 +34,61 @@
   :border-width 0px 0px 0px 0px
 
 #formbuilder-body
-  :padding 10px 20px 0px 0px
+  :padding 0px 20px 0px 0px
   :margin-right 220px
   
 #sidebar
   :width 215px
   :float right
-  :padding 20px 5px 0px 0px
-
-
-
+  :padding 0px 5px 0px 0px
 
 #buidler-mods
 #root-element-list
-  :padding 0px 0px 6px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 1px 1px 0px
+  :padding 8px 0px 0px 0px
+  ul
+    :margin 0px 0px 0px 0px
+    :padding 0px 0px 0px 0px
+  li
+    :margin 0px 0px 0px 0px
+    :padding 5px 0px 10px 10px
 #core-builder-mods
 #core-element-list
-  :padding 0px 0px 20px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 1px 1px 1px
+  :padding 8px 0px 0px 0px
+  ul
+    :margin 0px 0px 0px 0px
+    :padding 0px 0px 0px 0px
+  li
+    :margin 0px 0px 0px 0px
+    :padding 5px 0px 10px 10px
 #core-filed-builder-mods
 #core-field-element-list
-  :padding 0px 0px 20px 0px
-  :background-color #fff
-  /:border-color #c00
-  /:border dotted
-  /:border-width 1px 0px 0px 0px
+  :padding 8px 0px 0px 0px
+  ul
+    :margin 0px 0px 0px 0px
+    :padding 0px 0px 0px 0px
+  li
+    :margin 0px 0px 0px 0px
+    :padding 5px 0px 10px 10px
 
+#form_children 
+.sortable
 
-
+.add-section
+  :color #333
+.add-question
+  :color #333
+.add-follow-up
+  :color #333
+.delete-view
+  :color #333
+.edit-question
+  :color #333  
+.add-value-set
+  :color #333
 
 #fb-inplace-container
   :width 90%
   :padding 0px 0px 0px 10px
-  /:background-color #ccc
 
 .fb-container
   :padding 0px 0px 0px 0px
@@ -143,110 +158,125 @@
   :overflow auto
   :overflow-x hidden
 
-.sortable
-  :border-color #ccc
-
 .fb-tab
   :color #333
-  :height 23px
-  :background-color #81c348
-  :padding 0px 0px 0px 10px
+  :background-color #d3d3d3
   
-.fb-tab-children
-  :padding 0px 0px 0px 0px
-  /:background-color #fff
-  
-.question
-  :color #0068af
-  :padding 0px 0px 0px 18px
+/=dotline
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
+    
+=clearfix
+  *display:                 inline-block
+  &:after
+    content:                " "
+    display:                block
+    height:                 0
+    clear:                  both
+    visibility:             hidden
 
-.fb-value-set
-  :border-color #ccc
-  :color #f58052
-  /:background #87b8d9
-  :padding 0px 0px 6px 18px
+
+.fb-tab-children
+  :color #ccc
+  :background-color #fff
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
 
 .fb-section
   :color #333
-  :background #b4dc66
-  :padding 0px 0px 0px 10px
+  :background #e8e8e8
 
 .fb-section-children
-  /:background #8DC3E9
-  :padding 0px 0px 6px 0px
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
+
+.question
+  :color #c00
   
+.fb-question-children
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
+  
+.fb-value-set
+  :color #666
+  
+.fb-value-set-children
+  /+clearfix
+  ul
+    :margin 0px 30px 0px 0px
+    :padding 0px 30px 0px 0px
+  li
+    :border-color #c00
+    :border dotted
+    :border-width 0px 0px 1px 0px
+
+.follow-up-item
+  :color #666
+  
+.follow-up-children
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
+
 .fb-core-form
   :color #333
-  :height 23px
-  :background-color #4C88BE
-  :padding 0px 0px 0px 10px
-  
+  :background-color #b4dc66
+
 .fb-core-form-children
-  :padding 0px 0px 12px 0px
-  
+  :background-color #fff
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
+
 .fb-core-field
-  :color #333
-  :height 23px
-  :background-color #4C88BE
-  :padding 0px 0px 0px 10px
+  :background-color #b4dc66
   
 .fb-core-field-children
-  :padding 0px 0px 12px 0px
+  :background-color #fff
+  li
+    :border-color #ccc
+    :border dotted
+    :border-width 0px 0px 1px 0px
 
 .fb-before-core-field
-  :color #333
-  :height 23px
-  :background-color #87b8d9
-  :padding 0px 0px 0px 10px
+  :background-color #d0f191
 
 .fb-after-core-field
-  :color #333
-  :height 23px
-  :background-color #87b8d9
-  :padding 0px 0px 0px 10px
+  :background-color #d0f191
 
 .fb-group
   :color #093
 
 .fb-core-code-item
   :background-color #87b8d9
- 
+
 #edit-question-form
   :padding 0px 0px 5px 18px
 
 .edit_question_element
 
-.add-section
-  :color #333
-  
-.add-question
-  :color #333
-  
-.add-follow-up
-  :color #333
-  
-.edit-question
-  :color #333
-  
-.add-value-set
-  :color #333
-  
-.follow-up-item
-  :color #999
-  :padding 4px 0px 4px 20px
-  
 .fb-add-tab
   :color #333
 
 .fb-add-to-library
   :color #333
-  
+
 .fb-edit-value-set
   :color #333
-  
+
 .fb-add-core-tab
   :color #333
-  
+
 .fb-add-core-field
   :color #333
 
@@ -256,7 +286,7 @@ ul
   
 li
   :margin 0px 0px 0px 0px
-  :padding 0px 0px 3px 0px
+  :padding 0px 0px 0px 0px
   
 
 //typography
