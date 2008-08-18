@@ -106,7 +106,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
               <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
                 <%= person_form.label(:age) %>
                 <%= calculate_age(p.birth_date) %>
-              <% end -%>>
+              <% end -%>
             <% elsif not p.approximate_age_no_birthday.blank?  %>
               <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
                 <%= person_form.label(:approximage_age) %>

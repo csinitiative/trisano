@@ -97,38 +97,35 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <div id="reporting_tab">
     <fieldset>
       <legend>Reporting Information</legend>
-      <table>
-        <tr>
-          <td><span class="label">Name of reporter:</span></td>
-          <td><%= @event.reporter.active_secondary_entity.person.first_name unless @event.reporter.nil? -%>
-          <%= @event.reporter.active_secondary_entity.person.last_name unless @event.reporter.nil? %></td>
-          <td><span class="label">Reporting agency:</span></td>
-          <td><%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%></td>
-        </tr>
-        <tr>
-          <td><span class="label">Reporter phone number:</span></td>
-          <td><% p = @event.reporter.active_secondary_entity.telephone unless @event.reporter.nil? %>
-            <% if not p.nil? %>
-              <%= fml " (", p.area_code, ") " if p.area_code -%>
-              <%= phone_number(p.phone_number) -%>
-              <%= fml " Ext. ", p.extension, "" if p.extension -%>
-            <% end %></td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td><span class="label">Date results reported to Clinician:</span></td>
-          <td><%= @event.results_reported_to_clinician_date %></td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td><span class="label">Date first reported to public health:</span></td>
-          <td><%= @event.first_reported_PH_date %></td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-      </table>
+      <fieldset class="form">
+        <legend>Reporter</legend>
+        <span class="horiz">
+          <label>Name</label>
+          <%= @event.reporter.active_secondary_entity.person.first_name unless @event.reporter.nil? -%>
+          <%= @event.reporter.active_secondary_entity.person.last_name unless @event.reporter.nil? %>
+        </span>
+        <span class="horiz">
+          <label>Telephone</label>
+          <%= @event.reporter.active_secondary_entity.telephone.simple_format if @event.reporter && @event.reporter.active_secondary_entity.telephone %>
+        </span>
+      </fieldset>
+      <fieldset class="form">
+        <legend>Reporting Agency</legend>        
+        <span class="horiz">
+          <label>Agency</label>          
+          <%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%>
+        </span>
+        <span class="horiz">
+          <% core_element_show :results_reported_to_clinician_date, event_form, :horiz do -%>
+            <%= event_form.label(:results_reported_to_clinician_date) %>
+            <%= @event.results_reported_to_clinician_date %>
+          <% end -%>
+        </span>
+        <span class="horiz">
+          <label>Date first reported to public health</label>
+          <%= @event.first_reported_PH_date %>
+        </span>
+      </fieldset>
     </fieldset>
   </div>
   
