@@ -195,10 +195,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= event_form.label :event_name %>
           <%= h(@event.event_name) || '&nbsp;' %>
         <% end -%>
-        <span class="horiz">
-          <label>Date review completed by UDOH</label>
-          <%= @event.review_completed_UDOH_date %>
-        </span>
+        <% core_element_show :review_completed_UDOH_date, event_form, :horiz do -%>
+          <%= event_form.label :review_completed_UDOH_date, 'Date review completed by UDOH' %>
+          <%= h(@event.review_completed_UDOH_date) || '&nbsp;' %>
+        <% end -%>
       </fieldset>
     </fieldset>
   </div>
