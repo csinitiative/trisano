@@ -63,10 +63,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
         <% end -%>
       <% end %>
-      <span class="horiz">
+      <% core_element :event_status_id, f, :horixz do -%>
         <%= f.label(:event_status_id) %>
         <%= f.dropdown_code_field(:event_status_id, 'eventstatus', {:include_blank => false}) %>
-      </span>
+      <% end -%>
       <span class="horiz">
         <%= f.label(:investigation_started_date, "Date investigation started") %>
         <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>

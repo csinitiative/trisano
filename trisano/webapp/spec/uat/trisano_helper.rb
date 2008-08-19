@@ -426,7 +426,7 @@ module TrisanoHelper
   end
   
   def add_core_field_config(browser, core_field_name)
-    browser.click("link=Add a Core Field Configuration")
+    browser.click("link=Add a core field configuration")
     wait_for_element_present("new-core-field-form", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
     browser.click("core_field_element_submit")
