@@ -25,17 +25,34 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <div id='ra_info_form'>
     
     <fieldset class="vert">
-      <span class="horiz">
-        <label for="morbidity_event_active_reporting_agency__active_secondary_entity__place__name">Reporting Agency</label>
-        
-        <%= model_auto_completer "morbidity_event[active_reporting_agency][active_secondary_entity][place][name]", 
-          @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.name, 
-          "morbidity_event[active_reporting_agency][secondary_entity_id]", 
-          @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.entity_id, 
-          { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'},
-          { :size => 25 }, 
-          { :skip_style => false } %>
-      </span>
+      
+      <%
+      if @event.active_reporting_agency.nil?
+        agency_data = Participation.new(:active_secondary_entity => {:current_place => Place.new}) 
+      else
+        agency_data = @event.active_reporting_agency
+      end
+    %>
+      
+      <% f.fields_for(:active_reporting_agency, agency_data, :builder => ExtendedFormBuilder) do |agency_form| %>
+        <% agency_form.fields_for(:active_secondary_entity, agency_data.active_secondary_entity, :builder => ExtendedFormBuilder) do |entity_form| %>
+          <% entity_form.fields_for(:place, agency_data.active_secondary_entity.place, :builder => ExtendedFormBuilder) do |place_form| %>
+      
+            <% core_element :name, place_form, :horiz do %>
+              <%= agency_form.label("Reporting Agency?") %>
+              <%= model_auto_completer "morbidity_event[active_reporting_agency][active_secondary_entity][place][name]", 
+                @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.name, 
+                "morbidity_event[active_reporting_agency][secondary_entity_id]", 
+                @event.active_reporting_agency.nil? ? "" : @event.active_reporting_agency.active_secondary_entity.place.entity_id, 
+                { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'},
+                { :size => 25 }, 
+                { :skip_style => false } %>
+            <% end %>
+      
+          <% end %>
+        <% end %>
+      <% end %>
+      
       
       <% f.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
         <% if @event.active_reporter.nil? %>
@@ -53,14 +70,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       
         <% participant_fields.fields_for(:active_secondary_entity, entity_data, :builder => ExtendedFormBuilder) do |agency_fields| %>
           <% agency_fields.fields_for(:person, reporter_data, :builder => ExtendedFormBuilder) do |reporter_fields| %>
-            <span class="horiz">
+            <% core_element :first_name, reporter_fields, :horiz do %>
               <%= reporter_fields.label(:first_name, "Reporter first name") %>
               <%= reporter_fields.text_field(:first_name, :size => 25) %>
-            </span>
-            <span class="horiz">
+            <% end %>
+            <% core_element :last_name, reporter_fields, :horiz do %>
               <%= reporter_fields.label(:last_name, "Reporter last name") %>
               <%= reporter_fields.text_field(:last_name, :size => 25) %>
-            </span>
+            <% end %>
           <% end %>
         </fieldset>
     
@@ -74,25 +91,25 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= el.hidden_field(:entity_id) %>
             <%= el.hidden_field(:primary_yn_id) %>
             <%= el.hidden_field(:location_type_id) %>
-            <span class="horiz">
+            <% core_element :entity_location_type_id, el, :horiz do %>
               <%= el.label(:entity_location_type_id, "Phone type") %>
               <%= el.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event, @can_investigate) %>
-            </span>
+            <% end %>
           <% end %>
       
           <% agency_fields.fields_for(:telephone, entity_data.telephone, :builder => ExtendedFormBuilder) do |phone_fields| %>
-            <span class="horiz">
+            <% core_element :area_code, phone_fields, :horiz do %>
               <%= phone_fields.label(:area_code) %>
               <%= phone_fields.text_field(:area_code, :size => 3, :maxlength => 3, :class => 'autotab') %>
-            </span>
-            <span class="horiz">
+            <% end %>
+            <% core_element :phone_number, phone_fields, :horiz do %>
               <%= phone_fields.label(:phone_number) %>
               <%= phone_fields.text_field(:phone_number, :size => 8) %>
-            </span>
-            <span class="horiz">
+            <% end %>
+            <% core_element :extension, phone_fields, :horiz do %>
               <%= phone_fields.label(:extension) %>
               <%= phone_fields.text_field(:extension, :size => 6) %>
-            </span>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>

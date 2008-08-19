@@ -191,6 +191,7 @@ module EventsHelper
   private
   
   def concat_core_field(before_or_after, attribute, form_builder, block)
+    # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     unless (@can_investigate == false || @event.nil? || @event.form_references.nil?)
       @event.form_references.each do |form_reference|
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")

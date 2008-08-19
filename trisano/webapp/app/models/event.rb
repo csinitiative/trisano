@@ -683,7 +683,8 @@ class Event < ActiveRecord::Base
       "morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Patient birth gender" },
       "morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Patient ethnicity" },
       "morbidity_event[active_patient][active_primary_entity][person][primary_language_id]" => {:type => :single_line_text, :name => "Patient primary language" },
-
+      # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" }
+      
       # Risk factors
       "morbidity_event[active_patient][participations_risk_factor][pregnant_id]" => {:type => :drop_down, :name => "Pregnant" },
       "morbidity_event[active_patient][participations_risk_factor][pregnancy_due_date]" => {:type => :date, :name => "    Pregnancy due date" },
@@ -695,7 +696,6 @@ class Event < ActiveRecord::Base
       "morbidity_event[active_patient][participations_risk_factor][risk_factors]" => {:type => :single_line_text, :name => "Risk factors" },
       "morbidity_event[active_patient][participations_risk_factor][risk_factors_notes]" => {:type => :multi_line_text, :name => "Risk factors notes" },
 
-      
       # Event-level fields
       "morbidity_event[results_reported_to_clinician_date]" => {:type => :single_line_text, :name => "Results reported to clinician date"},
       "morbidity_event[first_reported_PH_date]" => {:type => :single_line_text, :name => "Date first reported to public health"},
@@ -709,8 +709,16 @@ class Event < ActiveRecord::Base
       "morbidity_event[investigation_completed_LHD_date]" => {:type => :single_line_text, :name => 'Date investigation completed'},
       "morbidity_event[event_name]" => {:type => :single_line_text, :name => 'Event name'},
       "morbidity_event[review_completed_UDOH_date]" => {:type => :single_line_text, :name => 'Date review completed by UDOH'},
-      "morbidity_event[imported_from_id]" => {:type => :drop_down, :name => 'Imported from'}
-      # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
+      "morbidity_event[imported_from_id]" => {:type => :drop_down, :name => 'Imported from'},
+     
+      # Reporting-level fields
+      "morbidity_event[active_reporting_agency][active_secondary_entity][place][name]" => {:type => :drop_down, :name => 'Reporting agency'},
+      "morbidity_event[active_reporter][active_secondary_entity][person][first_name]" => {:type => :drop_down, :name => 'Reporter first name'},
+      "morbidity_event[active_reporter][active_secondary_entity][person][last_name]" => {:type => :drop_down, :name => 'Reporter last name'},
+      "morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]" => {:type => :drop_down, :name => 'Reporter phone type'},
+      "morbidity_event[active_reporter][active_secondary_entity][telephone][area_code]" => {:type => :drop_down, :name => 'Reporter area code'},
+      "morbidity_event[active_reporter][active_secondary_entity][telephone][phone_number]" => {:type => :drop_down, :name => 'Reporter phone number'},
+      "morbidity_event[active_reporter][active_secondary_entity][telephone][extension]" => {:type => :drop_down, :name => 'Reporter extension'}
       
     }
   end
