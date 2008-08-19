@@ -63,13 +63,13 @@
     %ul{:id => "core-field-element-list"}
       = render :partial => 'forms/core_field_elements'
 #sidebar
-  = link_to 'Edit Form Information', edit_form_path(@form)
+  = link_to 'Edit form information', edit_form_path(@form)
   %br
-  = link_to_remote("Add a Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
+  = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
   %br
-  = link_to_remote("Add a Core Tab Configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
+  = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
   %br
-  = link_to_remote("Add a Core Field Configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
+  = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
   %br
   = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
   #library-admin

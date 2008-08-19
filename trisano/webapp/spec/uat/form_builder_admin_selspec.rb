@@ -232,7 +232,7 @@ def to_and_from_library_new_group
   @browser.type "group_element_name", group_name
   @browser.click "group_element_submit"    
   sleep(2)
-  @browser.click "link=Add question to: #{group_name}"
+  @browser.click "link=Add element to: #{group_name}"
   sleep(2)
   num_times_text_appears(@browser, @question_to_add_to_library_text).should == 4
   @browser.click "link=Close"
