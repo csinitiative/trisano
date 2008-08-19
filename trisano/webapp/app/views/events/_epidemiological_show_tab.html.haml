@@ -50,8 +50,7 @@
         - core_element_show :risk_factors_notes, risk_factor_form, :horiz do
           = risk_factor_form.label(:risk_factors_notes)
           = @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-
-    %span{:class => 'horiz'}
-      %label
-        Imported from
+          
+    - core_element_show :imported_from_id, event_form, :horiz do
+      = event_form.label(:imported_from_id)
       = l @event.imported_from

@@ -63,10 +63,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           </fieldset>
         <% end %>
       <% end %>
-      <span class="horiz">
+      <% core_element :imported_from_id, f, :horiz do -%>
         <%= f.label(:imported_from_id) %>
         <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
-      </span>
+      <% end -%>
 
     </fieldset>
   </div>

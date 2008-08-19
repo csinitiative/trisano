@@ -708,7 +708,8 @@ class Event < ActiveRecord::Base
       "morbidity_event[investigation_started_date]" => {:type => :single_line_text, :name => 'Date investigation started'},
       "morbidity_event[investigation_completed_LHD_date]" => {:type => :single_line_text, :name => 'Date investigation completed'},
       "morbidity_event[event_name]" => {:type => :single_line_text, :name => 'Event name'},
-      "morbidity_event[review_completed_UDOH_date]" => {:type => :single_line_text, :name => 'Date review completed by UDOH'}
+      "morbidity_event[review_completed_UDOH_date]" => {:type => :single_line_text, :name => 'Date review completed by UDOH'},
+      "morbidity_event[imported_from_id]" => {:type => :drop_down, :name => 'Imported from'}
       # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
       
     }
