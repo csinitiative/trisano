@@ -704,7 +704,8 @@ class Event < ActiveRecord::Base
       "morbidity_event[outbreak_associated_id]" => {:type => :drop_down, :name => 'Outbreak associated'},
       "morbidity_event[outbreak_name]" => {:type => :single_line_text, :name => 'Outbreak'},
       "morbidity_event[active_jurisdiction][secondary_entity_id]" => {:type => :multi_select, :name => 'Jurisdiction responsible for investigation'},
-      "morbidity_event[event_status_id]" => {:type => :drop_down, :name => 'Event status'}
+      "morbidity_event[event_status_id]" => {:type => :drop_down, :name => 'Event status'},
+      "morbidity_event[investigation_started_date]" => {:type => :single_line_text, :name => 'Date investigation started'}
       # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
       
     }

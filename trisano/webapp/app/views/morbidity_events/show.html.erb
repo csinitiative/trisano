@@ -179,10 +179,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= event_form.label :event_status_id, 'Event status' %>
           <%= l @event.event_status %>
         <% end -%>
-        <span class="horiz">
-          <label>Date investigation started</label>
+        <% core_element_show :investigation_started_date, event_form, :horiz do -%>
+          <%= event_form.label :investigation_started_date, 'Date investigation started' %>
           <%= @event.investigation_started_date %>
-        </span>
+        <% end -%>
         <span class="horiz">
           <label>Date invesitgation completed</label>
           <%= @event.investigation_completed_LHD_date %>
