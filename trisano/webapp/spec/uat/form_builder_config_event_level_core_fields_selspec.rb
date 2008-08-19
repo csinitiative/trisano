@@ -20,7 +20,8 @@ describe 'Add disease-specific questions around any event-level field' do
    {:name => 'Outbreak', :tab_name => 'administrative_tab'},
    {:name => 'Jurisdiction responsible for investigation', :tab_name => 'administrative_tab'},
    {:name => 'Event status', :tab_name => 'administrative_tab'},
-   {:name => 'Date investigation started', :tab_name => 'administrative_tab'}
+   {:name => 'Date investigation started', :tab_name => 'administrative_tab'},
+   {:name => 'Date investigation completed', :tab_name => 'administrative_tab'}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
