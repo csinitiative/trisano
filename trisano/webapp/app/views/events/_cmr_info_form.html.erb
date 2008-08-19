@@ -41,27 +41,27 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= f.label(:lhd_case_status_id, "LHD case status") %>
         <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
       <% end -%>
-      <span class="horiz">
+      <% core_element :udoh_case_status_id, f, :horiz do -%>
         <%= f.label(:udoh_case_status_id, "UDOH case status") %>
         <%= f.dropdown_code_field(:udoh_case_status_id, 'case', {}) %>
-      </span>
-      <span class="horiz">
+      <% end -%>
+      <% core_element :outbreak_associated_id, f, :horiz do -%>
         <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
         <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}) %>
-      </span>
-      <span class="horiz">
+      <% end -%>
+      <% core_element :outbreak_name, f, :horiz do -%>
         <%= f.label(:outbreak_name, "Outbreak") %>
         <%= f.text_field(:outbreak_name, :size => 25) %>
-      </span>
+      <% end -%>
     </fieldset>
     <fieldset class="form">
       <legend>Investigation</legend>
       <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
-        <span class="horiz">
+        <% core_element :secondary_entity_id, j, :horiz do -%>
           <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
           <% jurisdictions = User.current_user.jurisdictions_for_privilege(:update_event) %> 
           <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
-        </span>
+        <% end -%>
       <% end %>
       <span class="horiz">
         <%= f.label(:event_status_id) %>

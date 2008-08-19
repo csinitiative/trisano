@@ -699,7 +699,11 @@ class Event < ActiveRecord::Base
       # Event-level fields
       "morbidity_event[results_reported_to_clinician_date]" => {:type => :single_line_text, :name => "Results reported to clinician date"},
       "morbidity_event[first_reported_PH_date]" => {:type => :single_line_text, :name => "Date first reported to public health"},
-      "morbidity_event[lhd_case_status_id]" => {:type => :drop_down, :name => 'LHD case status'}
+      "morbidity_event[lhd_case_status_id]" => {:type => :drop_down, :name => 'LHD case status'},
+      "morbidity_event[udoh_case_status_id]" => {:type => :drop_down, :name => 'UDOH case status'},
+      "morbidity_event[outbreak_associated_id]" => {:type => :drop_down, :name => 'Outbreak associated'},
+      "morbidity_event[outbreak_name]" => {:type => :single_line_text, :name => 'Outbreak'},
+      "morbidity_event[active_jurisdiction][secondary_entity_id]" => {:type => :multi_select, :name => 'Jurisdiction responsible for investigation'}
       # "morbidity_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" },
       
     }

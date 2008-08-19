@@ -146,46 +146,60 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <label>MMWR week</label>
         <%= @event.MMWR_week %>
       </span>
-      <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
-        <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
-        <%= l @event.lhd_case_status %>
-      <% end -%>
-      <span class="vert">
-        <label>UDOH case status</label>
-        <%= l @event.udoh_case_status %>
-      </span>
-      <span class="horiz">
-        <label>Outbreak associated</label>
-        <%= l @event.outbreak_associated %>
-      </span>
-      <span class="vert">
-        <label>Outbreak name</label>
-        <%= @event.outbreak_name %>
-      </span>
-      <span class="horiz">
-        <label>Jurisdiction responsible for investigation</label>
-        <%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%>
-      </span>
-      <span class="vert">
-        <label>Event name</label>
-        <%= @event.event_name %>
-      </span>
-      <span class="horiz">
-        <label>Event status</label>
-        <%= l @event.event_status %>
-      </span>
-      <span class="vert">
-        <label>Date investigation started</label>
-        <%= @event.investigation_started_date %>
-      </span>
-      <span class="horiz">
-        <label>Date invesitgation completed</label>
-        <%= @event.investigation_completed_LHD_date %>
-      </span>
-      <span class="vert">
-        <label>Date review completed by UDOH</label>
-        <%= @event.review_completed_UDOH_date %>
-      </span>
+      
+      <fieldset class="form">
+      <legend>Case / Outbreak</legend>
+        <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
+          <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
+          <%= l @event.lhd_case_status %>
+        <% end -%>
+        <% core_element_show :udoh_case_status_id, event_form, :vert do -%>
+          <%= event_form.label(:udoh_case_status_id, 'UDOH case status') %>
+          <%= l @event.udoh_case_status %>
+        <% end -%>
+        <% core_element_show :outbreak_associated_id, event_form, :horiz do -%>
+          <%= event_form.label :outbreak_associated_id, 'Outbreak associated' %>
+          <%= l @event.outbreak_associated %>
+        <% end -%>
+        <% core_element_show :outbreak_name, event_form, :vert do -%>
+          <%= event_form.label :outbreak_name %>
+          <%= @event.outbreak_name %>
+        <% end -%>
+      </fieldset>
+
+      <fieldset class="form">
+        <legend>Investigation</legend>
+        <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| -%>
+          <% core_element_show :secondary_entity_id, j, :horiz do -%>
+            <%= j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') %>
+            <%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%>
+          <% end -%>
+        <% end -%>
+        <span class="horiz">
+          <label>Event status</label>
+          <%= l @event.event_status %>
+        </span>
+        <span class="horiz">
+          <label>Date investigation started</label>
+          <%= @event.investigation_started_date %>
+        </span>
+        <span class="horiz">
+          <label>Date invesitgation completed</label>
+          <%= @event.investigation_completed_LHD_date %>
+        </span>
+      </fieldset>
+
+      <fieldset class="form">
+        <legend>Auditing</legend>
+        <span class="horiz">
+          <label>Event name</label>
+          <%= @event.event_name %>
+        </span>
+        <span class="horiz">
+          <label>Date review completed by UDOH</label>
+          <%= @event.review_completed_UDOH_date %>
+        </span>
+      </fieldset>
     </fieldset>
   </div>
   
