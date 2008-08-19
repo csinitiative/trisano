@@ -41,7 +41,7 @@ describe 'Form Builder Admin' do
     add_question_to_library(@browser, @no_group_question_text)
     add_question_to_view(@browser, "Default View", {:question_text => @group_question_text, :data_type => "Single line text"})
     add_question_to_library(@browser, @group_question_text, @group_name)
-    open_form_builder_library(@browser).should be_true
+    open_form_builder_library_admin(@browser).should be_true
     delete_question(@browser, @no_group_question_text).should be_true
     delete_question(@browser, @group_question_text).should be_true
   end

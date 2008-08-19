@@ -301,7 +301,7 @@ module TrisanoHelper
   end
   
   # Must be called from the builder view
-  def open_form_builder_library(browser)
+  def open_form_builder_library_admin(browser)
     browser.click("fb-open-library-admin")
     wait_for_element_present("library-admin-container")
     return(browser.is_text_present("Library Administration"))
@@ -401,6 +401,22 @@ module TrisanoHelper
     end
   end
   
+  def add_value_set_from_library_to_question(browser, question_text, value_set_name)
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-value-set-#{element_id}")
+    wait_for_element_present("new-value-set-form", browser)
+    browser.type "lib_filter", value_set_name
+    browser.click "link=#{value_set_name}"
+    wait_for_element_not_present("new-value-set-form")
+
+    # Debt: Not the best test since it could be on the form already
+    if browser.is_text_present(value_set_name)
+      return true
+    else
+      return false      
+    end
+  end
+  
   def add_core_tab_configuration(browser, core_view_name)
     browser.click("link=Add a core tab configuration")
     wait_for_element_present("new-core-view-form", browser)
@@ -418,8 +434,26 @@ module TrisanoHelper
   end
   
   def add_question_to_library(browser, question_text, group_name=nil)
-    
     element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-element-to-library-#{element_id}")
+    wait_for_element_present("new-group-form")
+
+    if (group_name.nil?)
+      browser.click "link=No Group"
+    else
+      browser.type "group_element_name", group_name
+      browser.click "group_element_submit"  
+      sleep(2)
+      browser.click "link=Add element to: #{group_name}"
+    end
+   
+    sleep(2)
+    browser.click "link=Close"
+    # Debt: Find something to do an assertion off of
+  end
+  
+  def add_value_set_to_library(browser, value_set_name, group_name=nil)
+    element_id = get_form_element_id(browser, value_set_name, VALUE_SET_ID_PREFIX)
     browser.click("add-element-to-library-#{element_id}")
     wait_for_element_present("new-group-form")
 
