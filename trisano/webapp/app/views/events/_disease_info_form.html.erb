@@ -23,25 +23,25 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id ='disease_info_form'>
-
+    
     <fieldset class="form">
       <legend>Disease</legend>
       <%= error_messages_for :object => @event.disease %>
       <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
-        <span class="horiz">
+        <% core_element :disease_id, d, :horiz do %>
           <%= d.label(:disease_id, "Disease") %>
           <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
-        </span>
-        <span class="horiz">
+        <% end %>
+        <% core_element :disease_onset_date, d, :horiz do %>
           <%= d.label(:disease_onset_date, "Onset date") %>
           <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
-        </span>
-        <span class="horiz">
+        <% end %>
+        <% core_element :date_diagnosed, d, :horiz do %>
           <%= d.label(:date_diagnosed) %>
           <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
-        </span>
+        <% end %>
       </fieldset>
-
+    
       <fieldset class="form">
         <legend>Diagnosing Health Facilities</legend>
         <div id="diagnostics">
@@ -51,10 +51,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= render :partial => "events/diagnostic", :collection => @event.diagnosing_health_facilities %>
           <% end %>
         </div>
-
+      
         <p style="clear: both; padding-top: 20px"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
       </fieldset>
-
+    
       <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
         <%= error_messages_for :object => @event.hospitalized_health_facilities %>
@@ -62,28 +62,30 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% if @event.hospitalized_health_facilities.empty? %>
             <h3>No hospitals have been recorded for this event</h3>
           <% else %>
-            <%= d.label(:hospitalized_id, "Hospitalized") %>
-            <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
+            <% core_element :hospitalized_id, d, :horiz do %>
+              <%= d.label(:hospitalized_id, "Hospitalized") %>
+              <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}) %>
+            <% end %>
             <%= render :partial => "events/hospital", :collection => @event.hospitalized_health_facilities %>
           <% end %>
         </div>
-
+      
         <p style="clear: both; padding-top: 20px"> <%= add_hospital_link "Add a hospital" %> </p>
       <% end %>
-
+            
       <br/>
-
+      
     </fieldset>
-
+    
     <fieldset class="form">
       <legend>Status</legend>
       <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
-        <span class="horiz">
+        <% core_element :died_id, d, :horiz do %>
           <%= d.label(:died_id) %>
           <%= d.dropdown_code_field(:died_id, 'yesno', {}) %>
-        </span>
+        <% end %>
       <% end %>
-
+      
       <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
         <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
           <% current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person| %>
@@ -93,7 +95,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <% end %>
           <% end %>
         <% end %>
-
+      
         <% patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
           <% core_element :pregnant_id, rf, :horiz do %>
             <%= rf.label(:pregnant_id) %>
@@ -105,9 +107,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% end %>
         <% end %>
       <% end %>
-
+            
     </fieldset>
-
+    
     <fieldset class="form">
       <legend>Treatments</legend>
       <% if @event.new_record? %>
@@ -123,11 +125,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
       <% end %>
     </fieldset>
-
+    
     <fieldset class="form">
       <legend>Clinicians</legend>
       <%= render :partial => "events/clinicians_form", :locals => {:f => f} %>
     </fieldset>
-
+    
   </div>
 </fieldset>
