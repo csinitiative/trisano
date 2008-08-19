@@ -117,11 +117,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         </span>
         <% core_element_show :results_reported_to_clinician_date, event_form, :horiz do -%>
           <%= event_form.label(:results_reported_to_clinician_date) %>
-          <%= @event.results_reported_to_clinician_date %>
+          <%= h(@event.results_reported_to_clinician_date) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :first_reported_PH_date, event_form, :horiz do -%>
           <%= event_form.label(:first_reported_PH_date, 'Date first reported to public health') %>
-          <%= @event.first_reported_PH_date %>
+          <%= h(@event.first_reported_PH_date) || '&nbsp;' %>
         <% end -%>
       </fieldset>
     </fieldset>
@@ -151,19 +151,19 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <legend>Case / Outbreak</legend>
         <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
           <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
-          <%= l @event.lhd_case_status %>
+          <%= l(@event.lhd_case_status) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :udoh_case_status_id, event_form, :vert do -%>
           <%= event_form.label(:udoh_case_status_id, 'UDOH case status') %>
-          <%= l @event.udoh_case_status %>
+          <%= l(@event.udoh_case_status) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :outbreak_associated_id, event_form, :horiz do -%>
           <%= event_form.label :outbreak_associated_id, 'Outbreak associated' %>
-          <%= l @event.outbreak_associated %>
+          <%= l(@event.outbreak_associated) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :outbreak_name, event_form, :vert do -%>
           <%= event_form.label :outbreak_name %>
-          <%= @event.outbreak_name %>
+          <%= h(@event.outbreak_name) || '&nbsp;' %>
         <% end -%>
       </fieldset>
 
@@ -172,29 +172,29 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| -%>
           <% core_element_show :secondary_entity_id, j, :horiz do -%>
             <%= j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') %>
-            <%= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?%>
+            <%= h(@event.jurisdiction.active_secondary_entity.place.name) unless @event.jurisdiction.nil?%>
           <% end -%>
         <% end -%>
         <% core_element_show :event_status_id, event_form, :horiz do -%>
           <%= event_form.label :event_status_id, 'Event status' %>
-          <%= l @event.event_status %>
+          <%= l(@event.event_status) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :investigation_started_date, event_form, :horiz do -%>
           <%= event_form.label :investigation_started_date, 'Date investigation started' %>
-          <%= @event.investigation_started_date %>
+          <%= h(@event.investigation_started_date) || '&nbsp;' %>
         <% end -%>
         <% core_element_show :investigation_completed_LHD_date, event_form, :horiz do -%>
           <%= event_form.label :investigation_completed_LHD_date, 'Date invesitgation completed' %>
-          <%= @event.investigation_completed_LHD_date %>
+          <%= h(@event.investigation_completed_LHD_date) || '&nbsp;' %>
         <% end -%>
       </fieldset>
 
       <fieldset class="form">
         <legend>Auditing</legend>
-        <span class="horiz">
-          <label>Event name</label>
-          <%= @event.event_name %>
-        </span>
+        <% core_element_show :event_name, event_form, :horiz do -%>
+          <%= event_form.label :event_name %>
+          <%= h(@event.event_name) || '&nbsp;' %>
+        <% end -%>
         <span class="horiz">
           <label>Date review completed by UDOH</label>
           <%= @event.review_completed_UDOH_date %>

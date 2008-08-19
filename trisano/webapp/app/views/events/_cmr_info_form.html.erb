@@ -78,10 +78,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     </fieldset>
     <fieldset class="form">
       <legend>Auditing</legend>
-      <span class="horiz">
+      <% core_element :event_name, f, :horiz do -%>
         <%= f.label(:event_name) %>
         <%= f.text_field(:event_name, :size => 25) %>
-      </span>
+      <% end -%>
       <span class="horiz">
         <%= f.label(:review_completed_UDOH_date, "Date review completed by UDOH") %>
         <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
