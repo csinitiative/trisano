@@ -21,22 +21,20 @@ describe 'form builder core-field questions' do
   
    # $dont_kill_browser = true
   
-  [{:name => 'Patient last name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient middle name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient date of birth', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient age', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient date of death', :tab_name => CLINICAL},
-    {:name => 'Patient birth gender', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient ethnicity', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient primary language', :tab_name => DEMOGRAPHICS}
+  [{:name => 'Patient street number', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient street name', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient unit number', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient city', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient state', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient county', :tab_name => DEMOGRAPHICS},
+    {:name => 'Patient zip code', :tab_name => DEMOGRAPHICS}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
       form_name = get_unique_name(2) + " pl_f"
       cmr_last_name = get_unique_name(1) + " pl_f"
-      disease_name = "Pertussis"
-      jurisdiction = "TriCounty Health Department"
+      disease_name = "Listeriosis"
+      jurisdiction = "Wasatch County Health Department"
       before_question = "b4 #{test[:name]} " + get_unique_name(2)
       after_question = "af #{test[:name]} " + get_unique_name(2)
       before_answer = "b4 #{test[:name]} answer" + get_unique_name(2)
@@ -62,5 +60,5 @@ describe 'form builder core-field questions' do
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
     end
 
-  end
+  end  
 end

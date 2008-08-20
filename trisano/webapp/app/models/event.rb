@@ -665,6 +665,14 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # A hash that provides a basic field index for the event forms. It maps the event form
+  # attribute keys to some metadata that is used to drive core field and core follow-up
+  # configurations in form builder.
+  # 
+  #  Names do not have to match the field name on the form views. Names are used to 
+  # drive the drop downs for core field and core follow up configurations. So more context
+  # can be given to these names than might appear on the actual event forms, because in
+  # drop down in form builder, 'Last name' isn't going to be enough information for the user.
   def Event.exposed_attributes
     {
       "morbidity_event[active_patient][active_primary_entity][person][last_name]" => {:type => :single_line_text, :name => "Patient last name" },

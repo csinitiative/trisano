@@ -43,6 +43,7 @@ module TrisanoHelper
   FOLLOW_UP_ID_PREFIX = "follow_up_"
   VALUE_SET_ID_PREFIX = "value_set_"
     
+  INVESTIGATOR_QUESTION_ID_PREFIX = "question_investigate_"
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
   
   TAB_ELEMENT_IDS_BY_NAME = {
@@ -259,6 +260,8 @@ module TrisanoHelper
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", last_name
+    browser.type("morbidity_event_active_patient__active_primary_entity__address_street_number", "22")
+    browser.type("morbidity_event_active_patient__active_primary_entity__address_street_name", "Happy St.")
     click_core_tab(browser, CLINICAL)
     browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
@@ -575,7 +578,7 @@ module TrisanoHelper
   def assert_tab_contains_question(browser, tab_name, question_text)
     html_source = browser.get_html_source
     question_position = html_source.index(question_text)
-    id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position)
+    id_start_position = html_source.rindex(INVESTIGATOR_QUESTION_ID_PREFIX, question_position)
     id_end_position = html_source.index("\"", id_start_position) -1
     answer_input_element_id = html_source[id_start_position..id_end_position]
     tab_element_id = TAB_ELEMENT_IDS_BY_NAME[tab_name]
@@ -804,7 +807,14 @@ module TrisanoHelper
   
   def get_random_word
     wordlist = ["Lorem","ipsum","dolor","sit","amet","consectetuer","adipiscing","elit","Duis","sodales","dignissim","enim","Nunc","rhoncus","quam","ut","quam","Quisque","vitae","urna","Duis","nec","sapien","Proin","mollis","congue","mauris","Fusce","lobortis","tristique","elit","Phasellus","aliquam","dui","id","placerat","hendrerit","dolor","augue","posuere","tellus","at","ultricies","libero","leo","vel","leo","Nulla","purus","Ut","lacus","felis","tempus","at","egestas","nec","cursus","nec","magna","Ut","fringilla","aliquet","arcu","Vestibulum","ante","ipsum","primis","in","faucibus","orci","luctus","et","ultrices","posuere","cubilia","Curae","Etiam","vestibulum","urna","sit","amet","sem","Nunc","ac","ipsum","In","consectetuer","quam","nec","lectus","Maecenas","magna","Nulla","ut","mi","eu","elit","accumsan","gravida","Praesent","ornare","urna","a","lectus","dapibus","luctus","Integer","interdum","bibendum","neque","Nulla","id","dui","Aenean","tincidunt","dictum","tortor","Proin","sagittis","accumsan","nulla","Etiam","consectetuer","Etiam","eget","nibh","ut","sem","mollis","luctus","Etiam","mi","eros","blandit","in","suscipit","ut","vestibulum","et","velit","Fusce","laoreet","nulla","nec","neque","Nam","non","nulla","ut","justo","ullamcorper","egestas","In","porta","ipsum","nec","neque","Cras","non","metus","id","massa","ultrices","rhoncus","Donec","mattis","odio","sagittis","nunc","Vivamus","vehicula","justo","vitae","tincidunt","posuere","risus","pede","lacinia","dolor","quis","placerat","justo","arcu","ut","tortor","Aliquam","malesuada","lectus","id","condimentum","sollicitudin","arcu","mauris","adipiscing","turpis","a","sollicitudin","erat","metus","vel","magna","Proin","scelerisque","neque","id","urna","lobortis","vulputate","In","porta","pulvinar","urna","Cras","id","nulla","In","dapibus","vestibulum","pede","In","ut","velit","Aliquam","in","turpis","vitae","nunc","hendrerit","ullamcorper","Aliquam","rutrum","erat","sit","amet","velit","Nullam","pharetra","neque","id","pede","Phasellus","suscipit","ornare","mi","Ut","malesuada","consequat","ipsum","Suspendisse","suscipit","aliquam","nisl","Suspendisse","iaculis","magna","eu","ligula","Sed","porttitor","eros","id","euismod","auctor","dolor","lectus","convallis","justo","ut","elementum","magna","magna","congue","nulla","Pellentesque","eget","ipsum","Pellentesque","tempus","leo","id","magna","Cras","mi","dui","pellentesque","in","pellentesque","nec","blandit","nec","odio","Pellentesque","eget","risus","In","venenatis","metus","id","magna","Etiam","blandit","Integer","a","massa","vitae","lacus","dignissim","auctor","Mauris","libero","metus","aliquet","in","rhoncus","sed","volutpat","quis","libero","Nam","urna"]
-    wordlist[1 + rand(320)]
+    begin
+      result = wordlist[1 + rand(320)]
+      raise if result.nil?
+    rescue Exception => ex
+      result = wordlist[1 + rand(320)]
+    end
+    result
+    
   end
   
   def get_resource_id(browser, name)

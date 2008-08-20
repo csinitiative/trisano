@@ -50,7 +50,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= person_form.label(:middle_name) %>
             <%= p.middle_name %>
           <% end %>
-                                                                        
+                                                                                
         </fieldset>
   
         <fieldset class="form">
@@ -97,23 +97,23 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   
         <fieldset class="form">
           <legend>Age</legend>
-          <% event_form.fields_for(:person, p, :builder => ExtendedFormBuilder) do |person_form| %>
-            <% core_element_show :county, person_form, :horiz do -%>
-              <%= person_form.label(:birth_date) %>
-              <%= p.birth_date %>
+    
+          <% core_element_show :birth_date, person_form, :horiz do -%>
+            <%= person_form.label(:birth_date) %>
+            <%= p.birth_date %>
+          <% end -%>
+          <% if not p.birth_date.blank? %>
+            <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
+              <%= person_form.label(:age) %>
+              <%= calculate_age(p.birth_date) %>
             <% end -%>
-            <% if not p.birth_date.blank? %>
-              <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
-                <%= person_form.label(:age) %>
-                <%= calculate_age(p.birth_date) %>
-              <% end -%>
-            <% elsif not p.approximate_age_no_birthday.blank?  %>
-              <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
-                <%= person_form.label(:approximage_age) %>
-                <%= p.approximate_age_no_birthday %>
-              <% end -%>
-            <% end %>
+          <% elsif not p.approximate_age_no_birthday.blank?  %>
+            <% core_element_show :approximate_age_no_birthday, person_form, :horiz do -%>
+              <%= person_form.label(:approximage_age) %>
+              <%= p.approximate_age_no_birthday %>
+            <% end -%>
           <% end %>
+    
         </fieldset>
   
         <fieldset class="form">
@@ -124,31 +124,28 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <fieldset class="form">
           <legend>Demographics</legend>
     
-          <% event_form.fields_for(:person, p, :builder => ExtendedFormBuilder) do |person_form| %>
+          <% core_element_show :birth_gender_id, person_form, :horiz do -%>
+            <%= person_form.label(:birth_gender_id) %>
+            <%= l p.birth_gender %>
+          <% end -%>
     
-            <% core_element_show :birth_gender, person_form, :horiz do -%>
-              <%= person_form.label(:birth_gender) %>
-              <%= l p.birth_gender %>
-            <% end -%>
+          <% core_element_show :primary_language_id, person_form, :horiz do -%>
+            <%= person_form.label(:primary_language_id) %>
+            <%= l p.primary_language %>
+          <% end -%>
     
-            <% core_element_show :primary_language, person_form, :horiz do -%>
-              <%= person_form.label(:primary_language) %>
-              <%= l p.primary_language %>
-            <% end -%>
-    
-            <% core_element_show :ethnicity, person_form, :horiz do -%>
-              <%= person_form.label(:ethnicity) %>
-              <%= l p.ethnicity %>
-            <% end -%>
-    
-            <br/><br/>
-            <label>Race</label>
-            <% i = 0; for race in e.races %>
-              <%= " and " unless i == 0 %><%= l race %>
-              <% i += 1 %>
-            <% end %>
-    
+          <% core_element_show :ethnicity_id, person_form, :horiz do -%>
+            <%= person_form.label(:ethnicity_id) %>
+            <%= l p.ethnicity %>
+          <% end -%>
+            
+          <br/><br/>
+          <label>Race</label>
+          <% i = 0; for race in e.races %>
+            <%= " and " unless i == 0 %><%= l race %>
+            <% i += 1 %>
           <% end %>
+            
         </fieldset>
   
       </fieldset>
