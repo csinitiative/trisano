@@ -24,8 +24,6 @@ module FormsLibraryAdminHelper
     
     result = ""
     
-    result += "<h2>Ungrouped #{type_humanized}</h2>"
-    
     result += "<ul>"
     
     for ungrouped_form_element in @library_elements
@@ -39,8 +37,6 @@ module FormsLibraryAdminHelper
     end
     
     result += "</ul>"
-    
-    result += "<h2>Grouped #{type_humanized}</h2>"
     
     for grouped_form_element in @library_elements
       next unless grouped_form_element.is_a? GroupElement

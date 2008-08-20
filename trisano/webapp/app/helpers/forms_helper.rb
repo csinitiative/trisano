@@ -180,7 +180,9 @@ module FormsHelper
 
   def render_group(element, include_children=true)
 
-    result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b></li>"
+    result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b>"
+    result += "&nbsp;&nbsp;" + delete_group_link(element)
+    result += "</li>"
 
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children' style='clear: both'>"
@@ -324,7 +326,12 @@ module FormsHelper
     "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-section' id='delete-section-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Section") + "</a>"
   end
-
+  
+    def delete_group_link(element)
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
+      "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-group' id='delete-group-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Group") + "</a>"
+  end
+  
   def add_question_link(element, trailing_text)
     "<small><a href='#' onclick=\"new Ajax.Request('../../question_elements/new?form_element_id=" + 
       element.id.to_s + "&core_data=false" + "', {asynchronous:true, evalScripts:true}); return false;\" id='add-question-" + 
