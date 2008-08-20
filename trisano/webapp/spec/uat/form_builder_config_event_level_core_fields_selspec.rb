@@ -38,7 +38,7 @@ describe 'Add disease-specific questions around any event-level field' do
       add_core_field_config(@browser, test[:name])
       add_question_to_before_core_field_config(@browser, test[:name], {:question_text => before_question, :data_type => "Single line text"})
       add_question_to_after_core_field_config(@browser, test[:name], {:question_text => after_question, :data_type => "Single line text"})
-      publish_form(@browser)
+      publish_form(@browser).should be_true
       
       create_basic_investigatable_cmr(@browser, @cmr_last_name, disease_name, "Bear River Health Department")
       edit_cmr(@browser)

@@ -104,12 +104,14 @@ class FormsController < AdminController
       respond_to do |format|
         flash[:notice] = "Form was successfully published"
         format.html { redirect_to forms_path }
+        format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = "Unable to publish the form at this time"
       respond_to do |format|
         format.html { render :template => "forms/builder" }
+        format.js   { render :template => "rjs-error" }
       end
     end
   end

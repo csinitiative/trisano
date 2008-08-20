@@ -78,4 +78,6 @@
   #core-field-builder-mods
   %br
   %hr
-  = button_to "Publish", {:action => "publish", :id => @form.id}
+  - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
+    = submit_tag 'Publish', :id => 'publish_btn'
+    = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"

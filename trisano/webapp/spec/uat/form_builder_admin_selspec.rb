@@ -62,12 +62,12 @@ describe 'Form Builder Admin' do
     add_value_sets
     edit_value_sets
     add_and_populate_tab
-    publish_form(@browser)
+    publish_form(@browser).should be_true
     @browser.is_text_present("Form was successfully published").should be_true
     validate_investigator_rendering
     navigate_to_form_edit
     delete_edit_and_inactivate_questions
-    publish_form(@browser)
+    publish_form(@browser).should be_true
     @browser.is_text_present("Form was successfully published").should be_true
     revalidate_investigator_rendering
 

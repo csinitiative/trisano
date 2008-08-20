@@ -290,7 +290,7 @@ module TrisanoHelper
       browser.click(disease_label.tr(" ", "_"))
     end
     browser.select "form_jurisdiction_id", "label=#{jurisdiction_label}"
-    browser.click "form_submit"
+    browser.click "form_submit"    
     browser.wait_for_page_to_load($load_time)
     if browser.is_text_present("Form was successfully created.") != true 
       return(false)
@@ -519,6 +519,7 @@ module TrisanoHelper
   
   def publish_form(browser)
     browser.click '//input[@value="Publish"]'
+    return false if browser.is_editable('//input[@value="Publishing..."]')
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Form was successfully published "))
   end
