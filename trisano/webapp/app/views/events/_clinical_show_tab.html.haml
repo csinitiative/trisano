@@ -53,7 +53,7 @@
         = risk_factor_form.label(:pregnancy_due_date)
         = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-  %br
+  %br{:clear => 'all'}
 
   %fieldset
     %legend

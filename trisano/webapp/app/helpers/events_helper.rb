@@ -32,7 +32,7 @@ module EventsHelper
     concat_core_field_show(:before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
-    concat("</span>", block.binding)
+    concat("&nbsp;</span>", block.binding) # The &nbsp; is there to help resolve wrapping issues
     concat_core_field_show(:after, attribute, form_builder, block)
   end
   
