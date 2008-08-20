@@ -17,39 +17,25 @@
 %fieldset
   %legend Clinical Information
 
-  %table{:cellpadding => '2'}
-    %tr
-      %td
-        %span{:class => 'label'}
-          Disease:
-      %td
+  %fieldset{:class => 'form'}
+    %legend
+      Disease
+    - event_form.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d|
+      - core_element_show :disease_id, d, :horiz do
+        = d.label(:disease_id, "Disease")
         = @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
-    %tr
-      %td
-        %span{:class => 'label'}
-          Disease onset date:
-      %td
+      - core_element_show :disease_onset_date, d, :horiz do
+        = d.label(:disease_onset_date, "Onset date")
         = @event.disease.disease_onset_date unless @event.disease.nil? || @event.disease.disease.nil?
-      %td
-        %span{:class => 'label'}
-          Date diagnosed:
-      %td
+      - core_element_show :date_diagnosed, d, :horiz do
+        = d.label(:date_diagnosed)
         = @event.disease.date_diagnosed unless @event.disease.nil? || @event.disease.disease.nil?
-    %tr
-      %td
-        %span{:class => 'label'}
-          Hospitalized:
-      %td
+      - core_element_show :hospitalized_id, d, :horiz do
+        = d.label(:hospitalized)
         = l @event.disease.hospitalized unless @event.disease.nil?
-      %td
-        &nbsp;
-      %td
-        &nbsp;
-
-  %span{:class => 'horiz'}
-    %label
-      Died
-    = l @event.disease.died unless @event.disease.nil?
+      - core_element_show :died_id, d, :horiz do
+        = d.label(:died_id)
+        = l @event.disease.died unless @event.disease.nil?
 
   - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
     - patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient|

@@ -721,11 +721,11 @@ class Event < ActiveRecord::Base
       "morbidity_event[active_reporter][active_secondary_entity][telephone][extension]" => {:type => :drop_down, :name => 'Reporter extension'},
       
       # Disease-level fields
-        "morbidity_event[disease][disease_id]" => {:type => :drop_down, :name => 'Disease'},
-        "morbidity_event[disease][disease_onset_date]" => {:type => :date, :name => 'Disease onset date'},
-        "morbidity_event[disease][date_diagnosed]" => {:type => :date, :name => 'Disease date diagnosed'},
-        "morbidity_event[disease][hospitalized_id]" => {:type => :drop_down, :name => 'Hospitalized'},
-        "morbidity_event[disease][died_id]" => {:type => :drop_down, :name => 'Died'}
+      "morbidity_event[disease][disease_id]" => {:type => :drop_down, :name => 'Disease'},
+      "morbidity_event[disease][disease_onset_date]" => {:type => :date, :name => 'Disease onset date'},
+      "morbidity_event[disease][date_diagnosed]" => {:type => :date, :name => 'Disease date diagnosed'},
+      "morbidity_event[disease][hospitalized_id]" => {:type => :drop_down, :name => 'Hospitalized'},
+      "morbidity_event[disease][died_id]" => {:type => :drop_down, :name => 'Died'}
         
     }
   end
