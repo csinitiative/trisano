@@ -135,7 +135,7 @@
           %td
             = link_to("#{cmr.record_number}", { :controller => "morbidity_events", :action => "show", :id => "#{cmr.event_id}" })
           %td
-            = link_to("#{cmr.first_name} #{cmr.last_name}", { :controller => "entities", :action => "show", :id => "#{cmr.entity_id}" })
+            = "#{cmr.first_name} #{cmr.last_name}"
           %td
             - if  !cmr.birth_date.blank?
               = "#{calculate_age cmr.birth_date.to_date} / #{cmr.birth_date}"
