@@ -87,27 +87,22 @@
       %span.print-value
         = "#{patient.approximate_age_no_birthday}"
 
-- entities_location = entity.telephone_entities_location
-- no_location = entities_location.nil?
-- phone = entity.primary_phone_entities_location.location.current_phone unless no_location
-- no_phone = no_location || phone.nil?
+- for entities_location in entity.telephone_entities_locations
+  - no_location = entities_location.nil?
+  - phone = entities_location.location.current_phone unless no_location
+  - no_phone = no_location || phone.nil?
 
-#patient_phone
-  .three-valued-row
-    %hr
-    .left
-      %span.print-label Phone:
-      - unless no_phone
-        %span.print-value
-          = fml "(", phone.area_code, ") "
-          = phone_number(phone.phone_number)
-          = fml " Ext. ", phone.extension, ""
-    -# Revisit when we can collect more than one phone number
-    -# this doesn't need to show up right now
-    -# .left
-    -# %span.print-label Phone #2:
-    -# .right
-    -# %span.print-label Phone #3:
+  #patient_phone
+    .three-valued-row
+      %hr
+      .left
+        %span.print-label
+          = entities_location.entity_location_type.code_description + " Phone:"
+        - unless no_phone
+          %span.print-value
+            = fml "(", phone.area_code, ") "
+            = phone_number(phone.phone_number)
+            = fml " Ext. ", phone.extension, ""
 
 #patient_attributes
   .three-valued-row
