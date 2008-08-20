@@ -41,12 +41,12 @@ class CoreFieldElement < FormElement
     available_core_fields = []
     Event.exposed_attributes.each do |attribute|
       unless (fields_in_use.include?(attribute[1][:name]))
-        field_attributes = [ attribute[1][:name], attribute[0]]
+        field_attributes = [attribute[1][:name], attribute[0]]
         available_core_fields << field_attributes
       end
     end
     
-    available_core_fields
+    available_core_fields.sort
   end
   
 end
