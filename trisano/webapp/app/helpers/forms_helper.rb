@@ -96,7 +96,7 @@ module FormsHelper
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
   
-  result  
+    result  
   end
   
   def render_core_field(element, include_children=true)
@@ -254,10 +254,16 @@ module FormsHelper
       end
     end
     
-    result += ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" unless (element.core_path.blank?)
+    unless (element.core_path.blank?)
+      if Event.exposed_attributes[element.core_path].nil?
+        result += ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
+      else
+        result += ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" 
+      end
+    end
     
     result += " " + add_question_link(element, "follow up container") if (include_children)
-        
+
     if include_children && element.children?
       result += "<ul id='follow_up_" + element.id.to_s + "_children' class='fb-follow-up-children'>"
       element.children.each do |child|
@@ -327,7 +333,7 @@ module FormsHelper
       "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-section' id='delete-section-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Section") + "</a>"
   end
   
-    def delete_group_link(element)
+  def delete_group_link(element)
     "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + element.id.to_s + 
       "', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-group' id='delete-group-" + element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Group") + "</a>"
   end
@@ -374,7 +380,7 @@ module FormsHelper
       :html => {
         :class => "fb-add-to-library",
         :id => "add-element-to-library-#{element.id}"
-        }
+      }
     ) +"</small>"
   end
 
