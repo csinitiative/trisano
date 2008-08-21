@@ -1,0 +1,17 @@
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.tabular th {
+  font: bold 11px Verdana, Arial, Helvetica, sans-serif;
+  border: 1px solid #C1DAD7;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 3px 3px 3px 9px; }
+
+.tabular td {
+  border: 1px solid #C1DAD7;
+  background: #fff;
+  padding: 3px 3px 3px 9px;
+  color: #191970; }

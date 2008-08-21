@@ -1,0 +1,314 @@
+﻿table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%; }
+
+.listingforms th {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  weight: bold;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 3px 3px 3px 9px;
+  background-color: #b4dc66; }
+.listingforms td {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  weight: light;
+  color: #666;
+  background: #fff;
+  padding: 3px 3px 3px 9px;
+  border: dotted;
+  border-color: #ccc;
+  border-width: 1px 0px 1px 0px;
+  vertical-align: top; }
+.listingforms .forminformation {
+  width: 35%; }
+
+.diseaselist {
+  border: none;
+  border-width: 0px 0px 0px 0px; }
+
+#formbuilder-body {
+  padding: 0px 20px 0px 0px;
+  margin-right: 220px; }
+
+#sidebar {
+  width: 215px;
+  float: right;
+  padding: 0px 5px 0px 0px; }
+
+
+#root-element-list {
+  padding: 8px 0px 0px 0px; }
+  #root-element-list ul {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px; }
+  #root-element-list li {
+    margin: 0px 0px 0px 0px;
+    padding: 5px 0px 10px 10px; }
+
+
+#core-element-list {
+  padding: 8px 0px 0px 0px; }
+  #core-element-list ul {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px; }
+  #core-element-list li {
+    margin: 0px 0px 0px 0px;
+    padding: 5px 0px 10px 10px; }
+
+
+#core-field-element-list {
+  padding: 8px 0px 0px 0px; }
+  #core-field-element-list ul {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px; }
+  #core-field-element-list li {
+    margin: 0px 0px 0px 0px;
+    padding: 5px 0px 10px 10px; }
+
+
+
+.add-section {
+  color: #333; }
+
+.add-question {
+  color: #333; }
+
+.add-follow-up {
+  color: #333; }
+
+.delete-view {
+  color: #333; }
+
+.edit-question {
+  color: #333; }
+
+.add-value-set {
+  color: #333; }
+
+#fb-inplace-container {
+  width: 90%;
+  padding: 0px 0px 0px 10px; }
+
+.fb-container {
+  padding: 0px 0px 0px 0px;
+  overflow: hidden; }
+
+#lib-inplace-container {
+  width: 70%; }
+
+.fb-inplace-form {
+  width: 200px;
+  float: left;
+  clear: both; }
+
+#new-view-form {
+  padding: 0px 0px 12px 0px; }
+
+#new-section-form {
+  padding: 0px 0px 5px 10px; }
+
+#new-group-form {
+  padding: 0px 0px 0px 0px;
+  width: 200px; }
+
+#new-question-form {
+  padding: 0px 0px 0px 0px; }
+
+#new-question-element {
+  padding: 0px 20px 0px 0px;
+  display: inline;
+  list-style-type: none; }
+
+.new-question-element {
+  padding: 0px 20px 0px 0px;
+  display: inline;
+  list-style-type: none; }
+
+#new-follow-up-form {
+  padding: 0px 0px 5px 10px; }
+
+.new-follow-up-element {
+  padding: 0px 20px 0px 0px;
+  display: inline;
+  list-style-type: none;
+  border: solid; }
+
+#new-value-set-form {
+  padding: 0px 0px 5px 18px; }
+
+#library-container {
+  float: right;
+  padding: 2px 2px 2px 2px; }
+
+#library-header {
+  padding: 0px 0px 6px 0px; }
+
+#library-body {
+  height: 175px;
+  overflow: auto;
+  padding: 0px 0px 0px 0px;
+  border: 1px solid;
+  background: white; }
+
+
+.scrollable {
+  overflow: auto;
+  overflow-x: hidden; }
+
+.fb-tab {
+  color: #333;
+  background-color: #d3d3d3; }
+
+/=dotline li {
+  border-color: #ccc;
+  border: dotted;
+  border-width: 0px 0px 1px 0px; }
+
+=clearfix {
+  *display: inline-block; }
+  =clearfix:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+
+.fb-tab-children {
+  color: #ccc;
+  background-color: #fff; }
+  .fb-tab-children li {
+    border-color: #ccc;
+    border: dotted;
+    border-width: 0px 0px 1px 0px; }
+
+.fb-section {
+  color: #333;
+  background: #e8e8e8; }
+
+.fb-section-children li {
+  border-color: #ccc;
+  border: dotted;
+  border-width: 0px 0px 1px 0px; }
+
+.question {
+  color: #c00; }
+
+.fb-question-children li {
+  border-color: #ccc;
+  border: dotted;
+  border-width: 0px 0px 1px 0px; }
+
+.fb-value-set {
+  color: #666; }
+
+.fb-value-set-children ul {
+  margin: 0px 30px 0px 0px;
+  padding: 0px 30px 0px 0px; }
+.fb-value-set-children li {
+  border-color: #c00;
+  border: dotted;
+  border-width: 0px 0px 1px 0px; }
+
+.follow-up-item {
+  color: #666; }
+
+.follow-up-children li {
+  border-color: #ccc;
+  border: dotted;
+  border-width: 0px 0px 1px 0px; }
+
+.fb-core-form {
+  color: #333;
+  background-color: #b4dc66; }
+
+.fb-core-form-children {
+  background-color: #fff; }
+  .fb-core-form-children li {
+    border-color: #ccc;
+    border: dotted;
+    border-width: 0px 0px 1px 0px; }
+
+.fb-core-field {
+  background-color: #b4dc66; }
+
+.fb-core-field-children {
+  background-color: #fff; }
+  .fb-core-field-children li {
+    border-color: #ccc;
+    border: dotted;
+    border-width: 0px 0px 1px 0px; }
+
+.fb-before-core-field {
+  background-color: #d0f191; }
+
+.fb-after-core-field {
+  background-color: #d0f191; }
+
+.fb-group {
+  color: #093; }
+
+.fb-core-code-item {
+  background-color: #87b8d9; }
+
+#edit-question-form {
+  padding: 0px 0px 5px 18px; }
+
+
+.fb-add-tab {
+  color: #333; }
+
+.fb-add-to-library {
+  color: #333; }
+
+.fb-edit-value-set {
+  color: #333; }
+
+.fb-add-core-tab {
+  color: #333; }
+
+.fb-add-core-field {
+  color: #333; }
+
+ul {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px; }
+
+li {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px; }
+
+.formname {
+  font-family: helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: light;
+  color: #333;
+  letter-spacing: 0px;
+  padding: 6px 0px 3px 0px; }
+
+.description {
+  font-family: helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: light;
+  color: #666;
+  letter-spacing: 0px;
+  padding: 0px 0px 4px 0px; }
+
+.jurisdiction {
+  font-family: helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #c00;
+  letter-spacing: 0px;
+  padding: 0px 0px 3px 0px; }
+
+.status {
+  font-family: helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #c00;
+  letter-spacing: 0px;
+  padding: 8px 0px 3px 0px; }
