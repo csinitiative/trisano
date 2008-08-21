@@ -123,4 +123,8 @@ module ApplicationHelper
     result
   end
 
+  def format_date(date, using='%B %d, %Y')
+    date.strftime(using) if date
+  end
+
 end

@@ -36,4 +36,5 @@ describe ParticipationsTreatment do
     @pt.treatment_date = 'not a date'
     @pt.should_not be_valid
   end
+
 end

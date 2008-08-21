@@ -69,5 +69,9 @@ describe ApplicationHelper do
     replace_element.should eql("core-field-element-list")
     replace_partial.should eql("forms/core_field_elements")
   end
+
+  it "should format date correctly" do
+    format_date(Time.parse('8/21/2002')).should eql('August 21, 2002')
+  end
   
 end
