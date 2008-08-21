@@ -179,13 +179,18 @@ describe Form do
       form.has_investigator_view_elements?.should_not be_true
     end
 
-    it "should be interested in container if if contains more then a 'Default View'" do
+    it "should be interested in container if it contains more then a 'Default View'" do
       form = prepare_form {|defaultTab, section| [defaultTab, section]}
       form.has_investigator_view_elements?.should be_true
 
       form = prepare_form {|defaultTab, section| [section, defaultTab]}
       form.has_investigator_view_elements?.should be_true
     end    
+
+    it "should be interested in container if it contains more then one view" do
+      form = prepare_form {|defaultTab, section| [defaultTab, defaultTab]}
+      form.has_investigator_view_elements?.should be_true
+    end
                                 
   end
   

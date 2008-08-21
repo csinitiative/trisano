@@ -42,7 +42,7 @@ class Form < ActiveRecord::Base
   # investigation tab to render
   def has_investigator_view_elements?
     investigator_view_elements_container.all_children.each_with_index do |c, i|
-      return true if i < 0 || c.name != 'Default View'
+      return true if i > 0 || c.name != 'Default View'
     end
     false
   end
