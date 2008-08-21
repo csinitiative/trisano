@@ -29,4 +29,4 @@
   %br
   - values = {}
   - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
-  = f.select(:core_path, values, {:include_blank => true}) 
+  = f.select(:core_path, values.sort, {:include_blank => true}) 
