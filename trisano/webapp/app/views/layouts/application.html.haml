@@ -101,7 +101,10 @@
     .container
       = yield
     .container
-      #ft
-        %hr        
-        %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
-        %a{:href => 'http://www.trisano.org'}TriSano.org
+      #foot
+        .footlogo
+          = image_tag("foot.png", :border => 0)
+        .foottext
+          %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
+          |
+          %a{:href => 'http://www.trisano.org'}TriSano.org

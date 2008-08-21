@@ -91,3 +91,11 @@
           = yield :tools_two
     .container
       = yield
+    .container
+      #foot
+        .footlogo
+          = image_tag("foot.png", :border => 0)
+        .foottext
+          %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
+          |
+          %a{:href => 'http://www.trisano.org'}TriSano.org
