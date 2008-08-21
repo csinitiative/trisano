@@ -88,6 +88,7 @@ class FormElementsController <  AdminController
       # conditions are not preserved).
       if (@form_element.form_id.blank?)
         @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+        @type = params[:type].blank? ? "question_element" : params[:type]
       else
         @form = Form.find(@form_element.form_id)
       end

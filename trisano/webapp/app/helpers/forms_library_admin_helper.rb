@@ -30,9 +30,9 @@ module FormsLibraryAdminHelper
       next if ungrouped_form_element.is_a? GroupElement
       
       if ((ungrouped_form_element.class.name == type) && (ungrouped_form_element.is_a?(QuestionElement)))
-        result += render_library_admin_question(ungrouped_form_element)
+        result += render_library_admin_question(ungrouped_form_element, type)
       elsif ((ungrouped_form_element.class.name == type) && (ungrouped_form_element.is_a?(ValueSetElement)))
-        result += render_library_admin_value_set(ungrouped_form_element)
+        result += render_library_admin_value_set(ungrouped_form_element, type)
       end
     end
     
@@ -47,9 +47,9 @@ module FormsLibraryAdminHelper
       
       for child in grouped_form_element.children
         if ((child.class.name == type) && (child.is_a?(QuestionElement)))
-          result += render_library_admin_question(child)
+          result += render_library_admin_question(child, type)
         elsif ((child.class.name == type) && (child.is_a?(ValueSetElement)))
-          result += render_library_admin_value_set(child)
+          result += render_library_admin_value_set(child, type)
         end
       end
        
@@ -62,7 +62,7 @@ module FormsLibraryAdminHelper
   
   private
   
-  def render_library_admin_question(element)
+  def render_library_admin_question(element, type)
     result = "<li id='question_#{element.id}' class='lib-admin-question-item'>#{element.question.question_text}"
     result += "&nbsp;&nbsp;<small>#{element.question.data_type_before_type_cast.humanize}</small>"
     
@@ -71,10 +71,12 @@ module FormsLibraryAdminHelper
       result += fml("<em><small>#{child.name}</small></em>&nbsp;&nbsp;") if child.is_a? ValueElement
     end
     
-    result += "&nbsp;&nbsp;" + delete_question_link(element) + "</li>"
+    result += "&nbsp;&nbsp;<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + 
+      element.id.to_s + "?type=#{type.underscore}', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-question' id='delete-question-" + 
+      element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a></li>"
   end
   
-  def render_library_admin_value_set(element)
+  def render_library_admin_value_set(element, type)
     result = "<li id='value_set_#{element.id}' class='lib-admin-value-set-item'>#{element.name}"
     result += "<ul>"
     
