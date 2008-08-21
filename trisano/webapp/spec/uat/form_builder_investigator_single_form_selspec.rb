@@ -150,6 +150,7 @@ describe "Form Builder Investigator Single Form" do
   
   it "should publish the form" do
     @browser.click "//input[@value='Publish']"
+    @browser.is_element_present "//input[@value='Publishing...']"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Form was successfully published").should be_true
   end

@@ -714,4 +714,34 @@ describe MorbidityEvent do
     end
   end
 
+  describe "support for investigation view elements" do
+
+    def ref(form)
+      ref = mock(FormReference)
+      ref.should_receive(:form).and_return(form)
+      ref
+    end
+    
+    def investigation_form(is_a)
+      form = mock(Form)
+      form.stub!(:has_investigator_view_elements?).and_return(is_a)
+      form
+    end
+
+    def prepare_event
+      investigation_form = investigation_form(true)
+      core_view_form = investigation_form(false)
+      core_field_form = investigation_form(false)
+      event = Event.new
+      event.should_receive(:form_references).and_return([ref(core_field_form), ref(core_view_form), ref(investigation_form)])
+      event
+    end
+    
+    it "should only return refernces to forms that have investigation elements" do
+      event = prepare_event
+      event.investigation_form_references.size.should == 1
+    end
+
+  end
+
 end

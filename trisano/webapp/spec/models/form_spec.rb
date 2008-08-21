@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'ostruct'
 
 describe Form do
   before(:each) do
@@ -136,7 +137,7 @@ describe Form do
   describe "when using container convenience methods" do
     
     fixtures :forms, :form_elements, :questions
-    
+
     it "should return the investigator view element container" do
       @form.save_and_initialize_form_elements
       @form.investigator_view_elements_container.id.should eql(@form.form_base_element.children[0].id)
@@ -146,7 +147,46 @@ describe Form do
       @form.save_and_initialize_form_elements
       @form.core_view_elements_container.id.should eql(@form.form_base_element.children[1].id)
     end
+
+    it "should return the core fields element container" do
+      @form.save_and_initialize_form_elements
+      @form.core_field_elements_container.id.should eql(@form.form_base_element.children[2].id)
+    end
     
+  end
+
+  describe "when checking for renderable investigation view elements" do
+    
+    def prepare_form
+      form = Form.new
+      section = mock(SectionElement)
+      section.stub!(:name).and_return('Something Else')
+      defaultTab = mock(ViewElement)
+      defaultTab.stub!(:name).and_return('Default View')                  
+      result = yield defaultTab, section if block_given?
+      container = OpenStruct.new(:all_children => result)
+      form.should_receive(:investigator_view_elements_container).and_return(container)      
+      return form
+    end
+
+    it "should not assume 'Default View' alone is a valid investigator view element" do
+      form = prepare_form {|defaultTab, section| [defaultTab]}
+      form.has_investigator_view_elements?.should_not be_true
+    end
+
+    it "should not consider an empty container interesting" do
+      form = prepare_form {[]}
+      form.has_investigator_view_elements?.should_not be_true
+    end
+
+    it "should be interested in container if if contains more then a 'Default View'" do
+      form = prepare_form {|defaultTab, section| [defaultTab, section]}
+      form.has_investigator_view_elements?.should be_true
+
+      form = prepare_form {|defaultTab, section| [section, defaultTab]}
+      form.has_investigator_view_elements?.should be_true
+    end    
+                                
   end
   
   describe "when trying to call publish on a published instance" do

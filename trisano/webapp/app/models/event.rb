@@ -97,6 +97,16 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # returns only the references for forms that should be rendered on
+  # the investigation tab
+  def investigation_form_references
+    form_references.select {|ref| ref.form.has_investigator_view_elements?}
+  end
+
+  def core_only_form_references
+    form_references.reject {|ref| ref.form.has_investigator_view_elements?}
+  end
+
   def disease
     @disease ||= disease_events.last
   end

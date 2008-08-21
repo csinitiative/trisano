@@ -37,7 +37,16 @@ class Form < ActiveRecord::Base
   def core_field_elements_container
     form_element_cache.children[2]
   end
-  
+
+  # returns true if there's something interesting for the
+  # investigation tab to render
+  def has_investigator_view_elements?
+    investigator_view_elements_container.all_children.each_with_index do |c, i|
+      return true if i < 0 || c.name != 'Default View'
+    end
+    false
+  end
+
   def save_and_initialize_form_elements
     transaction do
       self.status = 'Not Published'

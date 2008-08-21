@@ -38,6 +38,7 @@ describe 'Add disease-specific questions around any event-level field' do
       @browser.is_text_present(after_question).should be_true
       answer_investigator_question(@browser, before_question, before_answer)
       answer_investigator_question(@browser, after_question, after_answer)
+      @browser.is_element_present("link=#{form_name}").should be_false
 
       save_cmr(@browser)
       @browser.is_text_present(before_answer).should be_true
