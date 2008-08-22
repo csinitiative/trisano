@@ -78,6 +78,23 @@ namespace :trisano do
       FileUtils.mv('trisano.war', '../distro')
     end
 
+    desc "Package the application with the settings from config.yml & use basic auth"
+    task :package_app_with_basic_auth do
+      
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']  
+      replace_database_yml(host, port, database, nedss_user, nedss_user_pwd)
+                
+      puts "creating .war deployment archive"
+      cd '../webapp/'
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=production"
+      FileUtils.mv('trisano.war', '../distro')
+    end
+
     desc "Migrate the database"
     task :upgrade_db => ['dump_db'] do
       
