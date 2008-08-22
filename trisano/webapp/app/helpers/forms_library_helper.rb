@@ -144,7 +144,7 @@ module FormsLibraryHelper
     result += "&nbsp;&nbsp;<small>" + question_element.question.data_type_before_type_cast.humanize + "</small>"
     question_element.pre_order_walk do |element|
       result += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;" + element.name + "</small></em>: " if element.is_a? ValueSetElement
-      result += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement
+      result += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement and !element.name.blank?
     end
           
     result += "</li>"
@@ -175,7 +175,11 @@ module FormsLibraryHelper
     result += "<ul>"
     
     value_set_element.children.each do |element|
-      result += fml("<li><em><small>", element.name, "</small></em></li>")
+      if element.name.blank?
+        "<li><em><small>(Blank)</small></em></li>"
+      else
+        result += fml("<li><em><small>", element.name, "</small></em></li>") 
+      end
     end
     
     result += "</ul>"

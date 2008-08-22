@@ -68,7 +68,7 @@ module FormsLibraryAdminHelper
     
     element.children do |child|
       result += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;#{child.name}</small></em>: " if child.is_a? ValueSetElement
-      result += fml("<em><small>#{child.name}</small></em>&nbsp;&nbsp;") if child.is_a? ValueElement
+      result += fml("<em><small>#{child.name}</small></em>&nbsp;&nbsp;") if child.is_a? ValueElement and !child.name.blank?
     end
     
     result += "&nbsp;&nbsp;<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + 
@@ -81,7 +81,11 @@ module FormsLibraryAdminHelper
     result += "<ul>"
     
     element.children.each do |child|
-      result += fml("<li><em><small>", child.name, "</small></em></li>")
+       if child.name.blank?
+         result += "<li><em><small>(Blank)</small></em></li>"
+      else
+        result += fml("<li><em><small>", child.name, "</small></em></li>") 
+      end
     end
     
     result += "</ul>"

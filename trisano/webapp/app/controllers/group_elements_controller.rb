@@ -38,7 +38,7 @@ class GroupElementsController <  AdminController
   def new
     begin
       @group_element = GroupElement.new
-      @reference_element = FormElement.find(params[:form_element_id])      
+      @reference_element = FormElement.find(params[:form_element_id]) 
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.debug ex
