@@ -194,6 +194,8 @@ namespace :trisano do
       p "removing tmp directories from #{dist_dirname}"
       cd dist_dirname
       sh "rm -rf ./webapp/tmp"
+      # TODO add a check for existence of trisano.war and then delete it as it bloats the distro size
+      #sh "rm ./webapp/trisano.war"
       sh "rm ./webapp/log/*.*"
       sh "rm -rf ./webapp/nbproject"
       sh "rm -rf ./distro/dump"
