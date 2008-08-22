@@ -1,0 +1,64 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  CONFIDENTIAL MORBIDITY REPORT
+
+- content_for :name do
+  Existing Reports
+
+- content_for :tools do
+  = new_cmr_link 'New Morbidity Report'
+  |
+  = link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv')
+
+- content_for :tools_two do
+  = new_cmr_button "Create New Morbidity Report"
+
+#rot
+  %table.listingforms
+    %tr
+      %th Patient Name
+      %th Disease
+      %th Jurisdiction
+      %th
+    - for event in @events
+      %tr
+        - patient = event.active_patient.active_primary_entity.person
+        - jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place
+        %td.forminformation
+          .patientname
+            = patient.last_name
+            = fml(", ", patient.first_name, "") unless patient.first_name.nil?
+          %small
+            Date:
+            = event.event_onset_date
+        %td
+          = event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
+        %td
+          %b
+            = jurisdiction.name
+          %p
+          %u
+            = l event.event_status
+          .tools
+            = state_controls(event, jurisdiction)
+        %td
+          .tools
+            = jurisdiction_routing_control(event, jurisdiction)
+          %p
+          .tools
+            = basic_morbidity_event_controls(event, jurisdiction)
+          
