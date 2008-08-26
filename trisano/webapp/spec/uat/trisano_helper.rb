@@ -511,7 +511,7 @@ module TrisanoHelper
     return(!browser.is_text_present("delete-section-#{element_id}"))
   end
   
-  # Deletes the section with the name provided
+  # Deletes the group with the name provided
   def delete_group(browser, name)
     element_id = get_form_element_id(browser, name, GROUP_ID_PREFIX)
     browser.click("delete-group-#{element_id}")

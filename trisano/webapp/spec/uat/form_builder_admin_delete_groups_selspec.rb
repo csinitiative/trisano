@@ -35,9 +35,8 @@ describe 'Form Builder Admin Delete Group Functionality' do
     @question_text = nil
     end
   
-  it 'should add a group to the form' do
+  it 'should add a group to a new  form' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
-    
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
     add_question_to_library(@browser, @question_text, @group_name)
     delete_question(@browser, @question_text).should be_true    
@@ -45,20 +44,17 @@ describe 'Form Builder Admin Delete Group Functionality' do
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     edit_cmr(@browser)
-    
     @browser.is_text_present(@question_text).should be_true
-    
+  end
+  
+  it 'should delete the group from the form' do
     click_nav_forms(@browser)
     click_build_form(@browser, @form_name)
-    
     delete_group(@browser, @group_name).should be_true
-    
     publish_form(@browser)
     click_nav_cmrs(@browser)
     click_resource_edit(@browser, "cmrs", @cmr_last_name)
-   
     @browser.is_text_present(@question_text).should be_false
-    
   end
     
 end
