@@ -369,6 +369,21 @@ module TrisanoHelper
   def add_question_to_after_core_field_config(browser, element_name, question_attributes = {})
     return add_question_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, question_attributes)
   end
+
+  def add_all_questions_from_group_to_view(browser, element_name, group_name)
+
+    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
+    browser.click("add-question-#{element_id}")
+    wait_for_element_present("new-question-form", browser)
+    browser.click("link=Click to add all questions in group: #{group_name}")
+    wait_for_element_not_present("new-question-form", browser)
+    
+    if browser.is_text_present(group_name)
+      return true
+    else
+      return false      
+    end
+  end
   
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
   def add_follow_up_to_question(browser, question_text, condition)
@@ -494,6 +509,14 @@ module TrisanoHelper
     browser.click("delete-section-#{element_id}")
     browser.get_confirmation()   
     return(!browser.is_text_present("delete-section-#{element_id}"))
+  end
+  
+  # Deletes the section with the name provided
+  def delete_group(browser, name)
+    element_id = get_form_element_id(browser, name, GROUP_ID_PREFIX)
+    browser.click("delete-group-#{element_id}")
+    browser.get_confirmation()   
+    return(!browser.is_text_present("delete-group-#{element_id}"))
   end
   
   # Deletes the question with the name provided
