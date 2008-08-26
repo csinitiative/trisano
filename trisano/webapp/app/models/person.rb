@@ -20,6 +20,7 @@ class Person < ActiveRecord::Base
   belongs_to :birth_gender, :class_name => 'ExternalCode'
   belongs_to :ethnicity, :class_name => 'ExternalCode'
   belongs_to :primary_language, :class_name => 'ExternalCode'
+  belongs_to :disposition, :class_name => 'ExternalCode'
   belongs_to :entity 
 
   validates_presence_of :last_name

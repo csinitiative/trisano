@@ -34,7 +34,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     options[:include_blank] = true unless options[:include_blank] == false
     html_options[:onchange] = change_event unless change_event.blank?
     self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
-
   end
 
   def multi_select_code_field(attribute, code_name, options, html_options)
@@ -168,7 +167,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   private
 
   def is_external_code?(code_name)
-    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "eventstatus", "telephonelocationtype"]
+    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "eventstatus", "telephonelocationtype", "contactdispositiontype"]
     @external_codes.each {|ec| return TRUE if ec == code_name}
     return FALSE
   end

@@ -383,3 +383,17 @@ telephonelocationtype_mobile:
   the_code: "MT"
   code_description: "Mobile"
   sort_order: 20
+
+contactdispositiontype_ooj:
+  id: 2200
+  code_name: 'contactdispositiontype'
+  the_code: 'OOJ'
+  code_description: 'Out of jurisdiction'
+  sort_order: 100
+
+contactdispositiontype_not_infected:
+  id: 2201
+  code_name: "contactdispositiontype"
+  the_code: "NI"
+  code_description: "Not Infected"
+  sort_order: 60

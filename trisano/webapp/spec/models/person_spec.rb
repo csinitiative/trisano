@@ -81,13 +81,18 @@ describe Person, "with associated codes" do
   before(:each) do
     @ethnicity = ExternalCode.find_by_code_name('ethnicity')
     @gender = ExternalCode.find_by_code_name('gender')
-    @person = Person.create(:last_name => 'Lacey', :ethnicity => @ethnicity, :birth_gender => @gender)
+    @disposition = ExternalCode.find_by_code_name('contactdispostiontype')
+    @person = Person.create(:last_name => 'Lacey', 
+                            :ethnicity => @ethnicity, 
+                            :birth_gender => @gender,
+                            :disposition => @disposition)
   end
 
   it "should retrieve with the same codes" do
     person = Person.find(@person.id)
     person.ethnicity.should eql(@ethnicity)
     person.birth_gender.should eql(@gender)
+    person.disposition.should eql(@disposition)
   end
 end
 

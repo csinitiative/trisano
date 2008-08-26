@@ -32,6 +32,7 @@ describe 'Adding multiple contacts to a CMR' do
     sleep(1)
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Lou"
+    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Unable to Locate"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Abbott"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Bud"
 
@@ -40,6 +41,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present('Costello').should be_true
     @browser.is_text_present('Lou').should be_true
+    @browser.is_text_present('Unable to Locate').should be_true
     @browser.is_text_present('Abbott').should be_true
     @browser.is_text_present('Bud').should be_true
   end
@@ -56,8 +58,10 @@ describe 'Adding multiple contacts to a CMR' do
     edit_cmr(@browser)
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "William"
+    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Not Infected"   
     save_cmr(@browser).should be_true
     @browser.is_text_present('William').should be_true
+    @browser.is_text_present('Not Infected')
   end
 
   it "should allow for editing a contact event" do

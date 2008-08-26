@@ -84,4 +84,11 @@ describe ExternalCode do
     end
     
   end
+
+  describe "contact disposition codes" do
+    it "should not be nil" do
+      code = ExternalCode.find_by_code_name('contactdispositiontype')
+      code.should_not be_nil
+    end
+  end
 end

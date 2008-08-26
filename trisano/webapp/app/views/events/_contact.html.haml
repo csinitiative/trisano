@@ -29,6 +29,9 @@
     %span{:class => 'horiz'}
       = contact_fields.label(:first_name)
       = contact_fields.text_field(:first_name, :size => 20)
+    %span.horiz
+      = contact_fields.label(:disposition_id)
+      = contact_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
   
     %span{:class => "horiz", :style => "margin-top: 30px"}
       = link_to_function "Remove" , "$(this).up('.contact').remove()", {:id => "remove_contact_link"}
