@@ -35,17 +35,17 @@ describe 'Form Builder Admin' do
     @no_group_question_text  = nil
   end
   
-  it 'should create a new form and add and delete questions to the library' do
+  it 'should create a new form and add  questions to the library' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     add_question_to_view(@browser, "Default View", {:question_text => @no_group_question_text, :data_type => "Single line text"})
     add_question_to_library(@browser, @no_group_question_text)
     add_question_to_view(@browser, "Default View", {:question_text => @group_question_text, :data_type => "Single line text"})
     add_question_to_library(@browser, @group_question_text, @group_name)
-    open_form_builder_library_admin(@browser).should be_true
-    delete_question(@browser, @no_group_question_text).should be_true
-    delete_question(@browser, @group_question_text).should be_true
   end
   
+  it 'should delete the questions from the library'
+  open_form_builder_library_admin(@browser).should be_true
+  delete_question(@browser, @no_group_question_text).should be_true
+  delete_question(@browser, @group_question_text).should be_true
 end
-
-
+  

@@ -395,6 +395,17 @@ module TrisanoHelper
     return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
   end
   
+  def add_invalid_core_follow_up_to_view(browser, element_name, condition, invalid_core_path)
+    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
+    browser.click("add-follow-up-#{element_id}")
+    wait_for_element_present("new-follow-up-form", browser)
+    browser.type "model_auto_completer_tf", condition
+    browser.select "follow_up_element_core_path", "label=Patient birth gender"
+    browser.get_eval("element = window.document.getElementById(\"follow_up_element_core_path\").options[1]; element.value = '#{invalid_core_path}'; element.selected = true")
+    browser.click "follow_up_element_submit"
+    wait_for_element_not_present("new-follow-up-form", browser)
+  end
+  
   # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
   def add_value_set_to_question(browser, question_text, value_set_name, value_one, value_two, value_three)
     element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
@@ -798,7 +809,7 @@ module TrisanoHelper
     browser.click "follow_up_element_submit"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
-    
+      
   def get_form_element_id(browser, name, element_id_prefix)
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
