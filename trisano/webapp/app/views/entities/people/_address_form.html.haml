@@ -1,0 +1,10 @@
+%fieldset.form
+  %legend Address
+  -if entity_data.entities_location.nil?
+    -entity_data.entities_location = {:entity_location_type_id => ExternalCode.unspecified_location_id, :primary_yn_id => ExternalCode.yes_id, :location_type_id => Code.find_by_code_name_and_code_description('locationtype', "Address Location Type").id}
+  -f.fields_for(:entities_location, entity_data.entities_location, :builder => ExtendedFormBuilder) do |el|
+    =el.hidden_field(:entity_id)
+    =el.hidden_field(:entity_location_type_id)
+    =el.hidden_field(:primary_yn_id)
+    =el.hidden_field(:location_type_id)
+  =render :partial => 'locations/address_form', :locals => {:f => f, :address => entity_data.address, :event => event}

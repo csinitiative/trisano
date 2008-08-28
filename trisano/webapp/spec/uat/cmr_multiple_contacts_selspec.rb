@@ -79,6 +79,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "contact_event_active_patient__active_primary_entity__person_first_name", "Oliver"
     @browser.type "contact_event_active_patient__active_primary_entity__address_street_number", "333"
     @browser.type "contact_event_active_patient__active_primary_entity__address_street_name", "33rd Street"
+    @browser.select "contact_event_active_patient__active_primary_entity__person_disposition_id", "label=Infected, brought to treatment"
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a lab result"
     @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"
@@ -89,6 +90,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('33rd Street').should be_true
     @browser.is_text_present('Abbott Labs').should be_true
     @browser.is_text_present('Positive').should be_true
+    #TODO @browser.is_text_present('Infected, brought to treatment').should be_true
   end
 
 end

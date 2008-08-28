@@ -1,0 +1,16 @@
+%fieldset.form
+  %legend Demographics
+  -f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p|
+    -core_element :birth_gender_id, p, :horiz do
+      =p.label(:birth_gender)
+      =p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event, @can_investigate)
+    -core_element :ethnicity_id, p, :horiz do
+      =p.label(:ethnicity)
+      =p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event, @can_investigate)
+    %span.horiz
+      =f.label(:race)
+      =f.multi_select_code_field(:race_ids, 'race', {}, {})
+    -core_element :primary_language_id, p, :horiz do 
+      =p.label(:primary_language) 
+      =p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event, @can_investigate)
+

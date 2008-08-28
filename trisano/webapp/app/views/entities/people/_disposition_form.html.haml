@@ -1,0 +1,6 @@
+%fieldset.form
+  %legend Disposition
+  -f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p|
+    %span.horiz
+      =p.label(:disposition_id)
+      =p.dropdown_code_field(:disposition_id, 'contactdispositiontype')

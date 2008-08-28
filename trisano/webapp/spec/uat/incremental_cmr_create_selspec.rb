@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-  $dont_kill_browser = true
+#  $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -71,7 +71,7 @@ describe 'User functionality for creating and saving CMRs' do
     click_core_tab(@browser, "Laboratory")
     @browser.click("link=Add a lab result")
     sleep 3
-    @browser.type('model_auto_completer_tf', 'Lab')
+    @browser.type("//input[contains(@id, 'model_auto_completer_tf')]", 'Lab')
     @browser.type('morbidity_event_new_lab_attributes__lab_result_text', 'Positive')
     @browser.select 'morbidity_event_new_lab_attributes__specimen_source_id', 'label=Animal head'
     save_cmr(@browser).should be_true
@@ -94,7 +94,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the reporting info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Reporting")
-    @browser.type 'model_auto_completer_tf', 'Happy Jacks Health Store'
+    @browser.type "//input[contains(@id, 'model_auto_completer_tf')]", 'Happy Jacks Health Store'
     save_cmr(@browser).should be_true
   end
 
@@ -121,6 +121,6 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.is_text_present('Salt Lake Valley Health Department').should be_true
     
     click_core_tab(@browser, "Contacts")
-    @browser.is_text_present('Smurfette').should be_true
+    @browser.is_text_present('Costello').should be_true
   end
 end
