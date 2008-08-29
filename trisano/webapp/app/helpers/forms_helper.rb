@@ -55,8 +55,7 @@ module FormsHelper
     result += "&nbsp;|&nbsp;"
     result += add_follow_up_link(element, "tab", true)
     result += "&nbsp;|&nbsp;" + delete_view_link(element)
-    result += "</li>"
-
+    
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
@@ -70,6 +69,8 @@ module FormsHelper
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
+    result += "</li>"
+    
     result
   end
   
@@ -82,8 +83,6 @@ module FormsHelper
     result += add_question_link(element, "tab")
     result += "&nbsp;|&nbsp;" + delete_view_link(element)
     
-    result += "</li>"
-    
     result += "<div id='section-mods-" + element.id.to_s + "'></div>"
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     
@@ -95,6 +94,8 @@ module FormsHelper
       result += "</ul>"
       result += sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
+    
+    result += "</li>"
   
     result  
   end
@@ -105,8 +106,6 @@ module FormsHelper
 
     result += "&nbsp;&nbsp;" + delete_core_field_link(element)
 
-    result += "</li>"
-    
     if include_children && element.children?
       result += "<ul id='core_field_" + element.id.to_s + "_children' class='fb-core-field-children' style='clear: both'>"
       element.children.each do |child|
@@ -115,6 +114,8 @@ module FormsHelper
       result += "</ul>"
     end
     
+    result += "</li>"
+    
   end
   
   def render_before_core_field(element, include_children)
@@ -122,8 +123,6 @@ module FormsHelper
     result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
     
     result += "&nbsp;" + add_question_link(element, "before config")
-    
-    result += "</li>"
     
     if include_children && element.children?
       result += "<ul id='before_core_field_" + element.id.to_s + "_children' class='fb-before-core-field-children' style='clear: both'>"
@@ -135,14 +134,14 @@ module FormsHelper
     end
     
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
+    
+    result += "</li>"
   end
     
   def render_after_core_field(element, include_children)
     result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
     
     result += "&nbsp;" + add_question_link(element, "after config")
-    
-    result += "</li>"
     
     if include_children && element.children?
       result += "<ul id='after_core_field_" + element.id.to_s + "_children' class='fb-after-core-field-children' style='clear: both'>"
@@ -155,6 +154,8 @@ module FormsHelper
     
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     
+    result += "</li>"
+    
   end
   
   def render_section(element, include_children=true)
@@ -162,8 +163,7 @@ module FormsHelper
     result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;" + add_question_link(element, "section") if (include_children)
     result += "&nbsp;|&nbsp;" + delete_section_link(element)
-    result += "</li>"
-
+    
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
 
     if include_children && element.children?
@@ -175,6 +175,8 @@ module FormsHelper
       result += sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
     
+    result += "</li>"
+    
     result
   end
 
@@ -182,8 +184,7 @@ module FormsHelper
 
     result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b>"
     result += "&nbsp;&nbsp;" + delete_group_link(element)
-    result += "</li>"
-
+    
     if include_children && element.children?
       result += "<ul id='section_" + element.id.to_s + "_children' style='clear: both'>"
       element.children.each do |child|
@@ -192,6 +193,8 @@ module FormsHelper
       result += "</ul>"
       result += sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
     end
+    
+    result += "</li>"
     
     result
   end
@@ -219,8 +222,6 @@ module FormsHelper
     result += "&nbsp;|&nbsp;" + add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
     result += "&nbsp;|&nbsp;" + delete_question_link(element)
     
-    result += "</li>"
-
     result += "<div id='question-mods-" + element.id.to_s + "'></div>"
     result += "<div id='library-mods-" + element.id.to_s + "'></div>"
     result += "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
@@ -233,6 +234,8 @@ module FormsHelper
       end
       result += "</ul>"
     end
+    
+    result += "</li>"
     
     result
     

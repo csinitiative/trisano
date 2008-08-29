@@ -56,12 +56,15 @@
                 %li.diseaselist= h disease.disease_name
           %td
             = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
-    %ul{:id => "root-element-list"}
-      = render :partial => 'forms/elements'
-    %ul{:id => "core-element-list"}
-      = render :partial => 'forms/core_elements'
-    %ul{:id => "core-field-element-list"}
-      = render :partial => 'forms/core_field_elements'
+    %div{:id => "form_children"}
+      %ul{:id => "root-element-list"}
+        = render :partial => 'forms/elements'
+    %div{:id => "core_form_children"}
+      %ul{:id => "core-element-list"}
+        = render :partial => 'forms/core_elements'
+    %div{:id => "core_field_form_children"}
+      %ul{:id => "core-field-element-list"}
+        = render :partial => 'forms/core_field_elements'
 #sidebar
   = link_to 'Edit form information', edit_form_path(@form)
   %br
