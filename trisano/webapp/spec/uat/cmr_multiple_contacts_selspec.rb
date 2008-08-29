@@ -90,7 +90,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('33rd Street').should be_true
     @browser.is_text_present('Abbott Labs').should be_true
     @browser.is_text_present('Positive').should be_true
-    #TODO @browser.is_text_present('Infected, brought to treatment').should be_true
+    @browser.is_text_present('Infected, brought to treatment').should be_true
   end
 
 end

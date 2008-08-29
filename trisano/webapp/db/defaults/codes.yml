@@ -1085,3 +1085,59 @@
   the_code: "TLT"
   code_description: "Telephone Location Type"
 
+    ### CONTACT DISPOSITION TYPES ###
+
+- code_name: 'contactdispositiontype'
+  sort_order: 0
+  code_description: 'Preventative treatment'
+  the_code: 'PT'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 10
+  code_description: 'Refused preventative treatment'
+  the_code: 'RPT'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 20
+  code_description: 'Infected, brought to treatment'
+  the_code: 'IBT'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 30
+  code_description: 'Infected, not treated'
+  the_code: 'INT'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 40
+  code_description: 'Previously treated for this infection'
+  the_code: 'PTFTI'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 50
+  code_description: 'Not infected'
+  the_code: 'NI'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 60
+  code_description: 'Insufficient information to begin investigation'
+  the_code: 'IIBI'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 70
+  code_description: 'Unable to locate'
+  the_code: 'UTL'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 80
+  code_description: 'Located, refused exam and/or treament'
+  the_code: 'LR'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 90
+  code_description: 'Out of jurisdiction'
+  the_code: 'OOJ'
+
+- code_name: 'contactdispositiontype'
+  sort_order: 100
+  code_description: 'Other'
+  the_code: 'O'

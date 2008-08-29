@@ -23,19 +23,25 @@ class AddContactDispositionToPeople < ActiveRecord::Migration
   def self.up
     add_column(:people, :disposition_id, :integer)    
     
-    [{:code_description => 'Preventative treatment', :the_code => 'PT'},
-     {:code_description => 'Refused preventative treatment', :the_code => 'RPT'},
-     {:code_description => 'Infected, brought to treatment', :the_code => 'IBT'},
-     {:code_description => 'Infected, not treated', :the_code => 'INT'},
-     {:code_description => 'Previously treated for this infection', :the_code => 'PTFTI'},
-     {:code_description => 'Not infected', :the_code => 'NI'},
-     {:code_description => 'Insufficient information to begin investigation', :the_code => 'IIBI'},
-     {:code_description => 'Unable to locate', :the_code => 'UTL'},
-     {:code_description => 'Located, refused exam and/or treament', :the_code => 'LR'},
-     {:code_description => 'Out of jurisdiction', :the_code => 'OOJ'},
-     {:code_description => 'Other', :the_code => 'O'}
-    ].each_with_index do |type, i|
-      ExternalCode.create!(type.merge(:sort_order => i*10, :code_name => 'contactdispositiontype'))
+    if RAILS_ENV == 'production'
+      transaction do
+        say 'Adding defaault contact dispostion codes to external_codes table'
+
+        [{:code_description => 'Preventative treatment', :the_code => 'PT'},
+         {:code_description => 'Refused preventative treatment', :the_code => 'RPT'},
+         {:code_description => 'Infected, brought to treatment', :the_code => 'IBT'},
+         {:code_description => 'Infected, not treated', :the_code => 'INT'},
+         {:code_description => 'Previously treated for this infection', :the_code => 'PTFTI'},
+         {:code_description => 'Not infected', :the_code => 'NI'},
+         {:code_description => 'Insufficient information to begin investigation', :the_code => 'IIBI'},
+         {:code_description => 'Unable to locate', :the_code => 'UTL'},
+         {:code_description => 'Located, refused exam and/or treament', :the_code => 'LR'},
+         {:code_description => 'Out of jurisdiction', :the_code => 'OOJ'},
+         {:code_description => 'Other', :the_code => 'O'}
+        ].each_with_index do |type, i|
+          ExternalCode.create!(type.merge(:sort_order => i*10, :code_name => 'contactdispositiontype'))
+        end
+      end
     end
     
     add_foreign_key(:people, :disposition_id, :external_codes)
@@ -43,7 +49,9 @@ class AddContactDispositionToPeople < ActiveRecord::Migration
 
   def self.down
     remove_foreign_key(:people, :disposition_id)
-    ExternalCode.delete_all :code_name => 'contactdispositiontype'
+    if RAILS_ENV == 'production'
+      ExternalCode.delete_all :code_name => 'contactdispositiontype'
+    end
     remove_column(:people, :disposition_id)    
   end
 end

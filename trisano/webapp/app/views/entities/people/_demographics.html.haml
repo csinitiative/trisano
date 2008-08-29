@@ -12,17 +12,21 @@
 -# 
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-
 %fieldset.form
-  %legend Name
-  -f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p|
-    -core_element :last_name, p, :horiz do
-      =p.label(:last_name)
-      =p.core_text_field(:last_name, {:size => 25}, event, @can_investigate)
-    -core_element :first_name, p, :horiz do
-      =p.label(:first_name)
-      =p.core_text_field(:first_name, {:size => 25}, event, @can_investigate)
-    -core_element :middle_name, p, :horiz do
-      =p.label(:middle_name)
-      =p.core_text_field(:middle_name, {:size => 25}, event, @can_investigate)
-  
+  %legend Demographics
+  -core_element_show :birth_gender_id, person_form, :horiz do
+    =person_form.label(:birth_gender_id)
+    =l person.birth_gender
+  -core_element_show :primary_language_id, person_form, :horiz do
+    =person_form.label(:primary_language_id)
+    =l person.primary_language
+  -core_element_show :ethnicity_id, person_form, :horiz do
+    =person_form.label(:ethnicity_id)
+    =l person.ethnicity
+  %br
+  %br
+  %span.horiz
+    %label Race
+    -races = entity_data.races.map{|race_id| l(race_id)}
+    =races[0...-1].join(', ') + ' and ' if races.size > 1
+    =races[-1]
