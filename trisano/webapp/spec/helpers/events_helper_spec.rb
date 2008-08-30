@@ -55,6 +55,7 @@ describe EventsHelper do
     person.stub!(:ethnicity_description).and_return('Not latino')
     person.stub!(:race_description).and_return('White')
     person.stub!(:primary_language_description).and_return('English')
+    person.should_receive(:disposition_description).and_return('Not infected')
     person.stub!(:address).and_return(address)
     entity = mock(Entity)
     entity.stub!(:person).and_return(person)
@@ -226,6 +227,7 @@ describe EventsHelper do
      'Not latino',
      'White',
      'English',
+     'Not infected',
      'Numero uno',
      'No (answer three)'].join(',') + "\n"
   end
@@ -277,6 +279,7 @@ describe EventsHelper do
      'Not latino',
      'White',
      'English',
+     'Not infected',
      'Numero uno',
      'No (answer three)'].join(',') + "\n"
   end
@@ -328,6 +331,7 @@ describe EventsHelper do
        contact_ethnicity
        contact_race
        contact_primary_language
+       contact_disposition
        short_name_1
        short_name_3)
   end

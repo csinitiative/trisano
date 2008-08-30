@@ -16,17 +16,15 @@
   %legend Demographics
   -core_element_show :birth_gender_id, person_form, :horiz do
     =person_form.label(:birth_gender_id)
-    =l person.birth_gender
+    =person.birth_gender_description
   -core_element_show :primary_language_id, person_form, :horiz do
     =person_form.label(:primary_language_id)
-    =l person.primary_language
+    =person.primary_language_description
   -core_element_show :ethnicity_id, person_form, :horiz do
     =person_form.label(:ethnicity_id)
-    =l person.ethnicity
+    =person.ethnicity_description
   %br
   %br
   %span.horiz
     %label Race
-    -races = entity_data.races.map{|race_id| l(race_id)}
-    =races[0...-1].join(', ') + ' and ' if races.size > 1
-    =races[-1]
+    =person.race_description

@@ -78,7 +78,8 @@ module Exporters
            contact_birth_gender
            contact_ethnicity
            contact_race
-           contact_primary_language)
+           contact_primary_language
+           contact_disposition)
       end
 
       # A complete export of all events, includes the header. The
@@ -204,6 +205,7 @@ module Exporters
         fields << contact.ethnicity_description
         fields << contact.race_description
         fields << contact.primary_language_description
+        fields << contact.disposition_description
       end
 
       def fill_form_answers(fields, event)

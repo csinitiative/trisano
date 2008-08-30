@@ -113,14 +113,17 @@ class Person < ActiveRecord::Base
     primary_language.code_description unless primary_language.blank?
   end
 
+  def disposition_description
+    disposition.code_description unless disposition.blank?
+  end
+
   # Builds a presentable description of the person's race.
   def race_description
     unless entity.blank? || entity.races.empty?
       races = entity.races.collect {|race| race.code_description}
-      return races.first unless races.size > 1
-      description = races.join(', ')
-      description[description.rindex(','), 1] = ' and'
-      description
+      description = races[0...-1] * ', '
+      description += ' and ' if races.size > 1
+      return description + races[-1]
     end  
   end
 
