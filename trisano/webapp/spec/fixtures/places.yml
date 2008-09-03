@@ -34,3 +34,13 @@ Davis_County:
   short_name: "Davis County"
   place_type_id: 2202
   entity_id: 102
+
+##############
+#
+# Other places
+#
+Davis_Nat:
+  id: 102
+  name: "Davis Natatorium"
+  place_type_id: 2206
+  entity_id: 103

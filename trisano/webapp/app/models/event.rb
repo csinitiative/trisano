@@ -49,6 +49,11 @@ class Event < ActiveRecord::Base
     :order => 'created_at ASC',
     :dependent => :destroy
 
+  has_many :place_exposures, :class_name => 'Participation',
+    :conditions => ['role_id = ?', Code.find_by_code_name_and_code_description('participant', 'Place Exposure').id],
+    :order => 'created_at ASC',
+    :dependent => :destroy
+
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
 
@@ -62,6 +67,7 @@ class Event < ActiveRecord::Base
   validates_associated :hospitalized_health_facilities
   validates_associated :diagnosing_health_facilities
   validates_associated :contacts
+  validates_associated :place_exposures
   validates_associated :participations
 
   before_validation_on_create :save_associations, :set_event_onset_date
@@ -271,6 +277,27 @@ class Event < ActiveRecord::Base
         contact.secondary_entity.person_temp.attributes = attributes
       else
         contacts.delete(contact)
+      end
+    end
+  end
+
+  def new_place_exposure_attributes=(place_exposure_attributes)
+    place_exposure_attributes.each do |attributes|
+      next if attributes.values_blank?
+      place_exposure_participation = place_exposures.build(:role_id => Event.participation_code('Place Exposure'))
+      place_exposure_entity = place_exposure_participation.build_secondary_entity
+      place_exposure_entity.entity_type = 'place'
+      place_exposure_entity.build_place_temp(attributes)
+    end
+  end
+
+  def existing_place_exposure_attributes=(place_exposure_attributes)
+    place_exposures.reject(&:new_record?).each do |place_exposure|
+      attributes = place_exposure_attributes[place_exposure.secondary_entity.id.to_s]
+      if attributes
+        place_exposure.secondary_entity.place_temp.attributes = attributes
+      else
+        place_exposures.delete(place_exposure)
       end
     end
   end

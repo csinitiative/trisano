@@ -37,3 +37,7 @@ Lab_Guy:
 Davis_County:
   id: 102
   entity_type: "place"
+
+Davis_Nat:
+  id: 103
+  entity_type: "place"

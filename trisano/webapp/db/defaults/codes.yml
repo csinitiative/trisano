@@ -1045,7 +1045,12 @@
   the_code: "DA"
   code_description: "Diagnosed At"
   sort_order: 60
-  
+
+- code_name: "participant"
+  the_code: "PE"
+  code_description: "Place Exposure"
+  sort_order: 65
+   
   ### PHONE LOCATION TYPES ###
 
 - code_name: "telephonelocationtype"

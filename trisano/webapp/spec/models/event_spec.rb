@@ -549,6 +549,111 @@ describe MorbidityEvent do
 
   end
 
+  describe "Place Exposures" do
+
+    before(:each) do
+      @event = MorbidityEvent.new(event_hash)
+    end
+    
+    describe "a new Morbidity event" do
+      it "should have an empty list of exposures" do
+        @event.place_exposures.should be_empty
+      end
+    end
+
+    describe "receiving a place exposure w/ no name" do
+      before(:each) do
+        new_place_exposure_hash = {
+          "new_place_exposure_attributes" => 
+          [
+           {'name' => '', 'place_type_id' => codes(:place_type_other).id}
+          ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(new_place_exposure_hash))
+      end
+
+      it "should return invalid" do
+        @event.should_not be_valid
+        @event.place_exposures.first.secondary_entity.place_temp.should have(1).error_on(:name)
+      end
+    end
+
+    describe "receiving a new place exposure" do
+      before(:each) do
+        new_place_exposure_hash = {
+          "new_place_exposure_attributes" => 
+          [
+           {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id}
+          ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(new_place_exposure_hash))
+      end
+
+      it "should create a new participation linked to the event" do
+        lambda {@event.save}.should change {Participation.count}.by(2)
+        @event.participations.find_by_role_id(codes(:participant_place_exposure).id).should_not be_nil
+      end
+
+      it "should create a new place" do
+        lambda {@event.save}.should change {Place.count}.by(1)
+        @event.place_exposures.first.secondary_entity.place_temp.name.should == 'Davis Natatorium'
+        @event.place_exposures.first.secondary_entity.place_temp.place_type.code_description.should == 'Other'
+      end    
+          
+    end
+
+    describe "receiving multiple new place exposures" do
+      before(:each) do
+        place_exposures_hash = {
+          'new_place_exposure_attributes' => 
+          [
+           {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id},
+           {'name' => 'Sonic', 'place_type_id' => codes(:place_type_other).id}
+          ]
+        }
+        @event = MorbidityEvent.new(event_hash.merge(place_exposures_hash))
+      end
+
+      it "should create new participations linked to event" do
+        lambda {@event.save}.should change {Participation.count}.by(3)
+        @event.participations.find_by_role_id(codes(:participant_place_exposure).id).should_not be_nil
+      end
+
+      it "should add two new places" do
+        lambda {@event.save}.should change {Place.count}.by(2)
+      end
+    end
+
+    describe 'receiving an edited place exposure' do
+      before(:each) do
+        @existing_place_exposure_hash = {
+          "existing_place_exposure_attributes" => {"#{entities(:Davis_Nat).id}" => {"name" => "Davis Hot Springs", 'place_type_id' => codes(:place_type_other).id}}
+        }
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
+      end
+
+      it 'should update the existing place exposure' do
+        @event.place_exposures.first.secondary_entity.place_temp.name.should == "Davis Natatorium"
+        lambda {@event.update_attributes(@existing_place_exposure_hash)}.should_not change {Participation.count}
+        @event.place_exposures.first.secondary_entity.place_temp.name.should == "Davis Hot Springs"
+      end
+    end
+
+    describe 'receiving an empty place exposure hash' do
+      before(:each) do
+        @existing_place_exposure_hash = {
+          "existing_place_exposure_attributes" => {}
+        }
+        @event = MorbidityEvent.find(events(:marks_cmr).id)
+      end
+
+      it 'should remove existing place exposures' do
+        lambda {@event.update_attributes(@existing_place_exposure_hash)}.should change {Participation.count}.by(-1)
+      end
+    end
+
+  end
+
   describe "Routing an event" do
 
     before(:each) do

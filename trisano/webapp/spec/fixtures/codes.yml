@@ -178,6 +178,12 @@ participant_testing_lab:
   the_code: "EB"
   code_description: "Tested By"
 
+participant_place_exposure:
+  id: 2400
+  code_name: "participant"
+  the_code: "PE"
+  code_description: "Place Exposure"
+
 address_location_type:
   id: 2311
   code_name: "locationtype"
