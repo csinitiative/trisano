@@ -24,24 +24,49 @@ class FormElement < ActiveRecord::Base
   # post-saving activities in the transaction
   def save_and_add_to_form
     if self.valid?
-      transaction do
-        parent_element = FormElement.find(parent_element_id)
-        self.tree_id = parent_element.tree_id
-        self.form_id = parent_element.form_id
-        self.save
-        yield if block_given?
-        parent_element.add_child(self)
+      begin
+        transaction do
+          parent_element = FormElement.find(parent_element_id)
+          self.tree_id = parent_element.tree_id
+          self.form_id = parent_element.form_id
+          self.save
+          yield if block_given?
+          parent_element.add_child(self)
+          validate_form_structure
+          return true
+        end
+      rescue Exception => ex
+        return nil
       end
     end
   end
   
   def destroy_with_dependencies
-    transaction do
-      if (self.class.name == "QuestionElement")
-        self.question.destroy
+    begin
+      transaction do
+        if (self.class.name == "QuestionElement")
+          self.question.destroy
+        end
+        self.destroy
+        validate_form_structure
+        return true
       end
-      self.destroy
+    rescue Exception => ex
+      return nil
     end
+  end
+  
+  def reorder_element_children(ids)
+    begin
+      transaction do
+        self.reorder_children(ids)
+        validate_form_structure
+        return true
+      end
+    rescue Exception => ex
+      return nil
+    end
+    
   end
   
   def children_count_by_type(type_name)
@@ -66,10 +91,17 @@ class FormElement < ActiveRecord::Base
   end
 
   def copy_from_library(lib_element_id)
-    transaction do
-      library_element = FormElement.find(lib_element_id)
-      self.add_child(copy_children(library_element, nil, self.form_id, self.tree_id, false))
+    begin
+      transaction do
+        library_element = FormElement.find(lib_element_id)
+        self.add_child(copy_children(library_element, nil, self.form_id, self.tree_id, false))
+        validate_form_structure
+        return true
+      end
+    rescue Exception => ex
+      return
     end
+    
   end
 
   # Returns root node of the copied tree
@@ -109,6 +141,18 @@ class FormElement < ActiveRecord::Base
       end
     end
     
+  end
+  
+  private
+  
+  def validate_form_structure
+    structural_errors = form.structure_valid?
+    unless structural_errors.empty?
+      structural_errors.each do |error|
+        errors.add_to_base(error)
+      end
+      raise
+    end
   end
     
 end

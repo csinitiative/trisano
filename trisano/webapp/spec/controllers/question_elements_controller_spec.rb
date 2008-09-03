@@ -266,6 +266,7 @@ describe QuestionElementsController do
       end
   
       it "should re-render 'new'" do
+        @question_element.stub!(:question=)
         do_post
         response.should render_template('new')
       end

@@ -79,9 +79,9 @@ class FormElementsController <  AdminController
   end
 
   def destroy
-    begin
-      @form_element = FormElement.find(params[:id])
-      @form_element.destroy_with_dependencies
+    @form_element = FormElement.find(params[:id])
+    
+    if @form_element.destroy_with_dependencies
       
       # A missing form_id means an element in the library is being destroyed, 
       # so the list of elements in the library must be rebuilt for the view (filter
@@ -92,8 +92,8 @@ class FormElementsController <  AdminController
       else
         @form = Form.find(@form_element.form_id)
       end
-    rescue Exception => ex
-      logger.debug ex
+    else
+      @rjs_errors = @form_element.errors
       flash[:notice] = 'An error occurred during the deletion process.'
       render :template => 'rjs-error'
     end

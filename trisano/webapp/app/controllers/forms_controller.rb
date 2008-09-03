@@ -117,15 +117,14 @@ class FormsController < AdminController
   end
   
   def order_section_children
-    begin
-      @section = FormElement.find(params[:id])
-      section_name, section_items = params.find { |k, v| k =~ /children$/ }
-      reorder_ids = section_items.collect {|id| id.to_i}
-      @section.reorder_children reorder_ids
-      flash[:notice] = 'The form elements were successfully reordered.'
+    @section = FormElement.find(params[:id])
+    section_name, section_items = params.find { |k, v| k =~ /children$/ }
+    reorder_ids = section_items.collect {|id| id.to_i}
+      
+    if @section.reorder_element_children(reorder_ids)
       @form = Form.find(@section.form_id)
-    rescue Exception => ex
-      logger.debug ex
+    else
+      @rjs_errors = @section.errors
       flash[:notice] = 'An error occurred during the reordering process.'
       render :template => 'rjs-error'
     end
@@ -156,9 +155,8 @@ class FormsController < AdminController
     @form_element = FormElement.find(form_element_id)
     if @form_element.copy_from_library(lib_element_id)
       @form = Form.find(@form_element.form_id)
-      replace_partial = (@form_element.ancestors[1].is_a?(InvestigatorViewElementContainer)) ?  'forms/elements' : 'forms/core_elements'
-      render :partial => replace_partial
     else
+      @rjs_errors = @form_element.errors
       flash[:notice] = "Unable to copy element to form."
       render :template => 'rjs-error'
     end

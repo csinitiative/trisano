@@ -226,6 +226,8 @@ describe ValueSetElementsController do
       @value_set_element = mock_model(ValueSetElement, :to_param => "1")
       @value_set_element.stub!(:form_id).and_return(1)
       ValueSetElement.stub!(:new).and_return(@value_set_element)
+      FormElement.stub!(:find).and_return(@section_element)
+      FormElement.stub!(:roots).and_return([])
     end
     
     describe "with successful save" do
@@ -234,6 +236,7 @@ describe ValueSetElementsController do
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @value_set_element.should_receive(:save_and_add_to_form).and_return(true)
         Form.stub!(:find).with(1).and_return(mock_model(Form))
+        
         post :create, :value_set_element => {}
       end
   
@@ -253,6 +256,7 @@ describe ValueSetElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
+        @value_set_element.stub!(:parent_element_id).and_return(1)
         @value_set_element.should_receive(:save_and_add_to_form).and_return(false)
         post :create, :value_set_element => {}
       end

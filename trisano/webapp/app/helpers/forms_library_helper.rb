@@ -86,8 +86,6 @@ module FormsLibraryHelper
       else       
         if ((type == "QuestionElement") && (form_element.is_a?(GroupElement)))
           result += link_to_remote("Click to add all questions in group: #{form_element.name}", 
-            :update => "#{@replace_element}", 
-            :complete => visual_effect(:highlight, "#{@replace_element}"), 
             :url => {
               :controller => "forms", 
               :action => "from_library", 
@@ -130,8 +128,6 @@ module FormsLibraryHelper
       result += question_element.question.question_text
     else
       result += link_to_remote(question_element.question.question_text, 
-        :update => "#{@replace_element}", 
-        :complete => visual_effect(:highlight, "#{@replace_element}"), 
         :url => {
           :controller => "forms", 
           :action => "from_library", 
@@ -161,8 +157,6 @@ module FormsLibraryHelper
       result += value_set_element.name
     else
       result += link_to_remote(value_set_element.name, 
-        :update => "#{@replace_element}", 
-        :complete => visual_effect(:highlight, "#{@replace_element}"), 
         :url => {
           :controller => "forms", 
           :action => "from_library", 

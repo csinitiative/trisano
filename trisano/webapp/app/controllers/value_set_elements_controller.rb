@@ -62,6 +62,8 @@ class ValueSetElementsController <  AdminController
         format.xml  { render :xml => @value_set_element, :status => :created, :location => @value_set_element }
         format.js { @form = Form.find(@value_set_element.form_id)}
       else
+        @reference_element = FormElement.find(@value_set_element.parent_element_id)
+        @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
         format.xml  { render :xml => @value_set_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }
       end

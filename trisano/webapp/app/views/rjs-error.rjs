@@ -17,5 +17,14 @@
 
 @error_message_div = "builder-mods" if @error_message_div.blank?
 
-page.replace_html @error_message_div, "<p style='color:red'>" + flash[:notice] + "</p>"
+error_string = ""
+
+unless @rjs_errors.blank?
+  error_string += "<br/>"
+  @rjs_errors.each do |k, v|
+    error_string+= "#{v}<br/>"
+  end
+end
+
+page.replace_html @error_message_div, "<p style='color:red'>" + flash[:notice] + "#{error_string}</p>"
 flash[:notice] = ''

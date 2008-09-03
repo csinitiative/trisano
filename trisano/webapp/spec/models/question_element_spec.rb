@@ -122,7 +122,7 @@ describe QuestionElement do
         })
         
       saved = question_element.save_and_add_to_form
-      saved.tree_id.should eql(1)
+      question_element.tree_id.should eql(1)
     end
     
   end

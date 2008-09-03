@@ -378,7 +378,7 @@ describe FormsController do
       @section = mock_model(SectionElement)
       @form = mock_model(Form)
       reorder_ids = @reorder_list.collect {|id| id.to_i}
-      @section.stub!(:reorder_children).with(reorder_ids)
+      @section.stub!(:reorder_element_children).with(reorder_ids).and_return(true)
       @section.stub!(:form_id).and_return(1)
       FormElement.stub!(:find).and_return(@section)
       Form.stub!(:find).and_return(@form)
@@ -403,13 +403,13 @@ describe FormsController do
       do_post
     end
     
-    it "should call reorder_children on the found section" do
-      @section.should_receive(:reorder_children)
+    it "should call :reorder_element_children on the found section" do
+      @section.should_receive(:reorder_element_children)
       do_post
     end
     
     it "should render error template in case of error" do
-      @section.stub!(:reorder_children).and_raise(Exception)
+      @section.stub!(:reorder_element_children).and_return(nil)
       do_post
       response.should render_template('rjs-error')
     end
@@ -486,20 +486,20 @@ describe FormsController do
       post :from_library, :reference_element_id => "1", :lib_element_id => "2"
     end
 
-    it "should render forms/_elements partial on success with the investigator view branch of the form tree" do
+    it "should render forms/from_library partial on success with the investigator view branch of the form tree" do
       @ancestors = [nil, InvestigatorViewElementContainer.new]
       @form_element.stub!(:ancestors).and_return(@ancestors)
       @form_element.stub!(:copy_from_library).with("2").and_return(true)
       do_post
-      response.should render_template('forms/_elements')
+      response.should render_template('forms/from_library')
     end
     
-    it "should render forms/_core_elements partial on success with the core view branch of the form tree" do
+    it "should render forms/from_library on success with the core view branch of the form tree" do
       @ancestors = [nil, CoreViewElementContainer.new]
       @form_element.stub!(:ancestors).and_return(@ancestors)
       @form_element.stub!(:copy_from_library).with("2").and_return(true)
       do_post
-      response.should render_template('forms/_core_elements')
+      response.should render_template('forms/from_library')
     end
     
     it "should render rjs error template on failure" do

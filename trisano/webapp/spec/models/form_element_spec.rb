@@ -262,8 +262,6 @@ describe "FormElement copying from library" do
     
   end
 
-  
-   
 end
 
 describe "when filtering the library" do
@@ -343,4 +341,56 @@ describe "when filtering the library" do
     ex.message.should eql("No type specified for a from library filter")
   end
    
+end
+
+describe "when executing an operation that requires form element structure validation" do
+    
+  before(:each) do
+    @form = Form.new(:name => "Test Form")
+    @form.save_and_initialize_form_elements
+    @element = SectionElement.new(:name => "Test")
+    @element.parent_element_id = @form.investigator_view_elements_container.children[0]
+  end
+    
+  it "should return false on save if the form element structure is invalid" do
+    # Force a validation failure
+    def @element.validate_form_structure
+      errors.add_to_base("Bad error")
+      raise
+    end
+      
+    @element.save_and_add_to_form.should be_nil
+  end
+    
+  it "should return false on delete if the form element structure is invalid" do
+    @element.save_and_add_to_form.should be_true
+      
+    # Force a validation failure
+    def @element.validate_form_structure
+      errors.add_to_base("Bad error")
+      raise
+    end
+      
+    @element.destroy_with_dependencies.should be_nil
+  end
+    
+end
+  
+describe "when executing an operation that requires form element structure validation" do
+    
+  fixtures :forms, :form_elements, :questions
+    
+  it "should return false on reorder if the form element structure is invalid" do
+    @form = Form.find(1)
+    default_view = @form.investigator_view_elements_container.children[0]
+    
+    # Force a validation failure
+    def default_view.validate_form_structure
+      errors.add_to_base("Bad error")
+      raise
+    end
+    
+    default_view.reorder_element_children([3, 8, 12]).should be_nil
+  end
+    
 end
