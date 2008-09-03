@@ -40,10 +40,22 @@ class MorbidityEventsController < EventsController
   end
 
   def index
+    conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
+
+    unless params[:states].nil?
+      state_ids = get_allowed_states(params[:states])
+      if state_ids.empty?
+        render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+      else
+        conditions[0] += " AND event_status_id IN (?)"
+        conditions << state_ids
+      end
+    end
+
     @events = MorbidityEvent.find(:all, 
-      :include => :jurisdiction, 
-      :select => "jurisdiction.secondary_entity_id", 
-      :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
+                                  :include => :jurisdiction, 
+                                  :select => "jurisdiction.secondary_entity_id", 
+                                  :conditions => conditions)
 
     respond_to do |format|
       format.html # { render :template => "events/index" }
@@ -238,4 +250,10 @@ class MorbidityEventsController < EventsController
     @event.disease.disease_id = params[:disease]
   end
   
+  # Expects string of space separated event states e.g. new, acptd-lhd, etc.
+  def get_allowed_states(states)
+    query_states = states.split(" ").collect { |state| state.upcase } 
+    system_states = ExternalCode.find_all_by_code_name('eventstatus')
+    system_states.collect { |system_state| query_states.include?(system_state.the_code) ? system_state.id : nil }.compact!
+  end
 end

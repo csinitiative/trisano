@@ -50,8 +50,8 @@ Entity.transaction do
       :include => :places, 
       :select => "places.name", 
       :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
-        jurisdiction_type_id, jurisdiction])
-    Entity.create(:entity_type => 'place', :place => {:name => jurisdiction, :place_type_id => jurisdiction_type_id}) if j.nil?
+        jurisdiction_type_id, jurisdiction['name'] ])
+    Entity.create(:entity_type => 'place', :place => {:name => jurisdiction['name'], :short_name => jurisdiction['short_name'], :place_type_id => jurisdiction_type_id}) if j.nil?
   end
 end
 

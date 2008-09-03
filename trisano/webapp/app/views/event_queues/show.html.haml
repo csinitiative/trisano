@@ -5,7 +5,7 @@
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
 -# GNU Affero General Public License as published by the Free Software Foundation, either 
 -# version 3 of the License, or (at your option) any later version.
-
+-#
 -# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 -# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 -# See the GNU Affero General Public License for more details.
@@ -14,20 +14,27 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Admin Console
+  Event Queue Admin
 
 - content_for :name do
-  Dashboard
+  Event queue details:  
+  = @event_queue.queue_name
 
 - content_for :tools do
-  = link_to 'Forms', forms_path
-  |
-  = link_to 'Users', users_path
-  |
-  = link_to 'Codes', codes_path
-  |
-  = link_to 'Event Queues', event_queues_path
+  -# = link_to 'Edit', edit_event_queue_path(@event_queue)
+  -# |
+  = link_to 'Back', event_queues_path
 
-%br
-%br
-%br
+- content_for :tools_two do
+  = button_to("Create new event queue", new_event_queue_path)
+
+%fieldset
+  %legend
+    Event Queue
+
+  %span{:class => 'horiz'}
+    %label Queue name
+    %span=@event_queue.queue_name
+
+  %label Jurisdiction
+  %span=@event_queue.jurisdiction.current_place.name

@@ -30,7 +30,7 @@ Existing_Lab_One:
 
 Davis_County:
   id: 101
-  name: "Davis County"
-  short_name: "Davis"
+  name: "Davis County Health Department"
+  short_name: "Davis County"
   place_type_id: 2202
   entity_id: 102

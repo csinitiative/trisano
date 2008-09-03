@@ -1,0 +1,364 @@
+# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+#
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+# GNU Affero General Public License as published by the Free Software Foundation, either 
+# version 3 of the License, or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+# See the GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+require File.dirname(__FILE__) + '/../spec_helper'
+
+describe EventQueuesController do
+  before(:each) do
+    mock_user
+    @user.stub!(:jurisdiction_ids_for_privilege).with(:administer).and_return([75])
+  end
+
+  describe "handling GET /event_queues" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue)
+      EventQueue.stub!(:find).and_return([@event_queue])
+    end
+  
+    def do_get
+      get :index
+    end
+  
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+
+    it "should render index template" do
+      do_get
+      response.should render_template('index')
+    end
+  
+    it "should find all event_queues" do
+      EventQueue.should_receive(:find).and_return([@event_queue])
+      do_get
+    end
+  
+    it "should assign the found event_queues for the view" do
+      do_get
+      assigns[:event_queues].should == [@event_queue]
+    end
+  end
+
+  describe "handling GET /event_queues.xml" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue, :to_xml => "XML")
+      EventQueue.stub!(:find).and_return(@event_queue)
+    end
+  
+    def do_get
+      @request.env["HTTP_ACCEPT"] = "application/xml"
+      get :index
+    end
+  
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+
+    it "should find all event_queues" do
+      EventQueue.should_receive(:find).and_return([@event_queue])
+      do_get
+    end
+  
+    it "should render the found event_queues as xml" do
+      @event_queue.should_receive(:to_xml).and_return("XML")
+      do_get
+      response.body.should == "XML"
+    end
+  end
+
+  describe "handling GET /event_queues/1" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue)
+      EventQueue.stub!(:find).and_return(@event_queue)
+    end
+  
+    def do_get
+      get :show, :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should render show template" do
+      do_get
+      response.should render_template('show')
+    end
+  
+    it "should find the event_queue requested" do
+      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+      do_get
+    end
+  
+    it "should assign the found event_queue for the view" do
+      do_get
+      assigns[:event_queue].should equal(@event_queue)
+    end
+  end
+
+  describe "handling GET /event_queues/1.xml" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue, :to_xml => "XML")
+      EventQueue.stub!(:find).and_return(@event_queue)
+    end
+  
+    def do_get
+      @request.env["HTTP_ACCEPT"] = "application/xml"
+      get :show, :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should find the event_queue requested" do
+      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+      do_get
+    end
+  
+    it "should render the found event_queue as xml" do
+      @event_queue.should_receive(:to_xml).and_return("XML")
+      do_get
+      response.body.should == "XML"
+    end
+  end
+
+  describe "handling GET /event_queues/new" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue)
+      EventQueue.stub!(:new).and_return(@event_queue)
+    end
+  
+    def do_get
+      get :new
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should render new template" do
+      do_get
+      response.should render_template('new')
+    end
+  
+    it "should create an new event_queue" do
+      EventQueue.should_receive(:new).and_return(@event_queue)
+      do_get
+    end
+  
+    it "should not save the new event_queue" do
+      @event_queue.should_not_receive(:save)
+      do_get
+    end
+  
+    it "should assign the new event_queue for the view" do
+      do_get
+      assigns[:event_queue].should equal(@event_queue)
+    end
+  end
+
+  describe "handling GET /event_queues/1/edit" do
+
+    def do_get
+      get :edit, :id => "1"
+    end
+
+    # Not allowing edits for now.  If this should change, delete the following running code and uncomment the rest.
+
+    it "should return a 404" do
+      do_get
+      response.response_code.should == 404
+    end
+
+    it "should render the public 404 page" do
+      do_get
+      response.should render_template("#{RAILS_ROOT}/public/404.html")
+    end
+
+    # before(:each) do
+    #   @event_queue = mock_model(EventQueue)
+    #   EventQueue.stub!(:find).and_return(@event_queue)
+    # end
+  
+    # it "should be successful" do
+    #   do_get
+    #   response.should be_success
+    # end
+  
+    # it "should render edit template" do
+    #   do_get
+    #   response.should render_template('edit')
+    # end
+  
+    # it "should find the event_queue requested" do
+    #   EventQueue.should_receive(:find).and_return(@event_queue)
+    #   do_get
+    # end
+  
+    # it "should assign the found EventQueue for the view" do
+    #   do_get
+    #   assigns[:event_queue].should equal(@event_queue)
+    # end
+  end
+
+  describe "handling POST /event_queues" do
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue, :to_param => "1")
+      EventQueue.stub!(:new).and_return(@event_queue)
+    end
+    
+    describe "with successful save" do
+  
+      def do_post
+        @event_queue.should_receive(:save).and_return(true)
+        post :create, :event_queue => {}
+      end
+ 
+      it "should create a new event_queue" do
+        EventQueue.should_receive(:new).with({}).and_return(@event_queue)
+        do_post
+      end
+
+      it "should redirect to the new event_queue" do
+        do_post
+        response.should redirect_to(event_queue_url("1"))
+      end
+      
+    end
+    
+    describe "with failed save" do
+
+      def do_post
+        @event_queue.should_receive(:save).and_return(false)
+        post :create, :event_queue => {}
+      end
+  
+      it "should re-render 'new'" do
+        do_post
+        response.should render_template('new')
+      end
+      
+    end
+  end
+
+  describe "handling PUT /event_queues/1" do
+    
+    # Not allowing updates for now.  If this should change, delete the following running code and uncomment the rest.
+    def do_put
+      put :update, :id => "1"
+    end
+    
+    it "should return a 405" do
+      do_put
+      response.response_code.should == 405
+    end
+
+    # before(:each) do
+    #   @event_queue = mock_model(EventQueue, :to_param => "1")
+    #   EventQueue.stub!(:find).and_return(@event_queue)
+    # end
+    
+    # describe "with successful update" do
+
+    #   def do_put
+    #     @event_queue.should_receive(:update_attributes).and_return(true)
+    #     put :update, :id => "1"
+    #   end
+
+    #   it "should find the event_queue requested" do
+    #     EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+    #     do_put
+    #   end
+
+    #   it "should update the found event_queue" do
+    #     do_put
+    #     assigns(:event_queue).should equal(@event_queue)
+    #   end
+
+    #   it "should assign the found event_queue for the view" do
+    #     do_put
+    #     assigns(:event_queue).should equal(@event_queue)
+    #   end
+
+    #   it "should redirect to the event_queue" do
+    #     do_put
+    #     response.should redirect_to(event_queue_url("1"))
+    #   end
+
+    # end
+    
+    # describe "with failed update" do
+
+    #   def do_put
+    #     @event_queue.should_receive(:update_attributes).and_return(false)
+    #     put :update, :id => "1"
+    #   end
+
+    #   it "should re-render 'edit'" do
+    #     do_put
+    #     response.should render_template('edit')
+    #   end
+
+    # end
+  end
+
+  describe "handling DELETE /event_queues/1" do
+    # Not allowing deletes for now.  If this should change, delete the following running code and uncomment the rest.
+    def do_delete
+      delete :destroy, :id => "1"
+    end
+    
+    it "should return a 405" do
+      do_delete
+      response.response_code.should == 405
+    end
+
+    # before(:each) do
+    #   @event_queue = mock_model(EventQueue, :destroy => true)
+    #   EventQueue.stub!(:find).and_return(@event_queue)
+    # end
+  
+    # def do_delete
+    #   delete :destroy, :id => "1"
+    # end
+
+    # it "should find the event_queue requested" do
+    #   EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+    #   do_delete
+    # end
+  
+    # it "should call destroy on the found event_queue" do
+    #   @event_queue.should_receive(:destroy)
+    #   do_delete
+    # end
+  
+    # it "should redirect to the event_queues list" do
+    #   do_delete
+    #   response.should redirect_to(event_queues_url)
+    # end
+  end
+end
