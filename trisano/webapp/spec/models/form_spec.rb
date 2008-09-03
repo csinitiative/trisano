@@ -21,6 +21,7 @@ require 'ostruct'
 describe Form do
   before(:each) do
     @form = Form.new
+    @form.name = "Test Form"
   end
 
   it "should be valid" do
@@ -28,8 +29,6 @@ describe Form do
   end
   
   describe "when created with save_and_initialize_form_elements" do
-    
-    # fixtures :forms, :form_elements, :questions
     
     it "should bootstrap the form element hierarchy" do
       @form.save_and_initialize_form_elements
@@ -66,7 +65,7 @@ describe Form do
       fixtures :diseases
 
       it "should allow a form to be associated with one disease" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ] )
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form" )
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 1
@@ -74,7 +73,7 @@ describe Form do
       end
 
       it "should allow a form to be associated with multiple diseases" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ] )
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form" )
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 2
@@ -82,6 +81,33 @@ describe Form do
         form.diseases[1].id.should == diseases(:tuberculosis).id
       end
 
+    end
+    
+    it 'should fail when the form is not valid' do
+      @form.name = ""
+      @form.save_and_initialize_form_elements.should be_nil
+    end
+    
+    it 'should fail when the form elements cannot be initialized' do
+      form = Form.new
+      form.name = "Test Form"
+      def form.initialize_form_elements
+        errors.add_to_base("An error occurred initializing form elements").
+        raise
+      end
+      form.save_and_initialize_form_elements.should be_nil
+      form.errors.size.should == 1
+    end
+    
+    it 'should fail when the form element structure is invalid' do
+      form = Form.new
+      form.name = "Test Form"
+      def form.structure_valid?
+        return ["Bad error"]
+      end
+      form.save_and_initialize_form_elements.should be_nil
+      form.errors.size.should == 1
+      form.errors["base"].should == "Bad error"
     end
   end
 
@@ -158,19 +184,19 @@ describe Form do
   describe "when checking for renderable investigation view elements" do
     
     def prepare_form
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       section = mock(SectionElement)
       section.stub!(:name).and_return('Something Else')
-      defaultTab = mock(ViewElement)
-      defaultTab.stub!(:name).and_return('Default View')                  
-      result = yield defaultTab, section if block_given?
+      default_tab = mock(ViewElement)
+      default_tab.stub!(:name).and_return('Default View')                  
+      result = yield(default_tab, section) if block_given?
       container = OpenStruct.new(:all_children => result)
       form.should_receive(:investigator_view_elements_container).and_return(container)      
       return form
     end
 
     it "should not assume 'Default View' alone is a valid investigator view element" do
-      form = prepare_form {|defaultTab, section| [defaultTab]}
+      form = prepare_form {|default_tab, section| [default_tab]}
       form.has_investigator_view_elements?.should_not be_true
     end
 
@@ -180,15 +206,15 @@ describe Form do
     end
 
     it "should be interested in container if it contains more then a 'Default View'" do
-      form = prepare_form {|defaultTab, section| [defaultTab, section]}
+      form = prepare_form {|default_tab, section| [default_tab, section]}
       form.has_investigator_view_elements?.should be_true
 
-      form = prepare_form {|defaultTab, section| [section, defaultTab]}
+      form = prepare_form {|default_tab, section| [section, default_tab]}
       form.has_investigator_view_elements?.should be_true
     end    
 
     it "should be interested in container if it contains more then one view" do
-      form = prepare_form {|defaultTab, section| [defaultTab, defaultTab]}
+      form = prepare_form {|default_tab, section| [default_tab, default_tab]}
       form.has_investigator_view_elements?.should be_true
     end
                                 
@@ -424,4 +450,47 @@ describe Form do
     
   end
   
+  describe 'when validating a form structure' do
+    
+    it 'should validate the bootstrapped form elements' do
+      @form.save_and_initialize_form_elements
+      @form.structure_valid?.size.should == 0
+    end
+    
+    it 'should fail validation if investigator view container does not exist' do
+      @form.save_and_initialize_form_elements
+      @form.investigator_view_elements_container.destroy
+      @form.reload
+      @form.structure_valid?.size.should == 1
+    end
+    
+    it 'should fail validation if core view container does not exist' do
+      @form.save_and_initialize_form_elements
+      @form.core_view_elements_container.destroy
+      @form.reload
+      @form.structure_valid?.size.should == 1
+    end
+    
+    it 'should fail validation if core field container does not exist' do
+      @form.save_and_initialize_form_elements
+      @form.core_field_elements_container.destroy
+      @form.reload
+      @form.structure_valid?.size.should == 1
+    end
+    
+  end
+  
+  describe 'when validating a form structure' do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    it 'should validate the left/right nested set elements' do
+      @form = Form.find(1)
+      default_view = @form.investigator_view_elements_container.children[0]
+      ActiveRecord::Base.connection.execute("update form_elements set lft = 32, rgt = 3 where id = #{default_view.id};") 
+      @form.structure_valid?.size.should == 1
+    end
+    
+  end
+    
 end

@@ -31,7 +31,7 @@ class FormElementCache
   def full_set
     @full_set
   end
-  
+   
   def children(element = @root_element)
     full_set.collect { |node| if (node.parent_id == element.id)
         node

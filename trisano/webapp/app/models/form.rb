@@ -22,6 +22,8 @@ class Form < ActiveRecord::Base
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]
   
+  validates_presence_of :name
+  
   def form_element_cache
     @form_element_cache ||=  FormElementCache.new(form_base_element)
   end
@@ -37,9 +39,9 @@ class Form < ActiveRecord::Base
   def core_field_elements_container
     form_element_cache.children[2]
   end
-
-  # returns true if there's something interesting for the
-  # investigation tab to render
+  
+  # Returns true if there's something interesting for the investigation tab to
+  # render.
   def has_investigator_view_elements?
     investigator_view_elements_container.all_children.each_with_index do |c, i|
       return true if i > 0 || c.name != 'Default View'
@@ -47,12 +49,29 @@ class Form < ActiveRecord::Base
     false
   end
 
+  # Saves the form and bootstraps its form element structure. Returns true on
+  # success, false on failure. The ActiveRecord::Validations#errors array can be
+  # checked for errors by clients.
   def save_and_initialize_form_elements
-    transaction do
-      self.status = 'Not Published'
-      self.is_template = true
-      self.save
-      initialize_form_elements
+    if self.valid?
+      begin
+        transaction do
+          self.status = 'Not Published'
+          self.is_template = true
+          self.save!
+          initialize_form_elements
+          structural_errors = structure_valid?
+          unless structural_errors.empty?
+            structural_errors.each do |error|
+              errors.add_to_base(error)
+            end
+            raise
+          end
+          return true
+        end
+      rescue Exception => ex
+        return nil
+      end
     end
   end
   
@@ -110,23 +129,50 @@ class Form < ActiveRecord::Base
       :order => "forms.created_at ASC"
     )
   end
-
+  
+  # Builds an array of structural error messages. Returns an empty array if all
+  #  is well.  Does not go against the cache and does not utilize the 
+  #  ActiveRecord::Validations#errors array.
+  def structure_valid?
+    structural_errors = []
+    structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
+    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where form_id = #{self.id} and lft > rgt;").size > 0
+    
+    if form_base_element.children_count == 3
+      structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].attributes["type"] == "InvestigatorViewElementContainer"
+      structural_errors << "Core view element container is the wrong type" unless form_base_element.children[1].attributes["type"] == "CoreViewElementContainer"
+      structural_errors << "Core field element container is the wrong type" unless form_base_element.children[2].attributes["type"] == "CoreFieldElementContainer"
+    else
+      structural_errors << "Form does not contain the correct top-level containers"
+    end
+    
+    structural_errors
+  end
+  
+  
   private
   
   def initialize_form_elements
-    tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-    form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
+    begin
+      tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+      form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
     
-    investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
-    core_view_element_container = CoreViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
-    core_field_element_container = CoreFieldElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+      investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+      core_view_element_container = CoreViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
+      core_field_element_container = CoreFieldElementContainer.create({:form_id => self.id, :tree_id => tree_id })
     
-    form_base_element.add_child(investigator_view_element_container)
-    form_base_element.add_child(core_view_element_container)
-    form_base_element.add_child(core_field_element_container)
+      form_base_element.add_child(investigator_view_element_container)
+      form_base_element.add_child(core_view_element_container)
+      form_base_element.add_child(core_field_element_container)
     
-    default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
-    investigator_view_element_container.add_child(default_view_element)
+      default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
+      investigator_view_element_container.add_child(default_view_element)
+    rescue Exception => ex
+      errors.add_to_base("An error occurred initializing form elements")
+      logger.error ex
+      raise
+    end
+    
   end
   
   # Debt: Consider moving this to FormElement
@@ -163,7 +209,7 @@ class Form < ActiveRecord::Base
         :core_data => template_question.core_data,
         :core_data_attr => template_question.core_data_attr,
         :size => template_question.size,
-         :is_required => template_question.is_required,
+        :is_required => template_question.is_required,
         :style => template_question.style
       })
    

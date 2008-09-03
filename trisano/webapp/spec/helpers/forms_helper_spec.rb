@@ -22,7 +22,7 @@ describe FormsHelper do
   describe "core field element rendering" do
     
     it "should contain the core field name" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       core_field_element = CoreFieldElement.new(:core_path => Event.exposed_attributes.keys[0])
       core_field_element.parent_element_id = form.core_field_elements_container.id

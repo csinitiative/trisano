@@ -35,7 +35,7 @@ describe CoreFieldElement do
     end
     
     it "should return all core field names when none are in use" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.form_base_element.id
       available_core_fields = @core_field_element.available_core_fields
@@ -44,7 +44,7 @@ describe CoreFieldElement do
     end
     
     it "should return only available core view names when some are in use" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       base_element_id = form.form_base_element.id
      
@@ -65,7 +65,7 @@ describe CoreFieldElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the form's base" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.save_and_add_to_form
@@ -74,7 +74,7 @@ describe CoreFieldElement do
     end
     
     it "should have a name" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.save_and_add_to_form
@@ -83,7 +83,7 @@ describe CoreFieldElement do
     end
     
     it "should override any name provided with the one in the exposed attributes" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.name = "name assigned"
@@ -93,7 +93,7 @@ describe CoreFieldElement do
     end
     
     it "should receive a tree id" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.save_and_add_to_form
@@ -102,7 +102,7 @@ describe CoreFieldElement do
     end
     
     it "should bootstrap the before and after core field elements" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.core_field_elements_container.id
       @core_field_element.save_and_add_to_form

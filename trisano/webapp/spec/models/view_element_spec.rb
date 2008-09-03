@@ -31,7 +31,7 @@ describe ViewElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the form's base" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @view_element.parent_element_id = form.investigator_view_elements_container.id
       @view_element.save_and_add_to_form
@@ -40,7 +40,7 @@ describe ViewElement do
     end
     
     it "should be receive a tree id" do
-      form = Form.new
+      form = Form.new(:name => "Test Form")
       form.save_and_initialize_form_elements
       @view_element.parent_element_id = form.investigator_view_elements_container.id
       @view_element.save_and_add_to_form
