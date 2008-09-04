@@ -96,7 +96,7 @@ class Event < ActiveRecord::Base
 
   class << self
 
-    def accept_reject_actions
+    def accept_reject_lhd_actions
       ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
         rv = false
         case event_action.the_code
@@ -104,6 +104,21 @@ class Event < ActiveRecord::Base
           event_action.code_description = "Accept"
           rv = true
         when 'RJCTD-LHD'
+          event_action.code_description = "Reject"
+          rv = true
+        end
+        rv
+      end
+    end
+
+    def accept_reject_inv_actions
+      ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
+        rv = false
+        case event_action.the_code
+        when 'UI'
+          event_action.code_description = "Accept"
+          rv = true
+        when 'RJCTD-INV'
           event_action.code_description = "Reject"
           rv = true
         end
@@ -119,6 +134,8 @@ class Event < ActiveRecord::Base
         priv = :accept_event_for_lhd
       when 'ASGD-INV'
         priv = :route_event_to_investigator
+      when 'UI', 'RJCTD-INV'
+        priv = :accept_event_for_investigation
       end
       return priv
     end

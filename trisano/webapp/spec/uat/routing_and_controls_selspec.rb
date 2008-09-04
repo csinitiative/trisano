@@ -71,7 +71,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.get_selected_label('jurisdiction_id').should == "Bear River"
   end
 
-  it "should allow for accepting or rejecting routing assignent" do
+  it "should allow for accepting or rejecting a remote routing assignent" do
     @browser.is_checked("name=morbidity_event[event_status_id]").should be_false
     @browser.is_text_present("Assigned to Local Health Dept.").should be_true
   end
@@ -86,7 +86,17 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.is_text_present('Route locally to:').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
     @browser.wait_for_page_to_load "30000"
+  end
+
+  it "should allow for accepting or rejecting a local routing assignent" do
     @browser.is_text_present('Queue:  Enterics-UtahCounty').should be_true
+    @browser.is_checked("name=morbidity_event[event_status_id]").should be_false
+  end
+
+  it "should set event to 'under investigation' when 'accept' is clicked" do
+    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Under Investigation").should be_true
   end
 
   it "should not display routing controls for a less privileged user" do

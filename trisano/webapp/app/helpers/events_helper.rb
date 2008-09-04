@@ -135,14 +135,15 @@ module EventsHelper
     if User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
       controls += form_remote_tag(:url => state_cmr_path(event))
-      Event.accept_reject_actions.each do | action |
+      Event.accept_reject_lhd_actions.each do | action |
         controls += radio_button_tag("morbidity_event[event_status_id]", action.id, false, :onchange => "this.form.submit()") + action.code_description
       end
       controls += "</form>"
     end
 
     if User.current_user.is_entitled_to_in?(:route_event_to_investigator, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id)
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id ||
+         event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "RJCTD-INV").id)
       event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
       controls += form_remote_tag(:url => state_cmr_path(event))
       controls += "<span>Route locally to:&nbsp;</span>" 
@@ -153,7 +154,11 @@ module EventsHelper
 
     if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-INV").id)
-      controls += "TBD: &nbsp;&nbsp;" + "Accept/Reject for investigation"
+      controls += form_remote_tag(:url => state_cmr_path(event))
+      Event.accept_reject_inv_actions.each do | action |
+        controls += radio_button_tag("morbidity_event[event_status_id]", action.id, false, :onchange => "this.form.submit()") + action.code_description
+      end
+      controls += "</form>"
     end
 
     if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id) && 
