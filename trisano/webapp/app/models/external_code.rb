@@ -61,5 +61,13 @@ class ExternalCode < ActiveRecord::Base
   def event_under_investigation?
     'eventstatus'.eql?(code_name) && ['UI', 'IC', 'RO-MGR'].include?(the_code)
   end
+
+  def self.event_code_id(event_code_str)
+    find_by_the_code(event_code_str).id
+  end
+
+  def self.event_code_str(event_code_id)
+    find(event_code_id).the_code
+  end
   
 end

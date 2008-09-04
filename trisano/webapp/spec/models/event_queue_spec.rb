@@ -44,7 +44,26 @@ describe EventQueue do
   it "should append short jurisidction name to queue name, remove surrounding whitespace, and replace internal whitespace with underscores" do
     @event_queue = EventQueue.new( :queue_name => 'Enterics Group', :jurisdiction_id => 102 )
     @event_queue.save
-    @event_queue.queue_name.should == "Enterics_Group-Davis_County"
+    @event_queue.queue_name.should == "EntericsGroup-DavisCounty"
+  end
+
+  describe "class methods" do
+    describe "queues_for_jurisdictions" do
+
+      fixtures :event_queues, :entities, :places
+
+      it "should return the event_queues associated with an array of jurisdictions" do
+        EventQueue.queues_for_jurisdictions([event_queues(:joecool_queue).jurisdiction_id]).size.should == 1
+        EventQueue.queues_for_jurisdictions([event_queues(:joecool_queue).jurisdiction_id]).first.queue_name.should == "JoeCool-UtahCounty"
+
+        EventQueue.queues_for_jurisdictions([75]).size.should == 2
+        EventQueue.queues_for_jurisdictions([75, 102]).size.should == 3
+
+        EventQueue.queues_for_jurisdictions([99]).size.should == 0
+        EventQueue.queues_for_jurisdictions([75, 102, 99]).size.should == 3
+      end
+
+    end
   end
 
 end

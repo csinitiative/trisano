@@ -18,11 +18,15 @@
 class Event < ActiveRecord::Base
   include Blankable
 
+  attr_protected :event_status_id
+
   belongs_to :event_status, :class_name => 'ExternalCode'
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :lhd_case_status, :class_name => 'ExternalCode'
   belongs_to :udoh_case_status, :class_name => 'ExternalCode'
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
+
+  belongs_to :event_queue
 
   has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
   has_many :participations
@@ -76,7 +80,22 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
+  @@state_transitions = {}
+  @@state_transitions['NEW'] = ["ASGD-LHD"]
+  @@state_transitions['ASGD-LHD'] = ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"]
+  @@state_transitions['ACPTD-LHD'] = ["ASGD-LHD", "ASGD-INV"]
+  @@state_transitions['RJCTD-LHD'] = ["ASGD-LHD"]
+  @@state_transitions['ASGD-INV'] = ["ASGD-LHD", "UI", "RJCTD-INV"]
+  @@state_transitions['UI'] = ["ASGD-LHD", "IC"]
+  @@state_transitions['RJCTD-INV'] = ["ASGD-LHD", "ASGD-INV"]
+  @@state_transitions['IC'] = ["ASGD-LHD", "RO-MGR", "APP-LHD"]
+  @@state_transitions['RO-MGR'] = ["ASGD-LHD", "IC"]
+  @@state_transitions['APP-LHD'] = ["ASGD-LHD", "RO-STATE", "CLOSED"]
+  @@state_transitions['RO-STATE'] = ["ASGD-LHD", "APP-LHD", "RO-MGR"]
+  @@state_transitions['CLOSED'] = []
+
   class << self
+
     def accept_reject_actions
       ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
         rv = false
@@ -98,9 +117,18 @@ class Event < ActiveRecord::Base
       case state.the_code
       when 'ACPTD-LHD', 'RJCTD-LHD'
         priv = :accept_event_for_lhd
+      when 'ASGD-INV'
+        priv = :route_event_to_investigator
       end
       return priv
     end
+
+  end
+
+  def legal_state_transition?(proposed_state)
+    cur_state = ExternalCode.event_code_str(self.event_status)
+    proposed_state = ExternalCode.event_code_str(proposed_state) if proposed_state.class != String
+    @@state_transitions[cur_state].include?(proposed_state) ? true : false
   end
 
   # returns only the references for forms that should be rendered on
@@ -698,6 +726,7 @@ class Event < ActiveRecord::Base
       raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
       active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
       update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
+      update_attribute("event_queue_id",  nil)
       reload # Any existing references to this object won't see these changes without this
     end
   end
@@ -845,5 +874,6 @@ class Event < ActiveRecord::Base
       el.location.telephones.each {|t| t.save(false) unless t.frozen?}
     end
   end
+
 
 end

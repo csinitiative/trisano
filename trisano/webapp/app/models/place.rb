@@ -35,7 +35,7 @@ class Place < ActiveRecord::Base
     def jurisdictions_for_privilege_by_user_id(user_id, privilege)
       query = "
         SELECT
-                places.id, places.entity_id, places.name
+                places.id, places.entity_id, places.name, places.short_name
         FROM
                 users,
                 entitlements,

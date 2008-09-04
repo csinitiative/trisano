@@ -18,9 +18,16 @@ class EventQueue < ActiveRecord::Base
   validates_presence_of :queue_name, :jurisdiction_id
   before_save :replace_white_space
 
+  class << self
+    def queues_for_jurisdictions(jurisdiction_ids)
+      jurisdiction_ids = jurisdiction_ids.to_a
+      find(:all, :conditions => ["jurisdiction_id IN (?)", jurisdiction_ids])
+    end
+  end
+
   private
 
   def replace_white_space
-    self.queue_name = Utilities::underscore(self.queue_name) + "-" + Utilities::underscore(jurisdiction.current_place.short_name)
+    self.queue_name = Utilities::make_queue_name(self.queue_name) + "-" + Utilities::make_queue_name(jurisdiction.current_place.short_name)
   end
 end

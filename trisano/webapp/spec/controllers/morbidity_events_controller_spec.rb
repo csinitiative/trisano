@@ -471,12 +471,16 @@ describe MorbidityEventsController do
       @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
       @event.stub!(:update_attributes).and_return(true)
+      @event.stub!(:legal_state_transition?).and_return(true)
+      @event.stub!(:event_status_id=).and_return(1)
+      @event.stub!(:attributes=).and_return(1)
       MorbidityEvent.stub!(:find).and_return(@event)
     end
 
     describe "with successful state change" do
       def do_change_state
-        @event.should_receive(:update_attributes).and_return(true)
+        request.env['HTTP_REFERER'] = "/some_path"
+        @event.should_receive(:save).and_return(true)
         post :state, :id => "1", :morbidity_event => {}
       end
 
@@ -485,14 +489,15 @@ describe MorbidityEventsController do
         do_change_state
       end
       
-      it "should redirect to the event index page" do
+      it "should redirect to the where it was called from" do
         do_change_state
-        response.should redirect_to(cmrs_path)
+        response.should redirect_to("http://test.host/some_path")
       end
     end
 
     describe "with bad state argument" do
       def do_change_state
+        request.env['HTTP_REFERER'] = "/some_path"
         Event.should_receive(:map_state_id_to_priv).and_return(nil)
         post :state, :id => "1", :morbidity_event => {}
       end
@@ -517,7 +522,7 @@ describe MorbidityEventsController do
 
     describe "with a failed state change" do
       def do_change_state
-        @event.should_receive(:update_attributes).and_return(false)
+        @event.should_receive(:save).and_return(false)
         post :state, :id => "1", :morbidity_event => {}
       end
 

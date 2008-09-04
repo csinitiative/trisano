@@ -18,36 +18,29 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
 <% content_for :title do %>
-                  CONFIDENTIAL MORBIDITY REPORT
+  CONFIDENTIAL MORBIDITY REPORT
 <% end %>
 
 <% content_for :watermark do %>
-                  morbidity event
-<% end %>
-
-<% content_for :name do %>
-  <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
+  morbidity event
 <% end %>
 
 <% content_for :tools_two do %>
   <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
 <% end %>
 
-<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
 <% content_for :tools do %>
-  <div style='float: left; margin-top: 5px'>
-    <%= basic_morbidity_event_controls(@event, jurisdiction) %> |
-    <%= link_to 'Back to list of CMRs', cmrs_path %>
-  </div>
 <% end %>
 
-<% content_for :tools_three do %>
-  <div style='float: right'>
-    <div class='tools' style='float: left; margin-right: 2em'><%= jurisdiction_routing_control(@event, jurisdiction) %></div>
-    <div style='float: left; margin-top: 2px'><%= l @event.event_status %>:</div>
-    <div class='tools' style='float: left'><%= state_controls(@event, jurisdiction) %><%= investigator_routing_control(@event, jurisdiction) %></div>
-  </div>
-<% end %>
+<table class='listingforms'>
+  <tr>
+    <th>Patient Name</th>
+    <th>Disease</th>
+    <th>Jurisdiction</th>
+    <th>Status</th>
+    <th></th>
+    <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path) } %>
+</table>
 
 <script type="text/javascript">
   var myTabs = new YAHOO.widget.TabView("cmr_tabs");
@@ -55,7 +48,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <%= error_messages_for :object => @event %>
 
-<%=  tab_toggler(true) %>
+<%= tab_toggler(true) %>
 
 <div id="cmr_tabs" class="yui-navset">
 <ul class="yui-nav" id="tabs">

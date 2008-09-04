@@ -21,14 +21,34 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Sytem functionality for routing a CMR among jurisdictions' do
 
-  it "should present all controls" do
-    @browser.open "/trisano/cmrs"
+  it "should allow for new event_queues" do
+    @browser.open "/trisano/admin"
     @browser.wait_for_page_to_load "30000"
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"
       switch_user(@browser, "default_user")
     end
 
+    @browser.click "link=Event Queues"
+    @browser.wait_for_page_to_load "30000"
+    
+    @browser.click "link=New event queue"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.type "event_queue_queue_name", "Enterics"
+    @browser.select "event_queue_jurisdiction_id", "label=Utah County Health Department"
+
+    @browser.click "event_queue_submit"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present('Event queue was successfully created.').should be_true
+    @browser.is_text_present('Enterics').should be_true
+    @browser.is_text_present('Utah County Health Department').should be_true
+  end
+
+  it "should present all controls" do
+    @browser.open "/trisano/cmrs"
+    @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("New Morbidity Report").should be_true
 
@@ -38,7 +58,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
 
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route to:").should be_true
+    @browser.is_text_present("Route remotely to:").should be_true
   end
 
   it "should create new CMRs in the unassigned jurisdiction" do
@@ -46,9 +66,9 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
   end
 
   it "should allow routing to a new jurisdiction" do
-    @browser.select "jurisdiction_id", "label=Bear River Health Department"
+    @browser.select "jurisdiction_id", "label=Bear River"
     @browser.wait_for_page_to_load "30000"
-    @browser.get_selected_label('jurisdiction_id').should == "Bear River Health Department"
+    @browser.get_selected_label('jurisdiction_id').should == "Bear River"
   end
 
   it "should allow for accepting or rejecting routing assignent" do
@@ -60,6 +80,13 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.click("name=morbidity_event[event_status_id]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
+  end
+
+  it "should allow routing to an investigator queue" do
+    @browser.is_text_present('Route locally to:').should be_true
+    @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present('Queue:  Enterics-UtahCounty').should be_true
   end
 
   it "should not display routing controls for a less privileged user" do

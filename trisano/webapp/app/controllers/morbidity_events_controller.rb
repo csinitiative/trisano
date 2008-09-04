@@ -142,8 +142,9 @@ class MorbidityEventsController < EventsController
       return
     end
     
+    @event.event_status = ExternalCode.find_by_the_code("NEW")
+
     respond_to do |format|
-      # DEBT: Cycle back for contacts
       if @event.save && @contact_events.all? { |contact| contact.save }
         flash[:notice] = 'CMR was successfully created.'
         format.html { redirect_to(cmr_url(@event)) }
@@ -209,30 +210,41 @@ class MorbidityEventsController < EventsController
 
   def state
     @event = MorbidityEvent.find(params[:id])
+    event_status_id = params[:morbidity_event].delete(:event_status_id)
 
-    priv_required = Event.map_state_id_to_priv(params[:morbidity_event][:event_status_id])
+    # Determine what privileges are required to change to the passed in state
+    priv_required = Event.map_state_id_to_priv(event_status_id)
 
+    # If nothing came back, then the passed in state was malformed
     if priv_required.nil?
       render :text => "Bad state", :status => 403
       return
     end
 
+    # Check if the user is allowed to change the event to the passed in state
     unless User.current_user.is_entitled_to_in?(priv_required, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403
       return
     end
+    
+    # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
+    unless @event.legal_state_transition?(event_status_id.to_i)
+      render :text => "Illegal State Transition", :status => 403
+      return
+    end
 
-    if @event.update_attributes(params[:morbidity_event])
-      @events = MorbidityEvent.find(:all, 
-        :include => :jurisdiction, 
-        :select => "jurisdiction.secondary_entity_id", 
-        :conditions => ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)])
-      redirect_to cmrs_path
+    # event_status_id is protected from mass update, set individually
+    @event.event_status_id = event_status_id
+
+    # A status change may be accompanied by other values such as an event queue, set them
+    @event.attributes = params[:morbidity_event]
+
+    if @event.save
+      redirect_to request.env["HTTP_REFERER"]
     else
       flash[:notice] = 'Unable to change state of CMR.'
       redirect_to cmrs_path
     end
-
   end
 
   private

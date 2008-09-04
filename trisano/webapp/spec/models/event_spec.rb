@@ -819,6 +819,29 @@ describe MorbidityEvent do
     end
   end
 
+  describe "the legal_state_transition? instance method" do
+    fixtures :external_codes
+
+    before(:each) do
+      @event = Event.new
+    end
+
+    it "should return true when transitioning from ACPTD-LHD to ASGD-INV" do
+      @event.event_status = external_codes(:event_status_accepted_lhd)
+      @event.legal_state_transition?("ASGD-INV").should be_true
+    end
+
+    it "should return false when transitioning from ACPTD-LHD to UI" do
+      @event.event_status = external_codes(:event_status_accepted_lhd)
+      @event.legal_state_transition?("UI").should be_false
+    end
+
+    it "should accept a event status ID as an argument" do
+      @event.event_status = external_codes(:event_status_accepted_lhd)
+      @event.legal_state_transition?(external_codes(:event_status_under_investigation).id).should be_false
+    end
+  end
+
   describe "support for investigation view elements" do
 
     def ref(form)

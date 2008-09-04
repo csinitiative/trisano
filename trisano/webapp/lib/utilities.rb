@@ -7,5 +7,9 @@ class Utilities
     def underscore(string)
       string.strip.gsub(/\s+/, "_")
     end
+
+    def make_queue_name(string)
+      string.strip.downcase.gsub(/\s+/, "_").camelize
+    end
   end
 end

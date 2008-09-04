@@ -45,17 +45,18 @@ describe 'Managing event queues' do
     @browser.is_text_present('Utah County Health Department').should be_true
   end
 
-  it "should allow editing an event queue" do
-    @browser.click "link=Edit"
-    @browser.wait_for_page_to_load "30000"
-    @browser.type "event_queue_queue_name", "Enteric Group"
-    @browser.click "event_queue_submit"
-    @browser.wait_for_page_to_load "30000"
-
-    @browser.is_text_present('Event queue was successfully updated.').should be_true
-    @browser.is_text_present('Enteric_Group').should be_true
-    @browser.is_text_present('Utah County Health Department').should be_true
-  end
+  # Uncomment if we decide to allow editing in the future
+  # it "should allow editing an event queue" do
+  #   @browser.click "link=Edit"
+  #   @browser.wait_for_page_to_load "30000"
+  #   @browser.type "event_queue_queue_name", "Enteric Group"
+  #   @browser.click "event_queue_submit"
+  #   @browser.wait_for_page_to_load "30000"
+  # 
+  #   @browser.is_text_present('Event queue was successfully updated.').should be_true
+  #   @browser.is_text_present('Enteric_Group').should be_true
+  #   @browser.is_text_present('Utah County Health Department').should be_true
+  # end
 
   it "should not be accessible to non-admins" do
     switch_user(@browser, "lhd_manager").should be_false

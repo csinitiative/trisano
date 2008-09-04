@@ -33,32 +33,6 @@
       %th Patient Name
       %th Disease
       %th Jurisdiction
+      %th Status
       %th
-    - for event in @events
-      %tr
-        - patient = event.active_patient.active_primary_entity.person
-        - jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place
-        %td.forminformation
-          .patientname
-            = patient.last_name
-            = fml(", ", patient.first_name, "") unless patient.first_name.nil?
-          %small
-            Date:
-            = event.event_onset_date
-        %td
-          = event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
-        %td
-          %b
-            = jurisdiction.name
-          %p
-          %u
-            = l event.event_status
-          .tools
-            = state_controls(event, jurisdiction)
-        %td
-          .tools
-            = jurisdiction_routing_control(event, jurisdiction)
-          %p
-          .tools
-            = basic_morbidity_event_controls(event, jurisdiction)
-          
+      = render :partial => 'morbidity_events/event', :collection => @events

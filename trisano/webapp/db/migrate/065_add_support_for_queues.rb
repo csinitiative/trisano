@@ -28,7 +28,7 @@ class AddSupportForQueues < ActiveRecord::Migration
       end
       add_foreign_key(:event_queues, :jurisdiction_id, :entities)
 
-      add_column :events, :jurisdiction_id, :integer
+      add_column :events, :event_queue_id, :integer
 
       # Give jurisdictions short names too
       if RAILS_ENV == 'production'
@@ -60,7 +60,7 @@ class AddSupportForQueues < ActiveRecord::Migration
   def self.down
     transaction do
       drop_table :event_queues
-      remove_column :events, :jurisdiction_id
+      remove_column :events, :event_queue_id
       if RAILS_ENV == 'production'
         Place.jurisdictions.each { |jurisdiction| jurisdiction.update_attribute(:short_name, "") }
       end

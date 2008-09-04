@@ -140,18 +140,32 @@ module EventsHelper
       end
       controls += "</form>"
     end
+
+    if User.current_user.is_entitled_to_in?(:route_event_to_investigator, jurisdiction.entity_id) && 
+        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id)
+      event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
+      controls += form_remote_tag(:url => state_cmr_path(event))
+      controls += "<span>Route locally to:&nbsp;</span>" 
+      controls += hidden_field_tag("morbidity_event[event_status_id]", ExternalCode.find_by_code_name_and_the_code("eventstatus", "ASGD-INV").id)
+      controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name), :id => 'morbidity_event__event_queue_id',:onchange => "this.form.submit()")
+      controls += "</form>"
+    end
+
     if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-INV").id)
       controls += "TBD: &nbsp;&nbsp;" + "Accept/Reject for investigation"
     end
+
     if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "UI").id)
       controls += "TBD: &nbsp;&nbsp;" + "Mark investigation complete"
     end
+
     if User.current_user.is_entitled_to_in?(:approve_event_at_lhd, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "IC").id)
       controls += "TBD: &nbsp;&nbsp;" + "Approve and send to state"
     end
+
     if User.current_user.is_entitled_to_in?(:approve_event_at_state, jurisdiction.entity_id) && 
         (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "APP-LHD").id)
       controls += "TBD: &nbsp;&nbsp;" + "Approve and close"
@@ -164,8 +178,8 @@ module EventsHelper
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, jurisdiction.entity_id)
       jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
       controls += form_tag(jurisdiction_cmr_path(event))
-      controls += "<span>Route to:&nbsp;</span>" 
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :name, jurisdiction.entity_id), :onchange => "this.form.submit()")
+      controls += "<span>Route remotely to:&nbsp;</span>" 
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, jurisdiction.entity_id), :onchange => "this.form.submit()")
       controls += "</form>"
     end
     controls

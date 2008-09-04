@@ -34,4 +34,20 @@ describe Utilities do
     end
 
   end
+
+  describe "the make_queue_name method" do
+
+    it "should strip surrounding whitespace and camelcase" do
+      Utilities::make_queue_name("   abc   ").should == "Abc"
+    end
+
+    it "should lowercase the string and camelcase" do
+      Utilities::make_queue_name("AbC").should == "Abc"
+    end
+
+    it "should remove underscores (nee whitespace) and replace with camelcase" do
+      Utilities::make_queue_name("   ABC   def ").should == "AbcDef"
+    end
+
+  end
 end
