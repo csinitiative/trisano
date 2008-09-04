@@ -57,6 +57,7 @@ class FormsController < AdminController
         format.html { redirect_to(@form) }
         format.xml  { render :xml => @form, :status => :created, :location => @form }
       else
+        @form = post_transaction_refresh(@form, params[:form])
         format.html { render :action => "new" }
         format.xml  { render :xml => @form.errors, :status => :unprocessable_entity }
       end
@@ -91,27 +92,33 @@ class FormsController < AdminController
   
   def builder
     @form = Form.find(params[:id])
-
-    respond_to do |format|
-      format.html { render :template => "forms/builder" }
+    
+    if @form.structure_valid?
+      render :template => "forms/builder"
+    else
+      flash[:notice] = "The form you are trying to access is invalid."
+      redirect_to forms_path
     end
+      
   end
   
   def publish
     @form = Form.find(params[:id])
-    begin
-      @form.publish!
+
+    if @form.publish
       respond_to do |format|
         flash[:notice] = "Form was successfully published"
         format.html { redirect_to forms_path }
         format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
-    rescue Exception => ex
-      logger.debug ex
-      flash[:notice] = "Unable to publish the form at this time"
+    else
+      flash[:notice] = "Unable to publish the form"
       respond_to do |format|
         format.html { render :template => "forms/builder" }
-        format.js   { render :template => "rjs-error" }
+        format.js   do
+          @rjs_errors = @form.errors
+          render :template => "rjs-error"
+        end
       end
     end
   end

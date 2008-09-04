@@ -58,6 +58,7 @@ class ViewElementsController < AdminController
         format.xml  { render :xml => @view_element, :status => :created, :location => @view_element }
         format.js { @form = Form.find(@view_element.form_id)}
       else
+        @view_element = post_transaction_refresh(@view_element, params[:view_element])
         flash[:notice] = 'Unable to create new tab.'
         format.xml  { render :xml => @view_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }

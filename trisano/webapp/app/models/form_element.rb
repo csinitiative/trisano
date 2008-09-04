@@ -146,7 +146,7 @@ class FormElement < ActiveRecord::Base
   private
   
   def validate_form_structure
-    structural_errors = form.structure_valid?
+    structural_errors = form.structural_errors
     unless structural_errors.empty?
       structural_errors.each do |error|
         errors.add_to_base(error)

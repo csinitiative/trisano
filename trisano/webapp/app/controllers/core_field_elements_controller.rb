@@ -61,6 +61,7 @@ class CoreFieldElementsController < ApplicationController
       else
         format.xml  { render :xml => @core_field_element.errors, :status => :unprocessable_entity }
         format.js { 
+          @core_field_element = post_transaction_refresh(@core_field_element, params[:core_field_element])
           @available_core_fields = @core_field_element.available_core_fields
           render :action => "new"
         }

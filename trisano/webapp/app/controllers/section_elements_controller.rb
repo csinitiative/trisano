@@ -64,10 +64,14 @@ class SectionElementsController <  AdminController
         format.js { @form = Form.find(@section_element.form_id)}
       else
         format.xml  { render :xml => @section_element.errors, :status => :unprocessable_entity }
-        format.js { render :action => "new" }
+        format.js do
+          @section_element = post_transaction_refresh(@section_element, params[:section_element])
+          render :action => "new" 
+        end
       end
     end
   end
+
 
   # PUT /section_elements/1
   # PUT /section_elements/1.xml

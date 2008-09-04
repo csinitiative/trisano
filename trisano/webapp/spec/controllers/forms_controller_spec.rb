@@ -246,6 +246,7 @@ describe FormsController do
 
       def do_post
         @form.should_receive(:save_and_initialize_form_elements).and_return(false)
+        @form.errors.should_receive(:each)
         post :create, :form => {}
       end
   
@@ -343,6 +344,7 @@ describe FormsController do
       mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
+      @form.stub!(:structure_valid?).and_return([])
     end
   
     def do_get
@@ -369,6 +371,27 @@ describe FormsController do
       assigns[:form].should equal(@form)
     end
   end
+  
+  describe "handling GET /forms/builder/1 for an invalid form" do
+
+    before(:each) do
+      mock_user
+      @form = mock_model(Form)
+      Form.stub!(:find).and_return(@form)
+      @form.stub!(:structure_valid?).and_return(false)
+    end
+  
+    def do_get
+      get :builder, :id => "1"
+    end
+  
+    it "should redirect to the forms listing" do
+      do_get
+      response.should redirect_to(forms_path)
+    end
+  
+  end
+  
   
   describe "handling POST /forms/order_section_children" do
 
@@ -430,13 +453,13 @@ describe FormsController do
     end
     
     it "should re-direct to forms index on success" do
-      @form.stub!(:publish!).and_return(@published_form)
+      @form.stub!(:publish).and_return(@published_form)
       do_post
       response.should redirect_to(forms_path)
     end
     
     it "should re-render the builder template on failure" do
-      @form.stub!(:publish!).and_raise(Exception)
+      @form.stub!(:publish).and_return(nil)
       do_post
       response.should render_template('builder')
     end

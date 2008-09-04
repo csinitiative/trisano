@@ -60,13 +60,7 @@ class Form < ActiveRecord::Base
           self.is_template = true
           self.save!
           initialize_form_elements
-          structural_errors = structure_valid?
-          unless structural_errors.empty?
-            structural_errors.each do |error|
-              errors.add_to_base(error)
-            end
-            raise
-          end
+          raise unless structure_valid?
           return true
         end
       rescue Exception => ex
@@ -75,7 +69,7 @@ class Form < ActiveRecord::Base
     end
   end
   
-  def publish!
+  def publish
     
     raise("Cannot publish an already published version") unless self.is_template
     
@@ -108,13 +102,23 @@ class Form < ActiveRecord::Base
 
         # Associate newly published form with the same diseases as current form
         self.diseases.each { | disease | published_form.diseases << disease }
+        
+        # Note: Errors in the published form's structure are added to the form that's being published
+        published_form_structural_errors = published_form.structural_errors
+        unless published_form_structural_errors.empty?
+          published_form_structural_errors.each do |error|
+            errors.add_to_base(error)
+          end
+          raise
+        end
+        
+        return published_form
       end
     rescue Exception => ex
       logger.error ex
-      raise ex
+      return nil
     end
     
-    published_form
   end
   
   def most_recent_version
@@ -130,10 +134,25 @@ class Form < ActiveRecord::Base
     )
   end
   
+  # Calls checks the form element structure and adds errors to the 
+  # ActiveRecord::Validations#errors array of form that is self at the
+  # time of calling.
+  def structure_valid?
+    structural_error_collection = structural_errors
+    if structural_error_collection.empty?
+      return true
+    else
+      structural_error_collection.each do |error|
+        errors.add_to_base(error)
+      end
+      return false
+    end
+  end
+  
   # Builds an array of structural error messages. Returns an empty array if all
   #  is well.  Does not go against the cache and does not utilize the 
   #  ActiveRecord::Validations#errors array.
-  def structure_valid?
+  def structural_errors
     structural_errors = []
     structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
     structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where form_id = #{self.id} and lft > rgt;").size > 0
@@ -145,7 +164,7 @@ class Form < ActiveRecord::Base
     else
       structural_errors << "Form does not contain the correct top-level containers"
     end
-    
+
     structural_errors
   end
   

@@ -262,6 +262,7 @@ describe QuestionElementsController do
 
       def do_post
         @question_element.should_receive(:save_and_add_to_form).and_return(false)
+        @question_element.errors.should_receive(:each)
         post :create, :question_element => {}
       end
   

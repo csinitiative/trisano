@@ -332,5 +332,38 @@ base_for_second_form:
   type: FormBaseElement
   id: "100"
   description: 
-  rgt: "50"
+  rgt: "8"
   parent_id: 
+
+investigator_container_for_second_form:
+  name: 
+  form_id: "7"
+  tree_id: "2"
+  lft: "2"
+  type: InvestigatorViewElementContainer
+  id: "101"
+  description: 
+  rgt: "3"
+  parent_id: "100"
+
+core_view_container_for_second_form:
+  name: 
+  form_id: "7"
+  tree_id: "2"
+  lft: "4"
+  type: CoreViewElementContainer
+  id: "102"
+  description: 
+  rgt: "5"
+  parent_id: "100"
+
+core_field_container_for_second_form:
+  name: 
+  form_id: "7"
+  tree_id: "2"
+  lft: "6"
+  type: CoreFieldElementContainer
+  id: "103"
+  description: 
+  rgt: "7"
+  parent_id: "100"

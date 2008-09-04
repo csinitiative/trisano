@@ -178,6 +178,7 @@ describe FollowUpElementsController do
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @follow_up_element.should_receive(:save_and_add_to_form).and_return(false)
+        @follow_up_element.errors.should_receive(:each)
         post :create, :follow_up_element => {}
       end
   

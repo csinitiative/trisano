@@ -102,6 +102,17 @@ class ApplicationController < ActionController::Base
 <a href='mailto:r1feedback@ut-nedss.csinitiative.net' style='font-size: 12px'>Email List</a>
 </td></tr></table></body></html>" 
   end
-
-
+  
+  # Kluge to get around the fact that Rails does not reset objects in
+  # memory after a failed transaction, thus interfering with behavior
+  # of form helpers. Creates a new object from request parameters
+  # and copies over any existing errors from the original object.
+  def post_transaction_refresh(obj, params)
+    errors = obj.errors
+    obj = obj.class.new(params)
+    errors.each do |error_key, error_value|
+      obj.errors.add(error_key, error_value)
+    end
+    obj
+  end
 end

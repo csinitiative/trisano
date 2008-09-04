@@ -56,7 +56,10 @@ class FollowUpElementsController <  AdminController
         format.js { @form = Form.find(@follow_up_element.form_id)}
       else
         format.xml  { render :xml => @follow_up_element.errors, :status => :unprocessable_entity }
-        format.js { render :action => "new" }
+        format.js do 
+          @follow_up_element = post_transaction_refresh(@follow_up_element, params[:follow_up_element])
+          render :action => "new"
+        end
       end
     end
   end

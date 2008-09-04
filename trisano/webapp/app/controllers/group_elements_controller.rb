@@ -55,12 +55,11 @@ class GroupElementsController <  AdminController
     @group_element = GroupElement.new(params[:group_element])
     @reference_element = FormElement.find(params[:reference_element_id])      
 
-    begin
-      @group_element.save_and_add_to_form
+    if @group_element.save_and_add_to_form
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
-    rescue Exception => ex
-      logger.debug ex
-      flash[:notice] = 'Unable to display the group form  at this time.'
+    else
+      flash[:notice] = 'Unable to create the group at this time.'
+      @group_element = post_transaction_refresh(@group_element, params[:group_element])
       render :template => 'rjs-error'
     end
   end

@@ -61,6 +61,7 @@ class CoreViewElementsController <  AdminController
       else
         format.xml  { render :xml => @core_view_element.errors, :status => :unprocessable_entity }
         format.js { 
+          @core_view_element = post_transaction_refresh(@core_view_element, params[:core_view_element])
           @available_core_views = @core_view_element.available_core_views
           render :action => "new"
         }

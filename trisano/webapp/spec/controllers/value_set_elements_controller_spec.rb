@@ -258,6 +258,7 @@ describe ValueSetElementsController do
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @value_set_element.stub!(:parent_element_id).and_return(1)
         @value_set_element.should_receive(:save_and_add_to_form).and_return(false)
+        @value_set_element.errors.should_receive(:each)
         post :create, :value_set_element => {}
       end
   

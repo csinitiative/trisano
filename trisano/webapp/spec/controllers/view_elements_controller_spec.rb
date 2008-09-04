@@ -251,6 +251,7 @@ describe ViewElementsController do
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @view_element.should_receive(:save_and_add_to_form).and_return(false)
+        @view_element.errors.should_receive(:each)
         post :create, :view_element => {}
       end
   

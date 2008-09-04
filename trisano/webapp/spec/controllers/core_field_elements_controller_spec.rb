@@ -252,6 +252,7 @@ describe CoreFieldElementsController do
         @request.env["HTTP_ACCEPT"] = "application/javascript"
         @core_field_element.should_receive(:save_and_add_to_form).and_return(false)
         @core_field_element.stub!(:available_core_fields).and_return([])
+        @core_field_element.errors.should_receive(:each)
         post :create, :core_field_element => {}
       end
   

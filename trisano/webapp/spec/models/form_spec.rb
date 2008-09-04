@@ -93,7 +93,7 @@ describe Form do
       form.name = "Test Form"
       def form.initialize_form_elements
         errors.add_to_base("An error occurred initializing form elements").
-        raise
+          raise
       end
       form.save_and_initialize_form_elements.should be_nil
       form.errors.size.should == 1
@@ -102,7 +102,7 @@ describe Form do
     it 'should fail when the form element structure is invalid' do
       form = Form.new
       form.name = "Test Form"
-      def form.structure_valid?
+      def form.structural_errors
         return ["Bad error"]
       end
       form.save_and_initialize_form_elements.should be_nil
@@ -229,12 +229,24 @@ describe Form do
       error_message = ""
       
       begin
-        published_form = form_to_publish.publish!
-        published_form.publish!
+        published_form = form_to_publish.publish
+        published_form.publish
       rescue RuntimeError => error
         error_message = error.message
       end
       error_message.should eql("Cannot publish an already published version")
+    end
+  end
+  
+  describe "when validation on the published instance fails" do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    it "should build a list of errors on the instance getting published" do
+      form_to_publish = Form.find(1)
+      form_to_publish.investigator_view_elements_container.destroy
+      form_to_publish.publish.should be_nil
+      form_to_publish.errors.size.should eql(1)
     end
   end
   
@@ -244,7 +256,7 @@ describe Form do
     
     before(:each) do
       @form_to_publish = Form.find(1)
-      @published_form = @form_to_publish.publish!
+      @published_form = @form_to_publish.publish
     end
 
     it "should give itself published status" do
@@ -409,7 +421,7 @@ describe Form do
       demo_q1.is_active = false
       demo_q1.save
       
-      published_form = @form_to_publish.publish!
+      published_form = @form_to_publish.publish
       
       default_view = published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
@@ -428,7 +440,7 @@ describe Form do
 
       # Two diseases
       form_to_publish = forms(:checken_pox_TB_form_for_LHD_2)
-      published_form = form_to_publish.publish!
+      published_form = form_to_publish.publish
       published_form.disease_ids.length.should == form_to_publish.disease_ids.length
       published_form.disease_ids.sort.should == form_to_publish.disease_ids.sort
     end
@@ -440,9 +452,9 @@ describe Form do
     
     it "should give the second version live status and first version archived status" do
       form_to_publish = Form.find(1)
-      first_version = form_to_publish.publish!
+      first_version = form_to_publish.publish
       first_version.status.should eql("Live")
-      second_version = form_to_publish.publish!
+      second_version = form_to_publish.publish
       second_version.status.should eql("Live")
       first_version.reload
       first_version.status.should eql("Archived")
@@ -454,28 +466,37 @@ describe Form do
     
     it 'should validate the bootstrapped form elements' do
       @form.save_and_initialize_form_elements
-      @form.structure_valid?.size.should == 0
+      @form.structural_errors.size.should == 0
+      @form.structure_valid?.should be_true
+      @form.errors.empty?.should be_true
+      
     end
     
     it 'should fail validation if investigator view container does not exist' do
       @form.save_and_initialize_form_elements
       @form.investigator_view_elements_container.destroy
       @form.reload
-      @form.structure_valid?.size.should == 1
+      @form.structural_errors.size.should == 1
+      @form.structure_valid?.should be_false
+      @form.errors.size.should == 1
     end
     
     it 'should fail validation if core view container does not exist' do
       @form.save_and_initialize_form_elements
       @form.core_view_elements_container.destroy
       @form.reload
-      @form.structure_valid?.size.should == 1
+      @form.structural_errors.size.should == 1
+      @form.structure_valid?.should be_false
+      @form.errors.size.should == 1
     end
     
     it 'should fail validation if core field container does not exist' do
       @form.save_and_initialize_form_elements
       @form.core_field_elements_container.destroy
       @form.reload
-      @form.structure_valid?.size.should == 1
+      @form.structural_errors.size.should == 1
+      @form.structure_valid?.should be_false
+      @form.errors.size.should == 1
     end
     
   end
@@ -488,7 +509,9 @@ describe Form do
       @form = Form.find(1)
       default_view = @form.investigator_view_elements_container.children[0]
       ActiveRecord::Base.connection.execute("update form_elements set lft = 32, rgt = 3 where id = #{default_view.id};") 
-      @form.structure_valid?.size.should == 1
+      @form.structural_errors.size.should == 1
+      @form.structure_valid?.should be_false
+      @form.errors.size.should == 1
     end
     
   end
