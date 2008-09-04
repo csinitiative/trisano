@@ -18,7 +18,10 @@
 class Event < ActiveRecord::Base
   include Blankable
 
-  attr_protected :event_status_id
+  p RAILS_ENV
+  if RAILS_ENV == "production"
+    attr_protected :event_status_id
+  end
 
   belongs_to :event_status, :class_name => 'ExternalCode'
   belongs_to :imported_from, :class_name => 'ExternalCode'

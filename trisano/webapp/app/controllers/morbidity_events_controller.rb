@@ -142,7 +142,10 @@ class MorbidityEventsController < EventsController
       return
     end
     
-    @event.event_status = ExternalCode.find_by_the_code("NEW")
+    # Allow for test scripts and developers to jump directly to the "under investigation" state
+    if RAILS_ENV == "production"
+      @event.event_status = ExternalCode.find_by_the_code("NEW")
+    end
 
     respond_to do |format|
       if @event.save && @contact_events.all? { |contact| contact.save }
