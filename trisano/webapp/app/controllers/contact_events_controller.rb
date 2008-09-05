@@ -54,10 +54,7 @@ class ContactEventsController < EventsController
   end
 
   def update
-    params[:contact_event][:existing_lab_attributes] ||= {}
-    params[:contact_event][:existing_hospital_attributes] ||= {}
-    params[:contact_event][:existing_diagnostic_attributes] ||= {}
-    params[:contact_event][:existing_telephone_attributes] ||= {}
+    prep_multimodels_for(:contact_event)
 
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])

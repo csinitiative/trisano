@@ -60,6 +60,7 @@ describe "/cmrs/new.html.erb" do
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:contacts).and_return([])
     @event.stub!(:clinicians).and_return([])
+    @event.stub!(:place_exposures).and_return([])
     event_type = 'MorbidityEvent'
     event_type.stub!(:underscore).and_return(event_type.underscore)
     @event.stub!(:type).and_return(event_type)

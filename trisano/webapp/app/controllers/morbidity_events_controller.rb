@@ -160,10 +160,7 @@ class MorbidityEventsController < EventsController
   end
 
   def update
-    params[:morbidity_event][:existing_lab_attributes] ||= {}
-    params[:morbidity_event][:existing_hospital_attributes] ||= {}
-    params[:morbidity_event][:existing_diagnostic_attributes] ||= {}
-    params[:morbidity_event][:existing_telephone_attributes] ||= {}
+    prep_multimodels_for(:morbidity_event)
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]

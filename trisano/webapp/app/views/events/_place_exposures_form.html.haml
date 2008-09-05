@@ -1,0 +1,6 @@
+%legend Place Exposures
+%div{:id => 'place_exposures'}
+  -place_exposures = (event.place_exposures.size > 0 ? event.place_exposures : [Participation.new_place_participation])
+  =render :partial => 'events/editable_place_exposure', :collection => place_exposures, :locals => {:f => f, :event => event}
+%p{:style => "clear: both; padding-top: 20px"}
+  =new_place_exposure_link "New Place Exposure"

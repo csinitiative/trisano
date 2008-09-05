@@ -297,4 +297,5 @@ describe ContactEventsController do
   #  end
 
   end
+  
 end

@@ -23,51 +23,52 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <span id='epi_info_show' onClick="Element.show('epi_info_form'); Element.hide('epi_info_show'); Element.show('epi_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
   <div id='epi_info_form'>
-    <fieldset class="form">
-      <legend>Contact Oriented</legend>
-      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |ap| %>
-        <% ap.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
-          <fieldset class="vert">
-            <% core_element :food_handler_id, rf, :horiz do %>
-              <%= rf.label(:food_handler_id) %>
-              <%= rf.dropdown_code_field(:food_handler_id, 'yesno') %>
-            <% end %>
-            <% core_element :healthcare_worker_id, rf, :horiz do %>
-              <%= rf.label(:healthcare_worker_id) %>
-              <%= rf.dropdown_code_field(:healthcare_worker_id, 'yesno') %>
-            <% end %>
-            <% core_element :group_living_id, rf, :horiz do %>
-              <%= rf.label(:group_living_id) %>
-              <%= rf.dropdown_code_field(:group_living_id, 'yesno') %>
-            <% end %>
-            <% core_element :day_care_association_id, rf, :horiz do %>
-              <%= rf.label(:day_care_association_id) %>
-              <%= rf.dropdown_code_field(:day_care_association_id, 'yesno') %>
-            <% end %>
-            <% core_element :occupation, rf, :horiz do %>
-              <%= rf.label(:occupation) %>
-              <%= rf.text_field(:occupation, :size => 25) %>
-            <% end %>
-          </fieldset>
-          <br />
-          <fieldset class="form">
-            <legend>Other</legend>
-            <% core_element :risk_factors, rf, :horiz do %>
-              <%= rf.label(:risk_factors) %>
-              <%= rf.text_field(:risk_factors, :size => 25) %>
-            <% end %>
-            <% core_element :risk_factors_notes, rf, :horiz do %>
-              <%= rf.label(:risk_factors_notes) %>
-              <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
-            <% end %>
-          </fieldset>
-        <% end %>
+    <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |ap| -%>
+      <% ap.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| -%>
+        <fieldset class="form">
+          <legend>Contact Oriented</legend>
+          <% core_element :food_handler_id, rf, :horiz do %>
+            <%= rf.label(:food_handler_id) %>
+            <%= rf.dropdown_code_field(:food_handler_id, 'yesno') %>
+          <% end %>
+          <% core_element :healthcare_worker_id, rf, :horiz do %>
+            <%= rf.label(:healthcare_worker_id) %>
+            <%= rf.dropdown_code_field(:healthcare_worker_id, 'yesno') %>
+          <% end %>
+          <% core_element :group_living_id, rf, :horiz do %>
+            <%= rf.label(:group_living_id) %>
+            <%= rf.dropdown_code_field(:group_living_id, 'yesno') %>
+          <% end %>
+          <% core_element :day_care_association_id, rf, :horiz do %>
+            <%= rf.label(:day_care_association_id) %>
+            <%= rf.dropdown_code_field(:day_care_association_id, 'yesno') %>
+          <% end %>
+          <% core_element :occupation, rf, :horiz do %>
+            <%= rf.label(:occupation) %>
+            <%= rf.text_field(:occupation, :size => 25) %>
+          <% end %>          
+        </fieldset>
+        <br />
+        <fieldset class="form">
+          <%= render :partial => 'events/place_exposures_form', :locals => {:f => f, :event => @event} %>
+        </fieldset>
+        <br />
+        <fieldset class="form">
+          <legend>Other</legend>
+          <% core_element :risk_factors, rf, :horiz do %>
+            <%= rf.label(:risk_factors) %>
+            <%= rf.text_field(:risk_factors, :size => 25) %>
+          <% end %>
+          <% core_element :risk_factors_notes, rf, :vert do %>
+            <%= rf.label(:risk_factors_notes) %>
+            <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
+          <% end %>
+          <% core_element :imported_from_id, f, :horiz do -%>
+            <%= f.label(:imported_from_id) %>
+            <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
+          <% end -%>    
+        </fieldset>
       <% end %>
-      <% core_element :imported_from_id, f, :horiz do -%>
-        <%= f.label(:imported_from_id) %>
-        <%= f.dropdown_code_field(:imported_from_id, 'imported', {}) %>
-      <% end -%>
-
-    </fieldset>
+    <% end %>
   </div>
 </fieldset>

@@ -1,0 +1,16 @@
+.place_exposure
+  -new_or_existing = new_or_existing?(editable_place_exposure)
+  -prefix = event_prefix_for_multi_models(new_or_existing, "_place_exposure_attributes") + "[]"
+  -if editable_place_exposure.secondary_entity
+    -place = editable_place_exposure.secondary_entity.place_temp
+    -fields_for prefix, place, :builder => ExtendedFormBuilder do |pe_form|
+      -core_element :editable_place_exposure, pe_form, :horiz do
+        =pe_form.label(:name)
+        =pe_form.core_text_field(:name)
+      -core_element :place_exposure, pe_form, :horiz do
+        =pe_form.label(:place_type_id, 'Type')
+        =pe_form.dropdown_code_field(:place_type_id, 'placetype')
+      %span.horiz
+        =pe_form.label('&nbsp;')
+        =link_to_function image_tag('delete.png', :border => 0), "$(this).up('.place_exposure').remove()"
+%hr

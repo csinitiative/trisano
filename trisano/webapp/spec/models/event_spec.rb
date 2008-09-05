@@ -627,7 +627,7 @@ describe MorbidityEvent do
     describe 'receiving an edited place exposure' do
       before(:each) do
         @existing_place_exposure_hash = {
-          "existing_place_exposure_attributes" => {"#{entities(:Davis_Nat).id}" => {"name" => "Davis Hot Springs", 'place_type_id' => codes(:place_type_other).id}}
+          "existing_place_exposure_attributes" => {"#{places(:Davis_Nat).id}" => {"name" => "Davis Hot Springs", 'place_type_id' => codes(:place_type_other).id}}
         }
         @event = MorbidityEvent.find(events(:marks_cmr).id)
       end

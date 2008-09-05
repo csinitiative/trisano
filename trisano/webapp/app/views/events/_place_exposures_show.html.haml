@@ -1,0 +1,16 @@
+%fieldset.form
+  %legend Place Exposures
+  -if @event.place_exposures.empty?
+    %h3 No place exposures have been recorded for this event
+  -else
+    %table.tabular
+      %tr
+        %th Place Name
+        %th Place Type
+
+      -@event.place_exposures.each do |pe|
+        -place = pe.secondary_entity.place_temp
+        %tr
+          %td=h(place.name)
+          %td=place.place_type.code_description
+        

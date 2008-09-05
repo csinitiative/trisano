@@ -367,7 +367,7 @@ class Event < ActiveRecord::Base
 
   def existing_place_exposure_attributes=(place_exposure_attributes)
     place_exposures.reject(&:new_record?).each do |place_exposure|
-      attributes = place_exposure_attributes[place_exposure.secondary_entity.id.to_s]
+      attributes = place_exposure_attributes[place_exposure.secondary_entity.place_temp.id.to_s]
       if attributes
         place_exposure.secondary_entity.place_temp.attributes = attributes
       else
@@ -909,6 +909,10 @@ class Event < ActiveRecord::Base
 
     contacts.each do |contact|
       contact.secondary_entity.person_temp.save(false)
+    end
+
+    place_exposures.each do |pe|
+      pe.secondary_entity.place_temp.save(false)
     end
 
     active_patient.save(false)
