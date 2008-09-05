@@ -92,14 +92,7 @@ class FormsController < AdminController
   
   def builder
     @form = Form.find(params[:id])
-    
-    if @form.structure_valid?
-      render :template => "forms/builder"
-    else
-      flash[:notice] = "The form you are trying to access is invalid."
-      redirect_to forms_path
-    end
-      
+    @form.structure_valid?
   end
   
   def publish
@@ -120,6 +113,19 @@ class FormsController < AdminController
           render :template => "rjs-error"
         end
       end
+    end
+  end
+  
+  def rollback
+    @form = Form.find(params[:id])
+    @rolled_back_form = @form.rollback
+    
+    if @rolled_back_form
+      @form = @rolled_back_form
+      redirect_to(builder_path(@form))
+    else
+      flash[:notice] = 'Unable to roll back the form. Please contact your administrator.'
+      redirect_to forms_path
     end
   end
   

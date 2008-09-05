@@ -372,26 +372,56 @@ describe FormsController do
     end
   end
   
-  describe "handling GET /forms/builder/1 for an invalid form" do
+  describe "handling GET /forms/rollback/1" do
 
     before(:each) do
       mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
-      @form.stub!(:structure_valid?).and_return(false)
+      @rolled_back_form = mock_model(Form)
+      @form.stub!(:rollback).and_return(@rolled_back_form)
     end
   
     def do_get
-      get :builder, :id => "1"
+      get :rollback, :id => "1"
     end
   
-    it "should redirect to the forms listing" do
+    it "should redirect to the builder" do
+      do_get
+      response.should redirect_to(builder_path(@rolled_back_form))
+    end
+  
+    it "should find the form requested" do
+      Form.should_receive(:find).and_return(@form)
+      do_get
+    end
+  
+    it "should assign the rolled back form for the view" do
+      do_get
+      assigns[:form].should equal(@rolled_back_form)
+    end
+  end
+  
+  describe "handling GET /forms/rollback/1 with failed rollback" do
+
+    before(:each) do
+      mock_user
+      @form = mock_model(Form)
+      Form.stub!(:find).and_return(@form)
+      @rolled_back_form = mock_model(Form)
+      @form.stub!(:rollback).and_return(nil)
+    end
+  
+    def do_get
+      get :rollback, :id => "1"
+    end
+  
+    it "should redirect to the builder" do
       do_get
       response.should redirect_to(forms_path)
     end
   
   end
-  
   
   describe "handling POST /forms/order_section_children" do
 

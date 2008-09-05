@@ -56,33 +56,46 @@
                 %li.diseaselist= h disease.disease_name
           %td
             = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
-    %div{:id => "form_children"}
-      %ul{:id => "root-element-list"}
-        = render :partial => 'forms/elements'
-    %div{:id => "core_form_children"}
-      %ul{:id => "core-element-list"}
-        = render :partial => 'forms/core_elements'
-    %div{:id => "core_field_form_children"}
-      %ul{:id => "core-field-element-list"}
-        = render :partial => 'forms/core_field_elements'
+    - if @form.errors.empty?
+      %div{:id => "form_children"}
+        %ul{:id => "root-element-list"}
+          = render :partial => 'forms/elements'
+      %div{:id => "core_form_children"}
+        %ul{:id => "core-element-list"}
+          = render :partial => 'forms/core_elements'
+      %div{:id => "core_field_form_children"}
+        %ul{:id => "core-field-element-list"}
+          = render :partial => 'forms/core_field_elements'
+    - else
+      %br
+      %span{:style => 'color:#CC0000; font-weight: bold'}
+        Form structure is invalid.
+      %ul
+        - @form.errors.each do |k, v|
+          %li{:style => 'color:#CC0000; font-weight: bold'}
+            = v
+      %br
+      = link_to 'Roll form back to last good published version.', form_rollback_path(@form)
+
 #sidebar
   = link_to 'Edit form information', edit_form_path(@form)
-  %br
-  = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
-  %br
-  = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
-  %br
-  = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
-  %br
-  = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
-  %br
-  %br
-  #library-admin
-  #builder-mods
-  #core-builder-mods
-  #core-field-builder-mods
-  %br
-  %hr
-  - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
-    = submit_tag 'Publish', :id => 'publish_btn'
-    = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
+  - if @form.errors.empty?
+    %br
+    = link_to_remote("Add a tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
+    %br
+    = link_to_remote("Add a core tab configuration", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
+    %br
+    = link_to_remote("Add a core field configuration", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
+    %br
+    = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+    %br
+    %br
+    #library-admin
+    #builder-mods
+    #core-builder-mods
+    #core-field-builder-mods
+    %br
+    %hr
+    - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
+      = submit_tag 'Publish', :id => 'publish_btn'
+      = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"

@@ -85,6 +85,14 @@ class Form < ActiveRecord::Base
           most_recent_form.status = "Archived"
           most_recent_form.save
         end
+        
+        unless self.rolled_back_from_id.blank?
+          most_recent_pre_rollback_form = most_recent_version(self.rolled_back_from_id)
+          unless (most_recent_pre_rollback_form.status == "Archived")
+            most_recent_pre_rollback_form.status = "Archived"
+            most_recent_pre_rollback_form.save!
+          end
+        end
       
         published_form = Form.create({:name => self.name, :description => self.description, 
             :jurisdiction => self.jurisdiction, :version => new_version_number, 
@@ -121,8 +129,62 @@ class Form < ActiveRecord::Base
     
   end
   
-  def most_recent_version
-    Form.find(:first, :conditions => {:template_id => self.id, :is_template => false}, :order => "version DESC")
+  # Operates on a template for which there is at least one published
+  # version, establishing a new template based on the most recent
+  # published copy.
+  #
+  # Debt: There's some duplication of the publish method in here.
+  def rollback
+    
+    unless self.status == "Published"
+      self.errors.add_to_base("Only forms with published versions can be rolled back")
+      return nil
+    end
+    
+    begin
+      transaction do
+        most_recent_form = most_recent_version
+
+        rolled_back_form = self.clone
+        rolled_back_form.created_at = nil
+        rolled_back_form.status = "Published"
+        rolled_back_form.rolled_back_from_id = self.id
+        self.status = "Invalid"
+        self.is_template = false
+      
+        self.save!
+        rolled_back_form.save!
+      
+        base_to_copy = most_recent_form.form_base_element
+        tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+        rolled_back_base = FormBaseElement.create({:form_id => rolled_back_form.id, :tree_id => tree_id})
+        publish_children(base_to_copy, rolled_back_base)
+      
+        # Associate newly copied form with the same diseases as current form
+        self.diseases.each { | disease | rolled_back_form.diseases << disease }
+        
+        # Note: Errors in the rolled back form's structure are added to the form that's being rolled back
+        rolled_back_form_structural_errors = rolled_back_form.structural_errors
+        unless rolled_back_form_structural_errors.empty?
+          rolled_back_form_structural_errors.each do |error|
+            errors.add_to_base(error)
+          end
+          raise
+        end
+        
+        return rolled_back_form
+      end
+      
+    rescue Exception => ex
+      logger.error ex
+      return nil
+    end
+    
+  end
+  
+  def most_recent_version(form_id = nil)
+    form_id = form_id.nil? ? self.id : form_id
+    Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
   end
   
   def self.get_published_investigation_forms(disease_id, jurisdiction_id)

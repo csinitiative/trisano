@@ -515,5 +515,63 @@ describe Form do
     end
     
   end
+  
+  describe 'when rolling back' do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    it 'should return the rolled back form on success' do
+      @original_form = Form.find(1)
+      @published_form = @original_form.publish
+      
+      # Add something to the original form post-publish
+      tab = ViewElement.new(:name => "New Tab")
+      tab.parent_element_id = @original_form.investigator_view_elements_container.id
+      tab.save_and_add_to_form
+      @original_form.investigator_view_elements_container.add_child(tab)
+      @original_form.investigator_view_elements_container.children_count.should == 3
+      
+      @rolled_back_form = @original_form.rollback
+      
+      @rolled_back_form.status.should == "Published"
+      @rolled_back_form.rolled_back_from_id.should == @original_form.id
+      @original_form.status.should == "Invalid"
+      @original_form.is_template.should == false
+      
+      # Look for the thing added on the rolled back form, it shouldn't be there
+      @rolled_back_form.investigator_view_elements_container.children_count.should == 2
+      
+    end
+    
+    it 'should set any previously published version to archived when a rolled back form is published' do
+      @original_form = Form.find(1)
+      @published_form = @original_form.publish
+      @published_form.status.should == "Live"
+      
+      @rolled_back_form = @original_form.rollback
+      @published_form_after_rollback = @rolled_back_form.publish
+      
+      @published_form_after_rollback.status.should == "Live"
+      @published_form.reload
+      @published_form.status.should == "Archived"
+    end
+    
+    it 'should return nil with an error on the form when there is no published version to roll back to' do
+      @original_form = Form.find(1)
+      @rolled_back_form = @original_form.rollback
+      @rolled_back_form.should be_nil
+      @original_form.errors.size.should == 1
+    end
+    
+    it 'should return nil with an error on the form when the rolled back form is invalid' do
+      @original_form = Form.find(1)
+      @published_form = @original_form.publish
+      @published_form.investigator_view_elements_container.destroy
+      @rolled_back_form = @original_form.rollback
+      @rolled_back_form.should be_nil
+      @original_form.errors.size.should == 1
+    end
+    
+  end
     
 end

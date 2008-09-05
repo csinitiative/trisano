@@ -15,17 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class AddPlaceExposureParticipationType < ActiveRecord::Migration
+class AddRolledBackFromIdToForms < ActiveRecord::Migration
   def self.up
-    if RAILS_ENV == 'production'
-        Code.create(:code_name        => 'participant',
-                    :the_code         => 'PE',
-                    :code_description => 'Place Exposure',
-                    :sort_order       => 65)
-    end
+    add_column :forms, :rolled_back_from_id, :integer
   end
 
   def self.down
-    Code.find_by_code_description('Place Exposure').destroy if RAILS_ENV == 'production'
+    remove_column :forms, :rolled_back_from_id
   end
 end
