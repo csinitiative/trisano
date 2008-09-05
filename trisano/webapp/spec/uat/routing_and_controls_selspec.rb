@@ -99,6 +99,12 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.is_text_present("Under Investigation").should be_true
   end
 
+  it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do
+    @browser.click("investigation_complete_btn")
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Investigation Complete").should be_true
+  end
+
   it "should not display routing controls for a less privileged user" do
     switch_user(@browser, "lhd_manager").should be_true
 

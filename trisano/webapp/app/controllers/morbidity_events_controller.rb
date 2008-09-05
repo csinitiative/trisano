@@ -232,7 +232,7 @@ class MorbidityEventsController < EventsController
     
     # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
     unless @event.legal_state_transition?(event_status_id.to_i)
-      render :text => "Illegal State Transition", :status => 403
+      render :text => "Illegal State Transition", :status => 409
       return
     end
 

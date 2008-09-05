@@ -18,7 +18,6 @@
 class Event < ActiveRecord::Base
   include Blankable
 
-  p RAILS_ENV
   if RAILS_ENV == "production"
     attr_protected :event_status_id
   end
@@ -139,6 +138,8 @@ class Event < ActiveRecord::Base
         priv = :route_event_to_investigator
       when 'UI', 'RJCTD-INV'
         priv = :accept_event_for_investigation
+      when 'IC'
+        priv = :investigate_event
       end
       return priv
     end
