@@ -471,10 +471,15 @@ module TrisanoHelper
     if (group_name.nil?)
       browser.click "link=No Group"
     else
-      browser.type "group_element_name", group_name
-      browser.click "group_element_submit"  
-      sleep(2)
-      browser.click "link=Add element to: #{group_name}"
+      begin
+        browser.click "link=Add element to: #{group_name}"
+      rescue
+        browser.type "group_element_name", group_name
+        browser.click "group_element_submit"  
+        sleep(2)
+        browser.click "link=Add element to: #{group_name}"
+      end
+      
     end
    
     sleep(2)
