@@ -132,6 +132,8 @@ module EventsHelper
 
   def state_controls(event, jurisdiction)
     current_state = ExternalCode.event_code_str(event.event_status_id)
+    return "" if current_state == "CLOSED"
+
     priv_required = Event.get_required_privilege(Event.get_transition_states(current_state).last)
     allowed = User.current_user.is_entitled_to_in?(priv_required, jurisdiction.entity_id)
                                                  
@@ -172,7 +174,7 @@ module EventsHelper
         controls += submit_tag(action.phrase, :id => "investigation_complete_btn")
         controls += "</form>"
       end
-    when "IC"
+    when "IC", "RO-STATE"
       if allowed
         action = Event.get_action_phrase_and_id(Event.get_transition_states("IC")).first
         controls += form_tag(state_cmr_path(event))
@@ -183,10 +185,14 @@ module EventsHelper
       end
     when "APP-LHD"
       if allowed
-        controls += "TBD: &nbsp;&nbsp;" + "Approve and close"
+        controls += form_tag(state_cmr_path(event))
+        Event.get_action_phrase_and_id(Event.get_transition_states("APP-LHD")).each do | action |
+          controls += radio_button_tag("morbidity_event[event_status_id]", action.status_id, false, :onchange => "this.form.submit()") + action.phrase
+        end
+        controls += "</form>"
       end
-      controls
     end
+    controls
   end
 
   def jurisdiction_routing_control(event, jurisdiction)

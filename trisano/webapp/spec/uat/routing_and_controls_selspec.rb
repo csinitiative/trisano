@@ -105,7 +105,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.is_text_present("Investigation Complete").should be_true
   end
 
-  it "should allow for accepting or rejecting a completed investigation" do
+  it "should allow for accepting or rejecting a locally completed investigation" do
     @browser.is_text_present("Reopen").should be_true
     @browser.is_text_present("Approve").should be_true
   end
@@ -114,6 +114,17 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.click("name=morbidity_event[event_status_id]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Approved by LHD").should be_true
+  end
+
+  it "should allow for accepting or rejecting a remotely completed investigation" do
+    @browser.is_text_present("Reopen").should be_true
+    @browser.is_text_present("Approve").should be_true
+  end
+
+  it "should set event to 'Approved by State' when 'accept' is clicked" do
+    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Approved by State").should be_true
   end
 
   it "should not display routing controls for a less privileged user" do

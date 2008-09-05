@@ -124,7 +124,7 @@ class Event < ActiveRecord::Base
                             :priv_required => :investigate_event 
                           }
   @@states['APP-LHD']   = { :status_id => ExternalCode.event_code_id("APP-LHD"),   
-                            :transitions => ["ASGD-LHD", "RO-STATE", "CLOSED"],     
+                            :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],     
                             :action_phrase => "Approve",
                             :priv_required => :approve_event_at_lhd 
                           }
@@ -154,7 +154,6 @@ class Event < ActiveRecord::Base
           actions << OpenStruct.new( :phrase => @@states[state_name][:action_phrase], :status_id => @@states[state_name][:status_id] )
         end
       end
-      p actions
       actions
     end
 
