@@ -167,7 +167,8 @@ module TrisanoHelper
         browser.is_text_present("Dashboard") and
         browser.is_element_present("link=Forms") and
         browser.is_element_present("link=Users") and
-        browser.is_element_present("link=Codes")) 
+        browser.is_element_present("link=Codes") and
+        browser.is_element_present("link=Event Queues") ) 
   end
   
   def edit_cmr(browser)

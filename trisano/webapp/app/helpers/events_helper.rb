@@ -131,55 +131,62 @@ module EventsHelper
   end
 
   def state_controls(event, jurisdiction)
+    current_state = ExternalCode.event_code_str(event.event_status_id)
+    priv_required = Event.get_required_privilege(Event.get_transition_states(current_state).last)
+    allowed = User.current_user.is_entitled_to_in?(priv_required, jurisdiction.entity_id)
+                                                 
     controls = ""
-    if User.current_user.is_entitled_to_in?(:accept_event_for_lhd, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
-      controls += form_tag(state_cmr_path(event))
-      Event.accept_reject_lhd_actions.each do | action |
-        controls += radio_button_tag("morbidity_event[event_status_id]", action.id, false, :onchange => "this.form.submit()") + action.code_description
+    case current_state
+    when "ASGD-LHD"
+      if allowed
+        controls += form_tag(state_cmr_path(event))
+        Event.get_action_phrase_and_id(Event.get_transition_states("ASGD-LHD")).each do | action |
+          controls += radio_button_tag("morbidity_event[event_status_id]", action.status_id, false, :onchange => "this.form.submit()") + action.phrase
+        end
+        controls += "</form>"
       end
-      controls += "</form>"
-    end
+    when "ACPTD-LHD", "RJCTD-INV"
+      if allowed
+        event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
 
-    if User.current_user.is_entitled_to_in?(:route_event_to_investigator, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ACPTD-LHD").id ||
-         event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "RJCTD-INV").id)
-      event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-      controls += form_tag(state_cmr_path(event))
-      controls += "<span>Route locally to:&nbsp;</span>" 
-      controls += hidden_field_tag("morbidity_event[event_status_id]", ExternalCode.find_by_code_name_and_the_code("eventstatus", "ASGD-INV").id)
-      controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name), :id => 'morbidity_event__event_queue_id',:onchange => "this.form.submit()")
-      controls += "</form>"
-    end
-
-    if User.current_user.is_entitled_to_in?(:accept_event_for_investigation, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-INV").id)
-      controls += form_tag(state_cmr_path(event))
-      Event.accept_reject_inv_actions.each do | action |
-        controls += radio_button_tag("morbidity_event[event_status_id]", action.id, false, :onchange => "this.form.submit()") + action.code_description
+        action = Event.get_action_phrase_and_id(Event.get_transition_states("ACPTD-LHD")).first
+        controls += form_tag(state_cmr_path(event))
+        controls += "<span>#{action.phrase}:&nbsp;</span>" 
+        controls += hidden_field_tag("morbidity_event[event_status_id]", action.status_id)
+        controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name), :id => 'morbidity_event__event_queue_id',:onchange => "this.form.submit()")
+        controls += "</form>"
       end
-      controls += "</form>"
+    when "ASGD-INV"
+      if allowed
+        controls += form_tag(state_cmr_path(event))
+        Event.get_action_phrase_and_id(Event.get_transition_states("ASGD-INV")).each do | action |
+          controls += radio_button_tag("morbidity_event[event_status_id]", action.status_id, false, :onchange => "this.form.submit()") + action.phrase
+        end
+        controls += "</form>"
+      end
+    when "UI", "RO-MGR"
+      if allowed
+        action = Event.get_action_phrase_and_id(Event.get_transition_states("UI")).first
+        controls += form_tag(state_cmr_path(event))
+        controls += hidden_field_tag("morbidity_event[event_status_id]", action.status_id)
+        controls += submit_tag(action.phrase, :id => "investigation_complete_btn")
+        controls += "</form>"
+      end
+    when "IC"
+      if allowed
+        action = Event.get_action_phrase_and_id(Event.get_transition_states("IC")).first
+        controls += form_tag(state_cmr_path(event))
+        Event.get_action_phrase_and_id(Event.get_transition_states("IC")).each do | action |
+          controls += radio_button_tag("morbidity_event[event_status_id]", action.status_id, false, :onchange => "this.form.submit()") + action.phrase
+        end
+        controls += "</form>"
+      end
+    when "APP-LHD"
+      if allowed
+        controls += "TBD: &nbsp;&nbsp;" + "Approve and close"
+      end
+      controls
     end
-
-    if User.current_user.is_entitled_to_in?(:investigate_event, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "UI").id ||
-         event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "RO-MGR").id)
-      controls += form_tag(state_cmr_path(event))
-      controls += hidden_field_tag("morbidity_event[event_status_id]", ExternalCode.find_by_code_name_and_the_code("eventstatus", "IC").id)
-      controls += submit_tag("Mark Investigation Complete", :id => "investigation_complete_btn")
-      controls += "</form>"
-    end
-
-    if User.current_user.is_entitled_to_in?(:approve_event_at_lhd, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "IC").id)
-      controls += "TBD: &nbsp;&nbsp;" + "Approve and send to state"
-    end
-
-    if User.current_user.is_entitled_to_in?(:approve_event_at_state, jurisdiction.entity_id) && 
-        (event.event_status_id ==  ExternalCode.find_by_code_name_and_the_code('eventstatus', "APP-LHD").id)
-      controls += "TBD: &nbsp;&nbsp;" + "Approve and close"
-    end
-    controls
   end
 
   def jurisdiction_routing_control(event, jurisdiction)

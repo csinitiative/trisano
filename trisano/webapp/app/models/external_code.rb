@@ -63,7 +63,7 @@ class ExternalCode < ActiveRecord::Base
   end
 
   def self.event_code_id(event_code_str)
-    find_by_the_code(event_code_str).id
+    find_by_code_name_and_the_code("eventstatus", event_code_str).id
   end
 
   def self.event_code_str(event_code_id)

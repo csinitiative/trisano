@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
-  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
+  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes, :external_codes
 
   event_hash = {
     "active_patient" => {
@@ -812,10 +812,26 @@ describe MorbidityEvent do
     end 
   end
 
-  describe "the map_state_id_to_priv() class method" do
-    it "should return :accept_event_for_lhd when the state_id is ACPTD-LHD or RJCT-LHD" do
-      Event.map_state_id_to_priv(external_codes(:event_status_accepted_lhd)).should == :accept_event_for_lhd
-      Event.map_state_id_to_priv(external_codes(:event_status_rejected_lhd)).should == :accept_event_for_lhd
+  describe "the get_required_priv() class method" do
+    it "should return :accept_event_for_lhd when the state is ACPTD-LHD or RJCT-LHD" do
+      Event.get_required_privilege(external_codes(:event_status_accepted_lhd).the_code).should == :accept_event_for_lhd
+      Event.get_required_privilege(external_codes(:event_status_rejected_lhd).the_code).should == :accept_event_for_lhd
+    end
+  end
+
+  describe "the get_transition_states() class method" do
+    it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
+      Event.get_transition_states(external_codes(:event_status_reopened_manager).the_code).should == ["ASGD-LHD", "IC"]
+    end
+  end
+
+  describe "the get_action_phrase_and_id() class method" do
+    it "should return an array of structs containing the right phrases and IDs" do
+      s = Event.get_action_phrase_and_id(['RO-STATE', 'APP-LHD'])
+      s.first.phrase.should == "Reopen"
+      s.first.status_id.should == external_codes(:event_status_reopened_state).id
+      s.last.phrase.should == "Approve"
+      s.last.status_id.should == external_codes(:event_status_approved_lhd).id
     end
   end
 

@@ -82,66 +82,92 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
-  @@state_transitions = {}
-  @@state_transitions['NEW'] = ["ASGD-LHD"]
-  @@state_transitions['ASGD-LHD'] = ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"]
-  @@state_transitions['ACPTD-LHD'] = ["ASGD-LHD", "ASGD-INV"]
-  @@state_transitions['RJCTD-LHD'] = ["ASGD-LHD"]
-  @@state_transitions['ASGD-INV'] = ["ASGD-LHD", "UI", "RJCTD-INV"]
-  @@state_transitions['UI'] = ["ASGD-LHD", "IC"]
-  @@state_transitions['RJCTD-INV'] = ["ASGD-LHD", "ASGD-INV"]
-  @@state_transitions['IC'] = ["ASGD-LHD", "RO-MGR", "APP-LHD"]
-  @@state_transitions['RO-MGR'] = ["ASGD-LHD", "IC"]
-  @@state_transitions['APP-LHD'] = ["ASGD-LHD", "RO-STATE", "CLOSED"]
-  @@state_transitions['RO-STATE'] = ["ASGD-LHD", "APP-LHD", "RO-MGR"]
-  @@state_transitions['CLOSED'] = []
+  @@states = {}
+  @@states['NEW']       = { :status_id => ExternalCode.event_code_id("NEW"),       
+                            :transitions => ["ASGD-LHD"],                           
+                            :action_phrase => nil,
+                            :priv_required => :create_event
+                          }
+  @@states['ASGD-LHD']  = { :status_id => ExternalCode.event_code_id("ASGD-LHD"),  
+                            :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"], 
+                            :action_phrase => nil,
+                            :priv_required => :route_event_to_any_lhd
+                          }
+  @@states['ACPTD-LHD'] = { :status_id => ExternalCode.event_code_id("ACPTD-LHD"), 
+                            :transitions => ["ASGD-LHD", "ASGD-INV"],               
+                            :action_phrase => "Accept",
+                            :priv_required => :accept_event_for_lhd
+                          }
+  @@states['RJCTD-LHD'] = { :status_id => ExternalCode.event_code_id("RJCTD-LHD"), 
+                            :transitions => ["ASGD-LHD"],                           
+                            :action_phrase => "Reject",
+                            :priv_required => :accept_event_for_lhd
+                          }
+  @@states['ASGD-INV']  = { :status_id => ExternalCode.event_code_id("ASGD-INV"),  
+                            :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],        
+                            :action_phrase => "Route locally to",
+                            :priv_required => :route_event_to_investigator
+                          }
+  @@states['UI']        = { :status_id => ExternalCode.event_code_id("UI"),        
+                            :transitions => ["ASGD-LHD", "IC"],                     
+                            :action_phrase => "Accept",
+                            :priv_required => :accept_event_for_investigation
+                          }
+  @@states['RJCTD-INV'] = { :status_id => ExternalCode.event_code_id("RJCTD-INV"), 
+                            :transitions => ["ASGD-LHD", "ASGD-INV"],               
+                            :action_phrase => "Reject",
+                            :priv_required => :accept_event_for_investigation
+                          }
+  @@states['IC']        = { :status_id => ExternalCode.event_code_id("IC"),        
+                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
+                            :action_phrase => "Mark Investigation Complete",
+                            :priv_required => :investigate_event 
+                          }
+  @@states['APP-LHD']   = { :status_id => ExternalCode.event_code_id("APP-LHD"),   
+                            :transitions => ["ASGD-LHD", "RO-STATE", "CLOSED"],     
+                            :action_phrase => "Approve",
+                            :priv_required => :approve_event_at_lhd 
+                          }
+  @@states['RO-MGR']    = { :status_id => ExternalCode.event_code_id("RO-MGR"),    
+                            :transitions => ["ASGD-LHD", "IC"],                     
+                            :action_phrase => "Reopen",
+                            :priv_required => :approve_event_at_lhd 
+                          }
+  @@states['RO-STATE']  = { :status_id => ExternalCode.event_code_id("RO-STATE"),  
+                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
+                            :action_phrase => "Reopen",
+                            :priv_required => :approve_event_at_state 
+                          }
+  @@states['CLOSED']    = { :status_id => ExternalCode.event_code_id("CLOSED"),    
+                            :transitions => [],                                     
+                            :action_phrase => "Approve",
+                            :priv_required => :approve_event_at_state 
+                          }
 
   class << self
 
-    def accept_reject_lhd_actions
-      ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
-        rv = false
-        case event_action.the_code
-        when 'ACPTD-LHD'
-          event_action.code_description = "Accept"
-          rv = true
-        when 'RJCTD-LHD'
-          event_action.code_description = "Reject"
-          rv = true
+    def get_action_phrase_and_id(state_names)
+      state_names.to_a
+      actions = []
+      state_names.each do |state_name|
+        unless @@states[state_name][:action_phrase].nil?
+          actions << OpenStruct.new( :phrase => @@states[state_name][:action_phrase], :status_id => @@states[state_name][:status_id] )
         end
-        rv
       end
+      p actions
+      actions
     end
 
-    def accept_reject_inv_actions
-      ExternalCode.find_all_by_code_name('eventstatus').select do |event_action|
-        rv = false
-        case event_action.the_code
-        when 'UI'
-          event_action.code_description = "Accept"
-          rv = true
-        when 'RJCTD-INV'
-          event_action.code_description = "Reject"
-          rv = true
-        end
-        rv
-      end
+    def get_status_id(state_name)
+      @@states[state_name][:status_id]
     end
 
-    def map_state_id_to_priv(state_id)
-      state = ExternalCode.find(state_id)
-      priv = nil
-      case state.the_code
-      when 'ACPTD-LHD', 'RJCTD-LHD'
-        priv = :accept_event_for_lhd
-      when 'ASGD-INV'
-        priv = :route_event_to_investigator
-      when 'UI', 'RJCTD-INV'
-        priv = :accept_event_for_investigation
-      when 'IC'
-        priv = :investigate_event
-      end
-      return priv
+    def get_transition_states(state_name)
+      @@states[state_name][:transitions]
+    end
+
+    def get_required_privilege(state_name)
+      @@states[state_name][:priv_required]
     end
 
   end
@@ -149,7 +175,7 @@ class Event < ActiveRecord::Base
   def legal_state_transition?(proposed_state)
     cur_state = ExternalCode.event_code_str(self.event_status)
     proposed_state = ExternalCode.event_code_str(proposed_state) if proposed_state.class != String
-    @@state_transitions[cur_state].include?(proposed_state) ? true : false
+    @@states[cur_state][:transitions].include?(proposed_state) ? true : false
   end
 
   # returns only the references for forms that should be rendered on

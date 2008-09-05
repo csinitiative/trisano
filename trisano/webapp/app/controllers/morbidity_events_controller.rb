@@ -216,7 +216,7 @@ class MorbidityEventsController < EventsController
     event_status_id = params[:morbidity_event].delete(:event_status_id)
 
     # Determine what privileges are required to change to the passed in state
-    priv_required = Event.map_state_id_to_priv(event_status_id)
+    priv_required = Event.get_required_privilege(ExternalCode.event_code_str(event_status_id))
 
     # If nothing came back, then the passed in state was malformed
     if priv_required.nil?

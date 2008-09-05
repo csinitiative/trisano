@@ -459,7 +459,7 @@ describe MorbidityEventsController do
 
   describe "handling STATE actions /events/1/state" do
     before(:each) do
-      Event.stub!(:map_state_id_to_priv).and_return(:a_privilege)
+      Event.stub!(:get_required_privilege).and_return(:a_privilege)
 
       mock_user
       @user.stub!(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
@@ -475,6 +475,7 @@ describe MorbidityEventsController do
       @event.stub!(:event_status_id=).and_return(1)
       @event.stub!(:attributes=).and_return(1)
       MorbidityEvent.stub!(:find).and_return(@event)
+      ExternalCode.stub!(:event_code_str).and_return("A_PRIV")
     end
 
     describe "with successful state change" do
@@ -498,7 +499,7 @@ describe MorbidityEventsController do
     describe "with bad state argument" do
       def do_change_state
         request.env['HTTP_REFERER'] = "/some_path"
-        Event.should_receive(:map_state_id_to_priv).and_return(nil)
+        Event.should_receive(:get_required_privilege).and_return(nil)
         post :state, :id => "1", :morbidity_event => {}
       end
 
