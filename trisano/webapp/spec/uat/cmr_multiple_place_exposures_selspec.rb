@@ -17,6 +17,8 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
+# $dont_kill_browser = true
+
 describe 'Adding multiple place exposures to a CMR' do
 
   before(:all) do

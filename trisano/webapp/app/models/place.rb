@@ -63,4 +63,8 @@ class Place < ActiveRecord::Base
       jurisdictions
     end
   end
+
+  def place_description
+    place_type.code_description if place_type
+  end
 end
