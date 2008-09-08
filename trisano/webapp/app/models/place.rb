@@ -20,6 +20,7 @@ class Place < ActiveRecord::Base
   belongs_to :entity 
 
   validates_presence_of :name
+  validates_date :date_of_exposure, :allow_nil => true
 
   class << self
 
@@ -67,4 +68,5 @@ class Place < ActiveRecord::Base
   def place_description
     place_type.code_description if place_type
   end
+
 end

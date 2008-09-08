@@ -44,25 +44,6 @@ describe Participation do
     
   end
 
-  describe 'place participation' do
-
-    before :each do
-      @place_participation = Participation.new_place_participation
-      @place_participation.save
-    end
-
-    it 'should have no date of participation' do
-      @place_participation.date_of.should be_nil
-    end
-
-    it 'should allow date of to assigned' do
-      @place_participation.date_of = Date.today
-      @place_participation.date_of.should_not be_nil
-    end
-
-  end
-
-
 end
     
     

@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
+require 'active_support'
 
 # $dont_kill_browser = true
 
@@ -26,21 +27,27 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.wait_for_page_to_load($load_time)
     @orginal_place_name = "Davis Nat"
     @new_place_name = "Davis Natatorium"
+    @date_of_exposure = 10.days.ago.strftime('%B %d, %Y')
+    @new_date_of_exposure = 7.days.ago.strftime('%B %d, %Y')
   end
 
   after(:all) do
     @orginal_last_name = nil
     @new_place_name = nil
+    @date_of_exposure = nil
+    @new_date_of_exposure = nil
   end
 
   it "should allow a single place exposure to be saved w/ a new CMR" do
     click_nav_new_cmr(@browser).should be_true
     @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "multi_place_exposure"
     @browser.type "morbidity_event_new_place_exposure_attributes__name", @orginal_place_name
+    @browser.type "morbidity_event_new_place_exposure_attributes__date_of_exposure", @date_of_exposure
     @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Other"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@orginal_place_name).should be_true
     @browser.is_text_present('Other').should be_true
+    @browser.is_text_present(@date_of_exposure).should be_true
   end
 
   it "should allow editing a place exposure from the CMR's edit mode" do
@@ -48,10 +55,13 @@ describe 'Adding multiple place exposures to a CMR' do
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
     @browser.type "//div[@class='place_exposure'][1]//input[contains(@id, '_name')]", @new_place_name
+    @browser.type "//div[@class='place_exposure'][1]//input[contains(@id, '_date_of_exposure')]", @new_date_of_exposure
     save_cmr(@browser).should be_true
     click_core_tab(@browser, "Epidemiological")
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Other').should be_true
+    @browser.is_text_present(@new_date_of_exposure).should be_true
+    @browser.is_text_present(@date_of_exposure).should_not be_true
   end
 
   it "should adding a new place exposure from the CMR's edit mode" do

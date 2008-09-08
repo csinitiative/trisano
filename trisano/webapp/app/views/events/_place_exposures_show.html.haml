@@ -7,10 +7,12 @@
       %tr
         %th Place Name
         %th Place Type
+        %th Date of Exposure
 
       -@event.place_exposures.each do |pe|
         -place = pe.secondary_entity.place_temp
         %tr
           %td=h(place.name)
           %td=place.place_description
+          %td=format_date(place.date_of_exposure)
         

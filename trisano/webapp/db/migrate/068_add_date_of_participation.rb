@@ -17,10 +17,10 @@
 
 class AddDateOfParticipation < ActiveRecord::Migration
   def self.up
-    add_column :participations, :date_of, :date
+    add_column :places, :date_of_exposure, :date
   end
 
   def self.down
-    remove_column :participations, :date_of
+    remove_column :places, :date_of_exposure
   end
 end

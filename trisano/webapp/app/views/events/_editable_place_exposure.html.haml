@@ -7,9 +7,12 @@
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:name)
         =pe_form.core_text_field(:name)
-      -core_element :place_exposure, pe_form, :horiz do
+      -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:place_type_id, 'Type')
         =pe_form.dropdown_code_field(:place_type_id, 'placetype')
+      -core_element :editable_place_exposure, pe_form, :horiz do
+        =pe_form.label(:date_of_exposure)
+        =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
       %span.horiz
         =pe_form.label('&nbsp;')
         =link_to_function image_tag('delete.png', :border => 0), "$(this).up('.place_exposure').remove()"
