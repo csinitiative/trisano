@@ -43,12 +43,12 @@ class MorbidityEventsController < EventsController
     conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
 
     unless params[:states].nil?
-      state_ids = get_allowed_states(params[:states])
-      if state_ids.empty?
+      states = get_allowed_states(params[:states])
+      if states.empty?
         render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
       else
-        conditions[0] += " AND event_status_id IN (?)"
-        conditions << state_ids
+        conditions[0] += " AND event_status IN (?)"
+        conditions << states
       end
     end
 
@@ -144,7 +144,7 @@ class MorbidityEventsController < EventsController
     
     # Allow for test scripts and developers to jump directly to the "under investigation" state
     if RAILS_ENV == "production"
-      @event.event_status = ExternalCode.find_by_the_code("NEW")
+      @event.event_status = "NEW"
     end
 
     respond_to do |format|
@@ -210,10 +210,10 @@ class MorbidityEventsController < EventsController
 
   def state
     @event = MorbidityEvent.find(params[:id])
-    event_status_id = params[:morbidity_event].delete(:event_status_id)
+    event_status = params[:morbidity_event].delete(:event_status)
 
     # Determine what privileges are required to change to the passed in state
-    priv_required = Event.get_required_privilege(ExternalCode.event_code_str(event_status_id))
+    priv_required = Event.get_required_privilege(event_status)
 
     # If nothing came back, then the passed in state was malformed
     if priv_required.nil?
@@ -228,13 +228,13 @@ class MorbidityEventsController < EventsController
     end
     
     # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
-    unless @event.legal_state_transition?(event_status_id.to_i)
+    unless @event.legal_state_transition?(event_status)
       render :text => "Illegal State Transition", :status => 409
       return
     end
 
-    # event_status_id is protected from mass update, set individually
-    @event.event_status_id = event_status_id
+    # event_status is protected from mass update, set individually
+    @event.event_status = event_status
 
     # A status change may be accompanied by other values such as an event queue, set them
     @event.attributes = params[:morbidity_event]
@@ -265,7 +265,7 @@ class MorbidityEventsController < EventsController
   # Expects string of space separated event states e.g. new, acptd-lhd, etc.
   def get_allowed_states(states)
     query_states = states.split(" ").collect { |state| state.upcase } 
-    system_states = ExternalCode.find_all_by_code_name('eventstatus')
-    system_states.collect { |system_state| query_states.include?(system_state.the_code) ? system_state.id : nil }.compact!
+    system_states = Event.get_state_keys
+    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact!
   end
 end

@@ -79,10 +79,7 @@ class SearchController < ApplicationController
 
     @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
     
-    @event_statuses = ExternalCode.find(:all,
-                                        :order => "id",
-				        :select => "id, code_description",
-				        :conditions => "code_name = 'eventstatus'")
+    @event_statuses = Event.get_states_and_descriptions
 
     @counties = ExternalCode.find(:all,
                           :order => "id",

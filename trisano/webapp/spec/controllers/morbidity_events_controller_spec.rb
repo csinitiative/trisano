@@ -472,7 +472,7 @@ describe MorbidityEventsController do
       @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
       @event.stub!(:update_attributes).and_return(true)
       @event.stub!(:legal_state_transition?).and_return(true)
-      @event.stub!(:event_status_id=).and_return(1)
+      @event.stub!(:event_status=).and_return("NEW")
       @event.stub!(:attributes=).and_return(1)
       MorbidityEvent.stub!(:find).and_return(@event)
       ExternalCode.stub!(:event_code_str).and_return("A_PRIV")

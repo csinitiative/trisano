@@ -107,7 +107,6 @@ def mock_event
   event = mock_model(MorbidityEvent)
   person = mock_person_entity
   
-  event_status = mock_model(ExternalCode)
   imported_from = mock_model(ExternalCode)
   udoh_case_status =mock_model(ExternalCode)
   lhd_case_status =mock_model(ExternalCode)
@@ -134,7 +133,6 @@ def mock_event
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
     
-  event_status.stub!(:code_description).and_return('Open')
   imported_from.stub!(:code_description).and_return('Utah')
   udoh_case_status.stub!(:code_description).and_return('Confirmed')
   lhd_case_status.stub!(:code_description).and_return('Confirmed')
@@ -185,8 +183,7 @@ def mock_event
   event.stub!(:event_onset_date).and_return("2008-02-19")
   event.stub!(:disease).and_return(disease_event)
   event.stub!(:lab_result).and_return(lab_result)
-  event.stub!(:event_status_id).and_return("1901")
-  event.stub!(:event_status).and_return(event_status)
+  event.stub!(:event_status).and_return("NEW")
   event.stub!(:imported_from_id).and_return("2101")
   event.stub!(:imported_from).and_return(imported_from)
   event.stub!(:udoh_case_status_id).and_return(1801)

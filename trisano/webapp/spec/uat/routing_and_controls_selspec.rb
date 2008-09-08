@@ -72,12 +72,12 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
   end
 
   it "should allow for accepting or rejecting a remote routing assignent" do
-    @browser.is_checked("name=morbidity_event[event_status_id]").should be_false
+    @browser.is_checked("name=morbidity_event[event_status]").should be_false
     @browser.is_text_present("Assigned to Local Health Dept.").should be_true
   end
 
   it "should set event to 'accepted' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
   end
@@ -90,11 +90,11 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
 
   it "should allow for accepting or rejecting a local routing assignent" do
     @browser.is_text_present('Queue:  Enterics-UtahCounty').should be_true
-    @browser.is_checked("name=morbidity_event[event_status_id]").should be_false
+    @browser.is_checked("name=morbidity_event[event_status]").should be_false
   end
 
   it "should set event to 'under investigation' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Under Investigation").should be_true
   end
@@ -111,7 +111,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
   end
 
   it "should set event to 'Approved by LHD' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Approved by LHD").should be_true
   end
@@ -122,7 +122,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
   end
 
   it "should set event to 'Approved by State' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status_id]")
+    @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Approved by State").should be_true
   end

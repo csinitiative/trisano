@@ -157,7 +157,7 @@ describe 'Print CMR page' do
     @browser.select "morbidity_event_outbreak_associated_id", "label=Yes"
     @browser.type "morbidity_event_outbreak_name", "POCKET MONSTERS"
     @browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=Central Utah Public Health Department"
-    @browser.select "morbidity_event_event_status_id", "label=Accepted by Local Health Dept."
+    @browser.select "morbidity_event_event_status", "label=Accepted by Local Health Dept."
     @browser.type "morbidity_event_investigation_started_date", "12/3/2003"
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"

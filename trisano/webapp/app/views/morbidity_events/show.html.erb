@@ -233,9 +233,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
               <%= h(@event.jurisdiction.active_secondary_entity.place.name) unless @event.jurisdiction.nil?%>
             <% end -%>
           <% end -%>
-          <% core_element_show :event_status_id, event_form, :horiz do -%>
-            <%= event_form.label :event_status_id, 'Event status' %>
-            <%= l(@event.event_status) || '&nbsp;' %>
+          <% core_element_show :event_status, event_form, :horiz do -%>
+            <%= event_form.label :event_status, 'Event status' %>
+            <%= Event.get_state_description(@event.event_status) || '&nbsp;' %>
           <% end -%>
           <% core_element_show :investigation_started_date, event_form, :horiz do -%>
             <%= event_form.label :investigation_started_date, 'Date investigation started' %>

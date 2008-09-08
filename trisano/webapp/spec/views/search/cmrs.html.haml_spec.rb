@@ -52,7 +52,7 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:county).and_return("Salt Lake")
     cmr.stub!(:district).and_return("Alpine")
     cmr.stub!(:county).and_return("Salt Lake")
-    cmr.stub!(:event_status_id).and_return(1)
+    cmr.stub!(:event_status).and_return("NEW")
     cmr.stub!(:jurisdiction_name).and_return("Weber-Morgan Health District")
 
     assigns[:cmrs] = [cmr]
@@ -136,9 +136,6 @@ describe "/search/cmrs.html.haml" do
   end
 
   def mock_event_status
-    status = mock_model(ExternalCode)
-    status.stub!(:id).and_return("1904")
-    status.stub!(:code_description).and_return("Investigation Complete")
-    status
+    OpenStruct.new( :state => "UI", :description => "Under Investigation")
   end
 end

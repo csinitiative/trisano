@@ -98,7 +98,6 @@ describe EventsHelper do
     @lab.stub!(:lab_results).and_return([@lab_result])
     @lab.stub!(:each).and_yield(@lab_result)
 
-    @event_status = mock_model(ExternalCode)
     @imported_from = mock_model(ExternalCode)
     @udoh_case_status =mock_model(ExternalCode)
     @lhd_case_status =mock_model(ExternalCode)
@@ -117,7 +116,6 @@ describe EventsHelper do
 
 
     @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
-    @event_status.stub!(:code_description).and_return('Open')
     @imported_from.stub!(:code_description).and_return('Utah')
     @udoh_case_status.stub!(:code_description).and_return('Confirmed')
     @lhd_case_status.stub!(:code_description).and_return('Confirmed')
@@ -155,7 +153,7 @@ describe EventsHelper do
     @event_1.stub!(:event_onset_date).and_return("2008-02-19")
     @event_1.stub!(:disease).and_return(@disease_event)
     @event_1.stub!(:type).and_return('MorbidityEvent')
-    @event_1.stub!(:event_status).and_return(@event_status)
+    @event_1.stub!(:event_status).and_return("NEW")
     @event_1.stub!(:imported_from).and_return(@imported_from)
     @event_1.stub!(:udoh_case_status).and_return(@udoh_case_status)
     @event_1.stub!(:lhd_case_status).and_return(@lhd_case_status)
@@ -190,7 +188,7 @@ describe EventsHelper do
      'Confirmed',
      'Yes',
      'Test Outbreak',
-     'Open',
+     'New',
      '2008-02-05',
      '2008-02-08',
      '2008-02-11',
@@ -242,7 +240,7 @@ describe EventsHelper do
      'Confirmed',
      'Yes',
      'Test Outbreak',
-     'Open',
+     'New',
      '2008-02-05',
      '2008-02-08',
      '2008-02-11',
@@ -366,13 +364,12 @@ describe EventsHelper do
   end
 
   describe "the state_controls method" do
-    fixtures :external_codes
 
     describe "when the event state is 'asssigned to LHD'" do
       before(:each) do
         mock_user
         mock_event
-        @event_1.stub!(:event_status_id).and_return(external_codes(:event_status_assigned_lhd).id)
+        @event_1.stub!(:event_status).and_return("ASGD-LHD")
         @jurisdiction = mock_model(Place)
         @jurisdiction.stub!(:entity_id).and_return(1)
         User.stub!(:current_user).and_return(@user)

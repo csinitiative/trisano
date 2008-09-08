@@ -58,16 +58,4 @@ class ExternalCode < ActiveRecord::Base
     find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' AND live is TRUE AND next_ver is NULL order by code_description limit #{limit};")
   end
 
-  def event_under_investigation?
-    'eventstatus'.eql?(code_name) && ['UI', 'IC', 'RO-MGR'].include?(the_code)
-  end
-
-  def self.event_code_id(event_code_str)
-    find_by_code_name_and_the_code("eventstatus", event_code_str).id
-  end
-
-  def self.event_code_str(event_code_id)
-    find(event_code_id).the_code
-  end
-  
 end

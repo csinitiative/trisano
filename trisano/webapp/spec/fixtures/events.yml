@@ -12,7 +12,7 @@ marks_cmr:
   results_reported_to_clinician_date: 
   event_name: Marks Chicken Pox
   MMWR_week: !str 10
-  event_status_id: !str 1901
+  event_status: "NEW"
   udoh_case_status_id: !str 1802
   lhd_case_status_id: !str 1802
   MMWR_year: !str 2006
@@ -22,10 +22,10 @@ marks_cmr:
 
 under_investigation_cmr:
   id: 2
-  event_status_id: !str 1904
+  event_status: "UI"
   type: MorbidityEvent
 
 no_disease_cmr:
   id: 3
-  event_status_id: 1901
+  event_status: "NEW"
   type: MorbidityEvent

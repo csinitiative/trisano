@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
-  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes, :external_codes
+  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
   event_hash = {
     "active_patient" => {
@@ -673,9 +673,11 @@ describe MorbidityEvent do
 
       it "should change the jurisdiction and set status to 'assigned to LHD'" do
         @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Southeastern_District).name
-        @event.event_status.should eql(external_codes(:event_status_new))
+        @event.event_status.should == "NEW"
+
         @event.route_to_jurisdiction(entities(:Davis_County).id)
-        @event.event_status_id.should eql(external_codes(:event_status_assigned_lhd).id)
+
+        @event.event_status.should == "ASGD-LHD"
         @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Davis_County).name
       end
     end
@@ -693,7 +695,6 @@ describe MorbidityEvent do
   end
 
   describe "under investigation" do
-    fixtures :external_codes
 
     it "should not be under investigation in the default state" do
       event = MorbidityEvent.new
@@ -701,23 +702,23 @@ describe MorbidityEvent do
     end
 
     it "should not be under investigation if it is new" do
-      event = MorbidityEvent.new(:event_status => external_codes(:event_status_new))
+      event = MorbidityEvent.new(:event_status => "NEW")
       event.should_not be_under_investigation
     end
 
 
     it "should be under investigation if set to under investigation" do
-      event = MorbidityEvent.new :event_status => external_codes(:event_status_under_investigation)
+      event = MorbidityEvent.new :event_status => "UI"
       event.should be_under_investigation
     end
 
     it "should be under investigation if reopened by manager" do
-      event = MorbidityEvent.new :event_status => external_codes(:event_status_reopened_manager)
+      event = MorbidityEvent.new :event_status => "RO-MGR"
       event.should be_under_investigation
     end
 
     it "should be under investigation if investigation is complete" do
-      event = MorbidityEvent.new :event_status => external_codes(:event_status_investigation_complete)
+      event = MorbidityEvent.new :event_status => "IC"
       event.should be_under_investigation
     end
   end
@@ -805,63 +806,45 @@ describe MorbidityEvent do
 
   end
 
-  describe "the accept_reject_actions() class method" do
-    it "should map accept and reject to an array of codes containing action words and status ids" do
-    pending
-      actions = Event.accept_reject_actions
-
-      actions.class.should eql(Array)
-      actions[0].id.should == external_codes(:event_status_accepted_lhd).id
-      actions[0].code_description.should == "Accept"
-      actions[1].id.should == external_codes(:event_status_rejected_lhd).id
-      actions[1].code_description.should == "Reject"
-    end 
-  end
-
   describe "the get_required_priv() class method" do
     it "should return :accept_event_for_lhd when the state is ACPTD-LHD or RJCT-LHD" do
-      Event.get_required_privilege(external_codes(:event_status_accepted_lhd).the_code).should == :accept_event_for_lhd
-      Event.get_required_privilege(external_codes(:event_status_rejected_lhd).the_code).should == :accept_event_for_lhd
+      Event.get_required_privilege("ACPTD-LHD").should == :accept_event_for_lhd
+      Event.get_required_privilege("RJCTD-LHD").should == :accept_event_for_lhd
     end
   end
 
   describe "the get_transition_states() class method" do
     it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
-      Event.get_transition_states(external_codes(:event_status_reopened_manager).the_code).should == ["ASGD-LHD", "IC"]
+      Event.get_transition_states("RO-MGR").should == ["ASGD-LHD", "IC"]
     end
   end
 
-  describe "the get_action_phrase_and_id() class method" do
-    it "should return an array of structs containing the right phrases and IDs" do
-      s = Event.get_action_phrase_and_id(['RO-STATE', 'APP-LHD'])
+  describe "the get_action_phrases() class method" do
+    it "should return an array of structs containing the right phrases and states" do
+      s = Event.get_action_phrases(['RO-STATE', 'APP-LHD'])
       s.first.phrase.should == "Reopen"
-      s.first.status_id.should == external_codes(:event_status_reopened_state).id
+      s.first.state.should == "RO-STATE"
       s.last.phrase.should == "Approve"
-      s.last.status_id.should == external_codes(:event_status_approved_lhd).id
+      s.last.state.should == "APP-LHD"
     end
   end
 
   describe "the legal_state_transition? instance method" do
-    fixtures :external_codes
 
     before(:each) do
       @event = Event.new
     end
 
     it "should return true when transitioning from ACPTD-LHD to ASGD-INV" do
-      @event.event_status = external_codes(:event_status_accepted_lhd)
+      @event.event_status = "ACPTD-LHD"
       @event.legal_state_transition?("ASGD-INV").should be_true
     end
 
     it "should return false when transitioning from ACPTD-LHD to UI" do
-      @event.event_status = external_codes(:event_status_accepted_lhd)
+      @event.event_status = "ACPTD-LHD"
       @event.legal_state_transition?("UI").should be_false
     end
 
-    it "should accept a event status ID as an argument" do
-      @event.event_status = external_codes(:event_status_accepted_lhd)
-      @event.legal_state_transition?(external_codes(:event_status_under_investigation).id).should be_false
-    end
   end
 
   describe "support for investigation view elements" do

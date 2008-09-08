@@ -162,7 +162,7 @@ describe "Form Builder Investigator Single Form" do
     click_core_tab(@browser, "Clinical")
     @browser.select "morbidity_event_disease_disease_id", "label=Amebiasis"
     click_core_tab(@browser, "Administrative")
-    @browser.select "morbidity_event_event_status_id", "label=Under Investigation"
+    @browser.select "morbidity_event_event_status", "label=Under Investigation"
     save_cmr(@browser)
     @browser.is_text_present("CMR was successfully created").should be_true
   end

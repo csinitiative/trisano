@@ -14,7 +14,7 @@
   %td
     = jurisdiction.short_name
   %td
-    = l event.event_status
+    = Event.get_state_description(event.event_status)
     - unless event.event_queue_id.nil?
       %br
       Queue:&nbsp;

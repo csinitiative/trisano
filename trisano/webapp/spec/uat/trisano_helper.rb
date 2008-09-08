@@ -267,7 +267,7 @@ module TrisanoHelper
     browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
     browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
-    browser.select "morbidity_event_event_status_id", "label=Under Investigation"
+    browser.select "morbidity_event_event_status", "label=Under Investigation"
     return save_cmr(browser)
   end
   
@@ -742,7 +742,7 @@ module TrisanoHelper
               "morbidity_event_lhd_case_status_id" => "Confirmed",
               "morbidity_event_outbreak_associated_id" => "Yes",
               #"morbidity_event_active_jurisdiction_secondary_entity_id" => "Out of State",
-              "morbidity_event_event_status_id" => "Investigation Complete",
+              "morbidity_event_event_status" => "Investigation Complete",
               "morbidity_event_outbreak_name" => NedssHelper.get_unique_name(1),
               "morbidity_event_investigation_started_date" => "1/1/1974",
               "morbidity_event_investigation_completed_LHD_date" => "1/1/1974",

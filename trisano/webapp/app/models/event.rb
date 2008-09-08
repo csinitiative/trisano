@@ -19,10 +19,9 @@ class Event < ActiveRecord::Base
   include Blankable
 
   if RAILS_ENV == "production"
-    attr_protected :event_status_id
+    attr_protected :event_status
   end
 
-  belongs_to :event_status, :class_name => 'ExternalCode'
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :lhd_case_status, :class_name => 'ExternalCode'
   belongs_to :udoh_case_status, :class_name => 'ExternalCode'
@@ -82,83 +81,93 @@ class Event < ActiveRecord::Base
   before_save :generate_mmwr
   before_create :set_record_number
 
+  ### Debt:  Event Status stuff should be made into its own object and associated with event
+
   @@states = {}
-  @@states['NEW']       = { :status_id => ExternalCode.event_code_id("NEW"),       
+  @@states['NEW']       = { 
                             :transitions => ["ASGD-LHD"],                           
                             :action_phrase => nil,
-                            :priv_required => :create_event
+                            :priv_required => :create_event,
+                            :description => "New"
                           }
-  @@states['ASGD-LHD']  = { :status_id => ExternalCode.event_code_id("ASGD-LHD"),  
+  @@states['ASGD-LHD']  = {
                             :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"], 
                             :action_phrase => nil,
-                            :priv_required => :route_event_to_any_lhd
+                            :priv_required => :route_event_to_any_lhd,
+                            :description => "Assigned to Local Health Dept."
                           }
-  @@states['ACPTD-LHD'] = { :status_id => ExternalCode.event_code_id("ACPTD-LHD"), 
+  @@states['ACPTD-LHD'] = {
                             :transitions => ["ASGD-LHD", "ASGD-INV"],               
                             :action_phrase => "Accept",
-                            :priv_required => :accept_event_for_lhd
+                            :priv_required => :accept_event_for_lhd,
+                            :description => "Accepted by Local Health Dept."
                           }
-  @@states['RJCTD-LHD'] = { :status_id => ExternalCode.event_code_id("RJCTD-LHD"), 
+  @@states['RJCTD-LHD'] = {
                             :transitions => ["ASGD-LHD"],                           
                             :action_phrase => "Reject",
-                            :priv_required => :accept_event_for_lhd
+                            :priv_required => :accept_event_for_lhd,
+                            :description => "Rejected by Local Health Dept."
                           }
-  @@states['ASGD-INV']  = { :status_id => ExternalCode.event_code_id("ASGD-INV"),  
+  @@states['ASGD-INV']  = {
                             :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],        
                             :action_phrase => "Route locally to",
-                            :priv_required => :route_event_to_investigator
+                            :priv_required => :route_event_to_investigator,
+                            :description => "Assigned to Investigator"
                           }
-  @@states['UI']        = { :status_id => ExternalCode.event_code_id("UI"),        
+  @@states['UI']        = {
                             :transitions => ["ASGD-LHD", "IC"],                     
                             :action_phrase => "Accept",
-                            :priv_required => :accept_event_for_investigation
+                            :priv_required => :accept_event_for_investigation,
+                            :description => "Under Investigation"
                           }
-  @@states['RJCTD-INV'] = { :status_id => ExternalCode.event_code_id("RJCTD-INV"), 
+  @@states['RJCTD-INV'] = {
                             :transitions => ["ASGD-LHD", "ASGD-INV"],               
                             :action_phrase => "Reject",
-                            :priv_required => :accept_event_for_investigation
+                            :priv_required => :accept_event_for_investigation,
+                            :description => "Rejected by Investigator"
                           }
-  @@states['IC']        = { :status_id => ExternalCode.event_code_id("IC"),        
+  @@states['IC']        = {
                             :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
                             :action_phrase => "Mark Investigation Complete",
-                            :priv_required => :investigate_event 
+                            :priv_required => :investigate_event ,
+                            :description => "Investigation Complete"
                           }
-  @@states['APP-LHD']   = { :status_id => ExternalCode.event_code_id("APP-LHD"),   
+  @@states['APP-LHD']   = {
                             :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],     
                             :action_phrase => "Approve",
-                            :priv_required => :approve_event_at_lhd 
+                            :priv_required => :approve_event_at_lhd ,
+                            :description => "Approved by LHD"
                           }
-  @@states['RO-MGR']    = { :status_id => ExternalCode.event_code_id("RO-MGR"),    
+  @@states['RO-MGR']    = {
                             :transitions => ["ASGD-LHD", "IC"],                     
                             :action_phrase => "Reopen",
-                            :priv_required => :approve_event_at_lhd 
+                            :priv_required => :approve_event_at_lhd ,
+                            :description => "Reopened by Manager"
                           }
-  @@states['RO-STATE']  = { :status_id => ExternalCode.event_code_id("RO-STATE"),  
-                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
-                            :action_phrase => "Reopen",
-                            :priv_required => :approve_event_at_state 
-                          }
-  @@states['CLOSED']    = { :status_id => ExternalCode.event_code_id("CLOSED"),    
+  @@states['CLOSED']    = {
                             :transitions => [],                                     
                             :action_phrase => "Approve",
-                            :priv_required => :approve_event_at_state 
+                            :priv_required => :approve_event_at_state ,
+                            :description => "Approved by State"
+                          }
+  @@states['RO-STATE']  = {
+                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
+                            :action_phrase => "Reopen",
+                            :priv_required => :approve_event_at_state ,
+                            :description => "Reopened by State"
                           }
 
   class << self
 
-    def get_action_phrase_and_id(state_names)
+    def get_action_phrases(state_names)
       state_names.to_a
       actions = []
       state_names.each do |state_name|
         unless @@states[state_name][:action_phrase].nil?
-          actions << OpenStruct.new( :phrase => @@states[state_name][:action_phrase], :status_id => @@states[state_name][:status_id] )
+          actions << OpenStruct.new( :phrase => @@states[state_name][:action_phrase], :state => state_name )
         end
       end
       actions
-    end
-
-    def get_status_id(state_name)
-      @@states[state_name][:status_id]
     end
 
     def get_transition_states(state_name)
@@ -169,12 +178,28 @@ class Event < ActiveRecord::Base
       @@states[state_name][:priv_required]
     end
 
+    def get_state_keys
+      @@states.keys
+    end
+
+    def get_states_and_descriptions
+      a = []
+      @@states.each_pair { |k, v| a << OpenStruct.new( :state => k, :description => v[:description]) }
+      a
+    end
+
+    def get_state_description(state_name)
+      @@states[state_name][:description]
+    end
+
   end
 
   def legal_state_transition?(proposed_state)
-    cur_state = ExternalCode.event_code_str(self.event_status)
-    proposed_state = ExternalCode.event_code_str(proposed_state) if proposed_state.class != String
-    @@states[cur_state][:transitions].include?(proposed_state) ? true : false
+    @@states[self.event_status][:transitions].include?(proposed_state) ? true : false
+  end
+
+  def under_investigation?
+    ['UI', 'IC', 'RO-MGR'].include?(self.event_status)
   end
 
   # returns only the references for forms that should be rendered on
@@ -506,7 +531,7 @@ class Event < ActiveRecord::Base
 
   ### End participations
 
-  # Debt: Consolidate sanitize_sql calls where possible
+  # Debt: Consolidate sanitize_sql_for_conditions calls where possible
   def self.find_by_criteria(*args)
     options = args.extract_options!
     fulltext_terms = []
@@ -516,7 +541,7 @@ class Event < ActiveRecord::Base
     
     if !options[:disease].blank?
       issue_query = true
-      where_clause += " AND p3.disease_id = " + sanitize_sql(["%s", options[:disease]])
+      where_clause += " AND p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
     end
     
     if !options[:gender].blank?
@@ -526,7 +551,7 @@ class Event < ActiveRecord::Base
       if options[:gender] == "Unspecified"
         where_clause += "p3.primary_birth_gender_id IS NULL"
       else
-        where_clause += "p3.primary_birth_gender_id = " + sanitize_sql(["%s", options[:gender]])
+        where_clause += "p3.primary_birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
       end
       
     end
@@ -534,26 +559,25 @@ class Event < ActiveRecord::Base
     if !options[:event_status].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "p3.event_status_id = " + sanitize_sql(["%s", options[:event_status]])
-      
+      where_clause += "p3.event_status = '" + sanitize_sql_for_conditions(["%s", options[:event_status]]) + "'"
     end
     
     if !options[:city].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "a.city ILIKE '" + sanitize_sql(["%s", options[:city]]) + "%'"
+      where_clause += "a.city ILIKE '" + sanitize_sql_for_conditions(["%s", options[:city]]) + "%'"
     end
 
     if !options[:county].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "a.county_id = " + sanitize_sql(["%s", options[:county]])
+      where_clause += "a.county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
     end
     
     if !options[:jurisdiction_id].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "p3.jurisdiction_id = " + sanitize_sql(["%s", options[:jurisdiction_id]])
+      where_clause += "p3.jurisdiction_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
     else
       where_clause += " AND " unless where_clause.empty?
       allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
@@ -568,11 +592,11 @@ class Event < ActiveRecord::Base
       if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "EXTRACT(YEAR FROM p3.primary_birth_date) = '" + sanitize_sql(["%s",options[:birth_date]]) + "'"
+        where_clause += "EXTRACT(YEAR FROM p3.primary_birth_date) = '" + sanitize_sql_for_conditions(["%s",options[:birth_date]]) + "'"
       else
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "p3.primary_birth_date = '" + sanitize_sql(["%s", options[:birth_date]]) + "'"
+        where_clause += "p3.primary_birth_date = '" + sanitize_sql_for_conditions(["%s", options[:birth_date]]) + "'"
       end
       
     end
@@ -583,12 +607,12 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
       
       if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-        where_clause += "p3.created_at BETWEEN '" + sanitize_sql(["%s", options[:entered_on_start]]) + 
-          "' AND '" + sanitize_sql(options[:entered_on_end]) + "'"
+        where_clause += "p3.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + 
+          "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
       elsif !options[:entered_on_start].blank?
-        where_clause += "p3.created_at > '" + sanitize_sql(["%s", options[:entered_on_start]]) + "'"
+        where_clause += "p3.created_at > '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
       else
-        where_clause += "p3.created_at < '" + sanitize_sql(["%s", options[:entered_on_end]]) + "'"
+        where_clause += "p3.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
       end
      
     end
@@ -603,12 +627,12 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
       
       if !options[:sw_last_name].blank?
-        where_clause += "p3.primary_last_name ILIKE '" + sanitize_sql(["%s", options[:sw_last_name]]) + "%'"
+        where_clause += "p3.primary_last_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_last_name]]) + "%'"
       end
       
       if !options[:sw_first_name].blank?
         where_clause += " AND " unless options[:sw_last_name].blank?
-        where_clause += "p3.primary_first_name ILIKE '" + sanitize_sql(["%s", options[:sw_first_name]]) + "%'"
+        where_clause += "p3.primary_first_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_first_name]]) + "%'"
       end
       
     elsif !options[:fulltext_terms].blank?
@@ -619,7 +643,7 @@ class Event < ActiveRecord::Base
       raw_terms.each do |word|
         soundex_code = Text::Soundex.soundex(word)
         soundex_codes << soundex_code.downcase unless soundex_code.nil?
-        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+        fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
       end
       
       fulltext_terms << soundex_codes unless soundex_codes.empty?
@@ -645,27 +669,26 @@ class Event < ActiveRecord::Base
            p3.primary_record_number AS record_number,
            p3.event_onset_date,
            p3.primary_birth_gender_id AS birth_gender_id,
-           p3.event_status_id,
+           p3.event_status,
            p3.jurisdiction_id,
            p3.jurisdiction_name, 
            p3.vector,
            p3.created_at,
            c.code_description AS gender,
-           cs.code_description AS event_status, 
            a.city, 
            co.code_description AS county
     FROM 
            ( SELECT 
                     p1.event_id, p1.type, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
-                    p1.event_status_id, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
+                    p1.event_status, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
                     ( SELECT 
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
                              people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
                              d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
-                             e.event_status_id as event_status_id, e.type as type,
+                             e.event_status as event_status, e.type as type,
                              e.created_at
                       FROM   
                              events e
@@ -739,18 +762,12 @@ class Event < ActiveRecord::Base
            external_codes co ON co.id = a.county_id
     LEFT OUTER JOIN 
            external_codes c ON c.id = p3.primary_birth_gender_id
-    LEFT OUTER JOIN 
-           codes cs ON cs.id = p3.event_status_id
     WHERE 
            #{where_clause}
     ORDER BY 
            #{order_by_clause}"
     
     find_by_sql(query) if issue_query
-  end
-
-  def under_investigation?
-    event_status.event_under_investigation? unless event_status.nil?
   end
 
   def get_investigation_forms
@@ -771,7 +788,7 @@ class Event < ActiveRecord::Base
       proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
       raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
       active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-      update_attribute("event_status_id",  ExternalCode.find_by_code_name_and_the_code('eventstatus', "ASGD-LHD").id)
+      update_attribute("event_status",  "ASGD-LHD")
       update_attribute("event_queue_id",  nil)
       reload # Any existing references to this object won't see these changes without this
     end
@@ -824,7 +841,7 @@ class Event < ActiveRecord::Base
       "morbidity_event[outbreak_associated_id]" => {:type => :drop_down, :name => 'Outbreak associated'},
       "morbidity_event[outbreak_name]" => {:type => :single_line_text, :name => 'Outbreak'},
       "morbidity_event[active_jurisdiction][secondary_entity_id]" => {:type => :multi_select, :name => 'Jurisdiction responsible for investigation'},
-      "morbidity_event[event_status_id]" => {:type => :drop_down, :name => 'Event status'},
+      "morbidity_event[event_status]" => {:type => :drop_down, :name => 'Event status'},
       "morbidity_event[investigation_started_date]" => {:type => :single_line_text, :name => 'Date investigation started'},
       "morbidity_event[investigation_completed_LHD_date]" => {:type => :single_line_text, :name => 'Date investigation completed'},
       "morbidity_event[event_name]" => {:type => :single_line_text, :name => 'Event name'},
