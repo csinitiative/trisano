@@ -42,13 +42,26 @@ class MorbidityEventsController < EventsController
   def index
     conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
 
+    conjunction = "AND"
+
     unless params[:states].nil?
       states = get_allowed_states(params[:states])
       if states.empty?
         render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
       else
-        conditions[0] += " AND event_status IN (?)"
+        conditions[0] += " #{conjunction} event_status IN (?)"
         conditions << states
+        conjunction = "OR"
+      end
+    end
+
+    unless params[:queues].nil?
+      queues = get_allowed_queues(params[:queues])
+      if queues.empty?
+        render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+      else
+        conditions[0] += " #{conjunction} event_queue_id IN (?)"
+        conditions << queues
       end
     end
 
@@ -266,6 +279,12 @@ class MorbidityEventsController < EventsController
   def get_allowed_states(states)
     query_states = states.split(" ").collect { |state| state.upcase } 
     system_states = Event.get_state_keys
-    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact!
+    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
+  end
+
+  def get_allowed_queues(queues)
+    query_queues = queues.split
+    system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+    system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
   end
 end
