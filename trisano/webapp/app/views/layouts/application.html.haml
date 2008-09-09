@@ -65,7 +65,7 @@
             - if User.current_user.is_entitled_to?(:create_event)
               = link_to 'NEW CMR', new_cmr_path
               |
-            = link_to 'CMRS', cmrs_path
+            = link_to 'CMRS', cmrs_path_with_defaults
             |
             - if User.current_user.is_admin?
               = link_to 'FORMS', forms_path

@@ -90,7 +90,7 @@
       %span.print-label
         Event status:
       %span.print-value
-        = l @event.event_status 
+        = Event.get_state_description(@event.event_status)
 
 #investigation
   .three-valued-row

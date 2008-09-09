@@ -23,9 +23,26 @@
   = new_cmr_link 'New Morbidity Report'
   |
   = link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv')
+  |
+  = link_to_function('Change View', nil) do |page|
+    - page[:change_view].visual_effect :slide_down
 
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
+
+#change_view{:style => "display: none"}
+  - form_tag(cmrs_path, :method => :get) do
+    %span.horiz
+      %label Events
+      = select_tag("states[]", options_from_collection_for_select(Event.get_states_and_descriptions, :state, :description), :size => 5, :multiple => true)
+    %label Queues
+    = select_tag("queues[]", options_from_collection_for_select(EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event)), :queue_name, :queue_name), :size => 5, :multiple => true)
+    = check_box_tag("set_as_default_view")
+    = "Set as default view"
+    = submit_tag("Change View", :id => "change_view_btn")
+  = link_to_function "Close", "Effect.BlindUp('change_view')"
+  %p 
+
 
 #rot
   %table.listingforms

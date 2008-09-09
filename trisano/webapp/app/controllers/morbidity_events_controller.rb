@@ -43,6 +43,7 @@ class MorbidityEventsController < EventsController
     conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
 
     conjunction = "AND"
+    query_string = ""
 
     unless params[:states].nil?
       states = get_allowed_states(params[:states])
@@ -52,18 +53,24 @@ class MorbidityEventsController < EventsController
         conditions[0] += " #{conjunction} event_status IN (?)"
         conditions << states
         conjunction = "OR"
+        query_string = states.to_query('states')
       end
     end
 
     unless params[:queues].nil?
-      queues = get_allowed_queues(params[:queues])
-      if queues.empty?
+      queue_ids, queue_names = get_allowed_queues(params[:queues])
+      if queue_ids.empty?
         render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
       else
         conditions[0] += " #{conjunction} event_queue_id IN (?)"
-        conditions << queues
+        conditions << queue_ids
+
+        query_string << "&" unless query_string.blank?
+        query_string << queue_names.to_query('queues')
       end
     end
+
+    User.current_user.update_attribute('event_view_settings', query_string) if params[:set_as_default_view] == "1"
 
     @events = MorbidityEvent.find(:all, 
                                   :include => :jurisdiction, 
@@ -276,15 +283,16 @@ class MorbidityEventsController < EventsController
   end
   
   # Expects string of space separated event states e.g. new, acptd-lhd, etc.
-  def get_allowed_states(states)
-    query_states = states.split(" ").collect { |state| state.upcase } 
+  def get_allowed_states(query_states)
+    query_states.collect! { |state| state.upcase } 
     system_states = Event.get_state_keys
     system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
   end
 
-  def get_allowed_queues(queues)
-    query_queues = queues.split
+  def get_allowed_queues(query_queues)
     system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-    system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
+    queue_ids = system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
+    queue_names = system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
+    return queue_ids, queue_names
   end
 end

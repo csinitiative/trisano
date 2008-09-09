@@ -17,9 +17,14 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+$dont_kill_browser = true
 
-describe 'Sytem functionality for routing a CMR among jurisdictions' do
+describe 'Sytem functionality for routing and workflow' do
+
+  before(:all) do
+    @person_1 = get_unique_name(2)
+    @person_2 = get_unique_name(2)
+  end
 
   it "should allow for new event_queues" do
     @browser.open "/trisano/admin"
@@ -53,7 +58,7 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     @browser.is_text_present("New Morbidity Report").should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', get_unique_name(2))
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_1)
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("NEW CMR").should be_true
@@ -131,6 +136,103 @@ describe 'Sytem functionality for routing a CMR among jurisdictions' do
     switch_user(@browser, "lhd_manager").should be_true
 
     @browser.is_text_present("Assigned Jurisdiction: Unassigned").should_not be_true
+  end
+
+  it "should allow for queues to specified" do
+    @browser.open "/trisano"
+    @browser.wait_for_page_to_load "30000"
+    current_user = @browser.get_selected_label("user_id")
+    if current_user != "default_user"
+      switch_user(@browser, "default_user")
+    end
+
+    @browser.open "/trisano/admin"
+    @browser.wait_for_page_to_load "30000"
+    @browser.click "link=Event Queues"
+    @browser.wait_for_page_to_load "30000"
+    
+    @browser.click "link=New event queue"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.type "event_queue_queue_name", "Joe Investigator"
+    @browser.select "event_queue_jurisdiction_id", "label=Summit County Public Health Department"
+
+    @browser.click "event_queue_submit"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present('Event queue was successfully created.').should be_true
+    @browser.is_text_present('JoeInvestigator').should be_true
+
+    click_nav_new_cmr(@browser).should be_true
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_2)
+    save_cmr(@browser).should be_true
+
+    @browser.open "/trisano/cmrs"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("NEW CMR").should be_true
+    @browser.is_text_present("New Morbidity Report").should be_true
+
+    click_nav_new_cmr(@browser).should be_true
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', get_unique_name(2))
+    save_cmr(@browser).should be_true
+
+    @browser.open "/trisano/cmrs"
+    @browser.click "link=Change View"
+    @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should be_true
+    @browser.is_text_present(@person_2).should_not be_true
+
+    @browser.click "link=Change View"
+    @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_2).should_not be_true
+
+    @browser.click "link=Change View"
+    @browser.add_selection "states[]", "label=New"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_2).should be_true
+
+    @browser.click "link=Change View"
+    @browser.add_selection "states[]", "label=Assigned to Investigator"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_2).should_not be_true
+
+    @browser.click "link=Change View"
+    @browser.add_selection "states[]", "label=New"
+    @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should be_true
+    @browser.is_text_present(@person_2).should be_true
+
+    @browser.click "link=Change View"
+    @browser.add_selection "states[]", "label=New"
+    @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
+    @browser.click "set_as_default_view"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_2).should be_true
+
+    @browser.click "link=CMRS"
+    @browser.wait_for_page_to_load "30000"
+
+    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_2).should be_true
   end
 
 end
