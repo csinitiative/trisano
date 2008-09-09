@@ -18,19 +18,22 @@
 module FormsLibraryHelper
   
   def render_library(type, direction)
+    return if @library_elements.empty?
     type = type.to_s.camelcase
+    library_element_cache = LibraryElementCache.new(@library_elements)
+    
     result = ""
-    result += render_library_no_group(type, direction)
-    result += render_library_groups(type, direction)
+    result << render_library_no_group(library_element_cache, type, direction)
+    result << render_library_groups(library_element_cache, type, direction)
   end
   
   private
 
-  def render_library_no_group(type, direction)
+  def render_library_no_group(library_element_cache, type, direction)
     result = ""
     
     if (direction == :to_library)
-      result += link_to_remote("No Group", 
+      result << link_to_remote("No Group", 
         :update => "library-element-list-#{@reference_element.id}", 
         :complete => visual_effect(:highlight, "library-element-list-#{@reference_element.id}"), 
         :url => {
@@ -42,92 +45,97 @@ module FormsLibraryHelper
       )
     end
     
-    result += "<ul>"
+    result << "<ul>"
     
-    for form_element in @library_elements
+    for form_element in library_element_cache
       next if form_element.is_a? GroupElement
       
       if ((form_element.class.name == type) && (form_element.is_a?(QuestionElement)))  
-        result += render_library_question(form_element, direction)
+        result << render_library_question(library_element_cache, form_element, direction)
       elsif ((form_element.class.name == type) && (form_element.is_a?(ValueSetElement)))
-        result += render_library_value_set(form_element, direction)
+        result << render_library_value_set(library_element_cache, form_element, direction)
       end
       
     end
     
-    result += "</ul>"
+    result << "</ul>"
   end
   
-  def render_library_groups(type, direction)
+  def render_library_groups(library_element_cache, type, direction)
     
     result = ""
-    result += "<ul>"
+    result << "<ul>"
 
     grouped_count = 0
     
-    for form_element in @library_elements
-      next unless form_element.is_a? GroupElement
+    for group_element in library_element_cache
+      next unless group_element.is_a? GroupElement
       
-      result += "Grouped:" if grouped_count == 0
+      result << "Grouped:" if grouped_count == 0
       
-      result += "<li id='lib_group_item_#{form_element.id}', class='lib-question-item'>"
+      result << "<li id='lib_group_item_#{group_element.id}' class='lib-question-item'>"
       
       if (direction == :to_library)
-        result += link_to_remote("Add element to: #{form_element.name}", 
+        result << link_to_remote("Add element to: #{group_element.name}", 
           :update => "library-element-list-#{@reference_element.id}", 
           :complete => visual_effect(:highlight, "library-element-list-#{@reference_element.id}"), 
           :url => {
             :controller => "forms", 
             :action => "to_library", 
-            :group_element_id => form_element.id, 
+            :group_element_id => group_element.id, 
             :reference_element_id => @reference_element.id
           }
         )
       else       
-        if ((type == "QuestionElement") && (form_element.is_a?(GroupElement)))
-          result += link_to_remote("Click to add all questions in group: #{form_element.name}", 
+        if ((type == "QuestionElement") && (group_element.is_a?(GroupElement)))
+          result << link_to_remote("Click to add all questions in group: #{group_element.name}", 
             :url => {
               :controller => "forms", 
               :action => "from_library", 
               :reference_element_id => @reference_element.id, 
-              :lib_element_id => form_element.id
+              :lib_element_id => group_element.id
             }
           )
         else
-          result += "<b>#{form_element.name}</b>"
+          result << "<b>#{group_element.name}</b>"
         end
       end
       
+      if (direction == :from_library)
+        group_element_cache = FormElementCache.new(group_element)
       
-      result += "<ul>"
+        result << "<ul>"
       
-      for child_element in form_element.children
-        if ((child_element.class.name == type) && (child_element.is_a?(QuestionElement)))
-          result += render_library_question(child_element, direction)
-        elsif ((child_element.class.name == type) && (child_element.is_a?(ValueSetElement)))
-          result += render_library_value_set(child_element, direction)
+        for child_element in group_element_cache.children
+          if ((child_element.class.name == type) && (child_element.is_a?(QuestionElement)))
+            result << render_library_question(group_element_cache, child_element, direction)
+          elsif ((child_element.class.name == type) && (child_element.is_a?(ValueSetElement)))
+            result << render_library_value_set(group_element_cache, child_element, direction)
+          end
         end
+      
+        result << "</ul>"
+      
       end
       
-      result += "</ul>"
-      result += "<br/></li>"
+      result << "<br/></li>"
       
       grouped_count += 1
     end
     
-    result += "</ul>"
+    result << "</ul>"
     result
   end
   
-  def render_library_question(question_element, direction)
+  def render_library_question(element_cache, question_element, direction)
     result = ""
     
-    result += "<li id='lib_question_item_#{question_element.id}', class='lib-question-item'>"
+    result << "<li id='lib_question_item_#{question_element.id}' class='lib-question-item'>"
     
     if (direction == :to_library)
-      result += question_element.question.question_text
+      result << element_cache.question(question_element).question_text
     else
-      result += link_to_remote(question_element.question.question_text, 
+      result << link_to_remote(element_cache.question(question_element).question_text, 
         :url => {
           :controller => "forms", 
           :action => "from_library", 
@@ -137,26 +145,40 @@ module FormsLibraryHelper
       )
     end
     
-    result += "&nbsp;&nbsp;<small>" + question_element.question.data_type_before_type_cast.humanize + "</small>"
-    question_element.pre_order_walk do |element|
-      result += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;" + element.name + "</small></em>: " if element.is_a? ValueSetElement
-      result += fml("<em><small>", element.name, "</small></em>&nbsp;&nbsp;") if element.is_a? ValueElement and !element.name.blank?
+    result << "&nbsp;&nbsp;<small>" + question_element.question.data_type_before_type_cast.humanize + "</small>"
+    
+    question_children = element_cache.children(question_element)
+    
+    question_children.each do |question_child|
+      next unless question_child.is_a? ValueSetElement
+      
+      result << "<ul>"
+    
+      element_cache.children(question_child).each do |element|
+        if element.name.blank?
+          "<li><em><small>(Blank)</small></em></li>"
+        else
+          result << fml("<li><em><small>", element.name, "</small></em></li>") 
+        end
+      end
+    
+      result << "</ul>"
     end
-          
-    result += "</li>"
+    
+    result << "</li>"
     
     result
   end
   
-  def render_library_value_set(value_set_element, direction)
+  def render_library_value_set(element_cache, value_set_element, direction)
     result = ""
     
-    result += "<li>"
+    result << "<li>"
     
     if (direction == :to_library)
-      result += value_set_element.name
+      result << value_set_element.name
     else
-      result += link_to_remote(value_set_element.name, 
+      result << link_to_remote(value_set_element.name, 
         :url => {
           :controller => "forms", 
           :action => "from_library", 
@@ -166,18 +188,18 @@ module FormsLibraryHelper
       )
     end
     
-    result += "<ul>"
+    result << "<ul>"
     
-    value_set_element.children.each do |element|
+    element_cache.children(value_set_element).each do |element|
       if element.name.blank?
         "<li><em><small>(Blank)</small></em></li>"
       else
-        result += fml("<li><em><small>", element.name, "</small></em></li>") 
+        result << fml("<li><em><small>", element.name, "</small></em></li>") 
       end
     end
     
-    result += "</ul>"
-    result += "</li>"
+    result << "</ul>"
+    result << "</li>"
     
     result
   end

@@ -42,7 +42,7 @@ class ValueSetElementsController <  AdminController
       @value_set_element.form_id = params[:form_id]
       
       @reference_element = FormElement.find(params[:form_element_id])
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      @library_elements = []
     rescue Exception => ex
       logger.debug ex
       flash[:notice] = 'Unable to display the value set form at this time.'
@@ -64,7 +64,7 @@ class ValueSetElementsController <  AdminController
       else
         @value_set_element = post_transaction_refresh(@value_set_element, params[:value_set_element])
         @reference_element = FormElement.find(@value_set_element.parent_element_id)
-        @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+        @library_elements = []
         format.xml  { render :xml => @value_set_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }
       end

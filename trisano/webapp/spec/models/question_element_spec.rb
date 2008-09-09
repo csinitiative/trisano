@@ -78,7 +78,11 @@ describe QuestionElement do
   describe "when created with 'save and add to form'" do
     
     it "should bootstrap the question" do
-      section_element = SectionElement.create({:form_id => 1, :name => "Section 1", :tree_id => 1})
+      form = Form.new(:name => "Test Form")
+      form.save_and_initialize_form_elements
+      section_element = SectionElement.new(:name => "Test")
+      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
+      section_element.save_and_add_to_form
       
       question_element = QuestionElement.new({
           :parent_element_id => section_element.id,
@@ -94,7 +98,11 @@ describe QuestionElement do
     end
     
     it "should fail if the associated question is not valid" do
-      section_element = SectionElement.create({:form_id => 1, :name => "Section 1", :tree_id => 1})
+      form = Form.new(:name => "Test Form")
+      form.save_and_initialize_form_elements
+      section_element = SectionElement.new(:name => "Test")
+      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
+      section_element.save_and_add_to_form
       
       question_element = QuestionElement.new({
           :parent_element_id => section_element.id,

@@ -376,6 +376,11 @@ module TrisanoHelper
     element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
     browser.click("add-question-#{element_id}")
     wait_for_element_present("new-question-form", browser)
+    browser.click("link=Show all groups")
+    
+    # Debt: If this UI sticks, add something to key off of instead of using this sleep
+    sleep(2)
+    
     browser.click("link=Click to add all questions in group: #{group_name}")
     wait_for_element_not_present("new-question-form", browser)
     
@@ -436,6 +441,7 @@ module TrisanoHelper
     browser.click("add-value-set-#{element_id}")
     wait_for_element_present("new-value-set-form", browser)
     browser.type "lib_filter", value_set_name
+    sleep(2)
     browser.click "link=#{value_set_name}"
     wait_for_element_not_present("new-value-set-form")
 

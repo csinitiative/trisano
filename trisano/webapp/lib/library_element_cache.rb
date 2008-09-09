@@ -15,6 +15,15 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-page.hide "library-mods-#{@reference_element.id}"
-page.replace_html "library-mods-#{@reference_element.id}", :partial => 'group_elements/new'
-page.visual_effect(:blind_down, "library-mods-#{@reference_element.id}", :duration => 0.1)
+require 'cacheable_tree'
+
+# A 'root-less' option for a cache of form elements.
+class LibraryElementCache
+  include CacheableTree
+    
+  def initialize(full_set)
+    @root_element = nil
+    @full_set = full_set
+  end
+  
+end

@@ -218,6 +218,11 @@ def to_and_from_library_no_group
 
   @browser.click "link=Add question to tab"
   wait_for_element_present("new-question-form")
+  
+  @browser.click("link=Show all groups")
+  # Debt: If this UI sticks, add something to key off of instead of using this sleep
+  sleep(2)
+    
   @browser.click "link=#{@question_to_add_to_library_text}"
   sleep(2)
   num_times_text_appears(@browser, @question_to_add_to_library_text).should == 2 #library closed or would be 3
@@ -234,7 +239,7 @@ def to_and_from_library_new_group
   sleep(2)
   @browser.click "link=Add element to: #{group_name}"
   sleep(2)
-  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 4
+  num_times_text_appears(@browser, @question_to_add_to_library_text).should == 3
   @browser.click "link=Close"
 end
 

@@ -45,7 +45,7 @@ class QuestionElementsController <  AdminController
       @question_element.question.core_data = params[:core_data] == "true" ? true : false
       
       @reference_element = FormElement.find(params[:form_element_id])
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      @library_elements = []
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to display the new question form.'
@@ -67,7 +67,7 @@ class QuestionElementsController <  AdminController
       @question_element = post_transaction_refresh(@question_element, params[:question_element])
       @question_element.question = Question.new(params[:question_element][:question_attributes])
       @reference_element = FormElement.find(@question_element.parent_element_id)
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      @library_elements = []
       render :action => "new" 
     end
 
