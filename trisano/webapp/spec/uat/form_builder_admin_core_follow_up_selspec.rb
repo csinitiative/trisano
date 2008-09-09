@@ -15,17 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) << '/spec_helper'
 
 # $dont_kill_browser = true
 
 describe 'Form Builder Admin Core Follow-Up Functionality' do
   
   before(:all) do
-    @form_name = get_unique_name(2) + " fu-uat"
-    @cmr_last_name = get_unique_name(2) + " fu-uat"
-    @follow_up_question_text = get_unique_name(2)  + " question fu-uat"
-    @follow_up_answer =  get_unique_name(2)  + " answer fu-uat"    
+    @form_name = get_unique_name(2) << " fu-uat"
+    @cmr_last_name = get_unique_name(2) << " fu-uat"
+    @follow_up_question_text = get_unique_name(2)  << " question fu-uat"
+    @follow_up_answer =  get_unique_name(2)  << " answer fu-uat"    
   end
   
   after(:all) do

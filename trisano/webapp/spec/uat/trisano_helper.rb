@@ -566,6 +566,15 @@ module TrisanoHelper
     return(!browser.is_text_present("delete-core-field-#{element_id}"))
   end
   
+  # Deletes the follow up with the name provided
+  def delete_follow_up(browser, name)
+    element_id = get_form_element_id(browser, name, FOLLOW_UP_ID_PREFIX)
+    browser.click("delete-follow-up-#{element_id}")
+    browser.get_confirmation()
+    sleep(2)
+    return(!browser.is_text_present("delete-follow-up-#{element_id}"))
+  end
+  
   def publish_form(browser)
     browser.click '//input[@value="Publish"]'
     return false if browser.is_editable('//input[@value="Publishing..."]')
