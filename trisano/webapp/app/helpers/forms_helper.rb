@@ -93,9 +93,12 @@ module FormsHelper
     result << "&nbsp;" + add_section_link(element, "tab")
     result << "&nbsp;|&nbsp;"
     result << add_question_link(element, "tab")
+    result << "&nbsp;|&nbsp;"
+    result << add_follow_up_link(element, "tab", true)
     result << "&nbsp;|&nbsp;" + delete_view_link(element)
     
     result << "<div id='section-mods-" + element.id.to_s + "'></div>"
+    result << "<div id='follow-up-mods-" + element.id.to_s + "'></div>"
     result << "<div id='question-mods-" + element.id.to_s + "'></div>"
     
     if include_children && form_elements_cache.children?(element)
