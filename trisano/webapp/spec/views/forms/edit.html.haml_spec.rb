@@ -27,6 +27,7 @@ describe "/forms/edit.html.haml" do
     @form.stub!(:description).and_return("MyString")
     @form.stub!(:disease_id).and_return(1)
     @form.stub!(:jurisdiction_id).and_return(2)
+    @form.stub!(:event_type).and_return('morbidity_event')
 
     @disease_1 = mock_model(Disease)
     @disease_1.stub!(:disease_name).and_return("Anthrax")

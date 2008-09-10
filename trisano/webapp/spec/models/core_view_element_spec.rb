@@ -34,7 +34,7 @@ describe CoreViewElement do
     end
     
     it "should return all core view names when none are in use" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       @core_view_element.parent_element_id = form.form_base_element.id
       available_core_views = @core_view_element.available_core_views
@@ -49,7 +49,7 @@ describe CoreViewElement do
     end
     
     it "should return only available core view names when some are in use" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       base_element_id = form.form_base_element.id
      
@@ -75,7 +75,7 @@ describe CoreViewElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the form's base" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       @core_view_element.parent_element_id = form.investigator_view_elements_container.id
       @core_view_element.save_and_add_to_form
@@ -84,7 +84,7 @@ describe CoreViewElement do
     end
     
     it "should receive a tree id" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       @core_view_element.parent_element_id = form.investigator_view_elements_container.id
       @core_view_element.save_and_add_to_form

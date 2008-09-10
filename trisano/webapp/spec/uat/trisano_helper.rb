@@ -281,13 +281,14 @@ module TrisanoHelper
     return true
   end
   
-  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label)
+  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity event')
     browser.open "/trisano/cmrs"
     browser.click "link=FORMS"
     browser.wait_for_page_to_load($load_time)
     browser.click "//input[@value='Create new form']"
     browser.wait_for_page_to_load($load_time)
     browser.type "form_name", form_name
+    browser.select "form_event_type", "label=#{type}"
     if disease_label.respond_to?(:each)
       disease_label.each { |label| browser.click(label.tr(" ", "_")) }
     else
@@ -546,7 +547,7 @@ module TrisanoHelper
   def delete_question(browser, name)
     element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
     browser.click("delete-question-#{element_id}")
-    browser.get_confirmation()   
+    browser.get_confirmation()
     return(!browser.is_text_present("delete-question-#{element_id}"))
   end
   

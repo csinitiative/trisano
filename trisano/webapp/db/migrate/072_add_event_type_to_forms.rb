@@ -15,22 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class CoreViewElement < FormElement
-  
-  attr_accessor :parent_element_id
-  
-  validates_presence_of :name
-  
-  def available_core_views
-    return nil if parent_element_id.blank?
-    parent_element = FormElement.find(parent_element_id)
-    form = Form.find(parent_element.form_id)
-    names_in_use = []
-    parent_element.children_by_type("CoreViewElement").each { |view| names_in_use << view.name }
-    eval(form.event_type.camelcase).core_views.collect { |core_view| if (!names_in_use.include?(core_view[0]))
-        core_view
-      end
-    }.compact
+class AddEventTypeToForms < ActiveRecord::Migration
+  def self.up
+    add_column :forms, :event_type, :string
+    execute "update forms set event_type = 'morbidity_event';"
   end
-  
+
+  def self.down
+    remove_column :forms, :event_type
+  end
 end

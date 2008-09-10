@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ # $dont_kill_browser = true
 
 describe 'Form Builder Admin' do
   
@@ -262,7 +262,7 @@ end
 
 def delete_edit_and_inactivate_questions
   delete_question(@browser, @question_to_delete_text)
-    
+  sleep(1)
   @browser.click "id=edit-question-#{@question_to_edit_id}"
   wait_for_element_present("edit-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_edit_modified_text

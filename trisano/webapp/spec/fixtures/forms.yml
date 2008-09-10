@@ -8,6 +8,7 @@ test_form:
   is_template: true
   jurisdiction_id:
   status: "Live"
+  event_type: "morbidity_event"
 
 anthrax_form_all_jurisdictions_1:
   id: 2
@@ -15,6 +16,7 @@ anthrax_form_all_jurisdictions_1:
   description: "Anthrax form for all jurisdictions."
   jurisdiction_id:
   status: "Live"
+  event_type: "morbidity_event"
 
 anthrax_form_all_jurisdictions_2:
   id: 3
@@ -22,6 +24,7 @@ anthrax_form_all_jurisdictions_2:
   description: "Another Anthrax form for all jurisdictions."
   jurisdiction_id:
   status: "Live"
+  event_type: "morbidity_event"
 
 anthrax_form_for_LHD_1:
   id: 4
@@ -29,6 +32,7 @@ anthrax_form_for_LHD_1:
   description: "Anthrax form for jurisdiction 1."
   jurisdiction_id: 1
   status: "Live"
+  event_type: "morbidity_event"
 
 anthrax_form_for_LHD_2:
   id: 5
@@ -36,6 +40,7 @@ anthrax_form_for_LHD_2:
   description: "Anthrax form for jurisdiction 2."
   jurisdiction_id: 2
   status: "Live"
+  event_type: "morbidity_event"
 
 aids_form_for_LHD_2:
   id: 6
@@ -43,6 +48,7 @@ aids_form_for_LHD_2:
   description: "AIDS form for jurisdiction 2."
   jurisdiction_id: 2
   status: "Live"
+  event_type: "morbidity_event"
 
 checken_pox_TB_form_for_LHD_2:
   id: 7
@@ -51,3 +57,4 @@ checken_pox_TB_form_for_LHD_2:
   jurisdiction_id: 2
   is_template: true
   status: "Live"
+  event_type: "morbidity_event"

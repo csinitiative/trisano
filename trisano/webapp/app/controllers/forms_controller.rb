@@ -18,7 +18,7 @@
 class FormsController < AdminController
 
   def index
-    @forms = Form.find(:all, :conditions => {:is_template => true})
+    @forms = Form.find(:all, :conditions => {:is_template => true}, :order => "name ASC")
 
     respond_to do |format|
       format.html # index.html.erb

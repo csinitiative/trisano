@@ -22,6 +22,7 @@ describe Form do
   before(:each) do
     @form = Form.new
     @form.name = "Test Form"
+    @form.event_type = 'morbidity_event'
   end
 
   it "should be valid" do
@@ -65,7 +66,7 @@ describe Form do
       fixtures :diseases
 
       it "should allow a form to be associated with one disease" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form" )
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form", :event_type => 'morbidity_event')
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 1
@@ -73,7 +74,7 @@ describe Form do
       end
 
       it "should allow a form to be associated with multiple diseases" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form" )
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form", :event_type => 'morbidity_event')
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 2
@@ -91,6 +92,7 @@ describe Form do
     it 'should fail when the form elements cannot be initialized' do
       form = Form.new
       form.name = "Test Form"
+      form.event_type = 'morbidity_event'
       def form.initialize_form_elements
         errors.add_to_base("An error occurred initializing form elements").
           raise
@@ -102,6 +104,7 @@ describe Form do
     it 'should fail when the form element structure is invalid' do
       form = Form.new
       form.name = "Test Form"
+      form.event_type = 'morbidity_event'
       def form.structural_errors
         return ["Bad error"]
       end
@@ -116,14 +119,14 @@ describe Form do
     fixtures :forms, :diseases_forms
 
     it "should return only forms for the specified disease and jurisdiction" do
-      form = Form.get_published_investigation_forms(3, 1)
+      form = Form.get_published_investigation_forms(3, 1, :morbidity_event)
       form.length.should == 4
       form.each do |d| 
         d.disease_ids.should == [3]
         d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
       end
 
-      form = Form.get_published_investigation_forms(4, 2)
+      form = Form.get_published_investigation_forms(4, 2, :morbidity_event)
       form.length.should == 1
       form.each do |d|  
         d.disease_ids.should == [4]
@@ -132,25 +135,29 @@ describe Form do
     end
 
     it "should return forms applicable to all jurisdictions even if given jurisdiction is not found" do
-      form = Form.get_published_investigation_forms(3, 99)
+      form = Form.get_published_investigation_forms(3, 99, :morbidity_event)
       form.length.should == 3
       form.each { |d| d.jurisdiction_id.should == nil }
     end
 
     it "should return no form if the disease is not found" do
-      Form.get_published_investigation_forms(99, 1).length.should == 0
+      Form.get_published_investigation_forms(99, 1, :morbidity_event).length.should == 0
+    end
+    
+    it "should return no form if the event type has no forms" do
+      form = Form.get_published_investigation_forms(1, 2, :contact_event).length.should == 0
     end
 
     describe "and a form is associated with multiple disease" do
       it "should return only forms for the specified disease and jurisdiction" do
-        form = Form.get_published_investigation_forms(1, 2)
+        form = Form.get_published_investigation_forms(1, 2, :morbidity_event)
         form.length.should == 2
         form.each do |d| 
           d.disease_ids.should == [1]
           d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
         end
 
-        form = Form.get_published_investigation_forms(2, 2)
+        form = Form.get_published_investigation_forms(2, 2, :morbidity_event)
         form.length.should == 1
         form.each do |d| 
           d.disease_ids.should == [2]
@@ -184,7 +191,7 @@ describe Form do
   describe "when checking for renderable investigation view elements" do
     
     def prepare_form
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       section = mock(SectionElement)
       section.stub!(:name).and_return('Something Else')
       default_tab = mock(ViewElement)

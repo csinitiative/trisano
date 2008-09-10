@@ -245,6 +245,8 @@ module FormsHelper
     
     result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
     
+    exposed_attributes = eval(element.form.event_type.camelcase).exposed_attributes
+    
     if (element.core_path.blank?)
       result <<  "Follow up, Condition: '#{element.condition}'"
     else
@@ -258,10 +260,10 @@ module FormsHelper
     end
     
     unless (element.core_path.blank?)
-      if Event.exposed_attributes[element.core_path].nil?
+      if exposed_attributes[element.core_path].nil?
         result << ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
       else
-        result << ", Core data element: #{Event.exposed_attributes[element.core_path][:name]}" 
+        result << ", Core data element: #{exposed_attributes[element.core_path][:name]}" 
       end
     end
     
@@ -270,7 +272,6 @@ module FormsHelper
       result << "&nbsp;|&nbsp;" << delete_follow_up_link(element)
     end
     
-
     if include_children && form_elements_cache.children?(element)
       result << "<ul id='follow_up_#{element.id.to_s}_children' class='fb-follow-up-children'>"
       form_elements_cache.children(element).each do |child|

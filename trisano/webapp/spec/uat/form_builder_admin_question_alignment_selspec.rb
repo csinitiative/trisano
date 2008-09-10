@@ -22,9 +22,9 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Form Builder Admin Question Alignment Functionality' do
   
   before(:all) do
-    @form_name = get_unique_name(2) + " fu-uat"
-    @cmr_last_name = get_unique_name(1) + " fu-uat"
-    @question_text = get_unique_name(2)  + " question fu-uat"
+    @form_name = get_unique_name(2) + " q-align-uat"
+    @cmr_last_name = get_unique_name(1) + " q-align-uat"
+    @question_text = get_unique_name(3) + " q-align-uat"
   end
   
   after(:all) do

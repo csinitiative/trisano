@@ -30,7 +30,7 @@ describe SectionElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the form's investigator element container" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       
       @section_element.parent_element_id = form.investigator_view_elements_container.id
@@ -40,7 +40,7 @@ describe SectionElement do
     end
     
     it "should be receive a tree id" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       
       @section_element.parent_element_id = form.investigator_view_elements_container.id

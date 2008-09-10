@@ -36,6 +36,7 @@
     %tr
       %th.forminformation
         Form Information
+      %th Event Type
       %th Diseases
       %th Jurisdiction
       %th
@@ -49,6 +50,8 @@
             = h form.description
           .status
             = h form.status
+        %td
+          = h form.event_type.humanize
         %td
           %ul
             - form.diseases.each do |disease|

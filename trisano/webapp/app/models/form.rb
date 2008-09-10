@@ -22,7 +22,7 @@ class Form < ActiveRecord::Base
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]
   
-  validates_presence_of :name
+  validates_presence_of :name, :event_type
   
   def form_element_cache
     @form_element_cache ||=  FormElementCache.new(form_base_element)
@@ -94,9 +94,15 @@ class Form < ActiveRecord::Base
           end
         end
       
-        published_form = Form.create({:name => self.name, :description => self.description, 
-            :jurisdiction => self.jurisdiction, :version => new_version_number, 
-            :status => 'Live', :is_template => false, :template_id => self.id })
+        published_form = Form.create({:name => self.name, 
+            :event_type => self.event_type, 
+            :description => self.description, 
+            :jurisdiction => self.jurisdiction, 
+            :version => new_version_number, 
+            :status => 'Live',
+            :is_template => false,
+            :template_id => self.id 
+          })
        
         base_to_publish = self.form_base_element
         tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
@@ -187,11 +193,12 @@ class Form < ActiveRecord::Base
     Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
   end
   
-  def self.get_published_investigation_forms(disease_id, jurisdiction_id)
+  def self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type)
+    event_type = event_type.to_s
     Form.find(:all,
       :include => :diseases,
-      :conditions => ["diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
-        disease_id, jurisdiction_id ],
+      :conditions => ["event_type = ? and diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+        event_type, disease_id, jurisdiction_id ],
       :order => "forms.created_at ASC"
     )
   end

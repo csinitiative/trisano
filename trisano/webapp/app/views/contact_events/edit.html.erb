@@ -18,7 +18,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
 <% content_for :title do %>
-  CONTACT EVENT
+    CONTACT EVENT
 <% end %>
 
 <% content_for :name do %>
@@ -30,7 +30,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :watermark do %>
-  contact event
+    contact event
 <% end %>
 
 <% @form_index = 0 %>
@@ -51,9 +51,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <li><a href="#clinical_tab"><em>Clinical</em></a></li>
     <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
     <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
-    <% if @can_investigate %>
-      <li><a href="#investigation_tab"><em>Investigation</em></a></li>
-    <% end %>
+    <li><a href="#investigation_tab"><em>Investigation</em></a></li>
   </ul>
   
   <% form_for(@event, :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
@@ -85,12 +83,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
         </p>
       </div>
-      <% if @can_investigate %>
-        <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
-      <% end %>
-            
+      <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
+    
     </div>
     <%= event_form.submit "Update" %>
   <% end %>
-      
+        
 </div>

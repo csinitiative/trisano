@@ -28,5 +28,5 @@
   %label Core data element
   %br
   - values = {}
-  - Event.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
+  - MorbidityEvent.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
   = f.select(:core_path, values.sort, {:include_blank => true}) 

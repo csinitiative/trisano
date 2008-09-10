@@ -22,8 +22,7 @@
         %td{:valign => "top"}
           - if @event.investigation_form_references.empty?
             %b
-              No investigation forms exist for
-              = @event.disease.disease.disease_name
+              No investigation forms are configured for this event and/or disease.
           - else
             %ul{:id => "investigation_form_list"}
               - form_count = 0

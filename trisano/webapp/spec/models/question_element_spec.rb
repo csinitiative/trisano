@@ -78,7 +78,7 @@ describe QuestionElement do
   describe "when created with 'save and add to form'" do
     
     it "should bootstrap the question" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       section_element = SectionElement.new(:name => "Test")
       section_element.parent_element_id = form.investigator_view_elements_container.children[0]
@@ -98,7 +98,7 @@ describe QuestionElement do
     end
     
     it "should fail if the associated question is not valid" do
-      form = Form.new(:name => "Test Form")
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       section_element = SectionElement.new(:name => "Test")
       section_element.parent_element_id = form.investigator_view_elements_container.children[0]

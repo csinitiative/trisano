@@ -346,7 +346,7 @@ end
 describe "when executing an operation that requires form element structure validation" do
     
   before(:each) do
-    @form = Form.new(:name => "Test Form")
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
     @form.save_and_initialize_form_elements
     @element = SectionElement.new(:name => "Test")
     @element.parent_element_id = @form.investigator_view_elements_container.children[0]
