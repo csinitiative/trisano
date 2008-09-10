@@ -155,9 +155,7 @@ module TrisanoHelper
   def click_nav_forms(browser)
     browser.click 'link=FORMS'
     browser.wait_for_page_to_load($load_time)
-    return (browser.is_text_present("Form Builder") and
-        browser.is_text_present("Forms") and
-        browser.is_element_present("link=New form"))   
+    return (browser.is_text_present("Listing Forms"))
   end
   
   def click_nav_admin(browser)
