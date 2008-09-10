@@ -1,10 +1,8 @@
 #!/bin/bash
-# consider shipping jruby as well and renaming this to configure_jruby.sh
-# script would tar xvf jruby, set path, and install the gems
-# this would make the dist pretty mistake proof at least at the setup level
-# total size of distro would be 30MB which isn't too bad
 
 # install the .gem files that are required to run the system
+
+. setenv.sh
 
 GEM_DIR=../lib/gems/
 

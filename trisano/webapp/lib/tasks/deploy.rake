@@ -178,7 +178,7 @@ namespace :trisano do
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
       
-      ruby "-S rake trisano:deploy:create_db_config"
+      #ruby "-S rake trisano:deploy:create_db_config"
 
       t = Time.now
       tformated = t.strftime("%m-%d-%Y-%I%M%p")
@@ -193,15 +193,21 @@ namespace :trisano do
       # tried to get tar --exclude to work, but had no luck - bailing to a simpler approach
       p "removing tmp directories from #{dist_dirname}"
       cd dist_dirname
-      sh "rm -rf ./webapp/tmp"
-      # TODO add a check for existence of trisano.war and then delete it as it bloats the distro size
-      #sh "rm ./webapp/trisano.war"
+
+      trisano_war_file = "./webapp/trisano.war"
+      if File.file? trisano_war_file
+        File.delete(trisano_war_file) 
+        puts "deleted trisano.war"
+      else
+        puts "#{trisano_war_file} not found - did not delete"
+      end
       sh "rm ./webapp/log/*.*"
       sh "rm -rf ./webapp/nbproject"
       sh "rm -rf ./distro/dump"
+      sh "rm -rf ./webapp/tmp"
       
       cd TRISANO_DIST_DIR
-      sh "tar cvzf #{filename} ./#{tformated}"
+      sh "tar czf #{filename} ./#{tformated}"
 
     end
   end
