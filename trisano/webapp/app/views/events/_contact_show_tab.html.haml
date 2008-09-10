@@ -32,4 +32,4 @@
           %td= person.last_name
           %td= person.first_name
           %td= person.disposition.code_description if person.disposition
-          %td= link_to "Edit contact event", edit_contact_event_path(person.entity.case_id)
+          %td= link_to("Edit contact event", edit_contact_event_path(person.entity.case_id), {:id => "edit-contact-event"})

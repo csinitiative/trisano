@@ -185,6 +185,15 @@ module TrisanoHelper
         browser.is_text_present("CMR was successfully updated."))
   end
   
+  def add_contact(browser, contact_attributes, index = 1)
+    click_core_tab(browser, "Contacts")
+    browser.click "link=Add a contact"
+    sleep(1)
+    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
+    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
+    browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
+  end
+  
   def save_contact_event(browser)
     browser.click "contact_event_submit"
     browser.wait_for_page_to_load($load_time)
