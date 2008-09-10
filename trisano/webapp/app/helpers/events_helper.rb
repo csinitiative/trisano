@@ -198,7 +198,13 @@ module EventsHelper
   def jurisdiction_routing_control(event, jurisdiction)
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, jurisdiction.entity_id)
-      jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
+      
+      # Commenting this out as I (Pete) don't think it makes sense to give people the 'route_to_any_lhd' privilege, but still
+      # insist on them having the 'create' privilege in each individual LHD.
+      #
+      # jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
+
+      jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
       controls += "<span>Route remotely to:&nbsp;</span>" 
       controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, jurisdiction.entity_id), :onchange => "this.form.submit()")

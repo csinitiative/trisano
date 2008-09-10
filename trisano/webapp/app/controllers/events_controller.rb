@@ -29,11 +29,10 @@ class EventsController < ApplicationController
       session[:user_id] = params[:user_id]
       User.current_user = User.find_by_uid(params[:user_id])
       
-      render(:update) do |page|
-        page.replace_html("user_name", :inline => "<%= User.current_user.user_name %>")
-      end
+      redirect_to request.env["HTTP_REFERER"]
     end
   end
+
   private
   
   def can_update?

@@ -673,11 +673,7 @@ describe MorbidityEvent do
 
       it "should change the jurisdiction and set status to 'assigned to LHD'" do
         @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Southeastern_District).name
-        @event.event_status.should == "NEW"
-
         @event.route_to_jurisdiction(entities(:Davis_County).id)
-
-        @event.event_status.should == "ASGD-LHD"
         @event.active_jurisdiction.secondary_entity.current_place.name.should == places(:Davis_County).name
       end
     end

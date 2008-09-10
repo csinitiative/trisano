@@ -79,10 +79,9 @@
               = current_user_name
             - else 
               - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
-              = form_remote_tag(:url => url_for(:controller => "events", :action => "change_user"))
-              %span{:id => "user_name"}= current_user_name + ":"
-              = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.onsubmit()")
-              </form>
+              - form_tag(url_for(:controller => "events", :action => "change_user")) do
+                %span{:id => "user_name"}= current_user_name + ":"
+                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.submit()")
     #bar
       .container
         .left.areas_title

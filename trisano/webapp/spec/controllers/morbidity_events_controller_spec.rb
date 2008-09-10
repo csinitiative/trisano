@@ -421,6 +421,7 @@ describe MorbidityEventsController do
 
       @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:active_jurisdiction).and_return(@jurisdiction)
+      @event.stub!(:update_attribute).and_return(true)
       MorbidityEvent.stub!(:find).and_return(@event)
     end
 

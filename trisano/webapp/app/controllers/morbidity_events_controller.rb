@@ -75,7 +75,8 @@ class MorbidityEventsController < EventsController
     @events = MorbidityEvent.find(:all, 
                                   :include => :jurisdiction, 
                                   :select => "jurisdiction.secondary_entity_id", 
-                                  :conditions => conditions)
+                                  :conditions => conditions,
+                                  :order => "events.updated_at DESC")
 
     respond_to do |format|
       format.html # { render :template => "events/index" }
@@ -104,7 +105,6 @@ class MorbidityEventsController < EventsController
     # Debt:  Get rid of this monstrosity and replace with #build calls here in the controller.
     #        Get rid of corresponding setters
     @event = MorbidityEvent.new(
-      :event_onset_date => Date.today,
       :disease          => {}, 
       :active_reporting_agency => { 
         :secondary_entity_id => nil,
@@ -130,7 +130,7 @@ class MorbidityEventsController < EventsController
           :telephone => {} 
         }
       },
-      :active_jurisdiction => {}
+      :active_jurisdiction => {}  # Needed for development and test mode
     )
 
     # Push this into the model
@@ -157,16 +157,17 @@ class MorbidityEventsController < EventsController
     @event = MorbidityEvent.new(params[:morbidity_event])
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
 
-    unless User.current_user.is_entitled_to_in?(:create_event, @event.active_jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403
-      return
-    end
-    
     # Allow for test scripts and developers to jump directly to the "under investigation" state
     if RAILS_ENV == "production"
       @event.event_status = "NEW"
+      @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
     end
+    @event.event_onset_date = Date.today,
 
+    unless User.current_user.is_entitled_to_in?(:create_event, @event.active_jurisdiction.secondary_entity_id)
+      render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
+    end
+    
     respond_to do |format|
       if @event.save && @contact_events.all? { |contact| contact.save }
         flash[:notice] = 'CMR was successfully created.'
@@ -213,14 +214,18 @@ class MorbidityEventsController < EventsController
       return
     end
 
+    # Commenting this out as I (Pete) don't think it makes sense to give people the 'route_to_any_lhd' privilege, but still
+    # insist on them having the 'create' privilege in each individual LHD.
+    #
     # user cannot route events _to_ a jurisdiction for which they do not have the 'create_event' privilege
-    unless User.current_user.is_entitled_to_in?(:create_event, params[:jurisdiction_id])
-      render :text => "Permission denied: You do not have sufficent privileges to route events to this jurisdiction", :status => 403
-      return
-    end
+    # unless User.current_user.is_entitled_to_in?(:create_event, params[:jurisdiction_id])
+    #   render :text => "Permission denied: You do not have sufficent privileges to route events to this jurisdiction", :status => 403
+    #   return
+    # end
 
     begin
       @event.route_to_jurisdiction(params[:jurisdiction_id])
+      @event.update_attribute("event_status",  "ASGD-LHD")
       redirect_to request.env["HTTP_REFERER"]
     rescue Exception => ex
       @event.errors.add_to_base('Unable to route CMR: ' + ex.message)
@@ -258,6 +263,18 @@ class MorbidityEventsController < EventsController
 
     # A status change may be accompanied by other values such as an event queue, set them
     @event.attributes = params[:morbidity_event]
+
+    # Special handling for certain state changes
+    case event_status
+    when "RJCTD-LHD"
+      @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
+    when "UI"
+      @event.investigation_started_date = Date.today
+    when "IC"
+      @event.investigation_completed_LHD_date = Date.today
+    when "CLOSED"
+      @event.review_completed_UDOH_date = Date.today
+    end
 
     if @event.save
       redirect_to request.env["HTTP_REFERER"]

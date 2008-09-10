@@ -33,6 +33,10 @@ class Place < ActiveRecord::Base
       find_all_by_place_type_id(Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction').id, :order => 'name')
     end
 
+    def jurisdiction_by_name(name)
+      find_by_name_and_place_type_id(name, Code.find_by_code_name_and_the_code("placetype", "J").id)
+    end
+
     def jurisdictions_for_privilege_by_user_id(user_id, privilege)
       query = "
         SELECT

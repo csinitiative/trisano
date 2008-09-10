@@ -788,7 +788,6 @@ class Event < ActiveRecord::Base
       proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
       raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
       active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-      update_attribute("event_status",  "ASGD-LHD")
       update_attribute("event_queue_id",  nil)
       reload # Any existing references to this object won't see these changes without this
     end
