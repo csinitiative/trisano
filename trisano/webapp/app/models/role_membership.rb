@@ -23,15 +23,15 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => 'Entity', :foreign_key => :jurisdiction_id
   
   after_create :create_entitlements
-  before_update :update_entitlements
+  after_update :update_entitlements
   before_destroy :remove_entitlements
   
   # Debt? Currently limits to one role per jurisdiction. The scope at one point
   # included role_id as well. The hope in removing it is to eliminate some strange
   # behavior still to be investigated w/regard to updating role memberships.
-  validates_uniqueness_of :user_id, :scope => [:jurisdiction_id],
-    :message => "only one role per jurisdiction is currently permitted", :on => :create
-  
+  validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
+    :message => "Cannot have the same role in the same jurisdiction twice"
+
   attr_accessor :should_destroy
   
   def should_destroy?
@@ -42,38 +42,28 @@ class RoleMembership < ActiveRecord::Base
     privileges_to_add = PrivilegesRole.find_all_by_role_id_and_jurisdiction_id(self.role_id, self.jurisdiction_id)
     
     privileges_to_add.each do |pr|
-      user.entitlements << Entitlement.new(:privilege_id => pr.privilege_id, :jurisdiction_id => self.jurisdiction_id)
+      # Seems to be as efficient as any other solution to preventing dups
+      user.entitlements.find_or_create_by_privilege_id_and_jurisdiction_id(pr.privilege_id, self.jurisdiction_id)
     end
   end
   
   def update_entitlements
-    
-    # Debt. This is ugly and inefficient. Needs a work-around. Maybe even from the UI standpoint 
-    # like, you can only add and remove roles, not update.
-    current_role = RoleMembership.find(self.id)
-    
-    privileges_to_remove = PrivilegesRole.find_all_by_role_id_and_jurisdiction_id(current_role.role_id, self.jurisdiction_id)
-    
-    # If this does end up staying, the following could be dried up, as it repeats the remove_entitlement stuff below
-    privileges_to_remove.each do |pr|  
-      entitlement_to_remove = user.entitlements.detect do |ent|
-        ent.privilege_id == pr.privilege_id && ent.jurisdiction_id == pr.jurisdiction_id
-      end
-       entitlement_to_remove.destroy unless entitlement_to_remove.nil?
-    end
+    # Debt: Should consider not allowing this, but it works
+    # In addtion, see comment for remove_entitlements below
 
-      create_entitlements
-    end
-  
-    def remove_entitlements
-      privileges_to_remove = PrivilegesRole.find_all_by_role_id_and_jurisdiction_id(self.role_id, self.jurisdiction_id)
-        
-      privileges_to_remove.each do |pr|  
-        entitlement_to_remove = user.entitlements.detect do |ent|
-          ent.privilege_id == pr.privilege_id && ent.jurisdiction_id == pr.jurisdiction_id
-        end
-        entitlement_to_remove.destroy unless entitlement_to_remove.nil?
-      end
-    end
-  
+    Entitlement.delete_all("user_id = #{user_id}")
+    role_memberships = user.role_memberships
+    role_memberships.each { |role_membership| role_membership.create_entitlements }
   end
+  
+  def remove_entitlements
+    # Removing entitlements means removing all entitlements a user has that are the same as the privileges associated with this role.  However,
+    # since the user might have several roles with identical privileges in the same jurisdiction we can't do this as we may delete entitlements
+    # granted via some other role. The only thing that can sensibly be done is to remove _all_ entitilements and recreate them for the remaining roles.
+
+    Entitlement.delete_all("user_id = #{user_id}")
+    role_memberships = user.role_memberships.select { |role_membership| role_membership.id != self.id }
+    role_memberships.each { |role_membership| role_membership.create_entitlements }
+  end
+  
+end

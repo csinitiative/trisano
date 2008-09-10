@@ -91,8 +91,7 @@ class MorbidityEventsController < EventsController
 
   def new
     unless User.current_user.is_entitled_to?(:create_event)
-      render :text => "Permission denied: You do not have privileges to create a CMR", :status => 403
-      return
+      render :text => "Permission denied: You do not have privileges to create a CMR", :status => 403 and return
     end
 
     # Debt:  Get rid of this monstrosity and replace with #build calls here in the controller.
@@ -205,8 +204,7 @@ class MorbidityEventsController < EventsController
 
     # user cannot route events _from_ a jurisdiction for which they do not have the 'route_event_to_any_lhd' privilege
     unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, @event.active_jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have sufficent privileges to route events from this jurisdiction", :status => 403
-      return
+      render :text => "Permission denied: You do not have sufficent privileges to route events from this jurisdiction", :status => 403 and return
     end
 
     # Commenting this out as I (Pete) don't think it makes sense to give people the 'route_to_any_lhd' privilege, but still
@@ -237,20 +235,17 @@ class MorbidityEventsController < EventsController
 
     # If nothing came back, then the passed in state was malformed
     if priv_required.nil?
-      render :text => "Bad state", :status => 403
-      return
+      render :text => "Bad state", :status => 403 and return
     end
 
     # Check if the user is allowed to change the event to the passed in state
     unless User.current_user.is_entitled_to_in?(priv_required, @event.active_jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403
-      return
+      render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403 and return
     end
     
     # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
     unless @event.legal_state_transition?(event_status)
-      render :text => "Illegal State Transition", :status => 409
-      return
+      render :text => "Illegal State Transition", :status => 409 and return
     end
 
     # event_status is protected from mass update, set individually
