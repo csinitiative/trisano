@@ -46,7 +46,12 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
         
     @browser.is_text_present('Christiansen').should be_true
     @browser.is_text_present('David').should be_true
-    @browser.is_text_present('123 My Street, Hometown, Texas, 46060 : Out-of-state county').should be_true
+    @browser.is_text_present('123').should be_true
+    @browser.is_text_present('My Street').should be_true
+    @browser.is_text_present('Hometown').should be_true
+    @browser.is_text_present('Texas').should be_true
+    @browser.is_text_present('46060').should be_true
+    @browser.is_text_present('Out-of-state').should be_true
     @browser.is_text_present('1989-04-01').should be_true
     @browser.is_text_present('34').should be_false
     @browser.is_text_present('(333) 555-1212').should be_true
