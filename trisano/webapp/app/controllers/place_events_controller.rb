@@ -15,14 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ContactEventsController < EventsController
-
-  def auto_complete_for_lab_name
-    super(:contact_event)
-  end
-
+class PlaceEventsController < EventsController
   def index
-    render :text => "Contacts can only be listed from the morbidity event show page of individuals who have contacts.", :status => 405
+    render :text => "Place exposures cannot be accessed directly.", :status => 405
   end
 
   def show
@@ -35,7 +30,7 @@ class ContactEventsController < EventsController
   end
 
   def new
-    render :text => "Contacts can only be created from within a morbidity event.", :status => 405
+    render :text => "Place exposures cannot be created directly.", :status => 405
   end
 
   def edit
@@ -43,26 +38,22 @@ class ContactEventsController < EventsController
   end
 
   def create
-    render :text => "Contacts can only be created from within a morbidity event.", :status => 405
+    render :text => "Place exposures cannot be created directly.", :status => 405
   end
 
   def update
-    prep_multimodels_for(:contact_event)
-
+    prep_multimodels_for(:place_event)
+    
     respond_to do |format|
-      if @event.update_attributes(params[:contact_event])
-        flash[:notice] = 'Contact event was successfully updated.'
-        format.html { redirect_to(contact_event_url(@event)) }
+      if @event.update_attributes(params[:place_event])
+        flash[:notice] = 'Place event was successfully updated.'
+        format.html { redirect_to(place_event_url(@event)) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :action => 'edit' }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
       end
     end
-  end
-
-  def destroy
-    head :method_not_allowed
   end
 
 end

@@ -21,6 +21,17 @@ class EventsController < ApplicationController
   before_filter :can_view?, :only => [:show]
   before_filter :get_investigation_forms, :only => [:edit]
   
+  def auto_complete_for_lab_name(event_type)
+    entered_name = params[event_type][:new_lab_attributes].first[:name]
+    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
+      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
+                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", entered_name.downcase + '%'],
+      :order => "entity_id, created_at ASC, name ASC",
+      :limit => 10
+    )
+    render :inline => '<ul><% for item in @items %><li id="lab_name_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
+  end
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"

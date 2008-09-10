@@ -29,14 +29,7 @@ class MorbidityEventsController < EventsController
   end
 
   def auto_complete_for_lab_name
-    entered_name = params[:morbidity_event][:new_lab_attributes].first[:name]
-    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
-      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
-                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", entered_name.downcase + '%'],
-      :order => "entity_id, created_at ASC, name ASC",
-      :limit => 10
-    )
-    render :inline => '<ul><% for item in @items %><li id="lab_name_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
+    super(:morbidity_event)
   end
 
   def index
@@ -156,6 +149,7 @@ class MorbidityEventsController < EventsController
   def create
     @event = MorbidityEvent.new(params[:morbidity_event])
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
+    @place_events = PlaceEvent.initialize_from_morbidity_event(@event)    
 
     # Allow for test scripts and developers to jump directly to the "under investigation" state
     if RAILS_ENV == "production"
@@ -169,7 +163,7 @@ class MorbidityEventsController < EventsController
     end
     
     respond_to do |format|
-      if @event.save && @contact_events.all? { |contact| contact.save }
+      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully created.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { render :xml => @event, :status => :created, :location => @event }
@@ -186,9 +180,10 @@ class MorbidityEventsController < EventsController
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
+    @place_events = PlaceEvent.initialize_from_morbidity_event(@event)
 
     respond_to do |format|
-      if @event.save && @contact_events.all? { |contact| contact.save }
+      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully updated.'
         format.html { redirect_to(cmr_url(@event)) }
         format.xml  { head :ok }
@@ -312,4 +307,5 @@ class MorbidityEventsController < EventsController
     queue_names = system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
     return queue_ids, queue_names
   end
+
 end
