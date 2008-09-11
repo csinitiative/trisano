@@ -18,7 +18,6 @@
 module FormsLibraryHelper
   
   def render_library(type, direction)
-    return if @library_elements.empty?
     type = type.to_s.camelcase
     library_element_cache = LibraryElementCache.new(@library_elements)
     
