@@ -1,7 +1,7 @@
 postgres_dir: /usr/bin # Location of Postgres client
 host: localhost # PostgreSQL host server 
 port: 5432 # PostgreSQL TCP listen port 
-database: trisano_development # Database name
+database: trisano_production # Database name
 priv_uname: mike # Database privileged username
 priv_passwd: password # Privileged user's password 
 nedss_uname: nedss # NEDSS username 

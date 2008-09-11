@@ -4,6 +4,6 @@
 JRUBY_DIR=../lib/jruby/
 JRUBY_BIN=$JRUBY_DIR/jruby-1.1.3/bin
 
-PATH=$PATH:$JRUBY_BIN
+PATH=$JRUBY_BIN:$PATH
 export PATH
 

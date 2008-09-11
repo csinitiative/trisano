@@ -208,7 +208,6 @@ namespace :trisano do
       
       cd TRISANO_DIST_DIR
       sh "tar czf #{filename} ./#{tformated}"
-
     end
   end
 end
