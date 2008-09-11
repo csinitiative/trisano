@@ -21,6 +21,10 @@
     %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
 
     %div{:id => "contacts"}
+      - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
+        = h @event.disease.disease.contact_lead_in
+        %br
+        %br
       - if @event.contacts.empty?
         %h3 No contacts have been recorded for this event
       - else

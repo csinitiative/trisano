@@ -5,7 +5,7 @@
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
 -# GNU Affero General Public License as published by the Free Software Foundation, either 
 -# version 3 of the License, or (at your option) any later version.
-
+-#
 -# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 -# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 -# See the GNU Affero General Public License for more details.
@@ -13,24 +13,18 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- content_for :title do
-  Admin Console
-
-- content_for :name do
-  Dashboard
-
-- content_for :tools do
-  
-  = link_to 'Diseases', diseases_path
-  |
-  = link_to 'Forms', forms_path
-  |
-  = link_to 'Users', users_path
-  |
-  = link_to 'Codes', codes_path
-  |
-  = link_to 'Event Queues', event_queues_path
-
-%br
-%br
-%br
+%fieldset
+  %legend Disease
+  %span{ :class => "vert" }
+    = f.label(:disease_name, "Disease name")
+    = f.text_field(:disease_name)
+  %span{ :class => "vert" }
+    = f.label(:contact_lead_in, "Contact lead-in question")
+    = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})
+  %span{ :class => "vert" }
+    = f.label(:place_lead_in, "Place lead-in question")
+    = f.text_area(:place_lead_in, {:cols => 50, :rows => 5})
+  %span{ :class => "vert" }
+    = f.label(:treatment_lead_in, "Treatment lead-in question")
+    = f.text_area(:treatment_lead_in, {:cols => 50, :rows => 5})
+ 

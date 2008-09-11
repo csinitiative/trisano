@@ -133,6 +133,9 @@ def mock_event
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
+   disease.stub!(:treatment_lead_in).and_return("")
+   disease.stub!(:place_lead_in).and_return("")
+   disease.stub!(:contact_lead_in).and_return("")
     
   imported_from.stub!(:code_description).and_return('Utah')
   udoh_case_status.stub!(:code_description).and_return('Confirmed')

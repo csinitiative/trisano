@@ -15,6 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class Disease < ActiveRecord::Base
-  validates_presence_of :disease_name
+require File.dirname(__FILE__) + '/../../spec_helper'
+
+describe "/diseases/index.html.haml" do
+  include DiseasesHelper
+  
+  before(:each) do
+    disease_98 = mock_model(Disease)
+    disease_98.stub!(:disease_name).and_return("The Pops")
+    disease_99 = mock_model(Disease)
+    disease_99.stub!(:disease_name).and_return("The Pops")
+
+    assigns[:diseases] = [disease_98, disease_99]
+  end
+
+  it "should render list of diseases" do
+    render "/diseases/index.html.haml"
+  end
 end
+

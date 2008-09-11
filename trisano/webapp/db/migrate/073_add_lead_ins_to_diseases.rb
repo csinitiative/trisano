@@ -15,6 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class Disease < ActiveRecord::Base
-  validates_presence_of :disease_name
+class AddLeadInsToDiseases < ActiveRecord::Migration
+  def self.up
+    add_column :diseases, :contact_lead_in, :text
+    add_column :diseases, :place_lead_in, :text
+    add_column :diseases, :treatment_lead_in, :text
+  end
+
+  def self.down
+    remove_column :diseases, :contact_lead_in
+    remove_column :diseases, :place_lead_in
+    remove_column :diseases, :treatment_lead_in
+  end
 end

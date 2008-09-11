@@ -17,6 +17,11 @@
 %fieldset
   %legend Contact Information
 
+  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
+    = h @event.disease.disease.contact_lead_in
+    %br
+    %br
+
   - if @event.contacts.empty?
     %h3 No contacts have been recorded for this event
   - else

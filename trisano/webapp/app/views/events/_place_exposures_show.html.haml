@@ -1,5 +1,11 @@
 %fieldset.form
   %legend Place Exposures
+
+  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.place_lead_in.blank?
+    = h @event.disease.disease.place_lead_in
+    %br
+    %br
+
   -if @event.place_exposures.empty?
     %h3 No place exposures have been recorded for this event
   -else

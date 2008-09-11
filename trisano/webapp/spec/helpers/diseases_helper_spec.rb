@@ -15,6 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class Disease < ActiveRecord::Base
-  validates_presence_of :disease_name
+require File.dirname(__FILE__) + '/../spec_helper'
+
+describe DiseasesHelper do
+  
+  #Delete this example and add some real ones or delete this file
+  it "should include the DiseaseHelper" do
+    included_modules = self.metaclass.send :included_modules
+    included_modules.should include(DiseasesHelper)
+  end
+  
 end

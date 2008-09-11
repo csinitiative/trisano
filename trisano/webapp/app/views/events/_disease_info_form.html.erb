@@ -30,7 +30,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% f.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d| %>
         <% core_element :disease_id, d, :horiz do %>
           <%= d.label(:disease_id, "Disease") %>
-          <%= d.collection_select(:disease_id, Disease.find(:all), :id, :disease_name, {:include_blank => true}) %>
+          <%= d.collection_select(:disease_id, Disease.find(:all, :order => 'disease_name ASC'), :id, :disease_name, {:include_blank => true}) %>
         <% end %>
         <% core_element :disease_onset_date, d, :horiz do %>
           <%= d.label(:disease_onset_date, "Onset date") %>
@@ -113,6 +113,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     
     <fieldset class="form">
       <legend>Treatments</legend>
+      <% unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank? %>
+        <%=  h @event.disease.disease.treatment_lead_in %><br/><br/>
+      <% end %>
+      
       <% if @event.new_record? %>
         <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
           <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>

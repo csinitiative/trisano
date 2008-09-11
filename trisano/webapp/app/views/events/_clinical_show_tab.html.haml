@@ -101,6 +101,10 @@
     %table{:cellpadding => '2'}
       %tr
         %td
+          - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank?
+            = h @event.disease.disease.treatment_lead_in
+            %br
+            %br
           %div{:id => 'treatment-list'}
             = render :partial => 'treatments/index'
 
