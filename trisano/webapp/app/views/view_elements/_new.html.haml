@@ -16,9 +16,6 @@
 
 %div{:id => "new-view-form"}
 
-  %h3
-    Add Tab
-
   = error_messages_for :view_element
 
   - remote_form_for(view_element) do |f|
