@@ -541,7 +541,6 @@ class Event < ActiveRecord::Base
     
     p options
     if !options[:event_type].blank?
-      p "HERE"
       issue_query = true
       where_clause += " p3.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) + "'"
     end

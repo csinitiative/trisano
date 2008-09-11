@@ -22,7 +22,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
+  <span><%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%></span>
+  <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
+  <span style='position: absolute; right: 0;'>
+    <span>Original Patient: <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%></span>
+    <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? %></p>
+  </span>
 <% end %>
 
 <% content_for :watermark do %>
