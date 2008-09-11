@@ -42,6 +42,7 @@ describe 'form builder core-tab questions for contacts' do
   after(:all) do
     @form_name = nil
     @cmr_last_name = nil
+    @contact_last_name = nil
     
     @demo_question_text = nil
     @demo_answer = nil

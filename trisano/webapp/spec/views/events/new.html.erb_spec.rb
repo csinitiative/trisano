@@ -64,6 +64,7 @@ describe "/cmrs/new.html.erb" do
     event_type = 'MorbidityEvent'
     event_type.stub!(:underscore).and_return(event_type.underscore)
     @event.stub!(:type).and_return(event_type)
+    @event.stub!(:attributes).and_return({"type" => event_type})
     
     @diagnosing_health_facility = mock_model(Participation)
     @diagnosing_health_facility.stub!(:role_id).and_return(199)
