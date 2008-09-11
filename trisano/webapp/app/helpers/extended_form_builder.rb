@@ -60,9 +60,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def dynamic_question(form_elements_cache, question_element, index, html_options = {}) 
-        
+      
+     result = ""
     question = question_element.question
-
+    
     if [:drop_down, :check_box, :radio_button].include? question.data_type 
       if form_elements_cache.children(question_element).empty?
         return ""
@@ -73,7 +74,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         end
       end
     end
-
+    
     event_id = (@object.nil? || @object.event_id.blank?) ? "" : @object.event_id
     index = @object.id.nil? ? index : @object.id
     html_options[:index] = index
@@ -104,7 +105,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :check_box
       
       if @object.new_record?
-        field_name = "morbidity_event[new_checkboxes]"
+        field_name = "#{@object_name[0...(@object_name.index("["))]}[new_checkboxes]"
         field_index = question.id.to_s
       else
         field_name = @object_name
@@ -122,7 +123,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :radio_button
       
       if @object.new_record?
-        field_name = "morbidity_event[new_radio_buttons]"
+        field_name = "#{@object_name[0...(@object_name.index("["))]}[new_radio_buttons]"
         field_index = question.id.to_s
       else
         field_name = @object_name
@@ -149,8 +150,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options) + "&nbsp;<small>10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999</small>"
     end
 
-    result = ""
-    
     if question.data_type == :check_box || question.data_type == :radio_button
       result += @template.content_tag(:label, question.question_text) + " " + input_element
       
