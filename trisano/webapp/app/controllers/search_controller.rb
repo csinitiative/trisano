@@ -71,20 +71,15 @@ class SearchController < ApplicationController
     @middle_name = ""
     @last_name = ""
     @birth_date = ""
+    @event_types = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     @diseases = Disease.find(:all, :order => "disease_name")
-    @genders = ExternalCode.find(:all, 
-                         :order => "id", 
-                         :select => "id, code_description", 
-                         :conditions => "code_name = 'gender'" )
+    @genders = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'", :order => "id")
 
     @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
     
     @event_statuses = Event.get_states_and_descriptions
 
-    @counties = ExternalCode.find(:all,
-                          :order => "id",
-                          :select => "id, code_description",
-                          :conditions => "code_name = 'county'")
+    @counties = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'", :order => "id")
 
     begin
      if not params.values_blank?
@@ -130,7 +125,8 @@ class SearchController < ApplicationController
                                        :entered_on_end => entered_on_end,
                                        :city => params[:city],
                                        :county => params[:county],
-                                       :jurisdiction_id => params[:jurisdiction_id]
+                                       :jurisdiction_id => params[:jurisdiction_id],
+                                       :event_type => params[:event_type]
                                       )
            
            if (@cmrs.blank?)

@@ -30,7 +30,7 @@ class RoleMembership < ActiveRecord::Base
   # included role_id as well. The hope in removing it is to eliminate some strange
   # behavior still to be investigated w/regard to updating role memberships.
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
-    :message => "Cannot have the same role in the same jurisdiction twice"
+    :message => "This role for this jurisdiction is already assigned to this user"
 
   attr_accessor :should_destroy
   

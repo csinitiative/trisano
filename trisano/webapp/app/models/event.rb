@@ -535,10 +535,17 @@ class Event < ActiveRecord::Base
   def self.find_by_criteria(*args)
     options = args.extract_options!
     fulltext_terms = []
-    where_clause = "p3.type = 'MorbidityEvent'"
+    where_clause = ""
     order_by_clause = "p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
     
+    p options
+    if !options[:event_type].blank?
+      p "HERE"
+      issue_query = true
+      where_clause += " p3.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) + "'"
+    end
+
     if !options[:disease].blank?
       issue_query = true
       where_clause += " AND p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])

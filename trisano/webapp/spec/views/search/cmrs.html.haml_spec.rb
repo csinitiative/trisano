@@ -31,6 +31,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:event_statuses] = [mock_event_status]
+    assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
   end
@@ -64,12 +65,12 @@ describe "/search/cmrs.html.haml" do
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
     assigns[:event_statuses] = [mock_event_status]
+    assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
 
     do_render
-    response.should have_tag("h3", "Results")
+    response.should_not have_text("Your search returned no results.")
     response.should have_tag("div.tools") do
-      with_tag('a', "New Search")
-      with_tag('a', "Export to CSV")
+      with_tag('a', "Export results to CSV")
     end
   end
   
@@ -83,6 +84,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
     assigns[:event_statuses] = [mock_event_status]
+    assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     do_render
     response.should have_text(/Your search returned no results./)
   end

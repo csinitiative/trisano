@@ -17,6 +17,8 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
+# $dont_kill_browser = true
+
 describe 'User functionality for searching for existing users' do
 
   it 'should find or add Charles Chuckles in Provo, Utah county' do
@@ -123,7 +125,7 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Unassigned').should be_true
   end
 
-  it 'should find Charles Chuckles when searching by Bear River jurisdiction' do  
+  it 'should find Charles Chuckles when searching by Unassigned jurisdiction' do  
     @browser.select('jurisdiction_id', 'label=Unassigned')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
@@ -137,6 +139,32 @@ describe 'User functionality for searching for existing users' do
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('Charles Chuckles').should be_true
-    @browser.is_text_present('Export to CSV').should be_true
+    @browser.is_text_present('Export results to CSV').should be_true
   end
+
+  it "should find charles chuckles when searchin for morbidity events" do
+    navigate_to_cmr_search(@browser).should be_true
+    @browser.select "event_type", "label=Morbidity Event (CMR)"
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('Charles Chuckles').should be_true
+  end
+
+  it "should find charles laurel when searchin for contact events" do
+    navigate_to_cmr_search(@browser).should be_true
+    @browser.select "event_type", "label=Contact Event"
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('Charles Laurel').should be_true
+  end
+
+  it "should find charles laurel and charles chuckles when searchin not specifying an event type" do
+    navigate_to_cmr_search(@browser).should be_true
+    @browser.type('name', 'Charles')
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Charles Laurel').should be_true
+  end
+
 end

@@ -22,7 +22,7 @@
 - content_for :tools do
   = link_to "People Search", :controller => "search", :action => "people"
   |
-  = link_to "CMR Search", :controller => "search", :action => "cmrs"
+  = link_to "Event Search", :controller => "search", :action => "cmrs"
   
 - content_for :tools_two do
-  = button_to("CMR Search", {:action => "cmrs"}, { :method => :get })
+  = button_to("Event Search", {:action => "cmrs"}, { :method => :get })
