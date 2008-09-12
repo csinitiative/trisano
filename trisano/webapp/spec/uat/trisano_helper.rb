@@ -218,6 +218,24 @@ module TrisanoHelper
         browser.is_text_present("Date or year of birth"))
   end
   
+  def navigate_to_disease_admin(browser)
+    browser.open "/trisano/cmrs"
+    click_nav_admin(browser)
+    browser.click("link=Diseases")
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Diseases"))
+  end
+  
+  def create_disease(browser, disease_attributes)
+    browser.type("disease_disease_name", disease_attributes[:disease_name])
+    browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in])
+    browser.type("disease_place_lead_in", disease_attributes[:place_lead_in])
+    browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in])
+    browser.click("disease_submit")
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Disease was successfully created."))
+  end
+  
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
   def click_link_by_order(browser, element_id_prefix, order)
     links = browser.get_all_links
