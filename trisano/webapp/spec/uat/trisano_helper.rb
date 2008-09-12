@@ -427,6 +427,10 @@ module TrisanoHelper
     return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
   end
   
+  def add_core_follow_up_to_after_core_field(browser, element_name, condition, core_label)
+    return add_follow_up_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, condition, core_label)
+  end
+
   def add_invalid_core_follow_up_to_view(browser, element_name, condition, invalid_core_path)
     element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
     browser.click("add-follow-up-#{element_id}")
@@ -488,7 +492,7 @@ module TrisanoHelper
   end
   
   def add_core_field_config(browser, core_field_name)
-    browser.click("link=Add a core field configuration")
+    browser.click("link=Add Core Field")
     wait_for_element_present("new-core-field-form", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
     browser.click("core_field_element_submit")
@@ -793,7 +797,7 @@ module TrisanoHelper
 =end             #}
     return(@cmr_fields)
   end
-  
+
   def get_question_investigate_div_id(browser, question_text)
     element_id_prefix = "investigator_answer_"
     html_source = browser.get_html_source
@@ -857,6 +861,21 @@ module TrisanoHelper
     wait_for_element_not_present("new-follow-up-form", browser)
   end
       
+  def add_follow_up_to_core_field_config(browser, element_name, element_id_prefix, condition, core_label=nil)
+    element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
+    browser.click("add-follow-up-#{element_id}")
+    wait_for_element_present("new-follow-up-form", browser)
+    if core_label.nil?
+      browser.type "follow_up_element_condition", condition
+    else
+      browser.type "model_auto_completer_tf", condition
+    end
+    
+    browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
+    browser.click "follow_up_element_submit"
+    wait_for_element_not_present("new-follow-up-form", browser)
+  end
+
   def get_form_element_id(browser, name, element_id_prefix)
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source

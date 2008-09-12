@@ -133,6 +133,10 @@ module FormsHelper
     result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
     
     result << "&nbsp;" << add_question_link(element, "before config")
+
+    result << "&nbsp;|&nbsp;"
+    result << add_follow_up_link(element, "before config", true)
+    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
     if include_children && form_elements_cache.children?(element)
       result << "<ul id='before_core_field_#{element.id.to_s}_children' class='fb-before-core-field-children' style='clear: both'>"
@@ -151,6 +155,10 @@ module FormsHelper
     result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
     
     result << "&nbsp;" << add_question_link(element, "after config")
+
+    result << "&nbsp;|&nbsp;"
+    result << add_follow_up_link(element, "after config", true)
+    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
     if include_children && form_elements_cache.children?(element)
       result << "<ul id='after_core_field_#{element.id.to_s}_children' class='fb-after-core-field-children' style='clear: both'>"
