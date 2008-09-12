@@ -23,7 +23,6 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => 'Entity', :foreign_key => :jurisdiction_id
   
   after_create :create_entitlements
-  after_update :update_entitlements
   before_destroy :remove_entitlements
   
   # Debt? Currently limits to one role per jurisdiction. The scope at one point
@@ -45,15 +44,6 @@ class RoleMembership < ActiveRecord::Base
       # Seems to be as efficient as any other solution to preventing dups
       user.entitlements.find_or_create_by_privilege_id_and_jurisdiction_id(pr.privilege_id, self.jurisdiction_id)
     end
-  end
-  
-  def update_entitlements
-    # Debt: Should consider not allowing this, but it works
-    # In addtion, see comment for remove_entitlements below
-
-    Entitlement.delete_all("user_id = #{user_id}")
-    role_memberships = user.role_memberships
-    role_memberships.each { |role_membership| role_membership.create_entitlements }
   end
   
   def remove_entitlements

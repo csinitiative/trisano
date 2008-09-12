@@ -45,5 +45,6 @@
 %br
 
 %div{ :id => "role_memberships" }
-  = render :partial => 'role', :collection => @user.role_memberships
+  %table
+    = render :partial => 'role', :collection => @user.role_memberships
 
