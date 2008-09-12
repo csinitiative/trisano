@@ -309,7 +309,6 @@ module EventsHelper
       end
 
       return result
-    
     rescue
       return "Could not render group element (#{element.id})"
     end

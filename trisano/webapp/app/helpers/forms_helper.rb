@@ -59,272 +59,319 @@ module FormsHelper
   end
   
   def render_view(form_elements_cache, element, include_children=true)
-
-    result = "<li id='view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
-    result << "&nbsp;" << add_section_link(element, "tab")
-    result << "&nbsp;|&nbsp;"
-    result << add_question_link(element, "tab")
-    result << "&nbsp;|&nbsp;"
-    result << add_follow_up_link(element, "tab", true)
-    result << "&nbsp;|&nbsp;" << delete_view_link(element)
+    begin
+      result = "<li id='view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
+      result << "&nbsp;" << add_section_link(element, "tab")
+      result << "&nbsp;|&nbsp;"
+      result << add_question_link(element, "tab")
+      result << "&nbsp;|&nbsp;"
+      result << add_follow_up_link(element, "tab", true)
+      result << "&nbsp;|&nbsp;" << delete_view_link(element)
     
-    result << "<div id='section-mods-#{element.id.to_s}'></div>"
-    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "<div id='section-mods-#{element.id.to_s}'></div>"
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
 
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='view_#{element.id.to_s}_children'  class='fb-tab-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='view_#{element.id.to_s}_children'  class='fb-tab-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render view element (#{element.id})</li>"
+    end
   end
   
   def render_core_view(form_elements_cache, element, include_children=true)
-
-    result = "<li id='core_view_#{element.id}' class='fb-tab' style='clear: both;'><b>#{element.name}</b>"
+    begin
+      result = "<li id='core_view_#{element.id}' class='fb-tab' style='clear: both;'><b>#{element.name}</b>"
     
-    result << "&nbsp;" << add_section_link(element, "tab")
-    result << "&nbsp;|&nbsp;"
-    result << add_question_link(element, "tab")
-    result << "&nbsp;|&nbsp;"
-    result << add_follow_up_link(element, "tab", true)
-    result << "&nbsp;|&nbsp;" << delete_view_link(element)
+      result << "&nbsp;" << add_section_link(element, "tab")
+      result << "&nbsp;|&nbsp;"
+      result << add_question_link(element, "tab")
+      result << "&nbsp;|&nbsp;"
+      result << add_follow_up_link(element, "tab", true)
+      result << "&nbsp;|&nbsp;" << delete_view_link(element)
     
-    result << "<div id='section-mods-#{element.id.to_s}'></div>"
-    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "<div id='section-mods-#{element.id.to_s}'></div>"
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
     
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='view_#{element.id.to_s}_children' class='fb-tab-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='view_#{element.id.to_s}_children' class='fb-tab-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("view_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render core view element (#{element.id})</li>"
+    end
   end
   
   def render_core_field(form_elements_cache, element, include_children=true)
+    begin
+      result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
 
-    result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
+      result << "&nbsp;&nbsp;" << delete_core_field_link(element)
 
-    result << "&nbsp;&nbsp;" << delete_core_field_link(element)
-
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='core_field_#{element.id.to_s}_children' class='fb-core-field-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='core_field_#{element.id.to_s}_children' class='fb-core-field-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
       end
-      result << "</ul>"
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render core field element (#{element.id})</li>"
+    end
   end
   
   def render_before_core_field(form_elements_cache, element, include_children)
+    begin
+      result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
     
-    result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
-    
-    result << "&nbsp;" << add_question_link(element, "before config")
+      result << "&nbsp;" << add_question_link(element, "before config")
 
-    result << "&nbsp;|&nbsp;"
-    result << add_follow_up_link(element, "before config", true)
-    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
+      result << "&nbsp;|&nbsp;"
+      result << add_follow_up_link(element, "before config", true)
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='before_core_field_#{element.id.to_s}_children' class='fb-before-core-field-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='before_core_field_#{element.id.to_s}_children' class='fb-before-core-field-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("before_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("before_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
-    result << "</li>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render before core field element (#{element.id})</li>"
+    end
   end
     
   def render_after_core_field(form_elements_cache, element, include_children)
-    result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
+    begin
+      result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
     
-    result << "&nbsp;" << add_question_link(element, "after config")
+      result << "&nbsp;" << add_question_link(element, "after config")
 
-    result << "&nbsp;|&nbsp;"
-    result << add_follow_up_link(element, "after config", true)
-    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
+      result << "&nbsp;|&nbsp;"
+      result << add_follow_up_link(element, "after config", true)
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='after_core_field_#{element.id.to_s}_children' class='fb-after-core-field-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='after_core_field_#{element.id.to_s}_children' class='fb-after-core-field-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("after_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("after_core_field_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
-    result << "</li>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render after core field element (#{element.id})</li>"
+    end
   end
   
   def render_section(form_elements_cache, element, include_children=true)
+    begin
+      result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
+      result << "&nbsp;" << add_question_link(element, "section") if (include_children)
+      result << "&nbsp;|&nbsp;" << delete_section_link(element)
     
-    result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
-    result << "&nbsp;" << add_question_link(element, "section") if (include_children)
-    result << "&nbsp;|&nbsp;" << delete_section_link(element)
-    
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
 
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='section_#{element.id.to_s}_children' class='fb-section-children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='section_#{element.id.to_s}_children' class='fb-section-children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render section element (#{element.id})</li>"
+    end
   end
 
   def render_group(form_elements_cache, element, include_children=true)
-
-    result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b>"
-    result << "&nbsp;&nbsp;" << delete_group_link(element)
+    begin
+      result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b>"
+      result << "&nbsp;&nbsp;" << delete_group_link(element)
     
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='section_#{element.id.to_s}_children' style='clear: both'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='section_#{element.id.to_s}_children' style='clear: both'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
-      result << "</ul>"
-      result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render group element (#{element.id})</li>"
+    end
   end
  
   def render_question(form_elements_cache, element, include_children=true)
+    begin
+      question = element.question
+      question_id = "question_#{element.id}"
     
-    question = element.question
-    question_id = "question_#{element.id}"
+      result = "<li id='#{question_id}' class='sortable fb-question' style='clear: both;'>"
+
+      css_class = element.is_active? ? "question" : "inactive-question"
+      result << "<span class='#{css_class}'>"
+      result << "Question: #{question.question_text}"
+      result << "&nbsp;&nbsp;<small>(" 
+      result << "#{question.short_name}, " unless question.short_name.blank?
+      result << question.data_type_before_type_cast.humanize << ")</small>"
+      result << "&nbsp;<i>(Inactive)</i>" unless element.is_active
+      result << "</span>"
+
+      result << "&nbsp;" << edit_question_link(element) 
+      # Debt: Disabling follow ups on checkboxes for now
+      result << "&nbsp;|&nbsp;" << add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box") 
+      result << "&nbsp;|&nbsp;" << add_to_library_link(element) if (include_children)  
+      result << "&nbsp;|&nbsp;" << add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+      result << "&nbsp;|&nbsp;" << delete_question_link(element)
     
-    result = "<li id='#{question_id}' class='sortable fb-question' style='clear: both;'>"
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "<div id='library-mods-#{element.id.to_s}'></div>"
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
+      result << "<div id='value-set-mods-#{element.id.to_s}'></div>"
 
-    css_class = element.is_active? ? "question" : "inactive-question"
-    result << "<span class='#{css_class}'>"
-    result << "Question: #{question.question_text}"
-    result << "&nbsp;&nbsp;<small>(" 
-    result << "#{question.short_name}, " unless question.short_name.blank?
-    result << question.data_type_before_type_cast.humanize << ")</small>"
-    result << "&nbsp;<i>(Inactive)</i>" unless element.is_active
-    result << "</span>"
-
-    result << "&nbsp;" << edit_question_link(element) 
-    # Debt: Disabling follow ups on checkboxes for now
-    result << "&nbsp;|&nbsp;" << add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box") 
-    result << "&nbsp;|&nbsp;" << add_to_library_link(element) if (include_children)  
-    result << "&nbsp;|&nbsp;" << add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
-    result << "&nbsp;|&nbsp;" << delete_question_link(element)
-    
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
-    result << "<div id='library-mods-#{element.id.to_s}'></div>"
-    result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
-    result << "<div id='value-set-mods-#{element.id.to_s}'></div>"
-
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='question_#{element.id.to_s}_children' class='fb-question-children'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='question_#{element.id.to_s}_children' class='fb-question-children'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
       end
-      result << "</ul>"
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render question element (#{element.id})</li>"
+    end
   end
 
   def render_follow_up(form_elements_cache, element, include_children=true)
+    begin
+      result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
     
-    result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
+      exposed_attributes = eval(element.form.event_type.camelcase).exposed_attributes
     
-    exposed_attributes = eval(element.form.event_type.camelcase).exposed_attributes
-    
-    if (element.core_path.blank?)
-      result <<  "Follow up, Condition: '#{element.condition}'"
-    else
-      result <<  "Core follow up, "
-      if (element.is_condition_code)
-        code = ExternalCode.find(element.condition)
-        result <<  "Code condition: #{code.code_description} (#{code.code_name})"
+      if (element.core_path.blank?)
+        result <<  "Follow up, Condition: '#{element.condition}'"
       else
-        result <<  "String condition: #{element.condition}"
+        result <<  "Core follow up, "
+        if (element.is_condition_code)
+          code = ExternalCode.find(element.condition)
+          result <<  "Code condition: #{code.code_description} (#{code.code_name})"
+        else
+          result <<  "String condition: #{element.condition}"
+        end
       end
-    end
     
-    unless (element.core_path.blank?)
-      if exposed_attributes[element.core_path].nil?
-        result << ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
-      else
-        result << ", Core data element: #{exposed_attributes[element.core_path][:name]}" 
+      unless (element.core_path.blank?)
+        if exposed_attributes[element.core_path].nil?
+          result << ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
+        else
+          result << ", Core data element: #{exposed_attributes[element.core_path][:name]}" 
+        end
       end
-    end
     
-    if (include_children)
-      result << " " << add_question_link(element, "follow up container")
-      result << "&nbsp;|&nbsp;" << delete_follow_up_link(element)
-    end
-    
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='follow_up_#{element.id.to_s}_children' class='fb-follow-up-children'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if (include_children)
+        result << " " << add_question_link(element, "follow up container")
+        result << "&nbsp;|&nbsp;" << delete_follow_up_link(element)
       end
-      result << "</ul>"
-      result << sortable_element("follow_up_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
-    end
     
-    result << "<div id='question-mods-#{element.id.to_s}'></div>"
-    result << "</li>"
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='follow_up_#{element.id.to_s}_children' class='fb-follow-up-children'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
+        result << sortable_element("follow_up_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+      end
+    
+      result << "<div id='question-mods-#{element.id.to_s}'></div>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render follow-up element (#{element.id})</li>"
+    end
   end
   
   def render_value_set(form_elements_cache, element, include_children=true)
-    result =  "<li id='value_set_#{element.id.to_s}' class='fb-value-set'>Value Set: "
-    result << element.name
+    begin
+      result =  "<li id='value_set_#{element.id.to_s}' class='fb-value-set'>Value Set: "
+      result << element.name
     
-    if include_children
-      result << "&nbsp;" << edit_value_set_link(element)
-      result << "&nbsp;|&nbsp;" << add_to_library_link(element)
-    end
+      if include_children
+        result << "&nbsp;" << edit_value_set_link(element)
+        result << "&nbsp;|&nbsp;" << add_to_library_link(element)
+      end
     
-    result << "&nbsp;|&nbsp;" << delete_value_set_link(element)
+      result << "&nbsp;|&nbsp;" << delete_value_set_link(element)
     
-    result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children
-    result << "<div id='value-set-mods-#{element.id.to_s}'></div>" if include_children
+      result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children
+      result << "<div id='value-set-mods-#{element.id.to_s}'></div>" if include_children
 
     
-    if include_children && form_elements_cache.children?(element)
-      result << "<ul id='value_set_#{element.id.to_s}_children' class='fb-value-set-children'>"
-      form_elements_cache.children(element).each do |child|
-        result << render_element(form_elements_cache, child, include_children)
+      if include_children && form_elements_cache.children?(element)
+        result << "<ul id='value_set_#{element.id.to_s}_children' class='fb-value-set-children'>"
+        form_elements_cache.children(element).each do |child|
+          result << render_element(form_elements_cache, child, include_children)
+        end
+        result << "</ul>"
       end
-      result << "</ul>"
-    end
     
-    result << "</li>"
+      result << "</li>"
+      return result
+    rescue
+      return "<li>Could not render value set element (#{element.id})</li>"
+    end
   end
   
   def render_value(form_elements_cache, element, include_children=true)
-    result =  "<li id='value_#{element.id.to_s}' class='fb-value'>"
-    result << "<span class='inactive-value'>" unless element.is_active
-    result << element.name
-    result << "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
-    result << " " << toggle_value_link(element) << "</li>"
+    begin
+      result =  "<li id='value_#{element.id.to_s}' class='fb-value'>"
+      result << "<span class='inactive-value'>" unless element.is_active
+      result << element.name
+      result << "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
+      result << " " << toggle_value_link(element) << "</li>"
+      return result
+    rescue
+      return "<li>Could not render value element (#{element.id})</li>"
+    end
   end
   
   private
