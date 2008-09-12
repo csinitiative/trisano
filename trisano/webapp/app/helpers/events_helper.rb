@@ -268,140 +268,121 @@ module EventsHelper
   end
   
   def render_investigator_section(form_elements_cache, element, f)
-    result = "<br/>"
-    section_id = "section_investigate_#{element.id}";
-    hide_id = section_id + "_hide";
-    show_id = section_id + "_show"
-    result <<  "<fieldset class='form_section'>"
-    result << "<legend>#{element.name} "
-    result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
-    result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
-    result << "</legend>"
-    result << "<div id='#{section_id}'>"
+    begin
+      result = "<br/>"
+      section_id = "section_investigate_#{element.id}";
+      hide_id = section_id + "_hide";
+      show_id = section_id + "_show"
+      result <<  "<fieldset class='form_section'>"
+      result << "<legend>#{element.name} "
+      result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
+      result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
+      result << "</legend>"
+      result << "<div id='#{section_id}'>"
     
-    section_children = form_elements_cache.children(element)
+      section_children = form_elements_cache.children(element)
     
-    if section_children.size > 0
-      section_children.each do |child|
-        result << render_investigator_element(form_elements_cache, child, f)
+      if section_children.size > 0
+        section_children.each do |child|
+          result << render_investigator_element(form_elements_cache, child, f)
+        end
       end
+    
+      result << "</div></fieldset><br/>"
+    
+      return result
+    rescue
+      return "Could not render section element (#{element.id})"
     end
-    
-    result << "</div></fieldset><br/>"
-    
-    result
   end
   
   def render_investigator_group(form_elements_cache, element, f)
-    result = ""
+    begin
+      result = ""
 
-    group_children = form_elements_cache.children(element)
+      group_children = form_elements_cache.children(element)
     
-    if group_children.size > 0
-      group_children.each do |child|
-        result << render_investigator_element(form_elements_cache, child, f)
+      if group_children.size > 0
+        group_children.each do |child|
+          result << render_investigator_element(form_elements_cache, child, f)
+        end
       end
-    end
 
-    result
+      return result
+    
+    rescue
+      return "Could not render group element (#{element.id})"
+    end
   end
 
   def render_investigator_question(form_elements_cache, element, f)
     
-    question = element.question
-    question_style = question.style.blank? ? "vert" : question.style
-    result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
+    begin
+      question = element.question
+      question_style = question.style.blank? ? "vert" : question.style
+      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
     
-    @answer_object = @event.get_or_initialize_answer(question.id)
+      @answer_object = @event.get_or_initialize_answer(question.id)
      
-    if (f.nil?)
-      result << fields_for(@event) do |f|
-        f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
+      if (f.nil?)
+        result << fields_for(@event) do |f|
+          f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+            answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
+          end
+        end
+      else
+        prefix = @answer_object.new_record? ? "new_answers" : "answers"
+        index = @answer_object.new_record? ? "" : @form_index += 1
+        result << f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
         end
       end
-    else
-      prefix = @answer_object.new_record? ? "new_answers" : "answers"
-      index = @answer_object.new_record? ? "" : @form_index += 1
-      result << f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
-      end
-    end
 
-    follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
+      follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
       
-    unless follow_up_group.nil?
-      result << "<div id='follow_up_investigate_#{element.id}'>"
-      result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
+      unless follow_up_group.nil?
+        result << "<div id='follow_up_investigate_#{element.id}'>"
+        result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
+        result << "</div>"
+      else
+        result << "<div id='follow_up_investigate_#{element.id}'></div>"
+      end
+    
       result << "</div>"
-    else
-      result << "<div id='follow_up_investigate_#{element.id}'></div>"
+    
+      result << "<br clear='all'/>" if question_style == "vert"
+    
+      return result
+    rescue
+      return "Could not render question element (#{element.id})"
     end
-    
-    result << "</div>"
-    
-    result << "<br clear='all'/>" if question_style == "vert"
-    
-    result
   end
   
   def show_investigator_question(form_elements_cache, element, f)
-    question = element.question
-    question_style = question.style.blank? ? "vert" : question.style
-    result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-    result << "<label>#{question.question_text}</label>"
-    answer = form_elements_cache.answer(element, @event)
-    result << answer.text_answer unless answer.nil?
-    result << "</div>"
-    result << "<br clear='all'/>" if question_style == "vert"
-    result
+    begin
+      question = element.question
+      question_style = question.style.blank? ? "vert" : question.style
+      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
+      result << "<label>#{question.question_text}</label>"
+      answer = form_elements_cache.answer(element, @event)
+      result << answer.text_answer unless answer.nil?
+      result << "</div>"
+      result << "<br clear='all'/>" if question_style == "vert"
+      return result
+    rescue
+      return "Could not show question element (#{element.id})"
+    end
   end
   
   def render_investigator_follow_up(form_elements_cache, element, f)
-    result = ""
+    begin
+      result = ""
     
-    unless element.core_path.blank?
-      result << render_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
-      return result
-    end
-    
-    questions = form_elements_cache.children(element)
-    
-    if questions.size > 0
-      questions.each do |child|
-        result << render_investigator_question(form_elements_cache, child, f)
+      unless element.core_path.blank?
+        result << render_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
+        return result
       end
-    end
-
-    result
-  end
-  
-  def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
-    result = ""
     
-    include_children = false
-    
-    unless (ajax_render)
-      # Debt: Replace with shorter eval technique
-      core_path_with_dots = element.core_path.sub("morbidity_event[", "").gsub(/\]/, "").gsub(/\[/, ".")
-      core_value = @event
-      core_path_with_dots.split(".").each do |method|
-        begin
-          core_value = core_value.send(method)
-        rescue
-          break
-        end
-        
-      end
-
-      if (element.condition == core_value.to_s)
-        include_children = true
-      end
-    end
-    
-    result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
-    
-    if (include_children || ajax_render)
       questions = form_elements_cache.children(element)
     
       if questions.size > 0
@@ -409,11 +390,55 @@ module EventsHelper
           result << render_investigator_question(form_elements_cache, child, f)
         end
       end
-    end
 
-    result << "</div>" unless ajax_render
+      return result
+    rescue
+      return "Could not render follow up element (#{element.id})"
+    end
+  end
+  
+  def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
+    begin
+      result = ""
     
-    result
+      include_children = false
+    
+      unless (ajax_render)
+        # Debt: Replace with shorter eval technique
+        core_path_with_dots = element.core_path.sub("morbidity_event[", "").gsub(/\]/, "").gsub(/\[/, ".")
+        core_value = @event
+        core_path_with_dots.split(".").each do |method|
+          begin
+            core_value = core_value.send(method)
+          rescue
+            break
+          end
+        
+        end
+
+        if (element.condition == core_value.to_s)
+          include_children = true
+        end
+      end
+    
+      result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
+    
+      if (include_children || ajax_render)
+        questions = form_elements_cache.children(element)
+    
+        if questions.size > 0
+          questions.each do |child|
+            result << render_investigator_question(form_elements_cache, child, f)
+          end
+        end
+      end
+
+      result << "</div>" unless ajax_render
+    
+      return result
+    rescue
+      return "Could not render core follow up element (#{element.id})"
+    end
   end
 
   # renders events as csv. Optional block gives you the opportunity to
