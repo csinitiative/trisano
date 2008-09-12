@@ -414,7 +414,7 @@ module FormsHelper
   
   def add_follow_up_link(element, trailing_text = "", core_data = false)
     result = "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/new?form_element_id=#{element.id.to_s}"
-    result <<  "&core_data=true" if (core_data)
+    result <<  "&core_data=true&event_type=#{@form.event_type}" if (core_data)
     result << "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-#{element.id.to_s}' class='add-follow-up' name='add-follow-up'>Add follow up"
     result << " to " << trailing_text unless trailing_text.empty?
     result << "</a></small>"

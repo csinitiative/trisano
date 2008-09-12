@@ -353,7 +353,7 @@ module TrisanoHelper
   end
   
   def add_view(browser, name)
-    browser.click("link=Add a tab")
+    browser.click("link=Add tab")
     wait_for_element_present("new-view-form")
     browser.type("view_element_name", name)
     browser.click("view_element_submit")
@@ -491,7 +491,7 @@ module TrisanoHelper
   end
   
   def add_core_tab_configuration(browser, core_view_name)
-    browser.click("link=Add a core tab configuration")
+    browser.click("link=Add Core Tab")
     wait_for_element_present("new-core-view-form", browser)
     browser.select("core_view_element_name", "label=#{core_view_name}")
     browser.click("core_view_element_submit")

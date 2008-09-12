@@ -97,6 +97,7 @@ describe FollowUpElementsController do
       FollowUpElement.stub!(:new).and_return(@follow_up_element)
       @follow_up_element.stub!(:parent_element_id=)
       @follow_up_element.stub!(:core_data=)
+      @follow_up_element.stub!(:event_type=)
     end
   
     def do_get

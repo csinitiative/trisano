@@ -15,6 +15,7 @@
 
 = f.hidden_field :parent_element_id
 = f.hidden_field :core_data
+= f.hidden_field :event_type
 
 %p
   %label Condition
@@ -28,5 +29,5 @@
   %label Core data element
   %br
   - values = {}
-  - MorbidityEvent.exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
+  - eval(@follow_up_element.event_type.camelcase).exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
   = f.select(:core_path, values.sort, {:include_blank => true}) 

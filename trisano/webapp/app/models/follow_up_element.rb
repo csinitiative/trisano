@@ -17,7 +17,7 @@
 
 class FollowUpElement < FormElement
   
-  attr_accessor :parent_element_id, :core_data
+  attr_accessor :parent_element_id, :core_data, :event_type
   
   validates_presence_of :condition
   validates_presence_of :core_path, :if => Proc.new {|follow_up| follow_up.core_data == "true" }
