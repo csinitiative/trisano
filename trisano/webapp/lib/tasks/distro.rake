@@ -149,6 +149,7 @@ namespace :trisano do
       
       sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'grant all privileges on table diseases_forms to #{nedss_user}'")
       sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'grant all privileges on table event_queues to #{nedss_user}'")
+      sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'grant all privileges on table event_queues_id_seq to #{nedss_user}'")
              
     end
 
