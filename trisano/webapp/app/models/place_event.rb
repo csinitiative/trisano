@@ -24,7 +24,7 @@ class PlaceEvent < Event
 
         primary = Participation.new
         primary.primary_entity = place_exposure.secondary_entity
-        primary.role_id = Event.participation_code('Place Exposure')
+        primary.role_id = Event.participation_code('Place of Interest')
 
         contact = Participation.new
         contact.secondary_entity = morbidity_event.active_patient.active_primary_entity
@@ -49,5 +49,27 @@ class PlaceEvent < Event
       place_events
     end
   end
+  
+  def new_telephone_attributes=(phone_attributes)
+    phone_attributes.each do |attributes|
+      code = attributes.delete(:entity_location_type_id)
+      next if attributes.values_blank?
+      el = active_place.active_primary_entity.entities_locations.build(:entity_location_type_id => code, :primary_yn_id => ExternalCode.no_id)
+      el.build_location.telephones.build(attributes)
+    end
+  end
 
+  def existing_telephone_attributes=(phone_attributes)
+    active_place.active_primary_entity.telephone_entities_locations.reject(&:new_record?).each do |el|
+      attributes = phone_attributes[el.id.to_s]
+      if attributes
+        attributes.delete(:entity_location_type_id)
+        el.location.telephones.last.attributes = attributes
+      else
+        el.location.destroy
+      end
+    end
+  end
+  
+  
 end

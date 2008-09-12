@@ -22,6 +22,14 @@ class EntitiesLocation < ActiveRecord::Base
   belongs_to  :entity_location_type, :class_name => 'ExternalCode'
   belongs_to  :primary_yn, :class_name => 'ExternalCode'
 
+  class << self
+    def new_telephone_location
+      el = new(:primary_yn_id => ExternalCode.no_id)
+      el.build_location.telephones.build
+      el
+    end
+  end
+
   # TGR - Disabled for now because it keeps addresses from saving
   # properly.
   # validates_associated :location

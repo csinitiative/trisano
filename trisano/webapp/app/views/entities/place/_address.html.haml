@@ -1,0 +1,43 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset.form
+  %legend Address
+  -unless address.nil?
+    -current_place.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|
+      -core_element_show :street_number, address_form, :horiz do
+        =address_form.label(:street_number)
+        =address.street_number 
+      -core_element_show :street_name, address_form, :horiz do
+        =address_form.label(:street_name)
+        =address.street_name 
+      -core_element_show :unit_number, address_form, :horiz do
+        =address_form.label(:unit_number)
+        =address.unit_number 
+      -core_element_show :city, address_form, :horiz do
+        =address_form.label(:city)
+        =address.city 
+      -core_element_show :state, address_form, :horiz do
+        =address_form.label(:state)
+        =l(address.state) 
+      -core_element_show :postal_code, address_form, :horiz do
+        =address_form.label(:postal_code)
+        =address.postal_code 
+      -core_element_show :county, address_form, :horiz do
+        =address_form.label(:county)
+        =l(address.county) 
+      -core_element_show :district, address_form, :horiz do
+        =address_form.label(:district)
+        =l(address.district)

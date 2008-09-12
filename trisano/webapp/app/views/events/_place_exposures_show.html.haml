@@ -21,4 +21,4 @@
           %td=h(place.name)
           %td=place.place_description
           %td=format_date(place.date_of_exposure)
-        
+          %td=link_to("Edit place details", edit_place_event_path(place.entity.case_id), {:id => "edit-place-event"})

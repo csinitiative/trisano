@@ -107,6 +107,12 @@ module EventsHelper
     controls += (link_to('Edit', edit_contact_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
   end
 
+  def basic_place_event_controls(event, jurisdiction)
+    controls = link_to('Show', place_event_path(event)) + " | "
+    controls += (link_to('Edit', edit_place_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+  end
+
+
   def state_controls(event, jurisdiction)
     current_state = event.event_status
     return "" if current_state == "CLOSED"

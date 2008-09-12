@@ -920,7 +920,52 @@
 - code_name: "placetype"
   the_code: "O"
   code_description: "Other"
-  sort_order: 25
+  sort_order: 75
+
+- code_name: "placetype"
+  the_code: "S"
+  code_description: "School"
+  sort_order: 30
+
+- code_name: "placetype"
+  the_code: "P"
+  code_description: "Pool"
+  sort_order: 35
+
+- code_name: "placetype"
+  the_code: "FE"
+  code_description: "Food Establishment"
+  sort_order: 40
+
+- code_name: "placetype"
+  the_code: "DC"
+  code_description: "Daycare"
+  sort_order: 45
+
+- code_name: "placetype"
+  the_code: "RA"
+  code_description: "Recreational Activities"
+  sort_order: 50
+
+- code_name: "placetype"
+  the_code: "E"
+  code_description: "Employer"
+  sort_order: 55
+
+- code_name: "placetype"
+  the_code: "CF"
+  code_description: "Correctional Facility"
+  sort_order: 60
+
+- code_name: "placetype"
+  the_code: "LCF"
+  code_description: "Long-term Care Facility"
+  sort_order: 65
+
+- code_name: "placetype"
+  the_code: "GLE"
+  code_description: "Group Living Environment"
+  sort_order: 70
 
   ### PARTICIPATION RELATIONSHIPS ###
   
@@ -988,6 +1033,11 @@
   the_code: "PE"
   code_description: "Place Exposure"
   sort_order: 65
+
+- code_name: "participant"
+  the_code: "PoI"
+  code_description: "Place of Interest"
+  sort_order: 70
    
   ### PHONE LOCATION TYPES ###
 

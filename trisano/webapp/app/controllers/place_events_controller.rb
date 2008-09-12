@@ -42,7 +42,7 @@ class PlaceEventsController < EventsController
   end
 
   def update
-    prep_multimodels_for(:place_event)
+    params[:place_event][:existing_telephone_attributes] ||= {}
     
     respond_to do |format|
       if @event.update_attributes(params[:place_event])

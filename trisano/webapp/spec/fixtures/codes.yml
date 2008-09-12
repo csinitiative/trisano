@@ -184,6 +184,12 @@ participant_place_exposure:
   the_code: "PE"
   code_description: "Place Exposure"
 
+participant_place_of_interest:
+  id: 2410
+  code_name: "participant"
+  the_code: "PoI"
+  code_description: "Place of Interest"
+
 address_location_type:
   id: 2311
   code_name: "locationtype"

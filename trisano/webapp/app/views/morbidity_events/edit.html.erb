@@ -26,7 +26,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :tools do %>
-  <%= link_to 'Show', cmr_path(@event) %> |
+  <%= link_to 'Show', :action => 'show', :id => @event %> |
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>
 

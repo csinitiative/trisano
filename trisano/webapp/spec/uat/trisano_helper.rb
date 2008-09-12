@@ -199,6 +199,13 @@ module TrisanoHelper
         browser.is_text_present("Contact event was successfully updated."))
   end
 
+  def save_place_event(browser)
+    browser.click "place_event_submit"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Place event was successfully created.") or
+        browser.is_text_present("Place event was successfully updated."))
+  end
+
   def navigate_to_people_search(browser)
     click_nav_search(browser)
     @browser.click('link=People Search')

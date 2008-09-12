@@ -19,7 +19,9 @@
   %legend Telephone / Email
   -if rendering_pt
     %div{:id => 'phones'}
-      =render :partial => 'events/telephone', :collection => entity_data.telephone_entities_locations
+      -entities_locations = entity_data.telephone_entities_locations
+      -entities_locations = [EntitiesLocation.new_telephone_location] unless entities_locations.size > 0
+      =render :partial => 'events/telephone', :collection => entities_locations
     %p{:style => "clear: both; padding-top: 20px"}
       =add_new_telephone_link "New Telephone / Email"
   -else

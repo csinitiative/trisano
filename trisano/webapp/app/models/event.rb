@@ -62,7 +62,8 @@ class Event < ActiveRecord::Base
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
 
-  has_one :patient,  :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
+  has_one :patient, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
+  has_one :place, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Place of Interest").id]
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
@@ -276,6 +277,20 @@ class Event < ActiveRecord::Base
     else
       # This is a bug!  Should be building these up in memory so they are subject to validation and transactions
       active_patient.update_attributes(attributes)
+    end
+  end
+
+  def active_place
+    @active_place || place
+  end
+
+  def active_place=(attributes)
+    if new_record?
+      @active_place = Participation.new(attributes)
+      @active_place.role_id = Event.participation_code('Place Exposure')
+    else
+      # Bug!
+      active_place.update_attributes(attributes)
     end
   end
   
@@ -864,13 +879,26 @@ class Event < ActiveRecord::Base
       pe.secondary_entity.place_temp.save(false)
     end
 
-    active_patient.save(false)
-    active_patient.active_primary_entity.save(false)
+    if active_patient
+      active_patient.save(false)
+      active_patient.active_primary_entity.save(false)
 
-    active_patient.active_primary_entity.entities_locations.each do |el|
-      el.save(false)           
-      el.location.save(false)
-      el.location.telephones.each {|t| t.save(false) unless t.frozen?}
+      active_patient.active_primary_entity.entities_locations.each do |el|
+        el.save(false)           
+        el.location.save(false)
+        el.location.telephones.each {|t| t.save(false) unless t.frozen?}
+      end
+    end
+
+    if active_place
+      active_place.save(false)
+      active_place.active_primary_entity.save(false)
+      
+      active_place.active_primary_entity.entities_locations.each do |el|
+        el.save(false)
+        el.location.save(false)
+        el.location.telephones.each {|t| t.save(false) unless t.frozen?}
+      end
     end
   end
 
