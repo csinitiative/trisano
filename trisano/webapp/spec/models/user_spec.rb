@@ -199,36 +199,3 @@ describe User, "modified to add duplicate roles" do
   end
   
 end
-
-# This can be added in when the remove/create action in RoleMembership is modified; as
-# of now, role memberships are not updated, although this probably needs to change.
-#describe User, "with a directly modified role membership" do
-#  
-#  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
-#  
-#  before(:each) do
-#    @user = users(:default_user)
-#    admin_role_to_change = @user.role_memberships.detect { |rm| rm.role_id == roles(:administrator).id and rm.jurisdiction_id == entities(:Southeastern_District).id}
-#    admin_role_to_change.role = roles(:investigator)
-#    admin_role_to_change.save
-#    @user.role_memberships.reload
-#    @user.entitlements.reload
-#  end
-#  
-#  it "should have an entitlement in the Southeastern District" do
-#    @user.has_entitlement_in?(entities(:Southeastern_District)).should be_true
-#  end
-#  
-#  it "should be an investigator" do
-#    @user.is_investigator?.should be_true
-#  end
-#  
-#  it "should not be an administrator" do
-#    @user.is_admin?.should be_false
-#  end
-#  
-#  it "should have not have administer privileges in Southeastern District" do
-#    @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_false
-#  end
-#  
-#end
