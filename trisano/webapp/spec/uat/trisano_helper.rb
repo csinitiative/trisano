@@ -491,7 +491,7 @@ module TrisanoHelper
   end
   
   def add_core_tab_configuration(browser, core_view_name)
-    browser.click("add-tab")
+    browser.click("add-core-tab")
     wait_for_element_present("new-core-view-form", browser)
     browser.select("core_view_element_name", "label=#{core_view_name}")
     browser.click("core_view_element_submit")
@@ -499,7 +499,7 @@ module TrisanoHelper
   end
   
   def add_core_field_config(browser, core_field_name)
-    browser.click("add-core-tab")
+    browser.click("add-core-field")
     wait_for_element_present("new-core-field-form", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
     browser.click("core_field_element_submit")
