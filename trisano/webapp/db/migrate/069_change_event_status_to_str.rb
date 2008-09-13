@@ -18,14 +18,26 @@
 class ChangeEventStatusToStr < ActiveRecord::Migration
   def self.up
     transaction do
-      add_column :events, :event_status, :string
+      add_column :events, :event_status, :string, :limit => 100
 
       # migrate data
       status_codes = ExternalCode.find_all_by_code_name('eventstatus')
 
       status_codes.each do |code|
+        # Old 2.x status codes were never migrated, handle that here
+        case code.the_code
+        when "ASG"
+          code.the_code = "ASGD-LHD"
+        when "RO"
+          code.the_code = "RO-MGR"
+        when "APP"
+          code.the_code = "APP-LHD"
+        when "CLO"
+          code.the_code = "CLOSED"
+        end
         Event.update_all("event_status = '#{code.the_code}'", "event_status_id = #{code.id}")
       end
+      Event.update_all("event_status = 'NEW'", "event_status_id IS NULL")
       # end migrate data
 
       remove_column :events, :event_status_id
