@@ -183,7 +183,7 @@ end
 
 def add_and_populate_tab
   
-  @browser.click "link=Add tab"
+  @browser.click("add-tab")
   wait_for_element_present("new-view-form")
   @browser.type "view_element_name", @user_defined_tab_text
   @browser.click "view_element_submit"

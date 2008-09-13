@@ -85,16 +85,16 @@
     %li.action
       = link_to 'Edit Form Detail', edit_form_path(@form)
     %li.action
-      = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab'})
+      = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
       #builder-mods
     %li.action
-      = link_to_remote("Add Core Tab", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab'})
+      = link_to_remote("Add Core Tab", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
       #core-builder-mods
     %li.action
-      = link_to_remote("Add Core Field", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field'})
+      = link_to_remote("Add Core Field", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
       #core-field-builder-mods
     %li.action
-      = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+      = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
       #library-admin
   %br
   %hr

@@ -339,7 +339,7 @@ module TrisanoHelper
   
   # Must be called from the builder view
   def open_form_builder_library_admin(browser)
-    browser.click("fb-open-library-admin")
+    browser.click("open-library-admin")
     wait_for_element_present("library-admin-container")
     return(browser.is_text_present("Library Administration"))
   end
@@ -353,7 +353,7 @@ module TrisanoHelper
   end
   
   def add_view(browser, name)
-    browser.click("link=Add tab")
+    browser.click("add-tab")
     wait_for_element_present("new-view-form")
     browser.type("view_element_name", name)
     browser.click("view_element_submit")
@@ -491,7 +491,7 @@ module TrisanoHelper
   end
   
   def add_core_tab_configuration(browser, core_view_name)
-    browser.click("link=Add Core Tab")
+    browser.click("add-tab")
     wait_for_element_present("new-core-view-form", browser)
     browser.select("core_view_element_name", "label=#{core_view_name}")
     browser.click("core_view_element_submit")
@@ -499,7 +499,7 @@ module TrisanoHelper
   end
   
   def add_core_field_config(browser, core_field_name)
-    browser.click("link=Add Core Field")
+    browser.click("add-core-tab")
     wait_for_element_present("new-core-field-form", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
     browser.click("core_field_element_submit")
