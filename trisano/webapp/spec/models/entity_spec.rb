@@ -269,7 +269,10 @@ describe Entity, "with multiple telephones" do
 
   it "should be able to build a list of telephone entites locations" do
     entity = entities(:Silvers)
-    entity.entities_locations.build(:entity_location_type_id => ExternalCode.telephone_location_type_ids[0])
+    entity.entities_locations.build(
+      :entity_location_type_id => ExternalCode.telephone_location_type_ids[0],
+      :location_type_id => Code.telephone_location_type_id)
+
     entity.save
     entity.telephone_entities_locations.size.should == 1
   end

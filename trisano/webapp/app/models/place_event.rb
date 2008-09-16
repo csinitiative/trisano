@@ -50,11 +50,15 @@ class PlaceEvent < Event
     end
   end
   
+  # needs a refactoring. Too much duplication from super class
   def new_telephone_attributes=(phone_attributes)
     phone_attributes.each do |attributes|
       code = attributes.delete(:entity_location_type_id)
       next if attributes.values_blank?
-      el = active_place.active_primary_entity.entities_locations.build(:entity_location_type_id => code, :primary_yn_id => ExternalCode.no_id)
+      el = active_place.active_primary_entity.entities_locations.build(
+             :entity_location_type_id => code, 
+             :primary_yn_id => ExternalCode.no_id,
+             :location_type_id => Code.telephone_location_type_id)
       el.build_location.telephones.build(attributes)
     end
   end

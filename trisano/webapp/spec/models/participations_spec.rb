@@ -38,10 +38,6 @@ describe Participation do
       @pt.primary_entity.person_temp.should_not be_nil
     end
 
-    it 'should have at least one telephone entities location (to seed the ui)' do
-      @pt.primary_entity.telephone_entities_locations.should_not be_empty
-    end
-    
   end
 
 end

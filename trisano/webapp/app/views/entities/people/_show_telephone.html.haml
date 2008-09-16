@@ -16,7 +16,10 @@
 -if show_telephone.current_phone
   %span.horiz
     %label
-      =show_telephone.entity_location_type.code_description
+      -if show_telephone.entity_location_type
+        =show_telephone.entity_location_type.code_description 
+      -else
+        Phone
     =h(show_telephone.current_phone.simple_format) 
   %span.vert
     %label

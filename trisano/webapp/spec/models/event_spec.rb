@@ -798,6 +798,22 @@ describe MorbidityEvent do
         @event.should be_valid
       end
 
+      it "should add the phone number, even if an entity location type isn't selected" do
+        create_event(event_hash) do |h|
+          h[:new_telephone_attributes] << {
+            :area_code => '330',
+            :phone_number => '432-1254',
+            :email_address => 'happy@joy.com'}
+        end
+        lambda{@event.save}.should change{EntitiesLocation.count}.by(2)
+        el = @event.patient.primary_entity.telephone_entities_locations[1]
+        @event.should be_valid
+        el.entity_location_type.should be_nil
+        el.area_code.should == '330'
+        el.phone_number.should == '4321254'
+        el.email_address.should == 'happy@joy.com'        
+      end
+
     end
 
   end

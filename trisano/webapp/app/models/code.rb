@@ -22,6 +22,11 @@ class Code < ActiveRecord::Base
    code.id unless code.nil?
   end
 
+  def self.telephone_location_type_id
+    code = find_by_code_name_and_the_code 'locationtype', 'TLT'
+    code.id if code
+  end
+
   def self.interested_party
     Code.find_by_code_name_and_code_description('participant', 'Interested Party')
   end

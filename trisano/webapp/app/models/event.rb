@@ -309,7 +309,10 @@ class Event < ActiveRecord::Base
     phone_attributes.each do |attributes|
       code = attributes.delete(:entity_location_type_id)
       next if attributes.values_blank?
-      el = active_patient.active_primary_entity.entities_locations.build(:entity_location_type_id => code, :primary_yn_id => ExternalCode.no_id)
+      el = active_patient.active_primary_entity.entities_locations.build(
+             :entity_location_type_id => code, 
+             :primary_yn_id => ExternalCode.no_id,
+             :location_type_id => Code.telephone_location_type_id)
       el.build_location.telephones.build(attributes)
     end
   end

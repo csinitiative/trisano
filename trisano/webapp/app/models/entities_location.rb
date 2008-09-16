@@ -24,7 +24,8 @@ class EntitiesLocation < ActiveRecord::Base
 
   class << self
     def new_telephone_location
-      el = new(:primary_yn_id => ExternalCode.no_id)
+      el = new(:primary_yn_id => ExternalCode.no_id,
+               :location_type_id => Code.telephone_location_type_id)
       el.build_location.telephones.build
       el
     end

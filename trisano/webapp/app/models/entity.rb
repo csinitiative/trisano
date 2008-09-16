@@ -44,6 +44,12 @@ class Entity < ActiveRecord::Base
     :foreign_key => 'entity_id', 
     :conditions => [ "location_type_id = ?", Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id],
     :order => 'created_at DESC'
+
+  has_many :telephone_entities_locations,
+    :class_name => 'EntitiesLocation',
+    :foreign_key => 'entity_id',
+    :conditions => ["location_type_id = ?", Code.find_by_code_name_and_code_description('locationtype', 'Telephone Location Type').id],
+    :order => 'created_at ASC'
   
   has_and_belongs_to_many :races, 
     :class_name => 'ExternalCode', 
@@ -97,10 +103,10 @@ class Entity < ActiveRecord::Base
   end
   
   #TGR: support for multiple phones.
-  def telephone_entities_locations
-    telephone_location_type_ids = ExternalCode.telephone_location_type_ids
-    entities_locations.select {|el| telephone_location_type_ids.include? el.entity_location_type_id}
-  end
+  # def telephone_entities_locations
+  #  telephone_location_type_ids = ExternalCode.telephone_location_type_ids
+  #  entities_locations.select {|el| telephone_location_type_ids.include? el.entity_location_type_id}
+  # end
 
   def telephone_entities_location
     @telephone_entities_location || primary_phone_entities_location
