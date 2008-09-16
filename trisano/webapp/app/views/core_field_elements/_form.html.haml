@@ -17,6 +17,11 @@
 = f.hidden_field :parent_element_id
 
 %p
-  %label Core Field
-  %br
-  = f.select(:core_path, @available_core_fields, {:include_blank => true}, {:style => 'width: 185px'}) 
+%table
+  %tr
+    %td
+      %b Core Field
+    %td.tinainfo
+      = link_to_function "Close", "$('core-field-builder-mods').down('form').reset(); Effect.BlindUp($('core-field-builder-mods'), { duration: 0.1 })"
+
+= f.select(:core_path, @available_core_fields, {:include_blank => true}, {:style => 'width: 185px'}) 

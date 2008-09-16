@@ -24,9 +24,6 @@
       %b No core fields are available. Use existing core field configurations.
     - else
       = render :partial => 'form', :locals => { :f => f }
-
     %p
       - unless @available_core_fields.empty?
         = f.submit "Create"
-      &nbsp;&nbsp;
-      = link_to_function "Close", "$('core-field-builder-mods').down('form').reset(); Effect.BlindUp($('core-field-builder-mods'), { duration: 0.1 })"

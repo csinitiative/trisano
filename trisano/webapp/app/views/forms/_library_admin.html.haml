@@ -15,17 +15,17 @@
 
 
 %div{:id => 'library-admin-container'}
-  %b Library Administration
-  &nbsp;&nbsp;
-  
-  = link_to_remote("Questions", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
-  &nbsp;&nbsp;
-  = link_to_remote("Value sets", :url => {:controller => "forms", :action => "library_admin", :type => "value_set_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
-  &nbsp;&nbsp;
-  = link_to_function "Close", "Effect.BlindUp($('library-admin-container'), { duration: 0.1 })", :id => 'fb-close-library-admin'
-  &nbsp;&nbsp;
-
-  %br
-  %br
-
+  %p
+    %table
+      %tr
+        %td
+          %b Library Administration
+        %td.tinainfo
+          = link_to_function "Close", "Effect.BlindUp($('library-admin-container'), { duration: 0.1 })", :id => 'fb-close-library-admin'
+      %tr
+        %td{:width => '2'}
+          = link_to_remote("Questions", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+        %td{:width => '2'}
+          = link_to_remote("Value sets", :url => {:controller => "forms", :action => "library_admin", :type => "value_set_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+  %hr
   = render_library_admin(@type)

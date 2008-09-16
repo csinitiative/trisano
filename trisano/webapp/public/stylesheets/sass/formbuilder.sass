@@ -68,7 +68,38 @@
     :width 188px
     :height 18px
     &:hover
-      :color #009900
+      :color #fff
+  .tinainfo
+    :font 
+      :family Verdana, Arial, Helvetica, sans-serif
+      :size 9px
+    :letter-spacing 0px
+    :text-align right
+    a
+      :color #999
+      :display inline
+      :width 0px
+      :height 0px
+      &:hover
+        :color #c00
+ 
+.clearfix
+  *display:                 inline-block
+  &:after
+    content:                " "
+    display:                block
+    height:                 0
+    clear:                  both
+    visibility:             hidden
+
+=clearfix
+  *display:                 inline-block
+  &:after
+    content:                " "
+    display:                block
+    height:                 0
+    clear:                  both
+    visibility:             hidden
       
 #buidler-mods
 #new-view-form
@@ -126,21 +157,22 @@
     
 #library-admin
   :padding 0px 0px 0px 0px
-#library-admin-container
-  :line-height 16px
+  :line-height 10px
   ul
     :padding 0px 0px 0px 0px
   li
     :padding 0px 0px 0px 0px
+  
+#library-admin-container 
+  :line-height 15px
   a
+    :color #999
     :display inline
     :width 0px
     :height 0px
-    :color #666
-    :font-weight 300
-    :text-decoration none
     &:hover
       :color #c00
+
 .lib-admin-question-item
   :padding 0px 0px 0px 0px
   :font 
@@ -253,15 +285,6 @@
     :border-color #ccc
     :border dotted
     :border-width 0px 0px 1px 0px
-    
-=clearfix
-  *display inline-block
-  &:after
-    :content " "
-    :display block
-    :height 0
-    :clear both
-    :visibility hidden
 
 .fb-tab-children
   :color #ccc
@@ -294,7 +317,6 @@
   :color #666
   
 .fb-value-set-children
-  /+clearfix
   ul
     :margin 0px 30px 0px 0px
     :padding 0px 30px 0px 0px

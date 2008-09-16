@@ -14,5 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 = f.hidden_field :parent_element_id
-%label Tab text:
+
+%p
+%table
+  %tr
+    %td
+      %b Tab text
+    %td.tinainfo
+      = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
+
 = f.text_field(:name, :size => 20)

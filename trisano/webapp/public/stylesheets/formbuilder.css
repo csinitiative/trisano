@@ -64,7 +64,37 @@
     width: 188px;
     height: 18px; }
     .tina a:hover {
-      color: #009900; }
+      color: #fff; }
+  .tina .tinainfo {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0px;
+    text-align: right; }
+    .tina .tinainfo a {
+      color: #999;
+      display: inline;
+      width: 0px;
+      height: 0px; }
+      .tina .tinainfo a:hover {
+        color: #c00; }
+
+.clearfix {
+  *display: inline-block; }
+  .clearfix:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+
+=clearfix {
+  *display: inline-block; }
+  =clearfix:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
 
 
 #new-view-form {
@@ -121,21 +151,20 @@
     padding: 5px 0px 10px 10px; }
 
 #library-admin {
-  padding: 0px 0px 0px 0px; }
+  padding: 0px 0px 0px 0px;
+  line-height: 10px; }
+  #library-admin ul {
+    padding: 0px 0px 0px 0px; }
+  #library-admin li {
+    padding: 0px 0px 0px 0px; }
 
 #library-admin-container {
-  line-height: 16px; }
-  #library-admin-container ul {
-    padding: 0px 0px 0px 0px; }
-  #library-admin-container li {
-    padding: 0px 0px 0px 0px; }
+  line-height: 15px; }
   #library-admin-container a {
+    color: #999;
     display: inline;
     width: 0px;
-    height: 0px;
-    color: #666;
-    font-weight: 300;
-    text-decoration: none; }
+    height: 0px; }
     #library-admin-container a:hover {
       color: #c00; }
 
@@ -252,13 +281,6 @@
   border-color: #ccc;
   border: dotted;
   border-width: 0px 0px 1px 0px; }
-
-=clearfix:after {
-  content: " ";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden; }
 
 .fb-tab-children {
   color: #ccc;
