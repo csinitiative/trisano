@@ -38,16 +38,14 @@ class MorbidityEventsController < EventsController
     conjunction = "AND"
     query_string = ""
 
-    unless params[:states].nil?
-      states = get_allowed_states(params[:states])
-      if states.empty?
-        render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-      else
-        conditions[0] += " #{conjunction} event_status IN (?)"
-        conditions << states
-        conjunction = "OR"
-        query_string = states.to_query('states')
-      end
+    states = get_allowed_states(params[:states])
+    if states.empty?
+      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+    else
+      conditions[0] += " #{conjunction} event_status IN (?)"
+      conditions << states
+      conjunction = "OR"
+      query_string = states.to_query('states')
     end
 
     unless params[:queues].nil?
@@ -291,9 +289,10 @@ class MorbidityEventsController < EventsController
   end
   
   # Expects string of space separated event states e.g. new, acptd-lhd, etc.
-  def get_allowed_states(query_states)
-    query_states.collect! { |state| state.upcase } 
+  def get_allowed_states(query_states=nil)
     system_states = Event.get_state_keys
+    return system_states if query_states.nil?
+    query_states.collect! { |state| state.upcase } 
     system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
   end
 
