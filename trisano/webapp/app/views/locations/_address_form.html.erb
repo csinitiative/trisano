@@ -25,7 +25,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <fieldset class="vert">
     <% core_element :street_number, a, :horiz do %>
       <%= a.label(:street_number) %>
-      <%= a.text_field(:street_number, :size => 10) %>
+      <%= a.core_text_field(:street_number, {:size => 10}, event, @can_investigate) %>
     <% end %>
     <% core_element :street_name, a, :horiz do %>
       <%= a.label(:street_name) %>

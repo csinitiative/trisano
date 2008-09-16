@@ -61,7 +61,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def dynamic_question(form_elements_cache, question_element, index, html_options = {}) 
       
-     result = ""
+    result = ""
     question = question_element.question
     
     if [:drop_down, :check_box, :radio_button].include? question.data_type 
@@ -182,7 +182,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return if  (event.nil? || event.form_references.nil?)
     result = ""
     
-    unless (@object.nil?)
+    unless (@object_name.nil?)
       if (event.attributes["type"] == "ContactEvent" || can_investigate)
         event.form_references.each do |form_reference|
           if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{@object_name}[#{attribute}]").size > 0)

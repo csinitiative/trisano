@@ -29,5 +29,5 @@
   %label Core data element
   %br
   - values = {}
-  - eval(@follow_up_element.event_type.camelcase).exposed_attributes.each_pair { |k, v| values[v[:name]] = k }
+  - eval(@follow_up_element.event_type.camelcase).exposed_attributes.each_pair { |k, v| values[v[:name]] = k if v[:can_follow_up] == true}
   = f.select(:core_path, values.sort, {:include_blank => true}) 
