@@ -62,7 +62,7 @@ end
 
 def create_structure
   puts "Creating tables and other such things."
-  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f nedss_schema.sql")
+  success = system("#{@psql} -U #{@username} -h #{@host} -p #{@port} #{@database} -e -f trisano_schema.sql")
   if success
     puts "Successfully created database structure for NEDSS."
   else

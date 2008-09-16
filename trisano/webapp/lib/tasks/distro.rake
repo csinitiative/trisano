@@ -55,10 +55,36 @@ namespace :trisano do
       end      
       
       config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
       database = config['database']
       postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      ENV["PGPASSWORD"] = priv_password
+
       pgdump = postgres_dir + "/pg_dump"
-      sh "#{pgdump} -c -O -c #{database} > #{dirname}/#{database}-dump.sql"
+      sh "#{pgdump} -U #{priv_uname} -h #{host} -p #{port} #{database} -c > #{dirname}/#{database}-dump.sql"
+    end
+
+    desc "Import the database from configured backup file"
+    task :restore_db do
+      dirname = './dump'
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      dump_file = config['dump_file_name']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+
+      psql = postgres_dir + "/psql"
+      ENV["PGPASSWORD"] = priv_password
+      sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'CREATE DATABASE #{database}'")
+      sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} < #{dirname}/#{dump_file}")
+      sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
+
     end
     
     desc "Package the application with the settings from config.yml"
