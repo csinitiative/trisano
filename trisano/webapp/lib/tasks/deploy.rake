@@ -194,12 +194,14 @@ namespace :trisano do
       p "removing tmp directories from #{dist_dirname}"
       cd dist_dirname
 
-      trisano_war_file = "./webapp/trisano.war"
-      if File.file? trisano_war_file
-        File.delete(trisano_war_file) 
-        puts "deleted trisano.war"
-      else
-        puts "#{trisano_war_file} not found - did not delete"
+      trisano_war_file = "trisano.war"
+      if File.file? "./webapp/#{trisano_war_file}"
+        File.delete("./webapp/#{trisano_war_file}") 
+        puts "deleted ./webapp/#{trisano_war_file}"
+      end
+      if File.file? "./distro/#{trisano_war_file}"
+        File.delete("./distro/#{trisano_war_file}") 
+        puts "deleted ./distro/#{trisano_war_file}"
       end
       sh "rm ./webapp/log/*.*"
       sh "rm -rf ./webapp/nbproject"
