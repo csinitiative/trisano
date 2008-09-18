@@ -88,7 +88,6 @@ User.transaction do
 end
 
 PrivilegesRole.transaction do
-  
   jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
   jurisdictions = Entity.find(:all, 
     :include => :places, 
@@ -104,6 +103,7 @@ PrivilegesRole.transaction do
                   
   roles = Role.find(:all)
   privileges = Privilege.find(:all)
+  roles_for_default_users = []
                   
   jurisdictions.each do |jurisdiction|
     roles.each do |role|
@@ -116,16 +116,16 @@ PrivilegesRole.transaction do
         end
       end
       
-      # While, we're at it, grant the default user all roles for all jurisdictions
-      user.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      mike.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      chuck.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      davidjackson.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      richard.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      ben.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
-      
+      # While, we're at it, grant the default users all roles for all jurisdictions
+      roles_for_default_users << { :role_id => role.id, :jurisdiction_id => jurisdiction.id }
     end
   end
+  user.update_attributes( { :role_membership_attributes => roles_for_default_users } )
+  mike.update_attributes( { :role_membership_attributes => roles_for_default_users } )
+  chuck.update_attributes( { :role_membership_attributes => roles_for_default_users } )
+  davidjackson.update_attributes( { :role_membership_attributes => roles_for_default_users } )
+  richard.update_attributes( { :role_membership_attributes => roles_for_default_users } )
+  ben.update_attributes( { :role_membership_attributes => roles_for_default_users } )
 end
 
 
