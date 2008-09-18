@@ -269,7 +269,7 @@ describe UsersController do
 
       def do_put
         @user.should_receive(:update_attributes).and_return(true)
-        put :update, :id => "1"
+        put :update, :user => {}, :id => "1"
       end
 
       it "should find the user requested" do
@@ -298,7 +298,7 @@ describe UsersController do
 
       def do_put
         @user.should_receive(:update_attributes).and_return(false)
-        put :update, :id => "1"
+        put :update, :user => {}, :id => "1"
       end
 
       it "should re-render 'edit'" do

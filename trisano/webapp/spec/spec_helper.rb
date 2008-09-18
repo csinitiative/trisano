@@ -91,6 +91,7 @@ def mock_user
   @role_membership.stub!(:jurisdiction_id).and_return("75")
   @role_membership.stub!(:should_destroy).and_return(0)
   @role_membership.stub!(:is_admin?).and_return(true)
+  @role_membership.stub!(:id=).and_return(1)
   @jurisdiction.stub!(:places).and_return([@place])
   @jurisdiction.stub!(:current_place).and_return(@place)
   @place.stub!(:name).and_return("Southeastern District")

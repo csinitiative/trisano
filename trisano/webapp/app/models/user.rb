@@ -18,17 +18,17 @@
 class User < ActiveRecord::Base
   
   # Debt? Mess with these includes, see if they are helping or hurting
-  has_many :role_memberships, :include => [:role, :jurisdiction]
+  has_many :role_memberships, :include => [:role, :jurisdiction], :dependent => :delete_all
   has_many :roles, :through => :role_memberships, :uniq => true
   
-  has_many :entitlements, :include => [:privilege, :jurisdiction]
+  has_many :entitlements, :include => [:privilege, :jurisdiction], :dependent => :delete_all
   has_many :privileges, :through => :entitlements
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name
+  validates_uniqueness_of :uid, :user_name
   validates_length_of :uid, :maximum => 50
   
-  after_update :save_role_memberships
   after_validation :clear_base_error
   
   def is_admin?
@@ -68,30 +68,38 @@ class User < ActiveRecord::Base
     @admin_jurisdiction_ids ||= entitlements.collect { |e| e.jurisdiction_id if e.privilege.priv_name.to_sym == :administer}.compact!
   end
   
+  # A necessary simplifying assumption: treat all modifications to a user's role as if they were new.
   def role_membership_attributes=(rm_attributes)
-    seen_before = []
+
+    # Zap existing entitlements and role memberships
+    entitlements.clear
+    role_memberships.clear
+
+    # Temporary holding places for new entitlements and role memberships
+    _entitlements = {}
+    _role_memberships = []
+
+    # Build an array of uniqe entitlements for this role and jurisdiction
     rm_attributes.each do |attributes|
-      if attributes[:id].blank?
-        attribute_check = seen_before.detect { |at| at[:role_id] == attributes[:role_id] and at[:jurisdiction_id] == attributes[:jurisdiction_id] } 
-        if attribute_check.nil?
-          role_memberships.build(attributes)
-          seen_before << attributes
-        end
-      else
-        rm = role_memberships.detect { |rm| rm.id == attributes[:id].to_i }
-        rm.attributes = attributes
+      role_id = attributes[:role_id]
+      jurisdiction_id = attributes[:jurisdiction_id]
+
+      # Skip duplicate roles in duplicate jurisdictions
+      attribute_identifier = "#{role_id}_#{jurisdiction_id}" 
+      next if _role_memberships.include?(attribute_identifier)
+      _role_memberships << attribute_identifier
+
+      Role.find(role_id).privileges.each do |priv|
+        # Crafting the key like this avoids duplicate entitlements
+        _entitlements["#{priv.id}_#{jurisdiction_id}"] = { :privilege_id => priv.id, :jurisdiction_id => jurisdiction_id }
       end
+
+      # Save the role too
+      role_memberships.build(attributes)
     end
-  end
-  
-  def save_role_memberships
-    role_memberships.each do |rm|
-      if rm.should_destroy?
-        rm.destroy
-      else
-        rm.save(false)
-      end
-    end
+
+    # Build a real entitlement for each uniqe entitlement
+    _entitlements.each_pair { |key, value| entitlements.build(value) }
   end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app
