@@ -43,11 +43,13 @@ describe 'form builder patient-level core field configs for contacts' do
       after_question = "af #{test[:name]} " + get_unique_name(2)
       before_answer = "b4 #{test[:name]} answer" + get_unique_name(2)
       after_answer = "af #{test[:name]} answer" + get_unique_name(2)
+      before_help_text = "b4 #{test[:name]} " + get_unique_name(10)
+      after_help_text = "af #{test[:name]} " + get_unique_name(10)
 
       create_new_form_and_go_to_builder(@browser, form_name, disease_name, jurisdiction, event_type).should be_true
       add_core_field_config(@browser, test[:name])
-      add_question_to_before_core_field_config(@browser, test[:name], {:question_text => before_question, :data_type => "Single line text"})
-      add_question_to_after_core_field_config(@browser, test[:name], {:question_text => after_question, :data_type => "Single line text"})
+      add_question_to_before_core_field_config(@browser, test[:name], {:question_text => before_question, :data_type => "Single line text", :help_text => before_help_text})
+      add_question_to_after_core_field_config(@browser, test[:name], {:question_text => after_question, :data_type => "Single line text", :help_text => after_help_text})
       publish_form(@browser).should be_true
       
       create_basic_investigatable_cmr(@browser, cmr_last_name, disease_name, jurisdiction)
@@ -68,6 +70,8 @@ describe 'form builder patient-level core field configs for contacts' do
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
+      assert_tooltip_exists(@browser, before_help_text)
+      assert_tooltip_exists(@browser, after_help_text)
     end
 
   end

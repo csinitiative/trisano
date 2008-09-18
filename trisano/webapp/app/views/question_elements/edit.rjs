@@ -16,4 +16,4 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 page.replace_html "question-mods-#{@question_element.id}", :partial => 'question_elements/edit', :locals => {:question_element => @question_element}
-page.visual_effect(:blind_down, "question-mods-#{@question_element.id}", :duration => 0.1)
+page.visual_effect(:blind_down, "question-mods-#{@question_element.id}", :duration => 0.2)

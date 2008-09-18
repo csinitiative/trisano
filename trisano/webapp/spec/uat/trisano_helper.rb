@@ -844,6 +844,7 @@ module TrisanoHelper
     browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
     browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
+    browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
     browser.click "question_element_submit"    
     wait_for_element_not_present("new-question-form", browser)
     if browser.is_text_present(question_attributes[:question_text])
@@ -933,5 +934,20 @@ module TrisanoHelper
     return id.to_i
   rescue => err
     return -1
+  end
+
+  def assert_tooltip_exists(browser, tool_tip_text)
+    return false unless browser.is_element_present('//img[@alt=\'Help\']')
+    return false unless browser.is_text_present(tool_tip_text)
+    return false if browser.is_visible("//div[contains(@id,'question_help_text')]")
+    return false if browser.is_visible("//div[@id='WzTtDiV']")
+    return false unless browser.mouse_over("//a[contains(@id,'question_help_text')]")
+    return false unless browser.mouse_move("//a[contains(@id,'question_help_text')]")
+    sleep(2)
+    return false unless browser.is_visible("//div[@id='WzTtDiV']")
+    return false unless browser.mouse_out("//a[contains(@id, 'question_help_text')]")
+    sleep(2)
+    return false if browser.is_visible("//div[@id='WzTtDiV']")
+    return true
   end
 end

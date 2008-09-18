@@ -22,10 +22,25 @@ describe Question do
     @question = Question.new
     @question.question_text = "Did you eat the fish?"
     @question.data_type = "single_line_text"
+    @question.help_text = 's' * 255
   end
 
   it "should be valid" do
     @question.should be_valid
   end
-  
+
+  it 'should produce an error if the help text is too long' do
+    @question.help_text = 's' * 256
+    @question.should_not be_valid
+    @question.errors.size.should == 1
+    @question.errors.on(:help_text).should_not be_nil
+  end
+
+  it 'should produce an error if the question text is too long' do
+    @question.question_text = 's' * 256
+    @question.should_not be_valid
+    @question.errors.size.should == 1
+    @question.errors.on(:question_text).should_not be_nil
+  end
+
 end

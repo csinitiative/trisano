@@ -207,7 +207,6 @@ module EventsHelper
   private
   
   def concat_core_field(before_or_after, attribute, form_builder, block)
-    
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     if (@event.attributes["type"] == "ContactEvent" || @can_investigate)
@@ -314,8 +313,22 @@ module EventsHelper
     end
   end
 
+  def tooltip(html_id, options={:fadein => 500, :fadeout => 500})
+    tool_tip_command = ["'#{html_id}'"]
+    tool_tip_command << options.map{|k,v| [k.to_s.upcase, v]} if options
+    "<a id=\"#{html_id}_hotspot\" href=\"#\" onmouseover=\"TagToTip(#{tool_tip_command.flatten.join(', ')})\" onmouseout=\"UnTip()\">#{yield}</a>"
+  end
+
+  def render_question_help_text(element)
+    question = element.question
+    return if question.nil?
+    result = tooltip("question_help_text_#{element.id}") do
+      image_tag('help.png', :border => 0)    
+    end
+    result << "<div id=\"question_help_text_#{element.id}\">#{question.help_text}</div>"
+  end
+
   def render_investigator_question(form_elements_cache, element, f)
-    
     begin
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
@@ -324,16 +337,18 @@ module EventsHelper
       @answer_object = @event.get_or_initialize_answer(question.id)
      
       if (f.nil?)
-        result << fields_for(@event) do |f|
+        fields_for(@event) do |f|
           f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
+            result << answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
+            result << render_question_help_text(element) unless question.help_text.blank?
           end
         end
       else
         prefix = @answer_object.new_record? ? "new_answers" : "answers"
         index = @answer_object.new_record? ? "" : @form_index += 1
-        result << f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
+        f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          result << answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
+          result << render_question_help_text(element) unless question.help_text.blank?
         end
       end
 
@@ -353,6 +368,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.backtrace.join('\n'))
       return "Could not render question element (#{element.id})"
     end
   end

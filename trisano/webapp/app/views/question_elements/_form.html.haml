@@ -39,3 +39,8 @@
     %label Style
     %br
     = q.select(:style, [["Horizontal", "horiz"], ["Vertical", "vert"]], {:include_blank => true}) 
+
+  %p
+    %label Help Text
+    %br
+    =q.text_area :help_text, :rows => 10
