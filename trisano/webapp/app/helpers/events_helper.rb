@@ -325,7 +325,7 @@ module EventsHelper
     result = tooltip("question_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)    
     end
-    result << "<div id=\"question_help_text_#{element.id}\">#{question.help_text}</div>"
+    result << "<div id=\"question_help_text_#{element.id}\" style=\"display: none;\">#{question.help_text}</div>"
   end
 
   def render_investigator_question(form_elements_cache, element, f)

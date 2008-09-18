@@ -937,7 +937,7 @@ module TrisanoHelper
   end
 
   def assert_tooltip_exists(browser, tool_tip_text)
-    return false unless browser.is_element_present('//img[@alt=\'Help\']')
+    return false unless browser.is_element_present("//img[contains(@src, 'help.png')]")
     return false unless browser.is_text_present(tool_tip_text)
     return false if browser.is_visible("//div[contains(@id,'question_help_text')]")
     return false if browser.is_visible("//div[@id='WzTtDiV']")

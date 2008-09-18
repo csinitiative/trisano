@@ -49,14 +49,14 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     
     edit_cmr(@browser)
     @browser.is_text_present(@follow_up_question_text).should be_false
-    assert_tooltip_exists(@browser, @follow_up_help_text)
     
     # Enter the answer that meets the follow-up condition
     answer_investigator_question(@browser, @original_question_text, "Yes")
     @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
     @browser.is_text_present(@follow_up_question_text).should be_true
-    
+    assert_tooltip_exists(@browser, @follow_up_help_text).should be_true
+        
     # Enter an answer that does not meet the follow-up condition
     answer_investigator_question(@browser, @original_question_text, "No match")
     @browser.click("link=#{@form_name}")

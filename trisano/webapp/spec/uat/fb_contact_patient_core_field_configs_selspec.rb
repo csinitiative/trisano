@@ -62,6 +62,8 @@ describe 'form builder patient-level core field configs for contacts' do
       @browser.type "contact_event_active_patient__active_primary_entity__person_approximate_age_no_birthday", "21"
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
+      assert_tooltip_exists(@browser, before_help_text).should be_true
+      assert_tooltip_exists(@browser, after_help_text).should be_true
       answer_investigator_question(@browser, before_question, before_answer)
       answer_investigator_question(@browser, after_question, after_answer)
 
@@ -70,8 +72,6 @@ describe 'form builder patient-level core field configs for contacts' do
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
-      assert_tooltip_exists(@browser, before_help_text)
-      assert_tooltip_exists(@browser, after_help_text)
     end
 
   end
