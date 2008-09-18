@@ -39,6 +39,7 @@ class Answer < ActiveRecord::Base
   end
 
   def radio_button_answer=(answer)
+    answer = answer.reject {|item| item.blank? } if answer.size > 1
     self.text_answer = answer.join("\n")
   end
 
