@@ -117,12 +117,12 @@ PrivilegesRole.transaction do
       end
       
       # While, we're at it, grant the default user all roles for all jurisdictions
-      user.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      mike.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      chuck.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      davidjackson.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      richard.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
-      ben.role_memberships << RoleMembership.new(:role => role, :jurisdiction => jurisdiction)
+      user.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
+      mike.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
+      chuck.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
+      davidjackson.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
+      richard.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
+      ben.update_attributes( { :role_membership_attributes => [{ :role_id => role.id, :jurisdiction_id => jurisdiction.id }] } )
       
     end
   end
