@@ -42,6 +42,30 @@
   :float right
   :padding 0px 5px 0px 0px
 
+  
+.question
+  :font
+    :family Verdana, Arial, Helvetica, sans-serif
+    :size 12px
+  :color #666
+  .label
+    :font 
+      :size 10px
+      :weight bold
+    :text-transform uppercase
+    :letter-spacing 1px
+    :color #36c
+  .actions
+    :font
+      :size 12px
+      :weight 900
+    :text-align right
+    :color #69c
+    a
+      :color #69c
+      &:hover
+        :color #036
+
 .tina
   :font 
     :family Verdana, Arial, Helvetica, sans-serif
@@ -120,6 +144,7 @@
     :padding 5px 0px 4px 10px
 
 #core-builder-mods
+#core_form_children
 #new-core-view-form
   :padding 0px 0px 12px 0px
   :font 
@@ -129,13 +154,13 @@
   :letter-spacing 0px
   :text-align left
 #core-element-list
-  :padding 8px 0px 0px 0px
+  :padding 0px 0px 0px 0px
   ul
     :margin 0px 10px 0px 0px
     :padding 0px 0px 0px 0px
   li
     :margin 0px 0px 0px 0px
-    :padding 5px 0px 10px 10px
+    :padding 5px 0px 5px 10px
 
 #core-field-builder-mods
 #new-core-field-form
@@ -277,20 +302,17 @@
   :overflow-x hidden
 
 .fb-tab
-  :color #333
+  /:color #333
   :background-color #d3d3d3
-  
-/=dotline
-  li
-    :border-color #ccc
+  /li
+    :border-color #c00
     :border dotted
     :border-width 0px 0px 1px 0px
 
 .fb-tab-children
-  :color #ccc
   :background-color #fff
   li
-    :border-color #ccc
+    :border-color #c00
     :border dotted
     :border-width 0px 0px 1px 0px
 
@@ -303,9 +325,6 @@
     :border-color #ccc
     :border dotted
     :border-width 0px 0px 1px 0px
-
-.question
-  :color #c00
   
 .fb-question-children
   li
@@ -318,12 +337,12 @@
   
 .fb-value-set-children
   ul
-    :margin 0px 30px 0px 0px
+    :margin 0px 0px 0px 0px
     :padding 0px 30px 0px 0px
   li
-    :border-color #c00
-    :border dotted
-    :border-width 0px 0px 1px 0px
+    /:border-color #c00
+    /:border dotted
+    /:border-width 0px 0px 1px 0px
 
 .follow-up-item
   :color #666

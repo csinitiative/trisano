@@ -39,6 +39,26 @@
   float: right;
   padding: 0px 5px 0px 0px; }
 
+.question {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: #666; }
+  .question .label {
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #36c; }
+  .question .actions {
+    font-size: 12px;
+    font-weight: 900;
+    text-align: right;
+    color: #69c; }
+    .question .actions a {
+      color: #69c; }
+      .question .actions a:hover {
+        color: #036; }
+
 .tina {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
@@ -115,6 +135,7 @@
     padding: 5px 0px 4px 10px; }
 
 
+
 #new-core-view-form {
   padding: 0px 0px 12px 0px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -124,13 +145,13 @@
   text-align: left; }
 
 #core-element-list {
-  padding: 8px 0px 0px 0px; }
+  padding: 0px 0px 0px 0px; }
   #core-element-list ul {
     margin: 0px 10px 0px 0px;
     padding: 0px 0px 0px 0px; }
   #core-element-list li {
     margin: 0px 0px 0px 0px;
-    padding: 5px 0px 10px 10px; }
+    padding: 5px 0px 5px 10px; }
 
 
 #new-core-field-form {
@@ -274,19 +295,16 @@
   overflow-x: hidden; }
 
 .fb-tab {
-  color: #333;
   background-color: #d3d3d3; }
-
-/=dotline li {
-  border-color: #ccc;
-  border: dotted;
-  border-width: 0px 0px 1px 0px; }
+  .fb-tab /li {
+    border-color: #c00;
+    border: dotted;
+    border-width: 0px 0px 1px 0px; }
 
 .fb-tab-children {
-  color: #ccc;
   background-color: #fff; }
   .fb-tab-children li {
-    border-color: #ccc;
+    border-color: #c00;
     border: dotted;
     border-width: 0px 0px 1px 0px; }
 
@@ -299,9 +317,6 @@
   border: dotted;
   border-width: 0px 0px 1px 0px; }
 
-.question {
-  color: #c00; }
-
 .fb-question-children li {
   border-color: #ccc;
   border: dotted;
@@ -311,12 +326,8 @@
   color: #666; }
 
 .fb-value-set-children ul {
-  margin: 0px 30px 0px 0px;
+  margin: 0px 0px 0px 0px;
   padding: 0px 30px 0px 0px; }
-.fb-value-set-children li {
-  border-color: #c00;
-  border: dotted;
-  border-width: 0px 0px 1px 0px; }
 
 .follow-up-item {
   color: #666; }
