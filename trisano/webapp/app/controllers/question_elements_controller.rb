@@ -93,7 +93,7 @@ class QuestionElementsController <  AdminController
     begin
       @question_element_id = params[:question_element_id]
       @follow_up = QuestionElement.find(@question_element_id).process_condition(params, params[:event_id])
-      @event = params[:event_id].blank? ? MorbidityEvent.new : Event.find(params[:event_id])
+      @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex
       flash[:notice] = 'Unable to process conditional logic for follow up questions.'

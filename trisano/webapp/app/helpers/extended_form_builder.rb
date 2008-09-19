@@ -59,7 +59,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @ret
   end
 
-  def dynamic_question(form_elements_cache, question_element, index, html_options = {}) 
+  def dynamic_question(form_elements_cache, question_element, event, index, html_options = {}) 
       
     result = ""
     question = question_element.question
@@ -75,7 +75,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
     
-    event_id = (@object.nil? || @object.event_id.blank?) ? "" : @object.event_id
     index = @object.id.nil? ? index : @object.id
     html_options[:index] = index
 
@@ -85,8 +84,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       conditions = []
       follow_ups.each { |follow_up| conditions << "#{follow_up.condition},#{follow_up.id}"}
       conditions = conditions.join(",")
-      text_answer_event = "sendConditionRequest(this, '#{event_id}', '#{question_element.id}');"
-      select_answer_event = "sendConditionRequest(this, '#{event_id}', '#{question_element.id}');"
+      text_answer_event = "sendConditionRequest(this, '#{event.id}', '#{question_element.id}');"
+      select_answer_event = "sendConditionRequest(this, '#{event.id}', '#{question_element.id}');"
     end
 
     input_element = case question.data_type

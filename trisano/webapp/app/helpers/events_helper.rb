@@ -50,7 +50,7 @@ module EventsHelper
   end
   
   # Debt? Some duplication here of render_investigator_view
-  def show_investigator_view(view, f, form=nil)
+  def show_investigator_view(view, form=nil, f = nil)
     return "" if view.nil?
     result = ""
     
@@ -229,7 +229,7 @@ module EventsHelper
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
         configs.each do |config|
           element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
-          concat(show_investigator_view(element, @event_form, form_reference.form), block.binding)
+          concat(show_investigator_view(element, form_reference.form, @event_form), block.binding)
         end
       end
     end
@@ -258,9 +258,15 @@ module EventsHelper
     result = ""
     
     case element.class.name
-   
+      
+    when "SectionElement"
+      result << show_investigator_section(form_elements_cache, element, f)
+    when "GroupElement"
+      result << show_investigator_group(form_elements_cache, element, f)
     when "QuestionElement"
       result << show_investigator_question(form_elements_cache, element, f)
+    when "FollowUpElement"
+      result << show_investigator_follow_up(form_elements_cache, element, f)
     end
     
     result
@@ -339,7 +345,7 @@ module EventsHelper
       if (f.nil?)
         fields_for(@event) do |f|
           f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            result << answer_template.dynamic_question(form_elements_cache, element, "", {:id => "investigator_answer_#{element.id}"})
+            result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{element.id}"})
             result << render_question_help_text(element) unless question.help_text.blank?
           end
         end
@@ -347,7 +353,7 @@ module EventsHelper
         prefix = @answer_object.new_record? ? "new_answers" : "answers"
         index = @answer_object.new_record? ? "" : @form_index += 1
         f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template.dynamic_question(form_elements_cache, element, index, {:id => "investigator_answer_#{element.id}"})
+          result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{element.id}"})
           result << render_question_help_text(element) unless question.help_text.blank?
         end
       end
@@ -370,22 +376,6 @@ module EventsHelper
     rescue
       logger.warn($!.backtrace.join('\n'))
       return "Could not render question element (#{element.id})"
-    end
-  end
-  
-  def show_investigator_question(form_elements_cache, element, f)
-    begin
-      question = element.question
-      question_style = question.style.blank? ? "vert" : question.style
-      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-      result << "<label>#{question.question_text}</label>"
-      answer = form_elements_cache.answer(element, @event)
-      result << answer.text_answer unless answer.nil?
-      result << "</div>"
-      result << "<br clear='all'/>" if question_style == "vert"
-      return result
-    rescue
-      return "Could not show question element (#{element.id})"
     end
   end
   
@@ -414,13 +404,12 @@ module EventsHelper
   
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
-      result = ""
-    
+      result = ""    
       include_children = false
     
       unless (ajax_render)
         # Debt: Replace with shorter eval technique
-        core_path_with_dots = element.core_path.sub("morbidity_event[", "").gsub(/\]/, "").gsub(/\[/, ".")
+        core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
         core_value = @event
         core_path_with_dots.split(".").each do |method|
           begin
@@ -455,8 +444,163 @@ module EventsHelper
       return "Could not render core follow up element (#{element.id})"
     end
   end
+  
+  # Show mode counterpart to #render_investigator_section
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def  show_investigator_section(form_elements_cache, element, f)
+    begin
+      result = "<br/>"
+      section_id = "section_investigate_#{element.id}";
+      hide_id = section_id + "_hide";
+      show_id = section_id + "_show"
+      result <<  "<fieldset class='form_section'>"
+      result << "<legend>#{element.name} "
+      result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
+      result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
+      result << "</legend>"
+      result << "<div id='#{section_id}'>"
+    
+      section_children = form_elements_cache.children(element)
+    
+      if section_children.size > 0
+        section_children.each do |child|
+          result << show_investigator_element(form_elements_cache, child, f)
+        end
+      end
+    
+      result << "</div></fieldset><br/>"
+    
+      return result
+    rescue
+      return "Could not render section element (#{element.id})"
+    end
+  end
+  
+  # Show mode counterpart to #render_investigator_group
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def show_investigator_group(form_elements_cache, element, f)
+    begin
+      result = ""
 
-  # renders events as csv. Optional block gives you the opportunity to
+      group_children = form_elements_cache.children(element)
+    
+      if group_children.size > 0
+        group_children.each do |child|
+          result << show_investigator_element(form_elements_cache, child, f)
+        end
+      end
+
+      return result
+    rescue
+      return "Could not render group element (#{element.id})"
+    end
+  end
+  
+  # Show mode counterpart to #render_investigator_question
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def show_investigator_question(form_elements_cache, element, f)
+    begin
+      question = element.question
+      question_style = question.style.blank? ? "vert" : question.style
+      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
+      result << "<label>#{question.question_text}&nbsp;"
+      result << render_question_help_text(element) unless question.help_text.blank?
+      result << "</label>"
+      answer = form_elements_cache.answer(element, @event)
+      result << answer.text_answer unless answer.nil?
+      result << "</div>"
+
+      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache)
+      
+      unless follow_up_group.nil?
+        result << "<div id='follow_up_investigate_#{element.id}'>"
+        result << show_investigator_follow_up(form_elements_cache, follow_up_group, f)
+        result << "</div>"
+      end
+      
+      result << "<br clear='all'/>" if question_style == "vert"
+      return result
+    rescue
+      return "Could not show question element (#{element.id})"
+    end
+  end
+  
+  # Show mode counterpart to #render_investigator_follow_up
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def show_investigator_follow_up(form_elements_cache, element, f)
+    begin
+      result = ""
+    
+      unless element.core_path.blank?
+        result << show_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
+        return result
+      end
+    
+      questions = form_elements_cache.children(element)
+    
+      if questions.size > 0
+        questions.each do |child|
+          result << show_investigator_question(form_elements_cache, child, f)
+        end
+      end
+
+      return result
+    rescue
+      return "Could not render follow up element (#{element.id})"
+    end
+  end
+  
+  # Show mode counterpart to #render_investigator_core_follow_up
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def show_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
+    begin
+      result = ""
+    
+      include_children = false
+    
+      unless (ajax_render)
+        # Debt: Replace with shorter eval technique
+        core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
+        core_value = @event
+        core_path_with_dots.split(".").each do |method|
+          begin
+            core_value = core_value.send(method)
+          rescue
+            break
+          end
+        end
+
+        if (element.condition == core_value.to_s)
+          include_children = true
+        end
+      end
+    
+      result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
+    
+      if (include_children || ajax_render)
+        questions = form_elements_cache.children(element)
+    
+        if questions.size > 0
+          questions.each do |child|
+            result << show_investigator_question(form_elements_cache, child, f)
+          end
+        end
+      end
+
+      result << "</div>" unless ajax_render
+    
+      return result
+    rescue
+      return "Could not render core follow up element (#{element.id})"
+    end
+  end
+
+  # Renders events as csv. Optional block gives you the opportunity to
   # handle each event before it is converted to csv. This is handy for
   # looking up an actual event from a set of find_by_sql records.
   def render_events_csv(events, &proc)
