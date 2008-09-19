@@ -32,17 +32,21 @@ class User < ActiveRecord::Base
   after_validation :clear_base_error
   
   def is_admin?
-    roles.detect { |role| role.role_name.to_sym == :administrator }.nil? ? false : true
+    # Right now, if you're an admin anywhere, you're an admin everywhere.  We need to change this.
+    is_entitled_to?(:administer)
   end
   
+  # Not used.  Probably not valuable.  Consider deleting.
   def is_investigator?
-    roles.detect { |role| role.role_name.to_sym == :investigator }.nil? ? false : true
+    is_entitled_to?(:investigate_event)
   end
   
+  # Not used.  Probably not valuable.  Consider deleting.
   def has_role_in?(jurisdiction)
     role_memberships.detect { |rm| rm.jurisdiction.id ==  jurisdiction.id }.nil? ? false : true
   end
   
+  # Not used.  Probably not valuable.  Consider deleting.
   def has_entitlement_in?(jurisdiction)
     entitlements.detect { |ent| ent.jurisdiction.id == jurisdiction.id }.nil? ? false : true
   end

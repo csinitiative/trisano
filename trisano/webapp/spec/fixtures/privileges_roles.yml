@@ -28,3 +28,9 @@ investigator_update:
   role_id: 2
   privilege_id: 2
   jurisdiction_id: 75
+
+investigator_investigate:
+  id: 6
+  role_id: 2
+  privilege_id: 4
+  jurisdiction_id: 75

@@ -14,3 +14,8 @@ administer:
   id: 3
   priv_name: administer
   description: 
+
+investigate_event:
+  id: 4
+  priv_name: investigate_event
+  description: 

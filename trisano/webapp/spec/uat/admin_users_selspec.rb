@@ -43,7 +43,7 @@ describe 'Managing users' do
     enter_user_info(uid, uname)
 
     @browser.click "link=Add a role"
-    @browser.select "user_role_membership_attributes__role_id", "label=administrator"
+    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Bear River Health Department"
 
     save_and_verify_user(uid, uname)
@@ -61,10 +61,10 @@ describe 'Managing users' do
     @browser.click "link=Add a role"
     @browser.click "link=Add a role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=administrator"
+    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
     @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=investigator"
+    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
     @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)
@@ -83,10 +83,10 @@ describe 'Managing users' do
     @browser.click "link=Add a role"
     @browser.click "link=Add a role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=administrator"
+    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
     @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=Davis County Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=investigator"
+    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
     @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)
@@ -104,7 +104,7 @@ describe 'Managing users' do
     enter_user_info(uid, uname)
 
     @browser.click "link=Add a role"
-    @browser.select "user_role_membership_attributes__role_id", "label=administrator"
+    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Bear River Health Department"
 
     save_and_verify_user(uid, uname)
@@ -116,7 +116,7 @@ describe 'Managing users' do
     click_resource_edit(@browser, "users", /\s+#{uid}/)
 
     @browser.click "link=Add a role"
-    @browser.select "user_role_membership_attributes__role_id", "label=investigator"
+    @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
 
     @browser.click "user_submit"
@@ -137,10 +137,10 @@ describe 'Managing users' do
     @browser.click "link=Add a role"
     @browser.click "link=Add a role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=administrator"
+    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
     @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=Davis County Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=investigator"
+    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
     @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)

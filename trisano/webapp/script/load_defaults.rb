@@ -17,7 +17,7 @@
 
 # Diseases are represented as an array of strings
 
-diseases = YAML::load_file "#{RAILS_ROOT}/db/defaults/diseases.yml"
+diseases = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases.yml")
 Disease.transaction do
   diseases.each do |disease|
     d = Disease.find_or_initialize_by_disease_name(:disease_name => disease)
@@ -55,16 +55,6 @@ Entity.transaction do
   end
 end
 
-# Roles are represented as an array of strings
-
-roles = YAML::load_file "#{RAILS_ROOT}/db/defaults/roles.yml"
-Role.transaction do
-  roles.each do |role|
-    r = Role.find_or_initialize_by_role_name(:role_name => role)
-    r.save! if r.new_record?
-  end
-end
-
 # Privileges are represented as an array of strings
 
 privileges = YAML::load_file "#{RAILS_ROOT}/db/defaults/privileges.yml"
@@ -72,6 +62,28 @@ Privilege.transaction do
   privileges.each do |privilege|
     p = Privilege.find_or_initialize_by_priv_name(:priv_name => privilege)
     p.save! if p.new_record?
+  end
+end
+
+# Roles are represented as a hash. The keys are role names and the values are arrays of privs
+roles = YAML::load_file "#{RAILS_ROOT}/db/defaults/roles.yml"
+
+Role.transaction do
+
+  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
+  jurisdictions = Entity.find(:all, 
+                              :include => :places, 
+                              :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?", jurisdiction_type_id])
+    
+  # Note: Technically privileges have associated jurisdictions, we are ignoring that for the time being.
+  roles.each_pair do |role_name, privs|
+    r = Role.find_or_initialize_by_role_name(:role_name => role_name)
+    r.privileges_roles.clear
+    privs.each do |priv|
+      p = Privilege.find_by_priv_name(priv)
+      r.privileges_roles.build('privilege_id' => p.id)
+    end
+    r.save!
   end
 end
 
@@ -87,13 +99,10 @@ User.transaction do
   end
 end
 
-PrivilegesRole.transaction do
-  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
-  jurisdictions = Entity.find(:all, 
-    :include => :places, 
-    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?",
-      jurisdiction_type_id])
-    
+# Create some superusers
+Entitlement.transaction do
+  
+  # Give these users all roles in all jurisdictions
   user = User.find_by_user_name('default_user')
   mike = User.find_by_user_name('mike')
   chuck = User.find_by_user_name('chuck')
@@ -101,25 +110,20 @@ PrivilegesRole.transaction do
   richard = User.find_by_user_name('Rkurzban')
   ben = User.find_by_user_name('benjamingoodrich')
                   
+  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
+  jurisdictions = Entity.find(:all, 
+    :include => :places, 
+    :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?", jurisdiction_type_id])
+    
   roles = Role.find(:all)
-  privileges = Privilege.find(:all)
   roles_for_default_users = []
-                  
+
   jurisdictions.each do |jurisdiction|
     roles.each do |role|
-      privileges.each do |privilege|
-        unless (role.role_name == 'investigator' && privilege.priv_name == 'administer')
-          pr = PrivilegesRole.find_or_initialize_by_jurisdiction_id_and_role_id_and_privilege_id(:jurisdiction_id => jurisdiction.id, 
-            :role_id => role.id, 
-            :privilege_id => privilege.id)
-          pr.save! if pr.new_record?
-        end
-      end
-      
-      # While, we're at it, grant the default users all roles for all jurisdictions
       roles_for_default_users << { :role_id => role.id, :jurisdiction_id => jurisdiction.id }
     end
   end
+
   user.update_attributes( { :role_membership_attributes => roles_for_default_users } )
   mike.update_attributes( { :role_membership_attributes => roles_for_default_users } )
   chuck.update_attributes( { :role_membership_attributes => roles_for_default_users } )
@@ -129,7 +133,7 @@ PrivilegesRole.transaction do
 end
 
 
-# TODO: Make this smarter when it comes to production
+# TODO: Create some ordinary users for testing purposes
 User.transaction do
 
   data_entry_tech = User.find_by_user_name('data_entry_tech')

@@ -1,2 +1,33 @@
-- "administrator"
-- "investigator"
+Administrator:
+  - administer
+Investigator:
+  - create_event
+  - view_event
+  - update_event
+  - route_event_to_any_lhd
+  - accept_event_for_investigation
+  - investigate_event
+Data Entry Technician:
+  - create_event
+  - view_event
+  - update_event
+  - route_event_to_any_lhd
+Surveillance Manager:
+  - create_event
+  - view_event
+  - update_event
+  - route_event_to_any_lhd
+  - accept_event_for_lhd
+  - route_event_to_investigator
+LHD Manager:
+  - create_event
+  - view_event
+  - update_event
+  - route_event_to_any_lhd
+  - approve_event_at_lhd
+State Manager:
+  - create_event
+  - view_event
+  - update_event
+  - route_event_to_any_lhd
+  - approve_event_at_state

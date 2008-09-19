@@ -44,7 +44,6 @@ class MorbidityEventsController < EventsController
     else
       conditions[0] += " #{conjunction} event_status IN (?)"
       conditions << states
-      conjunction = "OR"
       query_string = states.to_query('states')
     end
 
@@ -53,6 +52,7 @@ class MorbidityEventsController < EventsController
       if queue_ids.empty?
         render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
       else
+        conjunction = "OR" unless params[:states].nil?
         conditions[0] += " #{conjunction} event_queue_id IN (?)"
         conditions << queue_ids
 
@@ -298,8 +298,8 @@ class MorbidityEventsController < EventsController
 
   def get_allowed_queues(query_queues)
     system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-    queue_ids = system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
-    queue_names = system_queues.collect { |system_queue| p system_queue.queue_name; query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
+    queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
+    queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
     return queue_ids, queue_names
   end
 
