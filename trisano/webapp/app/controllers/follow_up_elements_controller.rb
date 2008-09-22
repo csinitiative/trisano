@@ -46,6 +46,14 @@ class FollowUpElementsController <  AdminController
 
   def edit
     @follow_up_element = FollowUpElement.find(params[:id])
+    
+    if @follow_up_element.is_condition_code
+      condition_string = FollowUpElement.condition_string_from_code(@follow_up_element.condition)
+      @follow_up_element.condition = condition_string.nil? ? @follow_up_element.condition : condition_string
+    end
+    
+    @follow_up_element.core_data = params[:core_data]
+    @follow_up_element.event_type = params[:event_type]
   end
   
   def create
@@ -67,7 +75,21 @@ class FollowUpElementsController <  AdminController
 
 
   def update
-    render :text => 'Method not supported.', :status => 405
+    @follow_up_element = FollowUpElement.find(params[:id])
+
+    if (params[:follow_up_element][:core_data].blank?)
+      update = @follow_up_element.update_attributes(params[:follow_up_element])  
+    else
+      update = @follow_up_element.update_core_follow_up(params[:follow_up_element])
+    end
+    
+    if update
+      flash[:notice] = 'Follow up was successfully updated.'
+      @form = Form.find(@follow_up_element.form_id)
+    else
+      render :action => "edit"
+    end
+
   end
 
   def destroy

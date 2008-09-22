@@ -136,10 +136,33 @@ describe FollowUpElementsController do
       mock_user
       @follow_up_element = mock_model(FollowUpElement)
       FollowUpElement.stub!(:find).and_return(@follow_up_element)
+      @follow_up_element.stub!(:is_condition_code).and_return(false)
+      @follow_up_element.stub!(:core_data=).and_return(nil)
+      @follow_up_element.stub!(:event_type=).and_return(nil)
     end
   
     def do_get
       get :edit, :id => "1"
+    end
+    
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should render edit template" do
+      do_get
+      response.should render_template('edit')
+    end
+  
+    it "should find the question_element requested" do
+      FollowUpElement.should_receive(:find).and_return(@follow_up_element)
+      do_get
+    end
+  
+    it "should assign the found QuestionElement for the view" do
+      do_get
+      assigns[:follow_up_element].should equal(@follow_up_element)
     end
 
   end
@@ -190,24 +213,54 @@ describe FollowUpElementsController do
       
     end
   end
+  
+  #  def update
+  #    @follow_up_element = FollowUpElement.find(params[:id])
+  #
+  #    if (params[:follow_up_element][:core_data].blank?)
+  #      update = @follow_up_element.update_attributes(params[:follow_up_element])  
+  #    else
+  #      update = @follow_up_element.update_core_follow_up(params[:follow_up_element])
+  #    end
+  #    
+  #    if update
+  #      flash[:notice] = 'Follow up was successfully updated.'
+  #      @form = Form.find(@follow_up_element.form_id)
+  #    else
+  #      render :action => "edit"
+  #    end
+  #  end
 
-  describe "handling PUT /follow_up_elements/1" do
+  describe "handling PUT /follow_up_elements/1 for a core follow up" do
 
     before(:each) do
       mock_user
       @follow_up_element = mock_model(FollowUpElement, :to_param => "1")
+      @follow_up_element.stub!(:form_id).and_return(1)
+      FollowUpElement.stub!(:find).and_return(@follow_up_element)
     end
     
     describe "with successful update" do
 
       def do_put
-        put :update, :id => "1"
+        @follow_up_element.should_receive(:update_core_follow_up).and_return(true)
+        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        put :update, {:id => "1", :follow_up_element => {:core_data => true}}
       end
 
-      it "should not be successful as the method is not currently supported" do
+      it "should find the question_element requested" do
+        FollowUpElement.should_receive(:find).with("1").and_return(@follow_up_element)
         do_put
-        response.should_not be_success
-        response.headers["Status"].should =~ /405/
+      end
+
+      it "should assign the found follow_up_element for the view" do
+        do_put
+        assigns(:follow_up_element).should equal(@follow_up_element)
+      end
+
+      it "should render the update view" do
+        do_put
+        response.should render_template('update')
       end
 
     end
@@ -215,13 +268,62 @@ describe FollowUpElementsController do
     describe "with failed update" do
 
       def do_put
-        put :update, :id => "1"
+        @follow_up_element.should_receive(:update_core_follow_up).and_return(false)
+        put :update, {:id => "1", :follow_up_element => {:core_data => true}}
       end
 
-      it "should not be successful as the method is not currently supported" do
+      it "should re-render 'edit'" do
         do_put
-        response.should_not be_success
-        response.headers["Status"].should =~ /405/
+        response.should render_template('edit')
+      end
+
+    end
+  end
+  
+  describe "handling PUT /follow_up_elements/1 for a standard follow up" do
+
+    before(:each) do
+      mock_user
+      @follow_up_element = mock_model(FollowUpElement, :to_param => "1")
+      @follow_up_element.stub!(:form_id).and_return(1)
+      FollowUpElement.stub!(:find).and_return(@follow_up_element)
+    end
+    
+    describe "with successful update" do
+
+      def do_put
+        @follow_up_element.should_receive(:update_attributes).and_return(true)
+        Form.stub!(:find).with(1).and_return(mock_model(Form))
+       put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
+      end
+
+      it "should find the question_element requested" do
+        FollowUpElement.should_receive(:find).with("1").and_return(@follow_up_element)
+        do_put
+      end
+
+      it "should assign the found follow_up_element for the view" do
+        do_put
+        assigns(:follow_up_element).should equal(@follow_up_element)
+      end
+
+      it "should render the update view" do
+        do_put
+        response.should render_template('update')
+      end
+
+    end
+    
+    describe "with failed update" do
+
+      def do_put
+        @follow_up_element.should_receive(:update_attributes).and_return(false)
+        put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
+      end
+
+      it "should re-render 'edit'" do
+        do_put
+        response.should render_template('edit')
       end
 
     end
@@ -263,7 +365,7 @@ describe FollowUpElementsController do
       assigns[:items].should == @items
     end
     
-     it "should assign the items list for the view" do
+    it "should assign the items list for the view" do
       do_post
       assigns[:items].should == @items
     end

@@ -24,20 +24,25 @@ class FollowUpElement < FormElement
   
   def save_and_add_to_form
     if self.valid?
-      unless condition_id.blank?
-        if (condition_id.to_i != 0)
-          self.condition = condition_id
-          self.is_condition_code = true
-        else
-          parse_and_assign_condition_from_string(condition_id)
-        end
-      else
-        parse_and_assign_condition_from_string(condition)
-      end
-      
+      parse_and_assign_condition(condition_id, condition)
       super
     end
-
+  end
+  
+  def update_core_follow_up(params)
+    self.attributes = params
+    if parse_and_assign_condition(params["condition_id"], params["condition"])
+      self.save
+    else
+      return nil
+    end
+  end
+  
+  def self.condition_string_from_code(code_id)
+    code = ExternalCode.find(code_id)
+    return "Code: #{code.code_description} (#{code.code_name})"
+  rescue
+    return nil
   end
   
   def condition_id=(condition_id)
@@ -89,6 +94,27 @@ class FollowUpElement < FormElement
   end
   
   private
+  
+  # This method accounts for the different field/value combinations
+  # that can result from the submission of the type-ahead field. The
+  # condition or condition_id can have different values depending on
+  # how the user modifies the input field and whether a validation error
+  # occurred on an attempted submission of the follow-up form.
+  def parse_and_assign_condition(condition_id, condition)
+    unless condition_id.blank?
+      if (condition_id.to_i != 0)
+        self.condition = condition_id
+        self.is_condition_code = true
+      else
+        parse_and_assign_condition_from_string(condition_id)
+      end
+    else
+      parse_and_assign_condition_from_string(condition)
+    end
+    return true
+  rescue
+    return false
+  end
   
   def parse_and_assign_condition_from_string(condition_value)
     begin

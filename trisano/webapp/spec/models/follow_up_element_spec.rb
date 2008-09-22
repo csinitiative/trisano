@@ -55,6 +55,95 @@ describe FollowUpElement do
     
   end
   
+  describe "when updating a core follow-up with type-ahead support in the UI" do
+    
+    before(:each) do
+      @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
+      @follow_up_element = FollowUpElement.new
+      @follow_up_element.form_id = 1
+      @follow_up_element.condition = "Yes"
+      @follow_up_element.save
+    end
+    
+    it "should use a condition_id for it's condition if one is present and it is a number" do
+      
+      update_hash = {
+        "condition_id"=>@external_code.id, 
+        "condition"=>"Code: #{@external_code.code_description}"
+      }
+    
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should == @external_code.id
+      @follow_up_element.is_condition_code.should be_true
+    end
+    
+    it "should find and use a external code id for it's condition if a condition_id is present, but is a string that corresponds to an external code" do
+      
+      update_hash = {
+        "condition_id"=> "Code: #{@external_code.code_description} (#{@external_code.code_name})",
+        "condition"=> ""
+      }
+      
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should == @external_code.id
+      @follow_up_element.is_condition_code.should be_true
+    end
+    
+    it "should use the condition string for the condition if no matching code can be found" do
+      
+      update_hash = {
+        "condition_id"=> "",
+        "condition"=>"Code: #{@external_code.code_description} (some crazy code)"
+      }
+      
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should eql("Code: #{@external_code.code_description} (some crazy code)")
+      @follow_up_element.is_condition_code.should be_false
+    end
+    
+    it "should use the condition string for the condition if there is content after the last paren" do
+      update_hash = {
+        "condition_id"=> "",
+        "condition"=>"#{@external_code.code_description} (#{@external_code.code_name}) and more stuff"
+      }
+      
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should eql("#{@external_code.code_description} (#{@external_code.code_name}) and more stuff")
+      @follow_up_element.is_condition_code.should be_false
+    end
+    
+    it "should use the condition_id string for the condition if the condition_id can't be parsed" do
+      update_hash = {
+        "condition_id"=> "Howdy!",
+        "condition"=> ""
+      }
+      
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should eql("Howdy!")
+      @follow_up_element.is_condition_code.should be_false
+    end
+    
+    it "should use the condition value for the saved condition, if no condition_id is supplied" do
+      update_hash = {
+        "condition_id"=> "",
+        "condition"=> "Yes"
+      }
+      
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.condition.should eql("Yes")
+      @follow_up_element.is_condition_code.should be_false
+    end
+    
+  end
+  
+  describe "when getting the magic code string for an external code's id" do
+    it 'should return the magic string in the correct format' do
+      @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
+      magic_string = FollowUpElement.condition_string_from_code(@external_code.id)
+      magic_string.should eql("Code: #{@external_code.code_description} (#{@external_code.code_name})")
+    end
+  end
+  
   describe "when created with 'save and add to form' with type-ahead support in the UI" do
     
     before(:each) do

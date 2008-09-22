@@ -15,22 +15,5 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
-
-describe Answer do
-  
-  before(:each) do 
-    question = Question.new :short_name => 'short_name_01'
-    @answer = Answer.new :question => question    
-  end
-
-  it "should return the short name from the question" do
-    @answer.short_name.should == 'short_name_01'
-  end
-  
-  it 'should strip out the extra blank values from a radio button submission' do
-    @answer.radio_button_answer=(["Yes", ""])
-    @answer.text_answer.should eql("Yes")
-  end
-
-end
+page.replace_html "follow-up-mods-#{@follow_up_element.id}", :partial => 'follow_up_elements/edit', :locals => {:follow_up_element => @follow_up_element}
+page.visual_effect(:blind_down, "follow-up-mods-#{@follow_up_element.id}", :duration => 0.1)

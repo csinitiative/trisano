@@ -311,8 +311,11 @@ module FormsHelper
     
       if (include_children)
         result << " " << add_question_link(element, "follow up container")
+        result << "&nbsp;|&nbsp;" << edit_follow_up_link(element, !element.core_path.blank?)
         result << "&nbsp;|&nbsp;" << delete_follow_up_link(element)
       end
+      
+      result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='follow_up_#{element.id.to_s}_children' class='fb-follow-up-children'>"
@@ -419,6 +422,12 @@ module FormsHelper
     result << "', {asynchronous:true, evalScripts:true}); return false;\" id='add-follow-up-#{element.id.to_s}' class='add-follow-up' name='add-follow-up'>Add follow up"
     result << " to " << trailing_text unless trailing_text.empty?
     result << "</a></small>"
+  end
+  
+  def edit_follow_up_link(element, core_data)
+    result = "<small><a href='#' onclick=\"new Ajax.Request('../../follow_up_elements/#{element.id.to_s}/edit"
+    result <<  "?core_data=true&event_type=#{@form.event_type}" if (core_data)
+    result << "', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" class='edit-follow-up' id='edit-follow-up-#{element.id.to_s}'>Edit</a></small>"
   end
   
   def add_to_library_link(element)
