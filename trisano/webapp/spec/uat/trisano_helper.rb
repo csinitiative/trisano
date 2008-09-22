@@ -924,11 +924,26 @@ module TrisanoHelper
     wait_for_element_not_present("new-follow-up-form", browser)
   end
 
+  # Goes in reverse from the name provided, looking for the magic string of
+  # element_prefix_<id>
+  # 
+  # The retry accounts for the fact that you may run into paths that just so
+  # happen to contain the element prefix string.
   def get_form_element_id(browser, name, element_id_prefix)
+    retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
     name_position = html_source.index(name)
-    id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+      
+    begin
+      id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+      raise if html_source[id_start_position..id_start_position+1].to_i == 0
+    rescue
+      retry_count += 1
+      name_position = id_start_position - (element_prefix_length+1)
+      retry if retry_count < 5
+    end
+    
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
