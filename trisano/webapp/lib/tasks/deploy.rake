@@ -212,44 +212,5 @@ namespace :trisano do
       sh "tar czf #{filename} ./#{tformated}"
     end
 
-    desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
-    task :releaseosl  do
-      #temporary task for testing
-      #ruby "-S rake trisano:deploy:create_db_config"
-
-      puts "TRISANO_DIST_DIR: #{TRISANO_DIST_DIR}"
-      puts "TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}"
-
-      t = Time.now
-      tformated = t.strftime("%m-%d-%Y-%I%M%p")
-      filename = "trisano-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar.gz"
-      dist_dirname = TRISANO_DIST_DIR + "/" + tformated
-      
-      sh "cp -R #{TRISANO_SVN_ROOT} #{dist_dirname}"
-
-      p "removing .svn directories"
-      sh "find #{dist_dirname} -name .svn -print0 | xargs -0 rm -rf"
-      
-      # tried to get tar --exclude to work, but had no luck - bailing to a simpler approach
-      p "removing tmp directories from #{dist_dirname}"
-      cd dist_dirname
-
-      trisano_war_file = "trisano.war"
-      if File.file? "./webapp/#{trisano_war_file}"
-        File.delete("./webapp/#{trisano_war_file}") 
-        puts "deleted ./webapp/#{trisano_war_file}"
-      end
-      if File.file? "./distro/#{trisano_war_file}"
-        File.delete("./distro/#{trisano_war_file}") 
-        puts "deleted ./distro/#{trisano_war_file}"
-      end
-      sh "rm -rf ./webapp/log/*.*"
-      sh "rm -rf ./webapp/nbproject"
-      sh "rm -rf ./distro/dump"
-      sh "rm -rf ./webapp/tmp"
-      
-      cd TRISANO_DIST_DIR
-      sh "tar czf #{filename} ./#{tformated}"
-    end
   end
 end
