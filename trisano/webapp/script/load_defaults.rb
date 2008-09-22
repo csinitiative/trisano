@@ -69,12 +69,6 @@ end
 roles = YAML::load_file "#{RAILS_ROOT}/db/defaults/roles.yml"
 
 Role.transaction do
-
-  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
-  jurisdictions = Entity.find(:all, 
-                              :include => :places, 
-                              :conditions => ["entities.entity_type = 'place' and places.place_type_id = ?", jurisdiction_type_id])
-    
   # Note: Technically privileges have associated jurisdictions, we are ignoring that for the time being.
   roles.each_pair do |role_name, privs|
     r = Role.find_or_initialize_by_role_name(:role_name => role_name)

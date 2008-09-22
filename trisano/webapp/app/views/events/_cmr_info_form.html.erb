@@ -60,8 +60,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
           <% core_element :secondary_entity_id, j, :horiz do -%>
             <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
-            <% jurisdictions = User.current_user.jurisdictions_for_privilege(:update_event) %> 
-            <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+            <%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name) %> 
           <% end -%>
         <% end %>
         <% core_element :event_status, f, :horiz do -%>

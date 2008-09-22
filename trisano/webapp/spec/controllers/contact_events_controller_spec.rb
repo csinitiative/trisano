@@ -75,7 +75,7 @@ describe ContactEventsController do
     before(:each) do
       @event = mock_event
       Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
+      @user.stub!(:is_entitled_to_in?).and_return(false)
       @event.stub!(:read_attribute).and_return('ContactEvent') 
     end
   

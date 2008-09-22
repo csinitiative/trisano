@@ -158,7 +158,7 @@ describe MorbidityEventsController do
       mock_user
       @event = mock_event
       Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(false)
+      @user.stub!(:is_entitled_to_in?).and_return(false)
       @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
   
@@ -440,6 +440,32 @@ describe MorbidityEventsController do
       it "should redirect to the where it was called from" do
         do_route_event
         response.should redirect_to("http://test.host/some_path")
+      end
+
+      describe "setting the status field" do
+        describe "with a new route" do
+          it "should change status to ASGD-LHD" do
+            @event.should_receive(:update_attribute).with("event_status", "ASGD-LHD")
+            do_route_event
+          end
+        end
+
+        describe "With an existing route" do
+          it "should not change status" do
+            @jurisdiction.stub!(:secondary_entity_id).and_return(2)
+            @event.should_not_receive(:update_attribute)
+            do_route_event
+          end
+        end
+      end
+
+      describe "with secondary_ids too" do
+        it "should pass IDs into event#route_to_jurisdiction" do
+          @event.should_receive(:route_to_jurisdiction).with("2", ["3", "4"])
+
+          request.env['HTTP_REFERER'] = "/some_path"
+          post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"]
+        end
       end
     end
 

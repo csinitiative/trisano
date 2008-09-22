@@ -1039,6 +1039,11 @@
   code_description: "Place of Interest"
   sort_order: 70
    
+- code_name: "participant"
+  the_code: "SJ"
+  code_description: "Secondary Jurisdiction"
+  sort_order: 75
+
   ### PHONE LOCATION TYPES ###
 
 - code_name: "telephonelocationtype"

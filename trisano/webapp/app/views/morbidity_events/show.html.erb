@@ -36,7 +36,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <tr>
   <th>Patient Name</th>
   <th>Disease</th>
-  <th>Jurisdiction</th>
+  <th>Investigating Jurisdiction
+    <br>
+    <small>Secondary jurisdictions</small>
+  </th>
   <th>Status</th>
   <th></th>
   <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path_with_defaults) } %>

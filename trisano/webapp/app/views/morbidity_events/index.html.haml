@@ -49,7 +49,10 @@
     %tr
       %th Patient Name
       %th Disease
-      %th Jurisdiction
+      %th 
+        Investigating jurisdiction
+        %br
+        %small Secondary jurisdictions
       %th Status
       %th
       = render :partial => 'morbidity_events/event', :collection => @events

@@ -95,30 +95,30 @@ module EventsHelper
     end
   end
 
-  def basic_morbidity_event_controls(event, jurisdiction)
+  def basic_morbidity_event_controls(event)
     controls = link_to('Show', cmr_path(event)) + " | "
-    controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+    controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
     controls += link_to('Export to CSV', cmr_path(event) + '.csv')
   end
 
-  def basic_contact_event_controls(event, jurisdiction)
+  def basic_contact_event_controls(event)
     controls = link_to('Show', contact_event_path(event)) + " | "
-    controls += (link_to('Edit', edit_contact_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+    controls += (link_to('Edit', edit_contact_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
 
-  def basic_place_event_controls(event, jurisdiction)
+  def basic_place_event_controls(event)
     controls = link_to('Show', place_event_path(event)) + " | "
-    controls += (link_to('Edit', edit_place_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, jurisdiction.entity_id)
+    controls += (link_to('Edit', edit_place_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
 
 
-  def state_controls(event, jurisdiction)
+  def state_controls(event)
     current_state = event.event_status
-    return "" if current_state == "CLOSED"
+    return "" if ["CLOSED", "NEW"].include? current_state
 
     priv_required = Event.get_required_privilege(Event.get_transition_states(current_state).last)
-    allowed = User.current_user.is_entitled_to_in?(priv_required, jurisdiction.entity_id)
+    allowed = User.current_user.is_entitled_to_in?(priv_required, event.primary_jurisdiction.entity_id)
                                                  
     controls = ""
     case current_state
@@ -175,23 +175,41 @@ module EventsHelper
         controls += "</form>"
       end
     end
+    controls += "<span style='color: gray'>Extra-jurisdictional event.  No action permitted.</span>" if controls.blank?
     controls
   end
 
-  def jurisdiction_routing_control(event, jurisdiction)
+  def jurisdiction_routing_control(event)
     controls = ""
-    if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, jurisdiction.entity_id)
+    if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
       
-      # Commenting this out as I (Pete) don't think it makes sense to give people the 'route_to_any_lhd' privilege, but still
-      # insist on them having the 'create' privilege in each individual LHD.
-      #
-      # jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event)
-
+      controls += link_to_function('Route event to one or more jurisdictions', nil) do |page|
+                    page[:routing_controls].visual_effect :blind_down
+                  end
+      controls += "<div id='routing_controls' style='display: none; position: absolute; z-index: 1000'>"
+      controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
-      controls += "<span>Route remotely to:&nbsp;</span>" 
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, jurisdiction.entity_id), :onchange => "this.form.submit()")
+      controls += "<span>Investigating jurisdiction: &nbsp;</span>" 
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id))
+      controls += "<br />Also grant access to:"
+
+      controls += "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
+      controls += "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
+
+      jurisdictions.each do | jurisdiction |
+        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", jurisdiction.id, event.secondary_jurisdictions.include?(jurisdiction), :id => jurisdiction.short_name.tr(" ", "_")) + jurisdiction.short_name + "</label>"
+      end
+
+      controls += "</div></div>"
+      controls += submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
+
       controls += "</form>"
+      controls += link_to_function "Close", "Effect.BlindUp('routing_controls')"
+      controls += "</div>"
+      controls += "</div>"
+    else
+      controls += "<span style='color: gray'>Extra-jurisdictional event.  Routing disabled</span>"
     end
     controls
   end

@@ -64,7 +64,7 @@ class MorbidityEventsController < EventsController
     User.current_user.update_attribute('event_view_settings', query_string) if params[:set_as_default_view] == "1"
 
     @events = MorbidityEvent.find(:all, 
-                                  :include => :jurisdiction, 
+                                  :include => :all_jurisdictions, 
                                   :select => "jurisdiction.secondary_entity_id", 
                                   :conditions => conditions,
                                   :order => "events.updated_at DESC")
@@ -206,18 +206,12 @@ class MorbidityEventsController < EventsController
       render :text => "Permission denied: You do not have sufficent privileges to route events from this jurisdiction", :status => 403 and return
     end
 
-    # Commenting this out as I (Pete) don't think it makes sense to give people the 'route_to_any_lhd' privilege, but still
-    # insist on them having the 'create' privilege in each individual LHD.
-    #
-    # user cannot route events _to_ a jurisdiction for which they do not have the 'create_event' privilege
-    # unless User.current_user.is_entitled_to_in?(:create_event, params[:jurisdiction_id])
-    #   render :text => "Permission denied: You do not have sufficent privileges to route events to this jurisdiction", :status => 403
-    #   return
-    # end
-
     begin
-      @event.route_to_jurisdiction(params[:jurisdiction_id])
-      @event.update_attribute("event_status",  "ASGD-LHD")
+      @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
+
+      # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondarys
+      @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
+
       redirect_to request.env["HTTP_REFERER"]
     rescue Exception => ex
       @event.errors.add_to_base('Unable to route CMR: ' + ex.message)

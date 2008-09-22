@@ -15,6 +15,9 @@ BRVH:
   place_type_id: 2201
   entity_id: 7
 
+###############
+# Jurisidictions
+#
 Southeastern_District:
   id: 73
   name: "Southeastern District"
@@ -22,18 +25,28 @@ Southeastern_District:
   place_type_id: 2202
   entity_id: 75
 
-Existing_Lab_One:
-  id: 100
-  name: "Existing Lab One"
-  place_type_id: 2203
-  entity_id: 100 
-
 Davis_County:
   id: 101
   name: "Davis County Health Department"
   short_name: "Davis County"
   place_type_id: 2202
   entity_id: 102
+
+Summit_County:
+  id: 103
+  name: "Summit County Health Department"
+  short_name: "Summit County"
+  place_type_id: 2202
+  entity_id: 104
+
+###############
+# Labs
+#
+Existing_Lab_One:
+  id: 100
+  name: "Existing Lab One"
+  place_type_id: 2203
+  entity_id: 100 
 
 ##############
 #

@@ -102,7 +102,7 @@ describe Place do
 
     it "jurisdictions should return a list of jurisdictions" do
       h = Place.jurisdictions
-      h.length.should == 2
+      h.length.should == 3
     end
   end
 

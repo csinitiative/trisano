@@ -42,7 +42,6 @@ module ApplicationHelper
   end
 
   def editable_content_tag(elemtype, obj, prop, editable, options = {}, editOptions = {}, ajaxOptions = {})
-    p options
     objname = obj.class.to_s.downcase
     options[:url] = "/#{objname.pluralize}/#{obj.id}" unless options.has_key? :url
     options[:url] += '.json'

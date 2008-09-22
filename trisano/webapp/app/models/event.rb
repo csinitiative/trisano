@@ -59,12 +59,26 @@ class Event < ActiveRecord::Base
     :order => 'created_at ASC',
     :dependent => :destroy
 
+  primary_jurisdiction_code_id   = Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id
+  secondary_jurisdiction_code_id = Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction").id
+
+  has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", primary_jurisdiction_code_id]
+
+  has_many :associated_jurisdictions, :class_name => 'Participation',
+    :conditions => ['role_id = ?', secondary_jurisdiction_code_id],
+    :order => 'created_at ASC',
+    :dependent => :destroy
+
+  has_many :all_jurisdictions, :class_name => 'Participation',
+    :conditions => ['role_id IN (?)', [primary_jurisdiction_code_id, secondary_jurisdiction_code_id]],
+    :order => 'created_at ASC',
+    :dependent => :destroy
+
   has_many :clinicians, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
 
   has_one :patient, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
   has_one :place, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Place of Interest").id]
-  has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id]
   has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
   has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
 
@@ -211,6 +225,18 @@ class Event < ActiveRecord::Base
 
   def core_only_form_references
     form_references.reject {|ref| ref.form.has_investigator_view_elements?}
+  end
+
+  def primary_jurisdiction
+    active_jurisdiction.active_secondary_entity.current_place
+  end
+
+  def secondary_jurisdictions
+    associated_jurisdictions.collect { |j| j.active_secondary_entity.current_place }
+  end
+
+  def jurisdiction_of_investigation
+    primary_jurisdiction
   end
 
   def disease
@@ -557,7 +583,6 @@ class Event < ActiveRecord::Base
     order_by_clause = "p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
     
-    p options
     if !options[:event_type].blank?
       issue_query = true
       where_clause += " p3.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) + "'"
@@ -804,15 +829,36 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def route_to_jurisdiction(jurisdiction)
+  def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[])
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
     jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
     jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
+
     transaction do
-      proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
-      raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
-      active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-      update_attribute("event_queue_id",  nil)
+      # Handle the primary jurisdiction
+      # 
+      # Do nothing if the passed-in jurisdiction is the current jurisdiction
+      unless jurisdiction_id == active_jurisdiction.secondary_entity_id
+        proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
+        raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
+        active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
+        update_attribute("event_queue_id",  nil)
+      end
+
+      # Handle secondary jurisdictions
+      #
+      existing_secondary_jurisdiction_ids = associated_jurisdictions.collect { |participation| participation.secondary_entity_id }
+
+      # if an existing secondary jurisdiction ID is not in the passed-in ids, delete
+      (existing_secondary_jurisdiction_ids - secondary_jurisdiction_ids).each do |id_to_delete|
+        associated_jurisdictions.delete(associated_jurisdictions.find_by_secondary_entity_id(id_to_delete))
+      end
+
+      # if an passed-in ID is not in the existing secondary jurisdiction IDs, add
+      (secondary_jurisdiction_ids - existing_secondary_jurisdiction_ids).each do |id_to_add|
+        associated_jurisdictions.create(:secondary_entity_id => id_to_add, :role_id => Event.participation_code('Secondary Jurisdiction'))
+      end
+
       reload # Any existing references to this object won't see these changes without this
     end
   end

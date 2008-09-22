@@ -41,3 +41,7 @@ Davis_County:
 Davis_Nat:
   id: 103
   entity_type: "place"
+
+Summit_County:
+  id: 104
+  entity_type: "place"

@@ -134,9 +134,9 @@ def mock_event
 
   disease.stub!(:disease_id).and_return(1)
   disease.stub!(:disease_name).and_return("Bubonic,Plague")
-   disease.stub!(:treatment_lead_in).and_return("")
-   disease.stub!(:place_lead_in).and_return("")
-   disease.stub!(:contact_lead_in).and_return("")
+  disease.stub!(:treatment_lead_in).and_return("")
+  disease.stub!(:place_lead_in).and_return("")
+  disease.stub!(:contact_lead_in).and_return("")
     
   imported_from.stub!(:code_description).and_return('Utah')
   udoh_case_status.stub!(:code_description).and_return('Confirmed')
@@ -175,6 +175,7 @@ def mock_event
   lab_result.stub!(:specimen_sent_to_uphl_yn_id).and_return(1401)
   lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(specimen_sent_to_uphl_yn)
   
+  event.stub!(:all_jurisdictions).and_return([active_jurisdiction])
   event.stub!(:labs).and_return([lab])
   event.stub!(:diagnosing_health_facilities).and_return([diagnostic])
   event.stub!(:hospitalized_health_facilities).and_return([hospital])

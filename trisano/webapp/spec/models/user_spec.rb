@@ -215,6 +215,12 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @user.save
         @user.jurisdiction_ids_for_privilege(:administer).size.should eql(1)
       end
+
+      it "should be possible to call is_entitled_to? with an array and get the right answer" do
+        @user.save
+        @user.is_entitled_to_in?(:update, [entities(:Southeastern_District).id, entities(:Davis_County).id]).should be_true
+        @user.is_entitled_to_in?(:update, [entities(:Davis_County).id, entities(:Davis_County).id]).should be_false
+      end
     end
 
     describe "assigning one admin role and one investigator role in the Southeastern District" do
