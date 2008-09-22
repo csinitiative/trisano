@@ -487,6 +487,27 @@ module TrisanoHelper
     wait_for_element_not_present("new-follow-up-form", browser)
   end
   
+  
+  def edit_core_follow_up(browser, element_name, condition, core_label)
+    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
+    browser.click("edit-follow-up-#{element_id}")
+    wait_for_element_present("edit-follow-up-form", browser)
+    browser.type "model_auto_completer_tf", condition
+    sleep 1 # Give the type ahead a second to breath, otherwise the edit doesn't stick
+    browser.select "follow_up_element_core_path", "label=#{core_label}"
+    browser.click "follow_up_element_submit"
+    wait_for_element_not_present("edit-follow-up-form", browser)
+  end
+  
+  def edit_follow_up(browser, element_name, condition)
+    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
+    browser.click("edit-follow-up-#{element_id}")
+    wait_for_element_present("edit-follow-up-form", browser)
+    browser.type "follow_up_element_condition", condition
+    browser.click "follow_up_element_submit"
+    wait_for_element_not_present("edit-follow-up-form", browser)
+  end
+  
   # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
   def add_value_set_to_question(browser, question_text, value_set_name, value_one, value_two, value_three)
     element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
