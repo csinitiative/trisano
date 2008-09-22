@@ -113,5 +113,12 @@ describe 'form builder core-tab questions for contacts' do
     @browser.is_text_present(@epi_answer).should be_true
   end
   
+  it 'should place user-defined questions on the correct tabs in show mode' do
+    assert_tab_contains_question(@browser, DEMOGRAPHICS, @demo_question_text).should be_true
+    assert_tab_contains_question(@browser, CLINICAL, @clinical_question_text).should be_true
+    assert_tab_contains_question(@browser, LABORATORY, @laboratory_question_text).should be_true
+    assert_tab_contains_question(@browser, EPI, @epi_question_text).should be_true
+  end
+  
 end
   
