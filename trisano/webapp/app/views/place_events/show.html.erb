@@ -31,7 +31,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
 <% content_for :tools do %>
-  <%= basic_place_event_controls(@event, jurisdiction) %>
+  <%= basic_place_event_controls(@event) %>
   <br />
   Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
