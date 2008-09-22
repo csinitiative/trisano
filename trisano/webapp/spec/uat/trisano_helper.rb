@@ -386,10 +386,8 @@ module TrisanoHelper
     
   def switch_user(browser, user_id)
     browser.select("user_id", "label=#{user_id}")
-    sleep(2)  
-    browser.refresh
     browser.wait_for_page_to_load "30000"
-    return(browser.is_text_present(user_id))
+    return browser.is_text_present("#{user_id}:")
   end
   
   def add_view(browser, name)

@@ -149,8 +149,8 @@ class MorbidityEventsController < EventsController
     # Allow for test scripts and developers to jump directly to the "under investigation" state
     if RAILS_ENV == "production"
       @event.event_status = "NEW"
-      @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
     end
+    @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
     @event.event_onset_date = Date.today,
 
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
@@ -207,10 +207,12 @@ class MorbidityEventsController < EventsController
     end
 
     begin
-      @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
-
       # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondarys
       @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
+      
+      # the following line must follow the previous line or state won't get changed.
+      @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
+
 
       redirect_to request.env["HTTP_REFERER"]
     rescue Exception => ex

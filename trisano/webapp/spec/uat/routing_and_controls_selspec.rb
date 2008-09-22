@@ -24,6 +24,7 @@ describe 'Sytem functionality for routing and workflow' do
   before(:all) do
     @person_1 = get_unique_name(2)
     @person_2 = get_unique_name(2)
+    @person_3 = get_unique_name(2)
   end
 
   it "should allow for new event_queues" do
@@ -34,6 +35,7 @@ describe 'Sytem functionality for routing and workflow' do
       switch_user(@browser, "default_user")
     end
 
+    # We need a queue first
     @browser.click "link=Event Queues"
     @browser.wait_for_page_to_load "30000"
     
@@ -57,23 +59,23 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("New Morbidity Report").should be_true
 
+    # We need a CMR too
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_1)
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route remotely to:").should be_true
-  end
-
-  it "should create new CMRs in the unassigned jurisdiction" do
-    @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
+    @browser.is_text_present("Route event to one or more jurisdictions").should be_true
   end
 
   it "should allow routing to a new jurisdiction" do
-    @browser.select "jurisdiction_id", "label=Bear River"
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
+    @browser.select "jurisdiction_id", "label=Central Utah"
+    @browser.click "route_event_btn"
     @browser.wait_for_page_to_load "30000"
-    @browser.get_selected_label('jurisdiction_id').should == "Bear River"
+    @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
   end
 
   it "should allow for accepting or rejecting a remote routing assignent" do
@@ -132,10 +134,86 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("Approved by State").should be_true
   end
 
-  it "should not display routing controls for a less privileged user" do
-    switch_user(@browser, "lhd_manager").should be_true
+  it "should allow for secondary jurisdictions" do
+    # We need another CMR 
+    click_nav_new_cmr(@browser).should be_true
+    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_3)
+    save_cmr(@browser).should be_true
 
-    @browser.is_text_present("Assigned Jurisdiction: Unassigned").should_not be_true
+    @browser.is_text_present("NEW CMR").should be_true
+    @browser.is_text_present("Edit").should be_true
+    @browser.is_text_present("Route event to one or more jurisdictions").should be_true
+
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "Davis_County"  #On
+    @browser.click "Salt_Lake_Valley"  #On
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+
+    # Primary jurisdiction should be unchanged
+    @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
+
+    # Status should be unchanged too
+    @browser.is_text_present("New").should be_true
+
+    # Should see new jurisdictions
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should be_true
+  end
+
+  it "should allow for secondary jurisdictions to be added" do
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "Bear_River"  # On
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should be_true
+  end
+
+  it "should allow for a subset of secondary jurisdictions to be removed" do
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "Davis_County"  # Off
+    @browser.click "Salt_Lake_Valley"  # Off
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should be_true
+  end
+
+  it "should allow for all secondary jurisdictions to be removed" do
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "Bear_River"  # Off
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should_not be_true
+  end
+
+  it "should not display controls for a user with entitlements in the secondary jurisdiction" do
+    # Route it to bring up some action controls
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.select "jurisdiction_id", "label=Central Utah"
+    @browser.click "Bear_River"   # On
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
+
+    switch_user(@browser, "surveillance_mgr").should be_true
+    @browser.is_text_present("Extra-jurisdictional event. Routing disabled").should be_true
+    @browser.is_text_present("Extra-jurisdictional event. No action permitted").should be_true
+  end
+
+  it "should deny access altogether when entitlements are outside any jurisdiction." do
+    switch_user(@browser, "default_user").should be_true
+    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "Bear_River"  # Off
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    switch_user(@browser, "surveillance_mgr")
+    @browser.is_text_present("Permission denied: You do not have view privileges for this jurisdiction")
   end
 
   it "should allow for queues to specified" do
