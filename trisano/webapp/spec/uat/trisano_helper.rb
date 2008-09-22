@@ -64,7 +64,7 @@ module TrisanoHelper
   #  for you. 
   def set_fields(browser, value_hash)
     fields = browser.get_all_fields
-    puts fields
+    #puts fields
     value_hash.each_pair do |key, value|
       if fields.index(key) != nil
         browser.type(key, value) 
@@ -125,6 +125,16 @@ module TrisanoHelper
     else
       puts("TAB NOT FOUND: " + tab_name)
     end
+  end
+  
+  def get_random_disease()
+    wordlist = ["African Tick Bite Fever","AIDS","Amebiasis","Anaplasma phagocytophilum","Anthrax","Aseptic meningitis","Bacterial meningitis, other","Botulism, foodborne","Botulism, infant","Botulism, other (includes wound)","Botulism, other unspecified","Botulism, wound","Brucellosis","Cache Valley virus neuroinvasive disease","Cache Valley virus non-neuroinvasive disease","California serogroup virus neuroinvasive disease","California serogroup virus non-neuroinvasive disease","Campylobacteriosis","Chancroid","Chlamydia trachomatis genital infection","Cholera (toxigenic Vibrio cholerae O or O)","Coccidioidomycosis","Cryptosporidiosis","Cyclosporiasis","Dengue","Dengue hemorrhagic fever","Diphtheria","Eastern equine encephalitis virus neuroinvasive disease","Eastern equine encephalitis virus non-neuroinvasive disease","Ehrlichia chaffeensis","Ehrlichia ewingii","Ehrlichiosis/Anaplasmosis, undetermined","Encephalitis, post-chickenpox","Encephalitis, post-mumps","Encephalitis, post-other","Encephalitis, primary","Flu activity code (Influenza)","Giardiasis","Gonorrhea","Granuloma inguinale (GI)","Haemophilus influenzae, invasive disease","Hansen disease (Leprosy)","Hantavirus infection","Hantavirus pulmonary syndrome","Hemolytic uremic syndrome postdiarrheal","Hepatitis A, acute","Hepatitis B virus infection, chronic","Hepatitis B, acute","Hepatitis B, virus infection perinatal","Hepatitis C virus infection, past or present","Hepatitis C, acute","Hepatitis Delta co- or super-infection, acute (Hepatitis D)","Hepatitis E, acute","Hepatitis, viral unspecified","HIV Infection, adult","HIV Infection, pediatric","Human T-Lymphotropic virus type I  infection (HTLV-I)","Human T-Lymphotropic virus type II  infection (HTLV-II)","Influenza, animal isolates","Influenza, human isolates","Influenza-associated mortality","Japanese encephalitis virus neuroinvasive disease","Japanese encephalitis virus non-neuroinvasive disease","Lead poisoning","Legionellosis","Listeriosis","Lyme disease","Lymphogranuloma venereum (LGV)","Malaria","Measles (rubeola), total","Meningococcal disease (Neisseria meningitidis)","Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)","Monkeypox","Mucopurulent cervicitis (MPC)","Mumps","Neurosyphilis","Nongonococcal urethritis (NGU)","Novel influenza A virus infections","Pelvic Inflammatory Disease (PID), Unknown Etiology","Pertussis","Plague","Poliomyelitis, paralytic","Poliovirus infection, nonparalytic","Powassan virus neuroinvasive disease","Powassan virus non-neuroinvasive disease","Psittacosis (Ornithosis)","Q fever","Q fever, acute","Q fever, chronic","Rabies, animal","Rabies, human","Rocky Mountain spotted fever","Rubella","Rubella, congenital syndrome","Salmonellosis","Severe Acute Respiratory Syndrome (SARS)-associated Coronavirus disease (SARS-CoV)","Shiga toxin-producing Escherichia coli (STEC)","Shigellosis","Smallpox","St. Louis encephalitis virus neuroinvasive disease","St. Louis encephalitis virus non-neuroinvasive disease","Streptococcal disease, invasive, Group A","Streptococcal disease, invasive, Group B","Streptococcal disease, other, invasive, beta-hemolytic (non-group A and non-group B)","Streptococcal toxic-shock syndrome","Streptococcus pneumoniae invasive, drug-resistant (DRSP)","Streptococcus pneumoniae, invasive disease","Syphilis, congenital","Syphilis, early latent","Syphilis, late latent","Syphilis, late with clinical manifestations other than neurosyphilis","Syphilis, primary","Syphilis, secondary","Syphilis, total primary and secondary","Syphilis, unknown latent","Tetanus","Toxic-shock syndrome (staphylococcal)","Trichinellosis","Tuberculosis","Tularemia","Typhoid fever (caused by Salmonella typhi)","Vancomycin-intermediate Staphylococcus aureus (VISA)","Vancomycin-resistant Staphylococcus aureus (VRSA)","Varicella (Chickenpox)","Venezuelan equine encephalitis virus neuroinvasive disease","Venezuelan equine encephalitis virus non-neuroinvasive disease","Vibriosis (non-cholera Vibrio species infections)","West Nile virus neuroinvasive disease","West Nile virus non-neuroinvasive disease","Western equine encephalitis virus neuroinvasive disease","Western equine encephalitis virus non-neuroinvasive disease","Yellow fever","Yersiniosis"]
+    result = wordlist[1 + rand(132)]
+  end
+  
+  def get_random_jurisdiction()
+    wordlist = ["Out of State","Weber-Morgan Health Department","Wasatch County Health Department","Utah State","Utah County Health Department","TriCounty Health Department","Tooele County Health Department","Summit County Public Health Department","Southwest Utah Public Health Department","Southeastern Utah District Health Department","Salt Lake Valley Health Department","Davis County Health Department","Central Utah Public Health Department","Bear River Health Department","Unassigned"]
+    result = wordlist[1 + rand(14)]
   end
   
   def click_nav_new_cmr(browser)
@@ -307,6 +317,36 @@ module TrisanoHelper
     answer_id = get_investigator_answer_id(browser, question_text)
     begin
       browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
+    rescue
+      return false
+    end
+    return true
+  end
+  
+  def answer_multi_select_investigator_question(browser, question_text, answer)
+    answer_id = get_investigator_answer_id(browser, question_text)
+    begin
+      browser.select("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
+    rescue
+      return false
+    end
+    return true
+  end
+  
+  def answer_check_investigator_question(browser, question_text, answer)
+    answer_id = get_investigator_click_answer_id(browser, question_text)
+    begin
+      browser.click("contact_event_answers__#{answer_id}_check_box_answer_#{answer}") == "OK"
+    rescue
+      return false
+    end
+    return true
+  end
+  
+  def answer_radio_investigator_question(browser, question_text, answer)
+    answer_id = get_investigator_click_answer_id(browser, question_text)
+    begin
+      browser.click("contact_event_answers__#{answer_id}_radio_button_answer_#{answer}") == "OK"
     rescue
       return false
     end
@@ -910,6 +950,15 @@ module TrisanoHelper
     question_position = html_source.index(question_text)
     id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position) + 20
     id_end_position = html_source.index("\"", id_start_position) -1
+    html_source[id_start_position..id_end_position]
+  end
+ 
+  # This only works for investigator questions on contact events
+  def get_investigator_click_answer_id(browser, question_text)
+    html_source = browser.get_html_source
+    question_position = html_source.index(question_text)
+    id_start_position = html_source.index("contact_event_answers__", question_position) + 23
+    id_end_position = html_source.index("_", id_start_position) -1
     html_source[id_start_position..id_end_position]
   end
   
