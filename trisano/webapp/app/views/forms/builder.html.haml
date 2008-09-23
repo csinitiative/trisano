@@ -84,7 +84,7 @@
 #sidebar
   %ul.tina
     %li.action
-      = link_to 'Edit Form Detail', edit_form_path(@form)
+      = link_to 'Edit Form Detail', edit_form_path(@form), :id => 'edit-form'
     - if @form.errors.empty?
       %li.action
         = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})

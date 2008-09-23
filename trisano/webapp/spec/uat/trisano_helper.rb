@@ -377,6 +377,30 @@ module TrisanoHelper
     return browser.is_text_present("Form Builder") 
   end
   
+  def edit_form_and_go_to_builder(browser, form_attributes ={})
+    browser.type "form_name", form_attributes[:form_name] unless form_attributes[:form_name].nil?
+    browser.select "form_event_type", "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
+    
+    unless form_attributes[:disease].nil?
+      if form_attributes[:disease].respond_to?(:each)
+        form_attributes[:disease].each { |label| browser.click(label.tr(" ", "_")) }
+      else
+        browser.click( form_attributes[:disease].tr(" ", "_"))
+      end
+    end
+    
+    browser.select "form_jurisdiction_id", "label=#{ form_attributes[:jurisdiction]}" unless form_attributes[:jurisdiction].nil?
+    browser.click "form_submit"    
+    browser.wait_for_page_to_load($load_time)
+    if browser.is_text_present("Form was successfully updated.") != true 
+      return(false)
+    end
+    browser.click "link=Form Builder"
+   
+    browser.wait_for_page_to_load($load_time)
+    return browser.is_text_present("Form Builder") 
+  end
+  
   # Must be called from the builder view
   def open_form_builder_library_admin(browser)
     browser.click("open-library-admin")

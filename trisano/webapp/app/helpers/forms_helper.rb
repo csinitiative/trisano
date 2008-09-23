@@ -121,10 +121,18 @@ module FormsHelper
   
   def render_core_field(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'><b>#{element.name}</b>"
+      result = "<li id='core_field_#{element.id}' class='fb-core-field' style='clear: both;'>"
+      
+      exposed_attributes = eval(element.form.event_type.camelcase).exposed_attributes
+         
+      if exposed_attributes[element.core_path].nil?
+        result << "<b style='color: #CC0000;'>Core field configuration is invalid: #{element.name}</b><br/><small>Invalid core field path is: #{element.core_path}</small>"
+      else
+          result << "<b>#{element.name}</b>"
+      end
 
       result << "&nbsp;&nbsp;" << delete_core_field_link(element)
-
+      
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='core_field_#{element.id.to_s}_children' class='fb-core-field-children' style='clear: both'>"
         form_elements_cache.children(element).each do |child|
