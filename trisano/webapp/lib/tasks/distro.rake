@@ -46,6 +46,74 @@ namespace :trisano do
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
     end    
 
+    desc "Create the database"
+    task :create_db do
+      puts "Creating TriSano database ..."
+
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      psql = postgres_dir + "/psql"
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      ENV["PGPASSWORD"] = priv_password
+
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'CREATE DATABASE #{database}'")
+      unless success
+        puts "Failed creating database structure for TriSano."
+        return success
+      end
+
+      puts "Creating TriSano database structure ..."
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f trisano_schema.sql")
+      unless success
+        puts "Failed creating database structure for TriSano."
+        return sucess
+      end
+
+      puts "Setting locale for full text search."
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
+      unless success
+        puts "Failed setting locale for full text search."
+        return sucess
+      end
+
+      puts "Creating TriSano user."
+      success = system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c \"CREATE USER #{nedss_user} ENCRYPTED PASSWORD '#{nedss_user_pwd}'\"")
+      unless success
+        puts "Failed creating TriSano user." 
+        return sucess
+      end
+
+      puts "Granting privileges to TriSano user."
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'GRANT ALL ON SCHEMA public TO #{nedss_user}'")
+      unless success
+        puts "Granting of privileges to TriSano user failed. Could not install plpgsql language into database."
+        return success
+      end
+
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f ./database/load_grant_function.sql")
+      unless success
+        puts "Granting of privileges to TriSano user failed.  Could not create grant privileges function."
+        return success
+      end
+
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -c \"SELECT pg_grant('#{nedss_user}', 'all', '%', 'public')\"")
+      unless success
+        puts "Failed granting privileges to TriSano user."
+        return sucess
+      end
+
+      if success
+        puts "Successfully created and configured TriSano database"
+      end
+
+    end
+
     desc "Export the database"
     task :dump_db do
       dirname = './dump'
@@ -62,8 +130,8 @@ namespace :trisano do
       priv_uname = config['priv_uname']
       priv_password = config['priv_passwd']
       ENV["PGPASSWORD"] = priv_password
-
       pgdump = postgres_dir + "/pg_dump"
+
       sh "#{pgdump} -U #{priv_uname} -h #{host} -p #{port} #{database} -c > #{dirname}/#{database}-dump.sql"
     end
 
@@ -78,7 +146,6 @@ namespace :trisano do
       dump_file = config['dump_file_name']
       priv_uname = config['priv_uname']
       priv_password = config['priv_passwd']
-
       psql = postgres_dir + "/psql"
       ENV["PGPASSWORD"] = priv_password
       sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'CREATE DATABASE #{database}'")
@@ -101,23 +168,6 @@ namespace :trisano do
       puts "creating .war deployment archive"
       cd '../webapp/'
       ruby "-S rake trisano:deploy:buildwar RAILS_ENV=production basicauth=false"
-      FileUtils.mv('trisano.war', '../distro')
-    end
-
-    desc "Package the application with the settings from config.yml & use basic auth"
-    task :package_app_with_basic_auth do
-      
-      config = YAML::load_file "./config.yml"
-      host = config['host']
-      port = config['port']
-      database = config['database']
-      nedss_user = config['nedss_uname']
-      nedss_user_pwd = config['nedss_user_passwd']  
-      replace_database_yml(host, port, database, nedss_user, nedss_user_pwd)
-                
-      puts "creating .war deployment archive"
-      cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=production"
       FileUtils.mv('trisano.war', '../distro')
     end
 
