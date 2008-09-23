@@ -21,14 +21,9 @@ describe 'form builder patient-level address core field configs for contacts' do
   
   $dont_kill_browser = true
 
-  fields = [{:name => 'Contact street number', :label => 'contact_event_active_patient__active_primary_entity__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact street name', :label => 'contact_event_active_patient__active_primary_entity__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Contact unit number', :label => 'contact_event_active_patient__active_primary_entity__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact city', :label => 'contact_event_active_patient__active_primary_entity__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'Contact state', :label => 'contact_event_active_patient__active_primary_entity__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-    {:name => 'Contact county', :label => 'contact_event_active_patient__active_primary_entity__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-    {:name => 'Contact zip code', :label => 'contact_event_active_patient__active_primary_entity__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
-  ]
+  fields = [
+    {:name => 'Imported from', :label => 'contact_event_imported_from_id', :entry_type => 'select', :code => 'Code: Outside U.S. (imported)', :fu_value => 'Outside U.S.', :no_fu_value => 'Acquired in Utah'}
+  ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

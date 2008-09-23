@@ -21,14 +21,14 @@ describe 'form builder patient-level address core field configs for contacts' do
   
   $dont_kill_browser = true
 
-  fields = [{:name => 'Contact street number', :label => 'contact_event_active_patient__active_primary_entity__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact street name', :label => 'contact_event_active_patient__active_primary_entity__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Contact unit number', :label => 'contact_event_active_patient__active_primary_entity__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact city', :label => 'contact_event_active_patient__active_primary_entity__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'Contact state', :label => 'contact_event_active_patient__active_primary_entity__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-    {:name => 'Contact county', :label => 'contact_event_active_patient__active_primary_entity__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-    {:name => 'Contact zip code', :label => 'contact_event_active_patient__active_primary_entity__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
-  ]
+  fields = [{:name => 'Contact last name', :label => 'contact_event_active_patient__active_primary_entity__person_last_name', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact first name', :label => 'contact_event_active_patient__active_primary_entity__person_first_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact middle name', :label => 'contact_event_active_patient__active_primary_entity__person_middle_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact age', :label => 'contact_event_active_patient__active_primary_entity__person_approximate_age_no_birthday', :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'},
+    {:name => 'Contact birth gender', :label => 'contact_event_active_patient__active_primary_entity__person_birth_gender_id', :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
+    {:name => 'Contact ethnicity', :label => 'contact_event_active_patient__active_primary_entity__person_ethnicity_id', :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'},
+    {:name => 'Contact primary language', :label => 'contact_event_active_patient__active_primary_entity__person_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
+  ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
