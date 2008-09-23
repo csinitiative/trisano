@@ -99,8 +99,11 @@ class ContactEvent < Event
       "contact_event[disease][disease_onset_date]" => {:type => :date, :name => 'Disease onset date', :can_follow_up => false },
       "contact_event[disease][date_diagnosed]" => {:type => :date, :name => 'Disease date diagnosed', :can_follow_up => false },
       "contact_event[disease][hospitalized_id]" => {:type => :drop_down, :name => 'Hospitalized', :can_follow_up => true },
-      "contact_event[disease][died_id]" => {:type => :drop_down, :name => 'Died', :can_follow_up => true }
-        
+      "contact_event[disease][died_id]" => {:type => :drop_down, :name => 'Died', :can_follow_up => true },
+      
+      # Multiples wrappers
+      "contact_event[treatments]" => {:type => :drop_down, :name => 'Treatments', :can_follow_up => false }
+      
     }
   end
   

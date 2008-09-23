@@ -20,14 +20,16 @@
     %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"} [Hide]
     %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
 
-    %div{:id => "contacts"}
-      - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
-        = h @event.disease.disease.contact_lead_in
-        %br
-        %br
+  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
+    = h @event.disease.disease.contact_lead_in
+    %br
+    %br
+
+  - core_element :contacts, f, :vert do
+    %div{:id => "contacts"}  
       - if @event.contacts.empty?
         %h3 No contacts have been recorded for this event
-      - else
+      -  else
         = render :partial => "events/contact", :collection => @event.contacts
 
     %br{:style => "clear: both;"}

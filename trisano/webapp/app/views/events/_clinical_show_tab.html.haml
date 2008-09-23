@@ -105,8 +105,9 @@
             = h @event.disease.disease.treatment_lead_in
             %br
             %br
-          %div{:id => 'treatment-list'}
-            = render :partial => 'treatments/index'
+          - core_element_show :treatments, event_form, :vert do
+            %div{:id => 'treatment-list'}
+              = render :partial => 'treatments/index'
 
   %fieldset
     %legend

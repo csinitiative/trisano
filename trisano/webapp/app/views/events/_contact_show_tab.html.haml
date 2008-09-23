@@ -22,19 +22,20 @@
     %br
     %br
 
-  - if @event.contacts.empty?
-    %h3 No contacts have been recorded for this event
-  - else
-    %table{:class => 'tabular'}
-      %tr
-        %th Last name
-        %th First name
-        %th Disposition
-
-      - for contact in @event.contacts
-        - person = contact.secondary_entity.person_temp
+  - core_element_show :contacts, f, :vert do
+    - if @event.contacts.empty?
+      %h3 No contacts have been recorded for this event
+    - else
+      %table{:class => 'tabular'}
         %tr
-          %td= person.last_name
-          %td= person.first_name
-          %td= person.disposition.code_description if person.disposition
-          %td= link_to("Edit contact event", edit_contact_event_path(person.entity.case_id), {:id => "edit-contact-event"})
+          %th Last name
+          %th First name
+          %th Disposition
+
+        - for contact in @event.contacts
+          - person = contact.secondary_entity.person_temp
+          %tr
+            %td= person.last_name
+            %td= person.first_name
+            %td= person.disposition.code_description if person.disposition
+            %td= link_to("Edit contact event", edit_contact_event_path(person.entity.case_id), {:id => "edit-contact-event"})

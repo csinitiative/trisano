@@ -39,7 +39,7 @@ describe CoreFieldElement do
       form.save_and_initialize_form_elements
       @core_field_element.parent_element_id = form.form_base_element.id
       available_core_fields = @core_field_element.available_core_fields
-      available_core_fields.size.should == 50
+      available_core_fields.size.should == 53
       available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_true
     end
     
@@ -56,7 +56,7 @@ describe CoreFieldElement do
        
       @core_field_element.parent_element_id = base_element_id
       available_core_fields = @core_field_element.available_core_fields
-      available_core_fields.size.should == 49
+      available_core_fields.size.should ==  52
       available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_false
     end
     

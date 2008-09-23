@@ -63,7 +63,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= d.label(:hospitalized_id, "Hospitalized") %>
             <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event, @can_investigate) %>
           <% end %>
-
+        
           <% if @event.hospitalized_health_facilities.empty? %>
             <h3>No hospitals have been recorded for this event</h3>
           <% else %>
@@ -73,7 +73,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       
         <p style="clear: both; padding-top: 20px"> <%= add_hospital_link "Add a hospital" %> </p>
       <% end %>
-                  
+                        
       <br/>
       
     </fieldset>
@@ -108,7 +108,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% end %>
         <% end %>
       <% end %>
-                  
+                        
     </fieldset>
     
     <fieldset class="form">
@@ -117,17 +117,21 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%=  h @event.disease.disease.treatment_lead_in %><br/><br/>
       <% end %>
       
-      <% if @event.new_record? %>
-        <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
-          <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
-            <%= render :partial => "treatments/form", :locals => { :ct => ct } %>
+      <% core_element :treatments, f, :vert do %>
+        <% if @event.new_record? %>
+          <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
+            <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
+              <%= render :partial => "treatments/form", :locals => { :ct => ct } %>
+            <% end %>
           <% end %>
+        <% else %>
+          <div id='treatment-list'>
+            <%= render :partial => "treatments/index" %>
+            <br/>
+          </div>
+          <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
+          <br/><br/>
         <% end %>
-      <% else %>
-        <div id='treatment-list'>
-          <%= render :partial => "treatments/index" %>
-        </div>
-        <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
       <% end %>
     </fieldset>
     

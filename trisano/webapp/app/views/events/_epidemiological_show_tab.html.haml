@@ -42,7 +42,15 @@
         - core_element_show :occupation, risk_factor_form, :horiz do
           = risk_factor_form.label(:occupation)
           = @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    
+  %br{:clear => 'all'}
+  =render :partial => 'events/place_exposures_show', :locals => {:event_form => event_form}
 
+  %fieldset.form
+    %legend Other
+
+    - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
+      - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
         - core_element_show :risk_factors, risk_factor_form, :horiz do
           = risk_factor_form.label(:risk_factors)
           = @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
@@ -51,8 +59,6 @@
           = risk_factor_form.label(:risk_factors_notes)
           = @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
           
-    - core_element_show :imported_from_id, event_form, :horiz do
-      = event_form.label(:imported_from_id)
-      = l @event.imported_from
-
-  =render :partial => 'events/place_exposures_show'
+        - core_element_show :imported_from_id, event_form, :horiz do
+          = event_form.label(:imported_from_id)
+          = l @event.imported_from

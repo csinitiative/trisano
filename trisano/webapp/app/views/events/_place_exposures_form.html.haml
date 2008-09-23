@@ -15,13 +15,17 @@
 -# You should have received a copy of the GNU Affero General Public License 
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %legend Place Exposures
-%div{:id => 'place_exposures'}
 
-  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.place_lead_in.blank?
-    = h @event.disease.disease.place_lead_in
-    %br
-    %br
-  -place_exposures = (event.place_exposures.size > 0 ? event.place_exposures : [Participation.new_place_participation])
-  =render :partial => 'events/editable_place_exposure', :collection => place_exposures, :locals => {:f => f, :event => event}
-%span{:style => "clear: both; padding-top: 20px"}
-  =new_place_exposure_link "New Place Exposure"
+- unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.place_lead_in.blank?
+  = h @event.disease.disease.place_lead_in
+  %br
+  %br
+
+- core_element :places, f, :vert do
+  %div{:id => 'place_exposures'}
+    -place_exposures = (event.place_exposures.size > 0 ? event.place_exposures : [Participation.new_place_participation])
+    =render :partial => 'events/editable_place_exposure', :collection => place_exposures, :locals => {:f => f, :event => event}
+  %span{:style => "clear: both; padding-top: 20px"}
+    =new_place_exposure_link "New Place Exposure"
+  %br
+  %br

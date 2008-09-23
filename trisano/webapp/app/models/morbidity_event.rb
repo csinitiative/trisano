@@ -85,7 +85,12 @@ class MorbidityEvent < Event
       "morbidity_event[disease][disease_onset_date]" => {:type => :date, :name => 'Disease onset date', :can_follow_up => false },
       "morbidity_event[disease][date_diagnosed]" => {:type => :date, :name => 'Disease date diagnosed', :can_follow_up => false },
       "morbidity_event[disease][hospitalized_id]" => {:type => :drop_down, :name => 'Hospitalized', :can_follow_up => true },
-      "morbidity_event[disease][died_id]" => {:type => :drop_down, :name => 'Died', :can_follow_up => true }
+      "morbidity_event[disease][died_id]" => {:type => :drop_down, :name => 'Died', :can_follow_up => true },
+      
+      # Multiples wrappers
+      "morbidity_event[contacts]" => {:type => :drop_down, :name => 'Contacts', :can_follow_up => false },
+      "morbidity_event[places]" => {:type => :drop_down, :name => 'Places', :can_follow_up => false },
+      "morbidity_event[treatments]" => {:type => :drop_down, :name => 'Treatments', :can_follow_up => false }
         
     }
   end
