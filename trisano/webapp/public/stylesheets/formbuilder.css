@@ -39,6 +39,48 @@
   float: right;
   padding: 0px 5px 0px 0px; }
 
+.tab {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #666;
+  letter-spacing: 0px;
+  color: #000; }
+
+.actions {
+  font-size: 12px;
+  font-weight: 900;
+  text-align: right;
+  color: #666; }
+  .actions a {
+    color: #666; }
+    .actions a:hover {
+      color: #c00; }
+
+.section {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333; }
+
+.field {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #36c; }
+
+.group {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #36c; }
+
 .question {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 12px;
@@ -117,6 +159,9 @@
     visibility: hidden; }
 
 
+
+
+
 #new-view-form {
   padding: 0px 0px 12px 0px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -126,17 +171,17 @@
   text-align: left; }
 
 #root-element-list {
-  padding: 8px 0px 0px 0px; }
+  margin: 8px 0px 0px 0px;
+  padding: 0px 0px 0px 0px; }
   #root-element-list ul {
     margin: 0px 10px 0px 0px;
     padding: 0px 0px 0px 0px; }
   #root-element-list li {
-    margin: 0px 0px 0px 0px;
+    margin: 0px 0px 8px 0px;
     padding: 5px 0px 4px 10px; }
 
-
-
 #new-core-view-form {
+  margin: 0px 0px 0px 0px;
   padding: 0px 0px 12px 0px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
@@ -145,16 +190,17 @@
   text-align: left; }
 
 #core-element-list {
+  margin: 8px 0px 0px 0px;
   padding: 0px 0px 0px 0px; }
   #core-element-list ul {
     margin: 0px 10px 0px 0px;
     padding: 0px 0px 0px 0px; }
   #core-element-list li {
-    margin: 0px 0px 0px 0px;
-    padding: 5px 0px 5px 10px; }
-
+    margin: 0px 0px 8px 0px;
+    padding: 5px 0px 4px 10px; }
 
 #new-core-field-form {
+  margin: 0px 0px 0px 0px;
   padding: 0px 0px 12px 0px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
@@ -163,13 +209,14 @@
   text-align: left; }
 
 #core-field-element-list {
-  padding: 8px 0px 0px 0px; }
+  margin: 8px 0px 0px 0px;
+  padding: 0px 0px 0px 0px; }
   #core-field-element-list ul {
     margin: 0px 10px 0px 0px;
     padding: 0px 0px 0px 0px; }
   #core-field-element-list li {
-    margin: 0px 0px 0px 0px;
-    padding: 5px 0px 10px 10px; }
+    margin: 0px 0px 8px 0px;
+    padding: 5px 0px 4px 10px; }
 
 #library-admin {
   padding: 0px 0px 0px 0px;
@@ -299,50 +346,44 @@
 
 .fb-tab {
   background-color: #d3d3d3; }
-  .fb-tab /li {
-    border-color: #c00;
-    border: dotted;
-    border-width: 0px 0px 1px 0px; }
 
 .fb-tab-children {
   background-color: #fff; }
   .fb-tab-children li {
-    border-color: #c00;
     border: dotted;
-    border-width: 0px 0px 1px 0px; }
+    border-width: 0px 0px 1px 0px;
+    border-color: #ccc; }
 
 .fb-section {
   color: #333;
   background: #e8e8e8; }
 
 .fb-section-children li {
-  border-color: #ccc;
-  border: dotted;
-  border-width: 0px 0px 1px 0px; }
+  border-width: 0px 0px 0px 0px; }
 
 .fb-question-children li {
-  border-color: #ccc;
-  border: dotted;
   border-width: 0px 0px 0px 0px; }
 
 .fb-value-set {
-  color: #666; }
+  color: #666;
+  background: #fff; }
+  .fb-value-set ul {
+    border-style: solid;
+    border-width: 0px 0px 0px 1px;
+    border-color: #c00; }
+  .fb-value-set li {
+    border-width: 0px 0px 0px 0px; }
 
-.fb-value-set-children ul {
-  margin: 0px 0px 0px 0px;
-  padding: 0px 30px 0px 0px; }
+.fb-value-set-children li {
+  border-width: 0px 0px 0px 0px; }
 
 .follow-up-item {
-  color: #666; }
+  color: #666;
+  background: #ccc; }
 
-.follow-up-children li {
-  border-color: #ccc;
-  border: dotted;
-  border-width: 0px 0px 1px 0px; }
 
 .fb-core-form {
-  color: #333;
-  background-color: #b4dc66; }
+  color: #333; }
 
 .fb-core-form-children {
   background-color: #fff; }
@@ -352,20 +393,22 @@
     border-width: 0px 0px 1px 0px; }
 
 .fb-core-field {
-  background-color: #b4dc66; }
+  background-color: #d3d3d3; }
 
 .fb-core-field-children {
   background-color: #fff; }
   .fb-core-field-children li {
-    border-color: #ccc;
     border: dotted;
-    border-width: 0px 0px 1px 0px; }
+    border-width: 0px 0px 1px 0px;
+    border-color: #ccc; }
 
 .fb-before-core-field {
-  background-color: #d0f191; }
+  background-color: #fff; }
+  .fb-before-core-field li {
+    border-width: 0px 0px 0px 0px; }
 
 .fb-after-core-field {
-  background-color: #d0f191; }
+  background-color: #fff; }
 
 .fb-group {
   color: #093; }
@@ -377,20 +420,10 @@
   padding: 0px 0px 5px 18px; }
 
 
-.fb-add-tab {
-  color: #333; }
 
-.fb-add-to-library {
-  color: #333; }
 
-.fb-edit-value-set {
-  color: #333; }
 
-.fb-add-core-tab {
-  color: #333; }
 
-.fb-add-core-field {
-  color: #333; }
 
 ul {
   margin: 0px 0px 0px 0px;

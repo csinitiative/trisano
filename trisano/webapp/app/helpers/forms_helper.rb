@@ -60,13 +60,15 @@ module FormsHelper
   
   def render_view(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='view_#{element.id}' class='sortable fb-tab' style='clear: both;'><b>#{element.name}</b>"
-      result << "&nbsp;" << add_section_link(element, "tab")
-      result << "&nbsp;|&nbsp;"
-      result << add_question_link(element, "tab")
-      result << "&nbsp;|&nbsp;"
-      result << add_follow_up_link(element, "tab", true)
-      result << "&nbsp;|&nbsp;" << delete_view_link(element)
+      result = "<li id='view_#{element.id}' class='sortable fb-tab'>"
+      
+      result << "<table><tr>"
+      result << "<td class='tab'>#{element.name}</td>"
+      result << "<td class='actions'>" << add_section_link(element, "tab")
+      result << "&nbsp;&nbsp;" << add_question_link(element, "tab")
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "tab", true)
+      result << "&nbsp;&nbsp;" << delete_view_link(element)
+      result << "</td></tr></table>"
     
       result << "<div id='section-mods-#{element.id.to_s}'></div>"
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
@@ -90,14 +92,15 @@ module FormsHelper
   
   def render_core_view(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='core_view_#{element.id}' class='fb-tab' style='clear: both;'><b>#{element.name}</b>"
+      result = "<li id='core_view_#{element.id}' class='fb-tab'>"
     
-      result << "&nbsp;" << add_section_link(element, "tab")
-      result << "&nbsp;|&nbsp;"
-      result << add_question_link(element, "tab")
-      result << "&nbsp;|&nbsp;"
-      result << add_follow_up_link(element, "tab", true)
-      result << "&nbsp;|&nbsp;" << delete_view_link(element)
+      result << "<table><tr>"
+      result << "<td class='tab'>#{element.name}</td>"
+      result << "<td class='actions'>" << add_section_link(element, "tab")
+      result << "&nbsp;&nbsp;" << add_question_link(element, "tab")
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "tab", true)
+      result << "&nbsp;&nbsp;" << delete_view_link(element)
+      result << "</td></tr></table>"
     
       result << "<div id='section-mods-#{element.id.to_s}'></div>"
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
@@ -150,12 +153,14 @@ module FormsHelper
   
   def render_before_core_field(form_elements_cache, element, include_children)
     begin
-      result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field' style='clear: both;'><b>Before configuration</b>"
+      result = "<li id='before_core_field_#{element.id}' class='fb-before-core-field'>"
     
-      result << "&nbsp;" << add_question_link(element, "before config")
-
-      result << "&nbsp;|&nbsp;"
-      result << add_follow_up_link(element, "before config", true)
+      result << "<table><tr>"
+      result << "<td class='field'>Before configuration</td>"
+      result << "<td class='actions'>" << add_question_link(element, "before config")
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "before config", true)
+      result << "</td></tr></table>"
+      
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
       if include_children && form_elements_cache.children?(element)
@@ -177,12 +182,14 @@ module FormsHelper
     
   def render_after_core_field(form_elements_cache, element, include_children)
     begin
-      result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field' style='clear: both;'><b>After configuration</b>"
+      result = "<li id='after_core_field_#{element.id}' class='fb-after-core-field'>"
     
-      result << "&nbsp;" << add_question_link(element, "after config")
-
-      result << "&nbsp;|&nbsp;"
-      result << add_follow_up_link(element, "after config", true)
+			result << "<table><tr>"
+      result << "<td class='field'>After configuration</td>"
+      result << "<td class='actions'>" << add_question_link(element, "after config")
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "after config", true)
+      result << "</td></tr></table>"
+      
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
     
       if include_children && form_elements_cache.children?(element)
@@ -204,9 +211,13 @@ module FormsHelper
   
   def render_section(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='section_#{element.id}' class='sortable fb-section' style='clear: both;'><b>#{element.name}</b>"
-      result << "&nbsp;" << add_question_link(element, "section") if (include_children)
-      result << "&nbsp;|&nbsp;" << delete_section_link(element)
+      result = "<li id='section_#{element.id}' class='sortable fb-section'>"
+      
+      result << "<table><tr>"
+      result << "<td class='section'>#{element.name}</td>"
+      result << "<td class='actions'>" << add_question_link(element, "section") if (include_children)
+      result << "&nbsp;&nbsp;" << delete_section_link(element)
+      result << "</td></tr></table>"
     
       result << "<div id='question-mods-#{element.id.to_s}'></div>"
 
@@ -228,8 +239,12 @@ module FormsHelper
 
   def render_group(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='group_#{element.id}' class='sortable fb-group' style='clear: both;'><b>#{element.name}</b>"
-      result << "&nbsp;&nbsp;" << delete_group_link(element)
+      result = "<li id='group_#{element.id}' class='sortable fb-group'>"
+      
+      result << "<table><tr>"
+      result << "<td class='group'>#{element.name}</td>"
+      result << "<td class='actions'>" << delete_group_link(element)
+      result << "</td></tr></table>"
     
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='section_#{element.id.to_s}_children' style='clear: both'>"
