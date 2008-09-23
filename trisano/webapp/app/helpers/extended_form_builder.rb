@@ -113,9 +113,9 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       
       i = 0
       name = field_name + "[" + field_index + "][check_box_answer][]"
+      id = html_options[:id]
       get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value|
-        id = @object_name.gsub(/[\[\]]/, "_") + "_" + field_index + "_check_box_answer_#{i += 1}"
-        html_options[:id] = id
+        html_options[:id] =  "#{id}_#{i += 1}"
         check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), html_options) + value
       end
       check_boxes += @template.hidden_field_tag(name, "")
@@ -131,10 +131,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
+      id = html_options[:id]
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value|
-        id = @object_name.gsub(/[\[\]]/, "_") + "_" + field_index + "_radio_button_answer_#{i += 1}"
         
-        html_options[:id] = id
+        html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onchange] = select_answer_event if follow_ups
         
         radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), html_options) + value
