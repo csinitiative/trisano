@@ -184,9 +184,9 @@ module EventsHelper
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
       
       controls += link_to_function('Route event to one or more jurisdictions', nil) do |page|
-                    page[:routing_controls].visual_effect :blind_down
+                    page["routing_controls_#{event.id}"].visual_effect :blind_down
                   end
-      controls += "<div id='routing_controls' style='display: none; position: absolute; z-index: 1000'>"
+      controls += "<div id='routing_controls_#{event.id}' style='display: none; position: absolute; z-index: 1000'>"
       controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
@@ -205,7 +205,7 @@ module EventsHelper
       controls += submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
 
       controls += "</form>"
-      controls += link_to_function "Close", "Effect.BlindUp('routing_controls')"
+      controls += link_to_function "Close", "Effect.BlindUp('routing_controls_#{event.id}')"
       controls += "</div>"
       controls += "</div>"
     else

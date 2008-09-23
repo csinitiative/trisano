@@ -30,7 +30,12 @@ class Place < ActiveRecord::Base
     end
 
     def jurisdictions
-      find_all_by_place_type_id(Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction').id, :order => 'name')
+      jurisdictions = find_all_by_place_type_id(Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction').id, :order => 'name')
+
+      # Pull 'Unassigned' out and place it on top.
+      unassigned = jurisdictions.find { |jurisdiction| jurisdiction.name == "Unassigned" }
+      jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
+      jurisdictions
     end
 
     def jurisdiction_by_name(name)

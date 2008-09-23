@@ -149,8 +149,8 @@ class MorbidityEventsController < EventsController
     # Allow for test scripts and developers to jump directly to the "under investigation" state
     if RAILS_ENV == "production"
       @event.event_status = "NEW"
+      @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
     end
-    @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
     @event.event_onset_date = Date.today,
 
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
