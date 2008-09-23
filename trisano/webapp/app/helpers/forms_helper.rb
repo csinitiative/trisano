@@ -309,11 +309,14 @@ module FormsHelper
   def render_follow_up(form_elements_cache, element, include_children=true)
     begin
       result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
-    
+      
+      result << "<table><tr>"
+      result << "<td class='followup'>"
+      
       exposed_attributes = eval(element.form.event_type.camelcase).exposed_attributes
     
       if (element.core_path.blank?)
-        result <<  "Follow up, Condition: '#{element.condition}'"
+        result <<  "Follow up, Condition: <b>#{element.condition}</b>"
       else
         result <<  "Core follow up, "
         if (element.is_condition_code)
@@ -332,10 +335,13 @@ module FormsHelper
         end
       end
     
+      result << "</td>"
+      result << "<td class='actions'>"
       if (include_children)
         result << " " << add_question_link(element, "follow up container")
-        result << "&nbsp;|&nbsp;" << edit_follow_up_link(element, !element.core_path.blank?)
-        result << "&nbsp;|&nbsp;" << delete_follow_up_link(element)
+        result << "&nbsp;&nbsp;" << edit_follow_up_link(element, !element.core_path.blank?)
+        result << "&nbsp;&nbsp;" << delete_follow_up_link(element)
+      result << "</td></tr></table>"
       end
       
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
@@ -359,15 +365,21 @@ module FormsHelper
   
   def render_value_set(form_elements_cache, element, include_children=true)
     begin
-      result =  "<li id='value_set_#{element.id.to_s}' class='fb-value-set'>Value Set: "
-      result << element.name
+      result =  "<li id='value_set_#{element.id.to_s}' class='fb-value-set'>"
+      
+      result << "<table><tr>"
+      result << "<td class='valueset'>Value Set: "
+      result << "<b>" << element.name << "</b>"
+      result << "</td>"
     
+      result << "<td class='actions'>"
       if include_children
-        result << "&nbsp;" << edit_value_set_link(element)
-        result << "&nbsp;|&nbsp;" << add_to_library_link(element)
+        result << edit_value_set_link(element)
+        result << "&nbsp;&nbsp;" << add_to_library_link(element)
       end
     
-      result << "&nbsp;|&nbsp;" << delete_value_set_link(element)
+      result << "&nbsp;&nbsp;" << delete_value_set_link(element)
+      result << "</td></tr></table>"
     
       result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children
       result << "<div id='value-set-mods-#{element.id.to_s}'></div>" if include_children
