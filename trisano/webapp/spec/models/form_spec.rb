@@ -580,5 +580,68 @@ describe Form do
     end
     
   end
+
+  describe 'a copied form' do
+    fixtures :forms, :form_elements, :questions, :diseases, :diseases_forms
+
+    before :each do 
+      @original_form = Form.find(1)
+      @copied_form = @original_form.copy
+    end
+
+    it 'should not impact the original form' do
+      @original_form.diseases.size.should == 2
+      @original_form.form_base_element.should_not be_nil
+    end
+
+    it "should append ' (Copy)' to the new form name" do
+      @copied_form.name.should eql(@original_form.name + " (Copy)")
+    end
+    
+    it 'should match the original description' do
+      @copied_form.description.should eql(@original_form.description)
+    end
+
+    it 'should have same diseases and the original form' do
+      @copied_form.diseases.size.should == @original_form.diseases.size
+    end
+
+    it 'should not have the same created_at date as the oringal form' do
+      @copied_form.created_at.should_not eql(@original_form.created_at)
+    end
+
+    it 'should not have the same updated_at date as the original form' do
+      @copied_form.updated_at.should_not eql(@original_form.created_at)
+    end
+
+    it 'should be a template' do
+      @copied_form.is_template.should be_true
+      @copied_form.template_id.should be_nil
+      @copied_form.version.should be_nil
+    end
+
+    it 'should not be published' do
+      @copied_form.status.should eql("Not Published")
+    end
+
+    it 'should not be rolled back' do
+      @copied_form.rolled_back_from_id.should be_nil
+    end
+
+    it 'should have the same event type as the original' do
+      @copied_form.event_type.should eql(@original_form.event_type)
+    end
+
+    it 'should have the same jurusdiction as the original' do
+      @copied_form.jurisdiction.should eql(@original_form.jurisdiction)
+    end
+
+    it 'should copy the form elements' do
+      @copied_form.form_base_element.should_not be_nil
+      @copied_form.form_base_element.children.size.should == 3
+      @copied_form.form_base_element.all_children.size.should == @original_form.form_base_element.all_children.size
+    end
+
+  end
     
 end

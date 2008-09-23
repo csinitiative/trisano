@@ -41,7 +41,7 @@ ActionController::Routing::Routes.draw do |map|
     entity.resources :locations
   end
   
-  map.resources :forms
+  map.resources :forms, :member => {:copy => :post}
 
   map.resources :external_codes
 

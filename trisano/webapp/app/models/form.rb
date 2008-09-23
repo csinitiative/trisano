@@ -134,6 +134,31 @@ class Form < ActiveRecord::Base
     end
     
   end
+
+  def copy
+    copied_form = nil
+    begin
+      transaction do
+        copied_form = self.clone
+        copied_form.name << " (Copy)"
+        copied_form.created_at = nil
+        copied_form.updated_at = nil
+        copied_form.status = 'Not Published'
+        copied_form.is_template = true
+        copied_form.save!
+        self.diseases.each do |disease|
+          copied_form.diseases << disease
+        end
+        copy_form_base_element_to(copied_form)
+      end
+
+      return copied_form
+
+    rescue Exception => ex
+      logger.error ex
+      return nil
+    end    
+  end
   
   # Operates on a template for which there is at least one published
   # version, establishing a new template based on the most recent
@@ -242,7 +267,7 @@ class Form < ActiveRecord::Base
   
   def initialize_form_elements
     begin
-      tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+      tree_id = next_tree_id
       form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
     
       investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
@@ -261,6 +286,10 @@ class Form < ActiveRecord::Base
       raise
     end
     
+  end
+
+  def next_tree_id
+    Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
   
   # Debt: Consider moving this to FormElement
@@ -302,6 +331,15 @@ class Form < ActiveRecord::Base
       })
    
     question_to_publish.save
+  end
+
+  def copy_form_base_element_to(copied_form)
+    tree_id = next_tree_id
+    form_id = copied_form.id
+    base_element = self.form_base_element.clone
+    base_element.form_id = form_id
+    base_element.tree_id = tree_id
+    base_element.copy_children(self.form_base_element, nil, form_id, tree_id, true)
   end
   
 end

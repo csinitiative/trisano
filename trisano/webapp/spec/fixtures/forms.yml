@@ -58,3 +58,4 @@ checken_pox_TB_form_for_LHD_2:
   is_template: true
   status: "Live"
   event_type: "morbidity_event"
+

@@ -64,6 +64,23 @@ class FormsController < AdminController
     end
   end
 
+  def copy
+    @original_form = Form.find(params[:id])
+    @form = @original_form.copy
+
+    respond_to do |format|
+      if @form.save_and_initialize_form_elements
+        flash[:notice] = "Form was successfully copied."
+        format.html { render :template => 'forms/edit' }
+        format.xml  { render :xml => @form, :status => :created, :location => @form }
+      else
+        flash[:error] = "Form copy failed"
+        format.html { redirect_to(@form) }
+        format.xml  { render :xml => @form.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
   def update
     params[:form][:disease_ids] ||= []
     @form = Form.find(params[:id])

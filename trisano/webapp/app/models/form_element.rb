@@ -113,6 +113,7 @@ class FormElement < ActiveRecord::Base
     e.name = node_to_copy.name
     e.description = node_to_copy.description
     e.condition = node_to_copy.condition
+    e.core_path = node_to_copy.core_path
     e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
     e.save!
     parent.add_child e unless parent.nil?
@@ -124,7 +125,7 @@ class FormElement < ActiveRecord::Base
     end
     e
   end
-  
+
   def self.filter_library(options)
     if options[:filter_by].blank?
       FormElement.roots(:conditions => ["form_id IS NULL"])
