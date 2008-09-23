@@ -175,7 +175,7 @@ module EventsHelper
         controls += "</form>"
       end
     end
-    controls += "<span style='color: gray'>Extra-jurisdictional event.  No action permitted.</span>" if controls.blank?
+    controls += "<span style='color: gray'>No action permitted.</span>" if controls.blank?
     controls
   end
 
@@ -209,7 +209,7 @@ module EventsHelper
       controls += "</div>"
       controls += "</div>"
     else
-      controls += "<span style='color: gray'>Extra-jurisdictional event.  Routing disabled</span>"
+      controls += "<span style='color: gray'>Routing disabled</span>"
     end
     controls
   end

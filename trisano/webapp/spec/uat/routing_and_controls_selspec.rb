@@ -202,8 +202,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
 
     switch_user(@browser, "surveillance_mgr").should be_true
-    @browser.is_text_present("Extra-jurisdictional event. Routing disabled").should be_true
-    @browser.is_text_present("Extra-jurisdictional event. No action permitted").should be_true
+    @browser.is_text_present("Routing disabled").should be_true
+    @browser.is_text_present("No action permitted").should be_true
   end
 
   it "should deny access altogether when entitlements are outside any jurisdiction." do

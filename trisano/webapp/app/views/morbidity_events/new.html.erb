@@ -56,6 +56,18 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 
 <% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder) do |event_form| %>
   <%  @event_form = event_form %>
+
+  <%# We put this here to keep jurisdiction from being changed in edit mode %>
+  <%- jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event) %>
+  <% content_for :jurisdiction_selection do %>
+    <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+      <% core_element :secondary_entity_id, j, :horiz do -%>
+        <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
+        <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+      <% end -%>
+    <% end %>
+  <% end %>
+
   <div class="yui-content">
     <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
       <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>

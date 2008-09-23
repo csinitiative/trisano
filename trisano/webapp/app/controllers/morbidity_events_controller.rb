@@ -120,7 +120,7 @@ class MorbidityEventsController < EventsController
           :telephone => {} 
         }
       },
-      :active_jurisdiction => {}  # Needed for development and test mode
+      :active_jurisdiction => {}
     )
 
     # Push this into the model
@@ -147,16 +147,15 @@ class MorbidityEventsController < EventsController
     @event = MorbidityEvent.new(params[:morbidity_event])
 
     # Allow for test scripts and developers to jump directly to the "under investigation" state
-    if RAILS_ENV == "production"
-      @event.event_status = "NEW"
-      @event.active_jurisdiction = {:secondary_entity_id => Place.jurisdiction_by_name("Unassigned").entity_id }
+    if RAILS_ENV == 'production'
+      @event.primary_jurisdiction.name == "Unassigned" ? @event.event_status = "NEW" : @event.event_status = "ACPTD-LHD"
     end
     @event.event_onset_date = Date.today,
 
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
     @place_events = PlaceEvent.initialize_from_morbidity_event(@event)    
 
-    unless User.current_user.is_entitled_to_in?(:create_event, @event.active_jurisdiction.secondary_entity_id)
+    unless User.current_user.is_entitled_to_in?(:create_event, @event.primary_jurisdiction.entity_id)
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
     end
     

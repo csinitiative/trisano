@@ -54,15 +54,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= f.core_text_field(:outbreak_name, {:size => 25}, @event, @can_investigate) %>
       <% end -%>
     </fieldset>
-    <% unless RAILS_ENV == "production" %>
-      <fieldset class="form">
-        <legend>Investigation</legend>
-        <% f.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
-          <% core_element :secondary_entity_id, j, :horiz do -%>
-            <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
-            <%= j.collection_select(:secondary_entity_id, Place.jurisdictions, :entity_id, :name) %> 
-          <% end -%>
-        <% end %>
+    <fieldset class="form">
+      <legend>Auditing / Investigation</legend>
+      <% core_element :event_name, f, :horiz do -%>
+        <%= f.label(:event_name) %>
+        <%= f.core_text_field(:event_name, {:size => 25}, @event, @can_investigate) %>
+      <% end -%>
+      <%= yield :jurisdiction_selection %>
+      <% unless RAILS_ENV == "production" %>
         <% core_element :event_status, f, :horiz do -%>
           <%= f.label(:event_status) %>
           <%= f.core_dropdown_field(:event_status, Event.get_states_and_descriptions, :state, :description, {:include_blank => false}) %>
@@ -75,15 +74,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>
           <%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %>
         <% end -%>
-      </fieldset>
-    <% end %>
-    <fieldset class="form">
-      <legend>Auditing</legend>
-      <% core_element :event_name, f, :horiz do -%>
-        <%= f.label(:event_name) %>
-        <%= f.core_text_field(:event_name, {:size => 25}, @event, @can_investigate) %>
-      <% end -%>
-      <% unless RAILS_ENV == "production" %>
         <% core_element :review_completed_UDOH_date, f, :horiz do -%>
           <%= f.label(:review_completed_UDOH_date, "Date review completed by UDOH") %>
           <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
