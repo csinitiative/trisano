@@ -62,6 +62,20 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   
   <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
     <%  @event_form = event_form %>
+
+    <%# Allow jurisdictions to be changed in development mode, not production %>
+    <% unless RAILS_ENV == 'production' %>
+      <% jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event) %>
+      <% content_for :jurisdiction_selection do %>
+        <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+          <% core_element :secondary_entity_id, j, :horiz do -%>
+            <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
+            <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+          <% end -%>
+        <% end %>
+      <% end %>
+    <% end %>
+
     <div class="yui-content">
       <div id="demographic_tab">
         <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>

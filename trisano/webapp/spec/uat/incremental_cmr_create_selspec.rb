@@ -101,7 +101,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save administrative info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Administrative")
-    @browser.select 'morbidity_event_active_jurisdiction_secondary_entity_id', 'label=Salt Lake Valley Health Department'
+    @browser.type 'morbidity_event_event_name', 'Test Event'
     save_cmr(@browser).should be_true
   end
   
@@ -118,7 +118,7 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.is_text_present('Animal head').should be_true
     
     click_core_tab(@browser, "Administrative")
-    @browser.is_text_present('Salt Lake Valley Health Department').should be_true
+    @browser.is_text_present('Test Event').should be_true
     
     click_core_tab(@browser, "Contacts")
     @browser.is_text_present('Costello').should be_true
