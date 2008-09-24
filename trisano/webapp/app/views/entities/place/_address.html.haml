@@ -29,13 +29,13 @@
       -core_element_show :city, address_form, :horiz do
         =address_form.label(:city)
         =address.city 
-      -core_element_show :state, address_form, :horiz do
+      -core_element_show :state_id, address_form, :horiz do
         =address_form.label(:state)
         =l(address.state) 
       -core_element_show :postal_code, address_form, :horiz do
         =address_form.label(:postal_code)
         =address.postal_code 
-      -core_element_show :county, address_form, :horiz do
+      -core_element_show :county_id, address_form, :horiz do
         =address_form.label(:county)
         =l(address.county) 
       -core_element_show :district, address_form, :horiz do

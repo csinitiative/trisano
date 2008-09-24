@@ -31,6 +31,9 @@ module TrisanoHelper
   ADMIN = "Administrative"
   INVESTIGATION = "Investigation"
   
+  # Tabs for place events
+  PLACE = "Place"
+  
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
@@ -53,7 +56,8 @@ module TrisanoHelper
     CONTACTS => "contacts_tab",
     EPI => "epi_tab",
     REPORTING => "reporting_tab",
-    ADMIN => "administrative_tab"
+    ADMIN => "administrative_tab",
+    PLACE => "place_tab"
   }
 
   #  Use set_fields after you navigate to any location by passing in a hash of 
@@ -122,6 +126,8 @@ module TrisanoHelper
       browser.click('//li[7]/a/em')
     when INVESTIGATION
       browser.click('//li[8]/a/em')
+    when PLACE
+      browser.click('//li[1]/a/em')
     else
       puts("TAB NOT FOUND: " + tab_name)
     end
@@ -207,6 +213,13 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Contact event was successfully created.") or
         browser.is_text_present("Contact event was successfully updated."))
+  end
+  
+  def add_place(browser, place_attributes, index = 1)
+    click_core_tab(browser, EPI)
+    browser.click "link=New Place Exposure"
+    sleep(1)
+    browser.type("//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", place_attributes[:name])
   end
 
   def save_place_event(browser)
@@ -976,8 +989,9 @@ module TrisanoHelper
     retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
-    name_position = html_source.index(name)
-      
+    # Start from form_children to avoid finding something up in the top portion of the page
+    name_position = html_source.index(name, html_source.index("form_children")) 
+    
     begin
       id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
       raise if html_source[id_start_position..id_start_position+1].to_i == 0

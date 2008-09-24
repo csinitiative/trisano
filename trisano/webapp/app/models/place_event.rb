@@ -75,5 +75,34 @@ class PlaceEvent < Event
     end
   end
   
+  # A hash that provides a basic field index for the contact event forms. It maps the form
+  # attribute keys to some metadata that is used to drive core field and core follow-up
+  # configurations in form builder.
+  # 
+  # Names do not have to match the field name on the form views. Names are used to 
+  # drive the drop downs for core field and core follow up configurations. So more context
+  # can be given to these names than might appear on the actual event forms, because in
+  # drop down in form builder, 'Last name' isn't going to be enough information for the user.
+  def self.exposed_attributes
+    {
+      "place_event[active_place][active_primary_entity][place][name]" => {:type => :single_line_text, :name => "Name", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][place][place_type_id]" => {:type => :drop_down, :name => "Type", :can_follow_up => false },
+      "place_event[active_place][active_primary_entity][address][street_number]" => {:type => :single_line_text, :name => "Street number", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][address][street_name]" => {:type => :single_line_text, :name => "Street name", :can_follow_up => true },
+      
+      "place_event[active_place][active_primary_entity][address][unit_number]" => {:type => :single_line_text, :name => "Unit number", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][address][city]" => {:type => :single_line_text, :name => "City", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][address][state_id]" => {:type => :drop_down, :name => "State", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][address][county_id]" => {:type => :drop_down, :name => "County", :can_follow_up => true },
+      "place_event[active_place][active_primary_entity][address][postal_code]" => {:type => :single_line_text, :name => "Zip code", :can_follow_up => true }
+    }
+  end
+  
+  def self.core_views
+    [
+      ["Place", "Place"]
+    ]
+  end
+  
   
 end

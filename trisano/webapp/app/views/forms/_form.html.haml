@@ -20,7 +20,7 @@
 
 %p
   = f.label(:event_type, "Show when event type is:")
-  = f.select(:event_type, [["Morbidity event", "morbidity_event"], ["Contact event", "contact_event"]], {:include_blank => true}) 
+  = f.select(:event_type, [["Morbidity event", "morbidity_event"], ["Contact event", "contact_event"], ["Place event", "place_event"]], {:include_blank => true}) 
 
 %p
   = f.label(:disease_id, "Show when disease is:")

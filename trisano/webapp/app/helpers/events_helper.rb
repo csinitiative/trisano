@@ -227,7 +227,7 @@ module EventsHelper
   def concat_core_field(before_or_after, attribute, form_builder, block)
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
-    if (@event.attributes["type"] == "ContactEvent" || @can_investigate)
+    if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
       @event.form_references.each do |form_reference|
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
         configs.each do |config|
@@ -242,7 +242,7 @@ module EventsHelper
   def concat_core_field_show(before_or_after, attribute, form_builder, block)
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
-    if (@event.attributes["type"] == "ContactEvent" || @can_investigate)
+    if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
       @event.form_references.each do |form_reference|
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
         configs.each do |config|
