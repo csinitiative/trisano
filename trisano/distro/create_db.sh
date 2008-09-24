@@ -2,6 +2,6 @@
 
 . setenv.sh
 
-jruby -S rake -f ../webapp/Rakefile trisano:distro:create_db
+jruby -S rake -f ../webapp/Rakefile trisano:distro:create_db_dbuser_permissions
 
 

@@ -46,6 +46,10 @@ namespace :trisano do
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
     end    
 
+    desc "Create the database, the user, and apply security permissions"
+    task :create_db_dbuser_permissions => [:create_db, :create_db_user, :create_db_permissions] do
+    end
+
     desc "Create the database"
     task :create_db do
       puts "Creating TriSano database ..."
@@ -82,12 +86,43 @@ namespace :trisano do
         return sucess
       end
 
+    end
+
+    desc "Create database user"
+    task :create_db_user do
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      psql = postgres_dir + "/psql"
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      ENV["PGPASSWORD"] = priv_password
+
       puts "Creating TriSano user."
       success = system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c \"CREATE USER #{nedss_user} ENCRYPTED PASSWORD '#{nedss_user_pwd}'\"")
       unless success
         puts "Failed creating TriSano user." 
         return sucess
       end
+    end
+
+    desc "Create database permissions for database user"
+    task :create_db_permissions do
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      psql = postgres_dir + "/psql"
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      ENV["PGPASSWORD"] = priv_password
 
       puts "Granting privileges to TriSano user."
       success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'GRANT ALL ON SCHEMA public TO #{nedss_user}'")
@@ -108,10 +143,6 @@ namespace :trisano do
         return sucess
       end
 
-      if success
-        puts "Successfully created and configured TriSano database"
-      end
-
     end
 
     desc "Drop the database"
@@ -127,6 +158,7 @@ namespace :trisano do
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']
       ENV["PGPASSWORD"] = priv_password
+
       success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'drop database #{database}'")
       unless success
         puts "Failed dropping database: #{database}"
@@ -156,7 +188,6 @@ namespace :trisano do
 
     desc "Drop the database"
     task :drop_db_and_user => [:drop_db, :drop_db_user] do
-      puts "dropped db & user"
     end
 
     desc "Export the database"
