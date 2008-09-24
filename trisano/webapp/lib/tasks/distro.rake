@@ -69,7 +69,7 @@ namespace :trisano do
       end
 
       puts "Creating TriSano database structure ..."
-      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f trisano_schema.sql")
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f ./database/trisano_schema.sql")
       unless success
         puts "Failed creating database structure for TriSano."
         return sucess
@@ -112,6 +112,51 @@ namespace :trisano do
         puts "Successfully created and configured TriSano database"
       end
 
+    end
+
+    desc "Drop the database"
+    task :drop_db do
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      psql = postgres_dir + "/psql"
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      ENV["PGPASSWORD"] = priv_password
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} template1 -e -c 'drop database #{database}'")
+      unless success
+        puts "Failed dropping database: #{database}"
+        return sucess
+      end
+    end
+
+    desc "Drop the database user"
+    task :drop_db_user do
+      config = YAML::load_file "./config.yml"
+      host = config['host']
+      port = config['port']
+      database = config['database']
+      postgres_dir = config['postgres_dir']
+      priv_uname = config['priv_uname']
+      priv_password = config['priv_passwd']
+      psql = postgres_dir + "/psql"
+      nedss_user = config['nedss_uname']
+      nedss_user_pwd = config['nedss_user_passwd']
+      ENV["PGPASSWORD"] = priv_password
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} template1 -e -c 'drop user #{nedss_user}'")
+      unless success
+        puts "Failed dropping database user: #{nedss_user}"
+        return sucess
+      end
+    end
+
+    desc "Drop the database"
+    task :drop_db_and_user => [:drop_db, :drop_db_user] do
+      puts "dropped db & user"
     end
 
     desc "Export the database"
