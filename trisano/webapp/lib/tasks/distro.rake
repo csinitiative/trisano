@@ -127,7 +127,7 @@ namespace :trisano do
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']
       ENV["PGPASSWORD"] = priv_password
-      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} template1 -e -c 'drop database #{database}'")
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'drop database #{database}'")
       unless success
         puts "Failed dropping database: #{database}"
         return sucess
@@ -147,7 +147,7 @@ namespace :trisano do
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']
       ENV["PGPASSWORD"] = priv_password
-      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} template1 -e -c 'drop user #{nedss_user}'")
+      success = sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'drop user #{nedss_user}'")
       unless success
         puts "Failed dropping database user: #{nedss_user}"
         return sucess
