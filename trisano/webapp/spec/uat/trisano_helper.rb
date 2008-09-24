@@ -1043,6 +1043,29 @@ module TrisanoHelper
     return -1
   end
 
+  # using the form name, get the form id from the forms index page
+  def get_form_id(browser, form_name)
+    html_source = browser.get_html_source
+    pos1 = html_source.index(form_name)
+    pos2 = html_source.index('forms/builder/', pos1) + 14
+    pos3 = html_source.index('"', pos2)
+    html_source[pos2...pos3]
+  end
+
+  def copy_form_and_open_in_form_builder(browser, form_name)
+    button_id = "copy_form_#{get_form_id(browser, form_name)}"
+    browser.click("//input[@id=\"#{button_id}\"]")    
+    browser.wait_for_page_to_load($load_time)
+    browser.is_text_present('Form was successfully copied.').should be_true
+    browser.click('//input[@id="form_submit"]')
+    browser.wait_for_page_to_load($load_time)
+    browser.is_text_present('Form was successfully updated.').should be_true
+    browser.is_text_present('Not Published').should be_true
+    browser.click('link=Form Builder')
+    browser.wait_for_page_to_load($load_time)
+    true
+  end    
+
   def assert_tooltip_exists(browser, tool_tip_text)
     return false unless browser.is_element_present("//img[contains(@src, 'help.png')]")
     return false unless browser.is_text_present(tool_tip_text)
