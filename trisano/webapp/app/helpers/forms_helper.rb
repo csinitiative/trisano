@@ -131,10 +131,12 @@ module FormsHelper
       if exposed_attributes[element.core_path].nil?
         result << "<b style='color: #CC0000;'>Core field configuration is invalid: #{element.name}</b><br/><small>Invalid core field path is: #{element.core_path}</small>"
       else
-          result << "<b>#{element.name}</b>"
+        result << "<table><tr>"
+        result << "<td class='tab'>#{element.name}</td>"
       end
 
-      result << "&nbsp;&nbsp;" << delete_core_field_link(element)
+      result << "<td class='actions'>" << delete_core_field_link(element)
+      result << "</td></tr></table>"
       
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='core_field_#{element.id.to_s}_children' class='fb-core-field-children' style='clear: both'>"
@@ -318,12 +320,13 @@ module FormsHelper
       if (element.core_path.blank?)
         result <<  "Follow up, Condition: <b>#{element.condition}</b>"
       else
-        result <<  "Core follow up, "
+        result <<  "Core follow up: "
         if (element.is_condition_code)
           code = ExternalCode.find(element.condition)
           result <<  "Code condition: #{code.code_description} (#{code.code_name})"
         else
-          result <<  "String condition: #{element.condition}"
+          result <<  "<!--String condition:--> <b>#{element.condition}</b>"
+          result << "<br>"
         end
       end
     
@@ -331,7 +334,7 @@ module FormsHelper
         if exposed_attributes[element.core_path].nil?
           result << ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
         else
-          result << ", Core data element: #{exposed_attributes[element.core_path][:name]}" 
+          result << "Core data element: <b>#{exposed_attributes[element.core_path][:name]}</b>" 
         end
       end
     
@@ -383,7 +386,6 @@ module FormsHelper
     
       result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children
       result << "<div id='value-set-mods-#{element.id.to_s}'></div>" if include_children
-
     
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='value_set_#{element.id.to_s}_children' class='fb-value-set-children'>"
