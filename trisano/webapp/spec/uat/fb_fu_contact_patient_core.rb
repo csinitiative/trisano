@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder patient-level address core field configs for contacts' do
   
-  $dont_kill_browser = true
+#  $dont_kill_browser = true
 
   fields = [{:name => 'Contact last name', :label => 'contact_event_active_patient__active_primary_entity__person_last_name', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
     {:name => 'Contact first name', :label => 'contact_event_active_patient__active_primary_entity__person_first_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},

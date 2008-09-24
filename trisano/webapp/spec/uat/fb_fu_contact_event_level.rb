@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder patient-level address core field configs for contacts' do
   
-  $dont_kill_browser = true
+  # $dont_kill_browser = true
 
   fields = [
     {:name => 'Imported from', :label => 'contact_event_imported_from_id', :entry_type => 'select', :code => 'Code: Outside U.S. (imported)', :fu_value => 'Outside U.S.', :no_fu_value => 'Acquired in Utah'}

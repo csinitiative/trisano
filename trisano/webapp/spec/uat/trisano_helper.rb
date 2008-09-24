@@ -336,7 +336,7 @@ module TrisanoHelper
   def answer_check_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
-      browser.click("contact_event_answers__#{answer_id}_check_box_answer_#{answer}") == "OK"
+      browser.click("investigator_answer_#{answer_id}_#{answer}") == "OK"
     rescue
       return false
     end
@@ -346,7 +346,7 @@ module TrisanoHelper
   def answer_radio_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
-      browser.click("contact_event_answers__#{answer_id}_radio_button_answer_#{answer}") == "OK"
+      browser.click("investigator_answer_#{answer_id}_#{answer}") == "OK"
     rescue
       return false
     end
@@ -1015,7 +1015,7 @@ module TrisanoHelper
   def get_investigator_click_answer_id(browser, question_text)
     html_source = browser.get_html_source
     question_position = html_source.index(question_text)
-    id_start_position = html_source.index("contact_event_answers__", question_position) + 23
+    id_start_position = html_source.index("investigator_answer_", question_position) + 20
     id_end_position = html_source.index("_", id_start_position) -1
     html_source[id_start_position..id_end_position]
   end
