@@ -18,5 +18,4 @@
 replace_element, replace_partial = replacement_elements(@question_element)
 page.replace_html replace_element, :partial => replace_partial
 page.replace_html 'builder-mods', "<input type='hidden' id='modified-element' name='created-element-id' value='" + @question_element.id.to_s + "'/>"
-page.visual_effect(:highlight, replace_element)
 flash[:notice] = ""

@@ -17,4 +17,3 @@
 
 replace_element, replace_partial = replacement_elements(@form_element)
 page.replace_html replace_element, :partial => replace_partial
-page.visual_effect(:highlight, replace_element)
