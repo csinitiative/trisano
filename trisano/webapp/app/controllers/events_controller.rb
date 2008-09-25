@@ -94,6 +94,7 @@ class EventsController < ApplicationController
     params[event.to_sym][:existing_diagnostic_attributes] ||= {}
     params[event.to_sym][:existing_telephone_attributes] ||= {}
     params[event.to_sym][:existing_place_exposure_attributes] ||= {}
+    params[event.to_sym][:existing_contact_attributes] ||= {} unless event.to_sym == :contact_event
   end
   
 end

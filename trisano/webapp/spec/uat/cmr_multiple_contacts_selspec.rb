@@ -35,6 +35,10 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Unable to locate"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Abbott"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Bud"
+    @browser.select "//div[@class='contact'][2]//select[contains(@id, 'entity_location_type_id')]", "label=Home"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'area_code')]", "202"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'phone_number')]", "5551212"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'extension')]", "22"
 
     save_cmr(@browser).should be_true
 
@@ -44,6 +48,16 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Unable to locate').should be_true
     @browser.is_text_present('Abbott').should be_true
     @browser.is_text_present('Bud').should be_true
+    @browser.is_text_present('(202) 555-1212 Ext. 22').should be_true
+  end
+
+  it "should allow adding a phone number to an existing contact" do
+    edit_cmr(@browser)
+    click_core_tab(@browser, "Contacts")
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'area_code')]", "999"
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'phone_number')]", "8888888"   
+    save_cmr(@browser).should be_true
+    @browser.is_text_present('(999) 888-8888').should be_true
   end
 
   it "should allow removing a contact" do
@@ -59,9 +73,13 @@ describe 'Adding multiple contacts to a CMR' do
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "William"
     @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Not infected"   
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'area_code')]", "777"
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'phone_number')]", "6666666"   
     save_cmr(@browser).should be_true
     @browser.is_text_present('William').should be_true
     @browser.is_text_present('Not infected')
+    @browser.is_text_present('(777) 666-6666 Ext. 22').should be_true
+    @browser.is_text_present('(202) 555-1212 Ext. 22').should_not be_true
   end
 
   it "should allow for editing a contact event" do
