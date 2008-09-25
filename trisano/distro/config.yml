@@ -6,5 +6,5 @@ priv_uname: mike # Database privileged username
 priv_passwd: password # Privileged user's password 
 nedss_uname: trisano_production_user # NEDSS username 
 nedss_user_passwd: password # NEDSS user's password
-dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-dump-09-25-2008-1123AM.dump
+dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
 

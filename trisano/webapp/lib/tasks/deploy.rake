@@ -158,6 +158,11 @@ namespace :trisano do
     task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
       puts "redeploy Tomcat success"
     end
+
+    desc "redeploy Tomcat"
+    task :redeploytomcat_no_smoke => [:stoptomcat, :deletewar, :copywar, :starttomcat] do
+      puts "redeploy Tomcat success"
+    end
     
     desc "build war and redeploy Tomcat"
     task :buildandredeploy => [:buildwar, :redeploytomcat] do
