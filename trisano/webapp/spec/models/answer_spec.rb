@@ -21,7 +21,8 @@ describe Answer do
   
   before(:each) do 
     question = Question.new :short_name => 'short_name_01'
-    @answer = Answer.new :question => question    
+    @answer = Answer.new :question => question
+    @answer.text_answer = 's' * 2000    
   end
 
   it "should return the short name from the question" do
@@ -31,6 +32,13 @@ describe Answer do
   it 'should strip out the extra blank values from a radio button submission' do
     @answer.radio_button_answer=(["Yes", ""])
     @answer.text_answer.should eql("Yes")
+  end
+  
+  it 'should produce an error if the answer text is too long' do
+    @answer.text_answer = 's' * 2001
+    @answer.should_not be_valid
+    @answer.errors.size.should == 1
+    @answer.errors.on(:text_answer).should_not be_nil
   end
 
 end

@@ -18,6 +18,7 @@
 class Answer < ActiveRecord::Base
   belongs_to :question
 
+  validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required
   validates_format_of :text_answer, :with => /^\d{3}-\d{3}-\d{4}$/, :message => 'Phone number must include area code and seven digit number', :allow_blank => true, :if => :is_phone
   validates_date :date_answer, :if => :is_date, :allow_nil => true
