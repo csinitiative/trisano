@@ -19,7 +19,7 @@
   - prefix = event_prefix_for_multi_models(new_or_existing, "_telephone_attributes") + "[]"
   - fields_for prefix, telephone, :builder => ExtendedFormBuilder do |telephone_form|
     - core_element :entity_location_type_id, telephone_form, :horiz do
-      = telephone_form.label(:entty_location_type_id, "Phone type")
+      = telephone_form.label(:entity_location_type_id, "Phone type")
       = telephone_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
     - core_element :area_code, telephone_form, :horiz do
       = telephone_form.label(:area_code)

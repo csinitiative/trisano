@@ -224,7 +224,7 @@ describe Entity, "with people fixtures loaded" do
   describe "and multiple instances of Phil Silvers" do
 
     it "should have two people altogether" do
-      entities(:Silvers).should have(2).people
+      entities(:Silvers).should have(1).people
     end
 
     it "should have one current person named Phil" do
@@ -252,19 +252,19 @@ describe Entity, "with location fixtures loaded" do
       worked = worked + 1 if loc.primary?
       worked = worked + 1 if loc.type == "Work"
     end
-    worked.should == 2
+    worked.should == 3
   end
 end
 
 describe Entity, "with multiple telephones" do
   fixtures :entities, :entities_locations, :locations, :external_codes
 
-  it "should have no telephone entities locations" do
-    entities(:Silvers).telephone_entities_location.should be_nil
+  it "should have telephone entities locations" do
+    entities(:Silvers).telephone_entities_location.should_not be_nil
   end
 
   it "should be able to return all telephone entities locations" do
-    entities(:Silvers).telephone_entities_locations.should be_empty
+    entities(:Silvers).telephone_entities_locations.length.should == 2
   end
 
   it "should be able to build a list of telephone entites locations" do
@@ -274,7 +274,7 @@ describe Entity, "with multiple telephones" do
       :location_type_id => Code.telephone_location_type_id)
 
     entity.save
-    entity.telephone_entities_locations.size.should == 1
+    entity.telephone_entities_locations.size.should == 3
   end
     
 end

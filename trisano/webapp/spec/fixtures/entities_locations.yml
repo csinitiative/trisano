@@ -5,6 +5,7 @@ silvers_joined_to_home_address:
   location_id: 1
   entity_id: 2
   entity_location_type_id: 1301
+  location_type_id: 2311
   primary_yn_id: 1401
   comment:
 
@@ -13,6 +14,7 @@ silvers_joined_to_work_address:
   location_id: 2
   entity_id: 2
   entity_location_type_id: 1302
+  location_type_id: 2311
   primary_yn_id: 1402
   comment:
 
@@ -21,5 +23,24 @@ marks_joined_to_home_address:
   entity_id: !str 86
   location_id: !str 4
   entity_location_type_id: !str 1301
+  location_type_id: 2311
   id: !str 3
   primary_yn_id: !str 1402
+
+silvers_joined_to_home_phone:
+  id: 4
+  location_id: 1
+  entity_id: 2
+  entity_location_type_id: 1301
+  location_type_id: 2312
+  primary_yn_id: 1401
+  comment:
+
+silvers_joined_to_work_phone:
+  id: 5
+  location_id: 2
+  entity_id: 2
+  entity_location_type_id: 1301
+  location_type_id: 2312
+  primary_yn_id: 1402
+  comment:

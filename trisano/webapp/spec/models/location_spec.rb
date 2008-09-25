@@ -53,19 +53,19 @@ describe Location, "with fixtures loaded" do
   fixtures :external_codes, :codes, :locations, :addresses, :entities, :entities_locations
 
   it "Phil Silvers should have two work addresses" do
-    locations(:silvers_work_address).should have(2).addresses
+    locations(:silvers_work).should have(1).addresses
   end
 
   it "Phil Silvers should have one current work address" do
-    locations(:silvers_work_address).current_address.street_name.should eql("Pine Rd.")
+    locations(:silvers_work).current_address.street_name.should eql("Pine Rd.")
   end
 
   it "Phil Silvers should have one home addresses" do
-    locations(:silvers_home_address).should have(1).addresses
+    locations(:silvers_home).should have(1).addresses
   end
 
   it "Phil Silvers should have one current home address" do
-    locations(:silvers_home_address).current_address.street_name.should eql("Birch St.")
+    locations(:silvers_home).current_address.street_name.should eql("Birch St.")
   end
 
   describe "using nested attributes" do

@@ -462,7 +462,7 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { "last_name"=>"Allen", "first_name"=>"Steve"}
+                { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "1234567"}
               ]
           }
           @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
@@ -478,6 +478,13 @@ describe MorbidityEvent do
           @event.contacts.first.secondary_entity.person_temp.last_name.should == "Allen"
           @event.contacts.first.secondary_entity.person_temp.first_name.should == "Steve"
         end
+
+        it "should add a new phone number" do
+          lambda {@event.save}.should change {EntitiesLocation.count + Location.count + Telephone.count}.by(3)
+          @event.contacts.first.secondary_entity.telephone_entities_location.entity_location_type_id.should == external_codes(:location_home).id
+          @event.contacts.first.secondary_entity.telephone.phone_number.should == "1234567"
+        end
+
       end
 
       describe "Receiving multiple new contacts" do
@@ -486,8 +493,8 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { "last_name"=>"Allen", "first_name"=>"Steve"},
-                { "last_name"=>"Burns", "first_name"=>"George"}
+                { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"},
+                { :last_name => "Burns", :first_name => "George"}
               ]
           }
           @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
@@ -501,6 +508,11 @@ describe MorbidityEvent do
         it "should add two new contacts" do
           lambda {@event.save}.should change {Person.count}.by(3)
         end
+
+        it "should add one new phone number" do
+          lambda {@event.save}.should change {EntitiesLocation.count + Location.count + Telephone.count}.by(3)
+        end
+
       end
 
       describe "Receiving a contact with a first name but no last name" do
@@ -509,7 +521,7 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { "last_name"=>"", "first_name"=>"Steve"}
+                { :last_name => "", :first_name => "Steve"}
               ]
           }
           @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
@@ -521,22 +533,72 @@ describe MorbidityEvent do
         end
       end
 
-      describe "Receiving an edited contact" do
+      describe "Receiving one edited contact with new phone number, when event has two contacts" do
+        fixtures :entities, :people, :entities_locations, :locations, :telephones
         before(:each) do
           @existing_contact_hash = {
-            "existing_contact_attributes" => { "#{entities(:Groucho).id}" => {"last_name" => "Marx", "first_name" => "Chico"} }
+            "existing_contact_attributes" => { "#{entities(:Groucho).id}" => {:last_name  => "Marx", :first_name  => "Chico", :contact_phone_id => "", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"} }
+          }
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should update one contact and destroy the other" do
+          first_names = @event.contacts.collect { |contact| contact.secondary_entity.person_temp.first_name }
+          first_names.length.should == 2
+          first_names.include?("Groucho").should be_true
+          first_names.include?("Phil").should be_true
+          lambda {@event.update_attributes(@existing_contact_hash)}.should change {Participation.count}.by(-1)
+          first_names = @event.contacts.collect { |contact| contact.secondary_entity.person_temp.first_name }
+          first_names.length.should == 1
+          first_names.include?("Chico").should be_true
+        end
+
+        it "should add a new phone number" do
+          lambda {@event.update_attributes(@existing_contact_hash)}.should change {EntitiesLocation.count + Location.count + Telephone.count}.by(3)
+          @event.contacts.first.secondary_entity.telephone_entities_location.entity_location_type_id.should == external_codes(:location_home).id
+          @event.contacts.first.secondary_entity.telephone.phone_number.should == "2345678"
+        end
+      end
+
+      describe "Receiving two edited contacts, one with an existing phone number" do
+        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
+        before(:each) do
+          @existing_contact_hash = {
+            "existing_contact_attributes" => {
+              "#{people(:groucho_marx).id}" => {:last_name  => "Marx", :first_name  => "Chico", :contact_phone_id => "", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"},
+              "#{people(:phil_silvers_cur).id}" => {:last_name  => "Silvers", :first_name  => "Jack", :contact_phone_id => "4", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "3456789"}
+            }
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
         it "should update the existing contact" do
-          @event.contacts.first.secondary_entity.person_temp.first_name.should == "Groucho"
+          first_names = @event.contacts.collect { |contact| contact.secondary_entity.person_temp.first_name }
+          first_names.length.should == 2
+          first_names.include?("Phil").should be_true
+          first_names.include?("Groucho").should be_true
+
           lambda {@event.update_attributes(@existing_contact_hash)}.should_not change {Participation.count}
-          @event.contacts.first.secondary_entity.person_temp.first_name.should == "Chico"
-          @event.contacts.first.secondary_entity.person_temp.last_name.should == "Marx"
+
+          first_names = @event.contacts.collect { |contact| contact.secondary_entity.person_temp.first_name }
+          first_names.length.should == 2
+          first_names.include?("Chico").should be_true
+          first_names.include?("Jack").should be_true
+
+          phone_numbers = []
+          @event.contacts.each do |contact| 
+            contact.secondary_entity.telephone_entities_locations.each do |t_el|
+              phone_numbers << t_el.location.current_phone.phone_number
+            end
+          end
+
+          phone_numbers.length.should == 3
+          phone_numbers.include?("2345678").should be_true
+          phone_numbers.include?("3456789").should be_true
+          phone_numbers.include?("5559999").should be_true
         end
       end
-      
+     
       describe "Receiving empty contact data" do
 
         before(:each) do
@@ -546,8 +608,8 @@ describe MorbidityEvent do
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
-        it "should delete existing contact" do
-          lambda {@event.update_attributes(@existing_contact_hash)}.should change {Participation.count}.by(-1)
+        it "should delete existing contacts" do
+          lambda {@event.update_attributes(@existing_contact_hash)}.should change {Participation.count}.by(-2)
         end
 
       end

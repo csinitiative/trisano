@@ -1,9 +1,9 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-silvers_home_address:
+silvers_home:
   id: 1
 
-silvers_work_address:
+silvers_work:
   id: 2
 
 marks_hospital_address_maybe:

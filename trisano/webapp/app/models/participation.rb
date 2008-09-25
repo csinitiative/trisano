@@ -52,6 +52,11 @@ class Participation < ActiveRecord::Base
 
     def new_contact_participation
       contact_participation = Participation.new_person_participation
+      contact_participation.secondary_entity.entities_locations.build( 
+        :primary_yn_id => ExternalCode.yes_id,
+        :location_type_id => Code.telephone_location_type_id,
+        :entity_location_type_id => ExternalCode.telephone_location_type_ids[0]).build_location.telephones.build
+      contact_participation
     end
 
     def new_place_participation

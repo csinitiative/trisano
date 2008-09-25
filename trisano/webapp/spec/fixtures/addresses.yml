@@ -7,13 +7,6 @@ silvers_home_address:
   street_name: "Birch St."
   created_at: <%= Time.now.to_s :db %> 
 
-silvers_work_address_old:
-  id: 2
-  location_id: 2
-  street_number: "789"
-  street_name: "Elm Ave."
-  created_at: <%= 1.day.ago.to_s :db %> 
-
 silvers_work_address_cur:
   id: 3
   location_id: 2

@@ -30,7 +30,7 @@ describe EntitiesLocation do
     fixtures :entities_locations
 
     it "should have three records" do
-      EntitiesLocation.should have(3).records
+      EntitiesLocation.should have(5).records
     end
 
     it "A Phil Silvers record should point to Phil Silvers" do

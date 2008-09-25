@@ -405,11 +405,25 @@ class Event < ActiveRecord::Base
 
   def new_contact_attributes=(contact_attributes)
     contact_attributes.each do |attributes|
+      code = attributes.delete(:entity_location_type_id)
       next if attributes.values_blank?
+
+      person = {}
+      person[:last_name] = attributes.delete(:last_name)
+      person[:first_name] = attributes.delete(:first_name)
+      person[:disposition_id] = attributes.delete(:disposition_id)
+
       contact_participation = contacts.build(:role_id => Event.participation_code('Contact'))
       contact_entity = contact_participation.build_secondary_entity
       contact_entity.entity_type = "person"
-      contact_entity.build_person_temp( attributes )
+      contact_entity.build_person_temp( person )
+
+      next if attributes.values_blank?
+      el = contact_entity.entities_locations.build(
+             :entity_location_type_id => code, 
+             :primary_yn_id => ExternalCode.yes_id,
+             :location_type_id => Code.telephone_location_type_id)
+      el.build_location.telephones.build(attributes)
     end
   end
 
@@ -417,7 +431,35 @@ class Event < ActiveRecord::Base
     contacts.reject(&:new_record?).each do |contact|
       attributes = contact_attributes[contact.secondary_entity.person_temp.id.to_s]
       if attributes
-        contact.secondary_entity.person_temp.attributes = attributes
+        person = {}
+        person[:last_name] = attributes.delete(:last_name)
+        person[:first_name] = attributes.delete(:first_name)
+        person[:disposition_id] = attributes.delete(:disposition_id)
+
+        contact.secondary_entity.person_temp.attributes = person
+
+        # Which entity_location to edit is passed along in the (hidden) attribute contact_phone_id
+        el_id = attributes.delete(:contact_phone_id).to_i
+
+        # They may be adding a phone number to an existing contact who did not lready have one
+        if el_id == 0 || el_id.blank?
+          code = attributes.delete(:entity_location_type_id)
+          next if attributes.values_blank?
+          el = contact.secondary_entity.telephone_entities_locations.build(
+                 :entity_location_type_id => code, 
+                 :primary_yn_id => ExternalCode.yes_id,
+                 :location_type_id => Code.telephone_location_type_id)
+          el.build_location.telephones.build(attributes)
+        else
+          # Don't just find it, loop through the association array looking for it
+          contact.secondary_entity.telephone_entities_locations.each do |tel_el|
+            if tel_el.id == el_id
+              tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
+              tel_el.location.telephones.last.attributes = attributes
+              break
+            end
+          end
+        end
       else
         contacts.delete(contact)
       end
@@ -922,6 +964,10 @@ class Event < ActiveRecord::Base
 
     contacts.each do |contact|
       contact.secondary_entity.person_temp.save(false)
+      contact.secondary_entity.telephone_entities_locations.each do |el|
+        el.save(false)
+        el.location.telephones.each { |t| t.save(false) unless t.frozen?}
+      end
     end
 
     place_exposures.each do |pe|
@@ -932,7 +978,7 @@ class Event < ActiveRecord::Base
       active_patient.save(false)
       active_patient.active_primary_entity.save(false)
 
-      active_patient.active_primary_entity.entities_locations.each do |el|
+      active_patient.active_primary_entity.telephone_entities_locations.each do |el|
         el.save(false)           
         el.location.save(false)
         el.location.telephones.each {|t| t.save(false) unless t.frozen?}

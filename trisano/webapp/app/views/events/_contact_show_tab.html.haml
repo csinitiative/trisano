@@ -31,11 +31,14 @@
           %th Last name
           %th First name
           %th Disposition
+          %th Primary Phone
 
         - for contact in @event.contacts
           - person = contact.secondary_entity.person_temp
+          - telephone = contact.secondary_entity.telephone
           %tr
             %td= person.last_name
             %td= person.first_name
             %td= person.disposition.code_description if person.disposition
+            %td= telephone.simple_format unless telephone.nil?
             %td= link_to("Edit contact event", edit_contact_event_path(person.entity.case_id), {:id => "edit-contact-event"})
