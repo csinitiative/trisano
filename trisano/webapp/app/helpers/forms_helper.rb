@@ -320,7 +320,7 @@ module FormsHelper
       if (element.core_path.blank?)
         result <<  "Follow up, Condition: <b>#{element.condition}</b>"
       else
-        result <<  "Core follow up: "
+        result <<  "Core follow up, "
         if (element.is_condition_code)
           code = ExternalCode.find(element.condition)
           result <<  "Code condition: #{code.code_description} (#{code.code_name})"
