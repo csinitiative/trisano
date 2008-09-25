@@ -208,7 +208,10 @@ namespace :trisano do
       ENV["PGPASSWORD"] = priv_password
       pgdump = postgres_dir + "/pg_dump"
 
-      sh "#{pgdump} -U #{priv_uname} -h #{host} -p #{port} #{database} -c > #{dirname}/#{database}-dump.sql"
+      t = Time.now
+      filename = "#{database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
+
+      sh "#{pgdump} -U #{priv_uname} -h #{host} -p #{port} #{database} -c > #{dirname}/#{filename}"
     end
 
     desc "Import the database from configured backup file"
