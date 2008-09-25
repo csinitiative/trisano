@@ -334,7 +334,7 @@ module FormsHelper
         if exposed_attributes[element.core_path].nil?
           result << ", <b>Core data element is invalid</b><br/><small>Invalid core field path is: #{element.core_path}</small><br/>"
         else
-          result << "Core data element: <b>#{exposed_attributes[element.core_path][:name]}</b>" 
+          result << "&nbsp;Core data element: <b>#{exposed_attributes[element.core_path][:name]}</b>" 
         end
       end
     

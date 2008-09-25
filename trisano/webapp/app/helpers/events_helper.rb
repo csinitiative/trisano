@@ -410,7 +410,7 @@ module EventsHelper
     
       if questions.size > 0
         questions.each do |child|
-          result << render_investigator_question(form_elements_cache, child, f)
+          result << render_investigator_element(form_elements_cache, child, f)
         end
       end
 
@@ -435,7 +435,6 @@ module EventsHelper
           rescue
             break
           end
-        
         end
 
         if (element.condition == core_value.to_s)
@@ -450,7 +449,7 @@ module EventsHelper
     
         if questions.size > 0
           questions.each do |child|
-            result << render_investigator_question(form_elements_cache, child, f)
+            result << render_investigator_element(form_elements_cache, child, f)
           end
         end
       end
