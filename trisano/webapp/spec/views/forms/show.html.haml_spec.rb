@@ -36,7 +36,8 @@ describe "/forms/show.html.haml" do
     @form.stub!(:jurisdiction).and_return(@entity)
     @form.stub!(:status).and_return('Not Published')
     @form.stub!(:event_type).and_return('morbidity_event')
-    
+    @form.stub!(:is_template).and_return(true)
+
     assigns[:form] = @form
   end
 

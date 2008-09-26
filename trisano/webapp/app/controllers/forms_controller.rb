@@ -46,6 +46,9 @@ class FormsController < AdminController
 
   def edit
     @form = Form.find(params[:id])
+    if not @form.is_template
+      render :text => "permission denied: this form id is not a template form", :status => 403
+    end
   end
 
   def create
@@ -110,6 +113,9 @@ class FormsController < AdminController
   def builder
     @form = Form.find(params[:id])
     @form.structure_valid?
+    if not @form.is_template
+      render :text => "Permission denied: This form id is not a template form", :status => 403
+    end
   end
   
   def publish

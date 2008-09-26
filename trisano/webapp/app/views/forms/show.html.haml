@@ -66,6 +66,7 @@
       %td
         = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
       %td
-        = link_to 'Edit', edit_form_path(@form)
-        |
-        = link_to 'Form Builder', builder_path(@form)
+        -if @form.is_template
+          = link_to 'Edit', edit_form_path(@form)
+          |
+          = link_to 'Form Builder', builder_path(@form)

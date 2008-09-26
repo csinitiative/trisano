@@ -188,6 +188,7 @@ describe FormsController do
       mock_user
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
+      @form.should_receive(:is_template).and_return(true)
     end
   
     def do_get
@@ -345,6 +346,7 @@ describe FormsController do
       @form = mock_model(Form)
       Form.stub!(:find).and_return(@form)
       @form.stub!(:structure_valid?).and_return([])
+      @form.should_receive(:is_template).and_return(true)
     end
   
     def do_get
