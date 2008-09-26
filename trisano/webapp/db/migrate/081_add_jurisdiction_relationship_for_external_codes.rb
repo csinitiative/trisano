@@ -1,11 +1,12 @@
 class AddJurisdictionRelationshipForExternalCodes < ActiveRecord::Migration
   def self.up
-    add_column :external_codes, :jurisdiction_id, :integer
-    if RAILS_ENV == 'production'
-      transaction do
+    transaction do
+      add_column :external_codes, :jurisdiction_id, :integer
+      if RAILS_ENV == 'production'
         execute("UPDATE external_codes SET code_description = 'Grand' where code_name='county' and code_description='GRAND'")
         codes = execute("SELECT * from external_codes where code_name='county' and code_description='Carbon'")
-        if codes.size == 0
+        say(codes.methods.inspect)
+        unless codes.first
           ExternalCode.create :code_name => "county", :the_code => "CR", :code_description => "Carbon", :sort_order => 17
         end
         [{:county_name => 'Box Elder',  :health_district => 'Bear River'},
@@ -44,8 +45,7 @@ class AddJurisdictionRelationshipForExternalCodes < ActiveRecord::Migration
             code.jurisdiction = place
             code.save!
           rescue Exception => ex
-            $stderr.puts("Failed to relate county #{relationship[:county_name]} to jurisdiction #{relationship[:health_district]}")
-            raise
+            say("Failed to relate county #{relationship[:county_name]} to jurisdiction #{relationship[:health_district]}")            
           end
         end
       end
@@ -53,6 +53,6 @@ class AddJurisdictionRelationshipForExternalCodes < ActiveRecord::Migration
   end
 
   def self.down
-    remove_colum :external_codes, :jurisdiction_id
+    remove_column :external_codes, :jurisdiction_id
   end
 end
