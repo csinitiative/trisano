@@ -60,5 +60,17 @@ describe 'Sytem functionality for setting the record ID of a CMR' do
     @browser.is_text_present('Hmong').should be_true
     @browser.is_text_present('White').should be_true
     @browser.is_text_present('Not Hispanic or Latino').should be_true
+    @browser.is_text_present('Jurisdiction of Residence').should be_true
+    @browser.is_text_present('Not Applicable').should be_true
+  end
+  
+  it 'should show a jurisdiction of residience' do
+    edit_cmr(@browser)
+    @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
+    @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Emery')
+    save_cmr(@browser).should be_true
+    click_core_tab(@browser, ADMIN)
+    @browser.is_text_present('Jurisdiction of Residence').should be_true
+    @browser.is_text_present('Southeastern Utah District Health Department').should be_true
   end
 end

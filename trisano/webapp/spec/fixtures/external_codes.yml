@@ -169,12 +169,14 @@ county_salt_lake:
   code_name: "county"
   the_code:  "SL"
   code_description: "Salt Lake"
+  jurisdiction_id: 103
 
 county_summit:
   id: 1102
   code_name: "county"
   the_code:  "SU"
   code_description: "Summit"
+  jurisdiction_id: 103
 
 district_alpine:
   id: 1201

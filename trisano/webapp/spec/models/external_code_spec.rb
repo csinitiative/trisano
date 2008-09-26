@@ -91,4 +91,17 @@ describe ExternalCode do
       code.should_not be_nil
     end
   end
+
+  describe 'county codes' do
+    fixtures :external_codes, :places
+
+    it 'should have a related jurisdiction' do
+      codes = ExternalCode.find_all_by_code_name('county')
+      codes.size.should == 2
+      codes.each do |county|
+        county.jurisdiction.should_not be_nil
+      end
+    end
+  end
+      
 end

@@ -541,6 +541,11 @@
   sort_order: 15
 
 - code_name: "county"
+  the_code:  "CR"
+  code_description: "Carbon"
+  sort_order: 17
+
+- code_name: "county"
   the_code:  "DG"
   code_description: "Daggett"
   sort_order: 20
@@ -567,7 +572,7 @@
 
 - code_name: "county"
   the_code:  "GR"
-  code_description: "GRAND"
+  code_description: "Grand"
   sort_order: 45
 
 - code_name: "county"

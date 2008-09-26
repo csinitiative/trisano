@@ -213,7 +213,23 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <label>MMWR week</label>
           <%= @event.MMWR_week %>
         </span>
-      
+        <span class="vert">
+          <label>Jurisdiction of Residence</label>
+          <% patient_entity = @event.active_patient.active_primary_entity -%>
+          <% if patient_entity -%>
+            <% unless patient_entity.entities_location.nil? -%>
+              <% location = patient_entity.primary_entities_location.location -%>
+              <% if location -%>
+                <% address = location.current_address -%>
+                <% if address && address.county && address.county.jurisdiction -%>
+                  <%  jurisdiction_name = address.county.jurisdiction.name -%>
+                <% end -%>
+              <% end %>
+            <% end -%>
+          <% end -%>
+          <%= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name %>
+        </span>
+              
         <fieldset class="form">
           <legend>Case / Outbreak</legend>
           <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>

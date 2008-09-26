@@ -32,6 +32,11 @@ describe Code do
     it 'should exist' do 
       Code.interested_party.should_not be_nil
     end
+  end
 
+  describe 'Jurisdiction place type' do
+    it 'should exist' do
+      Code.jurisdiction_place_type_id.should_not be_nil
+    end
   end
 end

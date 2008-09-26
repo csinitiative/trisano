@@ -31,4 +31,9 @@ class Code < ActiveRecord::Base
     Code.find_by_code_name_and_code_description('participant', 'Interested Party')
   end
 
+  def self.jurisdiction_place_type_id
+    code = Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction')
+    code.id if code
+  end
+
 end

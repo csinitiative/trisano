@@ -20,6 +20,8 @@ class ExternalCode < ActiveRecord::Base
   # That query was a workaround for a defect in acts_as_auditable
   acts_as_auditable
 
+  belongs_to :jurisdiction, :class_name => 'Place', :foreign_key => :jurisdiction_id
+
   def self.yes
     find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
   end
