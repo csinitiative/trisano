@@ -63,7 +63,8 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #333; }
+  color: #333;
+  padding: 4px 0px 0px 8px; }
 
 .field {
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -79,7 +80,8 @@
   font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #666; }
+  color: #666;
+  padding: 2px 0px 0px 8px; }
 
 .valueset {
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -95,7 +97,8 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #36c; }
+  color: #333;
+  padding: 4px 0px 0px 8px; }
 
 .question {
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -426,8 +429,10 @@
 
 .fb-after-core-field {
   background-color: #fff; }
+  .fb-after-core-field li {
+    border-width: 0px 0px 0px 0px; }
 
-.fb-group {
+/.fb-group {
   color: #093; }
 
 .fb-core-code-item {

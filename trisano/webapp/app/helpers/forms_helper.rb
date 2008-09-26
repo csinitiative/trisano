@@ -213,7 +213,7 @@ module FormsHelper
   
   def render_section(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='section_#{element.id}' class='sortable fb-section'>"
+      result = "<ul id='section_#{element.id}' class='sortable fb-section'>"
       
       result << "<table><tr>"
       result << "<td class='section'>#{element.name}</td>"
@@ -232,7 +232,7 @@ module FormsHelper
         result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
     
-      result << "</li>"
+      result << "</ul>"
       return result
     rescue
       return "<li>Could not render section element (#{element.id})</li>"
@@ -241,7 +241,7 @@ module FormsHelper
 
   def render_group(form_elements_cache, element, include_children=true)
     begin
-      result = "<li id='group_#{element.id}' class='sortable fb-group'>"
+      result = "<ul id='group_#{element.id}' class='sortable fb-group'>"
       
       result << "<table><tr>"
       result << "<td class='group'>#{element.name}</td>"
@@ -257,7 +257,7 @@ module FormsHelper
         result << sortable_element("section_#{element.id}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
       end
     
-      result << "</li>"
+      result << "</ul>"
       return result
     rescue
       return "<li>Could not render group element (#{element.id})</li>"
@@ -310,7 +310,7 @@ module FormsHelper
 
   def render_follow_up(form_elements_cache, element, include_children=true)
     begin
-      result = "<li class='follow-up-item sortable' id='follow_up_#{element.id}'>"
+      result = "<ul class='follow-up-item sortable' id='follow_up_#{element.id}'>"
       
       result << "<table><tr>"
       result << "<td class='followup'>"
@@ -359,7 +359,7 @@ module FormsHelper
       end
     
       result << "<div id='question-mods-#{element.id.to_s}'></div>"
-      result << "</li>"
+      result << "</ul>"
       return result
     rescue
       return "<li>Could not render follow-up element (#{element.id})</li>"
