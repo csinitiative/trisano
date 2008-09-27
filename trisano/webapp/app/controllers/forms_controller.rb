@@ -72,7 +72,7 @@ class FormsController < AdminController
     @form = @original_form.copy
 
     respond_to do |format|
-      if @form.save_and_initialize_form_elements
+      if @form.save
         flash[:notice] = "Form was successfully copied."
         format.html { render :template => 'forms/edit' }
         format.xml  { render :xml => @form, :status => :created, :location => @form }

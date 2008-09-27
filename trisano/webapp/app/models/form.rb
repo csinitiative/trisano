@@ -334,12 +334,10 @@ class Form < ActiveRecord::Base
   end
 
   def copy_form_base_element_to(copied_form)
-    tree_id = next_tree_id
     form_id = copied_form.id
     base_element = self.form_base_element.clone
     base_element.form_id = form_id
-    base_element.tree_id = tree_id
-    base_element.copy_children(self.form_base_element, nil, form_id, tree_id, true)
+    base_element.copy_children(self.form_base_element, nil, form_id, next_tree_id, true)
   end
   
 end
