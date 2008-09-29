@@ -49,7 +49,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   var myTabs = new YAHOO.widget.TabView("cmr_tabs");
 </script>
 
-<%=  tab_toggler(@can_investigate) %>
+<%=  tab_toggler(@can_investigate, %w(demographic_tab clinical_tab lab_info_tab epi_tab)) %>
 
 <div id="cmr_tabs" class="yui-navset">
   <ul id='tabs' class="yui-nav">
