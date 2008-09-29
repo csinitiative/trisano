@@ -17,59 +17,114 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe 'Core tabs' do
+shared_examples_for 'disabling/enabling core tabs' do
+
+  it 'should display disable tabs message' do
+    @browser.is_visible("//span[@id='disable_tabs']").should be_true
+  end
+
+  it 'should display core tabs' do
+    @browser.is_visible("//ul[@id='tabs']").should be_true
+  end
+
+  it 'should not display enable tabs message' do
+    @browser.is_visible("//span[@id='enable_tabs']").should be_false
+  end
+
+  it 'should be able to click the enable tabs' do
+    @browser.click("//span[@id='disable_tabs']")
+  end
+      
+  it 'should hide the disable tabs message' do        
+    @browser.is_visible("//span[@id='disable_tabs']").should be_false
+  end
+    
+  it 'should hide the core tabs' do
+    @browser.is_visible("//ul[@id='tabs']").should be_false
+  end
+    
+  it 'should display enable tabs message' do
+    @browser.is_visible("//span[@id='enable_tabs']").should be_true
+  end
+
+  it 'should be able to click enable tabs message' do
+    @browser.click("//span[@id='enable_tabs']")
+  end
+
+  it 'should display disable tabs message' do
+    @browser.is_visible("//span[@id='disable_tabs']").should be_true
+  end
+
+  it 'should display core tabs' do
+    @browser.is_visible("//ul[@id='tabs']").should be_true
+  end
+  
+  it 'should not display enable tabs message' do
+    @browser.is_visible("//span[@id='enable_tabs']").should be_false
+  end
+    
+end
+
+
+describe 'New CMR Core tabs' do
 
   before :all do
     @browser.open '/trisano/cmrs/new'
     @browser.wait_for_page_to_load($load_time)
   end
 
-  describe 'showing the new cmr page' do
-    
-    it 'should display disable tabs message' do
-      @browser.is_visible("//span[@id='disable_tabs']").should be_true
-    end
+  it_should_behave_like 'disabling/enabling core tabs'
 
-    it 'should display core tabs' do
-      @browser.is_visible("//ul[@id='tabs']").should be_true
-    end
+end
 
-    it 'should not display enable tabs message' do
-      @browser.is_visible("//span[@id='enable_tabs']").should be_false
-    end
+describe 'Show CMR Core tabs' do
 
-    it 'should be able to click the enable tabs' do
-      @browser.click("//span[@id='disable_tabs']")
-    end
-      
-    it 'should hide the disable tabs message' do        
-      @browser.is_visible("//span[@id='disable_tabs']").should be_false
-    end
-    
-    it 'should hide the core tabs' do
-      @browser.is_visible("//ul[@id='tabs']").should be_false
-    end
-    
-    it 'should display enable tabs message' do
-      @browser.is_visible("//span[@id='enable_tabs']").should be_true
-    end
-
-    it 'should be able to click enable tabs message' do
-      @browser.click("//span[@id='enable_tabs']")
-    end
-
-    it 'should display disable tabs message' do
-      @browser.is_visible("//span[@id='disable_tabs']").should be_true
-    end
-
-    it 'should display core tabs' do
-      @browser.is_visible("//ul[@id='tabs']").should be_true
-    end
-
-    it 'should not display enable tabs message' do
-      @browser.is_visible("//span[@id='enable_tabs']").should be_false
-    end
-    
+  before :all do
+    @browser.open '/trisano/cmrs'
+    @browser.wait_for_page_to_load($load_time)
+    create_basic_investigatable_cmr(@browser, 'Biel', 'AIDS', 'TriCounty Health Department').should be_true
   end
+
+  it_should_behave_like 'disabling/enabling core tabs'
+
+end
+
+describe 'Edit Place exposure tabs' do
+  
+#  $dont_kill_browser = true
+
+  before :all do
+    @browser.open '/trisano/cmrs'
+    @browser.wait_for_page_to_load($load_time)
+    edit_cmr(@browser).should be_true
+    sleep(3)
+    click_core_tab(@browser, "Epidemiological")
+    @browser.type "morbidity_event_new_place_exposure_attributes__name", 'Davis Natatorium'
+    @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Pool"
+    save_cmr(@browser).should be_true
+    click_core_tab(@browser, "Epidemiological")
+    @browser.click "link=Edit place details"
+  end 
+
+  it_should_behave_like 'disabling/enabling core tabs'
+
+end
+
+describe 'Show Place exposure tabs' do
+  
+  before :all do
+    # $dont_kill_browser = true
+    @browser.open '/trisano/cmrs'
+    @browser.wait_for_page_to_load($load_time)
+    @browser.click "link=Show"
+    @browser.wait_for_page_to_load($load_time)
+    click_core_tab(@browser, "Epidemiological")
+    @browser.click "link=Edit place details"
+    @browser.wait_for_page_to_load($load_time)
+    @browser.click "link=Show"
+    @browser.wait_for_page_to_load($load_time)
+  end 
+
+  it_should_behave_like 'disabling/enabling core tabs'
 
 end
