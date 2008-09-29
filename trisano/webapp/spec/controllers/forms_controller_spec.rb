@@ -594,5 +594,22 @@ describe FormsController do
       response.should render_template('rjs-error')
     end
   end
+
+  describe 'copying a form' do    
+
+    before :each do 
+      mock_user
+      @form = mock_model(Form)
+      @copy = mock_model(Form)
+      Form.stub!(:find).and_return(@form)
+    end
+
+    it 'should copy form elements w/out reinitializing form_element_base' do
+      @form.should_receive(:copy).and_return(@copy)
+      @copy.should_receive(:save).and_return(true)      
+      post :copy, :id => '1'
+    end
+  
+  end
   
 end
