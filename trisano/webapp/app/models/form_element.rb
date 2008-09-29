@@ -114,6 +114,8 @@ class FormElement < ActiveRecord::Base
     e.description = node_to_copy.description
     e.condition = node_to_copy.condition
     e.core_path = node_to_copy.core_path
+    e.is_active = node_to_copy.is_active
+    e.is_condition_code = node_to_copy.is_condition_code
     e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
     e.save!
     parent.add_child e unless parent.nil?

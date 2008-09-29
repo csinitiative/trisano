@@ -530,7 +530,7 @@ module EventsHelper
       result << answer.text_answer unless answer.nil?
       result << "</div>"
 
-      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache)
+      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
       
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{element.id}'>"
@@ -561,7 +561,7 @@ module EventsHelper
     
       if questions.size > 0
         questions.each do |child|
-          result << show_investigator_question(form_elements_cache, child, f)
+          result << show_investigator_element(form_elements_cache, child, f)
         end
       end
 
@@ -604,7 +604,7 @@ module EventsHelper
     
         if questions.size > 0
           questions.each do |child|
-            result << show_investigator_question(form_elements_cache, child, f)
+            result << show_investigator_element(form_elements_cache, child, f)
           end
         end
       end
