@@ -128,3 +128,48 @@ describe 'Show Place exposure tabs' do
   it_should_behave_like 'disabling/enabling core tabs'
 
 end
+
+describe 'Edit contact event tabs' do
+
+  before :all do
+    @browser.open "/trisano/cmrs"
+    click_nav_new_cmr(@browser)
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Headroom"
+    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Max"
+    click_core_tab(@browser, "Contacts")
+    @browser.click "link=Add a contact"
+    sleep(1)
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Lou"
+    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Unable to locate"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Abbott"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Bud"
+    @browser.select "//div[@class='contact'][2]//select[contains(@id, 'entity_location_type_id')]", "label=Home"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'area_code')]", "202"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'phone_number')]", "5551212"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'extension')]", "22"
+    save_cmr(@browser).should be_true
+    click_core_tab(@browser, "Contacts")
+    @browser.click "link=Edit contact event"
+  end
+
+  it_should_behave_like 'disabling/enabling core tabs'
+end
+
+describe 'Show contact event tabs' do
+
+  before :all do
+    # $dont_kill_browser = true
+    @browser.open "/trisano/cmrs"
+    @browser.click "link=Show"
+    @browser.wait_for_page_to_load $load_time
+    click_core_tab(@browser, 'Contacts')
+    @browser.click "link=Edit contact event"
+    @browser.wait_for_page_to_load $load_time
+    @browser.click "link=Show"
+    @browser.wait_for_page_to_load $load_time    
+  end
+
+  it_should_behave_like 'disabling/enabling core tabs'
+
+end
