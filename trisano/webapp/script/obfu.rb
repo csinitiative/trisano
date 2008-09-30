@@ -118,8 +118,10 @@ end
 
 #read in the dump file
 #TODO - make this user selected (in and out)
-file_in = File.new("nedss_prod-dump24-SEP-2008.sql", "r")
-file_out = File.new("obfu_nedss_prod-dump24-SEP-2008.sql", "w")
+ARGV[0].nil? ? return : file_in = ARGV[0]
+ARGV[1].nil? ? return : file_out = ARGV[1]
+file_in = File.new(file_in, "r")
+file_out = File.new(file_out, "w")
 
 active_table = nil
 
@@ -153,3 +155,4 @@ end
 
 file_in.close
 file_out.close
+
