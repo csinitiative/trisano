@@ -35,7 +35,8 @@ def get_random_email
 end
 
 def get_random_date(keep_year, cur_value)
-  "1971-12-12"
+  # Creates random dates of this format: "1971-12-12"
+  keep_year ? cur_value[0..4] + "%02d" % (rand(11)+1).to_s + "-" + "%02d" % (rand(27)+1).to_s : (rand(100)+1907).to_s + "-" + "%02d" % (rand(11)+1).to_s + "-" + "%02d" % (rand(27)+1).to_s
 end
 
 def set_value(line, field)
