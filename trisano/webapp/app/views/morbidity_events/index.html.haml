@@ -43,16 +43,13 @@
   = link_to_function "Close", "Effect.BlindUp('change_view')"
   %p 
 
-
 #rot
   %table.listingforms
     %tr
       %th Patient Name
       %th Disease
-      %th 
-        Investigating jurisdiction
-        %br
-        %small Secondary jurisdictions
+      %th.forminformation
+        Investigating Jurisdiction
       %th Status
       %th
       = render :partial => 'morbidity_events/event', :collection => @events

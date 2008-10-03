@@ -10,21 +10,24 @@
   %td
     = event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
   %td
-    = event.primary_jurisdiction.short_name
+    %b
+      = event.primary_jurisdiction.short_name
+    %br
+    .tools
+      = jurisdiction_routing_control(event)
     - for secondary_jurisdiction in event.secondary_jurisdictions
-      %br
-      %small= secondary_jurisdiction.short_name
+      %small
+        = secondary_jurisdiction.short_name
+        %br
   %td
     = Event.get_state_description(event.event_status)
     - unless event.event_queue_id.nil?
       %br
-      Queue:&nbsp;
-      = event.event_queue.queue_name
+      %small
+        Queue:&nbsp;
+        = event.event_queue.queue_name
     .tools
       = state_controls(event)
   %td
-    .tools
-      = jurisdiction_routing_control(event)
-    %p
     .tools
       = basic_morbidity_event_controls(event) + extra_tools
