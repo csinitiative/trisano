@@ -198,7 +198,7 @@ module EventsHelper
       controls += "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
 
       jurisdictions.each do | jurisdiction |
-        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", jurisdiction.id, event.secondary_jurisdictions.include?(jurisdiction), :id => jurisdiction.short_name.tr(" ", "_")) + jurisdiction.short_name + "</label>"
+        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", jurisdiction.entity_id, event.secondary_jurisdictions.include?(jurisdiction), :id => jurisdiction.short_name.tr(" ", "_")) + jurisdiction.short_name + "</label>"
       end
 
       controls += "</div></div>"
