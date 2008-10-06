@@ -28,11 +28,11 @@ namespace :trisano do
     # database.yml to have the proper settings for the target database.
     # To simplify things we just reset it every time based on the contents
     # of config.yml
-    def replace_database_yml(host, port, database, nedss_user, nedss_user_pwd)
+    def replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)
        
       puts "creating database.yml based on contents of config.yml in #{WEB_APP_CONFIG_DIR}"
   
-      db_config = { 'production' => 
+      db_config = { environment => 
           { 'adapter' => 'postgresql', 
           'encoding' => 'unicode', 
           'database' => database, 
@@ -239,14 +239,15 @@ namespace :trisano do
       config = YAML::load_file "./config.yml"
       host = config['host']
       port = config['port']
+      environment = config['environment']
       database = config['database']
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']  
-      replace_database_yml(host, port, database, nedss_user, nedss_user_pwd)
+      replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)
                 
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=production basicauth=false"
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{environment} basicauth=false"
       FileUtils.mv('trisano.war', '../distro')
     end
 
@@ -256,11 +257,12 @@ namespace :trisano do
       config = YAML::load_file "./config.yml"
       host = config['host']
       port = config['port']
+      environment = config['environment']
       database = config['database']
       # In order to run migrations, need appropriate permissions (app user doesn't have them)
       nedss_user = config['priv_uname']
       nedss_user_pwd = config['priv_passwd']  
-      replace_database_yml(host, port, database, nedss_user, nedss_user_pwd)      
+      replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)      
       
       cd '../webapp/'
       ruby "-S rake db:migrate RAILS_ENV=production"
