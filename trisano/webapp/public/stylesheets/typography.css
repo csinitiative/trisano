@@ -1,22 +1,15 @@
 .areas {
   font-family: helvetica, arial, sans-serif;
   font-size: 11px;
-  color: #ccc;
+  color: #9c9;
   padding: 10px 0px 5px 0px;
   letter-spacing: 1px; }
   .areas a {
-    color: #063;
-    font-weight: normal;
+    color: #fff;
     text-decoration: none; }
     .areas a:hover {
       color: 063;
       text-decoration: underline; }
-    .areas a:visited {
-      color: #063;
-      font-weight: normal; }
-    .areas a:active {
-      color: #063;
-      font-weight: normal; }
 
 .user {
   font-size: 10px;
