@@ -240,6 +240,7 @@ namespace :trisano do
       host = config['host']
       port = config['port']
       environment = config['environment']
+      basicauth = config['basicauth']
       database = config['database']
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']  
@@ -247,7 +248,7 @@ namespace :trisano do
                 
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{environment} basicauth=false"
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{environment} basicauth=#{basicauth}"
       FileUtils.mv('trisano.war', '../distro')
     end
 
