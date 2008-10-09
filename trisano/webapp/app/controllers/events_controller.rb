@@ -82,7 +82,6 @@ class EventsController < ApplicationController
   
   def can_investigate
     (
-      (@event.under_investigation?) and 
         User.current_user.is_entitled_to_in?(:investigate_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } ) and 
         (@event.disease && @event.disease.disease_id)
     )
