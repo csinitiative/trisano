@@ -122,8 +122,8 @@ namespace :trisano do
         #form.fields.each { |f| puts f.name }
 
         # Set minimal values
-        form['morbidity_event[active_patient][active_primary_entity][person][first_name]'] = 'Steve'
-        form['morbidity_event[active_patient][active_primary_entity][person][last_name]'] = 'Smoker'
+        form['morbidity_event[active_patient][person][first_name]'] = 'Steve'
+        form['morbidity_event[active_patient][person][last_name]'] = 'Smoker'
 
         # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
         # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
