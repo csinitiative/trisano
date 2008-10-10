@@ -24,8 +24,8 @@ describe 'Adding multiple hospitals to a CMR' do
   it "should allow adding new hospitals to a new CMR" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Hospital-HF"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Johnny"
+    @browser.type "morbidity_event_active_patient__person_last_name", "Hospital-HF"
+    @browser.type "morbidity_event_active_patient__person_first_name", "Johnny"
 
     click_core_tab(@browser, "Clinical")
     @browser.click "link=Add a hospital"

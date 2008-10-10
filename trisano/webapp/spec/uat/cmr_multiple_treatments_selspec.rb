@@ -20,66 +20,54 @@ require 'active_support'
 
 describe 'Adding multiple treatments to a CMR' do
   
-  it "should allow a single treatment to be saved with a new CMR" do
-    display_date = 10.days.ago.strftime('%B %d, %Y')
+  #$dont_kill_browser = true
+  
+  before(:all) do
     @browser.open "/trisano/cmrs"
+    @browser.wait_for_page_to_load($load_time)
+  end
+  
+  it "should allow multiple treatments to be saved with a new CMR" do
+    display_date = 10.days.ago.strftime('%B %d, %Y')
+
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Smith"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Jersey"
+    @browser.type "morbidity_event_active_patient__person_last_name", "multi-treatments"
+    @browser.type "morbidity_event_active_patient__person_first_name", "test"
+
     click_core_tab(@browser, "Clinical")
-    @browser.select "morbidity_event_active_patient__participations_treatment_treatment_given_yn_id", "label=Yes"
-    @browser.type "morbidity_event_active_patient__participations_treatment_treatment", "Leeches"
-    @browser.type "morbidity_event_active_patient__participations_treatment_treatment_date", display_date
+    @browser.click "link=Add a treatment"
+    sleep(1)
+
+    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_attributes__treatment')]", "Leeches" 
+    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_date')]", display_date
+    @browser.select "//div[@class='treatment'][1]//select[contains(@id, 'treatment_given_yn_id')]", "label=Yes"
+
+    @browser.type "//div[@class='treatment'][2]//input[contains(@id, 'treatment_attributes__treatment')]", "Whiskey" 
+    @browser.type "//div[@class='treatment'][2]//input[contains(@id, 'treatment_date')]", display_date
+    @browser.select "//div[@class='treatment'][2]//select[contains(@id, 'treatment_given_yn_id')]", "label=Yes"
+
     save_cmr(@browser).should be_true
-    @browser.is_text_present('Treatment Date').should be_true
-    @browser.is_text_present('Leeches').should be_true
-    @browser.is_text_present(display_date).should be_true
+
+    @browser.is_text_present('CMR was successfully created.').should be_true
+    @browser.is_text_present("Leeches").should be_true
+    @browser.is_text_present("Whiskey").should be_true
   end
 
-  it "should allow editing a treatment from the CMR's show mode" do
-    display_date = 8.days.ago.strftime('%B %d, %Y')
+  it "should allow removing a treatement" do
+    edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
-    @browser.click "link=Edit treatment"
-    sleep(3)
-    # @browser.wait_for_element_present("treatment_form")
-    @browser.type "participations_treatment_treatment", "Blood Letting"
-    @browser.type "participations_treatment_treatment_date", display_date
-    @browser.click "treatment-save-button"
-    sleep(3)
-    # @browser.wait_for_element_not_present("treatment_form")
-    @browser.is_text_present('Blood Letting').should be_true
-    @browser.is_text_present(display_date).should be_true
+    @browser.click "remove_treatment_link"
+    save_cmr(@browser).should be_true
+    @browser.is_text_present("Leeches").should_not be_true
   end
 
-  it "should allow editing a treatment from the CMR's edit mode" do
-    display_date = 11.days.ago.strftime('%B %d, %Y')
-    edit_cmr(@browser).should be_true
+  it "should allow editing a treatemt" do
+    pending "No XPath way to narrow down to this element as ends-with does not seem to be supported in FF."
+    edit_cmr(@browser)
+    @browser.type "//div[@class='treatment'][1]//input[ends-with(@id, '_treatment')]", "Eye of newt" 
     click_core_tab(@browser, "Clinical")
-    @browser.click "link=Edit treatment"
-    sleep(3)
-    # @browser.wait_for_element_present("treatment_form")
-    @browser.type "participations_treatment_treatment", "Toad saliva"
-    @browser.type 'participations_treatment_treatment_date', display_date
-    @browser.click "treatment-save-button"
-    sleep(3)
-    # @browser.wait_for_element_not_present("treatment_form")
-    @browser.is_text_present('Toad saliva').should be_true
-    @browser.is_text_present(display_date).should be_true
+    save_cmr(@browser).should be_true
+    @browser.is_text_present('Eye of newt').should be_true
   end
 
-  it "should allow adding a treatment from the CMR's edit mode" do
-    display_date = 7.days.ago.strftime('%B %d, %Y')
-    @browser.click "link=New Treatment"
-    sleep(3)
-    # @browser.wait_for_element_present("treatment_form")
-    @browser.select "participations_treatment_treatment_given_yn_id", "label=No"
-    @browser.type "participations_treatment_treatment", "Mercury"
-    @browser.type 'participations_treatment_treatment_date', display_date
-    @browser.click "treatment-save-button"
-    sleep(3)
-    # @browser.wait_for_element_not_present("treatment_form")
-    @browser.is_text_present('Toad saliva').should be_true
-    @browser.is_text_present('Mercury').should be_true
-    @browser.is_text_present(display_date).should be_true
-  end
 end

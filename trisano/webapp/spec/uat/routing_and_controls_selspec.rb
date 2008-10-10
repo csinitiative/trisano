@@ -61,7 +61,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     # We need a CMR too
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_1)
+    @browser.type('morbidity_event_active_patient__person_last_name', @person_1)
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("NEW CMR").should be_true
@@ -137,7 +137,7 @@ describe 'Sytem functionality for routing and workflow' do
   it "should allow for secondary jurisdictions" do
     # We need another CMR 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_3)
+    @browser.type('morbidity_event_active_patient__person_last_name', @person_3)
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("NEW CMR").should be_true
@@ -242,7 +242,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present('JoeInvestigator').should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @person_2)
+    @browser.type('morbidity_event_active_patient__person_last_name', @person_2)
     save_cmr(@browser).should be_true
 
     @browser.open "/trisano/cmrs"
@@ -251,7 +251,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("New Morbidity Report").should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', get_unique_name(2))
+    @browser.type('morbidity_event_active_patient__person_last_name', get_unique_name(2))
     save_cmr(@browser).should be_true
 
     @browser.open "/trisano/cmrs"

@@ -59,7 +59,7 @@ describe 'form builder patient-level core field configs for contacts' do
       click_link_by_order(@browser, "edit-contact-event", 1)
       @browser.wait_for_page_to_load($load_time)
       
-      @browser.type "contact_event_active_patient__active_primary_entity__person_approximate_age_no_birthday", "21"
+      @browser.type "contact_event_active_patient__person_approximate_age_no_birthday", "21"
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       assert_tooltip_exists(@browser, before_help_text).should be_true

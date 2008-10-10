@@ -157,8 +157,8 @@ describe "Form Builder Investigator Single Form" do
 
   it "Should create a test CMR" do
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Doe"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "John"
+    @browser.type "morbidity_event_active_patient__person_last_name", "Doe"
+    @browser.type "morbidity_event_active_patient__person_first_name", "John"
     click_core_tab(@browser, "Clinical")
     @browser.select "morbidity_event_disease_disease_id", "label=Amebiasis"
     click_core_tab(@browser, "Administrative")

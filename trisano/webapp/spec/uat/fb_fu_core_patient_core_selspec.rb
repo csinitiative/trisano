@@ -22,13 +22,13 @@ describe 'form builder patient-level address core field configs for contacts' do
   
 #  $dont_kill_browser = true
 
-  fields = [{:name => 'Patient last name', :label => 'morbidity_event_active_patient__active_primary_entity__person_last_name', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Patient first name', :label => 'morbidity_event_active_patient__active_primary_entity__person_first_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Patient middle name', :label => 'morbidity_event_active_patient__active_primary_entity__person_middle_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Patient age', :label => 'morbidity_event_active_patient__active_primary_entity__person_approximate_age_no_birthday', :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'},
-    {:name => 'Patient birth gender', :label => 'morbidity_event_active_patient__active_primary_entity__person_birth_gender_id', :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
-    {:name => 'Patient ethnicity', :label => 'morbidity_event_active_patient__active_primary_entity__person_ethnicity_id', :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'},
-    {:name => 'Patient primary language', :label => 'morbidity_event_active_patient__active_primary_entity__person_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
+  fields = [{:name => 'Patient last name', :label => 'morbidity_event_active_patient__person_last_name', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Patient first name', :label => 'morbidity_event_active_patient__person_first_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Patient middle name', :label => 'morbidity_event_active_patient__person_middle_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Patient age', :label => 'morbidity_event_active_patient__person_approximate_age_no_birthday', :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'},
+    {:name => 'Patient birth gender', :label => 'morbidity_event_active_patient__person_birth_gender_id', :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
+    {:name => 'Patient ethnicity', :label => 'morbidity_event_active_patient__person_ethnicity_id', :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'},
+    {:name => 'Patient primary language', :label => 'morbidity_event_active_patient__person_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
   ]                                                  
   
   data_types = [#{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

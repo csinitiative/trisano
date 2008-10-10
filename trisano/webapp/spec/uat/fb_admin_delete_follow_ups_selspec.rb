@@ -55,7 +55,7 @@ describe 'Form Builder Admin Core Follow-Up Functionality' do
     edit_cmr(@browser)
 
     # Enter the answer that meets the core follow-up condition
-    @browser.select("morbidity_event_active_patient__active_primary_entity__person_birth_gender_id", "label=Female")
+    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
     click_core_tab(@browser, "Investigation") # This click triggers the onChange that triggers the condition processing
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
     @browser.is_text_present(@core_follow_up_question_text).should be_false

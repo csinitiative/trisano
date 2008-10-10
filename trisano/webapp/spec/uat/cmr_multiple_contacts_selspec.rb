@@ -24,8 +24,8 @@ describe 'Adding multiple contacts to a CMR' do
   it "should allow adding new contacts to a new CMR" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Headroom"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Max"
+    @browser.type "morbidity_event_active_patient__person_last_name", "Headroom"
+    @browser.type "morbidity_event_active_patient__person_first_name", "Max"
 
     click_core_tab(@browser, "Contacts")
     @browser.click "link=Add a contact"
@@ -94,10 +94,10 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Laurel').should be_true
     @browser.click "//div[@id='contacts_tab']//table/tbody/tr[3]//a"
     @browser.wait_for_page_to_load($load_time)
-    @browser.type "contact_event_active_patient__active_primary_entity__person_first_name", "Oliver"
-    @browser.type "contact_event_active_patient__active_primary_entity__address_street_number", "333"
-    @browser.type "contact_event_active_patient__active_primary_entity__address_street_name", "33rd Street"
-    @browser.select "contact_event_active_patient__active_primary_entity__person_disposition_id", "label=Infected, brought to treatment"
+    @browser.type "contact_event_active_patient__person_first_name", "Oliver"
+    @browser.type "contact_event_active_patient__address_street_number", "333"
+    @browser.type "contact_event_active_patient__address_street_name", "33rd Street"
+    @browser.select "contact_event_active_patient__person_disposition_id", "label=Infected, brought to treatment"
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a lab result"
     @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"

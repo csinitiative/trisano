@@ -26,11 +26,11 @@ require File.dirname(__FILE__) + '/spec_helper'
     it 'should find or add Chuckles in Provo, Utah county' do
       if !@browser.is_text_present('chuckles')
         click_nav_new_cmr(@browser).should be_true
-        @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'chuckles')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Provo')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84602')
+        @browser.type('morbidity_event_active_patient__person_last_name', 'chuckles')
+        @browser.type('morbidity_event_active_patient__address_city', 'Provo')
+        @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
+        @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
+        @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
         save_cmr(@browser).should be_true
       end
     end
@@ -39,11 +39,11 @@ require File.dirname(__FILE__) + '/spec_helper'
       click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Joker')
         click_nav_new_cmr(@browser).should be_true
-        @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Joker')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Orem')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84606')
+        @browser.type('morbidity_event_active_patient__person_last_name', 'Joker')
+        @browser.type('morbidity_event_active_patient__address_city', 'Orem')
+        @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
+        @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
+        @browser.type('morbidity_event_active_patient__address_postal_code', '84606')
         save_cmr(@browser).should be_true
       end
     end
@@ -52,12 +52,12 @@ require File.dirname(__FILE__) + '/spec_helper'
       click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Smurf, Papa')
         click_nav_new_cmr(@browser).should be_true
-        @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Smurf')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'Papa')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Provo')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84602')
+        @browser.type('morbidity_event_active_patient__person_last_name', 'Smurf')
+        @browser.type('morbidity_event_active_patient__person_first_name', 'Papa')
+        @browser.type('morbidity_event_active_patient__address_city', 'Provo')
+        @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
+        @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
+        @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
         save_cmr(@browser).should be_true
       end
     end
@@ -66,11 +66,11 @@ require File.dirname(__FILE__) + '/spec_helper'
       click_nav_cmrs(@browser).should be_true
       if !@browser.is_text_present('Gidget')
         click_nav_new_cmr(@browser).should be_true
-        @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Gidget')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Orem')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-        @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-        @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84606')
+        @browser.type('morbidity_event_active_patient__person_last_name', 'Gidget')
+        @browser.type('morbidity_event_active_patient__address_city', 'Orem')
+        @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
+        @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
+        @browser.type('morbidity_event_active_patient__address_postal_code', '84606')
         save_cmr(@browser).should be_true
       end
     end

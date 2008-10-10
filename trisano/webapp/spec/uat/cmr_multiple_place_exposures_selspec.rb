@@ -40,7 +40,7 @@ describe 'Adding multiple place exposures to a CMR' do
 
   it "should allow a single place exposure to be saved w/ a new CMR" do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "multi_place_exposure"
+    @browser.type "morbidity_event_active_patient__person_last_name", "multi_place_exposure"
     @browser.type "morbidity_event_new_place_exposure_attributes__name", @orginal_place_name
     @browser.type "morbidity_event_new_place_exposure_attributes__date_of_exposure", @date_of_exposure
     @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Pool"
@@ -93,14 +93,14 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.click "link=Edit place details"
     sleep(3)
     # Address
-    @browser.select "place_event_active_place__active_primary_entity__place_place_type_id", "label=Other"
-    @browser.type "place_event_active_place__active_primary_entity__address_street_number", "555"
-    @browser.type "place_event_active_place__active_primary_entity__address_street_name", "Main St."
-    @browser.type "place_event_active_place__active_primary_entity__address_unit_number", "D"
-    @browser.type "place_event_active_place__active_primary_entity__address_city", "Springfield"
-    @browser.select "place_event_active_place__active_primary_entity__address_state_id", "label=Utah"
-    @browser.select "place_event_active_place__active_primary_entity__address_county_id", "label=Summit"
-    @browser.type "place_event_active_place__active_primary_entity__address_postal_code", "11111"
+    @browser.select "place_event_active_place__place_place_type_id", "label=Other"
+    @browser.type "place_event_active_place__address_street_number", "555"
+    @browser.type "place_event_active_place__address_street_name", "Main St."
+    @browser.type "place_event_active_place__address_unit_number", "D"
+    @browser.type "place_event_active_place__address_city", "Springfield"
+    @browser.select "place_event_active_place__address_state_id", "label=Utah"
+    @browser.select "place_event_active_place__address_county_id", "label=Summit"
+    @browser.type "place_event_active_place__address_postal_code", "11111"
     # Phone
     @browser.select "place_event_new_telephone_attributes__entity_location_type_id", "label=Work"
     @browser.type "place_event_new_telephone_attributes__area_code", "330"

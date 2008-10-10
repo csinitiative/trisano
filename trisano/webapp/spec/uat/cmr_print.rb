@@ -8,25 +8,25 @@ describe 'Print CMR page' do
   it 'should correctly display the information to the print page' do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Lebowski')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'Jeffrey')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_middle_name', '`The Dude`')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__address_street_number', '123')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__address_street_name', 'Fake Street')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Venice')
-    @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=California')
-    @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Out-of-state')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '12345')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_birth_date', '4/20/1965')
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_approximate_age_no_birthday', '43')
+    @browser.type('morbidity_event_active_patient__person_last_name', 'Lebowski')
+    @browser.type('morbidity_event_active_patient__person_first_name', 'Jeffrey')
+    @browser.type('morbidity_event_active_patient__person_middle_name', '`The Dude`')
+    @browser.type('morbidity_event_active_patient__address_street_number', '123')
+    @browser.type('morbidity_event_active_patient__address_street_name', 'Fake Street')
+    @browser.type('morbidity_event_active_patient__address_city', 'Venice')
+    @browser.select('morbidity_event_active_patient__address_state_id', 'label=California')
+    @browser.select('morbidity_event_active_patient__address_county_id', 'label=Out-of-state')
+    @browser.type('morbidity_event_active_patient__address_postal_code', '12345')
+    @browser.type('morbidity_event_active_patient__person_birth_date', '4/20/1965')
+    @browser.type('morbidity_event_active_patient__person_approximate_age_no_birthday', '43')
     @browser.click('link=New Telephone / Email')
     @browser.select('morbidity_event_new_telephone_attributes__entity_location_type_id', 'label=Work')
     @browser.type('morbidity_event_new_telephone_attributes__area_code', '555')
     @browser.type('morbidity_event_new_telephone_attributes__phone_number', '5551345')
-    @browser.select('morbidity_event_active_patient__active_primary_entity__person_birth_gender_id', 'label=Male')
-    @browser.select('morbidity_event_active_patient__active_primary_entity__person_ethnicity_id', 'label=Not Hispanic or Latino')
-    @browser.add_selection('morbidity_event_active_patient__active_primary_entity_race_ids', 'label=White')
-    @browser.select('morbidity_event_active_patient__active_primary_entity__person_primary_language_id', 'label=Hmong')
+    @browser.select('morbidity_event_active_patient__person_birth_gender_id', 'label=Male')
+    @browser.select('morbidity_event_active_patient__person_ethnicity_id', 'label=Not Hispanic or Latino')
+    @browser.add_selection('morbidity_event_active_patient__race_ids', 'label=White')
+    @browser.select('morbidity_event_active_patient__person_primary_language_id', 'label=Hmong')
     save_cmr(@browser).should be_true
 
     @browser.click "edit_cmr_link"
@@ -49,46 +49,22 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_new_hospital_attributes__discharge_date", "12/12/2003"
     @browser.type "morbidity_event_new_hospital_attributes__medical_record_number", "7"
     @browser.select "morbidity_event_disease_died_id", "label=Yes"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_date_of_death", "5/5/2009"
+    @browser.type "morbidity_event_active_patient__person_date_of_death", "5/5/2009"
     @browser.select "morbidity_event_active_patient__participations_risk_factor_pregnant_id", "label=Yes"
     @browser.type "morbidity_event_active_patient__participations_risk_factor_pregnancy_due_date", "12/12/2009"
-    @browser.click "link=New Treatment"
-    sleep($sleep_time)
-    @browser.type "participations_treatment_treatment", "White Russian"
-    @browser.select "participations_treatment_treatment_given_yn_id", "label=Yes"
-    @browser.type "participations_treatment_treatment_date", "1/17/1901"
-    @browser.click "treatment-save-button"
-    @browser.click "link=New Treatment"
-    sleep($sleep_time)
-    @browser.type "participations_treatment_treatment", "Bowling"
-    @browser.select "participations_treatment_treatment_given_yn_id", "label=No"
-    @browser.type "participations_treatment_treatment_date", "1/18/1901"
-    @browser.click "treatment-save-button"
-    @browser.click "link=New Clinician"
-    sleep($sleep_time)
-    @browser.type "entity_person_last_name", "Mario"
-    @browser.type "entity_person_first_name", "Mario"
-    @browser.type "entity_person_middle_name", "A"
-    @browser.select "entity_telephone_entities_location_entity_location_type_id", "label=Home"
-    @browser.type "entity_telephone_area_code", "555"
-    @browser.type "entity_telephone_phone_number", "5551337"
-    @browser.type "entity_telephone_extension", "555"
-    @browser.type "entity_telephone_email_address", "asd@asd.asd"
-    @browser.click "person-save-button"
-    @browser.click "link=New Clinician"
-    sleep($sleep_time)
-    @browser.type "entity_person_last_name", "Luigi"
-    @browser.type "entity_person_last_name", "Mario"
-    @browser.type "entity_person_first_name", "Luigi"
-    @browser.type "entity_person_middle_name", "A"
-    @browser.select "entity_telephone_entities_location_entity_location_type_id", "label=Unknown"
-    @browser.type "entity_telephone_area_code", "625"
-    @browser.type "entity_telephone_phone_number", "5550100"
-    @browser.type "entity_telephone_extension", "55"
-    @browser.type "entity_telephone_email_address", "qwe@wq.we"
-    @browser.click "person-save-button"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+
+    @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment", "White Russian"
+    @browser.select "morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id", "label=Yes"
+    @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment_date", "1/17/1901"
+
+    @browser.type "morbidity_event_new_clinician_attributes__last_name", "Mario"
+    @browser.type "morbidity_event_new_clinician_attributes__first_name", "Mario"
+    @browser.type "morbidity_event_new_clinician_attributes__middle_name", "A"
+    @browser.select "morbidity_event_new_clinician_attributes__entity_location_type_id", "label=Home"
+    @browser.type "morbidity_event_new_clinician_attributes__area_code", "555"
+    @browser.type "morbidity_event_new_clinician_attributes__phone_number", "5551337"
+    @browser.type "morbidity_event_new_clinician_attributes__extension", "555"
+    @browser.type "morbidity_event_new_clinician_attributes__email_address", "asd@asd.asd"
 
     @browser.click "edit_cmr_link"
     @browser.wait_for_page_to_load $load_time
@@ -138,12 +114,12 @@ describe 'Print CMR page' do
     @browser.wait_for_page_to_load $load_time
     @browser.click "//ul[@id='tabs']/li[6]/a/em"
     type_field_by_order(@browser, "model_auto_completer_tf", 0, "why")
-    @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_first_name", "what"
-    @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_last_name", "how"
-    @browser.select "morbidity_event_active_reporter__active_secondary_entity__telephone_entities_location_entity_location_type_id", "label=Unknown"
-    @browser.type "morbidity_event_active_reporter__active_secondary_entity__telephone_area_code", "555"
-    @browser.type "morbidity_event_active_reporter__active_secondary_entity__telephone_extension", "555"
-    @browser.type "morbidity_event_active_reporter__active_secondary_entity__telephone_phone_number", "5550150"
+    @browser.type "morbidity_event_active_reporting_agency_first_name", "what"
+    @browser.type "morbidity_event_active_reporting_agency_last_name", "how"
+    @browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", "label=Unknown"
+    @browser.type "morbidity_event_active_reporting_agency_area_code", "555"
+    @browser.type "morbidity_event_active_reporting_agency_extension", "555"
+    @browser.type "morbidity_event_active_reporting_agency_phone_number", "5550150"
     @browser.type "morbidity_event_results_reported_to_clinician_date", "12/12/2004"
     @browser.type "morbidity_event_first_reported_PH_date", "12/12/2005"
     @browser.click "morbidity_event_submit"
@@ -200,9 +176,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('7').should be_true
     @browser.is_text_present('No').should be_true
     @browser.is_text_present('White Russian').should be_true
-    @browser.is_text_present('Bowling').should be_true
     @browser.is_text_present('Mario').should be_true
-    @browser.is_text_present('Luigi').should be_true
     @browser.is_text_present('Venture Complex').should be_true
     @browser.is_text_present('Necromancy').should be_true
     @browser.is_text_present('Blood').should be_true

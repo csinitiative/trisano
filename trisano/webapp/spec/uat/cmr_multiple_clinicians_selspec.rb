@@ -17,9 +17,6 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# TODO: The specs in this test case are dependent on each other. If
-# they are run in a different order they fail. This happens when run
-# from rake, rahter then the command line spec.
 describe 'Adding multiple clinicians to a CMR' do
   
   #$dont_kill_browser = true

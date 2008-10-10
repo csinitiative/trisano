@@ -134,8 +134,8 @@ describe 'Edit contact event tabs' do
   before :all do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_last_name", "Headroom"
-    @browser.type "morbidity_event_active_patient__active_primary_entity__person_first_name", "Max"
+    @browser.type "morbidity_event_active_patient__person_last_name", "Headroom"
+    @browser.type "morbidity_event_active_patient__person_first_name", "Max"
     click_core_tab(@browser, "Contacts")
     @browser.click "link=Add a contact"
     sleep(1)

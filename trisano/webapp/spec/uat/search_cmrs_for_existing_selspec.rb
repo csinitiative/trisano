@@ -26,20 +26,20 @@ describe 'User functionality for searching for existing users' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Chuckles')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', 'Chuckles')
-      @browser.type('morbidity_event_active_patient__active_primary_entity__person_first_name', 'Charles')
-      @browser.type('morbidity_event_active_patient__active_primary_entity__address_city', 'Provo')
-      @browser.select('morbidity_event_active_patient__active_primary_entity__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__active_primary_entity__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__active_primary_entity__address_postal_code', '84602')
+      @browser.type('morbidity_event_active_patient__person_last_name', 'Chuckles')
+      @browser.type('morbidity_event_active_patient__person_first_name', 'Charles')
+      @browser.type('morbidity_event_active_patient__address_city', 'Provo')
+      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
+      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
+      @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
 
       click_core_tab(@browser, "Contacts")
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Laurel"
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Charles"
 
       click_core_tab(@browser, "Reporting")
-      @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_last_name", "Hardy"
-      @browser.type "morbidity_event_active_reporter__active_secondary_entity__person_first_name", "Charles"
+      @browser.type "morbidity_event_active_active_reporting_agency_last_name", "Hardy"
+      @browser.type "morbidity_event_active_active_reporting_agency_first_name", "Charles"
       save_cmr(@browser).should be_true
     end
   end
