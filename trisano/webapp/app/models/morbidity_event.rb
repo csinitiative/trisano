@@ -206,7 +206,6 @@ class MorbidityEvent < HumanEvent
 
     # Now the reporter and reporter phone
     return if attributes.values_blank?
-    p attributes
 
     # User can send either a reporter or a phone number or both.  Regardless we need a participation and an entity if we don't have one already
     self.build_reporter(:role_id => Event.participation_code('Reported By')).build_secondary_entity if self.reporter.nil?
@@ -215,11 +214,10 @@ class MorbidityEvent < HumanEvent
     # Process the person, if any
     last_name = attributes.delete(:last_name)
     first_name = attributes.delete(:first_name)
-    unless last_name.blank?
-      # Build a person if we don't have one
-      self.reporter.secondary_entity.build_person_temp if self.reporter.secondary_entity.person_temp.nil?
-      self.reporter.secondary_entity.person_temp.attributes = { :last_name => last_name, :first_name => first_name }
-    end
+    #
+    # Build a person if we don't have one
+    self.reporter.secondary_entity.build_person_temp if self.reporter.secondary_entity.person_temp.nil?
+    self.reporter.secondary_entity.person_temp.attributes = { :last_name => last_name, :first_name => first_name }
 
     # Now do the phone, if any (attached to person, not agency)
     return if attributes.values_blank?
