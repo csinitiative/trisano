@@ -74,6 +74,5 @@ class ContactEventsController < EventsController
       params[:contact_event][:existing_hospital_attributes] ||= {}
       params[:contact_event][:existing_diagnostic_attributes] ||= {}
       params[:contact_event][:existing_clinician_attributes] ||= {}
-      params[:contact_event][:existing_contact_attributes] ||= {}
     end
 end
