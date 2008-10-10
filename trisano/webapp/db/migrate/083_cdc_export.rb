@@ -14,25 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+class CdcExport < ActiveRecord::Migration
+  def self.up
+    add_column :diseases, :active, :boolean
+    add_column :diseases, :cdc_code,  :string
 
-require File.dirname(__FILE__) + '/../../spec_helper'
-
-describe "/diseases/index.html.haml" do
-  include DiseasesHelper
-  
-  before(:each) do
-    disease_98 = mock_model(Disease)
-    disease_98.stub!(:disease_name).and_return("The Pops")
-    disease_98.should_receive(:active?).and_return(true)
-    disease_99 = mock_model(Disease)
-    disease_99.stub!(:disease_name).and_return("The Pops")
-    disease_99.should_receive(:active?).and_return(true)
-
-    assigns[:diseases] = [disease_98, disease_99]
+    if RAILS_ENV == 'production'
+      exexcute("UPDATE diseases SET active=true")
+    end
   end
 
-  it "should render list of diseases" do
-    render "/diseases/index.html.haml"
+  def self.down
+    remove_column :diseases, :active
+    remove_column :diseases, :cdc_code
   end
 end
-

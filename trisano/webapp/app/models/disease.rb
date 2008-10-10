@@ -17,4 +17,10 @@
 
 class Disease < ActiveRecord::Base
   validates_presence_of :disease_name
+
+  def self.find_active(*args)
+    with_scope(:find => {:conditions => ['active = ?', true]}) do
+      find(*args)
+    end
+  end
 end

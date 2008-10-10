@@ -27,6 +27,8 @@ describe "/diseases/new.html.haml" do
     @disease.stub!(:contact_lead_in).and_return("")
     @disease.stub!(:place_lead_in).and_return("")
     @disease.stub!(:treatment_lead_in).and_return("")
+    @disease.should_receive(:active).and_return(true)
+    @disease.should_receive(:cdc_code).and_return("")
     assigns[:disease] = @disease
   end
 

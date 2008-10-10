@@ -18,6 +18,10 @@
   %span{ :class => "vert" }
     = f.label(:disease_name, "Disease name")
     = f.text_field(:disease_name)
+    = "#{f.check_box(:active)} Active?"
+  %span{ :class =>  "vert" }
+    = f.label(:cdc_code, "CDC/NETSS code")
+    = f.text_field(:cdc_code)
   %span{ :class => "vert" }
     = f.label(:contact_lead_in, "Contact lead-in question")
     = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})

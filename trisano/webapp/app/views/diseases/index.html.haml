@@ -36,9 +36,8 @@
   - for disease in @diseases
     %tr
       %td
-        = disease.disease_name
+        = "#{disease.disease_name}  [#{(disease.active? ? 'active' :  'inactive')}]"
       %td
         = link_to('Show', disease)
         = link_to('Edit', edit_disease_path(disease))
-
 %br

@@ -45,7 +45,8 @@ describe 'disease admin lead in questions' do
         :disease_name => @disease_name, 
         :contact_lead_in => @contact_lead_in, 
         :place_lead_in => @place_lead_in, 
-        :treatment_lead_in => @treatment_lead_in
+        :treatment_lead_in => @treatment_lead_in,
+        :disease_active =>  true
       }).should be_true
    
   end

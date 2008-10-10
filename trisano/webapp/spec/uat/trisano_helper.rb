@@ -258,6 +258,7 @@ module TrisanoHelper
   
   def create_disease(browser, disease_attributes)
     browser.type("disease_disease_name", disease_attributes[:disease_name])
+    browser.click("disease_active") if disease_attributes[:disease_active]
     browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in])
     browser.type("disease_place_lead_in", disease_attributes[:place_lead_in])
     browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in])

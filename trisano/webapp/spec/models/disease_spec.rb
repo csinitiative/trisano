@@ -25,4 +25,36 @@ describe Disease do
   it "should be valid" do
     @disease.should be_valid
   end
+
+  it "should not be active" do
+    @disease.should_not be_active
+  end
+
+  it "can be made active" do
+    @disease.active = true
+    @disease.save.should be_true
+    @disease.should be_active
+  end
+
+  it 'should have no cdc code' do
+    @disease.cdc_code.should be_nil
+  end
+
+  it 'can set the cdc code' do
+    @disease.cdc_code = '99123'
+    @disease.save.should be_true
+    @disease.cdc_code.should_not be_nil
+  end
+
+  it '#find_active should not return inactive diseases' do
+    @disease.save.should be_true
+    Disease.find(:all).size.should >= 1
+    Disease.find_active(:all).size.should == 0
+  end
+
+  it '#find_active should return active diseases' do
+    @disease.active = true
+    @disease.save.should be_true
+    Disease.find_active(:all).size.should == 1
+  end
 end
