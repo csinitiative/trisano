@@ -27,7 +27,7 @@ describe 'User functionality for creating and saving CMRs' do
   
   it 'should save a CMR with just a last name' do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__active_primary_entity__person_last_name', @last_name)
+    @browser.type('morbidity_event_active_patient__person_last_name', @last_name)
     save_cmr(@browser).should be_true
     @browser.is_text_present(@last_name).should be_true
   end
@@ -45,7 +45,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the street name' do    
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Demographics")
-    @browser.type('morbidity_event_active_patient__active_primary_entity__address_street_name', 'Junglewood Court')
+    @browser.type('morbidity_event_active_patient__address_street_name', 'Junglewood Court')
              
     save_cmr(@browser).should be_true
   end
@@ -53,9 +53,9 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the phone number' do
     edit_cmr(@browser).should be_true
     @browser.click 'link=New Telephone / Email'
-    @browser.select 'morbidity_event_new_telephone_attributes__entity_location_type_id', 'label=Work'
-    @browser.type 'morbidity_event_new_telephone_attributes__area_code',   '801'
-    @browser.type 'morbidity_event_new_telephone_attributes__phone_number', '5811234'
+    @browser.select 'morbidity_event_active_patient__new_telephone_attributes__entity_location_type_id', 'label=Work'
+    @browser.type 'morbidity_event_active_patient__new_telephone_attributes__area_code',   '801'
+    @browser.type 'morbidity_event_active_patient__new_telephone_attributes__phone_number', '5811234'
     save_cmr(@browser).should be_true
   end
   
@@ -82,12 +82,8 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the treatment info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Clinical")
-    @browser.click("link=New Treatment")
-    sleep 3
-    @browser.select 'participations_treatment_treatment_given_yn_id', 'label=Yes'
-    @browser.type('participations_treatment_treatment', 'Leaches')
-    @browser.click 'treatment-save-button'
-    sleep 3
+    @browser.select 'morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id', 'label=Yes'
+    @browser.type('morbidity_event_active_patient__new_treatment_attributes__treatment', 'Leaches')
     save_cmr(@browser).should be_true
   end
   
