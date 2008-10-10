@@ -207,7 +207,7 @@ describe FollowUpElement do
   
   describe "when processing conditional logic for core follow ups'" do
     
-    fixtures :external_codes, :codes, :participations, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
+    fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
     
     before(:each) do
       

@@ -108,19 +108,12 @@ namespace :trisano do
       begin
         sleep 10
         puts "executing smoke test"
-        people_url = TRISANO_URL + '/trisano/entities?type=person'
-        puts people_url
 
         Hpricot.buffer_size = 32768
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new 
         agent.basic_auth('utah', 'arches')
         #agent.set_proxy("localhost", "8118")
-        page = agent.get people_url
-
-        new_person_url = TRISANO_URL + '/trisano/entities/new?type=person'
-        puts new_person_url
-        page = agent.get new_person_url
 
         puts "POST CMR"
         new_event_url = TRISANO_URL + '/trisano/cmrs/new'
@@ -135,11 +128,11 @@ namespace :trisano do
         # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
         # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
         form.add_field!("morbidity_event[disease][disease_id]", "")
-        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]", "")
-        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]", "")
-        form.add_field!("morbidity_event[active_patient][active_primary_entity][person][primary_language_id]", "")
-        form.add_field!("morbidity_event[active_patient][active_primary_entity][address][state_id]", "")
-        form.add_field!("morbidity_event[active_patient][active_primary_entity][address][county_id]", "")
+        form.add_field!("morbidity_event[active_patient][person][birth_gender_id]", "")
+        form.add_field!("morbidity_event[active_patient][person][ethnicity_id]", "")
+        form.add_field!("morbidity_event[active_patient][person][primary_language_id]", "")
+        form.add_field!("morbidity_event[active_patient][address][state_id]", "")
+        form.add_field!("morbidity_event[active_patient][address][county_id]", "")
         form.add_field!("morbidity_event[active_jurisdiction][secondary_entity_id]", "")
 
         page = agent.submit form      

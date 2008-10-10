@@ -546,7 +546,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving one edited contact with new phone number, when event has two contacts" do
-        fixtures :entities, :people, :entities_locations, :locations, :telephones
+        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
         before(:each) do
           @existing_contact_hash = {
             "existing_contact_attributes" => { "#{entities(:Groucho).id}" => {:last_name  => "Marx", :first_name  => "Chico", :contact_phone_id => "", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"} }
