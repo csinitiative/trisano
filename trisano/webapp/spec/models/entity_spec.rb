@@ -45,9 +45,9 @@ describe Entity do
     end
   end
 
-  describe "with an associated person via <<" do
+  describe "with an associated person" do
     before(:each) do
-      @entity.people << Person.new
+      @entity.person = { :last_name => "Smith" }
     end
 
     it "should have an entity_type of person" do
@@ -60,14 +60,14 @@ describe Entity do
     
     describe "where person is not valid" do
       it "should not save" do
-        # @person has no last_name and thus is not valid
+        @entity.person = { :last_name => "" }
         @entity.save.should be_false
       end
     end
 
     describe "where person is valid" do
       it "should save without error" do
-        @entity.people.last.last_name = 'Lacey'
+        @entity.person_temp.last_name = 'Lacey'
         @entity.save.should be_true
       end
     end
@@ -106,10 +106,8 @@ end
 describe Entity, "with associated location and person via custom attributes" do
   before(:each) do
     @entity = Entity.new( :person => {:last_name => 'Fields'},
-                          :entities_location => {:entity_location_type_id => 1302, :primary_yn_id => 1402 },
-                          :telephone_entities_location => {:entity_location_type_id => 2105, :primary_yn_id => 1401 },
-                          :address => { :street_name => "Pine St.", :street_number => "123" },
-                          :telephone => { :area_code => '212', :phone_number => '5551212'} )
+                          :address => {:street_name => "Pine St.", :street_number => "123" },
+                          :new_telephone_attributes => [ {:entity_location_type_id => '1302', :area_code => '212', :phone_number => '5551212'} ] )
   end
     
   it "should have an entity_type of person" do
@@ -126,10 +124,6 @@ describe Entity, "with associated location and person via custom attributes" do
 
   it "phone number should be accesible via telephone attribute" do
     @entity.telephone.phone_number.should eql("5551212")
-  end
-
-  it "entity location should be accesible via entities_location attribute" do
-    @entity.entities_location.entity_location_type_id.should eql(1302 )
   end
 
   describe "where person is not valid" do
@@ -162,38 +156,33 @@ describe Entity, "with associated location and person via custom attributes" do
     end
       
   end
+end
 
-  describe "where address is empty and phone number are empty" do
-    before(:each) do
-      @entity.address.street_name = nil
-      @entity.address.street_number = nil
-      @entity.telephone.area_code = nil
-      @entity.telephone.phone_number = nil
-    end
-
-    it "should save without error" do
-      @entity.save.should be_true
-    end
-
-    it "should not add one new row to the entities_location table" do
-      lambda { @entity.save}.should_not change { EntitiesLocation.count }
-    end
-
-    it "should add one new row to the location table" do
-      lambda { @entity.save}.should_not change { Location.count }
-    end
-
-    it "should add no new rows to the address table" do
-      lambda { @entity.save}.should_not change { Address.count }
-    end
+describe Entity, "with associated location and person via empty custom attributes" do
+  before(:each) do
+    @entity = Entity.new( :person => {:last_name => 'Fields'},
+                          :address => {},
+                          :new_telephone_attributes => [ {} ] )
+  end
+    
+  it "should save without error" do
+    @entity.save.should be_true
   end
 
-  describe "where address is empty" do
-    # someday
+  it "should not add any rows to the entities_location table" do
+    lambda { @entity.save}.should_not change { EntitiesLocation.count }
   end
 
-  describe "where telephone is empty" do
-    # someday
+  it "should not add any rows to the location table" do
+    lambda { @entity.save}.should_not change { Location.count }
+  end
+
+  it "should not add any rows to the addresses table" do
+    lambda { @entity.save}.should_not change { Address.count }
+  end
+
+  it "should not add any rows to the telephones table" do
+    lambda { @entity.save}.should_not change { Telephone.count }
   end
 end
 
@@ -243,19 +232,6 @@ describe Entity, "with people fixtures loaded" do
 
 end
 
-describe Entity, "with location fixtures loaded" do
-  fixtures :entities, :entities_locations, :locations
-
-  it "should find current locations with type and primary attributes" do
-    worked = 0
-    entities(:Silvers).current_locations.each do |loc|
-      worked = worked + 1 if loc.primary?
-      worked = worked + 1 if loc.type == "Work"
-    end
-    worked.should == 3
-  end
-end
-
 describe Entity, "with multiple telephones" do
   fixtures :entities, :entities_locations, :locations, :external_codes
 
@@ -267,15 +243,5 @@ describe Entity, "with multiple telephones" do
     entities(:Silvers).telephone_entities_locations.length.should == 2
   end
 
-  it "should be able to build a list of telephone entites locations" do
-    entity = entities(:Silvers)
-    entity.entities_locations.build(
-      :entity_location_type_id => ExternalCode.telephone_location_type_ids[0],
-      :location_type_id => Code.telephone_location_type_id)
-
-    entity.save
-    entity.telephone_entities_locations.size.should == 3
-  end
-    
 end
 

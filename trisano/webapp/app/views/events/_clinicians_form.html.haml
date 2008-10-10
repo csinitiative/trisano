@@ -13,14 +13,8 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+%div{:id => "clinicians"}  
+  - clinicians = (@event.clinicians.size > 0 ? @event.clinicians : [Participation.new_clinician_participation])
+  = render :partial => "events/clinician", :collection => clinicians
 
-- if @event.new_record?
-  - f.fields_for(:clinician, @event.clinician, :builder => ExtendedFormBuilder) do |clinician_fields|
-    - clinician_fields.fields_for(:active_secondary_entity, @event.clinician.active_secondary_entity, :builder => ExtendedFormBuilder) do |new_clinician|
-      = render :partial => "clinicians/form", :locals => { :f => new_clinician, :entity_data => @event.clinician.active_secondary_entity, :rendering_pt => false }
-- else
-  %div{:id => 'clinicians-list'}
-    = render :partial => "clinicians/index"
-
-  %br
-  = link_to_remote_redbox("New Clinician", :url => new_cmr_clinician_path(@event), :method => :get)
+%p{:style => "clear: both;"}= add_clinician_link "Add a clinician"

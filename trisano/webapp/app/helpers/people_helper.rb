@@ -17,9 +17,9 @@
 
 module PeopleHelper
 
-  def add_new_telephone_link(name)
+  def add_new_telephone_link(name, namespace)
     link_to_function name do |page|
-      page.insert_html :bottom, :phones, :partial => 'events/telephone', :object => EntitiesLocation.new
+      page.insert_html :bottom, :phones, :partial => 'events/people/telephone', :object => EntitiesLocation.new_telephone_location, :locals => { :namespace, namespace }
     end
   end
 

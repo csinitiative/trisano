@@ -69,19 +69,17 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
   <% end %>
 
   <div class="yui-content">
-    <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
-      <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
-        <div id="demographic_tab">
-          <%= render :partial => "entities/people/form", 
-            :locals => { :f => current_patient, :entity_data => @event.active_patient.active_primary_entity, :event => @event, :rendering_pt => true } %>
-        </div>
-      <% end %>
+    <% event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+      <div id="demographic_tab">
+        <%= render :partial => "events/people/form", 
+          :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event } %>
+      </div>
     <% end %>
     <div id="clinical_tab"><%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %></div>
     <div id="lab_info_tab"><%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %></div>
     <div id="contacts_tab"><%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %></div>
     <div id="epi_tab"><%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %></div>
-    <div id="reporting_tab"><%= render :partial => 'events/reporting_agency', :locals => {:f => event_form} %></div>
+    <div id="reporting_tab"><%= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %></div>
     <div id="administrative_tab"><%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %></div>
     <%= event_form.submit "Create" %>
   </div>

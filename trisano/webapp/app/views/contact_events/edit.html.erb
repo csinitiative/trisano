@@ -22,7 +22,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%>
+  <%= @event.active_patient.primary_entity.person.first_name -%> <%= @event.active_patient.primary_entity.person.last_name -%>
   <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
   <span style='position: absolute; right: 0;'>
     <span>Original Patient: <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%></span>
@@ -64,10 +64,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <%  @event_form = event_form %>
     <div class="yui-content">
       <div id="demographic_tab">
-        <% event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
-          <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
-            <%= render :partial => "entities/people/contact_form", :locals => { :f => current_patient, :entity_data => @event.active_patient.active_primary_entity, :event => @event, :rendering_pt => true } %>
-          <% end %>
+        <% event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+          <%= render :partial => "events/people/contact_form", :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event, :rendering_pt => true } %>
         <% end %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
       </div>

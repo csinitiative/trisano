@@ -1,9 +1,9 @@
 %tr
   - extra_tools = "" if extra_tools.nil?
-  - patient = event.active_patient.active_primary_entity.person
+  - patient = event.active_patient.primary_entity.person
   %td.forminformation
     .patientname
-      = patient.last_name << (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
+      = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
     %small
       Date:
       = event.event_onset_date

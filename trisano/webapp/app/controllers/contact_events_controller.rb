@@ -47,7 +47,7 @@ class ContactEventsController < EventsController
   end
 
   def update
-    prep_multimodels_for(:contact_event)
+    prep_multimodels
 
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
@@ -65,4 +65,15 @@ class ContactEventsController < EventsController
     head :method_not_allowed
   end
 
+  private
+
+    def prep_multimodels
+      params[:contact_event][:active_patient][:existing_telephone_attributes] ||= {}
+      params[:contact_event][:active_patient][:existing_treatment_attributes] ||= {}
+      params[:contact_event][:existing_lab_attributes] ||= {}
+      params[:contact_event][:existing_hospital_attributes] ||= {}
+      params[:contact_event][:existing_diagnostic_attributes] ||= {}
+      params[:contact_event][:existing_clinician_attributes] ||= {}
+      params[:contact_event][:existing_contact_attributes] ||= {}
+    end
 end

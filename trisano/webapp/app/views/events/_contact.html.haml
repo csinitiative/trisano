@@ -14,18 +14,21 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
-%div{:style => "clear: both;"}
-  = error_messages_for :object => contact.secondary_entity.person_temp
-%div{:class => 'contact'}
+%div{:class => 'contact', :style => "clear: both;"}
   - new_or_existing = new_or_existing?(contact)
   - prefix = event_prefix_for_multi_models(new_or_existing, "_contact_attributes")
   - prefix_with_array = prefix + "[]"
+
   - contact_person = contact.secondary_entity.person_temp
-  - if contact.new_record?
-    - contact_phone  = contact.secondary_entity.entities_locations[0]
-  - else
-    - contact_phone = contact.secondary_entity.primary_phone_entities_location
-    - contact_phone = EntitiesLocation.new_telephone_location if contact_phone.nil?
+  - contact_telephone_entities_location = contact.secondary_entity.telephone_entities_locations[0]
+
+  -# Reading back a contact who was saved with no phone
+  - if contact_telephone_entities_location.nil?
+    - contact_telephone_entities_location = EntitiesLocation.new_telephone_location
+
+  - contact_telephone = contact_telephone_entities_location.location.telephones.last
+
+  = error_messages_for :object => [contact_person, contact_telephone]
 
   - fields_for(prefix_with_array, contact_person, :builder => ExtendedFormBuilder) do |contact_fields|
 
@@ -39,14 +42,18 @@
       = contact_fields.label(:disposition_id)
       = contact_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
 
-  - contact_phone_id = contact_phone.id
-  - contact_phone.id = contact_person.id
+  - contact_phone_id = contact_telephone_entities_location.id
+  - contact_telephone_entities_location.id = contact_person.id
 
-  - fields_for(prefix_with_array, contact_phone, :builder => ExtendedFormBuilder) do |phone_fields|
-    = hidden_field_tag("#{prefix}[#{contact_phone.id}][contact_phone_id]", contact_phone_id) unless contact.new_record?
-    %span.horiz
-      = phone_fields.label(:entity_location_type_id, "Phone type")
-      = phone_fields.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+  - fields_for prefix_with_array, contact_telephone_entities_location, :builder => ExtendedFormBuilder do |el_form|
+    = hidden_field_tag("#{prefix}[#{contact_telephone_entities_location.id}][contact_phone_id]", contact_phone_id) unless contact.new_record?
+    - core_element :entity_location_type_id, el_form, :horiz do
+      = el_form.label(:entity_location_type_id, "Phone type")
+      = el_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+
+  - contact_telephone.id = contact_person.id
+
+  - fields_for(prefix_with_array, contact_telephone, :builder => ExtendedFormBuilder) do |phone_fields|
     %span.horiz
       = phone_fields.label(:area_code)
       = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'})

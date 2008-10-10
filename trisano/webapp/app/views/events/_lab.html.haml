@@ -13,9 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:style => "clear: both;"}
-  = error_messages_for :object => lab.secondary_entity.place_temp
-%div{:class => 'lab'}
+%div{:class => 'lab', :style => "clear: both;"}
   - new_or_existing = new_or_existing?(lab)
   - prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes")
   - prefix_with_array = "#{prefix}[]"
@@ -31,6 +29,7 @@
   - lab_place = lab.secondary_entity.place_temp
 
   - for lab_result in lab.lab_results
+    = error_messages_for :object => [lab_place, lab_result]
     - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
 
       -# If lab exist do not allow editing of lab name

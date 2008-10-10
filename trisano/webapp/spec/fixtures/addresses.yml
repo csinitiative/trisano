@@ -7,20 +7,20 @@ silvers_home_address:
   street_name: "Birch St."
   created_at: <%= Time.now.to_s :db %> 
 
-silvers_work_address_cur:
+silvers_work_address:
   id: 3
-  location_id: 2
+  location_id: 3
   street_number: "678"
   street_name: "Pine Rd."
   created_at: <%= Time.now.to_s :db %> 
 
 marks_home_address:
+  id: !str 4
   postal_code: ""
   state_id: !str 1001
-  location_id: !str 4
+  location_id: !str 5
   county_id: !str 1101
   street_name: NE Ankeny St
-  id: !str 4
   unit_number: ""
   street_number: !str 3114
   created_at:  <%= Time.now.to_s :db %> 

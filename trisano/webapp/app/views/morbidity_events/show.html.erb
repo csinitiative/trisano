@@ -61,8 +61,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <li><a href="#contacts_tab"><em>Contacts</em></a></li>
   <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
   <li><a href="#reporting_tab"><em>Reporting</em></a></li>
-  <li><a href="#administrative_tab"><em>Administrative</em></a></li>
   <li><a href="#investigation_tab"><em>Investigation</em></a></li>
+  <li><a href="#administrative_tab"><em>Administrative</em></a></li>
 </ul>
 
 <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
@@ -70,8 +70,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <div class="yui-content">
   
     <div id="demographic_tab">
-      <% patient_entity = @event.active_patient.active_primary_entity %>
-      <%= render :partial => "entities/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+      <% patient_entity = @event.active_patient.primary_entity %>
+      <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
     </div>
   
@@ -96,200 +96,17 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     </div>
   
     <div id="reporting_tab">
-      <fieldset>
-        <legend>Reporting Information</legend>
-        <fieldset class="vert">
-        
-          <%
-          if @event.active_reporting_agency.nil?
-            agency_data = Participation.new(:active_secondary_entity => {:current_place => Place.new}) 
-          else
-            agency_data = @event.active_reporting_agency
-          end
-        %>
-        
-          <% event_form.fields_for(:active_reporting_agency, agency_data, :builder => ExtendedFormBuilder) do |agency_form| %>
-            <% agency_form.fields_for(:active_secondary_entity, agency_data.active_secondary_entity, :builder => ExtendedFormBuilder) do |entity_form| %>
-              <% entity_form.fields_for(:place, agency_data.active_secondary_entity.place, :builder => ExtendedFormBuilder) do |place_form| %>
-        
-                <% core_element_show :name, place_form, :horiz do %>
-        
-                <% end %>
-              <% end %>
-            <% end %>
-        
-            <% event_form.fields_for(:active_reporter, @event.active_reporter, :builder => ExtendedFormBuilder) do |participant_fields| %>
-        
-              <% if @event.active_reporter.nil? %>
-                <% entity_data = Entity.new %> 
-                <% reporter_data = Person.new %> 
-                <% telephone_data = EntitiesLocation.new %> 
-              <% else %>
-                <% entity_data = @event.active_reporter.active_secondary_entity %>
-                <% reporter_data = @event.active_reporter.active_secondary_entity.person %>
-                <% telephone_data = @event.active_reporter.active_secondary_entity.telephone_entities_location %>
-                <% telephone_data = EntitiesLocation.new if telephone_data.nil? %>
-              <% end %>
-        
-              <% participant_fields.fields_for(:active_secondary_entity, entity_data, :builder => ExtendedFormBuilder) do |agency_fields| %>
-                <% agency_fields.fields_for(:person, reporter_data, :builder => ExtendedFormBuilder) do |reporter_fields| %>
-                  <% core_element_show :first_name, reporter_fields, :horiz do %>
-                    <%= reporter_fields.label(:first_name) %>
-                    <%= @event.reporter.active_secondary_entity.person.first_name unless @event.reporter.nil? -%>
-                  <% end %>
-        
-                  <% core_element_show :last_name, reporter_fields, :vert do %>
-                    <%= reporter_fields.label(:last_name) %>
-                    <%= @event.reporter.active_secondary_entity.person.last_name unless @event.reporter.nil? %>
-                  <% end %>
-        
-                  <% if telephone_data.primary_yn_id.nil? then telephone_data.primary_yn_id = ExternalCode.no_id end %>
-                  <% if telephone_data.location_type_id.nil? then telephone_data.location_type_id = Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id end %>
-                  <% agency_fields.fields_for(:telephone_entities_location, telephone_data, :builder => ExtendedFormBuilder) do |el| %>
-        
-                    <% core_element_show :entity_location_type_id, el, :horiz do %>
-                      <%= el.label(:entity_location_type_id, "Phone type") %>
-                      <%= @event.active_reporter.secondary_entity.telephone_entities_location.entity_location_type.code_description if @event.active_reporter && @event.active_reporter.secondary_entity.telephone_entities_location %>
-                    <% end %>
-                  <% end %>
-        
-                  <% agency_fields.fields_for(:telephone, entity_data.telephone, :builder => ExtendedFormBuilder) do |phone_fields| %>
-                    <% core_element_show :area_code, phone_fields, :horiz do %>
-                      <%= phone_fields.label(:area_code) %>
-                      <%= @event.reporter.active_secondary_entity.telephone.area_code if @event.reporter && @event.reporter.active_secondary_entity.telephone %>
-                    <% end %>
-                    <% core_element_show :phone_number, phone_fields, :horiz do %>
-                      <%= phone_fields.label(:phone_number) %>
-                      <%= @event.reporter.active_secondary_entity.telephone.phone_number if @event.reporter && @event.reporter.active_secondary_entity.telephone %>
-                    <% end %>
-                    <% core_element_show :extension, phone_fields, :horiz do %>
-                      <%= phone_fields.label(:extension) %>
-                      <%= @event.reporter.active_secondary_entity.telephone.extension if @event.reporter && @event.reporter.active_secondary_entity.telephone %>
-                    <% end %>
-                  <% end %>
-        
-                <% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-                
-        </fieldset>
-        <fieldset class="form">
-        
-          <legend>Reporting Agency</legend>        
-          <span class="horiz">
-            <label>Agency</label>          
-            <%= @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?%>
-          </span>
-          <% core_element_show :results_reported_to_clinician_date, event_form, :horiz do -%>
-            <%= event_form.label(:results_reported_to_clinician_date) %>
-            <%= h(@event.results_reported_to_clinician_date) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :first_reported_PH_date, event_form, :horiz do -%>
-            <%= event_form.label(:first_reported_PH_date, 'Date first reported to public health') %>
-            <%= h(@event.first_reported_PH_date) || '&nbsp;' %>
-          <% end -%>
-        </fieldset>
-      </fieldset>
+      <%= render :partial => "events/reporting_show_tab", :locals => { :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Reporting" } %>
-    </div>
-  
-    <div id="administrative_tab">
-      <fieldset>
-        <legend>Administrative Information</legend>  
-        <span class="horiz">
-          <label>Record number</label>
-          <%= @event.record_number %>
-        </span>
-        <span class="vert">
-          <label>Date record created</label>
-          <%= @event.event_onset_date %>
-        </span>
-        <span class="horiz">
-          <label>MMWR year</label>
-          <%= @event.MMWR_year %>
-        </span>
-        <span class="vert">
-          <label>MMWR week</label>
-          <%= @event.MMWR_week %>
-        </span>
-        <span class="vert">
-          <label>Jurisdiction of Residence</label>
-          <% patient_entity = @event.active_patient.active_primary_entity -%>
-          <% if patient_entity -%>
-            <% unless patient_entity.entities_location.nil? -%>
-              <% location = patient_entity.primary_entities_location.location -%>
-              <% if location -%>
-                <% address = location.current_address -%>
-                <% if address && address.county && address.county.jurisdiction -%>
-                  <%  jurisdiction_name = address.county.jurisdiction.name -%>
-                <% end -%>
-              <% end %>
-            <% end -%>
-          <% end -%>
-          <%= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name %>
-        </span>
-              
-        <fieldset class="form">
-          <legend>Case / Outbreak</legend>
-          <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
-            <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
-            <%= l(@event.lhd_case_status) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :udoh_case_status_id, event_form, :vert do -%>
-            <%= event_form.label(:udoh_case_status_id, 'UDOH case status') %>
-            <%= l(@event.udoh_case_status) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :outbreak_associated_id, event_form, :horiz do -%>
-            <%= event_form.label :outbreak_associated_id, 'Outbreak associated' %>
-            <%= l(@event.outbreak_associated) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :outbreak_name, event_form, :vert do -%>
-            <%= event_form.label :outbreak_name %>
-            <%= h(@event.outbreak_name) || '&nbsp;' %>
-          <% end -%>
-        </fieldset>
-      
-        <fieldset class="form">
-          <legend>Investigation</legend>
-          <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| -%>
-            <% core_element_show :secondary_entity_id, j, :horiz do -%>
-              <%= j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') %>
-              <%= h(@event.jurisdiction.active_secondary_entity.place.name) unless @event.jurisdiction.nil?%>
-            <% end -%>
-          <% end -%>
-          <% core_element_show :event_status, event_form, :horiz do -%>
-            <%= event_form.label :event_status, 'Event status' %>
-            <%= Event.get_state_description(@event.event_status) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :investigation_started_date, event_form, :horiz do -%>
-            <%= event_form.label :investigation_started_date, 'Date investigation started' %>
-            <%= h(@event.investigation_started_date) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :investigation_completed_LHD_date, event_form, :horiz do -%>
-            <%= event_form.label :investigation_completed_LHD_date, 'Date invesitgation completed' %>
-            <%= h(@event.investigation_completed_LHD_date) || '&nbsp;' %>
-          <% end -%>
-        </fieldset>
-      
-        <fieldset class="form">
-          <legend>Auditing</legend>
-          <% core_element_show :event_name, event_form, :horiz do -%>
-            <%= event_form.label :event_name %>
-            <%= h(@event.event_name) || '&nbsp;' %>
-          <% end -%>
-          <% core_element_show :review_completed_UDOH_date, event_form, :horiz do -%>
-            <%= event_form.label :review_completed_UDOH_date, 'Date review completed by UDOH' %>
-            <%= h(@event.review_completed_UDOH_date) || '&nbsp;' %>
-          <% end -%>
-        </fieldset>
-      </fieldset>
-      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
     </div>
   
     <div id="investigation_tab">
       <%= render :partial => "events/investigation_show_tab" %>
     </div>
-  </div>
+
+    <div id="administrative_tab">
+      <%= render :partial => "events/admin_show_tab", :locals => { :event_form => event_form }%>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
+    </div>
 
 <% end %>

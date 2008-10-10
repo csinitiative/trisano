@@ -1,13 +1,16 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-silvers_home:
+silvers_home_address:
   id: 1
 
-silvers_work:
+silvers_home_phone:
   id: 2
 
-marks_hospital_address_maybe:
-  id: !str 3
+silvers_work_address:
+  id: 3
+
+silvers_work_phone:
+  id: 4
 
 marks_home_address:
-  id: !str 4
+  id: 5

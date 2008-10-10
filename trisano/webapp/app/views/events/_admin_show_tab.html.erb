@@ -1,0 +1,87 @@
+<fieldset>
+  <legend>Administrative Information</legend>  
+  <span class="horiz">
+    <label>Record number</label>
+    <%= @event.record_number %>
+  </span>
+  <span class="vert">
+    <label>Date record created</label>
+  <%= @event.event_onset_date %>
+  </span>
+  <span class="horiz">
+    <label>MMWR year</label>
+    <%= @event.MMWR_year %>
+  </span>
+  <span class="vert">
+    <label>MMWR week</label>
+    <%= @event.MMWR_week %>
+  </span>
+
+  <span class="vert">
+    <label>Jurisdiction of Residence</label>
+    <% patient_entity = @event.active_patient.primary_entity -%>
+    <% if patient_entity -%>
+      <% unless patient_entity.address_entities_locations.empty? -%>
+        <% address = patient_entity.address_entities_locations.last.location.addresses.last -%>
+        <% if address && address.county && address.county.jurisdiction -%>
+          <%  jurisdiction_name = address.county.jurisdiction.name -%>
+        <% end -%>
+      <% end -%>
+    <% end -%>
+    <%= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name %>
+  </span>
+      
+  <fieldset class="form">
+    <legend>Case / Outbreak</legend>
+    <% core_element_show :lhd_case_status_id, event_form, :horiz do -%>
+      <%= event_form.label(:lhd_case_status_id, 'LHD case status') %>
+      <%= l(@event.lhd_case_status) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :udoh_case_status_id, event_form, :vert do -%>
+      <%= event_form.label(:udoh_case_status_id, 'UDOH case status') %>
+      <%= l(@event.udoh_case_status) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :outbreak_associated_id, event_form, :horiz do -%>
+      <%= event_form.label :outbreak_associated_id, 'Outbreak associated' %>
+      <%= l(@event.outbreak_associated) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :outbreak_name, event_form, :vert do -%>
+      <%= event_form.label :outbreak_name %>
+      <%= h(@event.outbreak_name) || '&nbsp;' %>
+    <% end -%>
+  </fieldset>
+
+  <fieldset class="form">
+    <legend>Investigation</legend>
+    <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| -%>
+      <% core_element_show :secondary_entity_id, j, :horiz do -%>
+        <%= j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') %>
+        <%= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?%>
+      <% end -%>
+    <% end -%>
+    <% core_element_show :event_status, event_form, :horiz do -%>
+      <%= event_form.label :event_status, 'Event status' %>
+      <%= Event.get_state_description(@event.event_status) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :investigation_started_date, event_form, :horiz do -%>
+      <%= event_form.label :investigation_started_date, 'Date investigation started' %>
+      <%= h(@event.investigation_started_date) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :investigation_completed_LHD_date, event_form, :horiz do -%>
+      <%= event_form.label :investigation_completed_LHD_date, 'Date invesitgation completed' %>
+      <%= h(@event.investigation_completed_LHD_date) || '&nbsp;' %>
+    <% end -%>
+  </fieldset>
+
+  <fieldset class="form">
+    <legend>Auditing</legend>
+    <% core_element_show :event_name, event_form, :horiz do -%>
+      <%= event_form.label :event_name %>
+      <%= h(@event.event_name) || '&nbsp;' %>
+    <% end -%>
+    <% core_element_show :review_completed_UDOH_date, event_form, :horiz do -%>
+      <%= event_form.label :review_completed_UDOH_date, 'Date review completed by UDOH' %>
+      <%= h(@event.review_completed_UDOH_date) || '&nbsp;' %>
+    <% end -%>
+  </fieldset>
+</fieldset>

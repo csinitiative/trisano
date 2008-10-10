@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ContactEvent < Event
+class ContactEvent < HumanEvent
 
   class << self
     def initialize_from_morbidity_event(morbidity_event)
@@ -25,13 +25,14 @@ class ContactEvent < Event
         primary = Participation.new
         primary.primary_entity = contact.secondary_entity
         primary.role_id = Event.participation_code('Interested Party')
+        primary.primary_entity.entity_type = "person"
 
         contact = Participation.new
-        contact.secondary_entity = morbidity_event.active_patient.active_primary_entity
+        contact.secondary_entity = morbidity_event.active_patient.primary_entity
         contact.role_id = Event.participation_code('Contact')
 
         jurisdiction = Participation.new
-        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.active_secondary_entity
+        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
         jurisdiction.role_id = Event.participation_code('Jurisdiction') 
 
         unless morbidity_event.disease.nil?
@@ -43,7 +44,7 @@ class ContactEvent < Event
         contact_event.participations << primary
         contact_event.participations << contact
         contact_event.participations << jurisdiction
-        contact_event.disease_events << disease_event unless morbidity_event.disease.nil?
+        contact_event.disease_event = disease_event unless morbidity_event.disease.nil?
         contact_events << contact_event
       end
       contact_events
@@ -76,9 +77,9 @@ class ContactEvent < Event
       "contact_event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Contact birth gender", :can_follow_up => true },
       "contact_event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Contact ethnicity", :can_follow_up => true },
       "contact_event[active_patient][active_primary_entity][person][primary_language_id]" => {:type => :single_line_text, :name => "Contact primary language", :can_follow_up => true },
-      
-      # contact_event_active_patient__active_primary_entity__person_disposition_id
-      # "contact_event[active_patient][active_primary_entity][race_ids][]" => {:type => :single_line_text, :name => "Patient race" }
+
+      # contact_event_active_patient__person_disposition_id
+      # "contact_event[active_patient][race_ids][]" => {:type => :single_line_text, :name => "Patient race" }
       
       # Event-level fields
       "contact_event[imported_from_id]" => {:type => :drop_down, :name => 'Imported from', :can_follow_up => true },
@@ -114,6 +115,10 @@ class ContactEvent < Event
       ["Laboratory", "Laboratory"], 
       ["Epidemiological", "Epidemiological"]
     ]
+  end
+
+  def save_associations
+    super
   end
 
 end

@@ -45,7 +45,7 @@
     .right
       %span.print-label Date of death:
       %span.print-value
-        = @event.active_patient.active_primary_entity.person.date_of_death
+        = @event.active_patient.primary_entity.person.date_of_death
 
 #pregnancy
   .three-valued-row
@@ -147,7 +147,7 @@
       %hr
 
       - for clinician in @event.clinicians
-        - person = clinician.active_secondary_entity.person
+        - person = clinician.secondary_entity.person
         .three-valued-row
           .left
             %span.print-value

@@ -51,18 +51,18 @@ describe "/cmrs/new.html.erb" do
     @lab.stub!(:lab_results).and_return([])
 
     @event.stub!(:active_patient).and_return(@participation)
-    @event.stub!(:active_reporting_agency).and_return(@active_reporting_agency)
+    @event.stub!(:reporting_agency).and_return(@active_reporting_agency)
     
     @event.stub!(:labs).and_return([@lab])
     @event.stub!(:active_hospital).and_return(@active_hospital)
-    @event.stub!(:active_reporter).and_return(@active_reporter)
+    @event.stub!(:reporter).and_return(@active_reporter)
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:contacts).and_return([])
     @event.stub!(:clinicians).and_return([])
     @event.stub!(:place_exposures).and_return([])
     event_type = 'MorbidityEvent'
-    event_type.stub!(:underscore).and_return(event_type.underscore)
+    event_type.stub!(:underscore).and_return("morbidity_event")
     @event.stub!(:type).and_return(event_type)
     @event.stub!(:attributes).and_return({"type" => event_type})
     
@@ -85,16 +85,19 @@ describe "/cmrs/new.html.erb" do
     @person.stub!(:last_name).and_return("Cool")
 
     @participation.stub!(:active_primary_entity).and_return(@primary_entity)
+    @participation.stub!(:primary_entity).and_return(@primary_entity)
+    @participation.stub!(:active_secondary_entity).and_return(@secondary_entity)
     @participation.stub!(:secondary_entity).and_return(@secondary_entity)
     @participation.stub!(:participations_treatment).and_return(@current_treatment)
     @participation.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
     @participation.stub!(:participations_treatments).and_return([])
     @secondary_entity.stub!(:place).and_return(@place)
+    @secondary_entity.stub!(:place_temp).and_return(@place)
     @secondary_entity.stub!(:person).and_return(@person)
+    @secondary_entity.stub!(:person_temp).and_return(@person)
     
-    
-    @active_reporting_agency.stub!(:active_secondary_entity).and_return(@secondary_entity)
-    @active_reporter.stub!(:active_secondary_entity).and_return(@secondary_entity)
+    @active_reporting_agency.stub!(:secondary_entity).and_return(@secondary_entity)
+    @active_reporter.stub!(:secondary_entity).and_return(@secondary_entity)
     @active_hospital.stub!(:secondary_entity_id).and_return(13)
     @active_hospital.stub!(:hospitals_participation).and_return(@hospitals_participation)
     @current_treatment.stub!(:treatment).and_return("Some pills")

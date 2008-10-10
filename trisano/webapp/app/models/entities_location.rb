@@ -29,21 +29,17 @@ class EntitiesLocation < ActiveRecord::Base
       el.build_location.telephones.build
       el
     end
+
+    def new_address_location
+      el = new(:primary_yn_id => ExternalCode.yes_id,
+               :location_type_id => Code.address_location_type_id)
+      el.build_location.addresses.build
+      el
+    end
   end
 
-  # TGR - Disabled for now because it keeps addresses from saving
-  # properly.
-  # validates_associated :location
+  validates_associated :location
 
-  # Should validate that entity_location_type and primary_yn are legitimate codes
-
-  # Debt: a terrible hack because location wasn't working in the
-  # application the way same way it did in the console.
-  def telephones
-    Telephone.find(:all, :conditions => ['location_id = ?', location_id])
-  end
-  
- 
   # Convenient read only attributes make presenting telephone
   # information easier. Maybe candidates for STI.
   def area_code
@@ -63,10 +59,10 @@ class EntitiesLocation < ActiveRecord::Base
   end
 
   def current_phone
-    @current_phone ||= telephones.last if telephones.last
+    location.telephones.last if location.telephones.last
   end
 
   def current_phone_exists?
-    @current_phone.nil? ? false : true
+    current_phone.nil? ? false : true
   end
 end

@@ -27,10 +27,7 @@
 
   - core_element :contacts, f, :vert do
     %div{:id => "contacts"}  
-      - if @event.contacts.empty?
-        %h3 No contacts have been recorded for this event
-      -  else
-        = render :partial => "events/contact", :collection => @event.contacts
+      - contacts = (@event.contacts.size > 0 ? @event.contacts : [Participation.new_contact_participation])
+      = render :partial => "events/contact", :collection => contacts
 
-    %br{:style => "clear: both;"}
     %p= add_contact_link "Add a contact"

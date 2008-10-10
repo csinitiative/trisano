@@ -16,7 +16,9 @@
 %span.section-header Reporting Information
 %br
 
-- entity = @event.reporter.active_secondary_entity unless @event.reporter.nil?
+- reporter_entity = @event.reporter.nil? ? nil : @event.reporter.secondary_entity
+- reporter_person = reporter_entity.person if reporter_entity
+- reporter_phone = (reporter_entity && !reporter_entity.telephone_entities_locations.empty?) ? reporter_entity.telephone_entities_locations.last.location.telephones.last : nil
 
 #reporter
   .three-valued-row
@@ -24,13 +26,13 @@
       %span.print-label
         Name of reporter:
       %span.print-value
-        = entity.person.first_name unless @event.reporter.nil?
-        = entity.person.last_name unless @event.reporter.nil?
+        = reporter_person.first_name unless reporter_entity.nil?
+        = reporter_person.last_name unless reporter_entity.nil?
     .long
       %span.print-label
         Reporting agency:
       %span.print-value
-        = @event.reporting_agency.active_secondary_entity.place.name unless @event.reporting_agency.nil?
+        = @event.reporting_agency.secondary_entity.place.name unless @event.reporting_agency.nil?
 
   .three-valued-row
     %hr
@@ -38,11 +40,11 @@
       %span.print-label
         Reporter phone number:
       %span.print-value
-        - p = entity.telephone unless @event.reporter.nil?
-        - if not p.nil?
-          = fml " (", p.area_code, ") " if p.area_code
-          = phone_number(p.phone_number)
-          = fml " Ext. ", p.extension, "" if p.extension
+        - unless reporter_phone.nil?
+          - if not reporter_phone.nil?
+            = fml " (", reporter_phone.area_code, ") " if reporter_phone.area_code
+            = phone_number(reporter_phone.phone_number)
+            = fml " Ext. ", reporter_phone.extension, "" if reporter_phone.extension
 
   .three-valued-row
     %hr

@@ -15,7 +15,7 @@
 
 %span.section-header Demographic Information
 
-- entity = @event.active_patient.active_primary_entity
+- entity = @event.active_patient.primary_entity
 - patient = entity.person
 
 %br
@@ -34,9 +34,9 @@
       %span.print-value
         = "#{patient.middle_name}"
 
-- entities_location = entity.entities_location
-- no_location = entities_location.nil?
-- address = entities_location.location.current_address unless no_location
+- entities_locations = entity.address_entities_locations
+- no_location = entities_locations.empty?
+- address = entities_locations.last.location.addresses.last unless no_location
 - no_address = no_location || address.nil?
 
 #patient_address
@@ -89,7 +89,7 @@
 
 - for entities_location in entity.telephone_entities_locations
   - no_location = entities_location.nil?
-  - phone = entities_location.location.current_phone unless no_location
+  - phone = entities_location.location.telephones.last unless no_location
   - no_phone = no_location || phone.nil?
 
   #patient_phone
@@ -97,7 +97,7 @@
       %hr
       .left
         %span.print-label
-          = entities_location.entity_location_type.code_description + " Phone:"
+          = (entities_location.entity_location_type.nil? ? "" : entities_location.entity_location_type.code_description) + " Phone:"
         - unless no_phone
           %span.print-value
             = fml "(", phone.area_code, ") "

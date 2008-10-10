@@ -22,7 +22,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <span><%= @event.active_patient.active_primary_entity.person.first_name -%> <%= @event.active_patient.active_primary_entity.person.last_name -%></span>
+  <span><%= @event.active_patient.primary_entity.person.first_name -%> <%= @event.active_patient.primary_entity.person.last_name -%></span>
   <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
   <span style='position: absolute; right: 0;'>
     <span>Original Patient: <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%></span>
@@ -34,7 +34,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   contact event
 <% end %>
 
-<%- jurisdiction = @event.active_jurisdiction.active_secondary_entity.current_place %>
+<%- jurisdiction = @event.active_jurisdiction.secondary_entity.current_place %>
 <% content_for :tools do %>
   <%= basic_contact_event_controls(@event) %>
   <br />
@@ -62,8 +62,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <div class="yui-content">
   
     <div id="demographic_tab">
-      <% patient_entity = @event.active_patient.active_primary_entity %>
-      <%= render :partial => "entities/people/contact_show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+      <% patient_entity = @event.active_patient.primary_entity %>
+      <%= render :partial => "events/people/contact_show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
     </div>
   

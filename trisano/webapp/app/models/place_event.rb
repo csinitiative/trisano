@@ -17,6 +17,12 @@
 
 class PlaceEvent < Event
 
+  has_one :place, :class_name => 'Participation', :foreign_key => "event_id", :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Place of Interest").id]
+
+  validates_associated :place
+
+  after_save :set_primary_entity_on_secondary_participations
+
   class << self
     def initialize_from_morbidity_event(morbidity_event)
       place_events = []
@@ -25,13 +31,14 @@ class PlaceEvent < Event
         primary = Participation.new
         primary.primary_entity = place_exposure.secondary_entity
         primary.role_id = Event.participation_code('Place of Interest')
+        primary.primary_entity.entity_type = "place"
 
         contact = Participation.new
-        contact.secondary_entity = morbidity_event.active_patient.active_primary_entity
+        contact.secondary_entity = morbidity_event.active_patient.primary_entity
         contact.role_id = Event.participation_code('Contact')
         
         jurisdiction = Participation.new
-        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.active_secondary_entity
+        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
         jurisdiction.role_id = Event.participation_code('Jurisdiction') 
 
         unless morbidity_event.disease.nil?
@@ -43,36 +50,20 @@ class PlaceEvent < Event
         place_event.participations << primary
         place_event.participations << contact
         place_event.participations << jurisdiction
-        place_event.disease_events << disease_event unless morbidity_event.disease.nil?
+        place_event.disease_event = disease_event unless morbidity_event.disease.nil?
         place_events << place_event
       end
       place_events
     end
   end
   
-  # needs a refactoring. Too much duplication from super class
-  def new_telephone_attributes=(phone_attributes)
-    phone_attributes.each do |attributes|
-      code = attributes.delete(:entity_location_type_id)
-      next if attributes.values_blank?
-      el = active_place.active_primary_entity.entities_locations.build(
-             :entity_location_type_id => code, 
-             :primary_yn_id => ExternalCode.no_id,
-             :location_type_id => Code.telephone_location_type_id)
-      el.build_location.telephones.build(attributes)
-    end
+  def active_place
+    self.place
   end
 
-  def existing_telephone_attributes=(phone_attributes)
-    active_place.active_primary_entity.telephone_entities_locations.reject(&:new_record?).each do |el|
-      attributes = phone_attributes[el.id.to_s]
-      if attributes
-        attributes.delete(:entity_location_type_id)
-        el.location.telephones.last.attributes = attributes
-      else
-        el.location.destroy
-      end
-    end
+  def active_place=(attributes)
+    self.place = Participation.new_exposure_participation if self.place.nil?
+    self.place.primary_entity.attributes = attributes
   end
   
   # A hash that provides a basic field index for the contact event forms. It maps the form
@@ -104,5 +95,18 @@ class PlaceEvent < Event
     ]
   end
   
-  
+  def save_associations
+    place.save(false)
+    place.primary_entity.save(false)
+    super
+  end
+
+  def set_primary_entity_on_secondary_participations
+    reload
+    self.participations.each do |participation|
+      if participation.primary_entity_id.nil?
+        participation.update_attribute('primary_entity_id', self.place.primary_entity.id)
+      end
+    end
+  end
 end

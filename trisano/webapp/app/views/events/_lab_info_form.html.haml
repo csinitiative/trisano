@@ -20,10 +20,7 @@
     %span{:id => 'lab_info_show', :onClick => "Element.show('labs'); Element.hide('lab_info_show'); Element.show('lab_info_hide'); return false;", :style => "display: none;"} [Show]
 
     %div{:id => "labs"}
-      - if @event.labs.empty?
-        %h3 No lab results have been recorded for this event
-      - else
-        = render :partial => "events/lab", :collection => @event.labs
+      - labs = (@event.labs.size > 0 ? @event.labs : [Participation.new_lab_participation])
+      = render :partial => "events/lab", :collection => labs
 
-    %br{:style => "clear: both;"}
     %p= add_lab_link "Add a lab result"

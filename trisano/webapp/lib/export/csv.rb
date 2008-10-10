@@ -127,8 +127,8 @@ module Exporters
               fields << (event.disease.nil? ? nil : event.disease.date_diagnosed.to_s.gsub(/,/,' '))
               fields << (event.disease.nil? ? nil : l(event.disease.hospitalized).to_s.gsub(/,/,' ')) 
               fields << (event.disease.nil? ? nil : l(event.disease.died).to_s.gsub(/,/,' '))
-              fields << l(event.active_patient.participations_risk_factor.pregnant).to_s.gsub(/,/,' ')
-              fields << event.active_patient.participations_risk_factor.pregnancy_due_date.to_s.gsub(/,/,' ')
+              fields << (event.active_patient.participations_risk_factor.nil? ? nil : l(event.active_patient.participations_risk_factor.pregnant).to_s.gsub(/,/,' '))
+              fields << (event.active_patient.participations_risk_factor.nil? ? nil : event.active_patient.participations_risk_factor.pregnancy_due_date.to_s.gsub(/,/,' '))
               fields << lab_name(lab).gsub(/,/,' ')
               fields << l(lab_result.specimen_source).to_s.gsub(/,/,' ')
               fields << lab_result.lab_result_text.to_s.gsub(/,/,' ')
@@ -170,7 +170,7 @@ module Exporters
       def first_clinician(event)
         participation = event.clinicians.first
         if participation
-          result = participation.active_secondary_entity.person
+          result = participation.secondary_entity.person
         end
         result || OpenStruct.new(Hash.new(''))
       end
@@ -179,7 +179,7 @@ module Exporters
       def first_contact(event)
         participation = event.contacts.first
         if participation
-          person = participation.active_secondary_entity.person
+          person = participation.secondary_entity.person
         end
         person || OpenStruct.new(Hash.new(''))
       end

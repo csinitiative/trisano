@@ -20,21 +20,29 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe MorbidityEvent do
   fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
-  event_hash = {
-    "active_patient" => {
-      "active_primary_entity" => {
-        "entity_type"=>"person", 
-        "person" => {
-          "last_name"=>"Green"
-        }
-      }
-    }
-  }
+#  event_hash = {
+#    "active_patient" => {
+#      "entity_type"=>"person", 
+#      "person" => {
+#        "last_name"=>"Green"
+#      }
+#    }
+#  }
 
   describe "Managing Jurisdictions" do
   end
 
   describe "Managing associations." do
+    before(:each) do
+      @event_hash = {
+        "active_patient" => {
+          "entity_type"=>"person", 
+          "person" => {
+            "last_name"=>"Green"
+          }
+        }
+      }
+    end
 
     describe "Handling new labs and lab results" do
 
@@ -47,7 +55,7 @@ describe MorbidityEvent do
                 { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should create a new participation linked to the event" do
@@ -77,7 +85,7 @@ describe MorbidityEvent do
                 {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(exisitng_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(exisitng_lab_hash_1))
         end
 
         it "should not create a new lab" do
@@ -104,7 +112,7 @@ describe MorbidityEvent do
                 { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>""}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should be invalid" do
@@ -123,7 +131,7 @@ describe MorbidityEvent do
                 { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"Whatever"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should be invalid" do
@@ -140,7 +148,7 @@ describe MorbidityEvent do
                 { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
 
@@ -160,12 +168,14 @@ describe MorbidityEvent do
                 { "lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should create one new lab" do
           lambda {@event.save}.should change {Place.count}.by(1)
-          @event.labs.first.secondary_entity.place_temp.name.should == "New Lab One"
+          lab_names = @event.labs.collect { |lab| lab.secondary_entity.place_temp.name }
+          lab_names.size.should == 2
+          lab_names.include?("New Lab One").should be_true
         end
         
         it "should create two new lab results" do
@@ -187,7 +197,7 @@ describe MorbidityEvent do
                 {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should not create any new labs" do
@@ -207,7 +217,7 @@ describe MorbidityEvent do
                 {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
               ]
           }
-          @new_lab_hash = event_hash.merge(existing_lab_hash_1)
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
@@ -266,7 +276,7 @@ describe MorbidityEvent do
                 {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16", "medical_record_number" => "1234"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
 
         it "should create a new participation linked to the event" do
@@ -291,7 +301,7 @@ describe MorbidityEvent do
                 {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
 
         it "should be valid" do
@@ -317,7 +327,7 @@ describe MorbidityEvent do
                 {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15", "medical_record_number" => ""}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
 
         it "should be invalid" do
@@ -335,7 +345,7 @@ describe MorbidityEvent do
                 {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
 
         it "should make the participation invalid" do
@@ -354,7 +364,7 @@ describe MorbidityEvent do
               { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
             ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_hospital_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
 
         it "should do nothing" do
@@ -413,7 +423,7 @@ describe MorbidityEvent do
                 {"secondary_entity_id" => places(:AVH).id}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_diagnostic_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_diagnostic_hash))
         end
 
         it "should create a new participation linked to the event" do
@@ -457,6 +467,7 @@ describe MorbidityEvent do
     describe "Handling new contacts" do
 
       describe "Receiving one new contact" do
+        fixtures :entities, :participations, :people, :entities_locations, :locations, :telephones
 
         before(:each) do
           new_contact_hash = {
@@ -465,7 +476,7 @@ describe MorbidityEvent do
                 { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "1234567"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
 
         it "should create a new participation linked to the event" do
@@ -488,6 +499,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving multiple new contacts" do
+        fixtures :entities, :participations, :people, :entities_locations, :locations, :telephones
 
         before(:each) do
           new_contact_hash = {
@@ -497,7 +509,7 @@ describe MorbidityEvent do
                 { :last_name => "Burns", :first_name => "George"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
 
         it "should create a new participation linked to the event" do
@@ -524,7 +536,7 @@ describe MorbidityEvent do
                 { :last_name => "", :first_name => "Steve"}
               ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_contact_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
 
         it "should be invalid" do
@@ -566,7 +578,7 @@ describe MorbidityEvent do
           @existing_contact_hash = {
             "existing_contact_attributes" => {
               "#{people(:groucho_marx).id}" => {:last_name  => "Marx", :first_name  => "Chico", :contact_phone_id => "", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"},
-              "#{people(:phil_silvers_cur).id}" => {:last_name  => "Silvers", :first_name  => "Jack", :contact_phone_id => "4", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "3456789"}
+              "#{people(:phil_silvers_cur).id}" => {:last_name  => "Silvers", :first_name  => "Jack", :contact_phone_id => entities_locations(:silvers_joined_to_home_phone).id, :entity_location_type_id => external_codes(:location_home).id, :phone_number => "3456789"}
             }
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
@@ -588,7 +600,7 @@ describe MorbidityEvent do
           phone_numbers = []
           @event.contacts.each do |contact| 
             contact.secondary_entity.telephone_entities_locations.each do |t_el|
-              phone_numbers << t_el.location.current_phone.phone_number
+              phone_numbers << t_el.location.telephones.last.phone_number
             end
           end
 
@@ -619,7 +631,7 @@ describe MorbidityEvent do
     describe "Place Exposures" do
 
       before(:each) do
-        @event = MorbidityEvent.new(event_hash)
+        @event = MorbidityEvent.new(@event_hash)
       end
     
       describe "A new Morbidity event" do
@@ -636,7 +648,7 @@ describe MorbidityEvent do
              {'name' => '', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => Time.now.strftime('%B %d, %Y')}
             ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_place_exposure_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_place_exposure_hash))
         end
 
         it "should return invalid" do
@@ -654,7 +666,7 @@ describe MorbidityEvent do
              {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => @date}
             ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(new_place_exposure_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(new_place_exposure_hash))
         end
 
         it "should create a new participation linked to the event" do
@@ -681,7 +693,7 @@ describe MorbidityEvent do
              {'name' => 'Sonic', 'place_type_id' => codes(:place_type_other).id}
             ]
           }
-          @event = MorbidityEvent.new(event_hash.merge(place_exposures_hash))
+          @event = MorbidityEvent.new(@event_hash.merge(place_exposures_hash))
         end
 
         it "should create new participations linked to event" do
@@ -728,39 +740,41 @@ describe MorbidityEvent do
     end
 
     describe "Handling telephone numbers" do
-      fixtures :external_codes, :entities_locations, :locations, :addresses
+      fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses, :external_codes, :codes
     
       describe "Adding new telephone number" do
-        def new_telephone_hash
-          { :new_telephone_attributes =>  
-            [ { :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s,
-                :area_code => '123',
-                :phone_number => '4567890' } ] }
+        before(:each) do
+          @new_telephone_hash = { 
+            :new_telephone_attributes =>  [ 
+              { :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s, :area_code => '123', :phone_number => '4567890' } 
+            ] 
+          }
         end
 
         def create_event(event_hash)
-          h = new_telephone_hash 
+          h = @new_telephone_hash 
           yield h if block_given?
-          @event = MorbidityEvent.new(event_hash.merge(h))
+          @event_hash["active_patient"][:new_telephone_attributes] = h[:new_telephone_attributes]
+          @event = MorbidityEvent.new(@event_hash)
         end
 
         it "should be able to add a new phone number " do           
-          create_event(event_hash)
+          create_event(@event_hash)
           lambda {@event.save}.should change {EntitiesLocation.count}.by(1)      
           el = @event.patient.primary_entity.telephone_entities_locations[0]
           el.entity_location_type.code_description == 'Unknown'
           @event.should be_valid
-          el.current_phone.should_not be_nil
+          el.location.telephones.last.should_not be_nil
+          el.location.telephones.last.phone_number.should == '4567890'
         end      
 
-  # TODO: Restore this test when telephone validation is fixed
-  #      it "should not save invalid phone numbers" do
-  #        create_event(event_hash) { |h| h[:new_telephone_attributes][0][:area_code] = '32' }
-  #        @event.should_not be_valid
-  #      end
+        it "should not save invalid phone numbers" do
+          create_event(@event_hash) { |h| h[:new_telephone_attributes][0][:area_code] = '32' }
+          @event.should_not be_valid
+        end
         
         it "should allow adding multiple new phone numbers" do
-          create_event(event_hash) do |h|
+          create_event(@event_hash) do |h|
             h[:new_telephone_attributes] << { 
               :area_code => '330', 
               :phone_number => '322-1234', 
@@ -779,7 +793,7 @@ describe MorbidityEvent do
         end
 
         it "should allow adding phone numbers when editing cmrs" do
-          h = new_telephone_hash.merge(:existing_telephone_attributes => {})
+          h = { :active_patient => @new_telephone_hash.merge(:existing_telephone_attributes => {}) }
           event = events(:marks_cmr)
           event.patient.should_not be_nil
           event.patient.primary_entity.should_not be_nil
@@ -789,7 +803,7 @@ describe MorbidityEvent do
         end
 
         it "should not add the phone number if no telephone attributes are specified" do
-          create_event(event_hash) do |h|
+          create_event(@event_hash) do |h|
             h[:new_telephone_attributes] = 
               [ { :entity_location_type_id => ExternalCode.telephone_location_type_ids[0].to_s } ]
           end
@@ -799,7 +813,7 @@ describe MorbidityEvent do
         end
 
         it "should add the phone number, even if an entity location type isn't selected" do
-          create_event(event_hash) do |h|
+          create_event(@event_hash) do |h|
             h[:new_telephone_attributes] << {
               :area_code => '330',
               :phone_number => '432-1254',
@@ -924,7 +938,7 @@ describe MorbidityEvent do
 
   describe "Saving an event" do
     it "should generate an event onset date set to today" do
-      event = MorbidityEvent.new(event_hash)
+      event = MorbidityEvent.new(@event_hash)
       event.save.should be_true
       event.event_onset_date.should == Date.today
     end

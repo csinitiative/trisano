@@ -29,35 +29,11 @@ class Event < ActiveRecord::Base
 
   belongs_to :event_queue
 
-  has_many :disease_events, :order => 'created_at ASC', :dependent => :delete_all
+  has_one :disease_event, :order => 'created_at ASC', :dependent => :delete
   has_many :participations
+
   has_many :form_references
   has_many :answers
-
-  has_many :labs, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
-    :order => 'created_at ASC',
-    :dependent => :destroy
-
-  has_many :hospitalized_health_facilities, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id],
-    :order => 'created_at ASC',
-    :dependent => :destroy
-
-  has_many :diagnosing_health_facilities, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id],
-    :order => 'created_at ASC',
-    :dependent => :destroy
-
-  has_many :contacts, :class_name => 'Participation',  
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id],
-    :order => 'created_at ASC',
-    :dependent => :destroy
-
-  has_many :place_exposures, :class_name => 'Participation',
-    :conditions => ['role_id = ?', Code.find_by_code_name_and_code_description('participant', 'Place Exposure').id],
-    :order => 'created_at ASC',
-    :dependent => :destroy
 
   primary_jurisdiction_code_id   = Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id
   secondary_jurisdiction_code_id = Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction").id
@@ -74,27 +50,18 @@ class Event < ActiveRecord::Base
     :order => 'created_at ASC',
     :dependent => :destroy
 
-  has_many :clinicians, :class_name => 'Participation', 
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id]
+  # Turn off auto validation of has_many associations
+  def validate_associated_records_for_participations() end
+  def validate_associated_records_for_answers() end
 
-  has_one :patient, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id]
-  has_one :place, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Place of Interest").id]
-  has_one :reporting_agency, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
-  has_one :reporter, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
-
-  validates_date :event_onset_date
-  validates_associated :labs
-  validates_associated :hospitalized_health_facilities
-  validates_associated :diagnosing_health_facilities
-  validates_associated :contacts
-  validates_associated :place_exposures
-  validates_associated :participations
-
-  before_validation_on_create :save_associations, :set_event_onset_date
+  before_validation_on_create :set_event_onset_date
   
-  after_update :save_multiples
+  after_update :save_associations
   before_save :generate_mmwr
   before_create :set_record_number
+
+  validates_date :event_onset_date
+  validates_associated :answers
 
   ### Debt:  Event Status stuff should be made into its own object and associated with event
 
@@ -207,6 +174,10 @@ class Event < ActiveRecord::Base
       @@states[state_name][:description]
     end
 
+    def participation_code(description)
+      Code.find_by_code_name_and_code_description('participant', description).id
+    end
+
   end
 
   def legal_state_transition?(proposed_state)
@@ -228,11 +199,11 @@ class Event < ActiveRecord::Base
   end
 
   def primary_jurisdiction
-    active_jurisdiction.active_secondary_entity.current_place
+    active_jurisdiction.secondary_entity.current_place
   end
 
   def secondary_jurisdictions
-    associated_jurisdictions.collect { |j| j.active_secondary_entity.current_place }
+    associated_jurisdictions.collect { |j| j.secondary_entity.current_place }
   end
 
   def jurisdiction_of_investigation
@@ -240,21 +211,21 @@ class Event < ActiveRecord::Base
   end
 
   def disease
-    @disease ||= disease_events.last
+    self.disease_event
   end
 
   def disease=(attributes)
-    if new_record?
-      @disease = DiseaseEvent.new(attributes)
-    else
-      disease_events.build(attributes) unless attributes.values_blank?
-    end
+    return if attributes.values_blank?
+
+    self.build_disease_event if self.disease_event.nil?
+    self.disease_event.attributes = attributes
   end  
 
   def form_references=(attributes)
     if form_references.empty?
       form_references.build(attributes)
     else
+      ### TGR:  Bug here.  Don't forget.
       form_references.update(attributes.keys, attributes.values)
     end
   end
@@ -263,7 +234,7 @@ class Event < ActiveRecord::Base
     if answers.empty?
       answers.build(attributes.values)
     else
-      answers.update(attributes.keys, attributes.values)
+      answers.each { |answer| answer.attributes = attributes[answer.id.to_s] }
     end
   end  
   
@@ -272,350 +243,25 @@ class Event < ActiveRecord::Base
   end
   
   def new_checkboxes=(attributes)
-    attributes.each do |key, value|
-      answer = Answer.new(:question_id => key, :check_box_answer => value[:check_box_answer])
-      answers << answer
-    end
+    attributes.each { |key, value| answers.build(:question_id => key, :check_box_answer => value[:check_box_answer]) }
   end
   
   def new_radio_buttons=(attributes)
-    attributes.each do |key, value|
-      answer = Answer.new(:question_id => key, :radio_button_answer => value[:radio_button_answer])
-      answers << answer
-    end
+    attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer]) }
   end  
 
   def get_or_initialize_answer(question_id)
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  ### Participations
-  # For all secondary (non-patient) participations this code will ultimately need to populate the primary_entity field with the patient's ID.
-  
-  def active_patient
-    @active_patient || patient
-  end
-  
-  def active_patient=(attributes)
-    if new_record?
-      @active_patient = Participation.new(attributes)
-      @active_patient.role_id = Event.participation_code('Interested Party')
-    else
-      # This is a bug!  Should be building these up in memory so they are subject to validation and transactions
-      active_patient.update_attributes(attributes)
-    end
-  end
-
-  def active_place
-    @active_place || place
-  end
-
-  def active_place=(attributes)
-    if new_record?
-      @active_place = Participation.new(attributes)
-      @active_place.role_id = Event.participation_code('Place Exposure')
-    else
-      # Bug!
-      active_place.update_attributes(attributes)
-    end
-  end
-  
-  def clinician
-    @clinician ||= Participation.new( :role_id => Event.participation_code('Treated By'), :active_secondary_entity => {}) 
-  end
-
-  def clinician=(attributes)
-    unless attributes[:active_secondary_entity][:person][:last_name].blank?
-      attributes[:role_id] = Event.participation_code('Treated By')
-      @clinician = clinicians.build(attributes)
-    end
-  end
-
-  def new_telephone_attributes=(phone_attributes)
-    phone_attributes.each do |attributes|
-      code = attributes.delete(:entity_location_type_id)
-      next if attributes.values_blank?
-      el = active_patient.active_primary_entity.entities_locations.build(
-             :entity_location_type_id => code, 
-             :primary_yn_id => ExternalCode.no_id,
-             :location_type_id => Code.telephone_location_type_id)
-      el.build_location.telephones.build(attributes)
-    end
-  end
-
-  def existing_telephone_attributes=(phone_attributes)
-    active_patient.active_primary_entity.telephone_entities_locations.reject(&:new_record?).each do |el|
-      attributes = phone_attributes[el.id.to_s]
-      if attributes
-        attributes.delete(:entity_location_type_id)
-        el.location.telephones.last.attributes = attributes
-      else
-        el.location.destroy
-      end
-    end
-  end
-  
-  def new_hospital_attributes=(hospital_attributes)
-    hospital_attributes.each do |attributes|
-      next if attributes.values_blank?
-      hospital_participation = hospitalized_health_facilities.build(:role_id => Event.participation_code('Hospitalized At'))
-      # Hospitals are a drop down of existing places, not an autocomplete.  Just assgn.
-      hospital_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
-      hospital_participation.build_hospitals_participation(attributes) unless attributes.values_blank?
-    end
-  end
-
-  def existing_hospital_attributes=(hospital_attributes)
-    hospitalized_health_facilities.reject(&:new_record?).each do |hospital|
-      attributes = hospital_attributes[hospital.id.to_s]
-      if attributes
-        hospital.secondary_entity_id = attributes.delete("secondary_entity_id")
-        unless attributes.values_blank?
-          if hospital.hospitals_participation.nil?
-            hospital.hospitals_participation = HospitalsParticipation.new(attributes)
-          else
-            hospital.hospitals_participation.attributes = attributes
-          end
-        end
-      else
-        hospitalized_health_facilities.delete(hospital)
-      end
-    end
-  end
-
-  def new_diagnostic_attributes=(diagnostic_attributes)
-    diagnostic_attributes.each do |attributes|
-      next if attributes.values_blank?
-      diagnostic_participation = diagnosing_health_facilities.build(:role_id => Event.participation_code('Diagnosed At'))
-      # Diagnostic facilities are a drop down of existing places, not an autocomplete.  Just assgn.
-      diagnostic_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
-    end
-  end
-
-  def existing_diagnostic_attributes=(diagnostic_attributes)
-    diagnosing_health_facilities.reject(&:new_record?).each do |diagnostic|
-      attributes = diagnostic_attributes[diagnostic.id.to_s]
-      if attributes
-        diagnostic.secondary_entity_id = attributes.delete("secondary_entity_id")
-      else
-        diagnosing_health_facilities.delete(diagnostic)
-      end
-    end
-  end
-
-  def new_contact_attributes=(contact_attributes)
-    contact_attributes.each do |attributes|
-      code = attributes.delete(:entity_location_type_id)
-      next if attributes.values_blank?
-
-      person = {}
-      person[:last_name] = attributes.delete(:last_name)
-      person[:first_name] = attributes.delete(:first_name)
-      person[:disposition_id] = attributes.delete(:disposition_id)
-
-      contact_participation = contacts.build(:role_id => Event.participation_code('Contact'))
-      contact_entity = contact_participation.build_secondary_entity
-      contact_entity.entity_type = "person"
-      contact_entity.build_person_temp( person )
-
-      next if attributes.values_blank?
-      el = contact_entity.entities_locations.build(
-             :entity_location_type_id => code, 
-             :primary_yn_id => ExternalCode.yes_id,
-             :location_type_id => Code.telephone_location_type_id)
-      el.build_location.telephones.build(attributes)
-    end
-  end
-
-  def existing_contact_attributes=(contact_attributes)
-    contacts.reject(&:new_record?).each do |contact|
-      attributes = contact_attributes[contact.secondary_entity.person_temp.id.to_s]
-      if attributes
-        person = {}
-        person[:last_name] = attributes.delete(:last_name)
-        person[:first_name] = attributes.delete(:first_name)
-        person[:disposition_id] = attributes.delete(:disposition_id)
-
-        contact.secondary_entity.person_temp.attributes = person
-
-        # Which entity_location to edit is passed along in the (hidden) attribute contact_phone_id
-        el_id = attributes.delete(:contact_phone_id).to_i
-
-        # They may be adding a phone number to an existing contact who did not lready have one
-        if el_id == 0 || el_id.blank?
-          code = attributes.delete(:entity_location_type_id)
-          next if attributes.values_blank?
-          el = contact.secondary_entity.telephone_entities_locations.build(
-                 :entity_location_type_id => code, 
-                 :primary_yn_id => ExternalCode.yes_id,
-                 :location_type_id => Code.telephone_location_type_id)
-          el.build_location.telephones.build(attributes)
-        else
-          # Don't just find it, loop through the association array looking for it
-          contact.secondary_entity.telephone_entities_locations.each do |tel_el|
-            if tel_el.id == el_id
-              tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-              tel_el.location.telephones.last.attributes = attributes
-              break
-            end
-          end
-        end
-      else
-        contacts.delete(contact)
-      end
-    end
-  end
-
-  def new_place_exposure_attributes=(place_exposure_attributes)
-    place_exposure_attributes.each do |attributes|
-      next if attributes.values_blank?
-      place_exposure_participation = place_exposures.build(:role_id => Event.participation_code('Place Exposure'))
-      place_exposure_entity = place_exposure_participation.build_secondary_entity
-      place_exposure_entity.entity_type = 'place'
-      place_exposure_entity.build_place_temp(attributes)
-    end
-  end
-
-  def existing_place_exposure_attributes=(place_exposure_attributes)
-    place_exposures.reject(&:new_record?).each do |place_exposure|      
-      attributes = place_exposure_attributes[place_exposure.secondary_entity.place_temp.id.to_s]
-      if attributes
-        place_exposure.secondary_entity.place_temp.attributes = attributes
-      else
-        place_exposures.delete(place_exposure)
-      end
-    end
-  end
-
-  def new_lab_attributes=(lab_attributes)
-    lab_attributes.each do |attributes|
-      next if attributes.values_blank?
-
-      lab_entity_id = attributes.delete("lab_entity_id")
-      lab_name = attributes.delete("name")
-      lab_name = nil if lab_name.blank?
-      lab_participation = nil
-
-      # If lab_entity_id has a value then the place already exists
-      unless lab_entity_id.blank?
-        # Check to see if there's an existing participation for the lab
-        # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
-        lab_participation = labs.detect { |lab| lab.secondary_entity_id == lab_entity_id.to_i }
-
-        # Participation does not exist, create one and link to existing lab
-        if lab_participation.nil?
-          lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-          lab_participation.secondary_entity_id = lab_entity_id
-        else
-          # participation already exists, do nothing
-        end
-      else
-        # New lab. Create participation, entity, and place, linking each to the next
-        lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-        lab_entity = lab_participation.build_secondary_entity
-        lab_entity.entity_type = "place"
-        lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
-      end
-
-      # Build a new lab_result and associate with the participation
-      lab_participation.lab_results.build(attributes)
-    end
-  end
-  
-  # We're not allowing editing lab names, just lab results
-  def existing_lab_attributes=(lab_attributes)
-
-    # loop through all lab participations and their lab_results, ignoring any just added by new_lab_attributes
-    labs.reject(&:new_record?).each do |lab|
-      lab.lab_results.reject(&:new_record?).each do |lab_result|
-
-        # Note the "id" here is the lab_result ID, not the lab ID as in new_lab_attributes
-        # If there are attributes for that ID, then the lab result has not been deleted, update the attributes in memory
-        attributes = lab_attributes[lab_result.id.to_s]
-        if attributes
-          lab_result.attributes = attributes
-        else
-          # Array (not activerecord) deletion.  Make this a soft delete when we get to it
-          lab.lab_results.delete(lab_result)
-        end
-      end
-    end
-  end
-
   def active_jurisdiction
-    @active_jurisdiction || jurisdiction
+    self.jurisdiction
   end
 
-  # Ultimately need to populate the primary_entity field with the patient's ID.
   def active_jurisdiction=(attributes)
-    if new_record?
-      @active_jurisdiction = Participation.new(attributes)
-      @active_jurisdiction.role_id = Event.participation_code('Jurisdiction')
-    else
-      unless attributes.values_blank?
-        if active_jurisdiction.nil?
-          attributes[:role_id] = Event.participation_code('Jurisdiction')
-          self.create_jurisdiction(attributes)
-        else
-          # Bug!
-          active_jurisdiction.update_attributes(attributes)
-        end
-      end
-    end
+    self.jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction')) if self.jurisdiction.nil?
+    self.jurisdiction.attributes = attributes
   end
-
-  def active_reporting_agency
-    @active_reporting_agency || reporting_agency
-  end
-
-  def active_reporting_agency=(attributes)
-    if attributes.values_blank? # User did nothing
-    elsif attributes[:secondary_entity_id].blank? # User entered a new agency
-      attributes.delete('secondary_entity_id')
-      attributes[:active_secondary_entity][:entity_type] = 'place'
-      attributes[:active_secondary_entity][:place][:place_type_id] = Code.other_place_type_id
-    else                                       # User selected an existing entity
-      attributes.delete('active_secondary_entity')
-    end
-
-    if new_record?
-      @active_reporting_agency = Participation.new(attributes)
-      @active_reporting_agency.role_id = Event.participation_code('Reporting Agency')
-    else
-      unless attributes.values_blank?
-        if active_reporting_agency.nil?
-          attributes[:role_id] = Event.participation_code('Reporting Agency')
-          self.create_reporting_agency(attributes)
-        else
-          # Bug!
-          active_reporting_agency.update_attributes(attributes)
-        end
-      end
-    end
-  end
-
-  def active_reporter
-    @active_reporter || reporter
-  end
-
-  def active_reporter=(attributes)
-    if new_record?
-      @active_reporter = Participation.new(attributes)
-      @active_reporter.role_id = Event.participation_code('Reported By')
-    else
-      unless attributes[:active_secondary_entity][:person][:last_name].blank? and attributes[:active_secondary_entity][:person][:first_name].blank?
-        if active_reporter.nil?
-          attributes[:role_id] = Event.participation_code('Reported By')
-          self.create_reporter(attributes)
-        else
-          # Bug!
-          active_reporter.update_attributes(attributes) 
-        end
-      end
-    end
-  end
-
-  ### End participations
 
   # Debt: Consolidate sanitize_sql_for_conditions calls where possible
   def self.find_by_criteria(*args)
@@ -871,46 +517,8 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[])
-    jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
-    jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
-    jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
-
-    transaction do
-      # Handle the primary jurisdiction
-      # 
-      # Do nothing if the passed-in jurisdiction is the current jurisdiction
-      unless jurisdiction_id == active_jurisdiction.secondary_entity_id
-        proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
-        raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
-        active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-        update_attribute("event_queue_id",  nil)
-      end
-
-      # Handle secondary jurisdictions
-      #
-      existing_secondary_jurisdiction_ids = associated_jurisdictions.collect { |participation| participation.secondary_entity_id }
-
-      # if an existing secondary jurisdiction ID is not in the passed-in ids, delete
-      (existing_secondary_jurisdiction_ids - secondary_jurisdiction_ids).each do |id_to_delete|
-        associated_jurisdictions.delete(associated_jurisdictions.find_by_secondary_entity_id(id_to_delete))
-      end
-
-      # if an passed-in ID is not in the existing secondary jurisdiction IDs, add
-      (secondary_jurisdiction_ids - existing_secondary_jurisdiction_ids).each do |id_to_add|
-        associated_jurisdictions.create(:secondary_entity_id => id_to_add, :role_id => Event.participation_code('Secondary Jurisdiction'))
-      end
-
-      reload # Any existing references to this object won't see these changes without this
-    end
-  end
-
   private
   
-  def self.participation_code(description)
-    Code.find_by_code_name_and_code_description('participant', description).id
-  end
-
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
@@ -918,8 +526,8 @@ class Event < ActiveRecord::Base
   end
   
   def generate_mmwr
-    epi_dates = { :onsetdate => @disease.nil? ? nil : @disease.disease_onset_date, 
-      :diagnosisdate => @disease.nil? ? nil : @disease.date_diagnosed, 
+    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date, 
+      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed, 
       #      :labresultdate => @lab.lab_result.nil? ? nil : @lab.lab_result.lab_test_date, 
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
@@ -932,70 +540,10 @@ class Event < ActiveRecord::Base
     self.event_onset_date = Date.today
   end
 
-  # DEBT: Replace these one by one as we switch to the multi-model process used by lab results
   def save_associations
-    participations << @active_patient unless @active_patient.nil?
-    disease_events << @disease unless Utilities::model_empty?(@disease)
-    participations << @active_jurisdiction unless (@active_jurisdiction.nil? or @active_jurisdiction.secondary_entity_id.blank?)
-    participations << @active_reporting_agency unless (@active_reporting_agency.nil? or (@active_reporting_agency.secondary_entity_id.blank? and @active_reporting_agency.active_secondary_entity.place.name.blank?))
-    participations << @active_reporter unless (@active_reporter.nil? or (@active_reporter.active_secondary_entity.person.last_name.blank? and @active_reporter.active_secondary_entity.person.first_name.blank?))
+    disease.save(false) unless disease.nil?
+    answers.each { |answer| answer.save(false) }
+    # Jurisdictions don't need to be saved on edit.  They can only be set by create.  After that routing is used.
   end
-
-  def save_multiples
-    labs.each do |lab|
-      if lab.lab_results.length == 0
-        lab.destroy
-        next
-      end
-      lab.save(false)
-      lab.lab_results.each do |lab_result|
-        lab_result.save(false)
-      end
-    end
-
-    hospitalized_health_facilities.each do |hospital|
-      hospital.save(false)
-      hospital.hospitals_participation.save(false) unless hospital.hospitals_participation.nil?
-    end
-
-    diagnosing_health_facilities.each do |diagnostic|
-      diagnostic.save(false)
-    end
-
-    contacts.each do |contact|
-      contact.secondary_entity.person_temp.save(false)
-      contact.secondary_entity.telephone_entities_locations.each do |el|
-        el.save(false)
-        el.location.telephones.each { |t| t.save(false) unless t.frozen?}
-      end
-    end
-
-    place_exposures.each do |pe|
-      pe.secondary_entity.place_temp.save(false)
-    end
-
-    if active_patient
-      active_patient.save(false)
-      active_patient.active_primary_entity.save(false)
-
-      active_patient.active_primary_entity.telephone_entities_locations.each do |el|
-        el.save(false)           
-        el.location.save(false)
-        el.location.telephones.each {|t| t.save(false) unless t.frozen?}
-      end
-    end
-
-    if active_place
-      active_place.save(false)
-      active_place.active_primary_entity.save(false)
-      
-      active_place.active_primary_entity.entities_locations.each do |el|
-        el.save(false)
-        el.location.save(false)
-        el.location.telephones.each {|t| t.save(false) unless t.frozen?}
-      end
-    end
-  end
-
 
 end

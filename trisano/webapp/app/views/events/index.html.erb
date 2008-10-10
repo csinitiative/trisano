@@ -45,7 +45,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   </thead>
   <% for event in @events %>
     <tr>
-      <% patient = event.active_patient.active_primary_entity.person %>
+      <% patient = event.active_patient.primary_entity.person %>
       <% jurisdiction = event.active_jurisdiction.active_secondary_entity.current_place %></td>
       <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
       <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>

@@ -16,10 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Entity < ActiveRecord::Base
-  has_many :people, :before_add => :set_entity_type
+  has_many :people
 
   #TODO: TGF DELETE THESE WHEN DONE WITH REFACTORING
-  has_many :places, :order => 'created_at ASC', :before_add => :set_entity_type
+  has_many :places, :order => 'created_at ASC'
   has_one  :current_place, :class_name => 'Place', :order => 'created_at DESC'
 
   #TODO: TGF CHANGE PLACE_TEMP TO PLACE WHEN REFACTORING COMPLETE
@@ -31,24 +31,16 @@ class Entity < ActiveRecord::Base
                                 :order => 'entity_id, entity_location_type_id, primary_yn_id, location_type_id, created_at DESC'
   has_many :locations, :through => :entities_locations
 
-  # TODO: SERIOUS DEBT, Nothing enforces just one primary location
-  has_one :primary_entities_location, 
-    :class_name => 'EntitiesLocation', 
-    :foreign_key => 'entity_id', 
-    :conditions => [ "primary_yn_id = ?", ExternalCode.yes_id ],
-    :order => 'created_at DESC'
-  
-  # Just grabbing the most recent phone here. Not supporting multiples yet.
-  has_one :primary_phone_entities_location, 
-    :class_name => 'EntitiesLocation', 
-    :foreign_key => 'entity_id', 
-    :conditions => [ "location_type_id = ?", Code.find_by_code_name_and_code_description('locationtype', "Telephone Location Type").id],
-    :order => 'created_at DESC'
-
   has_many :telephone_entities_locations,
     :class_name => 'EntitiesLocation',
     :foreign_key => 'entity_id',
-    :conditions => ["location_type_id = ?", Code.find_by_code_name_and_code_description('locationtype', 'Telephone Location Type').id],
+    :conditions => ["location_type_id = ?", Code.telephone_location_type_id],
+    :order => 'created_at ASC'
+  
+  has_many :address_entities_locations,
+    :class_name => 'EntitiesLocation',
+    :foreign_key => 'entity_id',
+    :conditions => ["location_type_id = ?", Code.address_location_type_id],
     :order => 'created_at ASC'
   
   has_and_belongs_to_many :races, 
@@ -58,88 +50,90 @@ class Entity < ActiveRecord::Base
     :order => 'code_description'
 
   attr_protected :entity_type
+
+  # Turn off auto validation of has_many associations
+  def validate_associated_records_for_people() end
+  def validate_associated_records_for_places() end
+  def validate_associated_records_for_telephone_entities_locations() end
+  def validate_associated_records_for_address_entities_locations() end
+
   validates_presence_of :entity_type
   validates_associated :people
   validates_associated :place_temp
   validates_associated :person_temp
-  validates_associated :entities_locations
+  validates_associated :telephone_entities_locations
+  validates_associated :address_entities_locations
 
-  before_validation :save_entity_associations
-  after_save :save_location_info
+  after_update :save_associations
 
   def person
-    @person || Person.find_by_entity_id(self.id) || person_temp
+    person_temp
   end
 
   def person=(attributes)
-    if new_record?
-      @person = Person.new(attributes)
-    else
-      person.update_attributes(attributes)
-    end
-    set_entity_type(person)
+    self.build_person_temp if self.person_temp.nil?
+    self.entity_type = 'person'
+    person_temp.attributes = attributes
   end  
 
-  # Debt: Remove this when the associations are correct on user.rb.
-  # The role view uses this accessor to get a place name in a
-  # collection_select.
-  #
-  #TODO: TGF REMOVE THESE TWO METHODS WHEN REFACTROING COMPLETE
   def place
-    @place || current_place
+    place_temp
   end
 
   def place=(attributes)
-    @place = Place.new(attributes)
-    set_entity_type(@place)
+    self.build_place_temp if self.place_temp.nil?
+    self.entity_type = 'place'
+    place_temp.attributes = attributes
   end
 
-  def entities_location
-    @entities_location || primary_entities_location
-  end
-
-  def entities_location=(attributes)
-    @entities_location = EntitiesLocation.new(attributes)
-  end
-  
-  #TGR: support for multiple phones.
-  # def telephone_entities_locations
-  #  telephone_location_type_ids = ExternalCode.telephone_location_type_ids
-  #  entities_locations.select {|el| telephone_location_type_ids.include? el.entity_location_type_id}
-  # end
-
-  def telephone_entities_location
-    @telephone_entities_location || primary_phone_entities_location
-  end
-
-  def telephone_entities_location=(attributes)
-    @telephone_entities_location = EntitiesLocation.new(attributes)
-  end
-  
   def address
-    @address || (primary_entities_location.nil? ? nil : primary_entities_location.location.address)
+    self.address_entities_locations.empty? ? nil : self.address_entities_locations.last.location.addresses.last
   end
 
   def address=(attributes)
-    @address = Address.new(attributes)
+    return if attributes.values_blank?
+
+    if self.address_entities_locations.empty?
+      self.address_entities_locations.build( 
+        :primary_yn_id => ExternalCode.yes.id,
+        :location_type_id => Code.address_location_type_id).build_location.addresses.build
+    end
+    address_entities_locations.last.location.addresses.last.attributes = attributes
   end  
 
-  def telephone
-    @telephone || (primary_phone_entities_location.nil? ? nil : primary_phone_entities_location.location.telephone)
+  # For backwards compatibility.  Can be removed when formbuilder usage is purged.
+  def telephone_entities_location
+    self.telephone_entities_locations.last
   end
 
-  def telephone=(attributes)
-    @telephone = Telephone.new(attributes)
-  end  
-
-  # Debt: Not sure I like this.
-  def current_locations
-    entities_locations.map do |el|
-      location = locations.find(el.location_id)
-      location.type = el.entity_location_type.code_description
-      location.primary = el.primary_yn.the_code == "Y" ? true : false
-      location
+  def new_telephone_attributes=(phone_attributes)
+    phone_attributes.each do |attributes|
+      code = attributes.delete(:entity_location_type_id)
+      next if attributes.values_blank?
+      el = self.telephone_entities_locations.build(
+             :entity_location_type_id => code, 
+             :primary_yn_id => ExternalCode.no_id,
+             :location_type_id => Code.telephone_location_type_id)
+      el.build_location.telephones.build(attributes)
     end
+  end
+
+  def existing_telephone_attributes=(phone_attributes)
+    self.telephone_entities_locations.reject(&:new_record?).each do |el|
+      attributes = phone_attributes[el.id.to_s]
+      if attributes
+        el.entity_location_type_id = attributes.delete(:entity_location_type_id)
+        el.location.telephones.last.attributes = attributes
+      else
+        el.location.destroy
+      end
+    end
+  end
+  
+  # For backwards compatibility.  Can be removed when formbuilder usage is purged.
+  def telephone
+    return nil if self.telephone_entities_locations.empty?
+    self.telephone_entities_locations.last.location.telephones.last
   end
 
   def case_id
@@ -151,49 +145,23 @@ class Entity < ActiveRecord::Base
 
   private
 
-  def validate
-    # Uncomment when person is factored in
-    # Extend when animal and material support is added
-    # errors.add_to_base("Entity must be associated to a person or place") if place.nil and person.nil
+  def save_associations
+    # Debt: break these out when Entity is STI enabled as PersonEntity, PlaceEntity, etc.
+    self.person_temp.save(false) if person_temp
+    self.place_temp.save(false) if place_temp
 
-    errors.add(:address) unless @address.valid? unless Utilities::model_empty?(@address)
-    errors.add(:telephone) unless @telephone.valid? unless Utilities::model_empty?(@telephone)
-  end
-
-  #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
-  def set_entity_type(record)
-    self.entity_type = record.class.name.downcase
-  end
-
-  #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
-  def save_entity_associations
-    case entity_type
-    when "person"
-      people << @person unless @person.nil?
-     
-    #TODO: TGF: REMOVE WHEN REFACTORING COMPLETE
-    when "place"
-      places << @place unless @place.nil?
-
-      # More 'when' clauses as needed
+    self.address_entities_locations.each do |al|
+      al.save(false)
+      al.location.save(false)
+      al.location.addresses.each {|a| a.save(false)}
     end
-  end
 
-  def save_location_info
-    unless Utilities::model_empty?(@address)
-       entities_location.entity_id = id
-      a_attrs = @address.nil?   ? {} : @address.attributes
-      address_location = Location.new(:entities_location => entities_location.attributes, :address => a_attrs)
-      address_location.save
+    self.telephone_entities_locations.each do |el|
+      el.save(false)           
+      el.location.save(false)
+      # el.location.telephones.each {|t| t.save(false) unless t.frozen?}
+      el.location.telephones.each {|t| t.save(false)}
     end
-    
-    unless Utilities::model_empty?(@telephone)
-       telephone_entities_location.entity_id = id
-       t_attrs = @telephone.nil? ? {} : @telephone.attributes
-       telephone_location = Location.new(:entities_location => telephone_entities_location.attributes, :telephone => t_attrs)    
-       telephone_location.save
-    end
-    
   end
 
 end

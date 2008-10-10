@@ -1,0 +1,27 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-# 
+-# This file is part of TriSano.
+-# 
+-# TriSano is free software: you can redistribute it and/or modify it under the 
+-# terms of the GNU Affero General Public License as published by the 
+-# Free Software Foundation, either version 3 of the License, or 
+-# (at your option) any later version.
+-# 
+-# TriSano is distributed in the hope that it will be useful, but 
+-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+-# for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along 
+-# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+%fieldset.form
+  %legend Place Name
+  -core_element_show :name, p, :horiz do
+    =place_form.label(:name)
+    =place.name
+  -core_element_show :place_type_id, p, :horiz do
+    =place_form.label(:place_type_id, 'Type')
+    =place.place_type.code_description if place.place_type
+  -core_element_show :date_of_exposure, p, :horiz do
+    =place_form.label(:date_of_exposure)
+    =format_date(place.date_of_exposure)

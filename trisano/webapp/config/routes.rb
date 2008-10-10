@@ -37,10 +37,6 @@ ActionController::Routing::Routes.draw do |map|
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
   map.toggle_value 'value_set_elements/toggle_value/:value_element_id', :controller => 'value_set_elements', :action => 'toggle_value'
 
-  map.resources :entities do |entity|
-    entity.resources :locations
-  end
-  
   map.resources :forms, :member => {:copy => :post}
 
   map.resources :external_codes
@@ -67,11 +63,9 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :cmrs, 
                 :controller => :morbidity_events,
-                :member => { :state => :post, :jurisdiction => :post },
-                :has_many => [:treatments, :clinicians]
+                :member => { :state => :post, :jurisdiction => :post }
 
-  map.resources :contact_events, 
-                :has_many => [:treatments, :clinicians]
+  map.resources :contact_events
 
   map.resources :codes, :controller => :external_codes
 

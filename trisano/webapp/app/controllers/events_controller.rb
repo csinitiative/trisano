@@ -87,13 +87,4 @@ class EventsController < ApplicationController
     )
   end
 
-  def prep_multimodels_for(event)
-    params[event.to_sym][:existing_lab_attributes] ||= {}
-    params[event.to_sym][:existing_hospital_attributes] ||= {}
-    params[event.to_sym][:existing_diagnostic_attributes] ||= {}
-    params[event.to_sym][:existing_telephone_attributes] ||= {}
-    params[event.to_sym][:existing_place_exposure_attributes] ||= {}
-    params[event.to_sym][:existing_contact_attributes] ||= {} unless event.to_sym == :contact_event
-  end
-  
 end

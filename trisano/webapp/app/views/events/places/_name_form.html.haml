@@ -1,0 +1,14 @@
+%fieldset.form
+  %legend Place Name
+  -f.fields_for(:place, entity_data.place, :builder => ExtendedFormBuilder) do |p|
+    -core_element :name, p, :horiz do
+      =p.label(:name)
+      =p.core_text_field(:name, {:size => 25}, event, @can_investigate)
+    -core_element :place_type_id, p, :horiz do
+      =p.label(:place_type_id, 'Type')
+      =p.dropdown_code_field(:place_type_id, 'placetype')
+    -core_element :date_of_exposure, p, :horiz do
+      =p.label(:date_of_exposure)
+      =p.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+      
+  

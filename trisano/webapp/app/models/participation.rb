@@ -21,17 +21,21 @@ class Participation < ActiveRecord::Base
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
   has_many :lab_results, :order => 'created_at ASC', :dependent => :destroy
-  #TGR: Remove auditing (has_many) for now.
   has_one :hospitals_participation, :dependent => :destroy
-  has_many :participations_treatments, :order => 'created_at ASC'
-  has_many :participations_risk_factors, :order => 'created_at ASC'
+  has_many :participations_treatments, :dependent => :destroy, :order => 'created_at ASC'
+  has_one :participations_risk_factor, :order => 'created_at ASC'
+
+  # Turn off auto validation of has_many associations
+  def validate_associated_records_for_lab_results() end
+  def validate_associated_records_for_participations_treatments() end
 
   validates_associated :primary_entity
   validates_associated :secondary_entity
   validates_associated :lab_results
   validates_associated :hospitals_participation
+  validates_associated :participations_treatments
 
-  before_validation :save_associations
+  after_update :save_multiples
 
   class << self
     def new_lab_participation
@@ -51,77 +55,108 @@ class Participation < ActiveRecord::Base
     end
 
     def new_contact_participation
-      contact_participation = Participation.new_person_participation
-      contact_participation.secondary_entity.entities_locations.build( 
-        :primary_yn_id => ExternalCode.yes_id,
-        :location_type_id => Code.telephone_location_type_id,
-        :entity_location_type_id => ExternalCode.telephone_location_type_ids[0]).build_location.telephones.build
-      contact_participation
+      Participation.new_secondary_person_with_phone_participation
     end
 
     def new_place_participation
       place_participation = Participation.new
       place_participation.build_secondary_entity.build_place_temp
+      place_participation.secondary_entity.entity_type = "place"
       place_participation
     end
 
-    def new_person_participation
+    def new_secondary_person_participation
       person_participation = Participation.new
       person_participation.build_secondary_entity.build_person_temp
+      person_participation.secondary_entity.entity_type = "person"
       person_participation
+    end
+
+    def new_secondary_person_with_phone_participation
+      pwp_participation = Participation.new_secondary_person_participation
+      pwp_participation.secondary_entity.telephone_entities_locations.build(
+        :primary_yn_id => ExternalCode.yes_id,
+        :location_type_id => Code.telephone_location_type_id).build_location.telephones.build
+      pwp_participation
+    end
+
+    def new_reporting_agency_participation
+      ra_participation = Participation.new_place_participation
+      ra_participation.role_id = Event.participation_code('Reporting Agency')
+      ra_participation
+    end
+
+    def new_reporter_participation
+      reporter_participation = Participation.new_secondary_person_with_phone_participation
+      reporter_participation.role_id = Event.participation_code('Reported By')
+      reporter_participation
     end
 
     def new_patient_participation
       patient = Participation.new
       patient.build_primary_entity.build_person_temp
-      patient.primary_entity.address = {}
-      patient.primary_entity.entities_locations.build( 
-        :entity_location_type_id => ExternalCode.telephone_location_type_ids[0])
       patient.role_id = Code.interested_party.id
+      patient.primary_entity.entity_type = "person"
       patient
     end
 
-  end
-
-  def active_primary_entity
-    @active_primary_entity || primary_entity
-  end
-
-  def active_primary_entity=(attributes)
-    if new_record?
-      @active_primary_entity = Entity.new(attributes)
-    else
-      active_primary_entity.update_attributes(attributes)
+    def new_exposure_participation
+      exposure = Participation.new
+      exposure.build_primary_entity.build_place_temp
+      exposure.role_id = Event.participation_code('Place Exposure')
+      exposure.primary_entity.entity_type = "place"
+      exposure
     end
-  end
 
-  def active_secondary_entity
-    @active_secondary_entity || secondary_entity
-  end
-
-  def active_secondary_entity=(attributes)
-    if new_record?
-      @active_secondary_entity = Entity.new(attributes)
-    else
-      active_secondary_entity.update_attributes(attributes)
+    def new_patient_participation_with_address_and_phone
+      patient = Participation.new_patient_participation
+      patient.primary_entity.address_entities_locations.build( 
+        :primary_yn_id => ExternalCode.yes.id,
+        :location_type_id => Code.address_location_type_id).build_location.addresses.build
+      patient.primary_entity.telephone_entities_locations.build( 
+        :primary_yn_id => ExternalCode.yes.id,
+        :location_type_id => Code.telephone_location_type_id).build_location.telephones.build
+      patient
     end
-  end
 
-  def participations_treatment
-    @participations_treatment ||= ParticipationsTreatment.new
-  end
-
-  def participations_treatment=(attributes)
-    @participations_treatment = participations_treatments.build(attributes) unless attributes[:treatment].blank?
-  end  
-
-  def participations_risk_factor
-    @participations_risk_factor ||= participations_risk_factors.last
+    def new_clinician_participation
+      Participation.new_secondary_person_with_phone_participation
+    end
   end
 
   def participations_risk_factor=(attributes)
-    @participations_risk_factor = participations_risk_factors.build(attributes)
+    return if attributes.values_blank?
+    self.build_participations_risk_factor if participations_risk_factor.nil?
+    self.participations_risk_factor.attributes = attributes
   end  
+
+  def new_treatment_attributes=(treatment_attributes)
+    treatment_attributes.each do |attributes|
+      next if attributes.values_blank?
+      treatment = self.participations_treatments.build(attributes)
+    end
+  end
+
+  def existing_treatment_attributes=(treatment_attributes)
+    participations_treatments.reject(&:new_record?).each do |treatment|
+      attributes = treatment_attributes[treatment.id.to_s]
+      if attributes
+        treatment.attributes = attributes
+      else
+        participations_treatments.delete(treatment)
+      end
+    end
+  end
+
+  # For backwards compatibility.  Currently only used by form builder core field configs and follow-ups.
+  def active_secondary_entity
+    self.secondary_entity
+  end
+
+  # For backwards compatibility.  Currently only used by form builder core field configs and follow-ups.
+  def active_primary_entity
+    self.primary_entity
+  end
 
   private
 
@@ -131,8 +166,10 @@ class Participation < ActiveRecord::Base
     end
   end
 
-  def save_associations
-    self.primary_entity = @active_primary_entity unless Utilities::model_empty?(@active_primary_entity)
-    self.secondary_entity = @active_secondary_entity unless Utilities::model_empty?(@active_secondary_entity)
+  def save_multiples
+    participations_treatments.each do |treatment|
+      treatment.save(false)
+    end
   end
+
 end

@@ -25,11 +25,9 @@ describe PlaceEvent do
 
     patient_attrs = {
       "active_patient" => {
-        "active_primary_entity" => {
-          "entity_type"=>"person", 
-          "person" => {
-            "last_name"=>"Green"
-          }
+        "entity_type"=>"person", 
+        "person" => {
+          "last_name"=>"Green"
         }
       },
       :active_jurisdiction => { 
@@ -79,7 +77,7 @@ describe PlaceEvent do
         it "should have the same jurisdiction as the original event" do
           @place_event.participations.each do |participation|
             if participation.role_id == codes(:participant_jurisdiction)
-              participation.active_secondary_entity_id.should == 1
+              participation.secondary_entity_id.should == 1
             end
           end
         end

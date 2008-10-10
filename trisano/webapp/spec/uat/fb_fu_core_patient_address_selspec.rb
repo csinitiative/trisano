@@ -22,13 +22,13 @@ describe 'form builder patient-level address core field configs for contacts' do
   
 #  $dont_kill_browser = true
 
-  fields = [{:name => 'Patient street number', :label => 'morbidity_event_active_patient__active_primary_entity__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Patient street name', :label => 'morbidity_event_active_patient__active_primary_entity__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Patient unit number', :label => 'morbidity_event_active_patient__active_primary_entity__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Patient city', :label => 'morbidity_event_active_patient__active_primary_entity__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'Patient state', :label => 'morbidity_event_active_patient__active_primary_entity__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-    {:name => 'Patient county', :label => 'morbidity_event_active_patient__active_primary_entity__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-    {:name => 'Patient zip code', :label => 'morbidity_event_active_patient__active_primary_entity__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
+  fields = [{:name => 'Patient street number', :label => 'morbidity_event_active_patient__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+    {:name => 'Patient street name', :label => 'morbidity_event_active_patient__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
+    {:name => 'Patient unit number', :label => 'morbidity_event_active_patient__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+    {:name => 'Patient city', :label => 'morbidity_event_active_patient__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
+    {:name => 'Patient state', :label => 'morbidity_event_active_patient__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
+    {:name => 'Patient county', :label => 'morbidity_event_active_patient__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
+    {:name => 'Patient zip code', :label => 'morbidity_event_active_patient__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
   ]                                                 
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

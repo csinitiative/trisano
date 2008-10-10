@@ -45,37 +45,27 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <fieldset class="form">
         <legend>Diagnosing Health Facilities</legend>
         <div id="diagnostics">
-          <% if @event.diagnosing_health_facilities.empty? %>
-            <h3>No diagnosing facilities have been recorded for this event</h3>
-          <% else %>
-            <%= render :partial => "events/diagnostic", :collection => @event.diagnosing_health_facilities %>
-          <% end %>
+          <% diagnosing_health_facilities = (@event.diagnosing_health_facilities.size > 0 ? @event.diagnosing_health_facilities : [Participation.new_diagnostic_participation]) %>
+          <%= render :partial => "events/diagnostic", :collection => diagnosing_health_facilities %>
         </div>
       
-        <p style="clear: both; padding-top: 20px"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
+        <p style="clear: both;"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
       </fieldset>
     
       <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
-        <%= error_messages_for :object => @event.hospitalized_health_facilities %>
         <div id="hospitals">
-          <% core_element :hospitalized_id, d, :horiz do %>
+          <% core_element :hospitalized_id, d, :vert do %>
             <%= d.label(:hospitalized_id, "Hospitalized") %>
             <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event, @can_investigate) %>
           <% end %>
         
-          <% if @event.hospitalized_health_facilities.empty? %>
-            <h3>No hospitals have been recorded for this event</h3>
-          <% else %>
-            <%= render :partial => "events/hospital", :collection => @event.hospitalized_health_facilities %>
-          <% end %>
+          <% hospitalized_health_facilities = (@event.hospitalized_health_facilities.size > 0 ? @event.hospitalized_health_facilities : [Participation.new_hospital_participation]) %>
+          <%= render :partial => "events/hospital", :collection => hospitalized_health_facilities %>
         </div>
       
-        <p style="clear: both; padding-top: 20px"> <%= add_hospital_link "Add a hospital" %> </p>
+        <p style="clear: both;"> <%= add_hospital_link "Add a hospital" %> </p>
       <% end %>
-                        
-      <br/>
-      
     </fieldset>
     
     <fieldset class="form">
@@ -87,17 +77,18 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <% end %>
       <% end %>
       
-      <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields| %>
-        <% patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
-          <% current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person| %>
-            <% core_element :date_of_death, person, :horiz do %>
-              <%= person.label(:date_of_death) %>
-              <%= person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event, @can_investigate) %>
-            <% end %>
+      <% f.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+        <%# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields %>
+        <% core_path = "#{current_patient.object_name}[person]" %>
+
+        <% current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :core_path => core_path, :builder => ExtendedFormBuilder) do |person| %>
+          <% core_element :date_of_death, person, :horiz do %>
+            <%= person.label(:date_of_death) %>
+            <%= person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event, @can_investigate) %>
           <% end %>
         <% end %>
       
-        <% patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
+        <% current_patient.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |rf| %>
           <% core_element :pregnant_id, rf, :horiz do %>
             <%= rf.label(:pregnant_id) %>
             <%= rf.dropdown_code_field(:pregnant_id, 'yesno', {}, {}, @event, @can_investigate) %>
@@ -116,28 +107,22 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank? %>
         <%=  h @event.disease.disease.treatment_lead_in %><br/><br/>
       <% end %>
-      
+
       <% core_element :treatments, f, :vert do %>
-        <% if @event.new_record? %>
-          <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |cp| %>
-            <% cp.fields_for(:participations_treatment, @event.active_patient.participations_treatment, :builder => ExtendedFormBuilder) do |ct| %>
-              <%= render :partial => "treatments/form", :locals => { :ct => ct } %>
-            <% end %>
-          <% end %>
-        <% else %>
-          <div id='treatment-list'>
-            <%= render :partial => "treatments/index" %>
-            <br/>
+        <% f.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |treatments| %>
+          <div id="treatments">
+            <% treatments = (@event.active_patient.participations_treatments.size > 0 ? @event.active_patient.participations_treatments : [ParticipationsTreatment.new]) %>
+            <%= render :partial => "events/treatment", :locals => { :namespace => "active_patient" }, :collection => treatments %>
           </div>
-          <%= link_to_remote_redbox("New Treatment", :url => new_cmr_treatment_path(@event), :method => :get) %>
-          <br/><br/>
+          <p style="clear: both;"> <%= add_treatment_link "Add a treatment", "active_patient" %> </p>
         <% end %>
       <% end %>
-    </fieldset>
     
+    </fieldset>
+  
     <fieldset class="form">
       <legend>Clinicians</legend>
-      <%= render :partial => "events/clinicians_form", :locals => {:f => f} %>
+      <%= render :partial => "events/clinicians_form" %>
     </fieldset>
     
   </div>

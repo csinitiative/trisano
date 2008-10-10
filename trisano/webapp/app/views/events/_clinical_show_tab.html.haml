@@ -37,12 +37,11 @@
         = d.label(:died_id)
         = l @event.disease.died unless @event.disease.nil?
 
-  - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
-    - patient_fields.fields_for(:active_primary_entity, @event.active_patient.active_primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
-      - current_patient.fields_for(:person, @event.active_patient.active_primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
-        - core_element_show :date_of_death, person_form, :vert do
-          = person_form.label(:date_of_death)
-          = entity_data.person.date_of_death
+  - event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
+    - current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
+      - core_element_show :date_of_death, person_form, :vert do
+        = person_form.label(:date_of_death)
+        = entity_data.person.date_of_death
 
   - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
     - patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
@@ -94,28 +93,52 @@
               %td= hospital.hospitals_participation.discharge_date
               %td= hospital.hospitals_participation.medical_record_number
 
-
   %fieldset
     %legend
       Treatments  
-    %table{:cellpadding => '2'}
-      %tr
-        %td
-          - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank?
-            = h @event.disease.disease.treatment_lead_in
-            %br
-            %br
-          - core_element_show :treatments, event_form, :vert do
-            %div{:id => 'treatment-list'}
-              = render :partial => 'treatments/index'
+
+    - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank?
+      = h @event.disease.disease.treatment_lead_in
+
+    - core_element_show :treatments, event_form, :vert do
+
+      - if @event.active_patient.participations_treatments.empty?
+        %h3 No treatments have been recorded for this event
+      - else
+        %table{:class => 'tabular'}
+          %tr
+            %th Treatment Given
+            %th Treatment
+            %th Date of Treatment
+
+          - for treatment in @event.active_patient.participations_treatments
+            %tr
+              %td= l treatment.treatment_given_yn
+              %td= treatment.treatment
+              %td= treatment.treatment_date
 
   %fieldset
     %legend
       Clinicians  
-    %table{:cellpadding => '2'}
-      %tr
-        %td
-          %div{:id => 'clinicians-list'}
-            = render :partial => 'clinicians/index'
 
+    - if @event.clinicians.empty?
+      %h3 No clinicians have been recorded for this event
+    - else
+      %table{:class => 'tabular'}
+        %tr
+          %th Name
+          %th Phone
 
+        -# A clinician (participation) may have one name and zero or one phone numbers
+        - for clinician in @event.clinicians
+          - clinician_entity = clinician.secondary_entity
+          - clinician_person = clinician_entity.person_temp
+
+          - clinician_phone_loc = clinician_entity.telephone_entities_locations.last
+          - clinician_phone = clinician_phone_loc.location.telephones.last unless clinician_phone_loc.nil?
+
+          %tr 
+            %td= clinician_person.last_name + (clinician_person.first_name.blank? ? "" : fml(", ", clinician_person.first_name, ""))
+            %td 
+              -unless clinician_phone_loc.nil? 
+                = (l(clinician_phone_loc.entity_location_type) || "Unspecified Locaiton") + ": " + clinician_phone.simple_format

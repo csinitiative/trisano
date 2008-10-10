@@ -61,6 +61,7 @@ describe EventsHelper do
     entity.stub!(:person).and_return(person)
     mock = mock(Participation)
     mock.stub!(:active_secondary_entity).and_return(entity)
+    mock.stub!(:secondary_entity).and_return(entity)
     mock
   end
 
@@ -83,6 +84,7 @@ describe EventsHelper do
     entity.stub!(:person).and_return(person)
     mock = mock(Participation)
     mock.stub!(:active_secondary_entity).and_return(entity)
+    mock.stub!(:secondary_entity).and_return(entity)
     mock
   end
 

@@ -21,14 +21,13 @@
   %b No contacts have been recorded for this case
 - else
 - for contact in @event.contacts
-  - entity = contact.active_secondary_entity
+  - entity = contact.secondary_entity
   - person = entity.person
 
-  - entities_location = entity.entities_location
-  - no_location = entities_location.nil?
-  - address = entities_location.location.current_address unless no_location
+  - entities_locations = entity.address_entities_locations
+  - no_location = entities_locations.empty?
+  - address = entities_locations.last.location.addresses.last unless no_location
   - no_address = no_location || address.nil?
-
 
   #name
     - unless ran.nil?

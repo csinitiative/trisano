@@ -2,7 +2,7 @@
 
 silvers_home_phone:
   id: 1
-  location_id: 1
+  location_id: 2
   area_code: "212"
   phone_number: "5551212"
   extension:
@@ -10,7 +10,7 @@ silvers_home_phone:
 
 silvers_current_work_phone:
   id: 3
-  location_id: 2
+  location_id: 4
   area_code: "212"
   phone_number: "5559999"
   extension: "1234"

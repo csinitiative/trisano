@@ -36,7 +36,12 @@ Entity.transaction do
       :select => "places.name", 
       :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
         hospital_type_id, hospital])
-    Entity.create(:entity_type => 'place', :place => {:name => hospital, :place_type_id => hospital_type_id}) if h.nil?
+    if h.nil?
+      e = Entity.new
+      e.entity_type = 'place'
+      e.places.build(:name => hospital, :place_type_id => hospital_type_id)
+      e.save
+    end
   end
 end
 
@@ -51,7 +56,13 @@ Entity.transaction do
       :select => "places.name", 
       :conditions => ["entities.entity_type = 'place' and places.place_type_id = ? and places.name = ?",
         jurisdiction_type_id, jurisdiction['name'] ])
-    Entity.create(:entity_type => 'place', :place => {:name => jurisdiction['name'], :short_name => jurisdiction['short_name'], :place_type_id => jurisdiction_type_id}) if j.nil?
+
+    if j.nil?
+      e = Entity.new
+      e.entity_type = 'place'
+      e.places.build(:name => jurisdiction['name'], :short_name => jurisdiction['short_name'], :place_type_id => jurisdiction_type_id)
+      e.save
+    end
   end
 end
 

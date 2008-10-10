@@ -18,7 +18,7 @@
 .header
   .left
     %h1 Utah Public Health
-    %h2= @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?
+    %h2= @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
     %h3 Address of Local Health Department
     %h3
       %i Phone: (801) xxx-xxxx 
@@ -37,7 +37,6 @@
 
 #demographics
   = render :partial => 'events/demographic_show_print.html.haml'
-
 
 .brak#clinical
   = render :partial => 'events/clinical_show_print.html.haml'

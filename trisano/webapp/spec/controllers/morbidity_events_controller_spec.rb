@@ -213,7 +213,7 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      MorbidityEvent.stub!(:new).and_return(@event)
+      MorbidityEvent.stub!(:new_event_tree).and_return(@event)
       @user.stub!(:is_entitled_to?).with(:create_event).and_return(true)
       @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end
@@ -233,7 +233,7 @@ describe MorbidityEventsController do
     end
     
     it "should create an new event" do
-      MorbidityEvent.should_receive(:new).and_return(@event)
+      MorbidityEvent.should_receive(:new_event_tree).and_return(@event)
       do_get
     end
     

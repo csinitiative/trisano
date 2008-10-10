@@ -27,6 +27,11 @@ class Code < ActiveRecord::Base
     code.id if code
   end
 
+  def self.address_location_type_id
+    code = find_by_code_name_and_the_code 'locationtype', 'ALT'
+    code.id if code
+  end
+
   def self.interested_party
     Code.find_by_code_name_and_code_description('participant', 'Interested Party')
   end

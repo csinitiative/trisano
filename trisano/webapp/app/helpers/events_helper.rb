@@ -67,8 +67,11 @@ module EventsHelper
     model.new_record? ? 'new' : 'existing'
   end
 
-  def event_prefix_for_multi_models(new_or_existing, attribute_name)
-    "#{@event.type.underscore}[#{new_or_existing}#{attribute_name}]"
+  def event_prefix_for_multi_models(new_or_existing, attribute_name, namespace=nil)
+    prefix = @event.type.underscore
+    prefix << "[#{namespace}]" if namespace
+    prefix << "[#{new_or_existing}#{attribute_name}]"
+    prefix
   end
 
   def add_lab_link(name)
@@ -89,9 +92,27 @@ module EventsHelper
     end
   end
 
+  def add_treatment_link(name, namespace)
+    link_to_function name do |page|
+      page.insert_html :bottom, "treatments", :partial => 'events/treatment' , :object => ParticipationsTreatment.new, :locals => { :namespace => namespace }
+    end
+  end
+
   def add_contact_link(name)
     link_to_function name do |page|
       page.insert_html :bottom, "contacts", :partial => 'events/contact' , :object => Participation.new_contact_participation
+    end
+  end
+
+  def add_clinician_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "clinicians", :partial => 'events/clinician' , :object => Participation.new_clinician_participation
+    end
+  end
+
+  def add_reporting_agency_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, "reporting_agencies", :partial => 'events/reporting_agency' , :object => Participation.new_reporting_agency_participation
     end
   end
 
@@ -229,7 +250,7 @@ module EventsHelper
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
       @event.form_references.each do |form_reference|
-        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
+        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.options[:core_path]}[#{attribute}]")
         configs.each do |config|
           element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
           concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
@@ -255,7 +276,7 @@ module EventsHelper
   
   def render_investigator_element(form_elements_cache, element, f)
     result = ""
-    
+   
     case element.class.name
    
     when "SectionElement"
@@ -360,6 +381,7 @@ module EventsHelper
     
       @answer_object = @event.get_or_initialize_answer(question.id)
      
+      result << error_messages_for(:answer_object)
       if (f.nil?)
         fields_for(@event) do |f|
           f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
@@ -436,6 +458,7 @@ module EventsHelper
             break
           end
         end
+
 
         if (element.condition == core_value.to_s)
           include_children = true

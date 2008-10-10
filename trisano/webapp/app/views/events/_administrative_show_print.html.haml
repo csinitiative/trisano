@@ -76,7 +76,7 @@
       %span.print-label
         Jurisdiction responsible for investigation:
       %span.print-value
-        = @event.jurisdiction.active_secondary_entity.place.name unless @event.jurisdiction.nil?
+        = @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
 
 #event
   .three-valued-row
