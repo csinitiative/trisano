@@ -34,7 +34,7 @@ Rails::Initializer.run do |config|
 
   # Uncomment the following line for running in Tomcat
   # TODO: Find permanent fix
-  #config.logger = Logger.new(STDOUT)
+  config.logger = Logger.new(STDOUT)
 
   # Uncomment the following line if you want to read the log file in Eclipse
   # config.active_record.colorize_logging = false
@@ -81,6 +81,8 @@ end
 PG_LOCALE = ENV['PG_LOCALE'] ||= 'en_US' 
 
 if RAILS_ENV == "development" || RAILS_ENV == "test" || ENV['TRISANO_TEST_UID_OVERRIDE'] == "true"
+  puts "TRISANO_TEST_UID_OVERRIDE: #{ENV['TRISANO_TEST_UID_OVERRIDE']}"
+  puts "setting TRISANO_UID to value of $TRISANO_UID: #{ENV['TRISANO_UID']}"
   TRISANO_UID = ENV['TRISANO_UID']
 else
   TRISANO_UID = nil
