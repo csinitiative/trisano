@@ -250,7 +250,8 @@ module EventsHelper
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
       @event.form_references.each do |form_reference|
-        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.options[:core_path]}[#{attribute}]")
+        core_path = form_builder.options[:core_path] || form_builder.object_name
+        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
         configs.each do |config|
           element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
           concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
