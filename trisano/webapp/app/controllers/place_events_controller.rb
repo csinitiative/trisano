@@ -49,9 +49,11 @@ class PlaceEventsController < EventsController
         flash[:notice] = 'Place event was successfully updated.'
         format.html { redirect_to(place_event_url(@event)) }
         format.xml  { head :ok }
+        format.js   { render :inline => "Exposure event saved.", :status => :created }
       else
         format.html { render :action => 'edit' }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        format.js   { render :inline => "Exposure Event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
       end
     end
   end

@@ -54,9 +54,11 @@ class ContactEventsController < EventsController
         flash[:notice] = 'Contact event was successfully updated.'
         format.html { redirect_to(contact_event_url(@event)) }
         format.xml  { head :ok }
+        format.js   { render :inline => "Contact saved.", :status => :created }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        format.js   { render :inline => "Contact event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
       end
     end
   end

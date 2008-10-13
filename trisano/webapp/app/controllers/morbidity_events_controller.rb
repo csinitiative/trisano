@@ -153,7 +153,7 @@ class MorbidityEventsController < EventsController
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => "Event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+        format.js   { render :inline => "Morbidity Event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
       end
     end
   end

@@ -129,6 +129,8 @@ div.progressBar div.background {
 
 .success-message {
   color: green;
+  position: absolute;
+  right: 1%;
 }
 
 .investigator-form-title {

@@ -86,21 +86,25 @@
           = yield :title
         .right.action1
           = yield :tools_two
-    .container
-      .name
-        = yield :name
-      .tools
-        = yield :tools
-      .success_message
-        = flash[:notice]
-    %br
-    .container
-      = yield
-    .container
-      #foot
-        .footlogo
-          = image_tag("foot.png", :border => 0)
-        .foottext
-          %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
-          |
-          %a{:href => 'http://www.trisano.org'}TriSano.org
+    #title_area
+      .container
+        %br
+        .name
+          = yield :name
+        .tools
+          = yield :tools
+        .success-message
+          = flash[:notice]
+        %hr
+    #main-content
+      %br
+      .container
+        = yield
+      .container
+        #foot
+          .footlogo
+            = image_tag("foot.png", :border => 0)
+          .foottext
+            %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
+            |
+            %a{:href => 'http://www.trisano.org'}TriSano.org

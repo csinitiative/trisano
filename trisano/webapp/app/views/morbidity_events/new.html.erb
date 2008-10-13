@@ -81,7 +81,7 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
     <div id="epi_tab"><%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %></div>
     <div id="reporting_tab"><%= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %></div>
     <div id="administrative_tab"><%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %></div>
-    <%= event_form.submit "Create" %>
+    <%= event_form.submit "Save & Exit", :style => 'position: fixed; top: 72px; right: 5%; z-index: 800' %>
   </div>
 <% end %>
 </div>
