@@ -66,11 +66,11 @@ describe 'Sytem functionality for routing and workflow' do
 
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route event to one or more jurisdictions").should be_true
+    @browser.is_text_present("Route to Local Health Depts.").should be_true
   end
 
   it "should allow routing to a new jurisdiction" do
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
     @browser.select "jurisdiction_id", "label=Central Utah"
     @browser.click "route_event_btn"
@@ -142,9 +142,9 @@ describe 'Sytem functionality for routing and workflow' do
 
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route event to one or more jurisdictions").should be_true
+    @browser.is_text_present("Route to Local Health Depts.").should be_true
 
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.click "Davis_County"  #On
     @browser.click "Salt_Lake_Valley"  #On
     @browser.click "route_event_btn"
@@ -157,44 +157,44 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("New").should be_true
 
     # Should see new jurisdictions
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
   end
 
   it "should allow for secondary jurisdictions to be added" do
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # On
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load "30000"
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
   end
 
   it "should allow for a subset of secondary jurisdictions to be removed" do
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.click "Davis_County"  # Off
     @browser.click "Salt_Lake_Valley"  # Off
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load "30000"
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
   end
 
   it "should allow for all secondary jurisdictions to be removed" do
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # Off
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load "30000"
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Davis County']").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Salt Lake Valley']").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//small[text()='Bear River']").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt lake Valley')]").should_not be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should_not be_true
   end
 
   it "should not display controls for a user with entitlements in the secondary jurisdiction" do
     # Route it to bring up some action controls
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.select "jurisdiction_id", "label=Central Utah"
     @browser.click "Bear_River"   # On
     @browser.click "route_event_btn"
@@ -208,7 +208,7 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should deny access altogether when entitlements are outside any jurisdiction." do
     switch_user(@browser, "default_user").should be_true
-    @browser.click "link=Route event to one or more jurisdictions"
+    @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # Off
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load "30000"

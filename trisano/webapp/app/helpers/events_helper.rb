@@ -204,7 +204,7 @@ module EventsHelper
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
       
-      controls += link_to_function('Route to Secondary Jurisdiction(s)', nil) do |page|
+      controls += link_to_function('Route to Local Health Depts.', nil) do |page|
                     page["routing_controls_#{event.id}"].visual_effect :blind_down
                   end
       controls += "<div id='routing_controls_#{event.id}' style='display: none; position: absolute; z-index: 1000'>"
