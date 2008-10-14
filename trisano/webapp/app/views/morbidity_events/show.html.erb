@@ -32,18 +32,18 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% content_for :tools do %>
 <% end %>
 
+<% content_for :name do %>
 <table class='listingforms'>
   <tr>
-  <th>Patient Name</th>
-  <th>Disease</th>
-  <th>Investigating Jurisdiction
-    <br>
-    <small>Secondary jurisdictions</small>
-  </th>
-  <th>Status</th>
-  <th></th>
+    <th>Patient Name</th>
+    <th>Disease</th>
+    <th>Investigating Jurisdictions </th>
+    <th>Status</th>
+    <th></th>
+  </tr>
   <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :with_show => false, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path_with_defaults) } %>
 </table>
+<% end %>
 
 <script type="text/javascript">
   var myTabs = new YAHOO.widget.TabView("cmr_tabs");
