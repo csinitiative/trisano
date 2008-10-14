@@ -31,4 +31,5 @@
       = state_controls(event)
   %td
     .tools
-      = basic_morbidity_event_controls(event) + extra_tools
+      - with_show = with_show.nil? ? true : with_show
+      = basic_morbidity_event_controls(event, with_show) + extra_tools

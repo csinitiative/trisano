@@ -42,7 +42,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   </th>
   <th>Status</th>
   <th></th>
-  <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path_with_defaults) } %>
+  <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :with_show => false, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path_with_defaults) } %>
 </table>
 
 <script type="text/javascript">
@@ -65,7 +65,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <li><a href="#administrative_tab"><em>Administrative</em></a></li>
 </ul>
 
-<%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
+<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>
 
 <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
 

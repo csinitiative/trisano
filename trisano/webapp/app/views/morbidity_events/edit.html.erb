@@ -73,7 +73,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <% end %>
   </ul>
   
-  <%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
+  <script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>
 
   <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
     <%  @event_form = event_form %>

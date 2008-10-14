@@ -116,20 +116,23 @@ module EventsHelper
     end
   end
 
-  def basic_morbidity_event_controls(event)
-    controls = link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") + " | "
+  def basic_morbidity_event_controls(event, with_show=true)
+    controls = ""
+    (controls = link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") + " | ") if with_show
     controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
     controls += link_to('Export to CSV', cmr_path(event) + '.csv')
   end
 
-  def basic_contact_event_controls(event)
-    controls = link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") + " | "
+  def basic_contact_event_controls(event, with_show=true)
+    controls = ""
+    (controls = link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") + " | ") if with_show
     controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
 
-  def basic_place_event_controls(event)
-    controls = link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") + " | "
+  def basic_place_event_controls(event, with_show=true)
+    controls = ""
+    (controls = link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") + " | ") if with_show
     controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
 
