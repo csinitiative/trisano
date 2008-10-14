@@ -57,7 +57,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   var myTabs = new YAHOO.widget.TabView("place_event_tabs");
 </script>
 
-<%= tab_toggler(@can_investigate, %w(place_tab)) %>
+<%= tab_toggler(@can_investigate, %w(place_tab investigation_tab)) %>
 
 <div id="place_event_tabs" class="yui-navset">
   <ul id='tabs' class="yui-nav">
@@ -65,7 +65,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <li><a href="#investigation_tab"><em>Investigation</em></a></li>
   </ul>
 
-  <script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>
+  <%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
 
   <% form_for(@event, :url => place_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
     <%  @event_form = event_form %>
