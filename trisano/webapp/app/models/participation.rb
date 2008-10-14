@@ -170,6 +170,8 @@ class Participation < ActiveRecord::Base
     participations_treatments.each do |treatment|
       treatment.save(false)
     end
+    
+    participations_risk_factor.save
   end
 
 end
