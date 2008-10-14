@@ -171,7 +171,7 @@ class Participation < ActiveRecord::Base
       treatment.save(false)
     end
     
-    participations_risk_factor.save
+    participations_risk_factor.save unless participations_risk_factor.nil?
   end
 
 end

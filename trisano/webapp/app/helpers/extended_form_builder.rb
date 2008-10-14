@@ -54,6 +54,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       @ret = @external_codes.select {|code| code.code_name == code_name}
     else
       @codes = Code.find(:all, :order => 'sort_order')
+
+      # DEBT:  Clean this up some day, but for now remove the 'jurisdiction' code type so that the user
+      # doesn't accidentally create one.
+      @codes.delete_if { |code| code.the_code == 'J' } if code_name == 'placetype'
+
       @ret = @codes.select {|code| code.code_name == code_name}
     end
     @ret
