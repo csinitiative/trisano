@@ -52,10 +52,11 @@ describe "/cmrs/new.html.erb" do
 
     @event.stub!(:active_patient).and_return(@participation)
     @event.stub!(:reporting_agency).and_return(@active_reporting_agency)
-    
     @event.stub!(:labs).and_return([@lab])
     @event.stub!(:active_hospital).and_return(@active_hospital)
     @event.stub!(:reporter).and_return(@active_reporter)
+    @event.stub!(:investigation_form_references).and_return([])
+    @event.stub!(:core_only_form_references).and_return([])
     @event.stub!(:under_investigation?).and_return(false)
     @event.stub!(:reopened?).and_return(false)
     @event.stub!(:contacts).and_return([])
