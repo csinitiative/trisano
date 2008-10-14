@@ -117,22 +117,21 @@ module EventsHelper
   end
 
   def basic_morbidity_event_controls(event)
-    controls = link_to('Show', cmr_path(event)) + " | "
-    controls += (link_to('Edit', edit_cmr_path(event), :id => "edit_cmr_link") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    controls = link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") + " | "
+    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
     controls += link_to('Export to CSV', cmr_path(event) + '.csv')
   end
 
   def basic_contact_event_controls(event)
-    controls = link_to('Show', contact_event_path(event)) + " | "
-    controls += (link_to('Edit', edit_contact_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    controls = link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") + " | "
+    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
 
   def basic_place_event_controls(event)
-    controls = link_to('Show', place_event_path(event)) + " | "
-    controls += (link_to('Edit', edit_place_event_path(event), :id => "edit_cmr_link")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    controls = link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") + " | "
+    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
   end
-
 
   def state_controls(event)
     current_state = event.event_status

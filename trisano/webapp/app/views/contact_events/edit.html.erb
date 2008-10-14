@@ -46,7 +46,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :tools do %>
-  <%= link_to 'Show', contact_event_path(@event) %>
+  <%= link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(@event)}')") %>
 <% end %>
 
 <% content_for :watermark do %>
@@ -74,6 +74,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <li><a href="#investigation_tab"><em>Investigation</em></a></li>
   </ul>
   
+  <%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
+
   <% form_for(@event, :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
     <%  @event_form = event_form %>
     <div class="yui-content">
@@ -103,8 +105,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       </div>
       <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
     
+      <%= event_form.submit "Save & Exit", :style => "position: fixed; top: 72px; right: 5%; z-index: 800", :onclick => "add_tab_index_to_action(this.form)" %>
     </div>
-    <%= event_form.submit "Save & Exit", :style => 'position: fixed; top: 72px; right: 5%; z-index: 800' %>
   <% end %>
         
 </div>

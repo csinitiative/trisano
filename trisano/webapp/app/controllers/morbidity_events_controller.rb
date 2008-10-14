@@ -126,7 +126,7 @@ class MorbidityEventsController < EventsController
     respond_to do |format|
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully created.'
-        format.html { redirect_to(cmr_url(@event)) }
+        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(cmr_url(@event) + query_str) }
         format.xml  { render :xml => @event, :status => :created, :location => @event }
       else
         format.html { render :action => "new" }
@@ -147,7 +147,7 @@ class MorbidityEventsController < EventsController
     respond_to do |format|
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully updated.'
-        format.html { redirect_to(cmr_url(@event)) }
+        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(cmr_url(@event) + query_str) }
         format.xml  { head :ok }
         format.js   { render :inline => "CMR saved.", :status => :created }
       else

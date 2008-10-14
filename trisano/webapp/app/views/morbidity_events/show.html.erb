@@ -65,6 +65,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <li><a href="#administrative_tab"><em>Administrative</em></a></li>
 </ul>
 
+<%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
+
 <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
 
   <div class="yui-content">

@@ -47,7 +47,7 @@ class PlaceEventsController < EventsController
     respond_to do |format|
       if @event.update_attributes(params[:place_event])
         flash[:notice] = 'Place event was successfully updated.'
-        format.html { redirect_to(place_event_url(@event)) }
+        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(place_event_url(@event) + query_str) }
         format.xml  { head :ok }
         format.js   { render :inline => "Exposure event saved.", :status => :created }
       else

@@ -52,7 +52,7 @@ class ContactEventsController < EventsController
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
         flash[:notice] = 'Contact event was successfully updated.'
-        format.html { redirect_to(contact_event_url(@event)) }
+        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(contact_event_url(@event) + query_str) }
         format.xml  { head :ok }
         format.js   { render :inline => "Contact saved.", :status => :created }
       else

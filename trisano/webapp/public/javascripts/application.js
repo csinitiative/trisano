@@ -61,3 +61,19 @@ function checkNameSearchFields(field) {
     }
   }
 }
+
+function build_url_with_tab_index(url) {
+  if (!(window.myTabs === undefined)) {
+    url = url + "?tab_index=" + myTabs.get("activeIndex")
+  }
+  return url
+}
+
+function send_url_with_tab_index(url) {
+  url = build_url_with_tab_index(url)
+  location.replace(url)
+}
+
+function add_tab_index_to_action(form) {
+  form.action = build_url_with_tab_index(form.action);
+}
