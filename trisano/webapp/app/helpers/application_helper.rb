@@ -114,9 +114,8 @@ module ApplicationHelper
     end
   end
   
-  def tab_toggler(include_investigation_tab, tabs=%w(demographic_tab clinical_tab lab_info_tab contacts_tab epi_tab reporting_tab investigation_tab administrative_tab))
+  def tab_toggler(tabs=%w(demographic_tab clinical_tab lab_info_tab contacts_tab epi_tab reporting_tab investigation_tab administrative_tab))
     result = ""
-    tabs.delete('investigation_tab') unless include_investigation_tab
     tabs_string = tabs.map{|value| "'#{value}'"}.join(',')
     result += "<span id='disable_tabs' onClick=\"myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); [#{tabs_string}].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;\">[Disable Tabs]</span>"
     result += "<span id='enable_tabs' onClick=\"myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); [#{tabs_string},'enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;\" style='display: none;'>[Enable Tabs]</span>"
