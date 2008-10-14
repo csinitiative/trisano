@@ -71,7 +71,8 @@ function build_url_with_tab_index(url) {
 
 function send_url_with_tab_index(url) {
   url = build_url_with_tab_index(url)
-  location.replace(url)
+  //location.replace(url)
+  location.href = url;
 }
 
 function add_tab_index_to_action(form) {
