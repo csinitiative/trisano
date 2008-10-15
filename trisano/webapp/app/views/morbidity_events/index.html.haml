@@ -46,10 +46,9 @@
 #rot
   %table.listingforms
     %tr
-      %th Patient Name
-      %th Disease
       %th.forminformation
-        Investigating Jurisdiction
+        Patient Name
+      %th Disease
+      %th Jurisdiction
       %th Status
-      %th
       = render :partial => 'morbidity_events/event', :collection => @events

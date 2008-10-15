@@ -7,6 +7,9 @@
     %small
       Date:
       = event.event_onset_date
+    .tools
+      - with_show = with_show.nil? ? true : with_show
+      = basic_morbidity_event_controls(event, with_show) + extra_tools
   %td
     = event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
   %td
@@ -29,7 +32,3 @@
         = event.event_queue.queue_name
     .tools
       = state_controls(event)
-  %td
-    .tools
-      - with_show = with_show.nil? ? true : with_show
-      = basic_morbidity_event_controls(event, with_show) + extra_tools
