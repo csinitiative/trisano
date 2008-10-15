@@ -30,6 +30,9 @@
   - f.fields_for(:address, entity_data.address, :core_path => core_path, :builder => ExtendedFormBuilder) do |a|
 
     %fieldset.vert
+      - p a.object_name
+      - p a.options[:core_path]
+
       - core_element :street_number, a, :horiz do
         = a.label(:street_number)
         = a.core_text_field(:street_number, {:size => 10}, event, @can_investigate)

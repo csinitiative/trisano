@@ -15,11 +15,11 @@
 -# You should have received a copy of the GNU Affero General Public License along 
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
--event_form.fields_for(:active_place, @event.active_place.primary_entity, :builder => ExtendedFormBuilder) do |current_place|
-  -current_place.fields_for(:place, entity_data.place, :builder => ExtendedFormBuilder) do |place_form|
-    %fieldset
-      %legend Place Information
-      =render :partial => 'events/places/name_show', :locals => {:place => entity_data.place, :place_form => current_place}
-      =render :partial => 'events/places/address_show', :locals => { :address => entity_data.address, :current_place => current_place}
-      =render :partial => 'events/people/phones_show', :locals => {:entity_data => entity_data}
+- event_form.fields_for(:active_place, @event.active_place.primary_entity, :builder => ExtendedFormBuilder) do |active_place_form|
+  - active_place_form.fields_for(:active_primary_entity, @event.active_place.primary_entity, :builder => ExtendedFormBuilder) do |primary_form|
+    - primary_form.fields_for(:place, entity_data.place, :builder => ExtendedFormBuilder) do |place_form|
+      %fieldset
+        %legend Place Information
+        =render :partial => 'events/places/name_show', :locals => {:place => entity_data.place, :place_form => place_form}
+        =render :partial => 'events/places/address_show', :locals => { :address => entity_data.address, :current_place => primary_form}
+        =render :partial => 'events/people/phones_show', :locals => {:entity_data => entity_data}

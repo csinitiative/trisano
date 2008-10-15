@@ -1,6 +1,11 @@
 %fieldset.form
   %legend Place Name
-  -f.fields_for(:place, entity_data.place, :builder => ExtendedFormBuilder) do |p|
+
+  -# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
+  -core_path = "#{fb_form.object_name}[place]"
+  -p core_path
+
+  -f.fields_for(:place, entity_data.place, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :name, p, :horiz do
       =p.label(:name)
       =p.core_text_field(:name, {:size => 25}, event, @can_investigate)
