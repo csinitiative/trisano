@@ -23,20 +23,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% content_for :name do %>
   <%= @event.active_place.primary_entity.place_temp.name -%>
-
-  <%= submit_to_remote 'place_create_btn', 'Save & Continue', :url => place_event_path(@event), 
-    :method => :put, 
-    :submit => "edit_place_event_#{@event.id}", 
-    :type => :synchronous,
-    :update => { :success => "xhr_success_message", :failure => "xhr_failure_message" },
-    :before => "Element.show('spinner'); Element.update('xhr_success_message', ''); Element.update('xhr_failure_message', ''); Element.show('xhr_success_message'); Element.show('xhr_failure_message')",
-    :after => "Element.hide('spinner'); setTimeout(\"Element.hide('xhr_success_message');Element.hide('xhr_failure_message')\", 2000)" 
-  %>
-  <%= image_tag 'redbox_spinner.gif', :id => "spinner", :style => 'height: 16px; width: 20px; display: none' %>
-  <span id='xhr_success_message', style='color: green; font-size: 14px'></span>
-  <span id='xhr_failure_message', style='color: red; font-size: 14px'></span>
-</span>
-
+  <span style='margin-left: 1em'>
+    <%= button_to_function("Save & Continue", "post_and_return('edit_place_event_#{@event.id}')") %>
+  </span>
 <% end %>
 
 <% content_for :tools do %>

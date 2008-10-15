@@ -77,3 +77,10 @@ function send_url_with_tab_index(url) {
 function add_tab_index_to_action(form) {
   form.action = build_url_with_tab_index(form.action);
 }
+
+function post_and_return(form_id) {
+  form = document.getElementById(form_id);
+  form.action = build_url_with_tab_index(form.action);
+  form.action = form.action + "&return=true";
+  form.submit();
+}

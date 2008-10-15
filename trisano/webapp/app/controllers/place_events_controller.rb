@@ -43,11 +43,20 @@ class PlaceEventsController < EventsController
 
   def update
     prep_multimodels
+
+    go_back = params.delete(:return)
     
     respond_to do |format|
       if @event.update_attributes(params[:place_event])
         flash[:notice] = 'Place event was successfully updated.'
-        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(place_event_url(@event) + query_str) }
+        format.html {
+          if go_back
+            render :action => "edit"
+          else
+            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+            redirect_to(place_event_url(@event) + query_str)
+          end
+        }
         format.xml  { head :ok }
         format.js   { render :inline => "Exposure event saved.", :status => :created }
       else

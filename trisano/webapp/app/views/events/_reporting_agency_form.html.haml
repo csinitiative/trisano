@@ -32,12 +32,12 @@
       = error_messages_for :object => reporting_agency
 
       -# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
-      -agency_core_path = OpenStruct.new(:object_name => "#{f.object_name}[active_reporting_agency][active_secondary_entity][place]")
+      -agency_core_path = "#{f.object_name}[active_reporting_agency][active_secondary_entity][place]"
 
       - f.fields_for(:active_reporting_agency, reporting_agency, :core_path => agency_core_path, :builder => ExtendedFormBuilder) do |agency_form|
         - core_element :name, agency_form, :vert do
           = agency_form.label("Reporting Agency")
-          = model_auto_completer "morbidity_event[active_reporting_agency][agency_name]", reporting_agency.nil? ? "" : reporting_agency.name, "morbidity_event[active_reporting_agency][secondary_entity_id]", reporting_agency.nil? ? "" : reporting_agency.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'}, { :size => 25 }, { :skip_style => false }
+          = model_auto_completer "morbidity_event[active_reporting_agency][name]", reporting_agency.nil? ? "" : reporting_agency.name, "morbidity_event[active_reporting_agency][secondary_entity_id]", reporting_agency.nil? ? "" : reporting_agency.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'}, { :size => 25 }, { :skip_style => false }
 
       - reporter_name = Person.new
       - reporter_ent_loc = EntitiesLocation.new

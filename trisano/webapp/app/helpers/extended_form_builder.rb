@@ -185,12 +185,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def core_follow_up_event(attribute, event, can_investigate)
     return if  (event.nil? || event.form_references.nil?) 
     result = ""
-    
-    unless (@options[:core_path].nil?)
+
+    core_path = @options[:core_path] || @object_name
+    unless (core_path.nil?)
       if (event.attributes["type"] != "MorbidityEvent" || can_investigate)
         event.form_references.each do |form_reference|
-          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{@options[:core_path]}[#{attribute}]").size > 0)
-            result = "sendCoreConditionRequest(this, '#{event.id}', '#{@options[:core_path]}[#{attribute}]');"
+
+          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path}[#{attribute}]").size > 0)
+            result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path}[#{attribute}]');"
             break
           end
         end

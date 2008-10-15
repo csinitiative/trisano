@@ -56,7 +56,7 @@ describe 'Adding multiple lab results to a CMR' do
 
   it "should allow removing a lab result" do
     edit_cmr(@browser).should be_true
-    @browser.click("link=Remove")
+    @browser.click("remove_lab_result_link")
     save_cmr(@browser).should be_true
     @browser.is_text_present('Lab One').should_not be_true
   end

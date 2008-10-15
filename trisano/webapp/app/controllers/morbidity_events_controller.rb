@@ -140,6 +140,8 @@ class MorbidityEventsController < EventsController
   def update
     prep_multimodels
 
+    go_back = params.delete(:return)
+
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]
 
@@ -149,7 +151,14 @@ class MorbidityEventsController < EventsController
     respond_to do |format|
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully updated.'
-        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(cmr_url(@event) + query_str) }
+        format.html { 
+          if go_back
+            render :action => "edit"
+          else
+            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+            redirect_to(cmr_url(@event) + query_str)
+          end
+        }
         format.xml  { head :ok }
         format.js   { render :inline => "CMR saved.", :status => :created }
       else

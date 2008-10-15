@@ -301,7 +301,7 @@ module TrisanoHelper
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0 
-      browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
+      browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -312,7 +312,7 @@ module TrisanoHelper
   def click_resource_show(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0 
-      browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "')]"
+      browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -1012,7 +1012,7 @@ module TrisanoHelper
   def get_resource_id(browser, name)
     html_source = browser.get_html_source
     pos1 = html_source.index(name)
-    pos2 = html_source.index("/edit\"", pos1)-1
+    pos2 = html_source.index(/\d\/edit['"]/, pos1)
     pos3 = html_source.rindex("/", pos2)+1
     id = html_source[pos3..pos2]
     return id.to_i
