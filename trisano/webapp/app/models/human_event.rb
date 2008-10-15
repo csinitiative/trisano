@@ -16,36 +16,38 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEvent < Event
-  has_one :patient, :class_name => 'Participation', :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Interested Party").id], :foreign_key => "event_id"
+  has_one :patient, :class_name => 'Participation', 
+    :conditions => ["role_id = ?", Code.interested_party_id], 
+    :foreign_key => "event_id"
 
   has_many :labs, :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Tested By").id],
+    :conditions => ["role_id = ?", Code.tested_by_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 
   has_many :hospitalized_health_facilities, :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Hospitalized At").id],
+    :conditions => ["role_id = ?", Code.hospitalized_at_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 
   has_many :diagnosing_health_facilities, :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Diagnosed At").id],
+    :conditions => ["role_id = ?", Code.diagnosed_at_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 
   has_many :clinicians, :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Treated By").id],
+    :conditions => ["role_id = ?", Code.treated_by_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 
   has_many :contacts, 
     :class_name => 'Participation',  
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Contact").id],
+    :conditions => ["role_id = ?", Code.contact_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 

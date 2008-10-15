@@ -17,6 +17,7 @@
 
 class Event < ActiveRecord::Base
   include Blankable
+  include Export::Cdc
 
   if RAILS_ENV == "production"
     attr_protected :event_status
@@ -35,8 +36,13 @@ class Event < ActiveRecord::Base
   has_many :form_references
   has_many :answers
 
-  primary_jurisdiction_code_id   = Code.find_by_code_name_and_code_description('participant', "Jurisdiction").id
-  secondary_jurisdiction_code_id = Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction").id
+  def self.primary_jurisdiction_code_id
+    @@primary_jurisdiction_code_id ||= Code.primary_jurisdiction_participant_type_id
+  end
+
+  def self.secondary_jurisdiction_code_id
+    @@secondary_jurisdiction_code_id ||= Code.secondary_jurisdiction_participant_type_id
+  end
 
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", primary_jurisdiction_code_id]
 
@@ -516,7 +522,15 @@ class Event < ActiveRecord::Base
       end
     end
   end
-  
+
+  def cache_old_attributes
+    @old_attributes = self.attributes.dup
+  end
+
+  def old_attributes
+    @old_attributes
+  end
+
   private
   
   def set_record_number
@@ -545,5 +559,6 @@ class Event < ActiveRecord::Base
     answers.each { |answer| answer.save(false) }
     # Jurisdictions don't need to be saved on edit.  They can only be set by create.  After that routing is used.
   end
+
 
 end

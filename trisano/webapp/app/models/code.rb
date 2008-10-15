@@ -36,9 +36,63 @@ class Code < ActiveRecord::Base
     Code.find_by_code_name_and_code_description('participant', 'Interested Party')
   end
 
+  def self.interested_party_id
+    code = interested_party
+    code.id if code
+  end
+
   def self.jurisdiction_place_type_id
     code = Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction')
     code.id if code
   end
 
+  def self.primary_jurisdiction_participant_type_id
+    code = Code.find_by_code_name_and_code_description('participant', "Jurisdiction")
+    code.id if code
+  end
+
+  def self.secondary_jurisdiction_participant_type_id
+    code = Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction")
+    code.id if code
+  end
+
+  def self.tested_by_type_id
+    code = Code.find_by_code_name_and_code_description('participant', "Tested By")
+    code.id if code
+  end
+
+  def self.hospitalized_at_type_id
+    code = find_by_code_name_and_code_description('participant', "Hospitalized At")
+    code.id if code
+  end
+
+  def self.diagnosed_at_type_id
+    code = find_by_code_name_and_code_description('participant', "Diagnosed At")
+    code.id if code
+  end
+
+  def self.treated_by_type_id
+    code = find_by_code_name_and_code_description('participant', "Treated By")
+    code.id if code    
+  end
+
+  def self.contact_type_id
+    code = find_by_code_name_and_code_description('participant', "Contact")
+    code.id if code
+  end
+
+  def self.place_exposure_type_id
+    code = find_by_code_name_and_code_description('participant', 'Place Exposure')
+    code.id if code
+  end
+
+  def self.reporting_agency_type_id
+    code = find_by_code_name_and_code_description('participant', "Reporting Agency")
+    code.id if code
+  end
+
+  def self.reported_by_type_id
+    code = find_by_code_name_and_code_description('participant', "Reported By")
+    code.id if code
+  end
 end

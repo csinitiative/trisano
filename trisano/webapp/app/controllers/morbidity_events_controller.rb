@@ -17,6 +17,8 @@
 
 class MorbidityEventsController < EventsController
 
+  before_filter :capture_old_attributes, :only => [:update]
+
   def auto_complete_for_event_reporting_agency
     entered_name = params[:morbidity_event][:active_reporting_agency][:agency_name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
@@ -274,5 +276,9 @@ class MorbidityEventsController < EventsController
     params[:morbidity_event][:existing_clinician_attributes] ||= {}
     params[:morbidity_event][:existing_contact_attributes] ||= {}
     params[:morbidity_event][:existing_place_exposure_attributes] ||= {} 
+  end
+
+  def capture_old_attributes
+    @old_attributes = @event.attributes
   end
 end

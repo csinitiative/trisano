@@ -1016,4 +1016,50 @@ describe MorbidityEvent do
 
   end
 
+  describe 'checking CDC ' do
+    fixtures :external_codes
+
+    before :each do
+      @event_hash = {
+        "active_patient" => {
+          "entity_type"=>"person", 
+          "person" => {
+            "last_name"=>"Biel"
+          }
+        }
+      }
+    end
+
+    def with_cdc_event
+      event = MorbidityEvent.new @event_hash
+      event.save
+      event.reload
+      yield event
+    end
+    
+    it 'should return false if no cdc values have changed' do
+      with_cdc_event do |event|
+        event.should_not be_new_record
+        event.should_not be_a_cdc_update
+      end
+    end
+
+    it 'should need cdc update when first_reported_PH_date value changes' do
+      with_cdc_event do |event|
+        event.first_reported_PH_date = DateTime.now
+        event.save.should be_true
+        event.should be_a_cdc_update
+      end
+    end
+    
+    it 'should need cdc update when udoh case status id changes' do
+      with_cdc_event do |event|
+        event.udoh_case_status = ExternalCode.find(:first, :conditions => "code_name = 'case'")
+        event.save.should be_true
+        event.should be_a_cdc_update
+      end
+    end
+       
+  end
+
 end

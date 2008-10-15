@@ -129,19 +129,19 @@ class MorbidityEvent < HumanEvent
   has_many :place_exposures, 
     :class_name => 'Participation',
     :foreign_key => "event_id",
-    :conditions => ['role_id = ?', Code.find_by_code_name_and_code_description('participant', 'Place Exposure').id],
+    :conditions => ['role_id = ?', Code.place_exposure_type_id],
     :order => 'created_at ASC',
     :dependent => :destroy
 
   has_one :reporting_agency, 
     :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reporting Agency").id]
+    :conditions => ["role_id = ?", Code.reporting_agency_type_id]
 
   has_one :reporter, 
     :class_name => 'Participation', 
     :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Reported By").id]
+    :conditions => ["role_id = ?", Code.reported_by_type_id]
 
   # Turn off auto validation of has_many associations
   def validate_associated_records_for_place_exposures() end
