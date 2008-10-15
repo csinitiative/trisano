@@ -257,14 +257,31 @@ module TrisanoHelper
   end
   
   def create_disease(browser, disease_attributes)
-    browser.type("disease_disease_name", disease_attributes[:disease_name])
-    browser.click("disease_active") if disease_attributes[:disease_active]
-    browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in])
-    browser.type("disease_place_lead_in", disease_attributes[:place_lead_in])
-    browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in])
-    browser.click("disease_submit")
+    modify_disease(browser, disease_attributes)
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Disease was successfully created."))
+  end
+
+  def modify_disease(browser, disease_attributes)
+    browser.type("disease_disease_name", disease_attributes[:disease_name]) if disease_attributes[:disease_name]
+    browser.click("disease_active") if disease_attributes[:disease_active]
+    browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in]) if disease_attributes[:contact_lead_in]
+    browser.type("disease_place_lead_in", disease_attributes[:place_lead_in]) if disease_attributes[:place_lead_in]
+    browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in]) if disease_attributes[:treatment_lead_in]
+    browser.click("disease_submit")
+  end    
+
+  def click_edit_disease(browser, disease_name)
+    disease_id = get_resource_id(browser, disease_name)
+    browser.click("//a[contains(@href, 'diseases/#{disease_id}/edit')]")
+    browser.wait_for_page_to_load($load_time)
+  end
+
+  def edit_disease(browser, disease_name, disease_attributes)
+    click_edit_disease(browser, disease_name)
+    modify_disease(browser, disease_attributes)
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Disease was successfully updated."))
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type

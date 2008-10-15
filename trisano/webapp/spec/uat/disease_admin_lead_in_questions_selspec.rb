@@ -67,6 +67,6 @@ describe 'disease admin lead in questions' do
     @browser.is_text_present(@place_lead_in).should be_true
     @browser.is_text_present(@treatment_lead_in).should be_true
   end
-  
+
 end
   
