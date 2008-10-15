@@ -41,6 +41,11 @@ body, p, ol, ul {
   top: 200px;
   width: 100%; }
 
+#form-content {
+  position: absolute;
+  top: 120px;
+  width: 100%; }
+
 .left {
   position: absolute;
   align: left;
