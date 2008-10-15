@@ -28,6 +28,7 @@ describe "/diseases/edit.html.haml" do
     @disease.stub!(:treatment_lead_in).and_return("")
     @disease.should_receive(:active).and_return(true)
     @disease.should_receive(:cdc_code).and_return("")
+    @disease.should_receive(:external_code_ids).at_least(7).times.and_return([])
     assigns[:disease] = @disease
   end
 

@@ -27,7 +27,7 @@
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - ExternalCode.find_cases(:all).each do |code|
-          = "<label>" + check_box_tag("diease[export_cases][]", code.id, false, :id => code.code_description.tr(" ", "_")) + code.code_description + "</label>"
+          = "<label>" + check_box_tag("disease[external_code_ids][]", code.id, @disease.external_code_ids.include?(code.id), :id => code.code_description.tr(" ", "_")) + code.code_description + "</label>"
   %span{ :class => "vert" }
     = f.label(:contact_lead_in, "Contact lead-in question")
     = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})

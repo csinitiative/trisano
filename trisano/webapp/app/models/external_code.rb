@@ -22,6 +22,8 @@ class ExternalCode < ActiveRecord::Base
 
   belongs_to :jurisdiction, :class_name => 'Place', :foreign_key => :jurisdiction_id
 
+  has_and_belongs_to_many :diseases
+
   def self.yes
     find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
   end

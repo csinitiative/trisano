@@ -57,4 +57,22 @@ describe Disease do
     @disease.save.should be_true
     Disease.find_active(:all).size.should == 1
   end
+
+  describe 'export statuses' do
+    it 'should initialize w/ zero export statuses' do
+      @disease.external_codes.should be_empty
+    end
+
+    describe 'associating cases' do
+
+      it 'should add export case status' do
+        codes = ExternalCode.find_cases(:all).select {|s| %w(Probable Suspect).include?(s.code_description)}
+        codes.length.should == 2
+        @disease.update_attributes( 'external_code_ids' => codes.map{|c| c.id} )
+        @disease.save!
+        @disease.external_codes.length.should == 2
+      end
+    end
+        
+  end
 end
