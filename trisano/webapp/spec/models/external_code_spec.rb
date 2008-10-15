@@ -103,5 +103,15 @@ describe ExternalCode do
       end
     end
   end
+
+  describe 'find cases' do
+    fixtures :external_codes
+    
+    it 'should return only cases w/ :all' do
+      codes = ExternalCode.find_cases(:all)
+      codes.size.should == 7
+      codes.each {|code| code.code_name.should == 'case'}
+    end
+  end
       
 end

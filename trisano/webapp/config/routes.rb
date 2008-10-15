@@ -29,6 +29,8 @@ ActionController::Routing::Routes.draw do |map|
     search.search_people 'search/people',       :action => 'people'
     search.search        'search'
   end
+
+  map.export 'export/cdc.:format', :controller => 'export', :action => 'cdc'
   
   map.admin 'admin', :controller => 'admin'
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'

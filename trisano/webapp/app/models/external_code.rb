@@ -60,4 +60,10 @@ class ExternalCode < ActiveRecord::Base
     find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' AND live is TRUE AND next_ver is NULL order by code_description limit #{limit};")
   end
 
+  def self.find_cases(*args)
+    with_scope(:find => {:conditions => "code_name = 'case'", :order => 'sort_order ASC'}) do
+      find(*args)
+    end
+  end
+
 end

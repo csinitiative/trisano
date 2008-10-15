@@ -18,22 +18,22 @@
 class Code < ActiveRecord::Base
 
   def self.other_place_type_id
-   code = find(:first, :conditions => "code_name = 'placetype' and the_code = 'O'")
-   code.id unless code.nil?
+    @@other_place_type ||= find(:first, :conditions => "code_name = 'placetype' and the_code = 'O'")
+    @@other_place_type.id unless @@other_place_type.nil?
   end
 
   def self.telephone_location_type_id
-    code = find_by_code_name_and_the_code 'locationtype', 'TLT'
-    code.id if code
+    @@telephone_location_type ||= find_by_code_name_and_the_code 'locationtype', 'TLT'
+    @@telephone_location_type.id if @@telephone_location_type
   end
 
   def self.address_location_type_id
-    code = find_by_code_name_and_the_code 'locationtype', 'ALT'
-    code.id if code
+    @@address_location_type ||= find_by_code_name_and_the_code 'locationtype', 'ALT'
+    @@address_location_type.id if @@address_location_type
   end
 
   def self.interested_party
-    Code.find_by_code_name_and_code_description('participant', 'Interested Party')
+    @@interested_party ||= Code.find_by_code_name_and_code_description('participant', 'Interested Party')
   end
 
   def self.interested_party_id
@@ -42,57 +42,57 @@ class Code < ActiveRecord::Base
   end
 
   def self.jurisdiction_place_type_id
-    code = Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction')
-    code.id if code
+    @@jurisdiction_place_type ||= Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction')
+    @@jurisdiction_place_type.id if @@jurisdiction_place_type
   end
 
   def self.primary_jurisdiction_participant_type_id
-    code = Code.find_by_code_name_and_code_description('participant', "Jurisdiction")
-    code.id if code
+    @@primary_jurisdiction_participant_type ||= Code.find_by_code_name_and_code_description('participant', "Jurisdiction")
+    @@primary_jurisdiction_participant_type.id if @@primary_jurisdiction_participant_type
   end
 
   def self.secondary_jurisdiction_participant_type_id
-    code = Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction")
-    code.id if code
+    @@secondary_jurisdiction_participant_type ||= Code.find_by_code_name_and_code_description('participant', "Secondary Jurisdiction")
+    @@secondary_jurisdiction_participant_type.id if @@secondary_jurisdiction_participant_type
   end
 
   def self.tested_by_type_id
-    code = Code.find_by_code_name_and_code_description('participant', "Tested By")
-    code.id if code
+    @@tested_by_type ||= Code.find_by_code_name_and_code_description('participant', "Tested By")
+    @@tested_by_type.id if @@tested_by_type
   end
 
   def self.hospitalized_at_type_id
-    code = find_by_code_name_and_code_description('participant', "Hospitalized At")
-    code.id if code
+    @@hospitalized_at_type ||= find_by_code_name_and_code_description('participant', "Hospitalized At")
+    @@hospitalized_at_type.id if @@hospitalized_at_type
   end
 
   def self.diagnosed_at_type_id
-    code = find_by_code_name_and_code_description('participant', "Diagnosed At")
-    code.id if code
+    @@diagnosed_at_type ||= find_by_code_name_and_code_description('participant', "Diagnosed At")
+    @@diagnosed_at_type.id if @@diagnosed_at_type
   end
 
   def self.treated_by_type_id
-    code = find_by_code_name_and_code_description('participant', "Treated By")
-    code.id if code    
+    @@treated_by_type ||= find_by_code_name_and_code_description('participant', "Treated By")
+    @@treated_by_type.id if @@treated_by_type
   end
 
   def self.contact_type_id
-    code = find_by_code_name_and_code_description('participant', "Contact")
-    code.id if code
+    @@contact_type ||= find_by_code_name_and_code_description('participant', "Contact")
+    @@contact_type.id if @@contact_type
   end
 
   def self.place_exposure_type_id
-    code = find_by_code_name_and_code_description('participant', 'Place Exposure')
-    code.id if code
+    @@place_exposure_type ||= find_by_code_name_and_code_description('participant', 'Place Exposure')
+    @@place_exposure_type.id if @@place_exposure_type
   end
 
   def self.reporting_agency_type_id
-    code = find_by_code_name_and_code_description('participant', "Reporting Agency")
-    code.id if code
+    @@reporting_agency_type ||= find_by_code_name_and_code_description('participant', "Reporting Agency")
+    @@reporting_agency_type.id if @@reporting_agency_type
   end
 
   def self.reported_by_type_id
-    code = find_by_code_name_and_code_description('participant', "Reported By")
-    code.id if code
+    @@reported_by_type ||= find_by_code_name_and_code_description('participant', "Reported By")
+    @@reported_by_type.id if @@reported_by_type
   end
 end

@@ -14,18 +14,12 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-class CdcExport < ActiveRecord::Migration
-  def self.up
-    add_column :diseases, :active, :boolean
-    add_column :diseases, :cdc_code,  :string
-
-    if RAILS_ENV == 'production'
-      execute("UPDATE diseases SET active=true")
+class ExportController < ApplicationController
+  
+  def cdc
+    respond_to do |format|
+      format.dat
     end
   end
 
-  def self.down
-    remove_column :diseases, :active
-    remove_column :diseases, :cdc_code
-  end
 end
