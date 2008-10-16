@@ -264,10 +264,16 @@ module TrisanoHelper
 
   def modify_disease(browser, disease_attributes)
     browser.type("disease_disease_name", disease_attributes[:disease_name]) if disease_attributes[:disease_name]
+    browser.type("disease_cdc_code", disease_attributes[:cdc_code]) if disease_attributes[:cdc_code]
     browser.click("disease_active") if disease_attributes[:disease_active]
     browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in]) if disease_attributes[:contact_lead_in]
     browser.type("disease_place_lead_in", disease_attributes[:place_lead_in]) if disease_attributes[:place_lead_in]
     browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in]) if disease_attributes[:treatment_lead_in]
+    if disease_attributes[:external_codes]
+      disease_attributes[:external_codes].each do |id, msg|
+        browser.send(msg, [id])
+      end
+    end
     browser.click("disease_submit")
   end    
 
@@ -872,7 +878,13 @@ module TrisanoHelper
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
-  
+
+  def case_checkboxes(browser)
+    browser.get_all_fields().select do |id|
+      %w(Unknown Confirmed Probable Suspect Not_a_Case Chronic_Carrier Discarded).include? id
+    end
+  end
+
   private
   
   def assert_contains(browser, container_element, element)
