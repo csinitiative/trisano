@@ -22,23 +22,41 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <span><%= @event.active_patient.primary_entity.person.first_name -%> <%= @event.active_patient.primary_entity.person.last_name -%></span>
-  <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
-  <span style='position: absolute; right: 0;'>
-    <span>Original Patient: <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%></span>
-    <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? %></p>
-  </span>
+  <table class='listingforms'>
+    <tr>
+      <th class='forminformation'>Patient Name</th>
+      <th>Disease</th>
+      <th>Jurisdiction</th>
+      <th>Original Patient</th>
+    </tr>
+    <tr>
+      <% contact = @event.active_patient.primary_entity.person %>
+      <td class='forminformation'>
+        <div class='patientname'>
+          <%= contact.last_name + (contact.first_name.blank? ? "" : fml(", ", contact.first_name, "")) %>
+        </div>
+        <small>Date: <%= @event.event_onset_date %></small>
+        <div class='tools'>
+          <%= basic_contact_event_controls(@event, false) %>
+        </div>
+      </td>
+      <td>
+        <%= @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil? %>
+      </td>
+      <td>
+        <b><%= @event.primary_jurisdiction.short_name %></b>
+      </td>
+      <td>
+        <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
+        <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%>
+        <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? %></p>
+      </td>
+    </tr>
+  </table>
 <% end %>
 
 <% content_for :watermark do %>
   contact event
-<% end %>
-
-<%- jurisdiction = @event.active_jurisdiction.secondary_entity.current_place %>
-<% content_for :tools do %>
-  <%= basic_contact_event_controls(@event, false) %>
-  <br />
-  Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
 
 <script type="text/javascript">
