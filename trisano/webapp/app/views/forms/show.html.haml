@@ -44,10 +44,9 @@
     %tr
       %th.forminformation
         Form Information
-      %th Event Type
       %th Diseases
       %th Jurisdiction
-      %th
+      %th Event Type
     %tr
       %td.forminformation
         .formname
@@ -55,10 +54,11 @@
           %br
         .description  
           = h @form.description
-        .status
-          = h @form.status
-      %td
-        = h @form.event_type.humanize
+        .tools
+          -if @form.is_template
+            = link_to 'Edit', edit_form_path(@form)
+            |
+            = link_to 'Form Builder', builder_path(@form)
       %td
         %ul
           - @form.diseases.each do |disease|
@@ -66,7 +66,6 @@
       %td
         = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
       %td
-        -if @form.is_template
-          = link_to 'Edit', edit_form_path(@form)
-          |
-          = link_to 'Form Builder', builder_path(@form)
+        = h @form.event_type.humanize
+        .status
+          = h @form.status

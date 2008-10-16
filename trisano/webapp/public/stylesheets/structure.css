@@ -24,17 +24,16 @@ body, p, ol, ul {
   position: fixed;
   top: 68px;
   width: 100%;
-  height: 10%;
+  height: 36px;
   background: url(../images/repeat.gif);
   background-repeat: repeat-x;
   z-index: 800; }
 
 #title_area {
-  position: fixed;
-  top: 98px;
+  position: relative;
+  top: 104px;
   width: 100%;
-  background-color: #f9f8f5;
-  z-index: 800; }
+  background-color: #f9f8f5; }
 
 #main-content {
   position: absolute;
@@ -61,6 +60,35 @@ body, p, ol, ul {
   width: 100%;
   float: left;
   margin-right: -220px; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%; }
+
+.listingforms th {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  weight: bold;
+  letter-spacing: 1px;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 3px 3px 3px 9px;
+  background-color: #d4cbb4; }
+.listingforms td {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  weight: light;
+  color: #666;
+  background: #fff;
+  padding: 3px 3px 3px 9px;
+  border: dotted;
+  border-color: #ccc;
+  border-width: 1px 0px 1px 0px;
+  vertical-align: top;
+  width: 22%; }
+.listingforms .forminformation {
+  width: 34%; }
 
 #foot {
   width: 420px;

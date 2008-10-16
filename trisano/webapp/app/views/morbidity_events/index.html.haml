@@ -30,7 +30,7 @@
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
 
-#change_view{:style => "display: none"}
+#change_view{:style => "display: block"}
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
       %label Events
