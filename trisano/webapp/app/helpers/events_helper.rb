@@ -326,6 +326,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
+      result << "#{element.description.gsub("\n", '<br/>')}<br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     
@@ -503,6 +504,8 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
+      
+      result << "#{element.description.gsub("\n", '<br/>')}<br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     

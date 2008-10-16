@@ -24,7 +24,6 @@
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
         %label Data type
-        %br
         = q.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
 
       %p

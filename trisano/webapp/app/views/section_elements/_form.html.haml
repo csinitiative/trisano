@@ -14,5 +14,11 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 = f.hidden_field :parent_element_id
-%label Section text:
-= f.text_field :name
+
+%p
+  %label Section text
+  = f.text_field :name
+
+  %p
+    %label Instructions
+    =f.text_area :description, :rows => 10

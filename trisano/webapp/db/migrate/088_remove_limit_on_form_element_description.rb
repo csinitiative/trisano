@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class SectionElement < FormElement
+class RemoveLimitOnFormElementDescription < ActiveRecord::Migration
+  def self.up
+    execute("ALTER TABLE form_elements ALTER COLUMN description TYPE varchar;")
+  end
 
-  attr_accessor :parent_element_id
-
-  validates_presence_of :name
-  validates_length_of :description, :maximum => 2000, :allow_blank => true
-
+  def self.down
+    execute("ALTER TABLE form_elements ALTER COLUMN description TYPE varchar(255);")
+  end
 end

@@ -219,7 +219,9 @@ module FormsHelper
       result << "<td class='section'>#{element.name}</td>"
       result << "<td class='actions'>" << add_question_link(element, "section") if (include_children)
       result << "&nbsp;&nbsp;" << delete_section_link(element)
-      result << "</td></tr></table>"
+      result << "</td></tr>"
+      result << "<tr><td colspan='2' class='instructions'>#{element.description.gsub("\n", '<br/>')}</td></tr>" unless element.description.blank?
+      result << "</table>"
     
       result << "<div id='question-mods-#{element.id.to_s}'></div>"
 

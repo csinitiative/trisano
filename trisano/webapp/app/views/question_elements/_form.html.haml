@@ -21,12 +21,10 @@
 
   %p
     %label Question text
-    %br
     = q.text_field :question_text
 
   %p
     %label Short name
-    %br
     = q.text_field :short_name
 
   = f.label(:is_active, "Is active?")
@@ -37,10 +35,8 @@
 
   %p
     %label Style
-    %br
     = q.select(:style, [["Horizontal", "horiz"], ["Vertical", "vert"]], {:include_blank => true}) 
 
   %p
     %label Help Text
-    %br
     =q.text_area :help_text, :rows => 10
