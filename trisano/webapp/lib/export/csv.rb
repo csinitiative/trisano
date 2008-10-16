@@ -117,7 +117,7 @@ module Exporters
               fields << l(event.udoh_case_status).to_s.gsub(/,/,' ')
               fields << l(event.outbreak_associated).to_s.gsub(/,/,' ')
               fields << event.outbreak_name.to_s.gsub(/,/,' ')
-              fields << MorbidityEvent.get_state_description(event.event_status).to_s.gsub(/,/,' ')
+              fields << (event.event_status.nil? ? 'N/A' : MorbidityEvent.get_state_description(event.event_status).to_s.gsub(/,/,' '))
               fields << event.investigation_started_date.to_s.gsub(/,/,' ')
               fields << event.investigation_completed_LHD_date.to_s.gsub(/,/,' ')
               fields << event.review_completed_UDOH_date.to_s.gsub(/,/,' ')

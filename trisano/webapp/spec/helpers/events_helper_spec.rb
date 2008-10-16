@@ -363,6 +363,12 @@ describe EventsHelper do
       mock_event
       Exporters::Csv::Event.export(@event_1).should include(expected_record)
     end
+
+    it "should report 'N/A' if event_status is nil" do
+      mock_event
+      @event_1.stub!(:event_status).and_return(nil)
+      Exporters::Csv::Event.export(@event_1).should include('N/A')
+    end
   end
 
   describe "the state_controls method" do
