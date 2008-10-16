@@ -16,21 +16,14 @@
 - content_for :title do
   Forms
 
-- content_for :name do
-  Forms
+//- content_for :name do
 
-- content_for :tools do
-  = link_to 'New form', new_form_path
+//- content_for :tools do
+//  = link_to 'New form', new_form_path
 
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
-.name
-  Listing Forms
-.tools
-  %br
-  %p{:style => "color: green"}
-    = flash[:notice]
 #rot
   %table.listingforms
     %tr
@@ -54,7 +47,7 @@
             |
             = link_to 'Edit', edit_form_path(form)
             |
-            = link_to 'Copy', copy_form_path(form), :id => "copy_form_#{form.id}"
+            = button_to 'Copy', copy_form_path(form), :id => "copy_form_#{form.id}"
         %td
           %ul
             - form.diseases.each do |disease|

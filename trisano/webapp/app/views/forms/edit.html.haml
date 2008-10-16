@@ -14,33 +14,51 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Forms
+  Edit Form Detail
   
-- content_for :name do
-  Edit 
-  = @form.name
+//- content_for :name do
+//  = @form.name
 
 - content_for :tools do
-  = link_to 'Show', @form 
-  |
-  = link_to 'Back', forms_path
-  |
-  = link_to 'Form Builder', builder_path(@form)
-
+  = link_to '< Back to Forms', forms_path
+  
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Form Information
+      %th Diseases
+      %th Jurisdiction
+      %th Event Type
+    %tr
+      %td.forminformation
+        .formname
+          = h @form.name
+          %br
+        .description  
+          = h @form.description
+        .tools
+          -if @form.is_template
+            = link_to 'Form Builder', builder_path(@form)
+      %td
+        %ul
+          - @form.diseases.each do |disease|
+            %li.diseaselist= h disease.disease_name
+      %td
+        = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
+      %td
+        = h @form.event_type.humanize
+        .status
+          = h @form.status
+#rot
+  %p
 = error_messages_for :form
 
-.name
-  Edit Form Detail
-.tools
-  = link_to 'Back to Forms', forms_path
-  %p{:style => "color: green"}
-    = flash[:notice]
-#rot
 - form_for(@form) do |f|
-
+  
   = render :partial => 'form', :locals => { :f => f }
 
   %p

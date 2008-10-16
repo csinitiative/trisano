@@ -14,31 +14,18 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Forms
+  Form Detail
   
-- content_for :name do
-  Form details:  
-  = @form.name
+//- content_for :name do
+//  = @form.name
 
 - content_for :tools do
-  = link_to 'Edit', edit_form_path(@form)
-  |
-  = link_to 'Back', forms_path
-  |
-  = link_to 'Form Builder', builder_path(@form)
-
+  = link_to '< Back to Forms', forms_path
+  %p
+  
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
-  
-.name
-  Form Detail
-.tools
-  = link_to 'Back to Forms', forms_path
-  |
-  = link_to 'Create New Form', new_form_path
-  %p{:style => "color: green"}
-    = flash[:notice]
 #rot
   %table.listingforms
     %tr
