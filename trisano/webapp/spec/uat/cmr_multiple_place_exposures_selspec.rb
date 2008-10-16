@@ -102,11 +102,11 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.select "place_event_active_place__address_county_id", "label=Summit"
     @browser.type "place_event_active_place__address_postal_code", "11111"
     # Phone
-    @browser.select "place_event_new_telephone_attributes__entity_location_type_id", "label=Work"
-    @browser.type "place_event_new_telephone_attributes__area_code", "330"
-    @browser.type "place_event_new_telephone_attributes__phone_number", "5555555"
-    @browser.type "place_event_new_telephone_attributes__extension", "231"
-    @browser.type "place_event_new_telephone_attributes__email_address", "test@home.com"
+    @browser.select "place_event_active_place__new_telephone_attributes__entity_location_type_id", "label=Work"
+    @browser.type "place_event_active_place__new_telephone_attributes__area_code", "330"
+    @browser.type "place_event_active_place__new_telephone_attributes__phone_number", "5555555"
+    @browser.type "place_event_active_place__new_telephone_attributes__extension", "231"
+    @browser.type "place_event_active_place__new_telephone_attributes__email_address", "test@home.com"
     save_place_event(@browser).should be_true
     
     @browser.is_text_present("555").should be_true

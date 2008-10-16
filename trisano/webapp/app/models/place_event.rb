@@ -17,7 +17,9 @@
 
 class PlaceEvent < Event
 
-  has_one :place, :class_name => 'Participation', :foreign_key => "event_id", :conditions => ["role_id = ?", Code.find_by_code_name_and_code_description('participant', "Place of Interest").id]
+  has_one :place, :class_name => 'Participation', 
+    :foreign_key => "event_id", 
+    :conditions => ["role_id = ?", Code.place_of_interest_type_id]
 
   validates_associated :place
 

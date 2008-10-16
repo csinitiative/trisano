@@ -28,11 +28,11 @@ namespace :trisano do
     desc "full rebuild of all databases"
     task :db_rebuild_full do
       puts "doing full rebuild of all databases"
-       ruby "-S rake db:drop:all"
-       ruby "-S rake db:create:all"
-       ruby "-S rake db:migrate"
-       Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
-       Rake::Task["db:test:prepare"].invoke
+      ruby "-S rake db:drop:all"
+      ruby "-S rake db:create:all"
+      ruby "-S rake db:migrate"
+      Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
+      Rake::Task["db:test:prepare"].invoke
     end
     
     desc "full rebuild of all databases for the build server"
