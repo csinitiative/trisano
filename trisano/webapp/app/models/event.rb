@@ -293,7 +293,8 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
 
       if options[:gender] == "Unspecified"
-        where_clause += "p3.primary_birth_gender_id IS NULL"
+        # Debt:  The 'AND event_id IS NOT NULL' is kind of a hack.  Will do until this query is examined more closely.
+        where_clause += "p3.primary_birth_gender_id IS NULL AND event_id IS NOT NULL"
       else
         where_clause += "p3.primary_birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
       end
