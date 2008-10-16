@@ -184,7 +184,7 @@ class MorbidityEvent < HumanEvent
     return if attributes.values_blank? 
 
     # Handle the reporting agency.  Note, it's an auto-complete: user might have entered a new one or chosen an existing one.
-    agency = attributes.delete(:agency_name)
+    agency = attributes.delete(:name)
     entity_id = attributes.delete('secondary_entity_id')
 
     # First, the reporting agency
