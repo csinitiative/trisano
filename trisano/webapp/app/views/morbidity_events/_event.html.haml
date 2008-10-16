@@ -19,10 +19,9 @@
     .tools
       = jurisdiction_routing_control(event)
     %div{:id => 'secondary_jurisdictions'}
-      - for secondary_jurisdiction in event.secondary_jurisdictions
-        %small
-          = secondary_jurisdiction.short_name
-          %br
+      %small
+        = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
+        %br
   %td
     = Event.get_state_description(event.event_status)
     - unless event.event_queue_id.nil?
