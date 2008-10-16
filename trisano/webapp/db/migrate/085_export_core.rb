@@ -18,7 +18,7 @@
 class ExportCore < ActiveRecord::Migration
   def self.up
  
-    execute "Create Language plpgsql"
+    #execute "Create Language plpgsql"
     
     create_table :export_names do |t|
       t.string :export_name, :limit=> 50   #  name of the export data set
