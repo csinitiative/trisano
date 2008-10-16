@@ -284,7 +284,8 @@ class Event < ActiveRecord::Base
 
     if !options[:disease].blank?
       issue_query = true
-      where_clause += " AND p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
+      where_clause += " AND " unless where_clause.empty?
+      where_clause += " p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
     end
     
     if !options[:gender].blank?
