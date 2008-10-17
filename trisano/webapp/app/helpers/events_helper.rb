@@ -207,8 +207,8 @@ module EventsHelper
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
       
       controls += link_to_function('Route to Local Health Depts.', nil) do |page|
-                    page["routing_controls_#{event.id}"].visual_effect :blind_down
-                  end
+        page["routing_controls_#{event.id}"].visual_effect :blind_down
+      end
       controls += "<div id='routing_controls_#{event.id}' style='display: none; position: absolute; z-index: 1000'>"
       controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
@@ -322,11 +322,17 @@ module EventsHelper
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
       result << "<legend>#{element.name} "
+      
+      unless element.help_text.blank?
+        result << render_help_text(element) 
+        result << "&nbsp;"
+      end
+
       result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "#{element.description.gsub("\n", '<br/>')}<br/><br/>" unless element.description.blank?
+      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     
@@ -368,13 +374,22 @@ module EventsHelper
     "<a id=\"#{html_id}_hotspot\" href=\"#\" onmouseover=\"TagToTip(#{tool_tip_command.flatten.join(', ')})\" onmouseout=\"UnTip()\">#{yield}</a>"
   end
 
-  def render_question_help_text(element)
-    question = element.question
-    return if question.nil?
-    result = tooltip("question_help_text_#{element.id}") do
+  def render_help_text(element)
+
+    if element.is_a?(QuestionElement)
+      return if element.question.nil?
+      help_text = element.question.help_text
+    else
+      return if element.help_text.blank?
+      help_text = element.help_text
+    end
+    
+    identifier = element.class.name.underscore[0..element.class.name.underscore.index("_")-1]
+    
+    result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)    
     end
-    result << "<div id=\"question_help_text_#{element.id}\" style=\"display: none;\">#{question.help_text}</div>"
+    result << "<span id=\"#{identifier}_help_text_#{element.id}\" style=\"display: none;\">#{help_text}</span>"
   end
 
   def render_investigator_question(form_elements_cache, element, f)
@@ -390,7 +405,7 @@ module EventsHelper
         fields_for(@event) do |f|
           f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
             result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{element.id}"})
-            result << render_question_help_text(element) unless question.help_text.blank?
+            result << render_help_text(element) unless question.help_text.blank?
           end
         end
       else
@@ -398,7 +413,7 @@ module EventsHelper
         index = @answer_object.new_record? ? "" : @form_index += 1
         f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
           result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{element.id}"})
-          result << render_question_help_text(element) unless question.help_text.blank?
+          result << render_help_text(element) unless question.help_text.blank?
         end
       end
 
@@ -463,7 +478,6 @@ module EventsHelper
           end
         end
 
-
         if (element.condition == core_value.to_s)
           include_children = true
         end
@@ -500,12 +514,17 @@ module EventsHelper
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
       result << "<legend>#{element.name} "
+      
+      unless element.help_text.blank?
+        result << render_help_text(element) 
+        result << "&nbsp;"
+      end
+      
       result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      
-      result << "#{element.description.gsub("\n", '<br/>')}<br/><br/>" unless element.description.blank?
+      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     
@@ -553,7 +572,7 @@ module EventsHelper
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
       result << "<label>#{question.question_text}&nbsp;"
-      result << render_question_help_text(element) unless question.help_text.blank?
+      result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
       answer = form_elements_cache.answer(element, @event)
       result << answer.text_answer unless answer.nil?

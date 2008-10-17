@@ -22,6 +22,7 @@ describe SectionElement do
     @section_element = SectionElement.new
     @section_element.name="Section 1"
     @section_element.description = 's' * 2000
+    @section_element.help_text = 's' * 2000
   end
 
   it "should be valid" do
@@ -33,6 +34,13 @@ describe SectionElement do
     @section_element.should_not be_valid
     @section_element.errors.size.should == 1
     @section_element.errors.on(:description).should_not be_nil
+  end
+  
+  it 'should produce an error if the help text is too long' do
+    @section_element.help_text = 's' * 2001
+    @section_element.should_not be_valid
+    @section_element.errors.size.should == 1
+    @section_element.errors.on(:help_text).should_not be_nil
   end
   
   describe "when created with 'save and add to form'" do

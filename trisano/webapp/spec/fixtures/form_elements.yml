@@ -62,7 +62,8 @@ demographic_section:
   lft: "4"
   type: SectionElement
   id: "3"
-  description: 
+  description: "Read these instructions."
+  help_text: "Read this help text."
   rgt: "13"
   parent_id: "2"
  

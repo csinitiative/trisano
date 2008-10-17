@@ -17,18 +17,13 @@
   Form Builder
 
 - content_for :name do
-  New form
+  Create New Form
 
 - content_for :tools do
-  = link_to 'Back', forms_path
-
-.name
-  Create New Form
-.tools
   = link_to 'Back to Forms', forms_path
   %p{:style => "color: green"}
     = flash[:notice]
-    
+
 = error_messages_for :form
 
 - form_for(@form) do |f|

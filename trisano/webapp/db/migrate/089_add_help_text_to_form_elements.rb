@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class SectionElement < FormElement
+class AddHelpTextToFormElements < ActiveRecord::Migration
+  def self.up
+    add_column :form_elements, :help_text, :string, :limit => 2000
+  end
 
-  attr_accessor :parent_element_id
-
-  validates_presence_of :name
-  validates_length_of :description, :maximum => 2000, :allow_blank => true
-  validates_length_of :help_text, :maximum => 2000, :allow_blank => true
-
+  def self.down
+    remove_column :form_elements, :help_text
+  end
 end

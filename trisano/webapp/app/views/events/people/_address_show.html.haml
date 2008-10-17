@@ -15,7 +15,6 @@
 
 %fieldset.form
   %legend
-    =location.type unless location.nil? 
     Address 
   -unless address.nil?
     -current_patient.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|

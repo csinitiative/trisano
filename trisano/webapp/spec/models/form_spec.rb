@@ -305,6 +305,8 @@ describe Form do
       demo_section.class.name.should eql("SectionElement")
       demo_section.form_id.should eql(@published_form.id)
       demo_section.name.should eql(form_elements(:demographic_section).name)
+      demo_section.description.should eql(form_elements(:demographic_section).description)
+      demo_section.help_text.should eql(form_elements(:demographic_section).help_text)
       
       demo_group = demo_section.children[0]
       demo_group.class.name.should eql("GroupElement")

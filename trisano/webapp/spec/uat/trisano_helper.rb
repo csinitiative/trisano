@@ -346,7 +346,6 @@ module TrisanoHelper
     browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
     browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
-    browser.select "morbidity_event_event_status", "label=Under Investigation"
     return save_cmr(browser)
   end
   
@@ -464,14 +463,16 @@ module TrisanoHelper
     end
   end
   
-  def add_section_to_view(browser, view_name, section_name)
+  def add_section_to_view(browser, view_name, section_attributes = {})
     element_id = get_form_element_id(browser, view_name, VIEW_ID_PREFIX)
     browser.click("add-section-#{element_id}")
     wait_for_element_present("new-section-form", browser)
-    browser.type("section_element_name", section_name)
+    browser.type("section_element_name", section_attributes[:section_name])
+    browser.type("section_element_description", section_attributes[:description]) unless section_attributes[:description].nil?
+    browser.type("section_element_help_text", section_attributes[:help_text]) unless section_attributes[:help_text].nil?
     browser.click("section_element_submit")
     wait_for_element_not_present("new-section-form", browser)
-    if browser.is_text_present(section_name)
+    if browser.is_text_present(section_attributes[:section_name])
       return browser.get_value("id=modified-element")
     else
       return false      
@@ -1058,13 +1059,13 @@ module TrisanoHelper
   def assert_tooltip_exists(browser, tool_tip_text)
     return false unless browser.is_element_present("//img[contains(@src, 'help.png')]")
     return false unless browser.is_text_present(tool_tip_text)
-    return false if browser.is_visible("//div[contains(@id,'question_help_text')]")
+    return false if browser.is_visible("//span[contains(@id,'_help_text')]")
     return false if browser.is_visible("//div[@id='WzTtDiV']")
-    return false unless browser.mouse_over("//a[contains(@id,'question_help_text')]")
-    return false unless browser.mouse_move("//a[contains(@id,'question_help_text')]")
+    return false unless browser.mouse_over("//a[contains(@id,'_help_text')]")
+    return false unless browser.mouse_move("//a[contains(@id,'_help_text')]")
     sleep(2)
     return false unless browser.is_visible("//div[@id='WzTtDiV']")
-    return false unless browser.mouse_out("//a[contains(@id, 'question_help_text')]")
+    return false unless browser.mouse_out("//a[contains(@id, '_help_text')]")
     sleep(2)
     return false if browser.is_visible("//div[@id='WzTtDiV']")
     return true
