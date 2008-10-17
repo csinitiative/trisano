@@ -55,14 +55,14 @@
           = h @form.status
 #rot
   %p
-= error_messages_for :form
+  = error_messages_for :form
 
-- form_for(@form) do |f|
+  - form_for(@form) do |f|
   
-  = render :partial => 'form', :locals => { :f => f }
+    = render :partial => 'form', :locals => { :f => f }
 
-  %p
-    = f.submit "Update"
+    %p
+      = f.submit "Update"
 
 
 
