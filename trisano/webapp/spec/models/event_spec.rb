@@ -831,6 +831,66 @@ describe MorbidityEvent do
       end
 
     end
+
+    describe "Handling notes" do
+      fixtures :notes, :users
+
+      describe "Receiving a new note" do
+
+        before(:each) do
+          @user = users(:default_user)
+          User.stub!(:current_user).and_return(@user)
+          new_note_hash = {
+            "new_note_attributes" => {"note" => "This is a note"}
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_note_hash))
+        end
+
+        it "should create a new note linked to the event" do
+          lambda {@event.save}.should change {Note.count}.by(1)
+          @event.notes.first.note.should == "This is a note"
+        end
+      end
+
+      describe "Receiving an empty note" do
+
+        before(:each) do
+          @user = users(:default_user)
+          User.stub!(:current_user).and_return(@user)
+          new_note_hash = {
+            "new_note_attributes" => {}
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_note_hash))
+        end
+
+        it "should do nothing" do
+          lambda {@event.save}.should change {Note.count}.by(0)
+        end
+      end
+
+      describe "Receiving two existing notes, one struck through one not." do
+        fixtures :notes, :users, :events
+
+        before(:each) do
+          @user = users(:default_user)
+          User.stub!(:current_user).and_return(@user)
+          @existing_note_hash = {
+            "existing_note_attributes"=>{ "#{notes(:marks_note_1).id}" => {:struckthrough => "0"}, 
+                                          "#{notes(:marks_note_2).id}" => {:struckthrough => "1"} }
+          }
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should not change note 1 and should change note 2 to struckthrough" do
+          notes(:marks_note_1).struckthrough.should be_false
+          notes(:marks_note_2).struckthrough.should be_false
+          lambda {@event.update_attributes(@existing_note_hash)}.should change {Note.count}.by(0)
+          strikethroughs = @event.notes.collect { |note| note.struckthrough? }
+          strikethroughs.include?(true).should be_true
+          strikethroughs.include?(false).should be_true
+        end
+      end
+    end
   end
 
   describe "Routing an event" do

@@ -33,6 +33,7 @@ class MorbidityEvent < HumanEvent
       event.clinicians << Participation.new_clinician_participation
       event.reporting_agency = Participation.new_reporting_agency_participation
       event.reporter = Participation.new_reporter_participation
+      event.notes.build
       event
     end
   

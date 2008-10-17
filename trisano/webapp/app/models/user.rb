@@ -31,6 +31,13 @@ class User < ActiveRecord::Base
   
   after_validation :clear_base_error
   
+  def best_name
+    return given_name unless self.given_name.blank?
+    return "#{first_name} #{last_name}" unless self.last_name.blank?
+    return user_name unless self.user_name.blank?
+    return uid
+  end
+
   def is_admin?
     # Right now, if you're an admin anywhere, you're an admin everywhere.  We need to change this.
     is_entitled_to?(:administer)

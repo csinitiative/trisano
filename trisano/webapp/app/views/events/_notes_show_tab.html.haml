@@ -1,0 +1,34 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+%fieldset
+  %legend Notes
+
+  - if @event.notes.empty?
+    %h3 No notes have been recorded for this event
+  - else
+
+    - for note in @event.notes
+      %div{:class => 'existing-note'}
+        %div{:class => 'existing-note-header'} 
+          %span{:class => 'existing-note-header-element'}= note.user.best_name
+          %span{:class => 'existing-note-header-element'}= note.created_at.strftime("%a, %B %d, %Y;  %I:%M: %p")
+
+        - note_body = simple_format(note.note)
+        - if note.struckthrough?
+          %div{:id => "note_#{note.id}", :class => 'existing-note-body struck-through'}= note_body
+        - else
+          %div{:id => "note_#{note.id}", :class => 'existing-note-body'}= note_body

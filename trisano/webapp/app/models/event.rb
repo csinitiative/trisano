@@ -56,9 +56,12 @@ class Event < ActiveRecord::Base
     :order => 'created_at ASC',
     :dependent => :destroy
 
+  has_many :notes, :order => 'updated_at ASC', :dependent => :destroy
+
   # Turn off auto validation of has_many associations
   def validate_associated_records_for_participations() end
   def validate_associated_records_for_answers() end
+  def validate_associated_records_for_notes() end
 
   before_validation_on_create :set_event_onset_date
   
@@ -68,6 +71,7 @@ class Event < ActiveRecord::Base
 
   validates_date :event_onset_date
   validates_associated :answers
+  validates_associated :notes
 
   ### Debt:  Event Status stuff should be made into its own object and associated with event
 
@@ -227,6 +231,22 @@ class Event < ActiveRecord::Base
     self.disease_event.attributes = attributes
   end  
 
+  def new_note_attributes=(attributes)
+    # There can only be one new note
+    return if attributes.values_blank?
+    note = notes.build(attributes)
+    note.user = User.current_user
+  end  
+  
+  def existing_note_attributes=(notes_attributes)
+    p notes_attributes
+    # existing notes can't be deleted or edited, but they can be marked as struck through
+    notes.reject(&:new_record?).each do |note|
+      attributes = notes_attributes[note.id.to_s]
+      note.struckthrough = attributes[:struckthrough] if attributes
+    end
+  end
+
   def form_references=(attributes)
     if form_references.empty?
       form_references.build(attributes)
@@ -243,7 +263,7 @@ class Event < ActiveRecord::Base
       answers.each { |answer| answer.attributes = attributes[answer.id.to_s] }
     end
   end  
-  
+
   def new_answers=(attributes)
     answers.build(attributes)
   end
@@ -559,8 +579,8 @@ class Event < ActiveRecord::Base
   def save_associations
     disease.save(false) unless disease.nil?
     answers.each { |answer| answer.save(false) }
+    notes.each { |note| note.save(false) }
     # Jurisdictions don't need to be saved on edit.  They can only be set by create.  After that routing is used.
   end
-
 
 end

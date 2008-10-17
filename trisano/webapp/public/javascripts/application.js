@@ -84,3 +84,7 @@ function post_and_return(form_id) {
   form.action = form.action + "&return=true";
   form.submit();
 }
+
+function toggle_strike_through(element_id) {
+  Element.toggleClassName(element_id, 'struck-through')
+}

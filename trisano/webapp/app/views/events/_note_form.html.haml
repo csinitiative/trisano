@@ -1,0 +1,68 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset
+  %legend 
+    Notes
+    %span{:id => 'notes_hide', :onClick => "Element.hide('notes'); Element.hide('notes_hide'); Element.show('notes_show'); return false;"} [Hide]
+    %span{:id => 'notes_show', :onClick => "Element.show('notes'); Element.hide('notes_show'); Element.show('notes_hide'); return false;", :style => "display: none;"} [Show]
+
+    - current_note = nil
+    prefix
+    %div{:id => "notes"}  
+      - if @event.new_record?
+        %b New record:  No existing notes.
+      - else
+        %b Earlier notes
+        %div{:id => 'existing-notes'}
+          - no_saved_notes = true
+          - for note in @event.notes
+            -# This can happen if validation fails and this form is re-rendered
+            - if note.new_record?
+              - current_note = note
+              - next
+            - no_saved_notes = false
+            %div{:class => 'existing-note'}
+              %div{:class => 'existing-note-header'} 
+                %span{:class => 'existing-note-header-element'}= note.user.best_name
+                %span{:class => 'existing-note-header-element'}= note.created_at.strftime("%a, %B %d, %Y;  %I:%M: %p")
+
+                - prefix = event_prefix_for_multi_models("existing", "_note_attributes") + "[]"
+                - fields_for(prefix, note, :builder => ExtendedFormBuilder) do |note_fields|
+                  %span{:class => 'existing-note-header-element'}
+                    = note_fields.check_box :struckthrough, :onclick => "toggle_strike_through('note_#{note.id}')"
+                    %span strike through
+
+              - note_body = simple_format(note.note)
+              - if note.struckthrough?
+                %div{:id => "note_#{note.id}", :class => 'existing-note-body struck-through'}
+                  =note_body
+              - else
+                %div{:id => "note_#{note.id}", :class => 'existing-note-body'}
+                  = note_body
+
+          - if no_saved_notes
+            %b No notes have been recorded for this event
+
+      %div{:id => 'new-note'}
+        -# notes = (@event.notes.size > 0 ? @event.notes : [Note.new])
+        =# error_messages_for :object => note
+
+        -# note = current_note.nil? ? Note.new | current_note
+        - note = current_note || Note.new
+        - f.fields_for(:new_note_attributes, note, :builder => ExtendedFormBuilder) do |note_fields|
+          %span{:class => "horiz"}
+            = note_fields.label(:note, "New note")
+            ~ note_fields.text_area(:note, :size => "91x5")
