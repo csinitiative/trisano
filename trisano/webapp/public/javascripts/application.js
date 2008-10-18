@@ -82,10 +82,7 @@ function post_and_return(form_id) {
   form = document.getElementById(form_id);
   form.action = build_url_with_tab_index(form.action);
   form.action = form.action + "&return=true";
-  setTimeout("alert('firing'); Element.update('success-message');", 5000);
   form.submit();
-  //alert("here")
-  //Element.update('success-message');
 }
 
 function post_and_exit(form_id) {
