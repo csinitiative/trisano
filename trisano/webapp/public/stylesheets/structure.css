@@ -30,14 +30,14 @@ body, p, ol, ul {
   z-index: 800; }
 
 #title_area {
-  position: relative;
+  position: fixed;
   top: 104px;
   width: 100%;
-  background-color: #f9f8f5; }
+  background-color: #f9f8f5;
+  z-index: 800; }
 
 #main-content {
   position: absolute;
-  top: 230px;
   width: 100%; }
 
 #form-content {

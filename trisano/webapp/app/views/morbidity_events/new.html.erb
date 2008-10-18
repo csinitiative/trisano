@@ -25,6 +25,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   New CMR
 <% end %>
 
+<% content_for :tools_two do %>
+  <span style='margin-left: 1em'>
+    <%= button_to_function("Save & Continue", "post_and_return('new_morbidity_event')") %>
+    <%= button_to_function("Save & Exit", "post_and_exit('new_morbidity_event')") %>
+  </span>
+<% end %>
+
 <% content_for :tools do %>
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>
@@ -85,7 +92,6 @@ var myTabs = new YAHOO.widget.TabView("cmr_tabs");
     <div id="investigation_tab"><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></div>
     <div id="notes_tab"><%= render :partial => 'events/note_form', :locals => {:f => event_form} %></div>
     <div id="administrative_tab"><%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %></div>
-    <%= event_form.submit "Save & Exit", :style => "position: fixed; top: 72px; right: 5%; z-index: 800", :onclick => "add_tab_index_to_action(this.form)" %>
   </div>
 <% end %>
 </div>

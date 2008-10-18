@@ -17,15 +17,16 @@ You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
+<script type="text/javascript">
+  setTimeout("Element.update('success-message');", 3000);
+</script>
+
 <% content_for :title do %>
     CONTACT EVENT
 <% end %>
 
 <% content_for :name do %>
   <%= @event.active_patient.primary_entity.person.first_name -%> <%= @event.active_patient.primary_entity.person.last_name -%>
-  <span style='margin-left: 1em'>
-    <%= button_to_function("Save & Continue", "post_and_return('edit_contact_event_#{@event.id}')") %>
-  </span>
 
   <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
   <span style='position: absolute; right: 0;'>
@@ -33,6 +34,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? %></p>
   </span>
   
+<% end %>
+
+<% content_for :tools_two do %>
+  <span style='margin-left: 1em'>
+    <%= button_to_function("Save & Continue", "post_and_return('edit_contact_event_#{@event.id}')") %>
+    <%= button_to_function("Save & Exit", "post_and_exit('edit_contact_event_#{@event.id}')") %>
+  </span>
 <% end %>
 
 <% content_for :tools do %>
@@ -94,8 +102,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         </p>
       </div>
       <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
-    
-      <%= event_form.submit "Save & Exit", :style => "position: fixed; top: 72px; right: 5%; z-index: 800", :onclick => "add_tab_index_to_action(this.form)" %>
     </div>
   <% end %>
         

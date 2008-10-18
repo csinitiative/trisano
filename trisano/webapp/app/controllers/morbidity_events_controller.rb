@@ -110,6 +110,7 @@ class MorbidityEventsController < EventsController
   end
 
   def create
+    go_back = params.delete(:return)
     @event = MorbidityEvent.new(params[:morbidity_event])
 
     # Allow for test scripts and developers to jump directly to the "under investigation" state
@@ -128,7 +129,14 @@ class MorbidityEventsController < EventsController
     respond_to do |format|
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully created.'
-        format.html { query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""; redirect_to(cmr_url(@event) + query_str) }
+        format.html { 
+          if go_back
+            render :action => "edit"
+          else
+            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+            redirect_to(cmr_url(@event) + query_str)
+          end
+        }
         format.xml  { render :xml => @event, :status => :created, :location => @event }
       else
         format.html { render :action => "new" }

@@ -1106,7 +1106,7 @@ describe MorbidityEvent do
 
     it 'should need cdc update when first_reported_PH_date value changes' do
       with_cdc_event do |event|
-        event.first_reported_PH_date = DateTime.now
+        event.first_reported_PH_date = Date.today
         event.save.should be_true
         event.should be_a_cdc_update
       end

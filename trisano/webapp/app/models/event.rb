@@ -239,7 +239,6 @@ class Event < ActiveRecord::Base
   end  
   
   def existing_note_attributes=(notes_attributes)
-    p notes_attributes
     # existing notes can't be deleted or edited, but they can be marked as struck through
     notes.reject(&:new_record?).each do |note|
       attributes = notes_attributes[note.id.to_s]

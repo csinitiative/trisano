@@ -94,8 +94,12 @@
           = yield :name
         .tools
           = yield :tools
-        .success-message
+        #success-message.success-message
           = flash[:notice]
+    #main-content
+      %script
+        header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
+        Element.setStyle('main-content', {top: header_height})
       .container
         = yield
       .container
