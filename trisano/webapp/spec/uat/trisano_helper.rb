@@ -193,7 +193,7 @@ module TrisanoHelper
   end
   
   def save_cmr(browser)
-    browser.click "morbidity_event_submit"
+    browser.click "//input[@value='Save & Exit']"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("CMR was successfully created.") or
         browser.is_text_present("CMR was successfully updated."))
@@ -209,7 +209,7 @@ module TrisanoHelper
   end
   
   def save_contact_event(browser)
-    browser.click "contact_event_submit"
+    browser.click "//input[@value='Save & Exit']"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Contact event was successfully created.") or
         browser.is_text_present("Contact event was successfully updated."))
@@ -223,7 +223,7 @@ module TrisanoHelper
   end
 
   def save_place_event(browser)
-    browser.click "place_event_submit"
+    browser.click "//input[@value='Save & Exit']"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Place event was successfully created.") or
         browser.is_text_present("Place event was successfully updated."))

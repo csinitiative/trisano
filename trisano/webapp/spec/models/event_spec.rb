@@ -29,6 +29,13 @@ describe MorbidityEvent do
 #    }
 #  }
 
+  def with_event(event_hash=@event_hash)
+    event = MorbidityEvent.new event_hash
+    event.save
+    event.reload
+    yield event if block_given?
+  end
+
   describe "Managing Jurisdictions" do
   end
 
@@ -1076,6 +1083,63 @@ describe MorbidityEvent do
 
   end
 
+  describe 'with age info is already set' do
+    before :each do
+      @event_hash = {
+        "age_at_onset" => 14,
+        "age_type_id" => 2300,
+        "active_patient" => {
+          "entity_type"=>"person", 
+          "person" => {
+            "last_name"=>"Biel"
+          }
+        }
+      }
+    end
+
+    it 'should aggregate onset age and age type in age info' do
+      with_event do |event|
+        event.age_info.should_not be_nil
+        event.age_info.age_at_onset.should == 14
+        event.age_info.age_type.code_description.should == 'days'
+      end
+    end
+
+  end
+
+  describe 'just created w/ no age info' do
+    before :each do
+      @event_hash = {
+        "active_patient" => {
+          "entity_type"=>"person", 
+          "person" => {
+            "last_name"=>"Biel"
+          }
+        }
+      }
+    end
+
+    it 'should not generate an age at onset if the birthdate is unknown' do
+      with_event do |event|
+        event.age_info.should_not be_nil
+        event.age_info.age_type.code_description.should == 'unknown'
+        event.age_info.age_at_onset.should be_nil
+      end
+    end
+        
+
+    it 'should generate an age at onset if the birthday is known' do
+      @event_hash['active_patient']['person']['birth_date'] = 14.years.ago
+      with_event do |event|
+        event.active_patient.primary_entity.person_temp.birth_date.should_not be_nil
+        event.event_onset_date.should_not be_nil
+        event.age_info.age_at_onset.should == 14
+        event.age_info.age_type.code_description.should == 'years'
+      end
+    end
+
+  end      
+
   describe 'checking CDC ' do
     fixtures :external_codes
 
@@ -1090,22 +1154,15 @@ describe MorbidityEvent do
       }
     end
 
-    def with_cdc_event
-      event = MorbidityEvent.new @event_hash
-      event.save
-      event.reload
-      yield event
-    end
-    
     it 'should return false if no cdc values have changed' do
-      with_cdc_event do |event|
+      with_event do |event|
         event.should_not be_new_record
         event.should_not be_a_cdc_update
       end
     end
 
     it 'should need cdc update when first_reported_PH_date value changes' do
-      with_cdc_event do |event|
+      with_event do |event|
         event.first_reported_PH_date = Date.today
         event.save.should be_true
         event.should be_a_cdc_update
@@ -1113,7 +1170,7 @@ describe MorbidityEvent do
     end
     
     it 'should need cdc update when udoh case status id changes' do
-      with_cdc_event do |event|
+      with_event do |event|
         event.udoh_case_status = ExternalCode.find(:first, :conditions => "code_name = 'case'")
         event.save.should be_true
         event.should be_a_cdc_update

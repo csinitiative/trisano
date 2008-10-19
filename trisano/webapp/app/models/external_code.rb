@@ -52,6 +52,12 @@ class ExternalCode < ActiveRecord::Base
   def self.telephone_location_type_ids
     telephone_location_types.collect{|code| code.id}
   end
+
+  def self.age_type(age_description)
+    with_scope(:find => {:conditions => "code_name='age_type'"}) do
+      find(:first, :conditions => "code_description='#{age_description.to_s}'") 
+    end    
+  end
   
   # Debt: This query bypasses AR because of an issue in acts_as_audible where
   # using an array in a condition was failing

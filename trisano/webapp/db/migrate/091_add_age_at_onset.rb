@@ -15,26 +15,23 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-module Export
-  module Cdc
-       
-    def check_cdc_updates      
-      self.cdc_update = cdc_attributes_changed?(old_attributes)
-    end
+require "migration_helpers"
 
-    private
+class AddAgeAtOnset < ActiveRecord::Migration
 
-    def cdc_attributes_changed?(old_attributes)
-      return false unless old_attributes
-      
-      cdc_fields = %w(first_reported_PH_date udoh_case_status_id)
-      old_attributes.select {|k, v| cdc_fields.include?(k)}.reject do |field, value|
-        self.attributes[field] == value
-      end.size > 0
-    end
+  extend MigrationHelpers
 
+  def self.up
+    #age at onset
+    add_column :events, :age_at_onset, :integer
+    #age type
+    add_column :events, :age_type_id, :integer
+    add_foreign_key( :events, :age_type_id, :external_codes)
+  end
+
+  def self.down
+    remove_foreign_key( :events, :age_type_id)
+    drop_column :events, :age_type_id
+    drop_column :events, :age_at_onset
   end
 end
-
-
-

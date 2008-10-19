@@ -321,3 +321,36 @@ contactdispositiontype_not_infected:
   the_code: "NI"
   code_description: "Not Infected"
   sort_order: 60
+
+## age type codes
+
+age_type_days:
+  id: 2300
+  code_name: "age_type"
+  the_code: 3
+  code_description: "days"
+
+age_type_weeks:
+  id: 2301
+  code_name: "age_type"
+  the_code: 2
+  code_description: "weeks"
+
+age_type_months:
+  id: 2302
+  code_name: "age_type"
+  the_code: 1
+  code_description: "months"
+
+age_type_years:
+  id: 2303
+  code_name: "age_type"
+  the_code: 0
+  code_description: "years"
+
+age_type_unknown:
+  id: 2304
+  code_name: "age_type"
+  the_code: 9
+  code_description: "unknown"
+  

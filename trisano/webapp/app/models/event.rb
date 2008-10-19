@@ -28,6 +28,9 @@ class Event < ActiveRecord::Base
     attr_protected :event_status
   end
 
+  composed_of :age_info, :mapping => [%w(age_at_onset age_at_onset), %w(age_type_id age_type_id)]
+  belongs_to  :age_type, :class_name => 'ExternalCode', :foreign_key => :age_type_id
+
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :lhd_case_status, :class_name => 'ExternalCode'
   belongs_to :udoh_case_status, :class_name => 'ExternalCode'
@@ -544,14 +547,30 @@ class Event < ActiveRecord::Base
   end
 
   def cache_old_attributes
-    @old_attributes = self.attributes.dup
+    @old_attributes = self.attributes
   end
 
   def old_attributes
     @old_attributes
   end
 
+  def safe_call_chain(*messages)
+    receiver = self
+    messages.each do |msg|
+      return nil if receiver.nil?
+      receiver = receiver.send(msg)
+    end
+    receiver
+  end
+
   private
+
+  def set_age_at_onset
+    birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
+    onset = [self.event_onset_date].compact.sort.first
+    return unless birthdate && onset
+    self.age_info = AgeInfo.create_from_dates(birthdate, onset)
+  end
   
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'
