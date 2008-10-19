@@ -18,6 +18,11 @@
 class Event < ActiveRecord::Base
   include Blankable
   include Export::Cdc
+  
+  after_update :save_associations
+  before_save :generate_mmwr
+  before_create :set_record_number
+  before_validation_on_create :set_event_onset_date
 
   if RAILS_ENV == "production"
     attr_protected :event_status
@@ -62,12 +67,6 @@ class Event < ActiveRecord::Base
   def validate_associated_records_for_participations() end
   def validate_associated_records_for_answers() end
   def validate_associated_records_for_notes() end
-
-  before_validation_on_create :set_event_onset_date
-  
-  after_update :save_associations
-  before_save :generate_mmwr
-  before_create :set_record_number
 
   validates_date :event_onset_date
   validates_associated :answers
