@@ -21,12 +21,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       CONFIDENTIAL MORBIDITY REPORT
 <% end %>
 
-<!--
-<% content_for :watermark do %>
-      morbidity event
-<% end %>
--->
-
 <% content_for :tools_two do %>
   <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
 <% end %>
@@ -46,33 +40,20 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 </table>
 <% end %>
 
-<script type="text/javascript">
-  var myTabs = new YAHOO.widget.TabView("cmr_tabs");
-</script>
-
-<%= error_messages_for :object => @event %>
-
-<%= tab_toggler() %>
-
-<div id="cmr_tabs" class="yui-navset">
-<ul class="yui-nav" id="tabs">
-  <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
-  <li><a href="#clinical_tab"><em>Clinical</em></a></li>
-  <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
-  <li><a href="#contacts_tab"><em>Contacts</em></a></li>
-  <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
-  <li><a href="#reporting_tab"><em>Reporting</em></a></li>
-  <li><a href="#investigation_tab"><em>Investigation</em></a></li>
-  <li><a href="#notes_tab"><em>Notes</em></a></li>
-  <li><a href="#administrative_tab"><em>Administrative</em></a></li>
-</ul>
-
-<%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
-
 <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+  <% tabs = {
+            :demographic_tab => 'Demographic',
+            :clinical_tab => 'Clinical',
+            :lab_info_tab => 'Laboratory',
+            :contacts_tab => 'Contacts',
+            :epi_tab => 'Epidemiolgical',
+            :reporting_tab => 'Reporting',
+            :investigation_tab => 'Investigation',
+            :notes_tab => 'Notes',
+            :administrative_tab => 'Administrative'
+          } %>
 
-  <div class="yui-content">
-  
+  <% tabbed_content(tabs, @tab_index) do %>
     <div id="demographic_tab">
       <% patient_entity = @event.active_patient.primary_entity %>
       <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
@@ -116,5 +97,5 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <%= render :partial => "events/admin_show_tab", :locals => { :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
     </div>
-
+  <% end %>
 <% end %>

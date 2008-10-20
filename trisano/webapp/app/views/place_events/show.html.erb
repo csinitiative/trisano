@@ -25,10 +25,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%= @event.active_place.primary_entity.place_temp.name -%>
 <% end %>
 
-<% content_for :watermark do %>
-    place event
-<% end %>
-
 <%- jurisdiction = @event.active_jurisdiction.secondary_entity.current_place %>
 <% content_for :tools do %>
   <%= basic_place_event_controls(@event, false) %>
@@ -36,25 +32,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
 
-<script type="text/javascript">
-  var myTabs = new YAHOO.widget.TabView("place_event_tabs");
-</script>
-
-<%= error_messages_for :object => @event %>
-
-<%= tab_toggler(%w(place_tab investigation_tab)) %>
-
-<div id="place_event_tabs" class="yui-navset">
-<ul class="yui-nav" id="tabs">
-  <li class="selected"><a href="#place_tab"><em>Place</em></a></li>
-  <li><a href="#investigation_tab"><em>Investigation</em></a></li>
-</ul>
-
-<%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
-
 <% form_for(@event, :url => place_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-  <div class="yui-content">
-  
+  <% tabs = {
+            :place_tab => 'Place',
+            :investigation_tab => 'Investigation',
+            :notes_tab => 'Notes'
+          } %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
     <div id="place_tab">
       <% place_entity = @event.active_place.primary_entity %>
       <%= render :partial => "events/places/show", :locals => { :entity_data => place_entity, :event_form => event_form } %>
@@ -64,5 +49,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="investigation_tab">
       <%= render :partial => "events/investigation_show_tab" %>
     </div>
-  </div>
+
+    <div id="notes_tab">
+      <%= render :partial => "events/notes_show_tab" %>
+    </div>
+  <% end %>
 <% end %>

@@ -41,108 +41,93 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%= link_to 'Back to list', cmrs_path %>
 <% end %>
 
-<% content_for :watermark do %>
-  morbidity event
-<% end %>
-
 <% @form_index = 0 %>
 
 <%= error_messages_for :object => @event %>
 
 <div id="follow-up-error"></div>
 
-<script type="text/javascript">
-  var myTabs = new YAHOO.widget.TabView("cmr_tabs");
-</script>
+<% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+  <%  @event_form = event_form %>
 
-<%= tab_toggler() %>
-
-<div id="cmr_tabs" class="yui-navset">
-  <ul id='tabs' class="yui-nav">
-    <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
-    <li><a href="#clinical_tab"><em>Clinical</em></a></li>
-    <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
-    <li><a href="#contacts_tab"><em>Contacts</em></a></li>
-    <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
-    <li><a href="#reporting_tab"><em>Reporting</em></a></li>
-    <li><a href="#investigation_tab"><em>Investigation</em></a></li>
-    <li><a href="#notes_tab"><em>Notes</em></a></li>
-    <li><a href="#administrative_tab"><em>Administrative</em></a></li>
-  </ul>
-  
-  <%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
-
-  <% form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-    <%  @event_form = event_form %>
-
-    <%# Allow jurisdictions to be changed in development mode, not production %>
-    <% unless RAILS_ENV == 'production' %>
-      <% jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event) %>
-      <% content_for :jurisdiction_selection do %>
-        <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
-          <% core_element :secondary_entity_id, j, :horiz do -%>
-            <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
-            <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
-          <% end -%>
-        <% end %>
+  <%# Allow jurisdictions to be changed in development mode, not production %>
+  <% unless RAILS_ENV == 'production' %>
+    <% jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event) %>
+    <% content_for :jurisdiction_selection do %>
+      <% event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+        <% core_element :secondary_entity_id, j, :horiz do -%>
+          <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
+          <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+        <% end -%>
       <% end %>
     <% end %>
+  <% end %>
 
-    <div class="yui-content">
-      <div id="demographic_tab">
-        <% event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
-          <%= render :partial => "events/people/form", 
-                     :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event, :rendering_pt => true } %>
-        <% end %>
-        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
-      </div>
-      <div id="clinical_tab">
-        <p>
-          <%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
-        </p>
-      </div>
-      <div id="lab_info_tab">
-        <p>
-          <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
-        </p>
-      </div>
-      <div id="contacts_tab">
-        <p>
-          <%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Contacts" } %>
-        </p>
-      </div>
-      <div id="epi_tab">
-        <p>
-          <%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
-        </p>
-      </div>
-      <div id="reporting_tab">
-        <p>
-          <%= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Reporting" } %>
-        </p>
-      </div>
-      <div id="investigation_tab">
-        <p>
-          <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
-        </p>
-      </div>
-      <div id="notes_tab">
-        <p>
-          <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
-        </p>
-      </div>
-      <div id="administrative_tab">
-        <p>
-          <%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %>
-          <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Administrative" } %>
-        </p>
-      </div>
+  <% tabs = {
+            :demographic_tab => 'Demographic',
+            :clinical_tab => 'Clinical',
+            :lab_info_tab => 'Laboratory',
+            :contacts_tab => 'Contacts',
+            :epi_tab => 'Epidemiolgical',
+            :reporting_tab => 'Reporting',
+            :investigation_tab => 'Investigation',
+            :notes_tab => 'Notes',
+            :administrative_tab => 'Administrative'
+          } %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="demographic_tab">
+      <% event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
+        <%= render :partial => "events/people/form", 
+                   :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event, :rendering_pt => true } %>
+      <% end %>
+      <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
+    </div>
+    <div id="clinical_tab">
+      <p>
+        <%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
+      </p>
+    </div>
+    <div id="lab_info_tab">
+      <p>
+        <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
+      </p>
+    </div>
+    <div id="contacts_tab">
+      <p>
+        <%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Contacts" } %>
+      </p>
+    </div>
+    <div id="epi_tab">
+      <p>
+        <%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
+      </p>
+    </div>
+    <div id="reporting_tab">
+      <p>
+        <%= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Reporting" } %>
+      </p>
+    </div>
+    <div id="investigation_tab">
+      <p>
+        <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
+      </p>
+    </div>
+    <div id="notes_tab">
+      <p>
+        <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+      </p>
+    </div>
+    <div id="administrative_tab">
+      <p>
+        <%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Administrative" } %>
+      </p>
     </div>
   <% end %>
-      
-</div>
+<% end %>

@@ -122,6 +122,34 @@ module ApplicationHelper
     result
   end
 
+  # http://www.pathf.com/blogs/2008/07/pretty-blocks-in-rails-views/
+  def tabbed_content(tabs, focus_tab, &block)
+    raise ArgumentError, "Missing block" unless block_given?
+
+    tabs_string = tabs.map{|key, value| "'#{key}'"}.join(',')
+
+    concat(
+      javascript_tag("var myTabs = new YAHOO.widget.TabView('cmr_tabs'); myTabs.set('activeIndex', #{focus_tab});") +
+
+      content_tag(:span, "[Disable Tabs]", :id => 'disable_tabs', :onClick => "myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); [#{tabs_string}].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;") +
+      content_tag(:span, "[Enable Tabs]", :id => 'enable_tabs', :onClick => "myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); [#{tabs_string},'enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;", :style => 'display: none;') +
+
+      content_tag(:div, :id => "cmr_tabs", :class => "yui-navset") do
+        content_tag(:ul, :id => "tabs", :class => "yui-nav") do
+          line_items = ""
+          tabs.each_pair do |tab_id, display|
+            line_items += content_tag(:li) do
+              link_to(content_tag(:em, display), "##{tab_id.to_s}")
+            end
+          end
+          line_items
+        end +
+        content_tag(:div, :class => "yui-content") do
+          capture(&block)
+        end
+      end, block.binding)
+  end
+
   def format_date(date, using='%B %d, %Y')
     date.strftime(using) if date
   end

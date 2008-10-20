@@ -55,56 +55,45 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   </table>
 <% end %>
 
-<% content_for :watermark do %>
-  contact event
-<% end %>
-
-<script type="text/javascript">
-  var myTabs = new YAHOO.widget.TabView("cmr_tabs");
-</script>
-
-<%= error_messages_for :object => @event %>
-
-<%= tab_toggler(%w(demographic_tab clinical_tab lab_info_tab epi_tab investigation_tab)) %>
-
-<div id="cmr_tabs" class="yui-navset">
-<ul class="yui-nav" id="tabs">
-  <li class="selected"><a href="#demographic_tab"><em>Demographic</em></a></li>
-  <li><a href="#clinical_tab"><em>Clinical</em></a></li>
-  <li><a href="#lab_info_tab"><em>Laboratory</em></a></li>
-  <li><a href="#epi_tab"><em>Epidemiological</em></a></li>
-  <li><a href="#investigation_tab"><em>Investigation</em></a></li>
-</ul>
-
-<%= "<script type='text/javascript'> myTabs.set('activeIndex', #{@tab_index}); </script>" %>
-
 <% form_for(@event, :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-  <div class="yui-content">
-  
-    <div id="demographic_tab">
-      <% patient_entity = @event.active_patient.primary_entity %>
-      <%= render :partial => "events/people/contact_show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
-      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
-    </div>
-  
-    <div id="clinical_tab">
-      <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
-      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
-    </div>
-  
-    <div id="lab_info_tab">
-      <%= render :partial => "events/lab_info_show_tab" %>
-      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
-    </div>
-  
-    <div id="epi_tab">
-      <%= render :partial => "contact_events/epidemiological_show_tab", :locals => { :event_form => event_form } %>
-      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
-    </div>
-  
-    <div id="investigation_tab">
-      <%= render :partial => "events/investigation_show_tab" %>
-    </div>
-  
-  </div>
+  <% tabs = {
+            :demographic_tab => 'Demographic',
+            :clinical_tab => 'Clinical',
+            :lab_info_tab => 'Laboratory',
+            :epi_tab => 'Epidemiolgical',
+            :investigation_tab => 'Investigation',
+            :notes_tab => 'Notes'
+          } %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+      <div id="demographic_tab">
+        <% patient_entity = @event.active_patient.primary_entity %>
+        <%= render :partial => "events/people/contact_show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+        <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
+      </div>
+    
+      <div id="clinical_tab">
+        <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+        <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
+      </div>
+    
+      <div id="lab_info_tab">
+        <%= render :partial => "events/lab_info_show_tab" %>
+        <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
+      </div>
+    
+      <div id="epi_tab">
+        <%= render :partial => "contact_events/epidemiological_show_tab", :locals => { :event_form => event_form } %>
+        <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
+      </div>
+    
+      <div id="investigation_tab">
+        <%= render :partial => "events/investigation_show_tab" %>
+      </div>
+
+      <div id="notes_tab">
+        <%= render :partial => "events/notes_show_tab" %>
+      </div>
+  <% end %>
+
 <% end %>
