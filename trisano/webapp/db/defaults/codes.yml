@@ -1144,3 +1144,36 @@
   sort_order: 100
   code_description: 'Other'
   the_code: 'O'
+
+### Age type codes (CDC)
+
+- code_name: 'age_type'
+  code_description: 'years'
+  the_code: '0'
+
+- code_name: 'age_type'
+  code_description: 'months'
+  the_code: '1'
+
+- code_name: 'age_type'
+  code_description: 'weeks'
+  the_code: '2'
+
+- code_name: 'age_type'
+  code_description: 'days'
+  the_code: '3'
+
+- code_name: 'age_type'
+  code_description: 'census'
+  the_code: '4'
+
+- code_name: 'age_type'
+  code_description: 'unknown'
+  the_code: '9'
+
+
+
+
+
+
+
