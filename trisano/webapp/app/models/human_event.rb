@@ -18,7 +18,7 @@
 class HumanEvent < Event
   before_validation_on_create :set_age_at_onset
   before_validation_on_update :set_age_at_onset
-  
+
   has_one :patient, :class_name => 'Participation', 
     :conditions => ["role_id = ?", Code.interested_party_id], 
     :foreign_key => "event_id"
@@ -361,5 +361,28 @@ class HumanEvent < Event
         participation.update_attribute('primary_entity_id', self.patient.primary_entity.id)
       end
     end
+  end
+
+  private
+
+  def set_age_at_onset
+    birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
+    onset = onset_candidate_dates.compact.sort.first
+    return unless birthdate && onset
+    self.age_info = AgeInfo.create_from_dates(birthdate, onset)
+  end
+
+  def onset_candidate_dates
+    dates = [self.event_onset_date]
+    dates << safe_call_chain(:disease, :date_diagnosed)
+    self.labs.each do |l| 
+      l.lab_results.each do |r| 
+        dates << r.collection_date 
+        dates << r.lab_test_date
+      end
+    end
+    dates << self.created_at.to_date unless self.created_at.nil?
+    dates << self.first_reported_PH_date
+    dates
   end
 end

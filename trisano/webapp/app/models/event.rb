@@ -553,7 +553,7 @@ class Event < ActiveRecord::Base
   def old_attributes
     @old_attributes
   end
-
+   
   def safe_call_chain(*messages)
     receiver = self
     messages.each do |msg|
@@ -564,13 +564,6 @@ class Event < ActiveRecord::Base
   end
 
   private
-
-  def set_age_at_onset
-    birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
-    onset = [self.event_onset_date].compact.sort.first
-    return unless birthdate && onset
-    self.age_info = AgeInfo.create_from_dates(birthdate, onset)
-  end
   
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'

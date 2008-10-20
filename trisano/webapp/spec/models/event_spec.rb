@@ -1107,19 +1107,21 @@ describe MorbidityEvent do
 
   end
 
-  describe 'just created w/ no age info' do
+  describe 'just created' do
     before :each do
       @event_hash = {
         "active_patient" => {
           "entity_type"=>"person", 
           "person" => {
-            "last_name"=>"Biel"
+            "last_name"=>"Biel",
+            "birth_date" => Date.today.years_ago(14)
           }
         }
       }
     end
 
     it 'should not generate an age at onset if the birthdate is unknown' do
+      @event_hash['active_patient']['person']['birth_date'] = nil
       with_event do |event|
         event.age_info.should_not be_nil
         event.age_info.age_type.code_description.should == 'unknown'
@@ -1129,13 +1131,78 @@ describe MorbidityEvent do
         
 
     it 'should generate an age at onset if the birthday is known' do
-      @event_hash['active_patient']['person']['birth_date'] = 14.years.ago
       with_event do |event|
         event.active_patient.primary_entity.person_temp.birth_date.should_not be_nil
         event.event_onset_date.should_not be_nil
         event.age_info.age_at_onset.should == 14
         event.age_info.age_type.code_description.should == 'years'
       end
+    end
+
+    describe 'generating age at onset from earliest encounter date' do
+
+      it 'should use the date the disease was diagnosed' do
+        date_diagnosed = Date.today.years_ago(3)
+        @event_hash['disease'] = {'date_diagnosed' => date_diagnosed }
+        with_event do |event|
+          event.age_info.age_at_onset.should == 11
+          event.age_info.age_type.code_description.should == 'years'
+        end
+      end
+
+      it 'sould use the lab collection date' do
+        @event_hash['new_lab_attributes'] = [{'name' => 'Quest', 'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]
+        with_event do |event|
+          event.labs.count.should == 1
+          event.age_info.age_at_onset.should == 13
+        end
+      end
+
+      it 'should use the earliest lab collection date' do
+        @event_hash['new_lab_attributes'] = [
+          {'name' => 'Quest', 'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)},
+          {'name' => 'Merck', 'lab_result_text' => 'neg', 'collection_date' => Date.today.months_ago(18)}]
+        with_event do |event|
+          event.labs.count.should == 2
+          event.age_info.age_at_onset.should == 12
+        end
+      end
+
+      it 'should use the lab test date' do
+        @event_hash['new_lab_attributes'] = [{'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]
+        with_event do |event|
+          event.labs.count.should == 1
+          event.age_info.age_at_onset.should == 13
+        end
+      end
+
+      it 'should use the earliet lab test date' do
+        @event_hash['new_lab_attributes'] = [
+          {'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)},
+          {'name' => 'Merck', 'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18)}]
+        with_event do |event|
+          event.labs.count.should == 2
+          event.age_info.age_at_onset.should == 12
+        end
+      end
+
+      it 'should use the earliet of all lab dates' do
+        @event_hash['new_lab_attributes'] = [
+          {'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1), 'collection_date' => Date.today.years_ago(1)},
+          {'name' => 'Merck', 'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18), 'collection_date' => Date.today.years_ago(3)}]
+        with_event do |event|
+          event.labs.count.should == 2
+          event.age_info.age_at_onset.should == 11
+        end
+      end
+
+      it 'should use the first reported public health date (if its the earliest)' do
+        @event_hash['first_reported_PH_date'] = Date.today.months_ago(6)
+        with_event do |event|
+          event.age_info.age_at_onset.should == 13
+        end
+      end
+      
     end
 
   end      

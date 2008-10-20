@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'active_support'
+
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
@@ -28,8 +30,10 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save a CMR with just a last name' do
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__person_last_name', @last_name)
+    @browser.type "//input[@id='morbidity_event_active_patient__person_birth_date']", Date.today.years_ago(13).strftime("%m/%d/%Y")
     save_cmr(@browser).should be_true
     @browser.is_text_present(@last_name).should be_true
+    @browser.is_text_present(Date.today.years_ago(13).strftime("%Y-%m-%d"))
   end
   
   it 'should save the contact information' do
