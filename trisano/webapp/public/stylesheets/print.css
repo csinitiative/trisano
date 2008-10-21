@@ -100,12 +100,35 @@
 }
 
 .print-label {
-  font-size: 11px
+  font-size: 11px;
+  font-weight: normal;
 }
 
 .print-value {
   font-size: 11px;
   font-weight: bold;
+}
+
+.print-section {
+  font-size: 12px;
+  font-weight: bold;
+  border: solid 1px;
+  display: block;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  margin-top: 2em;
+  border-top-color: #999;
+  border-bottom-color: #999;
+  border-left-color: #999;
+  border-right-color: #999;
+}
+
+.print-instructions {
+  font-size: 11px;
+  font-weight: normal;
+  font-style: italic;
 }
 
 .brak {

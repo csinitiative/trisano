@@ -63,6 +63,19 @@ module EventsHelper
     result
   end
   
+  def print_investigator_view(view, form=nil, f = nil)
+    return "" if view.nil?
+    result = ""
+    
+    form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
+    
+    form_elements_cache.children(view).each do |element|
+      result << print_investigator_element(form_elements_cache, element, f)
+    end
+    
+    result
+  end
+  
   def new_or_existing?(model)
     model.new_record? ? 'new' : 'existing'
   end
@@ -309,6 +322,25 @@ module EventsHelper
       result << show_investigator_question(form_elements_cache, element, f)
     when "FollowUpElement"
       result << show_investigator_follow_up(form_elements_cache, element, f)
+    end
+    
+    result
+  end
+  
+  # Print mode counterpart to #render_investigator_element and #show_investigator_element 
+  def print_investigator_element(form_elements_cache, element, f)
+    result = ""
+    
+    case element.class.name
+      
+    when "SectionElement"
+      result << print_investigator_section(form_elements_cache, element, f)
+    when "GroupElement"
+      result << print_investigator_group(form_elements_cache, element, f)
+    when "QuestionElement"
+      result << print_investigator_question(form_elements_cache, element, f)
+    when "FollowUpElement"
+      result << print_investigator_follow_up(form_elements_cache, element, f)
     end
     
     result
@@ -662,6 +694,140 @@ module EventsHelper
       return result
     rescue
       return "Could not render core follow up element (#{element.id})"
+    end
+  end
+  
+  # Print mode counterpart to #render_investigator_section
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def  print_investigator_section(form_elements_cache, element, f)
+    begin
+      result = "<div class='print-section'>"
+      result << "<br/>#{element.name}<br/>"
+      result << "<span class='print-instructions'>#{element.description.gsub("\n", '<br/>')}</span>" unless element.description.blank?
+      result << "<hr/>"
+
+      section_children = form_elements_cache.children(element)
+
+      if section_children.size > 0
+        section_children.each do |child|
+          result << print_investigator_element(form_elements_cache, child, f)
+        end
+      end
+
+      result << "</div>"
+
+      return result
+    rescue
+      return "Could not render section element (#{element.id})<br/>"
+    end
+  end
+  
+  # Print mode counterpart to #render_investigator_group
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def print_investigator_group(form_elements_cache, element, f)
+    begin
+      result = ""
+
+      group_children = form_elements_cache.children(element)
+
+      if group_children.size > 0
+        group_children.each do |child|
+          result << print_investigator_element(form_elements_cache, child, f)
+        end
+      end
+
+      return result
+    rescue
+      return "Could not render group element (#{element.id})<br/>"
+    end
+  end
+  
+  # Print mode counterpart to #render_investigator_question
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def print_investigator_question(form_elements_cache, element, f)
+    begin
+      result = ""
+      question = element.question
+
+      result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
+      answer = form_elements_cache.answer(element, @event)
+      result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
+      result << "<hr/>"
+
+      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
+
+      unless follow_up_group.nil?
+        result << print_investigator_follow_up(form_elements_cache, follow_up_group, f)
+      end
+
+      return result
+    rescue
+      return "Could not show question element (#{element.id})<br/>"
+    end
+  end
+  
+  # Print mode counterpart to #render_investigator_follow_up
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def print_investigator_follow_up(form_elements_cache, element, f)
+    begin
+      result = ""
+    
+      unless element.core_path.blank?
+        result << print_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
+        return result
+      end
+    
+      questions = form_elements_cache.children(element)
+    
+      if questions.size > 0
+        questions.each do |child|
+          result << print_investigator_element(form_elements_cache, child, f)
+        end
+      end
+    
+      return result
+    rescue
+      return "Could not render follow up element (#{element.id})<br/>"
+    end
+  end
+  
+  # Print mode counterpart to #render_investigator_core_follow_up
+  # 
+  # Debt? Dupliactes most of the render method. Consider consolidating.
+  def print_investigator_core_follow_up(form_elements_cache, element, f)
+    begin
+      result = ""
+    
+      include_children = false
+    
+      # Debt: Replace with shorter eval technique
+      core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
+      core_value = @event
+      core_path_with_dots.split(".").each do |method|
+        begin
+          core_value = core_value.send(method)
+        rescue
+          break
+        end
+      end
+    
+      if (element.condition == core_value.to_s)
+        questions = form_elements_cache.children(element)
+    
+        if questions.size > 0
+          questions.each do |child|
+            result << print_investigator_element(form_elements_cache, child, f)
+          end
+        end
+      end
+    
+      return result
+    rescue
+      return "Could not render core follow up element (#{element.id})<br/>"
     end
   end
 

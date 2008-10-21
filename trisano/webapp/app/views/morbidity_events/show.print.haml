@@ -28,7 +28,7 @@
       %i= Date.today.strftime("%B %d, %Y")
   .right
     = image_tag("logo.png")
-
+    
 .sub-header
   .left
     = (@event.disease.nil? || @event.disease.disease.nil?) ? "Disease not specified" : @event.disease.disease.disease_name
@@ -37,24 +37,31 @@
 
 #demographics
   = render :partial => 'events/demographic_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Demographics" }
 
 .brak#clinical
   = render :partial => 'events/clinical_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Clinical" }
 
 .brak#laboratory
   = render :partial => 'events/laboratory_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Laboratory" }
 
 .brak#contacts
   = render :partial => 'events/contacts_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Contacts" }
 
 .brak#epidemiological
   = render :partial => 'events/epidemiological_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Epidemiological" }
 
 #reporting
   = render :partial => 'events/reporting_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Reporting" }
 
 #administrative
   = render :partial => 'events/administrative_show_print.html.haml'
+  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Administrative" }
 
 .brak#investigation
   = render :partial => 'events/investigation_show_print.html.haml'
