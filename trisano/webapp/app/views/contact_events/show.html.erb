@@ -56,14 +56,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% form_for(@event, :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-  <% tabs = {
-            :demographic_tab => 'Demographic',
-            :clinical_tab => 'Clinical',
-            :lab_info_tab => 'Laboratory',
-            :epi_tab => 'Epidemiolgical',
-            :investigation_tab => 'Investigation',
-            :notes_tab => 'Notes'
-          } %>
+  <% tabs = []
+     tabs << %w(demographic_tab Demographic)
+     tabs << %w(clinical_tab Clinical)
+     tabs << %w(lab_info_tab Laboratory)
+     tabs << %w(epi_tab Epidemiolgical)
+     tabs << %w(investigation_tab Investigation)
+     tabs << %w(notes_tab Notes)
+  %>
 
   <% tabbed_content(tabs, @tab_index) do %>
       <div id="demographic_tab">

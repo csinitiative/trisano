@@ -118,7 +118,7 @@ module ApplicationHelper
   def tabbed_content(tabs, focus_tab, &block)
     raise ArgumentError, "Missing block" unless block_given?
 
-    tabs_string = tabs.map{|key, value| "'#{key}'"}.join(',')
+    tabs_string = tabs.map{|tab| "'#{tab.first}'"}.join(',')
 
     concat(
       javascript_tag("var myTabs = new YAHOO.widget.TabView('cmr_tabs'); myTabs.set('activeIndex', #{focus_tab});") +
@@ -129,9 +129,9 @@ module ApplicationHelper
       content_tag(:div, :id => "cmr_tabs", :class => "yui-navset") do
         content_tag(:ul, :id => "tabs", :class => "yui-nav") do
           line_items = ""
-          tabs.each_pair do |tab_id, display|
+          tabs.each do |tab|
             line_items += content_tag(:li) do
-              link_to(content_tag(:em, display), "##{tab_id.to_s}")
+              link_to(content_tag(:em, tab.last), "##{tab.first}")
             end
           end
           line_items
