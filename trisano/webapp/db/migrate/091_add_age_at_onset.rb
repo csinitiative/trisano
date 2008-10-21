@@ -27,6 +27,20 @@ class AddAgeAtOnset < ActiveRecord::Migration
     #age type
     add_column :events, :age_type_id, :integer
     add_foreign_key( :events, :age_type_id, :external_codes)
+    
+    if RAILS_ENV == 'production'
+      transaction do
+        say "Loading age types"
+        [{:code_name => "age_type", :the_code => "0", :code_description => "years"},
+         {:code_name => "age_type", :the_code => "1", :code_description => "months"},
+         {:code_name => "age_type", :the_code => "2", :code_description => "weeks"),
+         {:code_name => "age_type", :the_code => "3", :code_description => "days"},
+         {:code_name => "age_type", :the_code => "4", :code_description => "census"},
+         {:code_name => "age_type", :the_code => "9", :code_description => "unknown"}
+        ].each {|hash| ExternalCode.create(hash)}
+      end
+    end
+
   end
 
   def self.down
