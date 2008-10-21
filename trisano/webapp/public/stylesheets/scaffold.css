@@ -38,6 +38,7 @@ pre {
 #errorExplanation ul li {
   font-size: 12px;
   list-style: square;
+  margin-left: 20px;
 }
 
 fieldset.form

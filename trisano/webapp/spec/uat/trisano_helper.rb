@@ -150,7 +150,7 @@ module TrisanoHelper
   def click_nav_new_cmr(browser)
     browser.click 'link=NEW CMR'
     browser.wait_for_page_to_load($load_time)
-    return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
+    return (browser.is_text_present("New Morbidity Event") and
         browser.is_text_present("New CMR") and
         browser.is_element_present("link=Back to list") and
         browser.is_element_present("disable_tabs"))
@@ -159,7 +159,7 @@ module TrisanoHelper
   def click_nav_cmrs(browser)
     browser.click 'link=CMRS'
     browser.wait_for_page_to_load($load_time)
-    return (browser.is_text_present("CONFIDENTIAL MORBIDITY REPORT") and
+    return (browser.is_text_present("List Morbidity Events") and
         browser.is_text_present("Existing Reports") and
         browser.is_element_present("link=New Morbidity Report") and
         browser.is_element_present("link=Export To CSV")) 
