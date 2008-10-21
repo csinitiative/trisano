@@ -36,18 +36,18 @@
       %tr
         %td.forminformation
           .formname
-            = h form.name
+            = link_to form.name, form
             %br
           .description
             = h form.description
           .tools
-            = link_to 'Builder', builder_path(form)
-            |
             = link_to 'Show', form
             |
             = link_to 'Edit', edit_form_path(form)
             |
-            = button_to 'Copy', copy_form_path(form), :id => "copy_form_#{form.id}"
+            = link_to 'Form Builder', builder_path(form)
+            |
+            = link_to 'Copy', copy_form_path(form), :method => :post
         %td
           %ul
             - form.diseases.each do |disease|
