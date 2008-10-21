@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 
 # $dont_kill_browser = true
@@ -98,6 +99,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "contact_event_active_patient__address_street_number", "333"
     @browser.type "contact_event_active_patient__address_street_name", "33rd Street"
     @browser.select "contact_event_active_patient__person_disposition_id", "label=Infected, brought to treatment"
+    @browser.type "contact_event_active_patient__person_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a lab result"
     @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"
@@ -106,6 +108,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Oliver').should be_true
     @browser.is_text_present('333').should be_true
     @browser.is_text_present('33rd Street').should be_true
+    @browser.is_text_present('8 months').should be_true
     @browser.is_text_present('Abbott Labs').should be_true
     @browser.is_text_present('Positive').should be_true
     @browser.is_text_present('Infected, brought to treatment').should be_true

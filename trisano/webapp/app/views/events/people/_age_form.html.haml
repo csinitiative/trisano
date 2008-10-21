@@ -28,3 +28,6 @@
     -core_element :approximate_age_no_birthday, p, :horiz do
       =p.label(:approximate_age_no_birthday, "Age")
       =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event, @can_investigate)
+    -core_element :age_at_onset, p, :horiz do
+      =p.label :age_at_onset
+      =@event.age_info

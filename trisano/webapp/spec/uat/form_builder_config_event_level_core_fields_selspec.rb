@@ -1,20 +1,38 @@
+# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+#
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU Affero General Public License as published by the 
+# Free Software Foundation, either version 3 of the License, 
+# or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License 
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Add disease-specific questions around any event-level field' do
 
   [{:name => 'Results reported to clinician date', :tab_name => REPORTING},
-    {:name => 'Date first reported to public health', :tab_name => REPORTING},
-    {:name => 'LHD case status', :tab_name => ADMIN},
-    {:name => 'UDOH case status', :tab_name => ADMIN},
-    {:name => 'Outbreak associated', :tab_name => ADMIN},
-    {:name => 'Outbreak', :tab_name => ADMIN},
-    {:name => 'Jurisdiction responsible for investigation', :tab_name  => ADMIN},
-    {:name => 'Event status', :tab_name  => ADMIN},
-    {:name => 'Date investigation started', :tab_name  => ADMIN},
-    {:name => 'Date investigation completed', :tab_name  => ADMIN},
-    {:name => 'Event name', :tab_name  => ADMIN},
-    {:name => 'Date review completed by UDOH', :tab_name  => ADMIN},
-    {:name => 'Imported from', :tab_name => EPI}
+   {:name => 'Date first reported to public health', :tab_name => REPORTING},
+   {:name => 'LHD case status', :tab_name => ADMIN},
+   {:name => 'UDOH case status', :tab_name => ADMIN},
+   {:name => 'Outbreak associated', :tab_name => ADMIN},
+   {:name => 'Outbreak', :tab_name => ADMIN},
+   {:name => 'Jurisdiction responsible for investigation', :tab_name  => ADMIN},
+   {:name => 'Event status', :tab_name  => ADMIN},
+   {:name => 'Date investigation started', :tab_name  => ADMIN},
+   {:name => 'Date investigation completed', :tab_name  => ADMIN},
+   {:name => 'Event name', :tab_name  => ADMIN},
+   {:name => 'Date review completed by UDOH', :tab_name  => ADMIN},
+   {:name => 'Imported from', :tab_name => EPI},
+   {:name => 'Age at onset', :tab_name => DEMOGRAPHICS}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do

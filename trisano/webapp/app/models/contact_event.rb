@@ -73,6 +73,7 @@ class ContactEvent < HumanEvent
       "contact_event[active_patient][active_primary_entity][address][postal_code]" => {:type => :single_line_text, :name => "Contact zip code", :can_follow_up => true },
       "contact_event[active_patient][active_primary_entity][person][birth_date]" => {:type => :date, :name => "Contact date of birth", :can_follow_up => false },
       "contact_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => {:type => :single_line_text, :name => "Contact age", :can_follow_up => true },
+      "contact_event[active_patient][active_primary_entity][person][age_at_onset]" => {:type => :single_line_text, :name => "Age at onset", :can_follow_up => true },
       "contact_event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Contact date of death", :can_follow_up => false },
       "contact_event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Contact birth gender", :can_follow_up => true },
       "contact_event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Contact ethnicity", :can_follow_up => true },

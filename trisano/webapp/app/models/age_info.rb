@@ -46,4 +46,15 @@ class AgeInfo
       @age_type_id = @age_type.id
     end
   end
+
+  def to_s    
+    if age_at_onset.nil?
+      return "N/A" unless age_type
+      ""
+    else
+      description = " #{age_type.code_description}" if age_type
+      age_at_onset.to_s + description
+    end
+  end
+      
 end

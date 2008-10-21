@@ -59,6 +59,7 @@ class MorbidityEvent < HumanEvent
       "morbidity_event[active_patient][active_primary_entity][address][postal_code]" => {:type => :single_line_text, :name => "Patient zip code", :can_follow_up => true },
       "morbidity_event[active_patient][active_primary_entity][person][birth_date]" => {:type => :date, :name => "Patient date of birth", :can_follow_up => false },
       "morbidity_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]" => {:type => :single_line_text, :name => "Patient age", :can_follow_up => true },
+      "morbidity_event[active_patient][active_primary_entity][person][age_at_onset]" => {:type => :single_line_text, :name => "Age at onset", :can_follow_up => true },
       "morbidity_event[active_patient][active_primary_entity][person][date_of_death]" => {:type => :date, :name => "Patient date of death", :can_follow_up => false },
       "morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]" => {:type => :single_line_text, :name => "Patient birth gender", :can_follow_up => true },
       "morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]" => {:type => :single_line_text, :name => "Patient ethnicity", :can_follow_up => true },

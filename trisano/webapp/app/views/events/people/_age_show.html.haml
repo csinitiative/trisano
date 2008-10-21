@@ -26,4 +26,6 @@
     -core_element_show :approximate_age_no_birthday, person_form, :horiz do
       =person_form.label(:approximage_age)
       =person.approximate_age_no_birthday
-
+  -core_element_show :age_at_onset, person_form, :horiz do
+    =person_form.label :age_at_onset
+    =@event.age_info
