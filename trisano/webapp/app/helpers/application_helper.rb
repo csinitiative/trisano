@@ -160,4 +160,17 @@ module ApplicationHelper
     end
   end 
 
+  def save_buttons(event)
+    event_type = event.class.to_s.underscore
+    if event.new_record?
+      form_id = "new_#{event_type}"
+    else
+      form_id = "edit_#{event_type}_#{event.id}"
+    end
+
+    # The display: inline style is to get IE to render the two buttons side by side.
+    out =  button_to_function("Save & Continue", "post_and_return('#{form_id}')", :id => "save_and_continue_btn")
+    out += button_to_function("Save & Exit", "post_and_exit('#{form_id}')", :id => "save_and_exit_btn")
+  end
+
 end

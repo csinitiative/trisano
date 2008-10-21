@@ -43,7 +43,7 @@
                 - fields_for(prefix, note, :builder => ExtendedFormBuilder) do |note_fields|
                   %span{:class => 'existing-note-header-element'}
                     = note_fields.check_box :struckthrough, :onclick => "toggle_strike_through('note_#{note.id}')"
-                    %span strike through
+                    strike through
 
               - note_body = simple_format(note.note)
               - if note.struckthrough?

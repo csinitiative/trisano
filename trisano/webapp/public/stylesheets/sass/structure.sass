@@ -28,7 +28,7 @@ body, p, ol, ul
   :background url(../images/repeat.gif)
   :background-repeat repeat-x
   :z-index 800
-    
+
 #title_area
   /:position relative
   :position fixed
@@ -72,7 +72,11 @@ table
   :border-collapse collapse
   :border-spacing 0
   :width 100%
-  
+
+/ To keep IE 7 from putting a margin around a form
+form
+  :margin 0px
+
 .listingforms
   th
     :font 

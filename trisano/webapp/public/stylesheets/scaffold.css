@@ -72,11 +72,6 @@ fieldset.radio label
   font-weight: normal;
 }
 
-input
-{
-#  display: block;
-}
-
 input.submit
 {
   clear: both;

@@ -149,7 +149,7 @@ module EventsHelper
       if allowed
         controls += form_tag(state_cmr_path(event))
         Event.get_action_phrases(Event.get_transition_states("ASGD-LHD")).each do | action |
-          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onchange => "this.form.submit()") + action.phrase
+          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
       end
@@ -168,7 +168,7 @@ module EventsHelper
       if allowed
         controls += form_tag(state_cmr_path(event))
         Event.get_action_phrases(Event.get_transition_states("ASGD-INV")).each do | action |
-          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onchange => "this.form.submit()") + action.phrase
+          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
       end
@@ -185,7 +185,7 @@ module EventsHelper
         action = Event.get_action_phrases(Event.get_transition_states("IC")).first
         controls += form_tag(state_cmr_path(event))
         Event.get_action_phrases(Event.get_transition_states("IC")).each do | action |
-          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onchange => "this.form.submit()") + action.phrase
+          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
       end
@@ -193,7 +193,7 @@ module EventsHelper
       if allowed
         controls += form_tag(state_cmr_path(event))
         Event.get_action_phrases(Event.get_transition_states("APP-LHD")).each do | action |
-          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onchange => "this.form.submit()") + action.phrase
+          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
       end
@@ -242,7 +242,7 @@ module EventsHelper
   end
 
   def new_cmr_button(text)
-    button_to(text, {:action => "new"}, { :method => :get }) if User.current_user.is_entitled_to?(:create_event)
+    button_to_function(text, "location.href = '#{new_cmr_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
 
   private

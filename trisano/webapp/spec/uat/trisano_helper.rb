@@ -206,7 +206,7 @@ module TrisanoHelper
   def save_and_continue(browser)
     browser.click "save_and_continue_btn"
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("successfully updated."))
+    return(browser.is_text_present("successfully"))
   end
   
   def add_contact(browser, contact_attributes, index = 1)

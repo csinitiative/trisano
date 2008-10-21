@@ -66,6 +66,10 @@ table {
   border-spacing: 0;
   width: 100%; }
 
+
+form {
+  margin: 0px; }
+
 .listingforms th {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
