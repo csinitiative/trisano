@@ -28,8 +28,9 @@ module TrisanoHelper
   CONTACTS = "Contacts"
   EPI = "Epidemiological"
   REPORTING = "Reporting"
-  ADMIN = "Administrative"
   INVESTIGATION = "Investigation"
+  NOTES = "Notes"
+  ADMIN = "Administrative"
   
   # Tabs for place events
   PLACE = "Place"
@@ -56,6 +57,7 @@ module TrisanoHelper
     CONTACTS => "contacts_tab",
     EPI => "epi_tab",
     REPORTING => "reporting_tab",
+    NOTES => 'notes_tab',
     ADMIN => "administrative_tab",
     PLACE => "place_tab"
   }
@@ -122,10 +124,12 @@ module TrisanoHelper
       browser.click('//li[5]/a/em')
     when REPORTING
       browser.click('//li[6]/a/em')
-    when ADMIN
-      browser.click('//li[7]/a/em')
     when INVESTIGATION
+      browser.click('//li[7]/a/em')
+    when NOTES
       browser.click('//li[8]/a/em')
+    when ADMIN
+      browser.click('//li[9]/a/em')
     when PLACE
       browser.click('//li[1]/a/em')
     else
@@ -193,10 +197,16 @@ module TrisanoHelper
   end
   
   def save_cmr(browser)
-    browser.click "//input[@value='Save & Exit']"
+    browser.click "save_and_exit_btn"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("CMR was successfully created.") or
         browser.is_text_present("CMR was successfully updated."))
+  end
+
+  def save_and_continue(browser)
+    browser.click "save_and_continue_btn"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("successfully updated."))
   end
   
   def add_contact(browser, contact_attributes, index = 1)
@@ -209,7 +219,7 @@ module TrisanoHelper
   end
   
   def save_contact_event(browser)
-    browser.click "//input[@value='Save & Exit']"
+    browser.click "save_and_exit_btn"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Contact event was successfully created.") or
         browser.is_text_present("Contact event was successfully updated."))
@@ -223,7 +233,7 @@ module TrisanoHelper
   end
 
   def save_place_event(browser)
-    browser.click "//input[@value='Save & Exit']"
+    browser.click "save_and_exit_btn"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Place event was successfully created.") or
         browser.is_text_present("Place event was successfully updated."))

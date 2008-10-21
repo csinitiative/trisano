@@ -27,8 +27,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% content_for :tools_two do %>
   <span style='margin-left: 1em'>
-    <%= button_to_function("Save & Continue", "post_and_return('new_morbidity_event')") %>
-    <%= button_to_function("Save & Exit", "post_and_exit('new_morbidity_event')") %>
+    <%= button_to_function("Save & Continue", "post_and_return('new_morbidity_event')", :id => "save_and_continue_btn") %>
+    <%= button_to_function("Save & Exit", "post_and_exit('new_morbidity_event')", :id => "save_and_exit_btn") %>
   </span>
 <% end %>
 
