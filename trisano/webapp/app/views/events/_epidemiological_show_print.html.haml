@@ -16,6 +16,8 @@
 %span.section-header
   Epidemiological Information
 
+%span.subsection-header
+  Contact Oriented
 - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
     - core_element_print :food_handler_id, risk_factor_form, :horiz do
@@ -34,10 +36,18 @@
       %span.print-label Day care association:
       %span.print-value= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-    - core_element_print :occupation, risk_factor_form, :horiz do
+    - core_element_print :occupation, risk_factor_form, :vert do
       %span.print-label Occupation:
       %span.print-value= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
+%span.subsection-header
+  Place Exposures
+
+=render :partial => 'events/place_exposures_print.html.haml', :locals => {:event_form => event_form}
+
+%span.subsection-header
+  Other
+- event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
     - core_element_print :risk_factors, risk_factor_form, :horiz do
       %span.print-label Risk factors:

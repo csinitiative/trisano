@@ -1,6 +1,22 @@
+# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+#
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU Affero General Public License as published by the 
+# Free Software Foundation, either version 3 of the License, 
+# or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License 
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
 require File.dirname(__FILE__) + '/spec_helper'
 
-#uncomment to kill browser
 $dont_kill_browser = true
 $sleep_time = 5
 
@@ -20,17 +36,16 @@ describe 'Print CMR page' do
     @browser.type('morbidity_event_active_patient__person_birth_date', '4/20/1965')
     @browser.type('morbidity_event_active_patient__person_approximate_age_no_birthday', '43')
     @browser.click('link=New Telephone / Email')
-    @browser.select('morbidity_event_new_telephone_attributes__entity_location_type_id', 'label=Work')
-    @browser.type('morbidity_event_new_telephone_attributes__area_code', '555')
-    @browser.type('morbidity_event_new_telephone_attributes__phone_number', '5551345')
+    @browser.select('morbidity_event_active_patient__new_telephone_attributes__entity_location_type_id', 'label=Work')
+    @browser.type('morbidity_event_active_patient__new_telephone_attributes__area_code', '555')
+    @browser.type('morbidity_event_active_patient__new_telephone_attributes__phone_number', '5551345')
     @browser.select('morbidity_event_active_patient__person_birth_gender_id', 'label=Male')
     @browser.select('morbidity_event_active_patient__person_ethnicity_id', 'label=Not Hispanic or Latino')
-    @browser.add_selection('morbidity_event_active_patient__race_ids', 'label=White')
+    @browser.add_selection('morbidity_event_active_patient_race_ids', 'label=White')
     @browser.select('morbidity_event_active_patient__person_primary_language_id', 'label=Hmong')
     save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
+    edit_cmr(@browser).should be_true
     @browser.click "//ul[@id='tabs']/li[2]/a/em"
     @browser.select "morbidity_event_disease_disease_id", "label=Botulism, foodborne"
     @browser.type "morbidity_event_disease_disease_onset_date", "12/12/2002"
@@ -64,10 +79,9 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_new_clinician_attributes__area_code", "555"
     @browser.type "morbidity_event_new_clinician_attributes__phone_number", "5551337"
     @browser.type "morbidity_event_new_clinician_attributes__extension", "555"
-    @browser.type "morbidity_event_new_clinician_attributes__email_address", "asd@asd.asd"
+    save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
+    edit_cmr(@browser).should be_true
     @browser.click "//ul[@id='tabs']/li[3]/a/em"
     @browser.click "link=Add a lab result"
     type_field_by_order(@browser, "model_auto_completer_tf", 0, "Venture Complex")
@@ -78,26 +92,21 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_new_lab_attributes__collection_date", "12/12/2002"
     @browser.type "morbidity_event_new_lab_attributes__lab_test_date", "12/13/2005"
     @browser.select "morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=Unknown"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+    save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
-    @browser.click "//ul[@id='tabs']/li[4]/a/em"
+    edit_cmr(@browser).should be_true
+    click_core_tab(@browser, "Contacts")
     @browser.click "link=Add a contact"
-    @browser.type "morbidity_event_new_contact_attributes__last_name", "Nakamura"
-    @browser.type "morbidity_event_new_contact_attributes__first_name", "Hiro"
+    sleep(1)
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Lina"
+    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Inverse"
     @browser.click "link=Add a contact"
-    @browser.type "//div[@id='contacts']/div[4]/span[1]/input", "Lina"
-    @browser.type "//div[@id='contacts']/div[4]/span[2]/input", "Inverse"
-    @browser.click "link=Add a contact"
-    @browser.type "//div[@id='contacts']/div[6]/span[1]/input", "Steve"
-    @browser.type "//div[@id='contacts']/div[6]/span[2]/input", "Jobbs"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+    sleep(1)
+     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Steve"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Jobbs"
+    save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
+    edit_cmr(@browser).should be_true
     @browser.click "//ul[@id='tabs']/li[5]/a/em"
     @browser.select "morbidity_event_active_patient__participations_risk_factor_food_handler_id", "label=No"
     @browser.select "morbidity_event_active_patient__participations_risk_factor_healthcare_worker_id", "label=Yes"
@@ -107,11 +116,9 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_active_patient__participations_risk_factor_risk_factors", "Nope"
     @browser.type "morbidity_event_active_patient__participations_risk_factor_risk_factors_notes", "Whatever, Man"
     @browser.select "morbidity_event_imported_from_id", "label=Unknown"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+    save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
+    edit_cmr(@browser).should be_true
     @browser.click "//ul[@id='tabs']/li[6]/a/em"
     type_field_by_order(@browser, "model_auto_completer_tf", 0, "why")
     @browser.type "morbidity_event_active_reporting_agency_first_name", "what"
@@ -122,11 +129,9 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_active_reporting_agency_phone_number", "5550150"
     @browser.type "morbidity_event_results_reported_to_clinician_date", "12/12/2004"
     @browser.type "morbidity_event_first_reported_PH_date", "12/12/2005"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+    save_cmr(@browser).should be_true
 
-    @browser.click "edit_cmr_link"
-    @browser.wait_for_page_to_load $load_time
+    edit_cmr(@browser).should be_true
     @browser.click "//ul[@id='tabs']/li[7]/a/em"
     @browser.select "morbidity_event_lhd_case_status_id", "label=Confirmed"
     @browser.select "morbidity_event_udoh_case_status_id", "label=Not a Case"
@@ -138,8 +143,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
     @browser.type "morbidity_event_review_completed_UDOH_date", "12/5/1963"
-    @browser.click "morbidity_event_submit"
-    @browser.wait_for_page_to_load $load_time
+    save_cmr(@browser).should be_true
     @browser.click "link=Print"
     @browser.wait_for_pop_up '_blank', $load_time
     @browser.select_window '_blank'
@@ -150,7 +154,8 @@ describe 'Print CMR page' do
     @browser.is_text_present('Lebowski').should be_true
     @browser.is_text_present('Jeffrey').should be_true
     @browser.is_text_present('`The Dude`').should be_true
-    @browser.is_text_present('123 Fake Street').should be_true
+    @browser.is_text_present('123').should be_true
+    @browser.is_text_present('Fake Street').should be_true
     @browser.is_text_present('Venice').should be_true
     @browser.is_text_present('California').should be_true
     @browser.is_text_present('Out-of-state').should be_true
@@ -183,17 +188,16 @@ describe 'Print CMR page' do
     @browser.is_text_present('Zombies').should be_true
     @browser.is_text_present('Orpheus Says Oops').should be_true
     @browser.is_text_present('2005-12-13').should be_true
-    @browser.is_text_present('Nakamura').should be_true
-    @browser.is_text_present('Hiro').should be_true
     @browser.is_text_present('Lina').should be_true
     @browser.is_text_present('Inverse').should be_true
     @browser.is_text_present('Steve').should be_true
     @browser.is_text_present('Jobbs').should be_true
     @browser.is_text_present('Unemployed').should be_true
     @browser.is_text_present('Whatever, Man').should be_true
-    @browser.is_text_present('what how').should be_true
+    @browser.is_text_present('what').should be_true
+    @browser.is_text_present('how').should be_true
     @browser.is_text_present('why').should be_true
-    @browser.is_text_present('(555) 555-0150 Ext. 555').should be_true
+    @browser.is_text_present('5550150').should be_true
     @browser.is_text_present('2004-12-12').should be_true
     @browser.is_text_present('2005-12-12').should be_true
     @browser.is_text_present('2005').should be_true
@@ -203,6 +207,5 @@ describe 'Print CMR page' do
     @browser.is_text_present('2003-12-03').should be_true
     @browser.is_text_present('1963-12-05').should be_true
     @browser.is_text_present('2007-12-07').should be_true
-    @browser.is_text_present('Central Utah Public Health Department').should be_true
   end
 end

@@ -44,41 +44,41 @@
 
 %span.subsection-header
   Case / Outbreak
-- core_element_show :lhd_case_status_id, event_form, :horiz do
+- core_element_print :lhd_case_status_id, event_form, :horiz do
   %span.print-label LHD case status:
   %span.print-value= l(@event.lhd_case_status) || '&nbsp;'
-- core_element_show :udoh_case_status_id, event_form, :vert do
+- core_element_print :udoh_case_status_id, event_form, :vert do
   %span.print-label UDOH case status:
   %span.print-value= l(@event.udoh_case_status) || '&nbsp;'
-- core_element_show :outbreak_associated_id, event_form, :horiz do
+- core_element_print :outbreak_associated_id, event_form, :horiz do
   %span.print-label Outbreak associated:
   %span.print-value= l(@event.outbreak_associated) || '&nbsp;'
-- core_element_show :outbreak_name, event_form, :vert do
+- core_element_print :outbreak_name, event_form, :vert do
   %span.print-label Outbreak name:
   %span.print-value= h(@event.outbreak_name) || '&nbsp;'
 
 %span.subsection-header
   Investigation
 - event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j|
-  - core_element_show :secondary_entity_id, j, :horiz do
+  - core_element_print :secondary_entity_id, j, :horiz do
     %span.print-label Jurisdiction responsible for investigation:
     %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
-  - core_element_show :event_status, event_form, :vert do
+  - core_element_print :event_status, event_form, :vert do
     %span.print-label Event status:
     %span.print-value= Event.get_state_description(@event.event_status) || '&nbsp;'
-  - core_element_show :investigation_started_date, event_form, :horiz do
+  - core_element_print :investigation_started_date, event_form, :horiz do
     %span.print-label Date investigation started:
     %span.print-value= h(@event.investigation_started_date) || '&nbsp;'
-  - core_element_show :investigation_completed_LHD_date, event_form, :vert do
+  - core_element_print :investigation_completed_LHD_date, event_form, :vert do
     %span.print-label Date invesitgation completed:
     %span.print-value= h(@event.investigation_completed_LHD_date) || '&nbsp;'
 
 %span.subsection-header
   Auditing
-- core_element_show :event_name, event_form, :horiz do
+- core_element_print :event_name, event_form, :horiz do
   %span.print-label Event name:
   %span.print-value= h(@event.event_name) || '&nbsp;'
-- core_element_show :review_completed_UDOH_date, event_form, :vert do
+- core_element_print :review_completed_UDOH_date, event_form, :vert do
   %span.print-label Date review completed by UDOH:
   %span.print-value= h(@event.review_completed_UDOH_date) || '&nbsp;'
 

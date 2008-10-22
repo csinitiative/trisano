@@ -28,7 +28,7 @@
 - event_form.fields_for(:active_reporting_agency, fb_part, :builder => ExtendedFormBuilder) do |agency_form|
   - agency_form.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |entity_form|
     - entity_form.fields_for(:place, agency_data, :builder => ExtendedFormBuilder) do |place_form|
-      - core_element_show :name, place_form, :horiz do
+      - core_element_print :name, place_form, :horiz do
         %span.print-label Agency name:
         %span.print-value= agency_data.name
 
@@ -52,32 +52,32 @@
   - participant_fields.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |agency_fields|
     - agency_fields.fields_for(:person, reporter_name, :builder => ExtendedFormBuilder) do |reporter_fields|
 
-      - core_element_show :first_name, reporter_fields, :horiz do
+      - core_element_print :first_name, reporter_fields, :horiz do
         %span.print-label First name:
         %span.print-value= reporter_name.first_name
-      - core_element_show :last_name, reporter_fields, :vert do
+      - core_element_print :last_name, reporter_fields, :vert do
         %span.print-label Last name:
         %span.print-value= reporter_name.last_name
 
     - agency_fields.fields_for(:telephone_entities_location, reporter_ent_loc, :builder => ExtendedFormBuilder) do |el|
-      - core_element_show :entity_location_type_id, el, :horiz do
+      - core_element_print :entity_location_type_id, el, :horiz do
         %span.print-label Phone type:
         %span.print-value= l reporter_ent_loc.entity_location_type
 
     - agency_fields.fields_for(:telephone, reporter_phone, :builder => ExtendedFormBuilder) do |phone_fields|
-      - core_element_show :area_code, phone_fields, :horiz do
+      - core_element_print :area_code, phone_fields, :horiz do
         %span.print-label Area code:
         %span.print-value= reporter_phone.area_code
-      - core_element_show :phone_number, phone_fields, :horiz do
+      - core_element_print :phone_number, phone_fields, :horiz do
         %span.print-label Phone number:
         %span.print-value= reporter_phone.phone_number
-      - core_element_show :extension, phone_fields, :horiz do
+      - core_element_print :extension, phone_fields, :horiz do
         %span.print-label Extension:
         %span.print-value= reporter_phone.extension
 
-    - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
+    - core_element_print :results_reported_to_clinician_date, event_form, :horiz do
       %span.print-label Results reported to clinician date:
       %span.print-value= h(@event.results_reported_to_clinician_date) || '&nbsp;'
-    - core_element_show :first_reported_PH_date, event_form, :vert do
+    - core_element_print :first_reported_PH_date, event_form, :vert do
       %span.print-label Date first reported to public health:
       %span.print-value= h(@event.first_reported_PH_date)

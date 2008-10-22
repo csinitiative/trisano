@@ -1,0 +1,29 @@
+
+- unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.place_lead_in.blank?
+  %span.print-label= h @event.disease.disease.place_lead_in
+  %br
+  %br
+
+- core_element_print :places, event_form, :vert do
+
+  -if @event.place_exposures.empty?
+    %b No place exposures have been recorded for this event
+  -else
+    .three-valued-row
+      .short
+        %span.print-label Hospitalized health facility
+      .short
+        %span.print-label Admission date
+      .short
+        %span.print-label Discharge date
+      -@event.place_exposures.each do |pe|
+        -place = pe.secondary_entity.place_temp
+        .three-valued-row
+          .short
+            %span.print-value=h(place.name)
+          .short
+            %span.print-value=place.place_description
+          .short
+            %span.print-value=format_date(place.date_of_exposure)
+  %br
+          
