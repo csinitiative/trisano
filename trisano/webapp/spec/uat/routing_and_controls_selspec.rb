@@ -104,6 +104,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present("Under Investigation").should be_true
+    @browser.is_element_present("//table[@class='listingforms']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
   end
 
   it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do

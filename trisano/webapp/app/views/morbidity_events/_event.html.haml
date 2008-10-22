@@ -11,7 +11,7 @@
       - with_show = with_show.nil? ? true : with_show
       = basic_morbidity_event_controls(event, with_show) + extra_tools
   %td
-    = event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
+    %b= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
   %td
     %b
       = event.primary_jurisdiction.short_name
@@ -23,11 +23,16 @@
         = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
         %br
   %td
-    = Event.get_state_description(event.event_status)
+    %b= Event.get_state_description(event.event_status)
     - unless event.event_queue_id.nil?
-      %br
-      %small
-        Queue:&nbsp;
-        = event.event_queue.queue_name
+      %div{:id => 'queue_info'}
+        %small
+          Queue:&nbsp;
+          %b= event.event_queue.queue_name
+    - unless event.investigator_id.nil?
+      %div{:id => 'investigator_info'}
+        %small
+          Investigator:&nbsp;
+          %b= event.investigator.best_name
     .tools
       = state_controls(event)

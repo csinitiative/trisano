@@ -239,9 +239,12 @@ class MorbidityEventsController < EventsController
     when "RJCTD-LHD"
       @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
     when "UI"
+      @event.investigator = User.current_user
       @event.investigation_started_date = Date.today
     when "IC"
       @event.investigation_completed_LHD_date = Date.today
+    when "RO-MGR"
+      @event.investigation_completed_LHD_date = nil
     when "CLOSED"
       @event.review_completed_UDOH_date = Date.today
     end
