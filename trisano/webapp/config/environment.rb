@@ -82,8 +82,6 @@ end
 PG_LOCALE = ENV['PG_LOCALE'] ||= 'en_US' 
 
 if RAILS_ENV == "development" || RAILS_ENV == "test" || ENV['TRISANO_TEST_UID_OVERRIDE'] == "true"
-  puts "TRISANO_TEST_UID_OVERRIDE: #{ENV['TRISANO_TEST_UID_OVERRIDE']}"
-  puts "setting TRISANO_UID to value of $TRISANO_UID: #{ENV['TRISANO_UID']}"
   TRISANO_UID = ENV['TRISANO_UID']
 else
   TRISANO_UID = nil
