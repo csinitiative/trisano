@@ -35,33 +35,36 @@
   .right
     Confidential Case Report
 
-#demographics
-  = render :partial => 'events/demographic_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Demographics" }
+- form_for(@event, :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form|
 
-.brak#clinical
-  = render :partial => 'events/clinical_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Clinical" }
+  #demographics
+    - patient_entity = @event.active_patient.primary_entity
+    = render :partial => 'events/demographic_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Demographics" }
 
-.brak#laboratory
-  = render :partial => 'events/laboratory_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Laboratory" }
+  .brak#clinical
+    = render :partial => 'events/clinical_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Clinical" }
 
-.brak#contacts
-  = render :partial => 'events/contacts_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Contacts" }
+  .brak#laboratory
+    = render :partial => 'events/laboratory_show_print.html.haml'
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Laboratory" }
 
-.brak#epidemiological
-  = render :partial => 'events/epidemiological_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Epidemiological" }
+  .brak#contacts
+    = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form }
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
 
-#reporting
-  = render :partial => 'events/reporting_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Reporting" }
+  .brak#epidemiological
+    = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form }
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }
 
-#administrative
-  = render :partial => 'events/administrative_show_print.html.haml'
-  = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Administrative" }
+  #reporting
+    = render :partial => 'events/reporting_show_print.html.haml'
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Reporting" }
 
-.brak#investigation
-  = render :partial => 'events/investigation_show_print.html.haml'
+  #administrative
+    = render :partial => 'events/administrative_show_print.html.haml'
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :tab => "Administrative" }
+
+  .brak#investigation
+    = render :partial => 'events/investigation_show_print.html.haml'

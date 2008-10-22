@@ -12,59 +12,42 @@
 -# 
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-%span.section-header Epidemiological Information
 
-- factor = @event.active_patient.participations_risk_factor unless @event.active_patient.nil?
+%span.section-header
+  Epidemiological Information
 
-%br
-#service-industry
-  .three-valued-row
-    .left
-      %span.print-label
-        Food handler:
-      %span.print-value
-        = l factor.food_handler unless factor.nil?
-    .double
-      %span.print-label
-        Healthcare worker:
-      %span.print-value
-        = l factor.healthcare_worker unless factor.nil? 
+- event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
+  - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+    - core_element_print :food_handler_id, risk_factor_form, :horiz do
+      %span.print-label Food handler:
+      %span.print-value= l @event.active_patient.participations_risk_factor.food_handler unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-#living
-  .three-valued-row
-    %hr
-    .left
-      %span.print-label
-        Group living:
-      %span.print-value
-        = l factor.group_living unless factor.nil?
-    .double
-      %span.print-label
-        Day care association:
-      %span.print-value
-        = l factor.day_care_association unless factor.nil?
+    - core_element_print :healthcare_worker_id, risk_factor_form, :horiz do
+      %span.print-label Healthcare worker:
+      %span.print-value= l @event.active_patient.participations_risk_factor.healthcare_worker unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-#occupation
-  .three-valued-row
-    %hr
-    .left
-      %span.print-label
-        Occupation:
-      %span.print-value
-        = factor.occupation unless factor.nil?
+    - core_element_print :group_living_id, risk_factor_form, :horiz do
+      %span.print-label Group living:
+      %span.print-value= l @event.active_patient.participations_risk_factor.group_living unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-#risks
-  .three-valued-row
-    %hr
-    .left
-      %span.print-label
-        Risk factors:
-      %span.print-value
-        = factor.risk_factors unless factor.nil?
-    .double
-      %span.print-label
-        Risk factor notes:
-      %span.print-value
-        = factor.risk_factors_notes unless factor.nil?
-  .three-valued-row
-    %hr
+    - core_element_print :day_care_association_id, risk_factor_form, :horiz do
+      %span.print-label Day care association:
+      %span.print-value= l @event.active_patient.participations_risk_factor.day_care_association unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+    - core_element_print :occupation, risk_factor_form, :horiz do
+      %span.print-label Occupation:
+      %span.print-value= @event.active_patient.participations_risk_factor.occupation unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+  - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+    - core_element_print :risk_factors, risk_factor_form, :horiz do
+      %span.print-label Risk factors:
+      %span.print-value= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+    - core_element_print :risk_factors_notes, risk_factor_form, :horiz do
+      %span.print-label Risk factors notes:
+      %span.print-value= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+
+    - core_element_print :imported_from_id, event_form, :horiz do
+      %span.print-label Imported from:
+      %span.print-value= l @event.imported_from
+

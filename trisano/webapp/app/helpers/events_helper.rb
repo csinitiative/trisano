@@ -21,21 +21,29 @@ require 'ostruct'
 module EventsHelper
   
   def core_element(attribute, form_builder, css_class, &block)
-    concat_core_field(:before, attribute, form_builder, block)
+    concat_core_field(:edit, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
     concat("</span>", block.binding)
-    concat_core_field(:after, attribute, form_builder, block)
+    concat_core_field(:edit, :after, attribute, form_builder, block)
   end
 
   def core_element_show(attribute, form_builder, css_class, &block)
-    concat_core_field_show(:before, attribute, form_builder, block)
+    concat_core_field(:show, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
     concat("&nbsp;</span>", block.binding) # The &nbsp; is there to help resolve wrapping issues
-    concat_core_field_show(:after, attribute, form_builder, block)
+    concat_core_field(:show, :after, attribute, form_builder, block)
   end
-    
+  
+  def core_element_print(attribute, form_builder, css_class, &block)
+    concat_core_field(:print, :before, attribute, form_builder, block)
+    concat("<span class='#{css_class}'>", block.binding)
+    yield
+    concat("&nbsp;</span>", block.binding) # The &nbsp; is there to help resolve wrapping issues
+    concat_core_field(:print, :after, attribute, form_builder, block)
+  end
+  
   def render_investigator_view(view, f, form=nil)
     return "" if view.nil?
     result = ""
@@ -260,7 +268,7 @@ module EventsHelper
 
   private
   
-  def concat_core_field(before_or_after, attribute, form_builder, block)
+  def concat_core_field(mode, before_or_after, attribute, form_builder, block)
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
@@ -269,22 +277,16 @@ module EventsHelper
         configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
         configs.each do |config|
           element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
-          concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
-        end
-      end
-    end
-  end
-
-  # Debt? Some duplication of #concat_core_field
-  def concat_core_field_show(before_or_after, attribute, form_builder, block)
-    return if  (@event.nil? || @event.form_references.nil?)
-    # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
-    if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
-      @event.form_references.each do |form_reference|
-        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.object_name}[#{attribute}]")
-        configs.each do |config|
-          element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
-          concat(show_investigator_view(element, form_reference.form, @event_form), block.binding)
+          
+          case mode
+          when :edit
+            concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
+          when :show
+            concat(show_investigator_view(element, form_reference.form, @event_form), block.binding)
+          when :print
+            concat(print_investigator_view(element, form_reference.form, @event_form), block.binding)
+          end
+          
         end
       end
     end
@@ -755,7 +757,6 @@ module EventsHelper
       result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
       answer = form_elements_cache.answer(element, @event)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
-      result << "<hr/>"
 
       follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
 

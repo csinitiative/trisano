@@ -18,7 +18,6 @@
 - ran = nil
 - if @event.labs.empty?
   %b No lab results have been recorded for this event
-  %hr
 - else
   - for lab in @event.labs
     - for lab_result in lab.lab_results
