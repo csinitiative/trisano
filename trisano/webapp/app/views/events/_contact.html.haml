@@ -32,10 +32,10 @@
 
   - fields_for(prefix_with_array, contact_person, :builder => ExtendedFormBuilder) do |contact_fields|
 
-    %span{:class => 'horiz'}
+    %span.horiz
       = contact_fields.label(:last_name)
       = contact_fields.text_field(:last_name, :size => 20)
-    %span{:class => 'horiz'}
+    %span.horiz
       = contact_fields.label(:first_name)
       = contact_fields.text_field(:first_name, :size => 20)
     %span.vert
@@ -65,6 +65,7 @@
       = phone_fields.core_text_field(:extension, {:size => 6})
 
     %span{:class => "horiz", :style => "margin-top: 30px"}
+      = link_to("Edit contact event", edit_contact_event_path(contact_person.id), {:id => "edit-contact-event"}) unless contact_person.id.nil?
       = link_to_function "Remove" , "$(this).up('.contact').remove()", {:id => "remove_contact_link"}
 
     %hr

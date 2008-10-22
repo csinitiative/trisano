@@ -15,5 +15,6 @@
         =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
       %span.horiz
         =pe_form.label('&nbsp;')
+        =link_to("Edit place details", edit_place_event_path(editable_place_exposure.secondary_entity.case_id), {:id => "edit-place-event"}) unless editable_place_exposure.secondary_entity.case_id.nil?
         =link_to_function image_tag('delete.png', :border => 0), "$(this).up('.place_exposure').remove()"
       %hr
