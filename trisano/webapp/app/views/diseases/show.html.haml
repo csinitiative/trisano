@@ -14,28 +14,31 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Disease Admin
+  Disease Detail
 
-- content_for :name do
-  Disease details:  
-  = @disease.disease_name
+/- content_for :name do
+/  Disease details:  
+/  = @disease.disease_name
 
 - content_for :tools do
-  = link_to 'Edit', edit_disease_path(@disease)
-  |
-  = link_to 'Back', diseases_path
+  = link_to '< Back to Diseases', diseases_path
+  %p
 
-%fieldset
-  %legend
-    Disease
+- content_for :tools_two do
+  = button_to("Create new disease", {:action => "new"}, { :method => :get })
 
-  %table
+#rot
+  %table.listingforms
     %tr
-      %td
-        %b Disease name
-      %td
-        = @disease.disease_name
-    %tr
-      %td
-        %b 
-      %td
+      %th.forminformation
+        Disease Information
+      %th
+      %tr
+        %td.forminformation
+          .formname
+            = @disease.disease_name
+            .tools
+              = @disease.active? ? 'Active' :  'Inactive'
+          .tools
+            = link_to 'Edit', edit_disease_path(@disease)
+        %td

@@ -28,6 +28,7 @@ describe "/diseases/show.html.haml" do
   end
 
   it "should render attributes in <p>" do
+    pending
     render "/diseases/show.html.haml"
   end
 end

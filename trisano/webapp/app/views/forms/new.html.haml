@@ -14,13 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Form Builder
+  Create Form
 
-- content_for :name do
-  Create New Form
+/- content_for :name do
+/  Create New Form
 
 - content_for :tools do
-  = link_to 'Back to Forms', forms_path
+  = link_to '< Back to Forms', forms_path
   %p{:style => "color: green"}
     = flash[:notice]
 
