@@ -26,6 +26,7 @@ namespace :trisano do
 
     SELENIUM_GRID_HOME = ENV['SELENIUM_GRID_HOME'] ||= '/opt/selenium-grid-1.0'
     SPEC_RUNNER_COUNT = ENV['SPEC_RUNNER_COUNT'] ||= '2'
+    SPECS_PATTERN = ENV['SPECS_PATTERN'] ||= './spec/uat/*_selspec.rb'
 
    
     desc "start selenium grid"
@@ -49,7 +50,8 @@ namespace :trisano do
       require './lib/selenium_grid/multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
       runner = MultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i)
-      runner.run(Dir['./spec/uat/*_selspec.rb'])
+      puts "runnings following specs: #{SPECS_PATTERN}"
+      runner.run(Dir[SPECS_PATTERN])
       puts "[complete]"
     end
 
