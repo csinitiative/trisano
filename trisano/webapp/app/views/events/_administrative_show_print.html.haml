@@ -13,106 +13,72 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+%span.section-header
+  Administrative Information
 
-%span.section-header Administrative Information
-%br
-#records
-  .three-valued-row
-    .long
-      %span.print-label
-        Record number:
-      %span.print-value
-        = @event.record_number 
-    .long
-      %span.print-label
-        Date record created:
-      %span.print-value
-        = @event.event_onset_date
-#MMWR
-  .three-valued-row
-    %hr
-    .long
-      %span.print-label
-        MMWR year:
-      %span.print-value
-        = @event.MMWR_year 
-    .long
-      %span.print-label
-        MMWR week:
-      %span.print-value
-        = @event.MMWR_week 
-#status
-  .three-valued-row
-    %hr
-    .long
-      %span.print-label
-        LHD case status:
-      %span.print-value
-        = l @event.lhd_case_status 
-    .long
-      %span.print-label
-        UDOH case status:
-      %span.print-value
-        = l @event.udoh_case_status 
+%span{:class => "horiz"}
+  %span.print-label Record number
+  %span.print-value= @event.record_number
 
-#outbreak
-  .three-valued-row
-    %hr
-    .long
-      %span.print-label
-        Outbreak associated:
-      %span.print-value
-        = l @event.outbreak_associated 
-    .long
-      %span.print-label
-        Outbreak name:
-      %span.print-value
-        = @event.outbreak_name 
+%span{:class => "vert"}
+  %span.print-label Date record created
+  %span.print-value= @event.event_onset_date
 
-#jurisdiction
-  .three-valued-row
-    %hr
-    .full
-      %span.print-label
-        Jurisdiction responsible for investigation:
-      %span.print-value
-        = @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
+%span{:class => "horiz"}
+  %span.print-label MMWR year
+  %span.print-value= @event.MMWR_year
 
-#event
-  .three-valued-row
-    %hr
-    .left
-      %span.print-label
-        Event name:
-      %span.print-value
-        = @event.event_name 
-    .double
-      %span.print-label
-        Event status:
-      %span.print-value
-        = Event.get_state_description(@event.event_status)
+%span{:class => "vert"}
+  %span.print-label MMWR week
+  %span.print-value= @event.MMWR_week
 
-#investigation
-  .three-valued-row
-    %hr
-    .long
-      %span.print-label
-        Date investigation started:
-      %span.print-value
-        = @event.investigation_started_date 
-    .long
-      %span.print-label
-        Date invesitgation completed:
-      %span.print-value
-        = @event.investigation_completed_LHD_date
+%span{:class => "vert"}
+  %span.print-label Jurisdiction of Residence
+  - patient_entity = @event.active_patient.primary_entity
+  - if patient_entity
+    - unless patient_entity.address_entities_locations.empty?
+      - address = patient_entity.address_entities_locations.last.location.addresses.last
+      - if address && address.county && address.county.jurisdiction
+        - jurisdiction_name = address.county.jurisdiction.name
+  %span.print-value= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
 
-#review
-  .three-valued-row
-    %hr
-    .full
-      %span.print-label
-        Date review completed by UDOH:
-      %span.print-value
-        = @event.review_completed_UDOH_date 
-  .three-valued-row
-    %hr
+%span.subsection-header
+  Case / Outbreak
+- core_element_show :lhd_case_status_id, event_form, :horiz do
+  %span.print-label LHD case status:
+  %span.print-value= l(@event.lhd_case_status) || '&nbsp;'
+- core_element_show :udoh_case_status_id, event_form, :vert do
+  %span.print-label UDOH case status:
+  %span.print-value= l(@event.udoh_case_status) || '&nbsp;'
+- core_element_show :outbreak_associated_id, event_form, :horiz do
+  %span.print-label Outbreak associated:
+  %span.print-value= l(@event.outbreak_associated) || '&nbsp;'
+- core_element_show :outbreak_name, event_form, :vert do
+  %span.print-label Outbreak name:
+  %span.print-value= h(@event.outbreak_name) || '&nbsp;'
+
+%span.subsection-header
+  Investigation
+- event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j|
+  - core_element_show :secondary_entity_id, j, :horiz do
+    %span.print-label Jurisdiction responsible for investigation:
+    %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
+  - core_element_show :event_status, event_form, :vert do
+    %span.print-label Event status:
+    %span.print-value= Event.get_state_description(@event.event_status) || '&nbsp;'
+  - core_element_show :investigation_started_date, event_form, :horiz do
+    %span.print-label Date investigation started:
+    %span.print-value= h(@event.investigation_started_date) || '&nbsp;'
+  - core_element_show :investigation_completed_LHD_date, event_form, :vert do
+    %span.print-label Date invesitgation completed:
+    %span.print-value= h(@event.investigation_completed_LHD_date) || '&nbsp;'
+
+%span.subsection-header
+  Auditing
+- core_element_show :event_name, event_form, :horiz do
+  %span.print-label Event name:
+  %span.print-value= h(@event.event_name) || '&nbsp;'
+- core_element_show :review_completed_UDOH_date, event_form, :vert do
+  %span.print-label Date review completed by UDOH:
+  %span.print-value= h(@event.review_completed_UDOH_date) || '&nbsp;'
+

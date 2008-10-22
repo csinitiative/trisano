@@ -751,19 +751,23 @@ module EventsHelper
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def print_investigator_question(form_elements_cache, element, f)
     begin
-      result = ""
       question = element.question
-
+      question_style = question.style.blank? ? "vert" : question.style
+      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
       result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
       answer = form_elements_cache.answer(element, @event)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
+      result << "</div>"
 
       follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
 
       unless follow_up_group.nil?
+        result << "<div id='follow_up_investigate_#{element.id}'>"
         result << print_investigator_follow_up(form_elements_cache, follow_up_group, f)
+        result << "</div>"
       end
 
+      result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
       return "Could not show question element (#{element.id})<br/>"

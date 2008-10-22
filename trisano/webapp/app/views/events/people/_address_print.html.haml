@@ -14,6 +14,8 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -unless address.nil?
+  %span.subsection-header
+    Address
   -current_patient.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|
     -core_element_print :street_number, address_form, :horiz do
       %span.print-label Street number:
@@ -36,6 +38,6 @@
     -core_element_print :county_id, address_form, :horiz do
       %span.print-label County:
       %span.print-value=l(address.county)
-    -core_element_print :district, address_form, :horiz do
+    -core_element_print :district, address_form, :vert do
       %span.print-label District:
       %span.print-value=l(address.district)

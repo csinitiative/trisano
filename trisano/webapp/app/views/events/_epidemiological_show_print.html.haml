@@ -47,7 +47,7 @@
       %span.print-label Risk factors notes:
       %span.print-value= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-    - core_element_print :imported_from_id, event_form, :horiz do
+    - core_element_print :imported_from_id, event_form, :vert do
       %span.print-label Imported from:
       %span.print-value= l @event.imported_from
 
