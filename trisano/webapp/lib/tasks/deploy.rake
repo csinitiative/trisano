@@ -115,7 +115,7 @@ namespace :trisano do
         agent.basic_auth('utah', 'arches')
         #agent.set_proxy("localhost", "8118")
 
-        puts "POST CMR"
+        puts "POST CMR to #{TRISANO_URL}/trisano/cmrs/new"
         new_event_url = TRISANO_URL + '/trisano/cmrs/new'
         page = agent.get(new_event_url)
         form = page.forms[1]

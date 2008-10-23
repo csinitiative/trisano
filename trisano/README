@@ -47,5 +47,7 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  Yahoo YUI            BSD               Copyright (c) 2008, Yahoo! Inc.
  SASS Gridification   MIT               Copyright (c) 2008 Lorin Tackett
  autotab              MIT               Michael J. Sepcot (michael.sepcot@gmail.com)
- 
+ logging              Ruby License      Tim Pease http://rubyforge.org/projects/logging
+ flexmock             MIT               Jim Weirich http://rubyforge.org/projects/flexmock/
+ lockfile             Ruby License      http://rubyforge.org/projects/codeforpeople/
 

@@ -41,3 +41,7 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ci_reporter-1.5.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rest-open-uri-1.0.0.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.9.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
+
