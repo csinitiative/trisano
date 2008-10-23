@@ -52,7 +52,6 @@
 %br
 %span.subsection-header Diagnosing health facilities
 - if @event.diagnosing_health_facilities.empty?
-  %br
   %b No diganosing health facilities have been recorded for this event
 - else
   %ul
@@ -61,7 +60,6 @@
         = diagnostic.secondary_entity.place_temp.name
 
 %span.subsection-header Hospitalized health facilities
-%br
 - if @event.hospitalized_health_facilities.empty?
   %b No hospitalized health facilities have been recorded for this event
 - else
@@ -127,18 +125,29 @@
 - else
   .three-valued-row
     .left
-      %span.print-label Last Name
+      %span.print-label Name
     .left
-      %span.print-label First Name
+      %span.print-label Phone
     %br
     %hr
 
     - for clinician in @event.clinicians
-      - person = clinician.secondary_entity.person
+      - clinician_entity = clinician.secondary_entity
+      - clinician_person = clinician_entity.person_temp
+
+      - clinician_phone_loc = clinician_entity.telephone_entities_locations.last
+      - clinician_phone = clinician_phone_loc.location.telephones.last unless clinician_phone_loc.nil?
+
       .three-valued-row
         .left
           %span.print-value
-            = person.last_name
+            = clinician_person.last_name + (clinician_person.first_name.blank? ? "" : fml(", ", clinician_person.first_name, ""))
         .left
           %span.print-value
-            = person.first_name
+            -unless clinician_phone_loc.nil?
+              = (l(clinician_phone_loc.entity_location_type) || "Unspecified Locaiton") + ": " + clinician_phone.simple_format
+
+
+
+
+
