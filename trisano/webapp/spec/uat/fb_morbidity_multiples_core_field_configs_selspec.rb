@@ -17,11 +17,9 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
  
-describe 'form builder patient-level core field configs for contacts' do
-  
-  
+describe 'form builder core field configs for morbidity event multiples' do
 
-  $dont_kill_browser = true
+  #$dont_kill_browser = true
   
   [{:name => 'Contacts', :tab_name => CONTACTS},
     {:name => 'Places', :tab_name => EPI},
@@ -62,6 +60,14 @@ describe 'form builder patient-level core field configs for contacts' do
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
+      
+      print_cmr(@browser).should be_true
+      @browser.is_text_present(before_question).should be_true
+      @browser.is_text_present(after_question).should be_true
+      @browser.is_text_present(before_answer).should be_true
+      @browser.is_text_present(after_answer).should be_true
+      @browser.close()
+      @browser.select_window 'null'
     end
 
   end

@@ -92,27 +92,33 @@
             = hospital.hospitals_participation.medical_record_number unless hospital.hospitals_participation.nil?
 %br
 
-%span.subsection-header Treatments
-%br
-  - core_element_print :treatments, event_form, :vert do
-    - if @event.active_patient.participations_treatments.empty?
-      %b No treatments have been recorded for this case
-    - else
-      .three-valued-row
-        %dif.left
-          %span.print-label Treatment
-        .left
-          %span.print-label Treatment Given
-        %br
-        %hr
-        - for treatment in @event.active_patient.participations_treatments
-          .three-valued-row
-            .left
-              %span.print-value
-                = treatment.treatment
-            .left
-              %span.print-value
-                = l treatment.treatment_given_yn
+%span.subsection-header
+  Treatments
+
+- unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank?
+  %span.print-label=h @event.disease.disease.treatment_lead_in
+  %br
+  %br
+
+- core_element_print :treatments, event_form, :vert do
+  - if @event.active_patient.participations_treatments.empty?
+    %b No treatments have been recorded for this case
+  - else
+    .three-valued-row
+      %dif.left
+        %span.print-label Treatment
+      .left
+        %span.print-label Treatment Given
+      %br
+      %hr
+      - for treatment in @event.active_patient.participations_treatments
+        .three-valued-row
+          .left
+            %span.print-value
+              = treatment.treatment
+          .left
+            %span.print-value
+              = l treatment.treatment_given_yn
 
 %span.subsection-header Clinicians
 %br

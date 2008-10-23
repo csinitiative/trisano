@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder core-field questions' do
   
-   # $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   [{:name => 'Patient last name', :tab_name => DEMOGRAPHICS},
     {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
@@ -60,6 +60,15 @@ describe 'form builder core-field questions' do
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
+      
+      print_cmr(@browser).should be_true
+      @browser.is_text_present(before_question).should be_true
+      @browser.is_text_present(after_question).should be_true
+      @browser.is_text_present(before_answer).should be_true
+      @browser.is_text_present(after_answer).should be_true
+      @browser.close()
+      @browser.select_window 'null'
+      
     end
 
   end

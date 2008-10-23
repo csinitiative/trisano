@@ -55,6 +55,11 @@ describe 'Adding help text to form builder questions' do
       save_cmr(@browser).should be_true
       assert_tooltip_exists(@browser, @help_text).should be_true
       @browser.is_text_present(@instruction_text).should be_true
+      
+      print_cmr(@browser).should be_true
+      @browser.is_text_present(@instruction_text).should be_true
+      @browser.close()
+      @browser.select_window 'null'
     end
   end
 

@@ -327,7 +327,7 @@ module FormsHelper
           code = ExternalCode.find(element.condition)
           result <<  "Code condition: #{code.code_description} (#{code.code_name})"
         else
-          result <<  "<!--String condition:--> <b>#{element.condition}</b>"
+          result <<  "<b>#{element.condition}</b>"
           result << "<br>"
         end
       end

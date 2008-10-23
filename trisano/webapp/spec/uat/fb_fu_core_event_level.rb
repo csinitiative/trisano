@@ -20,7 +20,7 @@ require 'date'
  
 describe 'form builder core event level core field configs for contacts' do
   
-#  $dont_kill_browser = true
+  #  $dont_kill_browser = true
 
   fields = [{:name => 'Outbreak associated', :label => 'morbidity_event_outbreak_associated_id', :entry_type => 'select',:code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'},
     {:name => 'Outbreak', :label => 'morbidity_event_outbreak_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
@@ -62,7 +62,6 @@ describe 'form builder core event level core field configs for contacts' do
       end
     end
  
-  
     it "should publish the form" do
       publish_form(@browser).should be_true
     end
@@ -93,7 +92,7 @@ describe 'form builder core event level core field configs for contacts' do
       
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up
+      sleep 2 #Giving the investigator form questions time to show up
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_true
@@ -112,7 +111,7 @@ describe 'form builder core event level core field configs for contacts' do
       
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up    
+      sleep 2 #Giving the investigator form questions time to show up    
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_false
@@ -132,7 +131,7 @@ describe 'form builder core event level core field configs for contacts' do
       click_core_tab(@browser, "Demographics")
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up
+      sleep 2 #Giving the investigator form questions time to show up
             
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
@@ -166,7 +165,14 @@ describe 'form builder core event level core field configs for contacts' do
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_cmr(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true 
-        end       
+        end
+
+        print_cmr(@browser).should be_true
+        @browser.is_text_present(follow_up_question).should be_true
+        @browser.is_text_present(data_type[:answer]).should be_true 
+        @browser.close()
+        @browser.select_window 'null'
+        
       end
     end
   end

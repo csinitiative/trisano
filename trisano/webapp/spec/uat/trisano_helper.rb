@@ -209,6 +209,18 @@ module TrisanoHelper
     return(browser.is_text_present("successfully"))
   end
   
+  # Clicks the print button and points the browser at the print window.
+  # 
+  # To close the window after inspecting it, do something like the following:
+  # @browser.close()
+  # @browser.select_window 'null'
+  def print_cmr(browser)
+    browser.click "link=Print"
+    browser.wait_for_pop_up '_blank', $load_time
+    browser.select_window '_blank'
+    return(browser.is_text_present('Utah Public Health'))
+  end
+  
   def add_contact(browser, contact_attributes, index = 1)
     click_core_tab(browser, "Contacts")
     browser.click "link=Add a contact"

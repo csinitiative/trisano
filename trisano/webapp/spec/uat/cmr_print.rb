@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 $sleep_time = 5
 
 describe 'Print CMR page' do
@@ -102,7 +102,7 @@ describe 'Print CMR page' do
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Inverse"
     @browser.click "link=Add a contact"
     sleep(1)
-     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Steve"
+    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Steve"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Jobbs"
     save_cmr(@browser).should be_true
 
@@ -144,9 +144,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
     @browser.type "morbidity_event_review_completed_UDOH_date", "12/5/1963"
     save_cmr(@browser).should be_true
-    @browser.click "link=Print"
-    @browser.wait_for_pop_up '_blank', $load_time
-    @browser.select_window '_blank'
+    print_cmr(@browser).should be_true
 
     @browser.is_text_present('Confidential Case Report').should be_true
     @browser.is_text_present('Lebowski').should be_true
@@ -207,5 +205,8 @@ describe 'Print CMR page' do
     @browser.is_text_present('2003-12-03').should be_true
     @browser.is_text_present('1963-12-05').should be_true
     @browser.is_text_present('2007-12-07').should be_true
+    
+    @browser.close()
+    @browser.select_window 'null'
   end
 end

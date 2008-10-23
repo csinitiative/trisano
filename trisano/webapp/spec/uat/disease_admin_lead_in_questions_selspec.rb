@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'disease admin lead in questions' do
   
-  # $dont_kill_browser = true
+   # $dont_kill_browser = true
   
   before(:all) do
     @cmr_last_name = get_unique_name(1)  << " da-uat"
@@ -39,7 +39,7 @@ describe 'disease admin lead in questions' do
   
   it 'should create a new disease' do
     navigate_to_disease_admin(@browser).should be_true
-    @browser.click("link=New disease")
+    @browser.click("//input[@value='Create new disease']")
     @browser.wait_for_page_to_load($load_time)
     create_disease(@browser, {
         :disease_name => @disease_name, 
@@ -59,6 +59,15 @@ describe 'disease admin lead in questions' do
     @browser.is_text_present(@contact_lead_in).should be_true
     @browser.is_text_present(@place_lead_in).should be_true
     @browser.is_text_present(@treatment_lead_in).should be_true
+  end
+  
+  it 'should display lead in questions in print mode' do
+    print_cmr(@browser).should be_true
+    @browser.is_text_present(@contact_lead_in).should be_true
+    @browser.is_text_present(@place_lead_in).should be_true
+    @browser.is_text_present(@treatment_lead_in).should be_true
+    @browser.close()
+    @browser.select_window 'null'
   end
     
   it 'should display lead in questions in edit mode' do

@@ -19,17 +19,17 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder core-field questions' do
   
-   # $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   [ {:name => 'Pregnant', :tab_name => CLINICAL},
-     {:name => 'Pregnancy due date', :tab_name => CLINICAL},
-     {:name => 'Food handler', :tab_name => EPI},
-     {:name => 'Healthcare worker', :tab_name => EPI},
-     {:name => 'Group living', :tab_name => EPI},
-     {:name => 'Day care association', :tab_name => EPI},
-     {:name => 'Occupation', :tab_name => EPI},
-     {:name => 'Risk factors', :tab_name => EPI},
-     {:name => 'Risk factors notes', :tab_name => EPI}
+    {:name => 'Pregnancy due date', :tab_name => CLINICAL},
+    {:name => 'Food handler', :tab_name => EPI},
+    {:name => 'Healthcare worker', :tab_name => EPI},
+    {:name => 'Group living', :tab_name => EPI},
+    {:name => 'Day care association', :tab_name => EPI},
+    {:name => 'Occupation', :tab_name => EPI},
+    {:name => 'Risk factors', :tab_name => EPI},
+    {:name => 'Risk factors notes', :tab_name => EPI}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
@@ -60,6 +60,14 @@ describe 'form builder core-field questions' do
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
+      
+      print_cmr(@browser).should be_true
+      @browser.is_text_present(before_question).should be_true
+      @browser.is_text_present(after_question).should be_true
+      @browser.is_text_present(before_answer).should be_true
+      @browser.is_text_present(after_answer).should be_true
+      @browser.close()
+      @browser.select_window 'null'
     end
 
   end

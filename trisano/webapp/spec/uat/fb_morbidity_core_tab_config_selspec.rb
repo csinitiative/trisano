@@ -159,5 +159,30 @@ describe 'form builder user-defined, core-tab questions' do
     assert_tab_contains_question(@browser, ADMIN, @admin_question_text).should be_true
   end
   
+  it 'should have questions and answers in print mode' do
+    
+    print_cmr(@browser).should be_true
+        
+    @browser.is_text_present(@demo_question_text).should be_true
+    @browser.is_text_present(@clinical_question_text).should be_true
+    @browser.is_text_present(@laboratory_question_text).should be_true
+    @browser.is_text_present(@contacts_question_text).should be_true
+    @browser.is_text_present(@epi_question_text).should be_true
+    @browser.is_text_present(@reporting_question_text).should be_true
+    @browser.is_text_present(@admin_question_text).should be_true
+    
+    @browser.is_text_present(@demo_answer).should be_true
+    @browser.is_text_present(@clinical_answer).should be_true
+    @browser.is_text_present(@laboratory_answer).should be_true
+    @browser.is_text_present(@contacts_answer).should be_true
+    @browser.is_text_present(@epi_answer).should be_true
+    @browser.is_text_present(@reporting_answer).should be_true
+    @browser.is_text_present(@admin_answer).should be_true
+    
+    @browser.close()
+    @browser.select_window 'null'
+    
+  end
+  
 end
   

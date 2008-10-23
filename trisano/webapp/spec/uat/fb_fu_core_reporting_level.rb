@@ -23,10 +23,10 @@ describe 'form builder core event level core field configs for contacts' do
 
   fields = [#{:name => 'Reporter first name', :label => 'morbidity_event_active_reporting_agency_first_name', :entry_type => 'type',:fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
     {:name => 'Reporter last name', :label => 'morbidity_event_active_reporting_agency_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-#    {:name => 'Reporter phone type', :label => 'morbidity_event_active_reporting_agency_extension', :entry_type => 'select', :code => 'Code: Mobile (telephonelocationtype)', :fu_value => 'Mobile', :no_fu_value => 'Work'},
-#    {:name => 'Reporter area code', :label => 'morbidity_event_active_reporting_agency_area_code', :entry_type => 'type',:fu_value => '874', :no_fu_value => '878'},
-#    {:name => 'Reporter phone number', :label => 'morbidity_event_active_reporting_agency_phone_number', :entry_type => 'type',:fu_value => '555-8777', :no_fu_value => '555-8998'},
-#    {:name => 'Reporter extension', :label => 'morbidity_event_active_reportng_agency_extension', :entry_type => 'type',:fu_value => '33', :no_fu_value => '32'}
+    #    {:name => 'Reporter phone type', :label => 'morbidity_event_active_reporting_agency_extension', :entry_type => 'select', :code => 'Code: Mobile (telephonelocationtype)', :fu_value => 'Mobile', :no_fu_value => 'Work'},
+    #    {:name => 'Reporter area code', :label => 'morbidity_event_active_reporting_agency_area_code', :entry_type => 'type',:fu_value => '874', :no_fu_value => '878'},
+    #    {:name => 'Reporter phone number', :label => 'morbidity_event_active_reporting_agency_phone_number', :entry_type => 'type',:fu_value => '555-8777', :no_fu_value => '555-8998'},
+    #    {:name => 'Reporter extension', :label => 'morbidity_event_active_reportng_agency_extension', :entry_type => 'type',:fu_value => '33', :no_fu_value => '32'}
   ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
@@ -64,7 +64,6 @@ describe 'form builder core event level core field configs for contacts' do
       end
     end
  
-  
     it "should publish the form" do
       publish_form(@browser).should be_true
     end
@@ -96,7 +95,7 @@ describe 'form builder core event level core field configs for contacts' do
       
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up
+      sleep 2 #Giving the investigator form questions time to show up
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
   
@@ -116,7 +115,7 @@ describe 'form builder core event level core field configs for contacts' do
       
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up    
+      sleep 2 #Giving the investigator form questions time to show up
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
   
@@ -137,7 +136,7 @@ describe 'form builder core event level core field configs for contacts' do
       click_core_tab(@browser, "Demographics")
       click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 5 #Giving the investigator form questions time to show up
+      sleep 2 #Giving the investigator form questions time to show up
             
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
@@ -173,7 +172,14 @@ describe 'form builder core event level core field configs for contacts' do
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_cmr(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true 
-        end       
+        end
+
+        print_cmr(@browser).should be_true
+        @browser.is_text_present(follow_up_question).should be_true
+        @browser.is_text_present(data_type[:answer]).should be_true 
+        @browser.close()
+        @browser.select_window 'null'
+        
       end
     end
   end

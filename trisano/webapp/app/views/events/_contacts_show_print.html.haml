@@ -17,7 +17,7 @@
 %span.section-header Contacts
 
 - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
-  = h @event.disease.disease.contact_lead_in
+  %span.print-label=h @event.disease.disease.contact_lead_in
   %br
   %br
 
