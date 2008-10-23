@@ -24,11 +24,14 @@
   = link_to '< Back to Users', users_path
   %p
 
+- content_for :tools_two do
+  = button_to("Create new user", {:action => "new"}, { :method => :get })
+
 #rot
   %table.listingforms
     %tr
       %th.forminformation
-        Users
+        User
       %tr
         %td.forminformation
           .tools
