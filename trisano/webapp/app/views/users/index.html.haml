@@ -13,39 +13,31 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  User Admin
-
-- content_for :name do
   Users
 
-- content_for :tools do
-  = link_to 'New user', new_user_path
+/- content_for :name do
+/  Users
+
+/- content_for :tools do
+/  = link_to 'New user', new_user_path
 
 - content_for :tools_two do
   = button_to("Create new user", {:action => "new"}, { :method => :get })
 
-
-%table{ :class => 'tabular' }
-  %tr
-    %th
-      UID
-    %th
-      User name
-    %th
-      Full name
-
-  - for user in @users
+#rot
+  %table.listingforms
     %tr
-      %td
-        = user.uid
-      %td
-        = user.user_name
-      %td
-        = user.first_name
-        = user.last_name
-      %td
-        = link_to('Show', user)
-        = link_to('Edit', edit_user_path(user))
-        -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
-
-%br
+      %th.forminformation
+        Users
+    - for user in @users
+      %tr
+        %td.forminformation
+          .tools
+            = link_to ("#{user.first_name} #{user.last_name}", user)
+          .formname
+            UID:
+            = link_to user.uid, user
+          .tools
+            = user.user_name
+            %br
+            -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)

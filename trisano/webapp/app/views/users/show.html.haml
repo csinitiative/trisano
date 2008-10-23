@@ -14,49 +14,43 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  User Admin
+  User Detail
 
-- content_for :name do
-  User details:  
-  = @user.user_name
+/- content_for :name do
+/  User details:  
+/  = @user.user_name
 
 - content_for :tools do
-  = link_to 'Edit', edit_user_path(@user)
-  |
-  = link_to 'Back', users_path
+  = link_to '< Back to Users', users_path
+  %p
 
-%fieldset
-  %legend
-    User
-
-  %table
+#rot
+  %table.listingforms
     %tr
-      %td
-        %b UID
-      %td
-        = @user.uid
-    %tr
-      %td
-        %b User name
-      %td
-        = @user.user_name
-    %tr
-      %td
-        %b Given name
-      %td
-        = @user.given_name
-    %tr
-      %td
-        %b Name
-      %td
-        = "#{@user.first_name} #{@user.last_name}"
-    %tr
-      %td
-        %b Initials
-      %td
-        = @user.initials
-
-= render :partial => 'roles'
+      %th.forminformation
+        Users
+      %tr
+        %td.forminformation
+          .tools
+            = "#{@user.first_name} #{@user.last_name}"
+          .formname
+            UID:
+            = @user.uid
+          .tools
+            Username:
+            = @user.user_name
+            %br
+            Given Name:
+            = @user.given_name
+            %br
+            Initials:
+            = @user.initials
+          .tools
+            = link_to 'Edit', edit_user_path(@user)
+            
+#rot
+  %p
+  = render :partial => 'roles'
 
 
 
