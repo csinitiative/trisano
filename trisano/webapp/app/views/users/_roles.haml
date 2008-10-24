@@ -19,12 +19,12 @@
       %tr
         %th
           Roles
-        %th
       - for rm in @user.role_memberships
         %tr
           %td
-            = rm.role.role_name.capitalize
-          %td
-            = rm.jurisdiction.places.first.name
+            .formname
+              = rm.jurisdiction.places.first.name
+            .tools
+              = rm.role.role_name.capitalize
   - else
     No roles.

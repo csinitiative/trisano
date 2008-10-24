@@ -13,29 +13,33 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:class => "role_membership" }
-  -# Not using the 'new or existing' stuff because we always treat an update of role memberships as a new set.
-  - fields_for "user[role_membership_attributes][]", role do |rm_form|
-    -# You can only add and remove roles, not update them
-    - unless role.new_record?
-      %span{:class => "horiz"}
-        = "Has #{role.role.role_name} privileges in #{role.jurisdiction.current_place.name}"
 
-        -# Make existing records look new
-        - role.id = nil
+%tr.role_membership
+  %td.forminformation
+    .formname
+      -# Not using the 'new or existing' stuff because we always treat an update of role memberships as a new set.
+      - fields_for "user[role_membership_attributes][]", role do |rm_form|
+        -# You can only add and remove roles, not update them
+        - unless role.new_record?
+          = role.jurisdiction.current_place.name
+          .tools
+            = role.role.role_name
 
-        = rm_form.hidden_field(:role_id)
-        = rm_form.hidden_field(:jurisdiction_id)
-    - else
-      %span{:class => "horiz"}
-        = rm_form.label(:role_id)
-        = rm_form.collection_select(:role_id, Role.find(:all, :order => :role_name), :id, :role_name)
-      %span{:class => "horiz"}
-        = rm_form.label(:jurisdiction_id)
-        = rm_form.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name)
+          -# Make existing records look new
+          - role.id = nil
 
-  %span{:class => "horiz"}
-    - if role.new_record?
-      %br
-    = link_to_function "remove", "$(this).up('.role_membership').remove()", {:style => "position: absolute; left: 55%;", :id => "remove_role_membership_link"}
-  %hr
+          = rm_form.hidden_field(:jurisdiction_id)
+          = rm_form.hidden_field(:role_id)
+        - else
+          %td
+            = rm_form.label(:jurisdiction_id)
+            = rm_form.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name)
+          %td
+            = rm_form.label(:role_id)
+            = rm_form.collection_select(:role_id, Role.find(:all, :order => :role_name), :id, :role_name)
+
+  %td
+    .tools
+      - if role.new_record?
+        %br
+      = link_to_function "Remove", "$(this).up('.role_membership').remove()", {:style => "position: absolute; right: 15px;", :id => "remove_role_membership_link"}

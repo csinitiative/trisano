@@ -13,36 +13,44 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset
-  %legend User
-  %span{ :class => "horiz" }
-    = f.label(:uid, "UID")
-    = f.text_field(:uid)
-  %span{ :class => "vert" }
-    = f.label(:user_name)
-    = f.text_field(:user_name)
-  %span{ :class => "horiz" }
-    = f.label(:first_name)
-    = f.text_field(:first_name)
-  %span{ :class => "vert" }
-    = f.label(:last_name)
-    = f.text_field(:last_name)
-  %span{ :class => "horiz" }
-    = f.label(:given_name)
-    = f.text_field(:given_name)
-  %span{ :class => "vert" }
-    = f.label(:generational_qualifer)
-    = f.text_field(:generational_qualifer)
-  %span{ :class => "vert" }
-    = f.label(:initials)
-    = f.text_field(:initials)
+%table.listingforms
+  %tr
+    %th.forminformation
+      Edit User
+  %tr
+    %td
+      %span{ :class => "horiz" }
+        = f.label(:uid, "UID")
+        = f.text_field(:uid)
+      %span{ :class => "vert" }
+        = f.label(:user_name)
+        = f.text_field(:user_name)
+      %span{ :class => "horiz" }
+        = f.label(:first_name)
+        = f.text_field(:first_name)
+      %span{ :class => "vert" }
+        = f.label(:last_name)
+        = f.text_field(:last_name)
+      %span{ :class => "horiz" }
+        = f.label(:given_name)
+        = f.text_field(:given_name)
+      %span{ :class => "vert" }
+        = f.label(:generational_qualifer)
+        = f.text_field(:generational_qualifer)
+      %span{ :class => "vert" }
+        = f.label(:initials)
+        = f.text_field(:initials)
+      %p
 
-%br
-
-= add_role_link "Add a role"
-
-%br
-%br
-
-%div{ :id => "role_memberships" }
+%table.listingforms
+  %tr
+    %th.forminformation
+      Edit Roles
+    %th
+  %tr
+    %td
+      .tools
+        = add_role_link "Add Role"
+        #role_memberships
+    %td
   = render :partial => 'role', :collection => @user.role_memberships

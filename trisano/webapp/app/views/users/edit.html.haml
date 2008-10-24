@@ -29,7 +29,7 @@
   %table.listingforms
     %tr
       %th.forminformation
-        Users
+        User
       %tr
         %td.forminformation
           .tools
@@ -50,7 +50,6 @@
             = link_to 'Show', @user
 
 #rot
-  %p
   = error_messages_for :object => [@user, @user.role_memberships]
 
   - form_for(@user) do |f|
@@ -58,4 +57,3 @@
     = render :partial => 'form', :locals => { :f => f, :user_data => @user }
 
     = f.submit "Update"
-
