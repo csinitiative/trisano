@@ -609,7 +609,53 @@ describe FormsController do
       @copy.should_receive(:save).and_return(true)      
       post :copy, :id => '1'
     end
+  end
   
+  describe "handling POST /forms/export" do
+    
+    describe 'on successful export' do
+      
+      before :each do 
+        mock_user
+        @form = mock_model(Form)
+        @form.stub!(:name).and_return("Test Form")
+        Form.stub!(:find).and_return(@form)
+      end
+      
+      def do_post
+        post :export, :id => '1'
+      end
+
+      it 'should send export file' do
+        @form.should_receive(:export).and_return("test_form.zip")
+        @controller.should_receive(:send_file).with(("test_form.zip"))
+        do_post
+        response.should be_success
+      end
+      
+    end
+    
+    describe 'on failed export' do
+      
+      before :each do 
+        mock_user
+        @form = mock_model(Form)
+        @form.stub!(:name).and_return("Test Form")
+        Form.stub!(:find).and_return(@form)
+      end
+      
+      def do_post
+        post :export, :id => '1'
+      end
+
+      it 'should redirect to forms listing' do
+        @form.should_receive(:export).and_return(nil)
+        @controller.should_not_receive(:send_file).with(("test_form.zip"))
+        do_post
+        response.should redirect_to(forms_path)
+      end
+      
+    end
   end
   
 end

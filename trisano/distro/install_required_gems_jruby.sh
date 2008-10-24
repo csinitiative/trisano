@@ -44,4 +44,6 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/json-jruby-1.1.2-universal-java.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyzip-0.9.1.gem
 

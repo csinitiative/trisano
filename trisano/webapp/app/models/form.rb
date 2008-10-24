@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'zip/zip'
+require 'zip/zipfilesystem'
+
 class Form < ActiveRecord::Base
   has_and_belongs_to_many :diseases, :order => "disease_id"
   belongs_to :jurisdiction, :class_name => "Entity", :foreign_key => "jurisdiction_id"
@@ -211,6 +214,36 @@ class Form < ActiveRecord::Base
       return nil
     end
     
+  end
+
+  def export
+    begin
+      base_path = "/tmp/"
+      form_name = self.name.downcase.sub(" ", "_")
+      zip_file_path = "#{base_path}#{form_name}.zip"
+    
+      form_file_name = "#{form_name}_form"
+      form_elements_file_name = "#{form_name}_elements"
+    
+      open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
+      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_elements.to_json(:methods => [:type, :question]) }
+
+      File.delete(zip_file_path) if File.file?(zip_file_path)
+
+      Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) do |zip|
+        zip.add( form_file_name, "#{base_path}#{form_file_name}")
+        zip.add( form_elements_file_name, "#{base_path}#{form_elements_file_name}")
+      end
+    
+      File.delete("#{base_path}#{form_file_name}")
+      File.delete("#{base_path}#{form_elements_file_name}")
+    
+      File.chmod(0644, zip_file_path)
+      return zip_file_path
+    rescue Exception => ex
+      logger.error ex
+      return nil
+    end
   end
   
   def most_recent_version(form_id = nil)

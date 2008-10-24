@@ -151,6 +151,17 @@ class FormsController < AdminController
       redirect_to forms_path
     end
   end
+
+  def export
+    @form = Form.find(params[:id])
+    export_file_path = @form.export
+    if export_file_path
+      send_file export_file_path
+    else
+      flash[:notice] = 'Unable to export the form. Please contact your administrator.'
+      redirect_to forms_path
+    end
+  end
   
   def order_section_children
     @section = FormElement.find(params[:id])

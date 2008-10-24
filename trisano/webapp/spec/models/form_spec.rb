@@ -645,5 +645,23 @@ describe Form do
     end
 
   end
+  
+  describe 'when exporting' do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    it 'should create a zip file with the exported form' do
+      @form = Form.find(1)
+      export_file_path = @form.export
+      form_name_for_file =  forms(:test_form).name.downcase.sub(" ", "_")
+
+      export_file_path[export_file_path.rindex("/")+1...export_file_path.size].should eql(form_name_for_file + ".zip")
+
+      Zip::ZipFile.foreach(export_file_path) do |file|
+        ["#{form_name_for_file}_elements", "#{form_name_for_file}_form"].include?(file.name).should be_true
+      end
+      
+    end
+  end
     
 end

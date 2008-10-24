@@ -43,3 +43,5 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.9.
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/json-1.1.3.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyzip-0.9.1.gem

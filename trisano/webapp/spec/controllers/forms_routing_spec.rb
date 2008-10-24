@@ -60,6 +60,10 @@ describe FormsController do
       route_for(:controller => "forms", :action => "library_admin", :type => 'question_element').should == "/forms/library_admin/question_element"
     end
     
+    it "should map { :controller => 'forms', :action => 'export', :id => 1} to /forms/1/export" do
+      route_for(:controller => "forms", :action => "export", :id => 1).should == "/forms/1/export"
+    end
+    
   end
 
   describe "route recognition" do
@@ -106,6 +110,10 @@ describe FormsController do
     
     it "should generate params { :controller => 'forms', action => 'library_admin', type => 'question_element' } from POST /forms/library_admin/question_element" do
       params_from(:post, "/forms/library_admin/question_element").should == {:controller => "forms", :action => "library_admin", :type => "question_element"}
+    end
+    
+    it "should generate params { :controller => 'forms', action => 'export', id => '1' } from POST /forms/1/export" do
+      params_from(:post, "/forms/1/export").should == {:controller => "forms", :action => "export", :id => "1"}
     end
     
     
