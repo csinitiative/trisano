@@ -103,7 +103,7 @@ end
 
 PG_LOCALE = ENV['PG_LOCALE'] ||= 'en_US' 
 
-if RAILS_ENV == "development" || RAILS_ENV == "test" || ENV['TRISANO_TEST_UID_OVERRIDE'] == "true"
+if RAILS_ENV == "development" || RAILS_ENV == "test" || RAILS_ENV == "uattest"
   TRISANO_UID = ENV['TRISANO_UID']
 else
   TRISANO_UID = nil
