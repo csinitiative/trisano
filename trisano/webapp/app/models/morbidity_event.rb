@@ -17,11 +17,8 @@
 
 class MorbidityEvent < HumanEvent
   
-    def self.new_event_tree
-      event = MorbidityEvent.new(
-        :disease             => {}, 
-        :active_jurisdiction => {}
-      )
+    def self.new_event_tree(event_hash = {:disease => {}, :active_jurisdiction => {}})
+      event = MorbidityEvent.new(event_hash)
 
       event.patient = Participation.new_patient_participation_with_address_and_phone
       event.patient.participations_treatments.build

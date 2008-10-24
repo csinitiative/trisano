@@ -92,7 +92,7 @@ class Mmwr
   # Returns :unknown if Mmwr initialized without Hash of symbols/dates
   def epi_date_used
     return :unknown if @epi_dates == nil
-    
+   
     if (@epi_dates.has_key? :onsetdate) && (nil != @epi_dates[:onsetdate])
       :onsetdate
     elsif (@epi_dates.has_key? :diagnosisdate) && (nil != @epi_dates[:diagnosisdate])

@@ -198,9 +198,8 @@ module TrisanoHelper
   
   def save_cmr(browser)
     browser.click "save_and_exit_btn"
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("CMR was successfully created.") or
-        browser.is_text_present("CMR was successfully updated."))
+    browser.wait_for_page_to_load($load_time)    
+    return browser.is_text_present("successfully")
   end
 
   def save_and_continue(browser)
