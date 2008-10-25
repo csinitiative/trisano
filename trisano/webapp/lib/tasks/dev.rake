@@ -35,6 +35,7 @@ namespace :trisano do
       Rake::Task["db:test:prepare"].invoke
     end
     
+    # may be able to delete this - 24-oct-08: build box no longer using
     desc "full rebuild of all databases for the build server"
     task :db_rebuild_full_for_build  => ['trisano:deploy:stoptomcat', 'db_rebuild_full'] do
     end
