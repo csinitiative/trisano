@@ -33,6 +33,7 @@ Warbler::Config.new do |config|
   # config.gems = ["activerecord-jdbc-adapter", "jruby-openssl"]
   # config.gems << "tzinfo"
   config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "json-jruby", "rubyzip"]
+  #config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "json-jruby", "rubyzip", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter']
   config.gems['rails'] = "2.0.2"
 
   # Include gem dependencies not mentioned specifically
@@ -71,7 +72,8 @@ Warbler::Config.new do |config|
   # Control the pool of Rails runtimes. Leaving unspecified means
   # the pool will grow as needed to service requests. It is recommended
   # that you fix these values when running a production server!
-  config.webxml.jruby.min.runtimes = 2
+  config.webxml.jruby.min.runtimes = 3
+  config.webxml.jruby.pool.minIdle = 3 # for some reason JRuby Rack only picking this up (not min.runtimes)
   config.webxml.jruby.max.runtimes = 10
 
   # JNDI data source name
