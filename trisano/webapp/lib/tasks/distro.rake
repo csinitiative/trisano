@@ -244,11 +244,13 @@ namespace :trisano do
       database = config['database']
       nedss_user = config['nedss_uname']
       nedss_user_pwd = config['nedss_user_passwd']  
+      min_runtimes = config['min_runtimes']
+      max_runtimes = config['max_runtimes']
       replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)
                 
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{environment} basicauth=#{basicauth}"
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{environment} basicauth=#{basicauth} min_runtimes=#{min_runtimes} max_runtimes=#{max_runtimes}"
       FileUtils.mv('trisano.war', '../distro')
     end
 
