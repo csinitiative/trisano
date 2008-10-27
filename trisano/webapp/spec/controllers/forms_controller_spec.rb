@@ -658,4 +658,65 @@ describe FormsController do
     end
   end
   
+  describe "handling POST /forms/import" do
+    
+    describe 'when lacking upload file' do
+      
+      before :each do 
+        mock_user
+      end
+      
+      def do_post
+        post :import, :form => {:import => ""}
+      end
+
+      it 'should redirect to forms path' do
+        do_post
+        response.should redirect_to(forms_path)
+      end
+      
+    end
+
+    describe 'on successful import' do
+    
+      before :each do
+        mock_user
+        @form = mock_model(Form, :to_param => "1")
+        @form.stub!(:id).and_return("1")
+        @upload_file = mock(ActionController::UploadedStringIO)            
+      end
+    
+      def do_post
+        post :import, :form => {:import => @upload_file}
+      end
+    
+      it 'should be successful' do
+        Form.should_receive(:import).and_return(@form)
+        do_post
+        response.should redirect_to(form_url(@form.id))
+      end
+    
+    end
+
+    describe 'on failed import' do
+
+      before :each do
+        mock_user
+        @form = mock_model(Form, :to_param => "1")
+        @upload_file = mock(ActionController::UploadedStringIO)
+      end
+
+      def do_post
+        post :import, :form => {:import => @upload_file}
+      end
+
+      it 'should redirect to forms listing' do
+        Form.should_receive(:import).and_return(nil)
+        do_post
+        response.should redirect_to(forms_path)
+      end
+
+    end
+  end
+  
 end

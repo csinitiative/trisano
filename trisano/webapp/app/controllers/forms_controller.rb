@@ -163,6 +163,21 @@ class FormsController < AdminController
     end
   end
   
+  def import
+    if params[:form][:import].respond_to?(:empty?)
+      flash[:notice] = 'Please navigate to a file to import.'
+      redirect_to forms_path
+      return
+    end
+    
+    if (@form = Form.import(params[:form][:import]))
+      redirect_to(@form)
+    else
+      flash[:notice] = 'Unable to import the form. Please contact your administrator.'
+      redirect_to forms_path
+    end
+  end
+  
   def order_section_children
     @section = FormElement.find(params[:id])
     section_name, section_items = params.find { |k, v| k =~ /children$/ }

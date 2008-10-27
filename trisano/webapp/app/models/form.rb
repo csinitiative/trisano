@@ -222,11 +222,11 @@ class Form < ActiveRecord::Base
       form_name = self.name.downcase.sub(" ", "_")
       zip_file_path = "#{base_path}#{form_name}.zip"
     
-      form_file_name = "#{form_name}_form"
-      form_elements_file_name = "#{form_name}_elements"
+      form_file_name = "form"
+      form_elements_file_name = "elements"
     
       open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
-      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_elements.to_json(:methods => [:type, :question]) }
+      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.to_json(:methods => [:type, :question]) }
 
       File.delete(zip_file_path) if File.file?(zip_file_path)
 
@@ -246,6 +246,16 @@ class Form < ActiveRecord::Base
     end
   end
   
+  def self.import(form_upload)
+    base_path = "/tmp/"
+    uploaded_file_name = form_upload.original_filename
+    open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
+
+    Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
+      import_form(zip.read("form"), zip.read("elements"))
+    end
+  end
+
   def most_recent_version(form_id = nil)
     form_id = form_id.nil? ? self.id : form_id
     Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
@@ -261,7 +271,7 @@ class Form < ActiveRecord::Base
     )
   end
   
-  # Calls checks the form element structure and adds errors to the 
+  # Calls checks the form element structure and adds errors to the
   # ActiveRecord::Validations#errors array of form that is self at the
   # time of calling.
   def structure_valid?
@@ -277,7 +287,7 @@ class Form < ActiveRecord::Base
   end
   
   # Builds an array of structural error messages. Returns an empty array if all
-  #  is well.  Does not go against the cache and does not utilize the 
+  #  is well.  Does not go against the cache and does not utilize the
   #  ActiveRecord::Validations#errors array.
   def structural_errors
     structural_errors = []
@@ -300,7 +310,7 @@ class Form < ActiveRecord::Base
   
   def initialize_form_elements
     begin
-      tree_id = next_tree_id
+      tree_id = Form.next_tree_id
       form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
     
       investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
@@ -321,7 +331,7 @@ class Form < ActiveRecord::Base
     
   end
 
-  def next_tree_id
+  def self.next_tree_id
     Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
   
@@ -352,7 +362,7 @@ class Form < ActiveRecord::Base
     
     template_question = template_question_element.question
     
-    question_to_publish = Question.new({:form_element_id => published_question_element.id, 
+    question_to_publish = Question.new({:form_element_id => published_question_element.id,
         :question_text => template_question.question_text,
         :short_name => template_question.short_name,
         :help_text => template_question.help_text,
@@ -371,7 +381,54 @@ class Form < ActiveRecord::Base
     form_id = copied_form.id
     base_element = self.form_base_element.clone
     base_element.form_id = form_id
-    base_element.copy_children(self.form_base_element, nil, form_id, next_tree_id, false)
+    base_element.copy_children(self.form_base_element, nil, form_id, Form.next_tree_id, false)
+  end
+  
+  def self.import_form(form_import_string, elements_import_string)
+    begin
+      transaction do
+        form = Form.new(ActiveSupport::JSON.decode(form_import_string))
+        form.rolled_back_from_id = nil
+        form.template_id = nil
+        form.status = "Not Published"
+        form.save!
+        import_elements(elements_import_string, form.id)
+        raise("Structural error in imported form") unless form.structural_errors.empty?
+        return form
+      end
+    rescue Exception => ex
+      logger.error ex
+      return nil
+    end
+  end
+  
+  def self.import_elements(element_import_string, form_id)
+    elements = ActiveSupport::JSON.decode(element_import_string)
+    parent_id_map = {}
+    tree_id = Form.next_tree_id
+      
+    elements.each do |e|
+      parent_id =  parent_id_map[e["parent_id"].to_i].nil? ? "null" : parent_id_map[e["parent_id"].to_i]
+      is_condition_code = e["is_condition_code"].nil? ? "null" : e["is_condition_code"]
+      
+      sql = "INSERT INTO form_elements "
+      sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
+      sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, created_at, updated_at) "
+      sql << "VALUES "
+      sql << "('#{form_id}', '#{sanitize_sql(["%s", e["type"]])}', '#{sanitize_sql(["%s", e["name"]])}', '#{sanitize_sql(["%s", e["description"]])}', #{parent_id}, #{sanitize_sql(["%s", e["lft"]])}, #{sanitize_sql(["%s", e["rgt"]])}, false, null, "
+      sql << "#{sanitize_sql(["%s", e["is_active"]])}, #{tree_id}, '#{sanitize_sql(["%s", e["condition"]])}', '#{sanitize_sql(["%s", e["core_path"]])}', #{is_condition_code}, '#{sanitize_sql(["%s", e["help_text"]])}', now(), now()"
+      sql << ");"
+      
+      result = ActiveRecord::Base.connection.insert(sql)
+      parent_id_map[e["id"]] = result
+      import_question(e["question"], result)  if (e["type"] == "QuestionElement")
+    end
+  end
+  
+  def self.import_question(question_import_string, form_element_id)
+    question = Question.new(question_import_string)
+    question.form_element_id = form_element_id
+    question.save!
   end
   
 end

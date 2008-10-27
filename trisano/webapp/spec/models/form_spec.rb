@@ -658,10 +658,69 @@ describe Form do
       export_file_path[export_file_path.rindex("/")+1...export_file_path.size].should eql(form_name_for_file + ".zip")
 
       Zip::ZipFile.foreach(export_file_path) do |file|
-        ["#{form_name_for_file}_elements", "#{form_name_for_file}_form"].include?(file.name).should be_true
+        ["elements", "form"].include?(file.name).should be_true
       end
       
     end
+  end
+  
+  describe 'when importing' do
+    
+    fixtures :forms, :form_elements, :questions
+    
+    before(:each) do
+      @original_form = Form.find(1)
+      @imported_form = Form.import(fixture_file_upload('files/test_form.zip', 'application/zip'))
+    end
+    
+    it 'should match the original name' do
+      @imported_form.name.should eql(@original_form.name)
+    end
+    
+    it 'should match the original description' do
+      @imported_form.description.should eql(@original_form.description)
+    end
+
+    it 'should have no diseases' do
+      @imported_form.diseases.size.should == 0
+    end
+
+    it 'should not have the same created_at date as the oringal form' do
+      @imported_form.created_at.should_not eql(@original_form.created_at)
+    end
+
+    it 'should not have the same updated_at date as the original form' do
+      @imported_form.updated_at.should_not eql(@original_form.created_at)
+    end
+
+    it 'should be a template' do
+      @imported_form.is_template.should be_true
+      @imported_form.template_id.should be_nil
+      @imported_form.version.should be_nil
+    end
+
+    it 'should not be published' do
+      @imported_form.status.should eql("Not Published")
+    end
+
+    it 'should not be rolled back' do
+      @imported_form.rolled_back_from_id.should be_nil
+    end
+
+    it 'should have the same event type as the original' do
+      @imported_form.event_type.should eql(@original_form.event_type)
+    end
+
+    it 'should have no jurisdiction' do
+      @imported_form.jurisdiction.should be_nil
+    end
+
+    it 'should copy the form elements' do
+      @imported_form.form_base_element.should_not be_nil
+      @imported_form.form_base_element.children.size.should == 3
+      @imported_form.form_base_element.all_children.size.should == @original_form.form_base_element.all_children.size
+    end
+    
   end
     
 end
