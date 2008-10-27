@@ -27,7 +27,7 @@ class InstallCdcExportData < ActiveRecord::Migration
     transaction do
       execute("alter table export_predicates alter column comparison_value TYPE varchar(2000)")
       script_dir = File.join(File.dirname(__FILE__), '..', 'scripts', '094')
-      %w(fnTrisanoBuildPredicate.sql fnTrisanoExport.sql insert_export_cols.sql insert_predicates.sql thebigcdcsql.sql).each do |file|
+      %w(fnTrisanoBuildPredicate.sql fnTrisanoExport.sql insert_export_cols.sql thebigcdcsql.sql).each do |file|
         execute(IO.read(File.join(script_dir,file)))
       end
     end
