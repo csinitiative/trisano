@@ -840,7 +840,7 @@ module EventsHelper
   # handle each event before it is converted to csv. This is handy for
   # looking up an actual event from a set of find_by_sql records.
   def render_events_csv(events, &proc)
-    Exporters::Csv::Event.export(events, &proc)
+    Export::Csv::Event.export(events, &proc)
   end
   
 end

@@ -22,353 +22,358 @@ describe EventsHelper do
 
   include ApplicationHelper
 
-  def mock_answers    
-    answers = []
-    answers << Answer.new(:text_answer => 'Numero uno')
-    answers << Answer.new(:text_answer => 'No short name')
-    answers << Answer.new(:text_answer => 'No (answer three)')    
-    answers[0].stub!(:short_name).and_return('short_name_1')
-    answers[2].stub!(:short_name).and_return('short_name_3')
-    answers
+  def simple_reference 
+    @reference ||= OpenStruct.new(
+      :code_description => "a code",
+      :best_name => "A Name",
+      :disease_name => "A Disease",
+      :name => "Another Name"
+    )
   end
 
-  def mock_lab_place
-    mock = mock(Place)
-    mock.should_receive(:name).at_least(1).and_return('Some Lab')
-    mock
+  def mock_mixed_events
+    p = mock_simple_event(:morbidity)
+    c = mock_simple_event(:contact)
+    [p, c]
   end
 
-  def mock_lab_entity
-    mock = mock(Entity)
-    mock.stub!(:current_place).and_return(mock_lab_place)
-    mock
-  end
-
-  def mock_contact
-    address = mock(Address)
-    address.stub!(:city).and_return('Newton Falls')
-    address.stub!(:county_name).and_return('Summit')
-    address.stub!(:postal_code).and_return('55555')
-    person = mock(Person)
-    person.stub!(:age).and_return('11')
-    person.stub!(:birth_gender_description).and_return('Male') 
-    person.stub!(:ethnicity_description).and_return('Not latino')
-    person.stub!(:race_description).and_return('White')
-    person.stub!(:primary_language_description).and_return('English')
-    person.should_receive(:disposition_description).and_return('Not infected')
-    person.stub!(:address).and_return(address)
-    entity = mock(Entity)
-    entity.stub!(:person).and_return(person)
-    mock = mock(Participation)
-    mock.stub!(:active_secondary_entity).and_return(entity)
-    mock.stub!(:secondary_entity).and_return(entity)
-    mock
-  end
-
-  def mock_clinician
-    address = mock(Address)
-    address.stub!(:number_and_street).and_return('777 Some Address')
-    address.stub!(:unit_number).and_return('21')
-    address.stub!(:city).and_return('Some City')
-    address.stub!(:postal_code).and_return('77777')
-    address.stub!(:county_name).and_return('Some County')
-    address.stub!(:state_name).and_return('Utah')
-    address.stub!(:district_name).and_return('Some District')
-    phone = mock(Telephone)
-    phone.stub!(:simple_format).and_return('(555)555-5555')
-    person = mock(Person)    
-    person.stub!(:full_name).and_return('Joe Clinic')
-    person.stub!(:telephone).and_return(phone)
-    person.stub!(:address).and_return(address)
-    entity = mock(Entity)
-    entity.stub!(:person).and_return(person)
-    mock = mock(Participation)
-    mock.stub!(:active_secondary_entity).and_return(entity)
-    mock.stub!(:secondary_entity).and_return(entity)
-    mock
-  end
-
-  def mock_event
-    @event_1 = mock_model(Event)
-    @lab = mock_model(Participation)
+  def mock_complex_event
     @lab_result = mock_model(LabResult)
-
-    @event_1.stub!(:labs).and_return([@lab])
-
-    [].stub!(:empty?).and_return(false)
-    @lab.stub!(:secondary_entity).and_return(mock_lab_entity)
-    @lab.stub!(:lab_results).and_return([@lab_result])
-    @lab.stub!(:each).and_yield(@lab_result)
-
-    @imported_from = mock_model(ExternalCode)
-    @udoh_case_status =mock_model(ExternalCode)
-    @lhd_case_status =mock_model(ExternalCode)
-    @outbreak_associated = mock_model(Code)
-    @hospitalized = mock_model(ExternalCode)
-    @died = mock_model(ExternalCode)
-    @pregnant = mock_model(ExternalCode)
-    @specimen_source = mock_model(ExternalCode)
-    @specimen_sent_to_uphl_yn = mock_model(ExternalCode)
-    @pregant = mock_model(ExternalCode)
-
-    @disease_event = mock_model(DiseaseEvent)
-    @disease_mock = mock_model(Disease)
-    @active_patient = mock_model(Participation)
-    @participations_risk_factor = mock_model(ParticipationsRiskFactor)
-
-
-    @disease_mock.stub!(:disease_name).and_return("Bubonic,Plague")
-    @imported_from.stub!(:code_description).and_return('Utah')
-    @udoh_case_status.stub!(:code_description).and_return('Confirmed')
-    @lhd_case_status.stub!(:code_description).and_return('Confirmed')
-    @outbreak_associated.stub!(:code_description).and_return('Yes')
-    @hospitalized.stub!(:code_description).and_return('Yes')
-    @died.stub!(:code_description).and_return('No')
-    @pregnant.stub!(:code_description).and_return('Yes')
-    @disease_event.stub!(:hospitalized).and_return(@hospitalized)
-    @disease_event.stub!(:died).and_return(@died)
-    @disease_event.stub!(:disease).and_return(@disease_mock)
-    @disease_event.stub!(:date_diagnosed).and_return("2008-02-15")
-    @disease_event.stub!(:disease_onset_date).and_return("2008-02-13")
-    @specimen_source.stub!(:code_description).and_return('Tissue')
-    @specimen_sent_to_uphl_yn.stub!(:code_description).and_return('Yes')
-
-    @lab_result.stub!(:specimen_source).and_return(@specimen_source)
+    @lab_result.stub!(:test_type).and_return("Biopsy")
     @lab_result.stub!(:lab_result_text).and_return("Positive")
-    @lab_result.stub!(:collection_date).and_return("2008-02-14")
-    @lab_result.stub!(:lab_test_date).and_return("2008-02-15")
-    @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(@specimen_sent_to_uphl_yn)
+    @lab_result.stub!(:interpretation).and_return("Sick")
+    @lab_result.stub!(:specimen_source).and_return(simple_reference)
+    @lab_result.stub!(:collection_date).and_return("2008-02-01")
+    @lab_result.stub!(:lab_test_date).and_return("2008-02-02")
+    @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(simple_reference)
 
-#    @participations_risk_factor.stub!(:food_handler_id).and_return(1402)
-#    @participations_risk_factor.stub!(:group_living_id).and_return(1402)
-#    @participations_risk_factor.stub!(:day_care_association_id).and_return(1402)
-#    @participations_risk_factor.stub!(:healthcare_worker_id).and_return(1402)
-#    @participations_risk_factor.stub!(:risk_factors).and_return("Obese")
-#    @participations_risk_factor.stub!(:risk_factors_notes).and_return("300 lbs")
-    @participations_risk_factor.stub!(:pregnant).and_return(@pregnant)
-    @participations_risk_factor.stub!(:pregnancy_due_date).and_return(Date.parse('2008-10-12'))
+    @lab_place = mock_model(Place)
+    @lab_place.stub!(:name).and_return("A Lab")
 
-    @active_patient.stub!(:participations_risk_factor).and_return(@participations_risk_factor)
+    entity = mock_model(Entity)
+    entity.stub!(:place_temp).and_return(@lab_place)
 
-    @event_1.stub!(:record_number).and_return("2008537081")
-    @event_1.stub!(:event_name).and_return('Test')
-    @event_1.stub!(:event_onset_date).and_return("2008-02-19")
-    @event_1.stub!(:disease).and_return(@disease_event)
-    @event_1.stub!(:type).and_return('MorbidityEvent')
-    @event_1.stub!(:event_status).and_return("NEW")
-    @event_1.stub!(:imported_from).and_return(@imported_from)
-    @event_1.stub!(:udoh_case_status).and_return(@udoh_case_status)
-    @event_1.stub!(:lhd_case_status).and_return(@lhd_case_status)
-    @event_1.stub!(:outbreak_associated).and_return(@outbreak_associated)
-    @event_1.stub!(:outbreak_name).and_return("Test Outbreak")
-    @event_1.stub!(:investigation_started_date).and_return("2008-02-05")
-    @event_1.stub!(:investigation_completed_LHD_date).and_return("2008-02-08")
-    @event_1.stub!(:review_completed_UDOH_date).and_return("2008-02-11")
-    @event_1.stub!(:first_reported_PH_date).and_return("2008-02-07")
-    @event_1.stub!(:results_reported_to_clinician_date).and_return("2008-02-08")
-    @event_1.stub!(:MMWR_year).and_return("2008")
-    @event_1.stub!(:MMWR_week).and_return("7")
-    @event_1.stub!(:active_patient).and_return(@active_patient)
-    @event_1.stub!(:clinicians).and_return([mock_clinician])
-    @event_1.stub!(:contacts).and_return([mock_contact])
-    @event_1.stub!(:answers).and_return(mock_answers)
-    @event_1.stub!(:respond_to?).with(:each).and_return(false)
+    lab_part = mock_model(Participation)
+    lab_part.stub!(:secondary_entity).and_return(entity)
+    lab_part.stub!(:lab_results).and_return([@lab_result])
+
+    p = mock_simple_event(:morbidity)
+    p.stub!(:labs).and_return([lab_part])
+
+    p
   end
 
-  def mock_event_no_disease
-    mock_event
-    @event_1.stub!(:disease).and_return(nil)
+  def mock_simple_event(event_type)
+    @person = mock_model(Person)
+    @person.stub!(:last_name).and_return("Lastname")
+    @person.stub!(:first_name).and_return("Firstname")
+    @person.stub!(:middle_name).and_return("Middlename")
+    @person.stub!(:birth_date).and_return("2008-01-01")
+    @person.stub!(:date_of_death).and_return("2008-01-02")
+    @person.stub!(:approximate_age_no_birthday).and_return(55)
+    @person.stub!(:birth_gender).and_return(simple_reference)
+    @person.stub!(:ethnicity).and_return(simple_reference)
+    @person.stub!(:primary_language).and_return(simple_reference)
+    @person.stub!(:disposition).and_return(simple_reference)
+
+    entity = mock_model(Entity)
+    entity.stub!(:address_entities_locations).and_return([])
+    entity.stub!(:telephone_entities_locations).and_return([])
+    entity.stub!(:person).and_return(@person)
+
+    patient = mock_model(Participation)
+    patient.stub!(:primary_entity).and_return(entity)
+    patient.stub!(:participations_treatments).and_return([])
+    patient.stub!(:participations_risk_factor).and_return(nil)
+
+    @disease = mock_model(DiseaseEvent)
+    @disease.stub!(:disease).and_return(simple_reference)
+    @disease.stub!(:disease_onset_date).and_return("2008-01-03")
+    @disease.stub!(:date_diagnosed).and_return("2008-01-04")
+    @disease.stub!(:hospitalized).and_return(simple_reference)
+    @disease.stub!(:died).and_return(simple_reference)
+
+    if event_type == :morbidity
+      m = mock_model(MorbidityEvent)
+      m.stub!(:type).and_return('MorbidityEvent')
+    else
+      m = mock_model(ContactEvent)
+      m.stub!(:type).and_return('ContactEvent')
+    end
+    m.stub!(:id).and_return(1)
+    m.stub!(:record_number).and_return("20080001")
+    m.stub!(:event_onset_date).and_return("2008-01-05")
+    m.stub!(:read_attribute).with("MMWR_week").and_return(1)
+    m.stub!(:read_attribute).with("MMWR_year").and_return(2008)
+    m.stub!(:age_info).and_return("30 years")
+
+    m.stub!(:age_type).and_return(simple_reference)
+    m.stub!(:imported_from).and_return(simple_reference)
+    m.stub!(:lhd_case_status).and_return(simple_reference)
+    m.stub!(:udoh_case_status).and_return(simple_reference)
+    m.stub!(:outbreak_associated).and_return(simple_reference)
+    m.stub!(:outbreak_name).and_return("an outbreak")
+
+    m.stub!(:disease).and_return(@disease)
+    m.stub!(:event_name).and_return("an event")
+    m.stub!(:event_status).and_return("NEW")
+    m.stub!(:investigation_started_date).and_return("2008-01-06")
+    m.stub!(:investigation_completed_lhd_date).and_return("2008-01-07")
+    m.stub!(:review_completed_UDOH_date).and_return("2008-01-08")
+    m.stub!(:results_reported_to_clinician_date).and_return("2008-01-09")
+    m.stub!(:first_reported_PH_date).and_return("2008-01-10")
+    m.stub!(:investigation_completed_LHD_date).and_return("2008-01-11")
+    m.stub!(:created_at).and_return("2008-01-12")
+    m.stub!(:updated_at).and_return("2008-01-13")
+
+    m.stub!(:investigator).and_return(simple_reference)
+    m.stub!(:sent_to_cdc).and_return(true)
+
+    m.stub!(:primary_jurisdiction).and_return(simple_reference)
+    m.stub!(:patient).and_return(patient)
+
+    m.stub!(:place_exposures).and_return([])
+    m.stub!(:reporting_agency).and_return(nil)
+    m.stub!(:reporter).and_return(nil)
+    m.stub!(:labs).and_return([])
+    m.stub!(:hospitalized_health_facilities).and_return([])
+    m.stub!(:diagnosing_health_facilities).and_return([])
+    m.stub!(:clinicians).and_return([])
+    m.stub!(:contacts).and_return([])
+    m.stub!(:answers).and_return([])
+
+    m
   end
 
-  def expected_record
-    ['2008537081',
-     'Test',
-     '2008-02-19',
-     'Bubonic Plague',
-     'MorbidityEvent',
-     'Utah',
-     'Confirmed',
-     'Yes',
-     'Test Outbreak',
-     'New',
-     '2008-02-05',
-     '2008-02-08',
-     '2008-02-11',
-     '2008-02-07',
-     '2008-02-08',
-     '2008-02-13',
-     '2008-02-15',
-     'Yes',
-     'No',
-     'Yes',
-     '2008-10-12',
-     'Some Lab',
-     'Tissue',
-     'Positive',
-     '2008-02-14',
-     '2008-02-15',
-     'Yes',
-     'Joe Clinic',
-     '(555)555-5555',
-     '777 Some Address',
-     '21',
-     'Some City',
-     '77777',
-     'Some County',
-     'Utah',
-     'Some District',
-     '2008',
-     '7',
-     'Newton Falls',
-     'Summit',
-     '55555',
-     '11',
-     'Male',
-     'Not latino',
-     'White',
-     'English',
-     'Not infected',
-     'Numero uno',
-     'No (answer three)'].join(',') + "\n"
-  end
-  
-  def expected_record_no_disease
-    ['2008537081',
-     'Test',
-     '2008-02-19',
-     nil,
-     'MorbidityEvent',
-     'Utah',
-     'Confirmed',
-     'Yes',
-     'Test Outbreak',
-     'New',
-     '2008-02-05',
-     '2008-02-08',
-     '2008-02-11',
-     '2008-02-07',
-     '2008-02-08',
-     nil,
-     nil,
-     nil,
-     nil,
-     'Yes',
-     '2008-10-12',
-     'Some Lab',
-     'Tissue',
-     'Positive',
-     '2008-02-14',
-     '2008-02-15',
-     'Yes',
-     'Joe Clinic',
-     '(555)555-5555',
-     '777 Some Address',
-     '21',
-     'Some City',
-     '77777',
-     'Some County',
-     'Utah',
-     'Some District',
-     '2008',
-     '7',
-     'Newton Falls',
-     'Summit',
-     '55555',
-     '11',
-     'Male',
-     'Not latino',
-     'White',
-     'English',
-     'Not infected',
-     'Numero uno',
-     'No (answer three)'].join(',') + "\n"
+  def complex_event_output
+    out = simple_event_output(:morbidity) 
+
+    out << "\"\",Lab Results\n\"\","
+
+    out << lab_header.join(",") + "\n" 
+    out << '"",'
+    out << "#{@lab_place.name},"
+    out << "#{@lab_result.test_type},"
+    out << "#{@lab_result.lab_result_text},"
+    out << "#{@lab_result.interpretation},"
+    out << "#{@lab_result.specimen_source.code_description},"
+    out << "#{@lab_result.collection_date},"
+    out << "#{@lab_result.lab_test_date},"
+    out << "#{@lab_result.specimen_sent_to_uphl_yn.code_description}"
+    out << "\n"
   end
 
-  def expected_headers_array
-    %w(record_number
-       event_name
-       record_created_date
-       disease
-       event_type 
-       imported_from
-       UDOH_case_status
-       outbreak_associated
-       outbreak_name
-       event_status
-       investigation_started_date
-       investigation_completed_LHD_date
-       review_completed_UDOH_date
-       first_reported_PH_date
-       results_reported_to_clinician_date
-       disease_onset_date
-       date_diagnosed
-       hospitalized
-       died
-       pregnant
-       pregnancy_due_date
-       laboratory_name
-       specimen_source
-       lab_result_text
-       collection_date
-       lab_test_date
-       specimen_sent_to_uphl_yn
-       clinician_name
-       clinician_phone
-       clinician_street
-       clinician_unit
-       clinician_city
-       clinician_postal_code
-       clinician_county
-       clinician_state
-       clinician_district
-       MMWR_year
-       MMWR_week
-       contact_city
-       contact_county
-       contact_zip
-       contact_age
-       contact_birth_gender
-       contact_ethnicity
-       contact_race
-       contact_primary_language
-       contact_disposition
-       short_name_1
-       short_name_3)
+  def mixed_event_output
+    simple_event_output(:morbidity) + simple_event_output(:contact)
+  end
+
+  def simple_event_output(event_type)
+    m = mock_simple_event(event_type)
+    out = event_header(event_type).join(",") + "\n"
+    out << "#{m.id},"
+    out << "#{m.record_number},"
+    out << "#{@person.last_name},"
+    out << "#{@person.first_name},"
+    out << "#{@person.middle_name},"
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+
+    out << "#{@person.birth_date},"
+    out << "#{@person.approximate_age_no_birthday},"
+    out << "#{m.age_info},"
+    out << '"",'
+    out << '"",'
+    out << '"",'
+
+    out << "#{@person.birth_gender.code_description},"
+    out << "#{@person.ethnicity.code_description},"
+    out << "#{@person.primary_language.code_description},"
+    if event_type == :contact
+      out << "#{@person.disposition.code_description},"
+    end
+    out << "#{@disease.disease.disease_name},"
+    out << "#{@disease.disease_onset_date},"
+    out << "#{@disease.date_diagnosed},"
+    out << '"",'
+    out << "#{@disease.hospitalized.code_description},"
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << "#{@disease.died.code_description},"
+    out << "#{@person.date_of_death},"
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << "#{m.imported_from.code_description},"
+    if event_type == :morbidity
+      out << '"",'
+      out << '"",'
+      out << '"",'
+      out << '"",'
+      out << '"",'
+      out << '"",'
+      out << "#{m.results_reported_to_clinician_date},"
+      out << "#{m.first_reported_PH_date},"
+      out << "#{m.event_onset_date},"
+      out << "#{m.read_attribute("MMWR_week")},"
+      out << "#{m.read_attribute("MMWR_year")},"
+      out << "#{m.lhd_case_status.code_description},"
+      out << "#{m.udoh_case_status.code_description},"
+      out << "#{m.outbreak_associated.code_description},"
+      out << "#{m.outbreak_name},"
+      out << "#{m.event_name},"
+      out << "#{m.primary_jurisdiction.name},"
+      out << '"",'
+      out << "#{m.event_status},"
+      out << "#{m.investigation_started_date},"
+      out << "#{m.investigation_completed_LHD_date},"
+      out << "#{m.review_completed_UDOH_date},"
+      out << "#{m.investigator.best_name},"
+      out << "#{m.sent_to_cdc},"
+    end
+    out << "#{m.created_at},"
+    out << "#{m.updated_at}"
+    out << "\n"
+  end
+
+  def lab_header
+    %w(lab_name
+    test_type
+    lab_result
+    interpretation
+    specimen_source
+    collection_date
+    lab_test_date
+    specimen_sent_to_uphl)
+  end
+
+  def event_header(event_type)
+    header_array = []
+    p_or_c = event_type == :morbidity ? "patient" : "contact"
+
+    header_array << "internal_id"
+    header_array << "record_number"
+    
+    header_array << "#{p_or_c}_last_name"
+    header_array << "#{p_or_c}_first_name"
+    header_array << "#{p_or_c}_middle_name"
+    header_array << "#{p_or_c}_address_street_number"
+    header_array << "#{p_or_c}_address_street_name"
+    header_array << "#{p_or_c}_address_unit_number"
+    header_array << "#{p_or_c}_address_city"
+    header_array << "#{p_or_c}_address_state"
+    header_array << "#{p_or_c}_address_county"
+    header_array << "#{p_or_c}_address_postal_code"
+    header_array << "#{p_or_c}_birth_date"
+    header_array << "#{p_or_c}_approximate_age_no_birthdate"
+    header_array << "#{p_or_c}_age_at_onset"
+    header_array << "#{p_or_c}_phone_area_code"
+    header_array << "#{p_or_c}_phone_phone_number"
+    header_array << "#{p_or_c}_phone_extension"
+    header_array << "#{p_or_c}_birth_gender"
+    header_array << "#{p_or_c}_ethnicity"
+    header_array << "#{p_or_c}_language"
+
+    if event_type == :contact
+      header_array << "contact_disposition"
+    end
+
+    header_array << "#{p_or_c}_disease"
+    header_array << "#{p_or_c}_disease_onset_date"
+    header_array << "#{p_or_c}_date_diagnosed"
+    header_array << "#{p_or_c}_diagnosing_health_facility"
+    header_array << "#{p_or_c}_hospitalized"
+    header_array << "#{p_or_c}_hospitalized_health_facility"
+    header_array << "#{p_or_c}_hospital_admission_date"
+    header_array << "#{p_or_c}_hospital_discharge_date"
+    header_array << "#{p_or_c}_hospital_medical_record_no"
+    header_array << "#{p_or_c}_died"
+    header_array << "#{p_or_c}_date_of_death"
+    header_array << "#{p_or_c}_pregnant"
+    header_array << "#{p_or_c}_clinician_last_name"
+    header_array << "#{p_or_c}_clinician_first_name"
+    header_array << "#{p_or_c}_clinician_middle_name"
+    header_array << "#{p_or_c}_clinician_phone_area_code"
+    header_array << "#{p_or_c}_clinician_phone_phone_number"
+    header_array << "#{p_or_c}_clinician_phone_extension"
+    header_array << "#{p_or_c}_food_handler"
+    header_array << "#{p_or_c}_healthcare_worker"
+    header_array << "#{p_or_c}_group_living"
+    header_array << "#{p_or_c}_day_care_association"
+    header_array << "#{p_or_c}_occupation"
+    header_array << "#{p_or_c}_risk_factors"
+    header_array << "#{p_or_c}_risk_factors_notes"
+    header_array << "#{p_or_c}_imported_from"
+
+    if event_type == :morbidity
+      header_array << "reporting_agency"
+      header_array << "reporter_last_name"
+      header_array << "reporter_first_name"
+      header_array << "reporter_phone_area_code"
+      header_array << "reporter_phone_phone_number"
+      header_array << "reporter_phone_extension"
+      header_array << "results_reported_to_clinician_date"
+      header_array << "first_reported_PH_date"
+      header_array << "event_onset_date"
+      header_array << "MMWR_week"
+      header_array << "MMWR_year"
+      header_array << "lhd_case_status"
+      header_array << "udoh_case_status"
+      header_array << "outbreak_associated"
+      header_array << "outbreak_name"
+      header_array << "event_name"
+      header_array << "jurisdiction_of_investigation"
+      header_array << "jurisdiction_of_residence"
+      header_array << "event_status"
+      header_array << "investigation_started_date"
+      header_array << "investigation_completed_lhd_date"
+      header_array << "review_completed_UDOH_date"
+      header_array << "investigator"
+      header_array << "sent_to_cdc"
+    end
+    header_array << "event_created_date"
+    header_array << "event_last_updated_date"
   end
 
   describe "rendering csv output" do
-    it "should render csv data for 1 event" do
-      mock_event
-      render_events_csv(@event_1).should include(expected_record)
+    it "should render csv output for 1 morbidity event" do
+      render_events_csv(mock_simple_event(:morbidity)).should == simple_event_output(:morbidity)
     end
 
-    it "should not exclude disease fields if disease is nil" do
-      mock_event_no_disease
-      render_events_csv(@event_1).should include(expected_record_no_disease)
-    end
+   it "should render csv output for 1 contact event" do
+     render_events_csv(mock_simple_event(:contact)).should == simple_event_output(:contact)
+   end
 
-    it "should render a header row" do
-      mock_event
-      exporter = Exporters::Csv::Event.new
-      exporter.export_event(@event_1)
-      exporter.headers.should == expected_headers_array
-    end
+   it "should render csv output for multiple mixed events" do
+     render_events_csv(mock_mixed_events).should == mixed_event_output
+   end
 
-    it "should replace commas with spaces to avoid creating fake columns" do
-      mock_event
-      render_events_csv(@event_1).should_not include('Bubonic,Plague')
-    end
+   it "should render treatments and labs" do
+     render_events_csv(mock_complex_event).should == complex_event_output
+     #TODO: Really test treatments
+   end
 
-    it "should use the Event Csv export class" do
-      mock_event
-      Exporters::Csv::Event.export(@event_1).should include(expected_record)
-    end
+   #TODO
+   it "should render child contacts and places" do
+   end
 
-    it "should report 'N/A' if event_status is nil" do
-      mock_event
-      @event_1.stub!(:event_status).and_return(nil)
-      Exporters::Csv::Event.export(@event_1).should include('N/A')
-    end
   end
 
   describe "the state_controls method" do
