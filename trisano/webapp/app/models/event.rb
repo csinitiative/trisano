@@ -17,7 +17,7 @@
 
 class Event < ActiveRecord::Base
   include Blankable
-  include Export::Cdc
+  include Export::Cdc::Event
   
   after_update :save_associations
   before_save :generate_mmwr

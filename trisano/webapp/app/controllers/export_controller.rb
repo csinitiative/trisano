@@ -17,10 +17,9 @@
 class ExportController < ApplicationController
   
   def cdc
-    mmwr = Mmwr.new
-    @events = MorbidityEvent.find(:all, 
-      :conditions => ["(\"MMWR_week\"=? OR \"MMWR_week\"=?) AND \"MMWR_year\"=?", 
-                      mmwr.mmwr_week, mmwr.mmwr_week - 1, mmwr.mmwr_year])
+    predicate = ActiveRecord::Base.connection.execute("select * from fnTrisanoExportBuildPredicate(1)").first 
+    @events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc #{predicate}")
+    @events.map!{ |event| event.extend(Export::Cdc::Record) }
     respond_to do |format|
       format.dat
     end
