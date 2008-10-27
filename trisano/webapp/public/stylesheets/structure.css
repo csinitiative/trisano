@@ -79,12 +79,15 @@ form {
   text-transform: uppercase;
   padding: 3px 3px 3px 9px;
   background-color: #d4cbb4; }
+.listingforms tr {
+  background-color: #fff; }
+  .listingforms tr:hover {
+    background-color: #e5e5e5; }
 .listingforms td {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 12px;
   weight: light;
   color: #666;
-  background: #fff;
   padding: 3px 3px 3px 9px;
   border: dotted;
   border-color: #ccc;
