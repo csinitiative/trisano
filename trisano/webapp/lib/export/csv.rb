@@ -117,7 +117,16 @@ module Export
         unless event.is_a?(PlaceEvent)
           event_data << ["#{patient_or_contact}_birth_gender", "patient.primary_entity.person.birth_gender.code_description if patient.primary_entity.person.birth_gender"]
           event_data << ["#{patient_or_contact}_ethnicity", "patient.primary_entity.person.ethnicity.code_description if patient.primary_entity.person.ethnicity"]
-          # What to do about race
+          
+          # Cheating
+          cnt = 0
+          event.patient.primary_entity.races.each do |race|
+            cnt += 1
+            event_data << ["race_#{cnt}", "'#{race.code_description}'"]
+          end
+          num_races = ExternalCode.count(:conditions => "code_name = 'race'")
+          (num_races - cnt).times { |race_cnt| event_data << ["race_#{cnt + race_cnt + 1}", ""] }
+
           event_data << ["#{patient_or_contact}_language", "patient.primary_entity.person.primary_language.code_description if patient.primary_entity.person.primary_language"]
 
           if event.is_a?(ContactEvent)

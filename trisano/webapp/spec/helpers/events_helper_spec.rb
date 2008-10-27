@@ -64,6 +64,8 @@ describe EventsHelper do
   end
 
   def mock_simple_event(event_type)
+    ExternalCode.stub!(:count).and_return(7)
+
     @person = mock_model(Person)
     @person.stub!(:last_name).and_return("Lastname")
     @person.stub!(:first_name).and_return("Firstname")
@@ -80,6 +82,7 @@ describe EventsHelper do
     entity.stub!(:address_entities_locations).and_return([])
     entity.stub!(:telephone_entities_locations).and_return([])
     entity.stub!(:person).and_return(@person)
+    entity.stub!(:races).and_return([])
 
     patient = mock_model(Participation)
     patient.stub!(:primary_entity).and_return(entity)
@@ -192,6 +195,13 @@ describe EventsHelper do
 
     out << "#{@person.birth_gender.code_description},"
     out << "#{@person.ethnicity.code_description},"
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
+    out << '"",'
     out << "#{@person.primary_language.code_description},"
     if event_type == :contact
       out << "#{@person.disposition.code_description},"
@@ -289,6 +299,13 @@ describe EventsHelper do
     header_array << "#{p_or_c}_phone_extension"
     header_array << "#{p_or_c}_birth_gender"
     header_array << "#{p_or_c}_ethnicity"
+    header_array << "race_1"
+    header_array << "race_2"
+    header_array << "race_3"
+    header_array << "race_4"
+    header_array << "race_5"
+    header_array << "race_6"
+    header_array << "race_7"
     header_array << "#{p_or_c}_language"
 
     if event_type == :contact
