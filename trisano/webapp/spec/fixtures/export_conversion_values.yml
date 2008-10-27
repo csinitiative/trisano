@@ -1,0 +1,6 @@
+aids_export_value:
+  id: 1
+  export_column_id: 9
+  value_from: 'AIDS'
+  value_to:   '10560'
+  

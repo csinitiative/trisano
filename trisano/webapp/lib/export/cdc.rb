@@ -38,7 +38,7 @@ module Export
 
     module Record
 
-      def to_cdc 
+      def to_cdc
         %w(exp_rectype
            exp_update
            exp_state
@@ -50,13 +50,13 @@ module Export
            exp_count
            exp_county
            exp_birthdate
-           exp_age
+           age_at_onset
            exp_agetype
            exp_sex exp_race
            exp_ethnicity
            exp_eventdate
            exp_datetype
-           exp_casestatus
+           udoh_case_status_id
            exp_imported
            exp_outbreak
            exp_future
@@ -64,7 +64,20 @@ module Export
            mmwr_week
            event_onset_date
            event_status
-          ).map { |field| self[field] }.join
+          ).map { |field| send field }.join
+      end
+
+      def age_at_onset
+        self['age_at_onset'].to_s.rjust(3, '0')
+      end
+
+      def method_missing(method, *args)
+        if self.has_key? method.to_s
+          self.class.send(:define_method, method, lambda {self[method.to_s]})
+          send(method, args)
+        else
+          super
+        end
       end
 
     end

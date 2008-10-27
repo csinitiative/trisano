@@ -75,6 +75,8 @@ SELECT  DISTINCT
 , udoh_case_status_id
 , event_onset_date
 , event_status
+, age_at_onset
+, age_type_id
 FROM
 (
 SELECT events.id
@@ -83,8 +85,8 @@ SELECT events.id
   , events.udoh_case_status_id AS udoh_case_status_id
   , addresses.county_id
   , people.birth_date
-  , events.age_at_onset
-  , events.age_type_id
+  , events.age_at_onset AS age_at_onset
+  , events.age_type_id AS age_type_id
   , people.birth_gender_id
   , people_races.race_id
   , people.ethnicity_id
@@ -112,7 +114,7 @@ SELECT events.id
   , CAST(' '  AS char(1)) AS exp_update
   , CAST('49' AS char(2)) AS exp_state
   , SUBSTR(EXTRACT(YEAR from CURRENT_DATE), 3,2) AS exp_year 
-  , LPAD(events.id, 6, ' ') AS exp_caseid
+  , SUBSTR(events.record_number, 5) AS exp_caseid
   , CAST('S01' AS CHAR(3)) AS exp_site
   , events."MMWR_week" AS exp_week
   , cast(coalesce(valdisease.value_to, '99999', valdisease.value_to) as char(5)) AS exp_event
@@ -168,7 +170,8 @@ FROM
     LEFT  OUTER JOIN external_codes county
       ON  county.id = addresses.county_id
     LEFT  OUTER JOIN external_codes ageType
-      ON  ageType.id = people.age_type_id
+        ON  ageType.id = events.age_type_id
+--      ON  ageType.id = people.age_type_id
     LEFT  OUTER JOIN external_codes gender
       ON  gender.id = people.birth_gender_id
     LEFT  OUTER JOIN external_codes race
