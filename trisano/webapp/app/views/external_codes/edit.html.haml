@@ -14,31 +14,54 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Code Admin
+  Edit Code Detail
 
-- content_for :name do
-  Edit code
+/- content_for :name do
 
 - content_for :tools do
-  = link_to 'Back', codes_path
+  = link_to '< Back to Codes', codes_path
+  %p
 
-- form_for(@external_code, code_path(@external_code), :builder => ExtendedFormBuilder) do |code_form|
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Code Information
+    %tr
+      %td
+        .formname
+          = @external_code.the_code
+        .tools
+          = @external_code.code_description
+          %br
+          %b Code Type:
+          = @external_code.code_name
+          %br
+          %b Sort Order:
+          = @external_code.sort_order
+          %br
+          = link_to"Show", code_path(@external_code)
 
-  %span{ :class => "vert" }
-    %label Code
-    = code_form.text_field :the_code
-  %span{ :class => "vert" }
-    %label Description
-    = code_form.text_field :code_description
-  %span{ :class => "vert" }
-    %label Type
-    = code_form.text_field :code_name
-  %span{ :class => "vert" }  
-    %label Sort Order
-    = code_form.text_field :sort_order
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Edit Code
+    %tr
+      %td
+        - form_for(@external_code, code_path(@external_code), :builder => ExtendedFormBuilder) do |code_form|
 
-  %br
+          %span{ :class => "vert" }
+            %label Code
+            = code_form.text_field :the_code
+          %span{ :class => "vert" }
+            %label Description
+            = code_form.text_field :code_description
+          %span{ :class => "vert" }
+            %label Type
+            = code_form.text_field :code_name
+          %span{ :class => "vert" }  
+            %label Sort Order
+            = code_form.text_field :sort_order
 
-  = code_form.submit "Update"
-
-%br
+          = code_form.submit "Update"

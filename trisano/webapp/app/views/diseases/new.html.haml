@@ -17,10 +17,10 @@
   Create Disease
 
 /- content_for :name do
-/  New disease
 
 - content_for :tools do
   = link_to '< Back to Diseases', diseases_path
+  %p
 
 = error_messages_for :disease
 
@@ -29,7 +29,3 @@
   = render :partial => 'form', :locals => { :f => f }
 
   = f.submit "Create"
-
-%br
-%br
-

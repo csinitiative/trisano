@@ -14,27 +14,26 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Queue Admin
+  Event Queue Detail
 
-- content_for :name do
-  Event queue details:  
-  = @event_queue.queue_name
+/- content_for :name do
 
 - content_for :tools do
-  -# = link_to 'Edit', edit_event_queue_path(@event_queue)
-  -# |
-  = link_to 'Back', event_queues_path
-
+  /= link_to 'Edit', edit_event_queue_path(@event_queue)
+  = link_to '< Back to Event Queues', event_queues_path
+  %p
+  
 - content_for :tools_two do
   = button_to("Create new event queue", new_event_queue_path)
 
-%fieldset
-  %legend
-    Event Queue
-
-  %span{:class => 'horiz'}
-    %label Queue name
-    %span=@event_queue.queue_name
-
-  %label Jurisdiction
-  %span=@event_queue.jurisdiction.current_place.name
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Event Queue
+      %tr
+        %td.forminformation
+          .formname
+            =@event_queue.queue_name
+          .tools
+            = @event_queue.jurisdiction.current_place.name

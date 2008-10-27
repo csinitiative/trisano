@@ -14,34 +14,37 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Code Admin
+  Create Code
 
-- content_for :name do
-  New code
+/- content_for :name do
 
 - content_for :tools do
-  = link_to 'Back', codes_path
+  = link_to '< Back to Codes', codes_path
+  %p
+  
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Create Code
+    %tr
+      %td
+        - form_for(@external_code, :builder => ExtendedFormBuilder) do |f|
 
-- form_for(@external_code, :builder => ExtendedFormBuilder) do |f|
+          %span{ :class => "vert" }
+            = f.label(:the_code, "Code")
+            = f.text_field :the_code
 
-  %span{ :class => "vert" }
-    = f.label(:the_code, "Code")
-    = f.text_field :the_code
+          %span{ :class => "vert" }
+            = f.label(:code_description, "Description")
+            = f.text_field :code_description
 
-  %span{ :class => "vert" }
-    = f.label(:code_description, "Description")
-    = f.text_field :code_description
+          %span{ :class => "vert" }
+            = f.label(:code_name, "Code Type")
+            = f.text_field :code_name
 
-  %span{ :class => "vert" }
-    = f.label(:code_name, "Code Type")
-    = f.text_field :code_name
+          %span{ :class => "vert" }
+            = f.label(:sort_order, "Sort Order")
+            = f.text_field :sort_order
 
-  %span{ :class => "vert" }
-    = f.label(:sort_order, "Sort Order")
-    = f.text_field :sort_order
-
-  %br
- 
-  = f.submit "Create"
-
-%br
+          = f.submit "Create"

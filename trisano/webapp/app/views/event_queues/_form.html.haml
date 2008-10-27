@@ -13,14 +13,19 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%h3 Note!  Event queues cannot be edited or deleted.  Please be mindful.
-%label Create a queue named
-= f.text_field :queue_name
-%br
-%br
+%table.listingforms
+  %tr
+    %th.forminformation
+      Event Queue
+  %tr
+    %td
+      %h3 Note!  Event queues cannot be edited or deleted.  Please be mindful.
+      %label
+        Queue Name:
+      = f.text_field :queue_name
+      %p
 
-%label for jurisdiction
-= f.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name,  {})
-
-%br
-%br
+      %label
+        Jurisdiction:
+      = f.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name,  {})
+      %p

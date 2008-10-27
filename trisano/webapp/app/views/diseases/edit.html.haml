@@ -17,8 +17,6 @@
   Edit Disease Detail
 
 /- content_for :name do
-/  Edit 
-/  = @disease.disease_name
 
 - content_for :tools do
   = link_to '< Back to Diseases', diseases_path
@@ -31,8 +29,7 @@
   %table.listingforms
     %tr
       %th.forminformation
-        Disease Information
-      %th
+        Disease
       %tr
         %td.forminformation
           .formname
@@ -41,10 +38,7 @@
               = @disease.active? ? 'Active' :  'Inactive'
           .tools
             = link_to 'Show', @disease
-        %td
-
 #rot
-  %p
   = error_messages_for :disease
 
   - form_for(@disease) do |f|

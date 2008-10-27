@@ -14,13 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Queue Admin
+  Create Event Queue
 
-- content_for :name do
-  New event queue
+/- content_for :name do
 
 - content_for :tools do
-  = link_to 'Back', event_queues_path
+  = link_to '< Back to Event Queues', event_queues_path
+  %p
 
 = error_messages_for :event_queue
 

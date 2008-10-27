@@ -14,27 +14,25 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Queue Admin
-
-- content_for :name do
   Event Queues
 
-- content_for :tools do
-  = link_to 'New event queue', new_event_queue_path
+/- content_for :name do
+
+/- content_for :tools do
 
 - content_for :tools_two do
   = button_to("Create new event queue", new_event_queue_path)
 
-%table{:class => 'tabular'}
-  %tr
-    %th Queue Name
-    %th Jurisdiction
-
-  - for event_queue in @event_queues
+#rot
+  %table.listingforms
     %tr
-      %td=event_queue.queue_name
-      %td=event_queue.jurisdiction.current_place.name
-      %td
-        = link_to 'Show', event_queue
-        -# &nbsp;
-        -# = link_to 'Edit', edit_event_queue_path(event_queue)
+      %th.forminformation
+        Event Queues
+    - for event_queue in @event_queues
+      %tr
+        %td
+          .formname
+            = link_to event_queue.queue_name, event_queue
+          .tools
+            = event_queue.jurisdiction.current_place.name
+            /= link_to 'Edit', edit_event_queue_path(event_queue)

@@ -15,7 +15,7 @@
 
 
 %tr.role_membership
-  %td.forminformation
+  %td
     .formname
       -# Not using the 'new or existing' stuff because we always treat an update of role memberships as a new set.
       - fields_for "user[role_membership_attributes][]", role do |rm_form|

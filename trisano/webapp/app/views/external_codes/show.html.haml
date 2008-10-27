@@ -14,39 +14,31 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Code Admin
+  Code Detail
 
-- content_for :name do
-  = "Code details: #{@external_code.code_description}"
+/- content_for :name do
+/  = "Code details: #{@external_code.code_description}"
 
 - content_for :tools do
-  = link_to "Return to Code List", codes_path
-  |
-  = link_to "Edit Code", edit_code_path(@external_code)
+  = link_to "< Back to Codes", codes_path
+  %p
 
-
-%fieldset
-  %legend Code Information
-  %table
+#rot
+  %table.listingforms
+    %tr
+      %th.forminformation
+        Code Information
     %tr
       %td
-        %span.label Code Description:
-      %td
-        = @external_code.code_description
-    %tr
-      %td
-        %span.label Code Type:
-      %td
-        = @external_code.code_name
-    %tr
-      %td
-        %span.label Code:
-      %td
-        = @external_code.the_code
-    %tr
-      %td
-        %span.label Sort Order:
-      %td
-        = @external_code.sort_order
-
-%br
+        .formname
+          = @external_code.the_code
+        .tools
+          = @external_code.code_description
+          %br
+          %b Code Type:
+          = @external_code.code_name
+          %br
+          %b Sort Order:
+          = @external_code.sort_order
+          %br
+          = link_to "Edit", edit_code_path(@external_code)

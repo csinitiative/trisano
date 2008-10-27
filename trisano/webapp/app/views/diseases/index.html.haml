@@ -17,10 +17,8 @@
   Diseases
 
 /- content_for :name do
-/  Diseases
 
 /- content_for :tools do
-/  = link_to 'New disease', new_disease_path
 
 - content_for :tools_two do
   = button_to("Create new disease", {:action => "new"}, { :method => :get })
@@ -30,7 +28,6 @@
     %tr
       %th.forminformation
         Diseases
-      %th
     - for disease in @diseases
       %tr
         %td.forminformation
@@ -40,5 +37,3 @@
               = disease.active? ? 'Active' :  'Inactive'
           /.tools
           /  = link_to('Edit', edit_disease_path(disease))
-        %td
-          

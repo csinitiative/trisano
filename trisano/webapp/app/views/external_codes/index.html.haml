@@ -14,37 +14,43 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Code Admin
-
-- content_for :name do
   Codes
 
-- content_for :tools do
-  = link_to 'New code', new_external_code_path
+/- content_for :name do
+
+/- content_for :tools do
+/  = link_to 'New code', new_external_code_path
 
 - content_for :tools_two do
   = button_to("Create new code", {:action => "new"}, { :method => :get })
 
 - for code_type in @code_types
-%fieldset
-  %legend= code_type.code_name.capitalize
-  %table{ :class => 'tabular' }
+
+#rot
+  %table.listingforms
     %tr
-      %th Code Description
-      %th Code Type
-      %th Code
+      %th.forminformation
+        = code_type.code_name.capitalize,'&#160; Codes'
+      %th
+        Type
+      %th
     - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
     %tr
       %td
-        = code.code_description
+        .formname
+          = link_to code.the_code, code_path(code)
+        .tools
+          = code.code_description
       %td
-        = code.code_name
+        .formname
+          &#160;
+        .tools
+          = code.code_name
       %td
-        = code.the_code
-      %td
-        = link_to("Edit", edit_code_path(code))
-        = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
-        = link_to("Show", code_path(code))
+        .tools{:style => "position: absolute; right: 15px;"}
+          = link_to("Edit", edit_code_path(code))
+          |
+          = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
+          /= link_to("Show", code_path(code))
     -end
 - end
-
