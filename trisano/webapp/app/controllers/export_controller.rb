@@ -17,9 +17,7 @@
 class ExportController < ApplicationController
   
   def cdc
-    predicate = ActiveRecord::Base.connection.execute("select * from fnTrisanoExportBuildPredicate(1)").first 
-    @events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc #{predicate}")
-    @events.map!{ |event| event.extend(Export::Cdc::Record) }
+    @events = CdcExport.weekly_cdc_export
     respond_to do |format|
       format.dat
     end

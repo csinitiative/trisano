@@ -70,12 +70,14 @@ SELECT  DISTINCT
 , cast(exp_future  as char(2))
 , disease_name
 , mmwr_week
+, mmwr_year
 , event_onset_date
 , event_status
 FROM
 (
 SELECT events.id
   , events."MMWR_week" AS mmwr_week
+  , events."MMWR_year" AS mmwr_year
   , addresses.county_id
   , people.birth_date
   , events.age_at_onset
