@@ -73,7 +73,6 @@ Warbler::Config.new do |config|
   # the pool will grow as needed to service requests. It is recommended
   # that you fix these values when running a production server!
   config.webxml.jruby.min.runtimes = ENV['min_runtimes'] ||= '3'
-  config.webxml.jruby.pool.minIdle = ENV['min_runtimes'] ||= '3' # for some reason JRuby Rack only picking this up (not min.runtimes)
   config.webxml.jruby.max.runtimes = ENV['max_runtimes'] ||= '10'
 
   # JNDI data source name
