@@ -51,7 +51,5 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  flexmock             MIT               Jim Weirich http://rubyforge.org/projects/flexmock/
  lockfile             Ruby License      http://rubyforge.org/projects/codeforpeople/
  rubyzip	      Ruby License      Thomas Sondergaard http://rubyzip.sourceforge.net/ 
- json                 Ruby License      Florian Frank http://json.rubyforge.org/ 
- json-jruby           Ruby License      Daniel Luz http://json-jruby.rubyforge.org/ 
 
 

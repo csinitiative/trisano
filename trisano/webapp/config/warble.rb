@@ -32,8 +32,8 @@ Warbler::Config.new do |config|
   # overwrite the value
   # config.gems = ["activerecord-jdbc-adapter", "jruby-openssl"]
   # config.gems << "tzinfo"
-  config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "json-jruby", "rubyzip"]
-  #config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "json-jruby", "rubyzip", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter']
+  config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "rubyzip"]
+  #config.gems = ["hoe", "hpricot", "rest-open-uri", "postgres-pr", "logging", "rubyzip", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter']
   config.gems['rails'] = "2.0.2"
 
   # Include gem dependencies not mentioned specifically
