@@ -69,8 +69,10 @@ SELECT  DISTINCT
 , cast(exp_outbreak  as char(2))
 , cast(exp_future  as char(2))
 , disease_name
+, disease_id
 , mmwr_week
 , mmwr_year
+, udoh_case_status_id
 , event_onset_date
 , event_status
 FROM
@@ -78,6 +80,7 @@ FROM
 SELECT events.id
   , events."MMWR_week" AS mmwr_week
   , events."MMWR_year" AS mmwr_year
+  , events.udoh_case_status_id AS udoh_case_status_id
   , addresses.county_id
   , people.birth_date
   , events.age_at_onset
@@ -114,6 +117,7 @@ SELECT events.id
   , events."MMWR_week" AS exp_week
   , cast(coalesce(valdisease.value_to, '99999', valdisease.value_to) as char(5)) AS exp_event
   , disease_name AS disease_name
+  , diseases.id as disease_id
   , CAST('00001' AS CHAR(6))  as exp_count
   , COALESCE(valcounty.value_to, '999', valcounty.value_to) AS exp_county
   , cast(coalesce(EXTRACT(YEAR FROM people.birth_date) 

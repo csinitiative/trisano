@@ -18,8 +18,9 @@ class CdcExport < ActiveRecord::Base
 
   class << self
     def weekly_cdc_export
-      where = %Q[where (("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})]
-      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc #{where}")
+      where = [%Q|(("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
+      where << Disease.disease_status_where_clause
+      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end

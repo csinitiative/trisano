@@ -20,9 +20,31 @@ class Disease < ActiveRecord::Base
 
   has_and_belongs_to_many :external_codes
 
-  def self.find_active(*args)
-    with_scope(:find => {:conditions => ['active = ?', true]}) do
-      find(*args)
+  class << self
+
+    def find_active(*args)
+      with_scope(:find => {:conditions => ['active = ?', true]}) do
+        find(*args)
+      end
     end
+
+    def disease_status_where_clause
+      diseases = []
+      find(:all).each do |disease|
+        diseases << disease.case_status_where_clause
+      end
+      "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
+    end      
+        
   end
+
+  def case_status_where_clause
+    codes = []
+    external_codes.each do |code|
+      codes << "udoh_case_status_id = '#{code.id}'"
+    end
+    "(disease_id='#{self.id}' AND (#{codes.join(' OR ')}))" unless codes.empty?
+  end
+    
+
 end
