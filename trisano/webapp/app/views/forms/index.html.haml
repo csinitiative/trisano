@@ -24,7 +24,7 @@
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
-- form_tag ({:action => 'import'}, :multipart => true) do
+- form_tag({:action => 'import'}, :multipart => true) do
   %table{:width => '100%'}
     %tr
       %td{:align => 'right', :width => '100%'}
