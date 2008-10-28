@@ -28,11 +28,22 @@ require File.dirname(__FILE__) + '/trisano_helper'
 Spec::Runner.configure do |config|
   include TrisanoHelper
   
+  $trisano_download_file_url = ENV['TRISANO_DOWNLOAD_FILE_URL'] ||= "/home/#{ENV['USERNAME']}/downloads/"
+
   trisano_url = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   trisano_url = trisano_url.sub("//", "//utah:arches@")
-    
+  
   config.before(:all) do
     @browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox",trisano_url, 10000)
+
+    # Debt: Need to get this all dialed in properly. Use the following browser for testing downloads.
+    #
+    # Requires a current browser profile that allows auto-downloading.
+    #
+    # See: https://trisano.csinitiative.net/wiki/TestingDownloadsWithSelenium
+    # 
+    #@browser = Selenium::SeleniumDriver.new("localhost", 4444, "*custom /usr/bin/firefox",trisano_url, 10000)
+
     @browser.start
   end
   

@@ -156,6 +156,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
     export_file_path = @form.export
     if export_file_path
+      response.headers['Content-type'] = "application/zip"
       send_file export_file_path
     else
       flash[:error] = 'Unable to export the form. Please contact your administrator.'

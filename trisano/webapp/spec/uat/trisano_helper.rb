@@ -358,6 +358,16 @@ module TrisanoHelper
     end
   end
   
+  def click_form_export(browser, name)
+    id = get_resource_id(browser, name)
+    if id > 0 
+      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/export')]"
+      return true
+    else
+      return false
+    end
+  end
+  
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_active_patient__person_last_name", last_name
