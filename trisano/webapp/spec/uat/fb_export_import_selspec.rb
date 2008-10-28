@@ -38,7 +38,7 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     @tab_question_text = nil
   end
   
-  it 'should handle standard follow-ups.' do
+  it 'should export and import forms' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     
     add_section_to_view(@browser, "Default View", {:section_name => @section_name})
@@ -49,15 +49,25 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
 
     click_nav_forms(@browser)
 
-    # Relies on browser profile changes that we need to get dialed in. Works if you uncomment and
+    # The rest relies on browser profile changes that we need to get dialed in. Works if you uncomment and
     # also use the alternate @browser initialization in spec_helper.
     #
-    # click_form_export(@browser, @form_name).should be_true
-    # sleep 2
-    # File.exist?("#{$trisano_download_file_url}#{@form_name.downcase.sub(" ", "_")}.zip").should be_true
-
-    # Import on the way...
-
+#    click_form_export(@browser, @form_name).should be_true
+#    sleep 2
+#    File.exist?("#{$trisano_download_file_url}#{@form_name.downcase.sub(" ", "_")}.zip").should be_true
+#
+#    @browser.type("form_import", "#{$trisano_download_file_url}#{@form_name.downcase.sub(" ", "_")}.zip")
+#    @browser.click("//input[@value='Upload']")
+#    @browser.wait_for_page_to_load($load_time)
+#    @browser.click "link=Form Builder"
+#    @browser.wait_for_page_to_load($load_time)
+#
+#    @browser.is_text_present(@form_name).should be_true
+#    @browser.is_text_present(@section_name).should be_true
+#    @browser.is_text_present(@section_question_text).should be_true
+#    @browser.is_text_present(@tab_name).should be_true
+#    @browser.is_text_present(@tab_question_text).should be_true
+    
   end
     
 end
