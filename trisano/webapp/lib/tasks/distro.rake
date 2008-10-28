@@ -40,6 +40,7 @@ namespace :trisano do
       @basicauth = config['basicauth'] unless validate_config_attribute(config, 'basicauth')
       @min_runtimes = config['min_runtimes'] unless validate_config_attribute(config, 'min_runtimes')
       @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
+      @dump_file = config['dump_file_name'] unless validate_config_attribute(config, 'dump_file_name')
       ENV["PGPASSWORD"] = @priv_password 
     end
 
@@ -169,7 +170,7 @@ namespace :trisano do
       initialize_config
       dirname = './dump'
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{dump_file}")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
     end
     
