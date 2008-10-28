@@ -169,7 +169,7 @@ namespace :trisano do
     task :restore_db do
       initialize_config
       if @dump_file.nil?
-        raise "attribute #{attribute} is not specified in config.yml - please add it and try again."
+        raise "attribute dump_file_name is not specified in config.yml - please add it and try again."
       end
       dirname = './dump'
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")

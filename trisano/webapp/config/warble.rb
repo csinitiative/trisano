@@ -1,3 +1,7 @@
+# Monkeypatch: http://www.nabble.com/Re%3A-Why-does-Warbler-requires-a-db-to-build--p19504132.html
+# Turn off Rails auto-detection which invokes the environment task and requires a DB connection 
+class Warbler::Config; def auto_detect_rails; true; end; end
+
 # Warbler web application assembly configuration file
 Warbler::Config.new do |config|
   # Temporary directory where the application is staged
