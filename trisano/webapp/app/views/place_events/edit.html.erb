@@ -45,7 +45,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <div id="follow-up-error"></div>
 
-<% form_for(@event, :url => place_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+<% form_for(@event, :url => place_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
 
   <% tabs = []

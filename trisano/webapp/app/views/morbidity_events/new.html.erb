@@ -35,7 +35,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <%= error_messages_for :object => @event %>
 
-<% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder) do |event_form| %>
+<% form_for(@event, :url => cmrs_path, :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
 
   <%# We put this here to keep jurisdiction from being changed in edit mode %>
