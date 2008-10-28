@@ -18,11 +18,17 @@ class CdcExport < ActiveRecord::Base
 
   class << self
     def weekly_cdc_export
-      where = [%Q|(("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
+      where = [%Q|cdc_update=true AND (("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
       where << Disease.disease_status_where_clause
       events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
+    end
+
+    # set updated to false and sent to true for all cdc records
+    def reset_sent_status(cdc_records)
+      event_ids = cdc_records.collect {|record| record.event_id}
+      Event.update_all('cdc_update=false, sent_to_cdc=true', ['id IN (?)', event_ids])
     end
 
     private

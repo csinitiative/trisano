@@ -78,11 +78,16 @@ SELECT  DISTINCT
 , event_status
 , age_at_onset
 , age_type_id
+, event_id
+, cdc_update
+, sent_to_cdc
 FROM
 (
-SELECT events.id
+SELECT events.id AS event_id
   , events."MMWR_week" AS mmwr_week
   , events."MMWR_year" AS mmwr_year
+  , events.cdc_update AS cdc_update
+  , events.sent_to_cdc AS sent_to_cdc
   , events.udoh_case_status_id AS udoh_case_status_id
   , addresses.county_id
   , people.birth_date

@@ -1221,15 +1221,17 @@ describe MorbidityEvent do
       }
     end
 
-    it 'should return false if no cdc values have changed' do
+    it 'should return true for a new record, not yet sent to cdc' do
       with_event do |event|
-        event.should_not be_new_record
-        event.should_not be_a_cdc_update
+        event.should_not be_a_new_record
+        event.should be_a_cdc_update
+        event.should_not be_sent_to_cdc
       end
     end
 
     it 'should need cdc update when first_reported_PH_date value changes' do
       with_event do |event|
+        event.cdc_update = false
         event.first_reported_PH_date = Date.today
         event.save.should be_true
         event.should be_a_cdc_update

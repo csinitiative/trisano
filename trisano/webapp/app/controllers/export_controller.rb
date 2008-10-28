@@ -18,6 +18,7 @@ class ExportController < ApplicationController
   
   def cdc
     @events = CdcExport.weekly_cdc_export
+    CdcExport.reset_sent_status(@events)
     respond_to do |format|
       format.dat
     end

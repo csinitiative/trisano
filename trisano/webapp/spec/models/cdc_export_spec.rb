@@ -25,6 +25,7 @@ describe CdcExport do
     event.save!
     event.reload
     records =  CdcExport.weekly_cdc_export.collect {|record| [record, event]}
+    records.should_not be_empty
     yield records if block_given?
   end
 
@@ -218,6 +219,27 @@ describe CdcExport do
     it "should display outbreak as a one digit code" do
       with_cdc_records do |records|
         records[0][0].to_cdc[54...55].should == '0'
+      end
+    end
+
+    describe 'resetting sent and updated flags' do
+      it 'should mark an event a not updated and sent after processing' do
+        with_cdc_records do |records|
+          samples = records.collect {|record| record[0]}
+          CdcExport.reset_sent_status(samples)
+          event = records[0][1]
+          event.reload
+          event.should_not be_a_cdc_update
+          event.should be_sent_to_cdc
+        end
+      end
+
+      it 'should stop a record from appearing in the cdc export' do
+        with_cdc_records do |records|
+          samples = records.collect {|record| record[0]}
+          CdcExport.reset_sent_status(samples)
+          CdcExport.weekly_cdc_export.should be_empty
+        end
       end
     end
   end

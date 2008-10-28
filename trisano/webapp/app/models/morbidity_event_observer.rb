@@ -20,12 +20,11 @@ class MorbidityEventObserver < ActiveRecord::Observer
     event.cache_old_attributes
   end
 
-  def before_update(event)
+  def before_save(event)
     event.check_cdc_updates
-    event.cache_old_attributes
   end
 
-  def after_create(event)
+  def after_save(event)
     event.cache_old_attributes
   end
 

@@ -26,6 +26,7 @@ module Export
       private
       
       def cdc_attributes_changed?(old_attributes)
+        return true if new_record?
         return false unless old_attributes
         
         cdc_fields = %w(first_reported_PH_date udoh_case_status_id)
