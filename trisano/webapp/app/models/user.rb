@@ -73,11 +73,11 @@ class User < ActiveRecord::Base
   end
 
   def jurisdiction_ids_for_privilege(privilege)
-    entitlements.collect { |ent| ent.jurisdiction_id if ent.privilege.priv_name.to_sym == privilege }.compact!
+    entitlements.collect { |ent| ent.jurisdiction_id if ent.privilege.priv_name.to_sym == privilege }.compact
   end
   
   def admin_jurisdiction_ids
-    @admin_jurisdiction_ids ||= entitlements.collect { |e| e.jurisdiction_id if e.privilege.priv_name.to_sym == :administer}.compact!
+    @admin_jurisdiction_ids ||= entitlements.collect { |e| p e; p e.privilege.priv_name.to_sym; p e.jurisdiction_id; e.jurisdiction_id if e.privilege.priv_name.to_sym == :administer}.compact
   end
   
   # A necessary simplifying assumption: treat all modifications to a user's role as if they were new.
