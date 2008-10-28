@@ -24,14 +24,36 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <%= place_name %>
+  <table class='listingforms'>
+    <tr>
+      <th class='forminformation'>Place Name</th>
+      <th>Assigned Jurisidiction</th>
+      <th>Original Patient</th>
+    </tr>
+    <tr>
+      <% place = @event.active_place.primary_entity.person %>
+      <td class='forminformation'>
+        <div class='patientname'>
+          <%= place_name %>
+        </div>
+        <small>Date: <%= @event.event_onset_date %></small>
+        <div class='tools'>
+          <%= basic_place_event_controls(@event, false) %>
+        </div>
+      </td>
+      <td>
+        <b><%= @event.primary_jurisdiction.short_name %></b>
+      </td>
+      <td>
+        <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
+        <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%>
+        <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? %></p>
+      </td>
+    </tr>
+  </table>
 <% end %>
 
-<%- jurisdiction = @event.active_jurisdiction.secondary_entity.current_place %>
 <% content_for :tools do %>
-  <%= basic_place_event_controls(@event, false) %>
-  <br />
-  Assigned Jurisdiction: <%= jurisdiction.name %>
 <% end %>
 
 <% form_for(@event, :url => place_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>

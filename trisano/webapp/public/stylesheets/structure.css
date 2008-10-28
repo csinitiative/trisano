@@ -33,6 +33,7 @@ body, p, ol, ul {
   position: fixed;
   top: 104px;
   width: 100%;
+  padding-top: 1em;
   background-color: #f9f8f5;
   z-index: 800; }
 
