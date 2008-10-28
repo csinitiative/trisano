@@ -40,3 +40,5 @@ DEFAULT_LOGGER = Logging::Logger['server']
 DEFAULT_LOGGER.add_appenders default_appender
 DEFAULT_LOGGER.level = :info
 
+config.logger = DEFAULT_LOGGER
+
