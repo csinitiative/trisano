@@ -187,7 +187,7 @@ namespace :trisano do
     desc "Migrate the database"
     task :upgrade_db => ['dump_db'] do
       initialize_config   
-      replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)            
+      replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
       cd '../webapp/'
       ruby "-S rake db:migrate RAILS_ENV=production"
     end
