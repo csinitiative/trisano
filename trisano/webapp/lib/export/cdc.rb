@@ -59,17 +59,23 @@ module Export
            udoh_case_status_id
            exp_imported
            exp_outbreak
-           exp_future
-           disease_name
-           mmwr_week
-           event_onset_date
-           event_status
           ).map { |field| send field }.join
       end
 
       def age_at_onset
         self['age_at_onset'].to_s.rjust(3, '0')
       end
+      
+      # This is a cheat. Sometime we should go back and fix the view.
+      def udoh_case_status_id
+        return '9' unless status_code = self['udoh_case_status_id']
+        external_code = ExternalCode.find(status_code)
+        cdc_code = ExportConversionValue.find(:first, :conditions => 
+                     ["export_column_id=? and value_from=?", 
+                      20, external_code.the_code])
+        cdc_code.value_to
+      end
+           
 
       def method_missing(method, *args)
         if self.has_key? method.to_s

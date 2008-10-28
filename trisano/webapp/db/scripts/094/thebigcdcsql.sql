@@ -65,9 +65,9 @@ SELECT  DISTINCT
     THEN cast('3' as char(1))
     ELSE cast('9' as char(1))
     END  as exp_datetype
-, cast(exp_casestatus   as char(2))
-, cast(exp_imported as char(2))
-, cast(exp_outbreak  as char(2))
+, cast(exp_casestatus   as char(1))
+, cast(exp_imported as char(1))
+, cast(exp_outbreak  as char(1))
 , cast(exp_future  as char(2))
 , disease_name
 , disease_id
@@ -171,7 +171,7 @@ FROM
     LEFT  OUTER JOIN external_codes county
       ON  county.id = addresses.county_id
     LEFT  OUTER JOIN external_codes ageType
-        ON  ageType.id = events.age_type_id
+      ON  ageType.id = events.age_type_id
 --      ON  ageType.id = people.age_type_id
     LEFT  OUTER JOIN external_codes gender
       ON  gender.id = people.birth_gender_id
@@ -195,6 +195,7 @@ FROM
       AND valethnicity.export_column_id = 17
     LEFT  OUTER JOIN export_conversion_values valcasestatus
       ON  valcasestatus.value_from = events.event_status
+--      ON  valcasestatus.value_from = events.udoh_case_status_id
       AND valcasestatus.export_column_id = 20
     LEFT  OUTER JOIN export_conversion_values valimported
       ON  valimported.value_from = imported.the_code

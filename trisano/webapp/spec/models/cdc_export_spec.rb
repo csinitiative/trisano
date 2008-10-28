@@ -30,14 +30,21 @@ describe CdcExport do
 
   before :each do
     @event_hash = {
+      "imported_from_id" => external_codes(:imported_from_utah).id,
       "udoh_case_status_id" => external_codes(:case_status_probable).id,
       "disease" => {
         "disease_id" => diseases(:aids).id
       },
       "active_patient" => {
-        "entity_type"=>"person", 
+        "address" => {
+          "county_id" => external_codes(:county_salt_lake).id
+        },
+        "entity_type"=>"person",
+        "race_ids" => [external_codes(:race_white).id],
         "person" => {
           "last_name"=>"Biel",
+          "ethnicity_id" => external_codes(:ethnicity_non_hispanic).id,
+          "birth_gender_id" => external_codes(:gender_female).id,
           "birth_date" => Date.parse('01/01/1975')
         }          
       }
@@ -107,9 +114,14 @@ describe CdcExport do
       end
     end
 
-    it "should display 3 digit county code"
+    it "should display 3 digit county code" do
+      with_cdc_records do |records|
+        records[0][0].to_cdc[27..29].should == '035'
+      end
+    end
 
     it "should display an unknown county code as 999" do
+      @event_hash["active_patient"].delete("address")
       with_cdc_records do |records|
         records[0].first.to_cdc[27..29].should == '999'
       end
@@ -141,28 +153,43 @@ describe CdcExport do
     end
 
     it "should display sex as 'U' for unknown genders" do
+      @event_hash['active_patient']['person']['birth_gender_id'] = nil
       with_cdc_records do |records|
         records[0].first.to_cdc[42...43].should == 'U'
       end
     end
 
-    it "should display sex as a 1 digit code" 
+    it "should display sex as a single char code" do
+      with_cdc_records do |records|
+        records[0][0].to_cdc[42...43].should == 'F'
+      end
+    end
 
     it "should display an unknown race as 'U'" do
+      @event_hash['active_patient']['race_ids'] = nil
       with_cdc_records do |records|
         records[0].first.to_cdc[43...44].should == 'U'
       end
     end
 
-    it "should display race as a 1 digit code"    
+    it "should display race as a 1 digit code" do
+      with_cdc_records do |records|
+        records[0].first.to_cdc[43...44].should == 'W'
+      end
+    end        
 
     it "should displat an unknown ethinicity as 'U'" do
+      @event_hash['active_patient']['person']['ethnicity_id'] = nil
       with_cdc_records do |records|
         records[0].first.to_cdc[44...45].should == 'U'
       end
     end
 
-    it "should display ethnicity as a 1 digit code"
+    it "should display ethnicity as a 1 char code" do
+      with_cdc_records do |records|
+        records[0][0].to_cdc[44...45].should == 'N'
+      end
+    end
 
     it "should display event date a YYMMDD" do
       with_cdc_records do |records|
@@ -177,16 +204,22 @@ describe CdcExport do
     end
 
     it "should display case status as a one digit code" do
-      pending
       with_cdc_records do |records|
         records[0].first.to_cdc[52...53].should == '2'
       end
     end
 
-    it "should display imported as a one digit code"
+    it "should display imported as a one digit code" do
+      with_cdc_records do |records|
+        records[0][0].to_cdc[53...54].should == '1'
+      end
+    end
 
-    it "should display outbreak as a one digit code"
-
+    it "should display outbreak as a one digit code" do
+      with_cdc_records do |records|
+        records[0][0].to_cdc[54...55].should == '0'
+      end
+    end
   end
 
 end
