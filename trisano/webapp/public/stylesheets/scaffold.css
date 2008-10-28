@@ -123,10 +123,16 @@ div.progressBar div.background {
     color: #999
 }
 
-.success-message {
+#flash-message {
+  text-align: center;
+}
+
+.notice-message {
   color: green;
-  position: absolute;
-  right: 1%;
+}
+
+.error-message {
+  color: red;
 }
 
 .investigator-form-title {

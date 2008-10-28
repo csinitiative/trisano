@@ -41,7 +41,7 @@ class CoreFieldElementsController < ApplicationController
       @available_core_fields = @core_field_element.available_core_fields
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the core field form  at this time.'
+      flash[:error] = 'Unable to display the core field form  at this time.'
       render :template => 'rjs-error'
     end
   end

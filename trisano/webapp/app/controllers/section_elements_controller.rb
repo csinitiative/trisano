@@ -45,7 +45,7 @@ class SectionElementsController <  AdminController
       @section_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the section form  at this time.'
+      flash[:error] = 'Unable to display the section form  at this time.'
       render :template => 'rjs-error'
     end
   end

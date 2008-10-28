@@ -128,7 +128,7 @@ class FormsController < AdminController
         format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
     else
-      flash[:notice] = "Unable to publish the form"
+      flash[:error] = "Unable to publish the form"
       respond_to do |format|
         format.html { render :template => "forms/builder" }
         format.js   do
@@ -147,7 +147,7 @@ class FormsController < AdminController
       @form = @rolled_back_form
       redirect_to(builder_path(@form))
     else
-      flash[:notice] = 'Unable to roll back the form. Please contact your administrator.'
+      flash[:error] = 'Unable to roll back the form. Please contact your administrator.'
       redirect_to forms_path
     end
   end
@@ -158,14 +158,14 @@ class FormsController < AdminController
     if export_file_path
       send_file export_file_path
     else
-      flash[:notice] = 'Unable to export the form. Please contact your administrator.'
+      flash[:error] = 'Unable to export the form. Please contact your administrator.'
       redirect_to forms_path
     end
   end
   
   def import
     if params[:form][:import].respond_to?(:empty?)
-      flash[:notice] = 'Please navigate to a file to import.'
+      flash[:error] = 'Please navigate to a file to import.'
       redirect_to forms_path
       return
     end
@@ -173,7 +173,7 @@ class FormsController < AdminController
     if (@form = Form.import(params[:form][:import]))
       redirect_to(@form)
     else
-      flash[:notice] = 'Unable to import the form. Please contact your administrator.'
+      flash[:error] = 'Unable to import the form. Please contact your administrator.'
       redirect_to forms_path
     end
   end
@@ -187,7 +187,7 @@ class FormsController < AdminController
       @form = Form.find(@section.form_id)
     else
       @rjs_errors = @section.errors
-      flash[:notice] = 'An error occurred during the reordering process.'
+      flash[:error] = 'An error occurred during the reordering process.'
       render :template => 'rjs-error'
     end
   end
@@ -206,7 +206,7 @@ class FormsController < AdminController
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.type }
     else
-      flash[:notice] = "Unable to copy #{@question_element.type.humanize} to library."
+      flash[:error] = "Unable to copy #{@question_element.type.humanize} to library."
       render :template => 'rjs-error'
     end
   end
@@ -219,7 +219,7 @@ class FormsController < AdminController
       @form = Form.find(@form_element.form_id)
     else
       @rjs_errors = @form_element.errors
-      flash[:notice] = "Unable to copy element to form."
+      flash[:error] = "Unable to copy element to form."
       render :template => 'rjs-error'
     end
   end
@@ -229,7 +229,7 @@ class FormsController < AdminController
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
       @type = params[:type].blank? ? "question_element" : params[:type]
     rescue Exception => ex
-      flash[:notice] = "Unable to open the library."
+      flash[:error] = "Unable to open the library."
       render :template => 'rjs-error'
     end
   end

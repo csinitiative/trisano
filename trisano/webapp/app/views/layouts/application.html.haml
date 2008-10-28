@@ -91,13 +91,16 @@
           = yield :tools_two
     #title_area
       .container
-        %br
+        - if flash[:notice]
+          #flash-message.notice-message
+            = flash[:notice]
+        - elsif flash[:error]
+          #flash-message.error-message
+            = flash[:error]
         .name
           = yield :name
         .tools
           = yield :tools
-        #success-message.success-message
-          = flash[:notice]
     #main-content
       %script
         header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"

@@ -39,7 +39,7 @@ class FollowUpElementsController <  AdminController
       @follow_up_element.event_type = params[:event_type]
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the follow up form at this time.'
+      flash[:error] = 'Unable to display the follow up form at this time.'
       render :template => 'rjs-error'
     end
   end

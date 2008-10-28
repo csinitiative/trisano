@@ -45,7 +45,7 @@ class ValueSetElementsController <  AdminController
       @library_elements = []
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the value set form at this time.'
+      flash[:error] = 'Unable to display the value set form at this time.'
       render :template => 'rjs-error'
     end
   end
@@ -110,7 +110,7 @@ class ValueSetElementsController <  AdminController
     rescue Exception => ex
       p ex
       logger.debug ex
-      flash[:notice] = 'Unable to toggle the value at this time.'
+      flash[:error] = 'Unable to toggle the value at this time.'
       render :template => 'rjs-error'
     end
   end

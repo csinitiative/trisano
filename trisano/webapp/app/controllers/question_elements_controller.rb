@@ -48,7 +48,7 @@ class QuestionElementsController <  AdminController
       @library_elements = []
     rescue Exception => ex
       logger.info ex
-      flash[:notice] = 'Unable to display the new question form.'
+      flash[:error] = 'Unable to display the new question form.'
       render :template => 'rjs-error'
     end
   end
@@ -96,7 +96,7 @@ class QuestionElementsController <  AdminController
       @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex
-      flash[:notice] = 'Unable to process conditional logic for follow up questions.'
+      flash[:error] = 'Unable to process conditional logic for follow up questions.'
       @error_message_div = "follow-up-error"
       render :template => 'rjs-error'
     end

@@ -41,7 +41,7 @@ class ViewElementsController < AdminController
       @view_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the tab form at this time.'
+      flash[:error] = 'Unable to display the tab form at this time.'
       render :template => 'rjs-error'
     end
   end
@@ -59,7 +59,7 @@ class ViewElementsController < AdminController
         format.js { @form = Form.find(@view_element.form_id)}
       else
         @view_element = post_transaction_refresh(@view_element, params[:view_element])
-        flash[:notice] = 'Unable to create new tab.'
+        flash[:error] = 'Unable to create new tab.'
         format.xml  { render :xml => @view_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }
       end

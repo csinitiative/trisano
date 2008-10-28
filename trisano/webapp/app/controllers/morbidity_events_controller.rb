@@ -252,7 +252,7 @@ class MorbidityEventsController < EventsController
     if @event.save
       redirect_to request.env["HTTP_REFERER"]
     else
-      flash[:notice] = 'Unable to change state of CMR.'
+      flash[:error] = 'Unable to change state of CMR.'
       redirect_to cmrs_path
     end
   end

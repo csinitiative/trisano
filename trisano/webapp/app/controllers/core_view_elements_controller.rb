@@ -41,7 +41,7 @@ class CoreViewElementsController <  AdminController
       @available_core_views = @core_view_element.available_core_views
     rescue Exception => ex
       logger.debug ex
-      flash[:notice] = 'Unable to display the core tab form  at this time.'
+      flash[:error] = 'Unable to display the core tab form  at this time.'
       render :template => 'rjs-error'
     end
   end
