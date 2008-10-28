@@ -9,27 +9,6 @@ RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
-require 'logging'
-
-# Logging.init is required to avoid 
-#   unknown level was given 'info' (ArgumentError)
-# or
-#   uninitialized constant Logging::MAX_LEVEL_LENGTH (NameError)
-# when an Appender or Layout is created BEFORE any Logger is instantiated:
-Logging.init :debug, :info, :warn, :error, :fatal
-
-layout = Logging::Layouts::Pattern.new :pattern => "[%d] [%-5l] %m\n"
-
-# Default logfile, history kept for 10 days
-TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= '/var/log/trisano/'
-default_appender = Logging::Appenders::RollingFile.new 'default', :filename => TRISANO_LOG_LOCATION + 'trisano.log', :age => 'daily', :keep => 10, :safe => true, :layout => layout
-
-#DEFAULT_LOGGER = returning Logging::Logger['server'] do |l|
-#  l.add_appenders default_appender
-#end
-DEFAULT_LOGGER = Logging::Logger['server']
-DEFAULT_LOGGER.add_appenders default_appender
-DEFAULT_LOGGER.level = :info
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -55,9 +34,8 @@ Rails::Initializer.run do |config|
   # config.log_level = :debug
 
   # Uncomment the following line for running in Tomcat
-  # TODO: Find permanent fix
   #config.logger = Logger.new(STDOUT)
-   config.logger = DEFAULT_LOGGER
+
 
   # Uncomment the following line if you want to read the log file in Eclipse
   # config.active_record.colorize_logging = false

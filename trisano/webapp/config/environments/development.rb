@@ -20,5 +20,4 @@ config.action_mailer.raise_delivery_errors = false
 # Reload the csv module
 Dependencies.explicitly_unloadable_constants = 'Export::Csv'
 
-# Override log settings
-#DEFAULT_LOGGER.level = :debug
+
