@@ -6,8 +6,8 @@ basicauth: false # whether HTTP basic auth should be on
 database: trisano_production # Database name
 priv_uname: mike # Database privileged username
 priv_passwd: password # Privileged user's password 
-nedss_uname: trisano_production_user # trisano application username 
-nedss_user_passwd: password # trisano application user password
+trisano_uname: trisano_production_user # trisano application username 
+trisano_user_passwd: password # trisano application user password
 min_runtimes: 5 # minimum number of trisano runtimes 
 max_runtimes: 10 # maximum number of trisano runtimes 
 dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
