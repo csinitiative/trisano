@@ -290,11 +290,12 @@ module Export
         # Don't follow a contact's contacts (or a place's either)
         if event.is_a?(MorbidityEvent) 
           unless event.contacts.empty?
+            @header_out = true
             str << "\"\",\"Contact Events\"\n"
-            output_header = true
             event.contacts.each do |contact|
-              csv_out(str, 1) { event_headers(ContactEvent.new) } if output_header
               contact_event = ContactEvent.find(contact.secondary_entity.case_id)
+              csv_out(str, 1) { event_headers(contact_event) } if @header_out
+              @header_out = false
               csv_out(str, 1) { event_values(contact_event).map { |value| value.to_s.gsub(/,/,' ') } } 
               add_lab_results(str, contact_event, 2)
               add_treatments(str, contact_event, 2)

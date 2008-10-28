@@ -65,7 +65,7 @@
       = phone_fields.core_text_field(:extension, {:size => 6})
 
     %span{:class => "horiz", :style => "margin-top: 30px"}
-      = link_to("Edit contact event", edit_contact_event_path(contact_person.id), {:id => "edit-contact-event"}) unless contact_person.id.nil?
+      = (link_to("Edit contact event", edit_contact_event_path(contact_person.entity.case_id), {:id => "edit-contact-event"}) + " | ") unless contact.new_record?
       = link_to_function "Remove" , "$(this).up('.contact').remove()", {:id => "remove_contact_link"}
 
     %hr

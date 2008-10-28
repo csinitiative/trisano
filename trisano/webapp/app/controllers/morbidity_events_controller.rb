@@ -20,7 +20,7 @@ class MorbidityEventsController < EventsController
   before_filter :capture_old_attributes, :only => [:update]
 
   def auto_complete_for_event_reporting_agency
-    entered_name = params[:morbidity_event][:active_reporting_agency][:agency_name]
+    entered_name = params[:morbidity_event][:active_reporting_agency][:name]
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
       :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
                        (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code IN ('H', 'L', 'C'))", entered_name.downcase + '%'],
