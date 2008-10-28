@@ -40,7 +40,7 @@ namespace :trisano do
       @basicauth = config['basicauth'] unless validate_config_attribute(config, 'basicauth')
       @min_runtimes = config['min_runtimes'] unless validate_config_attribute(config, 'min_runtimes')
       @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
-      @dump_file = config['dump_file_name'] unless validate_config_attribute(config, 'dump_file_name')
+      @dump_file = config['dump_file_name'] 
       ENV["PGPASSWORD"] = @priv_password 
     end
 
@@ -168,6 +168,9 @@ namespace :trisano do
     desc "Import the database from configured backup file"
     task :restore_db do
       initialize_config
+      if @dump_file.nil?
+        raise "attribute #{attribute} is not specified in config.yml - please add it and try again."
+      end
       dirname = './dump'
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}")
