@@ -29,6 +29,7 @@
     %tr
       %th.forminformation
         Users
+      %th
     - for user in @users
       %tr
         %td.forminformation
@@ -41,3 +42,8 @@
             = user.user_name
             %br
             -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to 'Edit', edit_user_path(user)
+            |
+            = link_to 'Show', user

@@ -22,11 +22,15 @@
   = link_to '< Back to Codes', codes_path
   %p
 
+- content_for :tools_two do
+  = button_to("Create new code", {:action => "new"}, { :method => :get })
+
 #rot
   %table.listingforms
     %tr
       %th.forminformation
         Code Information
+      %th
     %tr
       %td
         .formname
@@ -39,8 +43,13 @@
           %br
           %b Sort Order:
           = @external_code.sort_order
-          %br
+      %td
+        .tools{:style => "position: absolute; right: 15px;"}
+          Edit
+          |
           = link_to"Show", code_path(@external_code)
+          |
+          = link_to("Delete", code_path(@external_code), :method => :delete, :confirm => "Really delete code?")
 
 #rot
   %table.listingforms

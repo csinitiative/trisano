@@ -30,13 +30,17 @@
     %tr
       %th.forminformation
         Disease
+      %th
       %tr
         %td.forminformation
           .formname
             = @disease.disease_name
-            .tools
-              = @disease.active? ? 'Active' :  'Inactive'
           .tools
+            = @disease.active? ? 'Active' :  'Inactive'
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            Edit
+            |
             = link_to 'Show', @disease
 #rot
   = error_messages_for :disease

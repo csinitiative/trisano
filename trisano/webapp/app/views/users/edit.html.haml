@@ -30,6 +30,7 @@
     %tr
       %th.forminformation
         User
+      %th
       %tr
         %td.forminformation
           .tools
@@ -46,7 +47,10 @@
             %br
             Initials:
             = @user.initials
-          .tools
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            Edit
+            |
             = link_to 'Show', @user
 
 #rot

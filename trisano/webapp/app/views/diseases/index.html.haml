@@ -28,6 +28,7 @@
     %tr
       %th.forminformation
         Diseases
+      %th
     - for disease in @diseases
       %tr
         %td.forminformation
@@ -35,5 +36,8 @@
             = link_to disease.disease_name, disease
             .tools
               = disease.active? ? 'Active' :  'Inactive'
-          /.tools
-          /  = link_to('Edit', edit_disease_path(disease))
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to('Edit', edit_disease_path(disease))
+            |
+            = link_to('Show', disease_path(disease))

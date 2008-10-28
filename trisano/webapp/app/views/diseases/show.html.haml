@@ -30,11 +30,15 @@
     %tr
       %th.forminformation
         Disease
+      %th
       %tr
         %td.forminformation
           .formname
             = @disease.disease_name
-            .tools
-              = @disease.active? ? 'Active' :  'Inactive'
           .tools
+            = @disease.active? ? 'Active' :  'Inactive'
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_disease_path(@disease)
+            |
+            Show

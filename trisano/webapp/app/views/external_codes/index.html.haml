@@ -50,7 +50,8 @@
         .tools{:style => "position: absolute; right: 15px;"}
           = link_to("Edit", edit_code_path(code))
           |
+          = link_to("Show", code_path(code))
+          |
           = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
-          /= link_to("Show", code_path(code))
     -end
 - end

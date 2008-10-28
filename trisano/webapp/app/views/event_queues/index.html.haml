@@ -28,6 +28,7 @@
     %tr
       %th.forminformation
         Event Queues
+      %th
     - for event_queue in @event_queues
       %tr
         %td
@@ -35,4 +36,7 @@
             = link_to event_queue.queue_name, event_queue
           .tools
             = event_queue.jurisdiction.current_place.name
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to 'Show', event_queue
             /= link_to 'Edit', edit_event_queue_path(event_queue)
