@@ -70,6 +70,7 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     ValidatesDateTime.us_date_format = true
     require "active_record/errors.rb"
+    require "active_record/activesupport_json_unicode_patch.rb"
     require "soundex/Soundex.rb"
     require "mmwr/mmwr.rb"
     require "blankable.rb"

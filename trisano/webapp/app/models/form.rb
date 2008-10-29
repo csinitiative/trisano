@@ -226,7 +226,7 @@ class Form < ActiveRecord::Base
       form_elements_file_name = "elements"
     
       open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
-      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.to_json(:methods => [:type, :question]) }
+      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.patched_array_to_json(:methods => [:type, :question]) }
 
       File.delete(zip_file_path) if File.file?(zip_file_path)
 
