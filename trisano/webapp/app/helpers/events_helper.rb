@@ -170,7 +170,7 @@ module EventsHelper
       if allowed
         controls += form_tag(state_cmr_path(event))
         Event.get_action_phrases(Event.get_transition_states("ASGD-LHD")).each do | action |
-          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
+          controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "#{'if(confirm("Are you sure?")) ' if action.state=='RJCTD-LHD'}this.form.submit();") + action.phrase
         end
         controls += "</form>"
       end
