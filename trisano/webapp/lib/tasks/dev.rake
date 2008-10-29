@@ -28,6 +28,7 @@ namespace :trisano do
     desc "full rebuild of all databases"
     task :db_rebuild_full do
       puts "doing full rebuild of all databases"
+      sh "dropdb trisano_development; createdb -E UTF8 trisano_development" # there is an issue with observer that necessitates this, but also we can explicitly set the encoding which is useful
       ruby "-S rake db:drop:all"
       ruby "-S rake db:create:all"
       ruby "-S rake db:migrate"

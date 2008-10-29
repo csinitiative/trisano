@@ -77,7 +77,8 @@ namespace :trisano do
     task :create_db do
       puts "Creating TriSano database ..."
       initialize_config
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")
+      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c \"CREATE DATABASE #{@database} ENCODING='UTF8'\"")
+
       unless success
         puts "Failed creating database structure for TriSano."
         return success
