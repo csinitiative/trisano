@@ -36,16 +36,6 @@ describe Disease do
     @disease.should be_active
   end
 
-  it 'should have no cdc code' do
-    @disease.cdc_code.should be_nil
-  end
-
-  it 'can set the cdc code' do
-    @disease.cdc_code = '99123'
-    @disease.save.should be_true
-    @disease.cdc_code.should_not be_nil
-  end
-
   it '#find_active should not return inactive diseases' do
     @disease.save.should be_true
     Disease.find(:all).size.should >= 1

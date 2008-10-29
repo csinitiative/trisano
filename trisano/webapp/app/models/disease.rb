@@ -45,6 +45,14 @@ class Disease < ActiveRecord::Base
     end
     "(disease_id='#{self.id}' AND (#{codes.join(' OR ')}))" unless codes.empty?
   end
-    
+
+  # this is a hack until I can set up a proper polymorphic has_many :through
+  def cdc_code
+    #cdc_disease_column = ExportColumn.cdc_disease_id
+    export_conversion_value = ExportConversionValue.find(:first, 
+                                :conditions => ['export_column_id=? and value_from=?', 
+                                                9, self.disease_name])
+    export_conversion_value.nil? ? nil : export_conversion_value.value_to
+  end
 
 end

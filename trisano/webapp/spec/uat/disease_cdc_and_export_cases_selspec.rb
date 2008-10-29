@@ -31,7 +31,7 @@ describe 'adding diseases' do
 
   it 'should create an inactive disease' do
     navigate_to_disease_admin(@browser).should be_true
-    @browser.click("link=New disease")
+    @browser.click("//input[@value='Create new disease']")
     @browser.wait_for_page_to_load($load_time)
     create_disease(@browser, :disease_name => @disease_name).should be_true
   end
