@@ -160,10 +160,10 @@ class MorbidityEventsController < EventsController
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         flash[:notice] = 'CMR was successfully updated.'
         format.html { 
+          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            render :action => "edit"
+            redirect_to(edit_cmr_url(@event) + query_str)
           else
-            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
             redirect_to(cmr_url(@event) + query_str)
           end
         }
