@@ -200,7 +200,7 @@ module Export
           end
         end
 
-        # event_data.concat(event_answers(event))
+        event_data.concat(event_answers(event))
         event_data << ["event_created_date", "created_at"]
         event_data << ["event_last_updated_date", "updated_at"]
       end
