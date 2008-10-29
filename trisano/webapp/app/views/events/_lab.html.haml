@@ -61,7 +61,8 @@
       %span{:class => "horiz"}
         = lab_result_fields.label(:specimen_source_id, "Specimen source")
         = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
-      %span{:class => "horiz", :style => "clear: both;"}
+      %fieldset.vert
+      %span{:class => "horiz"}
         = lab_result_fields.label(:collection_date)
         = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
       %span{:class => "horiz"}

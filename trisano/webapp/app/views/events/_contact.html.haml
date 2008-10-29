@@ -38,10 +38,11 @@
     %span.horiz
       = contact_fields.label(:first_name)
       = contact_fields.text_field(:first_name, :size => 20)
-    %span.vert
+    %span.horiz
       = contact_fields.label(:disposition_id)
       = contact_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
 
+  %span.vert
   - contact_phone_id = contact_telephone_entities_location.id
   - contact_telephone_entities_location.id = contact_person.id
 

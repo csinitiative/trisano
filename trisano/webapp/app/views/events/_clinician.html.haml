@@ -37,10 +37,11 @@
     %span{:class => 'horiz'}
       = clinician_fields.label(:first_name)
       = clinician_fields.text_field(:first_name, :size => 20)
-    %span.vert
+    %span{:class => 'horiz'}
       = clinician_fields.label(:middle_name)
       = clinician_fields.text_field(:middle_name, :size => 20)
 
+  %span.vert
   - clinician_phone_id = clinician_telephone_entities_location.id
   - clinician_telephone_entities_location.id = clinician_person.id
 

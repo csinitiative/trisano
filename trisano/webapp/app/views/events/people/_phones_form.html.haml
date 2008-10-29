@@ -18,9 +18,9 @@
 %fieldset.form
   %legend 
     Telephone / Email
-    %div{:id => 'phones'}
-      - telephone_entities_locations = (entity_data.telephone_entities_locations.size > 0 ? entity_data.telephone_entities_locations : [EntitiesLocation.new_telephone_location])
-      =render :partial => 'events/people/telephone', :collection => telephone_entities_locations, :locals => { :namespace => namespace }
+  %div{:id => 'phones'}
+    - telephone_entities_locations = (entity_data.telephone_entities_locations.size > 0 ? entity_data.telephone_entities_locations : [EntitiesLocation.new_telephone_location])
+    =render :partial => 'events/people/telephone', :collection => telephone_entities_locations, :locals => { :namespace => namespace }
 
-    %p{:style => "clear: both"}
-      =add_new_telephone_link "New Telephone / Email", namespace
+  %p{:style => "clear: both"}
+    =add_new_telephone_link "New Telephone / Email", namespace
