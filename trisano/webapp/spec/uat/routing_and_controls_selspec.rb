@@ -39,7 +39,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Event Queues"
     @browser.wait_for_page_to_load "30000"
     
-    @browser.click "link=New event queue"
+    @browser.click "create_event_queue"
     @browser.wait_for_page_to_load "30000"
 
     @browser.type "event_queue_queue_name", "Enterics"
@@ -230,7 +230,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Event Queues"
     @browser.wait_for_page_to_load "30000"
     
-    @browser.click "link=New event queue"
+    @browser.click "create_event_queue"
     @browser.wait_for_page_to_load "30000"
 
     @browser.type "event_queue_queue_name", "Joe Investigator"
