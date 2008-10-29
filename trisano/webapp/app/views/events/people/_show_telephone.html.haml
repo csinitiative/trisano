@@ -21,10 +21,9 @@
       -else
         Phone
     =h(show_telephone.current_phone.simple_format) 
-  %span.vert
-    %label
-      Email
-    -unless show_telephone.current_phone.email_address.blank?
-      =h(show_telephone.current_phone.email_address)
-    -else
-      &nbsp;
+  %label
+    Email
+  -unless show_telephone.current_phone.email_address.blank?
+    =h(show_telephone.current_phone.email_address)
+  -else
+    &nbsp;

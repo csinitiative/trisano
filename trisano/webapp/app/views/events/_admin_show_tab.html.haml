@@ -1,51 +1,52 @@
 %fieldset
-  %legend
-    Administrative Information
-  %span{:class => "horiz"}
-    %label Record number
-    = @event.record_number
+  %legend Administrative Information
+  %fieldset{:class => "form"}
+    %legend Tracking Information
+    %span{:class => "horiz"}
+      %label Record number
+      = @event.record_number
 
-  %span{:class => "vert"}
-    %label Date record created
-    = @event.event_onset_date 
+    %span{:class => "horiz"}
+      %label Date record created
+      = @event.event_onset_date 
 
-  %span{:class => "horiz"}
-    %label MMWR year
-    = @event.MMWR_year 
+    %span{:class => "horiz"}
+      %label MMWR year
+      = @event.MMWR_year 
 
-  %span{:class => "vert"}
-    %label MMWR week
-    = @event.MMWR_week 
+    %span{:class => "horiz"}
+      %label MMWR week
+      = @event.MMWR_week 
 
-  %span{:class => "vert"}
-    %label Jurisdiction of Residence
-    - patient_entity = @event.active_patient.primary_entity
-    - if patient_entity
-      - unless patient_entity.address_entities_locations.empty?
-        - address = patient_entity.address_entities_locations.last.location.addresses.last
-        - if address && address.county && address.county.jurisdiction
-          - jurisdiction_name = address.county.jurisdiction.name
-    = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name 
-
-  %br
+  %span.vert
       
   %fieldset{:class => "form"}
     %legend Case / Outbreak
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label(:lhd_case_status_id, 'LHD case status')
       = l(@event.lhd_case_status) || '&nbsp;'
-    - core_element_show :udoh_case_status_id, event_form, :vert do
+    - core_element_show :udoh_case_status_id, event_form, :horiz do
       = event_form.label(:udoh_case_status_id, 'UDOH case status')
       = l(@event.udoh_case_status)
     - core_element_show :outbreak_associated_id, event_form, :horiz do
       = event_form.label :outbreak_associated_id, 'Outbreak associated'
       = l(@event.outbreak_associated) || '&nbsp;'
-    - core_element_show :outbreak_name, event_form, :vert do
+    - core_element_show :outbreak_name, event_form, :horiz do
       = event_form.label :outbreak_name
       = h(@event.outbreak_name) || '&nbsp;' 
 
   %fieldset{:class => "form"}
     %legend Investigation
+    %span{:class => "horiz"}
+      %label Jurisdiction of Residence
+      - patient_entity = @event.active_patient.primary_entity
+      - if patient_entity
+        - unless patient_entity.address_entities_locations.empty?
+          - address = patient_entity.address_entities_locations.last.location.addresses.last
+          - if address && address.county && address.county.jurisdiction
+            - jurisdiction_name = address.county.jurisdiction.name
+      = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name 
+
     - event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j|
       - core_element_show :secondary_entity_id, j, :horiz do
         = j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') 

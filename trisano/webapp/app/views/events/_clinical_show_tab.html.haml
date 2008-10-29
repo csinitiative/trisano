@@ -33,28 +33,29 @@
       - core_element_show :hospitalized_id, d, :horiz do
         = d.label(:hospitalized)
         = l @event.disease.hospitalized unless @event.disease.nil?
+      %span.vert
       - core_element_show :died_id, d, :horiz do
         = d.label(:died_id)
         = l @event.disease.died unless @event.disease.nil?
 
-  - event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
-    - current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
-      - core_element_show :date_of_death, person_form, :vert do
-        = person_form.label(:date_of_death)
-        = entity_data.person.date_of_death
+    - event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
+      - current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
+        - core_element_show :date_of_death, person_form, :horiz do
+          = person_form.label(:date_of_death)
+          = entity_data.person.date_of_death
 
-  - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
-    - patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
-      - core_element_show :pregnant_id, risk_factor_form, :horiz do
-        = risk_factor_form.label(:pregnant_id)
-        = l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
-      - core_element_show :pregnancy_due_date, risk_factor_form, :horiz do
-        = risk_factor_form.label(:pregnancy_due_date)
-        = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+    - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
+      - patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+        - core_element_show :pregnant_id, risk_factor_form, :horiz do
+          = risk_factor_form.label(:pregnant_id)
+          = l @event.active_patient.participations_risk_factor.pregnant unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
+        - core_element_show :pregnancy_due_date, risk_factor_form, :horiz do
+          = risk_factor_form.label(:pregnancy_due_date)
+          = @event.active_patient.participations_risk_factor.pregnancy_due_date unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-  %br{:clear => 'all'}
+  %span{:clear => 'all'}
 
-  %fieldset
+  %fieldset.form
     %legend
       Diagnosing health facilities  
     - if @event.diagnosing_health_facilities.empty?
@@ -68,7 +69,7 @@
           %tr
             %td= diagnostic.secondary_entity.place_temp.name
 
-  %fieldset
+  %fieldset.form
     %legend
       Hospitalized health facilities  
     - if @event.hospitalized_health_facilities.empty?
@@ -93,7 +94,7 @@
               %td= hospital.hospitals_participation.discharge_date
               %td= hospital.hospitals_participation.medical_record_number
 
-  %fieldset
+  %fieldset.form
     %legend
       Treatments  
 
@@ -117,7 +118,7 @@
               %td= treatment.treatment
               %td= treatment.treatment_date
 
-  %fieldset
+  %fieldset.form
     %legend
       Clinicians  
 

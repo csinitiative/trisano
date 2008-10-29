@@ -39,10 +39,11 @@
       - participant_fields.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |agency_fields|
         - agency_fields.fields_for(:person, reporter_name, :builder => ExtendedFormBuilder) do |reporter_fields|
 
+          %span.vert
           - core_element_show :first_name, reporter_fields, :horiz do
             = reporter_fields.label(:first_name)
             = reporter_name.first_name
-          - core_element_show :last_name, reporter_fields, :vert do
+          - core_element_show :last_name, reporter_fields, :horiz do
             = reporter_fields.label(:last_name)
             = reporter_name.last_name
 
