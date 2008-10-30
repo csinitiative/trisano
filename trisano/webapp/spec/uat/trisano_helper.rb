@@ -377,6 +377,7 @@ module TrisanoHelper
     browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
     browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
+    yield browser if block_given?
     return save_cmr(browser)
   end
   
