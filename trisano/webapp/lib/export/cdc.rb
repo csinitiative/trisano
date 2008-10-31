@@ -40,7 +40,7 @@ module Export
 
     module Record
 
-      def to_cdc
+      def cdc_export_fields
         %w(exp_rectype
            exp_update
            exp_state
@@ -54,14 +54,19 @@ module Export
            exp_birthdate
            age_at_onset
            exp_agetype
-           exp_sex exp_race
+           exp_sex 
+           exp_race
            exp_ethnicity
            exp_eventdate
            exp_datetype
            udoh_case_status_id
            exp_imported
            exp_outbreak
-          ).map { |field| send field }.join
+          )
+      end
+      
+      def to_cdc
+        cdc_export_fields.map { |field| send field }.join
       end
 
       def age_at_onset
@@ -88,6 +93,25 @@ module Export
         end
       end
 
+    end
+
+    module DeleteRecord
+      include Record
+
+      def cdc_export_fields
+        %w(exp_rectype
+           exp_update
+           exp_state
+           exp_year
+           exp_caseid
+           exp_site
+           exp_week)
+      end
+        
+
+      def exp_rectype
+        'D'
+      end
     end
   end
 end

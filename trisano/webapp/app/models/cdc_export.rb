@@ -25,6 +25,21 @@ class CdcExport < ActiveRecord::Base
       events
     end
 
+    def weekly_cdc_deletes
+      where = ['(cdc_update=true AND sent_to_cdc=true)']      
+      diseases = Disease.with_no_export_status
+      unless  diseases.empty?
+        where << "AND (disease_id IN (#{diseases.collect(&:id).join(',')}))"
+      end
+      invalid_case_status = Disease.with_invalid_case_status_clause
+      unless invalid_case_status.blank?
+        where << "OR #{ invalid_case_status}"
+      end      
+      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.join(' ')})")
+      events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
+      events
+    end
+
     # set updated to false and sent to true for all cdc records
     def reset_sent_status(cdc_records)
       event_ids = cdc_records.collect {|record| record.event_id}

@@ -1,4 +1,3 @@
-
 # Copyright (C) 2007, 2008, The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -40,6 +39,15 @@ describe CdcExport do
     yield events if block_given?
   end
 
+  def delete_a_record(event_hash = @event_hash)
+    with_sent_events do |events|
+      @event_hash['disease']['disease_id'] = diseases(:chicken_pox).id
+      events[0].update_attributes(@event_hash)
+    end
+    
+  end
+    
+
   before :each do
     @event_hash = {
       "imported_from_id" => external_codes(:imported_from_utah).id,
@@ -64,6 +72,7 @@ describe CdcExport do
   end
     
   describe 'running cdc export' do
+
     it 'should return records for mmr week' do
       with_cdc_records do |records|
         records.should_not be_nil
@@ -344,6 +353,54 @@ describe CdcExport do
         end
       end
     end
+  end
+
+  describe 'finding deleted cdc records' do
+    
+    before(:each)do
+      delete_a_record 
+      @deletes = CdcExport.weekly_cdc_deletes
+    end
+
+    it 'should return deleted records' do
+      @deletes.length.should == 1
+    end
+
+    it "should return 'D' to represent deleted MMWR records" do
+      @deletes[0].to_cdc[0...1].should == 'D'
+    end
+
+    it "should leave the update field blank" do
+      @deletes[0].to_cdc[1...2].should == " "
+    end
+
+    it "should use '49' to represent Utah's state code" do
+      @deletes[0].to_cdc[2..3].should == "49"
+    end
+
+    it "should report the last two digits of the mmwr year" do
+      expected_date = Date.today.strftime('%y')
+      @deletes[0].to_cdc[4..5].should == expected_date
+    end
+
+    it "should report the last 6 digits of the case id" do
+      event = Event.find(@deletes[0].event_id)
+      @deletes[0].to_cdc[6..11].should == event.record_number[-6, 6]
+    end
+
+    it "should report the 3 digit site code" do
+      @deletes[0].to_cdc[12..14].should == 'S01'
+    end
+
+    it "should report the mmwr week" do
+      event = Event.find(@deletes[0].event_id)
+      @deletes[0].to_cdc[15..16].should == event.MMWR_week.to_s
+    end
+
+    it 'should cut off the filler' do
+      @deletes[0].to_cdc.length.should == 17
+    end
+    
   end
 
 end

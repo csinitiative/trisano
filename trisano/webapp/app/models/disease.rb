@@ -28,22 +28,40 @@ class Disease < ActiveRecord::Base
       end
     end
 
-    def disease_status_where_clause
+    def collect_diseases
       diseases = []
       find(:all).each do |disease|
-        diseases << disease.case_status_where_clause
+        diseases << yield(disease) if block_given?
       end
+      diseases
+    end
+
+    def disease_status_where_clause
+      diseases = collect_diseases(&:case_status_where_clause)
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end      
+
+    def with_no_export_status
+      ids = ActiveRecord::Base.connection.select_all('select distinct disease_id from diseases_external_codes')
+      find(:all, :conditions => ['id not in (?)', ids.collect{|id| id['disease_id']}])
+    end
+
+    def with_invalid_case_status_clause
+      diseases = collect_diseases(&:invalid_case_status_where_clause)
+      "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?      
+    end
         
   end
 
   def case_status_where_clause
-    codes = []
-    external_codes.each do |code|
-      codes << "udoh_case_status_id = '#{code.id}'"
-    end
-    "(disease_id='#{self.id}' AND (#{codes.join(' OR ')}))" unless codes.empty?
+    codes = external_codes.collect(&:id)
+    "(disease_id='#{self.id}' AND udoh_case_status_id IN (#{codes.join(',')}))" unless codes.empty?
+
+  end
+
+  def invalid_case_status_where_clause
+    codes = external_codes.collect(&:id)
+    "(disease_id='#{self.id}' AND udoh_case_status_id NOT IN (#{codes.join(',')}))" unless codes.empty?
   end
 
   # this is a hack until I can set up a proper polymorphic has_many :through

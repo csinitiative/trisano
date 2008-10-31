@@ -65,4 +65,15 @@ describe Disease do
     end
         
   end
+
+  describe 'diseases w/ no export status' do
+    fixtures :diseases, :external_codes, :diseases_external_codes
+
+    it 'should only return diseases with no specified cdc export status' do
+      Disease.with_no_export_status.each do |disease|
+        disease.external_codes.length.should == 0
+      end
+    end
+
+  end
 end
