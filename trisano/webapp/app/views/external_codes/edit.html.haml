@@ -26,7 +26,7 @@
   = button_to("Create new code", {:action => "new"}, { :method => :get })
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         Code Information
@@ -52,7 +52,7 @@
           = link_to("Delete", code_path(@external_code), :method => :delete, :confirm => "Really delete code?")
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         Edit Code

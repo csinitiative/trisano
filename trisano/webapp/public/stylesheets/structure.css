@@ -71,6 +71,7 @@ table {
 form {
   margin: 0px; }
 
+
 .listingforms th {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
@@ -97,6 +98,33 @@ form {
   width: 22%; }
 .listingforms .forminformation {
   width: 34%; }
+
+.list {
+  font-family: Verdana, Arial, Helvetica, sans-serif; }
+  .list th {
+    font-size: 10px;
+    weight: bold;
+    letter-spacing: 1px;
+    text-align: left;
+    text-transform: uppercase;
+    padding: 3px 3px 3px 9px;
+    background-color: #d4cbb4; }
+  .list tr {
+    background-color: #fff; }
+  .list .roll:hover {
+    background-color: #e5e5e5; }
+  .list td {
+    font-size: 12px;
+    weight: light;
+    color: #666;
+    padding: 3px 3px 3px 9px;
+    border: dotted;
+    border-color: #ccc;
+    border-width: 1px 0px 1px 0px;
+    vertical-align: top;
+    width: 22%; }
+  .list .forminformation {
+    width: 34%; }
 
 #foot {
   width: 420px;

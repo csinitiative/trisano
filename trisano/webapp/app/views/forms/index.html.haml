@@ -34,7 +34,7 @@
   %br
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         Form Information
@@ -42,7 +42,7 @@
       %th Jurisdiction
       %th Event Type
     - for form in @forms
-      %tr
+      %tr.roll
         %td.forminformation
           .formname
             = link_to form.name, form

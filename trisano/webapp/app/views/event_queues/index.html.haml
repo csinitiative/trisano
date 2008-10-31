@@ -24,13 +24,13 @@
   = button_to("Create new event queue", new_event_queue_path, :id => 'create_event_queue')
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         Event Queues
       %th
     - for event_queue in @event_queues
-      %tr
+      %tr.roll
         %td
           .formname
             = link_to event_queue.queue_name, event_queue

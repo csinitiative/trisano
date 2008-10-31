@@ -27,7 +27,7 @@
 - for code_type in @code_types
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         = code_type.code_name.capitalize,'&#160; Codes'
@@ -35,7 +35,7 @@
         Type
       %th
     - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
-    %tr
+    %tr.roll
       %td
         .formname
           = link_to code.the_code, code_path(code)

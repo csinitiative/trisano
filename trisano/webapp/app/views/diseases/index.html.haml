@@ -24,13 +24,13 @@
   = button_to("Create new disease", {:action => "new"}, { :method => :get })
 
 #rot
-  %table.listingforms
+  %table.list
     %tr
       %th.forminformation
         Diseases
       %th
     - for disease in @diseases
-      %tr
+      %tr.roll
         %td.forminformation
           .formname
             = link_to disease.disease_name, disease
