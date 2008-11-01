@@ -27,8 +27,8 @@ namespace :trisano do
     SELENIUM_GRID_HOME = ENV['SELENIUM_GRID_HOME'] ||= '/opt/selenium-grid-1.0'
     SPEC_RUNNER_COUNT = ENV['SPEC_RUNNER_COUNT'] ||= '2'
     SPECS_PATTERN = ENV['SPECS_PATTERN'] ||= './spec/uat/*_selspec.rb'
-
-   
+    REPORTS_PREFIX = ENV['REPORTS_PREFIX'] ||= 'Default'
+      
     desc "start selenium grid"
     task :startgrid do     
       sh "./script/start_selenium_grid.sh &"
@@ -50,6 +50,19 @@ namespace :trisano do
       require './lib/selenium_grid/multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
       runner = MultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i)
+      puts "runnings following specs: #{SPECS_PATTERN}"
+      runner.run(Dir[SPECS_PATTERN])
+      puts "[complete]"
+    end
+
+    desc "TriSano specific - Run all behaviors in parallel spawing multiple processes"
+    task :runtrisano => [:report_dir] do
+      require './lib/selenium_grid/trisano_multi_process_behaviour_runner'
+      require './lib/selenium_grid/screenshot_formatter'
+      puts "hi"
+      runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
+      puts runner
+      puts "REPORTS_PREFIX: #{REPORTS_PREFIX}"
       puts "runnings following specs: #{SPECS_PATTERN}"
       runner.run(Dir[SPECS_PATTERN])
       puts "[complete]"
