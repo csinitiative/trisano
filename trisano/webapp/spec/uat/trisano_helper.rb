@@ -784,7 +784,7 @@ module TrisanoHelper
   def publish_form(browser)
     browser.click '//input[@value="Publish"]'
     return false if browser.is_editable('//input[@value="Publishing..."]')
-    browser.wait_for_page_to_load($load_time)
+    browser.wait_for_page_to_load($publish_time)
     return(browser.is_text_present("Form was successfully published "))
   end
   

@@ -19,6 +19,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../../rspec/lib')
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../lib')
 $load_time = ENV['TRISANO_PAGE_LOAD'] ||= '30000'
+$publish_time = ENV['TRISANO_PUBLISH'] ||= '60000'
 
 require 'rubygems'
 require 'spec'
