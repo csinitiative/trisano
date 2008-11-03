@@ -1291,7 +1291,7 @@ describe MorbidityEvent do
       MorbidityEvent.create(@event_hash)
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 4
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['NEW']}).size.should == 1
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED']}).size.should == 1
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 1
