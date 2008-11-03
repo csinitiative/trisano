@@ -20,14 +20,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe MorbidityEvent do
   fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
 
-#  event_hash = {
-#    "active_patient" => {
-#      "entity_type"=>"person", 
-#      "person" => {
-#        "last_name"=>"Green"
-#      }
-#    }
-#  }
+  #  event_hash = {
+  #    "active_patient" => {
+  #      "entity_type"=>"person",
+  #      "person" => {
+  #        "last_name"=>"Green"
+  #      }
+  #    }
+  #  }
 
   def with_event(event_hash=@event_hash)
     event = MorbidityEvent.new event_hash
@@ -59,8 +59,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
-              ]
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -89,8 +89,8 @@ describe MorbidityEvent do
           exisitng_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-              ]
+              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(exisitng_lab_hash_1))
         end
@@ -116,8 +116,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>""}
-              ]
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>""}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -135,8 +135,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"Whatever"}
-              ]
+              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"Whatever"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -152,8 +152,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
-              ]
+              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -171,9 +171,9 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"},
-                { "lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-              ]
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"},
+              { "lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -200,9 +200,9 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"},
-                {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-              ]
+              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"},
+              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -221,8 +221,8 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-                {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
-              ]
+              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
+            ]
           }
           @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
@@ -280,8 +280,8 @@ describe MorbidityEvent do
           new_hospital_hash = {
             "new_hospital_attributes" => 
               [
-                {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16", "medical_record_number" => "1234"}
-              ]
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-15", "discharge_date" => "2008-07-16", "medical_record_number" => "1234"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
@@ -305,8 +305,8 @@ describe MorbidityEvent do
           new_hospital_hash = {
             "new_hospital_attributes" => 
               [
-                {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
-              ]
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
@@ -331,8 +331,8 @@ describe MorbidityEvent do
           new_hospital_hash = {
             "new_hospital_attributes" => 
               [
-                {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15", "medical_record_number" => ""}
-              ]
+              {"secondary_entity_id" => places(:AVH).id, "admission_date" => "2008-07-16", "discharge_date" => "2008-07-15", "medical_record_number" => ""}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
@@ -349,8 +349,8 @@ describe MorbidityEvent do
           new_hospital_hash = {
             "new_hospital_attributes" => 
               [
-                {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"}
-              ]
+              {"secondary_entity_id" => "", "admission_date" => "2008-07-14", "discharge_date" => "2008-07-15", "medical_record_number" => "1234"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_hospital_hash))
         end
@@ -367,7 +367,7 @@ describe MorbidityEvent do
         before(:each) do
           new_hospital_hash = {
             "new_hospital_attributes" =>
-            [
+              [
               { "secondary_entity_id" => "", "admission_date" => "", "discharge_date" => "", "medical_record_number" => ""}
             ]
           }
@@ -427,8 +427,8 @@ describe MorbidityEvent do
           new_diagnostic_hash = {
             "new_diagnostic_attributes" => 
               [
-                {"secondary_entity_id" => places(:AVH).id}
-              ]
+              {"secondary_entity_id" => places(:AVH).id}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_diagnostic_hash))
         end
@@ -480,8 +480,8 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "1234567"}
-              ]
+              { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "1234567"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
@@ -512,9 +512,9 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"},
-                { :last_name => "Burns", :first_name => "George"}
-              ]
+              { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"},
+              { :last_name => "Burns", :first_name => "George"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
@@ -540,8 +540,8 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-                { :last_name => "", :first_name => "Steve"}
-              ]
+              { :last_name => "", :first_name => "Steve"}
+            ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
         end
@@ -621,7 +621,7 @@ describe MorbidityEvent do
       describe "Receiving empty contact data" do
 
         before(:each) do
-         @existing_contact_hash = {
+          @existing_contact_hash = {
             "existing_contact_attributes" => {}
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
@@ -651,8 +651,8 @@ describe MorbidityEvent do
         before(:each) do
           new_place_exposure_hash = {
             "new_place_exposure_attributes" => 
-            [
-             {'name' => '', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => Time.now.strftime('%B %d, %Y')}
+              [
+              {'name' => '', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => Time.now.strftime('%B %d, %Y')}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_place_exposure_hash))
@@ -669,8 +669,8 @@ describe MorbidityEvent do
           @date = 'August 10, 2008'
           new_place_exposure_hash = {
             "new_place_exposure_attributes" => 
-            [
-             {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => @date}
+              [
+              {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => @date}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_place_exposure_hash))
@@ -695,9 +695,9 @@ describe MorbidityEvent do
         before(:each) do
           place_exposures_hash = {
             'new_place_exposure_attributes' => 
-            [
-             {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id},
-             {'name' => 'Sonic', 'place_type_id' => codes(:place_type_other).id}
+              [
+              {'name' => 'Davis Natatorium', 'place_type_id' => codes(:place_type_other).id},
+              {'name' => 'Sonic', 'place_type_id' => codes(:place_type_other).id}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(place_exposures_hash))
@@ -804,7 +804,7 @@ describe MorbidityEvent do
           event = events(:marks_cmr)
           event.patient.should_not be_nil
           event.patient.primary_entity.should_not be_nil
-  #        event.patient.primary_entity.entities_locations.size.should > 0
+          #        event.patient.primary_entity.entities_locations.size.should > 0
           event.update_attributes(h)
           event.should be_valid
         end
@@ -883,7 +883,7 @@ describe MorbidityEvent do
           User.stub!(:current_user).and_return(@user)
           @existing_note_hash = {
             "existing_note_attributes"=>{ "#{notes(:marks_note_1).id}" => {:struckthrough => "0"}, 
-                                          "#{notes(:marks_note_2).id}" => {:struckthrough => "1"} }
+              "#{notes(:marks_note_2).id}" => {:struckthrough => "1"} }
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
@@ -1246,6 +1246,98 @@ describe MorbidityEvent do
       end
     end
        
+  end
+  
+  describe 'when executing a view-filtering search' do
+
+    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases
+
+    before :each do
+      
+      jurisdiction_id = role_memberships(:default_user_admin_role_southeastern_district).jurisdiction_id
+      
+      @user = users(:default_user)
+      @user.stub!(:jurisdiction_ids_for_privilege).and_return([jurisdiction_id])
+      User.stub!(:current_user).and_return(@user)
+      MorbidityEvent.stub!(:get_allowed_queues).and_return([[1], ["Speedy-BearRiver"]])
+      
+      @event_hash = {
+        "active_patient" => {
+          "entity_type"=>"person", 
+          "person" => {
+            "last_name"=>"Biel",
+            "birth_date" => Date.today.years_ago(14)
+          }
+        },
+        "active_jurisdiction" => {
+          "secondary_entity_id" => jurisdiction_id
+        },
+        "event_status" => 'NEW'
+      }
+    end
+
+    # The following specs add a couple more events in addition to what is in the fixtures. If the results are off,
+    # take a look at the events bootstrapped here, and what is set up in the fixtures, paying attention too, to
+    # the jurisdiction_id, which is included in the search criteria.
+    
+    it 'should filter by disease and the other attributes' do
+      @event_hash['disease'] = {'disease_id' => 1 }
+      MorbidityEvent.create(@event_hash)
+
+      @event_hash['event_queue_id'] = 1
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'CLOSED'
+      MorbidityEvent.create(@event_hash)
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 5
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['NEW']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 1
+    end
+    
+    it 'should filter by state and the other attributes' do
+      @event_hash['event_status'] = 'CLOSED'
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['disease'] = {'disease_id' => 1 }
+      MorbidityEvent.create(@event_hash)
+
+      @event_hash['event_queue_id'] = 1
+      MorbidityEvent.create(@event_hash)
+      
+      MorbidityEvent.find_all_for_filtered_view.size.should == 5
+      MorbidityEvent.find_all_for_filtered_view({:states => ['CLOSED']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1]}).size.should == 1
+    end
+    
+    it 'should filter by queue and the other attributes' do
+      @event_hash['event_queue_id'] = 1
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'CLOSED'
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['disease'] = {'disease_id' => 1 }
+      MorbidityEvent.create(@event_hash)
+      
+      MorbidityEvent.find_all_for_filtered_view.size.should == 5
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1]}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 1
+    end
+
+    it 'should set the query string on the user if the view change is to be the default' do
+      @event_hash['event_queue_id'] = 1
+      MorbidityEvent.create(@event_hash)
+            
+      MorbidityEvent.find_all_for_filtered_view.size.should == 3
+      @user.should_receive(:update_attribute)
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :set_as_default_view => "1"})
+    end
+
   end
 
 end

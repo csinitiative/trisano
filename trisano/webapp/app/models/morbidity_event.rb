@@ -17,27 +17,27 @@
 
 class MorbidityEvent < HumanEvent
   
-#    def self.new_event_tree(event_hash = {:disease => {}, :active_jurisdiction => {}})
-#      event = MorbidityEvent.new(event_hash)
+  #    def self.new_event_tree(event_hash = {:disease => {}, :active_jurisdiction => {}})
+  #      event = MorbidityEvent.new(event_hash)
 
-    def self.new_event_tree
-      event = MorbidityEvent.new
+  def self.new_event_tree
+    event = MorbidityEvent.new
 
-      event.patient = Participation.new_patient_participation_with_address_and_phone
-      event.jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
-      event.build_disease_event
-      event.patient.participations_treatments.build
-      event.patient.build_participations_risk_factor
-      event.labs << Participation.new_lab_participation
-      event.hospitalized_health_facilities << Participation.new_hospital_participation
-      event.diagnosing_health_facilities << Participation.new_diagnostic_participation
-      event.contacts << Participation.new_contact_participation
-      event.clinicians << Participation.new_clinician_participation
-      event.reporting_agency = Participation.new_reporting_agency_participation
-      event.reporter = Participation.new_reporter_participation
-      event.notes.build
-      event
-    end
+    event.patient = Participation.new_patient_participation_with_address_and_phone
+    event.jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
+    event.build_disease_event
+    event.patient.participations_treatments.build
+    event.patient.build_participations_risk_factor
+    event.labs << Participation.new_lab_participation
+    event.hospitalized_health_facilities << Participation.new_hospital_participation
+    event.diagnosing_health_facilities << Participation.new_diagnostic_participation
+    event.contacts << Participation.new_contact_participation
+    event.clinicians << Participation.new_clinician_participation
+    event.reporting_agency = Participation.new_reporting_agency_participation
+    event.reporter = Participation.new_reporter_participation
+    event.notes.build
+    event
+  end
   
   # A hash that provides a basic field index for the event forms. It maps the event form
   # attribute keys to some metadata that is used to drive core field and core follow-up
@@ -237,15 +237,13 @@ class MorbidityEvent < HumanEvent
 
       # Build the phone
       el = self.reporter.secondary_entity.telephone_entities_locations.build(
-          :entity_location_type_id => code, 
-          :primary_yn_id => ExternalCode.yes_id,
-          :location_type_id => Code.telephone_location_type_id)
+        :entity_location_type_id => code,
+        :primary_yn_id => ExternalCode.yes_id,
+        :location_type_id => Code.telephone_location_type_id)
       el.build_location.telephones.build(attributes)
     else
       # Don't just 'find' the existing phone, loop through the association array looking for it
       self.reporter.secondary_entity.telephone_entities_locations.each do |tel_el|
-        p tel_el.id
-        p el_id
         if tel_el.id == el_id
           tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
           tel_el.location.telephones.last.attributes = attributes
@@ -288,6 +286,59 @@ class MorbidityEvent < HumanEvent
       reload # Any existing references to this object won't see these changes without this
     end
   end
+  
+  def self.find_all_for_filtered_view(options = {})
+    
+    conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
+    conjunction = "AND"
+    query_string = ""
+
+    states = get_allowed_states(options[:states])
+    if states.empty?
+      raise
+    else
+      conditions[0] += " #{conjunction} event_status IN (?)"
+      conditions << states
+      query_string = states.to_query('states')
+    end
+    
+    unless options[:diseases].nil?
+      conditions[0] += " #{conjunction} disease_id IN (?)"
+      conditions << options[:diseases]
+      query_string << "&" unless query_string.blank?
+      query_string << options[:diseases].to_query('diseases')
+    end
+
+    unless options[:queues].nil?
+      queue_ids, queue_names = get_allowed_queues(options[:queues])
+
+      if queue_ids.empty?
+        raise
+      else
+        conditions[0] += " #{conjunction} event_queue_id IN (?)"
+        conditions << queue_ids
+
+        query_string << "&" unless query_string.blank?
+        query_string << queue_names.to_query('queues')
+      end
+    end
+
+    User.current_user.update_attribute('event_view_settings', query_string) if options[:set_as_default_view] == "1"
+    
+    find_options = {
+      :include => :all_jurisdictions,
+      :select => "jurisdiction.secondary_entity_id",
+      :conditions => conditions,
+      :order => "events.updated_at DESC"
+    }
+    
+    find_options[:joins] = "LEFT JOIN disease_events ON disease_events.event_id = events.id" unless options[:diseases].nil?
+
+    MorbidityEvent.find(:all, find_options)
+  rescue Exception => ex
+    logger.error ex
+    raise ex
+  end
 
   def save_associations
     super
@@ -310,6 +361,23 @@ class MorbidityEvent < HumanEvent
     place_exposures.each do |pe|
       pe.secondary_entity.place_temp.save(false)
     end
+  end
+
+  private
+  
+  # Expects string of space separated event states e.g. new, acptd-lhd, etc.
+  def self.get_allowed_states(query_states=nil)
+    system_states = Event.get_state_keys
+    return system_states if query_states.nil?
+    query_states.collect! { |state| state.upcase } 
+    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
+  end
+
+  def self.get_allowed_queues(query_queues)
+    system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+    queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
+    queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
+    return queue_ids, queue_names
   end
 
 end

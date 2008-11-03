@@ -35,42 +35,17 @@ class MorbidityEventsController < EventsController
   end
 
   def index
-    conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
-
-    conjunction = "AND"
-    query_string = ""
-
-    states = get_allowed_states(params[:states])
-    if states.empty?
+    begin
+      @events = MorbidityEvent.find_all_for_filtered_view(
+        :states => params[:states],
+        :queues => params[:queues],
+        :diseases => params[:diseases],
+        :set_as_default_view => params[:set_as_default_view]
+      )
+    rescue
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-    else
-      conditions[0] += " #{conjunction} event_status IN (?)"
-      conditions << states
-      query_string = states.to_query('states')
     end
-
-    unless params[:queues].nil?
-      queue_ids, queue_names = get_allowed_queues(params[:queues])
-      if queue_ids.empty?
-        render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-      else
-        conjunction = "OR" unless params[:states].nil?
-        conditions[0] += " #{conjunction} event_queue_id IN (?)"
-        conditions << queue_ids
-
-        query_string << "&" unless query_string.blank?
-        query_string << queue_names.to_query('queues')
-      end
-    end
-
-    User.current_user.update_attribute('event_view_settings', query_string) if params[:set_as_default_view] == "1"
-
-    @events = MorbidityEvent.find(:all, 
-                                  :include => :all_jurisdictions, 
-                                  :select => "jurisdiction.secondary_entity_id", 
-                                  :conditions => conditions,
-                                  :order => "events.updated_at DESC")
-
+    
     respond_to do |format|
       format.html # { render :template => "events/index" }
       format.xml  { render :xml => @events }
@@ -119,7 +94,7 @@ class MorbidityEventsController < EventsController
     end
     @event.event_onset_date = Date.today,
 
-    @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
+      @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
     @place_events = PlaceEvent.initialize_from_morbidity_event(@event)    
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.primary_jurisdiction.entity_id)
@@ -272,21 +247,6 @@ class MorbidityEventsController < EventsController
     @event.disease.disease_id = params[:disease]
   end
   
-  # Expects string of space separated event states e.g. new, acptd-lhd, etc.
-  def get_allowed_states(query_states=nil)
-    system_states = Event.get_state_keys
-    return system_states if query_states.nil?
-    query_states.collect! { |state| state.upcase } 
-    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
-  end
-
-  def get_allowed_queues(query_queues)
-    system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-    queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
-    queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
-    return queue_ids, queue_names
-  end
-
   def prep_multimodels
     params[:morbidity_event][:active_patient][:existing_telephone_attributes] ||= {}
     params[:morbidity_event][:active_patient][:existing_treatment_attributes] ||= {}
