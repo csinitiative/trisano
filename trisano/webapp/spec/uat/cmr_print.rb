@@ -17,11 +17,11 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+#$dont_kill_browser = true
 $sleep_time = 5
 
 describe 'Print CMR page' do
-  it 'should correctly display the information to the print page' do
+  it 'should create a CMR with demographic info' do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__person_last_name', 'Lebowski')
@@ -44,9 +44,11 @@ describe 'Print CMR page' do
     @browser.add_selection('morbidity_event_active_patient_race_ids', 'label=White')
     @browser.select('morbidity_event_active_patient__person_primary_language_id', 'label=Hmong')
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include clinical info' do
     edit_cmr(@browser).should be_true
-    @browser.click "//ul[@id='tabs']/li[2]/a/em"
+    click_core_tab(@browser, CLINICAL)
     @browser.select "morbidity_event_disease_disease_id", "label=Botulism, foodborne"
     @browser.type "morbidity_event_disease_disease_onset_date", "12/12/2002"
     @browser.type "morbidity_event_disease_date_diagnosed", "12/12/2003"
@@ -80,34 +82,33 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_new_clinician_attributes__phone_number", "5551337"
     @browser.type "morbidity_event_new_clinician_attributes__extension", "555"
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include lab info' do
     edit_cmr(@browser).should be_true
-    @browser.click "//ul[@id='tabs']/li[3]/a/em"
-    @browser.click "link=Add a lab result"
-    type_field_by_order(@browser, "model_auto_completer_tf", 0, "Venture Complex")
-    @browser.type "morbidity_event_new_lab_attributes__test_type", "Necromancy"
-    @browser.type "morbidity_event_new_lab_attributes__lab_result_text", "Zombies"
-    @browser.type "morbidity_event_new_lab_attributes__interpretation", "Orpheus Says Oops"
-    @browser.select "morbidity_event_new_lab_attributes__specimen_source_id", "label=Blood"
-    @browser.type "morbidity_event_new_lab_attributes__collection_date", "12/12/2002"
-    @browser.type "morbidity_event_new_lab_attributes__lab_test_date", "12/13/2005"
-    @browser.select "morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=Unknown"
+    add_lab_result(@browser, {:lab_name => "Venture Complex",
+                              :lab_test_type => "Necromancy",
+                              :lab_result_text => "Zombies",
+                              :lab_interpretation => "Orpheus Says Oops",
+                              :lab_specimen_source => "Blood",
+                              :lab_collection_date => "12/12/2002",
+                              :lab_test_date => "12/13/2005",
+                              :sent_to_uphl => "Unknown"})
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include contacts' do
     edit_cmr(@browser).should be_true
-    click_core_tab(@browser, "Contacts")
-    @browser.click "link=Add a contact"
-    sleep(1)
-    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Lina"
-    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Inverse"
-    @browser.click "link=Add a contact"
-    sleep(1)
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Steve"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Jobbs"
+    click_core_tab(@browser, CONTACTS)
+    add_contact(@browser, {:last_name => "Lina", :first_name => "Inverse"},1)
+    add_contact(@browser, {:last_name => "Steve", :first_name => "Jobbs"},2)    
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include EPI info' do
     edit_cmr(@browser).should be_true
-    @browser.click "//ul[@id='tabs']/li[5]/a/em"
+
+    click_core_tab(@browser, EPI)
     @browser.select "morbidity_event_active_patient__participations_risk_factor_food_handler_id", "label=No"
     @browser.select "morbidity_event_active_patient__participations_risk_factor_healthcare_worker_id", "label=Yes"
     @browser.select "morbidity_event_active_patient__participations_risk_factor_group_living_id", "label=No"
@@ -117,9 +118,11 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_active_patient__participations_risk_factor_risk_factors_notes", "Whatever, Man"
     @browser.select "morbidity_event_imported_from_id", "label=Unknown"
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include reporting info' do
     edit_cmr(@browser).should be_true
-    @browser.click "//ul[@id='tabs']/li[6]/a/em"
+    click_core_tab(@browser, REPORTING)
     type_field_by_order(@browser, "model_auto_completer_tf", 0, "why")
     @browser.type "morbidity_event_active_reporting_agency_first_name", "what"
     @browser.type "morbidity_event_active_reporting_agency_last_name", "how"
@@ -130,9 +133,11 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_results_reported_to_clinician_date", "12/12/2004"
     @browser.type "morbidity_event_first_reported_PH_date", "12/12/2005"
     save_cmr(@browser).should be_true
-
+  end
+  
+  it 'should edit the CMR to include admin info' do
     edit_cmr(@browser).should be_true
-    @browser.click "//ul[@id='tabs']/li[7]/a/em"
+    click_core_tab(@browser, ADMIN)
     @browser.select "morbidity_event_lhd_case_status_id", "label=Confirmed"
     @browser.select "morbidity_event_udoh_case_status_id", "label=Not a Case"
     @browser.select "morbidity_event_outbreak_associated_id", "label=Yes"
@@ -145,7 +150,9 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_review_completed_UDOH_date", "12/5/1963"
     save_cmr(@browser).should be_true
     print_cmr(@browser).should be_true
-
+  end
+  
+  it 'should correctly display the information to the print page' do
     @browser.is_text_present('Confidential Case Report').should be_true
     @browser.is_text_present('Lebowski').should be_true
     @browser.is_text_present('Botulism, foodborne').should be_true

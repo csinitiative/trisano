@@ -221,12 +221,28 @@ module TrisanoHelper
   end
   
   def add_contact(browser, contact_attributes, index = 1)
-    click_core_tab(browser, "Contacts")
+    click_core_tab(browser, CONTACTS)
     browser.click "link=Add a contact"
     sleep(1)
     browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
     browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
     browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
+  end
+  
+  #NOTE: This only works for multiple labs if you save the CMR with each new lab report
+  def add_lab_result(browser, result_attributes, index = 1)
+    click_core_tab(browser, LABORATORY)
+    browser.click("link=Add a lab result") unless index == 1 
+    sleep(1)
+        
+    type_field_by_order(@browser, "model_auto_completer_tf", 0, result_attributes[:lab_name])
+    @browser.type("morbidity_event_new_lab_attributes__test_type", result_attributes[:lab_test_type])
+    @browser.type("morbidity_event_new_lab_attributes__lab_result_text", result_attributes[:lab_result_text])
+    @browser.type("morbidity_event_new_lab_attributes__interpretation", result_attributes[:lab_interpretation])
+    @browser.select("morbidity_event_new_lab_attributes__specimen_source_id", result_attributes[:lab_specimen_source])
+    @browser.type("morbidity_event_new_lab_attributes__collection_date", result_attributes[:lab_collection_date])
+    @browser.type("morbidity_event_new_lab_attributes__lab_test_date", result_attributes[:lab_test_date])
+    @browser.select("morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=#{result_attributes[:sent_to_uphl]}")
   end
   
   def save_contact_event(browser)
