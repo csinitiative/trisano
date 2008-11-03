@@ -44,6 +44,15 @@ class CdcExport < ActiveRecord::Base
       events
     end
 
+    def verification_records
+      where = "where exp_year='#{this_mmwr_year.to_s[2..3]}' AND #{Disease.disease_status_where_clause}"
+      group_by = "GROUP BY exp_event, exp_state, exp_year"
+      select = "SELECT COUNT(*), exp_event, exp_state, exp_year FROM v_export_cdc"
+      records = ActiveRecord::Base.connection.select_all("#{select} #{where} #{group_by}")
+      records.map!{|record| record.extend(Export::Cdc::VerificationRecord)}
+      records
+    end
+
     # set updated to false and sent to true for all cdc records
     def reset_sent_status(cdc_records)
       event_ids = cdc_records.collect {|record| record.event_id}

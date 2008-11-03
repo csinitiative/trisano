@@ -113,6 +113,26 @@ module Export
         'D'
       end
     end
+
+    module VerificationRecord
+      include Record
+
+      def cdc_export_fields
+        %w(exp_rectype
+           exp_state
+           exp_event
+           count
+           exp_year)
+      end
+
+      def exp_rectype
+        'V'
+      end
+
+      def count
+        self['count'].rjust(5, '0')
+      end
+    end
   end
 end
 

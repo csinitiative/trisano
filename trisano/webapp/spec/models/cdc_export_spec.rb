@@ -403,5 +403,49 @@ describe CdcExport do
     
   end
 
+  describe "displaying summary records for AIDS" do
+
+    before :each do
+
+    end
+
+    it "should display the summary record for AIDS" do 
+      with_sent_events do
+        CdcExport.verification_records.length.should == 1
+      end
+    end
+
+    it "should display 'V' for the record type" do
+      with_sent_events do
+        CdcExport.verification_records[0].to_cdc[0...1].should == 'V'
+      end
+    end
+
+    it "should display '49' for the state" do
+      with_sent_events do
+        CdcExport.verification_records[0].to_cdc[1..2].should == '49'
+      end
+    end
+
+    it "should display '10560' for event code" do
+      with_sent_events do
+        CdcExport.verification_records[0].to_cdc[3..7].should == '10560'
+      end
+    end
+
+    it "should display the counts of AIDS sent to CDC for the year" do
+      with_sent_events do
+        CdcExport.verification_records[0].to_cdc[8..12].should == '00001'
+      end
+    end
+
+    it "should display the MMWR year as 2 digits" do
+      year = Date.today.strftime('%y')
+      with_sent_events do
+        CdcExport.verification_records[0].to_cdc[13..14].should == year
+      end
+    end
+  end
+
 end
   
