@@ -29,12 +29,16 @@ class CdcExport < ActiveRecord::Base
       where = ['(cdc_update=true AND sent_to_cdc=true)']      
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
-        where << "AND (disease_id IN (#{diseases.collect(&:id).join(',')}))"
+        where << "AND ("
+        unless  diseases.empty?
+          where << "(disease_id IN (#{diseases.collect(&:id).join(',')}))"
+        end
+        invalid_case_status = Disease.with_invalid_case_status_clause
+        unless invalid_case_status.blank?
+          where << "OR #{ invalid_case_status}"
+        end
+        where << ")"
       end
-      invalid_case_status = Disease.with_invalid_case_status_clause
-      unless invalid_case_status.blank?
-        where << "OR #{ invalid_case_status}"
-      end      
       events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.join(' ')})")
       events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
       events

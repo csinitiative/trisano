@@ -1363,7 +1363,7 @@ module Selenium
         # 
         #
         # 'timeout' is a timeout in milliseconds, after which this command will return with an error
-        def wait_for_page_to_load(timeout)
+        def wait_for_page_to_load(timeout=$load_time)
             do_command("waitForPageToLoad", [timeout,])
         end
 
