@@ -40,8 +40,8 @@ default_appender = Logging::Appenders::RollingFile.new 'default', :filename => T
 #end
 DEFAULT_LOGGER = Logging::Logger['server']
 DEFAULT_LOGGER.add_appenders default_appender
-DEFAULT_LOGGER.level = :debug
-#DEFAULT_LOGGER.level = ENV['TRISANO_LOG_LOCATION'] ||= :debug
+
+DEFAULT_LOGGER.level = ENV['TRISANO_LOG_LEVEL'].intern ||= :debug
 
 config.logger = DEFAULT_LOGGER
 
