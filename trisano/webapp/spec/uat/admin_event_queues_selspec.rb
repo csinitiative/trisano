@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ $dont_kill_browser = true
 
 describe 'Managing event queues' do
   
@@ -29,16 +29,16 @@ describe 'Managing event queues' do
     end
 
     @browser.click "link=Event Queues"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     
-    @browser.click "link=New event queue"
-    @browser.wait_for_page_to_load "30000"
+    @browser.click "create_event_queue"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.type "event_queue_queue_name", "Enterics"
     @browser.select "event_queue_jurisdiction_id", "label=Utah County Health Department"
 
     @browser.click "event_queue_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present('Event queue was successfully created.').should be_true
     @browser.is_text_present('Enterics').should be_true
@@ -48,10 +48,10 @@ describe 'Managing event queues' do
   # Uncomment if we decide to allow editing in the future
   # it "should allow editing an event queue" do
   #   @browser.click "link=Edit"
-  #   @browser.wait_for_page_to_load "30000"
+  #   @browser.wait_for_page_to_load($load_time)
   #   @browser.type "event_queue_queue_name", "Enteric Group"
   #   @browser.click "event_queue_submit"
-  #   @browser.wait_for_page_to_load "30000"
+  #   @browser.wait_for_page_to_load($load_time)
   # 
   #   @browser.is_text_present('Event queue was successfully updated.').should be_true
   #   @browser.is_text_present('Enteric_Group').should be_true

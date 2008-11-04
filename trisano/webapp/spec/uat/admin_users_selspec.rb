@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
- $dont_kill_browser = true
+ #$dont_kill_browser = true
 
 describe 'Managing users' do
   
@@ -113,13 +113,13 @@ describe 'Managing users' do
     @browser.is_text_present("Bear River").should be_true
 
     @browser.click("link=Edit")  
-    @browser.wait_for_page_to_load "30000"    
+    @browser.wait_for_page_to_load($load_time)    
     @browser.click "link=Add Role"
     @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
 
     @browser.click "user_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Investigator").should be_true
@@ -150,13 +150,13 @@ describe 'Managing users' do
     @browser.is_text_present("TriCounty").should be_true
 
     @browser.click("link=Edit")  
-    @browser.wait_for_page_to_load "30000" 
+    @browser.wait_for_page_to_load($load_time) 
     
     @browser.click "remove_role_membership_link"
     @browser.click "remove_role_membership_link"
 
     @browser.click "user_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Administrator").should be_false
     @browser.is_text_present("Investigator").should be_false
@@ -168,10 +168,10 @@ end
 
 def go_to_new_user_page
   @browser.open "/trisano/users"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
     
   @browser.click "//input[@value='Create new user']"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
 end
 
 def enter_user_info(uid, uname)
@@ -181,7 +181,7 @@ end
 
 def save_and_verify_user(uid, uname)
   @browser.click "user_submit"
-  @browser.wait_for_page_to_load "30000"
+  @browser.wait_for_page_to_load($load_time)
   @browser.is_text_present('User was successfully created.').should be_true
   @browser.is_text_present(uid).should be_true
   @browser.is_text_present(uname).should be_true

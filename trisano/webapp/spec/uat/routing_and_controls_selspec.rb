@@ -29,7 +29,7 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should allow for new event_queues" do
     @browser.open "/trisano/admin"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load $load_time
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"
       switch_user(@browser, "default_user")
@@ -37,16 +37,16 @@ describe 'Sytem functionality for routing and workflow' do
 
     # We need a queue first
     @browser.click "link=Event Queues"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load $load_time
     
     @browser.click "create_event_queue"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load $load_time
 
     @browser.type "event_queue_queue_name", "Enterics"
     @browser.select "event_queue_jurisdiction_id", "label=Utah County Health Department"
 
     @browser.click "event_queue_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load $load_time
 
     @browser.is_text_present('Event queue was successfully created.').should be_true
     @browser.is_text_present('Enterics').should be_true
@@ -55,7 +55,7 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should present all controls" do
     @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("New Morbidity Report").should be_true
 
@@ -74,7 +74,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
     @browser.select "jurisdiction_id", "label=Central Utah"
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
   end
 
@@ -85,14 +85,14 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should set event to 'accepted' when 'accept' is clicked" do
     @browser.click("name=morbidity_event[event_status]")
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
   end
 
   it "should allow routing to an investigator queue" do
     @browser.is_text_present('Route locally to:').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
   end
 
   it "should allow for accepting or rejecting a local routing assignent" do
@@ -102,14 +102,14 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should set event to 'under investigation' when 'accept' is clicked" do
     @browser.click("name=morbidity_event[event_status]")
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Under Investigation").should be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
   end
 
   it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do
     @browser.click("investigation_complete_btn")
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Investigation Complete").should be_true
   end
 
@@ -120,7 +120,7 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should set event to 'Approved by LHD' when 'accept' is clicked" do
     @browser.click("name=morbidity_event[event_status]")
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Approved by LHD").should be_true
   end
 
@@ -131,7 +131,7 @@ describe 'Sytem functionality for routing and workflow' do
 
   it "should set event to 'Approved by State' when 'accept' is clicked" do
     @browser.click("name=morbidity_event[event_status]")
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Approved by State").should be_true
   end
 
@@ -149,7 +149,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "Davis_County"  #On
     @browser.click "Salt_Lake_Valley"  #On
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     # Primary jurisdiction should be unchanged
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
@@ -166,7 +166,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # On
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
@@ -177,7 +177,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "Davis_County"  # Off
     @browser.click "Salt_Lake_Valley"  # Off
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should_not be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
@@ -187,7 +187,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # Off
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt lake Valley')]").should_not be_true
     @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should_not be_true
@@ -199,7 +199,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.select "jurisdiction_id", "label=Central Utah"
     @browser.click "Bear_River"   # On
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
 
     switch_user(@browser, "surveillance_mgr").should be_true
@@ -212,32 +212,32 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Route to Local Health Depts."
     @browser.click "Bear_River"  # Off
     @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     switch_user(@browser, "surveillance_mgr")
     @browser.is_text_present("Permission denied: You do not have view privileges for this jurisdiction")
   end
 
   it "should allow for queues to specified" do
     @browser.open "/trisano"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"
       switch_user(@browser, "default_user")
     end
 
     @browser.open "/trisano/admin"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Event Queues"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     
     @browser.click "create_event_queue"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.type "event_queue_queue_name", "Joe Investigator"
     @browser.select "event_queue_jurisdiction_id", "label=Summit County Public Health Department"
 
     @browser.click "event_queue_submit"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present('Event queue was successfully created.').should be_true
     @browser.is_text_present('JoeInvestigator').should be_true
@@ -247,7 +247,7 @@ describe 'Sytem functionality for routing and workflow' do
     save_cmr(@browser).should be_true
 
     @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("NEW CMR").should be_true
     @browser.is_text_present("New Morbidity Report").should be_true
 
@@ -259,7 +259,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Change View"
     @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should be_true
     @browser.is_text_present(@person_2).should_not be_true
@@ -267,7 +267,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Change View"
     @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should_not be_true
@@ -275,7 +275,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Change View"
     @browser.add_selection "states[]", "label=New"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should be_true
@@ -283,7 +283,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Change View"
     @browser.add_selection "states[]", "label=Assigned to Investigator"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should_not be_true
@@ -292,7 +292,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.add_selection "states[]", "label=New"
     @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should be_true
     @browser.is_text_present(@person_2).should be_true
@@ -302,13 +302,13 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
     @browser.click "set_as_default_view"
     @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should be_true
 
     @browser.click "link=CMRS"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should be_true

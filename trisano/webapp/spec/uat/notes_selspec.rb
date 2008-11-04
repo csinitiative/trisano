@@ -29,7 +29,7 @@ describe 'Associating notes with an event.' do
 
   it "It should show an appropriate message for new events." do
     @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load "30000"
+    @browser.wait_for_page_to_load $load_time
 
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__person_last_name', "Smith")
@@ -75,7 +75,7 @@ describe 'Associating notes with an event.' do
     @browser.type "morbidity_event_new_place_exposure_attributes__name", "PS 207"
     save_cmr(@browser)
     @browser.click "edit-contact-event"
-    @browser.wait_for_page_to_load "30000" 
+    @browser.wait_for_page_to_load $load_time 
     @browser.is_element_present("id=existing-notes").should be_true
     @browser.is_text_present("No notes have been recorded for this event").should be_true
     @browser.type "contact_event_new_note_attributes_note", "My first contact note."
@@ -84,9 +84,9 @@ describe 'Associating notes with an event.' do
     @browser.is_text_present("My first contact note.").should be_true
 
     @browser.click("link=Smith")
-    @browser.wait_for_page_to_load "30000" 
+    @browser.wait_for_page_to_load $load_time 
     @browser.click "edit-place-event"
-    @browser.wait_for_page_to_load "30000" 
+    @browser.wait_for_page_to_load $load_time 
     @browser.is_element_present("id=existing-notes").should be_true
     @browser.is_text_present("No notes have been recorded for this event").should be_true
     @browser.type "place_event_new_note_attributes_note", "My first place note."
