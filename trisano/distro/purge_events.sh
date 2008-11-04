@@ -21,4 +21,5 @@
 
 . setenv.sh
 
+jruby -S rake -f ../webapp/Rakefile trisano:distro:set_priv_database_yml
 jruby ../webapp/script/runner -e production ../webapp/script/purge_events.rb

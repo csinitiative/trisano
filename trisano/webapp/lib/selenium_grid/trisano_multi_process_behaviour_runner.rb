@@ -45,7 +45,8 @@ class TriSanoMultiProcessSpecRunner
  
   def options(process_number)
     [ "--require './lib/selenium_grid/screenshot_formatter'",
-      "--format='Spec::ScreenshotFormatter:#{screenshot_dir}/Selenium-Build-Report-#{process_number}.html'" 
+      "--format='Spec::ScreenshotFormatter:#{screenshot_dir}/Selenium-Build-Report-#{process_number}.html'", 
+      "--backtrace" 
     ].join(" ")
   end
   

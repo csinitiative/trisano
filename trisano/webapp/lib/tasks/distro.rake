@@ -50,7 +50,7 @@ namespace :trisano do
       end
     end
     
-    # Both the creationg of the .war file and running of migrations require 
+    # Both the creation of the .war file and running of migrations require 
     # database.yml to have the proper settings for the target database.
     # To simplify things we just reset it every time based on the contents
     # of config.yml
@@ -68,9 +68,16 @@ namespace :trisano do
       }
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
     end    
+
+    desc "Sets the database.yml to use the priveledged user info"
+    task :set_priv_database_yml do
+      initialize_config
+      replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
+    end
     
     desc "Create the database, the user, and apply security permissions"
     task :create_db_dbuser_permissions => [:create_db, :create_db_user, :create_db_permissions] do
+      initialize_config
     end
 
     desc "Create the database"
