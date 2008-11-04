@@ -15,3 +15,7 @@ anthrax:
 aids:
   id: 4
   disease_name: "AIDS"
+
+hep_a:
+  id: 5
+  disease_name: "Hepatitis A, acute"

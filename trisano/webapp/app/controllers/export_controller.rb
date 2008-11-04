@@ -18,6 +18,7 @@ class ExportController < ApplicationController
   
   def cdc
     @events = []
+    @events << CdcExport.verification_records
     @events << CdcExport.weekly_cdc_export
     @events << CdcExport.weekly_cdc_deletes
     @events.flatten!

@@ -405,10 +405,6 @@ describe CdcExport do
 
   describe "displaying summary records for AIDS" do
 
-    before :each do
-
-    end
-
     it "should display the summary record for AIDS" do 
       with_sent_events do
         CdcExport.verification_records.length.should == 1
@@ -445,6 +441,40 @@ describe CdcExport do
         CdcExport.verification_records[0].to_cdc[13..14].should == year
       end
     end
+  end
+
+  describe "multiple verification records" do
+
+    before :each do
+      with_sent_events
+      @event_hash['disease']['disease_id'] = diseases(:hep_a).id
+      with_sent_events
+      with_sent_events
+    end
+    
+    it "should display two verification records" do
+      CdcExport.verification_records.length.should == 2
+    end
+
+    it "should keep proper counts" do
+      records = CdcExport.verification_records
+      records.sort!{|a, b| a.count <=> b.count}
+      records[0].to_cdc[8..12].should == '00001'
+      records[1].to_cdc[8..12].should == '00002'
+    end
+
+  end
+
+  describe "runnning export w/ no valid disease exports" do
+    
+    before :all do
+    end
+
+    it "should not blow up if there are no disease export statuses" do      
+      ActiveRecord::Base.connection.execute('truncate table diseases_external_codes')
+      CdcExport.verification_records
+    end
+  
   end
 
 end

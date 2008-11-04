@@ -129,6 +129,10 @@ module Export
         'V'
       end
 
+      def event_id
+        nil
+      end
+
       def count
         self['count'].rjust(5, '0')
       end

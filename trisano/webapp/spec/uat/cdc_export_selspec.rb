@@ -54,7 +54,10 @@ describe 'Admin CDC Export' do
   it "should produce a cdc record for the cmr" do
     @browser.click("link=CDC Export")
     @browser.wait_for_page_to_load($load_time)
-    @browser.get_html_source.gsub(/<\/?[^>]*>/, "")[17..21].should == '11590'
+    source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
+    records = source.split("\n")
+    records[0][8..12].should == '00001'
+    records[1][17..21].should == '11590'
   end
     
   it "should not produce cdc record for next export" do
@@ -62,7 +65,10 @@ describe 'Admin CDC Export' do
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=CDC Export")
     @browser.wait_for_page_to_load($load_time)
-    @browser.get_html_source.gsub(/<\/?[^>]*>/, "").length.should == 0
+    source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
+    records = source.split("\n")
+    records[0][8..12].should == '00001'
+    records.length.should == 1
   end
 
   it "should update imported from" do
@@ -81,7 +87,10 @@ describe 'Admin CDC Export' do
     @browser.is_text_present('CDC Export').should be_true    
     @browser.click("link=CDC Export")
     @browser.wait_for_page_to_load($load_time)
-    @browser.get_html_source.gsub( /<\/?[^>]*>/, "")[17..21].should == '11590'
+    source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
+    records = source.split("\n")
+    records[0][8..12].should == '00001'
+    records[1][17..21].should == '11590'
   end
 
   it "should change case status" do
