@@ -848,9 +848,9 @@ module TrisanoHelper
   
   def get_record_number(browser)
     html_source = browser.get_html_source
-    text_position = html_source.index("Record number:")
+    text_position = html_source.index("Record number</label>")
     record_number_start_position = html_source.index(Time.now.year.to_s, text_position)
-    record_number_end_position = html_source.index("</td>", record_number_start_position) -1
+    record_number_end_position = html_source.index("</span>", record_number_start_position) -1
     html_source[record_number_start_position..record_number_end_position]
   end
 
