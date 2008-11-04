@@ -59,9 +59,7 @@ namespace :trisano do
     task :runtrisano => [:report_dir] do
       require './lib/selenium_grid/trisano_multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
-      puts "hi"
       runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
-      puts runner
       puts "REPORTS_PREFIX: #{REPORTS_PREFIX}"
       puts "runnings following specs: #{SPECS_PATTERN}"
       runner.run(Dir[SPECS_PATTERN])
