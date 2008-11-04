@@ -17,12 +17,12 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ $dont_kill_browser = true
 
 describe 'Managing users' do
   
   it "should allow adding a new user with no roles" do
-    @browser.open "/trisano"
+    @browser.open "/trisano/cmrs"
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"
       switch_user(@browser, "default_user")
@@ -42,7 +42,7 @@ describe 'Managing users' do
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
 
-    @browser.click "link=Add a role"
+    @browser.click "link=Add Role"
     @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Bear River Health Department"
 
@@ -58,14 +58,14 @@ describe 'Managing users' do
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
 
-    @browser.click "link=Add a role"
-    @browser.click "link=Add a role"
+    @browser.click "link=Add Role"
+    @browser.click "link=Add Role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
+    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
+    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)
 
@@ -80,14 +80,14 @@ describe 'Managing users' do
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
 
-    @browser.click "link=Add a role"
-    @browser.click "link=Add a role"
+    @browser.click "link=Add Role"
+    @browser.click "link=Add Role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=Davis County Health Department"
+    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
+    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Davis County Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)
 
@@ -102,8 +102,8 @@ describe 'Managing users' do
     uid = get_unique_name(1)+get_unique_name(1)
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
-
-    @browser.click "link=Add a role"
+    
+    @browser.click "link=Add Role"
     @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Bear River Health Department"
 
@@ -112,10 +112,9 @@ describe 'Managing users' do
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Bear River").should be_true
 
-    @browser.open "/trisano/users"
-    click_resource_edit(@browser, "users", /\s+#{uid}/)
-
-    @browser.click "link=Add a role"
+    @browser.click("link=Edit")  
+    @browser.wait_for_page_to_load "30000"    
+    @browser.click "link=Add Role"
     @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
     @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
 
@@ -134,20 +133,25 @@ describe 'Managing users' do
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
 
-    @browser.click "link=Add a role"
-    @browser.click "link=Add a role"
+    @browser.click "link=Add Role"
+    @browser.click "link=Add Role"
 
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__role_id']", "label=Administrator"
-    @browser.select "//div[@class='role_membership'][1]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=Davis County Health Department"
+    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
+    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Davis County Health Department"
 
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__role_id']", "label=Investigator"
-    @browser.select "//div[@class='role_membership'][2]//select[@id='user_role_membership_attributes__jurisdiction_id']", "label=TriCounty Health Department"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
+    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
 
     save_and_verify_user(uid, uname)
 
-    @browser.open "/trisano/users"
-    click_resource_edit(@browser, "users", /\s+#{uid}/)
+    @browser.is_text_present("Administrator").should be_true
+    @browser.is_text_present("Davis").should be_true
+    @browser.is_text_present("Investigator").should be_true
+    @browser.is_text_present("TriCounty").should be_true
 
+    @browser.click("link=Edit")  
+    @browser.wait_for_page_to_load "30000" 
+    
     @browser.click "remove_role_membership_link"
     @browser.click "remove_role_membership_link"
 
@@ -166,7 +170,7 @@ def go_to_new_user_page
   @browser.open "/trisano/users"
   @browser.wait_for_page_to_load "30000"
     
-  @browser.click "link=New user"
+  @browser.click "//input[@value='Create new user']"
   @browser.wait_for_page_to_load "30000"
 end
 

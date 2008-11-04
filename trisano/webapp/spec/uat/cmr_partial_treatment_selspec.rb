@@ -19,13 +19,15 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Adding partial treatments to a CMR' do
   
+  #$dont_kill_browser = true
+  
   it 'should allow a treatment to be added w/out a date specified' do
     @browser.open '/trisano/cmrs'
     click_nav_new_cmr(@browser).should be_true
     @browser.type "morbidity_event_active_patient__person_last_name", "Smith"
     @browser.type "morbidity_event_active_patient__person_first_name", "Jersey"
     click_core_tab(@browser, "Clinical")
-    morbidity_event_active_patient__new_treatment_attributes__treatment
+
     @browser.select "morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id", "label=Yes"
     @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment", "Leeches"
     save_cmr(@browser).should be_true
