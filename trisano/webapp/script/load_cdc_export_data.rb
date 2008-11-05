@@ -17,6 +17,9 @@
 
 export_names = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_names.yml")
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns.yml")
+export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values.yml")
+
+
 
 ExportName.transaction do
   export_names.each do |export_name|
@@ -43,5 +46,20 @@ ExportColumn.transaction do
     )
     
     export_column.save! if export_column.new_record?
+  end
+end
+
+ExportConversionValue.transaction do
+  export_conversion_values.each do |export_conversion_value|
+    export_column = ExportColumn.find_by_export_column_name(export_conversion_value['export_column_name'])
+    raise "Could not find an export column for the export column name" if export_column.nil?
+    
+    export_conversion_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from_and_value_to(
+      :export_column_id => export_column.id,
+      :value_from => export_conversion_value['value_from'],
+      :value_to => export_conversion_value['value_to']
+    )
+    
+    export_conversion_value.save! if export_conversion_value.new_record?
   end
 end

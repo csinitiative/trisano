@@ -1,0 +1,325 @@
+
+ - export_column_name: 'EVENT'
+   value_from: 'AIDS'
+   value_to: '10560'
+ 
+ - export_column_name: 'EVENT'
+   value_from: 'Tularemia'
+   value_to: '10230'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Tetanus'
+   value_to: '10210'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Smallpox'
+   value_to: '11800'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Rubella'
+   value_to: '10200'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Q fever'
+   value_to: '10255'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Plague'
+   value_to: '10440'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Neurosyphilis'
+   value_to: '10317'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Mumps'
+   value_to: '10180'
+ 
+ - export_column_name: 'EVENT'
+   value_from: 'Malaria'
+   value_to: '10130'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Legionellosis'
+   value_to: '10490'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Lead poisoning'
+   value_to: '32010'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Encephalitis, primary'
+   value_to: '10050'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Encephalitis, post-other'
+   value_to: '10090'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Encephalitis, post-mumps'
+   value_to: '10080'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Diphtheria'
+   value_to: '10040'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Dengue hemorrhagic fever'
+   value_to: '10685'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Cyclosporiasis'
+   value_to: '11575'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Cryptosporidiosis'
+   value_to: '11580'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Chancroid'
+   value_to: '10273'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Campylobacteriosis'
+   value_to: '11020'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Brucellosis'
+   value_to: '10020'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Bacterial meningitis, other'
+   value_to: '10650'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Aseptic meningitis'
+   value_to: '10010'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Anthrax'
+   value_to: '10350'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Amebiasis'
+   value_to: '11040'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'UT'
+   value_to: '049'
+ 
+ - export_column_name: 'COUNTY'
+   value_from: 'BV'
+   value_to: '001'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'BE'
+   value_to: '003'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'CA'
+   value_to: '005'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'CR'
+   value_to: '007'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'DG'
+   value_to: '009'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'DV'
+   value_to: '011'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'DU'
+   value_to: '013'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'EM'
+   value_to: '015'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'GA'
+   value_to: '017'
+ 
+ - export_column_name: 'COUNTY'
+   value_from: 'GR'
+   value_to: '019'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'IR'
+   value_to: '021'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'JU'
+   value_to: '023'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'KA'
+   value_to: '025'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'MI'
+   value_to: '027'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'MO'
+   value_to: '029'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'RI'
+   value_to: '033'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'SL'
+   value_to: '035'
+   
+ - export_column_name: 'COUNTY'
+   value_from: 'SJ'
+   value_to: '037'
+ 
+ - export_column_name: 'COUNTY'
+   value_from: 'SP'
+   value_to: '039'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'SV'
+   value_to: '041'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'SM'
+   value_to: '043'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'TL'
+   value_to: '045'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'UI'
+   value_to: '047'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'WS'
+   value_to: '051'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'WA'
+   value_to: '053'
+
+ - export_column_name: 'COUNTY'
+   value_from: 'WN'
+   value_to: '055'
+   
+ - export_column_name: 'COUNTY'
+   value_from: 'WB'
+   value_to: '057'
+
+ - export_column_name: 'BIRTHDATE'
+   value_from: 
+   value_to: '99999999'
+
+ - export_column_name: 'AGE'
+   value_from: 
+   value_to: '999'
+
+ - export_column_name: 'RACE'
+   value_from: 'B'
+   value_to: 'B'
+
+ - export_column_name: 'RACE'
+   value_from: 'AA'
+   value_to: 'N'
+
+ - export_column_name: 'RACE'
+   value_from: 'A'
+   value_to: 'A'
+
+ - export_column_name: 'RACE'
+   value_from: 'AK'
+   value_to: 'N'
+
+ - export_column_name: 'RACE'
+   value_from: 'UNK'
+   value_to: 'U'
+
+ - export_column_name: 'RACE'
+   value_from: 'H'
+   value_to: 'A'
+
+ - export_column_name: 'RACE'
+   value_from: 'W'
+   value_to: 'W'
+
+ - export_column_name: 'ETHNICITY'
+   value_from: 'H'
+   value_to: 'H'
+
+ - export_column_name: 'ETHNICITY'
+   value_from: 'UNK'
+   value_to: 'U'
+  
+ - export_column_name: 'ETHNICITY'
+   value_from: 'O'
+   value_to: 'U'
+
+ - export_column_name: 'ETHNICITY'
+   value_from: 'NH'
+   value_to: 'N'
+
+ - export_column_name: 'ETHNICITY'
+   value_from: 'U'
+   value_to: 'U'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'S'
+   value_to: '3'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'NC'
+   value_to: 'U'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'CC'
+   value_to: 'N'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'D'
+   value_to: 'U'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'P'
+   value_to: '2'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'C'
+   value_to: '1'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'UNK'
+   value_to: '9'
+
+ - export_column_name: 'CASESTATUS'
+   value_from: 'U'
+   value_to: '9'
+
+ - export_column_name: 'IMPORTED'
+   value_from: 'F'
+   value_to: '2'
+
+ - export_column_name: 'IMPORTED'
+   value_from: 'U'
+   value_to: '9'
+
+ - export_column_name: 'IMPORTED'
+   value_from: 'UNK'
+   value_to: '9'
+
+ - export_column_name: 'IMPORTED'
+   value_from: 'US'
+   value_to: '3'
+
+ - export_column_name: 'IMPORTED'
+   value_from: 'UT'
+   value_to: '1'
+
