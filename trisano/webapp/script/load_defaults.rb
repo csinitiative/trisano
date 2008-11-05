@@ -207,7 +207,7 @@ ExternalCode.transaction do
    {:county_name => 'Rich',       :health_district => 'Bear River'},
    {:county_name => 'Juab',       :health_district => 'Central Utah'},
    {:county_name => 'Millard',    :health_district => 'Central Utah'},
-   {:county_name => 'Plute',      :health_district => 'Central Utah'},
+   {:county_name => 'Piute',      :health_district => 'Central Utah'},
    {:county_name => 'Sevier',     :health_district => 'Central Utah'},
    {:county_name => 'Sanpete',    :health_district => 'Central Utah'},
    {:county_name => 'Wayne',      :health_district => 'Central Utah'},

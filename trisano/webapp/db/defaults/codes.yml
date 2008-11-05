@@ -188,7 +188,7 @@
 
 - code_name: "language"
   the_code:  "pt"
-  code_description: "Portugese"
+  code_description: "Portuguese"
   sort_order: 135
 
 - code_name: "language"
@@ -275,7 +275,7 @@
 
 - code_name: "state"
   the_code:  "DE"
-  code_description: "Deleware"
+  code_description: "Delaware"
   sort_order: 40
 
 - code_name: "state"
@@ -315,7 +315,7 @@
 
 - code_name: "state"
   the_code:  "IL"
-  code_description: "Ilinois"
+  code_description: "Illinois"
   sort_order: 80
 
 - code_name: "state"
@@ -440,7 +440,7 @@
 
 - code_name: "state"
   the_code:  "OK"
-  code_description: "Oklahamo"
+  code_description: "Oklahoma"
   sort_order: 230
 
 - code_name: "state"
@@ -485,7 +485,7 @@
 
 - code_name: "state"
   the_code:  "TN"
-  code_description: "Temmessee"
+  code_description: "Tennessee"
   sort_order: 270
 
 - code_name: "state"
@@ -602,7 +602,7 @@
 
 - code_name: "county"
   the_code:  "PL"
-  code_description: "Plute"
+  code_description: "Piute"
   sort_order: 75
 
 - code_name: "county"
