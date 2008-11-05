@@ -239,6 +239,18 @@ class HumanEvent < Event
     end
   end
 
+  def lab_results
+    @results ||= (
+      results = []
+      labs.each do |lab|
+        lab.lab_results.each do |lab_result|
+          results << lab_result
+        end
+      end
+      results
+    )
+  end
+
   def save_associations
     patient.save(false)
     patient.primary_entity.save(false)

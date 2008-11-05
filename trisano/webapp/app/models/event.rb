@@ -246,7 +246,7 @@ class Event < ActiveRecord::Base
   end
 
   def primary_jurisdiction
-    active_jurisdiction.secondary_entity.current_place
+    active_jurisdiction.secondary_entity.current_place if active_jurisdiction
   end
 
   def secondary_jurisdictions
@@ -392,12 +392,13 @@ class Event < ActiveRecord::Base
   def self.find_by_criteria(*args)
     options = args.extract_options!
     fulltext_terms = []
-    where_clause = ""
-    order_by_clause = "p3.primary_last_name, p3.primary_first_name ASC"
+    where_clause = " p3.type != 'PlaceEvent'"
+    order_by_clause = "p3.type DESC, p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
     
     if !options[:event_type].blank?
       issue_query = true
+      where_clause += " AND " unless where_clause.empty?
       where_clause += " p3.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) + "'"
     end
 

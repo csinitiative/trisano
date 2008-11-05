@@ -13,4 +13,5 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= render_events_csv(@cmrs) {|cmr| find_event(cmr)}
+-# @show_answers (to form builder questions) will be true if a disease was selected
+= render_events_csv(@cmrs, :show_answers => @show_answers) {|cmr| find_event(cmr)}

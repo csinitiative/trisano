@@ -151,8 +151,11 @@ class SearchController < ApplicationController
         flash[:error] += "</ul>"
       end
     end      
-
     
+    # For some reason can't communicate with template via :locals on the render line.  @show_answers is used for csv export to cause formbuilder answers
+    # to be output
+    @show_answers = !params[:disease].blank?
+
     respond_to do |format|
       format.html
       format.csv { render :layout => false }

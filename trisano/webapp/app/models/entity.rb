@@ -29,6 +29,7 @@ class Entity < ActiveRecord::Base
   has_many :entities_locations, :foreign_key => 'entity_id', 
                                 :select => "DISTINCT ON (entity_id, entity_location_type_id, primary_yn_id, location_type_id) *", 
                                 :order => 'entity_id, entity_location_type_id, primary_yn_id, location_type_id, created_at DESC'
+
   has_many :locations, :through => :entities_locations
 
   has_many :telephone_entities_locations,

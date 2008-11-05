@@ -26,6 +26,10 @@ class LabResult < ActiveRecord::Base
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
 
+  def lab_name
+    participation.secondary_entity.place_temp.name unless participation.nil?
+  end
+
   def validate
     if !collection_date.blank? && !lab_test_date.blank?
       errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
