@@ -1,0 +1,223 @@
+ - type_data: 'FIXED'
+   export_column_name: "RECTYPE"
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '1'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name:
+
+ - type_data: 'FIXED'
+   export_column_name: "UPDATE"
+   table_name: 
+   column_name: 
+   is_required: 'N'
+   start_position: '2'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 
+
+ - type_data: 'FIXED'
+   export_column_name: "STATE"
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '3'
+   length_to_output: '2'
+   export_name: 'CDC'
+   name: 
+     
+ - type_data: 'FIXED'
+   export_column_name: "YEAR"
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '5'
+   length_to_output: '2'
+   export_name: 'CDC'
+   name: 'YR'
+
+ - type_data: "CORE"
+   export_column_name: "CASEID"
+   table_name: 'events'
+   column_name: 'id'
+   is_required: 'Y'
+   start_position: '7'
+   length_to_output: '6'
+   export_name: 'CDC'
+   name: 'ID (Case)'
+
+ - type_data: 'FIXED'
+   export_column_name: 'SITE'
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '13'
+   length_to_output: '3'
+   export_name: 'CDC'
+   name: 'ID (Site)'
+
+ - type_data: 'CORE'
+   export_column_name: 'WEEK'
+   table_name: 'events'
+   column_name: 'MMWR_week'
+   is_required: 'Y'
+   start_position: '16'
+   length_to_output: '2'
+   export_name: 'CDC'
+   name: 'MMWR WK'
+
+ - type_data: 'CORE'
+   export_column_name: 'EVENT'
+   table_name: 'diseases'
+   column_name: 'id'
+   is_required: 'Y'
+   start_position: '18'
+   length_to_output: '5'
+   export_name: 'CDC'
+   name: 'EVENT'
+
+ - type_data: 'FIXED'
+   export_column_name: 'COUNT'
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '23'
+   length_to_output: '5'
+   export_name: 'CDC'
+   name: 'CASE COUNT'
+
+     
+ - type_data: 'CORE'
+   export_column_name: 'COUNTY'
+   table_name: 'addresses'
+   column_name: 'county_id'
+   is_required: 'N'
+   start_position: '28'
+   length_to_output: '3'
+   export_name: 'CDC'
+   name: 'COUNTY CODE'
+
+ - type_data: 'CORE'
+   export_column_name: 'BIRTHDATE'
+   table_name: 'people'
+   column_name: 'birth_date'
+   is_required: 'N'
+   start_position: '31'
+   length_to_output: '8'
+   export_name: 'CDC'
+   name: 'BIRTHDATE (MM/DD/YY)'
+ 
+ - type_data: 'CORE'
+   export_column_name: 'AGE'
+   table_name: 'events'
+   column_name: 'age_at_onset'
+   is_required: 'N'
+   start_position: '39'
+   length_to_output: '3'
+   export_name: 'CDC'
+   name: 'AGE'
+
+ - type_data: 'CORE'
+   export_column_name: 'AGETYPE'
+   table_name: 'events'
+   column_name: 'age_type_id'
+   is_required: 'N'
+   start_position: '42'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'AGE TYPE'
+     
+ - type_data: 'CORE'
+   export_column_name: 'SEX'
+   table_name: 'people'
+   column_name: 'birth_gender_id'
+   is_required: 'N'
+   start_position: '43'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'SEX'
+
+ - type_data: 'CORE'
+   export_column_name: 'RACE'
+   table_name: 'people_races'
+   column_name: 'race_id'
+   is_required: 'N'
+   start_position: '44'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'RACE'
+     
+ - type_data: 'CORE'
+   export_column_name: 'ETHNICITY'
+   table_name: 'people'
+   column_name: 'ethnicity_id'
+   is_required: 'N'
+   start_position: '45'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'ETHNIC'
+     
+ - type_data: 'CORE'
+   export_column_name: 'EVENTDATE'
+   table_name: 'events'
+   column_name: 'event_onset_date'
+   is_required: 'Y'
+   start_position: '46'
+   length_to_output: '6'
+   export_name: 'CDC'
+   name: 'EVENT DATE'
+     
+ - type_data: 'FIXED'
+   export_column_name: 'DATETYPE'
+   table_name: 
+   column_name: 
+   is_required: 'Y'
+   start_position: '46'
+   length_to_output: '6'
+   export_name: 'CDC'
+   name: 'EVENT TYPE'
+
+ - type_data: 'CORE'
+   export_column_name: 'CASESTATUS'
+   table_name: 'events'
+   column_name: 'event_status'
+   is_required: 'N'
+   start_position: '53'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'STATUS'
+   
+ - type_data: 'CORE'
+   export_column_name: 'IMPORTED'
+   table_name: 'events'
+   column_name: 'imported_from_id'
+   is_required: 'N'
+   start_position: '54'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'IMPORTED'
+
+ - type_data: 'CORE'
+   export_column_name: 'OUTBREAK'
+   table_name: 'events'
+   column_name: 'outbreak_associated_id'
+   is_required: 'N'
+   start_position: '55'
+   length_to_output: '1'
+   export_name: 'CDC'
+   name: 'OUTBREAK ASSOC'
+   
+ - type_data: 'FIXED'
+   export_column_name: 'FUTURE'
+   table_name: 
+   column_name: 
+   is_required: 'N'
+   start_position: '56'
+   length_to_output: '5'
+   export_name: 'CDC'
+   name: 
+     
+
+   
