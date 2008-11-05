@@ -347,7 +347,10 @@ class Form < ActiveRecord::Base
         child_to_publish.description = child.description unless child.description.nil?
         child_to_publish.help_text = child.help_text unless child.help_text.nil?
         child_to_publish.condition = child.condition unless child.condition.nil?
+        child_to_publish.is_condition_code = child.is_condition_code unless child.is_condition_code.nil?
         child_to_publish.core_path = child.core_path unless child.core_path.nil?
+        child_to_publish.export_column_id = child.export_column_id unless child.export_column_id.nil?
+        child_to_publish.export_conversion_value_id = child.export_conversion_value_id unless child.export_conversion_value_id.nil?
       
         child_to_publish.save!
         published_node.add_child child_to_publish
@@ -410,13 +413,17 @@ class Form < ActiveRecord::Base
     elements.each do |e|
       parent_id =  parent_id_map[e["parent_id"].to_i].nil? ? "null" : parent_id_map[e["parent_id"].to_i]
       is_condition_code = e["is_condition_code"].nil? ? "null" : e["is_condition_code"]
+      export_column_id = e["export_column_id"].nil? ? "null" : e["export_column_id"]
+      export_conversion_value_id = e["export_conversion_value_id"].nil? ? "null" : e["export_conversion_value_id"]
       
       sql = "INSERT INTO form_elements "
       sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
-      sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, created_at, updated_at) "
+      sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
+      sql << "export_conversion_value_id, created_at, updated_at) "
       sql << "VALUES "
       sql << "('#{form_id}', '#{sanitize_sql(["%s", e["type"]])}', '#{sanitize_sql(["%s", e["name"]])}', '#{sanitize_sql(["%s", e["description"]])}', #{parent_id}, #{sanitize_sql(["%s", e["lft"]])}, #{sanitize_sql(["%s", e["rgt"]])}, false, null, "
-      sql << "#{sanitize_sql(["%s", e["is_active"]])}, #{tree_id}, '#{sanitize_sql(["%s", e["condition"]])}', '#{sanitize_sql(["%s", e["core_path"]])}', #{is_condition_code}, '#{sanitize_sql(["%s", e["help_text"]])}', now(), now()"
+      sql << "#{sanitize_sql(["%s", e["is_active"]])}, #{tree_id}, '#{sanitize_sql(["%s", e["condition"]])}', '#{sanitize_sql(["%s", e["core_path"]])}', #{is_condition_code}, '#{sanitize_sql(["%s", e["help_text"]])}', "
+      sql << "#{sanitize_sql(["%s", export_column_id])}, #{sanitize_sql(["%s", export_conversion_value_id])}, now(), now()"
       sql << ");"
       
       result = ActiveRecord::Base.connection.insert(sql)

@@ -259,7 +259,7 @@ describe Form do
   
   describe "when first published" do
     
-    fixtures :forms, :form_elements, :questions, :diseases_forms, :diseases
+    fixtures :forms, :form_elements, :questions, :diseases_forms, :diseases, :export_columns
     
     before(:each) do
       @form_to_publish = Form.find(1)
@@ -317,6 +317,7 @@ describe Form do
       demo_q1.class.name.should eql("QuestionElement")
       demo_q1.form_id.should eql(@published_form.id)
       demo_q1.name.should be_nil
+      demo_q1.export_column_id.should eql(form_elements(:demo_group_q1).export_column_id)
       
       demo_q2 = demo_group.children[1]
       demo_q2.class.name.should eql("QuestionElement")
@@ -584,7 +585,7 @@ describe Form do
   end
 
   describe 'a copied form' do
-    fixtures :forms, :form_elements, :questions, :diseases, :diseases_forms
+    fixtures :forms, :form_elements, :questions, :diseases, :diseases_forms, :export_columns
 
     before :each do 
       @original_form = Form.find(1)
@@ -642,6 +643,14 @@ describe Form do
       @copied_form.form_base_element.should_not be_nil
       @copied_form.form_base_element.children.size.should == 3
       @copied_form.form_base_element.all_children.size.should == @original_form.form_base_element.all_children.size
+    end
+
+    it 'should copy the export column data' do
+      default_view = @copied_form.investigator_view_elements_container.children[0]
+      demo_section = default_view.children[0]
+      demo_group = demo_section.children[0]
+      demo_q1 = demo_group.children[0]
+      demo_q1.export_column_id.should eql(form_elements(:demo_group_q1).export_column_id)
     end
 
   end
@@ -715,10 +724,18 @@ describe Form do
       @imported_form.jurisdiction.should be_nil
     end
 
-    it 'should copy the form elements' do
+    it 'should import the form elements' do
       @imported_form.form_base_element.should_not be_nil
       @imported_form.form_base_element.children.size.should == 3
       @imported_form.form_base_element.all_children.size.should == @original_form.form_base_element.all_children.size
+    end
+    
+    it 'should import the export column data' do
+      default_view = @imported_form.investigator_view_elements_container.children[0]
+      demo_section = default_view.children[0]
+      demo_group = demo_section.children[0]
+      demo_q1 = demo_group.children[0]
+      demo_q1.export_column_id.should eql(form_elements(:demo_group_q1).export_column_id)
     end
     
   end

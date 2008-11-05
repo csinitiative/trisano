@@ -20,7 +20,7 @@
     %h4 Add a new question
     - remote_form_for(@question_element) do |f|
 
-      = render :partial => 'form', :locals => { :f => f }
+      = render :partial => 'form', :locals => { :f => f, :export_columns => @export_columns }
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
         %label Data type

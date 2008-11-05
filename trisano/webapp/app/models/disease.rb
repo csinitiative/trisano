@@ -19,6 +19,7 @@ class Disease < ActiveRecord::Base
   validates_presence_of :disease_name
 
   has_and_belongs_to_many :external_codes
+  has_and_belongs_to_many :export_columns
 
   class << self
 

@@ -88,6 +88,8 @@ demo_group_q1:
   description: 
   rgt: "7"
   parent_id: "4"
+  export_column_id: 1
+  export_conversion_value_id: 
 
 demo_group_q2:
   name: 

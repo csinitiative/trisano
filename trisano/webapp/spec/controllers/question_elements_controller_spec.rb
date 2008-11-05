@@ -148,6 +148,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      @form = mock_model(Form)
       @section_element = mock_model(SectionElement)
       @question_element = mock_model(QuestionElement)
       @question = mock_model(Question)
@@ -159,6 +160,8 @@ describe QuestionElementsController do
       @question_element.stub!(:question).and_return(@question)
       QuestionElement.stub!(:new).and_return(@question_element)
       FormElement.stub!(:find).and_return(@section_element)
+      @section_element.stub!(:form).and_return(@form)
+      @form.stub!(:disease_ids).and_return([])
     end
   
     def do_get
@@ -196,7 +199,12 @@ describe QuestionElementsController do
     before(:each) do
       mock_user
       @question_element = mock_model(QuestionElement)
+      @form = mock_model(Form)
+      
       QuestionElement.stub!(:find).and_return(@question_element)
+      
+      @question_element.stub!(:form).and_return(@form)
+      @form.stub!(:disease_ids).and_return([])
     end
   
     def do_get

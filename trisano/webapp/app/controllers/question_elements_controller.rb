@@ -44,8 +44,9 @@ class QuestionElementsController <  AdminController
       @question_element.parent_element_id = params[:form_element_id]
       @question_element.question.core_data = params[:core_data] == "true" ? true : false
       
-      @reference_element = FormElement.find(params[:form_element_id])
+      @reference_element = FormElement.find(params[:form_element_id], :include => :form)
       @library_elements = []
+      @export_columns = export_columns(@reference_element.form.disease_ids)
     rescue Exception => ex
       logger.info ex
       flash[:error] = 'Unable to display the new question form.'
@@ -54,7 +55,8 @@ class QuestionElementsController <  AdminController
   end
 
   def edit
-    @question_element = QuestionElement.find(params[:id])
+    @question_element = QuestionElement.find(params[:id], :include => :form)
+    @export_columns = export_columns(@question_element.form.disease_ids)
   end
 
   def create
@@ -101,6 +103,17 @@ class QuestionElementsController <  AdminController
       render :template => 'rjs-error'
     end
     
+  end
+  
+  private
+  
+  def export_columns(disease_ids)
+    ExportColumn.find(
+      :all,
+      :conditions => [" diseases_export_columns.disease_id IN (?)", disease_ids],
+      :joins => "LEFT JOIN diseases_export_columns ON diseases_export_columns.export_column_id = export_columns.id",
+      :order => "name DESC"
+    )
   end
 
 end

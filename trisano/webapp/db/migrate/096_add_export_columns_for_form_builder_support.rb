@@ -15,10 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ExportColumn < ActiveRecord::Base
-  belongs_to :export_name
-  has_many   :export_conversion_values
-  has_and_belongs_to_many   :diseases
+class AddExportColumnsForFormBuilderSupport < ActiveRecord::Migration
+  extend MigrationHelpers
+  def self.up
+    add_column :export_columns, :name, :string
+    add_column :form_elements, :export_column_id, :integer
+    add_column :form_elements, :export_conversion_value_id, :integer
+  end
+
+  def self.down
+    remove_column :export_columns, :name
+    remove_column :form_elements, :export_column_id
+    remove_column :form_elements, :export_conversion_value_id
+  end
 end
-
-

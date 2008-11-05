@@ -16,5 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ValueElement < FormElement
+  
+  belongs_to :export_conversion_value
+
   attr_accessor :parent_element_id
 end

@@ -17,6 +17,7 @@
 
 class QuestionElement < FormElement
   has_one :question, :foreign_key => "form_element_id"
+  belongs_to :export_column
 
   attr_accessor :parent_element_id
   
