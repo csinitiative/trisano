@@ -217,7 +217,20 @@
    start_position: '56'
    length_to_output: '5'
    export_name: 'CDC'
-   name: 
+   name:
+
+     
+     
+ - type_data: 'FORM'
+   export_column_name: 'DATEDX'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '8'
+   export_name: 'CDC'
+   name: 'Date Dx'
+   disease_name: 
      
 
    

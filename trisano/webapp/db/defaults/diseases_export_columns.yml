@@ -1,0 +1,13 @@
+ - disease_name: 'Hepatitis A, acute'
+   export_column_name: 'DATEDX'
+   start_position: '61'
+   length_to_output: '8'
+   
+   
+ - disease_name: 'Hepatitis E, acute'
+   export_column_name: 'DATEDX'
+   start_position: '61'
+   length_to_output: '8'
+
+
+

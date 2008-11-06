@@ -18,8 +18,7 @@
 export_names = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_names.yml")
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values.yml")
-
-
+diseases_export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases_export_columns.yml")
 
 ExportName.transaction do
   export_names.each do |export_name|
@@ -61,5 +60,24 @@ ExportConversionValue.transaction do
     )
     
     export_conversion_value.save! if export_conversion_value.new_record?
+  end
+end
+
+Disease.transaction do
+  diseases_export_columns.each do |disease_export_column|
+    disease = Disease.find_by_disease_name(disease_export_column['disease_name'])
+    
+    unless disease.nil?
+      export_column = ExportColumn.find_by_export_column_name_and_start_position_and_length_to_output(
+        disease_export_column['export_column_name'],
+        disease_export_column['start_position'],
+        disease_export_column['length_to_output']
+      )
+      
+      unless export_column.nil?
+        disease.export_columns << export_column
+      end
+    end
+    
   end
 end

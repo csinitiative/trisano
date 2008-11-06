@@ -236,7 +236,10 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      @form = mock_model(Form)
+      @form.stub!(:disease_ids).and_return([])
       @section_element = mock_model(SectionElement)
+      @section_element.stub!(:form).and_return(@form)
       @question_element = mock_model(QuestionElement, :to_param => "1")
       @question_element.stub!(:form_id).and_return(1)
       QuestionElement.stub!(:new).and_return(@question_element)
@@ -288,7 +291,10 @@ describe QuestionElementsController do
     before(:each) do
       mock_user
       @question_element = mock_model(QuestionElement, :to_param => "1")
+      @form = mock_model(Form)
+      @form.stub!(:disease_ids).and_return([])
       @question_element.stub!(:form_id).and_return(1)
+      @question_element.stub!(:form).and_return(@form)
       QuestionElement.stub!(:find).and_return(@question_element)
     end
     

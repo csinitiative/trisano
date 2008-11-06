@@ -70,6 +70,7 @@ class QuestionElementsController <  AdminController
       @question_element.question = Question.new(params[:question_element][:question_attributes])
       @reference_element = FormElement.find(@question_element.parent_element_id)
       @library_elements = []
+      @export_columns = export_columns(@reference_element.form.disease_ids)
       render :action => "new" 
     end
 
@@ -82,6 +83,7 @@ class QuestionElementsController <  AdminController
       flash[:notice] = 'Question was successfully updated.'
       @form = Form.find(@question_element.form_id)
     else
+      @export_columns = export_columns(@question_element.form.disease_ids)
       render :action => "edit"
     end
 
