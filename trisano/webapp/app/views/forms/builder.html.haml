@@ -14,46 +14,85 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Form Builder
+  Form:
+  = h @form.name
 
 //- content_for :name do
 //  = @form.name
 
 - content_for :tools do
-  = link_to '< Back to Forms', forms_path
+  = link_to 'Forms', forms_path
+  |
+  Detail View
   %p
 
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
 #rot
-  #formbuilder-body
-    %table.list
+  %table.list
+    %tr
+      %th.forminformation
+        Form Information
+      %th Diseases
+      %th Jurisdiction
+      %th Event Type
       %tr
-        %th.forminformation
-          Form Information
-        %th Diseases
-        %th Jurisdiction
-        %th Event Type
-        %tr
-          %td.forminformation
-            .formname
-              = h @form.name
-              %br
-            .description  
-              = h @form.description
-            .tools
+        %td.forminformation
+          .formname
+            = h @form.name
+            %br
+          .description  
+            = h @form.description
+          #button.press
+            %span
+              = link_to 'Detail', builder_path(@form)
+              |
               = link_to 'Edit', edit_form_path(@form)
-          %td
-            %ul
-              - @form.diseases.each do |disease|
-                %li.diseaselist= h disease.disease_name
-          %td
-            = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
-          %td
-            = h @form.event_type.humanize
-            .status
-              = h @form.status
+              |
+              = link_to 'Copy', copy_form_path(@form), :method => :post
+              |
+              = link_to 'Export', export_form_path(@form), :method => :post
+        %td
+          %ul
+            - @form.diseases.each do |disease|
+              %li.diseaselist= h disease.disease_name
+        %td
+          = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.current_place.name
+        %td
+          = h @form.event_type.humanize
+          %br
+          .status
+            = h @form.status
+#rot
+  %ul.horizontal
+    %li
+      #button.formname
+        Form Detail
+    %li
+      #button.press
+        %span
+          = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
+    %li
+      #button.press
+        %span
+          = link_to_remote("Add Core Tab Config", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
+    %li
+      #button.press
+        %span
+          = link_to_remote("Add Core Field Config", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
+    %li
+      #button.press
+        %span
+          = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
+  %ul.horizontal
+    %li
+      #builder-mods
+      #core-builder-mods
+      #core-field-builder-mods
+      #library-admin
+
+  %formbuilder
     - if @form.errors.empty?
       %div{:id => "form_children"}
         %ul{:id => "root-element-list"}
@@ -75,26 +114,6 @@
       %br
       = link_to 'Roll form back to last good published version.', form_rollback_path(@form)
       &nbsp;(This may take a few minutes.)
-
-#sidebar
-  %ul.tina
-    %li.action
-      = link_to 'Edit Form Detail', edit_form_path(@form), :id => 'edit-form'
-    - if @form.errors.empty?
-      %li.action
-        = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
-        #builder-mods
-      %li.action
-        = link_to_remote("Add Core Tab Config", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
-        #core-builder-mods
-      %li.action
-        = link_to_remote("Add Core Field Config", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
-        #core-field-builder-mods
-      %li.action
-        = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
-        #library-admin
-  %br
-  %hr
 
   - if @form.errors.empty?
     - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do

@@ -13,8 +13,8 @@
 
 .tab {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 12px;
+  font-weight: 400;
   color: #666;
   letter-spacing: 0px;
   color: #000; }
@@ -101,32 +101,73 @@
       .question .actions a:hover {
         color: #036; }
 
-.tina {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  weight: bold;
-  letter-spacing: 1px;
-  text-align: left;
-  text-transform: uppercase;
-  background: #EFEFEF;
-  padding: 8px 8px 15px 7px; }
-  .tina ul {
-    padding: 0px 0px 5px 0px; }
-  .tina li {
-    padding: 0px 0px 6px 10px; }
-  .tina .action {
-    background: transparent url('../images/button.png') no-repeat scroll 0 0; }
-    .tina .action:hover {
-      background-position: -200px 0; }
-  .tina a {
-    color: #666;
+#button {
+  border: 0;
+  cursor: pointer;
+  text-align: center;
+  padding: 7px 7px 7px 3px; }
+
+span {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  padding: 0 0 0 10px;
+  font-family: helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 100;
+  color: #ccc; }
+  span a {
+    font-size: 10px;
+    color: #fff;
     font-weight: bold;
-    text-decoration: none;
-    display: block;
-    width: 188px;
-    height: 18px; }
-    .tina a:hover {
-      color: #fff; }
+    letter-spacing: 1px;
+    text-align: left;
+    text-transform: uppercase;
+    text-decoration: none; }
+    span a:hover {
+      color: #c00; }
+
+.press {
+  display: inline-block;
+  background: url('../images/btn_right.png') right no-repeat; }
+  .press span {
+    height: 20px;
+    line-height: 20px;
+    background: url('../images/btn_left.png') left no-repeat; }
+  .press:hover {
+    background: url('../images/btn_right_hover.png') right no-repeat; }
+    .press:hover span {
+      background: url('../images/btn_left_hover.png') left no-repeat; }
+
+.horizontal {
+  overflow: auto; }
+  .horizontal li {
+    float: left; }
+
+.tina {
+  background: #EFEFEF;
+  padding: 8px 8px 5px 7px;
+  overflow: auto; }
+  .tina li {
+    float: left;
+    width: 206px; }
+    .tina li a {
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #666;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: left;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0px 0px 6px 10px;
+      display: block;
+      width: 190px;
+      height: 18px;
+      background: transparent url('../images/button.png') no-repeat scroll 0 0; }
+      .tina li a:hover {
+        background-position: -200px 0;
+        color: #fff; }
   .tina .tinainfo {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 9px;

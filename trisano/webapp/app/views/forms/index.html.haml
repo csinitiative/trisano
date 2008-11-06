@@ -45,20 +45,19 @@
       %tr.roll
         %td.forminformation
           .formname
-            = link_to form.name, form
+            = link_to form.name, builder_path(form)
             %br
           .description
             = h form.description
-          .tools
-            = link_to 'Show', form
-            |
-            = link_to 'Edit', edit_form_path(form)
-            |
-            = link_to 'Form Builder', builder_path(form)
-            |
-            = link_to 'Copy', copy_form_path(form), :method => :post
-            |
-            = link_to 'Export', export_form_path(form), :method => :post
+          #button.press
+            %span
+              = link_to 'Detail', builder_path(form)
+              |
+              = link_to 'Edit', edit_form_path(form)
+              |
+              = link_to 'Copy', copy_form_path(form), :method => :post
+              |
+              = link_to 'Export', export_form_path(form), :method => :post
         %td
           %ul
             - form.diseases.each do |disease|
