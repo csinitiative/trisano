@@ -18,12 +18,43 @@
 class CoreFieldsController < ApplicationController
 
   def index
-    @core_fields = CoreField.find(:all, :order => 'event_type')
-    
+    @core_fields = CoreField.find(:all, :order => 'event_type, name')
+
     respond_to do |format|
       format.html
       format.xml  { render :xml => @core_fields }
     end
   end
+
+  def show
+    @core_field = CoreField.find(params[:id])
+    
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @core_field }
+    end
+  end
   
+  def edit
+    @core_field = CoreField.find(params[:id])
+    
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def update
+    @core_field = CoreField.find(params[:id])
+
+    respond_to do |format|
+      if @core_field.update_attributes(params[:core_field])
+        flash[:notice] = 'Core field  was successfully updated.'
+        format.html { redirect_to(@core_field) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @core_field.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
 end

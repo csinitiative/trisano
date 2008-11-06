@@ -17,6 +17,8 @@
 
 class CoreField < ActiveRecord::Base
   
+  after_save :flush_caches
+  
   class << self
     
     def find_event_fields_for(event_type, *args)
@@ -26,6 +28,7 @@ class CoreField < ActiveRecord::Base
       end
     end
 
+    # uses the memoization cache 
     def event_fields(event_type)
       event_fields_hash[event_type] ||= find_event_fields_for(event_type, :all).inject({}) do |hash, field|
         hash[field.key] = field.attributes.symbolize_keys
@@ -33,10 +36,18 @@ class CoreField < ActiveRecord::Base
       end
     end
 
+    def flush_memoization_cache
+      @event_fields_hash = nil
+    end
+
     private 
 
     def event_fields_hash
       @event_fields_hash ||= {}
     end
+  end
+
+  def flush_caches
+    CoreField.flush_memoization_cache
   end
 end
