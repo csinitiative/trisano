@@ -36,6 +36,8 @@ class MorbidityEventsController < EventsController
 
   def index
     begin
+      @export_options = params[:export_options]
+
       @events = MorbidityEvent.find_all_for_filtered_view(
         :states => params[:states],
         :queues => params[:queues],
@@ -54,6 +56,8 @@ class MorbidityEventsController < EventsController
   end
 
   def show
+    @export_options = params[:export_options]
+    
     # @event initialized in can_view? filter
 
     respond_to do |format|

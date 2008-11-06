@@ -152,9 +152,10 @@ class SearchController < ApplicationController
       end
     end      
     
-    # For some reason can't communicate with template via :locals on the render line.  @show_answers is used for csv export to cause formbuilder answers
-    # to be output
+    # For some reason can't communicate with template via :locals on the render line.  @show_answers and @export_options are used for csv export to cause 
+    # formbuilder answers to be output and limit the repeating elements, respectively.
     @show_answers = !params[:disease].blank?
+    @export_options = params[:export_options] || []
 
     respond_to do |format|
       format.html

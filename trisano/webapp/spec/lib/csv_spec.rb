@@ -42,7 +42,7 @@ describe Export::Csv do
 
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-      to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
+      to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
 
     it "should output content for a simple event" do
@@ -71,7 +71,7 @@ describe Export::Csv do
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
       e = csv_mock_event(:morbidity)
-      a = to_arry( Export::Csv.export( e ) )
+      a = to_arry( Export::Csv.export( e, :export_options => ["labs", "treatments"] ) )
       a[1].should =~ /#{event_output(:morbidity, e) + "," + lab_output + "," + treatment_output}/
     end
   end

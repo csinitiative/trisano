@@ -19,16 +19,20 @@
 - content_for :name do
   Existing Reports
 
+
 - content_for :tools do
   = new_cmr_link 'New Morbidity Report'
   |
-  = link_to 'Export To CSV', url_for(:action => 'index', :format => 'csv')
+  = link_to_function('Export All to CSV', nil) do |page|
+    - page[:export_options].visual_effect :slide_down
   |
   = link_to_function('Change View', nil) do |page|
     - page[:change_view].visual_effect :slide_down
 
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
+
+= render :partial => "export_options", :locals => { :path => formatted_cmrs_path('csv') }
 
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do

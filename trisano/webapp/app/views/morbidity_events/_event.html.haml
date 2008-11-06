@@ -9,7 +9,8 @@
       = event.event_onset_date
     .tools
       - with_show = with_show.nil? ? true : with_show
-      = basic_morbidity_event_controls(event, with_show) + extra_tools
+      - with_export_options = with_export_options.nil? ? false : with_export_options
+      = basic_morbidity_event_controls(event, with_show, with_export_options) + extra_tools
   %td
     %b= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil?
   %td

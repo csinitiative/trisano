@@ -137,12 +137,18 @@ module EventsHelper
     end
   end
 
-  def basic_morbidity_event_controls(event, with_show=true)
+  def basic_morbidity_event_controls(event, with_show=true, with_export_options=false)
     controls = ""
     (controls = link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") + " | ") if with_show
     controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
-    controls += link_to('Export to CSV', cmr_path(event) + '.csv')
+    if with_export_options
+      controls += link_to_function('Export to CSV', nil) do |page|
+        page[:export_options].visual_effect :slide_down
+      end
+    else
+      controls += link_to('Export to CSV', cmr_path(event) + '.csv')
+    end
   end
 
   def basic_contact_event_controls(event, with_show=true)

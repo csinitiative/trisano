@@ -70,7 +70,7 @@ describe "/search/cmrs.html.haml" do
     do_render
     response.should_not have_text("Your search returned no results.")
     response.should have_tag("div.tools") do
-      with_tag('a', "Export results to CSV")
+      with_tag('a', "Export All to CSV")
     end
   end
   

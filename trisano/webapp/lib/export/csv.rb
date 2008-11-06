@@ -36,8 +36,8 @@ module Export
     def Csv.full_export(events, options, &proc)
       # Formbuilder answers are only displayed if there is only one row to output or the user chose a specific
       # disease in the event search form, which sets the show_answers option.
-      show_answers = events.size == 1 ? true : nil
-      show_answers = show_answers || options[:show_answers]
+      options[:show_answers] = events.size == 1 ? true : false unless options[:show_answers]
+      options[:export_options] ||= []
 
       output = ""
       event_type = nil
@@ -48,24 +48,26 @@ module Export
         # Check to see if we're moving from one event type to another so as to spit out new headers
         event_break = (event_type == event.class) ? false : true
         event_type  = event.class
-        output_header(event, output, show_answers) if event_break
+        output_header(event, output, options) if event_break
 
-        output_body(event, output, show_answers)
+        output_body(event, output, options)
       end
       output
     end
 
-    def Csv.output_header(event, output, show_answers=false)
+    def Csv.output_header(event, output, options)
+      csv_header  = event_headers(event, options) 
+      csv_header += lab_headers if options[:export_options].include? "labs"
+      csv_header += treatment_headers if options[:export_options].include? "treatments"
       if event.is_a? MorbidityEvent
-        csv_header = event_headers(event, show_answers) + lab_headers + treatment_headers + event_headers(PlaceEvent.new) + event_headers(ContactEvent.new)
-      else
-        csv_header = event_headers(event, show_answers) + lab_headers + treatment_headers 
+        csv_header += event_headers(PlaceEvent.new, options) if options[:export_options].include? "places"
+        csv_header += event_headers(ContactEvent.new, options)if options[:export_options].include? "contacts"
       end
       csv_out(output, csv_header)
     end
 
     # A root-level event is either a morbidity or a contact, not a place
-    def Csv.output_body(event, output, show_answers=false)
+    def Csv.output_body(event, output, options)
       # A contact's only contact is the original patient
       num_contacts    = event.contacts.size
       #contacts don't have places
@@ -78,48 +80,56 @@ module Export
       # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
       loop_event = event
       loop_ctr.times do |ctr| 
-        csv_row   = event_values(loop_event, show_answers).map { |value| value.to_s.gsub(/,/,' ') }
+        csv_row   = event_values(loop_event, options).map { |value| value.to_s.gsub(/,/,' ') }
 
         # Blank out the main event for successive rows, but not the ID
         loop_event = event.class.new
         loop_event.id = event.id
 
-        if ctr < num_lab_results
-          lab_result = event.lab_results[ctr]
-        else
-          lab_result = LabResult.new
+        if options[:export_options].include? "labs"
+          if ctr < num_lab_results
+            lab_result = event.lab_results[ctr]
+          else
+            lab_result = LabResult.new
+          end
+          csv_row += lab_values(lab_result).map { |value| value.to_s.gsub(/,/,' ') }
         end
-        csv_row += lab_values(lab_result).map { |value| value.to_s.gsub(/,/,' ') }
 
-        if ctr < num_treatments
-          treatment = event.patient.participations_treatments[ctr]
-        else
-          treatment = ParticipationsTreatment.new
+        if options[:export_options].include? "treatments"
+          if ctr < num_treatments
+            treatment = event.patient.participations_treatments[ctr]
+          else
+            treatment = ParticipationsTreatment.new
+          end
+          csv_row += treatment_values(treatment).map { |value| value.to_s.gsub(/,/,' ') }
         end
-        csv_row += treatment_values(treatment).map { |value| value.to_s.gsub(/,/,' ') }
 
         if event.is_a? MorbidityEvent
-          if ctr < num_places
-            place_event = PlaceEvent.find(event.place_exposures[ctr].secondary_entity.case_id)
-          else
-            place_event = PlaceEvent.new
+          if options[:export_options].include? "places"
+            if ctr < num_places
+              place_event = PlaceEvent.find(event.place_exposures[ctr].secondary_entity.case_id)
+            else
+              place_event = PlaceEvent.new
+            end
+            csv_row += event_values(place_event, options).map { |value| value.to_s.gsub(/,/,' ') }
           end
-          csv_row += event_values(place_event).map { |value| value.to_s.gsub(/,/,' ') }
 
-          if ctr < num_contacts
-            contact_event = ContactEvent.find(event.contacts[ctr].secondary_entity.case_id)
-          else
-            contact_event = ContactEvent.new
+          if options[:export_options].include? "contacts"
+            if ctr < num_contacts
+              contact_event = ContactEvent.find(event.contacts[ctr].secondary_entity.case_id)
+            else
+              contact_event = ContactEvent.new
+            end
+            csv_row += event_values(contact_event, options).map { |value| value.to_s.gsub(/,/,' ') }
           end
-          csv_row += event_values(contact_event).map { |value| value.to_s.gsub(/,/,' ') }
         end
 
         csv_out(output, csv_row)
       end
     end
 
-    def Csv.event_headers(event, show_answers=false)
-      event_data(event, show_answers).map { |event_datum| event_datum.first }
+    def Csv.event_headers(event, options)
+      event_data(event, options).map { |event_datum| event_datum.first }
     end
 
     def Csv.lab_headers
@@ -130,12 +140,12 @@ module Export
       treatment_data.map { |treatment_datum| treatment_datum.first }
     end
 
-    def Csv.event_values(event, show_answers=false)
+    def Csv.event_values(event, options)
       if (event.is_a?(HumanEvent) && event.active_patient) || (event.is_a?(PlaceEvent) && event.active_place)
-        event_data(event, show_answers).collect { |event_datum| event.instance_eval(event_datum.last) }
+        event_data(event, options).collect { |event_datum| event.instance_eval(event_datum.last) }
       else
         # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
-        ed = event_data(event).collect { nil }
+        ed = event_data(event, options).collect { nil }
         ed[0] = event.id
         ed
       end
@@ -155,7 +165,7 @@ module Export
       end
     end
 
-    def Csv.event_data(event, show_answers=false)
+    def Csv.event_data(event, options)
       event_type = if event.is_a?(MorbidityEvent)
                      "patient"
                    elsif event.is_a?(ContactEvent)
@@ -305,7 +315,7 @@ module Export
         end
       end
 
-      event_data.concat(event_answers(event)) if show_answers
+      event_data.concat(event_answers(event)) if options[:show_answers]
       event_data << ["#{event_type}_event_created_date", "created_at"]
       event_data << ["#{event_type}_event_last_updated_date", "updated_at"]
       event_data
