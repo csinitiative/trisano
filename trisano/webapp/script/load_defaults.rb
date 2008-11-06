@@ -26,6 +26,14 @@ Disease.transaction do
   end
 end
 
+# core fields
+core_fields = YAML::load_file("#{RAILS_ROOT}/db/defaults/core_fields.yml")
+CoreField.transaction do
+  core_fields.each do |k, v|
+    CoreField.create(v)
+  end
+end    
+
 # Hospitals are represented as an array of strings
 
 hospitals = YAML::load_file "#{RAILS_ROOT}/db/defaults/hospitals.yml"

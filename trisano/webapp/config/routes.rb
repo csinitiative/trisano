@@ -19,7 +19,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :diseases
 
   map.resources :event_queues
-
   
   map.home '', :controller => 'dashboard'
   
@@ -70,14 +69,16 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   
   map.resources :cmrs, 
-    :controller => :morbidity_events,
-    :member => { :state => :post, :jurisdiction => :post }
+                :controller => :morbidity_events,
+                :member => { :state => :post, :jurisdiction => :post }
 
   map.resources :contact_events
 
   map.resources :codes, :controller => :external_codes
 
   map.resources :place_events
+
+  map.resources :core_fields
 
   # The priority is based upon order of creation: first created -> highest priority.
 

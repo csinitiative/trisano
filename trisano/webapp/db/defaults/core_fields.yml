@@ -1,0 +1,673 @@
+--- 
+core_field_00083: 
+  key: contact_event[active_patient][participations_risk_factor][pregnancy_due_date]
+  can_follow_up: false
+  name: Pregnancy due date
+  field_type: date
+  event_type: contact_event
+  help_text: 
+core_field_00077: 
+  key: contact_event[active_patient][person][date_of_death]
+  can_follow_up: false
+  name: Contact date of death
+  field_type: date
+  event_type: contact_event
+  help_text: 
+core_field_00025: 
+  key: morbidity_event[active_patient][participations_risk_factor][risk_factors]
+  can_follow_up: true
+  name: Risk factors
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00075: 
+  key: contact_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]
+  can_follow_up: true
+  name: Contact age
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00027: 
+  key: morbidity_event[results_reported_to_clinician_date]
+  can_follow_up: false
+  name: Results reported to clinician date
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00082: 
+  key: contact_event[active_patient][participations_risk_factor][pregnant_id]
+  can_follow_up: true
+  name: Pregnant
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00076: 
+  key: contact_event[active_patient][active_primary_entity][person][age_at_onset]
+  can_follow_up: true
+  name: Age at onset
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00026: 
+  key: morbidity_event[active_patient][participations_risk_factor][risk_factors_notes]
+  can_follow_up: false
+  name: Risk factors notes
+  field_type: multi_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00080: 
+  key: contact_event[active_patient][active_primary_entity][person][primary_language_id]
+  can_follow_up: true
+  name: Contact primary language
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00079: 
+  key: contact_event[active_patient][active_primary_entity][person][ethnicity_id]
+  can_follow_up: true
+  name: Contact ethnicity
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00028: 
+  key: morbidity_event[first_reported_PH_date]
+  can_follow_up: false
+  name: Date first reported to public health
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00081: 
+  key: contact_event[imported_from_id]
+  can_follow_up: true
+  name: Imported from
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00078: 
+  key: contact_event[active_patient][active_primary_entity][person][birth_gender_id]
+  can_follow_up: true
+  name: Contact birth gender
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00029: 
+  key: morbidity_event[lhd_case_status_id]
+  can_follow_up: false
+  name: LHD case status
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00020: 
+  key: morbidity_event[active_patient][participations_risk_factor][food_handler_id]
+  can_follow_up: true
+  name: Food handler
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00067: 
+  key: contact_event[active_patient][active_primary_entity][address][street_number]
+  can_follow_up: true
+  name: Contact street number
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00066: 
+  key: contact_event[active_patient][active_primary_entity][person][middle_name]
+  can_follow_up: true
+  name: Contact middle name
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00090: 
+  key: contact_event[active_patient][participations_risk_factor][risk_factors_notes]
+  can_follow_up: false
+  name: Risk factors notes
+  field_type: multi_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00068: 
+  key: contact_event[active_patient][active_primary_entity][address][street_name]
+  can_follow_up: true
+  name: Contact street name
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00021: 
+  key: morbidity_event[active_patient][participations_risk_factor][healthcare_worker_id]
+  can_follow_up: true
+  name: Healthcare worker
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00092: 
+  key: contact_event[disease][disease_onset_date]
+  can_follow_up: false
+  name: Disease onset date
+  field_type: date
+  event_type: contact_event
+  help_text: 
+core_field_00023: 
+  key: morbidity_event[active_patient][participations_risk_factor][day_care_association_id]
+  can_follow_up: true
+  name: Day care association
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00022: 
+  key: morbidity_event[active_patient][participations_risk_factor][group_living_id]
+  can_follow_up: true
+  name: Group living
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00069: 
+  key: contact_event[active_patient][active_primary_entity][address][unit_number]
+  can_follow_up: true
+  name: Contact unit number
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00024: 
+  key: morbidity_event[active_patient][participations_risk_factor][occupation]
+  can_follow_up: true
+  name: Occupation
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00091: 
+  key: contact_event[disease][disease_id]
+  can_follow_up: false
+  name: Disease
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00061: 
+  key: place_event[active_place][active_primary_entity][address][state_id]
+  can_follow_up: true
+  name: State
+  field_type: drop_down
+  event_type: place_event
+  help_text: 
+core_field_00095: 
+  key: contact_event[disease][died_id]
+  can_follow_up: true
+  name: Died
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00094: 
+  key: contact_event[disease][hospitalized_id]
+  can_follow_up: true
+  name: Hospitalized
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00062: 
+  key: place_event[active_place][active_primary_entity][address][county_id]
+  can_follow_up: true
+  name: County
+  field_type: drop_down
+  event_type: place_event
+  help_text: 
+core_field_00063: 
+  key: place_event[active_place][active_primary_entity][address][postal_code]
+  can_follow_up: true
+  name: Zip code
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00093: 
+  key: contact_event[disease][date_diagnosed]
+  can_follow_up: false
+  name: Disease date diagnosed
+  field_type: date
+  event_type: contact_event
+  help_text: 
+core_field_00009: 
+  key: morbidity_event[active_patient][active_primary_entity][address][county_id]
+  can_follow_up: true
+  name: Patient county
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00008: 
+  key: morbidity_event[active_patient][active_primary_entity][address][state_id]
+  can_follow_up: true
+  name: Patient state
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00064: 
+  key: contact_event[active_patient][active_primary_entity][person][last_name]
+  can_follow_up: true
+  name: Contact last name
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00065: 
+  key: contact_event[active_patient][active_primary_entity][person][first_name]
+  can_follow_up: true
+  name: Contact first name
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00096: 
+  key: contact_event[treatments]
+  can_follow_up: false
+  name: Treatments
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00007: 
+  key: morbidity_event[active_patient][active_primary_entity][address][city]
+  can_follow_up: true
+  name: Patient city
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00089: 
+  key: contact_event[active_patient][participations_risk_factor][risk_factors]
+  can_follow_up: true
+  name: Risk factors
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00072: 
+  key: contact_event[active_patient][active_primary_entity][address][county_id]
+  can_follow_up: true
+  name: Contact county
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00006: 
+  key: morbidity_event[active_patient][active_primary_entity][address][unit_number]
+  can_follow_up: true
+  name: Patient unit number
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00088: 
+  key: contact_event[active_patient][participations_risk_factor][occupation]
+  can_follow_up: true
+  name: Occupation
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00071: 
+  key: contact_event[active_patient][active_primary_entity][address][state_id]
+  can_follow_up: true
+  name: Contact state
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00005: 
+  key: morbidity_event[active_patient][active_primary_entity][address][street_name]
+  can_follow_up: true
+  name: Patient street name
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00087: 
+  key: contact_event[active_patient][participations_risk_factor][day_care_association_id]
+  can_follow_up: true
+  name: Day care association
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00070: 
+  key: contact_event[active_patient][active_primary_entity][address][city]
+  can_follow_up: true
+  name: Contact city
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00004: 
+  key: morbidity_event[active_patient][active_primary_entity][address][street_number]
+  can_follow_up: true
+  name: Patient street number
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00086: 
+  key: contact_event[active_patient][participations_risk_factor][group_living_id]
+  can_follow_up: true
+  name: Group living
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00074: 
+  key: contact_event[active_patient][active_primary_entity][person][birth_date]
+  can_follow_up: false
+  name: Contact date of birth
+  field_type: date
+  event_type: contact_event
+  help_text: 
+core_field_00003: 
+  key: morbidity_event[active_patient][active_primary_entity][person][middle_name]
+  can_follow_up: true
+  name: Patient middle name
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00085: 
+  key: contact_event[active_patient][participations_risk_factor][healthcare_worker_id]
+  can_follow_up: true
+  name: Healthcare worker
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00073: 
+  key: contact_event[active_patient][active_primary_entity][address][postal_code]
+  can_follow_up: true
+  name: Contact zip code
+  field_type: single_line_text
+  event_type: contact_event
+  help_text: 
+core_field_00002: 
+  key: morbidity_event[active_patient][active_primary_entity][person][first_name]
+  can_follow_up: true
+  name: Patient first name
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00060: 
+  key: place_event[active_place][active_primary_entity][address][city]
+  can_follow_up: true
+  name: City
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00084: 
+  key: contact_event[active_patient][participations_risk_factor][food_handler_id]
+  can_follow_up: true
+  name: Food handler
+  field_type: drop_down
+  event_type: contact_event
+  help_text: 
+core_field_00056: 
+  key: place_event[active_place][active_primary_entity][place][place_type_id]
+  can_follow_up: false
+  name: Type
+  field_type: drop_down
+  event_type: place_event
+  help_text: 
+core_field_00055: 
+  key: place_event[active_place][active_primary_entity][place][name]
+  can_follow_up: true
+  name: Name
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00001: 
+  key: morbidity_event[active_patient][active_primary_entity][person][last_name]
+  can_follow_up: true
+  name: Patient last name
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00054: 
+  key: morbidity_event[treatments]
+  can_follow_up: false
+  name: Treatments
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00049: 
+  key: morbidity_event[disease][date_diagnosed]
+  can_follow_up: false
+  name: Disease date diagnosed
+  field_type: date
+  event_type: morbidity_event
+  help_text: 
+core_field_00053: 
+  key: morbidity_event[places]
+  can_follow_up: false
+  name: Places
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00048: 
+  key: morbidity_event[disease][disease_onset_date]
+  can_follow_up: false
+  name: Disease onset date
+  field_type: date
+  event_type: morbidity_event
+  help_text: 
+core_field_00010: 
+  key: morbidity_event[active_patient][active_primary_entity][address][postal_code]
+  can_follow_up: true
+  name: Patient zip code
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00052: 
+  key: morbidity_event[contacts]
+  can_follow_up: false
+  name: Contacts
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00039: 
+  key: morbidity_event[imported_from_id]
+  can_follow_up: true
+  name: Imported from
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00051: 
+  key: morbidity_event[disease][died_id]
+  can_follow_up: true
+  name: Died
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00050: 
+  key: morbidity_event[disease][hospitalized_id]
+  can_follow_up: true
+  name: Hospitalized
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00016: 
+  key: morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]
+  can_follow_up: true
+  name: Patient ethnicity
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00040: 
+  key: morbidity_event[active_reporting_agency][active_secondary_entity][place][name]
+  can_follow_up: false
+  name: Reporting agency
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00033: 
+  key: morbidity_event[active_jurisdiction][secondary_entity_id]
+  can_follow_up: false
+  name: Jurisdiction responsible for investigation
+  field_type: multi_select
+  event_type: morbidity_event
+  help_text: 
+core_field_00041: 
+  key: morbidity_event[active_reporter][active_secondary_entity][person][first_name]
+  can_follow_up: true
+  name: Reporter first name
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00017: 
+  key: morbidity_event[active_patient][active_primary_entity][person][primary_language_id]
+  can_follow_up: true
+  name: Patient primary language
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00031: 
+  key: morbidity_event[outbreak_associated_id]
+  can_follow_up: true
+  name: Outbreak associated
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00018: 
+  key: morbidity_event[active_patient][participations_risk_factor][pregnant_id]
+  can_follow_up: true
+  name: Pregnant
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00032: 
+  key: morbidity_event[outbreak_name]
+  can_follow_up: true
+  name: Outbreak
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00042: 
+  key: morbidity_event[active_reporter][active_secondary_entity][person][last_name]
+  can_follow_up: true
+  name: Reporter last name
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00030: 
+  key: morbidity_event[udoh_case_status_id]
+  can_follow_up: false
+  name: UDOH case status
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00019: 
+  key: morbidity_event[active_patient][participations_risk_factor][pregnancy_due_date]
+  can_follow_up: false
+  name: Pregnancy due date
+  field_type: date
+  event_type: morbidity_event
+  help_text: 
+core_field_00038: 
+  key: morbidity_event[review_completed_UDOH_date]
+  can_follow_up: false
+  name: Date review completed by UDOH
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00011: 
+  key: morbidity_event[active_patient][active_primary_entity][person][birth_date]
+  can_follow_up: false
+  name: Patient date of birth
+  field_type: date
+  event_type: morbidity_event
+  help_text: 
+core_field_00046: 
+  key: morbidity_event[active_reporter][active_secondary_entity][telephone][extension]
+  can_follow_up: true
+  name: Reporter extension
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00047: 
+  key: morbidity_event[disease][disease_id]
+  can_follow_up: false
+  name: Disease
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00012: 
+  key: morbidity_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]
+  can_follow_up: true
+  name: Patient age
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00037: 
+  key: morbidity_event[event_name]
+  can_follow_up: true
+  name: Event name
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00013: 
+  key: morbidity_event[active_patient][active_primary_entity][person][age_at_onset]
+  can_follow_up: true
+  name: Age at onset
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00035: 
+  key: morbidity_event[investigation_started_date]
+  can_follow_up: false
+  name: Date investigation started
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00043: 
+  key: morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]
+  can_follow_up: true
+  name: Reporter phone type
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00059: 
+  key: place_event[active_place][active_primary_entity][address][unit_number]
+  can_follow_up: true
+  name: Unit number
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00014: 
+  key: morbidity_event[active_patient][active_primary_entity][person][date_of_death]
+  can_follow_up: false
+  name: Patient date of death
+  field_type: date
+  event_type: morbidity_event
+  help_text: 
+core_field_00036: 
+  key: morbidity_event[investigation_completed_LHD_date]
+  can_follow_up: false
+  name: Date investigation completed
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00057: 
+  key: place_event[active_place][active_primary_entity][address][street_number]
+  can_follow_up: true
+  name: Street number
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00034: 
+  key: morbidity_event[event_status]
+  can_follow_up: false
+  name: Event status
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00044: 
+  key: morbidity_event[active_reporter][active_secondary_entity][telephone][area_code]
+  can_follow_up: true
+  name: Reporter area code
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 
+core_field_00058: 
+  key: place_event[active_place][active_primary_entity][address][street_name]
+  can_follow_up: true
+  name: Street name
+  field_type: single_line_text
+  event_type: place_event
+  help_text: 
+core_field_00015: 
+  key: morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]
+  can_follow_up: true
+  name: Patient birth gender
+  field_type: single_line_text
+  event_type: morbidity_event
+  help_text: 
+core_field_00045: 
+  key: morbidity_event[active_reporter][active_secondary_entity][telephone][phone_number]
+  can_follow_up: true
+  name: Reporter phone number
+  field_type: drop_down
+  event_type: morbidity_event
+  help_text: 

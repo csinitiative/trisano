@@ -18,6 +18,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreFieldElement do
+  fixtures :core_fields
+
   before(:each) do
     @core_field_element = CoreFieldElement.new
     @core_field_element.core_path = MorbidityEvent.exposed_attributes.keys[0]
