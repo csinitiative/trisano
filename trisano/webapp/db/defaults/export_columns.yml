@@ -220,7 +220,6 @@
    name:
 
      
-     
  - type_data: 'FORM'
    export_column_name: 'DATEDX'
    table_name: 

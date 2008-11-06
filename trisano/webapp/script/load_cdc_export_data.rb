@@ -65,7 +65,7 @@ end
 
 Disease.transaction do
   diseases_export_columns.each do |disease_export_column|
-    disease = Disease.find_by_disease_name(disease_export_column['disease_name'])
+    disease = Disease.find_by_cdc_code(disease_export_column['disease_cdc_code'])
     
     unless disease.nil?
       export_column = ExportColumn.find_by_export_column_name_and_start_position_and_length_to_output(

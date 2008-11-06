@@ -16,6 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Disease < ActiveRecord::Base
+
+  before_save :update_cdc_code
+  
   validates_presence_of :disease_name
 
   has_and_belongs_to_many :external_codes
@@ -65,13 +68,16 @@ class Disease < ActiveRecord::Base
     "(disease_id='#{self.id}' AND udoh_case_status_id NOT IN (#{codes.join(',')}))" unless codes.empty?
   end
 
-  # this is a hack until I can set up a proper polymorphic has_many :through
-  def cdc_code
-    #cdc_disease_column = ExportColumn.cdc_disease_id
-    export_conversion_value = ExportConversionValue.find(:first, 
-                                :conditions => ['export_column_id=? and value_from=?', 
-                                                9, self.disease_name])
-    export_conversion_value.nil? ? nil : export_conversion_value.value_to
-  end
+  private
 
+  # Debt: The CDC code lives in two places right now: On disease, and as a conversion value. This
+  # hook updates the conversion value.
+  def update_cdc_code
+    unless cdc_code.blank?
+      export_column = ExportColumn.find_by_export_column_name("EVENT")
+      export_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from(export_column.id, disease_name)
+      export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
+    end  
+  end
+  
 end

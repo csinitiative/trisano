@@ -1,14 +1,14 @@
-hep_specific_export_question:
+event_export_column:
   id: 1
-  export_name_id: 
-  type_data: 
-  export_column_name: 
-  table_name: 
-  column_name: 
-  is_required: 
-  start_position: 
-  length_to_output: 
+  export_name_id: 1
+  type_data: "FIXED"
+  export_column_name: "EVENT"
+  table_name: "diseases"
+  column_name: "id"
+  is_required: "Y"
+  start_position: 18
+  length_to_output: 5
   created_at: 
   updated_at: 
   name:
-  
+

@@ -48,6 +48,8 @@ describe Disease do
     Disease.find_active(:all).size.should == 1
   end
 
+
+  
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
       @disease.external_codes.should be_empty
@@ -76,4 +78,33 @@ describe Disease do
     end
 
   end
+  
+  
+  describe 'diseases w/a CDC export code' do
+
+    fixtures :export_columns
+
+    it 'it should create and update corresponding conversion values on save' do
+      export_column = ExportColumn.find_by_export_column_name("EVENT")
+
+      @disease.cdc_code = "123456"
+      @disease.save.should be_true
+      export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from(export_column.id, @disease.disease_name)
+      export_conversion_value.should_not be_nil
+      export_conversion_value.value_to.should eql(@disease.cdc_code)
+      
+      @disease.cdc_code = "654321"
+      @disease.save.should be_true
+      export_conversion_value.reload
+      export_conversion_value.value_to.should eql(@disease.cdc_code)
+      
+    end
+  end
+  
 end
+
+
+
+
+
+ 

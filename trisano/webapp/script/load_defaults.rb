@@ -20,7 +20,10 @@
 diseases = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases.yml")
 Disease.transaction do
   diseases.each do |disease|
-    d = Disease.find_or_initialize_by_disease_name(:disease_name => disease)
+    d = Disease.find_or_initialize_by_disease_name(
+      :disease_name => disease['disease_name'],
+      :cdc_code => disease['cdc_code']
+    )
     d.active = true
     d.save! if d.new_record?
   end
