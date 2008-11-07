@@ -191,22 +191,22 @@ FROM
       ON  valgender.value_from  = gender.the_code
     LEFT  OUTER JOIN export_conversion_values valcounty
       ON  valcounty.value_from  = county.the_code
-      AND valcounty.export_column_id = 11
+      AND valcounty.export_column_id = 10
     LEFT  OUTER JOIN export_conversion_values valrace
       ON  valrace.value_from = race.the_code
-      AND valrace.export_column_id = 16
+      AND valrace.export_column_id = 15
     LEFT  OUTER JOIN export_conversion_values valethnicity
       ON  valethnicity.value_from = ethnicity.the_code
-      AND valethnicity.export_column_id = 17
+      AND valethnicity.export_column_id = 16
     LEFT  OUTER JOIN export_conversion_values valcasestatus
       ON  valcasestatus.value_from = events.event_status
 --      ON  valcasestatus.value_from = events.udoh_case_status_id
-      AND valcasestatus.export_column_id = 20
+      AND valcasestatus.export_column_id = 19
     LEFT  OUTER JOIN export_conversion_values valimported
       ON  valimported.value_from = imported.the_code
-      AND valimported.export_column_id = 21
+      AND valimported.export_column_id = 20
     LEFT  OUTER JOIN export_conversion_values valdisease
       ON  valdisease.value_from = diseases.disease_name
-      AND valdisease.export_column_id = 9
+      AND valdisease.export_column_id = 8
    ) AS b
 ;

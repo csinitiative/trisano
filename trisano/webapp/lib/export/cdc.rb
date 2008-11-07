@@ -77,9 +77,11 @@ module Export
       def udoh_case_status_id
         return '9' unless status_code = self['udoh_case_status_id']
         external_code = ExternalCode.find(status_code)
+        case_status_export_column = ExportColumn.find_by_export_column_name("CASESTATUS")
+        
         cdc_code = ExportConversionValue.find(:first, :conditions => 
                      ["export_column_id=? and value_from=?", 
-                      20, external_code.the_code])
+                      case_status_export_column.id, external_code.the_code])
         cdc_code.value_to
       end
            

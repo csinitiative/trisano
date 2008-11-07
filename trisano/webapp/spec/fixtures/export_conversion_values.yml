@@ -1,35 +1,35 @@
 aids_export_value:
   id: 1
-  export_column_id: 9
+  export_column_id: 8
   value_from: 'AIDS'
   value_to:   '10560'
   
 salt_lake_county_export_value:
   id: 2
-  export_column_id: 11
+  export_column_id: 10
   value_from: 'SL'
   value_to:   '035'
 
 race_white_export_value:
   id: 3
-  export_column_id: 16
+  export_column_id: 15
   value_from: 'W'
   value_to:   'W'
 
 ethnicity_non_hispanic_value:
   id: 4
-  export_column_id: 17
+  export_column_id: 16
   value_from: 'NH'
   value_to:   'N'
 
 case_status_probable_value:
   id: 5
-  export_column_id: 20
+  export_column_id: 19
   value_from: 'P'
   value_to:   '2'
 
 imported_from_utah_value:
   id: 6
-  export_column_id: 21
+  export_column_id: 20
   value_from: 'UT'
   value_to:   '1'

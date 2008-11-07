@@ -17,7 +17,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
-  fixtures :diseases, :diseases_external_codes, :export_conversion_values
+  fixtures :diseases, :diseases_external_codes, :export_columns, :export_conversion_values
 
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)

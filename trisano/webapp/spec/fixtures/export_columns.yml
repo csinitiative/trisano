@@ -11,4 +11,18 @@ event_export_column:
   created_at: 
   updated_at: 
   name:
+    
+case_status_export_column:
+  id: 19
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "CASESTATUS"
+  table_name: "events"
+  column_name: "event_status"
+  is_required: "N"
+  start_position: 53
+  length_to_output: 1
+  created_at: 
+  updated_at: 
+  name:
 

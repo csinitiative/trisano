@@ -75,8 +75,10 @@ class Disease < ActiveRecord::Base
   def update_cdc_code
     unless cdc_code.blank?
       export_column = ExportColumn.find_by_export_column_name("EVENT")
-      export_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from(export_column.id, disease_name)
-      export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
+      unless export_column.nil?
+        export_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from(export_column.id, disease_name)
+        export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
+      end
     end  
   end
   

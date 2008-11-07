@@ -273,7 +273,6 @@ module FormsHelper
     
       result = "<li id='#{question_id}' class='sortable question'>"
 
-      css_class = element.is_active? ? "question" : "inactive-question"
       result << "<table><tr>"
       result << "<td class='question label'>Question</td>"
       result << "<td class='question actions'>" << edit_question_link(element) 
@@ -285,11 +284,13 @@ module FormsHelper
       result << "</td></tr></table>"
       
       result << "#{question.question_text}"
-      result << "&nbsp;&nbsp;<small>(" 
+      result << "&nbsp;&nbsp;<small>[" 
       result << "#{question.short_name}, " unless question.short_name.blank?
-      result << question.data_type_before_type_cast.humanize << ")</small>"
-      result << "&nbsp;<i>(Inactive)</i>" unless element.is_active
-    
+      result << question.data_type_before_type_cast.humanize
+      result << "&nbsp;, inactive" unless element.is_active
+      result << "&nbsp;, CDC value" unless element.export_column_id.blank?
+      result  << "]</small>"
+      
       result << "<div id='question-mods-#{element.id.to_s}'></div>"
       result << "<div id='library-mods-#{element.id.to_s}'></div>"
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"
@@ -346,7 +347,7 @@ module FormsHelper
         result << " " << add_question_link(element, "follow up container")
         result << "&nbsp;&nbsp;" << edit_follow_up_link(element, !element.core_path.blank?)
         result << "&nbsp;&nbsp;" << delete_follow_up_link(element)
-      result << "</td></tr></table>"
+        result << "</td></tr></table>"
       end
       
       result << "<div id='follow-up-mods-#{element.id.to_s}'></div>"

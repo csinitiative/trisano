@@ -961,6 +961,7 @@ module TrisanoHelper
     wait_for_element_present("new-question-form", browser)
     browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
     browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}")
+    browser.select("question_element_export_column_id", "label=#{question_attributes[:export_column_id]}") if question_attributes.include? :export_column_id
     browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
     browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name

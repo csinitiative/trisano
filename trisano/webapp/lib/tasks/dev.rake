@@ -84,10 +84,6 @@ namespace :trisano do
     task :load_codes_and_defaults => [:load_codes, :load_defaults] do
     end
 
-    desc "Load codes and defauts into database"
-    task :load_codes_and_defaults_test => [:load_codes_test, :load_defaults_test] do
-    end
-
     desc "Load codes into database"
     task :load_codes do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes.rb"
@@ -96,6 +92,7 @@ namespace :trisano do
     desc "Load defaults into database"
     task :load_defaults do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data.rb"
     end
 
   end
