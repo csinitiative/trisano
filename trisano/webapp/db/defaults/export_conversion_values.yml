@@ -433,6 +433,496 @@
  - disease_code_group: 'Hepatitis'
    export_column_name: 'ANTIHDV'
    value_from: 'Not Tested'
-   value_to: '9' 
+   value_to: '9'
 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'No'
+   value_to: '2'
 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE2'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE2'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE2'
+   value_from: 'Unknown'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTA'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTA'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTA'
+   value_from: 'Unknown'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ATYPE'
+   value_from: 'Sexual'
+   value_to: '1'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ATYPE'
+   value_from: 'Household'
+   value_to: '2'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ATYPE'
+   value_from: 'Other'
+   value_to: '3'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ATYPE'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RAWFISH'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RAWFISH'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RAWFISH'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRAVEL'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRAVEL'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRAVEL'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'So. Central America (including Mexico)'
+   value_to: '1'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Africa'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Carribean'
+   value_to: '3'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Middle East'
+   value_to: '4'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Asia/South Pacific'
+   value_to: '5'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Australia/NewZealand'
+   value_to: '6'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Other'
+   value_to: '7'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'WHERE'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DURATION'
+   value_from: '1-3 Days'
+   value_to: '1'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DURATION'
+   value_from: '4-7 Days'
+   value_to: '2'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DURATION'
+   value_from: '>7 Days'
+   value_to: '3'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DURATION'
+   value_from: 'Unknown'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTB'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTB'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'CONTACTB'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BTYPE'
+   value_from: 'Sexual'
+   value_to: '1'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BTYPE'
+   value_from: 'Household'
+   value_to: '2'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BTYPE'
+   value_from: 'Other'
+   value_to: '3'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BTYPE'
+   value_from: 'Unk'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'MEDEMP'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'MEDEMP'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'MEDEMP'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BLOOD'
+   value_from: 'Frequent'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BLOOD'
+   value_from: 'Infrequent'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BLOOD'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRANSF'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRANSF'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRANSF'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRANSFROM'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TRANS'
+   value_from: 
+   value_to: '99999999'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALYSIS'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALYSIS'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALYSIS'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALTYPE'
+   value_from: 'Patient'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALTYPE'
+   value_from: 'Employee'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DIALTYPE'
+   value_from: 'Contact of 1 or 2'
+   value_to: '3'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DRUGS'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DRUGS'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DRUGS'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SEX PREF'
+   value_from: 'Heterosexual'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SEX PREF'
+   value_from: 'Homosexual'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SEX PREF'
+   value_from: 'Bisexual'
+   value_to: '3'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SEX PREF'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'NUMPART'
+   value_from: 'None'
+   value_to: '1'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'NUMPART'
+   value_from: '1'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'NUMPART'
+   value_from: '2-5'
+   value_to: '3'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'NUMPART'
+   value_from: '>5'
+   value_to: '4'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'NUMPART'
+   value_from: 'Unk'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DENTAL'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DENTAL'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DENTAL'
+   value_from: 'Unknown'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SURGERY'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SURGERY'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'SURGERY'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ACUPUNCT'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ACUPUNCT'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ACUPUNCT'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TATTOO'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TATTOO'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'TATTOO'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'STICK'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'STICK'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'STICK'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BVACCINE'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BVACCINE'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'BVACCINE'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'VACCINEYEA'
+   value_from: 
+   value_to: '99'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIBODY'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIBODY'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIBODY'
+   value_from: 'Unknown'
+   value_to: '9'
+ 
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RESULT'
+   value_from: 'Positive'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RESULT'
+   value_from: 'Negative'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'RESULT'
+   value_from: 'Not Tested'
+   value_to: '9'
+   
+   

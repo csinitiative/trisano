@@ -309,3 +309,345 @@
    length_to_output: '1'
    export_name: 'CDC'
 
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DAYCARE1'
+   name: 'In Day Care'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '76'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DAYCARE2'
+   name: 'DC Contact'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '77'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'CONTACTA'
+   name: 'Hep A contact'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '78'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'ATYPE'
+   name: 'Anti-HDV'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '79'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'HANDLER'
+   name: 'Food Handler'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '80'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'RAWFISH'
+   name: 'Raw Shell'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '81'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'OUTBREAK'
+   name: 'Outbreak'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '82'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'TRAVEL'
+   name: 'Travel'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '83'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'WHERE'
+   name: 'Where'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '84'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DURATION'
+   name: 'Duration'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '85'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'CONTACTB'
+   name: 'Hep B or NA NB Contact'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '86'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'BTYPE'
+   name: 'Type Contact'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '87'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'MEDEMP'
+   name: 'Med/Dent Work'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '88'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'BLOOD'
+   name: 'Blood Contact'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '89'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'TRANSF'
+   name: 'Transfusion'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '90'
+   length_to_output: '1'
+   export_name: 'CDC'
+ 
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'TRANSFROM'
+   name: 'Trans From'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '91'
+   length_to_output: '8'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'TRANS'
+   name: 'Trans To'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '99'
+   length_to_output: '8'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DIALYSIS'
+   name: 'Dialysis'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '107'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DIALTYPE'
+   name: 'Dialysis Type'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '108'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DRUGS'
+   name: 'Street Drugs'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '109'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'SEX PREF'
+   name: 'Sex Pref'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '110'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'NUMPART'
+   name: 'Num Partner'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '111'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DENTAL'
+   name: 'Dental Work'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '112'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'SURGERY'
+   name: 'Surgery'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '113'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'ACUPUNCT'
+   name: 'Acupuncture'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '114'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'TATTOO'
+   name: 'Tattooing'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '115'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'STICK'
+   name: 'Needle Stick'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '116'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'BVACCINE'
+   name: 'HB Vaccine'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '117'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'VACCINEYEA'
+   name: 'Vaccine Year'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '118'
+   length_to_output: '2'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'ANTIBODY'
+   name: 'Antibody Test'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '120'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'RESULT'
+   name: 'Test Result'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '121'
+   length_to_output: '1'
+   export_name: 'CDC'
+
