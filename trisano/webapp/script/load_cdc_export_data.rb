@@ -18,7 +18,7 @@
 export_names = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_names.yml")
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values.yml")
-diseases_export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases_export_columns.yml")
+disease_code_groups = YAML::load_file("#{RAILS_ROOT}/db/defaults/disease_code_groups.yml")
 
 ExportName.transaction do
   export_names.each do |export_name|
@@ -28,55 +28,75 @@ ExportName.transaction do
 end
 
 ExportColumn.transaction do
-  export_columns.each do |export_column|
-    export_name = ExportName.find_by_export_name(export_column['export_name'])
+  export_columns.each do |ec|
+
+    export_name = ExportName.find_by_export_name(ec['export_name'])
     raise "Could not find an export name for the export column" if export_name.nil?
     
     export_column = ExportColumn.find_or_initialize_by_export_column_name(
-      :type_data => export_column['type_data'],
-      :export_column_name => export_column['export_column_name'],
-      :table_name => export_column['table_name'],
-      :column_name => export_column['column_name'],
-      :is_required => export_column['is_required'],
-      :start_position => export_column['start_position'],
-      :length_to_output => export_column['length_to_output'],
+      :type_data => ec['type_data'],
+      :export_column_name => ec['export_column_name'],
+      :table_name => ec['table_name'],
+      :column_name => ec['column_name'],
+      :is_required => ec['is_required'],
+      :start_position => ec['start_position'],
+      :length_to_output => ec['length_to_output'],
       :export_name_id => export_name.id,
-      :name => export_column['name']
+      :name => ec['name']
     )
     
-    export_column.save! if export_column.new_record?
+    if export_column.new_record?
+      export_column.save!
+
+      unless ec['disease_code_group'].blank?
+
+        disease_code_group = disease_code_groups.find {|d| d["disease"] == ec['disease_code_group'] }
+        disease_codes = disease_code_group["codes"].split("|").uniq
+
+        disease_codes.each do |disease_code|
+          disease = Disease.find_by_cdc_code(disease_code)
+
+          unless disease.nil?
+            disease.export_columns << export_column
+          end
+        end
+
+        # Find the export conversion values for this disease group and export column name
+        conversion_values = export_conversion_values.find_all do |ecv|
+          (ecv['disease_code_group'] == ec['disease_code_group']) && (export_column.export_column_name == ecv['export_column_name'])
+        end
+        
+        conversion_values.each do |conversion_value|
+          export_conversion_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from_and_value_to(
+            :export_column_id => export_column.id,
+            :value_from => conversion_value['value_from'],
+            :value_to => conversion_value['value_to']
+          )
+    
+          export_conversion_value.save! if export_conversion_value.new_record?
+        end
+
+      end
+    end
+    
   end
 end
 
+# Handles the conversion values that are not disease specific
 ExportConversionValue.transaction do
   export_conversion_values.each do |export_conversion_value|
-    export_column = ExportColumn.find_by_export_column_name(export_conversion_value['export_column_name'])
-    raise "Could not find an export column for the export column name" if export_column.nil?
+   
+    if export_conversion_value['disease_code_group'].blank?
+      export_column = ExportColumn.find_by_export_column_name(export_conversion_value['export_column_name'])
+      raise "Could not find an export column for the export column name" if export_column.nil?
     
-    export_conversion_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from_and_value_to(
-      :export_column_id => export_column.id,
-      :value_from => export_conversion_value['value_from'],
-      :value_to => export_conversion_value['value_to']
-    )
-    
-    export_conversion_value.save! if export_conversion_value.new_record?
-  end
-end
-
-Disease.transaction do
-  diseases_export_columns.each do |disease_export_column|
-    disease = Disease.find_by_cdc_code(disease_export_column['disease_cdc_code'])
-    
-    unless disease.nil?
-      export_column = ExportColumn.find_by_export_column_name_and_start_position_and_length_to_output(
-        disease_export_column['export_column_name'],
-        disease_export_column['start_position'],
-        disease_export_column['length_to_output']
+      export_conversion_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from_and_value_to(
+        :export_column_id => export_column.id,
+        :value_from => export_conversion_value['value_from'],
+        :value_to => export_conversion_value['value_to']
       )
-      
-      unless export_column.nil?
-        disease.export_columns << export_column
-      end
+    
+      export_conversion_value.save! if export_conversion_value.new_record?
     end
     
   end

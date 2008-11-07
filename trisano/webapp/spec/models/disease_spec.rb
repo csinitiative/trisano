@@ -79,7 +79,6 @@ describe Disease do
 
   end
   
-  
   describe 'diseases w/a CDC export code' do
 
     fixtures :export_columns
@@ -102,9 +101,3 @@ describe Disease do
   end
   
 end
-
-
-
-
-
- 

@@ -138,16 +138,16 @@
   cdc_code: "10110"
 
 - disease_name: "Hepatitis B virus infection, chronic"
-  cdc_code: "10100"
+  cdc_code: "10105"
 
 - disease_name: "Hepatitis B, acute"
   cdc_code: "10100"
 
 - disease_name: "Hepatitis B, virus infection perinatal"
-  cdc_code: "10100"
+  cdc_code: "10104"
 
 - disease_name: "Hepatitis C virus infection, past or present"
-  cdc_code: "10101"
+  cdc_code: "10106"
 
 - disease_name: "Hepatitis C, acute"
   cdc_code: "10101"

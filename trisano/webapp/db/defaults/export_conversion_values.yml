@@ -322,4 +322,117 @@
  - export_column_name: 'IMPORTED'
    value_from: 'UT'
    value_to: '1'
+   
+# Hepatitis values
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DATEDX'
+   value_from:
+   value_to: '99999999'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'JAUNDICED'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'JAUNDICED'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'JAUNDICED'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HOSPFORHEP'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HOSPFORHEP'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HOSPFORHEP'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHAV'
+   value_from: 'Positive'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHAV'
+   value_from: 'Negative'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHAV'
+   value_from: 'Not Tested'
+   value_to: '9'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HBSAG'
+   value_from: 'Positive'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HBSAG'
+   value_from: 'Negative'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HBSAG'
+   value_from: 'Not Tested'
+   value_to: '9' 
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DEATH'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DEATH'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DEATH'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHBC'
+   value_from: 'Positive'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHBC'
+   value_from: 'Negative'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'IGMHBC'
+   value_from: 'Not Tested'
+   value_to: '9' 
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIHDV'
+   value_from: 'Positive'
+   value_to: '1'
+   
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIHDV'
+   value_from: 'Negative'
+   value_to: '2'
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'ANTIHDV'
+   value_from: 'Not Tested'
+   value_to: '9' 
+
 

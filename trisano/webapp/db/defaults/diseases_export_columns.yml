@@ -1,5 +1,0 @@
- - disease_cdc_code: '10110'
-   export_column_name: 'DATEDX'
-   start_position: '61'
-   length_to_output: '8'
-

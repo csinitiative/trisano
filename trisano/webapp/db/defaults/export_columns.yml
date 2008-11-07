@@ -219,8 +219,10 @@
    export_name: 'CDC'
    name:
 
+# Hepatitis
      
- - type_data: 'FORM'
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
    export_column_name: 'DATEDX'
    table_name: 
    column_name: 
@@ -229,7 +231,81 @@
    length_to_output: '8'
    export_name: 'CDC'
    name: 'Date Dx'
-   disease_name: 
-     
-
    
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'JAUNDICED'
+   name: 'Jaundiced?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '69'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'HOSPFORHEP'
+   name: 'Hosp For Hep'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '70'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'IGMHAV'
+   name: 'IgM Anti-HAV'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '71'
+   length_to_output: '1'
+   export_name: 'CDC'
+   
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'HBSAG'
+   name: 'HBsAg'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '72'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'DEATH'
+   name: 'Death from Hep?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '73'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'IGMHBC'
+   name: 'IgM Anti-HBc'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '74'
+   length_to_output: '1'
+   export_name: 'CDC'
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'FORM'
+   export_column_name: 'ANTIHDV'
+   name: 'Anti-HDV'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '75'
+   length_to_output: '1'
+   export_name: 'CDC'
+
