@@ -15,12 +15,15 @@
 
 = f.hidden_field :parent_element_id
 
-%p
-%table
-  %tr
-    %td
-      %b Tab text
-    %td.tinainfo
-      = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
-
+#detail-container
+  %p
+    %table
+      %tr
+        %td
+          %b Add Tab Text
+      %tr
+        %td.tools
+          = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
+        %td
 = f.text_field(:name, :size => 20)
+= f.submit "Create"

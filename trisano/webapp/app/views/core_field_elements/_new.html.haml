@@ -13,17 +13,12 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+= error_messages_for :core_field_element
 
-%div{:id => "new-core-field-form"}
-
-  = error_messages_for :core_field_element
-
-  - remote_form_for(core_field_element) do |f|
+- remote_form_for(core_field_element) do |f|
     
-    - if @available_core_fields.empty?
-      %b No core fields are available. Use existing core field configurations.
-    - else
-      = render :partial => 'form', :locals => { :f => f }
-    %p
-      - unless @available_core_fields.empty?
-        = f.submit "Create"
+  - if @available_core_fields.empty?
+    %b No core fields are available. Use existing core field configurations.
+  - else
+    = render :partial => 'form', :locals => { :f => f }
+      

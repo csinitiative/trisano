@@ -13,15 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
 = f.hidden_field :parent_element_id
 
-%p
-%table
-  %tr
-    %td
-      %b Core Tab
-    %td.tinainfo
-      = link_to_function "Close", "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"
-
+#detail-container
+  %p
+    %table
+      %tr
+        %td
+          %b Add Core Tab
+      %tr
+        %td.tools
+          = link_to_function "Close", "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"
 = f.select(:name, @available_core_views, {:include_blank => true}, {:style => 'width: 185px'}) 
+- unless @available_core_views.empty?
+  = f.submit "Create"

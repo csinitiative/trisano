@@ -24,7 +24,7 @@ module FormsLibraryAdminHelper
     
     result = ""
     
-    result += "<ul>"
+#    result += "<ul>"
     
     for ungrouped_form_element in @library_elements
       next if ungrouped_form_element.is_a? GroupElement
@@ -36,14 +36,13 @@ module FormsLibraryAdminHelper
       end
     end
     
-    result += "</ul>"
+#    result += "</ul>"
     
     for grouped_form_element in @library_elements
       next unless grouped_form_element.is_a? GroupElement
       
-      result += "<h3 id='lib_group_admin_item_#{grouped_form_element.id}'>Group: #{grouped_form_element.name}</h3>"
-      
-      result += "<ul>"
+#      result += "<ul><li>"
+      result += "<p><b><id='lib_group_admin_item_#{grouped_form_element.id}'>Group: #{grouped_form_element.name}</b>"
       
       for child in grouped_form_element.children
         if ((child.class.name == type) && (child.is_a?(QuestionElement)))
@@ -53,7 +52,7 @@ module FormsLibraryAdminHelper
         end
       end
        
-      result += "</ul>"
+#      result += "</li></ul>"
       
     end
     
@@ -63,12 +62,12 @@ module FormsLibraryAdminHelper
   private
   
   def render_library_admin_question(element, type)
-    result = "<li id='question_#{element.id}' class='lib-admin-question-item'>#{element.question.question_text}"
-    result += "&nbsp;&nbsp;<small>#{element.question.data_type_before_type_cast.humanize}</small>"
+    result = "<li id='question_#{element.id}' class='library-admin-item'>#{element.question.question_text}"
+    result += "&nbsp;&nbsp;#{element.question.data_type_before_type_cast.humanize}"
     
     element.children do |child|
-      result += "<br />&nbsp;&nbsp;<em><small>Value Set:&nbsp;&nbsp;#{child.name}</small></em>: " if child.is_a? ValueSetElement
-      result += fml("<em><small>#{child.name}</small></em>&nbsp;&nbsp;") if child.is_a? ValueElement and !child.name.blank?
+      result += "&nbsp;&nbsp;Value Set:&nbsp;&nbsp;#{child.name}: " if child.is_a? ValueSetElement
+      result += fml("#{child.name}&nbsp;&nbsp;") if child.is_a? ValueElement and !child.name.blank?
     end
     
     result += "&nbsp;&nbsp;<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + 
@@ -77,18 +76,18 @@ module FormsLibraryAdminHelper
   end
   
   def render_library_admin_value_set(element, type)
-    result = "<li id='value_set_#{element.id}' class='lib-admin-value-set-item'>#{element.name}"
-    result += "<ul>"
+    result = "<li id='value_set_#{element.id}' class='library-admin-item'><b>#{element.name}</b><br>"
+#    result += "<ul>"
     
     element.children.each do |child|
        if child.name.blank?
-         result += "<li><em><small>(Blank)</small></em></li>"
+         result += "(Blank)"
       else
-        result += fml("<li><em><small>", child.name, "</small></em></li>") 
+        result += fml("", child.name, "") 
       end
     end
     
-    result += "</ul>"
+#    result += "</ul>"
     result += "</li>"
   end
   
