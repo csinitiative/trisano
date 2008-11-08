@@ -106,26 +106,25 @@
   cursor: pointer;
   text-align: center;
   padding: 7px 7px 7px 3px; }
-
-span {
-  position: relative;
-  display: block;
-  white-space: nowrap;
-  padding: 0 0 0 10px;
-  font-family: helvetica, sans-serif;
-  font-size: 11px;
-  font-weight: 100;
-  color: #ccc; }
-  span a {
-    font-size: 10px;
-    color: #fff;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-align: left;
-    text-transform: uppercase;
-    text-decoration: none; }
-    span a:hover {
-      color: #c00; }
+  #button span {
+    position: relative;
+    display: block;
+    white-space: nowrap;
+    padding: 0 0 0 10px;
+    font-family: helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 100;
+    color: #ccc; }
+    #button span a {
+      font-size: 10px;
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: left;
+      text-transform: uppercase;
+      text-decoration: none; }
+      #button span a:hover {
+        color: #c00; }
 
 .press {
   display: inline-block;
@@ -209,21 +208,21 @@ span {
   #root-element-list ul {
     margin: 0px 0px 8px 0px; }
   #root-element-list li {
-    padding: 0px 8px 0px 8px; }
+    padding: 0px 5px; }
 
 #core-element-list {
   margin: 8px 0px; }
   #core-element-list ul {
     margin: 0px 0px 8px 0px; }
   #core-element-list li {
-    padding: 0px 8px 0px 8px; }
+    padding: 0px 8px; }
 
 #core-field-element-list {
   margin: 8px 0px; }
   #core-field-element-list ul {
     margin: 0px 0px 8px 0px; }
   #core-field-element-list li {
-    padding: 0px 8px 0px 8px; }
+    padding: 0px 8px; }
 
 #library-admin {
   padding: 0px 0px 0px 0px;
