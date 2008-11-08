@@ -24,6 +24,7 @@ module EventsHelper
     concat_core_field(:edit, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
+    render_core_field_help_text(attribute, form_builder, block)
     concat("</span>", block.binding)
     concat_core_field(:edit, :after, attribute, form_builder, block)
   end
@@ -32,6 +33,7 @@ module EventsHelper
     concat_core_field(:show, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>", block.binding)
     yield
+    render_core_field_help_text(attribute, form_builder, block)
     concat("&nbsp;</span>", block.binding) # The &nbsp; is there to help resolve wrapping issues
     concat_core_field(:show, :after, attribute, form_builder, block)
   end
@@ -412,10 +414,9 @@ module EventsHelper
     tool_tip_command = ["'#{html_id}'"]
     tool_tip_command << options.map{|k,v| [k.to_s.upcase, v]} if options
     "<a id=\"#{html_id}_hotspot\" href=\"#\" onmouseover=\"TagToTip(#{tool_tip_command.flatten.join(', ')})\" onmouseout=\"UnTip()\">#{yield}</a>"
-  end
+  end  
 
   def render_help_text(element)
-
     if element.is_a?(QuestionElement)
       return if element.question.nil?
       help_text = element.question.help_text
@@ -430,6 +431,15 @@ module EventsHelper
       image_tag('help.png', :border => 0)    
     end
     result << "<span id=\"#{identifier}_help_text_#{element.id}\" style=\"display: none;\">#{help_text}</span>"
+  end
+
+  def render_core_field_help_text(attribute, form_builder, block)
+    if @event
+      core_path = (form_builder.options[:core_path] || form_builder.object_name) + "[#{attribute}]"
+      core_field = @event.class.exposed_attributes[core_path]
+      help = render_help_text(CoreField.new(core_field)) if core_field
+      concat(help, block.binding) if help
+    end
   end
 
   def render_investigator_question(form_elements_cache, element, f)

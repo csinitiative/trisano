@@ -1119,4 +1119,5 @@ module TrisanoHelper
     return false if browser.is_visible("//div[@id='WzTtDiV']")
     return true
   end
+  
 end

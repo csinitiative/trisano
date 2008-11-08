@@ -616,7 +616,7 @@ core_field_00059:
   event_type: place_event
   help_text: 
 core_field_00014: 
-  key: morbidity_event[active_patient][active_primary_entity][person][date_of_death]
+  key: morbidity_event[active_patient][person][date_of_death]
   can_follow_up: false
   name: Patient date of death
   field_type: date

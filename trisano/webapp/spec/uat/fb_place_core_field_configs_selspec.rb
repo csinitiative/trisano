@@ -35,7 +35,7 @@ describe 'form builder core field configs for places' do
     it "should support before and after on the '#{test[:name]}' field" do
       form_name = get_unique_name(2) << " p_f"
       cmr_last_name = get_unique_name(1) << " p_f"
-     place_name = get_unique_name(1) << " p_f"
+      place_name = get_unique_name(1) << " p_f"
       disease_name = "Ehrlichia ewingii"
       jurisdiction = "Out of State"
       event_type = "Place event"
