@@ -79,7 +79,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       
       <% f.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
         <%# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields %>
-        <% core_path = "#{current_patient.object_name}[person]" %>
+        <% core_path = "#{current_patient.object_name}[active_primary_entity][person]" %>
 
         <% current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :core_path => core_path, :builder => ExtendedFormBuilder) do |person| %>
           <% core_element :date_of_death, person, :horiz do %>

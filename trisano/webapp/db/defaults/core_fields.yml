@@ -7,7 +7,7 @@ core_field_00083:
   event_type: contact_event
   help_text: 
 core_field_00077: 
-  key: contact_event[active_patient][person][date_of_death]
+  key: contact_event[active_patient][active_primary_entity][person][date_of_death]
   can_follow_up: false
   name: Contact date of death
   field_type: date

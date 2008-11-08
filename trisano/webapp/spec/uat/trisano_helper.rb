@@ -458,7 +458,7 @@ module TrisanoHelper
     end
     browser.click "link=Form Builder"
     browser.wait_for_page_to_load($load_time)
-    return browser.is_text_present("Form Builder") 
+    return browser.is_text_present("Publish") 
   end
   
   def edit_form_and_go_to_builder(browser, form_attributes ={})
@@ -669,10 +669,10 @@ module TrisanoHelper
   
   def add_core_field_config(browser, core_field_name)
     browser.click("add-core-field")
-    wait_for_element_present("new-core-field-form", browser)
+    wait_for_element_present("new_core_field_element", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
     browser.click("core_field_element_submit")
-    wait_for_element_not_present("new-core-field-form", browser)
+    wait_for_element_not_present("new_core_field_element", browser)
   end
   
   def add_question_to_library(browser, question_text, group_name=nil)

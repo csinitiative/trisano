@@ -34,11 +34,12 @@
     %span.print-label Died:
     %span.print-value= l @event.disease.died unless @event.disease.nil?
 
-- event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
-  - current_patient.fields_for(:person, @event.active_patient.primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
-    - core_element_print :date_of_death, person_form, :vert do
-      %span.print-label Date of death:
-      %span.print-value= entity_data.person.date_of_death
+- event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
+  - active_patient_form.fields_for(:active_primary_entity, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |primary_form|
+    - primary_form.fields_for(:person, @event.active_patient.primary_entity.person, :builder => ExtendedFormBuilder) do |person_form|
+      - core_element_print :date_of_death, person_form, :vert do
+        %span.print-label Date of death:
+        %span.print-value= entity_data.person.date_of_death
 
 - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |patient_fields|
   - patient_fields.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
