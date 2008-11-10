@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEvent < Event
+  include Export::Cdc::HumanEvent
+
   before_validation_on_create :set_age_at_onset
   before_validation_on_update :set_age_at_onset
 

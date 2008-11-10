@@ -1331,7 +1331,7 @@ describe MorbidityEvent do
 
   describe 'when executing a view-filtering search' do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases
+    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases, :disease_events
 
     before :each do
       

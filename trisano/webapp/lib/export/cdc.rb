@@ -17,6 +17,17 @@
 
 module Export
   module Cdc
+    module HumanEvent
+      def nested_attribute_paths
+        { 'disease_id' => [:disease, :disease_id],
+          'county_id' => [:active_patient, :primary_entity, :address, :county_id],
+          'race_ids' => [:active_patient, :primary_entity, :race_ids],
+          'birth_gender_id' => [:active_patient, :primary_entity, :person, :birth_gender_id],
+          'birth_date' => [:active_patient, :primary_entity, :person, :birth_date],
+          'ethnicity_id' => [:active_patient, :primary_entity, :person, :ethnicity_id]}        
+      end
+    end
+
     module Event
       
       def check_cdc_updates
@@ -46,12 +57,7 @@ module Export
       end
 
       def nested_attribute_paths
-        { 'disease_id' => [:disease, :disease_id],
-          'county_id' => [:active_patient, :primary_entity, :address, :county_id],
-          'race_ids' => [:active_patient, :primary_entity, :race_ids],
-          'birth_gender_id' => [:active_patient, :primary_entity, :person, :birth_gender_id],
-          'birth_date' => [:active_patient, :primary_entity, :person, :birth_date],
-          'ethnicity_id' => [:active_patient, :primary_entity, :person, :ethnicity_id]}        
+        {}
       end
       
     end
