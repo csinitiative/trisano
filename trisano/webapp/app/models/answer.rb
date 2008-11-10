@@ -17,6 +17,7 @@
 
 class Answer < ActiveRecord::Base
   belongs_to :question
+  belongs_to :export_conversion_value
 
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required

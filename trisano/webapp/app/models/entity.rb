@@ -88,7 +88,6 @@ class Entity < ActiveRecord::Base
   end
 
   def address
-#    self.address_entities_locations.empty? ? nil : self.address_entities_locations.last.location.addresses.last
     self.address_entities_locations.empty? ? nil : safe_call_chain(:address_entities_locations, :last, :location, :addresses, :last)
   end
 

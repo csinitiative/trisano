@@ -15,30 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+class AddExportConversionValueToAnswer < ActiveRecord::Migration
+  
+  def self.up
+    add_column :answers, :export_conversion_value_id, :integer
+  end
 
-describe Answer do
-  
-  before(:each) do 
-    question = Question.new :short_name => 'short_name_01'
-    @answer = Answer.new :question => question
-    @answer.text_answer = 's' * 2000    
-  end
-  
-  it "should return the short name from the question" do
-    @answer.short_name.should == 'short_name_01'
-  end
-  
-  it 'should strip out the extra blank values from a radio button submission' do
-    @answer.radio_button_answer=(["Yes", ""])
-    @answer.text_answer.should eql("Yes")
-  end
-  
-  it 'should produce an error if the answer text is too long' do
-    @answer.text_answer = 's' * 2001
-    @answer.should_not be_valid
-    @answer.errors.size.should == 1
-    @answer.errors.on(:text_answer).should_not be_nil
+  def self.down
+    remove_column :answers, :export_conversion_value_id
   end
 
 end
