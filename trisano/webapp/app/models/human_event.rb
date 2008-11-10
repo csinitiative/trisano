@@ -300,7 +300,7 @@ class HumanEvent < Event
   def set_age_at_onset
     birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
     onset = onset_candidate_dates.compact.sort.first
-    return unless birthdate && onset
+    # return unless birthdate && onset
     self.age_info = AgeInfo.create_from_dates(birthdate, onset)
   end
 

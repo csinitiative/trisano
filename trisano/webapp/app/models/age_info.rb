@@ -19,6 +19,7 @@ class AgeInfo
 
   class << self
     def create_from_dates(birth_date, current_date)
+      return new(nil, nil) unless birth_date && current_date
       age, type = calculate_duration(birth_date, current_date)
       new(age, type)
     end
@@ -56,5 +57,9 @@ class AgeInfo
       age_at_onset.to_s + description
     end
   end
-      
+
+  def in_years
+    return nil if age_at_onset.nil?
+    age_type == ExternalCode.age_type(:years) ?  age_at_onset : 0
+  end
 end

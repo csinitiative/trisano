@@ -30,7 +30,6 @@ class ExportController < ApplicationController
 
   def ibis
     @events_to_export = Event.ibis_exportable_events
-    p @events_to_export
   end
 
 end
