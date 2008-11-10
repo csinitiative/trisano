@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'active_support'
 
-# $dont_kill_browser = true
+#$dont_kill_browser = true
 
 describe 'Adding multiple place exposures to a CMR' do
 
@@ -81,7 +81,7 @@ describe 'Adding multiple place exposures to a CMR' do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.click "//div[@class='place_exposure'][2]//a"
+    @browser.click "//div[@id='place_exposures']/div[2]/span[4]/a[2]/img"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Pool').should be_true

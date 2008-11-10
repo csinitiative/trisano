@@ -22,20 +22,20 @@ describe 'form builder core-field questions' do
   # $dont_kill_browser = true
   
   [{:name => 'Patient last name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient middle name', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient date of birth', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient age', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient date of death', :tab_name => CLINICAL},
-    {:name => 'Patient birth gender', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient ethnicity', :tab_name => DEMOGRAPHICS},
-    {:name => 'Patient primary language', :tab_name => DEMOGRAPHICS}
+   {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient middle name', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient date of birth', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient age', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient date of death', :tab_name => CLINICAL},
+   {:name => 'Patient birth gender', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient ethnicity', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient primary language', :tab_name => DEMOGRAPHICS}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
       form_name = get_unique_name(2) + " pl_f"
       cmr_last_name = get_unique_name(1) + " pl_f"
-      disease_name = "Pertussis"
+      disease_name = get_random_disease
       jurisdiction = "TriCounty Health Department"
       before_question = "b4 #{test[:name]} " + get_unique_name(2)
       after_question = "af #{test[:name]} " + get_unique_name(2)
