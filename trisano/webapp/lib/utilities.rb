@@ -13,3 +13,18 @@ class Utilities
     end
   end
 end
+
+module CallChainable
+
+  def safe_call_chain(*messages)
+    receiver = self
+    messages.each do |msg|
+      return nil if receiver.nil?
+      receiver = receiver.send(msg)
+    end
+    receiver
+  end
+
+end
+
+ActiveRecord::Base.send(:include, CallChainable)

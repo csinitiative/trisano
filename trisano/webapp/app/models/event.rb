@@ -709,7 +709,9 @@ class Event < ActiveRecord::Base
   def cache_old_attributes
     @old_attributes = self.attributes
     @nested_attributes = {}
-    @nested_attributes['disease_id'] = safe_call_chain(:disease, :disease_id)
+    nested_attribute_paths.each do |key, call_path|
+      @nested_attributes[key] = safe_call_chain(*call_path)
+    end
   end
 
   def old_attributes
@@ -720,15 +722,6 @@ class Event < ActiveRecord::Base
     @nested_attributes
   end
    
-  def safe_call_chain(*messages)
-    receiver = self
-    messages.each do |msg|
-      return nil if receiver.nil?
-      receiver = receiver.send(msg)
-    end
-    receiver
-  end
-
   # after find doesn't work unless its part of the actual class.
   def after_find
     self.cache_old_attributes

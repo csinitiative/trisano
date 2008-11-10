@@ -19,8 +19,10 @@ module Export
   module Cdc
     module Event
       
-      def check_cdc_updates        
-        self.cdc_update = cdc_attributes_changed?(old_attributes)
+      def check_cdc_updates
+        if cdc_attributes_changed?(old_attributes)
+          self.cdc_update = true
+        end
       end
       
       private
@@ -28,12 +30,28 @@ module Export
       def cdc_attributes_changed?(old_attributes)
         return true if new_record?
         return false unless old_attributes                
-        return true unless nested_attributes['disease_id'] == safe_call_chain(:disease, :disease_id)
-
-        cdc_fields = %w(first_reported_PH_date udoh_case_status_id imported_from_id event_onset_date)
+        
+        nested_attribute_paths.each do |k, call_path|
+          return true unless nested_attribute_changed?(k, call_path)
+        end
+                
+        cdc_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id event_onset_date)
         old_attributes.select {|k, v| cdc_fields.include?(k)}.reject do |field, value|
           self.attributes[field] == value
         end.size > 0
+      end
+
+      def nested_attribute_changed?(nested_key, call_path)
+        nested_attributes[nested_key] == safe_call_chain(*call_path)
+      end
+
+      def nested_attribute_paths
+        { 'disease_id' => [:disease, :disease_id],
+          'county_id' => [:active_patient, :primary_entity, :address, :county_id],
+          'race_ids' => [:active_patient, :primary_entity, :race_ids],
+          'birth_gender_id' => [:active_patient, :primary_entity, :person, :birth_gender_id],
+          'birth_date' => [:active_patient, :primary_entity, :person, :birth_date],
+          'ethnicity_id' => [:active_patient, :primary_entity, :person, :ethnicity_id]}        
       end
       
     end

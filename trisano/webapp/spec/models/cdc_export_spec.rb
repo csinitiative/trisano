@@ -287,18 +287,16 @@ describe CdcExport do
       end
 
       it 'should update when patient\'s county of residence changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
-          events[0].update_attributes({"active_patient" => {"address" => {"county_id" => external_codes(:county_salt_lake).id}}})
+          events[0].update_attributes({"active_patient" => {"address" => {"county_id" => external_codes(:county_summit).id}}})
           events[0].should be_a_cdc_update
           events[0].should be_sent_to_cdc
         end
       end
 
       it 'should update when race changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
@@ -310,7 +308,6 @@ describe CdcExport do
       end
 
       it 'should update when birth gender changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
@@ -321,7 +318,6 @@ describe CdcExport do
       end
 
       it 'should update when ethnicity changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
@@ -332,7 +328,6 @@ describe CdcExport do
       end
 
       it 'should update when birth date changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
@@ -343,7 +338,6 @@ describe CdcExport do
       end
 
       it 'should update when onset date changes' do
-        pending
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
           events[0].should be_sent_to_cdc
