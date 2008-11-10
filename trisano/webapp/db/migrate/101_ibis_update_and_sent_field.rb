@@ -14,23 +14,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-class ExportController < ApplicationController
-  
-  def cdc
-    @events = []
-    @events << CdcExport.verification_records
-    @events << CdcExport.weekly_cdc_export
-    @events << CdcExport.weekly_cdc_deletes
-    @events.flatten!
-    CdcExport.reset_sent_status(@events)
-    respond_to do |format|
-      format.dat
-    end
+class IbisUpdateAndSentField < ActiveRecord::Migration
+
+  def self.up
+    add_column :events, :ibis_update, :boolean
+    add_column :events, :sent_to_ibis, :boolean
   end
 
-  def ibis
-    @events_to_export = Event.ibis_exportable_events
-    p @events_to_export
+  def self.down
+    remove_column :events, :ibis_update
+    remove_column :events, :sent_to_ibis
   end
 
 end

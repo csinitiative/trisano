@@ -29,7 +29,8 @@ ActionController::Routing::Routes.draw do |map|
     search.search        'search'
   end
 
-  map.export 'export/cdc.:format', :controller => 'export', :action => 'cdc'
+  map.export 'export/cdc.:format',  :controller => 'export', :action => 'cdc'
+  map.export 'export/ibis.:format', :controller => 'export', :action => 'ibis'
   
   map.admin 'admin', :controller => 'admin'
   map.open_library 'forms/import', :controller => 'forms', :action => 'import'

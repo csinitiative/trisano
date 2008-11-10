@@ -237,6 +237,24 @@ class Event < ActiveRecord::Base
       CoreField.event_fields(self.to_s.underscore)
     end
 
+    def ibis_exportable_events
+      new_ibis_records.compact
+    end
+
+    def new_ibis_records
+      # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect
+      new_records = Event.find_by_sql("
+                                      SELECT * FROM events e, disease_events d, external_codes c
+                                      WHERE e.sent_to_ibis = FALSE
+                                      OR e.sent_to_ibis IS NULL 
+                                      AND d.event_id = e.id
+                                      AND d.disease_id IS NOT NULL 
+                                      AND e.udoh_case_status_id = c.id
+                                      AND c.code_name = 'case'
+                                      AND c.the_code IN ('C', 'P', 'S') 
+                                     ")
+    end
+      
   end
 
   def legal_state_transition?(proposed_state)
