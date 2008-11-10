@@ -1256,28 +1256,39 @@ describe MorbidityEvent do
       before :each do
         # For reasons unknown, I can't get at the external_codes fixture the normal way
         confirmed = ExternalCode.find(:first, :conditions => "code_name = 'case' and the_code = 'C'")
+        discarded = ExternalCode.find(:first, :conditions => "code_name = 'case' and the_code = 'D'")
         anthrax = Disease.find(:first, :conditions => "disease_name = 'Anthrax'")
 
-        # Not sent to IBIS, no disease, not confirmed
+        # NON_IBIS: Not sent to IBIS, no disease, not confirmed
         MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"Ibis1", } },
                                  "event_name"     => "Ibis1"
                              } )
-        # Not sent to IBIS, has disease, not confirmed
+        # NON_IBIS: Not sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"Ibis2", } }, 
                                  "disease"        => { "disease_id" => anthrax.id },
                                  "event_name"     => "Ibis2"
                              } )
-        # Not sent to IBIS, has disease, confirmed
+        # NEW: Not sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis3", } },
                                  "disease"             => { "disease_id" => anthrax.id },
                                  "udoh_case_status_id" => confirmed.id,
-                                 "event_name"     => "Ibis3" } )
-        # Sent to IBIS, has disease, confirmed
+                                 "event_name"          => "Ibis3" 
+                              } )
+        # UPDATED: Sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
                                  "disease"             => { "disease_id" => anthrax.id },
                                  "udoh_case_status_id" => confirmed.id,
-                                 "sent_to_ibis"        => true ,
-                                 "event_name"     => "Ibis4"
+                                 "sent_to_ibis"        => true,
+                                 "ibis_update"         => true,
+                                 "event_name"          => "Ibis4"
+                             } )
+        # DELETED: Sent to IBIS, has disease, not confirmed
+        MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
+                                 "disease"             => { "disease_id" => anthrax.id },
+                                 "udoh_case_status_id" => discarded.id,
+                                 "sent_to_ibis"        => true,
+                                 "ibis_update"         => true,
+                                 "event_name"          => "Ibis5"
                              } )
       end
 
@@ -1290,12 +1301,25 @@ describe MorbidityEvent do
       end
 
       it "should find updated records" do
+        events = Event.updated_ibis_records
+        events.size.should == 1
+        events.first.event_name.should ==  "Ibis4"
       end
 
       it "should find deleted records" do
+        events = Event.deleted_ibis_records
+        events.size.should == 1
+        events.first.event_name.should ==  "Ibis5"
       end
 
       it "should find all IBIS exportable records" do
+        events = Event.ibis_records
+        events.size.should == 4   # 1 above and 1 in the fixtures
+        event_names = events.collect { |event| event.event_name }
+        event_names.include?("Marks Chicken Pox").should be_true
+        event_names.include?("Ibis3").should be_true
+        event_names.include?("Ibis4").should be_true
+        event_names.include?("Ibis5").should be_true
       end
     end
   end

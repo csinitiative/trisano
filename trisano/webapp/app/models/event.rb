@@ -255,6 +255,37 @@ class Event < ActiveRecord::Base
                                      ")
     end
       
+    def updated_ibis_records
+      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is confirmed, probable, or suspect
+      updated_records = Event.find_by_sql("
+                                      SELECT * FROM events e, disease_events d, external_codes c
+                                      WHERE e.sent_to_ibis = TRUE
+                                      AND e.ibis_update = TRUE
+                                      AND d.event_id = e.id
+                                      AND d.disease_id IS NOT NULL 
+                                      AND e.udoh_case_status_id = c.id
+                                      AND c.code_name = 'case'
+                                      AND c.the_code IN ('C', 'P', 'S') 
+                                     ")
+    end
+
+    def deleted_ibis_records
+      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect
+      updated_records = Event.find_by_sql("
+                                      SELECT * FROM events e, disease_events d, external_codes c
+                                      WHERE e.sent_to_ibis = TRUE
+                                      AND e.ibis_update = TRUE
+                                      AND d.event_id = e.id
+                                      AND d.disease_id IS NOT NULL 
+                                      AND e.udoh_case_status_id = c.id
+                                      AND c.code_name = 'case'
+                                      AND c.the_code NOT IN ('C', 'P', 'S') 
+                                     ")
+    end
+
+    def ibis_records
+      new_ibis_records + updated_ibis_records + deleted_ibis_records
+    end
   end
 
   def legal_state_transition?(proposed_state)
