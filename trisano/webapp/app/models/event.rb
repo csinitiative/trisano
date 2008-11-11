@@ -237,10 +237,6 @@ class Event < ActiveRecord::Base
       CoreField.event_fields(self.to_s.underscore)
     end
 
-    def ibis_exportable_events
-      new_ibis_records.compact
-    end
-
     def new_ibis_records
       # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect
       new_records = Event.find_by_sql("
@@ -283,9 +279,15 @@ class Event < ActiveRecord::Base
                                      ")
     end
 
-    def ibis_records
+    def exportable_ibis_records
       new_ibis_records + updated_ibis_records + deleted_ibis_records
     end
+
+    def reset_ibis_status(events)
+      event_ids = events.compact.collect {|record| record.id}
+      Event.update_all('ibis_update=false, sent_to_ibis=true', ['id IN (?)', event_ids])
+    end
+      
   end
 
   def legal_state_transition?(proposed_state)
@@ -709,7 +711,7 @@ class Event < ActiveRecord::Base
   def cache_old_attributes
     @old_attributes = self.attributes
     @nested_attributes = {}
-    nested_attribute_paths.each do |key, call_path|
+    nested_attribute_paths.merge(ibis_nested_attribute_paths).each do |key, call_path|
       @nested_attributes[key] = safe_call_chain(*call_path)
     end
   end

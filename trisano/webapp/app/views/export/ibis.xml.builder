@@ -9,12 +9,15 @@ xml.Table {
 
       onset_date = event.disease.disease_onset_date
       onset_date = onset_date ? onset_date.strftime("%m/%d/%Y") : onset_date
-      
       xml.OnsetDate(onset_date)
-      xml.DiagnosisDate(event.disease.date_diagnosed.strftime("%m/%d/%Y"))
+
+      diagnosis_date = event.disease.date_diagnosed
+      diagnosis_date = diagnosis_date ? diagnosis_date.strftime("%m/%d/%Y") : diagnosis_date
+      xml.DiagnosisDate(diagnosis_date)
 
       lab_result_date = event.lab_results.collect { |lab_result| lab_result.lab_test_date}.compact.uniq.sort.first
-      xml.LabTestDate(lab_result_date.strftime("%m/%d/%Y"))
+      lab_result_date = lab_result_date ? lab_result_date.strftime("%m/%d/%Y") : lab_result_date
+      xml.LabTestDate(lab_result_date)
 
       reported_date = event.first_reported_PH_date ? event.first_reported_PH_date.strftime("%m/%d/%Y") : event.first_reported_PH_date
       xml.ReportedDate(reported_date)
@@ -27,7 +30,7 @@ xml.Table {
       
       xml.Age(event.age_info.in_years)
 
-      xml.InvestigationHeathDistrict(get_ibis_health_district(event.primary_jurisdiction))
+      xml.InvestigationHealthDistrict(get_ibis_health_district(event.primary_jurisdiction))
 
       if address && address.county && address.county.jurisdiction
         xml.ResidenceHealthDistrict(get_ibis_health_district(address.county.jurisdiction))

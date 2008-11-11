@@ -18,11 +18,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
-  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations, :codes
+  fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations
 
   #  event_hash = {
   #    "active_patient" => {
-  #      "entity_type"=>"person",
   #      "person" => {
   #        "last_name"=>"Green"
   #      }
@@ -43,7 +42,6 @@ describe MorbidityEvent do
     before(:each) do
       @event_hash = {
         "active_patient" => {
-          "entity_type"=>"person", 
           "person" => {
             "last_name"=>"Green"
           }
@@ -747,7 +745,7 @@ describe MorbidityEvent do
     end
 
     describe "Handling telephone numbers" do
-      fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses, :external_codes, :codes
+      fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
     
       describe "Adding new telephone number" do
         before(:each) do
@@ -1089,7 +1087,6 @@ describe MorbidityEvent do
         "age_at_onset" => 14,
         "age_type_id" => 2300,
         "active_patient" => {
-          "entity_type"=>"person", 
           "person" => {
             "last_name"=>"Biel",
             "birth_date" => Date.today.years_ago(14)
@@ -1112,7 +1109,6 @@ describe MorbidityEvent do
     before :each do
       @event_hash = {
         "active_patient" => {
-          "entity_type"=>"person", 
           "person" => {
             "last_name"=>"Biel",
             "birth_date" => Date.today.years_ago(14)
@@ -1208,13 +1204,11 @@ describe MorbidityEvent do
 
   end      
 
-  describe 'checking CDC ' do
-    fixtures :external_codes
+  describe 'checking CDC and IBIS export' do
 
     before :each do
       @event_hash = {
         "active_patient" => {
-          "entity_type"=>"person", 
           "person" => {
             "last_name"=>"Biel"
           }
@@ -1222,20 +1216,23 @@ describe MorbidityEvent do
       }
     end
 
-    it 'should return true for a new record, not yet sent to cdc' do
+    it 'should return true for a new record, not yet sent to cdc or ibis' do
       with_event do |event|
         event.should_not be_a_new_record
         event.should be_a_cdc_update
+        event.should be_a_ibis_update
         event.should_not be_sent_to_cdc
+        event.should_not be_sent_to_ibis
       end
     end
 
-    it 'should need cdc update when first_reported_PH_date value changes' do
+    it 'should need cdc and ibis update when first_reported_PH_date value changes' do
       with_event do |event|
         event.cdc_update = false
         event.first_reported_PH_date = Date.today
         event.save.should be_true
         event.should be_a_cdc_update
+        event.should be_a_ibis_update
       end
     end
     
@@ -1252,13 +1249,12 @@ describe MorbidityEvent do
   describe "when exporting to IBIS" do
     describe " and finding records to be exported" do
 
-      fixtures :events, :diseases, :disease_events, :external_codes
+      fixtures :events, :diseases, :disease_events
 
       before :each do
-        # For reasons unknown, I can't get at the external_codes fixture the normal way
-        confirmed = ExternalCode.find(:first, :conditions => "code_name = 'case' and the_code = 'C'")
-        discarded = ExternalCode.find(:first, :conditions => "code_name = 'case' and the_code = 'D'")
-        anthrax = Disease.find(:first, :conditions => "disease_name = 'Anthrax'")
+        confirmed = external_codes(:case_status_confirmed)
+        discarded = external_codes(:case_status_discarded)
+        anthrax = diseases(:anthrax)
 
         # NON_IBIS: Not sent to IBIS, no disease, not confirmed
         MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"Ibis1", } },
@@ -1317,7 +1313,7 @@ describe MorbidityEvent do
       end
 
       it "should find all IBIS exportable records" do
-        events = Event.ibis_records
+        events = Event.exportable_ibis_records
         events.collect! { |event| Event.find(event.id) }
         events.size.should == 4   # 1 above and 1 in the fixtures
         event_names = events.collect { |event| event.event_name }
@@ -1344,7 +1340,6 @@ describe MorbidityEvent do
       
       @event_hash = {
         "active_patient" => {
-          "entity_type"=>"person", 
           "person" => {
             "last_name"=>"Biel",
             "birth_date" => Date.today.years_ago(14)

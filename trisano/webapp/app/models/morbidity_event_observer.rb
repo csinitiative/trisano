@@ -21,7 +21,7 @@ class MorbidityEventObserver < ActiveRecord::Observer
   end
 
   def before_save(event)
-    event.check_cdc_updates
+    event.check_export_updates
   end
 
   def after_save(event)    

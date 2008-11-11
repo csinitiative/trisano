@@ -29,7 +29,8 @@ class ExportController < ApplicationController
   end
 
   def ibis
-    @events_to_export = Event.ibis_exportable_events
+    @events_to_export = Event.exportable_ibis_records
+    Event.reset_ibis_status(@events_to_export)
   end
 
 end

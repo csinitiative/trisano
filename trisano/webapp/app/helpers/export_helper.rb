@@ -42,10 +42,10 @@ module ExportHelper
 
   def get_ibis_ethnicity(ethnicity)
     return "." unless ethnicity
-    case ethnicity.code_description
-    when "Hispanic or Latino" then 1
-    when "Not Hispanic or Latino", "Other" then 2
-    when "Unknown" then 9
+    case ethnicity.the_code
+    when "H" then 1
+    when "NH", "O" then 2
+    when "UNK" then 9
     else "."
     end
   end

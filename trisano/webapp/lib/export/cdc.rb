@@ -26,40 +26,64 @@ module Export
           'birth_date' => [:active_patient, :primary_entity, :person, :birth_date],
           'ethnicity_id' => [:active_patient, :primary_entity, :person, :ethnicity_id]}        
       end
+
+      def ibis_nested_attribute_paths
+        { 'date_diagnosed' => [:disease, :date_diagnosed],
+          'postal_code' => [:active_patient, :primary_entity, :address, :postal_code],
+          'primary_jurisdiction' => [:active_jurisdiction, :secondary_entity_id]}        
+      end
+
     end
 
     module Event
       
-      def check_cdc_updates
-        if cdc_attributes_changed?(old_attributes)
-          self.cdc_update = true
+      def check_export_updates
+        # IBIS export is interested in all of the same fields as CDC export
+        if export_attributes_changed?(old_attributes)
+          self.ibis_update = self.cdc_update = true
+        end
+        # IBIS export is also interested in a few more
+         unless self.ibis_update 
+          if ibis_attributes_changed?(old_attributes)
+            self.ibis_update = true
+          end
         end
       end
       
       private
       
-      def cdc_attributes_changed?(old_attributes)
+      def export_attributes_changed?(old_attributes)
         return true if new_record?
         return false unless old_attributes                
         
         nested_attribute_paths.each do |k, call_path|
-          return true unless nested_attribute_changed?(k, call_path)
+          return true if nested_attribute_changed?(k, call_path)
         end
                 
-        cdc_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id event_onset_date)
-        old_attributes.select {|k, v| cdc_fields.include?(k)}.reject do |field, value|
+        export_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id)
+        old_attributes.select {|k, v| export_fields.include?(k)}.reject do |field, value|
           self.attributes[field] == value
         end.size > 0
       end
 
+      def ibis_attributes_changed?(old_attributes)
+        ibis_nested_attribute_paths.each do |k, call_path|
+          return true if nested_attribute_changed?(k, call_path)
+        end
+        false
+      end
+
       def nested_attribute_changed?(nested_key, call_path)
-        nested_attributes[nested_key] == safe_call_chain(*call_path)
+        nested_attributes[nested_key] != safe_call_chain(*call_path)
       end
 
       def nested_attribute_paths
         {}
       end
       
+      def ibis_nested_attribute_paths
+        {}
+      end
     end
 
     module Record
