@@ -26,3 +26,45 @@ case_status_export_column:
   updated_at: 
   name:
 
+hep_jaundiced:
+   id: 2
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'JAUNDICED'
+   name: 'Jaundiced?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '69'
+   length_to_output: '1'
+   data_type: 'radio_button'
+
+hep_datedx:
+   id: 3
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'DATEDX'
+   name: 'Date Dx'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '8'
+   data_type: 'date'
+   
+hep_vaccineyea:
+   id: 4
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'VACCINEYEA'
+   name: 'Vaccine Year'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '118'
+   length_to_output: '2'
+   data_type: 'single_line_text'
+   
+   
+   
+

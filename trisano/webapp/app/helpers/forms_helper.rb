@@ -276,10 +276,9 @@ module FormsHelper
       result << "<table><tr>"
       result << "<td class='question label'>Question</td>"
       result << "<td class='question actions'>" << edit_question_link(element) 
-      # Debt: Disabling follow ups on checkboxes for now
       result << "&nbsp;&nbsp;" << add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box") 
       result << "&nbsp;&nbsp;" << add_to_library_link(element) if (include_children)  
-      result << "&nbsp;&nbsp;" << add_value_set_link(element) if include_children && element.is_multi_valued_and_empty?
+      result << "&nbsp;&nbsp;" << add_value_set_link(element) if include_children && element.is_multi_valued_and_empty? && element.export_column_id.blank?
       result << "&nbsp;&nbsp;" << delete_question_link(element)
       result << "</td></tr></table>"
       
@@ -371,7 +370,8 @@ module FormsHelper
   
   def render_value_set(form_elements_cache, element, include_children=true)
     begin
-      result =  "<li id='value_set_#{element.id.to_s}' class='fb-value-set'>"
+      value_set_style = element.export_column_id.blank? ? "fb-value-set" : "fb-cdc-value-set"
+      result =  "<li id='value_set_#{element.id.to_s}' class='#{value_set_style}'>"
       
       result << "<table><tr>"
       result << "<td class='valueset'>Value Set: "
@@ -380,11 +380,11 @@ module FormsHelper
     
       result << "<td class='actions'>"
       if include_children
-        result << edit_value_set_link(element)
-        result << "&nbsp;&nbsp;" << add_to_library_link(element)
+        result << edit_value_set_link(element) if (element.export_column_id.blank?)
+        result << "&nbsp;&nbsp;" << add_to_library_link(element) if (element.export_column_id.blank?)
       end
     
-      result << "&nbsp;&nbsp;" << delete_value_set_link(element)
+      result << "&nbsp;&nbsp;" << delete_value_set_link(element) if (element.export_column_id.blank?)
       result << "</td></tr></table>"
     
       result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children

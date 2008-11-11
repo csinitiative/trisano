@@ -24,8 +24,20 @@ class QuestionElement < FormElement
   validates_associated :question
   
   def save_and_add_to_form
+    unless export_column.nil?
+      return nil if export_column.data_type.blank?
+      @question_instance.data_type = export_column.data_type
+    end
+    
     self.question = @question_instance
-    super
+    super do
+      build_cdc_value_set unless export_column.nil?
+    end
+  end
+
+  def save_and_update_children(attributes)
+    # Pending: Handle CDC changes
+    self.update_attributes(attributes)
   end
   
   def process_condition(answer, event_id, form_elements_cache=nil)
@@ -81,6 +93,31 @@ class QuestionElement < FormElement
 
   def is_multi_valued_and_empty?
     is_multi_valued? && (children_count_by_type("ValueSetElement") == 0)
+  end
+  
+  def build_cdc_value_set
+    return unless export_column.data_type == "radio_button"
+    
+    sorted_values = export_column.export_conversion_values.sort_by {|value| value.value_to}
+    
+    value_set = ValueSetElement.create({
+        :form_id => self.form_id,
+        :tree_id => self.tree_id,
+        :export_column_id => export_column.id,
+        :name => "#{export_column.export_name.export_name} #{export_column.export_column_name}",
+      })
+    
+    self.add_child(value_set)
+
+    sorted_values.each do |value|
+      value_element = ValueElement.create({
+          :form_id => self.form_id,
+          :tree_id => self.tree_id,
+          :name => value.value_from,
+          :export_conversion_value_id => value.id
+        })
+      value_set.add_child(value_element)
+    end
   end
   
 end

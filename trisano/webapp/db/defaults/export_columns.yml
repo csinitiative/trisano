@@ -219,19 +219,20 @@
    export_name: 'CDC'
    name:
 
-# Hepatitis
+##### Hepatitis #####
      
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
    export_column_name: 'DATEDX'
+   name: 'Date Dx'
    table_name: 
    column_name: 
    is_required: 
    start_position: '61'
    length_to_output: '8'
    export_name: 'CDC'
-   name: 'Date Dx'
-   
+   data_type: 'date'
+
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
    export_column_name: 'JAUNDICED'
@@ -242,6 +243,7 @@
    start_position: '69'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -253,6 +255,7 @@
    start_position: '70'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -264,6 +267,7 @@
    start_position: '71'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -275,6 +279,7 @@
    start_position: '72'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -286,6 +291,7 @@
    start_position: '73'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -297,6 +303,7 @@
    start_position: '74'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -308,6 +315,7 @@
    start_position: '75'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -319,6 +327,7 @@
    start_position: '76'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -330,6 +339,7 @@
    start_position: '77'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -341,6 +351,7 @@
    start_position: '78'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -352,6 +363,7 @@
    start_position: '79'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -363,6 +375,7 @@
    start_position: '80'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -374,6 +387,7 @@
    start_position: '81'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -385,6 +399,7 @@
    start_position: '82'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -396,6 +411,7 @@
    start_position: '83'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -407,6 +423,7 @@
    start_position: '84'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -418,6 +435,7 @@
    start_position: '85'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -429,6 +447,7 @@
    start_position: '86'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -440,6 +459,7 @@
    start_position: '87'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -451,6 +471,7 @@
    start_position: '88'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -462,6 +483,7 @@
    start_position: '89'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
 
  - disease_code_group: 'Hepatitis'
@@ -474,6 +496,7 @@
    start_position: '90'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
  
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -485,6 +508,7 @@
    start_position: '91'
    length_to_output: '8'
    export_name: 'CDC'
+   data_type: 'date'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -496,6 +520,7 @@
    start_position: '99'
    length_to_output: '8'
    export_name: 'CDC'
+   data_type: 'date'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -507,6 +532,7 @@
    start_position: '107'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -518,6 +544,7 @@
    start_position: '108'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -529,6 +556,7 @@
    start_position: '109'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -540,6 +568,7 @@
    start_position: '110'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -551,6 +580,7 @@
    start_position: '111'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -562,6 +592,7 @@
    start_position: '112'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -573,6 +604,7 @@
    start_position: '113'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -584,6 +616,7 @@
    start_position: '114'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -595,6 +628,7 @@
    start_position: '115'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -606,6 +640,7 @@
    start_position: '116'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -617,6 +652,7 @@
    start_position: '117'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -628,6 +664,7 @@
    start_position: '118'
    length_to_output: '2'
    export_name: 'CDC'
+   data_type: 'single_line_text'
    
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -639,6 +676,7 @@
    start_position: '120'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
@@ -650,4 +688,5 @@
    start_position: '121'
    length_to_output: '1'
    export_name: 'CDC'
+   data_type: 'radio_button'
 

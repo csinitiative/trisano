@@ -135,6 +135,134 @@ describe QuestionElement do
     
   end
   
+  describe "when a CDC question element and created with 'save and add to form'" do
+
+    fixtures :export_names, :export_columns, :export_conversion_values
+
+    it "should bootstrap the question with the CDC data type" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => export_columns(:hep_jaundiced).id,
+          :question_attributes => {
+            :question_text => "Jaundiced?"
+          }
+        })
+
+      question_element.save!        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.should_not be_nil
+      retrieved_question_element.question.question_text.should eql("Jaundiced?")
+      retrieved_question_element.question.data_type.should eql(export_columns(:hep_jaundiced).data_type.to_sym)
+      
+    end
+    
+    it "should bootstrap the value set" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "2",
+          :question_attributes => {
+            :question_text => "Jaundiced?"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      cdc_value_set = retrieved_question_element.children[0]
+      cdc_value_set.should_not be_nil
+      cdc_value_set.name.should eql("CDC JAUNDICED")
+      
+      cdc_value_elements = cdc_value_set.children
+      cdc_value_elements.size.should eql(3)
+      
+      cdc_value_elements[0].name.should eql(export_conversion_values(:jaundiced_yes).value_from)
+      cdc_value_elements[1].name.should eql(export_conversion_values(:jaundiced_no).value_from)
+      cdc_value_elements[2].name.should eql(export_conversion_values(:jaundiced_unknown).value_from)
+    end
+
+    it "should not bootstrap a value set for date data types" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "3",
+          :question_attributes => {
+            :question_text => "Date diagnosed"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.question_text.should eql("Date diagnosed")
+      retrieved_question_element.children.size.should eql(0)
+      retrieved_question_element.question.data_type.should eql(export_columns(:hep_datedx).data_type.to_sym)
+      
+    end
+
+    it "should not bootstrap a value set for single_line_text types" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "4",
+          :question_attributes => {
+            :question_text => "Vaccine year"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.question_text.should eql("Vaccine year")
+      retrieved_question_element.children.size.should eql(0)
+      retrieved_question_element.question.data_type.should eql(export_columns(:hep_vaccineyea).data_type.to_sym)
+    end
+    
+  end
+  
+  describe "when a non-CDC question element and updated" do
+    
+    it "should do standard persistence" do
+      pending
+    end
+    
+  end
+  
+  describe "when a CDC question element and updated" do
+
+    fixtures :export_names, :export_columns, :export_conversion_values
+
+    it "should remove export-related relationships when changing from CDC to non-CDC element" do
+      pending
+      # From question, value set, and values -- consider data type
+    end
+    
+    it "should do standard persistence when the CDC export column stays the same" do
+      pending
+    end
+    
+    it "should build a new value set when the CDC export column changes to a different CDC export column" do
+      pending
+      # Consider data type
+    end
+    
+  end
+
   describe "when processing conditional logic for follow ups'" do
     
     before(:each) do

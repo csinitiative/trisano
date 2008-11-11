@@ -42,7 +42,7 @@
     %label Queues
     = select_tag("queues[]", options_from_collection_for_select(EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event)), :queue_name, :queue_name), :size => 5, :multiple => true)
     %label Diseases
-    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all), :id, :disease_name), :size => 5, :multiple => true)
+    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true)
     %br
     = check_box_tag("set_as_default_view")
     = "Set as default view"

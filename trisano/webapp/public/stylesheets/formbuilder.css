@@ -242,6 +242,16 @@
     #detail-container a:hover {
       color: #c00; }
 
+#library-admin-container {
+  line-height: 15px; }
+  #library-admin-container a {
+    color: #999;
+    display: inline;
+    width: 0px;
+    height: 0px; }
+    #library-admin-container a:hover {
+      color: #c00; }
+
 .library-admin-item {
   padding: 0px 0px 0px 0px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -374,6 +384,16 @@
     border-width: 0px 0px 0px 3px;
     border-color: #c00; }
   .fb-value-set li {
+    border-width: 0px 0px 0px 0px; }
+
+.fb-cdc-value-set {
+  color: #666;
+  background: #fff; }
+  .fb-cdc-value-set ul {
+    border-style: solid;
+    border-width: 0px 0px 0px 3px;
+    border-color: #E7E01E; }
+  .fb-cdc-value-set li {
     border-width: 0px 0px 0px 0px; }
 
 .fb-value-set-children li {

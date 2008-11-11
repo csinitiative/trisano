@@ -79,7 +79,7 @@ class QuestionElementsController <  AdminController
   def update
     @question_element = QuestionElement.find(params[:id])
 
-    if @question_element.update_attributes(params[:question_element])
+    if @question_element.save_and_update_children(params[:question_element])
       flash[:notice] = 'Question was successfully updated.'
       @form = Form.find(@question_element.form_id)
     else
@@ -114,7 +114,7 @@ class QuestionElementsController <  AdminController
       :all,
       :conditions => [" diseases_export_columns.disease_id IN (?)", disease_ids],
       :joins => "LEFT JOIN diseases_export_columns ON diseases_export_columns.export_column_id = export_columns.id",
-      :order => "name DESC"
+      :order => "name"
     )
   end
 

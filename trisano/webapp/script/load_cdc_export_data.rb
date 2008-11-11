@@ -42,7 +42,8 @@ ExportColumn.transaction do
       :start_position => ec['start_position'],
       :length_to_output => ec['length_to_output'],
       :export_name_id => export_name.id,
-      :name => ec['name']
+      :name => ec['name'],
+      :data_type => ec['data_type']
     )
     
     if export_column.new_record?
