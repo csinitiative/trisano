@@ -22,9 +22,10 @@
 
       = render :partial => 'form', :locals => { :f => f }
 
-      %p
-        %label CDC export column
-        =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
+      - unless @export_columns.empty?
+        %p
+          %label CDC export column
+          =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
         %label Data type

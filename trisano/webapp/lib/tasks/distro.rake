@@ -208,7 +208,10 @@ namespace :trisano do
       initialize_config 
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_forms to #{@trisano_user}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues_id_seq to #{@trisano_user}'")             
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues_id_seq to #{@trisano_user}'")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_export_columns to #{@trisano_user}'")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table core_fields to #{@trisano_user}'")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table notes to #{@trisano_user}'")
     end
   end
 
