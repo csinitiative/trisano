@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) << '/spec_helper'
 
- $dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Form Builder CDC mapping functionality' do
   
@@ -31,9 +31,27 @@ describe 'Form Builder CDC mapping functionality' do
     @question_text = nil
   end
   
-  it 'should handle CDC question mapping.' do
+  it 'should handle CDC question mapping' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hepatitis A, acute", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :export_column_id => "Where"}).should be_true
-    @browser.is_text_present("CDC value")
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Where"}).should be_true
+    @browser.is_text_present("Radio button, CDC value")
   end
+  
+  it 'should build a value set when applicable' do
+    # Check a sampling of the values
+    @browser.is_text_present("Africa")
+    @browser.is_text_present("Carribean")
+    @browser.is_text_present("Middle East")
+  end
+  
+  it 'should create a date type when applicable' do
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Date Dx"}).should be_true
+    @browser.is_text_present("Date, CDC value")
+  end
+  
+  it 'should create a string type when applicable' do
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Vaccine Year"}).should be_true
+    @browser.is_text_present("Single line text, CDC value")
+  end
+
 end
