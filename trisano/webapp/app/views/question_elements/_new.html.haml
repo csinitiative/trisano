@@ -20,7 +20,11 @@
     %h4 Add a new question
     - remote_form_for(@question_element) do |f|
 
-      = render :partial => 'form', :locals => { :f => f, :export_columns => @export_columns }
+      = render :partial => 'form', :locals => { :f => f }
+
+      %p
+        %label CDC export column
+        =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
         %label Data type

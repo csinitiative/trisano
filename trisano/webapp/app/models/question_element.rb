@@ -34,11 +34,6 @@ class QuestionElement < FormElement
       build_cdc_value_set unless export_column.nil?
     end
   end
-
-  def save_and_update_children(attributes)
-    # Pending: Handle CDC changes
-    self.update_attributes(attributes)
-  end
   
   def process_condition(answer, event_id, form_elements_cache=nil)
     result = nil

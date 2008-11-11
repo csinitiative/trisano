@@ -157,6 +157,7 @@ describe QuestionElement do
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.should_not be_nil
+      retrieved_question_element.export_column_id.should eql(export_columns(:hep_jaundiced).id)
       retrieved_question_element.question.question_text.should eql("Jaundiced?")
       retrieved_question_element.question.data_type.should eql(export_columns(:hep_jaundiced).data_type.to_sym)
       
@@ -181,6 +182,7 @@ describe QuestionElement do
       cdc_value_set = retrieved_question_element.children[0]
       cdc_value_set.should_not be_nil
       cdc_value_set.name.should eql("CDC JAUNDICED")
+      cdc_value_set.export_column_id.should eql(export_columns(:hep_jaundiced).id)
       
       cdc_value_elements = cdc_value_set.children
       cdc_value_elements.size.should eql(3)
@@ -235,34 +237,6 @@ describe QuestionElement do
     
   end
   
-  describe "when a non-CDC question element and updated" do
-    
-    it "should do standard persistence" do
-      pending
-    end
-    
-  end
-  
-  describe "when a CDC question element and updated" do
-
-    fixtures :export_names, :export_columns, :export_conversion_values
-
-    it "should remove export-related relationships when changing from CDC to non-CDC element" do
-      pending
-      # From question, value set, and values -- consider data type
-    end
-    
-    it "should do standard persistence when the CDC export column stays the same" do
-      pending
-    end
-    
-    it "should build a new value set when the CDC export column changes to a different CDC export column" do
-      pending
-      # Consider data type
-    end
-    
-  end
-
   describe "when processing conditional logic for follow ups'" do
     
     before(:each) do

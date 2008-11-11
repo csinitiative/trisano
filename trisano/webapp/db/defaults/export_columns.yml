@@ -356,7 +356,7 @@
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
    export_column_name: 'ATYPE'
-   name: 'Anti-HDV'
+   name: 'Type Contact'
    table_name: 
    column_name: 
    is_required: 

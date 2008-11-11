@@ -56,7 +56,6 @@ class QuestionElementsController <  AdminController
 
   def edit
     @question_element = QuestionElement.find(params[:id], :include => :form)
-    @export_columns = export_columns(@question_element.form.disease_ids)
   end
 
   def create
@@ -79,11 +78,10 @@ class QuestionElementsController <  AdminController
   def update
     @question_element = QuestionElement.find(params[:id])
 
-    if @question_element.save_and_update_children(params[:question_element])
+    if @question_element.update_attributes(params[:question_element])
       flash[:notice] = 'Question was successfully updated.'
       @form = Form.find(@question_element.form_id)
     else
-      @export_columns = export_columns(@question_element.form.disease_ids)
       render :action => "edit"
     end
 
@@ -112,7 +110,8 @@ class QuestionElementsController <  AdminController
   def export_columns(disease_ids)
     ExportColumn.find(
       :all,
-      :conditions => [" diseases_export_columns.disease_id IN (?)", disease_ids],
+      :select => "distinct (id), name",
+      :conditions => ["diseases_export_columns.disease_id IN (?)", disease_ids],
       :joins => "LEFT JOIN diseases_export_columns ON diseases_export_columns.export_column_id = export_columns.id",
       :order => "name"
     )

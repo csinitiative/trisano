@@ -40,7 +40,3 @@
   %p
     %label Help text
     =q.text_area :help_text, :rows => 10
-
-%p
-  %label CDC export column
-  =f.collection_select(:export_column_id, export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
