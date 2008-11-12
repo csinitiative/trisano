@@ -33,7 +33,7 @@ describe 'Form Builder CDC mapping functionality' do
   
   it 'should handle CDC question mapping' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hepatitis A, acute", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Where"}).should be_true
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text + ' radios', :export_column_id => "Where"}).should be_true
     @browser.is_text_present("Radio button, CDC value")
   end
   
@@ -52,6 +52,25 @@ describe 'Form Builder CDC mapping functionality' do
   it 'should create a string type when applicable' do
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Vaccine Year"}).should be_true
     @browser.is_text_present("Single line text, CDC value")
+  end
+
+  it 'should publish the form' do
+    publish_form(@browser).should be_true
+  end
+
+  it 'should create basic Hep A cmr and open for edit' do
+    create_basic_investigatable_cmr(@browser, get_random_word + 'HepA', "Hepatitis A, acute", get_random_jurisdiction).should be_true
+    @browser.click('link=Edit')
+    @browser.wait_for_page_to_load
+    click_core_tab(@browser, INVESTIGATION)
+    @browser.click("link=#{@form_name}")
+  end
+
+  it "should change 'Where' answer" do
+    answer_radio_investigator_question(@browser, @question_text + ' radios', 1).should be_true
+    save_and_continue(@browser).should be_true
+    answer_radio_investigator_question(@browser, @question_text + ' radios', 2).should be_true
+    save_cmr(@browser).should be_true
   end
 
 end
