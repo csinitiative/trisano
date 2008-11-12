@@ -27,6 +27,7 @@ module Export
 
     def Csv.export(events, options={}, &proc)
       events = [events] unless events.respond_to?(:each)
+      return if events.empty?
       raise ArgumentError unless events.first.is_a? Event
       full_export(events, options, &proc)          
     end

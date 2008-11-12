@@ -23,9 +23,10 @@
 - content_for :tools do
   = new_cmr_link 'New Morbidity Report'
   |
-  = link_to_function('Export All to CSV', nil) do |page|
-    - page[:export_options].visual_effect :slide_down
-  |
+  - unless @events.empty? 
+    = link_to_function('Export All to CSV', nil) do |page|
+      - page[:export_options].visual_effect :slide_down
+    = "|"
   = link_to_function('Change View', nil) do |page|
     - page[:change_view].visual_effect :slide_down
 
