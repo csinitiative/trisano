@@ -249,7 +249,7 @@ module Export
         end
 
         # Clinical
-        event_data << ["#{event_type}_disease", "disease.disease.disease_name if disease"]
+        event_data << ["#{event_type}_disease", "disease.disease.disease_name if disease && disease.disease"]
         event_data << ["#{event_type}_disease_onset_date", "disease.disease_onset_date if disease"]
         event_data << ["#{event_type}_date_diagnosed", "disease.date_diagnosed if disease"]
         event_data << ["#{event_type}_diagnosing_health_facility", "diagnosing_health_facilities.first.secondary_entity.place_temp.name if !diagnosing_health_facilities.empty?"]
