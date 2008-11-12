@@ -39,7 +39,7 @@ xml.Table {
       end
 
       xml.Ethnic(get_ibis_ethnicity(event.active_patient.primary_entity.person.ethnicity))
-      xml.Race("DEBT: Skipping for now")
+      xml.Race(get_ibis_race(event.patient.primary_entity.races))
       xml.Sex(get_ibis_sex(event.active_patient.primary_entity.person.birth_gender))
       xml.Status(get_ibis_status(event.udoh_case_status))
 

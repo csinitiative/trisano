@@ -67,4 +67,32 @@ module ExportHelper
     else "."
     end
   end
+
+  def get_ibis_race(races)
+    case races.size
+    when 0
+      return "."
+    when 1
+      race = races.first
+      case race.the_code
+      when "W" then 1
+      when "B" then 2
+      when "AA", "AK" then 3
+      when "A" then 4
+      when "H" then 5
+      when "UNK" then "."
+      end
+    when 2
+      race_codes = races.map { |race| race.the_code }
+      if race_codes.include?("W") then return 7 end
+      if race_codes.include?("B") then return 8 end
+      if race_codes.include?("AA") || race_codes.include?("AK") then return 9 end
+      if race_codes.include?("A") then return 10 end
+      if race_codes.include?("H") then return 11 end
+      if race_codes.include?("UNK") then return "." end
+    else
+      return 6
+    end
+  end
+
 end

@@ -41,7 +41,7 @@ describe "/export/ibis.xml.builder" do
         with_tag("InvestigationHealthDistrict", :text => "1")
         with_tag("ResidenceHealthDistrict", :text => "99")
         with_tag("Ethnic", :text => "1")
-        with_tag("Race", :text => "DEBT: Skipping for now")
+        with_tag("Race", :text => ".")
         with_tag("Sex", :text => "1")
         with_tag("Status", :text => "1")
         with_tag("Year", :text => "2008")
