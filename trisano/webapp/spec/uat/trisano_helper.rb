@@ -1120,4 +1120,19 @@ module TrisanoHelper
     return true
   end
   
+  def is_disease_active(browser, disease_name)
+    html_source = browser.get_html_source
+    start = html_source.index(disease_name) + disease_name.length
+    puts 'Start: ' + start.to_s
+    puts html_source[start..start+100]
+    html_source[start..start+100].index("Active").nil? ? false : true
+  end
+  
+  def is_disease_inactive(browser, disease_name)
+    html_source = browser.get_html_source
+    start = html_source.index(disease_name) + disease_name.length
+    puts 'Start: ' + start.to_s
+    puts html_source[start..start+100]
+    html_source[start..start+100].index("Inactive").nil? ? false : true
+  end
 end

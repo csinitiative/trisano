@@ -31,14 +31,14 @@ describe 'adding and activating diseases' do
 
   it 'should create an inactive disease' do
     navigate_to_disease_admin(@browser).should be_true
-    @browser.click("link=New disease")
+    @browser.click("//input[@value='Create new disease']")
     @browser.wait_for_page_to_load($load_time)
     create_disease(@browser, :disease_name => @disease_name).should be_true
   end
 
   it 'should appear inactive in disease index' do
     navigate_to_disease_admin(@browser).should be_true
-    @browser.is_text_present("#{@disease_name} [inactive]").should be_true
+    is_disease_inactive(@browser, @disease_name).should be_true 
   end
 
   it 'inactive diseases should not appear in disease list for new cmrs' do
@@ -53,7 +53,7 @@ describe 'adding and activating diseases' do
 
   it 'should appear active in th disease index' do
     navigate_to_disease_admin(@browser).should be_true
-    @browser.is_text_present("#{@disease_name} [active]").should be_true
+    is_disease_active(@browser, @disease_name).should be_true 
   end
 
   it 'active diseases should appear in the disease list for new cmrs' do
