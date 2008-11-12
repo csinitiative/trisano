@@ -138,7 +138,7 @@ def event_header(event_type)
   if event_type != :place
     header_array << "#{lead_in}_birth_date"
     header_array << "#{lead_in}_approximate_age_no_birthdate"
-    header_array << "#{lead_in}_age_at_onset"
+    header_array << "#{lead_in}_age_at_onset_in_years"
   end
 
   header_array << "#{lead_in}_phone_area_code"
@@ -239,7 +239,7 @@ def event_output(event_type, m)
 
   out << "#{@person.birth_date},"
   out << "#{@person.approximate_age_no_birthday},"
-  out << "#{m.age_info},"
+  out << "#{m.age_info.in_years},"
   out << '"",'
   out << '"",'
   out << '"",'
@@ -387,7 +387,7 @@ def csv_mock_event(event_type)
   m.stub!(:event_onset_date).and_return("2008-01-05")
   m.stub!(:read_attribute).with("MMWR_week").and_return(1)
   m.stub!(:read_attribute).with("MMWR_year").and_return(2008)
-  m.stub!(:age_info).and_return("30 years")
+  m.stub!(:age_info).and_return(OpenStruct.new(:in_years => 30))
 
   m.stub!(:age_type).and_return(simple_reference)
   m.stub!(:imported_from).and_return(simple_reference)

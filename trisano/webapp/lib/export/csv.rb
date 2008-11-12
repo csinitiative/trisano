@@ -323,7 +323,7 @@ module Export
   end
 
   def Csv.event_answers(event)
-    a = event.answers.collect { |answer| ["disease_specific_#{answer.short_name}", "'#{answer.text_answer}'"] if answer.short_name }
+    event.answers.collect { |answer| ["disease_specific_#{answer.short_name}", "'#{answer.text_answer}'"] if answer.short_name }.compact
   end
 
   def Csv.lab_data
