@@ -69,11 +69,11 @@ module Export
     # A root-level event is either a morbidity or a contact, not a place
     def Csv.output_body(event, output, options)
       # A contact's only contact is the original patient
-      num_contacts    = event.contacts.size
+      num_contacts    = options[:export_options].include?("contacts") ? event.contacts.size : 0
       #contacts don't have places
-      num_places      = event.is_a?(MorbidityEvent) ? event.place_exposures.size : 0
-      num_lab_results = event.lab_results.size
-      num_treatments  = event.patient.participations_treatments.size
+      num_places      = event.is_a?(MorbidityEvent) && options[:export_options].include?("places") ? event.place_exposures.size : 0
+      num_lab_results = options[:export_options].include?("labs") ? event.lab_results.size : 0
+      num_treatments  = options[:export_options].include?("treatments") ? event.patient.participations_treatments.size : 0
       loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
 
       # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
@@ -214,7 +214,7 @@ module Export
       unless event.is_a?(PlaceEvent)
         event_data << ["#{event_type}_birth_date", "patient.primary_entity.person.birth_date"]
         event_data << ["#{event_type}_approximate_age_no_birthdate", "patient.primary_entity.person.approximate_age_no_birthday"]
-        event_data << ["#{event_type}_age_at_onset", "age_info"]
+        event_data << ["#{event_type}_age_at_onset_in_years", "age_info.in_years"]
       end
 
       if event.is_a?(PlaceEvent)
@@ -267,9 +267,9 @@ module Export
         event_data << ["#{event_type}_clinician_last_name", "clinicians.first.secondary_entity.person.last_name if !clinicians.empty?"]
         event_data << ["#{event_type}_clinician_first_name", "clinicians.first.secondary_entity.person.first_name if !clinicians.empty?"]
         event_data << ["#{event_type}_clinician_middle_name", "clinicians.first.secondary_entity.person.middle_name if !clinicians.empty?"]
-        event_data << ["#{event_type}_clinician_phone_area_code", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.area_code if !clinicians.empty? && !clinicians.first.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_clinician_phone_phone_number", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if !clinicians.empty? && !clinicians.first.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_clinician_phone_extension", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.extension if !clinicians.empty? && !clinicians.first.primary_entity.telephone_entities_locations.empty?"]
+        event_data << ["#{event_type}_clinician_phone_area_code", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.area_code if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
+        event_data << ["#{event_type}_clinician_phone_phone_number", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
+        event_data << ["#{event_type}_clinician_phone_extension", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.extension if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
 
         # Edidemioligical
         event_data << ["#{event_type}_food_handler", "patient.participations_risk_factor.food_handler.code_description if patient.participations_risk_factor && patient.participations_risk_factor.food_handler"]

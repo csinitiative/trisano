@@ -26,7 +26,7 @@ xml.Table {
         addresses = event.patient.primary_entity.address_entities_locations
         address = unless addresses.empty? then addresses.last.location.addresses.last else nil end
 
-        zip_code = address ? address.postal_code : address
+        zip_code = address ? address.postal_code : ""
         xml.ZipCode(zip_code[0..4])
         
         xml.Age(event.age_info.in_years)

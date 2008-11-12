@@ -10,7 +10,7 @@
       - params.delete(:commit)
       - params.delete(:action)
       - params.each_pair do |key, value|
-        - if value.respond_to?('each')
+        - if value.is_a?(Array)
           - value.each do |value_element|
             = hidden_field_tag("#{key}[]", value_element)
         - else
