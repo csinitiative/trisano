@@ -93,6 +93,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       select_answer_event = "sendConditionRequest(this, '#{event.id}', '#{question_element.id}');"
     end
 
+    cdc_radio_buttons = []
     input_element = case question.data_type
     when :single_line_text
       html_options[:size] = question.size
@@ -137,12 +138,17 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
       id = html_options[:id]
+      
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value|
         
         html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onchange] = select_answer_event if follow_ups
         
-        radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), html_options) + value
+        unless question_element.export_column.blank?
+          cdc_radio_buttons << {:id => html_options[:id], :export_conversion_value_id => conversion_id_for(question_element, value)}
+        end
+        
+        radio_buttons += @template.radio_button_tag(name, value, @object.radio_button_answer.include?(value), html_options) + value        
       end
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
@@ -155,16 +161,21 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     if question.data_type == :check_box || question.data_type == :radio_button
-      result += @template.content_tag(:label, question.question_text) + " " + input_element
-      
+      result += @template.content_tag(:label, question.question_text) + " " + input_element      
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
-      
+      unless question_element.export_column.blank?
+        result += "\n" + @template.hidden_field_tag(field_name + "[#{field_index}]" + '[export_conversion_value_id]', export_conversion_value_id(event, question)) 
+        result += export_js(cdc_radio_buttons, field_name + "[#{field_index}]" + '[export_conversion_value_id]')
+      end
     else
       result += @template.content_tag(:label) do
         question.question_text 
       end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
+      unless question_element.export_column.blank?
+        result += "\n" + hidden_field(:export_conversion_value_id, :index => index, :value => question_element.export_column.export_conversion_values.first.id )
+      end
     end
     
     result
@@ -199,6 +210,32 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
     return result
+  end
+
+  def conversion_id_for(question_element, value_from)
+    question_element.export_column.export_conversion_values.each do |conversion_value|
+      if conversion_value.value_from == value_from
+        return conversion_value.id
+      end
+    end
+  end
+
+  def export_js(radio_buttons, id)
+    script = "<script type=\"text/javascript\">\n"
+    script << "Event.observe(window, 'load', function() {\n"    
+
+    radio_buttons.each do |radio_button|
+      script << "$('#{radio_button[:id]}').observe('click', function() { "
+      script << "$('#{id}').writeAttribute('value', '#{radio_button[:export_conversion_value_id]}') });\n"
+    end
+    
+    script << "});</script>\n"
+    script
+  end
+
+  def export_conversion_value_id(event, question)
+    answer = event.answers.find_by_question_id(question.id)
+    answer.export_conversion_value_id unless answer.nil?
   end
 
 end

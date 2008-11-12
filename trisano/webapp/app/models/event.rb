@@ -418,7 +418,7 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def answers=(attributes)      
+  def answers=(attributes)
     if answers.empty?
       answers.build(attributes.values)
     else
@@ -435,7 +435,7 @@ class Event < ActiveRecord::Base
   end
   
   def new_radio_buttons=(attributes)
-    attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer]) }
+    attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer], :export_conversion_value_id => value[:export_conversion_value_id]) }
   end  
 
   def get_or_initialize_answer(question_id)

@@ -388,6 +388,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render section element (#{element.id})"
     end
   end
@@ -406,6 +407,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render group element (#{element.id})"
     end
   end
@@ -483,7 +485,7 @@ module EventsHelper
     
       return result
     rescue
-      logger.warn($!.backtrace.join('\n'))
+      logger.warn($!.message)
       return "Could not render question element (#{element.id})"
     end
   end
@@ -507,6 +509,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render follow up element (#{element.id})"
     end
   end
@@ -549,6 +552,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render core follow up element (#{element.id})"
     end
   end
@@ -588,6 +592,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render section element (#{element.id})"
     end
   end
@@ -609,6 +614,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render group element (#{element.id})"
     end
   end
@@ -639,6 +645,7 @@ module EventsHelper
       result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
+      logger.warn($!.message)
       return "Could not show question element (#{element.id})"
     end
   end
@@ -665,6 +672,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render follow up element (#{element.id})"
     end
   end
@@ -711,6 +719,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render core follow up element (#{element.id})"
     end
   end
@@ -737,6 +746,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render section element (#{element.id})<br/>"
     end
   end
@@ -758,6 +768,7 @@ module EventsHelper
 
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render group element (#{element.id})<br/>"
     end
   end
@@ -786,6 +797,7 @@ module EventsHelper
       result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
+      logger.warn($!.message)
       return "Could not show question element (#{element.id})<br/>"
     end
   end
@@ -812,6 +824,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render follow up element (#{element.id})<br/>"
     end
   end
@@ -848,6 +861,7 @@ module EventsHelper
     
       return result
     rescue
+      logger.warn($!.message)
       return "Could not render core follow up element (#{element.id})<br/>"
     end
   end

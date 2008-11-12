@@ -1416,4 +1416,33 @@ describe MorbidityEvent do
 
   end
 
+  describe 'form builder cdc export fields' do
+    fixtures :diseases, :export_conversion_values
+
+    before(:each) do      
+      @question = Question.create(:data_type => 'radio_buttons', :question_text => 'Contact?' )
+      @event = MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"CdcExportHep", } }, 
+                               "disease"        => { "disease_id" => diseases(:hep_a).id },
+                               "event_name"     => "CdcExportHepA",
+                               "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Yes'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
+                             } )
+    end
+
+    it "should have one answer" do
+      Answer.find(:all).length.should == 1
+    end
+
+    it "should have an export conversion value" do
+      answer = @event.answers.find_by_question_id(@question.id)
+      answer.export_conversion_value.should_not be_nil
+    end
+
+    it "should have the correct export conversion value" do
+      answer = @event.answers.find_by_question_id(@question.id)
+      answer.export_conversion_value.value_from.should == 'Unknown'
+      answer.export_conversion_value.value_to.should == '9'
+    end
+                            
+  end                       
+
 end
