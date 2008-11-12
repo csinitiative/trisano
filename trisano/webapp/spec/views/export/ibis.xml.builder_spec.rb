@@ -20,8 +20,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "/export/ibis.xml.builder" do
 
   before(:each) do
-    Event.stub!(:find).and_return(mock_ibis_event)
-    assigns[:events_to_export] = [OpenStruct.new({:id => 1})]
+    assigns[:events_to_export] = [mock_ibis_event, mock_deleted_ibis_event]
     render "export/ibis.xml.builder"
   end
 
@@ -45,6 +44,10 @@ describe "/export/ibis.xml.builder" do
         with_tag("Sex", :text => "1")
         with_tag("Status", :text => "1")
         with_tag("Year", :text => "2008")
+      end
+      with_tag("ComdisRecord") do
+        with_tag("RecordId", :text => "20080002")
+        with_tag("UpdateFlag", :text => "1")
       end
     end
   end
@@ -124,3 +127,13 @@ def mock_ibis_event
   m
 end
 
+def mock_deleted_ibis_event
+  @udoh_code_2 = mock_model(Code)
+  @udoh_code_2.stub!(:the_code).and_return("NC")
+
+  m = mock_model(MorbidityEvent)
+  m.stub!(:type).and_return('MorbidityEvent')
+  m.stub!(:record_number).and_return("20080002")
+  m.stub!(:udoh_case_status).and_return(@udoh_code_2)
+  m
+end

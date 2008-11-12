@@ -240,7 +240,7 @@ class Event < ActiveRecord::Base
     def new_ibis_records
       # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect
       new_records = Event.find_by_sql("
-                                      SELECT e.id FROM events e, disease_events d, external_codes c
+                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE e.sent_to_ibis = FALSE
                                       OR e.sent_to_ibis IS NULL 
                                       AND d.event_id = e.id
@@ -254,7 +254,7 @@ class Event < ActiveRecord::Base
     def updated_ibis_records
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is confirmed, probable, or suspect
       updated_records = Event.find_by_sql("
-                                      SELECT e.id FROM events e, disease_events d, external_codes c
+                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE e.sent_to_ibis = TRUE
                                       AND e.ibis_update = TRUE
                                       AND d.event_id = e.id
@@ -268,7 +268,7 @@ class Event < ActiveRecord::Base
     def deleted_ibis_records
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect
       updated_records = Event.find_by_sql("
-                                      SELECT e.id FROM events e, disease_events d, external_codes c
+                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE e.sent_to_ibis = TRUE
                                       AND e.ibis_update = TRUE
                                       AND d.event_id = e.id
@@ -284,7 +284,7 @@ class Event < ActiveRecord::Base
     end
 
     def reset_ibis_status(events)
-      event_ids = events.compact.collect {|record| record.id}
+      event_ids = events.compact.collect {|record| record.event_id}
       Event.update_all('ibis_update=false, sent_to_ibis=true', ['id IN (?)', event_ids])
     end
       

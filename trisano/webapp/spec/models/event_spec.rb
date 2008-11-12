@@ -1292,7 +1292,7 @@ describe MorbidityEvent do
       it "should find new records" do
         events = Event.new_ibis_records
         events.size.should == 2   # 1 above and 1 in the fixtures
-        events.collect! { |event| Event.find(event.id) }
+        events.collect! { |event| Event.find(event.event_id) }
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
         event_names.include?("Ibis3").should be_true
@@ -1300,22 +1300,22 @@ describe MorbidityEvent do
 
       it "should find updated records" do
         events = Event.updated_ibis_records
-        events.collect! { |event| Event.find(event.id) }
+        events.collect! { |event| Event.find(event.event_id) }
         events.size.should == 1
         events.first.event_name.should ==  "Ibis4"
       end
 
       it "should find deleted records" do
         events = Event.deleted_ibis_records
-        events.collect! { |event| Event.find(event.id) }
+        events.collect! { |event| Event.find(event.event_id) }
         events.size.should == 1
         events.first.event_name.should ==  "Ibis5"
       end
 
       it "should find all IBIS exportable records" do
         events = Event.exportable_ibis_records
-        events.collect! { |event| Event.find(event.id) }
-        events.size.should == 4   # 1 above and 1 in the fixtures
+        events.collect! { |event| Event.find(event.event_id) }
+        events.size.should == 4   # 3 above and 1 in the fixtures
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
         event_names.include?("Ibis3").should be_true

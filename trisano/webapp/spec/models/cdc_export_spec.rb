@@ -33,6 +33,7 @@ describe CdcExport do
     with_cdc_records do |records|
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
+      Event.reset_ibis_status(samples)
       CdcExport.weekly_cdc_export.should be_empty
       events = samples.collect {|sample| Event.find(sample.event_id)}
     end
@@ -247,10 +248,13 @@ describe CdcExport do
         with_cdc_records do |records|
           samples = records.collect {|record| record[0]}
           CdcExport.reset_sent_status(samples)
+          Event.reset_ibis_status(samples)
           event = records[0][1]
           event.reload
           event.should_not be_a_cdc_update
           event.should be_sent_to_cdc
+          event.should_not be_a_ibis_update
+          event.should be_sent_to_ibis
         end
       end
 
@@ -269,81 +273,113 @@ describe CdcExport do
         with_sent_events do |events|
           events.should_not be_empty
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes 'imported_from_id' => external_codes(:imported_from_unknown).id
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
           
       it 'should update when disease changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({'disease' => {'disease_id' => diseases(:anthrax).id}})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when patient\'s county of residence changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({"active_patient" => {"address" => {"county_id" => external_codes(:county_summit).id}}})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when race changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({"active_patient" => {"race_ids" => [external_codes(:race_black).id]}})
           events[0].save
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when birth gender changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({'active_patient' => {'person' => {'birth_gender_id' => external_codes(:gender_male).id}}})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when ethnicity changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({'active_patient' => {'person' => {'ethnicity_id' => external_codes(:ethnicity_hispanic).id}}})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when birth date changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({'active_patient' => {'person' => {'birth_date' => Date.parse('12/31/1975')}}})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
 
       it 'should update when onset date changes' do
         with_sent_events do |events|
           events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
           events[0].update_attributes({'event_onset_date' => Date.today - 1})
           events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
           events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
         end
       end
     end
