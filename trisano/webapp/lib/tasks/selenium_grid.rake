@@ -64,6 +64,13 @@ namespace :trisano do
       puts "running following specs: #{SPECS_PATTERN}"
       begin
       runner.run(Dir[SPECS_PATTERN])
+      rescue IOError => exception
+        if exception.message.index("File or directory not found: trisano:selenium:runtrisano").nil?
+          raise
+        else
+          puts "Run completed but rake had an error"
+        end      
+      end
       puts "[complete]"
     end
 
