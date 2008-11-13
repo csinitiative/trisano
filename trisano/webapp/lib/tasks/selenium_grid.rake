@@ -64,11 +64,6 @@ namespace :trisano do
       puts "running following specs: #{SPECS_PATTERN}"
       begin
       runner.run(Dir[SPECS_PATTERN])
-      rescue
-        puts "Run completed but rake had an error"
-      else
-        puts "Run completed"
-      end
       puts "[complete]"
     end
 
