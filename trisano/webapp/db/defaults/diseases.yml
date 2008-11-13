@@ -120,7 +120,7 @@
   cdc_code: 
 
 - disease_name: "Haemophilus influenzae, invasive disease"
-  cdc_code: 
+  cdc_code: 10590
 
 - disease_name: "Hansen disease (Leprosy)"
   cdc_code: 
@@ -195,7 +195,7 @@
   cdc_code: "10490"
 
 - disease_name: "Listeriosis"
-  cdc_code: 
+  cdc_code: 10640
 
 - disease_name: "Lyme disease"
   cdc_code: 
@@ -210,7 +210,7 @@
   cdc_code: 
 
 - disease_name: "Meningococcal disease (Neisseria meningitidis)"
-  cdc_code: 
+  cdc_code: 10150
 
 - disease_name: "Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)"
   cdc_code: 

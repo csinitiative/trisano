@@ -322,8 +322,8 @@
  - export_column_name: 'IMPORTED'
    value_from: 'UT'
    value_to: '1'
-   
-# Hepatitis values
+
+##### Hepatitis #####
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'DATEDX'
@@ -925,4 +925,720 @@
    value_from: 'Not Tested'
    value_to: '9'
    
+##### Meningitis #####
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'Yes'
+   value_to: '1'
    
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'Unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'OUTCOME'
+   value_from: 'Survived'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'OUTCOME'
+   value_from: 'Died'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'OUTCOME'
+   value_from: 'Unknown'
+   value_to: '9'  
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Neisseria meningitidis'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Haemophilus influenzae'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Group B streptococcus'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Listeria monocytogenes'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Streptococcus pneumoniae'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Escherichia coli'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Staphylococcus aureus'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Staphylococcus epidermidis'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Klebsiella species'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Enterobacter species'
+   value_to: '10'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Serratia species'
+   value_to: '11'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Actinobacter species'
+   value_to: '12'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Group A streptococcus'
+   value_to: '13'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Group D streptococcus'
+   value_to: '14'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Other streptococcus'
+   value_to: '15'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIES'
+   value_from: 'Other'
+   value_to: '16'
+ 
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'FIRSTCULT'
+   value_from: 
+   value_to: '99999999'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Blood'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'CSF'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Pleural fluid'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Peritoneal fluid'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Pericardial fluid'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Joint'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Placenta'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Amniotic fluid'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN1'
+   value_from: 'Other'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Blood'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'CSF'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Pleural fluid'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Peritoneal fluid'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Pericardial fluid'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Joint'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Placenta'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Amniotic fluid'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN2'
+   value_from: 'Other'
+   value_to: '9'
+  
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Blood'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'CSF'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Pleural fluid'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Peritoneal fluid'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Pericardial fluid'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Joint'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Placenta'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Amniotic fluid'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SPECIMEN3'
+   value_from: 'Other'
+   value_to: '9'   
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Primary bacteremia'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Meningitis'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Otitis media'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Pneumonia'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Cellulitis'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Epiglottitis'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Peritonitis'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Pericarditis'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Septic abortion'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Amnionitis'
+   value_to: '10'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Septic arthritis'
+   value_to: '11'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Conjunctivitis'
+   value_to: '12'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION1'
+   value_from: 'Other'
+   value_to: '13'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Primary bacteremia'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Meningitis'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Otitis media'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Pneumonia'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Cellulitis'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Epiglottitis'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Peritonitis'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Pericarditis'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Septic abortion'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Amnionitis'
+   value_to: '10'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Septic arthritis'
+   value_to: '11'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Conjunctivitis'
+   value_to: '12'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION2'
+   value_from: 'Other'
+   value_to: '13'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Primary bacteremia'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Meningitis'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Otitis media'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Pneumonia'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Cellulitis'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Epiglottitis'
+   value_to: '6'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Peritonitis'
+   value_to: '7'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Pericarditis'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Septic abortion'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Amnionitis'
+   value_to: '10'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Septic arthritis'
+   value_to: '11'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Conjunctivitis'
+   value_to: '12'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'INFECTION3'
+   value_from: 'Other'
+   value_to: '13'
+ 
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Group A'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Group B'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Group C'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Group Y'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Group W135'
+   value_to: '5'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Not Groupable'
+   value_to: '6'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Other'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROGROUP'
+   value_from: 'Unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SULFA'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SULFA'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SULFA'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMPIN'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMPIN'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMPIN'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROTYPE'
+   value_from: 'Type B'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROTYPE'
+   value_from: 'Not typable'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROTYPE'
+   value_from: 'Other type'
+   value_to: '8'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'SEROTYPE'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'AMP'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'AMP'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'AMP'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'CHLOR'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'CHLOR'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'CHLOR'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMP'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMP'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMP'
+   value_from: 'Not tested or unknown'
+   value_to: '9'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'HIBVAC'
+   value_from: 'Yes'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'HIBVAC'
+   value_from: 'No'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'RIFAMP'
+   value_from: 'Unknown'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACDATE1'
+   value_from: 
+   value_to: '99999999'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME'
+   value_from: 'HbOC (HibTITER, TETRAMUNE)'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME'
+   value_from: 'PRP-OMP (PedvaxHIB, COMVAX)'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME'
+   value_from: 'PRP-D (ProHIBit)'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME'
+   value_from: 'PRP-T (ActHIB, TriHIBit, OmniHIB)'
+   value_to: '4'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'LOTNUM1'
+   value_from: 
+   value_to: '9999999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACDATE2'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME2'
+   value_from: 'HbOC (HibTITER, TETRAMUNE)'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME2'
+   value_from: 'PRP-OMP (PedvaxHIB, COMVAX)'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME2'
+   value_from: 'PRP-D (ProHIBit)'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME2'
+   value_from: 'PRP-T (ActHIB, TriHIBit, OmniHIB)'
+   value_to: '4'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'LOTNUM2'
+   value_from: 
+   value_to: '9999999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACDATE3'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME3'
+   value_from: 'HbOC (HibTITER, TETRAMUNE)'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME3'
+   value_from: 'PRP-OMP (PedvaxHIB, COMVAX)'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME3'
+   value_from: 'PRP-D (ProHIBit)'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME3'
+   value_from: 'PRP-T (ActHIB, TriHIBit, OmniHIB)'
+   value_to: '4'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'LOTNUM3'
+   value_from: 
+   value_to: '9999999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACDATE4'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME4'
+   value_from: 'HbOC (HibTITER, TETRAMUNE)'
+   value_to: '1'
+   
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME4'
+   value_from: 'PRP-OMP (PedvaxHIB, COMVAX)'
+   value_to: '2'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME4'
+   value_from: 'PRP-D (ProHIBit)'
+   value_to: '3'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'VACNAME4'
+   value_from: 'PRP-T (ActHIB, TriHIBit, OmniHIB)'
+   value_to: '4'
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'LOTNUM4'
+   value_from: 
+   value_to: '9999999999'
+

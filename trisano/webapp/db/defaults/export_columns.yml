@@ -88,7 +88,6 @@
    export_name: 'CDC'
    name: 'CASE COUNT'
 
-     
  - type_data: 'CORE'
    export_column_name: 'COUNTY'
    table_name: 'addresses'
@@ -689,4 +688,371 @@
    length_to_output: '1'
    export_name: 'CDC'
    data_type: 'radio_button'
+   
+   ##### Meningitis #####
+   
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'DAYCARE'
+   name: 'DAYCARE'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'OUTCOME'
+   name: 'OUTCOME'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '62'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SPECIES'
+   name: 'SPECIES'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '63'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'FIRSTCULT'
+   name: 'FIRSTCULT'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '65'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SPECIMEN1'
+   name: 'SPECIMEN 1'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '73'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SPECIMEN2'
+   name: 'SPECIMEN 2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '74'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SPECIMEN3'
+   name: 'SPECIMEN 3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '75'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'INFECTION1'
+   name: 'INFECTION 1'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '76'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'INFECTION2'
+   name: 'INFECTION 2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '78'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'INFECTION3'
+   name: 'INFECTION 3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '80'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+  
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SEROGROUP'
+   name: 'SEROGROUP'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '82'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SULFA'
+   name: 'SULFA'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '83'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'RIFAMPIN'
+   name: 'RIFAMPIN'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '84'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'SEROTYPE'
+   name: 'SEROTYPE'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '85'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'AMP'
+   name: 'AMP'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '86'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'CHLOR'
+   name: 'CHLOR'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '87'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'RIFAMP'
+   name: 'RIFAMP'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '88'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'HIBVAC'
+   name: 'HIB VACCINE?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '89'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE1'
+   name: 'VACDATE1'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '90'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME'
+   name: 'VACNAME'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '98'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'LOTNUM1'
+   name: 'LOTNUM1'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '99'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE2'
+   name: 'VACDATE2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '109'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME2'
+   name: 'VACNAME2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '117'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'LOTNUM2'
+   name: 'LOTNUM2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '118'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE3'
+   name: 'VACDATE3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '128'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME3'
+   name: 'VACNAME3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '136'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'LOTNUM3'
+   name: 'LOTNUM3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '137'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE4'
+   name: 'VACDATE4'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '147'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME4'
+   name: 'VACNAME4'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '155'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'FORM'
+   export_column_name: 'LOTNUM4'
+   name: 'LOTNUM4'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '156'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+
+
+
+
 
