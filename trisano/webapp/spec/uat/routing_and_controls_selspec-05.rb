@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+$dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -104,7 +104,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click("name=morbidity_event[event_status]")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Under Investigation").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
   end
 
   it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do
@@ -158,8 +158,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("New").should be_true
 
     # Should see new jurisdictions
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
   end
 
   it "should allow for secondary jurisdictions to be added" do
@@ -167,9 +167,9 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "Bear_River"  # On
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
   end
 
   it "should allow for a subset of secondary jurisdictions to be removed" do
@@ -178,9 +178,9 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "Salt_Lake_Valley"  # Off
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt Lake Valley')]").should_not be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should be_true
   end
 
   it "should allow for all secondary jurisdictions to be removed" do
@@ -188,9 +188,9 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "Bear_River"  # Off
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt lake Valley')]").should_not be_true
-    @browser.is_element_present("//table[@class='listingforms']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should_not be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should_not be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Salt lake Valley')]").should_not be_true
+    @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Bear River')]").should_not be_true
   end
 
   it "should not display controls for a user with entitlements in the secondary jurisdiction" do
@@ -257,7 +257,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     @browser.open "/trisano/cmrs"
     @browser.click "link=Change View"
-    @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=Enterics-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -265,7 +265,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=JoeInvestigator-SummitCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -273,7 +273,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "states[]", "label=New"
+    @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=New"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -281,7 +281,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "states[]", "label=Assigned to Investigator"
+    @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=Assigned to Investigator"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -289,29 +289,20 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "states[]", "label=New"
-    @browser.add_selection "queues[]", "label=Enterics-UtahCounty"
-    @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load($load_time)
-
-    @browser.is_text_present(@person_1).should be_true
-    @browser.is_text_present(@person_2).should be_true
-
-    @browser.click "link=Change View"
-    @browser.add_selection "states[]", "label=New"
-    @browser.add_selection "queues[]", "label=JoeInvestigator-SummitCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=New"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=Enterics-UtahCounty"
     @browser.click "set_as_default_view"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should be_true
+    @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=CMRS"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should be_true
+    @browser.is_text_present(@person_2).should_not be_true
   end
 
 end
