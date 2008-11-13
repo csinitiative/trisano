@@ -61,8 +61,14 @@ namespace :trisano do
       require './lib/selenium_grid/screenshot_formatter'
       runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
       puts "REPORTS_PREFIX: #{REPORTS_PREFIX}"
-      puts "runnings following specs: #{SPECS_PATTERN}"
+      puts "running following specs: #{SPECS_PATTERN}"
+      begin
       runner.run(Dir[SPECS_PATTERN])
+      rescue
+        puts "Run completed but rake had an error"
+      else
+        puts "Run completed"
+      end
       puts "[complete]"
     end
 
