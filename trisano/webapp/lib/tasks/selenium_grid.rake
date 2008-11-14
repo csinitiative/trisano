@@ -26,7 +26,7 @@ namespace :trisano do
 
     SELENIUM_GRID_HOME = ENV['SELENIUM_GRID_HOME'] ||= '/opt/selenium-grid-1.0'
     SPEC_RUNNER_COUNT = ENV['SPEC_RUNNER_COUNT'] ||= '2'
-    SPECS_PATTERN = ENV['SPECS_PATTERN'] ||= './spec/uat/*_selspec.rb'
+    SPECS_PATTERN = ENV['SPECS_PATTERN'] ||= './spec/uat/*_selspec-*.rb'
     REPORTS_PREFIX = ENV['REPORTS_PREFIX'] ||= 'Default'
       
     desc "start selenium grid"
