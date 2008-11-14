@@ -198,7 +198,7 @@
   cdc_code: 10640
 
 - disease_name: "Lyme disease"
-  cdc_code: 
+  cdc_code: 11080
 
 - disease_name: "Lymphogranuloma venereum (LGV)"
   cdc_code: 
@@ -207,7 +207,7 @@
   cdc_code: "10130"
 
 - disease_name: "Measles (rubeola), total"
-  cdc_code: 
+  cdc_code: 10140
 
 - disease_name: "Meningococcal disease (Neisseria meningitidis)"
   cdc_code: 10150

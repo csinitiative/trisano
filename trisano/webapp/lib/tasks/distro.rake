@@ -212,6 +212,7 @@ namespace :trisano do
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_export_columns to #{@trisano_user}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table core_fields to #{@trisano_user}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table notes to #{@trisano_user}'")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table export_disease_groups to #{@trisano_user}'")
     end
   end
 

@@ -3,4 +3,10 @@
   
 - disease: 'Meningitis'
   codes: '10150|10590|10650|10640'
-
+  
+- disease: 'Lyme'
+  codes: '11080'
+  
+- disease: 'Measles'
+  codes: '10140'
+  

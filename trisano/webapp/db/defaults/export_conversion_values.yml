@@ -1642,3 +1642,280 @@
    value_from: 
    value_to: '9999999999'
 
+##### Lyme  #####
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'EM'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'EM'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'EM'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SWELLING'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SWELLING'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SWELLING'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BELLSPALSY'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BELLSPALSY'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BELLSPALSY'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RADICULONE'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RADICULONE'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RADICULONE'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'LYMPHOCYTI'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'LYMPHOCYTI'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'LYMPHOCYTI'
+   value_from: 'Unknown'
+   value_to: 'U'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'ENCEPHALIT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'ENCEPHALIT'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'ENCEPHALIT'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CSFTESTED'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CSFTESTED'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CSFTESTED'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SERUM'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SERUM'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SERUM'
+   value_from: 'Unknown'
+   value_to: 'U'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BLOCK'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BLOCK'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'BLOCK'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'OTHERCLINI'
+   value_from: 
+   value_to: '9999999999999999999999999999999999999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'DIAGNOSIS'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'REPORTED'
+   value_from: 
+   value_to: '99999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'Unknown'
+   value_to: 'U'
+ 
+ - disease_code_group: 'Lyme'
+   export_column_name: 'ANTIBIOTIC'
+   value_from: 
+   value_to: '999999999999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'DAYS'
+   value_from: 
+   value_to: '99999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'No'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'Unknown'
+   value_to: 'U'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 
+   value_to: '999999999999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 
+   value_to: '999999999999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SEROLOGICR'
+   value_from: 'Pos.'
+   value_to: 'P'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SEROLOGICR'
+   value_from: 'Neg.'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SEROLOGICR'
+   value_from: 'Equivocal'
+   value_to: 'E'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SEROLOGICR'
+   value_from: 'Note Done'
+   value_to: 'ND'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'SEROLOGICR'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CULTURERES'
+   value_from: 'Pos.'
+   value_to: 'P'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CULTURERES'
+   value_from: 'Neg.'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CULTURERES'
+   value_from: 'Equivocal'
+   value_to: 'E'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CULTURERES'
+   value_from: 'Note Done'
+   value_to: 'ND'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'CULTURERES'
+   value_from: 'Unknown'
+   value_to: 'U'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'OTHERSPECI'
+   value_from: 
+   value_to: '9999999999'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RESULTS'
+   value_from: 'Neg.'
+   value_to: 'N'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RESULTS'
+   value_from: 'Equivocal'
+   value_to: 'E'
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RESULTS'
+   value_from: 'Note Done'
+   value_to: 'ND'
+   
+ - disease_code_group: 'Lyme'
+   export_column_name: 'RESULTS'
+   value_from: 'Unknown'
+   value_to: 'U'
+   

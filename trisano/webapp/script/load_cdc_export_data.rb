@@ -19,6 +19,16 @@ export_names = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_names.yml")
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values.yml")
 disease_code_groups = YAML::load_file("#{RAILS_ROOT}/db/defaults/disease_code_groups.yml")
+export_disease_groups = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_disease_groups.yml")
+
+ExportDiseaseGroup.transaction do
+  export_disease_groups.each do |group|
+    g = ExportDiseaseGroup.find_or_initialize_by_name(
+      :name => group['name']
+    )
+    g.save! if  g.new_record?
+  end
+end
 
 ExportName.transaction do
   export_names.each do |export_name|
@@ -32,19 +42,41 @@ ExportColumn.transaction do
 
     export_name = ExportName.find_by_export_name(ec['export_name'])
     raise "Could not find an export name for the export column" if export_name.nil?
-    
-    export_column = ExportColumn.find_or_initialize_by_export_column_name(
-      :type_data => ec['type_data'],
-      :export_column_name => ec['export_column_name'],
-      :table_name => ec['table_name'],
-      :column_name => ec['column_name'],
-      :is_required => ec['is_required'],
-      :start_position => ec['start_position'],
-      :length_to_output => ec['length_to_output'],
-      :export_name_id => export_name.id,
-      :name => ec['name'],
-      :data_type => ec['data_type']
-    )
+
+    # If disease code group is blank, we're dealing with a core or fixed export value
+    if ec['disease_code_group'].blank?
+      export_column = ExportColumn.find_or_initialize_by_export_column_name(
+        :type_data => ec['type_data'],
+        :export_column_name => ec['export_column_name'],
+        :table_name => ec['table_name'],
+        :column_name => ec['column_name'],
+        :is_required => ec['is_required'],
+        :start_position => ec['start_position'],
+        :length_to_output => ec['length_to_output'],
+        :export_name_id => export_name.id,
+        :name => ec['name'],
+        :data_type => ec['data_type']
+      )
+      # Otherwise, we need to find export columns by name and disease group ID, because names are
+      # not unique across all diseases.
+    else
+      export_disease_group = ExportDiseaseGroup.find_by_name(ec['disease_code_group'])
+      raise "Could not find export disease group" if export_disease_group.nil?
+       
+      export_column = ExportColumn.find_or_initialize_by_export_column_name_and_export_disease_group_id(
+        :export_disease_group_id => export_disease_group.id,
+        :type_data => ec['type_data'],
+        :export_column_name => ec['export_column_name'],
+        :table_name => ec['table_name'],
+        :column_name => ec['column_name'],
+        :is_required => ec['is_required'],
+        :start_position => ec['start_position'],
+        :length_to_output => ec['length_to_output'],
+        :export_name_id => export_name.id,
+        :name => ec['name'],
+        :data_type => ec['data_type']
+      )
+    end
     
     if export_column.new_record?
       export_column.save!

@@ -1051,8 +1051,269 @@
    export_name: 'CDC'
    data_type: 'single_line_text'
    
+##### Lyme  #####
 
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'EM'
+   name: 'Erythema migrans'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'SWELLING'
+   name: 'SWELLING'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '62'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
 
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'BELLSPALSY'
+   name: 'BELLSPALSY'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '63'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
 
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'RADICULONE'
+   name: 'RADICULONE'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '64'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
 
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'LYMPHOCYTI'
+   name: 'LYMPHOCYTI'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '65'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'ENCEPHALIT'
+   name: 'ENCEPHALIT'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '66'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'CSFTESTED'
+   name: 'CSFTESTED'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '67'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'SERUM'
+   name: 'SERUM'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '68'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'BLOCK'
+   name: 'BLOCK'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '69'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'OTHERCLINI'
+   name: 'OTHER CLINICAL'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '70'
+   length_to_output: '40'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'DIAGNOSIS'
+   name: 'DIAGNOSIS'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '110'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'REPORTED'
+   name: 'REPORTED'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '118'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'HOSPITALIZ'
+   name: 'HOSPITALIZ'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '126'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'ANTIBIOTIC'
+   name: 'ANTIBIOTIC'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '127'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'DAYS'
+   name: 'DAYS'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '142'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'PREGNANT'
+   name: 'PREGNANT'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '147'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'STATE'
+   name: 'STATE'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '148'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'COUNTY'
+   name: 'COUNTY'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '163'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'SEROLOGICR'
+   name: 'SEROLOGICR'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '178'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'CULTURERES'
+   name: 'CULTURERES'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '180'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'OTHERSPECI'
+   name: 'OTHERSPECI'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '182'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Lyme'
+   type_data: 'FORM'
+   export_column_name: 'RESULTS'
+   name: 'RESULTS'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '192'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'radio_button'
 
