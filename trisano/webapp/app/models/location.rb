@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Location < ActiveRecord::Base
-  has_many :entities_locations, :dependent => :destroy
+  has_many :entities_locations
   has_many :entities, :through => :entities_locations
   
   has_many :addresses, :dependent => :destroy, :order => 'created_at DESC'

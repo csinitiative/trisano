@@ -68,7 +68,7 @@
 
         - for diagnostic in @event.diagnosing_health_facilities
           %tr
-            %td= diagnostic.secondary_entity.place_temp.name
+            %td= diagnostic.secondary_entity.place_temp.name if diagnostic.secondary_entity
 
   %fieldset.form
     %legend
@@ -85,15 +85,16 @@
 
         - for hospital in @event.hospitalized_health_facilities
           %tr
-            %td= hospital.secondary_entity.place_temp.name
-            - if hospital.hospitals_participation.nil?
-              %td
-              %td
-              %td
-            - else
-              %td= hospital.hospitals_participation.admission_date
-              %td= hospital.hospitals_participation.discharge_date
-              %td= hospital.hospitals_participation.medical_record_number
+            - if hospital.secondary_entity
+              %td= hospital.secondary_entity.place_temp.name
+              - if hospital.hospitals_participation.nil?
+                %td
+                %td
+                %td
+              - else
+                %td= hospital.hospitals_participation.admission_date
+                %td= hospital.hospitals_participation.discharge_date
+                %td= hospital.hospitals_participation.medical_record_number
 
   %fieldset.form
     %legend

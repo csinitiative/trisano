@@ -81,6 +81,7 @@ class ContactEventsController < EventsController
     def prep_multimodels
       params[:contact_event][:active_patient][:existing_telephone_attributes] ||= {}
       params[:contact_event][:active_patient][:existing_treatment_attributes] ||= {}
+      params[:contact_event][:active_patient][:race_ids] ||= []
       params[:contact_event][:existing_lab_attributes] ||= {}
       params[:contact_event][:existing_hospital_attributes] ||= {}
       params[:contact_event][:existing_diagnostic_attributes] ||= {}

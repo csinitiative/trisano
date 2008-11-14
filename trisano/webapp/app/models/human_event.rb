@@ -120,7 +120,7 @@ class HumanEvent < Event
         # Note the "id" here is the lab_result ID, not the lab ID as in new_lab_attributes
         # If there are attributes for that ID, then the lab result has not been deleted, update the attributes in memory
         attributes = lab_attributes[lab_result.id.to_s]
-        if attributes
+        if attributes && !attributes.values_blank?
           lab_result.attributes = attributes
         else
           # Array (not activerecord) deletion.  Make this a soft delete when we get to it
@@ -143,7 +143,7 @@ class HumanEvent < Event
   def existing_hospital_attributes=(hospital_attributes)
     hospitalized_health_facilities.reject(&:new_record?).each do |hospital|
       attributes = hospital_attributes[hospital.id.to_s]
-      if attributes
+      if attributes && !attributes.values_blank?
         hospital.secondary_entity_id = attributes.delete("secondary_entity_id")
         unless attributes.values_blank?
           if hospital.hospitals_participation.nil?
@@ -170,7 +170,7 @@ class HumanEvent < Event
   def existing_diagnostic_attributes=(diagnostic_attributes)
     diagnosing_health_facilities.reject(&:new_record?).each do |diagnostic|
       attributes = diagnostic_attributes[diagnostic.id.to_s]
-      if attributes
+      if attributes && !attributes.values_blank?
         diagnostic.secondary_entity_id = attributes.delete("secondary_entity_id")
       else
         diagnosing_health_facilities.delete(diagnostic)
@@ -205,16 +205,17 @@ class HumanEvent < Event
   def existing_clinician_attributes=(clinician_attributes)
     clinicians.reject(&:new_record?).each do |clinician|
       attributes = clinician_attributes[clinician.secondary_entity.person_temp.id.to_s]
-      if attributes
+
+      # Which entity_location (phone) to edit is passed along in the (hidden) attribute clinician_phone_id
+      el_id = attributes.delete(:clinician_phone_id).to_i if attributes
+
+      if attributes && !attributes.values_blank?
         person = {}
         person[:last_name] = attributes.delete(:last_name)
         person[:first_name] = attributes.delete(:first_name)
         person[:middle_name] = attributes.delete(:middle_name)
 
         clinician.secondary_entity.person_temp.attributes = person
-
-        # Which entity_location to edit is passed along in the (hidden) attribute clinician_phone_id
-        el_id = attributes.delete(:clinician_phone_id).to_i
 
         # They may be adding a phone number to an existing clinician who did not already have one
         if el_id == 0 || el_id.blank?
@@ -229,13 +230,20 @@ class HumanEvent < Event
           # Don't just find it, loop through the association array looking for it
           clinician.secondary_entity.telephone_entities_locations.each do |tel_el|
             if tel_el.id == el_id
-              tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-              tel_el.location.telephones.last.attributes = attributes
+              # If the clinician had a phone number and the user blanked it out, delete it
+              if attributes.values_blank?
+                tel_el.destroy
+                tel_el.location.destroy
+              else
+                tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
+                tel_el.location.telephones.last.attributes = attributes
+              end
               break
             end
           end
         end
       else
+        # Removes the participation.  Leaves the entity (with phone) intact.
         clinicians.delete(clinician)
       end
     end
@@ -280,8 +288,11 @@ class HumanEvent < Event
     clinicians.each do |clinician|
       clinician.secondary_entity.person_temp.save(false)
       clinician.secondary_entity.telephone_entities_locations.each do |el|
-        el.save(false)
-        el.location.telephones.each { |t| t.save(false) }
+        # Unless the phone number was destroyed, save it
+        unless el.frozen?
+          el.save(false)
+          el.location.telephones.each { |t| t.save(false) }
+        end
       end
     end
 

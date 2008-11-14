@@ -358,16 +358,17 @@ class Event < ActiveRecord::Base
   def existing_contact_attributes=(contact_attributes)
     contacts.reject(&:new_record?).each do |contact|
       attributes = contact_attributes[contact.secondary_entity.person_temp.id.to_s]
-      if attributes
+
+      # Which entity_location to edit is passed along in the (hidden) attribute contact_phone_id
+      el_id = attributes.delete(:contact_phone_id).to_i if attributes
+
+      if attributes && !attributes.values_blank?
         person = {}
         person[:last_name] = attributes.delete(:last_name)
         person[:first_name] = attributes.delete(:first_name)
         person[:disposition_id] = attributes.delete(:disposition_id)
 
         contact.secondary_entity.person_temp.attributes = person
-
-        # Which entity_location to edit is passed along in the (hidden) attribute contact_phone_id
-        el_id = attributes.delete(:contact_phone_id).to_i
 
         # They may be adding a phone number to an existing contact who did not lready have one
         if el_id == 0 || el_id.blank?
@@ -382,8 +383,14 @@ class Event < ActiveRecord::Base
           # Don't just find it, loop through the association array looking for it
           contact.secondary_entity.telephone_entities_locations.each do |tel_el|
             if tel_el.id == el_id
-              tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-              tel_el.location.telephones.last.attributes = attributes
+              # If the contact had a phone number and the user blanked it out, delete it
+              if attributes.values_blank?
+                tel_el.destroy
+                tel_el.location.destroy
+              else
+                tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
+                tel_el.location.telephones.last.attributes = attributes
+              end
               break
             end
           end
@@ -756,8 +763,11 @@ class Event < ActiveRecord::Base
     contacts.each do |contact|
       contact.secondary_entity.person_temp.save(false)
       contact.secondary_entity.telephone_entities_locations.each do |el|
-        el.save(false)
-        el.location.telephones.each { |t| t.save(false) }
+        # Unless the phone number was destroyed, save it
+        unless el.frozen?
+          el.save(false)
+          el.location.telephones.each { |t| t.save(false) }
+        end
       end
     end
     disease.save(false) unless disease.nil?

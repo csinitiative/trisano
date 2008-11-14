@@ -16,6 +16,7 @@
 - hospital.hospitals_participation = HospitalsParticipation.new if hospital.hospitals_participation.nil?
 
 %div{:style => "clear: both;"}
+  = error_messages_for :object => hospital
   = error_messages_for :object => hospital.hospitals_participation
 
 %div{:class => 'hospital'}

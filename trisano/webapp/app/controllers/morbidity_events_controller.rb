@@ -254,6 +254,7 @@ class MorbidityEventsController < EventsController
   def prep_multimodels
     params[:morbidity_event][:active_patient][:existing_telephone_attributes] ||= {}
     params[:morbidity_event][:active_patient][:existing_treatment_attributes] ||= {}
+    params[:morbidity_event][:active_patient][:race_ids] ||= []
     params[:morbidity_event][:existing_lab_attributes] ||= {}
     params[:morbidity_event][:existing_hospital_attributes] ||= {}
     params[:morbidity_event][:existing_diagnostic_attributes] ||= {}

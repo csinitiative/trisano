@@ -253,10 +253,10 @@ module Export
         event_data << ["#{event_type}_disease", "disease.disease.disease_name if disease && disease.disease"]
         event_data << ["#{event_type}_disease_onset_date", "disease.disease_onset_date if disease"]
         event_data << ["#{event_type}_date_diagnosed", "disease.date_diagnosed if disease"]
-        event_data << ["#{event_type}_diagnosing_health_facility", "diagnosing_health_facilities.first.secondary_entity.place_temp.name if !diagnosing_health_facilities.empty?"]
+        event_data << ["#{event_type}_diagnosing_health_facility", "diagnosing_health_facilities.first.secondary_entity.place_temp.name if !diagnosing_health_facilities.empty? && diagnosing_health_facilities.first.secondary_entity"]
 
         event_data << ["#{event_type}_hospitalized", "disease.hospitalized.code_description if (disease && disease.hospitalized)"]
-        event_data << ["#{event_type}_hospitalized_health_facility", "hospitalized_health_facilities.first.secondary_entity.place_temp.name if !hospitalized_health_facilities.empty?"]
+        event_data << ["#{event_type}_hospitalized_health_facility", "hospitalized_health_facilities.first.secondary_entity.place_temp.name if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.secondary_entity"]
         event_data << ["#{event_type}_hospital_admission_date", "hospitalized_health_facilities.first.hospitals_participation.admission_date if !hospitalized_health_facilities.empty?"]
         event_data << ["#{event_type}_hospital_discharge_date", "hospitalized_health_facilities.first.hospitals_participation.discharge_date if !hospitalized_health_facilities.empty?"]
         event_data << ["#{event_type}_hospital_medical_record_no", "hospitalized_health_facilities.first.hospitals_participation.medical_record_number if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.hospitals_participation"]

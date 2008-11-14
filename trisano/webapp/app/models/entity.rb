@@ -36,13 +36,15 @@ class Entity < ActiveRecord::Base
     :class_name => 'EntitiesLocation',
     :foreign_key => 'entity_id',
     :conditions => ["location_type_id = ?", Code.telephone_location_type_id],
-    :order => 'created_at ASC'
+    :order => 'created_at ASC',
+    :dependent => :destroy
   
   has_many :address_entities_locations,
     :class_name => 'EntitiesLocation',
     :foreign_key => 'entity_id',
     :conditions => ["location_type_id = ?", Code.address_location_type_id],
-    :order => 'created_at ASC'
+    :order => 'created_at ASC',
+    :dependent => :destroy
   
   has_and_belongs_to_many :races, 
     :class_name => 'ExternalCode', 
@@ -92,6 +94,11 @@ class Entity < ActiveRecord::Base
   end
 
   def address=(attributes)
+    if attributes.values_blank? && !self.address_entities_locations.empty?
+      el = self.address_entities_locations.last
+      self.address_entities_locations.delete(el)
+      el.location.destroy
+    end
     return if attributes.values_blank?
 
     if self.address_entities_locations.empty?
@@ -122,10 +129,11 @@ class Entity < ActiveRecord::Base
   def existing_telephone_attributes=(phone_attributes)
     self.telephone_entities_locations.reject(&:new_record?).each do |el|
       attributes = phone_attributes[el.id.to_s]
-      if attributes
+      if attributes && !attributes.values_blank?
         el.entity_location_type_id = attributes.delete(:entity_location_type_id)
         el.location.telephones.last.attributes = attributes
       else
+        self.telephone_entities_locations.delete(el)
         el.location.destroy
       end
     end
@@ -160,7 +168,6 @@ class Entity < ActiveRecord::Base
     self.telephone_entities_locations.each do |el|
       el.save(false)           
       el.location.save(false)
-      # el.location.telephones.each {|t| t.save(false) unless t.frozen?}
       el.location.telephones.each {|t| t.save(false)}
     end
   end

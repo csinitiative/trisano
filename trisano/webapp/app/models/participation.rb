@@ -125,6 +125,9 @@ class Participation < ActiveRecord::Base
   end
 
   def participations_risk_factor=(attributes)
+    if attributes.values_blank? && !participations_risk_factor.nil?
+      participations_risk_factor.destroy
+    end
     return if attributes.values_blank?
     self.build_participations_risk_factor if participations_risk_factor.nil?
     self.participations_risk_factor.attributes = attributes
@@ -140,7 +143,7 @@ class Participation < ActiveRecord::Base
   def existing_treatment_attributes=(treatment_attributes)
     participations_treatments.reject(&:new_record?).each do |treatment|
       attributes = treatment_attributes[treatment.id.to_s]
-      if attributes
+      if attributes && !attributes.values_blank?
         treatment.attributes = attributes
       else
         participations_treatments.delete(treatment)
@@ -171,7 +174,7 @@ class Participation < ActiveRecord::Base
       treatment.save(false)
     end
     
-    participations_risk_factor.save unless participations_risk_factor.nil?
+    participations_risk_factor.save unless participations_risk_factor.nil? || participations_risk_factor.frozen?
   end
 
 end

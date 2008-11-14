@@ -88,7 +88,7 @@ class MorbidityEvent < HumanEvent
   def existing_place_exposure_attributes=(place_exposure_attributes)
     place_exposures.reject(&:new_record?).each do |place_exposure|      
       attributes = place_exposure_attributes[place_exposure.secondary_entity.place_temp.id.to_s]
-      if attributes
+      if attributes && !attributes.values_blank?
         place_exposure.secondary_entity.place_temp.attributes = attributes
       else
         place_exposures.delete(place_exposure)
@@ -106,7 +106,6 @@ class MorbidityEvent < HumanEvent
 
   # This hurts my head
   def active_reporting_agency=(attributes)
-    return if attributes.values_blank? 
 
     # Handle the reporting agency.  Note, it's an auto-complete: user might have entered a new one or chosen an existing one.
     agency = attributes.delete(:name)
@@ -127,9 +126,18 @@ class MorbidityEvent < HumanEvent
       end
       # Otherwise assign the (now) existing entity id to the participation
       self.reporting_agency.secondary_entity_id = entity_id 
+    else
+      # The reporting agency is blank and there's an existing agency (i.e., the use blanked out the save value), delete the agency participation
+      unless self.reporting_agency.nil?
+        self.reporting_agency.destroy
+      end
     end
 
     # Now the reporter and reporter phone
+
+    # If there is a saved reporter and the user has blanked it out, delete reporter participation
+    self.reporter.destroy if attributes.values_blank? && self.reporter
+
     return if attributes.values_blank?
 
     # User can send either a reporter or a phone number or both.  Regardless we need a participation and an entity if we don't have one already
@@ -166,8 +174,14 @@ class MorbidityEvent < HumanEvent
       # Don't just 'find' the existing phone, loop through the association array looking for it
       self.reporter.secondary_entity.telephone_entities_locations.each do |tel_el|
         if tel_el.id == el_id
-          tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-          tel_el.location.telephones.last.attributes = attributes
+          # The user has blanked out the phone number of an existing reporter, delete it
+          if attributes.values_blank?
+            tel_el.destroy
+            tel_el.location.destroy
+          else
+            tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
+            tel_el.location.telephones.last.attributes = attributes
+          end
           break
         end
       end
@@ -264,18 +278,20 @@ class MorbidityEvent < HumanEvent
   def save_associations
     super
 
-    if reporting_agency
+    if reporting_agency && !reporting_agency.frozen?
       reporting_agency.save(false)
       reporting_agency.secondary_entity.place_temp.save(false)
     end
 
-    if reporter
+    if reporter && !reporter.frozen?
       reporter.save(false)
       reporter.secondary_entity.person_temp.save(false) if reporter.secondary_entity.person_temp
 
       reporter.secondary_entity.telephone_entities_locations.each do |el|
-        el.save(false)
-        el.location.telephones.each { |t| t.save(false) }
+        unless el.frozen?
+          el.save(false)
+          el.location.telephones.each { |t| t.save(false) }
+        end
       end
     end
 
