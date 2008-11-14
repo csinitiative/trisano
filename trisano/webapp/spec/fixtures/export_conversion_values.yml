@@ -39,29 +39,34 @@ jaundiced_yes:
   export_column_id: 2
   value_from: 'Yes'
   value_to: '1'
+  sort_order: 1
   
 jaundiced_no:
   id: 8
   export_column_id: 2
   value_from: 'No'
   value_to: '2'
+  sort_order: 2
 
 jaundiced_unknown:
   id: 9
   export_column_id: 2
   value_from: 'Unknown'
   value_to: '9'
+  sort_order: 3
 
 datedx_format:
   id: 10
   export_column_id: 3
   value_from: 
   value_to: '99999999'
+  sort_order: 
   
 vaccineyea_format:
   id: 11
   export_column_id: 4
   value_from: 
   value_to: '99'
+  sort_order: 
   
   

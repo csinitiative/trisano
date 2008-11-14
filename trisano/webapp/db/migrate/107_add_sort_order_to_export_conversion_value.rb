@@ -15,10 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ExportColumn < ActiveRecord::Base
-  belongs_to :export_name
-  has_many   :export_conversion_values, :order => "sort_order ASC"
-  has_and_belongs_to_many   :diseases
+class AddSortOrderToExportConversionValue < ActiveRecord::Migration
+  def self.up
+    add_column :export_conversion_values, :sort_order,  :integer
+  end
+
+  def self.down
+    remove_column :export_conversion_values, :sort_order
+  end
 end
-
-

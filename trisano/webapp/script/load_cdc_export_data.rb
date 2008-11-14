@@ -103,7 +103,8 @@ ExportColumn.transaction do
           export_conversion_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from_and_value_to(
             :export_column_id => export_column.id,
             :value_from => conversion_value['value_from'],
-            :value_to => conversion_value['value_to']
+            :value_to => conversion_value['value_to'],
+            :sort_order => conversion_value['sort_order']
           )
     
           export_conversion_value.save! if export_conversion_value.new_record?

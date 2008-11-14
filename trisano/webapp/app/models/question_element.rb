@@ -93,8 +93,6 @@ class QuestionElement < FormElement
   def build_cdc_value_set
     return unless export_column.data_type == "radio_button"
     
-    sorted_values = export_column.export_conversion_values.sort_by {|value| value.value_to}
-    
     value_set = ValueSetElement.create({
         :form_id => self.form_id,
         :tree_id => self.tree_id,
@@ -104,7 +102,7 @@ class QuestionElement < FormElement
     
     self.add_child(value_set)
 
-    sorted_values.each do |value|
+     export_column.export_conversion_values.each do |value|
       value_element = ValueElement.create({
           :form_id => self.form_id,
           :tree_id => self.tree_id,
