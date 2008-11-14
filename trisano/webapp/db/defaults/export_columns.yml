@@ -1317,3 +1317,620 @@
    export_name: 'CDC'
    data_type: 'radio_button'
 
+##### Measles #####
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'STATEID'
+   name: 'State ID'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'ZIPCODE'
+   name: 'ZIPCODE'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '71'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'RASH'
+   name: 'Rash'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '76'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'ONSET'
+   name: 'Onset'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '77'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'RASHDUR'
+   name: 'Rash Duration (days)'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '85'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'GENERAL'
+   name: 'Generalized'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '87'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'FEVER'
+   name: 'Fever'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '88'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'TEMPERAT'
+   name: 'TEMPERAT'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '89'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'COUGH'
+   name: 'Cough'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '94'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'CORYZA'
+   name: 'Coryza'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '95'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'CONJUNCT'
+   name: 'Conjunctivitis'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '96'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'CLINDEF'
+   name: 'CLINDEF'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '97'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'OTITIS'
+   name: 'Otitis media'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '98'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DIARRHEA'
+   name: 'Diarrhea'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '99'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'PNEUMON'
+   name: 'Pneumonia'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '100'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'ENCEPHAL'
+   name: 'Encephalitis'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '101'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'THROMBO'
+   name: 'Thrombocytopenia'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '102'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DEATH'
+   name: 'Death'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '103'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'OTHER'
+   name: 'Other'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '104'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'SPECIFY'
+   name: 'Specify'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '105'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'HOSPITAL'
+   name: 'Hospitalized'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '120'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DAYSHOSP'
+   name: 'Total days hospitalized'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '121'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'LABTEST'
+   name: 'Laboratory'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '124'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'IGMRES'
+   name: 'IgM Result'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '125'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DATEIGM'
+   name: 'Date IgM specimen'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '126'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'IGGRES'
+   name: 'IgG Result'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '192'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DATEACUT'
+   name: 'Date acute specimen'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '135'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DATECONV'
+   name: 'Date convalescent specimen'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '143'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'OTHERLAB'
+   name: 'Other Lab Result'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '151'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'METHOD'
+   name: 'Specify method'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '152'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'LABCONF'
+   name: 'Laboratory confirmed'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '160'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VACCIN'
+   name: 'Had case ever received measles-containing vaccine?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '161'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'REASON'
+   name: "Reason not rec'd"
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '162'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE'
+   name: 'Vacdate'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '163'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE01'
+   name: 'VacDate 1'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '171'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE02'
+   name: 'VacDate 2'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '179'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE03'
+   name: 'VacDate 3'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '187'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DOSESBEF'
+   name: 'Number of doses received BEFORE 1st birthday'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '195'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DOSESAFT'
+   name: 'Number of doses received ON or AFTER 1st birthday'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '196'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'REASON0'
+   name: 'Reason 0 doses given'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '197'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'REASONAD'
+   name: 'Reason additional doses not given'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '198'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DATEHEAL'
+   name: 'Date case FIRST REPORTED to a health department'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '199'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'DATEINVE'
+   name: 'Date case investigation started'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '207'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'TRANSMIS'
+   name: 'Transmission Setting'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '215'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'VERIFIED'
+   name: 'Were age and setting verified?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '217'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'SETOTHER'
+   name: 'If setting = other, explain'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '218'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'OUTBREL'
+   name: 'Outbreak related'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '233'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'OUTBNAME'
+   name: 'Outbreak name'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '234'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'SOURCE'
+   name: 'Source of exposure'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '249'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'EPILINK'
+   name: 'Epi-linked to other confirmed/probable case(s)'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '264'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Measles'
+   type_data: 'FORM'
+   export_column_name: 'TRACEABL'
+   name: 'Traceable WITHIN 2 GENERATIONS to known international import'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '265'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+  
+
+
+ 

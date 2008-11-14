@@ -2243,3 +2243,911 @@
    value_to: 'U'
    sort_order: 5
    
+##### Measles #####
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'STATEID'
+   value_from: 
+   value_to: '9999999999'
+   sort_order: 
+     
+ - disease_code_group: 'Measles'
+   export_column_name: 'ZIPCODE'
+   value_from: 
+   value_to: '99999'
+   sort_order: 
+     
+ - disease_code_group: 'Measles'
+   export_column_name: 'RASH'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'RASH'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'RASH'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'ONSET'
+   value_from: 
+   value_to: '99999999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'RASHDUR'
+   value_from: 
+   value_to: '99'
+   sort_order: 
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'GENERAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'GENERAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'GENERAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'FEVER'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'FEVER'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'FEVER'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TEMPERAT'
+   value_from: 
+   value_to: '99999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'COUGH'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'COUGH'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'COUGH'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'CORYZA'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'CORYZA'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'CORYZA'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'CONJUNCT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'CONJUNCT'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'CONJUNCT'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTITIS'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTITIS'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTITIS'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DIARRHEA'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'DIARRHEA'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DIARRHEA'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'PNEUMON'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'PNEUMON'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'PNEUMON'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'THROMBO'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'THROMBO'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'THROMBO'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHER'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHER'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHER'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'SPECIFY'
+   value_from: 
+   value_to: '999999999999999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DAYSHOSP'
+   value_from: 
+   value_to: '999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'LABTEST'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'LABTEST'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'LABTEST'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Positive IgM'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Negative IgM'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGMRES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DATEIGM'
+   value_from: 
+   value_to: '99999999'
+   sort_order: 
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'Significant rise (IgG)'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'No significant rise (IgG)'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'IGGRES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'DATEACUT'
+   value_from: 
+   value_to: '99999999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DATECONV'
+   value_from: 
+   value_to: '99999999'
+   sort_order: 
+     
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OTHERLAB'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'METHOD'
+   value_from: 
+   value_to: '99999999'
+   sort_order: 
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'LABCONF'
+   value_from: ' Positive IGM or IGG or OTHERLAB test'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'LABCONF'
+   value_from: 'LABCONF'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACCIN'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACCIN'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACCIN'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Religious exemption'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Medical contraindication'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Philosophical exemption'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Laboratory confirmation of previous disease'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'MD diagnosis of previous disease'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Underage for vaccine'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Parental refusal'
+   value_to: '7'
+   sort_order: 7
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Other'
+   value_to: '8'
+   sort_order: 8
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACDATE'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACDATE01'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACDATE02'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+     
+ - disease_code_group: 'Measles'
+   export_column_name: 'VACDATE03'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: 'No doses'
+   value_to: '0'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: '1 dose'
+   value_to: '1'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: '2 doses'
+   value_to: '2'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 4
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: 'No doses'
+   value_to: '0'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: '1 dose'
+   value_to: '1'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: '2 doses'
+   value_to: '2'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: '3 doses'
+   value_to: '3'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DOSESBEF'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Religious exemption'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Medical contraindication'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Philosophical exemption'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Laboratory confirmation of previous disease'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'MD diagnosis of previous disease'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Underage for vaccine'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Parental refusal'
+   value_to: '7'
+   sort_order: 7
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Other'
+   value_to: '8'
+   sort_order: 8
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASON0'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Religious exemption'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Medical contraindication'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Philosophical exemption'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Laboratory confirmation of previous disease'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'MD diagnosis of previous disease'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Underage for vaccine'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Parental refusal'
+   value_to: '7'
+   sort_order: 7
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Other'
+   value_to: '8'
+   sort_order: 8
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'REASONAD'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DATEHEAL'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DATEINVE'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Day Care'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'School'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: "Doctor's Office"
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital Ward'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital ER'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital Outpatient Clinic'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Home'
+   value_to: '7'
+   sort_order: 7
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Work'
+   value_to: '8'
+   sort_order: 8
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+   
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'College'
+   value_to: '10'
+   sort_order: 10
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Military'
+   value_to: '11'
+   sort_order: 11
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Correctional Facility'
+   value_to: '12'
+   sort_order: 12
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Church'
+   value_to: '13'
+   sort_order: 13
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'International Travel'
+   value_to: '14'
+   sort_order: 14
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Other'
+   value_to: '15'
+   sort_order: 15
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VERIFIED'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VERIFIED'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'VERIFIED'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'SETOTHER'
+   value_from: 
+   value_to: '999999999999999'
+   sort_order:
+     
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBNAME'
+   value_from: 
+   value_to: '999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'SOURCE'
+   value_from: 
+   value_to: '999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'EPILINK'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'EPILINK'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'EPILINK'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRACEABL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRACEABL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'TRACEABL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
