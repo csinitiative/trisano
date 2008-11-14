@@ -10,3 +10,6 @@
 - disease: 'Measles'
   codes: '10140'
   
+- disease: 'Mumps-Rubella'
+  codes: '10180|10200'
+  
