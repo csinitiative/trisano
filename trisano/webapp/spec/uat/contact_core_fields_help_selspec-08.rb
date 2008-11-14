@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
+require 'yaml'
 
 describe "help text for contact core fields" do
   # $dont_kill_browser = true

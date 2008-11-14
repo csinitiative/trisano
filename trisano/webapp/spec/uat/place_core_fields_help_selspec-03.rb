@@ -24,7 +24,7 @@ describe "help text for place core fields" do
   core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'core_fields.yml'))
 
   before :all do
-    @browser.open '/core_fields'
+    @browser.open '/trisano/core_fields'
   end
 
   core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'place_event'}.each do |core_field|
