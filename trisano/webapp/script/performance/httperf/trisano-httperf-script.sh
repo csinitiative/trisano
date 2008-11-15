@@ -2,7 +2,7 @@
 
 #httperf --server=ut-nedss-dev.csinitiative.com --port=5050 --wsesslog=100,0,trisano-perf-script-data --print-reply
 
-httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=100,0,trisano-new-cmr-data --rate=10
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=5 --timeout=20 --think-timeout=20
 
 # Doc details: http://www.hpl.hp.com/research/linux/httperf/httperf-man-0.9.pdf
 #
