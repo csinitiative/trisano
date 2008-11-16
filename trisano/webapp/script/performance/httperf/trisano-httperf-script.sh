@@ -1,8 +1,26 @@
 #!/bin/bash
 
-#httperf --server=ut-nedss-dev.csinitiative.com --port=5050 --wsesslog=100,0,trisano-perf-script-data --print-reply
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=0.5 --timeout=15 --think-timeout=15 > rate05.output
+echo "completed 0.5"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=1 --timeout=15 --think-timeout=15 > rate1.output
+echo "completed 1"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=2 --timeout=15 --think-timeout=15 > rate2.output
+echo "completed 2"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=4 --timeout=15 --think-timeout=15 > rate4.output
+echo "completed 4"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=6 --timeout=15 --think-timeout=15 > rate6.output
+echo "completed 6"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=8 --timeout=15 --think-timeout=15 > rate8.output
+echo "completed 8"
+sleep 20
+httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=10 --timeout=15 --think-timeout=15 > rate10.output
+echo "completed 10"
 
-httperf -v --server=test.csi.osuosl.org --port=80 --hog −−session−cookie --wsesslog=50,0,trisano-sequence-data --rate=5 --timeout=20 --think-timeout=20
 
 # Doc details: http://www.hpl.hp.com/research/linux/httperf/httperf-man-0.9.pdf
 #
