@@ -1,54 +1,53 @@
 #!/bin/bash
 
-# sample usage: ./trisano-httperf-script.sh test.csi.osuosl.org 80 create_simple_cmr
+# sample usage: ./trisano-httperf-script.sh test.csi.osuosl.org 80 create_simple_cmr 20
 
 NUM_CALLS=50
 TIMEOUT=15
 THINKTIMEOUT=15
-SLEEP=40
 
 echo "starting sequential 1 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT > $3-rate0.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT > $4-rate0.output
 echo "completed 1 @ time"
-sleep $SLEEP
+sleep $5
 echo "starting 1"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=1 > $3-rate1.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=1 > $4-rate1.output
 echo "completed 1"
-sleep $SLEEP
+sleep $5
 echo "starting 2 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=2 > $3-rate2.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=2 > $4-rate2.output
 echo "completed 2"
-sleep $SLEEP
+sleep $5
 echo "starting 3 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=3 > $3-rate3.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=3 > $4-rate3.output
 echo "completed 3"
-sleep $SLEEP
+sleep $5
 echo "starting 4 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=4 > $3-rate4.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=4 > $4-rate4.output
 echo "completed 4"
-sleep $SLEEP
+sleep $5
 echo "starting 5 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=5 > $3-rate5.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=5 > $4-rate5.output
 echo "completed 5"
-sleep $SLEEP
+sleep $5
 echo "starting 6 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=6 > $3-rate6.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=6 > $4-rate6.output
 echo "completed 6"
-sleep $SLEEP
+sleep $5
 echo "starting 7 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=7 > $3-rate7.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=7 > $4-rate7.output
 echo "completed 7"
-sleep $SLEEP
+sleep $5
 echo "starting 8 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=8 > $3-rate8.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=8 > $4-rate8.output
 echo "completed 8"
-sleep $SLEEP
+sleep $5
 echo "starting 9 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=9 > $3-rate9.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=9 > $4-rate9.output
 echo "completed 9"
-sleep $SLEEP
+sleep $5
 echo "starting 10 request @ a time"
-httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$NUM_CALLS,0,$3 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=10 > $3-rate10.output
+httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=10 > $4-rate10.output
 echo "completed 10"
 
 # Doc details: http://www.hpl.hp.com/research/linux/httperf/httperf-man-0.9.pdf
