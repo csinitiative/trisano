@@ -151,6 +151,7 @@ module EventsHelper
     else
       controls += link_to('Export to CSV', cmr_path(event) + '.csv')
     end
+    controls += ' | ' +  button_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.patient.primary_entity.id}) if User.current_user.is_entitled_to?(:create_event)
   end
 
   def basic_contact_event_controls(event, with_show=true)
@@ -439,7 +440,7 @@ module EventsHelper
     if @event
       core_path = (form_builder.options[:core_path] || form_builder.object_name) + "[#{attribute}]"
       core_field = @event.class.exposed_attributes[core_path]
-      help = render_help_text(CoreField.new(core_field)) if core_field
+      help = render_help_text(core_field[:model]) if core_field
       concat(help, block.binding) if help
     end
   end

@@ -62,6 +62,15 @@ describe Place do
     end
   end
 
+  describe "finding exising places" do
+    fixtures :codes, :places
+    
+    it "should be able to find 'Unassigned' jurisdiction by name" do
+      Place.jurisdiction_by_name('Unassigned').should_not be_nil
+    end
+
+  end
+
   describe "when updated and retrieved" do
 
     before(:each) do
@@ -102,7 +111,7 @@ describe Place do
 
     it "jurisdictions should return a list of jurisdictions" do
       h = Place.jurisdictions
-      h.length.should == 3
+      h.length.should == 4
     end
   end
 

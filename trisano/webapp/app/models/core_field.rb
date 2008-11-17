@@ -32,6 +32,7 @@ class CoreField < ActiveRecord::Base
     def event_fields(event_type)
       event_fields_hash[event_type] ||= find_event_fields_for(event_type, :all).inject({}) do |hash, field|
         hash[field.key] = field.attributes.symbolize_keys
+        hash[field.key][:model] = field
         hash
       end
     end

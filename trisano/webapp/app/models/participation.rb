@@ -92,11 +92,15 @@ class Participation < ActiveRecord::Base
       reporter_participation
     end
 
-    def new_patient_participation
+    def new_patient_participation(existing_entity=nil)
       patient = Participation.new
-      patient.build_primary_entity.build_person_temp
       patient.role_id = Code.interested_party_id
-      patient.primary_entity.entity_type = "person"
+      if existing_entity
+        patient.primary_entity_id = existing_entity.id
+      else
+        patient.build_primary_entity.build_person_temp
+        patient.primary_entity.entity_type = "person"
+      end
       patient
     end
 
@@ -117,6 +121,12 @@ class Participation < ActiveRecord::Base
         :primary_yn_id => ExternalCode.yes.id,
         :location_type_id => Code.telephone_location_type_id).build_location.telephones.build
       patient
+    end
+
+    def new_jurisdiction_participation
+      jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
+      jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create).first || Place.jurisdiction_by_name("Unassigned")).entity
+      jurisdiction
     end
 
     def new_clinician_participation

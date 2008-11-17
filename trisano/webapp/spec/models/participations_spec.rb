@@ -22,7 +22,7 @@ describe Participation do
   describe 'patient participation' do
 
     before :each do
-      @pt = Participation.new_patient_participation
+      @pt = Participation.new_patient_participation_with_address_and_phone
       @pt.save
     end
 
@@ -38,6 +38,22 @@ describe Participation do
       @pt.primary_entity.person_temp.should_not be_nil
     end
 
+    describe 'new patient participation from existing' do
+      
+      before :each do
+        @new_pt = Participation.new_patient_participation(@pt.primary_entity)
+      end
+
+      it 'should be a new record' do
+        @new_pt.should be_a_new_record
+      end
+
+      it 'should have the same entity' do        
+        @new_pt.primary_entity_id.should == @pt.primary_entity.id
+      end
+
+    end
+      
   end
 
 end

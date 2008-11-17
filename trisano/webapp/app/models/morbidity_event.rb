@@ -20,9 +20,9 @@ class MorbidityEvent < HumanEvent
   #    def self.new_event_tree(event_hash = {:disease => {}, :active_jurisdiction => {}})
   #      event = MorbidityEvent.new(event_hash)
 
-  def self.new_event_tree
+  def self.new_event_tree()
     event = MorbidityEvent.new
-
+    
     event.patient = Participation.new_patient_participation_with_address_and_phone
     event.jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
     event.build_disease_event
@@ -36,6 +36,15 @@ class MorbidityEvent < HumanEvent
     event.reporting_agency = Participation.new_reporting_agency_participation
     event.reporter = Participation.new_reporter_participation
     event.notes.build
+    event
+  end
+
+  def self.new_event_from_patient(patient_entity)
+    event = MorbidityEvent.new
+    event.patient = Participation.new_patient_participation(patient_entity)    
+    jurisdiction = Participation.new_jurisdiction_participation
+    puts "Jurisdiction: " + jurisdiction.inspect
+    event.jurisdiction = jurisdiction
     event
   end
   

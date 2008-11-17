@@ -39,6 +39,13 @@ Summit_County:
   place_type_id: 2202
   entity_id: 104
 
+unassigned_jurisdiction:
+  id: 105
+  name: 'Unassigned'
+  short_name: 'Unassigned'
+  place_type_id: 2202
+  entity_id: 105
+
 ###############
 # Labs
 #

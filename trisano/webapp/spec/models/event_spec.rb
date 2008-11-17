@@ -1445,4 +1445,35 @@ describe MorbidityEvent do
                             
   end                       
 
+  describe 'new event from patient' do
+    fixtures :users
+    
+    def with_new_event_from_patient(patient)
+      event = MorbidityEvent.new_event_from_patient(patient)
+      yield event if block_given?
+    end
+
+    before(:each) do
+      @patient = participations(:Patient_Without_Disease)
+      User.stub!(:current_user).and_return(users(:default_user))
+    end
+      
+    it 'should use the existing patient in the event tree' do
+      with_new_event_from_patient(@patient.primary_entity) do |event|
+        event.patient.primary_entity_id.should_not be_nil        
+        lambda {event.save!}.should_not change(Entity, :count)
+        event.active_patient.primary_entity.person.last_name.should == 'Labguy'
+        event.active_patient.primary_entity.id.should == participations(:Patient_Without_Disease).primary_entity.id
+        event.all_jurisdictions.size.should == 1
+        event.jurisdiction.secondary_entity.place_temp.name.should == 'Unassigned'
+        event.primary_jurisdiction.should_not be_nil
+        event.primary_jurisdiction.entity_id.should_not be_nil
+        event.primary_jurisdiction.name.should == 'Unassigned'
+      end
+         
+    end 
+
+  end
+        
+
 end

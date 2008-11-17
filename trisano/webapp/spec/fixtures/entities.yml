@@ -45,3 +45,7 @@ Davis_Nat:
 Summit_County:
   id: 104
   entity_type: "place"
+
+Unassigned_Jurisdiction:
+  id: 105
+  entity_type: 'place'
