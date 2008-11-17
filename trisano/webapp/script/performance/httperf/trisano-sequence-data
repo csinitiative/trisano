@@ -12,4 +12,11 @@
 # what about update CMR? may be interesting - we don't do any locking that I'm aware of
 # need to figure out appropriate way to test admin stuff - probably best to break out from investigator stuff
 # need to add contact creation/edit & place creation/edit
-
+# Think a seperate search test would be good.
+# Likely have too many runtimes configured. Run tests with them at 5 to see
+# Try against demo1
+# need a test with a more realistic usage pattern - hammering the system in parallel is good for measuring raw perf, but not realistic
+# Try with logging on FAIL
+# Need 3 CMR tests: 1 last name onely, 1 full, 1 with disease configured
+# there may be a timeout in JRuby Rack on how long threads should wait
+# know that 10 is too many runtimes (Java out of mem) and 5 seems to work - don't know more than that
