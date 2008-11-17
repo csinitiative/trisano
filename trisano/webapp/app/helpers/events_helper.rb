@@ -151,7 +151,7 @@ module EventsHelper
     else
       controls += link_to('Export to CSV', cmr_path(event) + '.csv')
     end
-    controls += ' | ' +  button_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.patient.primary_entity.id}) if User.current_user.is_entitled_to?(:create_event)
+    controls += ' | ' +  link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.patient.primary_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
   end
 
   def basic_contact_event_controls(event, with_show=true)
