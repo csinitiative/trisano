@@ -39,7 +39,7 @@ class SearchController < ApplicationController
               type = "No associated event"
               id = nil
             else
-              type = event.type
+              type = event[:type]
               id = event.id
             end
             { :person => person, :event_type => type, :event_id => id }

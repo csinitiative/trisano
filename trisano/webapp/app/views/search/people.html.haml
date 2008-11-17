@@ -53,16 +53,19 @@
         %b
           County
     - for person in @people
+      -p person
       %tr
         %td
           - unless person[:event_id].nil?
             / Case statements not working for some reason
-            - if person[:event_type] == MorbidityEvent
+            - if person[:event_type] == "MorbidityEvent"
               - path = cmr_path(person[:event_id])
               - html_id = "edit-person-cmr-link-#{person[:event_id]}"
-            - elsif person[:event_type] == ContactEvent
+            - elsif person[:event_type] == "ContactEvent"
               - path = contact_event_path(person[:event_id])
               - html_id = "edit-person-contact-link-#{person[:event_id]}"
+            - else
+              - next
             = link_to("#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})", path, :id => html_id)
           - else
             = "#{person[:person].first_name} #{person[:person].last_name} (No associated event)"
