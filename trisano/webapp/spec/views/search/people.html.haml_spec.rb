@@ -29,6 +29,7 @@ describe "/search/people.html.haml" do
   end
   
   it "should show results when results are present" do
+    User.current_user.stub!(:is_entitled_to?).and_return(true)
     entity = mock_model(Entity)
     entity.stub!(:case_id).and_return(1)
 
@@ -40,13 +41,15 @@ describe "/search/people.html.haml" do
     person.stub!(:gender).and_return("Male")
     person.stub!(:county).and_return("Salt Lake")
     person.stub!(:birth_date).and_return(nil)
-    person.stub!(:entity).and_return(entity)
+    person.stub!(:entity).and_return(entity)    
     assigns[:people] = [{:person => person, :event_type => "No associated event", :event_id => nil}]
     do_render
     response.should have_tag("h3", "Results")
+    response.should have_tag("a", "Start a CMR with the criteria that you searched on.")
   end
   
   it "should show message and link to create new CMR when no results are present" do
+    User.current_user.stub!(:is_entitled_to?).and_return(true)
     assigns[:people] = []
     params[:name] = "Notaperson"
     do_render

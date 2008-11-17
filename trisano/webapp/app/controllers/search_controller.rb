@@ -46,10 +46,8 @@ class SearchController < ApplicationController
           end
         end
 
-        if !params[:name].blank? && @people.empty?
-          parse_names_from_fulltext_search
-        end
-        
+        parse_names_from_fulltext_search
+                
       end
     rescue
       flash[:error] = "There was a problem with your search criteria. Please try again. #{$!}"
@@ -129,16 +127,14 @@ class SearchController < ApplicationController
                                        :event_type => params[:event_type]
                                       )
            
-           if (@cmrs.blank?)
-              if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
-                @first_name = params[:sw_first_name]
-                @last_name = params[:sw_last_name]
-              elsif !params[:name].blank?
-                parse_names_from_fulltext_search
-              end
-            end
+       if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
+         @first_name = params[:sw_first_name]
+         @last_name = params[:sw_last_name]
+       elsif !params[:name].blank?
+         parse_names_from_fulltext_search
+       end
             
-        end
+     end
     rescue Exception => ex
       flash[:error] = "There was a problem with your search criteria"
       

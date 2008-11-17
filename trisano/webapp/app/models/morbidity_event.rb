@@ -43,7 +43,6 @@ class MorbidityEvent < HumanEvent
     event = MorbidityEvent.new
     event.patient = Participation.new_patient_participation(patient_entity)    
     jurisdiction = Participation.new_jurisdiction_participation
-    puts "Jurisdiction: " + jurisdiction.inspect
     event.jurisdiction = jurisdiction
     event
   end

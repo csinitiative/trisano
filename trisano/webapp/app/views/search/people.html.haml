@@ -77,10 +77,14 @@
         %td
           = person[:person].county
 
+  - if User.current_user.is_entitled_to?(:create_event)  
+    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :birth_date => params[:birth_date]  }, {:id => "start_cmr"})
+
 - if @people.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:birth_date].blank?)
   <span>Your search returned no results.</span>
   
   %br
   %br
-  
-  = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :birth_date => params[:birth_date]  }, {:id => "start_cmr"})
+
+  - if User.current_user.is_entitled_to?(:create_event)  
+    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :birth_date => params[:birth_date]  }, {:id => "start_cmr"})
