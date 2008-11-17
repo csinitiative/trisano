@@ -4292,3 +4292,2427 @@
    value_from: 
    value_to: '99'
    sort_order: 
+
+##### Pertussis #####
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'STATEID'
+   value_from: 
+   value_to: '999999999'
+   sort_order: 
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ZIPCODE'
+   value_from: 
+   value_to: '99999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGH'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGH'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGH'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ONSET'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PAROXYSM'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PAROXYSM'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PAROXYSM'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'WHOOP'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'WHOOP'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'WHOOP'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VOMIT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VOMIT'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VOMIT'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'APNEA'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'APNEA'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'APNEA'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FINALINT'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGHFIN'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGHFIN'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'COUGHFIN'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DURCOUGH'
+   value_from: 
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CLINDEF'
+   value_from: 'CDC clinical (sporadic or outbreak) case definition met.'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CLINDEF'
+   value_from: 'Neither CDC clinical sporadic nor outbreak case definition met.'
+   value_to: 'N'
+   sort_order: 2
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'XRAY'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'XRAY'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'XRAY'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'XRAY'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SEIZURES'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SEIZURES'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SEIZURES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+ 
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ENCEPHAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DAYSHOSP'
+   value_from: 
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ANTIBIOT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ANTIBIOT'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ANTIBIOT'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Erythromycin (incl. pediazole)'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Cotrimoxazole (bactrim/septra)'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Clarithromycin/azithromycin'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Tetracycline/Doxycycline'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Amoxicillin/Penicillin/Ampicillin/Augmentin/Ceclor'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Other'
+   value_to: '6'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSTANT'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEFIR'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DAYSFIR'
+   value_from: 
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Erythromycin (incl. pediazole)'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Cotrimoxazole (bactrim/septra)'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Clarithromycin/azithromycin'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Tetracycline/Doxycycline'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Amoxicillin/Penicillin/Ampicillin/Augmentin/Ceclor'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Other'
+   value_to: '6'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'None'
+   value_to: '7'
+   sort_order: 7
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECONDAN'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 8
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATESEC'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+     
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DAYSSEC'
+   value_from: 
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LABTEST'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LABTEST'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LABTEST'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Parapertussis'
+   value_to: 'S'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CULRES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATECULT'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+ 
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Parapertussis'
+   value_to: 'S'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DFARES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEDFA'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+     
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Parapertussis'
+   value_to: 'S'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SERRES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'FIRSPEC'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+     
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SECSPEC'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Positive'
+   value_to: 'P'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Negative'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Indeterminate'
+   value_to: 'I'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Pending'
+   value_to: 'E'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Not Done'
+   value_to: 'X'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Parapertussis'
+   value_to: 'S'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'PCRRES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEPCR'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LABCONF'
+   value_from: 'Positive culture or PCR result'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LABCONF'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACCIN'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACCIN'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACCIN'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'LASTPERT'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE1'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE1'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME1'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE2'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE2'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME2'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE3'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE3'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME3'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE4'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE4'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME4'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE5'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE5'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME5'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACDATE6'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'DTP Whole cell'
+   value_to: 'W'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'DTaP'
+   value_to: 'A'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'DT'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'DTP-Hib Tetramune'
+   value_to: 'T'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'P only'
+   value_to: 'P'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TYPE6'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Lederle'
+   value_to: 'L'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Connaught'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Massachusetts Health Department'
+   value_to: 'M'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Michigan Health Department'
+   value_to: 'I'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Other'
+   value_to: 'O'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'VACNAME6'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: 'No doses'
+   value_to: '0'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '1 dose'
+   value_to: '1'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '2 doses'
+   value_to: '2'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '3 doses'
+   value_to: '3'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '4 doses'
+   value_to: '4'
+   sort_order: 5
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '5 doses'
+   value_to: '5'
+   sort_order: 6
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: '6 doses'
+   value_to: '6'
+   sort_order: 7
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DOSES'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 8
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Religious exemption'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Medical contraindication'
+   value_to: '2'
+   sort_order: 2
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Philosophical exemption'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Previous disease confirmed by culture or MD'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Parental refusal'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Age less than 7 months'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Other'
+   value_to: '7'
+   sort_order: 7
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'REASON'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 8
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEHEAL'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEINVE'
+   value_from: 
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'EPILINK'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'EPILINK'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'EPILINK'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBNAME'
+   value_from: 
+   value_to: '999999999999999999'
+   sort_order: 
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Day Care'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'School'
+   value_to: '2'
+   sort_order: 2
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: "Doctor's Office"
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital Ward'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital ER'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Hospital Outpatient Clinic'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Home'
+   value_to: '7'
+   sort_order: 7
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Work'
+   value_to: '8'
+   sort_order: 8
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'College'
+   value_to: '10'
+   sort_order: 10
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Military'
+   value_to: '11'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Correctional Facility'
+   value_to: '12'
+   sort_order: 12
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Church'
+   value_to: '13'
+   sort_order: 13
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'International Travel'
+   value_to: '14'
+   sort_order: 14
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'TRANSMIS'
+   value_from: 'Other'
+   value_to: '15'
+   sort_order: 15
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Day Care'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'School'
+   value_to: '2'
+   sort_order: 2
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: "Doctor's Office"
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Hospital Ward'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Hospital ER'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Hospital Outpatient Clinic'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: '> 1 Setting Outside Household'
+   value_to: '7'
+   sort_order: 7
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Work'
+   value_to: '8'
+   sort_order: 8
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 9
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'College'
+   value_to: '10'
+   sort_order: 10
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Military'
+   value_to: '11'
+   sort_order: 4
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Correctional Facility'
+   value_to: '12'
+   sort_order: 12
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Church'
+   value_to: '13'
+   sort_order: 13
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'International Travel'
+   value_to: '14'
+   sort_order: 14
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'Other'
+   value_to: '15'
+   sort_order: 15
+   
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'SPREAD'
+   value_from: 'No Documented Spread Outside Household'
+   value_to: '16'
+   sort_order: 16
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'CONTACTS'
+   value_from: 
+   value_to: '999'
+   sort_order:
+
+##### Tetanus #####
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'STATEID'
+   value_from:
+   value_to: '9999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ONSETYR'
+   value_from:
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'OCCUP'
+   value_from:
+   value_to: '999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MILITARY'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MILITARY'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MILITARY'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'YRENTRY'
+   value_from:
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTHIST'
+   value_from: '1 Dose'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTHIST'
+   value_from: '2 Doses'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTHIST'
+   value_from: '3 Doses'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTHIST'
+   value_from: '4+ Doses'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTHIST'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'YRSSINCE'
+   value_from: 
+   value_to: '99'
+   sort_order: 
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ACUTEWOU'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ACUTEWOU'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ACUTEWOU'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDDAT'
+   value_from:
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ANATOMIC'
+   value_from: 'Head'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ANATOMIC'
+   value_from: 'Trunk'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ANATOMIC'
+   value_from: 'Upper Extremity'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ANATOMIC'
+   value_from: 'Lower Extremity'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ANATOMIC'
+   value_from: 'Unspecified'
+   value_to: '9'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WORKRELA'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WORKRELA'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WORKRELA'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Home'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Other Indoors'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Farm/Yard'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Automobile'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Other Outdoors'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ENVIRONM'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'CIRCUMST'
+   value_from:
+   value_to: '99999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Puncture'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Stellate Laceration'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Linear Laceration'
+   value_to: '3'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Crush'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Abrasion'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Avulsion'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Burn'
+   value_to: '7'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Frostbite'
+   value_to: '8'
+   sort_order: 8
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Compound Fracture'
+   value_to: '9'
+   sort_order: 9
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Other'
+   value_to: '10'
+   sort_order: 10
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDTYP'
+   value_from: 'Unknown'
+   value_to: '99'
+   sort_order: 11
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'CONTAM'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'CONTAM'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'CONTAM'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEPTHWOU'
+   value_from: '1 cm. or less'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEPTHWOU'
+   value_from: 'More than 1 cm.'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEPTHWOU'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INFECT'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INFECT'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INFECT'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TISSUE'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TISSUE'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TISSUE'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MEDCARE'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MEDCARE'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MEDCARE'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTADMIN'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTADMIN'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTADMIN'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '< 6 Hrs'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '7-23 Hrs'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '1-4 Days'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '5-9 Days'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '10-14 Days'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: '15+ Days'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TTTIME'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDDEB'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDDEB'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'WOUNDDEB'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '< 6 Hrs'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '7-23 Hrs'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '1-4 Days'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '5-9 Days'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '10-14 Days'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: '15+ Days'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DEBRTIME'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGPROPH'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGPROPH'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGPROPH'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '< 6 Hrs'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '7-23 Hrs'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '1-4 Days'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '5-9 Days'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '10-14 Days'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: '15+ Days'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTIME'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DOSAGE'
+   value_from:
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Abscess'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Ulcer'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Blister'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Gangrene'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Cellulitis'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'Other infection'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'ASSOCCON'
+   value_from: 'None'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DESCRIBE'
+   value_from:
+   value_to: '99999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DIABETES'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DIABETES'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DIABETES'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INSULIN'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INSULIN'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INSULIN'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DRUGABUS'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DRUGABUS'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DRUGABUS'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DESCR'
+   value_from:
+   value_to: '99999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TYPEDIS'
+   value_from: 'Generalized'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TYPEDIS'
+   value_from: 'Localized'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TYPEDIS'
+   value_from: 'Cephalic'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TYPEDIS'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTHERA'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTHERA'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TIGTHERA'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '< 6 Hrs'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '7-23 Hrs'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '1-4 Days'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '5-9 Days'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '10-14 Days'
+   value_to: '5'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: '15+ Days'
+   value_to: '6'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'AFTERONS'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 7
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TDOSAGE'
+   value_from:
+   value_to: '99999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DAYSHOSP'
+   value_from:
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DAYSICU'
+   value_from:
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'VENTILAT'
+   value_from:
+   value_to: '999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'OUTCOME'
+   value_from: 'Recovered'
+   value_to: 'R'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'OUTCOME'
+   value_from: 'Convalescing'
+   value_to: 'C'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'OUTCOME'
+   value_from: 'Died'
+   value_to: 'D'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'DATEEXP'
+   value_from:
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MOTHAGE'
+   value_from:
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MBIRTH'
+   value_from:
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MARRIVAL'
+   value_from:
+   value_to: '99999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: 'Never'
+   value_to: '0'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: '1 Dose'
+   value_to: '1'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: '2 Doses'
+   value_to: '2'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: '3 Doses'
+   value_to: '3'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: '4+ Doses'
+   value_to: '4'
+   sort_order: 5
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'MTTHIST'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 6
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'LASTDOSE'
+   value_from:
+   value_to: '99'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHPLA'
+   value_from: 'Hospital'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHPLA'
+   value_from: 'Home'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHPLA'
+   value_from: 'Other'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHPLA'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 4
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHATT'
+   value_from: 'Physician'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHATT'
+   value_from: 'Nurse'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHATT'
+   value_from: 'Licensed Midwife'
+   value_to: '3'
+   sort_order: 3
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHATT'
+   value_from: 'Unlicensed Midwife'
+   value_to: '4'
+   sort_order: 4
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'BIRTHATT'
+   value_from: 'Other'
+   value_to: '5'
+   sort_order: 5
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'OTHER'
+   value_from:
+   value_to: '9999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'COMMENTS'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'COMMENTS'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+   
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'REPNAME'
+   value_from:
+   value_to: '999999999999999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'TITLE'
+   value_from:
+   value_to: '999999999999999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'INSTITUT'
+   value_from:
+   value_to: '999999999999999999999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'PHONE'
+   value_from:
+   value_to: '9999999999999'
+   sort_order:
+
+ - disease_code_group: 'Tetanus'
+   export_column_name: 'REPORTED'
+   value_from:
+   value_to: '99999999'
+   sort_order:
+

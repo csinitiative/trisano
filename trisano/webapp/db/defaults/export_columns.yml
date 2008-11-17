@@ -2545,7 +2545,6 @@
    export_name: 'CDC'
    data_type: 'radio_button'
 
-
  - disease_code_group: 'Mumps-Rubella'
    type_data: 'FORM'
    export_column_name: 'IMMUNITY'
@@ -2617,4 +2616,1460 @@
    length_to_output: '2'
    export_name: 'CDC'
    data_type: 'single_line_text'
+   
+##### Pertussis #####
 
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'STATEID'
+   name: 'State ID'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '61'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'ZIPCODE'
+   name: 'Zip code'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '71'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'COUGH'
+   name: 'Any cough'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '76'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'ONSET'
+   name: 'Cough Onset'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '77'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'PAROXYSM'
+   name: 'Paroxysmal cough'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '85'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'WHOOP'
+   name: 'Whoop'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '86'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VOMIT'
+   name: 'Post-tussive vomiting'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '87'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'APNEA'
+   name: 'Apnea'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '88'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'FINALINT'
+   name: 'Final interview date'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '89'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'COUGHFIN'
+   name: 'Cough at final interview'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '97'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DURCOUGH'
+   name: 'Duration of cough at final interview'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '98'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'CLINDEF'
+   name: 'Was CDC clinical case definition met?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '101'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'XRAY'
+   name: 'Chest Xray for pneumonia'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '102'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'SEIZURES'
+   name: 'Generalized or focal seizures due to Pertussis'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '103'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'ENCEPHAL'
+   name: 'Acute encephalopathy due to Pertussis'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '104'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'HOSPITAL'
+   name: 'Hospitalized'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '105'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DAYSHOSP'
+   name: 'Days hospitalized'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '280'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DIED'
+   name: 'Died'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '109'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'ANTIBIOT'
+   name: 'Were antibiotics given'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '110'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'FIRSTANT'
+   name: 'First antibiotic patient received'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '111'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATEFIR'
+   name: 'Date first started'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '112'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DAYSFIR'
+   name: 'Number of days first antibiotic actually taken'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '120'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'SECONDAN'
+   name: 'Second antibiotic patient received'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '122'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATESEC'
+   name: 'Date second started'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '123'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DAYSSEC'
+   name: 'Number of days second antibiotic actually taken'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '131'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'LABTEST'
+   name: 'Was laboratory testing for Pertussis done?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '133'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'CULRES'
+   name: 'Culture result'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '134'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATECULT'
+   name: 'Date culture specimen collected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '135'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DFARES'
+   name: 'DFA Result'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '143'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATEDFA'
+   name: 'Date DFA specimen collected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '144'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'SERRES'
+   name: 'Serology Result'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '152'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'FIRSPEC'
+   name: 'Date first specimen collected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '153'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'SECSPEC'
+   name: 'Date second specimen collected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '161'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'PCRRES'
+   name: 'PCR Result'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '169'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATEPCR'
+   name: 'Date PCR Specimen collected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '170'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'LABCONF'
+   name: 'Is case laboratory confirmed'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '178'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACCIN'
+   name: 'Vaccinated'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '179'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'LASTPERT'
+   name: 'Date of last pertussis vaccine prior to illness onset'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '180'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE1'
+   name: 'Vac Date 1'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '188'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE1'
+   name: 'Type 1'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '196'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME1'
+   name: 'Vac Name 1'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '197'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE2'
+   name: 'Vac Date 2'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '198'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE2'
+   name: 'Type 2'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '206'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME2'
+   name: 'Vac Name 2'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '207'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE3'
+   name: ' Vac Date 3'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '208'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE3'
+   name: 'Type 3'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '216'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME3'
+   name: 'Vac Name 3'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '217'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE4'
+   name: 'Vac Date 4'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '218'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE4'
+   name: 'Type 4'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '226'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME4'
+   name: 'Vac Name 4'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '227'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE5'
+   name: 'Vac Date 5'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '228'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE5'
+   name: 'Type 5'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '236'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME5'
+   name: 'Vac Name 5'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '237'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACDATE6'
+   name: 'Vac Date 6'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '238'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TYPE6'
+   name: 'Type 6'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '246'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'VACNAME6'
+   name: 'Vac Name 6'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '247'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DOSES'
+   name: 'Doses of pertussis containing vaccine prior to illness onset'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '248'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'REASON'
+   name: 'If not vaccinated reason given'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '249'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATEHEAL'
+   name: 'Date case FIRST REPORTED to a health department'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '250'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'DATEINVE'
+   name: 'Date case investigation started'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '258'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'EPILINK'
+   name: 'Epi-linked'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '266'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'OUTBREL'
+   name: 'Outbreak related'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '267'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'OUTBNAME'
+   name: 'Outbreak name'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '268'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'TRANSMIS'
+   name: 'Transmission setting'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '286'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'SPREAD'
+   name: 'Setting for further spread from this case'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '288'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Pertussis'
+   type_data: 'FORM'
+   export_column_name: 'CONTACTS'
+   name: 'Number of contacts in any setting recommended antibiotics'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '290'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+##### Tetanus #####
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'STATEID'
+   name: 'State ID'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '61'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'ONSETYR'
+   name: 'Onset Yr'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '71'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'OCCUP'
+   name: 'Occup.'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '73'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MILITARY'
+   name: 'Military-Natl.Guard'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '88'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'YRENTRY'
+   name: 'Yr Entry'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '89'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TTHIST'
+   name: 'TT history PRIOR to tetanus disease'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '91'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'YRSSINCE'
+   name: 'Yrs since'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '92'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'ACUTEWOU'
+   name: 'Acute wound'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '94'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'WOUNDDAT'
+   name: 'Wound date'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '95'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'ANATOMIC'
+   name: 'Anatomic site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '103'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'WORKRELA'
+   name: 'Work related'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '104'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'ENVIRONM'
+   name: 'Environment'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '105'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'CIRCUMST'
+   name: 'Circumstances'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '106'
+   length_to_output: '20'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'WOUNDTYP'
+   name: 'Wound type'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '126'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'CONTAM'
+   name: 'Contaminated'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '128'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DEPTHWOU'
+   name: 'Depth of wound'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '129'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'INFECT'
+   name: 'Infected'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '130'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TISSUE'
+   name: 'Devitalized tissue'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '131'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MEDCARE'
+   name: 'Medical care for this acute injury?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '132'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TTADMIN'
+   name: 'TT administered before onset?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '133'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TTTIME'
+   name: 'TT - time after injury'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '134'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'WOUNDDEB'
+   name: 'Wound debrided before tetanus onset?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '135'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DEBRTIME'
+   name: 'Debr - time after injury'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '136'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TIGPROPH'
+   name: 'TIG prophylaxis before tetanus onset?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '137'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TIGTIME'
+   name: 'TIG - time after injury'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '138'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DOSAGE'
+   name: 'Dosage (units)'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '139'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'ASSOCCON'
+   name: 'Associated condition'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '142'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DESCRIBE'
+   name: 'Describe'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '143'
+   length_to_output: '20'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DIABETES'
+   name: 'Diabetes?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '163'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'INSULIN'
+   name: 'Insulin dependent?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '164'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DRUGABUS'
+   name: 'Parenteral drug abuse?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '165'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DESCR'
+   name: 'Describe'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '166'
+   length_to_output: '20'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TYPEDIS'
+   name: 'Type of tetanus disease'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '186'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TIGTHERA'
+   name: 'TIG therapy given?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '187'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'AFTERONS'
+   name: 'Time after illness onset?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '188'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TDOSAGE'
+   name: 'Total dosage'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '189'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DAYSHOSP'
+   name: 'Days Hospitalized'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '194'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DAYSICU'
+   name: 'Days in ICU'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '197'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'VENTILAT'
+   name: 'Days mech. ventilation'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '200'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'OUTCOME'
+   name: 'One month outcome'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '203'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'DATEEXP'
+   name: 'Date Expired'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '204'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MOTHAGE'
+   name: "Mother's Age"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '212'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MBIRTH'
+   name: "Mother's Birthdate"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '214'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MARRIVAL'
+   name: "Mother's arrival in US"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '222'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'MTTHIST'
+   name: "Mother's TT history"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '230'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'LASTDOSE'
+   name: "YRs since last dose"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '231'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'BIRTHPLA'
+   name: 'Birth place'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '233'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'BIRTHATT'
+   name: 'Birth attendant(s)'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '234'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'OTHER'
+   name: 'Other'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '235'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'COMMENTS'
+   name: 'Comments?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '245'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'REPNAME'
+   name: "Reporter's Name"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '246'
+   length_to_output: '30'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'TITLE'
+   name: 'Title'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '276'
+   length_to_output: '30'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'INSTITUT'
+   name: 'Institution'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '306'
+   length_to_output: '30'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'PHONE'
+   name: 'Phone number (including area code) of person reporting.'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '336'
+   length_to_output: '13'
+   export_name: 'CDC'
+   data_type: 'phone'
+
+ - disease_code_group: 'Tetanus'
+   type_data: 'FORM'
+   export_column_name: 'REPORTED'
+   name: 'Reported'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '349'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   

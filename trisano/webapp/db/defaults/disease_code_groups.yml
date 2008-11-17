@@ -13,3 +13,9 @@
 - disease: 'Mumps-Rubella'
   codes: '10180|10200'
   
+- disease: 'Pertussis'
+  codes: '10190'
+  
+- disease: 'Tetanus'
+  codes: '10210'
+
