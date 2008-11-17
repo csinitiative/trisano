@@ -1092,8 +1092,7 @@ module TrisanoHelper
   end
 
   def copy_form_and_open_in_form_builder(browser, form_name)
-    button_id = "copy_form_#{get_form_id(browser, form_name)}"
-    browser.click("//input[@id=\"#{button_id}\"]")    
+    browser.click("copy_form_#{get_form_id(browser, form_name)}")
     browser.wait_for_page_to_load($load_time)
     browser.is_text_present('Form was successfully copied.').should be_true
     browser.click('//input[@id="form_submit"]')

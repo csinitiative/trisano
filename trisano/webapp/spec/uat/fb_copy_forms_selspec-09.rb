@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'copying forms' do
   
-#  $dont_kill_browser = true
+  $dont_kill_browser = true
 
   before :all do
     @form_name = get_unique_name(2) + " copy_form"
@@ -48,7 +48,7 @@ describe 'copying forms' do
     add_core_field_config(@browser, name)
     add_question_to_before_core_field_config(@browser, name, {:question_text => 'b4 quest', :data_type => "Single line text", :help_text => 'b4 text'})
     add_question_to_after_core_field_config(@browser, name, {:question_text => 'aft quest', :data_type => "Single line text", :help_text => 'aft text'})
-    add_section_to_view(@browser, 'Default View', 'Section 1')
+    add_section_to_view(@browser, 'Default View', {:section_name => 'Section 1'})
     add_question_to_section(@browser, 'Section 1', 
                             :question_text => 'drop down question', 
                             :data_type => "Drop-down select list")
