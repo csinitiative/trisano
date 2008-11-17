@@ -26,7 +26,7 @@
   - fields_for(prefix, hospital, :builder => ExtendedFormBuilder) do |hospital_fields|
     %span{:class => "horiz"}
       = hospital_fields.label(:secondary_entity_id, "Health facility")
-      = hospital_fields.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true})
+      = hospital_fields.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}, :class => 'required_if_others')
 
   - hospital.hospitals_participation.id = hospital.id
 

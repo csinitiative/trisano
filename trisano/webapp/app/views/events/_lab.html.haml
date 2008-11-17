@@ -36,7 +36,7 @@
       - if lab.new_record?
         %div{:style => "clear: both;"}
           = lab_fields.label(:name, "Lab Name")
-          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25 }, { :skip_style => false }
+          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25, :class => 'required_if_others' }, { :skip_style => false }
       - else
         %div{:style => "width: 15%; margin-top: 20px; font-weight: bold; clear: both;"}
           Lab Name: 
@@ -54,7 +54,7 @@
         = lab_result_fields.text_field(:test_type, :size => 20)
       %span{:class => "horiz"}
         = lab_result_fields.label(:lab_result_text, "Lab result")
-        = lab_result_fields.text_field(:lab_result_text, :size => 20)
+        = lab_result_fields.text_field(:lab_result_text, :size => 20, :class => 'required_if_others')
       %span{:class => "horiz"}
         = lab_result_fields.label(:interpretation)
         = lab_result_fields.text_field(:interpretation, :size => 20)

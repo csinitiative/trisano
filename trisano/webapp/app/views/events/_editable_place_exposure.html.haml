@@ -6,7 +6,7 @@
     -fields_for prefix, place, :builder => ExtendedFormBuilder do |pe_form|
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:name)
-        =pe_form.core_text_field(:name)
+        =pe_form.core_text_field(:name, :class => 'required_if_others')
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:place_type_id, 'Type')
         =pe_form.dropdown_code_field(:place_type_id, 'placetype')

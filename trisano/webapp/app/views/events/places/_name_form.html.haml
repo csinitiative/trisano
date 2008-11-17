@@ -8,7 +8,7 @@
   -f.fields_for(:place, entity_data.place, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :name, p, :horiz do
       =p.label(:name)
-      =p.core_text_field(:name, {:size => 25}, event, @can_investigate)
+      =p.core_text_field(:name, {:size => 25, :class => 'required'}, event, @can_investigate)
     -core_element :place_type_id, p, :horiz do
       =p.label(:place_type_id, 'Type')
       =p.dropdown_code_field(:place_type_id, 'placetype')

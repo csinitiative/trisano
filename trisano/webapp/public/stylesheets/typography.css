@@ -176,3 +176,9 @@ label {
       color: #090;
       font-weight: bold;
       text-decoration: none; }
+
+.required {
+  background: #FFE0C6; }
+
+.required_if_others {
+  background: #FFFFCC; }
