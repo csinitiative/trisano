@@ -51,13 +51,13 @@
             = h form.description
           #button.press
             %span
-              = link_to 'Detail', builder_path(form)
+              = link_to 'Detail', builder_path(form), :id => "detail_form_#{form.id}"
               |
-              = link_to 'Edit', edit_form_path(form)
+              = link_to 'Edit', edit_form_path(form), :id => "edit_form_#{form.id}"
               |
-              = link_to 'Copy', copy_form_path(form), :method => :post
+              = link_to 'Copy', copy_form_path(form), :method => :post, :id => "copy_form_#{form.id}"
               |
-              = link_to 'Export', export_form_path(form), :method => :post
+              = link_to 'Export', export_form_path(form), :method => :post, :id => "export_form_#{form.id}"
         %td
           %ul
             - form.diseases.each do |disease|
