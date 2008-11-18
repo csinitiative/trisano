@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
  
-describe 'form builder patient-level core field configs for contacts' do
+describe 'form builder event-level core field configs for contact events' do
   
   # $dont_kill_browser = true
   

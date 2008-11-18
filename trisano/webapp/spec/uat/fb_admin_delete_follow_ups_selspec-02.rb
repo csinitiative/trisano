@@ -19,7 +19,7 @@ require File.dirname(__FILE__) << '/spec_helper'
 
 # $dont_kill_browser = true
 
-describe 'Form Builder Admin Core Follow-Up Functionality' do
+describe 'Form Builder Admin Delete Follow-Up Functionality' do
   
   before(:all) do
     @form_name = get_unique_name(2) << " fud-uat"

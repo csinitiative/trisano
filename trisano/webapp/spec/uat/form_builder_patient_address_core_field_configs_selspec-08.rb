@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
  
-describe 'form builder core-field questions' do
+describe 'form builder patient address core-field questions for morbidity reports' do
   
   # $dont_kill_browser = true
   
