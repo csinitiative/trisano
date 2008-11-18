@@ -456,6 +456,7 @@ module TrisanoHelper
     if browser.is_text_present("Form was successfully created.") != true 
       return(false)
     end
+    sleep 3
     browser.click "link=Form Builder"
     browser.wait_for_page_to_load($load_time)
     return browser.is_text_present("Publish") 
@@ -464,7 +465,7 @@ module TrisanoHelper
   def edit_form_and_go_to_builder(browser, form_attributes ={})
     browser.type "form_name", form_attributes[:form_name] unless form_attributes[:form_name].nil?
     browser.select "form_event_type", "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
-    
+    puts "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
     unless form_attributes[:disease].nil?
       if form_attributes[:disease].respond_to?(:each)
         form_attributes[:disease].each { |label| browser.click(label.tr(" ", "_")) }
@@ -482,7 +483,8 @@ module TrisanoHelper
     browser.click "link=Form Builder"
    
     browser.wait_for_page_to_load($load_time)
-    return browser.is_text_present("Form Builder") 
+    return browser.is_element_present("publish_btn")
+    #return browser.is_text_present("Form Builder") 
   end
   
   # Must be called from the builder view

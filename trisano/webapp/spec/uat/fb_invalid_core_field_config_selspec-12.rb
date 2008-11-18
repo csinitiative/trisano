@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder invalid core field configs' do
   
-   # $dont_kill_browser = true
+    $dont_kill_browser = true
   
   before(:all) do
     @form_name = get_unique_name(2) + " ifu-uat"
@@ -39,7 +39,7 @@ describe 'form builder invalid core field configs' do
   end
  
   it 'should change the form to a contact form.' do
-    @browser.click("edit-form")
+    @browser.click("link=Edit")
     @browser.wait_for_page_to_load($load_time)
     edit_form_and_go_to_builder(@browser,:event_type => "Contact event").should be_true
   end
