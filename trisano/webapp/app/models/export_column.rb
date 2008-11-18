@@ -31,7 +31,7 @@ class ExportColumn < ActiveRecord::Base
   end
 
   validates_presence_of :export_name_id, :type_data, :export_column_name, :start_position, :length_to_output
-  validates_numericality_of :start_position, :lenght_to_output
+  validates_numericality_of :start_position, :length_to_output
   validates_inclusion_of :type_data, :in => self.valid_types
 
 end
