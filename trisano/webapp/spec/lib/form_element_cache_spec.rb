@@ -82,6 +82,14 @@ describe FormElementCache do
     view_children[0].is_a?(ViewElement).should be_true
   end
   
+  it "should reload" do
+    @form_element_cache.children_count(@form_base_element).should == 4
+    @form_element_cache.children(@form_base_element)[0].destroy
+    @form_element_cache.children_count(@form_base_element).should == 4
+    @form_element_cache.reload
+    @form_element_cache.children_count(@form_base_element).should == 3
+  end
+  
   it "should count children of an element" do
     @form_element_cache.children_count(@form_base_element).should == 4
   end

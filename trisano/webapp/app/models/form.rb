@@ -107,11 +107,8 @@ class Form < ActiveRecord::Base
             :template_id => self.id 
           })
        
-        base_to_publish = self.form_base_element
-        tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-        published_base = FormBaseElement.create({:form_id => published_form.id, :tree_id => tree_id})
-        publish_children(base_to_publish, published_base)
-      
+        Form.copy_form_elements(self, published_form, false)
+              
         unless self.status == 'Published'
           self.status = 'Published'
           self.save
@@ -152,7 +149,7 @@ class Form < ActiveRecord::Base
         self.diseases.each do |disease|
           copied_form.diseases << disease
         end
-        copy_form_base_element_to(copied_form)
+        Form.copy_form_elements(self, copied_form)
       end
 
       return copied_form
@@ -188,12 +185,9 @@ class Form < ActiveRecord::Base
       
         self.save!
         rolled_back_form.save!
-      
-        base_to_copy = most_recent_form.form_base_element
-        tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-        rolled_back_base = FormBaseElement.create({:form_id => rolled_back_form.id, :tree_id => tree_id})
-        publish_children(base_to_copy, rolled_back_base)
-      
+        
+        Form.copy_form_elements(most_recent_form, rolled_back_form)
+        
         # Associate newly copied form with the same diseases as current form
         self.diseases.each { | disease | rolled_back_form.diseases << disease }
         
@@ -328,44 +322,60 @@ class Form < ActiveRecord::Base
       logger.error ex
       raise
     end
-    
   end
 
   def self.next_tree_id
     Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
   
-  # Debt: Consider moving this to FormElement
-  def publish_children(node_to_publish, published_node)
-    node_to_publish.children.each do |child|
-      if (child.is_active)
-        child_to_publish = child.class.new
-        child_to_publish.form_id = published_node.form_id
-        child_to_publish.tree_id = published_node.tree_id
-      
-        child_to_publish.name = child.name unless child.name.nil?
-        child_to_publish.description = child.description unless child.description.nil?
-        child_to_publish.help_text = child.help_text unless child.help_text.nil?
-        child_to_publish.condition = child.condition unless child.condition.nil?
-        child_to_publish.is_condition_code = child.is_condition_code unless child.is_condition_code.nil?
-        child_to_publish.core_path = child.core_path unless child.core_path.nil?
-        child_to_publish.export_column_id = child.export_column_id unless child.export_column_id.nil?
-        child_to_publish.export_conversion_value_id = child.export_conversion_value_id unless child.export_conversion_value_id.nil?
-      
-        child_to_publish.save!
-        published_node.add_child child_to_publish
-     
-        publish_question(child_to_publish, child) if (child_to_publish.class.name == "QuestionElement")
-        publish_children(child, child_to_publish) if child.children?
+  def self.copy_form_elements(from_form, to_form, include_inactive = true)
+    elements = from_form.form_element_cache.full_set
+    parent_id_map = {}
+    tree_id = Form.next_tree_id
+    inactive_element_ids = []
+    
+    elements.each do |e|
+      values = {}
+      values[:form_id] = to_form.id
+      values[:type] = "'#{sanitize_sql(["%s", e.attributes["type"]])}'"
+      values[:name] = null_safe_sanitize(e.name)
+      values[:description] = null_safe_sanitize(e.description)
+      values[:parent_id] = null_safe_sanitize(parent_id_map[e.parent_id])
+      values[:lft] = "'#{sanitize_sql(["%s", e.lft])}'"
+      values[:rgt] = "'#{sanitize_sql(["%s", e.rgt])}'"
+      values[:is_active] = "#{sanitize_sql(["%s", e.is_active])}"
+      values[:tree_id] = "#{sanitize_sql(["%s", tree_id])}"
+      values[:condition] =  null_safe_sanitize(e.condition)
+      values[:core_path] = null_safe_sanitize(e.core_path)
+      values[:is_condition_code] = null_safe_sanitize(e.is_condition_code)
+      values[:help_text] = null_safe_sanitize(e.help_text)
+      values[:export_column_id] = null_safe_sanitize(e.export_column_id)
+      values[:export_conversion_value_id] = null_safe_sanitize(e.export_conversion_value_id)
+
+      result = insert_element(values)
+      parent_id_map[e.id] = result
+      inactive_element_ids << result if e.is_active == false
+      copy_question(result, e) if (e.attributes["type"] == "QuestionElement")
+    end
+    
+    unless (include_inactive)
+      inactive_element_ids.each do |id|
+        begin
+          inactive_element = FormElement.find(id)
+          inactive_element.destroy
+        rescue
+          # No-op, the element has already been deleted
+        end
+        
       end
     end
+    
   end
   
-  def publish_question(published_question_element, template_question_element)
-    
+  def self.copy_question(published_question_element_id, template_question_element)
     template_question = template_question_element.question
     
-    question_to_publish = Question.new({:form_element_id => published_question_element.id,
+    question_to_publish = Question.new({:form_element_id => published_question_element_id,
         :question_text => template_question.question_text,
         :short_name => template_question.short_name,
         :help_text => template_question.help_text,
@@ -378,13 +388,6 @@ class Form < ActiveRecord::Base
       })
    
     question_to_publish.save
-  end
-
-  def copy_form_base_element_to(copied_form)
-    form_id = copied_form.id
-    base_element = self.form_base_element.clone
-    base_element.form_id = form_id
-    base_element.copy_children(self.form_base_element, nil, form_id, Form.next_tree_id, false)
   end
   
   def self.import_form(form_import_string, elements_import_string)
@@ -404,29 +407,31 @@ class Form < ActiveRecord::Base
       return nil
     end
   end
-  
+
   def self.import_elements(element_import_string, form_id)
     elements = ActiveSupport::JSON.decode(element_import_string)
     parent_id_map = {}
     tree_id = Form.next_tree_id
       
     elements.each do |e|
-      parent_id =  parent_id_map[e["parent_id"].to_i].nil? ? "null" : parent_id_map[e["parent_id"].to_i]
-      is_condition_code = e["is_condition_code"].nil? ? "null" : e["is_condition_code"]
-      export_column_id = e["export_column_id"].nil? ? "null" : e["export_column_id"]
-      export_conversion_value_id = e["export_conversion_value_id"].nil? ? "null" : e["export_conversion_value_id"]
-      
-      sql = "INSERT INTO form_elements "
-      sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
-      sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
-      sql << "export_conversion_value_id, created_at, updated_at) "
-      sql << "VALUES "
-      sql << "('#{form_id}', '#{sanitize_sql(["%s", e["type"]])}', '#{sanitize_sql(["%s", e["name"]])}', '#{sanitize_sql(["%s", e["description"]])}', #{parent_id}, #{sanitize_sql(["%s", e["lft"]])}, #{sanitize_sql(["%s", e["rgt"]])}, false, null, "
-      sql << "#{sanitize_sql(["%s", e["is_active"]])}, #{tree_id}, '#{sanitize_sql(["%s", e["condition"]])}', '#{sanitize_sql(["%s", e["core_path"]])}', #{is_condition_code}, '#{sanitize_sql(["%s", e["help_text"]])}', "
-      sql << "#{sanitize_sql(["%s", export_column_id])}, #{sanitize_sql(["%s", export_conversion_value_id])}, now(), now()"
-      sql << ");"
-      
-      result = ActiveRecord::Base.connection.insert(sql)
+      values = {}
+      values[:form_id] = form_id
+      values[:type] = "'#{sanitize_sql(["%s", e["type"]])}'"
+      values[:name] = null_safe_sanitize(e["name"])
+      values[:description] = null_safe_sanitize(e["description"])
+      values[:parent_id] = parent_id_map[e["parent_id"].to_i].nil? ? "null" : parent_id_map[e["parent_id"].to_i]
+      values[:lft] = "'#{sanitize_sql(["%s", e["lft"]])}'"
+      values[:rgt] = "'#{sanitize_sql(["%s",  e["rgt"]])}'"
+      values[:is_active] = "#{sanitize_sql(["%s", e["is_active"]])}"
+      values[:tree_id] = "#{sanitize_sql(["%s", tree_id])}"
+      values[:condition] =  null_safe_sanitize(e["condition"])
+      values[:core_path] = null_safe_sanitize(e["core_path"])
+      values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
+      values[:help_text] = null_safe_sanitize(e["help_text"])
+      values[:export_column_id] = null_safe_sanitize(e["export_column_id"])
+      values[:export_conversion_value_id] = null_safe_sanitize(e["export_conversion_value_id"])
+
+      result = insert_element(values)
       parent_id_map[e["id"]] = result
       import_question(e["question"], result)  if (e["type"] == "QuestionElement")
     end
@@ -436,6 +441,25 @@ class Form < ActiveRecord::Base
     question = Question.new(question_import_string)
     question.form_element_id = form_element_id
     question.save!
+  end
+
+  # Inserts an element into form_elements, bypassing nested-set processing. Assumes
+  # values have been sanitized.
+  def self.insert_element(values)
+    sql = "INSERT INTO form_elements "
+    sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
+    sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
+    sql << "export_conversion_value_id, created_at, updated_at) "
+    sql << "VALUES (#{ values[:form_id]}, #{values[:type]} , #{values[:name]}, #{values[:description]}, "
+    sql << "#{values[:parent_id]}, #{values[:lft]}, #{values[:rgt]}, false, null, #{values[:is_active]}, "
+    sql << "#{values[:tree_id]}, #{ values[:condition]}, #{values[:core_path]}, #{values[:is_condition_code]}, "
+    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, now(), now());"
+    ActiveRecord::Base.connection.insert(sql)
+  end
+
+  # Debt? Rails' sanitize method wants to put null values in quotes.
+  def self.null_safe_sanitize(value)
+    value.blank? ? "null" :  "'#{sanitize_sql(["%s", value])}'"
   end
   
 end

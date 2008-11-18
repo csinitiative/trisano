@@ -251,7 +251,7 @@ describe Form do
     
     it "should build a list of errors on the instance getting published" do
       form_to_publish = Form.find(1)
-      form_to_publish.investigator_view_elements_container.destroy
+      form_to_publish.form_base_element.children[0].destroy
       form_to_publish.publish.should be_nil
       form_to_publish.errors.size.should eql(1)
     end
@@ -420,7 +420,7 @@ describe Form do
       demo_q1.question.question_text.should eql(questions(:demo_q1).question_text)
       demo_q1.question.short_name.should eql(questions(:demo_q1).short_name)
     end
-    
+      
     it "should not make a copy of the inactive questions" do
       default_view = @form_to_publish.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
@@ -431,18 +431,19 @@ describe Form do
       demo_q1.is_active = false
       demo_q1.save
       
+      @form_to_publish.form_element_cache.reload
       published_form = @form_to_publish.publish
-      
+
       default_view = published_form.investigator_view_elements_container.children[0]
       demo_section = default_view.children[0]
       demo_group = demo_section.children[0]
       demo_q1 = demo_group.children[0]
-      
+
       demo_q1.question.should_not be_nil
       demo_q1.question.question_text.should_not eql(questions(:demo_q1).question_text)
       demo_q1.question.question_text.should eql(questions(:demo_q2).question_text)
     end
-    
+
     it "should associate the published form with the same diseases as the original form." do
       # One disease
       @published_form.disease_ids.length.should == @form_to_publish.disease_ids.length

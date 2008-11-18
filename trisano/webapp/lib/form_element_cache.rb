@@ -24,8 +24,18 @@ class FormElementCache
     raise(ArgumentError, "FormElementCache initialize only handles FormElements") unless root_element.is_a?(FormElement)
     @root_element = root_element
     @root_element.reload
-    @full_set = FormElement.find(:all, 
-      :conditions => "tree_id = #{root_element.tree_id} and lft BETWEEN #{root_element.lft} AND #{root_element.rgt}",
+    @full_set = load_full_set
+  end
+  
+  def reload
+    @full_set = load_full_set
+  end
+  
+  private
+  
+  def load_full_set
+    FormElement.find(:all,
+      :conditions => "tree_id = #{@root_element.tree_id} and lft BETWEEN #{@root_element.lft} AND #{@root_element.rgt}",
       :order => "form_elements.lft",
       :include => [:question]
     )

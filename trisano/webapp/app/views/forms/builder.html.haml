@@ -63,27 +63,34 @@
           %br
           .status
             = h @form.status
+            &nbsp;
+            - if @form.errors.empty?
+              - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
+                = submit_tag 'Publish', :id => 'publish_btn'
+                = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
 #rot
-  %ul.horizontal
-    %li
-      #button.formname
-        Form Detail
-    %li
-      #button.press
-        %span
-          = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
-    %li
-      #button.press
-        %span
-          = link_to_remote("Add Core Tab Config", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
-    %li
-      #button.press
-        %span
-          = link_to_remote("Add Core Field Config", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
-    %li
-      #button.press
-        %span
-          = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
+  - if @form.errors.empty?
+    %ul.horizontal
+      %li
+        #button.formname
+          Form Detail
+      %li
+        #button.press
+          %span
+            = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
+      %li
+        #button.press
+          %span
+            = link_to_remote("Add Core Tab Config", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
+      %li
+        #button.press
+          %span
+            = link_to_remote("Add Core Field Config", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
+      %li
+        #button.press
+          %span
+            = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
+
   %ul
     %li
       #builder-mods
@@ -113,8 +120,3 @@
       %br
       = link_to 'Roll form back to last good published version.', form_rollback_path(@form)
       &nbsp;(This may take a few minutes.)
-
-  - if @form.errors.empty?
-    - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
-      = submit_tag 'Publish', :id => 'publish_btn'
-      = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"

@@ -330,7 +330,7 @@ anthrax_form_for_LHD_base:
 base_for_second_form:
   name: 
   form_id: "7"
-  tree_id: "2"
+  tree_id: "6"
   lft: "1"
   type: FormBaseElement
   id: "100"
@@ -341,7 +341,7 @@ base_for_second_form:
 investigator_container_for_second_form:
   name: 
   form_id: "7"
-  tree_id: "2"
+  tree_id: "6"
   lft: "2"
   type: InvestigatorViewElementContainer
   id: "101"
@@ -352,7 +352,7 @@ investigator_container_for_second_form:
 core_view_container_for_second_form:
   name: 
   form_id: "7"
-  tree_id: "2"
+  tree_id: "6"
   lft: "4"
   type: CoreViewElementContainer
   id: "102"
@@ -363,7 +363,7 @@ core_view_container_for_second_form:
 core_field_container_for_second_form:
   name: 
   form_id: "7"
-  tree_id: "2"
+  tree_id: "6"
   lft: "6"
   type: CoreFieldElementContainer
   id: "103"
