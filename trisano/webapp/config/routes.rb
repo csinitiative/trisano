@@ -19,6 +19,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :diseases
 
   map.resources :event_queues
+  map.resources :export_columns
   
   map.home '', :controller => 'dashboard'
   

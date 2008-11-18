@@ -1,0 +1,67 @@
+-# Copyright (C) 2007, 2008, The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%table.list
+  %tr
+    %th.forminformation
+      Edit Export Column
+  %tr
+    %td
+      %span{ :class => "horiz" }
+        = f.label(:name, "Descriptive Name")
+        = f.text_field(:name)
+
+      %span{ :class => "horiz" }
+        = f.label(:export_column_name, "CDC Column Name")
+        = f.text_field(:export_column_name, :class => 'required')
+
+      %br{ :class => "vert" }
+      %br
+
+      - cp_colm_names = ExportColumn.type_data_array
+      %span{ :class =>  "horiz" }
+        = f.label(:type_data, "Data source")
+        = f.collection_select(:type_data, cp_colm_names, :last, :first, :class => 'required')
+
+      -# Copied over from views/question_elements/_new.html.haml
+      - fb_colm_names = [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]]
+      %span{ :class =>  "horiz" }
+        = f.label(:data_type, "Data type (if source is Formbuilder)")
+        = f.collection_select(:data_type, fb_colm_names, :last, :first, :include_blank => true)
+
+      %span{ :class => "horiz" }
+        = f.label(:table_name, "Table name (if source is Core Data)")
+        = f.text_field(:table_name)
+
+      %span{ :class => "horiz" }
+        = f.label(:column_name, "Column name (if source is Core Data)")
+        = f.text_field(:column_name)
+
+      - req_colm_names = [["Yes", "Y"], ["No", "N"]]
+      %span{ :class =>  "horiz" }
+        = f.label(:is_required, "Required")
+        = f.collection_select(:is_required, req_colm_names, :last, :first)
+
+      %br{ :class => "vert" }
+      %br
+
+      %span{ :class => "horiz" }
+        = f.label(:start_position)
+        = f.text_field(:start_position, :size => 5, :class => 'required')
+
+      %span{ :class => "horiz" }
+        = f.label(:length_to_output)
+        = f.text_field(:length_to_output, :size => 5, :class => 'required')
+

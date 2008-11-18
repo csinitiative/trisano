@@ -19,6 +19,20 @@ class ExportColumn < ActiveRecord::Base
   belongs_to :export_name
   has_many   :export_conversion_values, :order => "sort_order ASC"
   has_and_belongs_to_many   :diseases
-end
 
+  class << self
+    def type_data_array
+      [["Core Data", "CORE"], ["Formbuilder Data", "FORM"], ["System Generated", "FIXED"]]
+    end
+
+    def valid_types
+      @valid_types ||= type_data_array.map { |type| type.last }
+    end
+  end
+
+  validates_presence_of :export_name_id, :type_data, :export_column_name, :start_position, :length_to_output
+  validates_numericality_of :start_position, :lenght_to_output
+  validates_inclusion_of :type_data, :in => self.valid_types
+
+end
 
