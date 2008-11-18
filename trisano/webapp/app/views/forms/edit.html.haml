@@ -44,16 +44,15 @@
           %br
         .description  
           = h @form.description
-        #button.press
-          %span
-            -if @form.is_template
-              = link_to 'Detail', builder_path(@form)
-            |
-            = link_to 'Edit', edit_form_path(@form)
-            |
-            = link_to 'Copy', copy_form_path(@form), :method => :post
-            |
-            = link_to 'Export', export_form_path(@form), :method => :post
+        .tools
+          -if @form.is_template
+            = link_to 'Detail', builder_path(@form)
+          |
+          = link_to 'Edit', edit_form_path(@form)
+          |
+          = link_to 'Copy', copy_form_path(@form), :method => :post
+          |
+          = link_to 'Export', export_form_path(@form), :method => :post
       %td
         %ul
           - @form.diseases.each do |disease|

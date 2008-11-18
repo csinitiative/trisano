@@ -14,13 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Form Detail
+  Form:
+  = h @form.name
   
 //- content_for :name do
 //  = @form.name
 
 - content_for :tools do
-  = link_to '< Back to Forms', forms_path
+  = link_to 'Forms', forms_path
   %p
   
 - content_for :tools_two do
@@ -42,10 +43,14 @@
         .description  
           = h @form.description
         .tools
+          = link_to 'Detail', builder_path(@form)
+          |
           -if @form.is_template
             = link_to 'Edit', edit_form_path(@form)
-            |
-            = link_to 'Form Builder', builder_path(@form)
+          |
+          = link_to 'Copy', copy_form_path(@form), :method => :post
+          |
+          = link_to 'Export', export_form_path(@form), :method => :post
       %td
         %ul
           - @form.diseases.each do |disease|
