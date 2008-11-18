@@ -744,6 +744,34 @@ describe MorbidityEvent do
 
     end
 
+    describe "Simple sanity check on reporter / reporting agency." do
+      describe "Receiving a new reporter/agency " do
+        before(:each) do
+          @date = 'August 10, 2008'
+          new_reporter_hash = {
+            "active_reporting_agency" => {:name => 'Agency 1', :last_name => "Starr", :first_name => "Brenda"}
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_reporter_hash))
+        end
+
+        it "should create a new reporter and reporting agency linked to the event" do
+          lambda {@event.save!}.should change {Participation.count}.by(3)
+          @event.participations.find_by_role_id(codes(:participant_reported_by).id).should_not be_nil
+          @event.participations.find_by_role_id(codes(:participant_reporting_agency).id).should_not be_nil
+        end
+
+        it "should create a new place" do
+          lambda {@event.save}.should change {Place.count}.by(1)
+          @event.reporting_agency.secondary_entity.place_temp.name.should == 'Agency 1'
+        end    
+
+        it "should create a new person" do
+          lambda {@event.save}.should change {Person.count}.by(2)
+          @event.reporter.secondary_entity.person_temp.last_name.should == 'Starr'
+        end    
+      end
+    end
+
     describe "Handling telephone numbers" do
       fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
     

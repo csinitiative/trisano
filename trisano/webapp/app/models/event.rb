@@ -736,6 +736,14 @@ class Event < ActiveRecord::Base
     self.cache_old_attributes
   end
 
+  def set_primary_entity_on_secondary_participations
+    self.participations.each do |participation|
+      if participation.primary_entity_id.nil?
+        participation.update_attribute('primary_entity_id', self.patient.primary_entity.id)
+      end
+    end
+  end
+
   private
   
   def set_record_number

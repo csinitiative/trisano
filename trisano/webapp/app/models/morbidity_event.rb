@@ -129,13 +129,14 @@ class MorbidityEvent < HumanEvent
         new_agency =  Entity.new
         new_agency.entity_type = 'place'
         new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
-        new_agency.save
-        entity_id = new_agency.id
+        self.reporting_agency.secondary_entity = new_agency
+      else
+        # Otherwise assign the (now) existing entity id to the participation
+        self.reporting_agency.secondary_entity_id = entity_id 
       end
-      # Otherwise assign the (now) existing entity id to the participation
-      self.reporting_agency.secondary_entity_id = entity_id 
     else
-      # The reporting agency is blank and there's an existing agency (i.e., the use blanked out the save value), delete the agency participation
+      
+      # The reporting agency is blank and there's an existing agency (i.e., the user blanked out the save value), delete the agency participation
       unless self.reporting_agency.nil?
         self.reporting_agency.destroy
       end
@@ -155,7 +156,7 @@ class MorbidityEvent < HumanEvent
     # Process the person, if any
     last_name = attributes.delete(:last_name)
     first_name = attributes.delete(:first_name)
-    #
+
     # Build a person if we don't have one
     self.reporter.secondary_entity.build_person_temp if self.reporter.secondary_entity.person_temp.nil?
     self.reporter.secondary_entity.person_temp.attributes = { :last_name => last_name, :first_name => first_name }

@@ -111,7 +111,8 @@ class MorbidityEventsController < EventsController
     end
     
     respond_to do |format|
-      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
+      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save; event.set_primary_entity_on_secondary_participations }
+
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
           query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""

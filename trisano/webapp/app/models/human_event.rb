@@ -61,8 +61,6 @@ class HumanEvent < Event
   validates_associated :diagnosing_health_facilities
   validates_associated :clinicians
 
-  after_save :set_primary_entity_on_secondary_participations
-  
   def active_patient
     self.patient
   end
@@ -297,15 +295,6 @@ class HumanEvent < Event
     end
 
     super
-  end
-
-  def set_primary_entity_on_secondary_participations
-    reload
-    self.participations.each do |participation|
-      if participation.primary_entity_id.nil?
-        participation.update_attribute('primary_entity_id', self.patient.primary_entity.id)
-      end
-    end
   end
 
   private

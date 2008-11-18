@@ -59,8 +59,8 @@
 
     - f.fields_for(:active_reporting_agency, reporter_name, :core_path => reporter_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       - core_element :last_name, agency_form, :horiz do
-        = agency_form.label(:last_name, "Reporter last name", :class => 'required_if_others')
-        = agency_form.core_text_field(:last_name, {:size => 25}, @event, @can_investigate)
+        = agency_form.label(:last_name, "Reporter last name")
+        = agency_form.core_text_field(:last_name, {:size => 25, :class => 'required_if_others'}, @event, @can_investigate)
       - core_element :first_name, agency_form, :horiz do
         = agency_form.label(:first_name, "Reporter first name")
         = agency_form.core_text_field(:first_name, {:size => 25}, @event, @can_investigate)
