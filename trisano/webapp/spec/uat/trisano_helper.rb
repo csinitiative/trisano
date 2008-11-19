@@ -758,6 +758,13 @@ module TrisanoHelper
     return(!browser.is_text_present("delete-question-#{element_id}"))
   end
   
+  def delete_question_from_library(browser, name)
+    element_id = get_library_element_id(browser, name, QUESTION_ID_PREFIX)
+    browser.click("delete-question-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-question-#{element_id}"))
+  end
+  
   # Deletes the value set with the name provided
   def delete_value_set(browser, name)
     element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
@@ -1016,7 +1023,7 @@ module TrisanoHelper
     retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
-    # Start from form_children to avoid finding something up in the top portion of the page
+        # Start from form_children to avoid finding something up in the top portion of the page
     name_position = html_source.index(name, html_source.index("form_children")) 
     
     begin
@@ -1032,6 +1039,25 @@ module TrisanoHelper
     html_source[id_start_position..id_end_position]
   end
   
+  def get_library_element_id(browser, name, element_id_prefix)
+    retry_count = 0
+    element_prefix_length = element_id_prefix.size
+    html_source = browser.get_html_source
+        # Start from form_children to avoid finding something up in the top portion of the page
+    name_position = html_source.index(name, html_source.index("Library Administration")) 
+    
+    begin
+      id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+      raise if html_source[id_start_position..id_start_position+1].to_i == 0
+    rescue
+      retry_count += 1
+      id_start_position.nil? ? name_position = 1 : name_position = id_start_position - (element_prefix_length+1) 
+      retry if retry_count < 5
+    end
+    
+    id_end_position = html_source.index("\"", id_start_position)-1
+    html_source[id_start_position..id_end_position]
+  end
   # Same as get_form_element_id except it doesn't do a reverse index looking for the start position.
   # Core field configs are different in that the name of the main core field config preceeds the two
   # containers for before and after configs.

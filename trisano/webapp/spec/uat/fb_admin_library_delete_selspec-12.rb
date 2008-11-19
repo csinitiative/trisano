@@ -19,13 +19,14 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 # $dont_kill_browser = true
 
-describe 'Form Builder Admin' do
+describe 'Form Builder Admin Delete Library' do
   
   before(:all) do
     @form_name = get_unique_name(4) + " fb lib uat"
     @group_name = get_unique_name(3) + " grp fb lib"
     @group_question_text = get_unique_name(3) + " q1 fb lib"
     @no_group_question_text = get_unique_name(3) + " q2 fb lib"
+    @disease = get_random_disease
   end
   
   after(:all) do
@@ -33,10 +34,11 @@ describe 'Form Builder Admin' do
     @group_name = nil
     @group_question_text = nil
     @no_group_question_text  = nil
+    @disease = nil
   end
   
   it 'should create a new form and add questions to the library' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
+    create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions")
     add_question_to_view(@browser, "Default View", {:question_text => @no_group_question_text, :data_type => "Single line text"})
     add_question_to_library(@browser, @no_group_question_text)
     add_question_to_view(@browser, "Default View", {:question_text => @group_question_text, :data_type => "Single line text"})
@@ -50,8 +52,8 @@ describe 'Form Builder Admin' do
   
   it 'should delete the questions from the library' do
     open_form_builder_library_admin(@browser).should be_true    
-    delete_question(@browser, @no_group_question_text).should be_true
-    delete_question(@browser, @group_question_text).should be_true
+    delete_question_from_library(@browser, @no_group_question_text).should be_true
+    delete_question_from_library(@browser, @group_question_text).should be_true
   end
   
 end
