@@ -47,6 +47,6 @@
 
   - form_for(@export_column) do |f|
 
-    = render :partial => 'form', :locals => { :f => f }
+    = render :partial => 'form', :locals => { :f => f, :editing => true }
 
     = f.submit "Update"

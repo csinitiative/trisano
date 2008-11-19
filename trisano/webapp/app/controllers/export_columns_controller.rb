@@ -18,7 +18,10 @@
 class ExportColumnsController < AdminController
 
   def index
-    @export_columns = ExportColumn.find(:all, :include => 'export_name', :conditions => "export_names.export_name = 'CDC'", :order => "export_columns.name ASC")
+    @export_columns = ExportColumn.find(:all, 
+                                        :include => ['export_disease_group', 'export_name'], 
+                                        :conditions => "export_names.export_name = 'CDC'", 
+                                        :order => "export_disease_groups.name, export_columns.name ASC")
   end
 
   def show
@@ -37,36 +40,29 @@ class ExportColumnsController < AdminController
     @export_column = ExportColumn.new(params[:export_column])
     @export_column.export_name = ExportName.find(:first, :conditions => "export_name = 'CDC'") 
 
-    respond_to do |format|
-      if @export_column.save
-        flash[:notice] = 'Export Column was successfully created.'
-        format.html { redirect_to(@export_column) }
-      else
-        format.html { render :action => "new" }
-      end
+    if @export_column.save
+      flash[:notice] = 'Export Column was successfully created.'
+      redirect_to(@export_column)
+    else
+      render :action => "new"
     end
   end
 
   def update
     @export_column = ExportColumn.find(params[:id])
     
-    respond_to do |format|
-      if @export_column.update_attributes(params[:export_column])
-        flash[:notice] = 'Export Column was successfully updated.'
-        format.html { redirect_to(@export_column) }
-      else
-        format.html { render :action => "edit" }
-      end
+    if @export_column.update_attributes(params[:export_column])
+      flash[:notice] = 'Export Column was successfully updated.'
+      redirect_to(@export_column)
+    else
+      render :action => "edit"
     end
   end
 
   def destroy
     @export_column = ExportColumn.find(params[:id])
     @export_column.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(export_columns_url) }
-    end
+    redirect_to(export_columns_url)
   end
 
 end

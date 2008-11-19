@@ -27,9 +27,11 @@
   %table.list
     %tr
       %th.forminformation
-        name
+        Descriptive Name
       %th
-        export_column_name
+        CDC Name
+      %th
+        Disease Group 
       %th
     - for xp_column in @export_columns
       %tr.roll
@@ -39,6 +41,8 @@
             = link_to xp_column.name || ("not specified"), xp_column
         %td
           = xp_column.export_column_name
+        %td
+          = xp_column.export_disease_group.name unless xp_column.export_disease_group.nil?
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to('Edit', edit_export_column_path(xp_column))

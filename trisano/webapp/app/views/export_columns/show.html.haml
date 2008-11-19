@@ -56,6 +56,10 @@
           %label CDC Column Name
           = @export_column.export_column_name
 
+        %span{ :class =>  "horiz" }
+          %label Disease Group
+          = @export_column.export_disease_group.nil? ? "All Diseases" : @export_column.export_disease_group.name
+
         %br{ :class => "vert" }
         %br
 
@@ -89,3 +93,12 @@
         %span{ :class => "horiz" }
           %label length_to_output
           = @export_column.length_to_output
+
+  %table.list
+    %tr
+      %th.forminformation
+        Column Conversion Values
+    - for conversion_value in @export_column.export_conversion_values
+      %tr.roll
+        %td
+          = "Convert #{conversion_value.value_from} to #{conversion_value.value_to}"

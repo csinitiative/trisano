@@ -27,6 +27,14 @@
         = f.label(:export_column_name, "CDC Column Name")
         = f.text_field(:export_column_name, :class => 'required')
 
+      %span{ :class =>  "horiz" }
+        - unless editing
+          = f.label(:export_disease_group, "Disease group (empty if all)")
+          = f.collection_select(:export_disease_group_id, ExportDiseaseGroup.find(:all), :id, :name, :include_blank => true)
+        - else
+          %label Disease Group
+          = @export_column.export_disease_group.nil? ? "All Diseases" : @export_column.export_disease_group.name
+
       %br{ :class => "vert" }
       %br
 

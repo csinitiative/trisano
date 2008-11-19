@@ -19,6 +19,7 @@ class ExportColumn < ActiveRecord::Base
   belongs_to :export_name
   has_many   :export_conversion_values, :order => "sort_order ASC"
   has_and_belongs_to_many   :diseases
+  belongs_to :export_disease_group
 
   class << self
     def type_data_array
@@ -34,5 +35,21 @@ class ExportColumn < ActiveRecord::Base
   validates_numericality_of :start_position, :length_to_output
   validates_inclusion_of :type_data, :in => self.valid_types
 
+  def validate
+    case self.type_data 
+    when "FORM"
+      self.errors.add_to_base("Data Type required if Data Source is Formbuilder") if data_type.blank?
+      self.errors.add_to_base("Table Name must be blank if Data Source is Formbuilder") unless table_name.blank?
+      self.errors.add_to_base("Column Name must be blank if Data Source is Formbuilder") unless column_name.blank?
+    when "CORE"
+      self.errors.add_to_base("Data Type must be blank if Data Source is Core") unless data_type.blank?
+      self.errors.add_to_base("Table Name required if Data Source is Core") if table_name.blank?
+      self.errors.add_to_base("Column Name required if Data Source is Core") if column_name.blank?
+    when "FIXED"
+      self.errors.add_to_base("Data Type must be blank if Data Source is System Generated") unless data_type.blank?
+      self.errors.add_to_base("Table Name must be blank if Data Source is System Generated") unless table_name.blank?
+      self.errors.add_to_base("Column Name must be blank if Data Source is System Generated") unless column_name.blank?
+    end
+  end
 end
 
