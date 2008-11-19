@@ -23,7 +23,7 @@ class Answer < ActiveRecord::Base
   validates_presence_of :text_answer, :if => :required
   validates_format_of :text_answer, :with => /^\d{3}-\d{3}-\d{4}$/, :message => 'Phone number must include area code and seven digit number', :allow_blank => true, :if => :is_phone
   validates_date :date_answer, :if => :is_date, :allow_nil => true
-
+  
   def date_answer
     ActiveRecord::ConnectionAdapters::Column.send("string_to_date", text_answer)
   end
@@ -74,4 +74,5 @@ class Answer < ActiveRecord::Base
   def short_name
     question.short_name unless question.nil? || question.short_name.blank?
   end
+
 end

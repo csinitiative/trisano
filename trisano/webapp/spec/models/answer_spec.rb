@@ -41,4 +41,24 @@ describe Answer do
     @answer.errors.on(:text_answer).should_not be_nil
   end
 
+  describe 'cdc conversion rules' do
+    fixtures :export_conversion_values, :export_columns
+
+    it 'should convert date fields 8 columns wide to MM/DD/YY format' do
+      @answer.export_conversion_value = export_conversion_values(:datedx_format)
+      @answer.text_answer = '10/25/2008'
+      result = @answer.write_export_conversion_to('')
+      result.strip.should == '10/25/08'
+    end
+
+    it 'should right justify and truncate single line text fields to output length' do
+      @answer.export_conversion_value = export_conversion_values(:vaccineyea_format)
+      @answer.text_answer = '2008'
+      result = @answer.write_export_conversion_to('')
+      result.strip.should == '08'
+    end
+
+  end
+    
+
 end

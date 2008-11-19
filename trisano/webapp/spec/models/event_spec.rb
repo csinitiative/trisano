@@ -1445,7 +1445,7 @@ describe MorbidityEvent do
   end
 
   describe 'form builder cdc export fields' do
-    fixtures :diseases, :export_conversion_values
+    fixtures :diseases, :export_conversion_values, :export_columns
 
     before(:each) do      
       @question = Question.create(:data_type => 'radio_buttons', :question_text => 'Contact?' )
@@ -1470,7 +1470,15 @@ describe MorbidityEvent do
       answer.export_conversion_value.value_from.should == 'Unknown'
       answer.export_conversion_value.value_to.should == '9'
     end
-                            
+
+    it "should have insert the answer value in the correct field location" do
+      answer = @event.answers.export_answers.first
+      result = ''
+      answer.write_export_conversion_to(result)
+      result.length.should == 69
+      result.last.should == '9'
+    end
+   
   end                       
 
   describe 'new event from patient' do

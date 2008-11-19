@@ -17,7 +17,7 @@
 
 class Event < ActiveRecord::Base
   include Blankable
-  include Export::Cdc::Event
+  include Export::Cdc::EventRules
   
   after_update :save_associations
   before_save :generate_mmwr
@@ -782,7 +782,6 @@ class Event < ActiveRecord::Base
     answers.each { |answer| answer.save(false) }
     notes.each { |note| note.save(false) }
     # Jurisdictions don't need to be saved on edit.  They can only be set by create.  After that routing is used.
-    all_jurisdictions.each { |jurisdiction| jurisdiction.save(false) }
   end
 
 end

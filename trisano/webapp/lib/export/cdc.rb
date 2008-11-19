@@ -35,7 +35,7 @@ module Export
 
     end
 
-    module Event
+    module EventRules
       
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
@@ -86,6 +86,53 @@ module Export
       end
     end
 
+    module AnswerRules
+      
+      def Answer.export_answers
+        find(:all, :conditions => ['export_conversion_value_id is not null'])
+      end
+
+      def convert_value        
+        if export_conversion_value
+          value = export_conversion_value.value_to
+          case
+          when conversion_type == 'date' && self.text_answer
+            value = Date.parse(self.text_answer).strftime("%m/%d/%y")
+          when conversion_type == 'single_line_text' && self.text_answer
+            value = self.text_answer.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
+          end
+          value
+        end
+      end
+
+      # modifies result string based on export conversion
+      # rules. Result is lengthened if needed. Returns the value that
+      # was inserted.
+      def write_export_conversion_to(result)
+        diff = (start_position + length_to_output) - result.length    
+        result << ' ' * diff if diff > 0
+        result[start_position, length_to_output] = convert_value
+        result
+      end
+
+      private
+
+      def conversion_type
+        safe_call_chain(:export_conversion_value, :export_column, :data_type)
+      end
+
+      # Returns the start position, adjusted for zero based indexes.
+      def start_position
+        pos = safe_call_chain(:export_conversion_value, :export_column, :start_position)
+        pos - 1 if pos
+      end
+
+      def length_to_output
+        safe_call_chain(:export_conversion_value, :export_column, :length_to_output)
+      end
+
+    end
+
     module Record
 
       def cdc_export_fields
@@ -110,6 +157,7 @@ module Export
            udoh_case_status_id
            exp_imported
            exp_outbreak
+           disease_specific_records
           )
       end
       
@@ -132,7 +180,14 @@ module Export
                       case_status_export_column.id, external_code.the_code])
         cdc_code.value_to
       end
-           
+
+      def disease_specific_records
+        result = ''
+        event = Event.find(event_id)
+        answers = event.answers.export_answers
+        answers.each {|answer| answer.write_export_conversion_to(result)}
+        (result[61...result.length] || '').rstrip  
+      end
 
       def method_missing(method, *args)
         if self.has_key? method.to_s
@@ -190,4 +245,4 @@ module Export
   end
 end
 
-
+Answer.send(:include, Export::Cdc::AnswerRules)
