@@ -58,11 +58,11 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.is_text_present('People Search').should be_true
     end
     
-    it 'should navigate successfully to the CMR Search page' do
+    it 'should navigate successfully to the Event Search page' do
       click_nav_search(@browser).should be_true
-      @browser.click 'link=CMR Search'
+      @browser.click 'link=Event Search'
       @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('CMR Search').should be_true
+      @browser.is_text_present('Event Search').should be_true
     end
     
     it 'should navigate successfully to the View CMRs page' do

@@ -161,32 +161,43 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
         browser.is_text_present("Existing Reports") and
-        browser.is_element_present("link=New Morbidity Report") and
-        browser.is_element_present("link=Export To CSV")) 
+        browser.is_element_present("link=CMRS") and
+        browser.is_element_present("link=Export All to CSV")) 
   end
   
   def click_nav_search(browser)
     browser.click 'link=SEARCH'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_element_present("link=People Search") and
-        browser.is_element_present("link=CMR Search"))  
+        browser.is_element_present("link=Event Search"))  
   end
   
   def click_nav_forms(browser)
     browser.click 'link=FORMS'
     browser.wait_for_page_to_load($load_time)
-    return (browser.is_text_present("Listing Forms"))
+    return (browser.is_text_present("Form Information") and
+      browser.is_text_present("Diseases") and
+      browser.is_text_present("Jurisdiction") and
+      browser.is_text_present("Event Type") and
+      browser.is_element_present("//input[@value='Upload']") and
+      browser.is_element_present("//input[@id='form_import']") and
+      browser.is_element_present("//input[@value='Create new form']")
+      )
   end
   
   def click_nav_admin(browser)
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Admin Console") and
-        browser.is_text_present("Dashboard") and
+    return(browser.is_text_present("Admin Dashboard") and
         browser.is_element_present("link=Forms") and
         browser.is_element_present("link=Users") and
         browser.is_element_present("link=Codes") and
-        browser.is_element_present("link=Event Queues") ) 
+        browser.is_element_present("link=Event Queues") and
+        browser.is_element_present("link=Diseases") and
+        browser.is_element_present("link=Core Fields") and
+        browser.is_element_present("link=CDC Export") and
+        browser.is_element_present("link=IBIS Export") 
+      ) 
   end
   
   def edit_cmr(browser)
