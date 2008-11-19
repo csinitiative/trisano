@@ -22,13 +22,21 @@
   - else
 
     - for note in @event.notes
-      %div{:class => 'existing-note'}
-        %div{:class => 'existing-note-header'} 
-          %span{:class => 'existing-note-header-element'}= note.user.best_name
-          %span{:class => 'existing-note-header-element'}= note.created_at.strftime("%a, %B %d, %Y;  %I:%M: %p")
-
-        - note_body = simple_format(note.note)
-        - if note.struckthrough?
-          %div{:id => "note_#{note.id}", :class => 'existing-note-body struck-through'}= note_body
-        - else
-          %div{:id => "note_#{note.id}", :class => 'existing-note-body'}= note_body
+      %table.list
+        %tr
+          %th.forminformation
+            = note.user.best_name
+          %th
+        %tr.roll
+          %td.forminformation
+            %small
+              = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
+          %td
+        %tr
+          %td
+            - note_body = simple_format(note.note)
+            - if note.struckthrough?
+              %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
+            - else
+              %div{:id => "note_#{note.id}"}= note_body
+          %td
