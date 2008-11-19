@@ -99,5 +99,20 @@ describe Disease do
       
     end
   end
-  
+
+  describe 'export conversion value ids' do
+    fixtures :diseases, :export_conversion_values, :export_columns, :diseases_export_columns
+
+    before :each do
+      @disease = diseases(:hep_a)
+    end
+           
+    it 'should ids for export conversion values related to this disease' do
+      @disease.export_columns.length.should == 1
+      @disease.export_columns[0].export_conversion_values.length.should == 1
+      @disease.export_conversion_value_ids.length.should == 1
+      @disease.export_conversion_value_ids[0].should == 11
+    end
+
+  end
 end

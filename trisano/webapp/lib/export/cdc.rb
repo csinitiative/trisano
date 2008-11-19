@@ -86,10 +86,25 @@ module Export
       end
     end
 
+    module DiseaseRules
+
+      def export_conversion_value_ids
+        ids = []
+        self.export_columns.each do |column|
+          ids <<  column.export_conversion_values.collect {|value| value.id}
+        end
+        ids.flatten
+      end
+
+    end
+
     module AnswerRules
       
-      def Answer.export_answers
-        find(:all, :conditions => ['export_conversion_value_id is not null'])
+      def Answer.export_answers(*args)
+        args = [:all] if args.empty?
+        with_scope(:find => {:conditions => ['export_conversion_value_id is not null']}) do
+          find(*args)
+        end
       end
 
       def convert_value        
@@ -184,7 +199,11 @@ module Export
       def disease_specific_records
         result = ''
         event = Event.find(event_id)
-        answers = event.answers.export_answers
+        if event.disease && event.disease.disease
+          conversion_value_ids = event.disease.disease.export_conversion_value_ids
+          disease_filter = {:conditions => ['export_conversion_value_id in (?)', conversion_value_ids]}
+        end
+        answers = event.answers.export_answers(:all, disease_filter)
         answers.each {|answer| answer.write_export_conversion_to(result)}
         (result[61...result.length] || '').rstrip  
       end
@@ -246,3 +265,4 @@ module Export
 end
 
 Answer.send(:include, Export::Cdc::AnswerRules)
+Disease.send(:include, Export::Cdc::DiseaseRules)
