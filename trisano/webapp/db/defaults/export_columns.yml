@@ -4233,249 +4233,747 @@
    
 ##### Congenital Syphilis #####
 
-#
-#INFOSRCE 61-62 Information Source/Provider Codes (from Interview Record if
-#               available). Values:
-#               01=HIV Counseling and Testing Site
-#               02=STD
-#               03=Drug Treatment
-#               04=Family Planning
-#               05=Prenatal/Obstetrics
-#               06=Tuberculosis
-#               07=Other Clinic
-#               08=Private Physician/HMO
-#               09=Hospital (Inpatient)
-#               10=Emergency Room
-#               11=Correctional Facility
-#               12=Laboratory
-#               13=Blood Bank
-#               14=Delivery
-#               15=Prenatal
-#               16=Job Corps
-#               17=School-based Clinic
-#               18=Mental Health Provider
-#               66=Indian Health Service
-#               77=Military
-#               88=Other
-#               99=Unknown (if data not available)
-#DETECTED 63-64 Method of Case Detection (from Interview Record if
-#               available). Values:
-#               01=Provider Referral
-#               02=Cluster
-#               03=Patient Referral
-#               04=Prenatal
-#               05=Delivery
-#               06=Institutional Screening
-#               07=Community Screening
-#               08=Reactor
-#               09=Provider Report
-#               10=Volunteer
-#               88=Other
-#               99=Unknown (if data not available)
-#MZIP     65-69 Zip Code for Mother's Residence - Q10 on 126 form.
-#               99999=Unknown (if data not available)
-#FUTURE   70-79 Blank
-#CITY     80-83 Reporting City FIPS Code - Q4 on 126 form.
-#SENTINEL 84    Sentinel Reporting Site - This question is not on the version
-#                 10-2003 126 form and will be left blank. It was Q6 prior to
-#                 this revised 126 form. Values:
-#                 1=Yes, 2=No
-#MSTATE   85-86   FIPS Code for Mother's State of Residence - Q7 on 126.
-#                 Code 98 for Mexico and 97 for any other non-USA residence.
-#MCOUNTY  87-89   FIPS Code for Mother's County of Residence - Q8 on 126.
-#                 Code 998 for Mexico and 997 for any other non-USA
-#                 residence.
-#MCITY    90-93   FIPS Code for Mother's City of Residence
-#                 - Q9 on 126. Code 9998 for Mexico and 9997 for any other
-#                 non-USA residence.
-#MBIRTH   94-101  Mother's Date of Birth in YYYYMMDD format - Q11 on
-#                 126.
-#MARITAL  102     Mother's Marital Status - Q14 on 126.
-#                 Values:
-#                 1=Single, never married
-#                 2=Married
-#                 3=Separated/Divorced
-#                 4=Widow
-#                 8=Other
-#                 9=Unknown
-#LMP      103-110 Date of Mother's Last Menstrual Period before delivery in
-#                 YYYYMMDD format - Q15 on 126 form.
-#PRENATAL 111     Did mother have prenatal care? - Q16 on 126 form. Values:
-#                 1=Yes, 2=No, 9=Unknown
-#PNCDATE1 112-119 Date of mother's first prenatal visit in YYYYMMDD format -
-#                 Q17 on 126 form.
-#PNCNUM   120-121 Number of prenatal visits - Q18 on 126 form.
-#NONTREP  122     Did mother have nontreponemal test (e.g., RPR or VDRL) in
-#                 pregnancy, at delivery, or soon after delivery? - Q19 on 126
-#                 form. Values:
-#                 1=Yes, 2=No, 9=Unknown
-#DATEA    123-130 Date of nontreponemal test in YYYYMMDD format - Q20.a.
-#                 on 126 form.
-#RESULTA  131     Result of nontreponemal test - Q20.a. on 126 form. Values:
-#                 1=Reactive, 2=Nonreactive, 9=Unknown
-#DATEB    132-139 Date of nontreponemal test in YYYYMMDD format - Q20.b.
-#                 on 126 form.
-#RESULTB  140     Result of nontreponemal test - Q20.b. on 126 form. Values:
-#                 1=Reactive, 2=Nonreactive, 9=Unknown
-#
-#DATEC    141-148 Date of nontreponemal test in YYYYMMDD format - Q20.c.
-#                 on 126 form.
-#RESULTC  149     Result of nontreponemal test - Q20.c. on 126 form. Values:
-#                 1=Reactive, 2=Nonreactive, 9=Unknown
-#DATED    150-157 Date of nontreponemal test in YYYYMMDD format - Q20.d.
-#                 on 126 form.
-#RESULTD  158     Result of nontreponemal test - Q20.d. on 126 form. Values:
-#                 1=Reactive, 2=Nonreactive, 9=Unknown
-#TITER    159-162 Titer of nontreponemal test a. – Q20.a. on 126 form. It was
-#                 Q21 on version 09-1991 126 form. The titers for dates b, c
-#                 and d are in columns 214-225.
-#                  0=weakly reactive
-#TREPONEM 163     Did mother have confirmatory treponemal test result (e.g.,
-#                 FTA-ABS or MHATP)? - Q21 on 126 form. Values:
-#                 1=Yes, reactive
-#                 2=Yes, nonreactive
-#                 3=No test
-#                 9=Unknown
-#LESIONS  164     Did mother have darkfield or direct fluorescent antibody
-#                 (DFA) exam of lesions at delivery? - Q22 on 126 form.
-#                 Values:
-#                 1=Yes, positive
-#                 2=Yes, negative
-#                 3=No test of lesions
-#                 4=No lesions present
-#                 9=Unknown
-#LASTREAT 165     When was mother last treated for syphilis? - Q23 on 126
-#                 form. The treatment date is located in columns 226-233.
-#                 Values:
-#                 1=Before pregnancy
-#                 2=During pregnancy
-#                 3=No Treatment
-#                 9=Unknown
-#TXADQBEF 166     Before pregnancy, was mother's treatment adequate? - Q24 on
-#                 126 form. Values:
-#                 1=Yes, adequate
-#                 2=No, inadequate
-#                 9=Unknown
-#TXADQDUR 167     During pregnancy, was mother's treatment adequate? - Q25
-#                 on 126 form. Values:
-#                 1=Yes, adequate
-#                 2=No, inadequate; non-penicillin therapy
-#                 3=No, inadequate; penicillin therapy begun
-#                  < 30 days before delivery
-#                 4=Unknown
-#RESPAPPR 168     Appropriate serologic response? - Q26 on 126 form. Values:
-#                 1=Yes, appropriate response with adequate
-#                  serologic follow-up during pregnancy
-#                 2=Yes, appropriate response but no follow-
-#                  up serologic titers during pregnancy
-#                 3=No, inappropriate response: evidence of
-#                  treatment failure or reinfection
-#                 4=No, response was equivocal or could not
-#                  be determined from available
-#                  nontreponemal titer information
-#VITAL    169     Vital status of child - Q28 on 126 form. Values:
-#                 1=Alive
-#                 2=Born alive, then died
-#                 3=Stillborn
-#                 9=Unknown
-#DEATHDAT 170-177 Date of death of child in YYYYMMDD format - Q29 on 126
-#                 form (Leave blank, if alive).
-#BIRTHWT  178-181 Birthweight in grams - Q31 on 126 form.
-#REACSTS  182     Did infant have reactive non-treponemal test for syphilis? -
-#                 Q33.a. on 126 form. Values:
-#                 1=Yes, 2=No, 9=Unknown
-#REACDATE 183-190 Date of child's first reactive non-treponemal test for syphilis
-#                 in YYYYMMDD format – Q33.b. on 126 form.
-#SIGNSCS  191     Did child have any classic signs of CS? - Q35 on 126 form.
-#                 Values:
-#                 1=Yes, 2=No, asymptomatic child, 9=Unknown
-#DARKFLD  192     Did child have a darkfield exam? - Q36 on 126 form. Values:
-#                 1=Yes, positive
-#                 2=Yes, negative
-#                 3=No test
-#                 9=Unknown
-#DFA      193     Did child have a direct fluorescent antibody test? - This
-#                 question is no longer on the 126 form and should be left
-#                 blank. It was Q38 prior to the 06-2000 126 form. Values:
-#                 1=Yes, positive
-#                 2=Yes, negative
-#                 3=No test
-#                 9=Unknown
-#IGM      194     Did child have an IgM-specific treponemal test? - Q37 on 126
-#                 form. Values:
-#                 1=Yes, reactive
-#
-#                 2=Yes, nonreactive
-#                 3=No test
-#                 9=Unknown
-#XRAYS    195     Did child have long bone x-rays? - Q38 on 126 form. Values:
-#                 1=Yes, changes consistent with CS
-#                 2=Yes, no signs of CS
-#                 3=No xrays
-#                 9=Unknown
-#CSFVDRL  196     Did child have a CSF-VDRL? – Q39 on 126 form. Values:
-#                 1=Yes, reactive
-#                 2=Yes, nonreactive
-#                 3=No test
-#                 9=Unknown
-#CSFCOUNT 197     Did child have a CSF cell count or CSF protein test? - Q40 on
-#                 126 form. Values:
-#                 1=Yes, one or both elevated
-#                 2=Yes, both not elevated
-#                 3=No test
-#                 9=Unknown
-#TREATED  198     Was child treated? - Q41 on 126 form. Values:
-#                 1=Yes, with Aqueous or Procaine Penicillin
-#                     for >=10 days
-#                 2=Yes, with Ampicillin followed by Aqueous
-#                    or Procaine Penicillin for a total of
-#                    >=10 days
-#                 3=Yes, with Benzathine penicillin x 1
-#                 4=Yes, with other treatment
-#                 5=No treatment
-#                 9=Unknown
-#CLASS    199     Case Classification - Q42 on 126 form. Values:
-#                 1=Not a case
-#                 2=Confirmed Case (laboratory confirmed identification of
-#                    T.pallidum, e.g., darkfield or direct fluorescent antibody
-#                    positive lesions)
-#                 3=Syphilitic stillbirth
-#                 4=Presumptive case (a case identified by the above
-#                    algorithm, which is not a confirmed case or syphilitic
-#                    stillbirth)
-#ID126    200-206 CDC 73.126 form Case ID number
-#VERSION  207-213 This information is automatically entered for areas using
-#                 STD*MIS. Values:
-#                 09-1991
-#                 06-2000
-#                 10-2003
-#TITERB   214-217 Titer of nontreponemal test b. - Q20.b.
-#
-#                  0=weakly reactive
-#TITERC   218-221 Titer of nontreponemal test c. - Q20.c.
-#                  0=weakly reactive
-#TITERD   222-225 Titer of nontreponemal test d. - Q20.d.
-#                  0=weakly reactive
-#TREATDAT 226-233 Date mother was treated in YYYYMMDD format - Q23 on
-#                 126 form.
-#INFTITER 234-237 Titer of infant’s first reactive non-treponemal test for syphilis
-#                 - Q33c on 126 form.
-#                 NOTE: If multiple races were selected and you entered
-#                 code 8=Other for Race (column 44), please also select the
-#                 appropriate race categories that apply in columns 238-244.
-#AMIND    238     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#ASIAN    239     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#BLACK    240     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#WHITE    241     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#NAHAW    242     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#RACEOTH  243     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#RACEUNK  244     If mother multi-racial, 1 = Yes, 2 = No, otherwise blank.
-#MCOUNTRY 245-246 Mother’s country of residence. Q.6 on 126 form.
-#REACTREP 247     Did infant have reactive treponemal test? Q.34.a. on 126
-#                 form. Values:
-#                 1 = Yes
-#                 2 = No
-#                 9 = Unknown
-#RTDATE   248-255 Date of infant reactive treponemal test in YYYYMMDD
-#                 format. Q.34.b. on 126 form.
-#
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'INFOSRCE'
+   name: 'Information Source/Provider Codes'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '61'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DETECTED'
+   name: 'Method of Case Detection (from Interview Record if available)'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '63'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MZIP'
+   name: "Zip Code for Mother's Residence"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '65'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'FUTURE'
+   name: "Future"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '70'
+   length_to_output: '10'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'CITY'
+   name: "Reporting City FIPS Code"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '80'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'single_line_text'   
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'SENTINEL'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '84'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MSTATE'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '84'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MCOUNTY'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '87'
+   length_to_output: '3'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MCITY'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '90'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MBIRTH'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '94'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MARITAL'
+   name: "Mother's Marital Status"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '102'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'LMP'
+   name: "Date of Mother's Last Menstrual Period before delivery"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '103'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'PRENATAL'
+   name: 'Did mother have prenatal care?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '111'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'PNCDATE1'
+   name: "Date of mother's first prenatal visit"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '112'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'PNCNUM'
+   name: 'Number of prenatal visits'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '120'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'NONTREP'
+   name: 'Did mother have nontreponemal test (e.g., RPR or VDRL) in pregnancy, at delivery, or soon after delivery?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '122'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DATEA'
+   name: 'Date of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '123'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RESULTA'
+   name: 'Result of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '131'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DATEB'
+   name: 'Date of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '132'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RESULTB'
+   name: 'Result of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '140'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DATEC'
+   name: 'Date of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '141'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RESULTC'
+   name: 'Result of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '149'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DATED'
+   name: 'Date of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '150'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RESULTD'
+   name: 'Result of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '158'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TITER'
+   name: 'Titer of nontreponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '159'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TREPONEM'
+   name: 'Did mother have confirmatory treponemal test result'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '163'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'LESIONS'
+   name: 'Did mother have darkfield or direct fluorescent antibody (DFA) exam of lesions at delivery?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '164'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'LASTREAT'
+   name: 'When was mother last treated for syphilis?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '165'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TXADQBEF'
+   name: "Before pregnancy, was mother's treatment adequate?"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '166'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TXADQDUR'
+   name: "During pregnancy, was mother's treatment adequate?"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '167'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RESPAPPR'
+   name: 'Appropriate serologic response?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '168'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'VITAL'
+   name: 'Vital status of child'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '169'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DEATHDAT'
+   name: 'Date of death of child'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '170'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'BIRTHWT'
+   name: 'Sentinel Reporting Site'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '178'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'REACSTS'
+   name: 'Did infant have reactive non-treponemal test for syphilis?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '182'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'REACDATE'
+   name: "Date of child's first reactive non-treponemal test for syphilis"
+   table_name:
+   column_name:
+   is_required:
+   start_position: '183'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'SIGNSCS'
+   name: 'Did child have any classic signs of CS?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '191'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DARKFLD'
+   name: 'Did child have a darkfield exam?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '192'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'DFA'
+   name: 'Did child have a direct fluorescent antibody test?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '193'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'IGM'
+   name: 'Did child have an IgM-specific treponemal test?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '194'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'XRAYS'
+   name: 'Did child have long bone x-rays?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '195'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'CSFVDRL'
+   name: 'Did child have a CSF-VDRL?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '196'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'CSFCOUNT'
+   name: 'Did child have a CSF cell count or CSF protein test?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '197'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TREATED'
+   name: 'Was child treated?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '198'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'CLASS'
+   name: 'Case Classification'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '199'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'ID126'
+   name: 'CDC 73.126 form Case ID number'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '200'
+   length_to_output: '7'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+   
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'VERSION'
+   name: 'STD*MIS. Values'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '207'
+   length_to_output: '7'
+   export_name: 'CDC'
+   data_type: 'single_line_text'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TITERB'
+   name: 'Titer of nontreponemal test b. - Q20.b.'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '214'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TITERC'
+   name: 'Titer of nontreponemal test c. - Q20.c.'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '218'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TITERD'
+   name: 'Titer of nontreponemal test d. - Q20.d.'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '222'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'TREATDAT'
+   name: ' Date mother was treated'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '226'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'INFTITER'
+   name: 'Titer of infant’s first reactive non-treponemal test for syphilis'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '234'
+   length_to_output: '4'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'AMIND'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '238'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'ASIAN'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '239'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'BLACK'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '240'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'WHITE'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '241'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'NAHAW'
+   name: ' If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '242'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RACEOTH'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '243'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RACEUNK'
+   name: 'If mother multi-racial'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '244'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'MCOUNTRY'
+   name: "Mother’s country of residence."
+   table_name:
+   column_name:
+   is_required:
+   start_position: '245'
+   length_to_output: '2'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'REACTREP'
+   name: 'Did infant have reactive treponemal test?'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '247'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type: 'radio_button'
+
+ - disease_code_group: 'Congenital Syphilis'
+   type_data: 'FORM'
+   export_column_name: 'RTDATE'
+   name: ' Date of infant reactive treponemal test'
+   table_name:
+   column_name:
+   is_required:
+   start_position: '248'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
