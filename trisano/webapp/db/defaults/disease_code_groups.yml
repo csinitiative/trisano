@@ -18,4 +18,9 @@
   
 - disease: 'Tetanus'
   codes: '10210'
-
+  
+- disease: 'STD'
+  codes: '10311|10312|10313|10314|10315|10318|10273|10274|10276|10280|10306|10307|10308|10309'
+  
+- disease: 'Congenital Syphilis'
+  codes: '10316'

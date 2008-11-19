@@ -57,7 +57,7 @@
   cdc_code: "10273"
 
 - disease_name: "Chlamydia trachomatis genital infection"
-  cdc_code: 
+  cdc_code: 10274
 
 - disease_name: "Cholera (toxigenic Vibrio cholerae O1 or O139)"
   cdc_code: 
@@ -114,7 +114,7 @@
   cdc_code: 
 
 - disease_name: "Gonorrhea"
-  cdc_code: 
+  cdc_code: 10280
 
 - disease_name: "Granuloma inguinale (GI)"
   cdc_code: 
@@ -201,7 +201,7 @@
   cdc_code: 11080
 
 - disease_name: "Lymphogranuloma venereum (LGV)"
-  cdc_code: 
+  cdc_code: 10306
 
 - disease_name: "Malaria"
   cdc_code: "10130"
@@ -228,13 +228,13 @@
   cdc_code: "10317"
 
 - disease_name: "Nongonococcal urethritis (NGU)"
-  cdc_code: 
+  cdc_code: 10307
 
 - disease_name: "Novel influenza A virus infections"
   cdc_code: 
 
 - disease_name: "Pelvic Inflammatory Disease (PID), Unknown Etiology"
-  cdc_code: 
+  cdc_code: 10309
 
 - disease_name: "Pertussis"
   cdc_code: "10190"
@@ -321,22 +321,22 @@
   cdc_code: 
 
 - disease_name: "Syphilis, congenital"
-  cdc_code: 
+  cdc_code: 10316
 
 - disease_name: "Syphilis, early latent"
-  cdc_code: 
+  cdc_code: 10313
 
 - disease_name: "Syphilis, late latent"
-  cdc_code: 
+  cdc_code: 10314
 
 - disease_name: "Syphilis, late with clinical manifestations other than neurosyphilis"
-  cdc_code: 
+  cdc_code: 10318
 
 - disease_name: "Syphilis, primary"
-  cdc_code: 
+  cdc_code: 10311
 
 - disease_name: "Syphilis, secondary"
-  cdc_code: 
+  cdc_code: 10312
 
 - disease_name: "Syphilis, total primary and secondary"
   cdc_code: 
