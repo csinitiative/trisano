@@ -5,7 +5,7 @@
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
 -# GNU Affero General Public License as published by the Free Software Foundation, either 
 -# version 3 of the License, or (at your option) any later version.
-
+-#
 -# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
 -# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 -# See the GNU Affero General Public License for more details.
@@ -13,31 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- content_for :title do
-  Admin Dashboard
+%table.list
+  %tr
+    %th.forminformation
+      Export Conversion Value
+  %tr
+    %td
+      %span{ :class => "horiz" }
+        = f.label(:value_from, "When local value is&nbsp;&nbsp;(leave blank for 'text' values)")
+        = f.text_field(:value_from)
 
-/- content_for :name do
+      %span{ :class => "horiz" }
+        = f.label(:value_to, "Convert it to")
+        = f.text_field(:value_to, :class => 'required')
 
-- content_for :tools do
-  
-  = link_to 'Diseases', diseases_path
-  |
-  = link_to 'CDC Export Configuration', export_columns_path
-  |
-  = link_to 'Core Fields', core_fields_path
-  |
-  = link_to 'Forms', forms_path
-  |
-  = link_to 'Users', users_path
-  |
-  = link_to 'Codes', codes_path
-  |
-  = link_to 'Event Queues', event_queues_path
-  |
-  = link_to 'CDC Export', url_for(:controller => 'export', :action => 'cdc', :format => 'dat')
-  |
-  = link_to 'IBIS Export', url_for(:controller => 'export', :action => 'ibis', :format => 'xml')
-
-%br
-%br
-%br

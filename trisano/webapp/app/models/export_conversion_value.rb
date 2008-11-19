@@ -16,4 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 class ExportConversionValue < ActiveRecord::Base
   belongs_to :export_column
+
+  validates_presence_of :value_to
 end

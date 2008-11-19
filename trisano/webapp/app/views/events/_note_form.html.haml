@@ -54,7 +54,6 @@
                     = note_fields.check_box :struckthrough, :onclick => "toggle_strike_through('note_#{note.id}')"
           %tr
             %td
-              - note_body = note.note
               - note_body = simple_format(note.note)
               - if note.struckthrough?
                 %div{:id => "note_#{note.id}", :class => 'struck-through'}

@@ -98,17 +98,9 @@
     %tr
       %th.forminformation
         Column Conversion Values
-      %th
-
     - for conversion_value in @export_column.export_conversion_values
       %tr.roll
         %td
-          - value_from = conversion_value.value_from.blank? ? "Text Value" : conversion_value.value_from
-          = "Convert&nbsp;&nbsp; #{value_from}&nbsp;&nbsp;to&nbsp;&nbsp;#{conversion_value.value_to}"
-        %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            = link_to('Edit', edit_export_column_export_conversion_value_path(@export_column, conversion_value))
-            |
-            = link_to('Delete', export_column_export_conversion_value_path(@export_column, conversion_value), :method => :delete)
+          = "Convert #{conversion_value.value_from} to #{conversion_value.value_to}"
 
   = link_to "Add a conversion value", new_export_column_export_conversion_value_url(@export_column)
