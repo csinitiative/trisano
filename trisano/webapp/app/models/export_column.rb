@@ -17,8 +17,8 @@
 
 class ExportColumn < ActiveRecord::Base
   belongs_to :export_name
-  has_many   :export_conversion_values, :order => "sort_order ASC"
-  has_and_belongs_to_many   :diseases
+  has_many :export_conversion_values, :order => "sort_order ASC", :dependent => :destroy
+  has_and_belongs_to_many :diseases
   belongs_to :export_disease_group
 
   class << self

@@ -304,6 +304,14 @@ module TrisanoHelper
     return(browser.is_text_present("Diseases"))
   end
   
+  def navigate_to_export_admin(browser)
+    browser.open "/trisano/cmrs"
+    click_nav_admin(browser)
+    browser.click("link=CDC Export Configuration")
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Export Columns"))
+  end
+
   def create_disease(browser, disease_attributes)
     modify_disease(browser, disease_attributes)
     browser.wait_for_page_to_load($load_time)

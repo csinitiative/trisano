@@ -41,7 +41,7 @@
 #rot
   = error_messages_for :export_conversion_value
 
-  - form_for(@export_conversion_value, :url => export_column_export_conversion_value_path(@export_column, @export_conversion_value)) do |f|
+  - form_for([@export_column, @export_conversion_value]) do |f|
 
     = render :partial => 'form', :locals => { :f => f, :editing => true }
 
