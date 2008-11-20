@@ -45,10 +45,10 @@ describe 'Form Builder Admin Delete Follow-Up Functionality' do
     
     add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text"})
     add_follow_up_to_question(@browser, @question_for_follow_up, "Yes")
-    add_question_to_follow_up(@browser, "Follow up, Condition: 'Yes'", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
     
     delete_follow_up(@browser, "Core follow up, Code condition: Female (gender)").should be_true
-    delete_follow_up(@browser, "Follow up, Condition: 'Yes'").should be_true
+    delete_follow_up(@browser, "Follow up, Condition: <b>Yes</b>").should be_true
     
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "Hantavirus infection", "Bear River Health Department")

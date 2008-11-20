@@ -31,7 +31,7 @@ describe 'form builder patient-level followups for morbidity events' do
     {:name => 'Patient primary language', :label => 'morbidity_event_active_patient__person_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
   ]                                                  
   
-  data_types = [#{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
+  data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
