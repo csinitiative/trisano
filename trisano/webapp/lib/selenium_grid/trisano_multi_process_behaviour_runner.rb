@@ -7,7 +7,7 @@ class TriSanoMultiProcessSpecRunner
   def initialize(max_concurrent_processes = 10, reports_prefix = "Default")
     @max_concurrent_processes = max_concurrent_processes
     @reports_prefix = reports_prefix
-    puts "Initializing TriSanoMultiProcessSpecRunner with " + @max_concurrent_processes + " max concurrent processes"
+    puts "Initializing TriSanoMultiProcessSpecRunner with " + @max_concurrent_processes.to_s + " max concurrent processes"
     puts "reports prefix: #{reports_prefix} @reports_prefix: #{@reports_prefix}"
   end
   
