@@ -74,6 +74,15 @@ namespace :trisano do
       puts "[complete]"
     end
 
+    desc "TriSano specific - Compile daily report"
+    task :compilereport => [:report_dir] do
+      require './lib/selenium_grid/trisano_multi_process_behaviour_runner'
+      require './lib/selenium_grid/screenshot_formatter'
+      runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
+      runner.compile_report(Dir[SPECS_PATTERN])
+      puts "Complete"
+    end
+    
     desc "display grid hub console"
     task :console do
       sh "firefox http://localhost:4444/console"

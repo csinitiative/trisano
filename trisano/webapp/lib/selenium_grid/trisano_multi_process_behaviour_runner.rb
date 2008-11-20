@@ -25,7 +25,13 @@ class TriSanoMultiProcessSpecRunner
       puts "Test process ##{i} with pid #{pid} completed with #{status}"
       success &&= status.exitstatus.zero?
     end
-    puts "Completed testing. Compiling reports."
+    puts "Completed testing."
+    
+    # in order to enable N runs (split up # of tests and restart grid), could set an env variable or something and check at the end
+    raise "Build failed" unless success
+  end
+
+  def compile_report
     script = File.expand_path(File.dirname(__FILE__) + "/aggregate_reports.rb")
     reports = Dir[screenshot_dir + "/Selenium-Build-Report-*.html"].collect {|report| %{"#{report}"} }.join(' ')
     t = Time.now
@@ -37,11 +43,8 @@ class TriSanoMultiProcessSpecRunner
     #puts "moving results to /data/csi/trisano/test-results"
     #FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results')
     #puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
-    
-    # in order to enable N runs (split up # of tests and restart grid), could set an env variable or something and check at the end
-    raise "Build failed" unless success
   end
-
+  
   protected
  
   def options(process_number)
