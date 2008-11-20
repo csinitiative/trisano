@@ -45,6 +45,12 @@
   %table.list
     %tr
       %th.forminformation
+        Associated Diseases
+    %tr
+      %td
+        = render :partial => 'disease', :collection => @export_column.diseases
+    %tr
+      %th.forminformation
         Edit Export Column
     %tr
       %td
