@@ -27,8 +27,8 @@ class TriSanoMultiProcessSpecRunner
     end
     puts "Completed testing."
     
-    puts "moving results to /data/csi/trisano/test-results/latest_UAT"
-    FileUtils.mv("#{screenshot_dir}/*.html", '/data/csi/trisano/test-results/latest_UAT')
+    puts "moving results to /data/csi/trisano/test-results/UAT/latest"
+    FileUtils.mv("#{screenshot_dir}/*.html", '/data/csi/trisano/test-results/UAT/latest')
     puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
     
     # in order to enable N runs (split up # of tests and restart grid), could set an env variable or something and check at the end
