@@ -62,15 +62,8 @@ namespace :trisano do
       runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
       puts "REPORTS_PREFIX: #{REPORTS_PREFIX}"
       puts "running following specs: #{SPECS_PATTERN}"
-      begin
       runner.run(Dir[SPECS_PATTERN])
-      rescue IOError => exception
-        if exception.message.index("File or directory not found: trisano:selenium:runtrisano").nil?
-          raise
-        else
-          puts "Run completed but rake had an error"
-        end      
-      end
+      runner.compile_report
       puts "[complete]"
     end
 
