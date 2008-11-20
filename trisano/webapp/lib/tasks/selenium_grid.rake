@@ -63,7 +63,6 @@ namespace :trisano do
       puts "REPORTS_PREFIX: #{REPORTS_PREFIX}"
       puts "running following specs: #{SPECS_PATTERN}"
       runner.run(Dir[SPECS_PATTERN])
-      runner.compile_report
       puts "[complete]"
     end
 

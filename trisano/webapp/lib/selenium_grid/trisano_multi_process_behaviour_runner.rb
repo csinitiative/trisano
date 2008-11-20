@@ -37,16 +37,16 @@ class TriSanoMultiProcessSpecRunner
 
   def compile_report
     script = File.expand_path(File.dirname(__FILE__) + "/aggregate_reports.rb")
-    reports = Dir[screenshot_dir + "/Selenium-Build-Report-*.html"].collect {|report| %{"#{report}"} }.join(' ')
+    reports = Dir["/data/csi/trisano/test-results/UAT/latest/*.html"].collect {|report| %{"#{report}"} }.join(' ')
     t = Time.now
     tformated = t.strftime("%m-%d-%Y-%I%M%p")
     report_file_name = "#{tformated}-#{@reports_prefix}-Aggregated-Selenium-Report.html"
     command = %{ruby "#{script}" #{reports} > "#{screenshot_dir}/#{report_file_name}"}   
     puts sh
     sh command
-    #puts "moving results to /data/csi/trisano/test-results"
-    #FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results')
-    #puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
+    puts "moving results to /data/csi/trisano/test-results"
+    FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results/UAT')
+    puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
   end
   
   protected
