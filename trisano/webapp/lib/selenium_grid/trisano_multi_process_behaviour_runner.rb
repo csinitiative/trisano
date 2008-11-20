@@ -29,7 +29,7 @@ class TriSanoMultiProcessSpecRunner
     puts "moving results to /data/csi/trisano/test-results/UAT/latest"
     FileUtils.mv("#{screenshot_dir}/Selenium-Build-Report-0.html", "/data/csi/trisano/test-results/UAT/latest/#{@reports_prefix}-set-0.html")
     FileUtils.mv("#{screenshot_dir}/Selenium-Build-Report-1.html", "/data/csi/trisano/test-results/UAT/latest/#{@reports_prefix}-set-1.html")
-    puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
+    puts "see results at http://results.csi.osuosl.org/#{@report_file_name}"
     
     # in order to enable N runs (split up # of tests and restart grid), could set an env variable or something and check at the end
     raise "Build failed" unless success
