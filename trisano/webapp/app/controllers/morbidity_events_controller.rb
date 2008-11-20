@@ -110,14 +110,11 @@ class MorbidityEventsController < EventsController
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
     end
     
-    p @event.valid?
-    p @event.errors
-
     respond_to do |format|
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save}
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
-          [@event, @contact_events, @place_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          [@event, @contact_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
@@ -151,7 +148,7 @@ class MorbidityEventsController < EventsController
       if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
-          [@event, @contact_events, @place_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          [@event, @contact_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
         flash[:notice] = 'CMR was successfully updated.'
         format.html { 

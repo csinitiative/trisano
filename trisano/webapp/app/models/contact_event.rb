@@ -41,9 +41,9 @@ class ContactEvent < HumanEvent
         end
 
         contact_event = ContactEvent.new
-        contact_event.participations << primary
-        contact_event.participations << contact
-        contact_event.participations << jurisdiction
+        contact_event.patient = primary
+        contact_event.contacts << contact
+        contact_event.jurisdiction = jurisdiction
         contact_event.disease_event = disease_event unless morbidity_event.disease.nil?
         contact_events << contact_event
       end
