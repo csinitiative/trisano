@@ -33,9 +33,9 @@ class TriSanoMultiProcessSpecRunner
     report_file_name = "#{tformated}-#{@reports_prefix}-Aggregated-Selenium-Report.html"
     command = %{ruby "#{script}" #{reports} > "#{screenshot_dir}/#{report_file_name}"}   
     sh command
-    puts "moving results to /data/csi/trisano/test-results"
-    FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results')
-    puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
+    #puts "moving results to /data/csi/trisano/test-results"
+    #FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results')
+    #puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
     
     # in order to enable N runs (split up # of tests and restart grid), could set an env variable or something and check at the end
     raise "Build failed" unless success
