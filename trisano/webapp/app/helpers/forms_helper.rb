@@ -409,7 +409,12 @@ module FormsHelper
     begin
       result =  "<li id='value_#{element.id.to_s}' class='fb-value'>"
       result << "<span class='inactive-value'>" unless element.is_active
-      result << element.name
+      if element.name.blank?
+        result << "<i color='#999999'>Blank</i>"
+      else
+        result << element.name
+      end
+      
       result << "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
       result << " " << toggle_value_link(element) << "</li>"
       return result

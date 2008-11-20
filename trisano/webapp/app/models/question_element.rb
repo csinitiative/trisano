@@ -91,7 +91,7 @@ class QuestionElement < FormElement
   end
   
   def build_cdc_value_set
-    return unless export_column.data_type == "radio_button"
+    return unless ((export_column.data_type == "radio_button") or (export_column.data_type == "drop_down") or (export_column.data_type == "check_box"))
     
     value_set = ValueSetElement.create({
         :form_id => self.form_id,
@@ -102,7 +102,16 @@ class QuestionElement < FormElement
     
     self.add_child(value_set)
 
-     export_column.export_conversion_values.each do |value|
+    if (export_column.data_type == "drop_down")
+      blank_value_element = ValueElement.create({
+          :form_id => self.form_id,
+          :tree_id => self.tree_id,
+          :name => ""
+        })
+      value_set.add_child(blank_value_element)
+    end
+
+    export_column.export_conversion_values.each do |value|
       value_element = ValueElement.create({
           :form_id => self.form_id,
           :tree_id => self.tree_id,

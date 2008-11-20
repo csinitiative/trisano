@@ -35,10 +35,32 @@
         %td.forminformation
           .formname
             = @disease.disease_name
-          .tools
+
+          %span{ :class => "horiz" }
+            %b
+              CDC/NETSS code
+            %br
+            = @disease.cdc_code
+
+          %span{ :class => "horiz" }
+            %b
+              Status
+            %br
             = @disease.active? ? 'Active' :  'Inactive'
+
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_disease_path(@disease)
             |
             Show
+    - unless @disease.export_columns.empty?
+      %table.list
+        %tr
+          %th.forminformation
+            CDC Export Columns
+        %tr
+          %td.forminformation
+            %ul
+              - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
+                %li
+                  = export_column.export_column_name

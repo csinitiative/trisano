@@ -22,14 +22,23 @@ describe "/diseases/show.html.haml" do
   
   before(:each) do
     @disease = mock_model(Disease)
+    @export_column_1 = mock_model(ExportColumn)
+    @export_column_1.stub!(:export_column_name).and_return("CHLOR")
+    @export_column_2 = mock_model(ExportColumn)
+    @export_column_2.stub!(:export_column_name).and_return("DAYCARE")
     @disease.stub!(:disease_name).and_return("The Pops")
-
+    @disease.stub!(:active?).and_return(true)
+    @disease.stub!(:cdc_code).and_return("123456")
+    @disease.stub!(:export_columns).and_return([@export_column_1, @export_column_2])
     assigns[:disease] = @disease
   end
 
-  it "should render attributes in <p>" do
-    pending
+  it "should show the export column mappings" do
     render "/diseases/show.html.haml"
+    response.should have_tag('li', :text => 'CHLOR')
+    response.should have_tag('li', :text => 'DAYCARE')
   end
+  
+
 end
 

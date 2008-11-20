@@ -355,7 +355,7 @@
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
    export_column_name: 'ATYPE'
-   name: 'Type Contact'
+   name: 'Type Contact (A)'
    table_name: 
    column_name: 
    is_required: 
@@ -451,7 +451,7 @@
  - disease_code_group: 'Hepatitis'
    type_data: 'FORM'
    export_column_name: 'BTYPE'
-   name: 'Type Contact'
+   name: 'Type Contact (B)'
    table_name: 
    column_name: 
    is_required: 
@@ -2543,7 +2543,7 @@
    start_position: '265'
    length_to_output: '3'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'drop_down'
 
  - disease_code_group: 'Mumps-Rubella'
    type_data: 'FORM'
@@ -3740,7 +3740,7 @@
  - disease_code_group: 'Tetanus'
    type_data: 'FORM'
    export_column_name: 'DESCRIBE'
-   name: 'Describe'
+   name: 'DESCRIBE'
    table_name:
    column_name:
    is_required:
@@ -3788,7 +3788,7 @@
  - disease_code_group: 'Tetanus'
    type_data: 'FORM'
    export_column_name: 'DESCR'
-   name: 'Describe'
+   name: 'DESCR'
    table_name:
    column_name:
    is_required:
@@ -4308,7 +4308,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MSTATE'
-   name: 'Sentinel Reporting Site'
+   name: "FIPS Code for Mother's County of Residence"
    table_name:
    column_name:
    is_required:
@@ -4320,7 +4320,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MCOUNTY'
-   name: 'Sentinel Reporting Site'
+   name: "FIPS Code for Mother's City of Residence"
    table_name:
    column_name:
    is_required:
@@ -4332,7 +4332,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MCITY'
-   name: 'Sentinel Reporting Site'
+   name: "FIPS Code for Mother's City of Residence"
    table_name:
    column_name:
    is_required:
@@ -4344,7 +4344,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MBIRTH'
-   name: 'Sentinel Reporting Site'
+   name: "Mother's Date of Birth"
    table_name:
    column_name:
    is_required:
@@ -4428,7 +4428,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'DATEA'
-   name: 'Date of nontreponemal test'
+   name: 'Date of nontreponemal test (A)'
    table_name:
    column_name:
    is_required:
@@ -4440,7 +4440,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RESULTA'
-   name: 'Result of nontreponemal test'
+   name: 'Result of nontreponemal test (A)'
    table_name:
    column_name:
    is_required:
@@ -4452,7 +4452,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'DATEB'
-   name: 'Date of nontreponemal test'
+   name: 'Date of nontreponemal test (B)'
    table_name:
    column_name:
    is_required:
@@ -4464,7 +4464,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RESULTB'
-   name: 'Result of nontreponemal test'
+   name: 'Result of nontreponemal test (B)'
    table_name:
    column_name:
    is_required:
@@ -4476,7 +4476,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'DATEC'
-   name: 'Date of nontreponemal test'
+   name: 'Date of nontreponemal test (C)'
    table_name:
    column_name:
    is_required:
@@ -4488,7 +4488,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RESULTC'
-   name: 'Result of nontreponemal test'
+   name: 'Result of nontreponemal test (C)'
    table_name:
    column_name:
    is_required:
@@ -4500,7 +4500,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'DATED'
-   name: 'Date of nontreponemal test'
+   name: 'Date of nontreponemal test (D)'
    table_name:
    column_name:
    is_required:
@@ -4512,7 +4512,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RESULTD'
-   name: 'Result of nontreponemal test'
+   name: 'Result of nontreponemal test (D)'
    table_name:
    column_name:
    is_required:
@@ -4632,7 +4632,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'BIRTHWT'
-   name: 'Sentinel Reporting Site'
+   name: 'Birthweight in grams'
    table_name:
    column_name:
    is_required:
@@ -4860,7 +4860,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'AMIND'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (AMIND)'
    table_name:
    column_name:
    is_required:
@@ -4872,7 +4872,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'ASIAN'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (ASIAN)'
    table_name:
    column_name:
    is_required:
@@ -4884,7 +4884,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'BLACK'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (BLACK)'
    table_name:
    column_name:
    is_required:
@@ -4896,7 +4896,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'WHITE'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (WHITE)'
    table_name:
    column_name:
    is_required:
@@ -4908,7 +4908,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'NAHAW'
-   name: ' If mother multi-racial'
+   name: 'If mother multi-racial (NAHAW)'
    table_name:
    column_name:
    is_required:
@@ -4920,7 +4920,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RACEOTH'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (RACEOTH)'
    table_name:
    column_name:
    is_required:
@@ -4932,7 +4932,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'RACEUNK'
-   name: 'If mother multi-racial'
+   name: 'If mother multi-racial (RACEUNK)'
    table_name:
    column_name:
    is_required:

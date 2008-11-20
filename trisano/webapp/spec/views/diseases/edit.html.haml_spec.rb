@@ -26,6 +26,7 @@ describe "/diseases/edit.html.haml" do
     @disease.stub!(:contact_lead_in).and_return("")
     @disease.stub!(:place_lead_in).and_return("")
     @disease.stub!(:treatment_lead_in).and_return("")
+    @disease.should_receive(:active?).and_return(true)
     @disease.should_receive(:active).and_return(true)
     @disease.should_receive(:cdc_code).and_return("")
     @disease.should_receive(:external_code_ids).at_least(7).times.and_return([])
@@ -33,9 +34,7 @@ describe "/diseases/edit.html.haml" do
   end
 
   it "should render edit form" do
-    pending
     render "/diseases/edit.html.haml"
-    
     response.should have_tag("form[action=#{disease_path(@disease)}][method=post]") do
     end
   end

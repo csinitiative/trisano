@@ -163,7 +163,7 @@ describe QuestionElement do
       
     end
     
-    it "should bootstrap the value set" do
+    it "should bootstrap the value set for a radio button data type" do
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
       
@@ -190,6 +190,65 @@ describe QuestionElement do
       cdc_value_elements[0].name.should eql(export_conversion_values(:jaundiced_yes).value_from)
       cdc_value_elements[1].name.should eql(export_conversion_values(:jaundiced_no).value_from)
       cdc_value_elements[2].name.should eql(export_conversion_values(:jaundiced_unknown).value_from)
+    end
+
+    it "should bootstrap the value set with a blank lead-in value for a drop_down data type" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "5",
+          :question_attributes => {
+            :question_text => "Drop down?"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      cdc_value_set = retrieved_question_element.children[0]
+      cdc_value_set.should_not be_nil
+      cdc_value_set.name.should eql("CDC DROPDOWN")
+      cdc_value_set.export_column_id.should eql(export_columns(:hep_drop_down).id)
+      
+      cdc_value_elements = cdc_value_set.children
+      cdc_value_elements.size.should eql(4)
+      
+      cdc_value_elements[0].name.should eql("")
+      cdc_value_elements[1].name.should eql(export_conversion_values(:drop_down_yes).value_from)
+      cdc_value_elements[2].name.should eql(export_conversion_values(:drop_down_no).value_from)
+      cdc_value_elements[3].name.should eql(export_conversion_values(:drop_down_unknown).value_from)
+    end
+    
+    it "should bootstrap the value set for a check_box data type" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "6",
+          :question_attributes => {
+            :question_text => "Check box?"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      cdc_value_set = retrieved_question_element.children[0]
+      cdc_value_set.should_not be_nil
+      cdc_value_set.name.should eql("CDC CHECKBOX")
+      cdc_value_set.export_column_id.should eql(export_columns(:hep_check_box).id)
+      
+      cdc_value_elements = cdc_value_set.children
+      cdc_value_elements.size.should eql(3)
+      
+      cdc_value_elements[0].name.should eql(export_conversion_values(:check_box_yes).value_from)
+      cdc_value_elements[1].name.should eql(export_conversion_values(:check_box_no).value_from)
+      cdc_value_elements[2].name.should eql(export_conversion_values(:check_box_unknown).value_from)
     end
 
     it "should not bootstrap a value set for date data types" do
@@ -233,6 +292,48 @@ describe QuestionElement do
       retrieved_question_element.question.question_text.should eql("Vaccine year")
       retrieved_question_element.children.size.should eql(0)
       retrieved_question_element.question.data_type.should eql(export_columns(:hep_vaccineyea).data_type.to_sym)
+    end
+    
+    it "should not bootstrap a value set for multi_line_text types" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "8",
+          :question_attributes => {
+            :question_text => "Multi-line?"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.question_text.should eql("Multi-line?")
+      retrieved_question_element.children.size.should eql(0)
+      retrieved_question_element.question.data_type.should eql(export_columns(:hep_multi_line).data_type.to_sym)
+    end
+    
+    it "should not bootstrap a value set for phone types" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+      
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "7",
+          :question_attributes => {
+            :question_text => "Phone?"
+          }
+        })
+        
+      saved = question_element.save_and_add_to_form
+      saved.should_not be_nil
+      
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.question_text.should eql("Phone?")
+      retrieved_question_element.children.size.should eql(0)
+      retrieved_question_element.question.data_type.should eql(export_columns(:hep_phone).data_type.to_sym)
     end
     
   end

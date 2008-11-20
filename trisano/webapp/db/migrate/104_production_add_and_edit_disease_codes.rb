@@ -15,16 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ProductionHepCdcLoad < ActiveRecord::Migration
+class ProductionAddAndEditDiseaseCodes < ActiveRecord::Migration
   def self.up
     if RAILS_ENV == 'production'
-      
-      say "Clean up rows from r 3.3"
-      reversed_value_to_row = ExportConversionValue.find_by_value_to("Encephalitis, post-other")
-      reversed_value_to_row.destroy unless reversed_value_to_row.nil?
-      reversed_value_to_row = ExportConversionValue.find_by_value_to("Legionellosis")
-      reversed_value_to_row.destroy unless reversed_value_to_row.nil?
-      
       say "Update diseases with CDC values"
       
       aids = Disease.find_by_disease_name("AIDS")
@@ -273,7 +266,74 @@ class ProductionHepCdcLoad < ActiveRecord::Migration
         meas.save!
       end
       
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data.rb"
+      ### STDs ###
+      
+      chl = Disease.find_by_disease_name("Chlamydia trachomatis infection")
+      unless chl.nil?
+        chl.cdc_code = "10274"
+        chl.save!
+      end
+      
+      sypp = Disease.find_by_disease_name("Syphilis, primary")
+      unless sypp.nil?
+        sypp.cdc_code = "10311"
+        sypp.save!
+      end
+
+      syps = Disease.find_by_disease_name("Syphilis, secondary")
+      unless syps.nil?
+        syps.cdc_code = "10312"
+        syps.save!
+      end
+
+      sypel = Disease.find_by_disease_name("Syphilis, early latent")
+      unless sypel.nil?
+        sypel.cdc_code = "10313"
+        sypel.save!
+      end
+
+      sypll = Disease.find_by_disease_name("Syphilis, late latent")
+      unless sypll.nil?
+        sypll.cdc_code = "10314"
+        sypll.save!
+      end
+      
+      sypul = Disease.find_by_disease_name("Syphilis, unknown latent")
+      unless sypul.nil?
+        sypul.cdc_code = "10315"
+        sypul.save!
+      end
+
+      sypc = Disease.find_by_disease_name("Syphilis, congenital")
+      unless sypc.nil?
+        sypc.cdc_code = "10316"
+        sypc.save!
+      end
+      
+      sypmal = Disease.find_by_disease_name("Syphilis, late with clinical manifestations other than neurosyphilis")
+      unless sypmal.nil?
+        sypmal.cdc_code = "10318"
+        sypmal.save!
+      end
+      
+      gono = Disease.find_by_disease_name("Gonorrhea")
+      unless gono.nil?
+        gono.cdc_code = "10280"
+        gono.save!
+      end
+
+      lgv = Disease.find_by_disease_name("Lymphogranuloma venereum (LGV)")
+      unless lgv.nil?
+        lgv.cdc_code = "10306"
+        lgv.save!
+      end
+      
+      pid = Disease.find_by_disease_name("Pelvic Inflammatory Disease (PID)")
+      unless pid.nil?
+        pid.cdc_code = "10309"
+        pid.save!
+      end
+     
     end
   end
 

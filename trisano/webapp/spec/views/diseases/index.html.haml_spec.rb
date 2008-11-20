@@ -24,9 +24,12 @@ describe "/diseases/index.html.haml" do
     disease_98 = mock_model(Disease)
     disease_98.stub!(:disease_name).and_return("The Pops")
     disease_98.should_receive(:active?).and_return(true)
+    disease_98.stub!(:cdc_code).and_return("123456")
+    
     disease_99 = mock_model(Disease)
     disease_99.stub!(:disease_name).and_return("The Pops")
     disease_99.should_receive(:active?).and_return(true)
+    disease_99.stub!(:cdc_code).and_return("654321")
 
     assigns[:diseases] = [disease_98, disease_99]
   end

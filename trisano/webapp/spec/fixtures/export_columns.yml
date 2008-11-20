@@ -64,7 +64,56 @@ hep_vaccineyea:
    start_position: '118'
    length_to_output: '2'
    data_type: 'single_line_text'
+
+hep_drop_down:
+   id: 5
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'DROPDOWN'
+   name: 'Drop down?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '70'
+   length_to_output: '1'
+   data_type: 'drop_down'
+
+hep_check_box:
+   id: 6
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'CHECKBOX'
+   name: 'Check box?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '71'
+   length_to_output: '1'
+   data_type: 'check_box'
    
-   
-   
+hep_phone:
+   id: 7
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'PHONE'
+   name: 'Phone?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '72'
+   length_to_output: '13'
+   data_type: 'phone'
+
+hep_multi_line:
+   id: 8
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'MULTILINE'
+   name: 'Multi-line?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '86'
+   length_to_output: '20'
+   data_type: 'multi_line_text'
 

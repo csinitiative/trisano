@@ -68,5 +68,60 @@ vaccineyea_format:
   value_from: 
   value_to: '99'
   sort_order: 
+    
+drop_down_yes:
+  id: 12
+  export_column_id: 5
+  value_from: 'Yes'
+  value_to: '1'
+  sort_order: 1
   
+drop_down_no:
+  id: 13
+  export_column_id: 5
+  value_from: 'No'
+  value_to: '2'
+  sort_order: 2
+
+drop_down_unknown:
+  id: 14
+  export_column_id: 5
+  value_from: 'Unknown'
+  value_to: '9'
+  sort_order: 3
+  
+check_box_yes:
+  id: 15
+  export_column_id: 6
+  value_from: 'Yes'
+  value_to: '1'
+  sort_order: 1
+  
+check_box_no:
+  id: 16
+  export_column_id: 6
+  value_from: 'No'
+  value_to: '2'
+  sort_order: 2
+
+check_box_unknown:
+  id: 17
+  export_column_id: 6
+  value_from: 'Unknown'
+  value_to: '9'
+  sort_order: 3 
+
+phone_format:
+  id: 18
+  export_column_id: 7
+  value_from: 
+  value_to: '9999999999999'
+  sort_order: 
+
+multiline_format:
+  id: 19
+  export_column_id: 8
+  value_from: 
+  value_to: '99999999999999999999'
+  sort_order: 
   
