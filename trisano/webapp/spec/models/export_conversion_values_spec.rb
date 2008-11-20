@@ -14,10 +14,29 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-class ExportConversionValue < ActiveRecord::Base
-  belongs_to :export_column
 
-  validates_presence_of :value_to
-  validates_numericality_of :sort_order, :allow_blank => true
-  validates_uniqueness_of :sort_order, :scope => :export_column_id
+require File.dirname(__FILE__) + '/../spec_helper'
+
+describe ExportConversionValue do
+  before(:each) do
+    @xcv = ExportConversionValue.new
+  end
+
+  it "should require a value_to" do
+    @xcv.sort_order = 1
+
+    @xcv.should_not be_valid
+    @xcv.value_to = "info"
+    @xcv.should be_valid
+  end
+
+  it "should force sort_order to be a number" do
+    @xcv.value_to = "info"
+
+    @xcv.sort_order = "Hi"
+    @xcv.should_not be_valid
+    @xcv.sort_order = 1
+    @xcv.should be_valid
+  end
+
 end

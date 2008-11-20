@@ -27,3 +27,6 @@
         = f.label(:value_to, "Convert it to")
         = f.text_field(:value_to, :class => 'required')
 
+      %span{ :class => "horiz" }
+        = f.label(:sort_order)
+        = f.text_field(:sort_order, :size => 5)
