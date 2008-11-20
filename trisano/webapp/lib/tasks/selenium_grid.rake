@@ -71,7 +71,7 @@ namespace :trisano do
       require './lib/selenium_grid/trisano_multi_process_behaviour_runner'
       require './lib/selenium_grid/screenshot_formatter'
       runner = TriSanoMultiProcessSpecRunner.new(SPEC_RUNNER_COUNT.to_i, REPORTS_PREFIX)
-      runner.compile_report(Dir[SPECS_PATTERN])
+      runner.compile_report
       puts "Complete"
     end
     
