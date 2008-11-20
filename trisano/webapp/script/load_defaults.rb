@@ -116,16 +116,11 @@ User.transaction do
   end
 end
 
-# Create some superusers
+# Create a default superusers
 Entitlement.transaction do
   
   # Give these users all roles in all jurisdictions
   user = User.find_by_user_name('default_user')
-  mike = User.find_by_user_name('mike')
-  chuck = User.find_by_user_name('chuck')
-  davidjackson = User.find_by_user_name('davidjackson')
-  richard = User.find_by_user_name('Rkurzban')
-  ben = User.find_by_user_name('benjamingoodrich')
                   
   jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
   jurisdictions = Entity.find(:all, 
@@ -142,11 +137,6 @@ Entitlement.transaction do
   end
 
   user.update_attributes( { :role_membership_attributes => roles_for_default_users } )
-  mike.update_attributes( { :role_membership_attributes => roles_for_default_users } )
-  chuck.update_attributes( { :role_membership_attributes => roles_for_default_users } )
-  davidjackson.update_attributes( { :role_membership_attributes => roles_for_default_users } )
-  richard.update_attributes( { :role_membership_attributes => roles_for_default_users } )
-  ben.update_attributes( { :role_membership_attributes => roles_for_default_users } )
 end
 
 
