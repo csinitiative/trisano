@@ -51,7 +51,7 @@ class ExportConversionValuesController < AdminController
     
     if @export_conversion_value.update_attributes(params[:export_conversion_value])
       flash[:notice] = 'Export Conversion Value was successfully updated.'
-      redirect_to export_column_export_conversion_value_url(@export_column, @export_conversion_value)
+      redirect_to export_column_url(@export_column)
     else
       render :action => "edit"
     end
@@ -60,7 +60,7 @@ class ExportConversionValuesController < AdminController
   def destroy
     export_conversion_value =  @export_column.export_conversion_values.find(params[:id])
     @export_column.export_conversion_values.delete(export_conversion_value)
-    redirect_to export_column_export_conversion_value_url(@export_column, @export_conversion_value)
+    redirect_to export_column_url(@export_column)
   end
 
   private
