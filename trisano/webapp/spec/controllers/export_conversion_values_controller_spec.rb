@@ -18,13 +18,16 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ExportConversionValuesController do
+  before(:each) do
+    mock_user
+    @proxy = mock('proxy')
+    @export_column = mock_model(ExportColumn, :to_param => "1")
+    @export_column.stub!(:export_conversion_values).and_return(@proxy)
+    ExportColumn.stub!(:find).and_return(@export_column)
+  end
+
   describe "handling GET /export_conversion_values" do
 
-    before(:each) do
-      mock_user
-      @export_column = mock_model(ExportColumn, :to_param => 1)
-    end
-  
     def do_get
       get :index, :export_column_id => "1"
     end
@@ -38,11 +41,6 @@ describe ExportConversionValuesController do
 
   describe "handling GET /export_conversion_values/1" do
 
-    before(:each) do
-      mock_user
-      @export_column = mock_model(ExportColumn, :to_param => 1)
-    end
-  
     def do_get
       get :show, :id => "1", :export_column_id => "1"
     end
@@ -57,7 +55,6 @@ describe ExportConversionValuesController do
   describe "handling GET /export_conversion_values/new" do
 
     before(:each) do
-      mock_user
       @export_conversion_value = mock_model(ExportConversionValue)
       ExportConversionValue.stub!(:new).and_return(@export_conversion_value)
     end
@@ -95,9 +92,8 @@ describe ExportConversionValuesController do
   describe "handling GET /export_conversion_values/1/edit" do
 
     before(:each) do
-      mock_user
       @export_conversion_value = mock_model(ExportConversionValue)
-      ExportConversionValue.stub!(:find).and_return(@export_conversion_value)
+      @proxy.stub!(:find).and_return(@export_conversion_value)
     end
   
     def do_get
@@ -115,7 +111,7 @@ describe ExportConversionValuesController do
     end
   
     it "should find the export_conversion_value requested" do
-      ExportConversionValue.should_receive(:find).and_return(@export_conversion_value)
+      @proxy.should_receive(:find).with("1").and_return(@export_conversion_value)
       do_get
     end
   
@@ -128,14 +124,8 @@ describe ExportConversionValuesController do
   describe "handling POST /export_conversion_values" do
 
     before(:each) do
-      mock_user
       @export_conversion_value = mock_model(ExportConversionValue, :to_param => "1")
       @export_conversion_value.stub!(:export_name=).and_return("CDC") 
-
-      @proxy = mock('proxy')
-      export_column = mock_model(ExportColumn, :to_param => "1")
-      export_column.stub!(:export_conversion_values).and_return(@proxy)
-      ExportColumn.stub!(:find).and_return(export_column)
     end
     
     describe "with successful save" do
@@ -175,15 +165,9 @@ describe ExportConversionValuesController do
   describe "handling PUT /export_conversion_values/1" do
 
     before(:each) do
-      mock_user
       @export_conversion_value = mock_model(ExportConversionValue, :to_param => "1")
-
-      @proxy = mock('proxy')
       @proxy.stub!(:find).and_return(@export_conversion_value)
 
-      export_column = mock_model(ExportColumn, :to_param => "1")
-      export_column.stub!(:export_conversion_values).and_return(@proxy)
-      ExportColumn.stub!(:find).and_return(export_column)
     end
     
     describe "with successful update" do
@@ -235,14 +219,8 @@ describe ExportConversionValuesController do
     before(:each) do
       mock_user
       @export_conversion_value = mock_model(ExportConversionValue, :destroy => true)
-
-      @proxy = mock('proxy')
       @proxy.stub!(:find).and_return(@export_conversion_value)
       @proxy.stub!(:delete).and_return(true)
-
-      export_column = mock_model(ExportColumn, :to_param => "1")
-      export_column.stub!(:export_conversion_values).and_return(@proxy)
-      ExportColumn.stub!(:find).and_return(export_column)
     end
   
     def do_delete
