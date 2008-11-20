@@ -5,9 +5,9 @@ Array.send :include, ArrayExtension
 class TriSanoMultiProcessSpecRunner
 
   def initialize(max_concurrent_processes = 10, reports_prefix = "Default")
-    puts "hi"
     @max_concurrent_processes = max_concurrent_processes
     @reports_prefix = reports_prefix
+    puts "Initializing TriSanoMultiProcessSpecRunner with " + @max_concurrent_processes + " max concurrent processes"
     puts "reports prefix: #{reports_prefix} @reports_prefix: #{@reports_prefix}"
   end
   
@@ -25,13 +25,14 @@ class TriSanoMultiProcessSpecRunner
       puts "Test process ##{i} with pid #{pid} completed with #{status}"
       success &&= status.exitstatus.zero?
     end
-    
+    puts "Completed testing. Compiling reports."
     script = File.expand_path(File.dirname(__FILE__) + "/aggregate_reports.rb")
     reports = Dir[screenshot_dir + "/Selenium-Build-Report-*.html"].collect {|report| %{"#{report}"} }.join(' ')
     t = Time.now
     tformated = t.strftime("%m-%d-%Y-%I%M%p")
     report_file_name = "#{tformated}-#{@reports_prefix}-Aggregated-Selenium-Report.html"
     command = %{ruby "#{script}" #{reports} > "#{screenshot_dir}/#{report_file_name}"}   
+    puts sh
     sh command
     #puts "moving results to /data/csi/trisano/test-results"
     #FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results')
