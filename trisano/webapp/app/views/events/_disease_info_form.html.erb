@@ -43,16 +43,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       </fieldset>
     
       <fieldset class="form">
-        <legend>Diagnosing Health Facilities</legend>
-        <div id="diagnostics">
-          <% diagnosing_health_facilities = (@event.diagnosing_health_facilities.size > 0 ? @event.diagnosing_health_facilities : [Participation.new_diagnostic_participation]) %>
-          <%= render :partial => "events/diagnostic", :collection => diagnosing_health_facilities %>
-        </div>
-      
-        <p style="clear: both;"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
-      </fieldset>
-    
-      <fieldset class="form">
         <legend>Hospitalized Health Facilities</legend>
         <div id="hospitals">
           <% core_element :hospitalized_id, d, :vert do %>
@@ -123,6 +113,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <fieldset class="form">
       <legend>Clinicians</legend>
       <%= render :partial => "events/clinicians_form" %>
+      <div id="diagnostics">
+        <% diagnosing_health_facilities = (@event.diagnosing_health_facilities.size > 0 ? @event.diagnosing_health_facilities : [Participation.new_diagnostic_participation]) %>
+        <%= render :partial => "events/diagnostic", :collection => diagnosing_health_facilities %>
+      </div>
+      
+      <p style="clear: both;"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>
     </fieldset>
     
   </div>

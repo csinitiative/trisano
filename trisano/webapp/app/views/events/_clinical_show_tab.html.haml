@@ -59,17 +59,7 @@
   %fieldset.form
     %legend
       Diagnosing health facilities  
-    - if @event.diagnosing_health_facilities.empty?
-      %h3 No diganosing health facilities have been recorded for this event
-    - else
-      %table{:class => 'tabular'}
-        %tr
-          %th Diagnosing health facility
-
-        - for diagnostic in @event.diagnosing_health_facilities
-          %tr
-            %td= diagnostic.secondary_entity.place_temp.name if diagnostic.secondary_entity
-
+    
   %fieldset.form
     %legend
       Hospitalized health facilities  
@@ -145,3 +135,15 @@
             %td 
               -unless clinician_phone_loc.nil? 
                 = (l(clinician_phone_loc.entity_location_type) || "Unspecified Locaiton") + ": " + clinician_phone.simple_format
+
+    - if @event.diagnosing_health_facilities.empty?
+      %h3 No diganosing health facilities have been recorded for this event
+    - else
+      %br
+      %table{:class => 'tabular'}
+        %tr
+          %th Diagnosing health facility
+
+        - for diagnostic in @event.diagnosing_health_facilities
+          %tr
+            %td= diagnostic.secondary_entity.place_temp.name if diagnostic.secondary_entity
