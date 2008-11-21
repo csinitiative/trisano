@@ -1759,7 +1759,7 @@
    export_column_name: 'RIFAMP'
    value_from: 'Unknown'
    value_to: '3'
-   sort_order: 3
+   sort_order: 4
 
  - disease_code_group: 'Meningitis'
    export_column_name: 'VACDATE1'
@@ -5650,7 +5650,7 @@
    export_column_name: 'TRANSMIS'
    value_from: 'Military'
    value_to: '11'
-   sort_order: 4
+   sort_order: 11
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'TRANSMIS'
@@ -5740,7 +5740,7 @@
    export_column_name: 'SPREAD'
    value_from: 'Military'
    value_to: '11'
-   sort_order: 4
+   sort_order: 11
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'SPREAD'
@@ -8220,4 +8220,3 @@
    value_from: 
    value_to: '99999999'
    sort_order: 
-

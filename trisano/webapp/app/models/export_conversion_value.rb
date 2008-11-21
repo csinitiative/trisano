@@ -19,5 +19,5 @@ class ExportConversionValue < ActiveRecord::Base
 
   validates_presence_of :value_to
   validates_numericality_of :sort_order, :allow_blank => true
-  validates_uniqueness_of :sort_order, :scope => :export_column_id
+  validates_uniqueness_of :sort_order, :scope => :export_column_id, :allow_blank => true
 end
