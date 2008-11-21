@@ -46,6 +46,7 @@ class TriSanoMultiProcessSpecRunner
     sh command
     puts "moving results to /data/csi/trisano/test-results/UAT"
     FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results/UAT')
+    FileUtils.rm("#{screenshot_dir}/*.html")
     puts "see results at http://results.csi.osuosl.org/UAT"
   end
   
