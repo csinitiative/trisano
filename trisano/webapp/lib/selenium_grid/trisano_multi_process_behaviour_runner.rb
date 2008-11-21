@@ -44,9 +44,9 @@ class TriSanoMultiProcessSpecRunner
     command = %{ruby "#{script}" #{reports} > "#{screenshot_dir}/#{report_file_name}"}   
     puts command
     sh command
-    puts "moving results to /data/csi/trisano/test-results"
+    puts "moving results to /data/csi/trisano/test-results/UAT"
     FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results/UAT')
-    puts "see results at http://results.csi.osuosl.org/UAT/latest"
+    puts "see results at http://results.csi.osuosl.org/UAT"
   end
   
   protected
