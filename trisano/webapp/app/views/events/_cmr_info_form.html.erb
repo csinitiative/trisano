@@ -79,6 +79,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
         <% end -%>
       <% end -%>
+      <% core_element :acuity, f, :horiz do -%>
+        <%= f.label(:acuity) %>
+        <%= f.core_text_field(:acuity) %>
+      <% end -%>
     </fieldset>
   </div>
 </fieldset>

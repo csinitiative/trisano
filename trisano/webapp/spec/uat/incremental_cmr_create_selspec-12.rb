@@ -102,6 +102,7 @@ describe 'User functionality for creating and saving CMRs' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Administrative")
     @browser.type 'morbidity_event_event_name', 'Test Event'
+    @browser.type 'morbidity_event_acuity', 'Extra Keen'
     save_cmr(@browser).should be_true
   end
   
@@ -119,6 +120,8 @@ describe 'User functionality for creating and saving CMRs' do
     
     click_core_tab(@browser, "Administrative")
     @browser.is_text_present('Test Event').should be_true
+    @browser.is_element_present("//div[@id='administrative_tab']/fieldset/fieldset[4]/span[3]/label[text()='Acuity']").should be_true
+    @browser.is_text_present("Extra Keen")
     
     click_core_tab(@browser, "Contacts")
     @browser.is_text_present('Costello').should be_true

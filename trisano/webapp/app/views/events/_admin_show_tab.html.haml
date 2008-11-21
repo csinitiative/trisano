@@ -69,4 +69,6 @@
     - core_element_show :review_completed_UDOH_date, event_form, :horiz do
       = event_form.label :review_completed_UDOH_date, 'Date review completed by UDOH' 
       = h(@event.review_completed_UDOH_date)
-
+    - core_element_show :acuity, event_form, :horiz do
+      = event_form.label :acuity
+      = h(@event.acuity)
