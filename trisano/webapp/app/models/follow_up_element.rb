@@ -69,7 +69,6 @@ class FollowUpElement < FormElement
 
     investigation_forms.each do |form|
       form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
-
         if (params[:response] == follow_up.condition)
           # Debt: The magic container for core follow ups needs to go probably
           result << ["show", follow_up]
@@ -89,7 +88,7 @@ class FollowUpElement < FormElement
         end
       end
     end
-        
+
     result
   end
   

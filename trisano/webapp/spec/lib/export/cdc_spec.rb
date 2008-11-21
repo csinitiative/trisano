@@ -18,13 +18,22 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe 'export/cdc' do
-  fixtures :events, :disease_events, :diseases, :export_conversion_values, :export_columns, :diseases_export_columns, :answers
+  fixtures :events, :disease_events, :diseases, :export_conversion_values, :export_columns, :diseases_export_columns
 
   before(:each) do
     @results = {
       'event_id' => 4
     }
     @results.extend(Export::Cdc::Record)
+
+    # Hack alert: adding this through the fixtures breaks other specs
+    # for reasons I can't fathom.
+    DiseaseEvent.create(:disease_id => 5, :event_id => 4)
+    question_id = Question.create(:question_text => 'hello?', :data_type => :single_line_text).id
+    Answer.create(:question_id => question_id, :event_id => 4, :export_conversion_value_id => 11)
+    Answer.create(:question_id => question_id, :event_id => 4, :text_answer => '2006')
+    Answer.create(:question_id => question_id, :event_id => 4, :export_conversion_value_id => 11, :text_answer => '2008')
+    Answer.create(:question_id => question_id, :event_id => 4, :export_conversion_value_id => 11, :text_answer => '2007')
   end
 
   it 'should return the first vaccine year by id if duplicates' do

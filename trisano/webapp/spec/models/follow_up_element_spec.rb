@@ -62,7 +62,7 @@ describe FollowUpElement do
       @follow_up_element = FollowUpElement.new
       @follow_up_element.form_id = 1
       @follow_up_element.condition = "Yes"
-      @follow_up_element.save
+      @follow_up_element.save!
     end
     
     it "should use a condition_id for it's condition if one is present and it is a number" do
@@ -245,7 +245,7 @@ describe FollowUpElement do
       params[:response] = "no match"
       
       follow_ups = FollowUpElement.process_core_condition(params)
-      
+
       # Debt: The magic container for core follow ups needs to go probably
       follow_ups[0][0].should eql("hide")
       follow_ups[0][1].is_a?(FollowUpElement).should be_true
