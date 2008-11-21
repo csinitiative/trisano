@@ -201,9 +201,10 @@ module Export
         event = Event.find(event_id)
         if event.disease && event.disease.disease
           conversion_value_ids = event.disease.disease.export_conversion_value_ids
-          disease_filter = {:conditions => ['export_conversion_value_id in (?)', conversion_value_ids]}
+          disease_filter = {:conditions => ['text_answer is not null AND export_conversion_value_id in (?)', conversion_value_ids]}
         end
-        answers = event.answers.export_answers(:all, disease_filter)
+        options = (disease_filter || {}).merge(:order => 'id DESC')
+        answers = event.answers.export_answers(:all, options)
         answers.each {|answer| answer.write_export_conversion_to(result)}
         (result[61...result.length] || '').rstrip  
       end

@@ -1452,7 +1452,7 @@ describe MorbidityEvent do
       @event = MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"CdcExportHep", } }, 
                                "disease"        => { "disease_id" => diseases(:hep_a).id },
                                "event_name"     => "CdcExportHepA",
-                               "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Yes'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
+                               "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
                              } )
     end
 
