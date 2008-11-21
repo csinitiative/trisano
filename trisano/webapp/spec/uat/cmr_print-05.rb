@@ -148,6 +148,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
     @browser.type "morbidity_event_review_completed_UDOH_date", "12/5/1963"
+    @browser.type "morbidity_event_acuity", "Extra Keen"
     save_cmr(@browser).should be_true
     print_cmr(@browser).should be_true
   end
@@ -212,6 +213,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('2003-12-03').should be_true
     @browser.is_text_present('1963-12-05').should be_true
     @browser.is_text_present('2007-12-07').should be_true
+    @browser.is_text_present('Extra Keen').should be_true
     
     @browser.close()
     @browser.select_window 'null'

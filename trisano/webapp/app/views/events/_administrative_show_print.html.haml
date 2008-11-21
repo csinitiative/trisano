@@ -78,7 +78,9 @@
 - core_element_print :event_name, event_form, :horiz do
   %span.print-label Event name:
   %span.print-value= h(@event.event_name) || '&nbsp;'
-- core_element_print :review_completed_UDOH_date, event_form, :vert do
+- core_element_print :review_completed_UDOH_date, event_form, :horiz do
   %span.print-label Date review completed by UDOH:
   %span.print-value= h(@event.review_completed_UDOH_date) || '&nbsp;'
-
+- core_element_print :acuity, event_form, :vert do
+  %span.print-label Acuity
+  %span.print-value= h(@event.acuity) || '&nbsp;'
