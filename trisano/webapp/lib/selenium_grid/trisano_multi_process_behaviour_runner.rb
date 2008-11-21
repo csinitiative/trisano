@@ -42,11 +42,11 @@ class TriSanoMultiProcessSpecRunner
     tformated = t.strftime("%m-%d-%Y-%I%M%p")
     report_file_name = "#{tformated}-#{@reports_prefix}-Aggregated-Selenium-Report.html"
     command = %{ruby "#{script}" #{reports} > "#{screenshot_dir}/#{report_file_name}"}   
-    puts sh
+    puts command
     sh command
     puts "moving results to /data/csi/trisano/test-results"
     FileUtils.mv("#{screenshot_dir}/#{report_file_name}", '/data/csi/trisano/test-results/UAT')
-    puts "see results at http://results.csi.osuosl.org/#{report_file_name}"
+    puts "see results at http://results.csi.osuosl.org/UAT/latest"
   end
   
   protected
