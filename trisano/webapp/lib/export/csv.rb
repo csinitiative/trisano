@@ -313,6 +313,8 @@ module Export
 
           event_data << ["patient_investigator", "investigator.best_name if investigator"]
           event_data << ["patient_sent_to_cdc", "sent_to_cdc"]
+
+          event_data << ["acuity", "acuity"]
         end
       end
 

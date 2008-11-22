@@ -215,6 +215,7 @@ def event_header(event_type)
       header_array << "patient_review_completed_UDOH_date"
       header_array << "patient_investigator"
       header_array << "patient_sent_to_cdc"
+      header_array << "acuity"
     end
   end
   header_array << "#{lead_in}_event_created_date"
@@ -308,6 +309,7 @@ def event_output(event_type, m)
     out << "#{m.review_completed_UDOH_date},"
     out << "#{m.investigator.best_name},"
     out << "#{m.sent_to_cdc},"
+    out << "#{m.acuity},"
   end
   out << "#{m.created_at},"
   out << "#{m.updated_at}"
@@ -424,6 +426,7 @@ def csv_mock_event(event_type)
   m.stub!(:clinicians).and_return([])
   m.stub!(:contacts).and_return([])
   m.stub!(:answers).and_return([])
+  m.should_receive(:acuity).twice.and_return('Difficult')
 
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
