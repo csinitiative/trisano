@@ -21,14 +21,19 @@ describe EventFormsController do
   before(:each) do
     mock_user
     @event = mock_model(Event, :to_param => "1")
+    @event.stub!(:get_investigation_forms).and_return(nil)
     Event.stub!(:find).and_return(@event)
   end
 
   describe "handling GET /events/1/forms" do
 
     before(:each) do
-      @forms = mock_model(Form)
-      Form.stub!(:find_by_sql).and_return([@forms])
+      @form = mock_model(Form)
+      Form.stub!(:find).and_return([@form])
+
+      @form_reference = mock_model(FormReference)
+      @form_reference.stub!(:form).and_return(@form)
+      @event.stub!(:form_references).and_return([@form_reference])
     end
   
     def do_get
@@ -46,15 +51,15 @@ describe EventFormsController do
     end
   
     it "should find all event_forms" do
-      Form.should_receive(:find_by_sql).twice.and_return([@forms])
+      Form.should_receive(:find).once.and_return([@form])
       do_get
     end
   
     it "should assign the found event_forms for the view" do
       do_get
       assigns[:event].should == @event
-      assigns[:forms_available].should == [@forms]
-      assigns[:forms_in_use].should == [@forms]
+      assigns[:forms_available].should == [@form]
+      assigns[:forms_in_use].should == [@form]
     end
 
     # Debt: Not working for some reason
