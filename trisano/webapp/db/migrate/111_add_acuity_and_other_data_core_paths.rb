@@ -1,7 +1,9 @@
 class AddAcuityAndOtherDataCorePaths < ActiveRecord::Migration
   def self.up
     if RAILS_ENV == 'production'
-      CoreField.create(field)
+      core_fields.each do |field|
+        CoreField.create(field)
+      end
     end
   end
 
