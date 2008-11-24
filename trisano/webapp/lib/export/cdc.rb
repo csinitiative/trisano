@@ -172,12 +172,17 @@ module Export
            udoh_case_status_id
            exp_imported
            exp_outbreak
+           future
            disease_specific_records
           )
       end
       
       def to_cdc
         cdc_export_fields.map { |field| send field }.join
+      end
+
+      def future
+        ' ' * 5
       end
 
       def age_at_onset
@@ -206,7 +211,7 @@ module Export
         options = (disease_filter || {}).merge(:order => 'id DESC')
         answers = event.answers.export_answers(:all, options)
         answers.each {|answer| answer.write_export_conversion_to(result)}
-        (result[61...result.length] || '').rstrip  
+        (result[60...result.length] || '').rstrip  
       end
 
       def method_missing(method, *args)
