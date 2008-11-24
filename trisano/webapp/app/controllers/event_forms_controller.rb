@@ -21,8 +21,9 @@ class EventFormsController < AdminController
 
   def index
     # Filter out forms already associated with the event
-    @forms_available = Form.find_by_sql("SELECT * FROM forms WHERE status = 'Live' AND id NOT IN (SELECT form_id FROM form_references WHERE event_id = #{params[:event_id]})")
-    @forms_in_use = Form.find_by_sql("SELECT * FROM forms WHERE status = 'Live' AND id IN (SELECT form_id FROM form_references WHERE event_id = #{params[:event_id]})")
+    event_type = @event.class.name.underscore
+    @forms_available = Form.find_by_sql("SELECT * FROM forms WHERE status = 'Live' AND event_type = '#{event_type}' AND id NOT IN (SELECT form_id FROM form_references WHERE event_id = #{params[:event_id]})")
+    @forms_in_use = Form.find_by_sql("SELECT * FROM forms WHERE status = 'Live' AND event_type = '#{event_type}' AND id IN (SELECT form_id FROM form_references WHERE event_id = #{params[:event_id]})")
   end
 
   def create

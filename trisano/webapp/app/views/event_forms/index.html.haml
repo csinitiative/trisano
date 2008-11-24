@@ -24,21 +24,22 @@
   %table.list
     %tr
       %th.forminformation
-        Patient Name
-      %th Disease
+        = if @event.is_a? MorbidityEvent then "Patient Name" elsif @event.is_a? ContactEvent then "Contact Name" else "Place Name" end
       %th Jurisdictions
-      %th Status
       %th
     %tr
-      - patient = @event.active_patient.primary_entity.person
+      - if @event.is_a? PlaceEvent
+        - name = @event.active_place.primary_entity.place_temp.name
+      - else
+        - patient = @event.active_patient.primary_entity.person
+        - name = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
+        
       %td.forminformation
         .patientname
-          = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
+          = name
         %small
           Date:
           = @event.event_onset_date
-      %td
-        %b= @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
       %td
         %b
           = @event.primary_jurisdiction.short_name
@@ -46,18 +47,6 @@
           %small
             = @event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
             %br
-      %td
-        %b= Event.get_state_description(@event.event_status)
-        - unless @event.event_queue_id.nil?
-          %div{:id => 'queue_info'}
-            %small
-              Queue:&nbsp;
-              %b= @event.event_queue.queue_name
-        - unless @event.investigator_id.nil?
-          %div{:id => 'investigator_info'}
-            %small
-              Investigator:&nbsp;
-              %b= @event.investigator.best_name
       %td.tools
         -# Why, oh why, didn't we name the cmrs resource morbidity_events?  Coulda avoided this.
         - if @event.is_a? MorbidityEvent
