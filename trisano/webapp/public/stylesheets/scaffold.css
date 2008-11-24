@@ -138,7 +138,9 @@ div.progressBar div.background {
 
 .investigator-form-title {
     font-size: 150%;
-    font-weight: bold
+    font-weight: bold;
+    display: block;
+    text-align: center;
 }
 
 .modal-dialog {
