@@ -16,7 +16,7 @@
 .list-of-forms
   %span Forms in Use
   %small &nbsp;(click to view)
-  - if @event.investigation_form_references.empty?
+  - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
     %p 
       %em none
   - else
@@ -29,7 +29,8 @@
         %li
           = link_to_function "#{form_reference.form.name}", "toggle_investigator_forms(\"#{form_reference.form.id}\")"
       - for form_reference in @event.core_only_form_references
-        = "#{form_reference.form.name} (core only)"
+        %li
+          = "#{form_reference.form.name} (core only)"
   = link_to "Add forms to this event", event_forms_path(@event)
 
 %fieldset
