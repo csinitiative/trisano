@@ -62,3 +62,11 @@
         - core_element_show :imported_from_id, event_form, :horiz do
           = event_form.label(:imported_from_id)
           = l @event.imported_from
+
+        - core_element_show :other_data_1, event_form, :horiz do
+          = event_form.label(:other_data_1, 'Other data')
+          = h(@event.other_data_1)
+
+        - core_element_show :other_data_2, event_form, :horiz do
+          = event_form.label(:other_data_2, '&nbsp;')
+          = h(@event.other_data_2)

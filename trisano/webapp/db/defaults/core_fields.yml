@@ -671,3 +671,21 @@ core_field_00045:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+core_field_acuity:
+  key: morbidity_event[acuity]
+  can_follow_up: true
+  name: Acuity
+  field_type: single_line_text
+  event_type: morbidity_event
+core_field_other_data_1:
+  key: morbidity_event[other_data_1]
+  can_follow_up: true
+  name: Other Data (First Field)
+  field_type: single_line_text
+  event_type: morbidity_event
+core_field_other_data_2:
+  key: morbidity_event[other_data_2]
+  can_follow_up: true
+  name: Other Data (Second Field)
+  field_type: single_line_text
+  event_type: morbidity_event

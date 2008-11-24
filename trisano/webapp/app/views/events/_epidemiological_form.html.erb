@@ -63,10 +63,18 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= rf.label(:risk_factors_notes) %>
             <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
           <% end %>
-          <% core_element :imported_from_id, f, :horiz do -%>
+          <% core_element :imported_from_id, f, :vert do -%>
             <%= f.label(:imported_from_id) %>
             <%= f.dropdown_code_field(:imported_from_id, 'imported', {}, {}, @event, @can_investigate) %>
           <% end -%>    
+          <% core_element :other_data_1, f, :horiz do -%>
+            <%= f.label(:other_data_1, 'Other data') %>
+            <%= f.text_field(:other_data_1) %>
+          <% end -%>
+          <% core_element :other_data_2, f, :vert do -%>
+            <%= f.label(:other_data_2, "&nbsp;") %>
+            <%= f.text_field(:other_data_2) %>
+          <% end -%>
         </fieldset>
       <% end %>
     <% end %>
