@@ -74,6 +74,14 @@ describe CdcExport do
     
   describe 'running cdc export' do
 
+    it 'should produce core data records (no disease specific fields) that are 60 chars long' do
+      with_cdc_records do |records|
+        records.collect {|record, event| record}.each do |record| 
+          record.to_cdc.length.should == 60
+        end
+      end
+    end
+
     it 'should return records for mmr week' do
       with_cdc_records do |records|
         records.should_not be_nil
