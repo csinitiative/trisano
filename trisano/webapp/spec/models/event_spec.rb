@@ -1505,6 +1505,7 @@ describe MorbidityEvent do
         event.primary_jurisdiction.should_not be_nil
         event.primary_jurisdiction.entity_id.should_not be_nil
         event.primary_jurisdiction.name.should == 'Unassigned'
+        event.event_status.should == 'NEW'
       end
          
     end 

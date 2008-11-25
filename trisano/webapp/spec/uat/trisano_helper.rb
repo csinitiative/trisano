@@ -1196,4 +1196,12 @@ module TrisanoHelper
     start = html_source.index(disease_name) + disease_name.length
     html_source[start..start+100].index("Inactive").nil? ? false : true
   end
+
+  def get_record_number(browser)
+    source = browser.get_html_source
+    label = '<label>Record number</label>'
+    index_start = source.index(label) + label.length
+    index_end = source.index('</span>', index_start)
+    source[index_start...index_end].strip
+  end
 end

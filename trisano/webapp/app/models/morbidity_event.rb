@@ -43,7 +43,8 @@ class MorbidityEvent < HumanEvent
     event = MorbidityEvent.new
     event.patient = Participation.new_patient_participation(patient_entity)    
     jurisdiction = Participation.new_jurisdiction_participation
-    event.jurisdiction = jurisdiction
+    event.jurisdiction = jurisdiction    
+    event.event_status = 'NEW'
     event
   end
   
