@@ -53,6 +53,9 @@
           = link_to 'Copy', copy_form_path(@form), :method => :post
           |
           = link_to 'Export', export_form_path(@form), :method => :post
+          - if(@form.status == "Published")
+            |
+            = link_to 'Push', push_form_path(@form), :method => :post
       %td
         %ul
           - @form.diseases.each do |disease|

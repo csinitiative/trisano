@@ -139,10 +139,10 @@ class FormsController < AdminController
     end
   end
   
-  def push_to_events
+  def push
     @form = Form.find(params[:id])
 
-    if @form.push_to_events
+    if @form.push
       respond_to do |format|
         flash[:notice] = "Form was successfully pushed to events"
         format.html { redirect_to forms_path }
@@ -151,7 +151,7 @@ class FormsController < AdminController
     else
       flash[:error] = "Unable to push the form"
       respond_to do |format|
-        format.html { render :template => "forms/builder" }
+        format.html { redirect_to forms_path }
         format.js   do
           @rjs_errors = @form.errors
           render :template => "rjs-error"

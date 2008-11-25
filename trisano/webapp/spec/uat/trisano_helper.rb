@@ -362,8 +362,13 @@ module TrisanoHelper
   # Use click_resource methods from any standard resource index page
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
-    if id > 0 
-      browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
+    if (id > 0)
+      if (resource == "cmrs")
+        browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
+      else
+        browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
+      end
+      
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -397,6 +402,17 @@ module TrisanoHelper
     id = get_resource_id(browser, name)
     if id > 0 
       browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/export')]"
+      return true
+    else
+      return false
+    end
+  end
+  
+    def click_push_form(browser, name)
+    id = get_resource_id(browser, name)
+    if id > 0 
+      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/push')]"
+      browser.wait_for_page_to_load "30000"
       return true
     else
       return false

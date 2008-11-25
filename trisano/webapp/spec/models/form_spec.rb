@@ -766,21 +766,21 @@ describe Form do
     end
     
     it "should not push if the form has not been published" do
-      result = @form.push_to_events
+      result = @form.push
       result.should be_nil
     end
     
     it "should not push and have errors if the form has no diseases associated with it" do
       @form.diseases.clear
       published_form = @form.publish
-      result = @form.push_to_events
+      result = @form.push
       result.should be_nil
       @form.errors.should_not be_empty
     end
     
-    it "it should push to all events with the form's disease" do
+    it "it should push to all events with the form's disease and jurisdiction" do
       published_form = @form.publish
-      result = @form.push_to_events
+      result = @form.push
       result.should eql(1)
       @event.reload
       @event.form_references.empty?.should be_false
@@ -795,9 +795,23 @@ describe Form do
       contact_event = contact_events[0]
       contact_event.save!
       published_form = @form.publish
-      result = @form.push_to_events
+      result = @form.push
       contact_event.reload
       contact_event.form_references.empty?.should be_true
+    end
+    
+    it "should not push to events with the same disease and type, but a different jurisdiction" do
+      @event_hash[:active_jurisdiction] = {
+        :secondary_entity_id => entities(:Summit_County).id
+      }
+      event = MorbidityEvent.new(@event_hash)
+      event.save!
+      @form.jurisdiction = entities(:Unassigned_Jurisdiction)
+      @form.save
+      published_form = @form.publish
+      result = @form.push
+      event.reload
+      event.form_references.empty?.should be_true
     end
     
     it "should not push to events that already have a version of this form associated to it" do
@@ -809,7 +823,7 @@ describe Form do
       @event.form_references.size.should eql(1)
       
       second_version = @form.publish
-      result = @form.push_to_events
+      result = @form.push
       @event.reload
       @event.form_references.size.should eql(1)
       @event.form_references[0].form.id.should eql(published_form.id)

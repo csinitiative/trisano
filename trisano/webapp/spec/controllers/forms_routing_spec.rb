@@ -68,6 +68,10 @@ describe FormsController do
       route_for(:controller => "forms", :action => "import").should == "/forms/import"
     end
     
+    it "should map { :controller => 'forms', :action => 'push', :id => 1} to /forms/1/push" do
+      route_for(:controller => "forms", :action => "push", :id => 1).should == "/forms/1/push"
+    end
+    
   end
 
   describe "route recognition" do
@@ -122,6 +126,10 @@ describe FormsController do
     
     it "should generate params { :controller => 'forms', action => 'import', id => '1' } from POST /forms/import" do
       params_from(:post, "/forms/import").should == {:controller => "forms", :action => "import"}
+    end
+    
+    it "should generate params { :controller => 'forms', action => 'push', id => '1' } from POST /forms/1/push" do
+      params_from(:post, "/forms/1/push").should == {:controller => "forms", :action => "push", :id => "1"}
     end
     
   end

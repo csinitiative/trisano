@@ -210,7 +210,7 @@ class Form < ActiveRecord::Base
     
   end
 
-  def push_to_events
+  def push
     if self.diseases.empty?
       self.errors.add_to_base("There are no diseases associated with this form.")
       return nil
