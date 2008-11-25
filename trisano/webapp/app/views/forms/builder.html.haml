@@ -66,8 +66,14 @@
             &nbsp;
             - if @form.errors.empty?
               - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
-                = submit_tag 'Publish', :id => 'publish_btn'
+                = submit_tag('Publish', :id => 'publish_btn', :class => 'form_button')
                 = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
+              - if @form.status == "Published"
+                &nbsp;
+                - form_remote_tag :url => {:action => 'push_to_events', :id => @form.id }, :loading => "$('push_button').disabled = 'disabled';$('push_button').value = 'Pushing...';$('push_spinner').show();" do
+                  = submit_tag('Push', :id => 'push_button', :class => 'form_button')
+                  = image_tag 'redbox_spinner.gif', :id => 'push_spinner', :style => "height: 16px; width: 16px; display: none;"
+
 #rot
   - if @form.errors.empty?
     %ul.horizontal

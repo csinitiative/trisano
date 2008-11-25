@@ -210,6 +210,48 @@ class Form < ActiveRecord::Base
     
   end
 
+  def push_to_events
+    if self.diseases.empty?
+      self.errors.add_to_base("There are no diseases associated with this form.")
+      return nil
+    end
+
+    begin
+      most_recent_form = most_recent_version
+      return nil if most_recent_form.nil?
+      push_count = 0
+      jurisdiction_ids = self.jurisdiction_id.nil? ? jurisdiction_ids = Place.jurisdictions.collect {|place| place.id }.join(", ") : jurisdiction_ids = self.jurisdiction_id
+    
+      conditions = "events.type = '#{self.event_type.camelcase}'"
+      conditions << "AND participations.role_id = #{Event.primary_jurisdiction_code_id} "
+      conditions << "AND participations.secondary_entity_id IN (#{jurisdiction_ids}) "
+      conditions << "AND disease_events.disease_id IN (#{self.disease_ids.join(", ")})"
+    
+      joins = "INNER JOIN participations ON participations.event_id = events.id "
+      joins << "INNER JOIN disease_events ON disease_events.event_id = events.id"
+    
+      events = Event.find(:all,
+        :conditions => conditions,
+        :joins => joins
+      )
+
+      events.each do |event|
+        form_template_ids = event.form_references.collect { |ref| ref.form.template_id }
+        unless (form_template_ids.include?(self.id))
+          event.form_references << FormReference.create(:event_id => event.id, :form_id => most_recent_form.id)
+          push_count += 1
+        end
+      end
+    
+      push_count
+    rescue Exception => ex
+      logger.error ex
+      self.errors.add_to_base("There an error occurred while pushing the form.")
+      return nil
+    end
+
+  end
+
   def export
     begin
       base_path = "/tmp/"

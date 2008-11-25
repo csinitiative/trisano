@@ -27,5 +27,5 @@ unless @rjs_errors.blank?
   error_string += "</ul>"
 end
 
-page.replace_html @error_message_div, "<p style='color:red'>" + flash[:notice] + "#{error_string}</p>"
+page.replace_html @error_message_div, "<p style='color:red'>#{flash[:error]} #{error_string}</p>"
 flash[:notice] = ''

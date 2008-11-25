@@ -740,5 +740,82 @@ describe Form do
     end
     
   end
+  
+  describe 'when pushing to events' do
+    
+    fixtures :forms, :form_elements, :questions, :diseases, :disease_events, :diseases_forms, :entities, :places
+    
+    before(:each) do
+      @form = Form.find(1)
+      @anthrax = diseases(:anthrax)
+      
+      @event_hash = {
+        "active_patient" => {
+          "person" => {
+            "last_name"=>"Green"
+          }
+        },
+        :active_jurisdiction => {
+          :secondary_entity_id => entities(:Unassigned_Jurisdiction).id
+        },
+        "disease" => { "disease_id" => @anthrax.id }
+      }
+
+      @event = MorbidityEvent.new(@event_hash)
+      @event.save!
+    end
+    
+    it "should not push if the form has not been published" do
+      result = @form.push_to_events
+      result.should be_nil
+    end
+    
+    it "should not push and have errors if the form has no diseases associated with it" do
+      @form.diseases.clear
+      published_form = @form.publish
+      result = @form.push_to_events
+      result.should be_nil
+      @form.errors.should_not be_empty
+    end
+    
+    it "it should push to all events with the form's disease" do
+      published_form = @form.publish
+      result = @form.push_to_events
+      result.should eql(1)
+      @event.reload
+      @event.form_references.empty?.should be_false
+      @event.form_references[0].form.id.should eql(published_form.id)      
+    end
+
+    it "should not push to events with the same disease but a different event type" do
+      contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
+        :disease => {:disease_id => diseases(:anthrax).id} }
+      event = MorbidityEvent.new(@event_hash.merge(contact_hash))
+      contact_events = ContactEvent.initialize_from_morbidity_event(event)
+      contact_event = contact_events[0]
+      contact_event.save!
+      published_form = @form.publish
+      result = @form.push_to_events
+      contact_event.reload
+      contact_event.form_references.empty?.should be_true
+    end
+    
+    it "should not push to events that already have a version of this form associated to it" do
+      @event.form_references.size.should eql(0)
+      published_form = @form.publish
+      form_ref = FormReference.new(:form_id => published_form.id, :event_id => @event.id)
+      @event.form_references << form_ref
+      @event.reload
+      @event.form_references.size.should eql(1)
+      
+      second_version = @form.publish
+      result = @form.push_to_events
+      @event.reload
+      @event.form_references.size.should eql(1)
+      @event.form_references[0].form.id.should eql(published_form.id)
+    end
+    
+  end
+    
     
 end

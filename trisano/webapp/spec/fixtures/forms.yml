@@ -6,7 +6,7 @@ test_form:
   description: Testng
   version: 
   is_template: true
-  jurisdiction_id:
+  jurisdiction_id: 
   status: "Live"
   event_type: "morbidity_event"
 

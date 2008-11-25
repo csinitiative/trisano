@@ -139,6 +139,27 @@ class FormsController < AdminController
     end
   end
   
+  def push_to_events
+    @form = Form.find(params[:id])
+
+    if @form.push_to_events
+      respond_to do |format|
+        flash[:notice] = "Form was successfully pushed to events"
+        format.html { redirect_to forms_path }
+        format.js   { render(:update) {|page| page.redirect_to forms_path} }
+      end
+    else
+      flash[:error] = "Unable to push the form"
+      respond_to do |format|
+        format.html { render :template => "forms/builder" }
+        format.js   do
+          @rjs_errors = @form.errors
+          render :template => "rjs-error"
+        end
+      end
+    end
+  end
+
   def rollback
     @form = Form.find(params[:id])
     @rolled_back_form = @form.rollback
