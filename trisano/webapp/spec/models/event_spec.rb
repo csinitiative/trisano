@@ -1511,6 +1511,72 @@ describe MorbidityEvent do
     end 
 
   end
-        
+
+  describe "adding forms to an event" do
+
+    describe "an event without forms already" do
+      fixtures :events, :forms
+
+      before(:each) do
+        @event = events(:has_anthrax_cmr)
+        @form_ids = [forms(:anthrax_form_all_jurisdictions_1), forms(:anthrax_form_all_jurisdictions_2)].map { |form| form.id }
+      end
+
+      it "should add new forms" do
+        @event.add_forms(@form_ids)
+        event_form_ids = @event.form_references.map { |ref| ref.form_id }
+        (event_form_ids & @form_ids).sort.should == @form_ids.sort
+      end
+
+      it "should add 'viable' forms" do
+        @event.get_investigation_forms
+        viable_form_ids = @event.form_references.map { |ref| ref.form_id }
+        @event = events(:has_anthrax_cmr)
+
+        @event.add_forms(@form_ids)
+        event_form_ids = @event.form_references.map { |ref| ref.form_id }
+        (event_form_ids & viable_form_ids).sort.should == viable_form_ids.sort
+      end
+
+    end
+
+    describe "an event with existing forms" do
+      fixtures :events, :forms, :form_references
+
+      before(:each) do
+        @event = events(:marks_cmr)
+        @form_ids = [forms(:anthrax_form_all_jurisdictions_1), forms(:anthrax_form_all_jurisdictions_2)].map { |form| form.id }
+        @form_ids << form_references(:marks_form_reference_1).form_id
+      end
+
+      it "should add new forms with no dups" do
+        @event.add_forms(@form_ids)
+        event_form_ids = @event.form_references.map { |ref| ref.form_id }
+        (event_form_ids & @form_ids).sort.should == @form_ids.sort
+      end
+
+    end
+
+    describe "argument handling" do
+      fixtures :events, :forms
+
+      before(:each) do
+        @event = events(:marks_cmr)
+      end
+
+      it "should raise an error if form does not exist" do
+        lambda { @event.add_forms([999]) }.should raise_error()
+      end
+
+      it "should accept a single non-array element" do
+        lambda { @event.add_forms(forms(:anthrax_form_all_jurisdictions_1).id) }.should_not raise_error()
+      end
+
+      it "should accept forms and not just form IDs" do
+        lambda { @event.add_forms(forms(:anthrax_form_all_jurisdictions_1)) }.should_not raise_error()
+      end
+    end
+
+  end
 
 end

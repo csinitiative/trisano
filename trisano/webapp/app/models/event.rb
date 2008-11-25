@@ -422,7 +422,7 @@ class Event < ActiveRecord::Base
     forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
 
     # Accepts either form_ids or forms.  If forms, convert to form_ids
-    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form.id else form_ref.to_i end } 
+    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end } 
 
     # Remember if this event has forms persisted with it already
     event_has_saved_forms = self.form_references.size > 0

@@ -15,3 +15,9 @@ marks_chicken_pox:
 #  disease_id: 5
 #  id: 2
 #  event_id: 4
+#
+
+anthrax_event:
+  id: 3
+  disease_id: 3
+  event_id: 5
