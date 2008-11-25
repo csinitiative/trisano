@@ -1155,17 +1155,17 @@ module TrisanoHelper
   end    
 
   def assert_tooltip_exists(browser, tool_tip_text)
-    return false unless browser.is_element_present("//img[contains(@src, 'help.png')]")
-    return false unless browser.is_text_present(tool_tip_text)
-    return false if browser.is_visible("//span[contains(@id,'_help_text')]")
-    return false if browser.is_visible("//div[@id='WzTtDiV']")
-    return false unless browser.mouse_over("//a[contains(@id,'_help_text')]")
-    return false unless browser.mouse_move("//a[contains(@id,'_help_text')]")
+    browser.is_element_present("//img[contains(@src, 'help.png')]").should be_true
+    browser.is_text_present(tool_tip_text).should be_true
+    browser.is_visible("//span[contains(@id,'_help_text')]").should be_false
+    browser.is_visible("//div[@id='WzTtDiV']").should be_false
+    browser.mouse_over("//a[contains(@id,'_help_text')]")
+    browser.mouse_move("//a[contains(@id,'_help_text')]")
     sleep(2)
-    return false unless browser.is_visible("//div[@id='WzTtDiV']")
-    return false unless browser.mouse_out("//a[contains(@id, '_help_text')]")
+    browser.is_visible("//div[@id='WzTtDiV']").should be_true
+    browser.mouse_out("//a[contains(@id, '_help_text')]")
     sleep(2)
-    return false if browser.is_visible("//div[@id='WzTtDiV']")
+    browser.is_visible("//div[@id='WzTtDiV']").should be_false
     return true
   end
   
