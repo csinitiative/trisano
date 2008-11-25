@@ -416,12 +416,38 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def form_references=(attributes)
-    if form_references.empty?
-      form_references.build(attributes)
+  # This method is used to add user selected fields and, if the timing is just right,
+  # auto-assigned fields to an event.
+  def add_forms(forms_to_add)
+    forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
+
+    # Accepts either form_ids or forms.  If forms, convert to form_ids
+    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form.id else form_ref.to_i end } 
+
+    # Remember if this event has forms persisted with it already
+    event_has_saved_forms = self.form_references.size > 0
+
+    # This will assign potentially viable forms to form_references, but not if there are some already there
+    self.get_investigation_forms
+
+    # Get the form ids that are associated with this event (either from the database or via get_investigation_forms)
+    existing_or_viable_form_ids = self.form_references.map { |ref| ref.form_id }
+
+    if event_has_saved_forms
+      # Lets be sure that there are no dups between the desired forms and the existing forms
+      forms_to_add -= existing_or_viable_form_ids
     else
-      ### TGR:  Bug here.  Don't forget.
-      form_references.update(attributes.keys, attributes.values)
+      # Persist all passed in forms plus all viable forms
+      forms_to_add += existing_or_viable_form_ids
+    end
+    Event.transaction do
+      unless (forms_to_add.all? do |form_id|
+          # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
+          Form.find(form_id)
+          self.form_references.create(:form_id => form_id)
+      end)
+        raise "Unable to process new forms"
+      end
     end
   end
 
@@ -780,6 +806,10 @@ class Event < ActiveRecord::Base
     end
     disease.save(false) unless disease.nil?
     answers.each { |answer| answer.save(false) }
+    if !answers.empty? && form_references.empty?
+      self.get_investigation_forms
+      self.form_references.each { |form_ref| form_ref.event_id = self.id; form_ref.save(false) }
+    end
     notes.each { |note| note.save(false) }
     # Jurisdictions don't need to be saved on edit.  They can only be set by create.  After that routing is used.
   end

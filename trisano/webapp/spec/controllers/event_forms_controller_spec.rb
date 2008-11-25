@@ -21,25 +21,38 @@ describe EventFormsController do
   before(:each) do
     mock_user
     @event = mock_model(Event, :to_param => "1")
-    @event.stub!(:get_investigation_forms).and_return(nil)
     Event.stub!(:find).and_return(@event)
   end
 
   describe "handling GET /events/1/forms" do
 
     before(:each) do
-      @form = mock_model(Form)
-      Form.stub!(:find).and_return([@form])
+      @form_1 = mock_model(Form)
+      @form_2 = mock_model(Form)
+      Form.stub!(:find).and_return([@form_1])
 
       @form_reference = mock_model(FormReference)
-      @form_reference.stub!(:form).and_return(@form)
+      @form_reference.stub!(:form).and_return(@form_2)
       @event.stub!(:form_references).and_return([@form_reference])
+      @event.stub!(:get_investigation_forms).and_return(nil)
     end
   
     def do_get
       get :index, :event_id => "1"
     end
   
+    it "should load up viable forms" do
+      @event.should_receive(:get_investigation_forms).once
+      do_get
+    end
+
+    it "should find all forms" do
+      @event.should_receive(:form_references).and_return([@form_reference])
+      @form_reference.should_receive(:form).and_return(@form_2)
+      Form.should_receive(:find).once.and_return([@form_1])
+      do_get
+    end
+
     it "should be successful" do
       do_get
       response.should be_success
@@ -50,16 +63,12 @@ describe EventFormsController do
       response.should render_template('index')
     end
   
-    it "should find all event_forms" do
-      Form.should_receive(:find).once.and_return([@form])
-      do_get
-    end
   
     it "should assign the found event_forms for the view" do
       do_get
       assigns[:event].should == @event
-      assigns[:forms_available].should == [@form]
-      assigns[:forms_in_use].should == [@form]
+      assigns[:forms_available].should == [@form_1]
+      assigns[:forms_in_use].should == [@form_2]
     end
 
     # Debt: Not working for some reason
@@ -75,76 +84,47 @@ describe EventFormsController do
   describe "handling POST /events/1/forms" do
 
     before(:each) do
-      @form_reference = mock_model(FormReference)
-      @form_reference.stub!(:id).and_return(1)
-      @event.stub!(:form_references).and_return([@form_reference])
-
-      @form = mock_model(Form)
-      Form.stub!(:find).and_return(@form)
+#      @form_reference = mock_model(FormReference)
+#      @form_reference.stub!(:id).and_return(1)
+#      @event.stub!(:form_references).and_return([@form_reference])
+#
+#      @form = mock_model(Form)
+#      Form.stub!(:find).and_return(@form)
     end
     
     describe "with bad or duplicative parameters" do
   
-    # Debt: Not working for some reason
-    #  it "should 422 if form not found" do
-    #    Form.stub!(:find).and_raise
-    #    post :create, :forms_to_add => [99], :event_id => "1"
-    #    response.should render_template("#{RAILS_ROOT}/public/422.html")
-    #    response.response_code.should == 422
-    #  end
-
       it "should do nothing if no form references are pased in" do
         post :create, :event_id => "1"
+        @event.should_not_receive(:add_forms)
         flash[:error].should == 'No forms were selected for addition to this event.'
         flash[:notice].should be_nil
       end
 
-      it "should do nothing if passed in form reference is already associated with event" do
-        @event.form_references.should_not_receive(:create)
-        post :create, :forms_to_add => [1], :event_id => "1"
-        flash[:error].should be_nil
-      end
-
-      it "should add one new form reference to event if passed in 1 new and 1 existing reference" do
-        form_references_proxy = mock("form referneces proxy")
-        form_references_proxy.stub!(:map).and_return([1])
-        @event.stub!(:form_references).and_return(form_references_proxy)
-        @event.form_references.should_receive(:create).once().and_return(true)
-
+      it "should call add_forms once to save form references" do
+        @event.should_receive(:add_forms).once()
         post :create, :forms_to_add => [1, 2], :event_id => "1"
         flash[:error].should be_nil
         flash[:notice].should == 'The list of forms in use was successfully updated.'
       end
 
-      it "should add two new form references to event if passed in 2 new references" do 
-        form_references_proxy = mock("form referneces proxy")
-        form_references_proxy.stub!(:map).and_return([1])
-        @event.stub!(:form_references).and_return(form_references_proxy)
-        @event.form_references.should_receive(:create).twice().and_return(true)
-
+      it "should send a 422 if add forms raises a RecordNot Found error." do
+        @event.should_receive(:add_forms).and_raise(ActiveRecord::RecordNotFound)
         post :create, :forms_to_add => [2, 3], :event_id => "1"
-        flash[:error].should be_nil
-        flash[:notice].should == 'The list of forms in use was successfully updated.'
+        response.should render_template("#{RAILS_ROOT}/public/422.html")
+        response.response_code.should == 422
       end
 
-      it "should redirect to the event forms form" do
+      it "should send a 500 if anything else goes wrong." do
+        @event.should_receive(:add_forms).and_raise(RuntimeError)
+        post :create, :forms_to_add => [2, 3], :event_id => "1"
+        response.should render_template("#{RAILS_ROOT}/public/500.html")
+        response.response_code.should == 500
+      end
+
+      it "should redirect to the event forms form otherwise" do
         post :create, :event_id => "1"
         response.should redirect_to(event_forms_path("1"))
-      end
-      
-    end
-
-    describe "with failed save" do
-
-      it "should flash an error and redirect to the event forms form" do
-        form_references_proxy = mock("form referneces proxy")
-        form_references_proxy.stub!(:map).and_return([1])
-        @event.stub!(:form_references).and_return(form_references_proxy)
-        @event.form_references.should_receive(:create).and_return(false)
-
-        post :create, :forms_to_add => [3], :event_id => "1"
-        flash[:error].should == 'There was an error during processing.'
-        flash[:notice].should be_nil
       end
       
     end

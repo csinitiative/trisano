@@ -45,8 +45,6 @@
         - display_style = (form_count == 1) ? "inline" : "none"
             
         %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style}; vertical-align: top"}
-          - f.fields_for(:form_references, form_reference, :builder => ExtendedFormBuilder) do |fr|
-            = fr.hidden_field(:form_id, :index => form_reference.id)
           %span{:class => 'investigator-form-title'}
             = form_reference.form.name
           %br{:clear => 'all'}
@@ -81,6 +79,3 @@
             %small
               Version 
               = form_reference.form.version
-      - @event.core_only_form_references.each do |core_ref|
-        - f.fields_for(:form_references, core_ref, :builder => ExtendedFormBuilder) do |core_rb|
-          = core_rb.hidden_field(:form_id, :index => core_ref.id)

@@ -96,11 +96,6 @@
   %h2="Forms available for use"
   - if @forms_available.size > 0
     - form_for(:event_form) do |f|
-
-      -# Note, forms_in_use may actually contain forms that _would_ be in use if the user had saved the event
-      - for form in @forms_in_use
-        = hidden_field_tag("forms_to_add[]", form.id)
-
       %table.list
         %tr
           %th.forminformation
