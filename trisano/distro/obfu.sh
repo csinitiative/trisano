@@ -23,8 +23,6 @@
 
 #. setenv.sh
 
-#echo "Warning: Ensure that you run ./package_app.sh prior to running this script"
-#echo "Warning: Only currently supports local Tomcat instance"
 dump_path=$PWD/dump
 dump_dir_contents=$(find "$dump_path" -type f)
 
