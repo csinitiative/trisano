@@ -63,68 +63,70 @@
         |
         =link_to "Edit", edit_path
 
-#rot
-  %h2="Forms in use"
-  %table.list
-    %tr
-      %th.forminformation
-        Form Information
-      %th Diseases
-      %th Jurisdiction
-      %th Event Type
-    - for form in @forms_in_use
-      %tr.roll
-        %td.forminformation
-          .formname
-            = form.name
-            %br
-          .description
-            = h form.description
-        %td
-          %ul
-            - form.diseases.each do |disease|
-              %li.diseaselist
-                = h disease.disease_name
-        %td
-          = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
-        %td
-          = h form.event_type.humanize
+#forms_in_use
+  #rot
+    %h2="Forms in use"
+    %table.list
+      %tr
+        %th.forminformation
+          Form Information
+        %th Diseases
+        %th Jurisdiction
+        %th Event Type
+      - for form in @forms_in_use
+        %tr.roll
+          %td.forminformation
+            .formname
+              = form.name
+              %br
+            .description
+              = h form.description
+          %td
+            %ul
+              - form.diseases.each do |disease|
+                %li.diseaselist
+                  = h disease.disease_name
+          %td
+            = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+          %td
+            = h form.event_type.humanize
 
-#rot
-  %br
-  %hr{:style => 'color: #090; background-color: #090; height: 2px'}
-  %h2="Forms available for use"
-  - if @forms_available.size > 0
-    - form_for(:event_form) do |f|
-      %table.list
-        %tr
-          %th.forminformation
-            Form Information
-          %th Diseases
-          %th Jurisdiction
-          %th Event Type
-          %th Add to Event
-          - for form in @forms_available
-            %tr.roll
-              %td.forminformation
-                .formname
-                  = form.name
-                  %br
-                .description
-                  = h form.description
-              %td
-                %ul
-                  - form.diseases.each do |disease|
-                    %li.diseaselist
-                      = h disease.disease_name
-              %td
-                = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
-              %td
-                = h form.event_type.humanize
-              %td
-                = check_box_tag("forms_to_add[]", form.id)
+#forms_available
+  #rot
+    %br
+    %hr{:style => 'color: #090; background-color: #090; height: 2px'}
+    %h2="Forms available for use"
+    - if @forms_available.size > 0
+      - form_for(:event_form) do |f|
+        %table.list
+          %tr
+            %th.forminformation
+              Form Information
+            %th Diseases
+            %th Jurisdiction
+            %th Event Type
+            %th Add to Event
+            - for form in @forms_available
+              %tr.roll
+                %td.forminformation
+                  .formname
+                    = form.name
+                    %br
+                  .description
+                    = h form.description
+                %td
+                  %ul
+                    - form.diseases.each do |disease|
+                      %li.diseaselist
+                        = h disease.disease_name
+                %td
+                  = h form.jurisdiction.nil? ? "All" : form.jurisdiction.current_place.name
+                %td
+                  = h form.event_type.humanize
+                %td
+                  = check_box_tag("forms_to_add[]", form.id)
 
-      %br
-      = submit_tag("Add Forms")
-  - else
-    %em All forms in use
+        %br
+        = submit_tag("Add Forms")
+    - else
+      %em All forms in use

@@ -418,7 +418,14 @@ module TrisanoHelper
       return false
     end
   end
-  
+ 
+  def create_simplest_cmr(browser, last_name)
+    click_nav_new_cmr(browser)
+    browser.type "morbidity_event_active_patient__person_last_name", last_name
+    yield browser if block_given?
+    return save_cmr(browser)
+  end
+
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_active_patient__person_last_name", last_name
