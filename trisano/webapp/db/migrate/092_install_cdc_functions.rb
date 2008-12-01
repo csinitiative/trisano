@@ -31,8 +31,8 @@ class InstallCdcFunctions < ActiveRecord::Migration
 
   def self.down
     transaction do
-      execute('DROP FUNCTION fnTrisanoExport(integer)')
-      execute('DROP FUNCTION  fnTrisanoExportNonGenericCdc (iexport_id integer, iexport_name varchar(50))')
+      # execute('DROP FUNCTION fnTrisanoExport(integer)')
+      # execute('DROP FUNCTION  fnTrisanoExportNonGenericCdc (iexport_id integer, iexport_name varchar(50))')
     end
   end
 

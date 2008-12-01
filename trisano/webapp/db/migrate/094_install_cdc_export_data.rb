@@ -23,7 +23,7 @@ class InstallCdcExportData < ActiveRecord::Migration
   def self.up
     begin; execute('DROP FUNCTION fnTrisanoExport(integer)'); rescue;end
     begin; execute('DROP FUNCTION  fnTrisanoExportNonGenericCdc (iexport_id integer, iexport_name varchar(50))'); rescue;end
-    
+
     transaction do
       execute("alter table export_predicates alter column comparison_value TYPE varchar(2000)")
       script_dir = File.join(File.dirname(__FILE__), '..', 'scripts', '094')

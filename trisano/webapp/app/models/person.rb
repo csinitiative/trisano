@@ -69,8 +69,8 @@ class Person < ActiveRecord::Base
       sql_terms = fulltext_terms.join(" | ")
       
       where_clause += " AND " if !where_clause.empty?
-      where_clause += "vector @@ to_tsquery('default', '#{sql_terms}')"
-      order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+      where_clause += "vector @@ to_tsquery('#{sql_terms}')"
+      order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
     end
     
     query = "SELECT people.entity_id, first_name, middle_name, last_name, birth_date, c.code_description as gender, co.code_description as county

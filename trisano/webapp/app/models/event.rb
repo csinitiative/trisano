@@ -242,7 +242,7 @@ class Event < ActiveRecord::Base
       new_records = Event.find_by_sql("
                                       SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE (e.sent_to_ibis = FALSE
-                                      OR e.sent_to_ibis IS NULL)
+                                      OR e.sent_to_ibis IS NULL) 
                                       AND d.event_id = e.id
                                       AND d.disease_id IS NOT NULL 
                                       AND e.udoh_case_status_id = c.id
@@ -611,8 +611,8 @@ class Event < ActiveRecord::Base
       sql_terms = fulltext_terms.join(" | ")
       
       where_clause += " AND " unless where_clause.empty?
-      where_clause += "vector @@ to_tsquery('default', '#{sql_terms}')"
-      order_by_clause = " rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+      where_clause += "vector @@ to_tsquery('#{sql_terms}')"
+      order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
       
     end
     

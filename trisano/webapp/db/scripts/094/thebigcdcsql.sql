@@ -24,27 +24,27 @@ SELECT  DISTINCT
     WHEN 	event_onset_date <= first_reported_ph_date 
 	AND 	event_onset_date <= collection_date 
 	AND 	event_onset_date <= lab_test_date
-    THEN cast(substr(EXTRACT(YEAR FROM event_onset_date),3,4) 
-      || LPAD(EXTRACT(MONTH FROM event_onset_date), 2, '0') 
-      || LPAD(EXTRACT(DAY FROM event_onset_date), 2, '0') as char(6))
+    THEN cast(substr(EXTRACT(YEAR FROM event_onset_date)::text,3,4)
+      || LPAD(EXTRACT(MONTH FROM event_onset_date)::text, 2, '0') 
+      || LPAD(EXTRACT(DAY FROM event_onset_date)::text, 2, '0') as char(6))
     WHEN 	first_reported_ph_date <= event_onset_date 
 	AND 	first_reported_ph_date <= collection_date 
 	AND 	first_reported_ph_date <= lab_test_date
-    THEN cast(substr(EXTRACT(YEAR FROM first_reported_ph_date),3,4) 
-      || LPAD(EXTRACT(MONTH FROM first_reported_ph_date), 2, '0') 
-      || LPAD(EXTRACT(DAY FROM first_reported_ph_date), 2, '0') as char(6))
+    THEN cast(substr(EXTRACT(YEAR FROM first_reported_ph_date)::text,3,4)
+      || LPAD(EXTRACT(MONTH FROM first_reported_ph_date)::text, 2, '0') 
+      || LPAD(EXTRACT(DAY FROM first_reported_ph_date)::text, 2, '0') as char(6))
     WHEN 	collection_date <= event_onset_date
 	AND 	collection_date <= first_reported_ph_date
 	AND 	collection_date <= lab_test_date
-    THEN cast(substr(EXTRACT(YEAR FROM collection_date),3,4) 
-      || LPAD(EXTRACT(MONTH FROM collection_date), 2, '0') 
-      || LPAD(EXTRACT(DAY FROM collection_date), 2, '0') as char(6))
+    THEN cast(substr(EXTRACT(YEAR FROM collection_date)::text,3,4) 
+      || LPAD(EXTRACT(MONTH FROM collection_date)::text, 2, '0') 
+      || LPAD(EXTRACT(DAY FROM collection_date)::text, 2, '0') as char(6))
     WHEN	lab_test_date <= event_onset_date
 	        AND	lab_test_date <= first_reported_ph_date
 	AND	lab_test_date <= collection_date
-    THEN cast(substr(EXTRACT(YEAR FROM lab_test_date),3,4) 
-      || LPAD(EXTRACT(MONTH FROM lab_test_date), 2, '0') 
-      || LPAD(EXTRACT(DAY FROM lab_test_date), 2, '0') as char(6))
+    THEN cast(substr(EXTRACT(YEAR FROM lab_test_date)::text,3,4)
+      || LPAD(EXTRACT(MONTH FROM lab_test_date)::text, 2, '0') 
+      || LPAD(EXTRACT(DAY FROM lab_test_date)::text, 2, '0') as char(6))
     END AS exp_eventdate
 ,  CASE 
     WHEN 	event_onset_date <= first_reported_ph_date 
@@ -119,8 +119,8 @@ SELECT events.id AS event_id
   , CAST('M'  AS char(1)) AS exp_rectype
   , CAST(' '  AS char(1)) AS exp_update
   , CAST('49' AS char(2)) AS exp_state
-  , SUBSTR(EXTRACT(YEAR from CURRENT_DATE), 3,2) AS exp_year 
-  , SUBSTR(events.record_number, 5) AS exp_caseid
+  , SUBSTR(EXTRACT(YEAR from CURRENT_DATE)::text, 3,2) AS exp_year
+  , SUBSTR(events.record_number::text, 5) AS exp_caseid
   , CAST('S01' AS CHAR(3)) AS exp_site
   , events."MMWR_week" AS exp_week
   , cast(coalesce(valdisease.value_to, '99999', valdisease.value_to) as char(5)) AS exp_event
@@ -129,11 +129,11 @@ SELECT events.id AS event_id
   , CAST('00001' AS CHAR(6))  as exp_count
   , COALESCE(valcounty.value_to, '999', valcounty.value_to) AS exp_county
   , cast(coalesce(EXTRACT(YEAR FROM people.birth_date) 
-      || LPAD(EXTRACT(MONTH FROM people.birth_date), 2, '0') 
-      ||  LPAD(EXTRACT(DAY FROM people.birth_date), 2, '0'),'99999999',
+      || LPAD(EXTRACT(MONTH FROM people.birth_date)::text, 2, '0') 
+      ||  LPAD(EXTRACT(DAY FROM people.birth_date)::text, 2, '0'),'99999999',
 	EXTRACT(YEAR FROM people.birth_date) 
-	|| LPAD(EXTRACT(MONTH FROM people.birth_date), 2, '0') 
-	||  LPAD(EXTRACT(DAY FROM people.birth_date), 2, '0')) as char(8)) 
+	|| LPAD(EXTRACT(MONTH FROM people.birth_date)::text, 2, '0') 
+	||  LPAD(EXTRACT(DAY FROM people.birth_date)::text, 2, '0')) as char(8)) 
     AS exp_birthdate
   , people.approximate_age_no_birthday AS exp_age  
   , COALESCE(ageType.the_code, '9', ageType.the_code) AS exp_agetype 

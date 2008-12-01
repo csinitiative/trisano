@@ -20,20 +20,25 @@ class AddFulltextSupportToPeople < ActiveRecord::Migration
     execute "ALTER TABLE people ADD COLUMN vector tsvector;"
     execute "CREATE INDEX people_fts_vector_index ON people USING gist(vector);"
     execute "vacuum full analyze;"
-    # execute "update pg_ts_cfg set locale = 'en_US' where ts_name = 'default';"
-    execute "CREATE TRIGGER tsvectorupdate BEFORE UPDATE OR INSERT ON people
-              FOR EACH ROW EXECUTE PROCEDURE
-              tsearch2(vector, first_name, last_name, first_name_soundex, last_name_soundex);"
-    execute "update people set vector = setweight(
-              to_tsvector('default', coalesce(first_name,'') || ' ' || 
-              coalesce(last_name,'') || ' ' || 
-              coalesce(first_name_soundex,'') || ' ' || 
-              coalesce(last_name_soundex,'')),'A');"
+    execute "CREATE LANGUAGE plpgsql;"
+    execute "CREATE FUNCTION people_trigger() RETURNS trigger AS $$
+                      begin
+                        new.vector :=
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name,'')), 'B') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name,'')), 'B') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name_soundex,'')), 'A') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name_soundex,'')), 'A');
+                        return new;
+                      end
+                    $$ LANGUAGE plpgsql;"
+    execute "CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON people
+                    FOR EACH ROW EXECUTE PROCEDURE people_trigger();"
   end
 
   def self.down
-   execute "DROP INDEX people_fts_vector_index;"
-   execute "ALTER TABLE people DROP COLUMN vector;"
-   execute "DROP TRIGGER tsvectorupdate ON people;"
+    execute "DROP INDEX people_fts_vector_index;"
+    execute "ALTER TABLE people DROP COLUMN vector;"
+    execute "DROP TRIGGER tsvectorupdate ON people;"
+    execute "DROP FUNCTION people_trigger();"
   end
 end

@@ -45,7 +45,7 @@ class AddAgeAtOnset < ActiveRecord::Migration
 
   def self.down
     remove_foreign_key( :events, :age_type_id)
-    drop_column :events, :age_type_id
-    drop_column :events, :age_at_onset
+    remove_column :events, :age_type_id
+    remove_column :events, :age_at_onset
   end
 end

@@ -35,6 +35,6 @@ class AssociateEventsAndInvestigators < ActiveRecord::Migration
 
   def self.down
     remove_foreign_key(:events, :investigator_id)
-    drop_column :events, :investigator_id
+    remove_column :events, :investigator_id
   end
 end

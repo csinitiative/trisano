@@ -41,27 +41,6 @@ namespace :trisano do
     task :db_rebuild_full_for_build  => ['trisano:deploy:stoptomcat', 'db_rebuild_full'] do
     end
     
-    # Debt: DRY up the tsearch tasks. They could be a bit more dynamic
-    
-    desc "add tsearch functions to dev and test"
-    task :add_tsearch => [:add_tsearch_to_dev, :add_tsearch_to_test] do
-       puts "tsearch support added to dev and test"
-    end
-    
-    desc "add tsearch functions to dev"
-    task :add_tsearch_to_dev do
-      puts "adding tsearch to dev"
-      sh "psql trisano_development < db/tsearch2.sql"
-    end
-    
-    desc "add tsearch functions to test"
-    task :add_tsearch_to_test do
-      puts "adding tsearch to test"
-      sh "psql trisano_test < db/tsearch2.sql"
-    end
-    
-    # The locale tasks that follow probably could be dried up a bit more, as well
-
     desc "update locale configs"
     task :update_locale_configs => [:update_dev_locale_config, :update_test_locale_config] do
     end

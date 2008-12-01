@@ -38,8 +38,8 @@ describe 'User functionality for searching for existing users' do
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Charles"
 
       click_core_tab(@browser, "Reporting")
-      @browser.type "morbidity_event_active_active_reporting_agency_last_name", "Hardy"
-      @browser.type "morbidity_event_active_active_reporting_agency_first_name", "Charles"
+      @browser.type "morbidity_event_active_reporting_agency_last_name", "Hardy"
+      @browser.type "morbidity_event_active_reporting_agency_first_name", "Charles"
       save_cmr(@browser).should be_true
     end
   end
@@ -125,8 +125,8 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Unassigned').should be_true
   end
 
-  it 'should find Charles Chuckles when searching by Unassigned jurisdiction' do  
-    @browser.select('jurisdiction_id', 'label=Unassigned')
+  it 'should find Charles Chuckles when searching by Unassigned jurisdiction' do
+    @browser.select("//select[@name='jurisdiction_id']", 'label=Unassigned')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('Charles Chuckles').should be_true
@@ -139,7 +139,7 @@ describe 'User functionality for searching for existing users' do
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('Charles Chuckles').should be_true
-    @browser.is_text_present('Export results to CSV').should be_true
+    @browser.is_text_present('Export All to CSV').should be_true
   end
 
   it "should find charles chuckles when searchin for morbidity events" do
