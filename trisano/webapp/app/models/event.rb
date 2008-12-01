@@ -241,8 +241,8 @@ class Event < ActiveRecord::Base
       # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect
       new_records = Event.find_by_sql("
                                       SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                                      WHERE e.sent_to_ibis = FALSE
-                                      OR e.sent_to_ibis IS NULL 
+                                      WHERE (e.sent_to_ibis = FALSE
+                                      OR e.sent_to_ibis IS NULL)
                                       AND d.event_id = e.id
                                       AND d.disease_id IS NOT NULL 
                                       AND e.udoh_case_status_id = c.id
