@@ -70,7 +70,7 @@ module TrisanoHelper
   #  for you. 
   def set_fields(browser, value_hash)
     fields = browser.get_all_fields
-    #puts fields
+    
     value_hash.each_pair do |key, value|
       if fields.index(key) != nil
         browser.type(key, value) 
@@ -507,7 +507,7 @@ module TrisanoHelper
   def edit_form_and_go_to_builder(browser, form_attributes ={})
     browser.type "form_name", form_attributes[:form_name] unless form_attributes[:form_name].nil?
     browser.select "form_event_type", "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
-    puts "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
+    #puts "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
     unless form_attributes[:disease].nil?
       if form_attributes[:disease].respond_to?(:each)
         form_attributes[:disease].each { |label| browser.click(label.tr(" ", "_")) }
@@ -583,9 +583,9 @@ module TrisanoHelper
   
   # Takes the name of the follow-up container to which the question should be added and the question's attributes.
   def add_question_to_follow_up(browser, element_name, question_attributes = {})
-    puts 'element_name: ' + element_name
-    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
-    puts question_attributes.to_s
+#    puts 'element_name: ' + element_name
+#    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
+#    puts question_attributes.to_s
     return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
