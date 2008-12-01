@@ -21,6 +21,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../../../lib')
 $load_time = ENV['TRISANO_PAGE_LOAD'] ||= '30000'
 $publish_time = ENV['TRISANO_PUBLISH'] ||= '60000'
 $rc_server = ENV['SEL_RC_SERVER'] ||= 'localhost'
+$rc_port = ENV['RC_PORT'] ||= '4444'
 
 require 'rubygems'
 require 'spec'
@@ -36,7 +37,7 @@ Spec::Runner.configure do |config|
   trisano_url = trisano_url.sub("//", "//utah:arches@")
   
   config.before(:all) do
-    @browser = Selenium::SeleniumDriver.new($rc_server, 4444, "*firefox",trisano_url, 10000)
+    @browser = Selenium::SeleniumDriver.new($rc_server, $rc_port, "*firefox",trisano_url, 10000)
 
     # Debt: Need to get this all dialed in properly. Use the following browser for testing downloads.
     #
