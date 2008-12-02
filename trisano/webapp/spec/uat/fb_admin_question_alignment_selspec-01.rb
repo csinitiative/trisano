@@ -25,16 +25,18 @@ describe 'Form Builder Admin Question Alignment Functionality' do
     @form_name = get_unique_name(2) + " q-align-uat"
     @cmr_last_name = get_unique_name(1) + " q-align-uat"
     @question_text = get_unique_name(3) + " q-align-uat"
+    @disease_name = get_random_disease
   end
   
   after(:all) do
     @form_name = nil
     @cmr_last_name = nil
     @question_text = nil
+    @disease_name = nil
   end
   
   it 'should handle standard follow-ups.' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
+    create_new_form_and_go_to_builder(@browser, @form_name, @disease_name, "All Jurisdictions")
     @question_id = add_question_to_view(@browser, "Default View", {
         :question_text => @question_text, 
         :data_type => "Single line text", 
@@ -43,7 +45,7 @@ describe 'Form Builder Admin Question Alignment Functionality' do
     )
     
     publish_form(@browser)
-    create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
+    create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease_name, "Bear River Health Department")
     edit_cmr(@browser)
     
     @browser.is_text_present(@question_text).should be_true

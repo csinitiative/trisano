@@ -136,15 +136,15 @@ module TrisanoHelper
       puts("TAB NOT FOUND: " + tab_name)
     end
   end
-  
+
   def get_random_disease()
     wordlist = ["African Tick Bite Fever","AIDS","Amebiasis","Anaplasma phagocytophilum","Anthrax","Aseptic meningitis","Bacterial meningitis, other","Botulism, foodborne","Botulism, infant","Botulism, other (includes wound)","Botulism, other unspecified","Botulism, wound","Brucellosis","Cache Valley virus neuroinvasive disease","Cache Valley virus non-neuroinvasive disease","California serogroup virus neuroinvasive disease","California serogroup virus non-neuroinvasive disease","Campylobacteriosis","Chancroid","Chlamydia trachomatis genital infection","Cholera (toxigenic Vibrio cholerae O or O)","Coccidioidomycosis","Cryptosporidiosis","Cyclosporiasis","Dengue","Dengue hemorrhagic fever","Diphtheria","Eastern equine encephalitis virus neuroinvasive disease","Eastern equine encephalitis virus non-neuroinvasive disease","Ehrlichia chaffeensis","Ehrlichia ewingii","Ehrlichiosis/Anaplasmosis, undetermined","Encephalitis, post-chickenpox","Encephalitis, post-mumps","Encephalitis, post-other","Encephalitis, primary","Flu activity code (Influenza)","Giardiasis","Gonorrhea","Granuloma inguinale (GI)","Haemophilus influenzae, invasive disease","Hansen disease (Leprosy)","Hantavirus infection","Hantavirus pulmonary syndrome","Hemolytic uremic syndrome postdiarrheal","Hepatitis A, acute","Hepatitis B virus infection, chronic","Hepatitis B, acute","Hepatitis B, virus infection perinatal","Hepatitis C virus infection, past or present","Hepatitis C, acute","Hepatitis Delta co- or super-infection, acute (Hepatitis D)","Hepatitis E, acute","Hepatitis, viral unspecified","HIV Infection, adult","HIV Infection, pediatric","Human T-Lymphotropic virus type I infection (HTLV-I)","Human T-Lymphotropic virus type II infection (HTLV-II)","Influenza, animal isolates","Influenza, human isolates","Influenza-associated mortality","Japanese encephalitis virus neuroinvasive disease","Japanese encephalitis virus non-neuroinvasive disease","Lead poisoning","Legionellosis","Listeriosis","Lyme disease","Lymphogranuloma venereum (LGV)","Malaria","Measles (rubeola), total","Meningococcal disease (Neisseria meningitidis)","Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)","Monkeypox","Mucopurulent cervicitis (MPC)","Mumps","Neurosyphilis","Nongonococcal urethritis (NGU)","Novel influenza A virus infections","Pelvic Inflammatory Disease (PID), Unknown Etiology","Pertussis","Plague","Poliomyelitis, paralytic","Poliovirus infection, nonparalytic","Powassan virus neuroinvasive disease","Powassan virus non-neuroinvasive disease","Psittacosis (Ornithosis)","Q fever","Q fever, acute","Q fever, chronic","Rabies, animal","Rabies, human","Rocky Mountain spotted fever","Rubella","Rubella, congenital syndrome","Salmonellosis","Severe Acute Respiratory Syndrome (SARS)-associated Coronavirus disease (SARS-CoV)","Shiga toxin-producing Escherichia coli (STEC)","Shigellosis","Smallpox","St. Louis encephalitis virus neuroinvasive disease","St. Louis encephalitis virus non-neuroinvasive disease","Streptococcal disease, invasive, Group A","Streptococcal disease, invasive, Group B","Streptococcal disease, other, invasive, beta-hemolytic (non-group A and non-group B)","Streptococcal toxic-shock syndrome","Streptococcus pneumoniae invasive, drug-resistant (DRSP)","Streptococcus pneumoniae, invasive disease","Syphilis, congenital","Syphilis, early latent","Syphilis, late latent","Syphilis, late with clinical manifestations other than neurosyphilis","Syphilis, primary","Syphilis, secondary","Syphilis, total primary and secondary","Syphilis, unknown latent","Tetanus","Toxic-shock syndrome (staphylococcal)","Trichinellosis","Tuberculosis","Tularemia","Typhoid fever (caused by Salmonella typhi)","Vancomycin-intermediate Staphylococcus aureus (VISA)","Vancomycin-resistant Staphylococcus aureus (VRSA)","Varicella (Chickenpox)","Venezuelan equine encephalitis virus neuroinvasive disease","Venezuelan equine encephalitis virus non-neuroinvasive disease","Vibriosis (non-cholera Vibrio species infections)","West Nile virus neuroinvasive disease","West Nile virus non-neuroinvasive disease","Western equine encephalitis virus neuroinvasive disease","Western equine encephalitis virus non-neuroinvasive disease","Yellow fever","Yersiniosis"]
-    result = wordlist[1 + rand(132)]
+    wordlist[1 + rand(132)]
   end
   
   def get_random_jurisdiction()
     wordlist = ["Out of State","Weber-Morgan Health Department","Wasatch County Health Department","Utah State","Utah County Health Department","TriCounty Health Department","Tooele County Health Department","Summit County Public Health Department","Southwest Utah Public Health Department","Southeastern Utah District Health Department","Salt Lake Valley Health Department","Davis County Health Department","Central Utah Public Health Department","Bear River Health Department","Unassigned"]
-    result = wordlist[1 + rand(14)]
+    wordlist[1 + rand(14)]
   end
   
   def click_nav_new_cmr(browser)
@@ -176,13 +176,13 @@ module TrisanoHelper
     browser.click 'link=FORMS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("Form Information") and
-      browser.is_text_present("Diseases") and
-      browser.is_text_present("Jurisdiction") and
-      browser.is_text_present("Event Type") and
-      browser.is_element_present("//input[@value='Upload']") and
-      browser.is_element_present("//input[@id='form_import']") and
-      browser.is_element_present("//input[@value='Create new form']")
-      )
+        browser.is_text_present("Diseases") and
+        browser.is_text_present("Jurisdiction") and
+        browser.is_text_present("Event Type") and
+        browser.is_element_present("//input[@value='Upload']") and
+        browser.is_element_present("//input[@id='form_import']") and
+        browser.is_element_present("//input[@value='Create new form']")
+    )
   end
   
   def click_nav_admin(browser)
@@ -197,7 +197,7 @@ module TrisanoHelper
         browser.is_element_present("link=Core Fields") and
         browser.is_element_present("link=CDC Export") and
         browser.is_element_present("link=IBIS Export") 
-      ) 
+    )
   end
   
   def edit_cmr(browser)
@@ -408,7 +408,7 @@ module TrisanoHelper
     end
   end
   
-    def click_push_form(browser, name)
+  def click_push_form(browser, name)
     id = get_resource_id(browser, name)
     if id > 0 
       browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/push')]"
@@ -583,9 +583,9 @@ module TrisanoHelper
   
   # Takes the name of the follow-up container to which the question should be added and the question's attributes.
   def add_question_to_follow_up(browser, element_name, question_attributes = {})
-#    puts 'element_name: ' + element_name
-#    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
-#    puts question_attributes.to_s
+    #    puts 'element_name: ' + element_name
+    #    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
+    #    puts question_attributes.to_s
     return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
   end
   
@@ -974,7 +974,7 @@ module TrisanoHelper
   end
 
   def get_question_investigate_div_id(browser, question_text)
-    element_id_prefix = "investigator_answer_"
+    element_id_prefix = "question_investigate_"
     html_source = browser.get_html_source
     name_position = html_source.index(question_text)
     id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_id_prefix.length
@@ -1068,7 +1068,7 @@ module TrisanoHelper
     retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
-        # Start from form_children to avoid finding something up in the top portion of the page
+    # Start from form_children to avoid finding something up in the top portion of the page
     name_position = html_source.index(name, html_source.index("form_children")) 
     
     begin
@@ -1088,7 +1088,7 @@ module TrisanoHelper
     retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
-        # Start from form_children to avoid finding something up in the top portion of the page
+    # Start from form_children to avoid finding something up in the top portion of the page
     name_position = html_source.index(name, html_source.index("Library Administration")) 
     
     begin

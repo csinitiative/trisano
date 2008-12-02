@@ -167,10 +167,10 @@
 - disease_name: "HIV Infection, pediatric"
   cdc_code: 
 
-- disease_name: "Human T-Lymphotropic virus type I  infection (HTLV-I)"
+- disease_name: "Human T-Lymphotropic virus type I infection (HTLV-I)"
   cdc_code: 
 
-- disease_name: "Human T-Lymphotropic virus type II  infection (HTLV-II)"
+- disease_name: "Human T-Lymphotropic virus type II infection (HTLV-II)"
   cdc_code: 
 
 - disease_name: "Influenza, animal isolates"
