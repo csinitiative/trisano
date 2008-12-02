@@ -190,7 +190,6 @@ class MorbidityEventsController < EventsController
       # the following line must follow the previous line or state won't get changed.
       @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
 
-
       redirect_to request.env["HTTP_REFERER"]
     rescue Exception => ex
       @event.errors.add_to_base('Unable to route CMR: ' + ex.message)
