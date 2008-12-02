@@ -19,8 +19,15 @@ function toggle_investigator_forms(id_to_show) {
   
 }
 
-function sendConditionRequest(element, event_id, question_element_id) {
-  new Ajax.Request('../../question_elements/process_condition?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {asynchronous:true, evalScripts:true})
+function sendConditionRequest(element, event_id, question_element_id, spinner_id) {
+  if (typeof spinner_id == "undefined")
+    spinner_id = 'investigator_answer_' +  question_element_id + '_spinner'
+  new Ajax.Request('../../question_elements/process_condition?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
+    asynchronous: true, 
+    evalScripts: true,
+    onCreate:   function() { $(spinner_id).show(); },
+    onComplete: function() { $(spinner_id).hide(); }
+  })
 }
 
 function sendCoreConditionRequest(element, event_id, core_path) {

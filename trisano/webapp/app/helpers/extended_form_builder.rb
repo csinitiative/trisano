@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::AssetTagHelper
   
   def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
     change_event = core_follow_up_event(attribute, event, can_investigate)
@@ -64,8 +66,9 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @ret
   end
 
+  # TODO: refactor me! 
   def dynamic_question(form_elements_cache, question_element, event, index, html_options = {}) 
-      
+    id = html_options[:id]
     result = ""
     question = question_element.question
     
@@ -119,7 +122,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       
       i = 0
       name = field_name + "[" + field_index + "][check_box_answer][]"
-      id = html_options[:id]
       get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value|
         html_options[:id] =  "#{id}_#{i += 1}"
         check_boxes += @template.check_box_tag(name, value, @object.check_box_answer.include?(value), html_options) + value
@@ -137,7 +139,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
-      id = html_options[:id]
       
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value|
         
@@ -177,6 +178,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         result += "\n" + hidden_field(:export_conversion_value_id, :index => index, :value => question_element.export_column.export_conversion_values.first.id )
       end
     end
+
+    result << '&nbsp;' * 2 << image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => "Working...", :size => '16x16', :style => 'display: none;')
     
     result
   end
