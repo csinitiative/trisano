@@ -18,31 +18,31 @@
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::AssetTagHelper
-  
+
   def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
-    change_event = core_follow_up_event(attribute, event, can_investigate)
-    options[:onchange] = change_event unless change_event.blank?
-    text_field(attribute, options)
+    core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
+      text_field(attribute, options)
+    end
   end
   
   def core_calendar_date_select(attribute, options = {}, event =nil, can_investigate =nil)
-    change_event = core_follow_up_event(attribute, event, can_investigate)
-    options[:onchange] = change_event unless change_event.blank?
-    calendar_date_select(attribute, options)
+    core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
+      calendar_date_select(attribute, options)
+    end
   end
   
   def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil, can_investigate =nil)
-    change_event = core_follow_up_event(attribute, event, can_investigate)
-    options[:include_blank] = true unless options[:include_blank] == false
-    html_options[:onchange] = change_event unless change_event.blank?
-    self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
+    core_follow_up(attribute, html_options, event, can_investigate) do |attribute, html_options|
+      options[:include_blank] = true unless options[:include_blank] == false
+      self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
+    end
   end
 
   def core_dropdown_field(attribute, collection, value_method, text_method, options={}, html_options={}, event=nil, can_investigate=nil)
-    change_event = core_follow_up_event(attribute, event, can_investigate)
-    options[:include_blank] = true unless options[:include_blank] == false
-    html_options[:onchange] = change_event unless change_event.blank?
-    self.collection_select(attribute, collection, value_method, text_method, options, html_options)
+    core_follow_up(attribute, html_options, event, can_investigate) do |attribute, html_options|
+      options[:include_blank] = true unless options[:include_blank] == false
+      self.collection_select(attribute, collection, value_method, text_method, options, html_options)
+    end
   end
 
   def multi_select_code_field(attribute, code_name, options, html_options)
@@ -179,7 +179,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
 
-    result << '&nbsp;' * 2 << image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => "Working...", :size => '16x16', :style => 'display: none;')
+    result << follow_up_spinner_for(id)
     
     result
   end
@@ -189,6 +189,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
   
   private
+
+  def core_follow_up(attribute, options = {}, event = nil, can_investigate = nil)
+    change_event = core_follow_up_event(attribute, event, can_investigate)
+    options[:onchange] = change_event unless change_event.blank?    
+    spinner = change_event.blank? ? '' : follow_up_spinner_for(core_path[attribute])
+    field = block_given? ? yield(attribute, options) : ''
+    field + spinner
+  end
 
   def is_external_code?(code_name)
     @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "telephonelocationtype", "contactdispositiontype"]
@@ -200,13 +208,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return if  (event.nil? || event.form_references.nil?) 
     result = ""
 
-    core_path = @options[:core_path] || @object_name
     unless (core_path.nil?)
       if (event.attributes["type"] != "MorbidityEvent" || can_investigate)
         event.form_references.each do |form_reference|
-
-          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path}[#{attribute}]").size > 0)
-            result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path}[#{attribute}]');"
+          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}").size > 0)
+            result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path[attribute]}');"
             break
           end
         end
@@ -214,6 +220,16 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
     return result
   end
+
+  def core_path
+    core_path = @options[:core_path] || @object_name
+    return if core_path.nil?
+    CorePath[core_path]
+  end
+
+  def follow_up_spinner_for(id)
+    '&nbsp;' * 2 + image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => 'Working...', :size => '16x16', :style => 'display: none;')
+  end    
 
   def conversion_id_for(question_element, value_from)
     question_element.export_column.export_conversion_values.each do |conversion_value|
@@ -239,6 +255,31 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def export_conversion_value_id(event, question)
     answer = event.answers.find_by_question_id(question.id)
     answer.export_conversion_value_id unless answer.nil?
+  end
+
+end
+
+class CorePath
+
+  class << self
+    def [](base)
+      new base
+    end
+  end
+
+  def [](attribute)
+    @path += "[#{attribute}]"
+    self
+  end
+
+  def to_s
+    @path
+  end
+
+  private 
+  
+  def initialize(base)
+    @path = base
   end
 
 end
