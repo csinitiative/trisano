@@ -193,6 +193,7 @@ module ModelAutoCompleterHelper
       #{text_field_tag tf_name, tf_value, tag_options}
       #{content_tag("div", "", :id => "#{tf_id}_auto_complete", :class => "auto_complete")}
       #{auto_complete_field tf_id, completion_options}
+      #{image_tag 'redbox_spinner.gif', :id => "#{hf_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'}
     HTML
   end
 
@@ -254,5 +255,7 @@ private
       :controller => options[:controller],
       :action     => options[:action]
     )
+
+    completion_options[:indicator] = "#{hf_id}_spinner"
   end
 end
