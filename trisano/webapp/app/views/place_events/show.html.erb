@@ -33,9 +33,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <tr>
       <% place = @event.active_place.primary_entity.person %>
       <td class='forminformation'>
-        <div class='patientname'>
+        <% place_name(@event) do %>
           <%= place_name %>
-        </div>
+        <% end %>
         <small>Date: <%= @event.event_onset_date %></small>
         <div class='tools'>
           <%= basic_place_event_controls(@event, false) %>

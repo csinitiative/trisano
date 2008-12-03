@@ -2,7 +2,7 @@
   - extra_tools = "" if extra_tools.nil?
   - patient = event.active_patient.primary_entity.person
   %td.forminformation
-    .patientname
+    - patient_name(event) do
       = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
     %small
       Date:

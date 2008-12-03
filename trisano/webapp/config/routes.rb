@@ -44,11 +44,11 @@ ActionController::Routing::Routes.draw do |map|
   map.form_rollback 'forms/rollback/:id', :controller => 'forms', :action => 'rollback'
 
   map.resources :forms, 
-                :member => {
-                  :copy => :post,
-                  :export => :post,
-                  :push => :post
-                }
+    :member => {
+    :copy => :post,
+    :export => :post,
+    :push => :post
+  }
 
   map.resources :external_codes
 
@@ -73,12 +73,20 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   
   map.resources :cmrs, 
-                :controller => :morbidity_events,
-                :member => { :state => :post, :jurisdiction => :post }
+    :controller => :morbidity_events,
+    :member => {
+    :state => :post,
+    :jurisdiction => :post,
+    :soft_delete => :post
+  }
 
-  map.resources :contact_events
+  map.resources :contact_events, :member => {
+    :soft_delete => :post
+  }
 
-  map.resources :place_events
+  map.resources :place_events, :member => {
+    :soft_delete => :post
+  }
 
   # These are the forms in use with and available to an event
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]

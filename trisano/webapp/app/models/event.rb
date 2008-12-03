@@ -90,89 +90,89 @@ class Event < ActiveRecord::Base
 
   @@states = {}
   @@states['NEW']       = { 
-                            :transitions => ["ASGD-LHD"],                           
-                            :action_phrase => nil,
-                            :priv_required => :create_event,
-                            :description => "New",
-                            :state_code => "NEW"
-                          }
+    :transitions => ["ASGD-LHD"],
+    :action_phrase => nil,
+    :priv_required => :create_event,
+    :description => "New",
+    :state_code => "NEW"
+  }
   @@states['ASGD-LHD']  = {
-                            :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"], 
-                            :action_phrase => nil,
-                            :priv_required => :route_event_to_any_lhd,
-                            :description => "Assigned to Local Health Dept.",
-                            :state_code => "ASGD-LHD"
-                          }
+    :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"],
+    :action_phrase => nil,
+    :priv_required => :route_event_to_any_lhd,
+    :description => "Assigned to Local Health Dept.",
+    :state_code => "ASGD-LHD"
+  }
   @@states['ACPTD-LHD'] = {
-                            :transitions => ["ASGD-LHD", "ASGD-INV"],               
-                            :action_phrase => "Accept",
-                            :priv_required => :accept_event_for_lhd,
-                            :description => "Accepted by Local Health Dept.",
-                            :state_code => "ACPTD-LHD"
-                          }
+    :transitions => ["ASGD-LHD", "ASGD-INV"],
+    :action_phrase => "Accept",
+    :priv_required => :accept_event_for_lhd,
+    :description => "Accepted by Local Health Dept.",
+    :state_code => "ACPTD-LHD"
+  }
   @@states['RJCTD-LHD'] = {
-                            :transitions => ["ASGD-LHD"],                           
-                            :action_phrase => "Reject",
-                            :priv_required => :accept_event_for_lhd,
-                            :description => "Rejected by Local Health Dept.",
-                            :state_code => "RJCTD-LHD"
-                          }
+    :transitions => ["ASGD-LHD"],
+    :action_phrase => "Reject",
+    :priv_required => :accept_event_for_lhd,
+    :description => "Rejected by Local Health Dept.",
+    :state_code => "RJCTD-LHD"
+  }
   @@states['ASGD-INV']  = {
-                            :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],        
-                            :action_phrase => "Route locally to",
-                            :priv_required => :route_event_to_investigator,
-                            :description => "Assigned to Investigator",
-                            :state_code => "ASGD-INV"
-                          }
+    :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],
+    :action_phrase => "Route locally to",
+    :priv_required => :route_event_to_investigator,
+    :description => "Assigned to Investigator",
+    :state_code => "ASGD-INV"
+  }
   @@states['UI']        = {
-                            :transitions => ["ASGD-LHD", "IC"],                     
-                            :action_phrase => "Accept",
-                            :priv_required => :accept_event_for_investigation,
-                            :description => "Under Investigation",
-                            :state_code => "UI"
-                          }
+    :transitions => ["ASGD-LHD", "IC"],
+    :action_phrase => "Accept",
+    :priv_required => :accept_event_for_investigation,
+    :description => "Under Investigation",
+    :state_code => "UI"
+  }
   @@states['RJCTD-INV'] = {
-                            :transitions => ["ASGD-LHD", "ASGD-INV"],               
-                            :action_phrase => "Reject",
-                            :priv_required => :accept_event_for_investigation,
-                            :description => "Rejected by Investigator",
-                            :state_code => "RJCTD-INV"
-                          }
+    :transitions => ["ASGD-LHD", "ASGD-INV"],
+    :action_phrase => "Reject",
+    :priv_required => :accept_event_for_investigation,
+    :description => "Rejected by Investigator",
+    :state_code => "RJCTD-INV"
+  }
   @@states['IC']        = {
-                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
-                            :action_phrase => "Mark Investigation Complete",
-                            :priv_required => :investigate_event ,
-                            :description => "Investigation Complete",
-                            :state_code => "IC"
-                          }
+    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
+    :action_phrase => "Mark Investigation Complete",
+    :priv_required => :investigate_event ,
+    :description => "Investigation Complete",
+    :state_code => "IC"
+  }
   @@states['APP-LHD']   = {
-                            :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],     
-                            :action_phrase => "Approve",
-                            :priv_required => :approve_event_at_lhd ,
-                            :description => "Approved by LHD",
-                            :state_code => "APP-LHD"
-                          }
+    :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],
+    :action_phrase => "Approve",
+    :priv_required => :approve_event_at_lhd ,
+    :description => "Approved by LHD",
+    :state_code => "APP-LHD"
+  }
   @@states['RO-MGR']    = {
-                            :transitions => ["ASGD-LHD", "IC"],                     
-                            :action_phrase => "Reopen",
-                            :priv_required => :approve_event_at_lhd ,
-                            :description => "Reopened by Manager",
-                            :state_code => "RO-MGR"
-                          }
+    :transitions => ["ASGD-LHD", "IC"],
+    :action_phrase => "Reopen",
+    :priv_required => :approve_event_at_lhd ,
+    :description => "Reopened by Manager",
+    :state_code => "RO-MGR"
+  }
   @@states['CLOSED']    = {
-                            :transitions => [],                                     
-                            :action_phrase => "Approve",
-                            :priv_required => :approve_event_at_state ,
-                            :description => "Approved by State",
-                            :state_code => "CLOSED"
-                          }
+    :transitions => [],
+    :action_phrase => "Approve",
+    :priv_required => :approve_event_at_state ,
+    :description => "Approved by State",
+    :state_code => "CLOSED"
+  }
   @@states['RO-STATE']  = {
-                            :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],      
-                            :action_phrase => "Reopen",
-                            :priv_required => :approve_event_at_state ,
-                            :description => "Reopened by State",
-                            :state_code => "RO-STATE"
-                          }
+    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
+    :action_phrase => "Reopen",
+    :priv_required => :approve_event_at_state ,
+    :description => "Reopened by State",
+    :state_code => "RO-STATE"
+  }
 
   @@ordered_states = []
   @@ordered_states << @@states['NEW']
@@ -248,7 +248,7 @@ class Event < ActiveRecord::Base
                                       AND e.udoh_case_status_id = c.id
                                       AND c.code_name = 'case'
                                       AND c.the_code IN ('C', 'P', 'S') 
-                                     ")
+        ")
     end
       
     def updated_ibis_records
@@ -262,7 +262,7 @@ class Event < ActiveRecord::Base
                                       AND e.udoh_case_status_id = c.id
                                       AND c.code_name = 'case'
                                       AND c.the_code IN ('C', 'P', 'S') 
-                                     ")
+        ")
     end
 
     def deleted_ibis_records
@@ -276,7 +276,7 @@ class Event < ActiveRecord::Base
                                       AND e.udoh_case_status_id = c.id
                                       AND c.code_name = 'case'
                                       AND c.the_code NOT IN ('C', 'P', 'S') 
-                                     ")
+        ")
     end
 
     def exportable_ibis_records
@@ -348,9 +348,9 @@ class Event < ActiveRecord::Base
 
       next if attributes.values_blank?
       el = contact_entity.telephone_entities_locations.build(
-             :entity_location_type_id => code, 
-             :primary_yn_id => ExternalCode.yes_id,
-             :location_type_id => Code.telephone_location_type_id)
+        :entity_location_type_id => code,
+        :primary_yn_id => ExternalCode.yes_id,
+        :location_type_id => Code.telephone_location_type_id)
       el.build_location.telephones.build(attributes)
     end
   end
@@ -375,9 +375,9 @@ class Event < ActiveRecord::Base
           code = attributes.delete(:entity_location_type_id)
           next if attributes.values_blank?
           el = contact.secondary_entity.telephone_entities_locations.build(
-                 :entity_location_type_id => code, 
-                 :primary_yn_id => ExternalCode.yes_id,
-                 :location_type_id => Code.telephone_location_type_id)
+            :entity_location_type_id => code,
+            :primary_yn_id => ExternalCode.yes_id,
+            :location_type_id => Code.telephone_location_type_id)
           el.build_location.telephones.build(attributes)
         else
           # Don't just find it, loop through the association array looking for it
@@ -442,12 +442,21 @@ class Event < ActiveRecord::Base
     end
     Event.transaction do
       unless (forms_to_add.all? do |form_id|
-          # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
-          Form.find(form_id)
-          self.form_references.create(:form_id => form_id)
-      end)
+            # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
+            Form.find(form_id)
+            self.form_references.create(:form_id => form_id)
+          end)
         raise "Unable to process new forms"
       end
+    end
+  end
+
+  def soft_delete
+    if self.deleted_at.nil?
+      self.deleted_at = Time.new
+      self.save
+    else
+      nil
     end
   end
 

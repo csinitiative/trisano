@@ -17,7 +17,7 @@
 
 class EventsController < ApplicationController
 
-  before_filter :can_update?, :only => [:edit, :update, :destroy]
+  before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete]
   before_filter :can_view?, :only => [:show]
   before_filter :get_investigation_forms, :only => [:edit, :show]
   before_filter :set_tab_index
@@ -45,6 +45,16 @@ class EventsController < ApplicationController
     end
   end
 
+  def soft_delete
+    if @event.soft_delete
+      flash[:notice] = 'The event was successfully marked as deleted.'
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:error] = 'An error occurred marking the event as deleted.'
+      redirect_to request.env["HTTP_REFERER"]
+    end
+  end
+  
   private
   
   def can_update?
@@ -83,7 +93,7 @@ class EventsController < ApplicationController
   
   def can_investigate
     (
-        User.current_user.is_entitled_to_in?(:investigate_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } ) and 
+      User.current_user.is_entitled_to_in?(:investigate_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } ) and
         (@event.disease && @event.disease.disease_id)
     )
   end

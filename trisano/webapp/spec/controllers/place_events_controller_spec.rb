@@ -182,5 +182,82 @@ describe PlaceEventsController do
       response.code.should == '405'
     end
   end
+  
+    describe "handling successful POST /place_events/1/soft_delete with update entitlement" do
+    
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @event.stub!(:read_attribute).and_return("PlaceEvent")
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+    end
+    
+    def do_post
+      request.env['HTTP_REFERER'] = "/some_path"
+      post :soft_delete, :id => "1"
+    end
+
+    it "should redirect to where the user came from" do
+      @event.should_receive(:soft_delete).and_return(true)
+      do_post
+      response.should redirect_to("http://test.host/some_path")
+    end
+    
+    it "should set the flash notice to a success message" do
+      @event.should_receive(:soft_delete).and_return(true)
+      do_post
+      flash[:notice].should eql("The event was successfully marked as deleted.")
+    end
+  end
+  
+  describe "handling failed POST /place_events/1/soft_delete with update entitlement" do
+    
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @event.stub!(:read_attribute).and_return("PlaceEvent")
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+    end
+    
+    def do_post
+      request.env['HTTP_REFERER'] = "/some_path"
+      post :soft_delete, :id => "1"
+    end
+
+    it "should redirect to where the user came from" do
+      @event.should_receive(:soft_delete).and_return(false)
+      do_post
+      response.should redirect_to("http://test.host/some_path")
+    end
+    
+    it "should set the flash error to an error message" do
+      @event.should_receive(:soft_delete).and_return(false)
+      do_post
+      flash[:error].should eql("An error occurred marking the event as deleted.")
+    end
+  end
+  
+  describe "handling POST /place_events/1/soft_delete without update entitlement" do
+    
+    before(:each) do
+      mock_user
+      @event = mock_event
+      Event.stub!(:find).and_return(@event)
+      @event.stub!(:read_attribute).and_return("PlaceEvent")
+      @user.stub!(:is_entitled_to_in?).and_return(false)
+    end
+    
+    def do_post
+      request.env['HTTP_REFERER'] = "/some_path"
+      post :soft_delete, :id => "1"
+    end
+
+    it "should be be a 403" do
+      do_post
+      response.response_code.should == 403
+    end
+  end
 
 end

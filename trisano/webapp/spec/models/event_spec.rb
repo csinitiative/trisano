@@ -1286,35 +1286,35 @@ describe MorbidityEvent do
 
         # NON_IBIS: Not sent to IBIS, no disease, not confirmed
         MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"Ibis1", } },
-                                 "event_name"     => "Ibis1"
-                             } )
+            "event_name"     => "Ibis1"
+          } )
         # NON_IBIS: Not sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"Ibis2", } }, 
-                                 "disease"        => { "disease_id" => anthrax.id },
-                                 "event_name"     => "Ibis2"
-                             } )
+            "disease"        => { "disease_id" => anthrax.id },
+            "event_name"     => "Ibis2"
+          } )
         # NEW: Not sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis3", } },
-                                 "disease"             => { "disease_id" => anthrax.id },
-                                 "udoh_case_status_id" => confirmed.id,
-                                 "event_name"          => "Ibis3" 
-                              } )
+            "disease"             => { "disease_id" => anthrax.id },
+            "udoh_case_status_id" => confirmed.id,
+            "event_name"          => "Ibis3"
+          } )
         # UPDATED: Sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
-                                 "disease"             => { "disease_id" => anthrax.id },
-                                 "udoh_case_status_id" => confirmed.id,
-                                 "sent_to_ibis"        => true,
-                                 "ibis_update"         => true,
-                                 "event_name"          => "Ibis4"
-                             } )
+            "disease"             => { "disease_id" => anthrax.id },
+            "udoh_case_status_id" => confirmed.id,
+            "sent_to_ibis"        => true,
+            "ibis_update"         => true,
+            "event_name"          => "Ibis4"
+          } )
         # DELETED: Sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
-                                 "disease"             => { "disease_id" => anthrax.id },
-                                 "udoh_case_status_id" => discarded.id,
-                                 "sent_to_ibis"        => true,
-                                 "ibis_update"         => true,
-                                 "event_name"          => "Ibis5"
-                             } )
+            "disease"             => { "disease_id" => anthrax.id },
+            "udoh_case_status_id" => discarded.id,
+            "sent_to_ibis"        => true,
+            "ibis_update"         => true,
+            "event_name"          => "Ibis5"
+          } )
       end
 
       it "should find new records" do
@@ -1450,10 +1450,10 @@ describe MorbidityEvent do
     before(:each) do      
       @question = Question.create(:data_type => 'radio_buttons', :question_text => 'Contact?' )
       @event = MorbidityEvent.create( { "active_patient" => { "person" => { "last_name"=>"CdcExportHep", } }, 
-                               "disease"        => { "disease_id" => diseases(:hep_a).id },
-                               "event_name"     => "CdcExportHepA",
-                               "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
-                             } )
+          "disease"        => { "disease_id" => diseases(:hep_a).id },
+          "event_name"     => "CdcExportHepA",
+          "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
+        } )
     end
 
     it "should have one answer" do
@@ -1577,6 +1577,36 @@ describe MorbidityEvent do
       end
     end
 
+  end
+  
+  describe "when soft deleting" do
+    before(:each) do
+      @event_hash = {
+        "active_patient" => {
+          "person" => {
+            "last_name"=>"Green"
+          }
+        }
+      }
+      @event = MorbidityEvent.new(@event_hash)
+    end
+
+    it "should give an active event a deleted_at time" do
+      result = @event.soft_delete
+      result.should be_true
+      @event.deleted_at.should_not be_nil
+      @event.deleted_at.class.name.should eql("Time")
+    end
+    
+    it "should return nil when trying to delete an already soft-deleted form" do
+      result = @event.soft_delete
+      result.should be_true
+      first_delete_time = @event.deleted_at
+      result = @event.soft_delete
+      result.should be_nil
+      @event.deleted_at.should_not be_nil
+      @event.deleted_at.should eql(first_delete_time)
+    end
   end
 
 end

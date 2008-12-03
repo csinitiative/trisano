@@ -140,30 +140,56 @@ module EventsHelper
   end
 
   def basic_morbidity_event_controls(event, with_show=true, with_export_options=false)
+    can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    (controls = link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") + " | ") if with_show
-    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") + " | ") if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-    controls += link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") + " | "
+    controls << (link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") << " | ") if with_show
+    controls << (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") << " | ") if can_update
+    controls << link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") << " | "
+    controls << (link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?') << " | ")  if can_update && event.deleted_at.nil?
     if with_export_options
-      controls += link_to_function('Export to CSV', nil) do |page|
+      controls << link_to_function('Export to CSV', nil) do |page|
         page[:export_options].visual_effect :slide_down
       end
     else
-      controls += link_to('Export to CSV', cmr_path(event) + '.csv')
+      controls << link_to('Export to CSV', cmr_path(event) + '.csv')
     end
-    controls += ' | ' +  link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.patient.primary_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
+    controls << ' | ' +  link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.patient.primary_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
+
+    controls
   end
 
   def basic_contact_event_controls(event, with_show=true)
+    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    (controls = link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") + " | ") if with_show
-    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") if with_show
+    
+    if can_update
+      controls <<  " | "  if with_show
+      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+      if event.deleted_at.nil?
+        controls <<  " | "
+        controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?')
+      end
+    end
+
+    controls
   end
 
   def basic_place_event_controls(event, with_show=true)
+    can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    (controls = link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") + " | ") if with_show
-    controls += (link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")) if User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    controls << link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") if with_show
+    
+    if can_update
+      controls <<  " | "  if with_show
+      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")
+      if event.deleted_at.nil?
+        controls <<  " | "
+        controls << link_to('Delete', soft_delete_place_event_path(event), :method => :post, :confirm => 'Are you sure?')
+      end
+    end
+     
+    controls
   end
 
   def state_controls(event)
@@ -274,6 +300,47 @@ module EventsHelper
   def new_cmr_button(text)
     button_to_function(text, "location.href = '#{new_cmr_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
+
+  # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
+  def patient_name(event, &block)
+    return if event.nil?
+    
+    if event.deleted_at.nil?
+      concat("<div class='patientname'>", block.binding)
+    else
+      concat("<div class='patientname-inactive'>", block.binding)
+    end
+    
+    yield
+    concat("</div>", block.binding)
+  end
+  
+  def contact_name(event, &block)
+    return if event.nil?
+    
+    if event.deleted_at.nil?
+      concat("<div class='contactname'>", block.binding)
+    else
+      concat("<div class='contactname-inactive'>", block.binding)
+    end
+    
+    yield
+    concat("</div>", block.binding)
+  end
+  
+  def place_name(event, &block)
+    return if event.nil?
+    
+    if event.deleted_at.nil?
+      concat("<div class='placename'>", block.binding)
+    else
+      concat("<div class='placename-inactive'>", block.binding)
+    end
+    
+    yield
+    concat("</div>", block.binding)
+  end
+   
 
   private
   
