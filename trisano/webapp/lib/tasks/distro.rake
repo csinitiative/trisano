@@ -96,12 +96,6 @@ namespace :trisano do
         puts "Failed creating database structure for TriSano."
         return sucess
       end
-      puts "Setting locale for full text search."
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
-      unless success
-        puts "Failed setting locale for full text search."
-        return sucess
-      end
     end
 
     desc "Create database user"
@@ -182,7 +176,6 @@ namespace :trisano do
       dirname = './dump'
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"")
     end
     
     desc "Package the application with the settings from config.yml"
