@@ -68,5 +68,6 @@ Spec::Runner.configure do |config|
     browser = @browser.nil? ? browser : @browser
     !60.times{ break unless (browser.is_element_present(name) rescue true); sleep 1 }
   end
+
 end
   

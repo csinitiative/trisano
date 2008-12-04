@@ -448,6 +448,19 @@ module TrisanoHelper
     end
     return true
   end
+
+  def watch_for_core_field_spinner(core_field, browser=@browser)
+    yield if block_given?
+    browser.wait_for_condition(%Q|selenium.browserbot.getCurrentWindow().$$('img[id$="[#{core_field}]_spinner"]').first().visible() == true|,  3000).should == "OK"
+    browser.wait_for_condition(%Q|selenium.browserbot.getCurrentWindow().$$('img[id$="[#{core_field}]_spinner"]').first().visible() == false|, 3000).should == "OK"
+  end
+
+  def watch_for_answer_spinner(question_text, browser=@browser)
+    answer_id = get_investigator_answer_id(browser, question_text)
+    yield if block_given?
+    browser.wait_for_condition("selenium.browserbot.getCurrentWindow().$('investigator_answer_#{answer_id}_spinner').visible() == true", 3000).should == "OK"
+    browser.wait_for_condition("selenium.browserbot.getCurrentWindow().$('investigator_answer_#{answer_id}_spinner').visible() == false", 3000).should == "OK"
+  end
   
   def answer_multi_select_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_answer_id(browser, question_text)

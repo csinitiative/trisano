@@ -51,22 +51,26 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     @browser.is_text_present(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition
+    click_core_tab(@browser, INVESTIGATION)
     answer_investigator_question(@browser, @original_question_text, "Yes")
-    @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@original_question_text) do
+      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
+    end
     @browser.is_text_present(@follow_up_question_text).should be_true
     assert_tooltip_exists(@browser, @follow_up_help_text).should be_true
         
     # Enter an answer that does not meet the follow-up condition
     answer_investigator_question(@browser, @original_question_text, "No match")
-    @browser.click("link=#{@form_name}")
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@original_question_text) do
+      @browser.click("link=#{@form_name}")
+    end
     @browser.is_text_present(@follow_up_question_text).should be_false
     
     # Back to a match, enter follow up answer and submit
     answer_investigator_question(@browser, @original_question_text, "Yes")
-    @browser.click("link=#{@form_name}")
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@original_question_text) do
+      @browser.click("link=#{@form_name}")
+    end
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
 
     save_cmr(@browser)    
@@ -81,8 +85,9 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     edit_cmr(@browser)
     # Enter an answer that does not meet the follow-up condition
     answer_investigator_question(@browser, @original_question_text, "No match")
-    @browser.click("link=#{@form_name}")
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@original_question_text) do
+      @browser.click("link=#{@form_name}")
+    end
     save_cmr(@browser)
     @browser.is_text_present(@follow_up_answer).should be_false
     

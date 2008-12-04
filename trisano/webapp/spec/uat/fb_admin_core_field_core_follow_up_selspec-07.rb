@@ -46,18 +46,22 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
     @browser.is_text_present(@follow_up_question_text).should be_false
 
     # Enter the answer that meets the follow-up condition
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
-    sleep(7)
+    click_core_tab(@browser, DEMOGRAPHICS)
+    watch_for_core_field_spinner('birth_gender_id') do 
+      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
+    end
     @browser.is_text_present(@follow_up_question_text).should be_true
 
     # Enter an answer that does not meet the follow-up condition
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Male")
-    sleep(7)
+    watch_for_core_field_spinner('birth_gender_id') do
+      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Male")
+    end
     @browser.is_text_present(@follow_up_question_text).should be_false
 
     # Back to a match, enter follow up answer and submit
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
-    sleep(7)
+    watch_for_core_field_spinner('birth_gender_id') do
+      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
+    end
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
 
     save_cmr(@browser)

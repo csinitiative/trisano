@@ -57,27 +57,32 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     edit_cmr(@browser)
 
     # Enter the answer that meets the core follow-up condition before the edit
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
-    click_core_tab(@browser, "Investigation") # This click triggers the onChange that triggers the condition processing
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    click_core_tab(@browser, DEMOGRAPHICS)
+    @browser.is_element_present("//img[contains(@id, 'birth_gender_id')]").should be_false
+    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")    
     @browser.is_text_present(@core_follow_up_question_text).should be_false
-    
+    click_core_tab(@browser, "Investigation")     
+
     # Enter the answer that meets the core follow-up condition after the edit
-    @browser.select("morbidity_event_disease_died_id", "label=Yes")
-    click_core_tab(@browser, "Investigation") # This click triggers the onChange that triggers the condition processing
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    click_core_tab(@browser, CLINICAL)
+    watch_for_core_field_spinner('died_id') do
+      @browser.select("morbidity_event_disease_died_id", "label=Yes")
+    end
     @browser.is_text_present(@core_follow_up_question_text).should be_true
+    click_core_tab(@browser, "Investigation") 
     
     # Enter the answer that meets the follow-up condition before the edit
     answer_investigator_question(@browser, @question_for_follow_up, "Yes")
-    @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@question_for_follow_up) do
+      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
+    end
     @browser.is_text_present(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition after the edit
     answer_investigator_question(@browser, @question_for_follow_up, "No")
-    @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-    sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
+    watch_for_answer_spinner(@question_for_follow_up) do
+      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
+    end
     @browser.is_text_present(@follow_up_question_text).should be_true
 
   end
