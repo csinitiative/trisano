@@ -1256,7 +1256,7 @@ describe MorbidityEvent do
       end
     end
 
-    it 'should need cdc and ibis update when first_reported_PH_date value changes' do
+    it 'should set cdc and ibis update when first_reported_PH_date value changes' do
       with_event do |event|
         event.cdc_update = false
         event.first_reported_PH_date = Date.today
@@ -1274,6 +1274,13 @@ describe MorbidityEvent do
       end
     end
        
+    it 'should need ibis update when event deleted' do
+      with_event do |event|
+        event.soft_delete
+        event.save.should be_true
+        event.should be_a_cdc_update
+      end
+    end
   end
   
   describe "when exporting to IBIS" do
@@ -1317,6 +1324,15 @@ describe MorbidityEvent do
             "ibis_update"         => true,
             "event_name"          => "Ibis5"
           } )
+        # DELETED: Sent to IBIS, has disease, confirmed but deleted
+        MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
+            "disease"             => { "disease_id" => anthrax.id },
+            "udoh_case_status_id" => confirmed.id,
+            "sent_to_ibis"        => true,
+            "ibis_update"         => true,
+            "event_name"          => "Ibis5",
+            "deleted_at"          => Time.now
+          } )
       end
 
       it "should find new records" do
@@ -1338,14 +1354,14 @@ describe MorbidityEvent do
       it "should find deleted records" do
         events = Event.deleted_ibis_records
         events.collect! { |event| Event.find(event.event_id) }
-        events.size.should == 1
+        events.size.should == 2
         events.first.event_name.should ==  "Ibis5"
       end
 
       it "should find all IBIS exportable records" do
         events = Event.exportable_ibis_records
         events.collect! { |event| Event.find(event.event_id) }
-        events.size.should == 4   # 3 above and 1 in the fixtures
+        events.size.should == 5   # 4 above and 1 in the fixtures
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
         event_names.include?("Ibis3").should be_true
@@ -1588,7 +1604,9 @@ describe MorbidityEvent do
           "person" => {
             "last_name"=>"Green"
           }
-        }
+        },
+        "new_contact_attributes" => [ { :last_name => "White" } ],
+        "new_place_exposure_attributes" => [ { :name => "Red" } ]
       }
       @event = MorbidityEvent.new(@event_hash)
     end
@@ -1608,6 +1626,13 @@ describe MorbidityEvent do
       result.should be_nil
       @event.deleted_at.should_not be_nil
       @event.deleted_at.should eql(first_delete_time)
+    end
+
+    it "should delete all children" do
+      ContactEvent.initialize_from_morbidity_event(@event)
+      PlaceEvent.initialize_from_morbidity_event(@event)
+      @event.soft_delete
+      @event.child_events.each { |event| event.deleted_at.should_not be_nil }
     end
   end
 

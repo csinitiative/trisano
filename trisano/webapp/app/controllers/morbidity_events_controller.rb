@@ -101,8 +101,10 @@ class MorbidityEventsController < EventsController
     if RAILS_ENV == 'production'
       @event.primary_jurisdiction.name == "Unassigned" ? @event.event_status = "NEW" : @event.event_status = "ACPTD-LHD"
     end
-    @event.event_onset_date = Date.today,
+    @event.event_onset_date = Date.today
 
+    # Debt: get rid of these eventually.
+    # Creates contact and place events from event participations, and links them to this event
     @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
     @place_events = PlaceEvent.initialize_from_morbidity_event(@event)    
 
@@ -111,10 +113,10 @@ class MorbidityEventsController < EventsController
     end
     
     respond_to do |format|
-      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save}
+      if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
-          [@event, @contact_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
@@ -141,14 +143,16 @@ class MorbidityEventsController < EventsController
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]
 
-    @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
-    @place_events = PlaceEvent.initialize_from_morbidity_event(@event)
+    # Debt: get rid of these eventually.
+    # Creates contact and place events from event participations, and links them to this event
+    ContactEvent.initialize_from_morbidity_event(@event)
+    PlaceEvent.initialize_from_morbidity_event(@event)
 
     respond_to do |format|
-      if [@event, @contact_events, @place_events].flatten.all? { |event| event.save }
+      if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
-          [@event, @contact_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
         flash[:notice] = 'CMR was successfully updated.'
         format.html { 

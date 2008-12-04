@@ -32,9 +32,11 @@ class ContactEvent < HumanEvent
         contact.secondary_entity = morbidity_event.active_patient.primary_entity
         contact.role_id = Event.participation_code('Contact')
 
-        jurisdiction = Participation.new
-        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
-        jurisdiction.role_id = Event.participation_code('Jurisdiction') 
+        if morbidity_event.active_jurisdiction
+          jurisdiction = Participation.new
+          jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
+          jurisdiction.role_id = Event.participation_code('Jurisdiction') 
+        end
 
         unless morbidity_event.disease.nil?
           disease_event = DiseaseEvent.new
@@ -44,7 +46,7 @@ class ContactEvent < HumanEvent
         contact_event = ContactEvent.new
         contact_event.patient = primary
         contact_event.contacts << contact
-        contact_event.jurisdiction = jurisdiction
+        contact_event.jurisdiction = jurisdiction if morbidity_event.active_jurisdiction
         contact_event.disease_event = disease_event unless morbidity_event.disease.nil?
 
         # Link this contact to the originating morbidity event.

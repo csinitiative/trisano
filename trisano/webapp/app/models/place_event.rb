@@ -40,9 +40,11 @@ class PlaceEvent < Event
         contact.secondary_entity = morbidity_event.active_patient.primary_entity
         contact.role_id = Event.participation_code('Contact')
         
-        jurisdiction = Participation.new
-        jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
-        jurisdiction.role_id = Event.participation_code('Jurisdiction') 
+        if morbidity_event.active_jurisdiction
+          jurisdiction = Participation.new
+          jurisdiction.secondary_entity = morbidity_event.active_jurisdiction.secondary_entity
+          jurisdiction.role_id = Event.participation_code('Jurisdiction') 
+        end
 
         unless morbidity_event.disease.nil?
           disease_event = DiseaseEvent.new
@@ -52,7 +54,7 @@ class PlaceEvent < Event
         place_event = PlaceEvent.new
         place_event.participations << primary
         place_event.participations << contact
-        place_event.participations << jurisdiction
+        place_event.participations << jurisdiction if morbidity_event.active_jurisdiction
         place_event.disease_event = disease_event unless morbidity_event.disease.nil?
 
         # Link this place event to the originating morbidity event.
