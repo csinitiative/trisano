@@ -103,7 +103,7 @@ class MorbidityEventsController < EventsController
     end
     @event.event_onset_date = Date.today,
 
-      @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
+    @contact_events = ContactEvent.initialize_from_morbidity_event(@event)
     @place_events = PlaceEvent.initialize_from_morbidity_event(@event)    
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.primary_jurisdiction.entity_id)

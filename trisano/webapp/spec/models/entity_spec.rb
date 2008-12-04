@@ -54,10 +54,6 @@ describe Entity do
       @entity.entity_type.should eql('person')
     end
 
-    it "should return nil calling case_id on unsaved records" do
-      @entity.case_id.should == nil
-    end
-    
     describe "where person is not valid" do
       it "should not save" do
         @entity.person = { :last_name => "" }
@@ -199,15 +195,6 @@ describe Entity, "with people fixtures loaded" do
       entities(:Groucho).person.first_name.should eql("Groucho")
     end
 
-    it "should not have a case_id" do
-      entities(:Groucho).case_id.should == nil
-    end
-  end
-
-  describe "and an entity that is the primary on a case" do
-    it "should have a case_id" do
-      entities(:Marks).case_id.should_not be_nil
-    end
   end
 
   describe "and multiple instances of Phil Silvers" do

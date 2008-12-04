@@ -8,7 +8,7 @@
 
   - core_element_show :places, event_form, :vert do
 
-    -if @event.place_exposures.empty?
+    -if @event.place_child_events.empty?
       %h3 No place exposures have been recorded for this event
     -else
       %table.tabular
@@ -17,10 +17,16 @@
           %th Place Type
           %th Date of Exposure
 
-        -@event.place_exposures.each do |pe|
-          -place = pe.secondary_entity.place_temp
+        -@event.place_child_events.each do |pe|
+          -place = pe.active_place.primary_entity.place_temp
+
+          - if pe.deleted_at
+            - style = {:class => 'struck-through'}
+          - else
+            - style = {}
+
           %tr
-            %td=h(place.name)
-            %td=place.place_description
-            %td=format_date(place.date_of_exposure)
-            %td=link_to("Edit place details", edit_place_event_path(place.entity.case_id), {:id => "edit-place-event"})
+            %td{style}=h(place.name)
+            %td{style}=place.place_description
+            %td{style}=format_date(place.date_of_exposure)
+            %td=link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"})

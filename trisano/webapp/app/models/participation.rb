@@ -25,6 +25,8 @@ class Participation < ActiveRecord::Base
   has_many :participations_treatments, :dependent => :destroy, :order => 'created_at ASC'
   has_one :participations_risk_factor, :order => 'created_at ASC'
 
+  belongs_to :participating_event, :class_name => 'Event', :foreign_key => 'participating_event_id'
+
   # Turn off auto validation of has_many associations
   def validate_associated_records_for_lab_results() end
   def validate_associated_records_for_participations_treatments() end

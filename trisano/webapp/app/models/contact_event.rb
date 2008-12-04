@@ -18,12 +18,13 @@
 class ContactEvent < HumanEvent
 
   class << self
+    # Only creates the events.  Does not save.
     def initialize_from_morbidity_event(morbidity_event)
       contact_events = []
-      morbidity_event.contacts.select(&:new_record?).each do |contact|
+      morbidity_event.contacts.select(&:new_record?).each do |contact_participation|
 
         primary = Participation.new
-        primary.primary_entity = contact.secondary_entity
+        primary.primary_entity = contact_participation.secondary_entity
         primary.role_id = Event.participation_code('Interested Party')
         primary.primary_entity.entity_type = "person"
 
@@ -45,6 +46,12 @@ class ContactEvent < HumanEvent
         contact_event.contacts << contact
         contact_event.jurisdiction = jurisdiction
         contact_event.disease_event = disease_event unless morbidity_event.disease.nil?
+
+        # Link this contact to the originating morbidity event.
+        contact_event.parent_event = morbidity_event
+        # Also link it to the participation.  DEBT: Undo this after the rush to 1.0.  It's kind of a hack.
+        contact_participation.participating_event = contact_event
+
         contact_events << contact_event
       end
       contact_events

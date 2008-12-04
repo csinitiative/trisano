@@ -927,12 +927,14 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
+    fixtures :events, :entities
 
     before(:each) do
       @event = MorbidityEvent.find(events(:marks_cmr).id)
     end
 
     describe "with legitimate parameters" do
+
       it "should not raise an exception" do
         lambda { @event.route_to_jurisdiction(entities(:Davis_County)) }.should_not raise_error()
       end

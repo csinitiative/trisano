@@ -100,6 +100,7 @@ class MorbidityEvent < HumanEvent
       if attributes && !attributes.values_blank?
         place_exposure.secondary_entity.place_temp.attributes = attributes
       else
+        place_exposure.participating_event.soft_delete if place_exposure.participating_event
         place_exposures.delete(place_exposure)
       end
     end

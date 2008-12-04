@@ -38,3 +38,4 @@ cdc_answers_cmr:
 has_anthrax_cmr:
   id: 5
   type: MorbidityEvent
+

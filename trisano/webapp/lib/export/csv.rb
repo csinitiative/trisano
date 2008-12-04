@@ -70,9 +70,9 @@ module Export
     # A root-level event is either a morbidity or a contact, not a place
     def Csv.output_body(event, output, options)
       # A contact's only contact is the original patient
-      num_contacts    = options[:export_options].include?("contacts") ? event.contacts.size : 0
+      num_contacts    = options[:export_options].include?("contacts") ? event.contact_child_events.active(true).size : 0
       #contacts don't have places
-      num_places      = event.is_a?(MorbidityEvent) && options[:export_options].include?("places") ? event.place_exposures.size : 0
+      num_places      = event.is_a?(MorbidityEvent) && options[:export_options].include?("places") ? event.place_child_events.active(true).size : 0
       num_lab_results = options[:export_options].include?("labs") ? event.lab_results.size : 0
       num_treatments  = options[:export_options].include?("treatments") ? event.patient.participations_treatments.size : 0
       loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
@@ -108,7 +108,7 @@ module Export
         if event.is_a? MorbidityEvent
           if options[:export_options].include? "places"
             if ctr < num_places
-              place_event = PlaceEvent.find(event.place_exposures[ctr].secondary_entity.case_id)
+              place_event = event.place_child_events.active[ctr]
             else
               place_event = PlaceEvent.new
             end
@@ -117,7 +117,7 @@ module Export
 
           if options[:export_options].include? "contacts"
             if ctr < num_contacts
-              contact_event = ContactEvent.find(event.contacts[ctr].secondary_entity.case_id)
+              contact_event = event.contact_child_events.active[ctr]
             else
               contact_event = ContactEvent.new
             end

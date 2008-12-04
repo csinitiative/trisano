@@ -30,7 +30,8 @@ module Export
       def ibis_nested_attribute_paths
         { 'date_diagnosed' => [:disease, :date_diagnosed],
           'postal_code' => [:active_patient, :primary_entity, :address, :postal_code],
-          'primary_jurisdiction' => [:active_jurisdiction, :secondary_entity_id]}        
+          'primary_jurisdiction' => [:active_jurisdiction, :secondary_entity_id],
+          'deleted_at' => [:deleted_at]}
       end
 
     end

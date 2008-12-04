@@ -23,7 +23,7 @@
     %br
 
   - core_element_show :contacts, f, :vert do
-    - if @event.contacts.empty?
+    - if @event.contact_child_events.empty?
       %h3 No contacts have been recorded for this event
     - else
       %table{:class => 'tabular'}
@@ -33,17 +33,23 @@
           %th Disposition
           %th Phone
 
-        - for contact in @event.contacts
-          - person = contact.secondary_entity.person_temp
-          - contact_phone_loc = contact.secondary_entity.telephone_entities_locations[0]
+        - for contact in @event.contact_child_events
+          - contact_entity = contact.active_patient.primary_entity
+          - person = contact_entity.person_temp
+          - contact_phone_loc = contact_entity.telephone_entities_locations[0]
           - contact_phone = contact_phone_loc.location.telephones.last unless contact_phone_loc.nil?
 
+          - if contact.deleted_at
+            - style = {:class => 'struck-through'}
+          - else
+            - style = {}
+
           %tr
-            %td= person.last_name
-            %td= person.first_name
-            %td= person.disposition.code_description if person.disposition
-            %td 
+            %td{style}= person.last_name
+            %td{style}= person.first_name
+            %td{style}= person.disposition.code_description if person.disposition
+            %td{style} 
               -unless contact_phone_loc.nil? 
                 = (l(contact_phone_loc.entity_location_type) || "Unspecified Location") + ": " + contact_phone.simple_format
 
-            %td= link_to("Edit contact event", edit_contact_event_path(person.entity.case_id), {:id => "edit-contact-event"})
+            %td= link_to("Edit contact event", edit_contact_event_path(contact), {:id => "edit-contact-event"})

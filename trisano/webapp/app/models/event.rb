@@ -75,6 +75,27 @@ class Event < ActiveRecord::Base
 
   has_many :notes, :order => 'updated_at ASC', :dependent => :destroy
 
+  # Consider acts_as_tree.
+  has_many :place_child_events, :class_name => 'PlaceEvent', :foreign_key => 'parent_id' do
+    def active(reload=false)
+      @active_places = nil if reload
+      @active_places ||= PlaceEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+    end
+  end
+  has_many :contact_child_events, :class_name => 'ContactEvent', :foreign_key => 'parent_id' do
+    def active(reload=false)
+      @active_contacts = nil if reload
+      @active_contacts ||= ContactEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+    end
+  end
+  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id' do
+    def active(reload=false)
+      @active_contacts = nil if reload
+      @active_contacts ||= Event.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+    end
+  end
+  belongs_to :parent_event, :class_name => 'Event', :foreign_key => 'parent_id'
+
   # Turn off auto validation of has_many associations
   def validate_associated_records_for_contacts() end
   def validate_associated_records_for_participations() end
@@ -238,11 +259,12 @@ class Event < ActiveRecord::Base
     end
 
     def new_ibis_records
-      # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect
+      # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect, record has not been soft-deleted
       new_records = Event.find_by_sql("
                                       SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE (e.sent_to_ibis = FALSE
-                                      OR e.sent_to_ibis IS NULL) 
+                                      OR e.sent_to_ibis IS NULL)
+                                      AND e.deleted_at IS NULL
                                       AND d.event_id = e.id
                                       AND d.disease_id IS NOT NULL 
                                       AND e.udoh_case_status_id = c.id
@@ -252,11 +274,12 @@ class Event < ActiveRecord::Base
     end
       
     def updated_ibis_records
-      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is confirmed, probable, or suspect
+      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is confirmed, probable, or suspect, record has not been soft-deleted
       updated_records = Event.find_by_sql("
                                       SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE e.sent_to_ibis = TRUE
                                       AND e.ibis_update = TRUE
+                                      AND e.deleted_at IS NULL
                                       AND d.event_id = e.id
                                       AND d.disease_id IS NOT NULL 
                                       AND e.udoh_case_status_id = c.id
@@ -266,7 +289,7 @@ class Event < ActiveRecord::Base
     end
 
     def deleted_ibis_records
-      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect
+      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect OR record has been soft-deleted
       updated_records = Event.find_by_sql("
                                       SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                                       WHERE e.sent_to_ibis = TRUE
@@ -275,7 +298,7 @@ class Event < ActiveRecord::Base
                                       AND d.disease_id IS NOT NULL 
                                       AND e.udoh_case_status_id = c.id
                                       AND c.code_name = 'case'
-                                      AND c.the_code NOT IN ('C', 'P', 'S') 
+                                      AND (c.the_code NOT IN ('C', 'P', 'S') OR e.deleted_at IS NOT NULL)
         ")
     end
 
@@ -396,6 +419,9 @@ class Event < ActiveRecord::Base
           end
         end
       else
+        # Soft delete the contact event (which should always be there despite the conditional)
+        contact.participating_event.soft_delete if contact.participating_event
+        # Remove the participation pointing at the entity
         contacts.delete(contact)
       end
     end
@@ -452,9 +478,17 @@ class Event < ActiveRecord::Base
   end
 
   def soft_delete
+    Event.transaction do
+      transactional_soft_delete
+    end
+  end
+
+  def transactional_soft_delete
     if self.deleted_at.nil?
       self.deleted_at = Time.new
-      self.save
+      self.save!
+      self.child_events.each { |child| child.transactional_soft_delete }
+      true
     else
       nil
     end

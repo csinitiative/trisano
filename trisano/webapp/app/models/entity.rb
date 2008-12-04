@@ -145,13 +145,6 @@ class Entity < ActiveRecord::Base
     self.telephone_entities_locations.last.location.telephones.last
   end
 
-  def case_id
-    return nil if new_record?
-    primary_entity = Participation.find_by_primary_entity_id(id)
-    case_id = primary_entity.event_id unless primary_entity.nil?
-    case_id.nil? ? nil : case_id
-  end
-
   private
 
   def save_associations

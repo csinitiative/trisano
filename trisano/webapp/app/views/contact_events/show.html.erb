@@ -49,7 +49,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <b><%= @event.primary_jurisdiction.short_name %></b>
       </td>
       <td>
-        <%- original_patient = Event.find(@event.contacts.first.secondary_entity.case_id) %>
+        <%- original_patient = @event.parent_event %>
         <%= link_to("#{original_patient.active_patient.primary_entity.person.first_name} #{original_patient.active_patient.primary_entity.person.last_name}", cmr_path(original_patient)) -%>
         <p style='font-size: 12px; font-weight: light;'><%= original_patient.disease.disease.disease_name unless original_patient.disease.nil? || original_patient.disease.disease.nil? %></p>
       </td>

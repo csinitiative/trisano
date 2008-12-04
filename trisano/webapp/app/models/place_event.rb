@@ -26,6 +26,7 @@ class PlaceEvent < Event
   after_save :set_primary_entity_on_secondary_participations
 
   class << self
+    # Only creates the events.  Does not save.
     def initialize_from_morbidity_event(morbidity_event)
       place_events = []
       morbidity_event.place_exposures.select(&:new_record?).each do |place_exposure|
@@ -53,6 +54,12 @@ class PlaceEvent < Event
         place_event.participations << contact
         place_event.participations << jurisdiction
         place_event.disease_event = disease_event unless morbidity_event.disease.nil?
+
+        # Link this place event to the originating morbidity event.
+        place_event.parent_event = morbidity_event
+        # Also link it to the participation.  DEBT: Undo this after the rush to 1.0.  It's kind of a hack.
+        place_exposure.participating_event = place_event
+
         place_events << place_event
       end
       place_events
