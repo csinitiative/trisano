@@ -449,17 +449,22 @@ module TrisanoHelper
     return true
   end
 
-  def watch_for_core_field_spinner(core_field, browser=@browser)
-    yield if block_given?
-    browser.wait_for_condition(%Q|selenium.browserbot.getCurrentWindow().$$('img[id$="[#{core_field}]_spinner"]').first().visible() == true|,  3000).should == "OK"
-    browser.wait_for_condition(%Q|selenium.browserbot.getCurrentWindow().$$('img[id$="[#{core_field}]_spinner"]').first().visible() == false|, 3000).should == "OK"
+  def watch_for_core_field_spinner(core_field, browser=@browser, &proc)
+    css_selector = %Q{img[id$="[#{core_field}]_spinner"]}
+    watch_for_spinner(css_selector, browser, &proc)
   end
 
-  def watch_for_answer_spinner(question_text, browser=@browser)
+  def watch_for_answer_spinner(question_text, browser=@browser, &proc)
     answer_id = get_investigator_answer_id(browser, question_text)
-    yield if block_given?
-    browser.wait_for_condition("selenium.browserbot.getCurrentWindow().$('investigator_answer_#{answer_id}_spinner').visible() == true", 3000).should == "OK"
-    browser.wait_for_condition("selenium.browserbot.getCurrentWindow().$('investigator_answer_#{answer_id}_spinner').visible() == false", 3000).should == "OK"
+    css_selector = "img[id=investigator_answer_#{answer_id}_spinner]"
+    watch_for_spinner(css_selector, browser, &proc)
+  end
+
+  def watch_for_spinner(css_selector, browser=@browser, &proc)
+    script = "selenium.browserbot.getCurrentWindow().$$('#{css_selector}').first().visible()"
+    proc.call unless proc.nil?
+    browser.wait_for_condition("#{script} == true", 3000).should == "OK"
+    browser.wait_for_condition("#{script} == false", 3000).should == "OK"
   end
   
   def answer_multi_select_investigator_question(browser, question_text, answer)

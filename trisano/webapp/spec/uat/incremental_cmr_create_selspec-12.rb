@@ -75,7 +75,9 @@ describe 'User functionality for creating and saving CMRs' do
     click_core_tab(@browser, "Laboratory")
     @browser.click("link=Add a lab result")
     sleep 3
-    @browser.type("//input[contains(@id, 'model_auto_completer_tf')]", 'Lab')
+    watch_for_spinner("div[id=labs] img[id^=model_auto_completer_hf]") do
+      @browser.type_keys("//input[contains(@id, 'model_auto_completer_tf')]", 'Lab')
+    end
     @browser.type('morbidity_event_new_lab_attributes__lab_result_text', 'Positive')
     @browser.select 'morbidity_event_new_lab_attributes__specimen_source_id', 'label=Animal head'
     save_cmr(@browser).should be_true
