@@ -18,9 +18,9 @@
 require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
-describe 'Soft deleting individual events' do
+describe 'Soft deleting events' do
   
   before(:all) do
     @cmr_last_name = get_unique_name(1) + " sd-uat"
@@ -50,30 +50,32 @@ describe 'Soft deleting individual events' do
     @browser.is_text_present(@place_name).should be_true
   end
   
-  it "should should soft delete the contact event" do
-    @browser.click("link=Edit contact event")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click("link=Show")
-    @browser.wait_for_page_to_load($load_time)
+  it "should should soft delete the morbidity event" do
     @browser.click("soft-delete")
-    @browser.get_confirmation()
+    @browser.get_confirmation()   
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
     @browser.is_text_present("Delete").should be_false
   end
   
-  it "should should soft delete the place event" do
+  it "should should have soft deleted the contact event" do
+    @browser.click("link=Edit contact event")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.click("link=Show")
+    @browser.wait_for_page_to_load($load_time)
+    # Debt: Add check that there is some visual indication that the event is soft-deleted other than no delete link
+    @browser.is_text_present("Delete").should be_false
+  end
+  
+  it "should should have soft deleted the place event" do
     @browser.click("link=#{@cmr_last_name}")
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Edit place details")
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Show")
     @browser.wait_for_page_to_load($load_time)
-    @browser.click("soft-delete")
-    @browser.get_confirmation()
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("The event was successfully marked as deleted.").should be_true
+    # Debt: Add check that there is some visual indication that the event is soft-deleted other than no delete link
     @browser.is_text_present("Delete").should be_false
   end
-
+  
 end
