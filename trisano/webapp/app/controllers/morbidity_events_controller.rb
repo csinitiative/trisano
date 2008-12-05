@@ -188,17 +188,17 @@ class MorbidityEventsController < EventsController
     end
 
     begin
-      # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondarys
-      @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
-      
-      # the following line must follow the previous line or state won't get changed.
-      @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
-
-      redirect_to request.env["HTTP_REFERER"]
+      Event.transaction do
+        # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondarys
+        @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
+        
+        # the following line must follow the previous line or state won't get changed.
+        @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
+      end
     rescue Exception => ex
-      @event.errors.add_to_base('Unable to route CMR: ' + ex.message)
-      render :action => "show"
+      flash[:error] = 'Unable to route CMR.' + ex.message
     end
+    redirect_to request.env["HTTP_REFERER"]
   end
 
   def state
