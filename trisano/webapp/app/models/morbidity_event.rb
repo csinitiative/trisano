@@ -230,9 +230,11 @@ class MorbidityEvent < HumanEvent
       end
 
       # Add any new forms to this event  I guess we'll keep any old ones for now.
-      forms_in_use = self.form_references.map { |ref| ref.form_id }
-      Form.get_published_investigation_forms(self.disease.disease_id, self.active_jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-        self.form_references.create(:form_id => form.id) unless forms_in_use.include?(form.id)
+      if self.disease
+        forms_in_use = self.form_references.map { |ref| ref.form_id }
+        Form.get_published_investigation_forms(self.disease.disease_id, self.active_jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
+          self.form_references.create(:form_id => form.id) unless forms_in_use.include?(form.id)
+        end
       end
       
       reload # Any existing references to this object won't see these changes without this

@@ -290,14 +290,13 @@ describe MorbidityEventsController do
     describe "with failed routing" do
       def do_route_event
         request.env['HTTP_REFERER'] = "/some_path"
-        @event.errors.should_receive(:add_to_base)
         @event.should_receive(:route_to_jurisdiction).and_raise()
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
       end
 
-      it "should render the show view" do
+      it "should redirect to where the user came from" do
         do_route_event
-        response.should render_template('show')
+        response.should redirect_to("http://test.host/some_path")
       end
     end
   end
