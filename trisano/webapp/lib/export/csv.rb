@@ -45,13 +45,15 @@ module Export
       events.each do |event|
         # Give the user a chance to convert an event into some other event.  Used mainly by search.
         event = proc.call(event) if proc
+        
+        unless event.deleted_at
+          # Check to see if we're moving from one event type to another so as to spit out new headers
+          event_break = (event_type == event.class) ? false : true
+          event_type  = event.class
+          output_header(event, output, options) if event_break
 
-        # Check to see if we're moving from one event type to another so as to spit out new headers
-        event_break = (event_type == event.class) ? false : true
-        event_type  = event.class
-        output_header(event, output, options) if event_break
-
-        output_body(event, output, options)
+          output_body(event, output, options)
+        end
       end
       output
     end

@@ -55,12 +55,15 @@ describe Export::Csv do
   describe "when passed multiple simple events" do
     it "should iterate over each event" do
       second_person = "White"
+      deleted_person = 'Gone'
       eh = { :active_patient => { :person => { :last_name => second_person } } }
+      dh = { :active_patient => { :person => { :last_name => deleted_person } }, :deleted_at => Date.parse('2008-1-1')}
 
       e1 = MorbidityEvent.new(@event_hash)
       e2 = MorbidityEvent.new( eh )
+      e3 = MorbidityEvent.new( dh )
 
-      a = to_arry( Export::Csv.export( [e1, e2] ) )
+      a = to_arry( Export::Csv.export( [e1, e3, e2] ) )
       a.size.should == 3
       a[1].include?(@event_hash[:active_patient][:person][:last_name]).should be_true
       a[2].include?(second_person).should be_true
@@ -433,6 +436,7 @@ def csv_mock_event(event_type)
   m.should_receive(:acuity).twice.and_return('Difficult')
   m.should_receive(:other_data_1).twice.and_return('First Other Data')
   m.should_receive(:other_data_2).twice.and_return('Second Other Data')
+  m.should_receive(:deleted_at).and_return(nil)
 
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
