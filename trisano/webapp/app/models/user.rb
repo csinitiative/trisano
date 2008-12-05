@@ -113,6 +113,12 @@ class User < ActiveRecord::Base
     # Build a real entitlement for each uniqe entitlement
     _entitlements.each_pair { |key, value| entitlements.build(value) }
   end
+
+  def self.investigators_for_jurisdiction(jurisdiction)
+    Privilege.investigate_event.entitlements.for_jurisdiction(jurisdiction).collect do |e|
+      e.user
+    end
+  end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app
   
@@ -122,7 +128,7 @@ class User < ActiveRecord::Base
 
   def self.current_user
     Thread.current[:user]
-  end
+  end  
   
   protected
   

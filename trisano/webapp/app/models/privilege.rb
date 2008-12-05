@@ -22,5 +22,10 @@ class Privilege < ActiveRecord::Base
   
   has_many :privileges_roles
   has_many :roles, :through => :privileges_roles
-  
+
+  class << self
+    def investigate_event
+      find_by_priv_name('investigate_event')
+    end
+  end
 end

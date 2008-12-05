@@ -204,6 +204,7 @@ class MorbidityEventsController < EventsController
   def state
     @event = MorbidityEvent.find(params[:id])
     event_status = params[:morbidity_event].delete(:event_status)
+    investigator_id = params[:morbidity_event].delete(:investigator_id)    
 
     # Determine what privileges are required to change to the passed in state
     priv_required = Event.get_required_privilege(event_status)
@@ -234,7 +235,7 @@ class MorbidityEventsController < EventsController
     when "RJCTD-LHD"
       @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
     when "UI"
-      @event.investigator = User.current_user
+      @event.investigator_id = investigator_id || User.current_user.id
       @event.investigation_started_date = Date.today
     when "IC"
       @event.investigation_completed_LHD_date = Date.today

@@ -212,12 +212,18 @@ module EventsHelper
     when "ACPTD-LHD", "RJCTD-INV"
       if allowed
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
+        investigators = User.investigators_for_jurisdiction(event.jurisdiction.secondary_entity.place)
 
         action = Event.get_action_phrases(Event.get_transition_states("ACPTD-LHD")).first
         controls += form_tag(state_cmr_path(event))
         controls += "<span>#{action.phrase}:&nbsp;</span>" 
         controls += hidden_field_tag("morbidity_event[event_status]", action.state)
         controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name), :id => 'morbidity_event__event_queue_id',:onchange => "this.form.submit()")
+        controls += "</form>"
+        controls += form_tag(state_cmr_path(event))
+        controls += "<span>Route to investigator:&nbsp;</span>"
+        controls += hidden_field_tag("morbidity_event[event_status]", "UI")
+        controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name), :id => 'morbidity_event__investigator_id',:onchange => "this.form.submit()")
         controls += "</form>"
       end
     when "ASGD-INV"

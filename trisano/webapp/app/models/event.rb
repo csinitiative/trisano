@@ -106,6 +106,7 @@ class Event < ActiveRecord::Base
   validates_associated :contacts
   validates_associated :answers
   validates_associated :notes
+  validates_existence_of :investigator, :allow_nil => true
 
   ### Debt:  Event Status stuff should be made into its own object and associated with event
 
@@ -125,7 +126,7 @@ class Event < ActiveRecord::Base
     :state_code => "ASGD-LHD"
   }
   @@states['ACPTD-LHD'] = {
-    :transitions => ["ASGD-LHD", "ASGD-INV"],
+    :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
     :action_phrase => "Accept",
     :priv_required => :accept_event_for_lhd,
     :description => "Accepted by Local Health Dept.",
@@ -153,7 +154,7 @@ class Event < ActiveRecord::Base
     :state_code => "UI"
   }
   @@states['RJCTD-INV'] = {
-    :transitions => ["ASGD-LHD", "ASGD-INV"],
+    :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
     :action_phrase => "Reject",
     :priv_required => :accept_event_for_investigation,
     :description => "Rejected by Investigator",

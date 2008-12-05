@@ -21,5 +21,10 @@ class Entitlement < ActiveRecord::Base
   belongs_to :privilege
   
   belongs_to :jurisdiction, :class_name => 'Entity', :foreign_key => :jurisdiction_id
-  
+
+  class << self
+    def for_jurisdiction(jurisdiction)
+      find_all_by_jurisdiction_id(jurisdiction.id)
+    end
+  end
 end
