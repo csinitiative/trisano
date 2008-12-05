@@ -1074,9 +1074,19 @@ describe MorbidityEvent do
       @event.legal_state_transition?("ASGD-INV").should be_true
     end
 
-    it "should return false when transitioning from ACPTD-LHD to UI" do
+    it "should return true when transitioning from ACPTD-LHD to UI" do
       @event.event_status = "ACPTD-LHD"
+      @event.legal_state_transition?("UI").should be_true
+    end
+
+    it "should return false when transitioning from RJCTD-LHD to UI" do
+      @event.event_status = 'RJCTD-LHD'
       @event.legal_state_transition?("UI").should be_false
+    end
+
+    it 'should return true when transitioning form RJCTD-INV to UI' do
+      @event.event_status = 'RJCTD-INV'
+      @event.legal_state_transition?("UI").should be_true
     end
 
   end
