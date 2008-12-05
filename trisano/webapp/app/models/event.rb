@@ -679,6 +679,7 @@ class Event < ActiveRecord::Base
            p3.jurisdiction_name, 
            p3.vector,
            p3.created_at,
+           p3. deleted_at,
            c.code_description AS gender,
            a.city, 
            co.code_description AS county
@@ -686,7 +687,7 @@ class Event < ActiveRecord::Base
            ( SELECT 
                     p1.event_id, p1.type, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
-                    p1.event_status, p1.created_at, p2.jurisdiction_id, p2.jurisdiction_name
+                    p1.event_status, p1.created_at, p1.deleted_at, p2.jurisdiction_id, p2.jurisdiction_name
              FROM 
                     ( SELECT 
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
@@ -694,7 +695,7 @@ class Event < ActiveRecord::Base
                              d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
                              e.event_status as event_status, e.type as type,
-                             e.created_at
+                             e.created_at, e.deleted_at
                       FROM   
                              events e
                       INNER JOIN  

@@ -55,6 +55,7 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:county).and_return("Salt Lake")
     cmr.stub!(:event_status).and_return("NEW")
     cmr.stub!(:jurisdiction_name).and_return("Weber-Morgan Health District")
+    cmr.stub!(:deleted_at).and_return(nil)
 
     assigns[:cmrs] = [cmr]
     assigns[params[:disease]] = "1"

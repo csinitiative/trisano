@@ -20,7 +20,13 @@ class AddFulltextSupportToPeople < ActiveRecord::Migration
     execute "ALTER TABLE people ADD COLUMN vector tsvector;"
     execute "CREATE INDEX people_fts_vector_index ON people USING gist(vector);"
     execute "vacuum full analyze;"
-    execute "CREATE LANGUAGE plpgsql;"
+
+    begin
+      execute "CREATE LANGUAGE plpgsql;"
+    rescue
+      # No-op, language probably already exists. If not, the next execution will fail.
+    end
+    
     execute "CREATE FUNCTION people_trigger() RETURNS trigger AS $$
                       begin
                         new.vector :=

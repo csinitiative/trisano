@@ -99,7 +99,7 @@ describe SearchController do
       mock_user
       @person = mock_model(Person)
       @person.stub!(:entity_id).and_return(1)
-      @person_hash = {:person => @person, :event_type => "No associated event", :event_id => nil}
+      @person_hash = {:person => @person, :event_type => "No associated event", :event_id => nil, :deleted_at => nil}
       Person.stub!(:find_by_ts).and_return([@person])
       Event.stub!(:find).and_return(nil)
     end

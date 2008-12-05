@@ -38,11 +38,13 @@ class SearchController < ApplicationController
             if event.nil?
               type = "No associated event"
               id = nil
+              deleted_at = nil
             else
               type = event[:type]
               id = event.id
+              deleted_at = event.deleted_at
             end
-            { :person => person, :event_type => type, :event_id => id }
+            { :person => person, :event_type => type, :event_id => id, :deleted_at => deleted_at }
           end
         end
 

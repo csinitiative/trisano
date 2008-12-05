@@ -38,7 +38,7 @@
 
 - if !@people.blank?
   %h3 Results
-  %table{ :width => 600 }
+  %table{:class => 'tabular'}
     %tr
       %td
         %b
@@ -53,8 +53,11 @@
         %b
           County
     - for person in @people
-      -p person
-      %tr
+      - if (person[:deleted_at].nil?)
+        - result_class = 'search-active tabular'
+      - else
+        - result_class = 'search-inactive tabular'
+      %tr{:class => result_class}
         %td
           - unless person[:event_id].nil?
             / Case statements not working for some reason

@@ -145,7 +145,11 @@
           - path = contact_event_path(cmr.event_id)
           - html_id = "show-contact-link-#{cmr.event_id}"
 
-        %tr
+        - if (cmr.deleted_at.nil?)
+          - result_class = 'search-active tabular'
+        - else
+          - result_class = 'search-inactive tabular'
+        %tr{:class => result_class}
           %td
             -# = link_to("#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})", path, :id => html_id)
             = link_to("#{cmr.record_number}", path, :if => html_id)
