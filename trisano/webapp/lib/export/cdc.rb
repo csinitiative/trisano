@@ -30,8 +30,7 @@ module Export
       def ibis_nested_attribute_paths
         { 'date_diagnosed' => [:disease, :date_diagnosed],
           'postal_code' => [:active_patient, :primary_entity, :address, :postal_code],
-          'primary_jurisdiction' => [:active_jurisdiction, :secondary_entity_id],
-          'deleted_at' => [:deleted_at]}
+          'primary_jurisdiction' => [:active_jurisdiction, :secondary_entity_id]}
       end
 
     end
@@ -61,7 +60,7 @@ module Export
           return true if nested_attribute_changed?(k, call_path)
         end
                 
-        export_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id)
+        export_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id deleted_at)
         old_attributes.select {|k, v| export_fields.include?(k)}.reject do |field, value|
           self.attributes[field] == value
         end.size > 0

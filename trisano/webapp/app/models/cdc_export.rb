@@ -20,32 +20,32 @@ class CdcExport < ActiveRecord::Base
     def weekly_cdc_export
       where = [%Q|cdc_update=true AND (("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
       where << Disease.disease_status_where_clause
+      where << "exp_deleted_at IS NULL"
       events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
 
     def weekly_cdc_deletes
-      where = ['(cdc_update=true AND sent_to_cdc=true)']      
+      where = ['(cdc_update=true AND sent_to_cdc=true) AND ((exp_deleted_at IS  NOT NULL)']      
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
-        where << "AND ("
         unless  diseases.empty?
-          where << "(disease_id IN (#{diseases.collect(&:id).join(',')}))"
+          where << "OR (disease_id IN (#{diseases.collect(&:id).join(',')}))"
         end
         invalid_case_status = Disease.with_invalid_case_status_clause
         unless invalid_case_status.blank?
-          where << "OR #{ invalid_case_status}"
+          where << "OR #{invalid_case_status}"
         end
-        where << ")"
-      end
+      end      
+      where << ")"
       events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.join(' ')})")
       events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
       events
     end
 
     def verification_records
-      where = "where exp_year='#{this_mmwr_year.to_s[2..3]}'"
+      where = "where exp_year='#{this_mmwr_year.to_s[2..3]}' AND exp_deleted_at IS NULL"
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
       group_by = "GROUP BY exp_event, exp_state, exp_year"

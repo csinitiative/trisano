@@ -22,9 +22,8 @@ describe CdcExport do
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)
     event.save!
-    event.reload
+    event.reload    
     records =  CdcExport.weekly_cdc_export.collect {|record| [record, event]}
-    records.should_not be_empty
     yield records if block_given?
   end
 
@@ -42,13 +41,18 @@ describe CdcExport do
 
   def delete_a_record(event_hash = @event_hash)
     with_sent_events do |events|
-      @event_hash['disease']['disease_id'] = diseases(:chicken_pox).id
-      events[0].update_attributes(@event_hash)
+      event_hash['disease']['disease_id'] = diseases(:chicken_pox).id
+      events[0].update_attributes(event_hash)
+    end    
+  end
+
+  def soft_delete_a_record(event_hash = @event_hash)
+    with_sent_events do |events|
+      event_hash['deleted_at'] = Date.parse('2008-1-1')
+      events[0].update_attributes(event_hash)
     end
-    
   end
     
-
   before :each do
     @event_hash = {
       "imported_from_id" => external_codes(:imported_from_utah).id,
@@ -390,6 +394,20 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
         end
       end
+
+      it 'should update when delted_at changes' do
+        with_sent_events do |events|
+          events[0].should_not be_a_cdc_update
+          events[0].should_not be_a_ibis_update
+          events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
+          events[0].update_attributes({:deleted_at => Date.parse('2008-1-1')})
+          events[0].should be_a_cdc_update
+          events[0].should be_a_ibis_update
+          events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
+        end
+      end
     end
   end
 
@@ -440,6 +458,29 @@ describe CdcExport do
     end
     
   end
+
+  describe 'soft deleted records' do
+    
+    describe 'that have already been sent' do
+
+      it 'should appear in the cdc export as deleted records' do
+        soft_delete_a_record 
+        CdcExport.weekly_cdc_deletes.length.should == 1
+      end
+
+      it 'should not appear in verification records' do
+        soft_delete_a_record
+        CdcExport.verification_records.should be_empty
+      end
+
+      it 'should not generate an update record' do
+        with_cdc_records(@event_hash.merge(:deleted_at => Date.parse('2008-1-1'))) do |records|
+          records.size.should == 0
+        end
+      end
+    end            
+
+  end    
 
   describe "displaying summary records for AIDS" do
 
