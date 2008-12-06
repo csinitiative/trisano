@@ -32,18 +32,18 @@
     %fieldset.vert
       - core_element :street_number, a, :horiz do
         = a.label(:street_number)
-        = a.core_text_field(:street_number, {:size => 10}, event, @can_investigate)
+        = a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event, @can_investigate)
       - core_element :street_name, a, :horiz do
         = a.label(:street_name)
-        = a.core_text_field(:street_name, {:size => 50}, event, @can_investigate)
+        = a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event, @can_investigate)
       - core_element :unit_number, a, :horiz do
         = a.label(:unit_number)
-        = a.core_text_field(:unit_number, {:size => 10}, event, @can_investigate)
+        = a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event, @can_investigate)
 
     %fieldset.vert
       - core_element :city, a, :horiz do
         = a.label(:city, "City")
-        = a.core_text_field(:city, {:size => 30}, event, @can_investigate)
+        = a.core_text_field(:city, {:size => 30, :maxlength=> 255}, event, @can_investigate)
       - core_element :state_id, a, :horiz do
         = a.label(:state_id, "State")
         = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {}, event, @can_investigate)
@@ -52,4 +52,4 @@
         = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {}, event, @can_investigate)
       - core_element :postal_code, a, :horiz do
         = a.label(:postal_code, "Zip code")
-        = a.core_text_field(:postal_code, {:size => 7}, event, @can_investigate)
+        = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event, @can_investigate)

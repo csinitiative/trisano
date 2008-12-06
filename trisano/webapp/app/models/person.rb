@@ -26,7 +26,10 @@ class Person < ActiveRecord::Base
   validates_presence_of :last_name
   validates_date :birth_date, :allow_nil => true
   validates_date :date_of_death, :allow_nil => true
-  
+  validates_length_of :last_name, :maximum => 25
+  validates_length_of :first_name, :maximum => 25
+  validates_length_of :middle_name, :maximum => 25
+
   before_save :generate_soundex_codes
   
   # Debt? Just getting this done fast after dives on options took a long time.

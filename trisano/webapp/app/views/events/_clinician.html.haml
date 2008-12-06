@@ -33,13 +33,13 @@
   - fields_for(prefix_with_array, clinician_person, :builder => ExtendedFormBuilder) do |clinician_fields|
     %span{:class => 'horiz'}
       = clinician_fields.label(:last_name)
-      = clinician_fields.text_field(:last_name, :size => 20, :class => 'required_if_others')
+      = clinician_fields.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')
     %span{:class => 'horiz'}
       = clinician_fields.label(:first_name)
-      = clinician_fields.text_field(:first_name, :size => 20)
+      = clinician_fields.text_field(:first_name, :size => 20, :maxlength => 25)
     %span{:class => 'horiz'}
       = clinician_fields.label(:middle_name)
-      = clinician_fields.text_field(:middle_name, :size => 20)
+      = clinician_fields.text_field(:middle_name, :size => 20, :maxlength => 25)
 
   %span.vert
   - clinician_phone_id = clinician_telephone_entities_location.id

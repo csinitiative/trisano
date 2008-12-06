@@ -39,7 +39,7 @@
       = telephone_form.core_text_field(:extension, {:size => 6})
     - core_element :email_address, telephone_form, :horiz do
       = telephone_form.label(:email_address)
-      = telephone_form.core_text_field(:email_address, {})
+      = telephone_form.core_text_field(:email_address, {:size => 25, :maxlength => 255})
     %span.horiz
       = telephone_form.label '&nbsp;'
       = link_to_function image_tag("delete.png", :border => 0), "$(this).up('.phone').remove()"

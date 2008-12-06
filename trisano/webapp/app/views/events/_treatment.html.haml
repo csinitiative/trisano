@@ -24,7 +24,7 @@
         = treatment_fields.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
       - core_element :treatment, treatment_fields, :horiz do
         = treatment_fields.label(:treatment, "Treatment")
-        = treatment_fields.text_field(:treatment, :size => 50)
+        = treatment_fields.text_field(:treatment, :size => 50, :maxlength => 255)
       - core_element :treatment_date, treatment_fields, :horiz do
         = treatment_fields.label(:treatment_date, 'Date of Treatment')
         = treatment_fields.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
