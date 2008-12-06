@@ -107,7 +107,11 @@ class Event < ActiveRecord::Base
   validates_associated :answers
   validates_associated :notes
   validates_existence_of :investigator, :allow_nil => true
-
+  validates_length_of :event_name, :maximum => 100
+  validates_length_of :acuity, :maximum => 255
+  validates_length_of :other_data_1, :maximum => 255
+  validates_length_of :other_data_2, :maximum => 255
+  validates_length_of :outbreak_name, :maximum => 255
   ### Debt:  Event Status stuff should be made into its own object and associated with event
 
   @@states = {}

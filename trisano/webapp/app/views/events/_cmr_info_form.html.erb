@@ -51,14 +51,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% end -%>
       <% core_element :outbreak_name, f, :horiz do -%>
         <%= f.label(:outbreak_name, "Outbreak") %>
-        <%= f.core_text_field(:outbreak_name, {:size => 25}, @event, @can_investigate) %>
+        <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event, @can_investigate) %>
       <% end -%>
     </fieldset>
     <fieldset class="form">
       <legend>Auditing / Investigation</legend>
       <% core_element :event_name, f, :horiz do -%>
         <%= f.label(:event_name) %>
-        <%= f.core_text_field(:event_name, {:size => 25}, @event, @can_investigate) %>
+        <%= f.core_text_field(:event_name, {:size => 25, :maxlength => 100}, @event, @can_investigate) %>
       <% end -%>
       <%= yield :jurisdiction_selection %>
       <% unless RAILS_ENV == "production" %>
@@ -81,7 +81,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% end -%>
       <% core_element :acuity, f, :horiz do -%>
         <%= f.label(:acuity) %>
-        <%= f.core_text_field(:acuity) %>
+        <%= f.core_text_field(:acuity, {:size => 25, :maxlength => 255}) %>
       <% end -%>
     </fieldset>
   </div>

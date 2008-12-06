@@ -34,10 +34,10 @@
 
     %span.horiz
       = contact_fields.label(:last_name)
-      = contact_fields.text_field(:last_name, :size => 20, :class => 'required_if_others')
+      = contact_fields.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')
     %span.horiz
       = contact_fields.label(:first_name)
-      = contact_fields.text_field(:first_name, :size => 20)
+      = contact_fields.text_field(:first_name, :size => 20, :maxlength => 25)
     %span.horiz
       = contact_fields.label(:disposition_id)
       = contact_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
@@ -63,7 +63,7 @@
       = phone_fields.core_text_field(:phone_number, {:size => 8})
     %span.horiz
       = phone_fields.label(:extension)
-      = phone_fields.core_text_field(:extension, {:size => 6})
+      = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6})
 
     %span{:class => "horiz", :style => "margin-top: 30px"}
       = (link_to("Edit contact event", edit_contact_event_path(contact.participating_event_id), {:id => "edit-contact-event"}) + " | ") unless contact.new_record?

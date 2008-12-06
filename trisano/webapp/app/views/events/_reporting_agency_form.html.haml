@@ -60,10 +60,10 @@
     - f.fields_for(:active_reporting_agency, reporter_name, :core_path => reporter_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       - core_element :last_name, agency_form, :horiz do
         = agency_form.label(:last_name, "Reporter last name")
-        = agency_form.core_text_field(:last_name, {:size => 25, :class => 'required_if_others'}, @event, @can_investigate)
+        = agency_form.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, @event, @can_investigate)
       - core_element :first_name, agency_form, :horiz do
         = agency_form.label(:first_name, "Reporter first name")
-        = agency_form.core_text_field(:first_name, {:size => 25}, @event, @can_investigate)
+        = agency_form.core_text_field(:first_name, {:size => 25, :maxlength => 25}, @event, @can_investigate)
     
     - f.fields_for(:active_reporting_agency, reporter_ent_loc, :core_path => reporter_loc_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       = agency_form.hidden_field(:id)
@@ -80,7 +80,7 @@
         = agency_form.core_text_field(:phone_number, {:size => 8}, @event, @can_investigate)
       - core_element :extension, agency_form, :horiz do
         = agency_form.label(:extension)
-        = agency_form.core_text_field(:extension, {:size => 6}, @event, @can_investigate)
+        = agency_form.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event, @can_investigate)
 
     %span.vert
     - core_element :results_reported_to_clinician_date, f, :horiz do
