@@ -94,13 +94,15 @@ class ApplicationController < ActionController::Base
   end
   
   def rescue_action_in_public(exception)
+    # The following can be made to render the 500.html view once we upgrade Rails.
+    # Issue with rendering error pages w/Tomcat WAR deployments in pre-Rails 2.1:
+    #   http://www.ruby-foru​m.com/topic/167228
+
     render :text => "<html><body bgcolor='#ededed'><br/><table bgcolor='#000000' width='500' cellspacing='1' cellpadding='10' align='center'>
-<tr bgcolor='#ffffff'><td style='font-family: verdana, sans-serif'><h3>Application Error</h3>
-<p style='font-size: 12px'>An error occurred while your request was being processed.<br/><br/>#{Time.now.to_s} #{exception}</p><br/><hr/>
-<b style='font-size: 12px'>Release 1 Pilot Feedback:</b>&nbsp;
-<a href='https://ut-nedss.csinitiative.net/wiki/Release1PilotFeedback' style='font-size: 12px'>Wiki</a>&nbsp;
-<a href='mailto:r1feedback@ut-nedss.csinitiative.net' style='font-size: 12px'>Email List</a>
-</td></tr></table></body></html>" 
+<tr bgcolor='#ffffff'><td style='font-family: verdana, sans-serif'><h2>TriSano</h2><hr/><h3>Application Error</h3>
+<p style='font-size: 12px'>An error occurred while your request was being processed.</p><br/><hr/>
+<b style='font-size: 12px'><a href='https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano' style='font-size: 12px'>Provide feedback</a></b>
+</td></tr></table></body></html>"
   end
   
   # Kluge to get around the fact that Rails does not reset objects in
