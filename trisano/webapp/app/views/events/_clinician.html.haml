@@ -62,7 +62,7 @@
       = phone_fields.core_text_field(:phone_number, {:size => 8})
     %span.horiz
       = phone_fields.label(:extension)
-      = phone_fields.core_text_field(:extension, {:size => 6})
+      = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6})
 
     %span{:class => "horiz", :style => "margin-top: 30px"}
       = link_to_function "Remove" , "$(this).up('.clinician').remove()", {:id => "remove_clinician_link"}

@@ -22,4 +22,8 @@ class ParticipationsRiskFactor < ActiveRecord::Base
   belongs_to :group_living, :class_name => 'ExternalCode'
   belongs_to :day_care_association, :class_name => 'ExternalCode'
   belongs_to :pregnant, :class_name => 'ExternalCode'
+
+  validates_length_of :risk_factors, :maximum => 25, :allow_blank => true
+  validates_length_of :risk_factors_notes, :maximum => 255, :allow_blank => true
+  validates_length_of :occupation, :maximum => 255, :allow_blank => true
 end

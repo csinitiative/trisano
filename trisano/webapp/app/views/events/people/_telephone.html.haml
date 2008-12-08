@@ -36,7 +36,7 @@
       = telephone_form.core_text_field(:phone_number, {:size => 8})
     - core_element :extension, telephone_form, :horiz do
       = telephone_form.label(:extension)
-      = telephone_form.core_text_field(:extension, {:size => 6})
+      = telephone_form.core_text_field(:extension, {:size => 6, :maxlength => 6})
     - core_element :email_address, telephone_form, :horiz do
       = telephone_form.label(:email_address)
       = telephone_form.core_text_field(:email_address, {:size => 25, :maxlength => 255})
