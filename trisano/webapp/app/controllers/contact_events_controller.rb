@@ -17,10 +17,6 @@
 
 class ContactEventsController < EventsController
 
-  def auto_complete_for_lab_name
-    super(:contact_event)
-  end
-
   def index
     render :text => "Contacts can only be listed from the morbidity event show page of individuals who have contacts.", :status => 405
   end
@@ -76,6 +72,11 @@ class ContactEventsController < EventsController
     head :method_not_allowed
   end
 
+  def lab_form
+    @event = ContactEvent.new
+    render :partial => 'events/lab', :object => Participation.new_lab_participation
+  end
+  
   private
 
     def prep_multimodels

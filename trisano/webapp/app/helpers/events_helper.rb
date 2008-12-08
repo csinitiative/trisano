@@ -91,16 +91,15 @@ module EventsHelper
   end
 
   def event_prefix_for_multi_models(new_or_existing, attribute_name, namespace=nil)
-    prefix = @event.type.underscore
+    prefix = @event.class.to_s.underscore
     prefix << "[#{namespace}]" if namespace
     prefix << "[#{new_or_existing}#{attribute_name}]"
     prefix
   end
 
-  def add_lab_link(name)
-    link_to_function name do |page|
-      page.insert_html :bottom, "labs", :partial => 'events/lab' , :object => Participation.new_lab_participation
-    end
+  def add_lab_link(name, event)
+    url = event.is_a?(MorbidityEvent) ? lab_form_new_cmr_path : lab_form_new_contact_event_path
+    link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get)
   end
 
   def add_hospital_link(name)

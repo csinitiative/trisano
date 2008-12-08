@@ -15,5 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-module LabResultsHelper
+class MakeLabResultTextLonger < ActiveRecord::Migration
+  def self.up
+    change_column(:lab_results, :lab_result_text, :string, :limit => 255)
+  end
+
+  def self.down
+    change_column(:lab_results, :lab_result_text, :string, :limit => 20)
+  end
 end

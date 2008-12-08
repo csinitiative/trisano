@@ -30,10 +30,6 @@ class MorbidityEventsController < EventsController
     render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
-  def auto_complete_for_lab_name
-    super(:morbidity_event)
-  end
-
   def index
     begin
       @export_options = params[:export_options]
@@ -253,6 +249,11 @@ class MorbidityEventsController < EventsController
     end
   end
 
+  def lab_form
+    @event = MorbidityEvent.new
+    render :partial => 'events/lab', :object => Participation.new_lab_participation
+  end
+  
   private
   
   def prepopulate

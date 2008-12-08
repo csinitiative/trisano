@@ -13,66 +13,58 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+- new_or_existing = new_or_existing?(lab)
+- prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes")
+- prefix_with_array = "#{prefix}[]"
+
+- lab_place = lab.secondary_entity.place_temp
+
 %div{:class => 'lab', :style => "clear: both;"}
-  - new_or_existing = new_or_existing?(lab)
-  - prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes")
-  - prefix_with_array = "#{prefix}[]"
+  = error_messages_for :object => lab_place
 
-  -# Hack because the :index option is not working on the fields_for level and the label helper doesn't understand it locally.
-  -# I think this is fixed in Rails 2.1+
-  -###  - lab.secondary_entity.places.last.id = lab.id
-  - lab.secondary_entity.place_temp.id = lab.id
+  - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
 
-  -# The call to #last is there to support "auditing."  It can be changed to "current_place" (with appropriate changes elsewhere), 
-  -# but explicit for now in anticipation of acts_as_auditable, when it can just be dripped
-  -###  - lab_place = lab.secondary_entity.places.last
-  - lab_place = lab.secondary_entity.place_temp
+    %span{:class => "horiz"}
+      = lab_fields.label(:name, "Lab Name")
+      = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25, :class => 'required_if_others', :maxlength => 50 }, { :skip_style => false, :param_name => 'lab_name'}
+    %span{:style => "position: relative; top: 18px; left: 10px"}
+      = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_result_link"}
 
   - for lab_result in lab.lab_results
-    = error_messages_for :object => [lab_place, lab_result]
-    - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
-
-      -# If lab exist do not allow editing of lab name
+    %div{:class => 'lab_result', :style => "clear: both; margin-left: 20px;"}
+      = error_messages_for :object => lab_result
       - if lab.new_record?
-        %div{:style => "clear: both;"}
-          = lab_fields.label(:name, "Lab Name")
-          = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25, :class => 'required_if_others', :maxlength => 50 }, { :skip_style => false }
+        -# Put lab results into the same namespace as labs
+        - lab_result_namespace = prefix_with_array
+        - lab_result.id = lab.id
       - else
-        %div{:style => "width: 15%; margin-top: 20px; font-weight: bold; clear: both;"}
-          Lab Name: 
-          = lab_place.name
-  
-    -# Same hack as above, but with a twist: for new records, index on lab.id.  For existing records index on lab_result.id
-    - if lab.new_record?
-      -# lab_result_id = lab_result.id
-      - lab_result.id = lab.id
+        - lab_result_namespace = "#{prefix}[#{lab.id}][lab_result_attributes][]"
 
-    - fields_for(prefix_with_array, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
-      =# hidden_field_tag("#{prefix}[#{lab.id}][lab_result_id]", lab_result_id)
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:test_type)
-        = lab_result_fields.text_field(:test_type, :size => 20, :maxlength => 255)
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:lab_result_text, "Lab result")
-        = lab_result_fields.text_field(:lab_result_text, :size => 20, :maxlength => 20, :class => 'required_if_others')
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:interpretation)
-        = lab_result_fields.text_field(:interpretation, :size => 20, :maxlength => 255)
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:specimen_source_id, "Specimen source")
-        = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
-      %fieldset.vert
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:collection_date)
-        = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:lab_test_date)
-        = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
-      %span{:class => "horiz"}
-        = lab_result_fields.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
-        = lab_result_fields.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
-
-      %span{:class => "horiz", :style => "margin-top: 30px"}
-        = link_to_function "Remove" , "$(this).up('.lab').remove()", {:id => "remove_lab_result_link"}
-
+      - fields_for(lab_result_namespace, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:test_type)
+          = lab_result_fields.text_field(:test_type, :size => 20, :maxlength => 255)
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:lab_result_text, "Lab result")
+          = lab_result_fields.text_field(:lab_result_text, :size => 20, :maxlength => 255, :class => 'required_if_others')
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:interpretation)
+          = lab_result_fields.text_field(:interpretation, :size => 20, :maxlenght => 255)
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:specimen_source_id, "Specimen source")
+          = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
+        %fieldset.vert
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:collection_date)
+          = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:lab_test_date)
+          = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
+        %span{:class => "horiz"}
+          = lab_result_fields.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
+          = lab_result_fields.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
+        %span{:style => "position: relative; top: 20px"}
+          = link_to_function "Remove this result" , "if ($$('.lab_result').size() == 1) {$(this).up('.lab').remove()} else {$(this).up('.lab_result').remove()}", {:id => "remove_lab_result_link"}
       %hr
+  %hr{:style => "height: 1px; color: black; background-color: black"}
+

@@ -75,14 +75,21 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs, 
     :controller => :morbidity_events,
     :member => {
-    :state => :post,
-    :jurisdiction => :post,
-    :soft_delete => :post
-  }
+      :state => :post,
+      :jurisdiction => :post,
+      :soft_delete => :post
+    },
+    :new => {
+      :lab_form => :get
+    }
 
-  map.resources :contact_events, :member => {
-    :soft_delete => :post
-  }
+  map.resources :contact_events, 
+    :member => {
+      :soft_delete => :post
+    },
+    :new => {
+      :lab_form => :get
+    }
 
   map.resources :place_events, :member => {
     :soft_delete => :post

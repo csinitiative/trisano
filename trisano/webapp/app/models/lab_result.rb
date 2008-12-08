@@ -26,7 +26,7 @@ class LabResult < ActiveRecord::Base
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
 
-  validates_length_of :lab_result_text, :maximum => 20, :allow_blank => true
+  validates_length_of :lab_result_text, :maximum => 255, :allow_blank => true
   validates_length_of :test_type, :maximum => 255, :allow_blank => true
   validates_length_of :interpretation, :maximum => 255, :allow_blank => true
 

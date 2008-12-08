@@ -22,11 +22,10 @@ class EventsController < ApplicationController
   before_filter :get_investigation_forms, :only => [:edit, :show]
   before_filter :set_tab_index
   
-  def auto_complete_for_lab_name(event_type)
-    entered_name = params[event_type][:new_lab_attributes].first[:name]
+  def auto_complete_for_lab_name
     @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
       :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
-                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", entered_name.downcase + '%'],
+                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", params[:lab_name].downcase + '%'],
       :order => "entity_id, created_at ASC, name ASC",
       :limit => 10
     )
@@ -54,7 +53,7 @@ class EventsController < ApplicationController
       redirect_to request.env["HTTP_REFERER"]
     end
   end
-  
+
   private
   
   def can_update?

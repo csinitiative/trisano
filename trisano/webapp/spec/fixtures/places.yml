@@ -55,6 +55,12 @@ Existing_Lab_One:
   place_type_id: 2203
   entity_id: 100 
 
+Existing_Lab_Two:
+  id: 110
+  name: "Existing Lab Two"
+  place_type_id: 2203
+  entity_id: 110 
+
 ##############
 #
 # Other places

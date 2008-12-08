@@ -49,3 +49,8 @@ Summit_County:
 Unassigned_Jurisdiction:
   id: 105
   entity_type: 'place'
+
+Existing_Lab_Two:
+  id: 110
+  entity_type: "place"
+

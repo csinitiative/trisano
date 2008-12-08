@@ -52,6 +52,7 @@ describe MorbidityEvent do
     describe "Handling new labs and lab results" do
 
       describe "Receiving a new lab and lab result" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
           new_lab_hash_1 = {
@@ -81,16 +82,49 @@ describe MorbidityEvent do
         end
       end
 
-      describe "Receiving an existing lab and a new lab result" do
+      describe "Receiving two new labs with the same name" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
-          exisitng_lab_hash_1 = {
+          new_lab_hash_1 = {
+            "new_lab_attributes" => 
+              [
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"},
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
+            ]
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
+        end
+
+        it "should create one participation (not two) linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          @event.participations.find_by_role_id(codes(:participant_testing_lab).id).should_not be_nil
+        end
+
+        it "should add one new lab, not two" do
+          lambda {@event.save}.should change {Place.count}.by(1)
+          @event.labs.first.secondary_entity.place_temp.name.should == "New Lab One"
+        end
+
+        it "should add two new lab results linked to one participation" do
+          lambda {@event.save}.should change {LabResult.count}.by(2)
+          results = @event.labs.first.lab_results.collect { |result| result.lab_result_text}
+          results.include?("New Lab One First Result").should be_true
+          results.include?("New Lab One Second Result").should be_true
+        end
+      end
+
+      describe "Receiving an existing lab and a new lab result" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          existing_lab_hash_1 = {
             "new_lab_attributes" => 
               [
               {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
           }
-          @event = MorbidityEvent.new(@event_hash.merge(exisitng_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(existing_lab_hash_1))
         end
 
         it "should not create a new lab" do
@@ -164,6 +198,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving two labs/lab results, one old one new" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
           new_lab_hash_1 = {
@@ -193,6 +228,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving two labs, both existing" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
           new_lab_hash_1 = {
@@ -215,6 +251,8 @@ describe MorbidityEvent do
       end
 
       describe "Receiving a new lab result for an existing event and participation" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
         before(:each) do
           existing_lab_hash_1 = {
             "new_lab_attributes" => 
@@ -236,34 +274,147 @@ describe MorbidityEvent do
       end
     end
 
-    describe "Handling exisiting lab results" do
+    describe "Handling existing lab results" do
 
-      describe "Receiving an edited lab result" do
+      describe "Receiving an edited lab result where the lab name has changed to an existing lab" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
-          @existing_lab_hash_1 = {
-            "existing_lab_attributes" => { "#{lab_results(:lab_guys_lab_result).id}" => {"lab_result_text"=>"Negative"}}
+          existing_lab_hash_1 = {
+            "existing_lab_attributes" => { 
+              "#{participations(:Lab_Guy_Tested_By).id}" => { 
+                "lab_entity_id" => places(:Existing_Lab_Two).id, 
+                "name" => places(:Existing_Lab_Two).name,
+                :lab_result_attributes => { 
+                  "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
+                  "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
+                }
+              }
+            }
           }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should not create a new participation" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should_not change {Participation.count}
+        end
+
+        it "should assign the existing lab to the existing participation" do
+          @event.update_attributes(@new_lab_hash)
+          @event.reload
+          @event.labs.first.secondary_entity.should eql(entities(:Existing_Lab_Two))
+        end
+
+        it "should not create or delete a place" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should_not change {Place.count}
+        end
+
+      end
+
+      describe "Receiving an edited lab result where the lab name has changed to a new lab" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          existing_lab_hash_1 = {
+            "existing_lab_attributes" => { 
+              "#{participations(:Lab_Guy_Tested_By).id}" => { 
+                "lab_entity_id" => "",
+                "name" => "BrandNewLab",
+                :lab_result_attributes => { 
+                  "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
+                  "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
+                }
+              }
+            }
+          }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should not create a new participation" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should_not change {Participation.count}
+        end
+
+        it "should add a new lab and link to participation" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should change {Place.count}.by(1)
+          @event.labs.first.secondary_entity.place_temp.name.should == "BrandNewLab"
+        end
+      end
+
+      describe "Receiving an edited lab result" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          existing_lab_hash_1 = {
+            "existing_lab_attributes" => { 
+              "#{participations(:Lab_Guy_Tested_By).id}" => { 
+                "lab_entity_id" => places(:Existing_Lab_One).id, 
+                "name" => places(:Existing_Lab_One).name, 
+                :lab_result_attributes => { 
+                  "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Negative" },
+                  "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
+                }
+              }
+            }
+          }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
         it "should update the existing lab_result" do
-          lambda {@event.update_attributes(@existing_lab_hash_1)}.should_not change {LabResult.count}
-          @event.labs.first.lab_results.first.lab_result_text.should == "Negative"
+          lambda {@event.update_attributes(@new_lab_hash)}.should_not change {LabResult.count}
+          results = @event.labs.first.lab_results.collect { |result| result.lab_result_text }
+          results.should == ["Negative", "Negative"]
+        end
+      end
+
+      describe "deleting one lab result and changing the other" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          existing_lab_hash_1 = {
+            "existing_lab_attributes" => { 
+              "#{participations(:Lab_Guy_Tested_By).id}" => { 
+                "lab_entity_id" => places(:Existing_Lab_One).id, 
+                "name" => places(:Existing_Lab_One).name,
+                :lab_result_attributes => { 
+                  "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Inconclusive" }
+                }
+              }
+            }
+          }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "Should remove just one lab result" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should change {LabResult.count}.by(-1)
+        end
+
+        it "The changed result should be persisted" do
+          @event.update_attributes(@new_lab_hash)
+          @event.labs.first.lab_results.first.lab_result_text.should == "Inconclusive"
         end
       end
 
       describe "Receiving no lab results" do
+        fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
-          @existing_lab_hash_1 = {
+          existing_lab_hash_1 = {
             "existing_lab_attributes" => {}
           }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
         it "should delete existing lab results and participation" do
-          lambda {@event.update_attributes(@existing_lab_hash_1)}.should change {LabResult.count + Participation.count}.by(-2)
+          lambda {@event.update_attributes(@new_lab_hash)}.should change {LabResult.count + Participation.count}.by(-3)
+        end
+
+        it "should not delete the lab place" do
+          lambda {@event.save}.should_not change {Place.count}
         end
 
       end
@@ -1645,5 +1796,4 @@ describe MorbidityEvent do
       @event.child_events.each { |event| event.deleted_at.should_not be_nil }
     end
   end
-
 end

@@ -22,5 +22,6 @@
   %div{:id => "labs"}
     - labs = (@event.labs.size > 0 ? @event.labs : [Participation.new_lab_participation])
     = render :partial => "events/lab", :collection => labs
+    #new_lab_holder
 
-  %p= add_lab_link "Add a lab result"
+  %p= add_lab_link "Add a new lab result", @event
