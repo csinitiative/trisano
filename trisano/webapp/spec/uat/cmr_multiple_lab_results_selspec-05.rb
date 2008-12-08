@@ -22,50 +22,87 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'Adding multiple lab results to a CMR' do
   
   it "should allow adding new lab results to a new CMR" do
-    @browser.open "/trisano/cmrs"
-    click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "Jones"
-    @browser.type "morbidity_event_active_patient__person_first_name", "Indiana"
+    @browser.open("/trisano/cmrs")
+    create_simplest_cmr(@browser, get_unique_name(1))
+    edit_cmr(@browser).should be_true
 
     click_core_tab(@browser, "Laboratory")
-    @browser.click "link=Add a lab result"
-    sleep(1)
+    @browser.click "link=Add a new lab result"
+    wait_for_element_present("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
+    @browser.click "link=Add a new lab result"
+    wait_for_element_present("//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'name')]")
 
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][name]'][0]", "Lab One"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][test_type]'][0]", "Urinalysis"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][lab_result_text]'][0]", "Positive"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][interpretation]'][0]", "Healthy"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", "Lab One"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'test_type')]", "Urinalysis"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'lab_result_text')]", "Positive"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'interpretation')]", "Healthy"
 
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][name]'][1]", "Lab Two"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][test_type]'][1]", "Blood Test"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][lab_result_text]'][1]", "Negative"
-    @browser.type "document.forms['new_morbidity_event'].elements['morbidity_event[new_lab_attributes][][interpretation]'][1]", "Sickly"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]", "Lab Two"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'test_type')]", "Blood Test"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'lab_result_text')]", "Negative"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'interpretation')]", "Sickly"
+
+    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'name')]", "Lab Two"
+    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'test_type')]", "Biopsy"
+    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'lab_result_text')]", "Inconclusive"
+    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'interpretation')]", "Whatever"
 
     save_cmr(@browser).should be_true
 
-    @browser.is_text_present('Jones').should be_true
     @browser.is_text_present('Lab One').should be_true
-    @browser.is_text_present('Positive').should be_true
     @browser.is_text_present('Lab Two').should be_true
+    @browser.is_text_present('Positive').should be_true
     @browser.is_text_present('Negative').should be_true
+    @browser.is_text_present('Inconclusive').should be_true
     @browser.is_text_present('Urinalysis').should be_true
     @browser.is_text_present('Blood Test').should be_true
+    @browser.is_text_present('Biopsy').should be_true
     @browser.is_text_present('Healthy').should be_true
     @browser.is_text_present('Sickly').should be_true
+    @browser.is_text_present('Whatever').should be_true
   end
 
-  it "should allow removing a lab result" do
-    edit_cmr(@browser).should be_true
-    @browser.click("remove_lab_result_link")
-    save_cmr(@browser).should be_true
-    @browser.is_text_present('Lab One').should_not be_true
-  end
+# DEBT:  Make this work
+# This works in real life, but not here.  Have a feeling the autocomplete's onblur is not firing in Selenium.  Dunno.
+#
+#  it "should allow editing a lab name" do
+#    edit_cmr(@browser).should be_true
+#    old_lab_name = @browser.get_value("//div[@id='labs']/div[1]//input[contains(@name, 'name')]")
+#    lab_name = get_unique_name(3)
+#    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", lab_name)
+#    # Change focus to force the lab name ID field to change
+#    @browser.key_press("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", "\9")
+#    save_cmr(@browser).should be_true
+#    @browser.is_text_present(lab_name).should be_true
+#    @browser.is_text_present(old_lab_name).should_not be_true
+#  end
 
   it "should allow editing lab results" do
     edit_cmr(@browser).should be_true
-    click_core_tab(@browser, "Laboratory")
-    type_field_by_order(@browser, "morbidity_event_existing_lab_attributes", 0, "Uncertain")
+    interpretation = get_unique_name(2)
+    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'interpretation')]", interpretation)
     save_cmr(@browser).should be_true
-    @browser.is_text_present('Uncertain').should be_true
+    @browser.is_text_present(interpretation).should be_true
+  end
+
+  it "should allow removing individual lab results" do
+    edit_cmr(@browser).should be_true
+    lab_name_1 = @browser.get_value("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]")
+    lab_name_2 = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
+    # Targets the 2nd lab result of the first lab to have 2 or more lab results
+    test_type = @browser.get_value("//div[@id='labs']/div[@class='lab']//div[@class='lab_result'][2]//input[contains(@name, 'test_type')]")
+    @browser.click("//div[@id='labs']/div[@class='lab']//div[@class='lab_result'][2]//a")
+    save_cmr(@browser).should be_true
+    @browser.is_text_present(test_type).should_not be_true
+    @browser.is_text_present(lab_name_1).should be_true
+    @browser.is_text_present(lab_name_2).should be_true
+  end
+
+  it "should allow deleting a lab and all its lab results" do
+    edit_cmr(@browser).should be_true
+    lab_name = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
+    @browser.click("//div[@id='labs']/div[@class='lab'][2]/span/a")
+    save_cmr(@browser).should be_true
+    @browser.is_text_present(lab_name).should_not be_true
   end
 end

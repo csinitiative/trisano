@@ -149,9 +149,10 @@ class HumanEvent < Event
           else
             # They've changed the lab name to a lab not seen before.
             # Create linked entity and place, then link to this participation.  Do not delete the previous lab
-            lab_entity = lab.build_secondary_entity
+            lab_entity = Entity.new
             lab_entity.entity_type = "place"
             lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+            lab.secondary_entity = lab_entity
             #
             # Memorize lab name and entity
             earlier_labs[lab_name] = lab_entity

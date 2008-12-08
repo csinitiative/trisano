@@ -28,7 +28,7 @@
       = lab_fields.label(:name, "Lab Name")
       = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25, :class => 'required_if_others', :maxlength => 50 }, { :skip_style => false, :param_name => 'lab_name'}
     %span{:style => "position: relative; top: 18px; left: 10px"}
-      = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_result_link"}
+      = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
 
   - for lab_result in lab.lab_results
     %div{:class => 'lab_result', :style => "clear: both; margin-left: 20px;"}
