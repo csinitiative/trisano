@@ -22,7 +22,7 @@ class Question < ActiveRecord::Base
   validates_presence_of :question_text
   validates_presence_of :data_type, :unless => :core_data
   validates_presence_of :core_data_attr, :if => :core_data
-  validates_length_of :question_text, :maximum => 1000
+  validates_length_of :question_text, :maximum => 1000, :allow_blank => true
   validates_length_of :help_text, :maximum => 1000, :allow_blank => true
 
   def data_type
