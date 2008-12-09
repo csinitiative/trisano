@@ -64,7 +64,7 @@ Warbler::Config.new do |config|
 
   
   # Whether or not to turn basicauth on
-  config.webxml.basicauth = ENV['basicauth'] ||= 'true'
+  config.webxml.basicauth = ENV['basicauth'] ||= 'false'
 
   # Control the pool of Rails runtimes
   # (Goldspike-specific; see README for details)
@@ -78,6 +78,7 @@ Warbler::Config.new do |config|
   # that you fix these values when running a production server!
   config.webxml.jruby.min.runtimes = ENV['min_runtimes'] ||= '3'
   config.webxml.jruby.max.runtimes = ENV['max_runtimes'] ||= '10'
+  config.webxml.jruby.runtime.timeout.sec = '5'
 
   # JNDI data source name
   # config.webxml.jndi = 'jdbc/rails'
