@@ -18,7 +18,7 @@
 require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Soft deleting individual events' do
   
@@ -59,6 +59,7 @@ describe 'Soft deleting individual events' do
     @browser.get_confirmation()
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.contactname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
   
@@ -73,6 +74,7 @@ describe 'Soft deleting individual events' do
     @browser.get_confirmation()
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.placename-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
 

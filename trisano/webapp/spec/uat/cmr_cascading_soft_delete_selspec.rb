@@ -55,6 +55,7 @@ describe 'Soft deleting events' do
     @browser.get_confirmation()   
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.patientname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
   
@@ -63,7 +64,7 @@ describe 'Soft deleting events' do
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Show")
     @browser.wait_for_page_to_load($load_time)
-    # Debt: Add check that there is some visual indication that the event is soft-deleted other than no delete link
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.contactname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
   
@@ -74,8 +75,29 @@ describe 'Soft deleting events' do
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Show")
     @browser.wait_for_page_to_load($load_time)
-    # Debt: Add check that there is some visual indication that the event is soft-deleted other than no delete link
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.placename-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
-  
+
+  it "should search for deleted events" do
+    navigate_to_cmr_search(@browser)
+    @browser.type("name", @cmr_last_name)
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+  end
+
+  it "should find at least one deleted event, which should be grey" do
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].getStyle('color') == "rgb(51, 51, 51)"}).should eql("true")
+  end
+
+  it "should search for deleted people" do
+    navigate_to_people_search(@browser)
+    @browser.type("name", @cmr_last_name)
+    @browser.click("//input[@type='submit']")
+    @browser.wait_for_page_to_load($load_time)
+  end
+
+  it "should find at least one deleted person, which should be grey" do
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].getStyle('color') == "rgb(51, 51, 51)"}).should eql("true")
+  end  
 end
