@@ -23,6 +23,7 @@
       %tr
         %th Lab name
         %th Test type
+        %th Test detail
         %th Lab result
         %th Interpretation
         %th Specimen source
@@ -35,6 +36,7 @@
           %tr
             %td= lab.secondary_entity.place_temp.name
             %td= lab_result.test_type
+            %td= lab_result.test_detail
             %td= lab_result.lab_result_text
             %td= lab_result.interpretation
             %td= l lab_result.specimen_source
