@@ -31,27 +31,41 @@
       = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
 
   - for lab_result in lab.lab_results
+    - if lab.new_record?
+      -# If this is a new lab result, then put them into the  same namespace as labs. i.e., lab_attributes.  Autocomplete fields have to be named manually, they can't use fields_for.
+      - auto_complete_prefix = lab_result_namespace = prefix_with_array  # e.g: morbidity_event[new_lab_attributes][]
+      -# Force the ID that Rails puts into the array component of the name to be the lab's ID, not the lab_result's ID
+      - lab_result.id = lab.id
+    - else
+      -# Otherwise, lab_results should be in their own name space, lab_result_attributes, a child of lab_attributes.
+      - lab_result_prefix = "#{prefix}[#{lab.id}][lab_result_attributes]"   # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes]
+      - lab_result_namespace = lab_result_prefix + "[]"                     # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes][]
+      - auto_complete_prefix = lab_result_prefix + "[#{lab_result.id}]"     # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes][27]
+
     %div{:class => 'lab_result', :style => "clear: both; margin-left: 20px;"}
+      - rand_id = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
       = error_messages_for :object => lab_result
-      - if lab.new_record?
-        -# Put lab results into the same namespace as labs
-        - lab_result_namespace = prefix_with_array
-        - lab_result.id = lab.id
-      - else
-        - lab_result_namespace = "#{prefix}[#{lab.id}][lab_result_attributes][]"
 
       - fields_for(lab_result_namespace, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
+
+        -# Autocomplete for test type.  Not using model_auto_completer because we don't need the ID.  Just saving the value.  
+        -# Also, there's a bug in text_field_with_autocomplete, so doing it manually
         %label{:class => "horiz"}
           Test type
-          - rand_id = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
           - tt_id = "test_type_#{rand_id}"
           = image_tag 'redbox_spinner.gif', :id => "#{tt_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'
-          = text_field_tag("#{prefix}[#{lab.id}][lab_result_attributes][#{lab_result.id}][test_type]", lab_result.test_type, :size => 20, :maxlength => 255, :style => "display: block", :id => tt_id )
+          = text_field_tag("#{auto_complete_prefix}[test_type]", lab_result.test_type, :size => 20, :maxlength => 255, :style => "display: block", :id => tt_id )
         %div{:id => "#{tt_id}_auto_complete", :class => "auto_complete"}
         = auto_complete_field(tt_id, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :method => :get, :param_name => 'test_type', :indicator => "#{tt_id}_spinner" })
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:lab_result_text, "Lab result")
-          = lab_result_fields.text_field(:lab_result_text, :size => 20, :maxlength => 255, :class => 'required_if_others')
+        -# Autocomplete for lab result 
+        %label{:class => "horiz"}
+          Lab result
+          - lr_id = "lab_result_#{rand_id}"
+          = image_tag 'redbox_spinner.gif', :id => "#{lr_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'
+          = text_field_tag("#{auto_complete_prefix}[lab_result_text]", lab_result.lab_result_text, :size => 20, :maxlength => 255, :style => "display: block", :class => 'required_if_others', :id => lr_id )
+        %div{:id => "#{lr_id}_auto_complete", :class => "auto_complete"}
+        = auto_complete_field(lr_id, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :method => :get, :param_name => 'lab_result', :indicator => "#{lr_id}_spinner" })
+
         %span{:class => "horiz"}
           = lab_result_fields.label(:interpretation)
           = lab_result_fields.text_field(:interpretation, :size => 20, :maxlenght => 255)
