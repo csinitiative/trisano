@@ -85,7 +85,7 @@ describe 'Adding multiple place exposures to a CMR' do
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Pool').should be_true
-    @browser.is_text_present('The Stuffed Mushroom').should_not be_true  
+    @browser.is_element_present("css=TD.struck-through").should be_true
   end
 
   it "should allow editing a place exposure as a place event" do

@@ -66,7 +66,7 @@ describe 'Adding multiple contacts to a CMR' do
     click_core_tab(@browser, "Contacts")
     @browser.click "remove_contact_link"
     save_cmr(@browser).should be_true
-    @browser.is_text_present('Costello').should_not be_true
+    @browser.is_element_present("css=TD.struck-through").should be_true
   end
 
   it "should allow editing a contact" do
@@ -101,7 +101,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.select "contact_event_active_patient__person_disposition_id", "label=Infected, brought to treatment"
     @browser.type "contact_event_active_patient__person_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
     click_core_tab(@browser, "Laboratory")
-    @browser.click "link=Add a lab result"
+    @browser.click "link=Add a new lab result"
     @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"
     @browser.type "name=contact_event[new_lab_attributes][][lab_result_text]", "Positive"
     save_contact_event(@browser).should be_true
