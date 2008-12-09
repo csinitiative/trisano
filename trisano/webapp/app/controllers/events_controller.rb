@@ -32,6 +32,25 @@ class EventsController < ApplicationController
     render :inline => '<ul><% for item in @items %><li id="lab_name_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
   end
 
+  def auto_complete_for_test_type
+    # acts_as_auditable code getting in the way of this.
+    # @items = ExternalCode.find(:all,
+    #   :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'gender'", '%' + params[:test_type].downcase + '%'],
+    #   :order => "code_description",
+    #   :limit => 10
+    # )
+    
+    @items = ExternalCode.find_by_sql(["SELECT code_description 
+                                        FROM external_codes 
+                                        WHERE LOWER(code_description) LIKE ? 
+                                        AND code_name = 'lab_test_type' 
+                                        ORDER BY sort_order 
+                                        LIMIT 10", 
+                                        '%' + params[:test_type].downcase + '%'])
+
+    render :inline => "<%= auto_complete_result(@items, 'code_description') %>"
+  end
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"

@@ -41,9 +41,14 @@
         - lab_result_namespace = "#{prefix}[#{lab.id}][lab_result_attributes][]"
 
       - fields_for(lab_result_namespace, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:test_type)
-          = lab_result_fields.text_field(:test_type, :size => 20, :maxlength => 255)
+        %label{:class => "horiz"}
+          Test type
+          - rand_id = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
+          - tt_id = "test_type_#{rand_id}"
+          = image_tag 'redbox_spinner.gif', :id => "#{tt_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'
+          = text_field_tag("#{prefix}[#{lab.id}][lab_result_attributes][#{lab_result.id}][test_type]", lab_result.test_type, :size => 20, :maxlength => 255, :style => "display: block", :id => tt_id )
+        %div{:id => "#{tt_id}_auto_complete", :class => "auto_complete"}
+        = auto_complete_field(tt_id, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :method => :get, :param_name => 'test_type', :indicator => "#{tt_id}_spinner" })
         %span{:class => "horiz"}
           = lab_result_fields.label(:lab_result_text, "Lab result")
           = lab_result_fields.text_field(:lab_result_text, :size => 20, :maxlength => 255, :class => 'required_if_others')
