@@ -45,15 +45,15 @@ describe 'User functionality for creating and saving CMRs' do
     save_cmr(@browser).should be_true
     @browser.is_text_present('Costello').should be_true
   end
-  
-  it 'should save the street name' do    
+
+  it 'should save the street name' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Demographics")
     @browser.type('morbidity_event_active_patient__address_street_name', 'Junglewood Court')
-             
+
     save_cmr(@browser).should be_true
   end
-  
+
   it 'should save the phone number' do
     edit_cmr(@browser).should be_true
     @browser.click 'link=New Telephone / Email'
@@ -62,14 +62,14 @@ describe 'User functionality for creating and saving CMRs' do
     @browser.type 'morbidity_event_active_patient__new_telephone_attributes__phone_number', '5811234'
     save_cmr(@browser).should be_true
   end
-  
+
   it 'should save the disease info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Clinical")
     @browser.select 'morbidity_event_disease_disease_id', 'label=AIDS'
     save_cmr(@browser).should be_true
   end
-  
+
   it 'should save the lab result' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Laboratory")
@@ -87,16 +87,14 @@ describe 'User functionality for creating and saving CMRs' do
   
   it 'should save the treatment info' do
     edit_cmr(@browser).should be_true
-    click_core_tab(@browser, "Clinical")
-    @browser.select 'morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id', 'label=Yes'
-    @browser.type('morbidity_event_active_patient__new_treatment_attributes__treatment', 'Leaches')
+    add_treatment(@browser, {:treatment_given => 'label=Yes', :treatment => 'Leaches'}, 1)
     save_cmr(@browser).should be_true
   end
   
   it 'should save the reporting info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Reporting")
-    @browser.type "//input[contains(@id, 'model_auto_completer_tf')]", 'Happy Jacks Health Store'
+    type_field_by_order(@browser, "model_auto_completer_tf", 1, 'Happy Jacks Health Store')
     save_cmr(@browser).should be_true
   end
 
