@@ -70,10 +70,8 @@ describe 'Print CMR page' do
     @browser.select "morbidity_event_active_patient__participations_risk_factor_pregnant_id", "label=Yes"
     @browser.type "morbidity_event_active_patient__participations_risk_factor_pregnancy_due_date", "12/12/2009"
 
-    @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment", "White Russian"
-    @browser.select "morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id", "label=Yes"
-    @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment_date", "1/17/1901"
-
+    add_treatment(@browser, {:treatment => "White Russian", :treatment_given => "label=Yes", :treatment_date => "1/17/1901"})
+    
     @browser.type "morbidity_event_new_clinician_attributes__last_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__first_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__middle_name", "A"
@@ -122,16 +120,15 @@ describe 'Print CMR page' do
   
   it 'should edit the CMR to include reporting info' do
     edit_cmr(@browser).should be_true
-    click_core_tab(@browser, REPORTING)
-    type_field_by_order(@browser, "model_auto_completer_tf", 0, "why")
-    @browser.type "morbidity_event_active_reporting_agency_first_name", "what"
-    @browser.type "morbidity_event_active_reporting_agency_last_name", "how"
-    @browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", "label=Unknown"
-    @browser.type "morbidity_event_active_reporting_agency_area_code", "555"
-    @browser.type "morbidity_event_active_reporting_agency_extension", "555"
-    @browser.type "morbidity_event_active_reporting_agency_phone_number", "5550150"
-    @browser.type "morbidity_event_results_reported_to_clinician_date", "12/12/2004"
-    @browser.type "morbidity_event_first_reported_PH_date", "12/12/2005"
+    add_reporting_info(@browser, {:agency => "why",
+                                  :first_name => "what",
+                                  :last_name => "how",
+                                  :phone_type => "label=Unknown",
+                                  :area_code => "555",
+                                  :extension => "555",
+                                  :phone_number => "5550150",
+                                  :clinician_date => "12/12/2004",
+                                  :PH_date => "12/12/2005"})
     save_cmr(@browser).should be_true
   end
   

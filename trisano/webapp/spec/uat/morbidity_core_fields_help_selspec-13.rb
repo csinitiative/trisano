@@ -29,6 +29,7 @@ describe "help text for morbidity core fields" do
 
   core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}.each do |core_field|
     it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
+      puts core_field['name']
       @browser.click("//div[@id='rot'][1]//a[text()='#{core_field['name']}']")
       @browser.wait_for_page_to_load
       @browser.click("link=Edit")
