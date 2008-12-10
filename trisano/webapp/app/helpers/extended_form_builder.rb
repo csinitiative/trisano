@@ -199,7 +199,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def is_external_code?(code_name)
-    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "telephonelocationtype", "contactdispositiontype"]
+    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "telephonelocationtype", "contactdispositiontype", "lab_interpretation"]
     @external_codes.each {|ec| return TRUE if ec == code_name}
     return FALSE
   end

@@ -89,7 +89,7 @@ describe 'Print CMR page' do
     add_lab_result(@browser, {:lab_name => "Venture Complex",
                               :lab_test_type => "Necromancy",
                               :lab_result_text => "Zombies",
-                              :lab_interpretation => "Orpheus Says Oops",
+                              :lab_interpretation => "Other",
                               :lab_specimen_source => "Blood",
                               :lab_collection_date => "12/12/2002",
                               :lab_test_date => "12/13/2005",

@@ -114,10 +114,9 @@ module EventsHelper
     end
   end
 
-  def add_treatment_link(name, namespace)
-    link_to_function name do |page|
-      page.insert_html :bottom, "treatments", :partial => 'events/treatment' , :object => ParticipationsTreatment.new, :locals => { :namespace => namespace }
-    end
+  def add_treatment_link(name, event)
+    url = event.is_a?(MorbidityEvent) ? treatment_form_new_cmr_path : treatment_form_new_contact_event_path
+    link_to_remote(name, :update => "new_treatment_holder", :position => :before, :url => url, :method => :get)
   end
 
   def add_contact_link(name)

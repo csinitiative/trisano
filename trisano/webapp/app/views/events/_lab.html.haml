@@ -61,7 +61,7 @@
 
         %span{:class => "horiz"}
           = lab_result_fields.label(:interpretation)
-          = lab_result_fields.text_field(:interpretation, :size => 20, :maxlenght => 255)
+          = lab_result_fields.dropdown_code_field(:interpretation_id, "lab_interpretation", {})
         %span{:class => "horiz"}
           = lab_result_fields.label(:specimen_source_id, "Specimen source")
           = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})

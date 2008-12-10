@@ -330,7 +330,7 @@ def lab_output
   out << "#{@lab_result.test_type},"
   out << "#{@lab_result.test_detail},"
   out << "#{@lab_result.lab_result_text},"
-  out << "#{@lab_result.interpretation},"
+  out << "#{@lab_result.interpretation.code_description},"
   out << "#{@lab_result.specimen_source.code_description},"
   out << "#{@lab_result.collection_date},"
   out << "#{@lab_result.lab_test_date},"
@@ -445,7 +445,7 @@ def csv_mock_event(event_type)
   @lab_result.stub!(:test_type).and_return("Biopsy")
   @lab_result.stub!(:test_detail).and_return("Liver")
   @lab_result.stub!(:lab_result_text).and_return("Positive")
-  @lab_result.stub!(:interpretation).and_return("Sick")
+  @lab_result.stub!(:interpretation).and_return(simple_reference)
   @lab_result.stub!(:specimen_source).and_return(simple_reference)
   @lab_result.stub!(:collection_date).and_return("2008-02-01")
   @lab_result.stub!(:lab_test_date).and_return("2008-02-02")

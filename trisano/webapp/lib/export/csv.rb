@@ -342,7 +342,7 @@ module Export
     lab_data << ["lab_test_type", "test_type"]
     lab_data << ["lab_test_detail", "test_detail"]
     lab_data << ["lab_result", "lab_result_text"]
-    lab_data << ["lab_interpretation", "interpretation"]
+    lab_data << ["lab_interpretation", "interpretation.code_description if interpretation"]
     lab_data << ["lab_specimen_source", "specimen_source.code_description if specimen_source"]
     lab_data << ["lab_collection_date", "collection_date"]
     lab_data << ["lab_test_date", "lab_test_date"]

@@ -58,7 +58,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -78,7 +78,7 @@ describe MorbidityEvent do
           lambda {@event.save}.should change {LabResult.count}.by(1)
           @event.labs.first.lab_results.first.lab_result_text.should == "New Lab One Result"
           @event.labs.first.lab_results.first.test_type.should == "Urinalysis"
-          @event.labs.first.lab_results.first.interpretation.should == "Healthy"
+          @event.labs.first.lab_results.first.test_detail.should == "Whatever"
         end
       end
 
@@ -89,8 +89,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"},
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis", "interpretation" => "Healthy"}
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis"},
+              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -184,7 +184,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "interpretation" => ""}
+              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "test_detail" => ""}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))

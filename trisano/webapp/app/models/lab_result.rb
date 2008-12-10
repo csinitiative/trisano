@@ -18,6 +18,7 @@
 class LabResult < ActiveRecord::Base
   belongs_to :specimen_source, :class_name => 'ExternalCode'
   belongs_to :specimen_sent_to_uphl_yn, :class_name => 'ExternalCode'
+  belongs_to :interpretation, :class_name => 'ExternalCode'
 
   belongs_to :participation
 
@@ -28,7 +29,6 @@ class LabResult < ActiveRecord::Base
 
   validates_length_of :lab_result_text, :maximum => 255, :allow_blank => true
   validates_length_of :test_type, :maximum => 255, :allow_blank => true
-  validates_length_of :interpretation, :maximum => 255, :allow_blank => true
   validates_length_of :test_detail, :maximum => 255, :allow_blank => true
 
   def lab_name

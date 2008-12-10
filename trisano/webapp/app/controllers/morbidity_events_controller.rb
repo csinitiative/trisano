@@ -254,6 +254,11 @@ class MorbidityEventsController < EventsController
     render :partial => 'events/lab', :object => Participation.new_lab_participation
   end
   
+  def treatment_form
+    @event = MorbidityEvent.new
+    render :partial => 'events/treatment', :object => ParticipationsTreatment.new, :locals => { :namespace => "active_patient" }
+  end
+  
   private
   
   def prepopulate

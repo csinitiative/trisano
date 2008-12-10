@@ -77,6 +77,11 @@ class ContactEventsController < EventsController
     render :partial => 'events/lab', :object => Participation.new_lab_participation
   end
   
+  def treatment_form
+    @event = ContactEvent.new
+    render :partial => 'events/treatment', :object => ParticipationsTreatment.new, :locals => { :namespace => "active_patient" }
+  end
+  
   private
 
     def prep_multimodels

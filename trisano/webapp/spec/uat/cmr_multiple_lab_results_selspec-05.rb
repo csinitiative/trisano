@@ -35,17 +35,14 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", "Lab One"
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'test_type')]", "Urinalysis"
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'lab_result_text')]", "Positive"
-    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'interpretation')]", "Healthy"
 
     @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]", "Lab Two"
     @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'test_type')]", "Blood Test"
     @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'lab_result_text')]", "Negative"
-    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'interpretation')]", "Sickly"
 
     @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'name')]", "Lab Two"
     @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'test_type')]", "Biopsy"
     @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'lab_result_text')]", "Inconclusive"
-    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'interpretation')]", "Whatever"
 
     save_cmr(@browser).should be_true
 
@@ -57,9 +54,6 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.is_text_present('Urinalysis').should be_true
     @browser.is_text_present('Blood Test').should be_true
     @browser.is_text_present('Biopsy').should be_true
-    @browser.is_text_present('Healthy').should be_true
-    @browser.is_text_present('Sickly').should be_true
-    @browser.is_text_present('Whatever').should be_true
   end
 
 # DEBT:  Make this work
@@ -79,10 +73,10 @@ describe 'Adding multiple lab results to a CMR' do
 
   it "should allow editing lab results" do
     edit_cmr(@browser).should be_true
-    interpretation = get_unique_name(2)
-    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'interpretation')]", interpretation)
+    test_type = get_unique_name(2)
+    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'test_type')]", test_type)
     save_cmr(@browser).should be_true
-    @browser.is_text_present(interpretation).should be_true
+    @browser.is_text_present(test_type).should be_true
   end
 
   it "should allow removing individual lab results" do

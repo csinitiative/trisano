@@ -80,7 +80,8 @@ ActionController::Routing::Routes.draw do |map|
       :soft_delete => :post
     },
     :new => {
-      :lab_form => :get
+      :lab_form => :get,
+      :treatment_form => :get
     }
 
   map.resources :contact_events, 
@@ -88,7 +89,8 @@ ActionController::Routing::Routes.draw do |map|
       :soft_delete => :post
     },
     :new => {
-      :lab_form => :get
+      :lab_form => :get,
+      :treatment_form => :get
     }
 
   map.resources :place_events, :member => {

@@ -103,8 +103,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <div id="treatments">
             <% treatments = (@event.active_patient.participations_treatments.size > 0 ? @event.active_patient.participations_treatments : [ParticipationsTreatment.new]) %>
             <%= render :partial => "events/treatment", :locals => { :namespace => "active_patient" }, :collection => treatments %>
+            <div id="new_treatment_holder"></div>
           </div>
-          <p style="clear: both;"> <%= add_treatment_link "Add a treatment", "active_patient" %> </p>
+          <p style="clear: both;"> <%= add_treatment_link "Add a treatment", @event %> </p>
         <% end %>
       <% end %>
     
