@@ -21,23 +21,17 @@
       = yield :title
 
     = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', :cache => 'styles'
-    
-    / Sam Skin CSS for TabView
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', :cache => 'base'
+
+    / TabView
     = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview.css'
     = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview-skin.css'
-    
-    / = javascript_include_tag '../yuinew/build/yahoo-dom-event/yahoo-dom-event.js', '../yuinew/build/element/element-beta-min.js', '../yuinew/build/tabview/tabview-min.js', 'autotab', :cache => 'base'
-
-    / JavaScript Dependencies for Tabview
     = javascript_include_tag '../yuinew/build/yahoo-dom-event/yahoo-dom-event.js'
     = javascript_include_tag '../yuinew/build/element/element-beta-min.js'
-
-    / Source files
     = javascript_include_tag '../yuinew/build/tabview/tabview-min.js'
-    = javascript_include_tag :defaults
-    = calendar_date_select_includes
 
-    = javascript_include_tag 'autotab'
+    / Calendar
+    = calendar_date_select_includes
 
   %body.yui-skin-sam
     = javascript_include_tag 'wz_tooltip'
