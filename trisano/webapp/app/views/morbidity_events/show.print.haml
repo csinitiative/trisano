@@ -68,3 +68,7 @@
 
   .brak#investigation
     = render :partial => 'events/investigation_show_print.html.haml'
+
+  -unless params[:note].nil?
+    .brak#notes
+      = render :partial => 'events/notes_show_print.html.haml'

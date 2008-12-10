@@ -146,3 +146,8 @@
 {
   display: block;
 }
+
+.struck-through
+{
+    text-decoration: line-through
+}

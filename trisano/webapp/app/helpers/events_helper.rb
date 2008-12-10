@@ -142,7 +142,8 @@ module EventsHelper
     controls = ""
     controls << (link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") << " | ") if with_show
     controls << (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") << " | ") if can_update
-    controls << link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") << " | "
+    controls << link_to('Print', formatted_cmr_path(event, "print") , :target => "_blank") << " ("
+    controls << link_to('With Notes', formatted_cmr_path(event, "print", :note => "1") , :target => "_blank") << ") | "
     controls << (link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete') << " | ")  if can_update && event.deleted_at.nil?
     if with_export_options
       controls << link_to_function('Export to CSV', nil) do |page|
