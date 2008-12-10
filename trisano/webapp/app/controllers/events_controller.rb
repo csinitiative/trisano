@@ -62,6 +62,17 @@ class EventsController < ApplicationController
     render :inline => "<%= auto_complete_result(@items, 'lab_result_text') %>"
   end
 
+  def auto_complete_for_treatment
+    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (treatment) treatment 
+                                        FROM participations_treatments 
+                                        WHERE LOWER(treatment) LIKE ? 
+                                        ORDER BY treatment 
+                                        LIMIT 10", 
+                                        '%' + params[:treatment].downcase + '%'])
+
+    render :inline => "<%= auto_complete_result(@items, 'treatment') %>"
+  end
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"

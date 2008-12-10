@@ -15,16 +15,23 @@
 
 %div{:class => 'treatment', :style => "clear: both;"}
   - new_or_existing = new_or_existing?(treatment)
-  - prefix = event_prefix_for_multi_models(new_or_existing, "_treatment_attributes", namespace) + "[]"
+  - prefix = event_prefix_for_multi_models(new_or_existing, "_treatment_attributes", namespace)
+  - prefix_with_array = prefix + "[]"
 
-  - fields_for(prefix, treatment, :builder => ExtendedFormBuilder) do |treatment_fields|
+  - fields_for(prefix_with_array, treatment, :builder => ExtendedFormBuilder) do |treatment_fields|
     %span{:class => "horiz"}
       - core_element :treatment_given_yn_id, treatment_fields, :horiz do
         = treatment_fields.label(:treatment_given_yn_id, "Treatment given")
         = treatment_fields.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
+        
+      - if treatment.new_record?
+        - auto_complete_prefix = prefix_with_array
+      - else
+        - auto_complete_prefix = prefix + "[#{treatment.id}]"
+
       - core_element :treatment, treatment_fields, :horiz do
-        = treatment_fields.label(:treatment, "Treatment")
-        = treatment_fields.text_field(:treatment, :size => 50, :maxlength => 255)
+        = trisano_auto_complete("#{auto_complete_prefix}[treatment]", "treatment", treatment, "treatment", "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
+
       - core_element :treatment_date, treatment_fields, :horiz do
         = treatment_fields.label(:treatment_date, 'Date of Treatment')
         = treatment_fields.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
