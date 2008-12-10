@@ -50,25 +50,15 @@
 
         -# Autocomplete for test type.  Not using model_auto_completer because we don't need the ID.  Just saving the value.  
         -# Also, there's a bug in text_field_with_autocomplete, so doing it manually
-        %label{:class => "horiz"}
-          Test type
-          - tt_id = "test_type_#{rand_id}"
-          = image_tag 'redbox_spinner.gif', :id => "#{tt_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'
-          = text_field_tag("#{auto_complete_prefix}[test_type]", lab_result.test_type, :size => 20, :maxlength => 255, :style => "display: block", :id => tt_id )
-        %div{:id => "#{tt_id}_auto_complete", :class => "auto_complete"}
-        = auto_complete_field(tt_id, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :method => :get, :param_name => 'test_type', :indicator => "#{tt_id}_spinner" })
+
+        = trisano_auto_complete("#{auto_complete_prefix}[test_type]", "test_type", lab_result, "test_type", "Test type", {:size => 20, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :param_name => 'test_type' })
+
         %span{:class => "horiz"}
           = lab_result_fields.label(:test_detail, "Specify test detail")
           = lab_result_fields.text_field(:test_detail, :size => 20, :maxlenght => 255)
 
         -# Autocomplete for lab result 
-        %label{:class => "horiz"}
-          Lab result
-          - lr_id = "lab_result_#{rand_id}"
-          = image_tag 'redbox_spinner.gif', :id => "#{lr_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'
-          = text_field_tag("#{auto_complete_prefix}[lab_result_text]", lab_result.lab_result_text, :size => 20, :maxlength => 255, :style => "display: block", :class => 'required_if_others', :id => lr_id )
-        %div{:id => "#{lr_id}_auto_complete", :class => "auto_complete"}
-        = auto_complete_field(lr_id, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :method => :get, :param_name => 'lab_result', :indicator => "#{lr_id}_spinner" })
+        = trisano_auto_complete("#{auto_complete_prefix}[lab_result_text]", "lab_result", lab_result, "lab_result_text", "Lab result", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
 
         %span{:class => "horiz"}
           = lab_result_fields.label(:interpretation)
