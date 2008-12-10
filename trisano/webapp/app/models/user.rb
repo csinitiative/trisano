@@ -28,6 +28,12 @@ class User < ActiveRecord::Base
   validates_presence_of :uid, :user_name
   validates_uniqueness_of :uid, :user_name
   validates_length_of :uid, :maximum => 50
+  validates_length_of :given_name, :maximum => 127, :allow_blank => true
+  validates_length_of :first_name, :maximum => 32, :allow_blank => true
+  validates_length_of :last_name, :maximum => 64, :allow_blank => true
+  validates_length_of :initials, :maximum => 8, :allow_blank => true
+  validates_length_of :user_name, :maximum => 20, :allow_blank => true
+  validates_length_of :generational_qualifer, :maximum => 8, :allow_blank => true
   
   after_validation :clear_base_error
   

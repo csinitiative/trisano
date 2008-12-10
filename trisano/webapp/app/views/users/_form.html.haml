@@ -21,25 +21,25 @@
     %td
       %span{ :class => "horiz" }
         = f.label(:uid, "UID")
-        = f.text_field(:uid)
+        = f.text_field(:uid, :size => 25, :maxlength => 50)
       %span{ :class => "vert" }
         = f.label(:user_name)
-        = f.text_field(:user_name)
+        = f.text_field(:user_name, :size => 20, :maxlength => 20)
       %span{ :class => "horiz" }
         = f.label(:first_name)
-        = f.text_field(:first_name)
+        = f.text_field(:first_name, :size => 25, :maxlength => 32)
       %span{ :class => "vert" }
         = f.label(:last_name)
-        = f.text_field(:last_name)
+        = f.text_field(:last_name, :size => 25, :maxlength => 64)
       %span{ :class => "horiz" }
         = f.label(:given_name)
-        = f.text_field(:given_name)
+        = f.text_field(:given_name, :size => 25, :maxlength => 127)
       %span{ :class => "vert" }
         = f.label(:generational_qualifer)
-        = f.text_field(:generational_qualifer)
+        = f.text_field(:generational_qualifer, :size => 8, :maxlength => 8)
       %span{ :class => "vert" }
         = f.label(:initials)
-        = f.text_field(:initials)
+        = f.text_field(:initials, :size => 8, :maxlength => 8)
       %p
 
 %table.list
