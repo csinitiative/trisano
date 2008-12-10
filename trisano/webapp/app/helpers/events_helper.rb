@@ -194,7 +194,7 @@ module EventsHelper
     current_state = event.event_status
     return "" if ["CLOSED", "NEW"].include? current_state
 
-    priv_required = Event.get_required_privilege(Event.get_transition_states(current_state).last)
+    priv_required = Event.states[event.current_state.transitions.last].required_privilege
     allowed = User.current_user.is_entitled_to_in?(priv_required, event.primary_jurisdiction.entity_id)
                                                  
     controls = ""
@@ -202,7 +202,7 @@ module EventsHelper
     when "ASGD-LHD"
       if allowed
         controls += form_tag(state_cmr_path(event))
-        Event.get_action_phrases(Event.get_transition_states("ASGD-LHD")).each do | action |
+        Event.action_phrases_for(*event.current_state.transitions).each do | action |
           controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "#{'if(confirm("Are you sure?")) ' if action.state=='RJCTD-LHD'}this.form.submit();") + action.phrase
         end
         controls += "</form>"
@@ -212,7 +212,7 @@ module EventsHelper
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
         investigators = User.investigators_for_jurisdiction(event.jurisdiction.secondary_entity.place)
 
-        action = Event.get_action_phrases(Event.get_transition_states("ACPTD-LHD")).first
+        action = Event.action_phrases_for(*event.current_state.transitions).first
         controls += form_tag(state_cmr_path(event))
         controls += "<span>#{action.phrase}:&nbsp;</span>" 
         controls += hidden_field_tag("morbidity_event[event_status]", action.state)
@@ -227,14 +227,14 @@ module EventsHelper
     when "ASGD-INV"
       if allowed
         controls += form_tag(state_cmr_path(event))
-        Event.get_action_phrases(Event.get_transition_states("ASGD-INV")).each do | action |
+        Event.action_phrases_for(*event.current_state.transitions).each do | action |
           controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
       end
     when "UI", "RO-MGR"
       if allowed
-        action = Event.get_action_phrases(Event.get_transition_states("UI")).first
+        action = Event.action_phrases_for(*event.current_state.transitions).first
         controls += form_tag(state_cmr_path(event))
         controls += hidden_field_tag("morbidity_event[event_status]", action.state)
         controls += submit_tag(action.phrase, :id => "investigation_complete_btn")
@@ -242,9 +242,9 @@ module EventsHelper
       end
     when "IC", "RO-STATE"
       if allowed
-        action = Event.get_action_phrases(Event.get_transition_states("IC")).first
+        action = Event.action_phrases_for(*event.current_state.transitions).first
         controls += form_tag(state_cmr_path(event))
-        Event.get_action_phrases(Event.get_transition_states("IC")).each do | action |
+        Event.action_phrases_for(*event.current_state.transitions).each do |action|
           controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"
@@ -252,7 +252,7 @@ module EventsHelper
     when "APP-LHD"
       if allowed
         controls += form_tag(state_cmr_path(event))
-        Event.get_action_phrases(Event.get_transition_states("APP-LHD")).each do | action |
+        Event.action_phrases_for(*event.current_state.transitions).each do |action|
           controls += radio_button_tag("morbidity_event[event_status]", action.state, false, :onclick => "this.form.submit()") + action.phrase
         end
         controls += "</form>"

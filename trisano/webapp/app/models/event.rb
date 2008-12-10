@@ -112,139 +112,126 @@ class Event < ActiveRecord::Base
   validates_length_of :other_data_1, :maximum => 255, :allow_blank => true
   validates_length_of :other_data_2, :maximum => 255, :allow_blank => true
   validates_length_of :outbreak_name, :maximum => 255, :allow_blank => true
-  ### Debt:  Event Status stuff should be made into its own object and associated with event
 
-  @@states = {}
-  @@states['NEW']       = { 
+  def self.states
+    @@states ||= {}
+  end
+
+  states['NEW'] = Routing::State.new({ 
     :transitions => ["ASGD-LHD"],
     :action_phrase => nil,
     :priv_required => :create_event,
     :description => "New",
     :state_code => "NEW"
-  }
-  @@states['ASGD-LHD']  = {
+  })
+  states['ASGD-LHD'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"],
     :action_phrase => nil,
     :priv_required => :route_event_to_any_lhd,
     :description => "Assigned to Local Health Dept.",
     :state_code => "ASGD-LHD"
-  }
-  @@states['ACPTD-LHD'] = {
+  })
+  states['ACPTD-LHD'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
     :action_phrase => "Accept",
     :priv_required => :accept_event_for_lhd,
     :description => "Accepted by Local Health Dept.",
     :state_code => "ACPTD-LHD"
-  }
-  @@states['RJCTD-LHD'] = {
+  })
+  states['RJCTD-LHD'] = Routing::State.new({
     :transitions => ["ASGD-LHD"],
     :action_phrase => "Reject",
     :priv_required => :accept_event_for_lhd,
     :description => "Rejected by Local Health Dept.",
     :state_code => "RJCTD-LHD"
-  }
-  @@states['ASGD-INV']  = {
+  })
+  states['ASGD-INV'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],
     :action_phrase => "Route locally to",
     :priv_required => :route_event_to_investigator,
     :description => "Assigned to Investigator",
     :state_code => "ASGD-INV"
-  }
-  @@states['UI']        = {
+  })
+  states['UI'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "IC"],
     :action_phrase => "Accept",
     :priv_required => :accept_event_for_investigation,
     :description => "Under Investigation",
     :state_code => "UI"
-  }
-  @@states['RJCTD-INV'] = {
+  })
+  states['RJCTD-INV'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
     :action_phrase => "Reject",
     :priv_required => :accept_event_for_investigation,
     :description => "Rejected by Investigator",
     :state_code => "RJCTD-INV"
-  }
-  @@states['IC']        = {
+  })
+  states['IC'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
     :action_phrase => "Mark Investigation Complete",
     :priv_required => :investigate_event ,
     :description => "Investigation Complete",
     :state_code => "IC"
-  }
-  @@states['APP-LHD']   = {
+  })
+  states['APP-LHD'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],
     :action_phrase => "Approve",
     :priv_required => :approve_event_at_lhd ,
     :description => "Approved by LHD",
     :state_code => "APP-LHD"
-  }
-  @@states['RO-MGR']    = {
+  })
+  states['RO-MGR'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "IC"],
     :action_phrase => "Reopen",
     :priv_required => :approve_event_at_lhd ,
     :description => "Reopened by Manager",
     :state_code => "RO-MGR"
-  }
-  @@states['CLOSED']    = {
+  })
+  states['CLOSED'] = Routing::State.new({
     :transitions => [],
     :action_phrase => "Approve",
     :priv_required => :approve_event_at_state ,
     :description => "Approved by State",
     :state_code => "CLOSED"
-  }
-  @@states['RO-STATE']  = {
+  })
+  states['RO-STATE']  = Routing::State.new({
     :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
     :action_phrase => "Reopen",
     :priv_required => :approve_event_at_state ,
     :description => "Reopened by State",
     :state_code => "RO-STATE"
-  }
+  })
 
   @@ordered_states = []
-  @@ordered_states << @@states['NEW']
-  @@ordered_states << @@states['ASGD-LHD']
-  @@ordered_states << @@states['ACPTD-LHD']
-  @@ordered_states << @@states['RJCTD-LHD']
-  @@ordered_states << @@states['ASGD-INV']
-  @@ordered_states << @@states['UI']
-  @@ordered_states << @@states['RJCTD-INV']
-  @@ordered_states << @@states['IC']
-  @@ordered_states << @@states['APP-LHD']
-  @@ordered_states << @@states['RO-MGR']
-  @@ordered_states << @@states['CLOSED']
-  @@ordered_states << @@states['RO-STATE']
+  @@ordered_states << states['NEW']
+  @@ordered_states << states['ASGD-LHD']
+  @@ordered_states << states['ACPTD-LHD']
+  @@ordered_states << states['RJCTD-LHD']
+  @@ordered_states << states['ASGD-INV']
+  @@ordered_states << states['UI']
+  @@ordered_states << states['RJCTD-INV']
+  @@ordered_states << states['IC']
+  @@ordered_states << states['APP-LHD']
+  @@ordered_states << states['RO-MGR']
+  @@ordered_states << states['CLOSED']
+  @@ordered_states << states['RO-STATE']
 
   class << self
 
-    def get_action_phrases(state_names)
-      state_names.to_a
-      actions = []
-      state_names.each do |state_name|
-        unless @@states[state_name][:action_phrase].nil?
-          actions << OpenStruct.new( :phrase => @@states[state_name][:action_phrase], :state => state_name )
+    def action_phrases_for(*state_names)
+      state_names.collect do |state_name|
+        if states[state_name].action_phrase
+          OpenStruct.new(:phrase => states[state_name].action_phrase, :state => state_name)
         end
-      end
-      actions
-    end
-
-    def get_transition_states(state_name)
-      @@states[state_name][:transitions]
-    end
-
-    def get_required_privilege(state_name)
-      @@states[state_name][:priv_required]
+      end.compact
     end
 
     def get_state_keys
-      @@states.keys
+      Event.states.keys
     end
 
     def get_states_and_descriptions
-      @@ordered_states.map { |state| OpenStruct.new( :state => state[:state_code], :description => state[:description]) }
-    end
-
-    def get_state_description(state_name)
-      @@states[state_name][:description]
+      @@ordered_states.map { |state| OpenStruct.new( :state => state.state_code, :description => state.description) }
     end
 
     def participation_code(description)
@@ -318,12 +305,12 @@ class Event < ActiveRecord::Base
       
   end
 
-  def legal_state_transition?(proposed_state)
-    @@states[self.event_status][:transitions].include?(proposed_state) ? true : false
-  end
-
   def under_investigation?
     ['UI', 'IC', 'RO-MGR'].include?(self.event_status)
+  end
+
+  def current_state
+    Event.states[self.event_status]
   end
 
   # returns only the references for forms that should be rendered on

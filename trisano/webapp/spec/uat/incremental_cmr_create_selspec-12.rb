@@ -20,7 +20,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-  # $dont_kill_browser = true
+#  $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)

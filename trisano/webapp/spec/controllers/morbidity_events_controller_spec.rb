@@ -303,8 +303,6 @@ describe MorbidityEventsController do
 
   describe "handling STATE actions /events/1/state" do
     before(:each) do
-      Event.stub!(:get_required_privilege).and_return(:a_privilege)
-
       mock_user
       @user.stub!(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
@@ -318,6 +316,9 @@ describe MorbidityEventsController do
       @event.stub!(:legal_state_transition?).and_return(true)
       @event.stub!(:event_status=).and_return("NEW")
       @event.stub!(:attributes=).and_return(1)
+      @event.stub!(:current_state).and_return(Event.states['ACPTD-LHD'])
+      @event.stub!(:investigator_id=).and_return(@user.id)
+      @event.stub!(:investigation_started_date=)
       MorbidityEvent.stub!(:find).and_return(@event)
       ExternalCode.stub!(:event_code_str).and_return("A_PRIV")
     end
@@ -326,7 +327,7 @@ describe MorbidityEventsController do
       def do_change_state
         request.env['HTTP_REFERER'] = "/some_path"
         @event.should_receive(:save).and_return(true)
-        post :state, :id => "1", :morbidity_event => {}
+        post :state, :id => "1", :morbidity_event => {:event_status => 'UI'}
       end
 
       it "should find the event requested" do
@@ -343,7 +344,6 @@ describe MorbidityEventsController do
     describe "with bad state argument" do
       def do_change_state
         request.env['HTTP_REFERER'] = "/some_path"
-        Event.should_receive(:get_required_privilege).and_return(nil)
         post :state, :id => "1", :morbidity_event => {}
       end
 
@@ -355,8 +355,13 @@ describe MorbidityEventsController do
 
     describe "with insufficent privileges" do
       def do_change_state
+        states = mock(Hash)
+        @state = mock(Routing::State)
+        @state.should_receive(:required_privilege).and_return(:a_privilege)
+        Event.should_receive(:states).twice.and_return(states)
+        states.should_receive(:[]).twice.with('a_status').and_return (@state)        
         @user.should_receive(:is_entitled_to_in?).with(:a_privilege, 1).and_return(false)
-        post :state, :id => "1", :morbidity_event => {}
+        post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
       end
 
       it "should respond with a 403" do
@@ -367,8 +372,19 @@ describe MorbidityEventsController do
 
     describe "with a failed state change" do
       def do_change_state
+        states = mock(Hash)
+        @state = mock(Routing::State)
+        @state.should_receive(:required_privilege).and_return(:a_privilege)        
+        Event.should_receive(:states).twice.and_return(states)
+        states.should_receive(:[]).twice.with('a_status').and_return (@state)        
+        
+        @user.should_receive(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
+        @current_state = mock(Routing::State)
+        @current_state.should_receive(:allows_transition_to?).with('a_status').and_return(true)
+        @event.should_receive(:current_state).and_return(@current_state)
+        @event.should_receive(:event_status=).with('a_status')
         @event.should_receive(:save).and_return(false)
-        post :state, :id => "1", :morbidity_event => {}
+        post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
       end
 
       it "should redirect to the event index page" do

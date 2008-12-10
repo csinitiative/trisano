@@ -108,6 +108,10 @@ module TrisanoHelper
   def get_nil_cmr()
     
   end
+
+  def current_user(browser = @browser)
+    browser.get_selected_label("user_id")
+  end
   
   #Use click_core_tab to change tabs in CMR views
   def click_core_tab(browser, tab_name)

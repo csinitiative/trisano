@@ -1192,21 +1192,22 @@ describe MorbidityEvent do
 
 
   describe "The get_required_priv() class method" do
+
     it "should return :accept_event_for_lhd when the state is ACPTD-LHD or RJCT-LHD" do
-      Event.get_required_privilege("ACPTD-LHD").should == :accept_event_for_lhd
-      Event.get_required_privilege("RJCTD-LHD").should == :accept_event_for_lhd
+      Event.states['ACPTD-LHD'].required_privilege.should == :accept_event_for_lhd
+      Event.states['RJCTD-LHD'].required_privilege.should == :accept_event_for_lhd
     end
   end
 
-  describe "The get_transition_states() class method" do
+  describe "The state#transitions method" do
     it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
-      Event.get_transition_states("RO-MGR").should == ["ASGD-LHD", "IC"]
+      Event.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC"]
     end
   end
 
-  describe "The get_action_phrases() class method" do
+  describe "The action_phrases_for() class method" do
     it "should return an array of structs containing the right phrases and states" do
-      s = Event.get_action_phrases(['RO-STATE', 'APP-LHD'])
+      s = Event.action_phrases_for('RO-STATE', 'APP-LHD')
       s.first.phrase.should == "Reopen"
       s.first.state.should == "RO-STATE"
       s.last.phrase.should == "Approve"
@@ -1214,7 +1215,16 @@ describe MorbidityEvent do
     end
   end
 
-  describe "The legal_state_transition? instance method" do
+  describe "state description" do
+    before(:each) { @event = Event.new(:event_status => "ACPTD-LHD") }
+
+    it "should come from the state#description method" do
+      @event.current_state.description.should == "Accepted by Local Health Dept."
+    end
+
+  end
+
+  describe "The state#allow_transitions_to? method" do
 
     before(:each) do
       @event = Event.new
@@ -1222,22 +1232,22 @@ describe MorbidityEvent do
 
     it "should return true when transitioning from ACPTD-LHD to ASGD-INV" do
       @event.event_status = "ACPTD-LHD"
-      @event.legal_state_transition?("ASGD-INV").should be_true
+      @event.current_state.allows_transition_to?("ASGD-INV").should be_true
     end
 
     it "should return true when transitioning from ACPTD-LHD to UI" do
       @event.event_status = "ACPTD-LHD"
-      @event.legal_state_transition?("UI").should be_true
+      @event.current_state.allows_transition_to?("UI").should be_true
     end
 
     it "should return false when transitioning from RJCTD-LHD to UI" do
       @event.event_status = 'RJCTD-LHD'
-      @event.legal_state_transition?("UI").should be_false
+      @event.current_state.allows_transition_to?("UI").should be_false
     end
 
     it 'should return true when transitioning form RJCTD-INV to UI' do
       @event.event_status = 'RJCTD-INV'
-      @event.legal_state_transition?("UI").should be_true
+      @event.current_state.allows_transition_to?("UI").should be_true
     end
 
   end

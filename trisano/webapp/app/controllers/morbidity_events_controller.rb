@@ -203,7 +203,7 @@ class MorbidityEventsController < EventsController
     investigator_id = params[:morbidity_event].delete(:investigator_id)    
 
     # Determine what privileges are required to change to the passed in state
-    priv_required = Event.get_required_privilege(event_status)
+    priv_required = Event.states[event_status].required_privilege if Event.states[event_status]
 
     # If nothing came back, then the passed in state was malformed
     if priv_required.nil?
@@ -216,7 +216,7 @@ class MorbidityEventsController < EventsController
     end
     
     # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
-    unless @event.legal_state_transition?(event_status)
+    unless @event.current_state.allows_transition_to?(event_status)
       render :text => "Illegal State Transition", :status => 409 and return
     end
 

@@ -53,7 +53,7 @@
         = h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
       - core_element_show :event_status, event_form, :horiz do
         = event_form.label :event_status, 'Event status'
-        = Event.get_state_description(@event.event_status)
+        =h(@event.current_state.description)
       - core_element_show :investigation_started_date, event_form, :horiz do
         = event_form.label :investigation_started_date, 'Date investigation started'
         = h(@event.investigation_started_date)

@@ -24,7 +24,7 @@
         = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
         %br
   %td
-    %b= Event.get_state_description(event.event_status)
+    %b= event.current_state.description
     - unless event.event_queue_id.nil?
       %div{:id => 'queue_info'}
         %small
