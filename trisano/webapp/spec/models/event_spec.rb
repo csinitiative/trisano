@@ -1237,7 +1237,7 @@ describe MorbidityEvent do
 
     it "should return true when transitioning from ACPTD-LHD to UI" do
       @event.event_status = "ACPTD-LHD"
-      @event.current_state.allows_transition_to?("UI").should be_true
+      @event.current_state.allows_transition_to?("UI").should be_false
     end
 
     it "should return false when transitioning from RJCTD-LHD to UI" do
@@ -1247,7 +1247,7 @@ describe MorbidityEvent do
 
     it 'should return true when transitioning form RJCTD-INV to UI' do
       @event.event_status = 'RJCTD-INV'
-      @event.current_state.allows_transition_to?("UI").should be_true
+      @event.current_state.allows_transition_to?("UI").should be_false
     end
 
   end

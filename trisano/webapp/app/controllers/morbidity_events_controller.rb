@@ -200,8 +200,7 @@ class MorbidityEventsController < EventsController
   def state
     @event = MorbidityEvent.find(params[:id])
     event_status = params[:morbidity_event].delete(:event_status)
-    investigator_id = params[:morbidity_event].delete(:investigator_id)    
-
+    
     # Determine what privileges are required to change to the passed in state
     priv_required = Event.states[event_status].required_privilege if Event.states[event_status]
 
@@ -211,6 +210,7 @@ class MorbidityEventsController < EventsController
     end
 
     # Check if the user is allowed to change the event to the passed in state
+    p User.current_user
     unless User.current_user.is_entitled_to_in?(priv_required, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403 and return
     end
@@ -219,7 +219,7 @@ class MorbidityEventsController < EventsController
     unless @event.current_state.allows_transition_to?(event_status)
       render :text => "Illegal State Transition", :status => 409 and return
     end
-
+    
     # event_status is protected from mass update, set individually
     @event.event_status = event_status
 
@@ -231,7 +231,7 @@ class MorbidityEventsController < EventsController
     when "RJCTD-LHD"
       @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
     when "UI"
-      @event.investigator_id = investigator_id || User.current_user.id
+      @event.investigator_id = User.current_user.id
       @event.investigation_started_date = Date.today
     when "IC"
       @event.investigation_completed_LHD_date = Date.today

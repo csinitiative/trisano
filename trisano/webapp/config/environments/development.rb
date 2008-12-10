@@ -18,7 +18,8 @@ config.action_view.cache_template_extensions         = false
 config.action_mailer.raise_delivery_errors = false
 
 # Reload the csv module
-Dependencies.explicitly_unloadable_constants = 'Export::Csv'
+Dependencies.explicitly_unloadable_constants << 'Export::Csv'
+Dependencies.explicitly_unloadable_constants << 'Routing::State'
 
 require 'logging'
 

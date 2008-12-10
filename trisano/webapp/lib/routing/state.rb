@@ -14,11 +14,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-require 'ostruct'
 
 module Routing
 
   class State
+
+    class << self       
+      def states
+        @@states ||= {}
+      end
+    end
     
     def initialize(options = {})
       @options = options
@@ -37,7 +42,7 @@ module Routing
     end
 
     def transitions
-      @options[:transitions]
+      @options[:transitions] ||= []
     end
 
     def state_code
@@ -47,6 +52,18 @@ module Routing
     def description
       @options[:description]
     end
+
+    # returns transitions for this state if they have action
+    # phrases. The block gives caller a chance to reject any of these
+    # states (based on privileges and what not).
+    def renderable_transitions(&block)
+      transitions.collect do |transition|
+        transition_state = Routing::State.states[transition]
+        if transition_state.action_phrase
+          transition_state unless block_given? && !yield(transition_state)
+        end
+      end.compact
+    end      
 
   end
 

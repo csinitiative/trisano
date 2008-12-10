@@ -114,7 +114,7 @@ class Event < ActiveRecord::Base
   validates_length_of :outbreak_name, :maximum => 255, :allow_blank => true
 
   def self.states
-    @@states ||= {}
+    Routing::State.states
   end
 
   states['NEW'] = Routing::State.new({ 
@@ -132,7 +132,7 @@ class Event < ActiveRecord::Base
     :state_code => "ASGD-LHD"
   })
   states['ACPTD-LHD'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
+    :transitions => ["ASGD-LHD", "ASGD-INV"],
     :action_phrase => "Accept",
     :priv_required => :accept_event_for_lhd,
     :description => "Accepted by Local Health Dept.",
@@ -160,7 +160,7 @@ class Event < ActiveRecord::Base
     :state_code => "UI"
   })
   states['RJCTD-INV'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "ASGD-INV", "UI"],
+    :transitions => ["ASGD-LHD", "ASGD-INV"],
     :action_phrase => "Reject",
     :priv_required => :accept_event_for_investigation,
     :description => "Rejected by Investigator",
