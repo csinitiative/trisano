@@ -210,7 +210,6 @@ class MorbidityEventsController < EventsController
     end
 
     # Check if the user is allowed to change the event to the passed in state
-    p User.current_user
     unless User.current_user.is_entitled_to_in?(priv_required, @event.active_jurisdiction.secondary_entity_id)
       render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403 and return
     end
