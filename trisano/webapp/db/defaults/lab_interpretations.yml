@@ -1,0 +1,25 @@
+- code_name: "lab_interpretation"
+  the_code:  "POSITIVE"
+  code_description: "Positive, Confirmed, Detected, Definitive"
+  sort_order: 10
+
+- code_name: "lab_interpretation"
+  the_code:  "NEGATIVE"
+  code_description: "Negative, Not detected"
+  sort_order: 20
+
+- code_name: "lab_interpretation"
+  the_code:  "INCONCLUSIVE"
+  code_description: "Indeterminate, Equivocal, Inconclusive"
+  sort_order: 30
+
+- code_name: "lab_interpretation"
+  the_code:  "PROBABLE"
+  code_description: "Pending, Preliminary, Presumptive, Probable"
+  sort_order: 40
+
+- code_name: "lab_interpretation"
+  the_code:  "OTHER"
+  code_description: "Other"
+  sort_order: 50
+
