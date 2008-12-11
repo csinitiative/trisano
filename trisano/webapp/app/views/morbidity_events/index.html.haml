@@ -54,9 +54,15 @@
 #rot
   %table.list
     %tr
+      - query_params = request.query_parameters
+      - query_params.delete('commit')
       %th.forminformation
-        Patient Name
-      %th Disease
-      %th Jurisdiction
-      %th Status
+        = link_to("Patient Name", cmrs_path(query_params.merge(:sort_order => 'patient')))
+      %th
+        = link_to("Disease", cmrs_path(query_params.merge(:sort_order => 'disease')))
+      %th
+        = link_to("Jurisdiction", cmrs_path(query_params.merge(:sort_order => 'jurisdiction')))
+      %th
+        = link_to("Status", cmrs_path(query_params.merge(:sort_order => 'status')))
+
       = render :partial => 'morbidity_events/event', :collection => @events

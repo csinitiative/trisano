@@ -1622,6 +1622,45 @@ describe MorbidityEvent do
       MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 1
     end
 
+    it "should sort appropriately" do
+      @user.stub!(:jurisdiction_ids_for_privilege).and_return([places(:Southeastern_District).entity_id, 
+                                                               places(:Davis_County).entity_id, 
+                                                               places(:Summit_County).entity_id])
+
+      @event_hash['event_status'] = 'NEW'
+      @event_hash['disease'] = {'disease_id' => diseases(:chicken_pox).id }
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['disease'] = {'disease_id' => diseases(:anthrax).id }
+      @event_hash.merge!("active_patient" => { "person" => { "last_name"=>"Zulu" } } )
+      @event_hash.merge!("active_jurisdiction" => {"secondary_entity_id" => places(:Davis_County).entity_id})
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'UI'
+      @event_hash['disease'] = {'disease_id' => 1 }
+      @event_hash['disease'] = {'disease_id' => diseases(:tuberculosis).id }
+      @event_hash.merge!("active_patient" => { "person" => { "last_name"=>"Lima" } } )
+      @event_hash.merge!("active_jurisdiction" => {"secondary_entity_id" => places(:Summit_County).entity_id})
+      MorbidityEvent.create(@event_hash)
+
+      events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'patient')
+      last_names = events.collect { |event| event.patient.primary_entity.person_temp.last_name }
+      last_names.should == last_names.sort
+
+      events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'jurisdiction')
+      jurisdictions = events.collect { |event| event.jurisdiction.secondary_entity.place_temp.name }
+      jurisdictions.should == jurisdictions.sort
+
+      events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'disease')
+      diseases = events.collect { |event| event.disease_event.disease.disease_name if event.disease_event }
+      jurisdictions.should == jurisdictions.sort
+
+      events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'status')
+      states = events.collect { |event| event.event_status }
+      states.should == states.sort
+    end
+
     it 'should set the query string on the user if the view change is to be the default' do
       @event_hash['event_queue_id'] = 1
       MorbidityEvent.create(@event_hash)

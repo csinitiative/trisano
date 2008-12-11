@@ -38,6 +38,7 @@ class MorbidityEventsController < EventsController
         :states => params[:states],
         :queues => params[:queues],
         :diseases => params[:diseases],
+        :order_by => params[:sort_order],
         :set_as_default_view => params[:set_as_default_view]
       )
     rescue

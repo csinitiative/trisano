@@ -24,6 +24,17 @@ class MakeLabInterpretationADropdown < ActiveRecord::Migration
     remove_column   :lab_results, :interpretation
     add_column      :lab_results, :interpretation_id, :integer
     add_foreign_key :lab_results, :interpretation_id, :external_codes
+
+    if RAILS_ENV == "production"
+      interpretations = YAML::load_file "#{RAILS_ROOT}/db/defaults/lab_interpretations.yml"
+      interpretations.each do |interpretation|
+        ExternalCode.create(:code_name => test_type['code_name'], 
+                            :the_code => test_type['the_code'], 
+                            :code_description => test_type['code_description'], 
+                            :sort_order => test_type['sort_order'], 
+                            :live => true)
+      end
+    end
   end
 
   def self.down

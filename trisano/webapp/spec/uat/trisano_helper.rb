@@ -253,7 +253,7 @@ module TrisanoHelper
     type_field_by_order(@browser, "model_auto_completer_tf", 0, result_attributes[:lab_name])
     type_field_by_order(@browser, "test_type", 0, result_attributes[:lab_test_type])
     type_field_by_order(@browser, "lab_result", 0, result_attributes[:lab_result_text])
-    @browser.type("morbidity_event_new_lab_attributes__interpretation", result_attributes[:lab_interpretation])
+    @browser.select("morbidity_event_new_lab_attributes__interpretation_id", result_attributes[:lab_interpretation])
     @browser.select("morbidity_event_new_lab_attributes__specimen_source_id", result_attributes[:lab_specimen_source])
     @browser.type("morbidity_event_new_lab_attributes__collection_date", result_attributes[:lab_collection_date])
     @browser.type("morbidity_event_new_lab_attributes__lab_test_date", result_attributes[:lab_test_date])

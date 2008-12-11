@@ -243,7 +243,7 @@ class MorbidityEvent < HumanEvent
   
   def self.find_all_for_filtered_view(options = {})
     
-    conditions = ["participations.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
+    conditions = ["jurisdictions.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
     conjunction = "AND"
     query_string = ""
 
@@ -277,16 +277,48 @@ class MorbidityEvent < HumanEvent
       end
     end
 
+    order_by = case options[:order_by]
+    when 'patient'
+      "people.last_name, people.first_name, diseases.disease_name, places.name, events.event_status"
+    when 'disease'
+      "diseases.disease_name, people.last_name, people.first_name, places.name, events.event_status"
+    when 'jurisdiction'
+      "places.name, people.last_name, people.first_name, diseases.disease_name, events.event_status"
+    when 'status'
+      # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
+      "events.event_status, people.last_name, people.first_name, diseases.disease_name, places.name"
+    else
+      "events.updated_at DESC"
+    end
+
+    # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
+    conditions[0] += " AND jurisdictions.role_id = ? AND patients.role_id = ?"
+    conditions << primary_jurisdiction_code_id
+    conditions << Code.interested_party_id
+    
+    # Similar to above comment, we now need to explicitly spell out the joins.  By the way, we're doing this join just so we can sort by different fields
+    joins = "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id
+             LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id
+             LEFT JOIN places ON places.entity_id = place_entities.id
+
+             LEFT JOIN participations patients ON patients.event_id = events.id
+             LEFT JOIN entities person_entities ON person_entities.id = patients.primary_entity_id
+             LEFT JOIN people ON people.entity_id = person_entities.id"
+
+    if options[:diseases]
+      joins << " LEFT JOIN disease_events ON disease_events.event_id = events.id"
+    else
+      joins << " LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id"
+    end
+    joins << " LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
+
     User.current_user.update_attribute('event_view_settings', query_string) if options[:set_as_default_view] == "1"
-    
+
     find_options = {
-      :include => :all_jurisdictions,
-      :select => "jurisdiction.secondary_entity_id",
+      :joins => joins,
       :conditions => conditions,
-      :order => "events.updated_at DESC"
+      :order => order_by
     }
-    
-    find_options[:joins] = "LEFT JOIN disease_events ON disease_events.event_id = events.id" unless options[:diseases].nil?
 
     MorbidityEvent.find(:all, find_options)
   rescue Exception => ex
