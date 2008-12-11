@@ -200,72 +200,40 @@ module EventsHelper
       User.current_user.is_entitled_to_in?(transition_state.required_privilege, j_id)
     end
 
-    controls = ""
-    case current_state
-    when "ASGD-LHD"
-      unless allowed_transitions.empty?
-        controls += form_tag(state_cmr_path(event))
-        allowed_transitions.each do |transition|
-          controls +=  radio_button_tag("morbidity_event[event_status]", 
-                                        transition.state_code, 
-                                        false, 
-                                        { :onclick => "#{'if(confirm("Are you sure?")) ' if transition.state_code=='RJCTD-LHD'} this.form.submit();" })
-          controls += transition.action_phrase 
-        end
-        controls += "</form>"
-      end
-    when "ACPTD-LHD", "RJCTD-INV"
-      unless allowed_transitions.empty?
+    controls = ""    
+    allowed_transitions.each do |transition|
+      case transition.state_code
+      when "ACPTD-LHD", "RJCTD-LHD", "UI", "RJCTD-INV", "APP-LHD", "RO-MGR", "CLOSED", "RO-STATE"
+        controls += radio_button_tag(transition.state_code,
+                                     transition.state_code, 
+                                     false, 
+                                     :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
+        controls += transition.action_phrase 
+      when "ASGD-INV"
+        controls += "<br/>" unless controls.blank?
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        queue_transition = allowed_transitions.first
-        controls += form_tag(state_cmr_path(event))
-        controls += "<span>#{queue_transition.action_phrase}:&nbsp;</span><br/>" 
-        controls += hidden_field_tag("morbidity_event[event_status]", queue_transition.state_code)
-        controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id',:onchange => "this.form.submit()")
-        controls += "</form>"
-
+        controls += "<span>#{transition.action_phrase}:&nbsp;</span><br/>" 
+        controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code))
+        controls += "<br/>"
+        
         investigators = User.investigators_for_jurisdiction(event.jurisdiction.secondary_entity.place)
-        controls += form_tag(state_cmr_path(event))
         controls += "<span>Assign to investigator:&nbsp;</span><br/>"
-        controls += hidden_field_tag("morbidity_event[event_status]", queue_transition.state_code) 
-        controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => "this.form.submit()")
-        controls += "</form>"
-      end
-    when "ASGD-INV"
-      unless allowed_transitions.empty?
-        controls += form_tag(state_cmr_path(event))
-        allowed_transitions.each do |transition|
-          controls += radio_button_tag("morbidity_event[event_status]", transition.state_code, false, :onclick => "this.form.submit()") + transition.action_phrase
-        end
-        controls += "</form>"
-      end
-    when "UI", "RO-MGR"
-      unless allowed_transitions.empty?
-        controls += form_tag(state_cmr_path(event))
-        allowed_transitions.each do |transition|
-          controls += hidden_field_tag("morbidity_event[event_status]", transition.state_code)
-          controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn")
-        end
-        controls += "</form>"
-      end
-    when "IC", "RO-STATE"
-      unless allowed_transitions.empty?
-        controls += form_tag(state_cmr_path(event))
-        allowed_transitions.each do |transition|
-          controls += radio_button_tag("morbidity_event[event_status]", transition.state_code, false, :onclick => "this.form.submit()") + transition.action_phrase
-        end
-        controls += "</form>"
-      end
-    when "APP-LHD"
-      unless allowed_transitions.empty?
-        controls += form_tag(state_cmr_path(event))
-        allowed_transitions.each do |transition|
-          controls += radio_button_tag("morbidity_event[event_status]", transition.state_code, false, :onclick => "this.form.submit()") + transition.action_phrase
-        end
-        controls += "</form>"
+        controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code))
+      when "IC"
+        controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.state_code))
       end
     end
-    controls += "<span style='color: gray'>No action permitted.</span>" if controls.blank?
+  
+    if controls.blank?
+      controls += "<span style='color: gray'>No action permitted.</span>"
+    else
+      controls = %Q[
+        #{form_tag(state_cmr_path(event))}
+        #{hidden_field_tag("morbidity_event[event_status]", '')}
+        #{controls} 
+        </form>
+      ]
+    end
     controls
   end
 
@@ -302,6 +270,17 @@ module EventsHelper
       controls += "<span style='color: gray'>Routing disabled</span>"
     end
     controls
+  end
+
+  def state_routing_js(options = {})
+    value = "'#{options[:value]}'" if options[:value]
+    confirm = options[:confirm]
+    js = []
+    js << 'if(confirm("Are you sure?")) {' if confirm
+    js << "$('morbidity_event[event_status]').setValue(#{value || '$F(this)'});"
+    js << 'this.form.submit();'
+    js << '}' if confirm
+    js.join(' ')
   end
 
   def new_cmr_link(text)

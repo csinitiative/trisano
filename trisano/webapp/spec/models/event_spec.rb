@@ -1201,7 +1201,7 @@ describe MorbidityEvent do
 
   describe "The state#transitions method" do
     it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
-      Event.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC"]
+      Event.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC", "ASGD-INV"]
     end
   end
 

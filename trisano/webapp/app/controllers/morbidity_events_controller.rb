@@ -200,7 +200,7 @@ class MorbidityEventsController < EventsController
   def state
     @event = MorbidityEvent.find(params[:id])
     event_status = params[:morbidity_event].delete(:event_status)
-    
+
     # Determine what privileges are required to change to the passed in state
     priv_required = Event.states[event_status].required_privilege if Event.states[event_status]
 

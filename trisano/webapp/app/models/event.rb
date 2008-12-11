@@ -146,14 +146,14 @@ class Event < ActiveRecord::Base
     :state_code => "RJCTD-LHD"
   })
   states['ASGD-INV'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "UI", "RJCTD-INV"],
+    :transitions => ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"],
     :action_phrase => "Route locally to",
     :priv_required => :route_event_to_investigator,
     :description => "Assigned to Investigator",
     :state_code => "ASGD-INV"
   })
   states['UI'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "IC"],
+    :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
     :action_phrase => "Accept",
     :priv_required => :accept_event_for_investigation,
     :description => "Under Investigation",
@@ -167,7 +167,7 @@ class Event < ActiveRecord::Base
     :state_code => "RJCTD-INV"
   })
   states['IC'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
+    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
     :action_phrase => "Mark Investigation Complete",
     :priv_required => :investigate_event ,
     :description => "Investigation Complete",
@@ -181,7 +181,7 @@ class Event < ActiveRecord::Base
     :state_code => "APP-LHD"
   })
   states['RO-MGR'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "IC"],
+    :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
     :action_phrase => "Reopen",
     :priv_required => :approve_event_at_lhd ,
     :description => "Reopened by Manager",
@@ -195,7 +195,7 @@ class Event < ActiveRecord::Base
     :state_code => "CLOSED"
   })
   states['RO-STATE']  = Routing::State.new({
-    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR"],
+    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
     :action_phrase => "Reopen",
     :priv_required => :approve_event_at_state ,
     :description => "Reopened by State",
