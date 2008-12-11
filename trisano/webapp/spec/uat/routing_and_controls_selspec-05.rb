@@ -86,7 +86,7 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it "should set event to 'accepted' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status]")
+    @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
   end
@@ -103,7 +103,7 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it "should set event to 'under investigation' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status]")
+    @browser.click("UI")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Under Investigation").should be_true
     @browser.is_element_present("//table[@class='list']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
@@ -121,7 +121,7 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it "should set event to 'Approved by LHD' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status]")
+    @browser.click("APP-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Approved by LHD").should be_true
   end
@@ -132,7 +132,7 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it "should set event to 'Approved by State' when 'accept' is clicked" do
-    @browser.click("name=morbidity_event[event_status]")
+    @browser.click("CLOSED")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Approved by State").should be_true
   end
@@ -349,7 +349,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
 
-    @browser.click("name=morbidity_event[event_status]")
+    @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
     
