@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'copying forms' do
   
-  $dont_kill_browser = true
+  #$dont_kill_browser = true
 
   before :all do
     @form_name = get_unique_name(2) + " copy_form"

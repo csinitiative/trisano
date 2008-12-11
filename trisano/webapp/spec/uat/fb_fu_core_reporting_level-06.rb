@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder core event level core field configs for contacts' do
   
-  $dont_kill_browser = true
+  #$dont_kill_browser = true
 
   fields = [#{:name => 'Reporter first name', :label => 'morbidity_event_active_reporting_agency_first_name', :entry_type => 'type',:fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
     {:name => 'Reporter last name', :label => 'morbidity_event_active_reporting_agency_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
