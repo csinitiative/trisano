@@ -69,6 +69,50 @@ namespace :trisano do
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
     end    
 
+    def create_db_user 
+      puts "Creating TriSano user: #{@trisano_user}."
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
+      unless success
+        puts "Failed creating TriSano user: #{@trisano_user}" 
+        return success
+      end
+      return success
+    end
+
+    def create_db_permissions 
+      puts "Granting privileges to TriSano user: #{@trisano_user}."
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'GRANT ALL ON SCHEMA public TO #{@trisano_user}'")
+      unless success
+        puts "Granting of privileges to TriSano user: #{@trisano_user} failed. Could not install plpgsql language into database."
+        return success
+      end
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/load_grant_function.sql")
+      unless success
+        puts "Granting of privileges to TriSano user: #{@trisano_user} failed.  Could not create grant privileges function."
+        return success
+      end
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"SELECT pg_grant('#{@trisano_user}', 'all', '%', 'public')\"")
+      unless success
+        puts "Failed granting privileges to TriSano user: #{@trisano_user}."
+        return sucess
+      end
+    end
+
+    def create_db 
+      puts "Creating TriSano database ..."
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c \"CREATE DATABASE #{@database} ENCODING='UTF8'\"")
+      unless success
+        puts "Failed creating database structure for TriSano."
+        return success
+      end
+      puts "Creating TriSano database structure ..."
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/trisano_schema.sql")
+      unless success
+        puts "Failed creating database structure for TriSano."
+        return sucess
+      end
+    end
+
     desc "Sets the database.yml to use the priveledged user info"
     task :set_priv_database_yml do
       initialize_config
@@ -78,75 +122,30 @@ namespace :trisano do
     desc "Create the database, the user, and apply security permissions"
     task :create_db_dbuser_permissions => [:create_db, :create_db_user, :create_db_permissions] do
       initialize_config
-    end
-
-    desc "Create the database"
-    task :create_db do
-      puts "Creating TriSano database ..."
-      initialize_config
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c \"CREATE DATABASE #{@database} ENCODING='UTF8'\"")
-
-      unless success
-        puts "Failed creating database structure for TriSano."
-        return success
-      end
-      puts "Creating TriSano database structure ..."
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/trisano_schema.sql")
-      unless success
-        puts "Failed creating database structure for TriSano."
-        return sucess
-      end
-    end
-
-    desc "Create database user"
-    task :create_db_user do
-      puts "Creating TriSano user."
-      initialize_config
-      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
-      unless success
-        puts "Failed creating TriSano user." 
-        return sucess
-      end
-    end
-
-    desc "Create database permissions for database user"
-    task :create_db_permissions do
-      puts "Granting privileges to TriSano user."
-      initialize_config
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'GRANT ALL ON SCHEMA public TO #{@trisano_user}'")
-      unless success
-        puts "Granting of privileges to TriSano user failed. Could not install plpgsql language into database."
-        return success
-      end
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/load_grant_function.sql")
-      unless success
-        puts "Granting of privileges to TriSano user failed.  Could not create grant privileges function."
-        return success
-      end
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"SELECT pg_grant('#{@trisano_user}', 'all', '%', 'public')\"")
-      unless success
-        puts "Failed granting privileges to TriSano user."
-        return sucess
-      end
+      create_db
+      create_db_user
+      create_db_permissions
     end
 
     desc "Drop the database"
     task :drop_db do
       initialize_config
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'drop database #{@database}'")
-      unless success
-        puts "Failed dropping database: #{database}"
-        return sucess
+      
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'drop database #{@database}'") do |ok, res|
+        if ! ok
+          puts "Failed dropping database: #{@database} with error #{res.exitstatus}"
+        end
       end
     end
 
     desc "Drop the database user"
     task :drop_db_user do
       initialize_config
-      success = sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'drop user #{@trisano_user}'")
-      unless success
-        puts "Failed dropping database user: #{@trisano_user}"
-        return sucess
+
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'drop user #{@trisano_user}'") do |ok, res|
+        if ! ok
+          puts "Failed dropping database user: #{@trisano_user} with error #{res.exitstatus}"
+        end
       end
     end
     
@@ -164,18 +163,33 @@ namespace :trisano do
       end            
       t = Time.now
       filename = "#{@database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
-      sh "#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c > #{dirname}/#{filename}"
+      sh "#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -c > #{dirname}/#{filename}"
     end
 
-    desc "Import the database from configured backup file"
+    desc "Import the database from configured backup file, create user (if needed), and set permissions"
     task :restore_db do
       initialize_config
       if @dump_file.nil?
         raise "attribute dump_file_name is not specified in config.yml - please add it and try again."
       end
       dirname = './dump'
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}")
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'") do |ok, res|
+        if ! ok
+          puts "Failed creating database: #{@database} with error #{res.exitstatus}"
+        end
+      end
+
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}") do |ok, res|
+        if ! ok
+          puts "Failed importing dumpfile: #{@dump_file} into database #{@database} with error #{res.exitstatus}"
+        end
+      end
+
+      if ! create_db_user
+       puts "assuming already exists and continuing ..."
+      end
+
+      create_db_permissions
     end
     
     desc "Package the application with the settings from config.yml"
@@ -194,10 +208,13 @@ namespace :trisano do
       replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
       cd '../webapp/'
       ruby "-S rake db:migrate RAILS_ENV=production"
+      # reset permissions ?
+      # create_db_permissions
     end
 
     desc "Set new db permissions"
     task :set_new_db_permissions do      
+      #TODO hope to get rid of this & just reset every time via create_db_permissions ?
       initialize_config 
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_forms to #{@trisano_user}'")
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues to #{@trisano_user}'")
