@@ -358,5 +358,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Investigator:  #{@uname}").should be_true
+    
+    @browser.is_text_present("Route locally to").should be_true
+    @browser.is_text_present("Assigned to Investigator").should be_true
   end
 end
