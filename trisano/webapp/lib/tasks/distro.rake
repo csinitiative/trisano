@@ -120,7 +120,7 @@ namespace :trisano do
     end
     
     desc "Create the database, the user, and apply security permissions"
-    task :create_db_dbuser_permissions => [:create_db, :create_db_user, :create_db_permissions] do
+    task :create_db_dbuser_permissions  do
       initialize_config
       create_db
       create_db_user
