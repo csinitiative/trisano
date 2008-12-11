@@ -208,21 +208,9 @@ namespace :trisano do
       replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
       cd '../webapp/'
       ruby "-S rake db:migrate RAILS_ENV=production"
-      # reset permissions ?
-      # create_db_permissions
-    end
-
-    desc "Set new db permissions"
-    task :set_new_db_permissions do      
-      #TODO hope to get rid of this & just reset every time via create_db_permissions ?
-      initialize_config 
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_forms to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table event_queues_id_seq to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table diseases_export_columns to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table core_fields to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table notes to #{@trisano_user}'")
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'grant all privileges on table export_disease_groups to #{@trisano_user}'")
+      puts "resetting db permissions"
+      cd '../distro/'
+      create_db_permissions
     end
   end
 

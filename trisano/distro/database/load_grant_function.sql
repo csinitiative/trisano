@@ -1,4 +1,4 @@
-CREATE LANGUAGE plpgsql;
+--CREATE LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION pg_grant(usr text, prv text, ptrn text, nsp text)
 RETURNS integer
