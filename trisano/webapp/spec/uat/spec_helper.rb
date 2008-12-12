@@ -37,7 +37,7 @@ Spec::Runner.configure do |config|
   trisano_url = trisano_url.sub("//", "//utah:arches@")
   
   config.before(:all) do
-    @browser = Selenium::SeleniumDriver.new($rc_server, $rc_port, "*custom /opt/firefox/firefox-bin -profile /home/schonstal/.mozilla/firefox/v7pnrw1t.Selenium",trisano_url, 10000)
+    @browser = Selenium::SeleniumDriver.new($rc_server, $rc_port, "*firefox",trisano_url, 10000)
 
     # Debt: Need to get this all dialed in properly. Use the following browser for testing downloads.
     #
