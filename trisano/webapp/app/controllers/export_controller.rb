@@ -24,6 +24,7 @@ class ExportController < ApplicationController
     @events.flatten!
     CdcExport.reset_sent_status(@events)
     respond_to do |format|
+      headers['Content-Disposition'] = "Attachment; filename=\"cdc.dat\""
       format.dat
     end
   end
