@@ -32,50 +32,47 @@ describe "Form Builder Investigator Single Form" do
   end
   
   it "should add a section to the forms tab" do
-    @browser.click "link=Add section to tab"
-    #wait_for_element_present("new-section-form")
-    sleep 3 #waiting for section text box to load
-    @browser.type "section_element_name", "Section 1"
-    @browser.click "section_element_submit"
-    wait_for_element_not_present("new-section-form")
-    @browser.is_text_present("Section 1").should be_true
+    add_section_to_view(@browser, "Default View", {:section_name => "Section 1"}).should_not be_false
   end
   
   it "should add a single-line text question to the section" do
     @browser.click "link=Add question to section"
     #wait_for_element_present("new-question-form")
     sleep 3 
-    @browser.type "question_element_question_attributes_question_text", "Single-line text"
+    @browser.type "question_element_question_attributes_question_text", "My First Question"
     @browser.select "question_element_question_attributes_data_type", "label=Single line text"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Single-line text").should be_true
+    @browser.is_text_present("My First Question").should be_true
+    @browser.is_text_present("Single line text").should be_true
   end
   
   it "should add a multi-line text question to the section" do  
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
-    @browser.type "question_element_question_attributes_question_text", "Multi-line text"
+    @browser.type "question_element_question_attributes_question_text", "My Second Question"
     @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Multi-line text").should be_true
+    @browser.is_text_present("My Second Question").should be_true
+    @browser.is_text_present("Multi line text").should be_true
   end
   
   it "should add a drop down question to the section" do  
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
-    @browser.type "question_element_question_attributes_question_text", "Drop Down"
+    @browser.type "question_element_question_attributes_question_text", "Q3"
     @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Drop Down").should be_true
+    @browser.is_text_present("Q3").should be_true
+    @browser.is_text_present("Drop down").should be_true
   end
 
   it "should add a value set to the drop down question" do    
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
-    @browser.type "value_set_element_name", "Drop down values"
+    @browser.type "value_set_element_name", "Value Set: Drop down values"
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
     @browser.click "link=Add a value"
@@ -99,7 +96,8 @@ describe "Form Builder Investigator Single Form" do
     @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Check boxes").should be_true
+    @browser.is_text_present("Check boxes").should be_true
+    @browser.is_text_present("[Check box]").should be_true
   end
   
   it "should add a value set to the check box question" do
@@ -128,17 +126,18 @@ describe "Form Builder Investigator Single Form" do
     @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Drop Down with no value set").should be_true
+    @browser.is_text_present("Drop Down with no value set").should be_true
+    @browser.is_text_present("Drop down").should be_true
   end
   
   it "should add a drop down question to the section with an answer set but no answer values" do
     @browser.click "link=Add question to section"
     wait_for_element_present("new-question-form")
-    @browser.type "question_element_question_attributes_question_text", "Drop down with null value set"
+    @browser.type "question_element_question_attributes_question_text", "Checkboxes with null value set"
     @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
     @browser.click "question_element_submit"
     wait_for_element_not_present("new-question-form")
-    @browser.is_text_present("Question: Drop down with null value set").should be_true
+    @browser.is_text_present("Checkboxes with null value set").should be_true
     
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")

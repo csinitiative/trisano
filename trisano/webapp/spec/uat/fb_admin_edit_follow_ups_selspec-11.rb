@@ -66,11 +66,6 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     # Enter the answer that meets the core follow-up condition after the edit
     click_core_tab(@browser, CLINICAL)
 
-    pending "Spinners disappear too quickly in Hudson for this to work reliably" do
-      watch_for_core_field_spinner('died_id') do
-        @browser.select("morbidity_event_disease_died_id", "label=Yes")
-      end
-    end
     @browser.is_text_present(@core_follow_up_question_text).should be_true
     click_core_tab(@browser, "Investigation") 
     
