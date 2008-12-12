@@ -713,6 +713,15 @@ module TrisanoHelper
     wait_for_element_not_present("edit-follow-up-form", browser)
   end
   
+  def edit_section(browser, element_name, section_text)
+    element_id = get_form_element_id(browser, element_name, SECTION_ID_PREFIX)
+    browser.click("edit-section-#{element_id}")
+    wait_for_element_present("section-element-edit-form", browser)
+    browser.type "section_element_name", section_text
+    browser.click "section_element_submit"
+    # wait_for_element_not_present("section-element-edit-form", browser)
+  end
+  
   # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
   def add_value_set_to_question(browser, question_text, value_set_name, value_one, value_two, value_three)
     element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)

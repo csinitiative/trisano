@@ -72,21 +72,16 @@ class SectionElementsController <  AdminController
     end
   end
 
-
   # PUT /section_elements/1
   # PUT /section_elements/1.xml
   def update
     @section_element = SectionElement.find(params[:id])
 
-    respond_to do |format|
-      if @section_element.update_attributes(params[:section_element])
-        flash[:notice] = 'Section was successfully updated.'
-        format.html { redirect_to(@section_element) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @section_element.errors, :status => :unprocessable_entity }
-      end
+    if @section_element.update_attributes(params[:section_element])
+      flash[:notice] = 'Section was successfully updated.'
+      @form = Form.find(@section_element.form_id)
+    else
+      render :action => "edit"
     end
   end
 
