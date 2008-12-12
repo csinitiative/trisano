@@ -78,5 +78,5 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="administrative_tab"><%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %></div>
   <% end %>
 
-  <%= event_form.submit "Save & Exit", :style => "display: none" %>
+  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;"%>
 <% end %>

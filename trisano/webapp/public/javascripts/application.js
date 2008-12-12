@@ -108,3 +108,10 @@ function post_and_exit(form_id) {
 function toggle_strike_through(element_id) {
   Element.toggleClassName(element_id, 'struck-through');
 }
+
+function safe_disable(target) {
+    element = document.getElementById(target);
+    if (element) {
+        element.disabled=true;
+    }
+}
