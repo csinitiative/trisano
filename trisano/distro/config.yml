@@ -1,4 +1,4 @@
-postgres_dir: /usr/bin # Location of Postgres client
+postgres_dir: /usr/local/pgsql/bin # Location of Postgres client
 host: localhost # PostgreSQL host server 
 port: 5432 # PostgreSQL TCP listen port 
 environment: production # the name of the environment - corresponds to rails configuration
