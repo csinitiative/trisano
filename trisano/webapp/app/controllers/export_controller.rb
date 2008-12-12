@@ -30,6 +30,7 @@ class ExportController < ApplicationController
   end
 
   def ibis
+    headers['Content-Disposition'] = "Attachment; filename=\"ibis.xml\""
     event_ids_to_export = Event.exportable_ibis_records
     @events_to_export = Event.find(event_ids_to_export.map { |event| event.event_id })
     Event.reset_ibis_status(event_ids_to_export)
