@@ -254,19 +254,11 @@ namespace :trisano do
           puts "No-op, language probably already exists. If not, the next execution will fail"
         end
       end
-      puts "creating people index function"
+      puts "creating people index function and trigger"
          success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/create_people_fts_trigger.sql")
       unless success
-        puts "Failed to create people fts function."
+        puts "Failed to create people fts function and trigger"
         return success
-      end
-      puts "Creating trigger for people index function"
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON people
-                    FOR EACH ROW EXECUTE PROCEDURE people_trigger();'") do |ok, res|
-        if ! ok
-          puts "Failed to create trigger for people index function. Exit status: #{res.exitstatus}"
-          return res
-        end
       end
     end
   end

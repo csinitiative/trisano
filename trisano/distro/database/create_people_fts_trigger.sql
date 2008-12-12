@@ -10,3 +10,5 @@ begin
   return new;
 end
 
+CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON people
+  FOR EACH ROW EXECUTE PROCEDURE people_trigger();
