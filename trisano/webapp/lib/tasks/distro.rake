@@ -233,7 +233,7 @@ namespace :trisano do
       puts "dropping old fts trigger"
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'DROP TRIGGER tsvectorupdate ON people'") do |ok, res|
         if ! ok
-          puts "Failed dropping trigger: tsvectorupdate ON people with error #{res.exitstatus}"
+          puts "Failed dropping trigger: tsvectorupdate ON people. Exit status: #{res.exitstatus}"
           return res
         end
       end
@@ -255,27 +255,17 @@ namespace :trisano do
         end
       end
       puts "creating people index function"
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE FUNCTION people_trigger() RETURNS trigger AS $$
-                      begin
-                        new.vector :=
-                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name,'')), 'B') ||
-                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name,'')), 'B') ||
-                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name_soundex,'')), 'A') ||
-                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name_soundex,'')), 'A');
-                        return new;
-                      end
-                    $$ LANGUAGE plpgsql'") do |ok, res|
-        if ! ok
-          puts "Failed to create people index function #{res.exitstatus}"
-          return res
-        end
+         success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/create_people_fts_trigger.sql")
+      unless success
+        puts "Failed to create people fts function."
+        return success
       end
       puts "Creating trigger for people index function"
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON people
-                    FOR EACH ROW EXECUTE PROCEDURE people_trigger()'") do |ok, res|
+                    FOR EACH ROW EXECUTE PROCEDURE people_trigger();'") do |ok, res|
         if ! ok
-          puts "Failed to create trigger for people index function #{res.exitstatus}"
-          retirm res
+          puts "Failed to create trigger for people index function. Exit status: #{res.exitstatus}"
+          return res
         end
       end
     end
