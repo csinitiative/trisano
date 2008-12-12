@@ -248,12 +248,36 @@ namespace :trisano do
     task :reset_fts do
       initialize_config
       puts "resetting fts in postgres 8.3"
-      # Ensure plpgsql language is installed in 8.3 (install if necessary w/ "CREATE LANGUAGE plpgsql;"
-      # Create new indexing function
-      # Create new trigger to call new function
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE LANGUAGE plpgsql'") do |ok, res|
+        if ! ok
+          puts "Failed to create language plpgsql #{res.exitstatus}"
+          puts "No-op, language probably already exists. If not, the next execution will fail"
+        end
+      end
+      puts "creating people index function"
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE FUNCTION people_trigger() RETURNS trigger AS $$
+                      begin
+                        new.vector :=
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name,'')), 'B') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name,'')), 'B') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.first_name_soundex,'')), 'A') ||
+                          setweight(to_tsvector('pg_catalog.english', coalesce(new.last_name_soundex,'')), 'A');
+                        return new;
+                      end
+                    $$ LANGUAGE plpgsql'") do |ok, res|
+        if ! ok
+          puts "Failed to create people index function #{res.exitstatus}"
+          return res
+        end
+      end
+      puts "Creating trigger for people index function"
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON people
+                    FOR EACH ROW EXECUTE PROCEDURE people_trigger()'") do |ok, res|
+        if ! ok
+          puts "Failed to create trigger for people index function #{res.exitstatus}"
+          retirm res
+        end
+      end
     end
-
-
   end
-
 end
