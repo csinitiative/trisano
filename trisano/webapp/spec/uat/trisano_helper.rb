@@ -228,8 +228,12 @@ module TrisanoHelper
   # To close the window after inspecting it, do something like the following:
   # @browser.close()
   # @browser.select_window 'null'
-  def print_cmr(browser)
-    browser.click "link=Print"
+  def print_cmr(browser, note = 0)
+    if note == 1
+      browser.click "link=With Notes"
+    else
+        browser.click "link=Print"
+    end
     browser.wait_for_pop_up '_blank', $load_time
     browser.select_window '_blank'
     return(browser.is_text_present('Utah Public Health'))
