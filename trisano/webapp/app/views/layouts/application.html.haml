@@ -21,7 +21,7 @@
       = yield :title
 
     = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', :cache => 'styles'
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', :cache => 'base'
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', :cache => 'base'
 
     / TabView
     = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview.css'
@@ -32,9 +32,6 @@
 
     / Calendar
     = calendar_date_select_includes
-
-    / Sniffer
-    = javascript_include_tag 'sniffer.js'
 
   %body.yui-skin-sam
     = javascript_include_tag 'wz_tooltip'
@@ -89,11 +86,6 @@
         Element.setStyle('main-content', {top: header_height})
       .container
         = yield
-        <script type="text/javascript">
-        <!--
-        document.write('<p class="accent">You\'re using ' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '!</p>');
-        // -->
-        </script>
       .container
         #foot
           .footlogo
@@ -102,3 +94,10 @@
             %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
             |
             %a{:href => 'http://www.trisano.org'}TriSano.org
+            |
+            %b
+              <script type="text/javascript">
+              <!--
+              document.write('' + BrowserDetect.browser + ' ' + BrowserDetect.version + ' on ' + BrowserDetect.OS + '');
+              // -->
+              </script>
