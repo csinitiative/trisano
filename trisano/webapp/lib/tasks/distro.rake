@@ -231,7 +231,7 @@ namespace :trisano do
       pre_upgrade_filename = "pre-postgers-83-#{@database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
       dump_db_to_file(pre_upgrade_filename)
       puts "dropping old fts trigger"
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'DROP TRIGGER tsvectorupdate ON people'") do |ok, res|
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c 'DROP TRIGGER tsvectorupdate ON people'") do |ok, res|
         if ! ok
           puts "Failed dropping trigger: tsvectorupdate ON people. Exit status: #{res.exitstatus}"
           return res
@@ -248,7 +248,7 @@ namespace :trisano do
     task :reset_fts do
       initialize_config
       puts "resetting fts in postgres 8.3"
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE LANGUAGE plpgsql'") do |ok, res|
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c 'CREATE LANGUAGE plpgsql'") do |ok, res|
         if ! ok
           puts "Failed to create language plpgsql #{res.exitstatus}"
           puts "No-op, language probably already exists. If not, the next execution will fail"
