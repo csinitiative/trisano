@@ -94,7 +94,7 @@ namespace :trisano do
       success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"SELECT pg_grant('#{@trisano_user}', 'all', '%', 'public')\"")
       unless success
         puts "Failed granting privileges to TriSano user: #{@trisano_user}."
-        return sucess
+        return success
       end
     end
 
@@ -109,7 +109,7 @@ namespace :trisano do
       success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/trisano_schema.sql")
       unless success
         puts "Failed creating database structure for TriSano."
-        return sucess
+        return success
       end
     end
 
@@ -119,11 +119,11 @@ namespace :trisano do
         puts "adding directory #{dirname}"
         FileUtils.mkdir(dirname)
       end            
-      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -c > #{dirname}/#{dump_file_name}")
+      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O -c > #{dirname}/#{dump_file_name}")
       puts "Created dump file: #{dump_file_name}"
       unless success
         puts "Failed to create #{dump_file_name}"
-        return sucess
+        return success
       end
     end
 
@@ -220,28 +220,6 @@ namespace :trisano do
       puts "resetting db permissions"
       cd '../distro/'
       create_db_permissions
-    end
-
-    desc "Generate dump file ready for imort into Postgres 8.3"
-    task :prepare_postgres_upgrade_dump do
-      initialize_config
-      puts "upgrading postgres from 8.2 to 8.3"
-      puts "creating pre-upgrade dump for safekeeping"
-      t = Time.now
-      pre_upgrade_filename = "pre-postgers-83-#{@database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
-      dump_db_to_file(pre_upgrade_filename)
-      puts "dropping old fts trigger"
-      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c 'DROP TRIGGER tsvectorupdate ON people'") do |ok, res|
-        if ! ok
-          puts "Failed dropping trigger: tsvectorupdate ON people. Exit status: #{res.exitstatus}"
-          return res
-        end
-      end
-      puts "creating upgradeable dump"
-      upgradeable_filename = "postgers-83-upgradeable-#{@database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
-      dump_db_to_file(upgradeable_filename)
-      puts "next step: put #{upgradeable_filename} in the ../config.yml and run restore_db.sh"
-      puts "  see ../dump for dump file"
     end
 
     desc "Reset FTS in 8.3"
