@@ -85,7 +85,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% end %>
           <% core_element :pregnancy_due_date, rf, :horiz do %>
             <%= rf.label(:pregnancy_due_date) %>
-            <%= rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..0.years.from_now) %>
+            <%= rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..1.years.from_now) %>
           <% end %>
         <% end %>
       <% end %>
