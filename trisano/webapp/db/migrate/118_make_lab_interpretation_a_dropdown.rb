@@ -28,10 +28,10 @@ class MakeLabInterpretationADropdown < ActiveRecord::Migration
     if RAILS_ENV == "production"
       interpretations = YAML::load_file "#{RAILS_ROOT}/db/defaults/lab_interpretations.yml"
       interpretations.each do |interpretation|
-        ExternalCode.create(:code_name => test_type['code_name'], 
-                            :the_code => test_type['the_code'], 
-                            :code_description => test_type['code_description'], 
-                            :sort_order => test_type['sort_order'], 
+        ExternalCode.create(:code_name => interpretation['code_name'], 
+                            :the_code => interpretation['the_code'], 
+                            :code_description => interpretation['code_description'], 
+                            :sort_order => interpretation['sort_order'], 
                             :live => true)
       end
     end
