@@ -113,6 +113,9 @@ class Event < ActiveRecord::Base
   validates_length_of :other_data_2, :maximum => 255, :allow_blank => true
   validates_length_of :outbreak_name, :maximum => 255, :allow_blank => true
 
+  cattr_reader :per_page
+  @@per_page = 10
+
   def self.states
     Routing::State.states
   end

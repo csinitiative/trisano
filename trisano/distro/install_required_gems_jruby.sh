@@ -46,5 +46,5 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/json-jruby-1.1.2-universal-java.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyzip-0.9.1.gem
-
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-will_paginate-2.3.6.gem
 

@@ -39,7 +39,8 @@ class MorbidityEventsController < EventsController
         :queues => params[:queues],
         :diseases => params[:diseases],
         :order_by => params[:sort_order],
-        :set_as_default_view => params[:set_as_default_view]
+        :set_as_default_view => params[:set_as_default_view],
+        :page => params[:page]
       )
     rescue
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return

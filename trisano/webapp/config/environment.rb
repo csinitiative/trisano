@@ -78,6 +78,7 @@ Rails::Initializer.run do |config|
     require 'export/cdc'
     require "routing/state"
     require 'utilities'
+    require 'will_paginate'
   end
 
 end

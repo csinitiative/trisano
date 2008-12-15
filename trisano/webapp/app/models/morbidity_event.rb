@@ -317,10 +317,11 @@ class MorbidityEvent < HumanEvent
     find_options = {
       :joins => joins,
       :conditions => conditions,
-      :order => order_by
+      :order => order_by,
+      :page => options[:page]
     }
 
-    MorbidityEvent.find(:all, find_options)
+    MorbidityEvent.paginate(:all, find_options)
   rescue Exception => ex
     logger.error ex
     raise ex
