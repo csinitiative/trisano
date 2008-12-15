@@ -110,7 +110,8 @@ namespace :trisano do
       unless success
         puts "Failed creating database structure for TriSano."
         return success
-      end
+      end 
+      return success
     end
 
     def dump_db_to_file(dump_file_name)
@@ -127,7 +128,7 @@ namespace :trisano do
       end
     end
 
-    desc "Sets the database.yml to use the priveledged user info"
+    desc "Sets the database.yml to use the privileged user info"
     task :set_priv_database_yml do
       initialize_config
       replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
@@ -136,9 +137,18 @@ namespace :trisano do
     desc "Create the database, the user, and apply security permissions"
     task :create_db_dbuser_permissions  do
       initialize_config
-      create_db
-      create_db_user
-      create_db_permissions
+      
+      if ! create_db
+        raise "failed to create database"
+      end
+
+      if ! create_db_user
+        raise "failed to create user"
+      end
+
+      if ! create_db_permissions
+        raise "failed to set db permissions"
+      end
     end
 
     desc "Drop the database"
