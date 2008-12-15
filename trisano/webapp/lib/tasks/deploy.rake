@@ -205,6 +205,7 @@ namespace :trisano do
       sh "rm -rf ./webapp/nbproject"
       sh "rm -rf ./distro/dump"
       sh "rm -rf ./webapp/tmp"
+      sh "rm -rf ./distro/*.txt"
       
       cd TRISANO_DIST_DIR
       sh "tar czf #{filename} ./#{tformated}"
