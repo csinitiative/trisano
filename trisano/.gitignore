@@ -1,0 +1,14 @@
+*~
+.gitignore
+TAGS
+*#
+.#*
+.emacs.desktop
+*.war
+tmp
+log
+patches*
+.stgit*
+webapp/db/*.sql
+distro/database/trisano_schema.sql
+*.dump_obfu
