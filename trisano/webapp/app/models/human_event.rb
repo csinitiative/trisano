@@ -87,12 +87,12 @@ class HumanEvent < Event
       if existing_lab
         # Check to see if there's an existing participation for the lab
         # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
-        lab_participation = labs.detect { |lab| lab.secondary_entity_id == existing_lab.id }
+        lab_participation = labs.detect { |lab| lab.secondary_entity_id == existing_lab.entity_id }
 
         # Participation does not exist, create one and link to existing lab
         if lab_participation.nil?
           lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-          lab_participation.secondary_entity_id = existing_lab.id
+          lab_participation.secondary_entity_id = existing_lab.entity_id
         else
           # participation already exists, do nothing
         end
@@ -139,7 +139,7 @@ class HumanEvent < Event
         existing_lab = Place.find_by_name_and_place_type_id(lab_name, Code.lab_place_type_id)
         if existing_lab
           # Simply assign the (possibly new) ID 
-          lab.secondary_entity_id = existing_lab.id
+          lab.secondary_entity_id = existing_lab.entity_id
         else
           # Has this lab been seen before in this POST?  In other words, did the user change two or more distinct existing labs to the same
           # previously unknown lab.  Ideally, we should delete the duplicate participations and move the lab_results over to the remaining one,

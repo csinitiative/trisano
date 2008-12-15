@@ -6,6 +6,10 @@ Silvers:
   id: 2
   entity_type: "person"
 
+entity_that_points_nowhere:
+  id: 3
+  entity_type: "person"
+
 Marks:
   id: 86
   entity_type: "person"
