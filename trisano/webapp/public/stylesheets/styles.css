@@ -611,6 +611,9 @@ form {
   width: 395px;
   float: left; }
 
+.pagination {
+  clear: both; }
+
 
 .tabular th {
   font: bold 11px Verdana, Arial, Helvetica, sans-serif;
