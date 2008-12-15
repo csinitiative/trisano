@@ -58,7 +58,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever"}
+              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -89,8 +89,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis"},
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis"}
+              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis"},
+              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -121,7 +121,7 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(existing_lab_hash_1))
@@ -148,7 +148,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>""}
+              { "name"=>"New Lab One", "lab_result_text"=>""}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -167,7 +167,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"Whatever"}
+              { "name"=>"", "lab_result_text"=>"Whatever"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -184,7 +184,7 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"", "lab_result_text"=>"", "test_type" => "", "test_detail" => ""}
+              { "name"=>"", "lab_result_text"=>"", "test_type" => "", "test_detail" => ""}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -204,8 +204,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              { "lab_entity_id" => nil, "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"},
-              { "lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"},
+              { "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -234,8 +234,8 @@ describe MorbidityEvent do
           new_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"},
-              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
+              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"},
+              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
@@ -257,7 +257,7 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "new_lab_attributes" => 
               [
-              {"lab_entity_id" => places(:Existing_Lab_One).id, "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
+              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
             ]
           }
           @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
@@ -283,7 +283,6 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
-                "lab_entity_id" => places(:Existing_Lab_Two).id, 
                 "name" => places(:Existing_Lab_Two).name,
                 :lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
@@ -319,7 +318,6 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
-                "lab_entity_id" => "",
                 "name" => "BrandNewLab",
                 :lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
@@ -349,7 +347,6 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
-                "lab_entity_id" => places(:Existing_Lab_One).id, 
                 "name" => places(:Existing_Lab_One).name, 
                 :lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Negative" },
@@ -376,7 +373,6 @@ describe MorbidityEvent do
           existing_lab_hash_1 = {
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
-                "lab_entity_id" => places(:Existing_Lab_One).id, 
                 "name" => places(:Existing_Lab_One).name,
                 :lab_result_attributes => { 
                   "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Inconclusive" }

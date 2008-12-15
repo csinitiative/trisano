@@ -24,9 +24,8 @@
 
   - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
 
-    %span{:class => "horiz"}
-      = lab_fields.label(:name, "Lab Name")
-      = model_auto_completer "#{prefix}[#{lab.id}][name]", lab_place.name, "#{prefix}[#{lab.id}][lab_entity_id]", lab_place.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_lab_name'}, { :size => 25, :class => 'required_if_others', :maxlength => 50 }, { :skip_style => false, :param_name => 'lab_name'}
+    = trisano_auto_complete("#{prefix}[#{lab.id}][name]", "lab_name", lab_place, "name", "Lab name", {:size => 25, :maxlength => 50, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
+
     %span{:style => "position: relative; top: 18px; left: 10px"}
       = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
 

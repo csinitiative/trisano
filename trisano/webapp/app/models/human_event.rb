@@ -78,21 +78,21 @@ class HumanEvent < Event
     lab_attributes.each do |attributes|
       next if attributes.values_blank?
 
-      lab_entity_id = attributes.delete("lab_entity_id")
       lab_name = attributes.delete("name")
       lab_name = nil if lab_name.blank? # to trigger validation error
       lab_participation = nil
 
       # If lab_entity_id has a value then the place already exists
-      unless lab_entity_id.blank?
+      existing_lab = Place.find_by_name_and_place_type_id(lab_name, Code.lab_place_type_id)
+      if existing_lab
         # Check to see if there's an existing participation for the lab
         # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
-        lab_participation = labs.detect { |lab| lab.secondary_entity_id == lab_entity_id.to_i }
+        lab_participation = labs.detect { |lab| lab.secondary_entity_id == existing_lab.id }
 
         # Participation does not exist, create one and link to existing lab
         if lab_participation.nil?
           lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-          lab_participation.secondary_entity_id = lab_entity_id
+          lab_participation.secondary_entity_id = existing_lab.id
         else
           # participation already exists, do nothing
         end
@@ -107,7 +107,7 @@ class HumanEvent < Event
           lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
           lab_entity = lab_participation.build_secondary_entity
           lab_entity.entity_type = "place"
-          lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+          lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.lab_place_type_id} )
 
           # Memorize lab name and participation
           earlier_labs[lab_name] = lab_participation
@@ -132,14 +132,14 @@ class HumanEvent < Event
 
       # If there are attributes for the current ID, then the lab has not been deleted, update the attributes in memory
       if attributes && !attributes.values_blank?
-        lab_entity_id = attributes.delete("lab_entity_id")
         lab_name = attributes.delete("name")
         lab_name = nil if lab_name.blank? # to trigger validation error
 
         # Is the POSTed lab name a known lab
-        unless lab_entity_id.blank?
+        existing_lab = Place.find_by_name_and_place_type_id(lab_name, Code.lab_place_type_id)
+        if existing_lab
           # Simply assign the (possibly new) ID 
-          lab.secondary_entity_id = lab_entity_id
+          lab.secondary_entity_id = existing_lab.id
         else
           # Has this lab been seen before in this POST?  In other words, did the user change two or more distinct existing labs to the same
           # previously unknown lab.  Ideally, we should delete the duplicate participations and move the lab_results over to the remaining one,
@@ -151,7 +151,7 @@ class HumanEvent < Event
             # Create linked entity and place, then link to this participation.  Do not delete the previous lab
             lab_entity = Entity.new
             lab_entity.entity_type = "place"
-            lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.find_by_code_name_and_code_description("placetype", "Laboratory").id} )
+            lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.lab_place_type_id} )
             lab.secondary_entity = lab_entity
             #
             # Memorize lab name and entity

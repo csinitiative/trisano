@@ -56,6 +56,13 @@ class Code < ActiveRecord::Base
     end
   end
 
+  def self.lab_place_type_id
+    safe_table_access do
+      @@lab_place_type ||= Code.find_by_code_name_and_code_description('placetype', 'Laboratory')
+      @@lab_place_type.id if @@lab_place_type
+    end
+  end
+
   def self.primary_jurisdiction_participant_type_id
     safe_table_access do
       @@primary_jurisdiction_participant_type ||= Code.find_by_code_name_and_code_description('participant', "Jurisdiction")

@@ -29,7 +29,7 @@ class EventsController < ApplicationController
       :order => "entity_id, created_at ASC, name ASC",
       :limit => 10
     )
-    render :inline => '<ul><% for item in @items %><li id="lab_name_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
+    render :inline => "<%= auto_complete_result(@items, 'name') %>"
   end
 
   def auto_complete_for_test_type
