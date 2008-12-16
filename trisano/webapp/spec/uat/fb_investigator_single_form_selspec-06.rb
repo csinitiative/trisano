@@ -172,9 +172,9 @@ describe "Form Builder Investigator Single Form" do
     @browser.is_text_present("Investigation").should be_true
     @browser.is_text_present(@form_name).should be_true
     @browser.click("link=" + @form_name)
-    @browser.is_text_present("Single-line text").should be_true
-    @browser.is_text_present("Multi-line text").should be_true
-    @browser.is_text_present("Drop Down").should be_true
+    @browser.is_text_present("My First Question").should be_true
+    @browser.is_text_present("My Second Question").should be_true
+    @browser.is_text_present("Q3").should be_true
     @browser.is_text_present("Check boxes").should be_true
     @browser.is_text_present("First Value").should be_true
     @browser.is_text_present("Second Value").should be_true
