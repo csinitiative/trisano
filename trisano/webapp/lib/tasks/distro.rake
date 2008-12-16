@@ -76,6 +76,7 @@ namespace :trisano do
         puts "Failed creating TriSano user: #{@trisano_user}" 
         return success
       end
+      puts "Success creating TriSano user: #{@trisano_user}" 
       return success
     end
 
@@ -96,6 +97,7 @@ namespace :trisano do
         puts "Failed granting privileges to TriSano user: #{@trisano_user}."
         return success
       end
+      puts "Success granting privileges to TriSano user: #{@trisano_user}."
       return success
     end
 
@@ -112,6 +114,7 @@ namespace :trisano do
         puts "Failed creating database structure for TriSano."
         return success
       end 
+      puts "Success creating database structure for TriSano."
       return success
     end
 
@@ -121,12 +124,14 @@ namespace :trisano do
         puts "adding directory #{dirname}"
         FileUtils.mkdir(dirname)
       end            
-      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O -c > #{dirname}/#{dump_file_name}")
-      puts "Created dump file: #{dump_file_name}"
+      # dump sans access privs/acl & sans object owner - we grant auth on restore to make moving dump files between envIRONments easier
+      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{dirname}/#{dump_file_name}")
+      puts "Created dump file: #{dirname}/#{dump_file_name}"
       unless success
-        puts "Failed to create #{dump_file_name}"
+        puts "Failed to create #{dirname}/#{dump_file_name}"
         return success
       end
+      return success
     end
 
     desc "Sets the database.yml to use the privileged user info"
@@ -137,19 +142,17 @@ namespace :trisano do
     
     desc "Create the database, the user, and apply security permissions"
     task :create_db_dbuser_permissions  do
-      initialize_config
-      
+      initialize_config      
       if ! create_db
         raise "failed to create database"
       end
-
       if ! create_db_user
         raise "failed to create user"
       end
-
       if ! create_db_permissions
         raise "failed to set db permissions"
       end
+      puts "Success creating TriSano db: #{@database}"
     end
 
     desc "Drop the database"
@@ -198,18 +201,18 @@ namespace :trisano do
           puts "Failed creating database: #{@database} with error #{res.exitstatus}"
         end
       end
-
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}") do |ok, res|
         if ! ok
           puts "Failed importing dumpfile: #{@dump_file} into database #{@database} with error #{res.exitstatus}"
         end
       end
-
       if ! create_db_user
        puts "assuming already exists and continuing ..."
       end
-
-      create_db_permissions
+      if ! create_db_permissions
+        raise "failed to set db permissions"
+      end
+      puts "Success restoring TriSano db: #{@database} from #{dirname}/#{@dump_file}"     
     end
     
     desc "Package the application with the settings from config.yml"
@@ -220,6 +223,7 @@ namespace :trisano do
       cd '../webapp/'
       ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes}"
       FileUtils.mv('trisano.war', '../distro')
+      puts "Success packaging trisano.war"
     end
 
     desc "Migrate the database"
@@ -230,7 +234,9 @@ namespace :trisano do
       ruby "-S rake db:migrate RAILS_ENV=production"
       puts "resetting db permissions"
       cd '../distro/'
-      create_db_permissions
+      if ! create_db_permissions
+        raise "failed to set db permissions"
+      end
     end
 
     desc "Reset FTS in 8.3"

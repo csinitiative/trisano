@@ -23,3 +23,4 @@
 . setenv.sh
 
 jruby -S rake -f ../webapp/Rakefile trisano:distro:upgrade_db > upgrade_db_output.txt
+echo "upgrade complete - review contents of ./upgrade_db_output.txt for details"
