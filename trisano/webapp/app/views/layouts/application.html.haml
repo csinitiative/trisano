@@ -20,15 +20,8 @@
       TriSano:
       = yield :title
 
-    = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', :cache => 'styles'
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', :cache => 'base'
-
-    / TabView
-    = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview.css'
-    = stylesheet_link_tag '../yuinew/build/tabview/assets/skins/sam/tabview-skin.css'
-    = javascript_include_tag '../yuinew/build/yahoo-dom-event/yahoo-dom-event.js'
-    = javascript_include_tag '../yuinew/build/element/element-beta-min.js'
-    = javascript_include_tag '../yuinew/build/tabview/tabview-min.js'
+    = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', 'tabview.css', :cache => 'styles'
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event.js', 'element-beta-min.js', 'tabview-min.js', :cache => 'base'
 
     / Calendar
     = calendar_date_select_includes
@@ -84,7 +77,7 @@
       %script
         header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
         Element.setStyle('main-content', {top: header_height})
-      .container.showgrid
+      .container
         = yield
       .container
         #foot
