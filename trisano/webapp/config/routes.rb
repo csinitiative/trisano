@@ -81,6 +81,7 @@ ActionController::Routing::Routes.draw do |map|
     },
     :new => {
       :lab_form => :get,
+      :lab_result_form => :get,
       :treatment_form => :get
     }
 
@@ -90,6 +91,7 @@ ActionController::Routing::Routes.draw do |map|
     },
     :new => {
       :lab_form => :get,
+      :lab_result_form => :get,
       :treatment_form => :get
     }
 

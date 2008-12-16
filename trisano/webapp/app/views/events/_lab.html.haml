@@ -14,68 +14,25 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - new_or_existing = new_or_existing?(lab)
-- prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes")
-- prefix_with_array = "#{prefix}[]"
+-# new lab participations do not use the array naming convention ([]).  Instead we give it a unique ID if it's new.
+-# This allows us to give new labs children (lab results)
+- lab_id = lab.id || Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
+- prefix = event_prefix_for_multi_models(new_or_existing, "_lab_attributes") + "[#{lab_id}]"
 
 - lab_place = lab.secondary_entity.place_temp
 
 %div{:class => 'lab', :style => "clear: both;"}
   = error_messages_for :object => lab_place
 
-  - fields_for(prefix_with_array, lab_place, :builder => ExtendedFormBuilder) do |lab_fields|
+  = trisano_auto_complete("#{prefix}[name]", "lab_name", lab_place, "name", "Lab name", {:size => 25, :maxlength => 50, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
 
-    = trisano_auto_complete("#{prefix}[#{lab.id}][name]", "lab_name", lab_place, "name", "Lab name", {:size => 25, :maxlength => 50, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
+  %span{:style => "position: relative; top: 18px; left: 10px"}
+    = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
 
-    %span{:style => "position: relative; top: 18px; left: 10px"}
-      = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
+  = render :partial => "events/lab_result", :collection => lab.lab_results, :locals => {:prefix => prefix}
+  %div{:id => "new_lab_result_holder_#{lab_id}"}
 
-  - for lab_result in lab.lab_results
-    - if lab.new_record?
-      -# If this is a new lab result, then put them into the  same namespace as labs. i.e., lab_attributes.  Autocomplete fields have to be named manually, they can't use fields_for.
-      - auto_complete_prefix = lab_result_namespace = prefix_with_array  # e.g: morbidity_event[new_lab_attributes][]
-      -# Force the ID that Rails puts into the array component of the name to be the lab's ID, not the lab_result's ID
-      - lab_result.id = lab.id
-    - else
-      -# Otherwise, lab_results should be in their own name space, lab_result_attributes, a child of lab_attributes.
-      - lab_result_prefix = "#{prefix}[#{lab.id}][lab_result_attributes]"   # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes]
-      - lab_result_namespace = lab_result_prefix + "[]"                     # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes][]
-      - auto_complete_prefix = lab_result_prefix + "[#{lab_result.id}]"     # e.g: morbidity_event[existing_lab_attributes][3][lab_result_attributes][27]
+  %p{:style => "margin-left: 20px"}
+    = add_lab_result_link "Add a new lab result to this lab", @event, prefix, lab_id
 
-    %div{:class => 'lab_result', :style => "clear: both; margin-left: 20px;"}
-      - rand_id = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
-      = error_messages_for :object => lab_result
-
-      - fields_for(lab_result_namespace, lab_result, :builder => ExtendedFormBuilder) do |lab_result_fields|
-
-        -# Autocomplete for test type.  Not using model_auto_completer because we don't need the ID.  Just saving the value.  
-        -# Also, there's a bug in text_field_with_autocomplete, so doing it manually
-        = trisano_auto_complete("#{auto_complete_prefix}[test_type]", "test_type", lab_result, "test_type", "Test type", {:size => 20, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :param_name => 'test_type' })
-
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:test_detail, "Specify test detail")
-          = lab_result_fields.text_field(:test_detail, :size => 20, :maxlenght => 255)
-
-        -# Autocomplete for lab result 
-        = trisano_auto_complete("#{auto_complete_prefix}[lab_result_text]", "lab_result", lab_result, "lab_result_text", "Lab result", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
-
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:interpretation)
-          = lab_result_fields.dropdown_code_field(:interpretation_id, "lab_interpretation", {})
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:specimen_source_id, "Specimen source")
-          = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
-        %fieldset.vert
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:collection_date)
-          = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:lab_test_date)
-          = lab_result_fields.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
-        %span{:class => "horiz"}
-          = lab_result_fields.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
-          = lab_result_fields.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
-        %span{:style => "position: relative; top: 20px"}
-          = link_to_function "Remove this result" , "if ($$('.lab_result').size() == 1) {$(this).up('.lab').remove()} else {$(this).up('.lab_result').remove()}", {:id => "remove_lab_result_link"}
-      %hr
-  %hr{:style => "height: 1px; color: black; background-color: black"}
-
+  %hr{:style => "height: 2px; color: black; background-color: black"}

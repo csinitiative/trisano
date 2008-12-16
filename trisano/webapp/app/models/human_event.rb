@@ -73,77 +73,78 @@ class HumanEvent < Event
     self.patient.primary_entity.attributes = attributes
   end
 
+  # Lab attributes is a hash (not an array) of lab_names (some possibly new).  The lab may have lab_result children - always new.
+  # It's a hash so that it has a unique HTML name and thus can have children
   def new_lab_attributes=(lab_attributes)
+    # A hash that tracks all previously unknown labs sent in with the current POST
     earlier_labs = {}
-    lab_attributes.each do |attributes|
+
+    # We don't care that lab_attribues is a hash (rails does), loop through new lab names like it's an array.
+    lab_attributes.each_value do |attributes|
       next if attributes.values_blank?
 
-      lab_name = attributes.delete("name")
+      lab_name = attributes["name"]
       lab_name = nil if lab_name.blank? # to trigger validation error
-      lab_participation = nil
 
-      # If lab_entity_id has a value then the place already exists
+      # All new labs are new lab participations.  If they've typed in the same lab 2 or more times, so be it.
+      lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
+
+      # Check to see if we already know this lab
       existing_lab = Place.find_by_name_and_place_type_id(lab_name, Code.lab_place_type_id)
-      if existing_lab
-        # Check to see if there's an existing participation for the lab
-        # We search the labs array, rather than use AR #find, so we can build the association in memory for the @event.save that's soon to come
-        lab_participation = labs.detect { |lab| lab.secondary_entity_id == existing_lab.entity_id }
 
-        # Participation does not exist, create one and link to existing lab
-        if lab_participation.nil?
-          lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
-          lab_participation.secondary_entity_id = existing_lab.entity_id
-        else
-          # participation already exists, do nothing
-        end
+      if existing_lab
+        # Simply assign the ID 
+        lab_participation.secondary_entity_id = existing_lab.entity_id
       else
-        # New lab. 
-        
-        # Has this lab been seen before in this POST
-        if lab_participation = earlier_labs[lab_name]
-          # Do nothing
+        # Event though we happily create participations that point at the same lab, lets not create multiple identical labs
+        if entity = earlier_labs[lab_name]
+          lab_participation.secondary_entity = entity
         else
-          # Create participation, entity, and place, linking each to the next
-          lab_participation = labs.build(:role_id => Event.participation_code('Tested By'))
           lab_entity = lab_participation.build_secondary_entity
           lab_entity.entity_type = "place"
           lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.lab_place_type_id} )
 
-          # Memorize lab name and participation
-          earlier_labs[lab_name] = lab_participation
+          # Memorize lab name and entity
+          earlier_labs[lab_name] = lab_entity
         end
       end
 
-      # Build a new lab_result and associate with the participation
-      lab_participation.lab_results.build(attributes)
+      # Loop through all lab results and attach to lab participation
+      if new_results = attributes["new_lab_result_attributes"] || []    # Is not possible via the UI, but...
+        new_results.each do |result_attributes|
+          lab_participation.lab_results.build(result_attributes)
+        end
+      end
+
     end
   end
   
   # Edits to existing labs can include: deletion of individual results, deletion of a lab and all its results, a modification to lab
-  # name (with either a new or existing lab), or modification of existing lab results.  But not new lab results, they will have been
-  # processed by new_lab_attributes.
+  # name (with either a new or existing lab), modification of existing lab results, or the addition of new new lab results.
   def existing_lab_attributes=(lab_attributes)
+    # A hash that tracks all previously unknown labs sent in with the current POST
     earlier_labs = {}
 
-    # loop through all lab participations and their lab_results, ignoring any just added by new_lab_attributes
+    # loop through all lab participations, ignoring any just added by new_lab_attributes
     labs.reject(&:new_record?).each do |lab|
-      # Get changes from POST params, if any
+
+      # Get any changes to this lab from the POST params
       attributes = lab_attributes[lab.id.to_s]
 
-      # If there are attributes for the current ID, then the lab has not been deleted, update the attributes in memory
+      # If there are attributes for the current lab, then the lab has not been deleted, update the attributes in memory
       if attributes && !attributes.values_blank?
-        lab_name = attributes.delete("name")
+        lab_name = attributes["name"]
         lab_name = nil if lab_name.blank? # to trigger validation error
 
         # Is the POSTed lab name a known lab
         existing_lab = Place.find_by_name_and_place_type_id(lab_name, Code.lab_place_type_id)
+
         if existing_lab
-          # Simply assign the (possibly new) ID 
+          # Simply assign the ID 
           lab.secondary_entity_id = existing_lab.entity_id
         else
           # Has this lab been seen before in this POST?  In other words, did the user change two or more distinct existing labs to the same
-          # previously unknown lab.  Ideally, we should delete the duplicate participations and move the lab_results over to the remaining one,
-          # but c'mon!  For now, lets just not create the new lab entity twice.
+          # previously unknown lab?  If so, avoide creating the lab entity twice.
           if entity = earlier_labs[lab_name]
             lab.secondary_entity = entity
           else
@@ -153,7 +154,7 @@ class HumanEvent < Event
             lab_entity.entity_type = "place"
             lab_entity.build_place_temp( {:name => lab_name, :place_type_id => Code.lab_place_type_id} )
             lab.secondary_entity = lab_entity
-            #
+            
             # Memorize lab name and entity
             earlier_labs[lab_name] = lab_entity
           end
@@ -161,22 +162,33 @@ class HumanEvent < Event
 
         # Now, handle the changed or deleted (but not added) lab_results
 
-        # Get the hash of POSTed lab results, passed in as a child of this lab
-        result_attributes = attributes[:lab_result_attributes] || {} 
+        # Get the hash of POSTed existing lab results, passed in as a child of this lab
+        existing_result_attributes = attributes[:existing_lab_result_attributes] || {} 
 
         # Copy the lab_results array and use that, so that we can delete from lab_results without skipping the next element 
         lab_results_copy = lab.lab_results.dup
 
         lab_results_copy.each do |lab_result|
-
           # If there are attributes for that ID, then the lab result has not been deleted, update the attributes in memory
-          attributes = result_attributes[lab_result.id.to_s]
-          if attributes && !attributes.values_blank?
-            lab_result.attributes = attributes
+          result_attributes = existing_result_attributes[lab_result.id.to_s]
+          if result_attributes && !result_attributes.values_blank?
+            lab_result.attributes = result_attributes
           else
             lab.lab_results.delete(lab_result)
           end
         end
+
+        # Now, handle the added lab_results
+
+        # Get the hash of POSTed new lab results, passed in as a child of this lab
+        new_result_attributes = attributes[:new_lab_result_attributes] || [] 
+
+        # Assign lab results to lab
+        new_result_attributes.each do |result_attributes|
+          next if result_attributes.values_blank?
+          lab.lab_results.build(result_attributes)
+        end
+
       else
         # The lab and all its results have been deleted
         labs.delete(lab)

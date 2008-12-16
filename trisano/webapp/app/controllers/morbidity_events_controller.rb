@@ -255,6 +255,11 @@ class MorbidityEventsController < EventsController
     render :partial => 'events/lab', :object => Participation.new_lab_participation
   end
   
+  def lab_result_form
+    @event = MorbidityEvent.new
+    render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix]}
+  end
+  
   def treatment_form
     @event = MorbidityEvent.new
     render :partial => 'events/treatment', :object => ParticipationsTreatment.new, :locals => { :namespace => "active_patient" }

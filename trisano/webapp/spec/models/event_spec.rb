@@ -56,10 +56,14 @@ describe MorbidityEvent do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever"}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "New Lab One", 
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -82,22 +86,64 @@ describe MorbidityEvent do
         end
       end
 
+      describe "Reveiving a new lab with two lab results" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          new_lab_hash_1 = {
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "New Lab One", 
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" },
+                  { "lab_result_text"=>"New Lab Two Result", "test_type" => "Biopsy", "test_detail" => "Whatever" }
+                ]
+              }
+            }
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
+        end
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          @event.participations.find_by_role_id(codes(:participant_testing_lab).id).should_not be_nil
+        end
+
+        it "should add a new lab" do
+          lambda {@event.save}.should change {Place.count}.by(1)
+          @event.labs.first.secondary_entity.place_temp.name.should == "New Lab One"
+        end
+
+        it "should add two new lab results" do
+          lambda {@event.save}.should change {LabResult.count}.by(2)
+        end
+      end
+
       describe "Receiving two new labs with the same name" do
         fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One First Result", "test_type" => "Urinalysis"},
-              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Second Result", "test_type" => "Urinalysis"}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "New Lab One", 
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              },
+              "unique_string_2" => { 
+                "name" => "New Lab One", 
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab Two Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
-        it "should create one participation (not two) linked to the event" do
-          lambda {@event.save}.should change {Participation.count}.by(2)
+        it "should create two participations (not one) linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(3)
           @event.participations.find_by_role_id(codes(:participant_testing_lab).id).should_not be_nil
         end
 
@@ -106,25 +152,28 @@ describe MorbidityEvent do
           @event.labs.first.secondary_entity.place_temp.name.should == "New Lab One"
         end
 
-        it "should add two new lab results linked to one participation" do
+        it "should add one new lab results linked to each participation" do
           lambda {@event.save}.should change {LabResult.count}.by(2)
-          results = @event.labs.first.lab_results.collect { |result| result.lab_result_text}
-          results.include?("New Lab One First Result").should be_true
-          results.include?("New Lab One Second Result").should be_true
+          results = @event.labs[0].should_not be_nil
+          results = @event.labs[1].should_not be_nil
         end
       end
 
-      describe "Receiving an existing lab and a new lab result" do
+      describe "Receiving a known lab and a new lab result" do
         fixtures :events, :participations, :entities, :places, :lab_results
 
         before(:each) do
-          existing_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-            ]
+          new_lab_hash_1 = {
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => places(:Existing_Lab_One).name,
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"Existing Lab Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
           }
-          @event = MorbidityEvent.new(@event_hash.merge(existing_lab_hash_1))
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
 
         it "should not create a new lab" do
@@ -142,14 +191,18 @@ describe MorbidityEvent do
         end
       end
 
-      describe "Receiving a lab with no lab result" do
+      describe "Receiving a lab with an empty lab result" do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"New Lab One", "lab_result_text"=>""}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => places(:Existing_Lab_One).name,
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"", "test_type" => "", "test_detail" => "" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -161,14 +214,45 @@ describe MorbidityEvent do
 
       end
 
+      describe "Receiving a lab with no lab result" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          new_lab_hash_1 = {
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "New Lab One"
+              }
+            }
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
+        end
+
+        it "should create the lab" do
+          lambda {@event.save}.should change {Place.count}.by(1)
+          @event.labs.first.secondary_entity.place_temp.name.should == "New Lab One"
+        end
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          @event.participations.find_by_role_id(codes(:participant_testing_lab).id).should_not be_nil
+        end
+
+        it "should not create any lab results" do
+          lambda {@event.save}.should change {LabResult.count}.by(0)
+        end
+
+      end
+
       describe "Receiving a lab result with no lab" do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"", "lab_result_text"=>"Whatever"}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name"=>"", "lab_result_text"=>"Whatever"
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -182,10 +266,14 @@ describe MorbidityEvent do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"", "lab_result_text"=>"", "test_type" => "", "test_detail" => ""}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "",
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"", "test_type" => "", "test_detail" => "" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -202,11 +290,20 @@ describe MorbidityEvent do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              { "name"=>"New Lab One", "lab_result_text"=>"New Lab One Result"},
-              { "name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => "New Lab One", 
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              },
+              "unique_string_2" => { 
+                "name" => places(:Existing_Lab_One).name,
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"Existing Lab Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -232,11 +329,20 @@ describe MorbidityEvent do
 
         before(:each) do
           new_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"},
-              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"Existing Lab Result"}
-            ]
+            "new_lab_attributes" => {
+              "unique_string" => { 
+                "name" => places(:Existing_Lab_One).name,
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"New Lab One Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              },
+              "unique_string_2" => { 
+                "name" => places(:Existing_Lab_One).name,
+                "new_lab_result_attributes" => [
+                  { "lab_result_text"=>"Existing Lab Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_lab_hash_1))
         end
@@ -247,29 +353,6 @@ describe MorbidityEvent do
 
         it "should create two new lab results" do
           lambda {@event.save}.should change {LabResult.count}.by(2)
-        end
-      end
-
-      describe "Receiving a new lab result for an existing event and participation" do
-        fixtures :events, :participations, :entities, :places, :lab_results
-
-        before(:each) do
-          existing_lab_hash_1 = {
-            "new_lab_attributes" => 
-              [
-              {"name"=> places(:Existing_Lab_One).name, "lab_result_text"=>"A new result"}
-            ]
-          }
-          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
-          @event = MorbidityEvent.find(events(:marks_cmr).id)
-        end
-
-        it "should not create any participations" do
-          lambda {@event.update_attributes(@new_lab_hash)}.should_not change {Participation.count}
-        end
-
-        it "should create one new lab result" do
-          lambda {@event.update_attributes(@new_lab_hash)}.should change {LabResult.count}.by(1)
         end
       end
     end
@@ -284,7 +367,7 @@ describe MorbidityEvent do
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
                 "name" => places(:Existing_Lab_Two).name,
-                :lab_result_attributes => { 
+                :existing_lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
                   "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
                 }
@@ -319,7 +402,7 @@ describe MorbidityEvent do
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
                 "name" => "BrandNewLab",
-                :lab_result_attributes => { 
+                :existing_lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Positive" },
                   "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
                 }
@@ -348,7 +431,7 @@ describe MorbidityEvent do
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
                 "name" => places(:Existing_Lab_One).name, 
-                :lab_result_attributes => { 
+                :existing_lab_result_attributes => { 
                   "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Negative" },
                   "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
                 }
@@ -374,7 +457,7 @@ describe MorbidityEvent do
             "existing_lab_attributes" => { 
               "#{participations(:Lab_Guy_Tested_By).id}" => { 
                 "name" => places(:Existing_Lab_One).name,
-                :lab_result_attributes => { 
+                :existing_lab_result_attributes => { 
                   "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Inconclusive" }
                 }
               }
@@ -411,6 +494,35 @@ describe MorbidityEvent do
 
         it "should not delete the lab place" do
           lambda {@event.save}.should_not change {Place.count}
+        end
+      end
+
+      describe "Receiving a mix of new and existing lab results" do
+        fixtures :events, :participations, :entities, :places, :lab_results
+
+        before(:each) do
+          existing_lab_hash_1 = {
+            "existing_lab_attributes" => { 
+              "#{participations(:Lab_Guy_Tested_By).id}" => { 
+                "name" => places(:Existing_Lab_One).name, 
+                :existing_lab_result_attributes => { 
+                  "#{lab_results(:lab_guys_lab_result).id}" => { "lab_result_text" => "Negative" },
+                  "#{lab_results(:lab_guys_other_lab_result).id}" => { "lab_result_text" => "Negative" }
+                },
+                :new_lab_result_attributes => [
+                  { "lab_result_text"=>"New Lab Result", "test_type" => "Urinalysis", "test_detail" => "Whatever" }
+                ]
+              }
+            }
+          }
+          @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should add one new lab result and update another" do
+          lambda {@event.update_attributes(@new_lab_hash)}.should change {LabResult.count}.by(1)
+          results = @event.labs.first.lab_results.collect { |result| result.lab_result_text }
+          results.should == ["Negative", "Negative", "New Lab Result"]
         end
 
       end
@@ -1344,8 +1456,8 @@ describe MorbidityEvent do
         end
       end
 
-      it 'sould use the lab collection date' do
-        @event_hash['new_lab_attributes'] = [{'name' => 'Quest', 'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]
+      it 'should use the lab collection date' do
+        @event_hash['new_lab_attributes'] = {"unique_string" => {'name' => 'Quest', "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]}}
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -1353,9 +1465,11 @@ describe MorbidityEvent do
       end
 
       it 'should use the earliest lab collection date' do
-        @event_hash['new_lab_attributes'] = [
-          {'name' => 'Quest', 'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)},
-          {'name' => 'Merck', 'lab_result_text' => 'neg', 'collection_date' => Date.today.months_ago(18)}]
+        @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]},
+                                             "unique_string_2" => {'name' => 'Merck', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'collection_date' => Date.today.months_ago(18)}]}
+                                            }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -1363,7 +1477,7 @@ describe MorbidityEvent do
       end
 
       it 'should use the lab test date' do
-        @event_hash['new_lab_attributes'] = [{'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]
+        @event_hash['new_lab_attributes'] = {"unique_string" => {'name' => 'Quest', "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]}}
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -1371,9 +1485,11 @@ describe MorbidityEvent do
       end
 
       it 'should use the earliet lab test date' do
-        @event_hash['new_lab_attributes'] = [
-          {'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)},
-          {'name' => 'Merck', 'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18)}]
+        @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]},
+                                             "unique_string_2" => {'name' => 'Merck', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18)}]}
+                                            }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -1381,9 +1497,15 @@ describe MorbidityEvent do
       end
 
       it 'should use the earliet of all lab dates' do
-        @event_hash['new_lab_attributes'] = [
-          {'name' => 'Quest', 'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1), 'collection_date' => Date.today.years_ago(1)},
-          {'name' => 'Merck', 'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18), 'collection_date' => Date.today.years_ago(3)}]
+        @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 
+                                                                                                    'lab_test_date' => Date.today.years_ago(1), 
+                                                                                                    'collection_date' => Date.today.years_ago(1)}]},
+                                             "unique_string_2" => {'name' => 'Merck', 
+                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 
+                                                                                                    'lab_test_date' => Date.today.months_ago(18), 
+                                                                                                    'collection_date' => Date.today.years_ago(3)}]}
+                                            }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 11

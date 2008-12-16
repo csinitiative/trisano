@@ -102,6 +102,11 @@ module EventsHelper
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get)
   end
 
+  def add_lab_result_link(name, event, prefix, lab_id)
+    url = event.is_a?(MorbidityEvent) ? lab_result_form_new_cmr_path(:prefix => prefix) : lab_result_form_new_contact_event_path(:prefix => prefix)
+    link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get)
+  end
+
   def add_hospital_link(name)
     link_to_function name do |page|
       page.insert_html :bottom, "hospitals", :partial => 'events/hospital' , :object => Participation.new_hospital_participation
