@@ -28,8 +28,8 @@ describe 'Adding partial treatments to a CMR' do
     @browser.type "morbidity_event_active_patient__person_first_name", "Jersey"
     click_core_tab(@browser, "Clinical")
 
-    @browser.select "morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id", "label=Yes"
-    @browser.type "morbidity_event_active_patient__new_treatment_attributes__treatment", "Leeches"
+    add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes"})
+    
     save_cmr(@browser).should be_true
     @browser.is_text_present('Treatment Date').should be_true
     @browser.is_text_present('Leeches').should be_true
