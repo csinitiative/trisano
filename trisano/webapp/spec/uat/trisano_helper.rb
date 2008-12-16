@@ -281,7 +281,7 @@ module TrisanoHelper
     click_core_tab(browser, CLINICAL)
     browser.click("link=Add a treatment") unless index == 1
     sleep(1)
-    type_field_by_order(@browser, "treatment", 0, result_attributes[:treatment])
+    type_field_by_order(@browser, "treatment", (index - 1)* 2, result_attributes[:treatment])
     browser.select('morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id', result_attributes[:treatment_given])
     browser.type('morbidity_event_active_patient__new_treatment_attributes__treatment_date', result_attributes[:treatment_date])
   end

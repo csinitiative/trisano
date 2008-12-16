@@ -38,17 +38,14 @@ describe 'Adding multiple treatments to a CMR' do
     @browser.click "link=Add a treatment"
     sleep(1)
 
-    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_attributes__treatment')]", "Leeches" 
-    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_date')]", display_date
-    @browser.select "//div[@class='treatment'][1]//select[contains(@id, 'treatment_given_yn_id')]", "label=Yes"
-
-    @browser.type "//div[@class='treatment'][2]//input[contains(@id, 'treatment_attributes__treatment')]", "Whiskey" 
-    @browser.type "//div[@class='treatment'][2]//input[contains(@id, 'treatment_date')]", display_date
-    @browser.select "//div[@class='treatment'][2]//select[contains(@id, 'treatment_given_yn_id')]", "label=Yes"
+    add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes", :treatment_date => display_date})
 
     save_cmr(@browser).should be_true
+    edit_cmr(@browser).should be_true
 
-    @browser.is_text_present('CMR was successfully created.').should be_true
+    add_treatment(@browser, {:treatment => "Whiskey", :treatment_given => "label=Yes", :treatment_date => display_date}, 2)
+    save_cmr(@browser).should be_true
+
     @browser.is_text_present("Leeches").should be_true
     @browser.is_text_present("Whiskey").should be_true
   end
@@ -64,7 +61,7 @@ describe 'Adding multiple treatments to a CMR' do
   it "should allow editing a treatemt" do
     pending "No XPath way to narrow down to this element as ends-with does not seem to be supported in FF."
     edit_cmr(@browser)
-    @browser.type "//div[@class='treatment'][1]//input[ends-with(@id, '_treatment')]", "Eye of newt" 
+    @browser.type "//div[@class='treatment'][1]//input[ends-with(@id, '_treatment')]", "Eye of newt"
     click_core_tab(@browser, "Clinical")
     save_cmr(@browser).should be_true
     @browser.is_text_present('Eye of newt').should be_true
