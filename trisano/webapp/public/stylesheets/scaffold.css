@@ -41,38 +41,6 @@ pre {
   margin-left: 20px;
 }
 
-fieldset.form
-{
-  border: 0 solid #FFFFFF;
-  border-top: 1px solid #000000;
-  margin: 0 0 0 0;
-  padding: 0 1em 1em 1em;
-}
-
-fieldset.vert
-{
-  border: 0;
-  margin: 0 0 0em 0;
-  padding: 0 0em 0em 0em;
-}
-
-fieldset.radio
-{
-  margin: 1em 0 2em 0;
-}
-
-fieldset.radio input
-{
-  clear: both;
-  float: left;
-  width: auto;
-}
-
-fieldset.radio label
-{
-  font-weight: normal;
-}
-
 input.submit
 {
   clear: both;
@@ -81,19 +49,6 @@ input.submit
 select
 {
   # display: block;
-}
-
-.horiz
-{
-  display: block;
-  float: left;
-  margin: 0em 1em 0 0;
-}
-
-.vert
-{
-  clear: both;
-  display: block;
 }
 
 div.uploadStatus {

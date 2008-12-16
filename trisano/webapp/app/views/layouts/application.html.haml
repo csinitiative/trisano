@@ -84,7 +84,7 @@
       %script
         header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
         Element.setStyle('main-content', {top: header_height})
-      .container
+      .container.showgrid
         = yield
       .container
         #foot
@@ -94,3 +94,6 @@
             %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
             |
             %a{:href => 'http://www.trisano.org'}TriSano.org
+            |
+            %script
+              document.write('Browser: ' + BrowserDetect.browser + ' ' + BrowserDetect.version + '')

@@ -30,26 +30,21 @@ body, p, ol, ul
   :z-index 800
 
 #title_area
-  /:position relative
   :position fixed
   :top 104px
   :width 100%
   :padding-top 1em
-  /:height 100%
   :background-color #f9f8f5
   :z-index 800
 
 #main-content
   :position absolute
-  /:top 230px
   :width 100%
-  /:overflow: auto
 
 #form-content
   :position absolute
   :top 120px
   :width 100%
-  /:overflow: auto
 
 .left
   :position absolute
@@ -78,8 +73,6 @@ table
 form
   :margin 0px
 
-/ replacing .listingforms w/ .list
-    
 .list
   :font 
     :family Verdana, Arial, Helvetica, sans-serif
@@ -91,11 +84,16 @@ form
     :text-transform uppercase
     :padding 3px 3px 3px 9px
     :background-color #d4cbb4
+    a
+      :color #333
+      :text-decoration none
+      &:hover
+        :color #c00
   tr
     :background-color #fff
   .roll
     &:hover
-      :background-color #e5e5e5
+      :background-color #f3eee4
   td
     :font-size 12px
     :weight light
@@ -109,6 +107,46 @@ form
   .forminformation
     :width 34%
 
+fieldset
+  :border 0px
+  :margin 0px
+  /:padding 40px
+.form
+  :border 1px dashed #999
+  /:border 0 solid #FFFFFF
+  /:border-top 1px solid #000000
+  :margin 0 0 0 0
+  :padding 0 1em 1em 1em
+.vert
+  :border 0
+  :margin 0 0 0em 0
+  :padding 0 0em 0em 0em
+.radio
+  :margin 1em 0 2em 0
+.radio input
+  :clear both
+  :float left
+  :width auto
+.radio label
+  :font-weight normal
+
+legend
+  :font-weight bold
+  :padding 5px
+  :font-size 12px
+  /:margin 7px
+  /:background-color #c00
+  :color #0900
+
+.horiz
+  :display block
+  :float left
+  :margin 0em 1em 0 0
+
+.vert
+  :clear both
+  :display block
+
 #foot
   :width 420px
   :padding 50px 0px 100px 0px
@@ -118,5 +156,3 @@ form
 .foottext
   :width 395px
   :float left
-.pagination
-  :clear both
