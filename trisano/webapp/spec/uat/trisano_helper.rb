@@ -254,27 +254,27 @@ module TrisanoHelper
     browser.click("link=Add a new lab result") unless index == 1
     sleep(1)
     #TODO verify this works for multiples...
-    type_field_by_order(@browser, "model_auto_completer_tf", 0, result_attributes[:lab_name])
-    type_field_by_order(@browser, "test_type", 0, result_attributes[:lab_test_type])
-    type_field_by_order(@browser, "lab_result", 0, result_attributes[:lab_result_text])
-    @browser.select("morbidity_event_new_lab_attributes__interpretation_id", result_attributes[:lab_interpretation])
-    @browser.select("morbidity_event_new_lab_attributes__specimen_source_id", result_attributes[:lab_specimen_source])
-    @browser.type("morbidity_event_new_lab_attributes__collection_date", result_attributes[:lab_collection_date])
-    @browser.type("morbidity_event_new_lab_attributes__lab_test_date", result_attributes[:lab_test_date])
-    @browser.select("morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=#{result_attributes[:sent_to_uphl]}")
+    type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
+    type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
+    type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
+    browser.select("morbidity_event_new_lab_attributes__interpretation_id", result_attributes[:lab_interpretation])
+    browser.select("morbidity_event_new_lab_attributes__specimen_source_id", result_attributes[:lab_specimen_source])
+    browser.type("morbidity_event_new_lab_attributes__collection_date", result_attributes[:lab_collection_date])
+    browser.type("morbidity_event_new_lab_attributes__lab_test_date", result_attributes[:lab_test_date])
+    browser.select("morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=#{result_attributes[:sent_to_uphl]}")
   end
 
   def add_reporting_info(browser, result_attributes)
-    click_core_tab(@browser, REPORTING)
-    type_field_by_order(@browser, "model_auto_completer_tf", 1, result_attributes[:agency])
-    @browser.type "morbidity_event_active_reporting_agency_first_name", result_attributes[:first_name]
-    @browser.type "morbidity_event_active_reporting_agency_last_name", result_attributes[:last_name]
-    @browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", result_attributes[:phone_type]
-    @browser.type "morbidity_event_active_reporting_agency_area_code", result_attributes[:area_code]
-    @browser.type "morbidity_event_active_reporting_agency_extension", result_attributes[:extension]
-    @browser.type "morbidity_event_active_reporting_agency_phone_number", result_attributes[:phone_number]
-    @browser.type "morbidity_event_results_reported_to_clinician_date", result_attributes[:clinician_date]
-    @browser.type "morbidity_event_first_reported_PH_date", result_attributes[:PH_date]
+    click_core_tab(browser, REPORTING)
+    type_field_by_order(browser, "model_auto_completer_tf", 0, result_attributes[:agency])
+    browser.type "morbidity_event_active_reporting_agency_first_name", result_attributes[:first_name]
+    browser.type "morbidity_event_active_reporting_agency_last_name", result_attributes[:last_name]
+    browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", result_attributes[:phone_type]
+    browser.type "morbidity_event_active_reporting_agency_area_code", result_attributes[:area_code]
+    browser.type "morbidity_event_active_reporting_agency_extension", result_attributes[:extension]
+    browser.type "morbidity_event_active_reporting_agency_phone_number", result_attributes[:phone_number]
+    browser.type "morbidity_event_results_reported_to_clinician_date", result_attributes[:clinician_date]
+    browser.type "morbidity_event_first_reported_PH_date", result_attributes[:PH_date]
   end
 
   def add_treatment(browser, result_attributes, index = 1)

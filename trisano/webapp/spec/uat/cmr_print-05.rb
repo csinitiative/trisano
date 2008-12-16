@@ -136,7 +136,7 @@ describe 'Print CMR page' do
     click_core_tab(@browser, NOTES)
     @browser.type "morbidity_event_new_note_attributes_note", "I'm the operator with my pocket calculator (beep boop)"
   end
-  
+
   it 'should edit the CMR to include admin info' do
     #edit_cmr(@browser).should be_true
     click_core_tab(@browser, ADMIN)
@@ -154,7 +154,7 @@ describe 'Print CMR page' do
     save_cmr(@browser).should be_true
     print_cmr(@browser).should be_true
   end
-  
+
   it 'should correctly display the information to the print page, report only' do
     @browser.is_text_present('Confidential Case Report').should be_true
     @browser.is_text_present('Lebowski').should be_true
