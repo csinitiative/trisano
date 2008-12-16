@@ -96,6 +96,7 @@ namespace :trisano do
         puts "Failed granting privileges to TriSano user: #{@trisano_user}."
         return success
       end
+      return success
     end
 
     def create_db 
