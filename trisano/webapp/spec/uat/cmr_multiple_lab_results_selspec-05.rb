@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+#$dont_kill_browser = true
 
 describe 'Adding multiple lab results to a CMR' do
   
@@ -59,6 +59,7 @@ describe 'Adding multiple lab results to a CMR' do
     edit_cmr(@browser).should be_true
     old_lab_name = @browser.get_value("//div[@id='labs']/div[1]//input[contains(@name, 'name')]")
     lab_name = get_unique_name(3)
+    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", "")
     @browser.type_keys("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", lab_name)
     save_cmr(@browser).should be_true
     @browser.is_text_present(lab_name).should be_true
