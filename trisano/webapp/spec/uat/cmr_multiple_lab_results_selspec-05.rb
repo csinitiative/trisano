@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+$dont_kill_browser = true
 
 describe 'Adding multiple lab results to a CMR' do
   
@@ -27,22 +27,21 @@ describe 'Adding multiple lab results to a CMR' do
     edit_cmr(@browser).should be_true
 
     click_core_tab(@browser, "Laboratory")
-    @browser.click "link=Add a new lab result"
+    @browser.click "link=Add a new lab result to this lab"
+    wait_for_element_present("//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][2]//input[contains(@name, 'test_type')]")
+    @browser.click "link=Add a new lab"
     wait_for_element_present("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
-    @browser.click "link=Add a new lab result"
-    wait_for_element_present("//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'name')]")
 
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", "Lab One"
-    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'test_type')]", "Urinalysis"
-    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'lab_result_text')]", "Positive"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'test_type')]", "Urinalysis"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
+
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][2]//input[contains(@name, 'test_type')]", "Blood Test"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][2]//input[contains(@name, 'lab_result_text')]", "Negative"
 
     @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]", "Lab Two"
-    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'test_type')]", "Blood Test"
-    @browser.type "//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'lab_result_text')]", "Negative"
-
-    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'name')]", "Lab Two"
-    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'test_type')]", "Biopsy"
-    @browser.type "//div[@id='labs']/div[@class='lab'][3]//input[contains(@name, 'lab_result_text')]", "Inconclusive"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'test_type')]", "Biopsy"
+    @browser.type "//div[@id='labs']/div[@class='lab'][2]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Inconclusive"
 
     save_cmr(@browser).should be_true
 
@@ -56,25 +55,20 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.is_text_present('Biopsy').should be_true
   end
 
-# DEBT:  Make this work
-# This works in real life, but not here.  Have a feeling the autocomplete's onblur is not firing in Selenium.  Dunno.
-#
-#  it "should allow editing a lab name" do
-#    edit_cmr(@browser).should be_true
-#    old_lab_name = @browser.get_value("//div[@id='labs']/div[1]//input[contains(@name, 'name')]")
-#    lab_name = get_unique_name(3)
-#    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", lab_name)
-#    # Change focus to force the lab name ID field to change
-#    @browser.key_press("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", "\9")
-#    save_cmr(@browser).should be_true
-#    @browser.is_text_present(lab_name).should be_true
-#    @browser.is_text_present(old_lab_name).should_not be_true
-#  end
+  it "should allow editing a lab name" do
+    edit_cmr(@browser).should be_true
+    old_lab_name = @browser.get_value("//div[@id='labs']/div[1]//input[contains(@name, 'name')]")
+    lab_name = get_unique_name(3)
+    @browser.type_keys("//div[@id='labs']/div[1]//input[contains(@name, 'name')]", lab_name)
+    save_cmr(@browser).should be_true
+    @browser.is_text_present(lab_name).should be_true
+    @browser.is_text_present(old_lab_name).should_not be_true
+  end
 
   it "should allow editing lab results" do
     edit_cmr(@browser).should be_true
     test_type = get_unique_name(2)
-    @browser.type("//div[@id='labs']/div[1]//input[contains(@name, 'test_type')]", test_type)
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'test_type')]", test_type
     save_cmr(@browser).should be_true
     @browser.is_text_present(test_type).should be_true
   end
@@ -84,8 +78,8 @@ describe 'Adding multiple lab results to a CMR' do
     lab_name_1 = @browser.get_value("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]")
     lab_name_2 = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
     # Targets the 2nd lab result of the first lab to have 2 or more lab results
-    test_type = @browser.get_value("//div[@id='labs']/div[@class='lab']//div[@class='lab_result'][2]//input[contains(@name, 'test_type')]")
-    @browser.click("//div[@id='labs']/div[@class='lab']//div[@class='lab_result'][2]//a")
+    test_type = @browser.get_value("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//input[contains(@name, 'test_type')]")
+    @browser.click("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//a")
     save_cmr(@browser).should be_true
     @browser.is_text_present(test_type).should_not be_true
     @browser.is_text_present(lab_name_1).should be_true

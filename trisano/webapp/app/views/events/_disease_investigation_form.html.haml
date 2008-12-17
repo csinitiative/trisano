@@ -31,7 +31,7 @@
       - for form_reference in @event.core_only_form_references
         %li
           = "#{form_reference.form.name} (core only)"
-  = link_to "Add forms to this event", event_forms_path(@event)
+  = link_to("Add forms to this event", event_forms_path(@event)) unless @event.new_record?
 
 %fieldset
   %legend Investigative Information

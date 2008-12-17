@@ -179,11 +179,11 @@ module ApplicationHelper
     tf_id = "#{id_prefix}_#{rand_id}"
     tag_options.merge!({:id => tf_id, :style => "display: block"})
     value = data_object.send(field)
-    completion_options.merge!(:method => :get, :indicator => "#{tf_id}_spinner")
+    completion_options.merge!(:method => :get, :indicator => "#{tf_id}_lab_spinner")
     return <<-HTML
       #{auto_complete_stylesheet}
       #{"<label class='horiz'>#{label}"}
-      #{image_tag 'redbox_spinner.gif', :id => "#{tf_id}_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'}
+      #{image_tag 'redbox_spinner.gif', :id => "#{tf_id}_lab_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'}
       #{text_field_tag(name, value, tag_options )}
       #{"</label>"}
       #{content_tag("div", "", :id => "#{tf_id}_auto_complete", :class => "auto_complete")}

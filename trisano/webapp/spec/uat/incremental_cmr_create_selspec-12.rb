@@ -73,13 +73,14 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the lab result' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Laboratory")
-    @browser.click("link=Add a new lab result")
+    @browser.click("link=Add a new lab")
     sleep 3
-    watch_for_spinner("div[id=labs] img[id^=model_auto_completer_hf]") do
-      @browser.type_keys("//input[contains(@id, 'model_auto_completer_tf')]", 'Lab')
+    watch_for_spinner("div[id=labs] img[id$=lab_spinner]") do
+      @browser.type_keys("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", 'Lab')
     end
-    @browser.type('morbidity_event[new_lab_attributes][][lab_result_text]', 'Positive')
-    @browser.select 'morbidity_event_new_lab_attributes__specimen_source_id', 'label=Animal head'
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
+    @browser.select "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//select[contains(@name, 'specimen_source')]", "label=Animal head"
+
     save_cmr(@browser).should be_true
     @browser.is_text_present('Animal head').should be_true
     @browser.is_text_present('Positive').should be_true
@@ -94,7 +95,7 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the reporting info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Reporting")
-    type_field_by_order(@browser, "model_auto_completer_tf", 1, 'Happy Jacks Health Store')
+    @browser.type("//input[contains(@name, '[active_reporting_agency][name]')]", 'Happy Jacks Health Store')
     save_cmr(@browser).should be_true
   end
 

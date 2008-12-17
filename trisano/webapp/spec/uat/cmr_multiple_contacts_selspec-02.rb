@@ -101,9 +101,9 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.select "contact_event_active_patient__person_disposition_id", "label=Infected, brought to treatment"
     @browser.type "contact_event_active_patient__person_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
     click_core_tab(@browser, "Laboratory")
-    @browser.click "link=Add a new lab result"
-    @browser.type "name=contact_event[new_lab_attributes][][name]", "Abbott Labs"
-    @browser.type "name=contact_event[new_lab_attributes][][lab_result_text]", "Positive"
+    @browser.click "link=Add a new lab"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", "Abbott Labs"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
     save_contact_event(@browser).should be_true
     @browser.is_text_present('Oliver').should be_true
     @browser.is_text_present('333').should be_true
