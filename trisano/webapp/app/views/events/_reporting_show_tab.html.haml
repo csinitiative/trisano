@@ -1,7 +1,7 @@
 %fieldset
   %legend
     Reporting Information
-  %fieldset{:class => "vert"}
+  %fieldset.form
         
     - if @event.active_reporting_agency.nil?
       - fb_part = Participation.new
@@ -47,6 +47,7 @@
             = reporter_fields.label(:last_name)
             = reporter_name.last_name
 
+        %span.vert
         - agency_fields.fields_for(:telephone_entities_location, reporter_ent_loc, :builder => ExtendedFormBuilder) do |el|
           - core_element_show :entity_location_type_id, el, :horiz do
             = el.label(:entity_location_type_id, "Phone type")
@@ -63,10 +64,10 @@
             = phone_fields.label(:extension)
             = reporter_phone.extension
 
-  %fieldset{:class => "vert"}
-    - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
-      = event_form.label(:results_reported_to_clinician_date)
-      = h(@event.results_reported_to_clinician_date) || '&nbsp;'
-    - core_element_show :first_reported_PH_date, event_form, :horiz do
-      = event_form.label(:first_reported_PH_date, 'Date first reported to public health')
-      = h(@event.first_reported_PH_date) || '&nbsp;'
+          %span.vert
+          - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
+            = event_form.label(:results_reported_to_clinician_date)
+            = h(@event.results_reported_to_clinician_date) || '&nbsp;'
+          - core_element_show :first_reported_PH_date, event_form, :horiz do
+            = event_form.label(:first_reported_PH_date, 'Date first reported to public health')
+            = h(@event.first_reported_PH_date) || '&nbsp;'

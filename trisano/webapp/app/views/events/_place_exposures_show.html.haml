@@ -11,11 +11,12 @@
     -if @event.place_child_events.empty?
       %h3 No place exposures have been recorded for this event
     -else
-      %table.tabular
+      %table.list
         %tr
           %th Place Name
           %th Place Type
           %th Date of Exposure
+          %th
 
         -@event.place_child_events.each do |pe|
           -place = pe.active_place.primary_entity.place_temp
@@ -29,4 +30,5 @@
             %td{style}=h(place.name)
             %td{style}=place.place_description
             %td{style}=format_date(place.date_of_exposure)
-            %td=link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"})
+            %td.tools
+              =link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"})

@@ -132,6 +132,7 @@ legend {
   font-weight: bold;
   padding: 5px;
   font-size: 12px;
+  background-color: #fff;
   color: #0900; }
 
 .horiz {
@@ -154,6 +155,3 @@ legend {
 .foottext {
   width: 395px;
   float: left; }
-
-.pagination {
-  clear: both; }

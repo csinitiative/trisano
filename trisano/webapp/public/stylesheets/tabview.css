@@ -100,7 +100,7 @@ version: 2.6.0
 .yui-skin-sam .yui-navset .yui-nav a em,.yui-skin-sam .yui-navset .yui-navset-top .yui-nav a em
 	{
 	border:solid #d4cbb4;
-	border-width:1px 0 0;
+	border-width:3px 0 0;
 	cursor:hand;
 	padding:0.25em .75em;
 	left:0;

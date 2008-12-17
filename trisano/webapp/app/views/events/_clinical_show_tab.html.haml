@@ -17,7 +17,7 @@
 %fieldset
   %legend Clinical Information
 
-  %fieldset{:class => 'form'}
+  %fieldset.form
     %legend
       Disease
     - event_form.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d|
@@ -66,7 +66,7 @@
     - if @event.hospitalized_health_facilities.empty?
       %h3 No hospitalized health facilities have been recorded for this event
     - else
-      %table{:class => 'tabular'}
+      %table.list
         %tr
           %th Hospitalized health facility
           %th Admission date
@@ -98,7 +98,7 @@
       - if @event.active_patient.participations_treatments.empty?
         %h3 No treatments have been recorded for this event
       - else
-        %table{:class => 'tabular'}
+        %table.list
           %tr
             %th Treatment Given
             %th Treatment
@@ -117,7 +117,7 @@
     - if @event.clinicians.empty?
       %h3 No clinicians have been recorded for this event
     - else
-      %table{:class => 'tabular'}
+      %table.list
         %tr
           %th Name
           %th Phone
@@ -130,7 +130,7 @@
           - clinician_phone_loc = clinician_entity.telephone_entities_locations.last
           - clinician_phone = clinician_phone_loc.location.telephones.last unless clinician_phone_loc.nil?
 
-          %tr 
+          %tr
             %td= clinician_person.last_name + (clinician_person.first_name.blank? ? "" : fml(", ", clinician_person.first_name, ""))
             %td 
               -unless clinician_phone_loc.nil? 
@@ -140,7 +140,7 @@
       %h3 No diganosing health facilities have been recorded for this event
     - else
       %br
-      %table{:class => 'tabular'}
+      %table.list
         %tr
           %th Diagnosing health facility
 

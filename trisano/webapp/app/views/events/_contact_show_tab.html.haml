@@ -26,12 +26,13 @@
     - if @event.contact_child_events.empty?
       %h3 No contacts have been recorded for this event
     - else
-      %table{:class => 'tabular'}
+      %table.list
         %tr
           %th Last name
           %th First name
           %th Disposition
           %th Phone
+          %th
 
         - for contact in @event.contact_child_events
           - contact_entity = contact.active_patient.primary_entity
@@ -51,5 +52,6 @@
             %td{style} 
               -unless contact_phone_loc.nil? 
                 = (l(contact_phone_loc.entity_location_type) || "Unspecified Location") + ": " + contact_phone.simple_format
-
-            %td= link_to("Edit contact event", edit_contact_event_path(contact), {:id => "edit-contact-event"})
+            %td
+              .tools
+                = link_to("Edit contact event", edit_contact_event_path(contact), {:id => "edit-contact-event"})
