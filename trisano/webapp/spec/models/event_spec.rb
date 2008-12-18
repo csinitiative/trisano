@@ -360,7 +360,7 @@ describe MorbidityEvent do
     describe "Handling existing lab results" do
 
       describe "Receiving an edited lab result where the lab name has changed to an existing lab" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -395,7 +395,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving an edited lab result where the lab name has changed to a new lab" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -424,7 +424,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving an edited lab result" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -450,7 +450,7 @@ describe MorbidityEvent do
       end
 
       describe "deleting one lab result and changing the other" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -478,7 +478,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving no lab results" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -498,7 +498,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving a mix of new and existing lab results" do
-        fixtures :events, :participations, :entities, :places, :lab_results
+        fixtures :events, :participations, :entities, :places, :lab_results, :participations_places
 
         before(:each) do
           existing_lab_hash_1 = {
@@ -660,6 +660,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving empty hospitalization data" do
+        fixtures :participations_places
 
         before(:each) do
           @existing_hospital_hash = {
@@ -698,6 +699,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving an edited diagnosing facility" do
+        fixtures :participations_places
         before(:each) do
           @existing_diagnostic_hash = {
             "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}"} }
@@ -712,7 +714,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving empty diagnostic data" do
-
+        fixtures :participations_places
         before(:each) do
           @existing_diagnostic_hash = {
             "existing_diagnostic_attributes" => {}
@@ -731,7 +733,7 @@ describe MorbidityEvent do
     describe "Handling new contacts" do
 
       describe "Receiving one new contact" do
-        fixtures :entities, :participations, :people, :entities_locations, :locations, :telephones
+        fixtures :entities, :participations, :people, :entities_locations, :locations, :telephones, :participations_places
 
         before(:each) do
           new_contact_hash = {
@@ -810,7 +812,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving one edited contact with new phone number, when event has two contacts" do
-        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
+        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses, :participations_places
         before(:each) do
           @existing_contact_hash = {
             "existing_contact_attributes" => { "#{entities(:Groucho).id}" => {:last_name  => "Marx", :first_name  => "Chico", :contact_phone_id => "", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "2345678"} }
@@ -837,7 +839,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving two edited contacts, one with an existing phone number" do
-        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
+        fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses, :participations_places
         before(:each) do
           @existing_contact_hash = {
             "existing_contact_attributes" => {
@@ -876,7 +878,7 @@ describe MorbidityEvent do
       end
      
       describe "Receiving empty contact data" do
-
+        fixtures :participations_places
         before(:each) do
           @existing_contact_hash = {
             "existing_contact_attributes" => {}
