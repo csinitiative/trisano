@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-#$dont_kill_browser = true
+$dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -225,7 +225,66 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("Permission denied: You do not have view privileges for this jurisdiction")
   end
 
-  it "should allow for queues to specified" do
+  it 'should allow creating a new investigator' do
+    @browser.open "/trisano/cmrs"
+    @browser.wait_for_page_to_load($load_time)
+    switch_user(@browser, "default_user").should be_true
+    @browser.click "link=ADMIN"
+    @browser.wait_for_page_to_load
+    @browser.click "link=Users"
+    @browser.wait_for_page_to_load($load_time)    
+    @browser.click "//input[@value='Create new user']"
+    @browser.wait_for_page_to_load($load_time)
+
+    @browser.type "user_uid", @uid
+    @browser.type "user_user_name", @uname
+
+    @browser.click "link=Add Role"
+    @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
+    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Central Utah Public Health Department"
+
+    @browser.click "user_submit"
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present('User was successfully created.').should be_true
+    @browser.is_text_present(@uid).should be_true
+    @browser.is_text_present(@uname).should be_true
+
+    @browser.is_text_present("Investigator").should be_true
+    @browser.is_text_present("Central Utah Public Health Department").should be_true
+  end
+
+  it 'should be able to route a cmr to an individual investigator' do
+    click_nav_new_cmr(@browser).should be_true
+    @browser.type('morbidity_event_active_patient__person_last_name', @person_1)
+    save_cmr(@browser).should be_true
+
+    @browser.is_text_present("NEW CMR").should be_true
+    @browser.is_text_present("Edit").should be_true
+    @browser.is_text_present("Route to Local Health Depts.").should be_true
+
+    @browser.click "link=Route to Local Health Depts."
+    @browser.select "jurisdiction_id", "label=Central Utah"
+    @browser.click "Bear_River"   # On
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load($load_time)
+    @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
+
+    @browser.click("ACPTD-LHD")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present("Accepted by Local Health Dept.").should be_true
+    
+    @browser.is_text_present('Assign to investigator:').should be_true
+    @browser.select "morbidity_event__investigator_id", "label=#{@uname}"
+    @browser.wait_for_page_to_load($load_time)
+
+    @browser.is_text_present("Investigator:  #{@uname}").should be_true
+    @browser.is_text_present("Routed to investigator #{@uname}").should be_true
+    
+    @browser.is_text_present("Route locally to").should be_true
+    @browser.is_text_present("Assigned to Investigator").should be_true
+  end
+
+  it "should allow for filtering the view" do
     @browser.open "/trisano"
     @browser.wait_for_page_to_load($load_time)
     current_user = @browser.get_selected_label("user_id")
@@ -233,6 +292,7 @@ describe 'Sytem functionality for routing and workflow' do
       switch_user(@browser, "default_user")
     end
 
+    # By Queue
     @browser.open "/trisano/admin"
     @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Event Queues"
@@ -280,6 +340,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should_not be_true
 
+    # By state
     @browser.click "link=Change View"
     @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=New"
     @browser.click "change_view_btn"
@@ -293,10 +354,12 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should_not be_true
+    @browser.is_text_present(@person_1).should be_true
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
+    
+    # By state and queue
     @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=New"
     @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=Enterics-UtahCounty"
     @browser.click "set_as_default_view"
@@ -306,6 +369,15 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_1).should_not be_true
     @browser.is_text_present(@person_2).should_not be_true
 
+    # By investigator
+    @browser.click "link=Change View"
+    @browser.add_selection "//div[@id='change_view']//select[@id='investigators[]']", "label=#{@uname}"
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load($load_time)
+
+    @browser.is_text_present(@uname).should be_true
+    @browser.get_xpath_count("//table[@class='list']//tr").should == "2"
+
     @browser.click "link=CMRS"
     @browser.wait_for_page_to_load($load_time)
 
@@ -313,60 +385,4 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
   end
 
-  it 'should allow creating a new investigator' do
-    @browser.click "link=ADMIN"
-    @browser.wait_for_page_to_load
-    @browser.click "link=Users"
-    @browser.wait_for_page_to_load($load_time)    
-    @browser.click "//input[@value='Create new user']"
-    @browser.wait_for_page_to_load($load_time)
-
-    @browser.type "user_uid", @uid
-    @browser.type "user_user_name", @uname
-
-    @browser.click "link=Add Role"
-    @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Central Utah Public Health Department"
-
-    @browser.click "user_submit"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('User was successfully created.').should be_true
-    @browser.is_text_present(@uid).should be_true
-    @browser.is_text_present(@uname).should be_true
-
-    @browser.is_text_present("Investigator").should be_true
-    @browser.is_text_present("Central Utah Public Health Department").should be_true
-  end
-
-
-  it 'should be able to route a cmr to an individual investigator' do
-    click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @person_1)
-    save_cmr(@browser).should be_true
-
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route to Local Health Depts.").should be_true
-
-    @browser.click "link=Route to Local Health Depts."
-    @browser.select "jurisdiction_id", "label=Central Utah"
-    @browser.click "Bear_River"   # On
-    @browser.click "route_event_btn"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
-
-    @browser.click("ACPTD-LHD")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Accepted by Local Health Dept.").should be_true
-    
-    @browser.is_text_present('Assign to investigator:').should be_true
-    @browser.select "morbidity_event__investigator_id", "label=#{@uname}"
-    @browser.wait_for_page_to_load($load_time)
-
-    @browser.is_text_present("Investigator:  #{@uname}").should be_true
-    @browser.is_text_present("Routed to investigator #{@uname}").should be_true
-    
-    @browser.is_text_present("Route locally to").should be_true
-    @browser.is_text_present("Assigned to Investigator").should be_true
-  end
 end
