@@ -48,6 +48,7 @@ class ContactEvent < HumanEvent
         contact_event.contacts << contact
         contact_event.jurisdiction = jurisdiction if morbidity_event.active_jurisdiction
         contact_event.disease_event = disease_event unless morbidity_event.disease.nil?
+        contact_event.new_note_attributes = {:note => "Event created."}
 
         # Link this contact to the originating morbidity event.
         contact_event.parent_event = morbidity_event

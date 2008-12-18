@@ -45,8 +45,12 @@ describe PlaceEvent do
     end
 
     describe "When event has one place exposure and a disease" do
+      fixtures :users
       
       before(:each) do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+
         place_hash = { :new_place_exposure_attributes => [ {:name => "Davis Natatorium"} ],
                          :disease => {:disease_id => diseases(:chicken_pox).id} }
         event = MorbidityEvent.new(patient_attrs.merge(place_hash))
@@ -97,6 +101,13 @@ describe PlaceEvent do
     end
 
     describe "when event has two place exposures" do
+      fixtures :users
+      
+      before(:each) do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+      end
+
       it "should return an array of two elements" do
         place_hash = { :new_place_exposure_attributes => [ {:name => "Davis Natatorium"}, {:name => "Takigawa Soba"} ] }
         event = MorbidityEvent.new(patient_attrs.merge(place_hash))

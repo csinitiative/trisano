@@ -56,6 +56,7 @@ class PlaceEvent < Event
         place_event.participations << contact
         place_event.participations << jurisdiction if morbidity_event.active_jurisdiction
         place_event.disease_event = disease_event unless morbidity_event.disease.nil?
+        place_event.new_note_attributes = {:note => "Event created."}
 
         # Link this place event to the originating morbidity event.
         place_event.parent_event = morbidity_event

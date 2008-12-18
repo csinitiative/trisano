@@ -46,6 +46,9 @@ class PlaceEventsController < EventsController
 
     go_back = params.delete(:return)
     
+    # Assume that "save & exits" represent a 'significant' update
+    @event.new_note_attributes = {:note => "Edited event"} unless go_back
+
     respond_to do |format|
       if @event.update_attributes(params[:place_event])
         flash[:notice] = 'Place event was successfully updated.'

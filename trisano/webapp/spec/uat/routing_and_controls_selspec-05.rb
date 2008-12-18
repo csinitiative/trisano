@@ -78,6 +78,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
+    @browser.is_text_present("Routed to jurisdiction Central Utah Public Health Department.").should be_true
   end
 
   it "should allow for accepting or rejecting a remote routing assignent" do
@@ -89,12 +90,14 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
+    @browser.is_text_present("Accepted by Central Utah Public Health Department.").should be_true
   end
 
   it "should allow routing to an investigator queue" do
     @browser.is_text_present('Route locally to:').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
     @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present("Routed to queue Enterics-UtahCounty.").should be_true
   end
 
   it "should allow for accepting or rejecting a local routing assignent" do
@@ -107,12 +110,14 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Under Investigation").should be_true
     @browser.is_element_present("//table[@class='list']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
+    @browser.is_text_present("Accepted for investigation.").should be_true
   end
 
   it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do
     @browser.click("investigation_complete_btn")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Investigation Complete").should be_true
+    @browser.is_text_present("Completed investigation.").should be_true
   end
 
   it "should allow for accepting or rejecting a locally completed investigation" do
@@ -124,6 +129,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click("APP-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Approved by LHD").should be_true
+    @browser.is_text_present("Approved at Central Utah Public Health Department.").should be_true
   end
 
   it "should allow for accepting or rejecting a remotely completed investigation" do
@@ -358,6 +364,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Investigator:  #{@uname}").should be_true
+    @browser.is_text_present("Routed to investigator #{@uname}").should be_true
     
     @browser.is_text_present("Route locally to").should be_true
     @browser.is_text_present("Assigned to Investigator").should be_true

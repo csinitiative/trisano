@@ -191,6 +191,7 @@ describe PlaceEventsController do
       Event.stub!(:find).and_return(@event)
       @event.stub!(:read_attribute).and_return("PlaceEvent")
       @user.stub!(:is_entitled_to_in?).and_return(true)
+      @event.stub!(:add_note).and_return(true)
     end
     
     def do_post
@@ -209,6 +210,12 @@ describe PlaceEventsController do
       do_post
       flash[:notice].should eql("The event was successfully marked as deleted.")
     end
+
+    it "should add a note" do
+      @event.should_receive(:soft_delete).and_return(true)
+      @event.should_receive(:add_note)
+      do_post
+    end
   end
   
   describe "handling failed POST /place_events/1/soft_delete with update entitlement" do
@@ -219,6 +226,7 @@ describe PlaceEventsController do
       Event.stub!(:find).and_return(@event)
       @event.stub!(:read_attribute).and_return("PlaceEvent")
       @user.stub!(:is_entitled_to_in?).and_return(true)
+      @event.stub!(:add_note).and_return(true)
     end
     
     def do_post
@@ -237,6 +245,12 @@ describe PlaceEventsController do
       do_post
       flash[:error].should eql("An error occurred marking the event as deleted.")
     end
+
+    it "should not add a note" do
+      @event.should_receive(:soft_delete).and_return(false)
+      @event.should_not_receive(:add_note)
+      do_post
+    end
   end
   
   describe "handling POST /place_events/1/soft_delete without update entitlement" do
@@ -247,6 +261,7 @@ describe PlaceEventsController do
       Event.stub!(:find).and_return(@event)
       @event.stub!(:read_attribute).and_return("PlaceEvent")
       @user.stub!(:is_entitled_to_in?).and_return(false)
+      @event.stub!(:add_note).and_return(true)
     end
     
     def do_post
@@ -257,6 +272,11 @@ describe PlaceEventsController do
     it "should be be a 403" do
       do_post
       response.response_code.should == 403
+    end
+
+    it "should not add a note" do
+      @event.should_not_receive(:add_note)
+      do_post
     end
   end
 

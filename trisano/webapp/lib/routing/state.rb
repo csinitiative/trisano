@@ -53,6 +53,10 @@ module Routing
       @options[:description]
     end
 
+    def note_text
+      @options[:note_text]
+    end
+
     # returns transitions for this state if they have action
     # phrases. The block gives caller a chance to reject any of these
     # states (based on privileges and what not).

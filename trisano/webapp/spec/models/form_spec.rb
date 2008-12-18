@@ -743,9 +743,12 @@ describe Form do
   
   describe 'when pushing to events' do
     
-    fixtures :forms, :form_elements, :questions, :diseases, :disease_events, :diseases_forms, :entities, :places
+    fixtures :forms, :form_elements, :questions, :diseases, :disease_events, :diseases_forms, :entities, :places, :users
     
     before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
+
       @form = Form.find(1)
       @anthrax = diseases(:anthrax)
       

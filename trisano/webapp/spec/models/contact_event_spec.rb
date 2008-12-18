@@ -45,8 +45,12 @@ describe ContactEvent do
     end
 
     describe "When event has one contact and a disease" do
+      fixtures :users
       
       before(:each) do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+
         contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
                          :disease => {:disease_id => diseases(:chicken_pox).id} }
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
@@ -97,6 +101,13 @@ describe ContactEvent do
     end
 
     describe "when event has two contacts" do
+      fixtures :users
+      
+      before(:each) do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+      end
+
       it "should return an array of two elements" do
         contact_hash = { :new_contact_attributes => [ {:last_name => "White"}, {:last_name => "Black"} ] }
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))

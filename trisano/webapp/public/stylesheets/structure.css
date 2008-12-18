@@ -83,7 +83,7 @@ form {
     background-color: #d4cbb4; }
     .list th a {
       color: #333;
-      text-decoration: none; }
+      text-decoration: underline; }
       .list th a:hover {
         color: #c00; }
   .list tr {

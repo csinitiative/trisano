@@ -205,14 +205,19 @@ class MorbidityEvent < HumanEvent
     jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
 
     transaction do
-      # Handle the primary jurisdiction
+      # Handle the primary jurisdiction 
       # 
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == active_jurisdiction.secondary_entity_id
         proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
         raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
-        active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-        update_attribute("event_queue_id",  nil)
+        self.active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
+        self.update_attributes(:event_queue_id => nil, 
+                               :investigator_id => nil, 
+                               :investigation_started_date => nil, 
+                               :investigation_completed_LHD_date => nil, 
+                               :review_completed_UDOH_date => nil)
+        self.add_note(self.instance_eval(Event.states[self.event_status].note_text))
       end
 
       # Handle secondary jurisdictions

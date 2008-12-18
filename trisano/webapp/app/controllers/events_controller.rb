@@ -87,6 +87,7 @@ class EventsController < ApplicationController
 
   def soft_delete
     if @event.soft_delete
+      @event.add_note("Deleted event.")
       flash[:notice] = 'The event was successfully marked as deleted.'
       redirect_to request.env["HTTP_REFERER"]
     else

@@ -1186,9 +1186,11 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :entities
+    fixtures :events, :entities, :users
 
     before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
       @event = MorbidityEvent.find(events(:marks_cmr).id)
     end
 
@@ -1926,7 +1928,11 @@ describe MorbidityEvent do
   end
   
   describe "when soft deleting" do
+    fixtures :users
+
     before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
       @event_hash = {
         "active_patient" => {
           "person" => {

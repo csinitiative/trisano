@@ -110,6 +110,8 @@ class MorbidityEventsController < EventsController
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
     end
     
+    @event.new_note_attributes = {:note => @event.instance_eval(Event.states["NEW"].note_text) }
+
     respond_to do |format|
       if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
@@ -140,6 +142,9 @@ class MorbidityEventsController < EventsController
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]
+
+    # Assume that "save & exits" represent a 'significant' update
+    @event.new_note_attributes = {:note => "Edited event"} unless go_back
 
     # Debt: get rid of these eventually.
     # Creates contact and place events from event participations, and links them to this event
@@ -187,7 +192,7 @@ class MorbidityEventsController < EventsController
 
     begin
       Event.transaction do
-        # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondarys
+        # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondaries
         @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
         
         # the following line must follow the previous line or state won't get changed.
@@ -227,10 +232,15 @@ class MorbidityEventsController < EventsController
     # A status change may be accompanied by other values such as an event queue, set them
     @event.attributes = params[:morbidity_event]
 
+    @event.new_note_attributes = {:note => @event.instance_eval(Event.states[event_status].note_text) }
+
     # Special handling for certain state changes
     case event_status
     when "RJCTD-LHD"
       @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
+    when "RJCTD-INV"
+      @event.investigator_id = nil
+      @event.investigation_started_date = nil
     when "UI"
       @event.investigator_id = User.current_user.id
       @event.investigation_started_date = Date.today

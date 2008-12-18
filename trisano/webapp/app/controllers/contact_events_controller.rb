@@ -47,6 +47,9 @@ class ContactEventsController < EventsController
 
     go_back = params.delete(:return)
     
+    # Assume that "save & exits" represent a 'significant' update
+    @event.new_note_attributes = {:note => "Edited event"} unless go_back
+
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
         flash[:notice] = 'Contact event was successfully updated.'
