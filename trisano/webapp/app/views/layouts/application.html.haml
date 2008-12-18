@@ -20,8 +20,26 @@
       TriSano:
       = yield :title
 
-    = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', 'tabview.css', :cache => 'styles'
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event.js', 'element-beta-min.js', 'tabview-min.js', :cache => 'base'
+    / = stylesheet_link_tag 'grid', 'structure', 'event', 'formbuilder', 'typography', 'scaffold', 'tabview', :cache => 'styles'
+    = stylesheet_link_tag 'grid'
+    = stylesheet_link_tag 'structure'
+    = stylesheet_link_tag 'event'
+    = stylesheet_link_tag 'formbuilder'
+    = stylesheet_link_tag 'typography'
+    = stylesheet_link_tag 'scaffold'
+    = stylesheet_link_tag 'tabview'
+
+    / = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'element-beta-min', 'tabview-min', :cache => 'base'
+    = javascript_include_tag 'prototype'
+    = javascript_include_tag 'effects'
+    = javascript_include_tag 'dragdrop'
+    = javascript_include_tag 'controls'
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'autotab'
+    = javascript_include_tag 'sniffer'
+    = javascript_include_tag 'yahoo-dom-event'
+    = javascript_include_tag 'element-beta-min'
+    = javascript_include_tag 'tabview-min'
 
     / Calendar
     = calendar_date_select_includes
@@ -78,6 +96,8 @@
         header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
         Element.setStyle('main-content', {top: header_height})
       .container
+        %script
+          detect();
         = yield
       .container
         #foot
