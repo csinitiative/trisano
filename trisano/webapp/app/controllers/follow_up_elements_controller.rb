@@ -78,7 +78,7 @@ class FollowUpElementsController <  AdminController
     @follow_up_element = FollowUpElement.find(params[:id])
 
     if (params[:follow_up_element][:core_data].blank?)
-      update = @follow_up_element.update_attributes(params[:follow_up_element])  
+      update = @follow_up_element.update_and_validate(params[:follow_up_element])
     else
       update = @follow_up_element.update_core_follow_up(params[:follow_up_element])
     end

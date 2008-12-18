@@ -67,7 +67,7 @@ class FormElementsController <  AdminController
     @form_element = FormElement.find(params[:id])
 
     respond_to do |format|
-      if @form_element.update_attributes(params[:form_element])
+      if @form_element.update_and_validate(params[:form_element])
         flash[:notice] = 'FormElement was successfully updated.'
         format.html { redirect_to(@form_element) }
         format.xml  { head :ok }
@@ -81,7 +81,7 @@ class FormElementsController <  AdminController
   def destroy
     @form_element = FormElement.find(params[:id])
     
-    if @form_element.destroy_with_dependencies
+    if @form_element.destroy_and_validate
       
       # A missing form_id means an element in the library is being destroyed, 
       # so the list of elements in the library must be rebuilt for the view (filter

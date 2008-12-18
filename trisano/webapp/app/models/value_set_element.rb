@@ -17,7 +17,11 @@
 
 class ValueSetElement < FormElement
   
-  has_many :value_elements, :class_name => "FormElement",  :foreign_key => :parent_id
+  has_many :value_elements, 
+    :class_name => "FormElement",
+    :foreign_key => :parent_id,
+    :dependent => :destroy
+  
   after_update :save_all_value_elements
   
   validates_presence_of :name
@@ -42,7 +46,7 @@ class ValueSetElement < FormElement
       if attributes
         value_element.attributes = attributes
       else
-        value_elements.destroy(value_element)
+        value_elements.delete(value_element)
       end
     end
   end

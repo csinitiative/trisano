@@ -78,7 +78,7 @@ class QuestionElementsController <  AdminController
   def update
     @question_element = QuestionElement.find(params[:id])
 
-    if @question_element.update_attributes(params[:question_element])
+    if @question_element.update_and_validate(params[:question_element])
       flash[:notice] = 'Question was successfully updated.'
       @form = Form.find(@question_element.form_id)
     else

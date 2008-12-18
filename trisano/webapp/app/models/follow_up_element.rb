@@ -30,11 +30,19 @@ class FollowUpElement < FormElement
   end
   
   def update_core_follow_up(params)
-    self.attributes = params
-    if parse_and_assign_condition(params["condition_id"], params["condition"])
-      self.save
-    else
-      return nil
+    begin
+      transaction do
+        self.attributes = params
+        if parse_and_assign_condition(params["condition_id"], params["condition"])
+          self.save
+        else
+          return nil
+        end
+        validate_form_structure
+        return true
+      end
+    rescue
+        return nil
     end
   end
   

@@ -76,16 +76,18 @@ describe QuestionElement do
   end
   
   describe "when created with 'save and add to form'" do
+
+    before(:each) do
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @section_element = SectionElement.new(:name => "Test")
+      @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
+      @section_element.save_and_add_to_form
+    end
     
     it "should bootstrap the question" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      section_element = SectionElement.new(:name => "Test")
-      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
-      section_element.save_and_add_to_form
-      
       question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
+          :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
         })
         
@@ -98,14 +100,8 @@ describe QuestionElement do
     end
     
     it "should fail if the associated question is not valid" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      section_element = SectionElement.new(:name => "Test")
-      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
-      section_element.save_and_add_to_form
-      
       question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
+          :parent_element_id => @section_element.id,
           :question_attributes => {:data_type => "single_line_text"}
         })
       
@@ -122,17 +118,69 @@ describe QuestionElement do
     end
     
     it "should be receive a tree id" do
-      section_element = SectionElement.create({:form_id => 1, :name => "Section 1", :tree_id => 1})
-      
       question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
+          :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
         })
         
       saved = question_element.save_and_add_to_form
-      question_element.tree_id.should eql(1)
+      question_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
     
+    it "should fail if form validation fails" do
+      question_element = QuestionElement.new({
+          :parent_element_id => @section_element.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        }) 
+      
+      invalidate_form(@form)
+      question_element.save_and_add_to_form.should be_nil
+      question_element.errors.should_not be_empty
+    end
+    
+  end
+  
+  describe "when updated or deleted" do
+      
+    before(:each) do
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @section_element = SectionElement.new(:name => "Test")
+      @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
+      @section_element.save_and_add_to_form
+      @question_element = QuestionElement.new({
+          :parent_element_id => @section_element.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        })
+      @question_element.parent_element_id = @section_element.id
+    end
+    
+    it "should succeed if form validation passes on update" do
+      @question_element.save_and_add_to_form
+      @question_element.update_and_validate(:name => "Updated Name").should_not be_nil
+      @question_element.name.should eql("Updated Name")
+      @question_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails on update" do
+      @question_element.save_and_add_to_form
+      invalidate_form(@form)
+      @question_element.update_and_validate(:name => "Updated Name").should be_nil
+      @question_element.errors.should_not be_empty
+    end
+    
+    it "should succeed if form validation passes on delete" do
+      @question_element.save_and_add_to_form
+      @question_element.destroy_and_validate.should_not be_nil
+      @question_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails on delete" do
+      @question_element.save_and_add_to_form
+      invalidate_form(@form)
+      @question_element.destroy_and_validate.should be_nil
+      @question_element.errors.should_not be_empty
+    end
   end
   
   describe "when a CDC question element and created with 'save and add to form'" do
@@ -151,7 +199,6 @@ describe QuestionElement do
           }
         })
 
-      question_element.save!        
       saved = question_element.save_and_add_to_form
       saved.should_not be_nil
       

@@ -19,9 +19,17 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FollowUpElement do
   before(:each) do
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form.save_and_initialize_form_elements
+    @question_element = QuestionElement.new({
+        :parent_element_id => @form.investigator_view_elements_container.id,
+        :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+      })
+    @question_element.save_and_add_to_form
     @follow_up_element = FollowUpElement.new
     @follow_up_element.form_id = 1
     @follow_up_element.condition = "Yes"
+    @follow_up_element.parent_element_id = @question_element.id
   end
 
   it "should be valid" do
@@ -37,65 +45,133 @@ describe FollowUpElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the question provided" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
       @follow_up_element.save_and_add_to_form
       @follow_up_element.parent_id.should_not be_nil
-      question_element = FormElement.find(question_element.id)
+      question_element = FormElement.find(@question_element.id)
       question_element.children[0].id.should == @follow_up_element.id 
     end
     
     it "should receive a tree id" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
       @follow_up_element.save_and_add_to_form
       @follow_up_element.tree_id.should_not be_nil
-      @follow_up_element.tree_id.should eql(question_element.tree_id)
+      @follow_up_element.tree_id.should eql(@question_element.tree_id)
     end
     
+    it "should fail if form validation fails" do
+      invalidate_form(@form)
+      @follow_up_element.save_and_add_to_form.should be_nil
+      @follow_up_element.errors.should_not be_empty
+    end
+    
+  end
+  
+  describe "when updated" do
+    it "should succeed if form validation passes" do
+      @follow_up_element.save_and_add_to_form
+      @follow_up_element.update_and_validate(:name => "Updated Name").should_not be_nil
+      @follow_up_element.name.should eql("Updated Name")
+      @follow_up_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @follow_up_element.save_and_add_to_form
+      invalidate_form(@form)
+      @follow_up_element.update_and_validate(:name => "Updated Name").should be_nil
+      @follow_up_element.errors.should_not be_empty
+    end
+  end
+  
+  describe "when updated with as a core follow up" do
+    
+    it "should succeed if form validation passes" do
+      external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
+      @follow_up_element.save_and_add_to_form
+      
+      update_hash = {
+        "condition_id"=>external_code.id, 
+        "condition"=>"Code: #{external_code.code_description}",
+        "name" => "Updated Name"
+      }
+    
+      @follow_up_element.update_core_follow_up(update_hash).should be_true
+      @follow_up_element.name.should eql("Updated Name")
+      @follow_up_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
+      @follow_up_element.save_and_add_to_form
+      
+      update_hash = {
+        "condition_id"=>external_code.id, 
+        "condition"=>"Code: #{external_code.code_description}",
+        "name" => "Updated Name"
+      }
+      
+      invalidate_form(@form)
+      @follow_up_element.update_core_follow_up(update_hash).should be_nil
+      @follow_up_element.errors.should_not be_empty
+    end
+  end
+  
+  describe "when deleted" do
+    it "should succeed if form validation passes" do
+      @follow_up_element.save_and_add_to_form
+      @follow_up_element.destroy_and_validate.should_not be_nil
+      @follow_up_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @follow_up_element.save_and_add_to_form
+      invalidate_form(@form)
+      @follow_up_element.destroy_and_validate.should be_nil
+      @follow_up_element.errors.should_not be_empty
+    end
   end
   
   describe "when updating a core follow-up with type-ahead support in the UI" do
     
     before(:each) do
-      @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @question_element = QuestionElement.new({
+          :parent_element_id => @form.investigator_view_elements_container.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        })
+      @question_element.save_and_add_to_form
       @follow_up_element = FollowUpElement.new
       @follow_up_element.form_id = 1
       @follow_up_element.condition = "Yes"
-      @follow_up_element.save!
+      @follow_up_element.parent_element_id = @question_element.id
+      @follow_up_element.save_and_add_to_form
+      @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
     end
     
     it "should use a condition_id for it's condition if one is present and it is a number" do
-      
       update_hash = {
         "condition_id"=>@external_code.id, 
         "condition"=>"Code: #{@external_code.code_description}"
       }
-    
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should == @external_code.id
       @follow_up_element.is_condition_code.should be_true
     end
     
     it "should find and use a external code id for it's condition if a condition_id is present, but is a string that corresponds to an external code" do
-      
       update_hash = {
         "condition_id"=> "Code: #{@external_code.code_description} (#{@external_code.code_name})",
         "condition"=> ""
       }
-      
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should == @external_code.id
       @follow_up_element.is_condition_code.should be_true
     end
     
     it "should use the condition string for the condition if no matching code can be found" do
-      
       update_hash = {
         "condition_id"=> "",
         "condition"=>"Code: #{@external_code.code_description} (some crazy code)"
       }
-      
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should eql("Code: #{@external_code.code_description} (some crazy code)")
       @follow_up_element.is_condition_code.should be_false
@@ -106,7 +182,6 @@ describe FollowUpElement do
         "condition_id"=> "",
         "condition"=>"#{@external_code.code_description} (#{@external_code.code_name}) and more stuff"
       }
-      
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should eql("#{@external_code.code_description} (#{@external_code.code_name}) and more stuff")
       @follow_up_element.is_condition_code.should be_false
@@ -117,7 +192,6 @@ describe FollowUpElement do
         "condition_id"=> "Howdy!",
         "condition"=> ""
       }
-      
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should eql("Howdy!")
       @follow_up_element.is_condition_code.should be_false
@@ -128,12 +202,10 @@ describe FollowUpElement do
         "condition_id"=> "",
         "condition"=> "Yes"
       }
-      
       @follow_up_element.update_core_follow_up(update_hash).should be_true
       @follow_up_element.condition.should eql("Yes")
       @follow_up_element.is_condition_code.should be_false
     end
-    
   end
   
   describe "when getting the magic code string for an external code's id" do

@@ -73,7 +73,7 @@ class CoreViewElementsController <  AdminController
     @core_view_element = CoreViewElement.find(params[:id])
 
     respond_to do |format|
-      if @core_view_element.update_attributes(params[:core_view_element])
+      if @core_view_element.update_and_validate(params[:core_view_element])
         flash[:notice] = 'CoreViewElement was successfully updated.'
         format.html { redirect_to(@core_view_element) }
         format.xml  { head :ok }
@@ -86,7 +86,7 @@ class CoreViewElementsController <  AdminController
 
   def destroy
     @core_view_element = CoreViewElement.find(params[:id])
-    @core_view_element.destroy
+    @core_view_element.destroy_and_validate
 
     respond_to do |format|
       format.html { redirect_to(core_view_elements_url) }

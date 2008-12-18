@@ -268,7 +268,7 @@ describe FormElementsController do
     describe "with successful update" do
 
       def do_put
-        @form_element.should_receive(:update_attributes).and_return(true)
+        @form_element.should_receive(:update_and_validate).and_return(true)
         put :update, :id => "1"
       end
 
@@ -297,7 +297,7 @@ describe FormElementsController do
     describe "with failed update" do
 
       def do_put
-        @form_element.should_receive(:update_attributes).and_return(false)
+        @form_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1"
       end
 
@@ -316,7 +316,7 @@ describe FormElementsController do
         mock_user
         @form_element = mock_model(FormElement, :destroy => true)
         @form_element.stub!(:form_id).and_return(1)
-        @form_element.stub!(:destroy_with_dependencies).and_return(true)
+        @form_element.stub!(:destroy_and_validate).and_return(true)
         FormElement.stub!(:find).and_return(@form_element)
         Form.stub!(:find).and_return(mock_model(Form))
       end
@@ -331,7 +331,7 @@ describe FormElementsController do
       end
   
       it "should call destroy on the found form_element" do
-        @form_element.should_receive(:destroy_with_dependencies)
+        @form_element.should_receive(:destroy_and_validate)
         do_delete
       end
   
@@ -346,7 +346,7 @@ describe FormElementsController do
         mock_user
         @form_element = mock_model(FormElement, :destroy => true)
         @form_element.stub!(:form_id).and_return(nil)
-        @form_element.stub!(:destroy_with_dependencies).and_return(true)
+        @form_element.stub!(:destroy_and_validate).and_return(true)
         @library_elements = []
         FormElement.stub!(:find).and_return(@form_element)
         FormElement.stub!(:roots).and_return(@library_elements)
@@ -362,7 +362,7 @@ describe FormElementsController do
       end
   
       it "should call destroy on the found form_element" do
-        @form_element.should_receive(:destroy_with_dependencies)
+        @form_element.should_receive(:destroy_and_validate)
         do_delete
       end
   

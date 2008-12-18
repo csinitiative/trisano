@@ -16,8 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class SectionElementsController <  AdminController
-  # GET /section_elements
-  # GET /section_elements.xml
+
   def index
     @section_elements = SectionElement.find(:all)
 
@@ -27,8 +26,6 @@ class SectionElementsController <  AdminController
     end
   end
 
-  # GET /section_elements/1
-  # GET /section_elements/1.xml
   def show
     @section_elements = SectionElement.find(params[:id])
 
@@ -38,7 +35,6 @@ class SectionElementsController <  AdminController
     end
   end
 
-  # Just used through RJS
   def new
     begin
       @section_element = SectionElement.new
@@ -50,7 +46,6 @@ class SectionElementsController <  AdminController
     end
   end
 
-  # GET /section_elements/1/edit
   def edit
     @section_element = SectionElement.find(params[:id])
   end
@@ -72,12 +67,10 @@ class SectionElementsController <  AdminController
     end
   end
 
-  # PUT /section_elements/1
-  # PUT /section_elements/1.xml
   def update
     @section_element = SectionElement.find(params[:id])
 
-    if @section_element.update_attributes(params[:section_element])
+    if @section_element.update_and_validate(params[:section_element])
       flash[:notice] = 'Section was successfully updated.'
       @form = Form.find(@section_element.form_id)
     else
@@ -85,11 +78,9 @@ class SectionElementsController <  AdminController
     end
   end
 
-  # DELETE /section_elements/1
-  # DELETE /section_elements/1.xml
   def destroy
     @section_element = SectionElement.find(params[:id])
-    @section_element.destroy
+    @section_element.destroy_and_validate
 
     respond_to do |format|
       format.html { redirect_to(section_elements_url) }

@@ -213,23 +213,6 @@ describe FollowUpElementsController do
       
     end
   end
-  
-  #  def update
-  #    @follow_up_element = FollowUpElement.find(params[:id])
-  #
-  #    if (params[:follow_up_element][:core_data].blank?)
-  #      update = @follow_up_element.update_attributes(params[:follow_up_element])  
-  #    else
-  #      update = @follow_up_element.update_core_follow_up(params[:follow_up_element])
-  #    end
-  #    
-  #    if update
-  #      flash[:notice] = 'Follow up was successfully updated.'
-  #      @form = Form.find(@follow_up_element.form_id)
-  #    else
-  #      render :action => "edit"
-  #    end
-  #  end
 
   describe "handling PUT /follow_up_elements/1 for a core follow up" do
 
@@ -292,7 +275,7 @@ describe FollowUpElementsController do
     describe "with successful update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_attributes).and_return(true)
+        @follow_up_element.should_receive(:update_and_validate).and_return(true)
         Form.stub!(:find).with(1).and_return(mock_model(Form))
        put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
       end
@@ -317,7 +300,7 @@ describe FollowUpElementsController do
     describe "with failed update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_attributes).and_return(false)
+        @follow_up_element.should_receive(:update_and_validate).and_return(false)
         put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
       end
 

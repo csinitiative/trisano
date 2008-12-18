@@ -70,7 +70,7 @@ class ViewElementsController < AdminController
     @view_element = ViewElement.find(params[:id])
 
     respond_to do |format|
-      if @view_element.update_attributes(params[:view_element])
+      if @view_element.update_and_validate(params[:view_element])
         flash[:notice] = 'ViewElement was successfully updated.'
         format.html { redirect_to(@view_element) }
         format.xml  { head :ok }
@@ -83,7 +83,7 @@ class ViewElementsController < AdminController
 
   def destroy
     @view_element = ViewElement.find(params[:id])
-    @view_element.destroy
+    @view_element.destroy_and_validate
 
     respond_to do |format|
       format.html { redirect_to(view_elements_url) }

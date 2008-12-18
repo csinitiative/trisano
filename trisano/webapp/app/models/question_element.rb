@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class QuestionElement < FormElement
-  has_one :question, :foreign_key => "form_element_id"
+  has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
   belongs_to :export_column
 
   attr_accessor :parent_element_id

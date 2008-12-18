@@ -301,7 +301,7 @@ describe QuestionElementsController do
     describe "with successful update" do
 
       def do_put
-        @question_element.should_receive(:update_attributes).and_return(true)
+        @question_element.should_receive(:update_and_validate).and_return(true)
         Form.stub!(:find).with(1).and_return(mock_model(Form))
         put :update, :id => "1"
       end
@@ -331,7 +331,7 @@ describe QuestionElementsController do
     describe "with failed update" do
 
       def do_put
-        @question_element.should_receive(:update_attributes).and_return(false)
+        @question_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1"
       end
 

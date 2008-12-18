@@ -275,7 +275,7 @@ describe CoreFieldElementsController do
     describe "with successful update" do
 
       def do_put
-        @core_field_element.should_receive(:update_attributes).and_return(true)
+        @core_field_element.should_receive(:update_and_validate).and_return(true)
         put :update, :id => "1"
       end
 
@@ -304,7 +304,7 @@ describe CoreFieldElementsController do
     describe "with failed update" do
 
       def do_put
-        @core_field_element.should_receive(:update_attributes).and_return(false)
+        @core_field_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1"
       end
 
@@ -320,7 +320,7 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement, :destroy => true)
+      @core_field_element = mock_model(CoreFieldElement, :destroy_and_validate => true)
       CoreFieldElement.stub!(:find).and_return(@core_field_element)
     end
   
@@ -334,7 +334,7 @@ describe CoreFieldElementsController do
     end
   
     it "should call destroy on the found core_field_element" do
-      @core_field_element.should_receive(:destroy)
+      @core_field_element.should_receive(:destroy_and_validate)
       do_delete
     end
   

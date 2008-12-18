@@ -78,7 +78,7 @@ class ValueSetElementsController <  AdminController
     @value_set_element = ValueSetElement.find(params[:id])
 
     respond_to do |format|
-      if @value_set_element.update_attributes(params[:value_set_element])
+      if @value_set_element.update_and_validate(params[:value_set_element])
         format.html { redirect_to(@value_set_element) }
         format.xml  { head :ok }
         format.js { @form = Form.find(@value_set_element.form_id)}
@@ -92,7 +92,7 @@ class ValueSetElementsController <  AdminController
 
   def destroy
     @value_set_element = ValueSetElement.find(params[:id])
-    @value_set_element.destroy
+    @value_set_element.destroy_and_validate
 
     respond_to do |format|
       format.html { redirect_to(value_set_elements_url) }

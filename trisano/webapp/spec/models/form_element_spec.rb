@@ -60,24 +60,27 @@ end
 
 describe "Quesiton FormElement" do
   before(:each) do
-    @form_element = QuestionElement.create(:tree_id => 1, :form_id => 1)
-    @question = Question.create({:question_text => "Que?", :data_type => "single_line_text"})
-    @form_element.question = @question
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form.save_and_initialize_form_elements
+    @question_element = QuestionElement.new({
+        :parent_element_id => @form.investigator_view_elements_container.id,
+        :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+      })
+    
+    @question_element.save_and_add_to_form
+    @question = @question_element.question
   end
 
-  it "should destroy associated question on destroying with dependencies" do
-    
-    form_element_id = @form_element.id
+  it "should destroy associated question" do
+    question_element_id =@question_element.id
     question_id = @question.id
     
-    FormElement.exists?(form_element_id).should be_true
+    FormElement.exists?(question_element_id).should be_true
     Question.exists?(question_id).should be_true
     
-    @form_element.destroy_with_dependencies
-    
-    FormElement.exists?(form_element_id).should be_false
+    @question_element.destroy_and_validate
+    FormElement.exists?(question_element_id).should be_false
     Question.exists?(question_id).should be_false
-    
   end
 end
 
@@ -87,7 +90,6 @@ describe "Quesiton FormElement when added to library" do
     @form_element = QuestionElement.create(:tree_id => 1, :form_id => 1)
     @question = Question.create({:question_text => "Que?", :data_type => "single_line_text", :short_name => "que_q" })
     @form_element.question = @question
-    
   end
   
   it "the copy should have a correct ids and type" do
@@ -344,7 +346,6 @@ describe "when filtering the library" do
 end
 
 describe "when executing an operation that requires form element structure validation" do
-    
   before(:each) do
     @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
     @form.save_and_initialize_form_elements
@@ -353,27 +354,15 @@ describe "when executing an operation that requires form element structure valid
   end
     
   it "should return false on save if the form element structure is invalid" do
-    # Force a validation failure
-    def @element.validate_form_structure
-      errors.add_to_base("Bad error")
-      raise
-    end
-      
+    invalidate_form(@form)
     @element.save_and_add_to_form.should be_nil
   end
     
   it "should return false on delete if the form element structure is invalid" do
     @element.save_and_add_to_form.should be_true
-      
-    # Force a validation failure
-    def @element.validate_form_structure
-      errors.add_to_base("Bad error")
-      raise
-    end
-      
-    @element.destroy_with_dependencies.should be_nil
+    invalidate_form(@form)
+    @element.destroy_and_validate.should be_nil
   end
-    
 end
   
 describe "when executing an operation that requires form element structure validation" do

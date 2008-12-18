@@ -274,7 +274,7 @@ describe ViewElementsController do
     describe "with successful update" do
 
       def do_put
-        @view_element.should_receive(:update_attributes).and_return(true)
+        @view_element.should_receive(:update_and_validate).and_return(true)
         put :update, :id => "1"
       end
 
@@ -303,7 +303,7 @@ describe ViewElementsController do
     describe "with failed update" do
 
       def do_put
-        @view_element.should_receive(:update_attributes).and_return(false)
+        @view_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1"
       end
 
@@ -319,7 +319,7 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement, :destroy => true)
+      @view_element = mock_model(ViewElement, :destroy_and_validate => true)
       ViewElement.stub!(:find).and_return(@view_element)
     end
   
@@ -333,7 +333,7 @@ describe ViewElementsController do
     end
   
     it "should call destroy on the found view_element" do
-      @view_element.should_receive(:destroy)
+      @view_element.should_receive(:destroy_and_validate)
       do_delete
     end
   

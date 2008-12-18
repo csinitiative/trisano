@@ -62,6 +62,11 @@ Spec::Runner.configure do |config|
   end
 end
 
+# Bypass nested set logic to invalidate the provided form.
+def invalidate_form(form)
+  ActiveRecord::Base.connection.execute("update form_elements set parent_id = null where id = #{form.investigator_view_elements_container.id}")
+end
+
 def mock_user
   @jurisdiction = mock_model(Entity)
   @place = mock_model(Place)
@@ -99,7 +104,7 @@ def mock_user
   
   @user.stub!(:role_memberships).and_return([@role_membership])
   @user.stub!(:admin_jurisdiction_ids).and_return([75])
-   @user.stub!(:is_entitled_to_in?).and_return(true)
+  @user.stub!(:is_entitled_to_in?).and_return(true)
   
   @user
 end

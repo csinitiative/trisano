@@ -41,17 +41,26 @@ class FormElement < ActiveRecord::Base
     end
   end
   
-  def destroy_with_dependencies
+  def update_and_validate(attributes)
     begin
       transaction do
-        if (self.class.name == "QuestionElement")
-          self.question.destroy
-        end
-        self.destroy
-        validate_form_structure
+        self.update_attributes(attributes)
+        self.validate_form_structure
         return true
       end
-    rescue Exception => ex
+    rescue
+      return nil
+    end
+  end
+  
+  def destroy_and_validate
+    begin
+      transaction do
+        self.destroy
+        self.validate_form_structure
+        return true
+      end
+    rescue
       return nil
     end
   end
@@ -151,8 +160,6 @@ class FormElement < ActiveRecord::Base
     end
     
   end
-  
-  private
   
   def validate_form_structure
     return if form.nil?

@@ -19,6 +19,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreViewElement do
   before(:each) do
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form.save_and_initialize_form_elements
     @core_view_element = CoreViewElement.new
     @core_view_element.name = "demographics"
   end
@@ -34,9 +36,7 @@ describe CoreViewElement do
     end
     
     it "should return all core view names when none are in use" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      @core_view_element.parent_element_id = form.form_base_element.id
+      @core_view_element.parent_element_id = @form.form_base_element.id
       available_core_views = @core_view_element.available_core_views
       available_core_views.size.should == 7
       available_core_views.flatten.uniq.include?("Demographics").should be_true
@@ -73,25 +73,62 @@ describe CoreViewElement do
   end
   
   describe "when created with 'save and add to form'" do
-    
     it "should be a child of the form's base" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      @core_view_element.parent_element_id = form.investigator_view_elements_container.id
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
       @core_view_element.save_and_add_to_form
       @core_view_element.parent_id.should_not be_nil
-      form.investigator_view_elements_container.children[1].id.should == @core_view_element.id
+      @form.investigator_view_elements_container.children[1].id.should == @core_view_element.id
     end
     
     it "should receive a tree id" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      @core_view_element.parent_element_id = form.investigator_view_elements_container.id
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
       @core_view_element.save_and_add_to_form
       @core_view_element.tree_id.should_not be_nil
-      @core_view_element.tree_id.should eql(form.form_base_element.tree_id)
+      @core_view_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
     
+    it "should fail if form validation fails" do
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
+      invalidate_form(@form)
+      @core_view_element.save_and_add_to_form.should be_nil
+      @core_view_element.errors.should_not be_empty
+    end
   end
+  
+  describe "when updated" do
+    it "should succeed if form validation passes" do
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
+      @core_view_element.save_and_add_to_form
+      @core_view_element.update_and_validate(:name => "Updated Name").should_not be_nil
+      @core_view_element.name.should eql("Updated Name")
+      @core_view_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
+      @core_view_element.save_and_add_to_form
+      invalidate_form(@form)
+      @core_view_element.update_and_validate(:name => "Updated Name").should be_nil
+      @core_view_element.errors.should_not be_empty
+    end
+  end
+  
+  describe "when deleted" do
+    it "should succeed if form validation passes" do
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
+      @core_view_element.save_and_add_to_form
+      @core_view_element.destroy_and_validate.should_not be_nil
+      @core_view_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
+      @core_view_element.save_and_add_to_form
+      invalidate_form(@form)
+      @core_view_element.destroy_and_validate.should be_nil
+      @core_view_element.errors.should_not be_empty
+    end
+  end
+
 
 end

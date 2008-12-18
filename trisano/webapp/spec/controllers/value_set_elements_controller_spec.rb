@@ -281,7 +281,7 @@ describe ValueSetElementsController do
     describe "with successful update" do
 
       def do_put
-        @value_set_element.should_receive(:update_attributes).and_return(true)
+        @value_set_element.should_receive(:update_and_validate).and_return(true)
         put :update, :id => "1",  :value_set_element => {}
       end
 
@@ -310,7 +310,7 @@ describe ValueSetElementsController do
     describe "with failed update" do
 
       def do_put
-        @value_set_element.should_receive(:update_attributes).and_return(false)
+        @value_set_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1", :value_set_element => {}
       end
 
@@ -326,7 +326,7 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement, :destroy => true)
+      @value_set_element = mock_model(ValueSetElement, :destroy_and_validate => true)
       ValueSetElement.stub!(:find).and_return(@value_set_element)
     end
   
@@ -340,7 +340,7 @@ describe ValueSetElementsController do
     end
   
     it "should call destroy on the found value_set_element" do
-      @value_set_element.should_receive(:destroy)
+      @value_set_element.should_receive(:destroy_and_validate)
       do_delete
     end
   

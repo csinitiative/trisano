@@ -19,10 +19,13 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe SectionElement do
   before(:each) do
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form.save_and_initialize_form_elements
     @section_element = SectionElement.new
     @section_element.name="Section 1"
     @section_element.description = 's' * 2000
     @section_element.help_text = 's' * 2000
+    @section_element.parent_element_id = @form.investigator_view_elements_container.id
   end
 
   it "should be valid" do
@@ -44,28 +47,54 @@ describe SectionElement do
   end
   
   describe "when created with 'save and add to form'" do
-    
     it "should be a child of the form's investigator element container" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      
-      @section_element.parent_element_id = form.investigator_view_elements_container.id
       @section_element.save_and_add_to_form
       @section_element.parent_id.should_not be_nil
-      form.investigator_view_elements_container.children[1].id.should == @section_element.id
+      @form.investigator_view_elements_container.children[1].id.should == @section_element.id
     end
     
-    it "should be receive a tree id" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.save_and_initialize_form_elements
-      
-      @section_element.parent_element_id = form.investigator_view_elements_container.id
+    it "should be receive a tree id" do  
       @section_element.save_and_add_to_form
-      
       @section_element.tree_id.should_not be_nil
-      @section_element.tree_id.should eql(form.form_base_element.tree_id)
+      @section_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
     
+    it "should fail if form validation fails" do
+      invalidate_form(@form)
+      @section_element.save_and_add_to_form.should be_nil
+      @section_element.errors.should_not be_empty
+    end
+  end
+  
+  describe "when updated" do
+    it "should succeed if form validation passes" do
+      @section_element.save_and_add_to_form
+      @section_element.update_and_validate(:name => "Updated Name").should_not be_nil
+      @section_element.name.should eql("Updated Name")
+      @section_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @section_element.save_and_add_to_form
+      invalidate_form(@form)
+      @section_element.update_and_validate(:name => "Updated Name").should be_nil
+      @section_element.errors.should_not be_empty
+    end
+  end
+  
+  describe "when deleted" do
+    it "should succeed if form validation passes" do
+      @section_element.save_and_add_to_form
+      @section_element.destroy_and_validate.should_not be_nil
+      @section_element.errors.should be_empty
+    end
+
+    it "should fail if form validation fails" do
+      @section_element.save_and_add_to_form
+      invalidate_form(@form)
+      @section_element.destroy_and_validate.should be_nil
+      @section_element.errors.should_not be_empty
+    end
   end
   
 end

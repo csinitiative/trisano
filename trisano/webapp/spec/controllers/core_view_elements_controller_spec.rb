@@ -275,7 +275,7 @@ describe CoreViewElementsController do
     describe "with successful update" do
 
       def do_put
-        @core_view_element.should_receive(:update_attributes).and_return(true)
+        @core_view_element.should_receive(:update_and_validate).and_return(true)
         put :update, :id => "1"
       end
 
@@ -304,7 +304,7 @@ describe CoreViewElementsController do
     describe "with failed update" do
 
       def do_put
-        @core_view_element.should_receive(:update_attributes).and_return(false)
+        @core_view_element.should_receive(:update_and_validate).and_return(false)
         put :update, :id => "1"
       end
 
@@ -320,7 +320,7 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement, :destroy => true)
+      @core_view_element = mock_model(CoreViewElement, :destroy_and_validate => true)
       CoreViewElement.stub!(:find).and_return(@core_view_element)
     end
   
@@ -334,7 +334,7 @@ describe CoreViewElementsController do
     end
   
     it "should call destroy on the found core_view_element" do
-      @core_view_element.should_receive(:destroy)
+      @core_view_element.should_receive(:destroy_and_validate)
       do_delete
     end
   

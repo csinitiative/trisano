@@ -73,7 +73,7 @@ class CoreFieldElementsController < ApplicationController
     @core_field_element = CoreFieldElement.find(params[:id])
 
     respond_to do |format|
-      if @core_field_element.update_attributes(params[:core_field_element])
+      if @core_field_element.update_and_validate(params[:core_field_element])
         flash[:notice] = 'Core Field Element was successfully updated.'
         format.html { redirect_to(@core_field_element) }
         format.xml  { head :ok }
@@ -86,7 +86,7 @@ class CoreFieldElementsController < ApplicationController
 
   def destroy
     @core_field_element = CoreFieldElement.find(params[:id])
-    @core_field_element.destroy
+    @core_field_element.destroy_and_validate
 
     respond_to do |format|
       format.html { redirect_to(core_field_elements_url) }
