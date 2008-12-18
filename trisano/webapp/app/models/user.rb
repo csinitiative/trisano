@@ -34,7 +34,9 @@ class User < ActiveRecord::Base
   validates_length_of :initials, :maximum => 8, :allow_blank => true
   validates_length_of :user_name, :maximum => 20, :allow_blank => true
   validates_length_of :generational_qualifer, :maximum => 8, :allow_blank => true
-  
+
+  serialize :event_view_settings, Hash
+
   after_validation :clear_base_error
   
   def best_name
@@ -120,10 +122,13 @@ class User < ActiveRecord::Base
     _entitlements.each_pair { |key, value| entitlements.build(value) }
   end
 
-  def self.investigators_for_jurisdiction(jurisdiction)
-    Privilege.investigate_event.entitlements.for_jurisdiction(jurisdiction).collect do |e|
-      e.user
+  def self.investigators_for_jurisdictions(jurisdictions)
+    jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
+    investigators = []
+    jurisdictions.each do |j|
+      investigators += Privilege.investigate_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
     end
+    investigators.uniq
   end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app

@@ -221,7 +221,7 @@ module EventsHelper
         controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code))
         controls += "<br/>"
         
-        investigators = User.investigators_for_jurisdiction(event.jurisdiction.secondary_entity.place)
+        investigators = User.investigators_for_jurisdictions(event.jurisdiction.secondary_entity.place)
         controls += "<span>Assign to investigator:&nbsp;</span><br/>"
         controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code))
       when "IC"
@@ -282,7 +282,7 @@ module EventsHelper
     confirm = options[:confirm]
     js = []
     js << 'if(confirm("Are you sure?")) {' if confirm
-    js << "$('morbidity_event[event_status]').setValue(#{value || '$F(this)'});"
+    js << "$(this.form).getInputs('hidden', 'morbidity_event[event_status]').reduce().setValue(#{value || '$F(this)'});"
     js << 'this.form.submit();'
     js << '}' if confirm
     js.join(' ')

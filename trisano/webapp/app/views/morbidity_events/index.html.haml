@@ -40,16 +40,23 @@
     %span.horiz
       %label Events
       = select_tag("states[]", options_from_collection_for_select(Event.get_states_and_descriptions, :state, :description), :size => 5, :multiple => true)
-    %label Queues
-    = select_tag("queues[]", options_from_collection_for_select(EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event)), :queue_name, :queue_name), :size => 5, :multiple => true)
+    %span.horiz
+      %label Queues
+      - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+      = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true)
+    %label Investigators
+    - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+    = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true)
     %label Diseases
     = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true)
     %br
+    = check_box_tag("do_not_show_deleted")
+    = "Do not show deleted records&nbsp;&nbsp;"
     = check_box_tag("set_as_default_view")
-    = "Set as default view"
+    = "Set as default view&nbsp;&nbsp;"
     = submit_tag("Change View", :id => "change_view_btn")
   = link_to_function "Close", "Effect.BlindUp('change_view')"
-  %p 
+  %p
 
 #rot
   %table.list

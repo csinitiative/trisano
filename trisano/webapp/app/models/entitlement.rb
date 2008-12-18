@@ -24,7 +24,11 @@ class Entitlement < ActiveRecord::Base
 
   class << self
     def for_jurisdiction(jurisdiction)
-      find_all_by_jurisdiction_id(jurisdiction.id)
+      jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
+      jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
+      jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
+
+      find_all_by_jurisdiction_id(jurisdiction_id)
     end
   end
 end

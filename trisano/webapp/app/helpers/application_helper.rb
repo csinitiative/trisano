@@ -153,11 +153,7 @@ module ApplicationHelper
   end
 
   def cmrs_path_with_defaults
-    unless User.current_user.event_view_settings.blank?
-      cmrs_path << "?" << User.current_user.event_view_settings
-    else
-      cmrs_path
-    end
+    cmrs_path(User.current_user.event_view_settings || {})
   end 
 
   def save_buttons(event)

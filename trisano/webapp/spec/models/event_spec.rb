@@ -34,7 +34,6 @@ describe MorbidityEvent do
     event.reload
     yield event if block_given?
   end
-
   describe "Managing Jurisdictions" do
   end
 
@@ -1708,11 +1707,15 @@ describe MorbidityEvent do
       @event_hash['event_status'] = 'CLOSED'
       MorbidityEvent.create(@event_hash)
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 4
+      @event_hash['investigator_id'] = 1
+      MorbidityEvent.create(@event_hash)
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 5
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['NEW']}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED']}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED'], :investigators => [1]}).size.should == 1
     end
     
     it 'should filter by state and the other attributes' do
@@ -1725,10 +1728,14 @@ describe MorbidityEvent do
       @event_hash['event_queue_id'] = 1
       MorbidityEvent.create(@event_hash)
       
-      MorbidityEvent.find_all_for_filtered_view.size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:states => ['CLOSED']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1]}).size.should == 1
+      @event_hash['investigator_id'] = 1
+      MorbidityEvent.create(@event_hash)
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view({:states => ['CLOSED']}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1], :investigators => [1]}).size.should == 1
     end
     
     it 'should filter by queue and the other attributes' do
@@ -1741,10 +1748,55 @@ describe MorbidityEvent do
       @event_hash['disease'] = {'disease_id' => 1 }
       MorbidityEvent.create(@event_hash)
       
-      MorbidityEvent.find_all_for_filtered_view.size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1]}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 1
+      @event_hash['investigator_id'] = 1
+      MorbidityEvent.create(@event_hash)
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1]}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1], :investigators => [1]}).size.should == 1
+    end
+
+    it "should filter by investigator and the other attributes" do
+      @event_hash['investigator_id'] = 1
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'CLOSED'
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['disease'] = {'disease_id' => 1 }
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_queue_id'] = 1
+      MorbidityEvent.create(@event_hash)
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1]}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED'], :diseases => [1], :queues => [1]}).size.should == 1
+    end
+
+    it "should not show deleted records if told so" do
+      @event_hash['investigator_id'] = 1
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_status'] = 'CLOSED'
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['disease'] = {'disease_id' => 1 }
+      MorbidityEvent.create(@event_hash)
+      
+      @event_hash['event_queue_id'] = 1
+      a = MorbidityEvent.create(@event_hash)
+      a.soft_delete
+
+      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1]}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED'], :diseases => [1], :queues => [1]}).size.should == 0
     end
 
     it "should sort appropriately" do

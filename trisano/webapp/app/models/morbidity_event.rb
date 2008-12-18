@@ -252,7 +252,6 @@ class MorbidityEvent < HumanEvent
     
     conditions = ["jurisdictions.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
     conjunction = "AND"
-    query_string = ""
 
     states = get_allowed_states(options[:states])
     if states.empty?
@@ -260,17 +259,19 @@ class MorbidityEvent < HumanEvent
     else
       conditions[0] += " #{conjunction} event_status IN (?)"
       conditions << states
-      query_string = states.to_query('states')
     end
     
-    unless options[:diseases].nil?
+    if options[:diseases]
       conditions[0] += " #{conjunction} disease_id IN (?)"
       conditions << options[:diseases]
-      query_string << "&" unless query_string.blank?
-      query_string << options[:diseases].to_query('diseases')
     end
 
-    unless options[:queues].nil?
+    if options[:investigators]
+      conditions[0] += " #{conjunction} investigator_id IN (?)"
+      conditions << options[:investigators]
+    end
+
+    if options[:queues]
       queue_ids, queue_names = get_allowed_queues(options[:queues])
 
       if queue_ids.empty?
@@ -278,10 +279,11 @@ class MorbidityEvent < HumanEvent
       else
         conditions[0] += " #{conjunction} event_queue_id IN (?)"
         conditions << queue_ids
-
-        query_string << "&" unless query_string.blank?
-        query_string << queue_names.to_query('queues')
       end
+    end
+
+    if options[:do_not_show_deleted]
+      conditions[0] += " AND deleted_at IS NULL" 
     end
 
     order_by = case options[:order_by]
@@ -319,7 +321,8 @@ class MorbidityEvent < HumanEvent
     end
     joins << " LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
 
-    User.current_user.update_attribute('event_view_settings', query_string) if options[:set_as_default_view] == "1"
+    query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
+    User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"
 
     find_options = {
       :joins => joins,

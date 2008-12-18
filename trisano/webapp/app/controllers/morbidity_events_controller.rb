@@ -37,8 +37,10 @@ class MorbidityEventsController < EventsController
       @events = MorbidityEvent.find_all_for_filtered_view(
         :states => params[:states],
         :queues => params[:queues],
+        :investigators => params[:investigators],
         :diseases => params[:diseases],
         :order_by => params[:sort_order],
+        :do_not_show_deleted => params[:do_not_show_deleted],
         :set_as_default_view => params[:set_as_default_view],
         :page => params[:page]
       )
