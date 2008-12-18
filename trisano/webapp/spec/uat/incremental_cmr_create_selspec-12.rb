@@ -20,7 +20,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-#  $dont_kill_browser = true
+#$dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -73,7 +73,6 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the lab result' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Laboratory")
-    @browser.click("link=Add a new lab")
     sleep 3
     watch_for_spinner("div[id=labs] img[id$=lab_spinner]") do
       @browser.type_keys("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", 'Lab')

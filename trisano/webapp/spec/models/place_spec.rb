@@ -115,22 +115,5 @@ describe Place do
     end
   end
 
-  describe 'date of exposure' do
-
-    it 'should be valid if nil' do
-      place = Place.create(:name => 'someplace')
-      place.should be_valid
-    end
-
-    it 'should accept valid dates' do
-      place = Place.create(:name => 'someplace', :date_of_exposure => 'August 8, 2008')
-      place.should be_valid
-    end
-
-    it 'should not accept invalid dates' do
-      place = Place.create(:name => 'someplace', :date_of_exposure => 'not valid')
-      place.should_not be_valid
-    end
-  end
 end
 

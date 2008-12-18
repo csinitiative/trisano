@@ -1,15 +1,16 @@
 .place_exposure
   -new_or_existing = new_or_existing?(editable_place_exposure)
-  -prefix = event_prefix_for_multi_models(new_or_existing, "_place_exposure_attributes") + "[]"
+  -prefix = event_prefix_for_multi_models(new_or_existing, "_place_exposure_attributes")
   -if editable_place_exposure.secondary_entity
     -place = editable_place_exposure.secondary_entity.place_temp
-    -fields_for prefix, place, :builder => ExtendedFormBuilder do |pe_form|
+    -fields_for prefix + "[]", place, :builder => ExtendedFormBuilder do |pe_form|
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:name)
         =pe_form.core_text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:place_type_id, 'Type')
         =pe_form.dropdown_code_field(:place_type_id, 'placetype')
+    -fields_for prefix + "[#{place.id}]", editable_place_exposure.participations_place, :builder => ExtendedFormBuilder do |pe_form|
       -core_element :editable_place_exposure, pe_form, :horiz do
         =pe_form.label(:date_of_exposure)
         =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)

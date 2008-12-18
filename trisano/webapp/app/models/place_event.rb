@@ -32,6 +32,7 @@ class PlaceEvent < Event
       morbidity_event.place_exposures.select(&:new_record?).each do |place_exposure|
 
         primary = Participation.new
+        primary.participations_place = place_exposure.participations_place
         primary.primary_entity = place_exposure.secondary_entity
         primary.role_id = Event.participation_code('Place of Interest')
         primary.primary_entity.entity_type = "place"
@@ -75,6 +76,8 @@ class PlaceEvent < Event
 
   def active_place=(attributes)
     self.place = Participation.new_exposure_participation if self.place.nil?
+    # HACK this to not have to make a lot of changes other places.
+    self.place.participations_place.date_of_exposure = attributes['place'].delete('date_of_exposure')
     self.place.primary_entity.attributes = attributes
   end
   
@@ -86,6 +89,7 @@ class PlaceEvent < Event
   
   def save_associations
     place.save(false)
+    place.participations_place.save(false)
     place.primary_entity.save(false)
     super
   end

@@ -187,7 +187,7 @@ module Export
         event_data << ["place_event_id", "id"]
         event_data << ["place_name", "place.primary_entity.place_temp.name"]
         event_data << ["place_type", "place.primary_entity.place_temp.place_type.code_description if place.primary_entity.place_temp.place_type"]
-        event_data << ["place_date_of_exposure", "place.primary_entity.place_temp.date_of_exposure"]
+        event_data << ["place_date_of_exposure", "place.participations_place.date_of_exposure"]
       else
         event_data << ["#{event_type}_event_id", "id"]
         event_data << ["#{event_type}_record_number", "record_number"]

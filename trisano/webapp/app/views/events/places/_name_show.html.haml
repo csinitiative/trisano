@@ -24,4 +24,4 @@
     =place.place_type.code_description if place.place_type
   -core_element_show :date_of_exposure, place_form, :horiz do
     =place_form.label(:date_of_exposure)
-    =format_date(place.date_of_exposure)
+    =format_date(@event.active_place.participations_place.date_of_exposure)

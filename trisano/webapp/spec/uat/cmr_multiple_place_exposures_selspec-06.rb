@@ -75,13 +75,14 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Food Establishment').should be_true
     @browser.is_text_present('The Stuffed Mushroom').should be_true
+    @browser.is_text_present(@new_date_of_exposure).should be_true
   end
 
   it "should delete a place exposure from the CMR's edit mode" do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.click "//div[@id='place_exposures']/div[2]/span[4]/a[2]/img"
+    @browser.click "//div[@id='epi_tab']//div[@id='place_exposures']/div[1]/span[3]/span/a[2]/img"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Pool').should be_true
@@ -91,7 +92,7 @@ describe 'Adding multiple place exposures to a CMR' do
   it "should allow editing a place exposure as a place event" do
     click_core_tab(@browser, "Epidemiological")
     @browser.click "link=Edit place details"
-    sleep(3)
+    @browser.wait_for_page_to_load
     # Address
     @browser.select "place_event_active_place__place_place_type_id", "label=Other"
     @browser.type "place_event_active_place__address_street_number", "555"

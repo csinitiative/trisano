@@ -20,7 +20,6 @@ class Place < ActiveRecord::Base
   belongs_to :entity 
 
   validates_presence_of :name
-  validates_date :date_of_exposure, :allow_nil => true
 
   class << self
 

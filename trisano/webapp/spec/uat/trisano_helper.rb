@@ -257,11 +257,12 @@ module TrisanoHelper
     type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
     type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
     type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
-    browser.select("morbidity_event_new_lab_attributes__interpretation_id", result_attributes[:lab_interpretation])
-    browser.select("morbidity_event_new_lab_attributes__specimen_source_id", result_attributes[:lab_specimen_source])
-    browser.type("morbidity_event_new_lab_attributes__collection_date", result_attributes[:lab_collection_date])
-    browser.type("morbidity_event_new_lab_attributes__lab_test_date", result_attributes[:lab_test_date])
-    browser.select("morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id", "label=#{result_attributes[:sent_to_uphl]}")
+    result_xpath = "//div[@id='labs']/div[1]/div[starts-with(@class,'lab_result')][#{index}]//"
+    browser.select(result_xpath + "select[contains(@id, 'interpretation')]", result_attributes[:lab_interpretation])
+    browser.select(result_xpath + "select[contains(@id, 'specimen_source_id')]", result_attributes[:lab_specimen_source])
+    browser.type(result_xpath + "input[contains(@id, 'collection_date')]", result_attributes[:lab_collection_date])
+    browser.type(result_xpath + "input[contains(@id, 'lab_test_date')]", result_attributes[:lab_test_date])
+    browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
   end
 
   def add_reporting_info(browser, result_attributes)
@@ -385,7 +386,7 @@ module TrisanoHelper
   
   def type_field_by_order(browser, element_id_prefix, order, value)
     fields = browser.get_all_fields
-    fields.delete_if{|field| field.index(element_id_prefix) == nil}
+    fields.delete_if{|field| field.index(element_id_prefix) != 0}
     browser.type(fields[order], value)
   end
   

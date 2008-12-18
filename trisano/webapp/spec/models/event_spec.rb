@@ -941,9 +941,10 @@ describe MorbidityEvent do
         it "should create a new place" do
           lambda {@event.save}.should change {Place.count}.by(1)
           @event.place_exposures.first.secondary_entity.place_temp.name.should == 'Davis Natatorium'
-          place = @event.place_exposures.first.secondary_entity.place_temp
+          participation = @event.place_exposures.first
+          participation.participations_place.date_of_exposure.should == Date.parse(@date)
+          place = participation.secondary_entity.place_temp
           place.place_type.code_description.should == 'Other'
-          place.date_of_exposure.should == Date.parse(@date)
         end    
             
       end
@@ -971,6 +972,7 @@ describe MorbidityEvent do
       end
 
       describe 'Receiving an edited place exposure' do
+        fixtures :participations_places
         before(:each) do
           @date = 'August 8, 2008'
           @existing_place_exposure_hash = {
@@ -982,9 +984,10 @@ describe MorbidityEvent do
         it 'should update the existing place exposure' do
           @event.place_exposures.first.secondary_entity.place_temp.name.should == "Davis Natatorium"
           lambda {@event.update_attributes(@existing_place_exposure_hash)}.should_not change {Participation.count}
-          place = @event.place_exposures.first.secondary_entity.place_temp
+          participation = @event.place_exposures.first
+          participation.participations_place.date_of_exposure.should == Date.parse(@date)
+          place = participation.secondary_entity.place_temp
           place.name.should == "Davis Hot Springs"
-          place.date_of_exposure.should == Date.parse(@date)
         end
       end
 
@@ -1032,7 +1035,7 @@ describe MorbidityEvent do
     end
 
     describe "Handling telephone numbers" do
-      fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses
+      fixtures :events, :participations, :entities, :people, :entities_locations, :locations, :telephones, :addresses, :participations_places
     
       describe "Adding new telephone number" do
         before(:each) do
@@ -1161,7 +1164,7 @@ describe MorbidityEvent do
       end
 
       describe "Receiving two existing notes, one struck through one not." do
-        fixtures :notes, :users, :events
+        fixtures :notes, :users, :events, :participations_places
 
         before(:each) do
           @user = users(:default_user)
@@ -1186,7 +1189,7 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :entities, :users
+    fixtures :events, :entities, :users, :participations_places
 
     before(:each) do
       @user = users(:default_user)

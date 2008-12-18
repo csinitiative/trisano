@@ -88,6 +88,7 @@ class MorbidityEvent < HumanEvent
     place_exposure_attributes.each do |attributes|
       next if attributes.values_blank?
       place_exposure_participation = place_exposures.build(:role_id => Event.participation_code('Place Exposure'))
+      place_exposure_participation.build_participations_place(:date_of_exposure => attributes.delete('date_of_exposure'))
       place_exposure_entity = place_exposure_participation.build_secondary_entity
       place_exposure_entity.entity_type = 'place'
       place_exposure_entity.build_place_temp(attributes)
@@ -95,9 +96,10 @@ class MorbidityEvent < HumanEvent
   end
 
   def existing_place_exposure_attributes=(place_exposure_attributes)
-    place_exposures.reject(&:new_record?).each do |place_exposure|      
+    place_exposures.reject(&:new_record?).each do |place_exposure|
       attributes = place_exposure_attributes[place_exposure.secondary_entity.place_temp.id.to_s]
       if attributes && !attributes.values_blank?
+        place_exposure.participations_place.date_of_exposure = attributes.delete('date_of_exposure')
         place_exposure.secondary_entity.place_temp.attributes = attributes
       else
         place_exposure.participating_event.soft_delete if place_exposure.participating_event
@@ -353,6 +355,7 @@ class MorbidityEvent < HumanEvent
     end
 
     place_exposures.each do |pe|
+      pe.participations_place.save(false)
       pe.secondary_entity.place_temp.save(false)
     end
   end

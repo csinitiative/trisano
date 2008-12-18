@@ -20,6 +20,6 @@
     - primary_form.fields_for(:place, entity_data.place, :builder => ExtendedFormBuilder) do |place_form|
       %fieldset
         %legend Place Information
-        =render :partial => 'events/places/name_show', :locals => {:place => entity_data.place, :place_form => place_form}
+        =render :partial => 'events/places/name_show', :locals => {:event => @event, :place => entity_data.place, :place_form => place_form}
         =render :partial => 'events/places/address_show', :locals => { :address => entity_data.address, :current_place => primary_form}
         =render :partial => 'events/people/phones_show', :locals => {:entity_data => entity_data}
