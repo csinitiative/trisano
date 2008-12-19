@@ -15,14 +15,24 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ParticipationsRiskFactor < ActiveRecord::Base
-  belongs_to :participations
-  belongs_to :food_handler, :class_name => 'ExternalCode'
-  belongs_to :healthcare_worker, :class_name => 'ExternalCode'
-  belongs_to :group_living, :class_name => 'ExternalCode'
-  belongs_to :day_care_association, :class_name => 'ExternalCode'
-  belongs_to :pregnant, :class_name => 'ExternalCode'
+class AdjustTablesAndColumns < ActiveRecord::Migration
 
-  validates_length_of :risk_factors, :maximum => 255, :allow_blank => true
-  validates_length_of :occupation, :maximum => 255, :allow_blank => true
+  def self.up
+    change_column :participations_risk_factors, :risk_factors, :string, :limit => 255
+    change_column :participations_risk_factors, :risk_factors_notes, :text
+    change_column :roles, :description, :string, :limit => 255
+
+    drop_table :laboratories
+    drop_table :organizations
+    drop_table :cases_events
+  end
+
+  def self.down
+    change_column :diseases, :disease_name, :limit => 100
+    change_column :participations_risk_factors, :risk_factors, :limit => 25
+    change_column :participations_risk_factors, :risk_factors_notes, :limit => 100
+    change_column :roles, :description, :limit => 60
+
+    # Not restoring the dropped tables as we never used them
+  end
 end

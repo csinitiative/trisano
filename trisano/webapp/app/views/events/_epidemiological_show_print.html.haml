@@ -49,6 +49,10 @@
   Other
 - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+    - core_element_print :imported_from_id, event_form, :vert do
+      %span.print-label Imported from:
+      %span.print-value= l @event.imported_from
+    
     - core_element_print :risk_factors, risk_factor_form, :horiz do
       %span.print-label Risk factors:
       %span.print-value= @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
@@ -57,14 +61,10 @@
       %span.print-label Risk factors notes:
       %span.print-value= @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
 
-    - core_element_print :imported_from_id, event_form, :horiz do
-      %span.print-label Imported from:
-      %span.print-value= l @event.imported_from
-    
     - core_element_print :other_data_1, event_form, :horiz do
       %span.print-label Other data:
       %span.print-value= h(@event.other_data_1)
 
-    - core_element_print :other_data_2, event_form, :vert do
+    - core_element_print :other_data_2, event_form, :horiz do
       %span.print-label &nbsp;
       %span.print-value= h(@event.other_data_2)

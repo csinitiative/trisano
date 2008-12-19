@@ -51,18 +51,26 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <br />
         <fieldset class="form">
           <legend>Other</legend>
-          <% core_element :risk_factors, rf, :horiz do %>
-            <%= rf.label(:risk_factors) %>
-            <%= rf.core_text_field(:risk_factors,{:size => 25, :maxlength => 25}, @event, @can_investigate) %>
-          <% end %>
-          <% core_element :risk_factors_notes, rf, :vert do %>
-            <%= rf.label(:risk_factors_notes) %>
-            <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
-          <% end %>
           <% core_element :imported_from_id, f, :horiz do -%>
             <%= f.label(:imported_from_id) %>
             <%= f.dropdown_code_field(:imported_from_id, 'imported', {}, {}, @event, @can_investigate) %>
           <% end -%>    
+          <% core_element :risk_factors, rf, :horiz do %>
+            <%= rf.label(:risk_factors) %>
+            <%= rf.core_text_field(:risk_factors,{:size => 25, :maxlength => 255}, @event, @can_investigate) %>
+          <% end %>
+          <% core_element :risk_factors_notes, rf, :horiz do %>
+            <%= rf.label(:risk_factors_notes) %>
+            <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
+          <% end %>
+          <% core_element :other_data_1, f, :vert do -%>
+            <%= f.label(:other_data_1, 'Other data 1') %>
+            <%= f.text_field(:other_data_1, :size => 30, :maxlength => 255) %>
+          <% end -%>
+          <% core_element :other_data_2, f, :horiz do -%>
+            <%= f.label(:other_data_2, "Other data 2") %>
+            <%= f.text_field(:other_data_2, :size => 30, :maxlength => 255) %>
+          <% end -%>
         </fieldset>
       <% end %>
     <% end %>

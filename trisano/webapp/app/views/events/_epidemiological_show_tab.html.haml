@@ -51,6 +51,10 @@
 
     - event_form.fields_for(:active_patient, @event.active_patient, :builder => ExtendedFormBuilder) do |active_patient_form|
       - active_patient_form.fields_for(:participations_risk_factor, @event.active_patient.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+        - core_element_show :imported_from_id, event_form, :horiz do
+          = event_form.label(:imported_from_id)
+          = l @event.imported_from
+
         - core_element_show :risk_factors, risk_factor_form, :horiz do
           = risk_factor_form.label(:risk_factors)
           = @event.active_patient.participations_risk_factor.risk_factors unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
@@ -59,10 +63,6 @@
           = risk_factor_form.label(:risk_factors_notes)
           = @event.active_patient.participations_risk_factor.risk_factors_notes unless @event.active_patient.nil? or @event.active_patient.participations_risk_factor.nil?
           
-        - core_element_show :imported_from_id, event_form, :horiz do
-          = event_form.label(:imported_from_id)
-          = l @event.imported_from
-
         - core_element_show :other_data_1, event_form, :horiz do
           = event_form.label(:other_data_1, 'Other data')
           = h(@event.other_data_1)
