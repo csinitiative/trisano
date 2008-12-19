@@ -26,4 +26,4 @@
           = link_to_function "Close", "$('builder-mods').down('form').reset(); Effect.BlindUp($('builder-mods'), { duration: 0.1 })"
         %td
 = f.text_field(:name, :size => 20)
-= f.submit "Create"
+= f.submit("Create", :id => 'create_view_submit')

@@ -17,5 +17,5 @@
 
   = error_messages_for :view_element
 
-  - remote_form_for(view_element) do |f|
+  - remote_form_for(view_element, {}, :loading => "$('create_view_submit').disabled = 'disabled';" ) do |f|
     = render :partial => 'form', :locals => { :f => f }

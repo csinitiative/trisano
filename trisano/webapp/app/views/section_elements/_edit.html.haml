@@ -18,8 +18,8 @@
   = error_messages_for :section_element
     
   %h4 Edit existing section
-  - remote_form_for(section_element, :html => { :method => 'put', :name => 'section-element-edit-form' } ) do |f|
+  - remote_form_for(section_element, :html => { :method => 'put', :name => 'section-element-edit-form' }, :loading => "$('edit_section_submit_#{section_element.id}').disabled = 'disabled';" ) do |f|
     = render :partial => 'form', :locals => { :f => f }
-    = f.submit "Update"
+    = f.submit("Update", :id => "edit_section_submit_#{section_element.id}")
     &nbsp;&nbsp;
     = link_to_function "Close", "$('section-mods-#{section_element.id}').down('form').reset(); Effect.BlindUp($('section-mods-#{section_element.id}'), { duration: 0.1 })"

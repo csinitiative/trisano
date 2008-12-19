@@ -17,11 +17,11 @@
 
   = error_messages_for :value_set_element
 
-  - remote_form_for(value_set_element, :html => { :method => 'put', :name => 'value-set-element-edit-form'}) do |f|
+  - remote_form_for(value_set_element, :html => { :method => 'put', :name => 'value-set-element-edit-form'}, :loading => "$('edit_value_set_submit_#{@value_set_element.id}').disabled = 'disabled';" ) do |f|
 
     = render :partial => 'form', :locals => { :f => f }
 
     %p
-      = f.submit "Update"
+      = f.submit("Update", :id => "edit_value_set_submit_#{@value_set_element.id}")
       &nbsp;&nbsp;
       = link_to_function "Close", "$('value-set-mods-#{@value_set_element.id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.id}'), { duration: 0.1 })"

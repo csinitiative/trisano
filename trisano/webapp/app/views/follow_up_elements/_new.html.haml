@@ -20,11 +20,11 @@
 
   = error_messages_for :follow_up_element
 
-  - remote_form_for(follow_up_element) do |f|
+  - remote_form_for(follow_up_element, {}, :loading => "$('create_follow_up_submit_#{@follow_up_element.parent_element_id}').disabled = 'disabled';" ) do |f|
 
     = render :partial => 'form', :locals => { :f => f }
 
     %p
-      = f.submit "Create"
+      = f.submit("Create", :id => "create_follow_up_submit_#{@follow_up_element.parent_element_id}")
       &nbsp;&nbsp;
       = link_to_function "Close", "$('follow-up-mods-#{@follow_up_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('follow-up-mods-#{@follow_up_element.parent_element_id}'), { duration: 0.1 })"

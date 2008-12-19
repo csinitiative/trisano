@@ -18,7 +18,7 @@
   %div{:id => "new-question-form", :class => 'fb-inplace-form'}
 
     %h4 Add a new question
-    - remote_form_for(@question_element) do |f|
+    - remote_form_for(@question_element, {}, :loading => "$('create_question_submit_#{@reference_element.id}').disabled = 'disabled';" ) do |f|
 
       = render :partial => 'form', :locals => { :f => f }
 
@@ -32,7 +32,7 @@
         = q.select(:data_type, [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]], {:include_blank => true}) 
 
       %p
-        = f.submit "Create"
+        = f.submit("Create", :id => "create_question_submit_#{@reference_element.id}")
         &nbsp;&nbsp;
         = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
 

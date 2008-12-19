@@ -17,7 +17,7 @@
 
   = error_messages_for :core_view_element
 
-  - remote_form_for(core_view_element) do |f|
+  - remote_form_for(core_view_element, {}, :loading => "$('create_core_view_submit').disabled = 'disabled';" ) do |f|
     
     - if @available_core_views.empty?
       %b No core tabs are available. Use existing core tab configurations.

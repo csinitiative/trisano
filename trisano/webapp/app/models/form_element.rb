@@ -72,7 +72,7 @@ class FormElement < ActiveRecord::Base
         validate_form_structure
         return true
       end
-    rescue Exception => ex
+    rescue
       return nil
     end
     

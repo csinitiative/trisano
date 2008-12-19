@@ -18,12 +18,12 @@
   = error_messages_for :value_set_element
   %div{:id => "new-value-set-form", :class => 'fb-inplace-form'}
 
-    - remote_form_for(value_set_element, :html => {:name => 'value-set-element-new-form'}) do |f|
+    - remote_form_for(value_set_element, :html => {:name => 'value-set-element-new-form'}, :loading => "$('create_value_set_submit_#{@value_set_element.parent_element_id}').disabled = 'disabled';" ) do |f|
 
       = render :partial => 'form', :locals => { :f => f }
 
       %p
-        = f.submit "Create"
+        = f.submit("Create", :id => "create_value_set_submit_#{@value_set_element.parent_element_id}")
         &nbsp;&nbsp;
         = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"
 

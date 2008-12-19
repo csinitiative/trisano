@@ -22,6 +22,11 @@ class CoreFieldElement < FormElement
   validates_presence_of :name
   
   def save_and_add_to_form
+    if self.core_path.blank?
+      errors.add_to_base("Core path is required.")
+      return nil
+    end
+    
     parent_element = FormElement.find(parent_element_id)
     self.name = eval(parent_element.form.event_type.camelcase).exposed_attributes[self.core_path][:name]
     super do

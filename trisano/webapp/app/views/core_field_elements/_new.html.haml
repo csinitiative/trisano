@@ -17,7 +17,7 @@
 
   = error_messages_for :core_field_element
 
-  - remote_form_for(core_field_element) do |f|
+  - remote_form_for(core_field_element, {}, :loading => "$('create_core_field_submit').disabled = 'disabled';" ) do |f|
     
     - if @available_core_fields.empty?
       %b No core fields are available. Use existing core field configurations.

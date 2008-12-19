@@ -595,7 +595,7 @@ module TrisanoHelper
     browser.click("add-tab")
     wait_for_element_present("new-view-form")
     browser.type("view_element_name", name)
-    browser.click("view_element_submit")
+    browser.click "//input[contains(@id, 'create_view_submit')]"
     wait_for_element_not_present("new-view-form")
     if browser.is_text_present(name)
       return browser.get_value("id=modified-element")
@@ -611,7 +611,7 @@ module TrisanoHelper
     browser.type("section_element_name", section_attributes[:section_name])
     browser.type("section_element_description", section_attributes[:description]) unless section_attributes[:description].nil?
     browser.type("section_element_help_text", section_attributes[:help_text]) unless section_attributes[:help_text].nil?
-    browser.click("section_element_submit")
+    browser.click "//input[contains(@id, 'create_section_submit')]"
     wait_for_element_not_present("new-section-form", browser)
     if browser.is_text_present(section_attributes[:section_name])
       return browser.get_value("id=modified-element")
@@ -689,7 +689,7 @@ module TrisanoHelper
     browser.type "model_auto_completer_tf", condition
     browser.select "follow_up_element_core_path", "label=Patient birth gender"
     browser.get_eval("element = window.document.getElementById(\"follow_up_element_core_path\").options[1]; element.value = '#{invalid_core_path}'; element.selected = true")
-    browser.click "follow_up_element_submit"
+    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
   
@@ -701,7 +701,7 @@ module TrisanoHelper
     browser.type "model_auto_completer_tf", condition
     sleep 1 # Give the type ahead a second to breath, otherwise the edit doesn't stick
     browser.select "follow_up_element_core_path", "label=#{core_label}"
-    browser.click "follow_up_element_submit"
+    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
     wait_for_element_not_present("edit-follow-up-form", browser)
   end
   
@@ -710,7 +710,7 @@ module TrisanoHelper
     browser.click("edit-follow-up-#{element_id}")
     wait_for_element_present("edit-follow-up-form", browser)
     browser.type "follow_up_element_condition", condition
-    browser.click "follow_up_element_submit"
+    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
     wait_for_element_not_present("edit-follow-up-form", browser)
   end
   
@@ -719,7 +719,7 @@ module TrisanoHelper
     browser.click("edit-section-#{element_id}")
     wait_for_element_present("section-element-edit-form", browser)
     browser.type "section_element_name", section_text
-    browser.click "section_element_submit"
+    browser.click "//input[contains(@id, 'edit_section_submit')]"
     # wait_for_element_not_present("section-element-edit-form", browser)
   end
   
@@ -736,7 +736,7 @@ module TrisanoHelper
     browser.type "value_set_element_new_value_element_attributes__name", value_one
     browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", value_two
     browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", value_three
-    browser.click "value_set_element_submit"
+    browser.click "//input[contains(@id, 'create_value_set_submit')]"
     wait_for_element_not_present("new-value-set-form")
     browser.is_text_present(value_set_name).should be_true
     
@@ -768,7 +768,7 @@ module TrisanoHelper
     browser.click("add-core-tab")
     wait_for_element_present("new-core-view-form", browser)
     browser.select("core_view_element_name", "label=#{core_view_name}")
-    browser.click("core_view_element_submit")
+    browser.click "//input[contains(@id, 'create_core_view_submit')]"
     wait_for_element_not_present("new-core-view-form", browser)
   end
   
@@ -776,7 +776,7 @@ module TrisanoHelper
     browser.click("add-core-field")
     wait_for_element_present("new_core_field_element", browser)
     browser.select("core_field_element_core_path", "label=#{core_field_name}")
-    browser.click("core_field_element_submit")
+    browser.click "//input[contains(@id, 'create_core_field_submit')]"
     wait_for_element_not_present("new_core_field_element", browser)
   end
   
@@ -916,16 +916,6 @@ module TrisanoHelper
       #TODO
     else #TODO - this is an error
     end
-  end
-  
-  #TODO 
-  def click_add_core_data_element_to_section(browser, section)
-    
-  end
-  
-  #TODO
-  def click_core_data_element(browser, element, action)
-  
   end
   
   #Get a unique name with the input number of words in it
@@ -1078,7 +1068,7 @@ module TrisanoHelper
     browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
-    browser.click "question_element_submit"    
+    browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form", browser)
     if browser.is_text_present(question_attributes[:question_text])
       return true
@@ -1098,7 +1088,7 @@ module TrisanoHelper
     end
     
     browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
-    browser.click "follow_up_element_submit"
+    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
       
@@ -1113,7 +1103,7 @@ module TrisanoHelper
     end
     
     browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
-    browser.click "follow_up_element_submit"
+    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
 

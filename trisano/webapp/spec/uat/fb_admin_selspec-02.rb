@@ -78,7 +78,7 @@ def add_a_section
   @browser.click "link=Add section to tab"
   wait_for_element_present("new-section-form")
   @browser.type "section_element_name", "Section 1"
-  @browser.click "section_element_submit"
+  @browser.click "//input[contains(@id, 'create_section_submit')]"
   wait_for_element_not_present("new-section-form")
   @browser.is_text_present("Section 1").should be_true
 
@@ -116,7 +116,7 @@ def add_value_sets
   @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
   @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
   @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Maybe"
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
   wait_for_element_not_present("new-value-set-form")
   @browser.is_text_present("Yes/No/Maybe").should be_true
   @browser.click "link=Add value set"
@@ -127,7 +127,7 @@ def add_value_sets
   wait_for_element_present("value_set_element_new_value_element_attributes__name")
   @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
   @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
   wait_for_element_not_present("new-value-set-form")
   @browser.click "link=Add value set"
   wait_for_element_present("new-value-set-form")
@@ -137,7 +137,7 @@ def add_value_sets
   wait_for_element_present("value_set_element_new_value_element_attributes__name")
   @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
   @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
   wait_for_element_not_present("new-value-set-form")
 end
 
@@ -155,14 +155,14 @@ def edit_value_sets
   @browser.type "value_set_element_name", "Edited"
   @browser.click "link=Remove"
   @browser.click "link=Remove"
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
   wait_for_element_not_present("edit-value-set-form")
   @browser.click "link=Edit value set"
   wait_for_element_present("edit-value-set-form")
     
   @browser.type "document.forms['value-set-element-edit-form'].elements[4]", "Edited value"
     
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
   wait_for_element_not_present("edit-value-set-form")
   
   @browser.click "link=Inactivate"
@@ -176,7 +176,7 @@ def edit_value_sets
   @browser.click "link=Add a value"
   wait_for_element_present("value_set_element_new_value_element_attributes__name")
   @browser.type "value_set_element_new_value_element_attributes__name", "Added after value"
-  @browser.click "value_set_element_submit"
+  @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
   wait_for_element_not_present("edit-value-set-form")
   @browser.is_text_present("Added after value").should be_true
 end
@@ -186,7 +186,7 @@ def add_and_populate_tab
   @browser.click("add-tab")
   wait_for_element_present("new-view-form")
   @browser.type "view_element_name", @user_defined_tab_text
-  @browser.click "view_element_submit"
+  @browser.click "//input[contains(@id, 'create_view_submit')]"
   wait_for_element_not_present("new-view-form")
   
   @tab_element_id = @browser.get_value("id=modified-element")
@@ -194,7 +194,7 @@ def add_and_populate_tab
   @browser.click "id=add-section-#{@tab_element_id}"
   wait_for_element_present("new-section-form")
   @browser.type "section_element_name", @user_defined_tab_section_text
-  @browser.click "section_element_submit"
+  @browser.click "//input[contains(@id, 'create_section_submit')]"
   wait_for_element_not_present("new-section-form")
   @browser.is_text_present(@user_defined_tab_text).should be_true
 
@@ -269,7 +269,7 @@ def delete_edit_and_inactivate_questions
   @browser.click "id=edit-question-#{@question_to_edit_id}"
   wait_for_element_present("edit-question-form")
   @browser.type "question_element_question_attributes_question_text", @question_to_edit_modified_text
-  @browser.click "question_element_submit"    
+  @browser.click "//input[contains(@id, 'edit_question_submit')]"
   wait_for_element_not_present("edit-question-form")
   @browser.is_text_present(@question_to_edit_text).should be_false
   @browser.is_text_present(@question_to_edit_modified_text).should be_true
@@ -277,7 +277,7 @@ def delete_edit_and_inactivate_questions
   @browser.click "id=edit-question-#{@question_to_inactivate_id}"
   wait_for_element_present("edit-question-form")
   @browser.click "question_element_is_active_false"
-  @browser.click "question_element_submit"    
+  @browser.click "//input[contains(@id, 'edit_question_submit')]"
   wait_for_element_not_present("edit-question-form")
 end
 

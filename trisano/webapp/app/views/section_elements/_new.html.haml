@@ -18,8 +18,8 @@
   = error_messages_for :section_element
     
   %h4 Add a new section
-  - remote_form_for(@section_element) do |f|
+  - remote_form_for(@section_element, {}, :loading => "$('create_section_submit_#{@section_element.parent_element_id}').disabled = 'disabled';" ) do |f|
     = render :partial => 'form', :locals => { :f => f }
-    = f.submit "Create"
+    = f.submit("Create", :id => "create_section_submit_#{@section_element.parent_element_id}")
     &nbsp;&nbsp;
     = link_to_function "Close", "$('section-mods-#{@section_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('section-mods-#{@section_element.parent_element_id}'), { duration: 0.1 })"
