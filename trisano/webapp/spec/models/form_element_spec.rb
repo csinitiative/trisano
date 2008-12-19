@@ -156,14 +156,12 @@ describe "FormElement copying from library" do
     @independent_value_set.add_child(@indie_value_1)
     @independent_value_set.add_child(@indie_value_2)
       
-    @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
-    @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question)
-    @group_element.add_child(@question_element_with_value_set)
     @question_with_value_set = Question.create(
-      :form_element_id => @question_element_with_value_set.id, 
       :question_text => "How's it going?", 
       :data_type => "drop_down")
-      
+    @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_with_value_set)
+    @group_element.add_child(@question_element_with_value_set)
+    
     @dependent_value_set = ValueSetElement.create(:name => "Dependent Value Set", :tree_id => @group_tree_id)
     @question_element_with_value_set.add_child(@dependent_value_set)
       
@@ -178,7 +176,6 @@ describe "FormElement copying from library" do
     @question_element_without_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_without_value_set)
     @group_element.add_child(@question_element_without_value_set)
 
-      
   end
     
   describe "when copying a group to a section" do
@@ -202,7 +199,7 @@ describe "FormElement copying from library" do
       @copied_group.children[1].is_a?(QuestionElement).should be_true
       
       @copied_group.children[0].question.should_not be_nil
-      @copied_group.children[0].question.question_text.should eql("?")
+      @copied_group.children[0].question.question_text.should eql("How's it going?")
       @copied_group.children[1].question.should_not be_nil
       @copied_group.children[1].question.question_text.should eql("Explain.")
     end
@@ -250,17 +247,12 @@ describe "FormElement copying from library" do
   end
   
   describe "when copying an individual value set to a question" do
-    
     it "should copy the question element, its value set, and the question" do
-      @to_question = Question.create({:question_text => "?", :data_type => "single_line_text"})
-      @to_element = QuestionElement.create(
+      @to_element =SectionElement.create(
         :name => "Section",
-        :parent_element_id => @form.investigator_view_elements_container.id,
-        :question => @to_question)
+        :parent_element_id => @form.investigator_view_elements_container.id)
       @to_element.save_and_add_to_form
-      
       @to_element.children.size.should eql(0)
-      
       @to_element.copy_from_library(@question_element_with_value_set)
       
       @to_element.children.size.should eql(1)
@@ -279,7 +271,7 @@ describe "FormElement copying from library" do
       
       @copied_question = @copied_question_element.question
       @copied_question.should_not be_nil
-      @copied_question.question_text.should eql("?")
+      @copied_question.question_text.should eql("How's it going?")
     end
     
     it "shouldn't copy anything if the form is invalid" do
