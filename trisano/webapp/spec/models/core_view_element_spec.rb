@@ -51,14 +51,12 @@ describe CoreViewElement do
     it "should return only available core view names when some are in use" do
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       form.save_and_initialize_form_elements
-      base_element_id = form.form_base_element.id
-     
-      demographic_core_config = CoreViewElement.new(:parent_element_id => base_element_id, :name => "Demographics")
-      clinical_core_config = CoreViewElement.new(:parent_element_id => base_element_id, :name => "Clinical")
-      demographic_core_config.save_and_add_to_form
-      clinical_core_config.save_and_add_to_form
+      demographic_core_config = CoreViewElement.new(:parent_element_id => form.core_view_elements_container.id, :name => "Demographics")
+      clinical_core_config = CoreViewElement.new(:parent_element_id => form.core_view_elements_container.id, :name => "Clinical")
+      demographic_core_config.save_and_add_to_form.should_not be_nil
+      clinical_core_config.save_and_add_to_form.should_not be_nil
        
-      @core_view_element.parent_element_id = base_element_id
+      @core_view_element.parent_element_id = form.core_view_elements_container.id
       available_core_views = @core_view_element.available_core_views
       available_core_views.size.should == 5
       available_core_views.flatten.uniq.include?("Demographics").should be_false
@@ -75,14 +73,14 @@ describe CoreViewElement do
   describe "when created with 'save and add to form'" do
     it "should be a child of the form's base" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       @core_view_element.parent_id.should_not be_nil
       @form.investigator_view_elements_container.children[1].id.should == @core_view_element.id
     end
     
     it "should receive a tree id" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       @core_view_element.tree_id.should_not be_nil
       @core_view_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
@@ -98,7 +96,7 @@ describe CoreViewElement do
   describe "when updated" do
     it "should succeed if form validation passes" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       @core_view_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @core_view_element.name.should eql("Updated Name")
       @core_view_element.errors.should be_empty
@@ -106,7 +104,7 @@ describe CoreViewElement do
 
     it "should fail if form validation fails" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @core_view_element.update_and_validate(:name => "Updated Name").should be_nil
       @core_view_element.errors.should_not be_empty
@@ -116,14 +114,14 @@ describe CoreViewElement do
   describe "when deleted" do
     it "should succeed if form validation passes" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       @core_view_element.destroy_and_validate.should_not be_nil
       @core_view_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
       @core_view_element.parent_element_id = @form.investigator_view_elements_container.id
-      @core_view_element.save_and_add_to_form
+      @core_view_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @core_view_element.destroy_and_validate.should be_nil
       @core_view_element.errors.should_not be_empty

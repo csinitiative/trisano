@@ -83,7 +83,7 @@ describe QuestionElement do
       @form.save_and_initialize_form_elements
       @section_element = SectionElement.new(:name => "Test")
       @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
     end
     
     it "should bootstrap the question" do
@@ -92,8 +92,7 @@ describe QuestionElement do
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.should_not be_nil
@@ -106,8 +105,7 @@ describe QuestionElement do
           :question_attributes => {:data_type => "single_line_text"}
         })
       
-      saved = question_element.save_and_add_to_form
-      saved.should be_nil
+      question_element.save_and_add_to_form.should be_nil
       
       begin
         retrieved_question_element = FormElement.find(question_element.id)
@@ -123,8 +121,8 @@ describe QuestionElement do
           :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
         })
-        
-      saved = question_element.save_and_add_to_form
+      
+      question_element.save_and_add_to_form.should_not be_nil
       question_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
     
@@ -148,7 +146,7 @@ describe QuestionElement do
       @form.save_and_initialize_form_elements
       @section_element = SectionElement.new(:name => "Test")
       @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       @question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
@@ -157,27 +155,27 @@ describe QuestionElement do
     end
     
     it "should succeed if form validation passes on update" do
-      @question_element.save_and_add_to_form
+      @question_element.save_and_add_to_form.should_not be_nil
       @question_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @question_element.name.should eql("Updated Name")
       @question_element.errors.should be_empty
     end
 
     it "should fail if form validation fails on update" do
-      @question_element.save_and_add_to_form
+      @question_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @question_element.update_and_validate(:name => "Updated Name").should be_nil
       @question_element.errors.should_not be_empty
     end
     
     it "should succeed if form validation passes on delete" do
-      @question_element.save_and_add_to_form
+      @question_element.save_and_add_to_form.should_not be_nil
       @question_element.destroy_and_validate.should_not be_nil
       @question_element.errors.should be_empty
     end
 
     it "should fail if form validation fails on delete" do
-      @question_element.save_and_add_to_form
+      @question_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @question_element.destroy_and_validate.should be_nil
       @question_element.errors.should_not be_empty
@@ -200,8 +198,7 @@ describe QuestionElement do
           }
         })
 
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.should_not be_nil
@@ -223,8 +220,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       cdc_value_set = retrieved_question_element.children[0]
@@ -252,8 +248,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       cdc_value_set = retrieved_question_element.children[0]
@@ -282,8 +277,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       cdc_value_set = retrieved_question_element.children[0]
@@ -311,8 +305,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.question_text.should eql("Date diagnosed")
@@ -333,8 +326,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.question_text.should eql("Vaccine year")
@@ -354,8 +346,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.question_text.should eql("Multi-line?")
@@ -375,8 +366,7 @@ describe QuestionElement do
           }
         })
         
-      saved = question_element.save_and_add_to_form
-      saved.should_not be_nil
+      question_element.save_and_add_to_form.should_not be_nil
       
       retrieved_question_element = FormElement.find(question_element.id)
       retrieved_question_element.question.question_text.should eql("Phone?")

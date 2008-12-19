@@ -48,13 +48,13 @@ describe SectionElement do
   
   describe "when created with 'save and add to form'" do
     it "should be a child of the form's investigator element container" do
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       @section_element.parent_id.should_not be_nil
       @form.investigator_view_elements_container.children[1].id.should == @section_element.id
     end
     
     it "should be receive a tree id" do  
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       @section_element.tree_id.should_not be_nil
       @section_element.tree_id.should eql(@form.form_base_element.tree_id)
     end
@@ -68,14 +68,14 @@ describe SectionElement do
   
   describe "when updated" do
     it "should succeed if form validation passes" do
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       @section_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @section_element.name.should eql("Updated Name")
       @section_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @section_element.update_and_validate(:name => "Updated Name").should be_nil
       @section_element.errors.should_not be_empty
@@ -84,13 +84,13 @@ describe SectionElement do
   
   describe "when deleted" do
     it "should succeed if form validation passes" do
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       @section_element.destroy_and_validate.should_not be_nil
       @section_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @section_element.save_and_add_to_form
+      @section_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @section_element.destroy_and_validate.should be_nil
       @section_element.errors.should_not be_empty

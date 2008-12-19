@@ -53,14 +53,14 @@ describe ViewElement do
   
   describe "when updated" do
     it "should succeed if form validation passes" do
-      @view_element.save_and_add_to_form
+      @view_element.save_and_add_to_form.should_not be_nil
       @view_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @view_element.name.should eql("Updated Name")
       @view_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @view_element.save_and_add_to_form
+      @view_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @view_element.update_and_validate(:name => "Updated Name").should be_nil
       @view_element.errors.should_not be_empty
@@ -69,13 +69,13 @@ describe ViewElement do
   
   describe "when deleted" do
     it "should succeed if form validation passes" do
-      @view_element.save_and_add_to_form
+      @view_element.save_and_add_to_form.should_not be_nil
       @view_element.destroy_and_validate.should_not be_nil
       @view_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @view_element.save_and_add_to_form
+      @view_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @view_element.destroy_and_validate.should be_nil
       @view_element.errors.should_not be_empty

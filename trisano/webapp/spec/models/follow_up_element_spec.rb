@@ -25,7 +25,7 @@ describe FollowUpElement do
         :parent_element_id => @form.investigator_view_elements_container.id,
         :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
       })
-    @question_element.save_and_add_to_form
+    @question_element.save_and_add_to_form.should_not be_nil
     @follow_up_element = FollowUpElement.new
     @follow_up_element.form_id = 1
     @follow_up_element.condition = "Yes"
@@ -45,14 +45,14 @@ describe FollowUpElement do
   describe "when created with 'save and add to form'" do
     
     it "should be a child of the question provided" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.parent_id.should_not be_nil
       question_element = FormElement.find(@question_element.id)
       question_element.children[0].id.should == @follow_up_element.id 
     end
     
     it "should receive a tree id" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.tree_id.should_not be_nil
       @follow_up_element.tree_id.should eql(@question_element.tree_id)
     end
@@ -67,14 +67,14 @@ describe FollowUpElement do
   
   describe "when updated" do
     it "should succeed if form validation passes" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @follow_up_element.name.should eql("Updated Name")
       @follow_up_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @follow_up_element.update_and_validate(:name => "Updated Name").should be_nil
       @follow_up_element.errors.should_not be_empty
@@ -85,7 +85,7 @@ describe FollowUpElement do
     
     it "should succeed if form validation passes" do
       external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       
       update_hash = {
         "condition_id"=>external_code.id, 
@@ -100,7 +100,7 @@ describe FollowUpElement do
 
     it "should fail if form validation fails" do
       external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       
       update_hash = {
         "condition_id"=>external_code.id, 
@@ -116,13 +116,13 @@ describe FollowUpElement do
   
   describe "when deleted" do
     it "should succeed if form validation passes" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.destroy_and_validate.should_not be_nil
       @follow_up_element.errors.should be_empty
     end
 
     it "should fail if form validation fails" do
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @follow_up_element.destroy_and_validate.should be_nil
       @follow_up_element.errors.should_not be_empty
@@ -138,12 +138,12 @@ describe FollowUpElement do
           :parent_element_id => @form.investigator_view_elements_container.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
         })
-      @question_element.save_and_add_to_form
+      @question_element.save_and_add_to_form.should_not be_nil
       @follow_up_element = FollowUpElement.new
       @follow_up_element.form_id = 1
       @follow_up_element.condition = "Yes"
       @follow_up_element.parent_element_id = @question_element.id
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
     end
     
@@ -219,15 +219,20 @@ describe FollowUpElement do
   describe "when created with 'save and add to form' with type-ahead support in the UI" do
     
     before(:each) do
-      @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
-      @question_element = QuestionElement.create({:form_id => 1, :tree_id => 1, :question => @question})
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @question_element = QuestionElement.new({
+          :parent_element_id => @form.investigator_view_elements_container.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        })
+      @question_element.save_and_add_to_form.should_not be_nil
       @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
     end
   
     it "should use a condition_id for it's condition if one is present and it is a number" do
       @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = @external_code.id.to_s
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql(@external_code.id.to_s)
       @follow_up_element.is_condition_code.should be_true
     end
@@ -235,7 +240,7 @@ describe FollowUpElement do
     it "should find and use a external code id for it's condition if a condition_id is present, but is a string that corresponds to an external code" do
       @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Code: #{@external_code.code_description} (#{@external_code.code_name})"
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql(@external_code.id.to_s)
       @follow_up_element.is_condition_code.should be_true
     end
@@ -243,7 +248,7 @@ describe FollowUpElement do
     it "should use the condition_id string for the condition if no matching code can be found" do
       @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Code: #{@external_code.code_description} (some crazy code)"
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql("Code: #{@external_code.code_description} (some crazy code)")
       @follow_up_element.is_condition_code.should be_false
     end
@@ -251,7 +256,7 @@ describe FollowUpElement do
     it "should use the condition_id string for the condition if there is content after the last paren" do
       @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "#{@external_code.code_description} (#{@external_code.code_name}) and more stuff"
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql("#{@external_code.code_description} (#{@external_code.code_name}) and more stuff")
       @follow_up_element.is_condition_code.should be_false
     end
@@ -259,14 +264,14 @@ describe FollowUpElement do
     it "should use the condition_id string for the condition if the condition_id can't be parsed" do
       @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Howdy!"
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql("Howdy!")
       @follow_up_element.is_condition_code.should be_false
     end
     
     it "should use the condition value for the saved condition, if no condition_id is supplied" do
       @follow_up_element.parent_element_id = @question_element.id
-      @follow_up_element.save_and_add_to_form
+      @follow_up_element.save_and_add_to_form.should_not be_nil
       @follow_up_element.condition.should eql("Yes")
       @follow_up_element.is_condition_code.should be_false
     end
