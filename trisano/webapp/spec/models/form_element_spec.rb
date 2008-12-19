@@ -87,9 +87,8 @@ end
 describe "Quesiton FormElement when added to library" do
   
   before(:each) do
-    @form_element = QuestionElement.create(:tree_id => 1, :form_id => 1)
     @question = Question.create({:question_text => "Que?", :data_type => "single_line_text", :short_name => "que_q" })
-    @form_element.question = @question
+    @form_element = QuestionElement.create(:tree_id => 1, :form_id => 1, :question => @question)
   end
   
   it "the copy should have a correct ids and type" do
@@ -118,9 +117,8 @@ describe "Quesiton FormElement when added to library" do
     
   it "the copy should have follow up questions" do
     follow_up_container = FollowUpElement.create({:tree_id => 1, :form_id => 1,:name => "Follow up", :condition => "Yes"})
-    follow_up_question_element = QuestionElement.create(:tree_id => 1, :form_id => 1)
     follow_up_question = Question.create({:question_text => "Did you do it?", :data_type => "single_line_text"})
-    follow_up_question_element.question = follow_up_question
+    follow_up_question_element = QuestionElement.create(:tree_id => 1, :form_id => 1, :question => follow_up_question)
     follow_up_container.add_child(follow_up_question_element)
     @form_element.add_child(follow_up_container)
     
@@ -158,7 +156,8 @@ describe "FormElement copying from library" do
     @independent_value_set.add_child(@indie_value_1)
     @independent_value_set.add_child(@indie_value_2)
       
-    @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id)
+    @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question)
     @group_element.add_child(@question_element_with_value_set)
     @question_with_value_set = Question.create(
       :form_element_id => @question_element_with_value_set.id, 
@@ -173,12 +172,12 @@ describe "FormElement copying from library" do
     @dependent_value_set.add_child(@dependent_value_1)
     @dependent_value_set.add_child(@dependent_value_2)
       
-    @question_element_without_value_set = QuestionElement.create(:tree_id => @group_tree_id)
-    @group_element.add_child(@question_element_without_value_set)
     @question_without_value_set = Question.create(
-      :form_element_id => @question_element_without_value_set.id, 
       :question_text => "Explain.", 
       :data_type => "single_line_text")
+    @question_element_without_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_without_value_set)
+    @group_element.add_child(@question_element_without_value_set)
+
       
   end
     
@@ -203,7 +202,7 @@ describe "FormElement copying from library" do
       @copied_group.children[1].is_a?(QuestionElement).should be_true
       
       @copied_group.children[0].question.should_not be_nil
-      @copied_group.children[0].question.question_text.should eql("How's it going?")
+      @copied_group.children[0].question.question_text.should eql("?")
       @copied_group.children[1].question.should_not be_nil
       @copied_group.children[1].question.question_text.should eql("Explain.")
     end
@@ -253,7 +252,11 @@ describe "FormElement copying from library" do
   describe "when copying an individual value set to a question" do
     
     it "should copy the question element, its value set, and the question" do
-      @to_element = QuestionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      @to_question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+      @to_element = QuestionElement.create(
+        :name => "Section",
+        :parent_element_id => @form.investigator_view_elements_container.id,
+        :question => @to_question)
       @to_element.save_and_add_to_form
       
       @to_element.children.size.should eql(0)
@@ -276,7 +279,7 @@ describe "FormElement copying from library" do
       
       @copied_question = @copied_question_element.question
       @copied_question.should_not be_nil
-      @copied_question.question_text.should eql("How's it going?")
+      @copied_question.question_text.should eql("?")
     end
     
     it "shouldn't copy anything if the form is invalid" do
@@ -294,17 +297,15 @@ describe "when filtering the library" do
   
   before(:each) do
     tree_id = 0
-    @question_element_1 = QuestionElement.create(:tree_id => tree_id+=1)
     @question_1 = Question.create({:question_text => "Que?", :data_type => "single_line_text", :short_name => "que_q" })
-    @question_element_1.question = @question_1
+    @question_element_1 = QuestionElement.create(:tree_id => tree_id+=1, :question => @question_1)
     
-    @question_element_2 = QuestionElement.create(:tree_id => tree_id+=1)
     @question_2 = Question.create({:question_text => "Que pasa?", :data_type => "single_line_text", :short_name => "que_pasa_q" })
-    @question_element_2.question = @question_2
-    
-    @question_element_3 = QuestionElement.create(:tree_id => tree_id+=1)
+    @question_element_2 = QuestionElement.create(:tree_id => tree_id+=1, :question => @question_2)
+
     @question_3 = Question.create({:question_text => "Cual?", :data_type => "single_line_text", :short_name => "cual_q" })
-    @question_element_3.question = @question_3
+    @question_element_3 = QuestionElement.create(:tree_id => tree_id+=1, :question => @question_3)
+
     
     @group_element_1 = GroupElement.create(:tree_id => tree_id+=1, :name => "Group")
     @group_element_2 = GroupElement.create(:tree_id => tree_id+=1, :name => "Not the one you're looking for")

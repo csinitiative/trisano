@@ -19,7 +19,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe QuestionElement do
   before(:each) do
-    @question_element = QuestionElement.new
+    @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    @question_element = QuestionElement.new(:question => @question)
   end
 
   it "should be valid" do

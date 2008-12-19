@@ -22,6 +22,7 @@ class QuestionElement < FormElement
   attr_accessor :parent_element_id
   
   validates_associated :question
+  validates_presence_of :question
   
   def save_and_add_to_form
     unless export_column.nil?

@@ -34,32 +34,28 @@ describe FormElementCache do
     @form_base_element.add_child(@section_element)
     @form_base_element.add_child(@core_field_config)
     
-    @question_element_1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
-    @question = Question.new(:question_text => "Eh?", :data_type => "Single-line text")
-    @question_element_1.question = @question
-    @question.save
+    @question = Question.create(:question_text => "Eh?", :data_type => "Single-line text")
+    @question_element_1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question)
     @section_element.add_child(@question_element_1)
     
     @follow_up = FollowUpElement.create(:tree_id => tree_id, :form_id => 1, :condition => "Yes", :core_path => "event[something]")
     @question_element_1.add_child(@follow_up)
     
-    @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
+    @fu_question = Question.create(:question_text => "Eh?", :data_type => "Single-line text")
+    @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @fu_question)
     @follow_up.add_child(@follow_up_q1)
     
-    
-    @question_element_2 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
-    @question_2 = Question.new(:question_text => "Really?", :data_type => "Single-line text")
-    @question_element_2.question = @question_2
-    @question_2.save
+    @question_2 = Question.create(:question_text => "Really?", :data_type => "Single-line text")
+    @question_element_2 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_2)
     @section_element.add_child(@question_element_2)
     
-    @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1)
+    @question_3 = Question.create(:question_text => "?", :data_type => "Single-line text")
+    @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_3)
     @section_element.add_child(@question_element_3)
     
     @event = Event.new(:id => 1)
     @event.answers << @answer_1 = Answer.new(:event_id => 1, :question_id => @question.id, :text_answer => "What?")
     @event.answers << @answer_2 = Answer.new(:event_id => 1, :question_id => @question_2.id, :text_answer => "Yes")
-    
     
     @form_element_cache = FormElementCache.new(@form_base_element)
     

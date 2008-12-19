@@ -219,12 +219,13 @@ describe FollowUpElement do
   describe "when created with 'save and add to form' with type-ahead support in the UI" do
     
     before(:each) do
+      @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+      @question_element = QuestionElement.create({:form_id => 1, :tree_id => 1, :question => @question})
       @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")
     end
   
     it "should use a condition_id for it's condition if one is present and it is a number" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = @external_code.id.to_s
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql(@external_code.id.to_s)
@@ -232,8 +233,7 @@ describe FollowUpElement do
     end
     
     it "should find and use a external code id for it's condition if a condition_id is present, but is a string that corresponds to an external code" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Code: #{@external_code.code_description} (#{@external_code.code_name})"
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql(@external_code.id.to_s)
@@ -241,8 +241,7 @@ describe FollowUpElement do
     end
     
     it "should use the condition_id string for the condition if no matching code can be found" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Code: #{@external_code.code_description} (some crazy code)"
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql("Code: #{@external_code.code_description} (some crazy code)")
@@ -250,8 +249,7 @@ describe FollowUpElement do
     end
     
     it "should use the condition_id string for the condition if there is content after the last paren" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "#{@external_code.code_description} (#{@external_code.code_name}) and more stuff"
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql("#{@external_code.code_description} (#{@external_code.code_name}) and more stuff")
@@ -259,8 +257,7 @@ describe FollowUpElement do
     end
     
     it "should use the condition_id string for the condition if the condition_id can't be parsed" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.condition_id = "Howdy!"
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql("Howdy!")
@@ -268,8 +265,7 @@ describe FollowUpElement do
     end
     
     it "should use the condition value for the saved condition, if no condition_id is supplied" do
-      question_element = QuestionElement.create({:form_id => 1, :tree_id => 1})
-      @follow_up_element.parent_element_id = question_element.id
+      @follow_up_element.parent_element_id = @question_element.id
       @follow_up_element.save_and_add_to_form
       @follow_up_element.condition.should eql("Yes")
       @follow_up_element.is_condition_code.should be_false
