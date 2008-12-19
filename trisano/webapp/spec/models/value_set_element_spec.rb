@@ -54,6 +54,19 @@ describe ValueSetElement do
       @value_set_element.save_and_add_to_form.should be_nil
       @value_set_element.errors.should_not be_empty
     end
+    
+    it "should fail if the question it is being added to already has a value set" do
+      @value_set_element.save_and_add_to_form.should_not be_nil
+      @value_set_element.tree_id
+      @question_element.children.size.should == 1
+
+      another_value_set_element = ValueSetElement.new
+      another_value_set_element.name = "Test"
+      another_value_set_element.parent_element_id = @question_element.id
+      another_value_set_element.save_and_add_to_form.should be_nil
+      @question_element.children.size.should == 1
+      
+    end
   end
   
   describe "when updated" do

@@ -67,7 +67,7 @@ describe "Quesiton FormElement" do
         :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
       })
     
-    @question_element.save_and_add_to_form
+    @question_element.save_and_add_to_form.should_not be_nil
     @question = @question_element.question
   end
 
@@ -141,11 +141,8 @@ describe "FormElement copying from library" do
   before(:each) do
     @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
     @form.save_and_initialize_form_elements
-    
-    @form_tree_id = @form.form_base_element.tree_id
-    @form_id = @form.id
-    @group_tree_id = @form_tree_id + 1
-    
+
+    @group_tree_id = 9999
     @group_element = GroupElement.create(:name => "Test Group", :tree_id => @group_tree_id)
       
     @independent_value_set = ValueSetElement.create(:name => "Indie Value Set", :tree_id => @group_tree_id)
@@ -181,35 +178,35 @@ describe "FormElement copying from library" do
   describe "when copying a group to a section" do
     
     it "should copy all children of the group that are not value sets and bring questions with question elements" do
-      @to_element = SectionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
+      to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      to_element.save_and_add_to_form.should_not be_nil
       
-      @to_element.children.size.should eql(0)
+      to_element.children.size.should eql(0)
       @group_element.children.size.should eql(3)
       
-      @to_element.copy_from_library(@group_element)
+      to_element.copy_from_library(@group_element)
       
-      @to_element.children.size.should eql(1)
-      @copied_group = @to_element.children[0]
-      @copied_group.should_not be_nil
-      @copied_group.is_a?(GroupElement).should be_true
+      to_element.children.size.should eql(1)
+      copied_group = to_element.children[0]
+      copied_group.should_not be_nil
+      copied_group.is_a?(GroupElement).should be_true
       
-      @copied_group.children.size.should eql(2)
-      @copied_group.children[0].is_a?(QuestionElement).should be_true
-      @copied_group.children[1].is_a?(QuestionElement).should be_true
+      copied_group.children.size.should eql(2)
+      copied_group.children[0].is_a?(QuestionElement).should be_true
+      copied_group.children[1].is_a?(QuestionElement).should be_true
       
-      @copied_group.children[0].question.should_not be_nil
-      @copied_group.children[0].question.question_text.should eql("How's it going?")
-      @copied_group.children[1].question.should_not be_nil
-      @copied_group.children[1].question.question_text.should eql("Explain.")
+      copied_group.children[0].question.should_not be_nil
+      copied_group.children[0].question.question_text.should eql("How's it going?")
+      copied_group.children[1].question.should_not be_nil
+      copied_group.children[1].question.question_text.should eql("Explain.")
     end
     
     it "shouldn't copy anything if the form is invalid" do
-      @to_element = SectionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
+      to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
-      @to_element.copy_from_library(@group_element).should be_nil
-      @to_element.errors.should_not be_empty
+      to_element.copy_from_library(@group_element).should be_nil
+      to_element.errors.should_not be_empty
     end
     
   end
@@ -217,69 +214,83 @@ describe "FormElement copying from library" do
   describe "when copying an individual question to a section" do
     
     it "should copy the question element, its value set, and the question" do
-      @to_element = SectionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
+      to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      to_element.save_and_add_to_form.should_not be_nil
       
-      @to_element.children.size.should eql(0)
+      to_element.children.size.should eql(0)
       
-      @to_element.copy_from_library(@independent_value_set)
+      to_element.copy_from_library(@question_element_with_value_set)
       
-      @to_element.children.size.should eql(1)
-      @copied_value_set = @to_element.children[0]
-      @copied_value_set.should_not be_nil
+      to_element.children.size.should eql(1)
+      copied_question_element = to_element.children[0]
+      copied_question_element.should_not be_nil
       
-      @copied_value_set.is_a?(ValueSetElement).should be_true
-      @copied_value_set.children.size.should eql(2)
-      @copied_value_set.children[0].is_a?(ValueElement).should be_true
-      @copied_value_set.children[0].name.should eql("Yes")
-      @copied_value_set.children[1].is_a?(ValueElement).should be_true
-      @copied_value_set.children[1].name.should eql("No")
+      copied_question_element.is_a?(QuestionElement).should be_true
+      copied_question_element.children.size.should eql(1)
+      
+      copied_value_set = copied_question_element.children[0]
+      copied_value_set.children.size.should eql(2)
+      copied_value_set.children[0].is_a?(ValueElement).should be_true
+      copied_value_set.children[0].name.should eql("Maybe")
+      copied_value_set.children[1].is_a?(ValueElement).should be_true
+      copied_value_set.children[1].name.should eql("Sometimes")
+      
+      copied_question = copied_question_element.question
+      copied_question.should_not be_nil
+      copied_question.question_text.should eql("How's it going?")
     end
     
     it "shouldn't copy anything if the form is invalid" do
-      @to_element = SectionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
+      to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
-      @to_element.copy_from_library(@independent_value_set).should be_nil
-      @to_element.errors.should_not be_empty
+      to_element.copy_from_library(@question_element_with_value_set).should be_nil
+      to_element.errors.should_not be_empty
     end
     
   end
   
   describe "when copying an individual value set to a question" do
-    it "should copy the question element, its value set, and the question" do
-      @to_element =SectionElement.create(
-        :name => "Section",
-        :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
-      @to_element.children.size.should eql(0)
-      @to_element.copy_from_library(@question_element_with_value_set)
+    it "should copy the value set and the values" do
+      question= Question.create({:question_text => "Que?", :data_type => "drop_down", :short_name => "que_q" })
+      to_element = QuestionElement.new(:parent_element_id => @form.investigator_view_elements_container.id, :question => question)
+      to_element.save_and_add_to_form.should_not be_nil
+      to_element.children.size.should eql(0)
       
-      @to_element.children.size.should eql(1)
-      @copied_question_element = @to_element.children[0]
-      @copied_question_element.should_not be_nil
+      to_element.copy_from_library(@independent_value_set)
+      to_element.children.size.should eql(1)
+      copied_value_set = to_element.children[0]
+      copied_value_set.should_not be_nil
       
-      @copied_question_element.is_a?(QuestionElement).should be_true
-      @copied_question_element.children.size.should eql(1)
-      
-      @copied_value_set = @copied_question_element.children[0]
-      @copied_value_set.children.size.should eql(2)
-      @copied_value_set.children[0].is_a?(ValueElement).should be_true
-      @copied_value_set.children[0].name.should eql("Maybe")
-      @copied_value_set.children[1].is_a?(ValueElement).should be_true
-      @copied_value_set.children[1].name.should eql("Sometimes")
-      
-      @copied_question = @copied_question_element.question
-      @copied_question.should_not be_nil
-      @copied_question.question_text.should eql("How's it going?")
+      copied_value_set.is_a?(ValueSetElement).should be_true
+      copied_value_set.children.size.should eql(2)
+      copied_value_set.children[0].is_a?(ValueElement).should be_true
+      copied_value_set.children[0].name.should eql("Yes")
+      copied_value_set.children[1].is_a?(ValueElement).should be_true
+      copied_value_set.children[1].name.should eql("No")
     end
     
     it "shouldn't copy anything if the form is invalid" do
-      @to_element = QuestionElement.create(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
-      @to_element.save_and_add_to_form
+      question= Question.create({:question_text => "Que?", :data_type => "drop_down", :short_name => "que_q" })
+      to_element = QuestionElement.new({:parent_element_id => @form.investigator_view_elements_container.id, :question => question})
+      
+      to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
-      @to_element.copy_from_library(@question_element_with_value_set).should be_nil
-      @to_element.errors.should_not be_empty
+
+      to_element.copy_from_library(@independent_value_set).should be_nil
+      to_element.errors.should_not be_empty
+    end
+    
+    it "shouldn't copy anything if the to-element is a question element that already has a value set" do
+      question= Question.create({:question_text => "Que?", :data_type => "drop_down", :short_name => "que_q" })
+      to_element = QuestionElement.new({:parent_element_id => @form.investigator_view_elements_container.id, :question => question})
+      to_element.save_and_add_to_form.should_not be_nil
+
+      to_element.copy_from_library(@independent_value_set).should_not be_nil
+      to_element.errors.should be_empty
+
+      to_element.copy_from_library(@independent_value_set)
+      to_element.errors.should_not be_empty
     end
     
   end
@@ -370,6 +381,10 @@ describe "when executing an operation that requires form element structure valid
     @element.parent_element_id = @form.investigator_view_elements_container.children[0]
   end
     
+  it "should return true on save if the form element structure is valid" do
+    @element.save_and_add_to_form.should_not be_nil
+  end
+
   it "should return false on save if the form element structure is invalid" do
     invalidate_form(@form)
     @element.save_and_add_to_form.should be_nil

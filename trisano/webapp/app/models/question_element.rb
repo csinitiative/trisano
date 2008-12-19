@@ -27,10 +27,10 @@ class QuestionElement < FormElement
   def save_and_add_to_form
     unless export_column.nil?
       return nil if export_column.data_type.blank?
-      @question_instance.data_type = export_column.data_type
+      question_instance.data_type = export_column.data_type
     end
     
-    self.question = @question_instance
+    self.question = question_instance
     super do
       build_cdc_value_set unless export_column.nil?
     end

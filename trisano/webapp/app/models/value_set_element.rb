@@ -29,6 +29,17 @@ class ValueSetElement < FormElement
   attr_accessor :parent_element_id
   
   def save_and_add_to_form
+    begin
+      parent_element = FormElement.find(parent_element_id)
+      unless parent_element.can_receive_value_set?
+        self.errors.add_to_base("A question can only have one value set")
+        return nil
+      end
+    rescue Exception => ex
+      self.errors.add_to_base("An error occurred checking the parent for existing value set children")
+      return nil
+    end
+    
     super { save_new_value_elements }
   end
   

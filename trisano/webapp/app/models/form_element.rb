@@ -103,12 +103,16 @@ class FormElement < ActiveRecord::Base
     begin
       transaction do
         library_element = FormElement.find(lib_element_id)
+        if (library_element.attributes['type'] == "ValueSetElement" && !can_receive_value_set?)
+          errors.add_to_base("Can't complete copy. A question can only have one value set")
+          raise
+        end
         self.add_child(copy_children(library_element, nil, self.form_id, self.tree_id, false))
         validate_form_structure
         return true
       end
     rescue Exception => ex
-      return
+      return nil
     end
     
   end
@@ -171,5 +175,19 @@ class FormElement < ActiveRecord::Base
       raise
     end
   end
-    
+  
+  def can_receive_value_set?
+    begin
+      if (self.attributes['type'] == "QuestionElement")
+        future_siblings = self.children
+        existing_value_set = future_siblings.detect {|sibling| sibling.attributes['type'] == "ValueSetElement"}
+        return false unless (existing_value_set.nil?)
+      end
+    rescue Exception => ex
+      self.errors.add_to_base("An error occurred checking the parent for existing value set children")
+      return nil
+    end
+    return true
+  end
+
 end
