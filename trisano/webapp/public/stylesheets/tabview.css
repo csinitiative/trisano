@@ -127,7 +127,7 @@ version: 2.6.0
 	{background:#ffffff;}
 .yui-skin-sam .yui-navset .yui-content,.yui-skin-sam .yui-navset .yui-navset-top .yui-content
 	{
-	border:1px solid #CCCCCC;
+	border:1px solid #ccc;
 	border-top-color:#006633;
 	padding:0.25em 0.5em;
 	}

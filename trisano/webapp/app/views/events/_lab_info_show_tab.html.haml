@@ -17,18 +17,17 @@
   %legend Laboratory Information
 
   - if @event.labs.empty?
-    %h3 No lab results have been recorded for this event
+    %fieldset.form
+      %legend
+        Labs
+      %h3
+        No lab results have been recorded for this event
   - else
     %table.list
       %tr
         %th Lab name
-        / %th Test type
-        / %th Test detail
         %th Lab result
-        / %th Interpretation
-        / %th Specimen source
         %th Date(s)
-        / %th Lab test date
         %th Specimen
 
       - for lab in @event.labs

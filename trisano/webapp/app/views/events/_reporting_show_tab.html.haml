@@ -2,7 +2,8 @@
   %legend
     Reporting Information
   %fieldset.form
-        
+    %legend
+      Agency
     - if @event.active_reporting_agency.nil?
       - fb_part = Participation.new
       - fb_entity = Entity.new

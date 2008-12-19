@@ -24,7 +24,11 @@
 
   - core_element_show :contacts, f, :vert do
     - if @event.contact_child_events.empty?
-      %h3 No contacts have been recorded for this event
+      %fieldset.form
+        %legend
+          Contacts
+        %h3
+          No contacts have been recorded for this event
     - else
       %table.list
         %tr
