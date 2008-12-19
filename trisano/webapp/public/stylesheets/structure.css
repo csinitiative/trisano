@@ -1,17 +1,6 @@
 body {
   background-color: #f9f8f5;
-  color: #333;
-  margin-left: 0px;
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-bottom: 0px;
   margin: 0px; }
-
-body, p, ol, ul {
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 12px;
-  line-height: 18px;
-  list-style-type: none; }
 
 #head {
   position: fixed;

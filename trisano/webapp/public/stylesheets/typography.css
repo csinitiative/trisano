@@ -1,6 +1,21 @@
-.areas {
+body {
+  font-family: helvetica, arial, sans-serif; }
+  body a {
+    color: #c00;
+    text-decoration: none; }
+    body a:hover {
+      color: #c00;
+      text-decoration: underline; }
+
+body, p, ol, ul {
   font-family: helvetica, arial, sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  list-style-type: none; }
+
+.areas {
   font-size: 11px;
+  font-weight: normal;
   color: #9c9;
   padding: 10px 0px 5px 0px;
   letter-spacing: 1px; }
@@ -8,7 +23,7 @@
     color: #fff;
     text-decoration: none; }
     .areas a:hover {
-      color: 063;
+      color: #fff;
       text-decoration: underline; }
 
 .user {
@@ -17,44 +32,13 @@
   text-transform: uppercase; }
 
 .areas_title {
-  font-family: helvetica, sans-serif;
   font-size: 12px;
   font-weight: light;
-  text-align: left;
   color: #fff;
+  text-align: left;
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 9px 0px 0px 5px; }
-
-.tools_ingreenbar {
-  font-family: helvetica, arial, sans-serif;
-  font-size: 11px;
-  color: #ccc;
-  padding: 10px 0px 5px 0px;
-  letter-spacing: 1px; }
-  .tools_ingreenbar a {
-    color: #063;
-    font-weight: normal;
-    text-decoration: none; }
-    .tools_ingreenbar a:hover {
-      color: 063;
-      text-decoration: underline; }
-    .tools_ingreenbar a:visited {
-      color: #063;
-      font-weight: normal; }
-    .tools_ingreenbar a:active {
-      color: #063;
-      font-weight: normal; }
-
-.title2 {
-  font-family: helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: light;
-  text-align: left;
-  color: #333;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 6px 0px 0px 10px; }
 
 .action1 {
   padding: 7px 0px 0px 0px; }
@@ -92,22 +76,6 @@
   letter-spacing: 0px;
   padding: 0px 0px 4px 0px; }
 
-.jurisdiction {
-  font-family: helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: bold;
-  color: #c00;
-  letter-spacing: 0px;
-  padding: 0px 0px 3px 0px; }
-
-.status {
-  font-family: helvetica, sans-serif;
-  font-size: 12px;
-  font-weight: bold;
-  color: #c00;
-  letter-spacing: 0px;
-  padding: 8px 0px 3px 0px; }
-
 .tools {
   font-family: helvetica, sans-serif;
   font-size: 12px;
@@ -122,10 +90,6 @@
       color: #000;
       font-weight: bold;
       text-decoration: underline; }
-
-.tools2 {
-  padding: 0px 0px 0px 0px;
-  text-align: right; }
 
 h3 {
   font-family: helvetica, sans-serif;
@@ -154,6 +118,50 @@ label {
   white-space: nowrap;
   color: #333; }
 
+.required {
+  background: #FFE0C6; }
+
+.required_if_others {
+  background: #FFFFCC; }
+
+.struck-through {
+  text-decoration: line-through; }
+
+.patientname {
+  font-family: helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: light;
+  color: #333;
+  letter-spacing: 0px;
+  padding: 6px 0px 3px 0px; }
+
+.patientname-inactive {
+  font-family: helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: light;
+  font-style: italic;
+  color: #ccc;
+  letter-spacing: 0px;
+  padding: 6px 0px 3px 0px; }
+
+.contactname-inactive {
+  font-family: helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: light;
+  font-style: italic;
+  color: #ccc;
+  letter-spacing: 0px;
+  padding: 6px 0px 3px 0px; }
+
+.placename-inactive {
+  font-family: helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: light;
+  font-style: italic;
+  color: #ccc;
+  letter-spacing: 0px;
+  padding: 6px 0px 3px 0px; }
+
 .foottext {
   font-family: helvetica, sans-serif;
   font-size: 10px;
@@ -176,9 +184,3 @@ label {
       color: #090;
       font-weight: bold;
       text-decoration: none; }
-
-.required {
-  background: #FFE0C6; }
-
-.required_if_others {
-  background: #FFFFCC; }
