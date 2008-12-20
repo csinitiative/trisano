@@ -48,5 +48,38 @@ FormElement.transaction do
   end
 end
 
+FormElement.transaction do
+  p "================ Hepatitis C ================"
+  #    * 769-771, 774: A core field element container with some junk in it. Orphaned value elements and an after core field element 
+  #
+  # 124530 | 762 | 775 | CoreFieldElementContainer        |                          |           |    124155 | 
+  # 124535 | 763 | 764 | ValueElement                             | Yes                    |           |    124534 |
+  # 124536 | 765 | 766 | ValueElement                             | No                     |           |    124534 | 
+  # 124537 | 767 | 768 | ValueElement                             | Unknown           |           |    124534 |
+  # 124538 | 772 | 773 | AfterCoreFieldElement                |                          |           |    124531 |
+  
+  p "Delete the four junk rows."
+  ActiveRecord::Base.connection.execute("delete from form_elements where id in (124535, 124536, 124536, 124537, 124538);")
+  
+  p "Insert placeholders to correct the structure"
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 763, 772, now(), now());")
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 764, 765, now(), now());")
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 766, 767, now(), now());")
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 768, 769, now(), now());")
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 770, 771, now(), now());")
+  ActiveRecord::Base.connection.execute("insert into form_elements (form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (526, 695, 'ValueElement', 'delete-me', 124530, 773, 774, now(), now());")
+
+  p "Delete the placeholders through the model"
+  core_field_element_container = FormElement.find(124530)
+  core_field_element_container.children.each do |element|
+    p "Destroying element: #{element.id}, #{element.name}"
+    element.destroy_and_validate
+  end
+  
+end
+
+
+
+
 
 
