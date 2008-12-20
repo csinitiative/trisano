@@ -34,6 +34,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Lou"
     @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Unable to locate"
+    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'contact_type')]", "label=Sexual"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Abbott"
     @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Bud"
     @browser.select "//div[@class='contact'][2]//select[contains(@id, 'entity_location_type_id')]", "label=Home"
@@ -47,6 +48,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Costello').should be_true
     @browser.is_text_present('Lou').should be_true
     @browser.is_text_present('Unable to locate').should be_true
+    @browser.is_text_present('Sexual').should be_true
     @browser.is_text_present('Abbott').should be_true
     @browser.is_text_present('Bud').should be_true
     @browser.is_text_present('(202) 555-1212 Ext. 22').should be_true
@@ -74,11 +76,13 @@ describe 'Adding multiple contacts to a CMR' do
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "William"
     @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Not infected"   
+    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'contact_type')]", "label=Household"   
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'area_code')]", "777"
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'phone_number')]", "6666666"   
     save_cmr(@browser).should be_true
     @browser.is_text_present('William').should be_true
     @browser.is_text_present('Not infected')
+    @browser.is_text_present('Household')
     @browser.is_text_present('(777) 666-6666 Ext. 22').should be_true
     @browser.is_text_present('(202) 555-1212 Ext. 22').should_not be_true
   end
@@ -98,7 +102,8 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.type "contact_event_active_patient__person_first_name", "Oliver"
     @browser.type "contact_event_active_patient__address_street_number", "333"
     @browser.type "contact_event_active_patient__address_street_name", "33rd Street"
-    @browser.select "contact_event_active_patient__person_disposition_id", "label=Infected, brought to treatment"
+    @browser.select "contact_event_active_patient__participations_contact_disposition_id", "label=Infected, brought to treatment"
+    @browser.select "contact_event_active_patient__participations_contact_contact_type_id", "label=First Responder"
     @browser.type "contact_event_active_patient__person_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a new lab"
@@ -112,6 +117,7 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Abbott Labs').should be_true
     @browser.is_text_present('Positive').should be_true
     @browser.is_text_present('Infected, brought to treatment').should be_true
+    @browser.is_text_present('First Responder').should be_true
   end
 
 end

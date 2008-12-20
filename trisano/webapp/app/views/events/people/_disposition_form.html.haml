@@ -16,8 +16,11 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Disposition
-  -f.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |p|
-    %span.horiz
-      =p.label(:disposition_id)
-      =p.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+  %legend Event Information
+  %span.horiz
+    =f.label(:disposition_id)
+    =f.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+
+  %span.horiz
+    =f.label(:contact_type_id)
+    =f.dropdown_code_field(:contact_type_id, 'contact_type')

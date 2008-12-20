@@ -369,9 +369,14 @@ class Event < ActiveRecord::Base
       person = {}
       person[:last_name] = attributes.delete(:last_name)
       person[:first_name] = attributes.delete(:first_name)
-      person[:disposition_id] = attributes.delete(:disposition_id)
+
+      event_data = {}
+      event_data[:disposition_id] = attributes.delete(:disposition_id)
+      event_data[:contact_type_id] = attributes.delete(:contact_type_id)
 
       contact_participation = contacts.build(:role_id => Event.participation_code('Contact'))
+      contact_participation.build_participations_contact(event_data) unless event_data.values_blank?
+
       contact_entity = contact_participation.build_secondary_entity
       contact_entity.entity_type = "person"
       contact_entity.build_person_temp( person )
@@ -396,9 +401,17 @@ class Event < ActiveRecord::Base
         person = {}
         person[:last_name] = attributes.delete(:last_name)
         person[:first_name] = attributes.delete(:first_name)
-        person[:disposition_id] = attributes.delete(:disposition_id)
+
+        event_data = {}
+        event_data[:disposition_id] = attributes.delete(:disposition_id)
+        event_data[:contact_type_id] = attributes.delete(:contact_type_id)
 
         contact.secondary_entity.person_temp.attributes = person
+        
+        unless event_data.values_blank?
+          contact.build_participations_contact if contact.participations_contact.nil?
+          contact.participations_contact.attributes = event_data
+        end
 
         # They may be adding a phone number to an existing contact who did not lready have one
         if el_id == 0 || el_id.blank?
@@ -852,7 +865,9 @@ class Event < ActiveRecord::Base
 
   def save_associations
     contacts.each do |contact|
+      contact.save(false)
       contact.secondary_entity.person_temp.save(false)
+      contact.participations_contact.save(false) if contact.participations_contact
       contact.secondary_entity.telephone_entities_locations.each do |el|
         # Unless the phone number was destroyed, save it
         unless el.frozen?

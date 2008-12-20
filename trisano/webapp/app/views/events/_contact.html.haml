@@ -28,7 +28,10 @@
 
   - contact_telephone = contact_telephone_entities_location.location.telephones.last
 
-  = error_messages_for :object => [contact_person, contact_telephone]
+  - if contact.participations_contact.nil?
+    - contact.participations_contact = ParticipationsContact.new
+
+  = error_messages_for :object => [contact_person, contact.participations_contact, contact_telephone]
 
   - fields_for(prefix_with_array, contact_person, :builder => ExtendedFormBuilder) do |contact_fields|
 
@@ -38,9 +41,15 @@
     %span.horiz
       = contact_fields.label(:first_name)
       = contact_fields.text_field(:first_name, :size => 20, :maxlength => 25)
+
+  - contact.participations_contact.id = contact_person.id
+  - fields_for(prefix_with_array, contact.participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
     %span.horiz
-      = contact_fields.label(:disposition_id)
-      = contact_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+      = pc_fields.label(:disposition_id)
+      = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+    %span.horiz
+      = pc_fields.label(:contact_type_id)
+      = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
 
   %span.vert
   - contact_phone_id = contact_telephone_entities_location.id

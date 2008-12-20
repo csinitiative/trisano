@@ -24,6 +24,7 @@ class ContactEvent < HumanEvent
       morbidity_event.contacts.select(&:new_record?).each do |contact_participation|
 
         primary = Participation.new
+        primary.participations_contact = contact_participation.participations_contact
         primary.primary_entity = contact_participation.secondary_entity
         primary.role_id = Event.participation_code('Interested Party')
         primary.primary_entity.entity_type = "person"

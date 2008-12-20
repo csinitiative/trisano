@@ -61,3 +61,6 @@ load_codes(ExternalCode, codes)
 
 codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/lab_interpretations.yml"
 load_codes(ExternalCode, codes)
+
+codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/contact_types.yml"
+load_codes(ExternalCode, codes)

@@ -20,6 +20,7 @@ class Participation < ActiveRecord::Base
   belongs_to :primary_entity, :foreign_key => :primary_entity_id, :class_name => 'Entity'
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
   belongs_to :participations_place
+  belongs_to :participations_contact
   
   has_many :lab_results, :order => 'created_at ASC', :dependent => :destroy
   has_one :hospitals_participation, :dependent => :destroy
@@ -58,12 +59,13 @@ class Participation < ActiveRecord::Base
     end
 
     def new_contact_participation
-      Participation.new_secondary_person_with_phone_participation
+      contact_participation = Participation.new_secondary_person_with_phone_participation
+      contact_participation.build_participations_contact
+      contact_participation
     end
 
     def new_place_participation
       place_participation = Participation.new
-      place_participation.build_participations_place
       place_participation.build_secondary_entity.build_place_temp
       place_participation.secondary_entity.entity_type = "place"
       place_participation
@@ -109,11 +111,9 @@ class Participation < ActiveRecord::Base
     end
 
     def new_exposure_participation
-      exposure = Participation.new
-      exposure.build_participations_place
-      exposure.build_primary_entity.build_place_temp
+      exposure = Participation.new_place_participation
       exposure.role_id = Event.participation_code('Place Exposure')
-      exposure.primary_entity.entity_type = "place"
+      exposure.build_participations_place
       exposure
     end
 

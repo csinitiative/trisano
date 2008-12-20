@@ -32,9 +32,9 @@
     - else
       %table.list
         %tr
-          %th Last name
-          %th First name
+          %th Name
           %th Disposition
+          %th Contact type
           %th Phone
           %th
 
@@ -43,6 +43,7 @@
           - person = contact_entity.person_temp
           - contact_phone_loc = contact_entity.telephone_entities_locations[0]
           - contact_phone = contact_phone_loc.location.telephones.last unless contact_phone_loc.nil?
+          - contact_event_data = contact.active_patient.participations_contact
 
           - if contact.deleted_at
             - style = {:class => 'struck-through'}
@@ -50,9 +51,10 @@
             - style = {}
 
           %tr
-            %td{style}= person.last_name
-            %td{style}= person.first_name
-            %td{style}= person.disposition.code_description if person.disposition
+            %td{style}= person.last_comma_first
+            %td{style}= contact_event_data.disposition.code_description if contact_event_data and contact_event_data.disposition
+            %td{style}= contact_event_data.contact_type.code_description if contact_event_data and contact_event_data.contact_type
+
             %td{style} 
               -unless contact_phone_loc.nil? 
                 = (l(contact_phone_loc.entity_location_type) || "Unspecified Location") + ": " + contact_phone.simple_format

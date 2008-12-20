@@ -29,6 +29,7 @@
   - for contact in @event.contacts
     - entity = contact.secondary_entity
     - person = entity.person
+    - event_data = contact.participations_contact
 
     - entities_locations = entity.address_entities_locations
     - no_location = entities_locations.empty?
@@ -82,4 +83,18 @@
           - unless no_address
             %span.print-value
               = address.postal_code
+
+    #event-data
+      .three-valued-row
+        .left
+          %span.print-label Disposition:
+          - unless event_data.nil? || event_data.disposition.nil?
+            %span.print-value
+              = event_data.disposition.code_description
+        .left
+          %span.print-label Contact Type:
+          - unless event_data.nil? || event_data.contact_type.nil?
+            %span.print-value
+              = event_data.contact_type.code_description
+
     - ran = 1

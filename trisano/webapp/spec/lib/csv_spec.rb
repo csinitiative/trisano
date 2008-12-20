@@ -164,6 +164,7 @@ def event_header(event_type)
 
   if event_type == :contact
     header_array << "contact_disposition"
+    header_array << "contact_type"
   end
 
   if event_type != :place
@@ -262,6 +263,7 @@ def event_output(event_type, m)
   out << '"",'
   out << "#{@person.primary_language.code_description},"
   if event_type == :contact
+    out << "#{@person.disposition.code_description},"
     out << "#{@person.disposition.code_description},"
   end
   out << "#{@disease.disease.disease_name},"
@@ -370,9 +372,14 @@ def csv_mock_event(event_type)
   @treatment.stub!(:treatment).and_return("Antibiotics")
   @treatment.stub!(:treatment_date).and_return("2008-02-01")
 
+  @contact = mock_model(ParticipationsContact)
+  @contact.stub!(:contact_type).and_return(simple_reference)
+  @contact.stub!(:disposition).and_return(simple_reference)
+
   patient = mock_model(Participation)
   patient.stub!(:primary_entity).and_return(entity)
   patient.stub!(:participations_treatments).and_return([@treatment])
+  patient.stub!(:participations_contact).and_return(@contact)
   patient.stub!(:participations_risk_factor).and_return(nil)
 
   @disease = mock_model(DiseaseEvent)

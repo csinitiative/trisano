@@ -248,7 +248,8 @@ module Export
         event_data << ["#{event_type}_language", "patient.primary_entity.person.primary_language.code_description if patient.primary_entity.person.primary_language"]
 
         if event.is_a?(ContactEvent)
-          event_data << ["contact_disposition", "patient.primary_entity.person.disposition.code_description if patient.primary_entity.person.disposition"]
+          event_data << ["contact_disposition", "patient.participations_contact.disposition.code_description if patient.participations_contact && patient.participations_contact.disposition"]
+          event_data << ["contact_type", "patient.participations_contact.contact_type.code_description if patient.participations_contact && patient.participations_contact.contact_type"]
         end
 
         # Clinical

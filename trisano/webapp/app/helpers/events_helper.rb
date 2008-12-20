@@ -130,6 +130,12 @@ module EventsHelper
     end
   end
 
+  def add_place_exposure_link(name)
+    link_to_function name do |page|
+      page.insert_html :bottom, :place_exposures, :partial => 'events/editable_place_exposure', :object => Participation.new_exposure_participation
+    end
+  end
+
   def add_clinician_link(name)
     link_to_function name do |page|
       page.insert_html :bottom, "clinicians", :partial => 'events/clinician' , :object => Participation.new_clinician_participation

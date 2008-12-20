@@ -70,6 +70,10 @@ class HumanEvent < Event
     self.patient.participations_risk_factor = attributes.delete(:participations_risk_factor) if attributes.has_key?(:participations_risk_factor)
     self.patient.new_treatment_attributes = attributes.delete(:new_treatment_attributes) if attributes.has_key?(:new_treatment_attributes)
     self.patient.existing_treatment_attributes = attributes.delete(:existing_treatment_attributes) if attributes.has_key?(:existing_treatment_attributes)
+    
+    # Contacts only, update only
+    self.patient.participations_contact.attributes = attributes.delete(:participations_contact) if attributes.has_key?(:participations_contact)
+
     self.patient.primary_entity.attributes = attributes
   end
 
@@ -330,6 +334,9 @@ class HumanEvent < Event
   def save_associations
     patient.save(false)
     patient.primary_entity.save(false)
+
+    # Contacts only
+    patient.participations_contact.save(false) if patient.participations_contact
 
     labs.each do |lab|
       if lab.lab_results.length == 0

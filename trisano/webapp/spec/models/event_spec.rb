@@ -738,7 +738,13 @@ describe MorbidityEvent do
           new_contact_hash = {
             "new_contact_attributes" => 
               [
-              { :last_name => "Allen", :first_name => "Steve", :entity_location_type_id => external_codes(:location_home).id, :phone_number => "1234567"}
+              { :last_name => "Allen", 
+                :first_name => "Steve", 
+                :entity_location_type_id => external_codes(:location_home).id, 
+                :phone_number => "1234567",
+                :disposition_id => external_codes(:contactdispositiontype_ooj).id,
+                :contact_type_id => external_codes(:contact_type_sexual).id
+              }
             ]
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_contact_hash))
@@ -761,6 +767,11 @@ describe MorbidityEvent do
           @event.contacts.first.secondary_entity.telephone.phone_number.should == "1234567"
         end
 
+        it "should add a new particpations_contact linked to the participation" do
+          lambda {@event.save}.should change {ParticipationsContact.count}.by(1)
+          @event.contacts.first.participations_contact.disposition.should == external_codes(:contactdispositiontype_ooj)
+          @event.contacts.first.participations_contact.contact_type.should == external_codes(:contact_type_sexual)
+        end
       end
 
       describe "Receiving multiple new contacts" do

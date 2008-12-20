@@ -308,6 +308,8 @@ telephonelocationtype_mobile:
   code_description: "Mobile"
   sort_order: 20
 
+## Contact dispositions codes
+
 contactdispositiontype_ooj:
   id: 2200
   code_name: 'contactdispositiontype'
@@ -321,6 +323,22 @@ contactdispositiontype_not_infected:
   the_code: "NI"
   code_description: "Not Infected"
   sort_order: 60
+
+## Contact type codes
+
+contact_type_sexual:
+  id: 2250
+  code_name: 'contact_type'
+  the_code: 'SEXUAL'
+  code_description: 'Sexual'
+  sort_order: 10
+
+contact_type_household:
+  id: 2251
+  code_name: "contact_type"
+  the_code: "HOUSEHOLD"
+  code_description: "Household"
+  sort_order: 20
 
 ## age type codes
 

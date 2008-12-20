@@ -20,7 +20,6 @@ class Person < ActiveRecord::Base
   belongs_to :birth_gender, :class_name => 'ExternalCode'
   belongs_to :ethnicity, :class_name => 'ExternalCode'
   belongs_to :primary_language, :class_name => 'ExternalCode'
-  belongs_to :disposition, :class_name => 'ExternalCode'
   belongs_to :entity 
 
   validates_presence_of :last_name
@@ -92,6 +91,10 @@ class Person < ActiveRecord::Base
     "#{self.first_name} #{self.last_name}".strip
   end
 
+  def last_comma_first
+    ("#{self.last_name}"  << (self.first_name.blank? ? "" : ", #{self.first_name}")).strip
+  end
+
   def telephone
     self.entity.telephone
   end
@@ -114,10 +117,6 @@ class Person < ActiveRecord::Base
 
   def primary_language_description
     primary_language.code_description unless primary_language.blank?
-  end
-
-  def disposition_description
-    disposition.code_description unless disposition.blank?
   end
 
   # Builds a presentable description of the person's race.

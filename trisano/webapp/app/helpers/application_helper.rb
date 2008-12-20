@@ -146,12 +146,6 @@ module ApplicationHelper
     date.strftime(using) if date
   end
 
-  def new_place_exposure_link(name)
-    link_to_function name do |page|
-      page.insert_html :bottom, :place_exposures, :partial => 'events/editable_place_exposure', :object => Participation.new_place_participation
-    end
-  end
-
   def cmrs_path_with_defaults
     cmrs_path(User.current_user.event_view_settings || {})
   end 
