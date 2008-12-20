@@ -78,8 +78,36 @@ FormElement.transaction do
   
 end
 
+FormElement.transaction do
+  
+  p "================ Meningococcal Disease, Invasive ================"
 
+#  * Gaps only
+#  * Missing bounds: 22, 31
+#  * Single floating value set with no parent
+#  * Trouble starts at id 25445
+#
+#  83482 |        6 |  21 | QuestionElement                  |                                        |         |     25432 | Syndrome:...
+#  83485 |        7 |  20 | ValueSetElement                  | Syndrome                 |               |     83482 |
+#  83486 |        8 |   9 | ValueElement                        | Bacteremia without sepsi |        |     83485 |
+#  83487 |       10 |  11 | ValueElement                     | Meningitis               |                  |     83485 |
+#  83488 |       12 |  13 | ValueElement                     | Meningoencephalitis      |          |     83485 |
+#  83489 |       14 |  15 | ValueElement                     | Pneumonia                |               |     83485 |
+#  83490 |       16 |  17 | ValueElement                     | Meningococcemia without  |      |     83485 |
+#  83491 |       18 |  19 | ValueElement                     | Unknown                  |                |     83485 |
+#  25445 |       23 |  30 | ValueSetElement                 | Y/N/U                    |                  |     25444 |
+#  25446 |       24 |  25 | ValueElement                     | Yes                      |                    |     25445 |
+#  25447 |       26 |  27 | ValueElement                     | No                       |                    |     25445 |
+#  25448 |       28 |  29 | ValueElement                     | Unknown                  |               |     25445 |
+#
 
-
+  p "Insert placeholder to correct the structure"
+  ActiveRecord::Base.connection.execute("insert into form_elements (id, form_id, tree_id, type, name, parent_id, lft, rgt, created_at, updated_at) values (25444, 181, 232, 'ValueElement', 'delete-me', 25432, 22, 31, now(), now());")
+  
+  p "Delete the placeholder. Orphaned children will go with it."
+  placeholder = FormElement.find(25444)
+  placeholder.destroy_and_validate
+  
+end
 
 
