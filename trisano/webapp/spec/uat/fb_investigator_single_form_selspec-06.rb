@@ -41,7 +41,7 @@ describe "Form Builder Investigator Single Form" do
     sleep 3 
     @browser.type "question_element_question_attributes_question_text", "My First Question"
     @browser.select "question_element_question_attributes_data_type", "label=Single line text"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("My First Question").should be_true
     @browser.is_text_present("Single line text").should be_true
@@ -52,7 +52,7 @@ describe "Form Builder Investigator Single Form" do
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "My Second Question"
     @browser.select "question_element_question_attributes_data_type", "label=Multi-line text"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("My Second Question").should be_true
     @browser.is_text_present("Multi line text").should be_true
@@ -63,7 +63,7 @@ describe "Form Builder Investigator Single Form" do
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Q3"
     @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Q3").should be_true
     @browser.is_text_present("Drop down").should be_true
@@ -80,7 +80,7 @@ describe "Form Builder Investigator Single Form" do
     @browser.type "value_set_element_new_value_element_attributes__name", "Value One"
     @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Value Two"
     @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Value Three"
-    @browser.click "value_set_element_submit"
+    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
     #wait_for_element_not_present("new-value-set-form")
     sleep 3
     @browser.is_text_present("Value Set: Drop down values").should be_true
@@ -94,7 +94,7 @@ describe "Form Builder Investigator Single Form" do
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Check boxes"
     @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Check boxes").should be_true
     @browser.is_text_present("[Check box]").should be_true
@@ -111,7 +111,7 @@ describe "Form Builder Investigator Single Form" do
     @browser.type "value_set_element_new_value_element_attributes__name", "First Value"
     @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Second Value"
     @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Third Value"
-    @browser.click "value_set_element_submit"
+    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
     wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Value Set: Check box values").should be_true    
     @browser.is_text_present("First Value").should be_true
@@ -124,7 +124,7 @@ describe "Form Builder Investigator Single Form" do
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Drop Down with no value set"
     @browser.select "question_element_question_attributes_data_type", "label=Drop-down select list"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Drop Down with no value set").should be_true
     @browser.is_text_present("Drop down").should be_true
@@ -135,14 +135,14 @@ describe "Form Builder Investigator Single Form" do
     wait_for_element_present("new-question-form")
     @browser.type "question_element_question_attributes_question_text", "Checkboxes with null value set"
     @browser.select "question_element_question_attributes_data_type", "label=Checkboxes"
-    @browser.click "question_element_submit"
+    @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Checkboxes with null value set").should be_true
     
     @browser.click "link=Add value set"
     wait_for_element_present("new-value-set-form")
     @browser.type "value_set_element_name", "Value set with no values"
-    @browser.click "value_set_element_submit"
+    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
     wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Value set with no values").should be_true
   end
