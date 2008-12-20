@@ -743,14 +743,22 @@ describe Form do
   
   describe 'when pushing to events' do
     
-    fixtures :forms, :form_elements, :questions, :diseases, :disease_events, :diseases_forms, :entities, :places, :users
+    fixtures :diseases, :entities, :places, :users
     
     before(:each) do
       @user = users(:default_user)
       User.stub!(:current_user).and_return(@user)
 
-      @form = Form.find(1)
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @question_element = QuestionElement.new({
+          :parent_element_id => @form.investigator_view_elements_container.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        })
+    
+      @question_element.save_and_add_to_form.should_not be_nil
       @anthrax = diseases(:anthrax)
+      @form.diseases << @anthrax
       
       @event_hash = {
         "active_patient" => {
@@ -783,6 +791,7 @@ describe Form do
     
     it "it should push to all events with the form's disease and jurisdiction" do
       published_form = @form.publish
+      published_form.should_not be_nil
       result = @form.push
       result.should eql(1)
       @event.reload
@@ -820,6 +829,7 @@ describe Form do
     it "should not push to events that already have a version of this form associated to it" do
       @event.form_references.size.should eql(0)
       published_form = @form.publish
+      published_form.should_not be_nil
       form_ref = FormReference.new(:form_id => published_form.id, :event_id => @event.id)
       @event.form_references << form_ref
       @event.reload
@@ -833,6 +843,5 @@ describe Form do
     end
     
   end
-    
     
 end

@@ -325,33 +325,12 @@ class Form < ActiveRecord::Base
   # Builds an array of structural error messages. Returns an empty array if all
   #  is well.  Does not go against the cache and does not utilize the
   #  ActiveRecord::Validations#errors array.
+  #
+  # Offloads non-form-specific validation to FormElement.structural_errors
   def structural_errors
-    structural_errors = []
-    
-    structural_errors << "Multiple root elements were detected" if FormElement.find_by_sql("select id from form_elements where form_id = #{self.id} and parent_id is null").size > 1
+    structural_errors = form_base_element.structural_errors
 
-    structural_errors << "Overlap was detected in the form element structure" if FormElement.find_by_sql("
-      select result, count(*) from (SELECT lft as result FROM form_elements where form_id = #{self.id}
-      UNION ALL SELECT rgt FROM form_elements where form_id = #{self.id} order by result) as elements
-      group by result
-      having count(*) > 1;"
-    ).size > 0
-
-    structural_errors << "Gaps were detected in the form element structure" if FormElement.find_by_sql("
-      select l.result + 1 as start
-      from (SELECT lft as result FROM form_elements where form_id = #{self.id}
-      UNION SELECT rgt FROM form_elements where form_id = #{self.id} order by result) as l
-      left outer join (SELECT lft as result FROM form_elements where form_id = #{self.id}
-      UNION SELECT rgt FROM form_elements where form_id = #{self.id} order by result) as r on l.result + 1 = r.result
-      where r.result is null;"
-    ).size > 1
-    
-    structural_errors << "Orphaned elements were detected" if FormElement.find_by_sql("
-      select id from form_elements where form_id = #{self.id} and parent_id not in (select id from form_elements where form_id = #{self.id});"
-    ).size > 0
-   
     structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
-    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where form_id = #{self.id} and lft > rgt;").size > 0
     
     if form_base_element.children_count == 3
       structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].attributes["type"] == "InvestigatorViewElementContainer"

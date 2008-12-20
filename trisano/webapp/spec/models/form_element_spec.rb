@@ -115,7 +115,7 @@ describe "Quesiton FormElement when added to library" do
     @library_question.question.short_name.should eql(@question.short_name)
   end
     
-  it "the copy should have follow up questions" do
+  it "should copy the question's follow up questions" do
     follow_up_container = FollowUpElement.create({:tree_id => 1, :form_id => 1,:name => "Follow up", :condition => "Yes"})
     follow_up_question = Question.create({:question_text => "Did you do it?", :data_type => "single_line_text"})
     follow_up_question_element = QuestionElement.create(:tree_id => 1, :form_id => 1, :question => follow_up_question)
@@ -133,10 +133,18 @@ describe "Quesiton FormElement when added to library" do
     follow_up_copy_quesiton_element.question.question_text.should eql(follow_up_question.question_text)
     follow_up_copy_quesiton_element.question.data_type.should eql(follow_up_question.data_type)
   end
+
+  it "should not copy to the library if the tree it is copying to is invalid" do
+    group_element = GroupElement.create(:name => "Test Group", :tree_id => 989898)
+    invalidate_tree(group_element)
+    group_element.reload
+    @form_element.add_to_library(group_element).should be_nil
+    @form_element.errors.should_not be_empty
+  end
    
 end
 
-describe "FormElement copying from library" do
+describe "FormElement working with the library" do
   
   before(:each) do
     @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
@@ -294,6 +302,25 @@ describe "FormElement copying from library" do
     end
     
   end
+
+  describe "when deleting from the library" do
+
+    it "should delete from a group if the group is valid" do
+      @question_element_with_value_set.destroy_and_validate.should_not be_nil
+    end
+    
+    it "should delete a standalone element" do
+      copy = @question_element_with_value_set.add_to_library
+      copy.should_not be_nil
+      @question_element_with_value_set.destroy_and_validate.should_not be_nil
+    end
+
+    it "should not delete from a group if the group is invalid" do
+      invalidate_tree(@group_element)
+      @question_element_with_value_set.destroy_and_validate.should be_nil
+    end
+  end
+
 end
 
 describe "when filtering the library" do
@@ -391,27 +418,22 @@ describe "when executing an operation that requires form element structure valid
   end
     
   it "should return false on delete if the form element structure is invalid" do
-    @element.save_and_add_to_form.should be_true
+    @element.save_and_add_to_form
+    #.should be_true
     invalidate_form(@form)
     @element.destroy_and_validate.should be_nil
   end
-end
-  
-describe "when executing an operation that requires form element structure validation" do
-    
-  fixtures :forms, :form_elements, :questions
-    
+
   it "should return false on reorder if the form element structure is invalid" do
-    @form = Form.find(1)
     default_view = @form.investigator_view_elements_container.children[0]
-    
+
     # Force a validation failure
     def default_view.validate_form_structure
       errors.add_to_base("Bad error")
       raise
     end
-    
+
     default_view.reorder_element_children([3, 8, 12]).should be_nil
   end
-    
+
 end

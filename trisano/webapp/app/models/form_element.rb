@@ -57,7 +57,7 @@ class FormElement < ActiveRecord::Base
     begin
       transaction do
         self.destroy
-        self.validate_form_structure
+        form.nil? ? validate_tree_structure : validate_form_structure
         return true
       end
     rescue
@@ -87,15 +87,21 @@ class FormElement < ActiveRecord::Base
   end
   
   # DEBT! Should make publish and add_to_library the same code
-  def add_to_library(group_element)
-    transaction do
-      if group_element.nil?
-        tree_id = FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
-        copy_children(self, nil, nil, tree_id, true)
-      else
-        tree_id = group_element.tree_id
-        copy_children(self, group_element, nil, tree_id, true)
+  def add_to_library(group_element=nil)
+    begin
+      transaction do
+        if group_element.nil?
+          tree_id = FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+          result = copy_children(self, nil, nil, tree_id, true)
+        else
+          tree_id = group_element.tree_id
+          result = copy_children(self, group_element, nil, tree_id, true)
+        end
+        result.validate_tree_structure(self)
+        return result
       end
+    rescue
+      return nil
     end
   end
 
@@ -174,6 +180,50 @@ class FormElement < ActiveRecord::Base
       end
       raise
     end
+  end
+  
+  def validate_tree_structure(element_for_errors=nil)
+    structural_errors = self.structural_errors
+    unless structural_errors.empty?
+      if (element_for_errors)
+        structural_errors.each do |error|
+          element_for_errors.errors.add_to_base(error)
+        end
+      end
+      raise
+    end
+  end
+
+  # Contains generic nested set validation checks for the tree that this node is in.
+  #
+  # Form#structural_errors contains additional checks specific to a form tree.
+  def structural_errors    
+    structural_errors = []
+
+    structural_errors << "Multiple root elements were detected" if FormElement.find_by_sql("select id from form_elements where tree_id = #{self.tree_id} and parent_id is null").size > 1
+
+    structural_errors << "Overlap was detected in the form element structure" if FormElement.find_by_sql("
+      select result, count(*) from (SELECT lft as result FROM form_elements where tree_id = #{self.tree_id}
+      UNION ALL SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as elements
+      group by result
+      having count(*) > 1;"
+    ).size > 0
+
+    structural_errors << "Gaps were detected in the form element structure" if FormElement.find_by_sql("
+      select l.result + 1 as start
+      from (SELECT lft as result FROM form_elements where tree_id = #{self.tree_id}
+      UNION SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as l
+      left outer join (SELECT lft as result FROM form_elements where tree_id = #{self.tree_id}
+      UNION SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as r on l.result + 1 = r.result
+      where r.result is null;"
+    ).size > 1
+    
+    structural_errors << "Orphaned elements were detected" if FormElement.find_by_sql("
+      select id from form_elements where tree_id = #{self.tree_id} and parent_id not in (select id from form_elements where tree_id = #{self.tree_id});"
+    ).size > 0
+    
+    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where tree_id = #{self.tree_id} and lft >= rgt;").size > 0
+    structural_errors
   end
   
   def can_receive_value_set?
