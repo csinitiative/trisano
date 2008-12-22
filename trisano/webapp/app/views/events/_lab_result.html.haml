@@ -17,18 +17,21 @@
 
     %span{:class => "horiz"}
       = lab_result_fields.label(:test_detail, "Specify test detail")
-      = lab_result_fields.text_field(:test_detail, :size => 20, :maxlenght => 255)
+      = lab_result_fields.text_field(:test_detail, :size => 20, :maxlength => 255)
 
     -# Autocomplete for lab result 
-    = trisano_auto_complete("#{auto_complete_prefix}[lab_result_text]", "lab_result", lab_result, "lab_result_text", "Lab result", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
+    = trisano_auto_complete("#{auto_complete_prefix}[lab_result_text]", "lab_result", lab_result, "lab_result_text", "Test result", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
 
+    %span{:class => "horiz"}
+      = lab_result_fields.label(:reference_range)
+      = lab_result_fields.text_field(:reference_range, :size => 20, :maxlength => 255)
     %span{:class => "horiz"}
       = lab_result_fields.label(:interpretation)
       = lab_result_fields.dropdown_code_field(:interpretation_id, "lab_interpretation", {})
+    %span.vert
     %span{:class => "horiz"}
       = lab_result_fields.label(:specimen_source_id, "Specimen source")
       = lab_result_fields.dropdown_code_field(:specimen_source_id, "specimen", {})
-    %fieldset.vert
     %span{:class => "horiz"}
       = lab_result_fields.label(:collection_date)
       = lab_result_fields.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)

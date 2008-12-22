@@ -24,25 +24,28 @@
         - unless ran.nil?
           %br
           %hr
+        %span.print-label Lab name:
+        %span.print-value
+          = lab.secondary_entity.place_temp.name
         .three-valued-row
-          .left
-            %span.print-label Lab name:
-            %span.print-value
-              = lab.secondary_entity.place_temp.name
           .left
             %span.print-label Test type:
             %span.print-value
               = lab_result.test_type
-          .right
+          .left
             %span.print-label Test detail:
             %span.print-value
               = lab_result.test_detail
+          .right
+            %span.print-label Test result:
+            %span.print-value
+              = lab_result.lab_result_text
       #test
         .three-valued-row
           .left
-            %span.print-label Lab result:
+            %span.print-label Reference range:
             %span.print-value
-              = lab_result.lab_result_text
+              = lab_result.reference_range
           .left
             %span.print-label Interpretation:
             %span.print-value

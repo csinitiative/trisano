@@ -26,8 +26,8 @@
     %table.list
       %tr
         %th Lab name
-        %th Lab result
-        %th Date(s)
+        %th Test type
+        %th Test result
         %th Specimen
 
       - for lab in @event.labs
@@ -35,31 +35,28 @@
           %tr
             %td.forminformation
               .formname
-                = lab.secondary_entity.place_temp.name
-              .description
-                Type:
-                = lab_result.test_type
-                %br
-                Detail:
-                = lab_result.test_detail
+                = lab.secondary_entity.place_temp.name.strip
             %td
-              = lab_result.lab_result_text
+              %b= lab_result.test_type
+              %br
+              %small Detail:
+              %b= lab_result.test_detail
+            %td
+              %b= lab_result.lab_result_text
+              %br
+              %small Reference range:
+              %b= lab_result.reference_range
               %br
               %small Interpretation:
-              = l lab_result.interpretation
-            %td
-              %small Collection Date:
-              %br
-              = lab_result.collection_date
-              %br
-              %small Lab Test Date:
-              %br
-              = lab_result.lab_test_date
+              %b= l lab_result.interpretation
             %td
               %small Source:
-              %b
-                = l lab_result.specimen_source
+              %b= l lab_result.specimen_source
+              %br
+              %small Collected on:
+              %b= lab_result.collection_date
+              %small &nbsp;Tested on:
+              %b= lab_result.lab_test_date
               %br
               %small Sent to UPHL:
-              %b
-                = l lab_result.specimen_sent_to_uphl_yn
+              %b= l lab_result.specimen_sent_to_uphl_yn
