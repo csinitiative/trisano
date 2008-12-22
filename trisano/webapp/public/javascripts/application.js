@@ -115,3 +115,14 @@ function safe_disable(target) {
         element.disabled=true;
     }
 }
+
+function AutoCompleteCallback(update_tag, url, attribute) {
+  this.update_tag = update_tag;
+  this.url = url;
+  this.attribute = attribute;
+
+  this.remote = function(event, selection) {
+    var id = $(selection).readAttribute(this.attribute);
+    new Ajax.Updater(this.update_tag, this.url + '?id=' + id, {asynchronous:true, evalScripts:true});
+  };
+}

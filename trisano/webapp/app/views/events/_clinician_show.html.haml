@@ -1,0 +1,21 @@
+-# This injects an existing clinician into a form
+
+- clinician = clinician_show
+
+%div.existing_clinician{:style => 'margin-top: 20px'}
+  %span.horiz
+    %label Last Name
+    = h(clinician.last_name)
+  %span.horiz  
+    %label First Name
+    = h(clinician.first_name) || "&nbsp;"
+  %span.horiz
+    %label Middle Name
+    = h(clinician.middle_name) || "&nbsp;"
+  %span.horiz
+    %label Telephone
+    = clinician.telephone ? h(clinician.telephone.simple_format) : "&nbsp;"
+  %span.horiz
+    %label &nbsp;
+    = link_to_function "Remove", "$(this).up('.existing_clinician').remove()", {:id => "remove_existing_clinician"}
+  %hr

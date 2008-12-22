@@ -944,5 +944,30 @@ module EventsHelper
   def render_events_csv(events, options={}, &proc)
     Export::Csv.export(events, options, &proc)
   end
-  
+
+  # wraps up remote function so it can be used in a prototype callback
+  def remote_function_callback(options)
+    <<-JS.gsub(/\s+/, ' ')
+      function(event, selection) {
+        #{remote_function(options)};
+      }
+    JS
+  end
+
+  def clinician_select_callback(options = {})
+    options = {:attribute => 'name'}.merge(options)
+      
+    <<-JS.gsub(/\s+/, ' ')
+      function(e, s) {
+        var id = $(s).readAttribute('#{options[:attribute]}');
+        new Ajax.Updater('#{options[:update]}', '#{url_for(options[:url])}', {
+          asynchronous: true, 
+          evalScripts: true,
+          parameters: {id: id},
+          method: 'get',
+          insertion: Insertion.Bottom
+        });
+      }  
+    JS
+  end
 end

@@ -13,8 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:id => "clinicians"}  
+%div{:id => "clinicians"}
+  %span{:class => 'vert'}
+    = auto_complete_stylesheet
+    %label{:for => 'clinicians_search'} Search for an existing clinician
+    = text_field_tag('clinicians_search')
+    = image_tag('redbox_spinner.gif', :size => '16x16', :alt => 'Searching...', :id=>'clinicians_search_spinner', :style=>'display: none;')
+    .auto_complete{:id => 'clinicians_search_choices'}
+    = auto_complete_field('clinicians_search', {:select => 'last_name', :param_name=>'last_name', :update => 'clinicians_search_choices', :indicator => 'clinicians_search_spinner', :method => 'get', :url => {:action => 'auto_complete_for_clinicians_search'}, :after_update_element => clinician_select_callback(:update => 'existing_clinicians', :url => {:action => :clinicians_selection})})
+  #existing_clinicians
   - clinicians = (@event.clinicians.size > 0 ? @event.clinicians : [Participation.new_clinician_participation])
-  = render :partial => "events/clinician", :collection => clinicians
+  = render :partial => "events/clinician", :collection => clinician_show
 
 %p{:style => "clear: both;"}= add_clinician_link "Add a clinician"
+

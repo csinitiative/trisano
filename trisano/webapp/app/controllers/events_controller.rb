@@ -73,6 +73,16 @@ class EventsController < ApplicationController
     render :inline => "<%= auto_complete_result(@items, 'treatment') %>"
   end
 
+  def auto_complete_for_clinicians_search
+    @clinicians = Person.find(:all, :conditions => ['LOWER(last_name) LIKE ?', params[:last_name].downcase + '%'])
+    render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
+  end
+
+  def clinicians_selection
+    @clinician = Person.find(params[:id])
+    render :partial => "events/clinician_show", :layout => false, :locals => {:clinician_show => @clinician} 
+  end
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"
