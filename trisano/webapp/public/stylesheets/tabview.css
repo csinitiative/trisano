@@ -90,7 +90,7 @@ version: 2.6.0
 	{margin:0 0.16em -1px 0;}
 .yui-skin-sam .yui-navset .yui-nav a,.yui-skin-sam .yui-navset .yui-navset-top .yui-nav a
 	{
-	background:#f3eee4 url(sprite.png) repeat-x;
+	background:#f3eee4;
 	border:solid #d4cbb4;
 	border-width:0 1px;
 	color:#000;
@@ -111,12 +111,12 @@ version: 2.6.0
 	}
 .yui-skin-sam .yui-navset .yui-nav .selected a,.yui-skin-sam .yui-navset .yui-nav .selected a:focus,.yui-skin-sam .yui-navset .yui-nav .selected a:hover
 	{
-	background:#006633 url(sprite.png) repeat-x left -1400px;
+	background:#006633;
 	color:#fff;
 	}
 .yui-skin-sam .yui-navset .yui-nav a:hover,.yui-skin-sam .yui-navset .yui-nav a:focus
 	{
-	background:#d4cbb4 url(sprite.png) repeat-x left -1300px;
+	background:#d4cbb4;
 	outline:0;
 	}
 .yui-skin-sam .yui-navset .yui-nav .selected a em
@@ -195,4 +195,3 @@ version: 2.6.0
 	border:1px solid #808080;
 	border-bottom-color:#243356;
 	}
-0099
