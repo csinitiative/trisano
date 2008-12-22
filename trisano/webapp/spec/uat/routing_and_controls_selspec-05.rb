@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -71,14 +71,16 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("Route to Local Health Depts.").should be_true
   end
 
-  it "should allow routing to a new jurisdiction" do
+  it "should allow routing to a new jurisdiction with a note" do
     @browser.click "link=Route to Local Health Depts."
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
     @browser.select "jurisdiction_id", "label=Central Utah"
+    @browser.type "note", "Routing is cool!"
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
     @browser.is_text_present("Routed to jurisdiction Central Utah Public Health Department.").should be_true
+    @browser.is_text_present("Routing is cool!").should be_true
   end
 
   it "should allow for accepting or rejecting a remote routing assignent" do
@@ -86,15 +88,17 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present("Assigned to Local Health Dept.").should be_true
   end
 
-  it "should set event to 'accepted' when 'accept' is clicked" do
+  it "should set event to 'accepted' when 'accept' is clicked and add note" do
+    @browser.type("morbidity_event[note]", "This is a note.")
     @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
     @browser.is_text_present("Accepted by Central Utah Public Health Department.").should be_true
+    @browser.is_text_present("This is a note.").should be_true
   end
 
   it "should allow routing to an investigator queue" do
-    @browser.is_text_present('Route locally to:').should be_true
+    @browser.is_text_present('Route to queue:').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Routed to queue Enterics-UtahCounty.").should be_true
@@ -212,7 +216,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     switch_user(@browser, "surveillance_mgr").should be_true
     @browser.is_text_present("Routing disabled").should be_true
-    @browser.is_text_present("No action permitted").should be_true
+    @browser.is_text_present("Action required: None").should be_true
   end
 
   it "should deny access altogether when entitlements are outside any jurisdiction." do
@@ -273,14 +277,14 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
     
-    @browser.is_text_present('Assign to investigator:').should be_true
+    @browser.is_text_present('Route to investigator:').should be_true
     @browser.select "morbidity_event__investigator_id", "label=#{@uname}"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Investigator:  #{@uname}").should be_true
     @browser.is_text_present("Routed to investigator #{@uname}").should be_true
     
-    @browser.is_text_present("Route locally to").should be_true
+    @browser.is_text_present("Route to queue").should be_true
     @browser.is_text_present("Assigned to Investigator").should be_true
   end
 

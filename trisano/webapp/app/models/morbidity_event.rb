@@ -202,7 +202,7 @@ class MorbidityEvent < HumanEvent
     end
   end
 
-  def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[])
+  def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
     jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
     jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
@@ -220,7 +220,7 @@ class MorbidityEvent < HumanEvent
                                :investigation_started_date => nil, 
                                :investigation_completed_LHD_date => nil, 
                                :review_completed_UDOH_date => nil)
-        self.add_note(self.instance_eval(Event.states[self.event_status].note_text))
+        self.add_note(self.instance_eval(Event.states[self.event_status].note_text) + "\n#{note}")
       end
 
       # Handle secondary jurisdictions

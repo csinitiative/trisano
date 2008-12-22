@@ -198,7 +198,7 @@ class MorbidityEventsController < EventsController
         @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.active_jurisdiction.secondary_entity_id
         
         # the following line must follow the previous line or state won't get changed.
-        @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [])
+        @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note])
       end
     rescue Exception => ex
       flash[:error] = 'Unable to route CMR.' + ex.message
@@ -231,10 +231,14 @@ class MorbidityEventsController < EventsController
     # event_status is protected from mass update, set individually
     @event.event_status = event_status
 
+    # Squirrel any notes away
+    note = params[:morbidity_event].delete(:note)
+
     # A status change may be accompanied by other values such as an event queue, set them
     @event.attributes = params[:morbidity_event]
 
-    @event.new_note_attributes = {:note => @event.instance_eval(Event.states[event_status].note_text) }
+    # This must follow the attribute setting so that the model is set up for the instance_eval
+    @event.new_note_attributes = {:note => @event.instance_eval(Event.states[event_status].note_text) + "\n#{note}" }
 
     # Special handling for certain state changes
     case event_status

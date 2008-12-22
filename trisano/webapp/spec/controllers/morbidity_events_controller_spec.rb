@@ -279,10 +279,10 @@ describe MorbidityEventsController do
 
       describe "with secondary_ids too" do
         it "should pass IDs into event#route_to_jurisdiction" do
-          @event.should_receive(:route_to_jurisdiction).with("2", ["3", "4"])
+          @event.should_receive(:route_to_jurisdiction).with("2", ["3", "4"], "")
 
           request.env['HTTP_REFERER'] = "/some_path"
-          post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"]
+          post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"], :note => ""
         end
       end
     end

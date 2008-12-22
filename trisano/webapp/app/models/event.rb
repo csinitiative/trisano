@@ -154,7 +154,7 @@ class Event < ActiveRecord::Base
   })
   states['ASGD-INV'] = Routing::State.new({
     :transitions => ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"],
-    :action_phrase => "Route locally to",
+    :action_phrase => "Route to queue",
     :priv_required => :route_event_to_investigator,
     :description => "Assigned to Investigator",
     :state_code => "ASGD-INV",

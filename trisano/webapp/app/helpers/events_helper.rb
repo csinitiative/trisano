@@ -211,37 +211,39 @@ module EventsHelper
       User.current_user.is_entitled_to_in?(transition_state.required_privilege, j_id)
     end
 
-    controls = ""    
+    routing_controls = action_controls = ""    
     allowed_transitions.each do |transition|
       case transition.state_code
       when "ACPTD-LHD", "RJCTD-LHD", "UI", "RJCTD-INV", "APP-LHD", "RO-MGR", "CLOSED", "RO-STATE"
-        controls += radio_button_tag(transition.state_code,
+        action_controls += radio_button_tag(transition.state_code,
                                      transition.state_code, 
                                      false, 
                                      :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
-        controls += transition.action_phrase 
+        action_controls += transition.action_phrase 
       when "ASGD-INV"
-        controls += "<br/>" unless controls.blank?
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        controls += "<span>#{transition.action_phrase}:&nbsp;</span><br/>" 
-        controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code))
-        controls += "<br/>"
+        routing_controls += "<div>#{transition.action_phrase}:&nbsp;" 
+        routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
         
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.secondary_entity.place)
-        controls += "<span>Assign to investigator:&nbsp;</span><br/>"
-        controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code))
+        routing_controls += "<div>Route to investigator:&nbsp;"
+        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
       when "IC"
-        controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.state_code))
+        action_controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.state_code))
       end
     end
   
-    if controls.blank?
-      controls += "<span style='color: gray'>No action permitted.</span>"
-    else
+    action_controls = "<span style='color: gray'> None</span>" if action_controls.blank?
+
+    unless (action_controls + routing_controls).blank?
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[event_status]", '')}
-        #{controls} 
+        Brief note: #{text_field_tag("morbidity_event[note]", '')}
+        <br/>
+        Action required: #{action_controls}
+        <br/>
+        #{routing_controls} 
         </form>
       ]
     end
@@ -271,6 +273,7 @@ module EventsHelper
       end
 
       controls += "</div></div>"
+      controls += "<div style='position: absolute; right: 15px'>Brief note: #{text_field_tag("note", '')}</div><br/>"
       controls += submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
 
       controls += "</form>"
