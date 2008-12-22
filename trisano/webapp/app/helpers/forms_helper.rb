@@ -214,10 +214,11 @@ module FormsHelper
   def render_section(form_elements_cache, element, include_children=true)
     begin
       result = "<ul id='section_#{element.id}' class='sortable fb-section'>"
-      
       result << "<table><tr>"
-      result << "<td class='section'>#{element.name} #{edit_section_link(element)}</td>"
-      result << "<td class='actions'>" << add_question_link(element, "section") if (include_children)
+      result << "<td class='section'>#{element.name}</td>"
+      result << "<td class='actions'>" 
+      result << edit_section_link(element)
+      result << "&nbsp;&nbsp;" << add_question_link(element, "section") if (include_children)
       result << "&nbsp;&nbsp;" << delete_section_link(element)
       result << "</td></tr>"
       result << "<tr><td colspan='2' class='instructions'>#{element.description.gsub("\n", '<br/>')}</td></tr>" unless element.description.blank?
@@ -435,7 +436,7 @@ module FormsHelper
   end
   
   def edit_section_link(element)
-    "<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/#{element.id.to_s}/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" id='edit-section-#{element.id.to_s}' class='edit-section'>(Edit)</a></small>"
+    "<small><a href='#' onclick=\"new Ajax.Request('../../section_elements/#{element.id.to_s}/edit', {asynchronous:true, evalScripts:true, method:'get'}); return false;\" id='edit-section-#{element.id.to_s}' class='edit-section'>Edit</a></small>"
   end
   
   def delete_section_link(element)

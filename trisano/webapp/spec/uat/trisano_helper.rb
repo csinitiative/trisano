@@ -720,7 +720,7 @@ module TrisanoHelper
     wait_for_element_present("section-element-edit-form", browser)
     browser.type "section_element_name", section_text
     browser.click "//input[contains(@id, 'edit_section_submit')]"
-    # wait_for_element_not_present("section-element-edit-form", browser)
+    wait_for_element_not_present("edit-section-form", browser)
   end
   
   # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
