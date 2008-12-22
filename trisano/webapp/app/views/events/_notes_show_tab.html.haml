@@ -15,10 +15,12 @@
 
 
 %fieldset
-  %legend Notes
+  %legend Notes Information
 
   - if @event.notes.empty?
-    %h3 No notes have been recorded for this event
+    %fieldset.form
+      %legend Notes
+      %h3 No notes have been recorded for this event
   - else
 
     - for note in @event.notes

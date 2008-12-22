@@ -30,4 +30,4 @@
       - contacts = (@event.contacts.size > 0 ? @event.contacts : [Participation.new_contact_participation])
       = render :partial => "events/contact", :collection => contacts
 
-    %p= add_contact_link "Add a contact"
+      %p= add_contact_link "Add a contact"
