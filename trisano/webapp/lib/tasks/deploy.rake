@@ -175,6 +175,7 @@ namespace :trisano do
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :release  do
+      puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
       
       ruby "-S rake trisano:deploy:create_db_config"
 
