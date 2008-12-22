@@ -74,7 +74,13 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_clinicians_search
-    @clinicians = Person.find(:all, :conditions => ['LOWER(last_name) LIKE ?', params[:last_name].downcase + '%'])
+    sql = <<-SQL
+      SELECT DISTINCT ON (l.id) l.id, l.last_name, l.first_name, l.middle_name, l.entity_id 
+      FROM participations p 
+        LEFT OUTER JOIN people l ON (p.secondary_entity_id = l.entity_id)
+      WHERE p.role_id = ? and LOWER(l.last_name) LIKE ?
+    SQL
+    @clinicians = Person.find_by_sql([sql, Code.treated_by_type_id, params[:last_name].downcase + '%'])
     render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
   end
 

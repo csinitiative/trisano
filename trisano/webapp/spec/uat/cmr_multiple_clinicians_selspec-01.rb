@@ -43,6 +43,7 @@ describe 'Adding multiple clinicians to a CMR' do
 
     click_core_tab(@browser, "Clinical")
     @browser.click "link=Add a clinician"
+    @browser.click "link=Add a clinician"
     sleep(1)
 
     @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'last_name')]", @original_last_name_1
@@ -65,20 +66,9 @@ describe 'Adding multiple clinicians to a CMR' do
   it "should allow removing a clinician" do
     edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
-    @browser.click "remove_clinician_link"
+    @browser.click "remove_existing_clinician_link"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@original_last_name_1).should_not be_true
-  end
-
-  it "should allow editing a clinician" do
-    edit_cmr(@browser)
-    click_core_tab(@browser, "Clinical")
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'first_name')]", "William"
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'area_code')]", "777"
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'phone_number')]", "6666666"   
-    save_cmr(@browser).should be_true
-    @browser.is_text_present('William').should be_true
-    @browser.is_text_present('(777) 666-6666').should be_true
   end
 
 end

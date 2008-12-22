@@ -32,7 +32,6 @@ class MorbidityEvent < HumanEvent
     event.hospitalized_health_facilities << Participation.new_hospital_participation
     event.diagnosing_health_facilities << Participation.new_diagnostic_participation
     event.contacts << Participation.new_contact_participation
-    event.clinicians << Participation.new_clinician_participation
     event.place_exposures << Participation.new_exposure_participation
     event.reporting_agency = Participation.new_reporting_agency_participation
     event.reporter = Participation.new_reporter_participation

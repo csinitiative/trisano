@@ -22,8 +22,7 @@
     .auto_complete{:id => 'clinicians_search_choices'}
     = auto_complete_field('clinicians_search', {:select => 'last_name', :param_name=>'last_name', :update => 'clinicians_search_choices', :indicator => 'clinicians_search_spinner', :method => 'get', :url => {:action => 'auto_complete_for_clinicians_search'}, :after_update_element => clinician_select_callback(:update => 'existing_clinicians', :url => {:action => :clinicians_selection})})
   #existing_clinicians
-  - clinicians = (@event.clinicians.size > 0 ? @event.clinicians : [Participation.new_clinician_participation])
-  = render :partial => "events/clinician", :collection => clinician_show
+    = render :partial => "events/clinician_show", :collection => @event.clinicians.collect {|c| c.secondary_entity.person_temp} 
 
 %p{:style => "clear: both;"}= add_clinician_link "Add a clinician"
 

@@ -273,50 +273,19 @@ class HumanEvent < Event
   end
 
   def existing_clinician_attributes=(clinician_attributes)
+    # first, preserve existing and delete removed
     clinicians.reject(&:new_record?).each do |clinician|
-      attributes = clinician_attributes[clinician.secondary_entity.person_temp.id.to_s]
-
-      # Which entity_location (phone) to edit is passed along in the (hidden) attribute clinician_phone_id
-      el_id = attributes.delete(:clinician_phone_id).to_i if attributes
-
-      if attributes && !attributes.values_blank?
-        person = {}
-        person[:last_name] = attributes.delete(:last_name)
-        person[:first_name] = attributes.delete(:first_name)
-        person[:middle_name] = attributes.delete(:middle_name)
-
-        clinician.secondary_entity.person_temp.attributes = person
-
-        # They may be adding a phone number to an existing clinician who did not already have one
-        if el_id == 0 || el_id.blank?
-          code = attributes.delete(:entity_location_type_id)
-          next if attributes.values_blank?
-          el = clinician.secondary_entity.telephone_entities_locations.build(
-                 :entity_location_type_id => code, 
-                 :primary_yn_id => ExternalCode.yes_id,
-                 :location_type_id => Code.telephone_location_type_id)
-          el.build_location.telephones.build(attributes)
-        else
-          # Don't just find it, loop through the association array looking for it
-          clinician.secondary_entity.telephone_entities_locations.each do |tel_el|
-            if tel_el.id == el_id
-              # If the clinician had a phone number and the user blanked it out, delete it
-              if attributes.values_blank?
-                tel_el.destroy
-                tel_el.location.destroy
-              else
-                tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-                tel_el.location.telephones.last.attributes = attributes
-              end
-              break
-            end
-          end
-        end
-      else
-        # Removes the participation.  Leaves the entity (with phone) intact.
-        clinicians.delete(clinician)
+      id = clinician.secondary_entity.person_temp.id.to_s
+      unless clinician_attributes.delete(id)
+        clinicians.delete(clinician) 
       end
     end
+
+    # then create references to any newly added ones
+    clinician_attributes.each do |id, hash|
+      clinician_participation = clinicians.build(:role_id => Event.participation_code('Treated By'))
+      clinician_participation.secondary_entity = Person.find(id).entity
+    end      
   end
 
   def lab_results

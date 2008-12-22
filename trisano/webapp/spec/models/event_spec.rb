@@ -2037,4 +2037,38 @@ describe MorbidityEvent do
       @event.child_events.each { |event| event.deleted_at.should_not be_nil }
     end
   end
+
+  describe "existing clinician handling" do
+    fixtures :users
+
+    before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
+      @event_hash = {
+        "active_patient" => {
+          "person" => {
+            "last_name"=>"Green"
+          }
+        },
+        "existing_clinician_attributes" => {'1' => {}}
+      }
+      @event = MorbidityEvent.create(@event_hash)
+    end
+    
+    it "should add an existing clinician if a new id is found" do
+      @event.clinicians.should_not be_empty
+      @event.clinicians.size.should == 1
+    end
+
+    it "should not change anything if clinician already exists" do
+      @event.update_attributes({"existing_clinician_attributes" => {'1' => {}}})
+      @event.clinicians.size.should == 1
+    end
+
+    it "should delete participation is the clinician is removed" do
+      @event.update_attributes({"existing_clinician_attributes" => {}})
+      @event.clinicians.should be_empty
+    end
+
+  end
 end

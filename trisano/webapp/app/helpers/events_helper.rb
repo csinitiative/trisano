@@ -90,7 +90,7 @@ module EventsHelper
     model.new_record? ? 'new' : 'existing'
   end
 
-  def event_prefix_for_multi_models(new_or_existing, attribute_name, namespace=nil)
+  def event_prefix_for_multi_models(new_or_existing, attribute_name, namespace=nil, event=@event)
     prefix = @event.class.to_s.underscore
     prefix << "[#{namespace}]" if namespace
     prefix << "[#{new_or_existing}#{attribute_name}]"
