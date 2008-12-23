@@ -16,10 +16,16 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
+require 'active_support'
 
  # $dont_kill_browser = true
 
 describe 'Managing event queues' do
+
+  before(:all) do
+    @queue_name_1 = get_unique_name(2)
+    @queue_name_2 = get_unique_name(2)
+  end
   
   it "should allow adding new event queues" do
     @browser.open "/trisano/admin"
@@ -34,29 +40,35 @@ describe 'Managing event queues' do
     @browser.click "create_event_queue"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.type "event_queue_queue_name", "Enterics"
+    @browser.type "event_queue_queue_name", @queue_name_1
     @browser.select "event_queue_jurisdiction_id", "label=Utah County Health Department"
 
     @browser.click "event_queue_submit"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present('Event queue was successfully created.').should be_true
-    @browser.is_text_present('Enterics').should be_true
+    @browser.is_text_present(make_queue_name(@queue_name_1, "Utah County")).should be_true
     @browser.is_text_present('Utah County Health Department').should be_true
   end
 
-  # Uncomment if we decide to allow editing in the future
-  # it "should allow editing an event queue" do
-  #   @browser.click "link=Edit"
-  #   @browser.wait_for_page_to_load($load_time)
-  #   @browser.type "event_queue_queue_name", "Enteric Group"
-  #   @browser.click "event_queue_submit"
-  #   @browser.wait_for_page_to_load($load_time)
-  # 
-  #   @browser.is_text_present('Event queue was successfully updated.').should be_true
-  #   @browser.is_text_present('Enteric_Group').should be_true
-  #   @browser.is_text_present('Utah County Health Department').should be_true
-  # end
+  it "should allow editing an event queue" do
+    @browser.click "link=Edit"
+    @browser.wait_for_page_to_load($load_time)
+    @browser.type "event_queue_queue_name", @queue_name_2
+    @browser.click "event_queue_submit"
+    @browser.wait_for_page_to_load($load_time)
+   
+    @browser.is_text_present('Event queue was successfully updated.').should be_true
+    @browser.is_text_present(make_queue_name(@queue_name_2, "Utah County")).should be_true
+  end
+
+  it "should allow deleting an event queue" do
+    @browser.click "link=Delete"
+    @browser.wait_for_page_to_load($load_time)
+   
+    @browser.is_text_present(make_queue_name(@queue_name_2, "Utah County")).should_not be_true
+    @browser.is_text_present('Utah County Health Department').should_not be_true
+  end
 
   it "should not be accessible to non-admins" do
     switch_user(@browser, "lhd_manager").should be_false
@@ -64,3 +76,8 @@ describe 'Managing event queues' do
   end
     
 end
+
+def make_queue_name(queue, jurisdiction)
+  queue.strip.downcase.gsub(/\s+/, "_").camelize + "-" + jurisdiction.strip.downcase.gsub(/\s+/, "_").camelize
+end
+
