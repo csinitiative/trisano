@@ -31,9 +31,15 @@
     %tr
       %th.forminformation
         Event Queue
+      %th
       %tr
         %td.forminformation
           .formname
             =@event_queue.queue_name
           .tools
             = @event_queue.jurisdiction.current_place.name
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to 'Edit', edit_event_queue_path(@event_queue)
+            |
+            = link_to 'Delete', event_queue_path(@event_queue), :method => :delete

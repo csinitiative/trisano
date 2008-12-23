@@ -39,4 +39,7 @@
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Show', event_queue
-            /= link_to 'Edit', edit_event_queue_path(event_queue)
+            |
+            = link_to 'Edit', edit_event_queue_path(event_queue)
+            |
+            = link_to 'Delete', event_queue_path(event_queue), :method => :delete

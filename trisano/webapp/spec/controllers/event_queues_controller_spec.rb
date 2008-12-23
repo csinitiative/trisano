@@ -186,42 +186,30 @@ describe EventQueuesController do
       get :edit, :id => "1"
     end
 
-    # Not allowing edits for now.  If this should change, delete the following running code and uncomment the rest.
-
-    it "should return a 404" do
-      do_get
-      response.response_code.should == 404
+    before(:each) do
+      @event_queue = mock_model(EventQueue)
+      EventQueue.stub!(:find).and_return(@event_queue)
     end
-
-    it "should render the public 404 page" do
+ 
+    it "should be successful" do
       do_get
-      response.should render_template("#{RAILS_ROOT}/public/404.html")
+      response.should be_success
     end
-
-    # before(:each) do
-    #   @event_queue = mock_model(EventQueue)
-    #   EventQueue.stub!(:find).and_return(@event_queue)
-    # end
   
-    # it "should be successful" do
-    #   do_get
-    #   response.should be_success
-    # end
+    it "should render edit template" do
+      do_get
+      response.should render_template('edit')
+    end
   
-    # it "should render edit template" do
-    #   do_get
-    #   response.should render_template('edit')
-    # end
+    it "should find the event_queue requested" do
+      EventQueue.should_receive(:find).and_return(@event_queue)
+      do_get
+    end
   
-    # it "should find the event_queue requested" do
-    #   EventQueue.should_receive(:find).and_return(@event_queue)
-    #   do_get
-    # end
-  
-    # it "should assign the found EventQueue for the view" do
-    #   do_get
-    #   assigns[:event_queue].should equal(@event_queue)
-    # end
+    it "should assign the found EventQueue for the view" do
+      do_get
+      assigns[:event_queue].should equal(@event_queue)
+    end
   end
 
   describe "handling POST /event_queues" do
@@ -267,98 +255,79 @@ describe EventQueuesController do
 
   describe "handling PUT /event_queues/1" do
     
-    # Not allowing updates for now.  If this should change, delete the following running code and uncomment the rest.
-    def do_put
-      put :update, :id => "1"
+    before(:each) do
+      @event_queue = mock_model(EventQueue, :to_param => "1")
+      EventQueue.stub!(:find).and_return(@event_queue)
     end
     
-    it "should return a 405" do
-      do_put
-      response.response_code.should == 405
+    describe "with successful update" do
+
+      def do_put
+        @event_queue.should_receive(:update_attributes).and_return(true)
+        put :update, :id => "1"
+      end
+
+      it "should find the event_queue requested" do
+        EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+        do_put
+      end
+
+      it "should update the found event_queue" do
+        do_put
+        assigns(:event_queue).should equal(@event_queue)
+      end
+
+      it "should assign the found event_queue for the view" do
+        do_put
+        assigns(:event_queue).should equal(@event_queue)
+      end
+
+      it "should redirect to the event_queue" do
+        do_put
+        response.should redirect_to(event_queue_url("1"))
+      end
+
     end
-
-    # before(:each) do
-    #   @event_queue = mock_model(EventQueue, :to_param => "1")
-    #   EventQueue.stub!(:find).and_return(@event_queue)
-    # end
     
-    # describe "with successful update" do
+    describe "with failed update" do
 
-    #   def do_put
-    #     @event_queue.should_receive(:update_attributes).and_return(true)
-    #     put :update, :id => "1"
-    #   end
+      def do_put
+        @event_queue.should_receive(:update_attributes).and_return(false)
+        put :update, :id => "1"
+      end
 
-    #   it "should find the event_queue requested" do
-    #     EventQueue.should_receive(:find).with("1").and_return(@event_queue)
-    #     do_put
-    #   end
+      it "should re-render 'edit'" do
+        do_put
+        response.should render_template('edit')
+      end
 
-    #   it "should update the found event_queue" do
-    #     do_put
-    #     assigns(:event_queue).should equal(@event_queue)
-    #   end
-
-    #   it "should assign the found event_queue for the view" do
-    #     do_put
-    #     assigns(:event_queue).should equal(@event_queue)
-    #   end
-
-    #   it "should redirect to the event_queue" do
-    #     do_put
-    #     response.should redirect_to(event_queue_url("1"))
-    #   end
-
-    # end
-    
-    # describe "with failed update" do
-
-    #   def do_put
-    #     @event_queue.should_receive(:update_attributes).and_return(false)
-    #     put :update, :id => "1"
-    #   end
-
-    #   it "should re-render 'edit'" do
-    #     do_put
-    #     response.should render_template('edit')
-    #   end
-
-    # end
+    end
   end
 
   describe "handling DELETE /event_queues/1" do
-    # Not allowing deletes for now.  If this should change, delete the following running code and uncomment the rest.
+
+    before(:each) do
+      @event_queue = mock_model(EventQueue, :destroy => true)
+      EventQueue.stub!(:find).and_return(@event_queue)
+    end
+  
     def do_delete
       delete :destroy, :id => "1"
     end
-    
-    it "should return a 405" do
+
+    it "should find the event_queue requested" do
+      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
       do_delete
-      response.response_code.should == 405
     end
-
-    # before(:each) do
-    #   @event_queue = mock_model(EventQueue, :destroy => true)
-    #   EventQueue.stub!(:find).and_return(@event_queue)
-    # end
   
-    # def do_delete
-    #   delete :destroy, :id => "1"
-    # end
-
-    # it "should find the event_queue requested" do
-    #   EventQueue.should_receive(:find).with("1").and_return(@event_queue)
-    #   do_delete
-    # end
+    it "should call destroy on the found event_queue" do
+      @event_queue.should_receive(:destroy)
+      do_delete
+    end
   
-    # it "should call destroy on the found event_queue" do
-    #   @event_queue.should_receive(:destroy)
-    #   do_delete
-    # end
-  
-    # it "should redirect to the event_queues list" do
-    #   do_delete
-    #   response.should redirect_to(event_queues_url)
-    # end
+    it "should redirect to the event_queues list" do
+      do_delete
+      response.should redirect_to(event_queues_url)
+    end
   end
 end

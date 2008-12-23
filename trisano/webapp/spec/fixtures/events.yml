@@ -40,3 +40,8 @@ has_anthrax_cmr:
   id: 5
   type: MorbidityEvent
 
+has_event_queue:
+  id: 6
+  event_status: "ASGD-INV"
+  event_queue_id: 1
+  event_onset_date: 2008-03-11

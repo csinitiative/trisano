@@ -134,6 +134,7 @@ class MorbidityEvent < HumanEvent
         new_agency.entity_type = 'place'
         new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
         self.reporting_agency.secondary_entity = new_agency
+        p self.reporting_agency.secondary_entity.place_temp
       else
         # Otherwise assign the (now) existing entity id to the participation
         self.reporting_agency.secondary_entity_id = entity_id 
@@ -342,6 +343,7 @@ class MorbidityEvent < HumanEvent
 
     if reporting_agency && !reporting_agency.frozen?
       reporting_agency.save(false)
+      reporting_agency.secondary_entity.save(false)
       reporting_agency.secondary_entity.place_temp.save(false)
     end
 

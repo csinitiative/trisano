@@ -49,10 +49,7 @@ class EventQueuesController < AdminController
 
   # GET /event_queues/1/edit
   def edit
-    render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-    
-    # For now, anyway, we are not allowing queues to be edited.  If this changes, delete the above and uncomment below.
-    # @event_queue = EventQueue.find(params[:id])
+    @event_queue = EventQueue.find(params[:id])
   end
 
   # POST /event_queues
@@ -75,35 +72,29 @@ class EventQueuesController < AdminController
   # PUT /event_queues/1
   # PUT /event_queues/1.xml
   def update
-    head :method_not_allowed
-    
-    # For now, anyway, we are not allowing queues to be updated.  If this changes, delete the above and uncomment below.
-    # @event_queue = EventQueue.find(params[:id])
+    @event_queue = EventQueue.find(params[:id])
 
-    # respond_to do |format|
-    #   if @event_queue.update_attributes(params[:event_queue])
-    #     flash[:notice] = 'Event queue was successfully updated.'
-    #     format.html { redirect_to(@event_queue) }
-    #     format.xml  { head :ok }
-    #   else
-    #     format.html { render :action => "edit" }
-    #     format.xml  { render :xml => @event_queue.errors, :status => :unprocessable_entity }
-    #   end
-    # end
+    respond_to do |format|
+      if @event_queue.update_attributes(params[:event_queue])
+        flash[:notice] = 'Event queue was successfully updated.'
+        format.html { redirect_to(@event_queue) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @event_queue.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /event_queues/1
   # DELETE /event_queues/1.xml
   def destroy
-    head :method_not_allowed
-    
-    # For now, anyway, we are not allowing queues to be deleted.  If this changes, delete the above and uncomment below.
-    # @event_queue = EventQueue.find(params[:id])
-    # @event_queue.destroy
+    @event_queue = EventQueue.find(params[:id])
+    @event_queue.destroy
 
-    # respond_to do |format|
-    #   format.html { redirect_to(event_queues_url) }
-    #   format.xml  { head :ok }
-    # end
+    respond_to do |format|
+      format.html { redirect_to(event_queues_url) }
+      format.xml  { head :ok }
+    end
   end
 end

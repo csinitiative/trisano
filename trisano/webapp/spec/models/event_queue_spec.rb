@@ -47,6 +47,34 @@ describe EventQueue do
     @event_queue.queue_name.should == "EntericsGroup-DavisCounty"
   end
 
+  describe "deleting an event queue" do
+    fixtures :event_queues, :events, :users
+
+    before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
+      event_queues(:enterics_queue).destroy
+    end
+
+    it "should remove the queue in all users' default index view settings" do
+      User.find(:all, :conditions => "event_view_settings IS NOT NULL").each do |user|
+        user.event_view_settings[:queues].should be_empty
+      end
+    end
+
+    describe "when event queue is in use" do
+      fixtures :event_queues, :events, :users
+
+      it "should remove the queue for existing entities" do
+        events(:has_event_queue).event_queue_id.should be_nil
+      end
+    
+      it "should reset event status if event is still in queue" do
+        events(:has_event_queue).event_status.should == "ACPTD-LHD"
+      end
+    end
+  end
+
   describe "class methods" do
     describe "queues_for_jurisdictions" do
 
