@@ -21,6 +21,6 @@
 
 . setenv.sh
 
-echo "installing jruby"
+echo "installing jruby 1.1.6"
 cd $JRUBY_DIR
-tar xvf jruby-bin-1.1.3.tar.gz
+tar zxvf jruby-bin-1.1.6.tar.gz
