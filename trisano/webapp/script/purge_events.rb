@@ -17,6 +17,7 @@
 
 # Purge event data with extreme prejudice
 
+puts "purging events ..."
 ActiveRecord::Base.transaction do
   Telephone.delete_all
   Address.delete_all
@@ -49,9 +50,10 @@ ActiveRecord::Base.transaction do
 
   Event.delete_all
 end
+puts "success - purge events"
 
 # Put hospitals back
-
+puts "replacing hospitals ..."
 hospitals = YAML::load_file "#{RAILS_ROOT}/db/defaults/hospitals.yml"
 ActiveRecord::Base.transaction do
   hospital_type_id = Code.find_by_code_name_and_the_code("placetype", "H").id
@@ -62,4 +64,26 @@ ActiveRecord::Base.transaction do
     e.save
   end
 end
+puts "success - replace hospitals"
+
+# Reset affected sequences 
+# Not resetting sequences that are selectively deleted (e.g., Place, Entity)
+puts "resetting sequences ..."
+ActiveRecord::Base.connection.select_value("select setval('telephones_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('addresses_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('entities_locations_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('locations_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('disease_events_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('survey_answers_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('form_references_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('notes_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('people_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('participations_risk_factors_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('participations_treatments_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('participation_hospitals_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('lab_results_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('participations_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('events_id_seq', 1)")
+ActiveRecord::Base.connection.select_value("select setval('events_record_number_seq', 2008000001)")
+puts "success - reset sequences"
 
