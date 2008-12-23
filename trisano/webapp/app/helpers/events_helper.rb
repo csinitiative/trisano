@@ -139,6 +139,7 @@ module EventsHelper
   def add_clinician_link(name)
     link_to_function name do |page|
       page.insert_html :bottom, "clinicians", :partial => 'events/clinician' , :object => Participation.new_clinician_participation
+      page << "$$('#morbidity_event_new_clinician_attributes__last_name').last().value=$F('clinicians_search')"
     end
   end
 
