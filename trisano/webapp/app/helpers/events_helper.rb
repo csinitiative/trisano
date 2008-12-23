@@ -955,9 +955,9 @@ module EventsHelper
     JS
   end
 
-  def clinician_select_callback(options = {})
+  def live_search_callback(options = {})
     options = {:attribute => 'name'}.merge(options)
-      
+
     <<-JS.gsub(/\s+/, ' ')
       function(e, s) {
         var id = $(s).readAttribute('#{options[:attribute]}');
@@ -970,5 +970,32 @@ module EventsHelper
         });
       }  
     JS
+  end
+
+  def live_search(label, options = {})
+    options[:search_field] ||= 'search_field'
+    options[:alt]          ||= 'Searching...'
+    options[:indicator]    ||= options[:search_field] + '_spinner'
+    options[:update]       ||= options[:search_field] + '_choices' 
+    options[:param_name]   ||= options[:select] if options[:select]    
+    options[:method]       ||= 'get'
+    options[:url]          ||= {:action => "auto_complete_for_#{options[:search_field]}"}
+    options[:results]      ||= options[:search_field] + '_results'
+    options[:after_update_element_url] ||= {:action => options[:search_field] + '_selection'}
+    options[:after_update_element]     ||= live_search_callback(:update => options[:results], 
+                                                                :url => options[:after_update_element_url])    
+    <<-HTML
+      #{auto_complete_stylesheet}
+      #{content_tag(:label, label, :for => options[:search_field])}
+      #{text_field_tag(options[:search_field])}
+      #{image_tag('redbox_spinner.gif', :size => '16x16', :alt => options[:alt], :id => options[:indicator], :style => 'display: none;')}
+      #{content_tag(:div, '', :class => 'auto_complete', :id => options[:update])}
+      #{auto_complete_field(options[:search_field], extract_auto_complete_options(options))}
+    HTML
+  end
+
+  def extract_auto_complete_options(options)
+    allowed = [:select, :param_name, :update, :indicator, :method, :url, :after_update_element]
+    Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
   end
 end

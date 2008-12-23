@@ -52,7 +52,7 @@
       = el_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
 
   - clinician_telephone.id = clinician_person.id
-
+  
   - fields_for(prefix_with_array, clinician_telephone, :builder => ExtendedFormBuilder) do |phone_fields|
     %span.horiz
       = phone_fields.label(:area_code)

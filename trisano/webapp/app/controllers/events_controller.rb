@@ -84,7 +84,7 @@ class EventsController < ApplicationController
     render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
   end
 
-  def clinicians_selection
+  def clinicians_search_selection
     @clinician = Person.find(params[:id])
     render :partial => "events/clinician_show", :layout => false, :locals => {:clinician_show => @clinician} 
   end

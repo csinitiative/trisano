@@ -15,14 +15,8 @@
 
 %div{:id => "clinicians"}
   %span{:class => 'vert'}
-    = auto_complete_stylesheet
-    %label{:for => 'clinicians_search'} Search for an existing clinician
-    = text_field_tag('clinicians_search')
-    = image_tag('redbox_spinner.gif', :size => '16x16', :alt => 'Searching...', :id=>'clinicians_search_spinner', :style=>'display: none;')
-    .auto_complete{:id => 'clinicians_search_choices'}
-    = auto_complete_field('clinicians_search', {:select => 'last_name', :param_name=>'last_name', :update => 'clinicians_search_choices', :indicator => 'clinicians_search_spinner', :method => 'get', :url => {:action => 'auto_complete_for_clinicians_search'}, :after_update_element => clinician_select_callback(:update => 'existing_clinicians', :url => {:action => :clinicians_selection})})
+    = live_search('Search for an existing clinician', :search_field => 'clinicians_search', :results => 'existing_clinicians', :select => 'last_name')
   #existing_clinicians
     = render :partial => "events/clinician_show", :collection => @event.clinicians.collect {|c| c.secondary_entity.person_temp} 
-
 %p{:style => "clear: both;"}= add_clinician_link "Add a clinician"
 
