@@ -261,8 +261,8 @@ class Form < ActiveRecord::Base
       form_file_name = "form"
       form_elements_file_name = "elements"
     
-      open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
-      open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.patched_array_to_json(:methods => [:type, :question]) }
+      File::open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
+      File::open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.patched_array_to_json(:methods => [:type, :question]) }
 
       File.delete(zip_file_path) if File.file?(zip_file_path)
 
@@ -285,8 +285,7 @@ class Form < ActiveRecord::Base
   def self.import(form_upload)
     base_path = "/tmp/"
     uploaded_file_name = form_upload.original_filename
-    open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
-
+    File::open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
     Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
       import_form(zip.read("form"), zip.read("elements"))
     end
@@ -325,12 +324,10 @@ class Form < ActiveRecord::Base
   # Builds an array of structural error messages. Returns an empty array if all
   #  is well.  Does not go against the cache and does not utilize the
   #  ActiveRecord::Validations#errors array.
-  #
-  # Offloads non-form-specific validation to FormElement.structural_errors
   def structural_errors
-    structural_errors = form_base_element.structural_errors
-
+    structural_errors = []
     structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
+    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where form_id = #{self.id} and lft > rgt;").size > 0
     
     if form_base_element.children_count == 3
       structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].attributes["type"] == "InvestigatorViewElementContainer"

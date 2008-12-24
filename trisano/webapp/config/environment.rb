@@ -76,8 +76,8 @@ Rails::Initializer.run do |config|
     require "blankable.rb"
     require "extend_better_nested_set.rb"
     require 'export/cdc'
-    require "routing/state"
     require 'utilities'
+    require "routing/state"
     require 'will_paginate'
   end
 
