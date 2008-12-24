@@ -117,3 +117,14 @@ hep_multi_line:
    length_to_output: '20'
    data_type: 'multi_line_text'
 
+birth_gender_id:
+  id: 14
+  export_name_id: 1
+  type_data: 'CORE'
+  export_column_name: 'SEX'
+  table_name: 'people'
+  column_name: 'birth_gender_id'
+  is_required: 'N'
+  start_position: 43
+  length_to_output: 1
+  name: 'SEX'

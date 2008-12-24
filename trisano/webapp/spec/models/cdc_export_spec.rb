@@ -186,42 +186,42 @@ describe CdcExport do
       end
     end
 
-    it "should display sex as 'U' for unknown genders" do
+    it "should display sex as '9' for unknown genders" do
       @event_hash['active_patient']['person']['birth_gender_id'] = nil
       with_cdc_records do |records|
-        records[0].first.to_cdc[42...43].should == 'U'
+        records[0].first.to_cdc[42...43].should == '9'
       end
     end
 
-    it "should display sex as a single char code" do
+    it "should display female as '2'" do
       with_cdc_records do |records|
-        records[0][0].to_cdc[42...43].should == 'F'
+        records[0][0].to_cdc[42...43].should == '2'
       end
     end
 
-    it "should display an unknown race as 'U'" do
+    it "should display an unknown race as '9'" do
       @event_hash['active_patient']['race_ids'] = nil
       with_cdc_records do |records|
-        records[0].first.to_cdc[43...44].should == 'U'
+        records[0].first.to_cdc[43...44].should == '9'
       end
     end
 
     it "should display race as a 1 digit code" do
       with_cdc_records do |records|
-        records[0].first.to_cdc[43...44].should == 'W'
+        records[0].first.to_cdc[43...44].should == '5'
       end
     end        
 
-    it "should displat an unknown ethinicity as 'U'" do
+    it "should displat an unknown ethinicity as '9'" do
       @event_hash['active_patient']['person']['ethnicity_id'] = nil
       with_cdc_records do |records|
-        records[0].first.to_cdc[44...45].should == 'U'
+        records[0].first.to_cdc[44...45].should == '9'
       end
     end
 
     it "should display ethnicity as a 1 char code" do
       with_cdc_records do |records|
-        records[0][0].to_cdc[44...45].should == 'N'
+        records[0][0].to_cdc[44...45].should == '2'
       end
     end
 

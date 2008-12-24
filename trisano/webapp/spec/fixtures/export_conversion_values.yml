@@ -14,13 +14,13 @@ race_white_export_value:
   id: 3
   export_column_id: 15
   value_from: 'W'
-  value_to:   'W'
+  value_to:   '5'
 
 ethnicity_non_hispanic_value:
   id: 4
   export_column_id: 16
   value_from: 'NH'
-  value_to:   'N'
+  value_to:   '2'
 
 case_status_probable_value:
   id: 5
@@ -125,3 +125,8 @@ multiline_format:
   value_to: '99999999999999999999'
   sort_order: 
   
+gender_female:
+  id: 20
+  export_column_id: 14
+  value_from: 'F'
+  value_to: '2'  

@@ -223,53 +223,65 @@
    value_from: 
    value_to: '999'
 
+ - export_column_name: 'SEX'
+   value_from: 'M'
+   value_to: '1'
+
+ - export_column_name: 'SEX'
+   value_from: 'F'
+   value_to: '2'
+
+ - export_column_name: 'SEX'
+   value_from: 'UNK'
+   value_to: '9'
+
  - export_column_name: 'RACE'
    value_from: 'B'
-   value_to: 'B'
+   value_to: '3'
 
  - export_column_name: 'RACE'
    value_from: 'AA'
-   value_to: 'N'
+   value_to: '1'
 
  - export_column_name: 'RACE'
    value_from: 'A'
-   value_to: 'A'
+   value_to: '2'
 
  - export_column_name: 'RACE'
    value_from: 'AK'
-   value_to: 'N'
+   value_to: '1'
 
  - export_column_name: 'RACE'
    value_from: 'UNK'
-   value_to: 'U'
+   value_to: '9'
 
  - export_column_name: 'RACE'
    value_from: 'H'
-   value_to: 'A'
+   value_to: '2'
 
  - export_column_name: 'RACE'
    value_from: 'W'
-   value_to: 'W'
+   value_to: '5'
 
  - export_column_name: 'ETHNICITY'
    value_from: 'H'
-   value_to: 'H'
+   value_to: '1'
 
  - export_column_name: 'ETHNICITY'
    value_from: 'UNK'
-   value_to: 'U'
+   value_to: '9'
   
  - export_column_name: 'ETHNICITY'
    value_from: 'O'
-   value_to: 'U'
+   value_to: '2'
 
  - export_column_name: 'ETHNICITY'
    value_from: 'NH'
-   value_to: 'N'
+   value_to: '2'
 
  - export_column_name: 'ETHNICITY'
    value_from: 'U'
-   value_to: 'U'
+   value_to: '9'
 
  - export_column_name: 'CASESTATUS'
    value_from: 'S'
