@@ -6,7 +6,7 @@ NUM_CALLS=50
 TIMEOUT=15
 THINKTIMEOUT=15
 
-echo "starting sequential 1 request @ a time"
+echo "starting sequential 1 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT > $4-rate0.output
 echo "completed 1 @ time"
 sleep $5
@@ -14,39 +14,39 @@ echo "starting 1"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=1 > $4-rate1.output
 echo "completed 1"
 sleep $5
-echo "starting 2 request @ a time"
+echo "starting 2 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=2 > $4-rate2.output
 echo "completed 2"
 sleep $5
-echo "starting 3 request @ a time"
+echo "starting 3 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=3 > $4-rate3.output
 echo "completed 3"
 sleep $5
-echo "starting 4 request @ a time"
+echo "starting 4 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=4 > $4-rate4.output
 echo "completed 4"
 sleep $5
-echo "starting 5 request @ a time"
+echo "starting 5 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=5 > $4-rate5.output
 echo "completed 5"
 sleep $5
-echo "starting 6 request @ a time"
+echo "starting 6 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=6 > $4-rate6.output
 echo "completed 6"
 sleep $5
-echo "starting 7 request @ a time"
+echo "starting 7 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=7 > $4-rate7.output
 echo "completed 7"
 sleep $5
-echo "starting 8 request @ a time"
+echo "starting 8 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=8 > $4-rate8.output
 echo "completed 8"
 sleep $5
-echo "starting 9 request @ a time"
+echo "starting 9 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=9 > $4-rate9.output
 echo "completed 9"
 sleep $5
-echo "starting 10 request @ a time"
+echo "starting 10 request per second"
 httperf -v --server=$1 --port=$2 --hog −−session−cookie --wsesslog=$3,0,$4 --timeout=$TIMEOUT --think-timeout=$TIMEOUT  --rate=10 > $4-rate10.output
 echo "completed 10"
 
