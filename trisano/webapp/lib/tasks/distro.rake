@@ -40,6 +40,7 @@ namespace :trisano do
       @basicauth = config['basicauth'] unless validate_config_attribute(config, 'basicauth')
       @min_runtimes = config['min_runtimes'] unless validate_config_attribute(config, 'min_runtimes')
       @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
+      @runtime_timeout = config['runtime_timeout'] unless validate_config_attribute(config, 'runtime_timeout')
       @dump_file = config['dump_file_name'] 
       ENV["PGPASSWORD"] = @priv_password 
     end
@@ -221,7 +222,7 @@ namespace :trisano do
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes}"
+      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
       FileUtils.mv('trisano.war', '../distro')
       puts "Success packaging trisano.war"
     end

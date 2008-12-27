@@ -76,9 +76,9 @@ Warbler::Config.new do |config|
   # Control the pool of Rails runtimes. Leaving unspecified means
   # the pool will grow as needed to service requests. It is recommended
   # that you fix these values when running a production server!
-  config.webxml.jruby.min.runtimes = ENV['min_runtimes'] ||= '3'
-  config.webxml.jruby.max.runtimes = ENV['max_runtimes'] ||= '10'
-  config.webxml.jruby.runtime.timeout.sec = '5'
+  config.webxml.jruby.min.runtimes = ENV['min_runtimes'] ||= '2'
+  config.webxml.jruby.max.runtimes = ENV['max_runtimes'] ||= '5'
+  config.webxml.jruby.runtime.timeout.sec = ENV['runtime_timeout'] ||= '5'
 
   # JNDI data source name
   # config.webxml.jndi = 'jdbc/rails'

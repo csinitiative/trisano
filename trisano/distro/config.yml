@@ -9,6 +9,7 @@ priv_passwd: password # Privileged user's password (used for upgrade db script)
 trisano_uname: trisano_production_user # trisano application username (used by package app script)
 trisano_user_passwd: password # trisano application user password (used by package app script)
 min_runtimes: 5 # minimum number of trisano runtimes 
-max_runtimes: 10 # maximum number of trisano runtimes 
+max_runtimes: 5 # maximum number of trisano runtimes 
+runtime_timeout: 5 # number of seconds that web app thread should wait before generating HTTP 503 and informing user to try again
 dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
 
