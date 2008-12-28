@@ -40,12 +40,12 @@ module Export
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
         if export_attributes_changed?(old_attributes)
-          self.ibis_updated_at = self.cdc_updated_at = Date.today
+          self.ibis_update = self.cdc_update = true
         end
         # IBIS export is also interested in a few more
-         unless self.ibis_updated_at
+         unless self.ibis_update 
           if ibis_attributes_changed?(old_attributes)
-            self.ibis_updated_at = Date.today
+            self.ibis_update = true
           end
         end
       end

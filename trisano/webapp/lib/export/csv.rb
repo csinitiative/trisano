@@ -315,6 +315,7 @@ module Export
           event_data << ["patient_review_completed_UDOH_date", "review_completed_UDOH_date"]
 
           event_data << ["patient_investigator", "investigator.best_name if investigator"]
+          event_data << ["patient_sent_to_cdc", "sent_to_cdc"]
 
           event_data << ["acuity", "acuity"]
           
