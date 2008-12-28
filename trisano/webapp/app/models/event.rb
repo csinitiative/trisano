@@ -513,6 +513,9 @@ class Event < ActiveRecord::Base
     if self.deleted_at.nil?
       self.deleted_at = Time.new
       self.save!
+      # Go back to this event's parent (if any), loop through it's participations, and sever the one that is related to this event.
+      # DEBT: Starting to get ugly.  We need to have just one reference from an event to a related event.
+      self.parent_event.participations.each { |participation| participation.destroy if participation.participating_event == self }
       self.child_events.each { |child| child.transactional_soft_delete }
       true
     else
