@@ -23,7 +23,9 @@
 
 - core_element :places, f, :vert do
   %div{:id => 'place_exposures'}
-    -place_exposures = (event.place_exposures.size > 0 ? event.place_exposures : [Participation.new_exposure_participation])
-    =render :partial => 'events/editable_place_exposure', :collection => place_exposures, :locals => {:f => f, :event => event}
+    = live_search('Search for an existing place', :search_field => 'places_search', :results => 'existing_places', :select => 'place_name')
+    #existing_places
+      -place_exposures = (event.place_exposures.size > 0 ? event.place_exposures : [Participation.new_exposure_participation])
+      =render :partial => 'events/editable_place_exposure', :collection => place_exposures, :locals => {:f => f, :event => event}
   %span{:style => "clear: both; padding-top: 20px"}
     =add_place_exposure_link "New Place Exposure"

@@ -960,6 +960,36 @@ describe MorbidityEvent do
         end    
             
       end
+      
+      describe "Receiving a new place exposure that refers to an existing place" do
+        before(:each) do
+          @date = 'August 10, 2008'
+          new_place_exposure_hash = {
+            "new_place_exposure_attributes" => 
+              [
+              {'entity_id' => places(:Davis_Nat).entity_id, 'date_of_exposure' => @date}
+            ]
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_place_exposure_hash))
+        end
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save!}.should change {Participation.count}.by(2)
+          @event.participations.find_by_role_id(codes(:participant_place_exposure).id).should_not be_nil
+        end
+
+        it "should not create a new place" do
+          lambda {@event.save}.should_not change {Place.count}
+        end
+        
+        it "should refer to the existing place" do
+          @event.place_exposures.first.secondary_entity.place_temp.name.should == places(:Davis_Nat).name
+          participation = @event.place_exposures.first
+          participation.participations_place.date_of_exposure.should == Date.parse(@date)
+          place = participation.secondary_entity.place_temp
+          place.place_type.code_description.should == 'Other'
+        end
+      end
 
       describe "Receiving multiple new place exposures" do
         before(:each) do
@@ -988,21 +1018,27 @@ describe MorbidityEvent do
         before(:each) do
           @date = 'August 8, 2008'
           @existing_place_exposure_hash = {
-            "existing_place_exposure_attributes" => {"#{places(:Davis_Nat).id}" => {"name" => "Davis Hot Springs", 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => @date}}
+            "existing_place_exposure_attributes" => {"#{participations(:marks_place_exposure).id}" => {"name" => "Davis Hot Springs", 'place_type_id' => codes(:place_type_other).id, 'date_of_exposure' => @date}}
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
-        it 'should update the existing place exposure' do
-          @event.place_exposures.first.secondary_entity.place_temp.name.should == "Davis Natatorium"
+        it 'should update the date of exposure' do
+          @event.place_exposures.first.secondary_entity.place_temp.name.should == places(:Davis_Nat).name
           lambda {@event.update_attributes(@existing_place_exposure_hash)}.should_not change {Participation.count}
           participation = @event.place_exposures.first
           participation.participations_place.date_of_exposure.should == Date.parse(@date)
+        end
+        
+        it 'should not update the place details' do
+          @event.place_exposures.first.secondary_entity.place_temp.name.should == places(:Davis_Nat).name
+          lambda {@event.update_attributes(@existing_place_exposure_hash)}.should_not change {Participation.count}
+          participation = @event.place_exposures.first
           place = participation.secondary_entity.place_temp
-          place.name.should == "Davis Hot Springs"
+          place.name.should_not eql("Davis Hot Springs")
         end
       end
-
+      
       describe 'Receiving an empty place exposure hash' do
         before(:each) do
           @existing_place_exposure_hash = {
@@ -1483,10 +1519,10 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]},
-                                             "unique_string_2" => {'name' => 'Merck', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'collection_date' => Date.today.months_ago(18)}]}
-                                            }
+            "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'collection_date' => Date.today.years_ago(1)}]},
+          "unique_string_2" => {'name' => 'Merck',
+            "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'collection_date' => Date.today.months_ago(18)}]}
+        }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -1503,10 +1539,10 @@ describe MorbidityEvent do
 
       it 'should use the earliet lab test date' do
         @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]},
-                                             "unique_string_2" => {'name' => 'Merck', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18)}]}
-                                            }
+            "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 'lab_test_date' => Date.today.years_ago(1)}]},
+          "unique_string_2" => {'name' => 'Merck',
+            "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 'lab_test_date' => Date.today.months_ago(18)}]}
+        }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -1515,14 +1551,14 @@ describe MorbidityEvent do
 
       it 'should use the earliet of all lab dates' do
         @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'pos', 
-                                                                                                    'lab_test_date' => Date.today.years_ago(1), 
-                                                                                                    'collection_date' => Date.today.years_ago(1)}]},
-                                             "unique_string_2" => {'name' => 'Merck', 
-                                                                   "new_lab_result_attributes" => [{'lab_result_text' => 'neg', 
-                                                                                                    'lab_test_date' => Date.today.months_ago(18), 
-                                                                                                    'collection_date' => Date.today.years_ago(3)}]}
-                                            }
+            "new_lab_result_attributes" => [{'lab_result_text' => 'pos',
+                'lab_test_date' => Date.today.years_ago(1),
+                'collection_date' => Date.today.years_ago(1)}]},
+          "unique_string_2" => {'name' => 'Merck',
+            "new_lab_result_attributes" => [{'lab_result_text' => 'neg',
+                'lab_test_date' => Date.today.months_ago(18),
+                'collection_date' => Date.today.years_ago(3)}]}
+        }
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 11
@@ -1812,8 +1848,8 @@ describe MorbidityEvent do
 
     it "should sort appropriately" do
       @user.stub!(:jurisdiction_ids_for_privilege).and_return([places(:Southeastern_District).entity_id, 
-                                                               places(:Davis_County).entity_id, 
-                                                               places(:Summit_County).entity_id])
+          places(:Davis_County).entity_id,
+          places(:Summit_County).entity_id])
 
       @event_hash['event_status'] = 'NEW'
       @event_hash['disease'] = {'disease_id' => diseases(:chicken_pox).id }

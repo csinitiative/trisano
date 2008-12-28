@@ -20,10 +20,9 @@
   %fieldset.list-of-forms.form
     %legend
       Forms in Use
-    %small (click to view)
     - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
       %p 
-        %em none
+        %em None
     - else
       %ul{:id => "investigation_form_list", :style => 'margin-bottom: 10px'}
         - form_count = 0

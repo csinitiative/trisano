@@ -3,19 +3,29 @@
   -prefix = event_prefix_for_multi_models(new_or_existing, "_place_exposure_attributes")
   -if editable_place_exposure.secondary_entity
     -place = editable_place_exposure.secondary_entity.place_temp
-    -fields_for prefix + "[]", place, :builder => ExtendedFormBuilder do |pe_form|
-      -core_element :editable_place_exposure, pe_form, :horiz do
-        =pe_form.label(:name)
-        =pe_form.core_text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
-      -core_element :editable_place_exposure, pe_form, :horiz do
-        =pe_form.label(:place_type_id, 'Type')
-        =pe_form.dropdown_code_field(:place_type_id, 'placetype')
-    -fields_for prefix + "[#{place.id}]", editable_place_exposure.participations_place, :builder => ExtendedFormBuilder do |pe_form|
-      -core_element :editable_place_exposure, pe_form, :horiz do
-        =pe_form.label(:date_of_exposure)
-        =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+    -disallow_place_edit = ((new_or_existing == "existing") || (new_or_existing == "new" && !place.entity_id.blank?))
+
+    -fields_for prefix + "[#{editable_place_exposure.id}]", place, :builder => ExtendedFormBuilder do |place_form|
+      =hidden_field_tag("#{prefix}[#{editable_place_exposure.id}][entity_id]", place.entity_id)
+      %span{:class => 'horiz'}
+        =place_form.label(:name)
+        -if disallow_place_edit
+          =h(place.name)
+        - else
+          =place_form.text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
+      %span{:class => 'horiz'}
+        =place_form.label(:place_type_id, 'Type')
+        -if disallow_place_edit
+          = h(place.place_type.code_description) unless place.place_type.nil?
+        - else
+          =place_form.dropdown_code_field(:place_type_id, 'placetype')
+
+    -fields_for prefix + "[#{editable_place_exposure.id}]", editable_place_exposure.participations_place, :builder => ExtendedFormBuilder do |pp_form|
       %span.horiz
-        =pe_form.label('&nbsp;')
+        =pp_form.label(:date_of_exposure)
+        =pp_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+      %span.horiz
+        =pp_form.label('&nbsp;')
         =link_to("Edit place details", edit_place_event_path(editable_place_exposure.participating_event_id), {:id => "edit-place-event"}) unless editable_place_exposure.participating_event_id.nil?
         =link_to_function image_tag('delete.png', :border => 0), "$(this).up('.place_exposure').remove()"
       %hr

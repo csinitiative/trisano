@@ -46,7 +46,7 @@ class EventsController < ApplicationController
                                         AND code_name = 'lab_test_type' 
                                         ORDER BY sort_order 
                                         LIMIT 10", 
-                                        '%' + params[:test_type].downcase + '%'])
+        '%' + params[:test_type].downcase + '%'])
 
     render :inline => "<%= auto_complete_result(@items, 'code_description') %>"
   end
@@ -57,7 +57,7 @@ class EventsController < ApplicationController
                                         WHERE LOWER(lab_result_text) LIKE ? 
                                         ORDER BY lab_result_text 
                                         LIMIT 10", 
-                                        '%' + params[:lab_result].downcase + '%'])
+        '%' + params[:lab_result].downcase + '%'])
 
     render :inline => "<%= auto_complete_result(@items, 'lab_result_text') %>"
   end
@@ -68,7 +68,7 @@ class EventsController < ApplicationController
                                         WHERE LOWER(treatment) LIKE ? 
                                         ORDER BY treatment 
                                         LIMIT 10", 
-                                        '%' + params[:treatment].downcase + '%'])
+        '%' + params[:treatment].downcase + '%'])
 
     render :inline => "<%= auto_complete_result(@items, 'treatment') %>"
   end
@@ -87,6 +87,22 @@ class EventsController < ApplicationController
   def clinicians_search_selection
     @clinician = Person.find(params[:id])
     render :partial => "events/clinician_show", :layout => false, :locals => {:clinician_show => @clinician} 
+  end
+  
+  def auto_complete_for_places_search
+    @places = Place.find(:all, :select => "entity_id, name, place_type_id",
+      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN
+                       (SELECT id FROM codes WHERE code_name = 'placetype'  and the_code != 'J')", params[:place_name].downcase + '%'],
+      :order => "name ASC",
+      :limit => 10
+    )
+    render :partial => "events/places_search", :layout => false, :locals => {:places => @places}
+  end
+
+  def places_search_selection
+    @place = Place.find_by_entity_id(params[:id])
+    @place_exposure = Participation.new_exposure_participation
+    render :partial => "events/place_exposures_from_live_search", :layout => false, :locals => {:place_show => @place, :place_exposure => @place_exposure} 
   end
 
   # This action is for development/testing purposes only.  This is not a "real" login action

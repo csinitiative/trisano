@@ -22,7 +22,6 @@ class MorbidityEvent < HumanEvent
 
   def self.new_event_tree()
     event = MorbidityEvent.new
-    
     event.patient = Participation.new_patient_participation_with_address_and_phone
     event.jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
     event.build_disease_event
@@ -89,18 +88,23 @@ class MorbidityEvent < HumanEvent
       next if attributes.values_blank?
       place_exposure_participation = place_exposures.build(:role_id => Event.participation_code('Place Exposure'))
       place_exposure_participation.build_participations_place(:date_of_exposure => attributes.delete('date_of_exposure'))
-      place_exposure_entity = place_exposure_participation.build_secondary_entity
-      place_exposure_entity.entity_type = 'place'
-      place_exposure_entity.build_place_temp(attributes)
+
+      if attributes["entity_id"].blank?
+        place_exposure_entity = place_exposure_participation.build_secondary_entity
+        place_exposure_entity.entity_type = 'place'
+        place_exposure_entity.build_place_temp(attributes)
+      else
+        place_exposure_entity = Entity.find(attributes["entity_id"])
+        place_exposure_participation.secondary_entity = place_exposure_entity
+      end
     end
   end
 
   def existing_place_exposure_attributes=(place_exposure_attributes)
     place_exposures.reject(&:new_record?).each do |place_exposure|
-      attributes = place_exposure_attributes[place_exposure.secondary_entity.place_temp.id.to_s]
+      attributes = place_exposure_attributes[place_exposure.id.to_s]
       if attributes && !attributes.values_blank?
-        place_exposure.participations_place.date_of_exposure = attributes.delete('date_of_exposure')
-        place_exposure.secondary_entity.place_temp.attributes = attributes
+        place_exposure.participations_place.date_of_exposure = attributes.delete("date_of_exposure")
       else
         place_exposure.participating_event.soft_delete if place_exposure.participating_event
         place_exposures.delete(place_exposure)
@@ -134,10 +138,9 @@ class MorbidityEvent < HumanEvent
         new_agency.entity_type = 'place'
         new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
         self.reporting_agency.secondary_entity = new_agency
-        p self.reporting_agency.secondary_entity.place_temp
       else
         # Otherwise assign the (now) existing entity id to the participation
-        self.reporting_agency.secondary_entity_id = entity_id 
+        self.reporting_agency.secondary_entity_id = entity_id
       end
     else
       
@@ -208,18 +211,18 @@ class MorbidityEvent < HumanEvent
     jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
 
     transaction do
-      # Handle the primary jurisdiction 
-      # 
+      # Handle the primary jurisdiction
+      #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == active_jurisdiction.secondary_entity_id
         proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
         raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.current_place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
         self.active_jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-        self.update_attributes(:event_queue_id => nil, 
-                               :investigator_id => nil, 
-                               :investigation_started_date => nil, 
-                               :investigation_completed_LHD_date => nil, 
-                               :review_completed_UDOH_date => nil)
+        self.update_attributes(:event_queue_id => nil,
+          :investigator_id => nil,
+          :investigation_started_date => nil,
+          :investigation_completed_LHD_date => nil,
+          :review_completed_UDOH_date => nil)
         self.add_note(self.instance_eval(Event.states[self.event_status].note_text) + "\n#{note}")
       end
 
@@ -284,7 +287,7 @@ class MorbidityEvent < HumanEvent
     end
 
     if options[:do_not_show_deleted]
-      conditions[0] += " AND deleted_at IS NULL" 
+      conditions[0] += " AND deleted_at IS NULL"
     end
 
     order_by = case options[:order_by]
@@ -371,7 +374,7 @@ class MorbidityEvent < HumanEvent
   def self.get_allowed_states(query_states=nil)
     system_states = Event.get_state_keys
     return system_states if query_states.nil?
-    query_states.collect! { |state| state.upcase } 
+    query_states.collect! { |state| state.upcase }
     system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
   end
 

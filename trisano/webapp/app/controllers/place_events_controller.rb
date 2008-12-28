@@ -42,11 +42,7 @@ class PlaceEventsController < EventsController
   end
 
   def update
-    prep_multimodels
-
     go_back = params.delete(:return)
-    
-    # Assume that "save & exits" represent a 'significant' update
     @event.new_note_attributes = {:note => "Edited event"} unless go_back
 
     respond_to do |format|
@@ -70,9 +66,4 @@ class PlaceEventsController < EventsController
     end
   end
 
-  private
-
-    def prep_multimodels
-      params[:place_event][:active_place][:existing_telephone_attributes] ||= {}
-    end
 end
