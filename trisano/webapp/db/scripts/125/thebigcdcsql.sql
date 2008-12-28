@@ -1,6 +1,5 @@
-drop view v_export_cdc;
 SET datestyle TO MDY;
-CREATE VIEW v_export_cdc AS
+CREATE OR REPLACE VIEW v_export_cdc AS
 SELECT  DISTINCT
   cast(exp_rectype as char(1))
 , cast(exp_update as char(1))

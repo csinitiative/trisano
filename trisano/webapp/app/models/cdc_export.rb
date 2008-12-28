@@ -17,17 +17,25 @@
 class CdcExport < ActiveRecord::Base
 
   class << self
-    def weekly_cdc_export
-      where = [%Q|cdc_update=true AND (("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
-      where << Disease.disease_status_where_clause
-      where << "exp_deleted_at IS NULL"
-      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
+    def weekly_cdc_export(mmwr_week)
+
+
+      HERE (passing in mmwr_week.  Need to worry about week one's previous mmwr week AND YEAR)
+
+
+      where = %Q|(("mmwr_week"=#{mmwr_week} OR "mmwr_week"=#{mmwr_week - 1}) AND "mmwr_year"=#{this_mmwr_year})|
+      where << " OR (cdc_updated_at BETWEEN '#{Mmwr.new(Date.today - 7).mmwr_week_range.start_date}' AND '#{Mmwr.new.mmwr_week_range.end_date}')"
+      # The following issues 133 separate selects to generate the where clause component.  What's it doing?
+      where << (Disease.disease_status_where_clause || "")
+      where << " AND exp_deleted_at IS NULL"
+
+      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where})")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
 
-    def weekly_cdc_deletes
-      where = ['(cdc_update=true AND sent_to_cdc=true) AND ((exp_deleted_at IS  NOT NULL)']      
+    def weekly_cdc_deletes(mmwr_week)
+      where = ['(cdc_updated_at IS NOT NULL) AND ((exp_deleted_at IS NOT NULL)']      
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
@@ -55,12 +63,6 @@ class CdcExport < ActiveRecord::Base
       records
     end
 
-    # set updated to false and sent to true for all cdc records
-    def reset_sent_status(cdc_records)
-      event_ids = cdc_records.compact.collect {|record| record.event_id}
-      Event.update_all('cdc_update=false, sent_to_cdc=true', ['id IN (?)', event_ids])
-    end
-
     private
 
     def this_mmwr_week
@@ -69,7 +71,8 @@ class CdcExport < ActiveRecord::Base
     end
 
     def last_mmwr_week
-      this_mmwr_week - 1
+      mmwr = Mmwr.new(Date.today - 7)
+      mmwr.mmwr_week
     end
 
     def this_mmwr_year
