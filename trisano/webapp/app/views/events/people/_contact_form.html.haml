@@ -17,8 +17,9 @@
 
 %fieldset
   =render :partial => 'events/people/person_legend'
+  - event_data = @event.active_patient.participations_contact || ParticipationsContact.new
   %div{:id => 'person_form'}
-    =error_messages_for :object => [entity_data.person, @event.active_patient.participations_contact]
+    =error_messages_for :object => [entity_data.person, event_data]
     -f.fields_for(:active_primary_entity, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient|
       =render :partial => 'events/people/name_form', :locals => {:f => f, :fb_form => current_patient, :event => event, :entity_data => entity_data}
       =render :partial => 'events/people/address_form', :locals => {:f => f, :fb_form => current_patient, :event => event, :entity_data => entity_data} 
@@ -26,5 +27,5 @@
       =render :partial => 'events/people/phones_form', :locals => {:f => f, :fb_form => current_patient, :event => event, :entity_data => entity_data, :namespace => 'active_patient'} 
       =render :partial => 'events/people/demographics_form', :locals => {:f => f, :fb_form => current_patient, :event => event, :entity_data => entity_data} 
 
-    -f.fields_for(:participations_contact, @event.active_patient.participations_contact, :builder => ExtendedFormBuilder) do |event_info|
+    -f.fields_for(:participations_contact, event_data, :builder => ExtendedFormBuilder) do |event_info|
       =render :partial => "events/people/disposition_form", :locals => { :f => event_info }
