@@ -26,7 +26,6 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.open "/trisano/cmrs"
     @browser.wait_for_page_to_load($load_time)
     @orginal_place_name = "Davis Nat"
-    @new_place_name = "Davis Natatorium"
     @date_of_exposure = 10.days.ago.strftime('%B %d, %Y')
     @new_date_of_exposure = 7.days.ago.strftime('%B %d, %Y')
   end
@@ -38,7 +37,7 @@ describe 'Adding multiple place exposures to a CMR' do
     @new_date_of_exposure = nil
   end
 
-  it "should allow a single place exposure to be saved w/ a new CMR" do
+  it "should allow a single place exposure to be saved w/a new CMR" do
     click_nav_new_cmr(@browser).should be_true
     @browser.type "morbidity_event_active_patient__person_last_name", "multi_place_exposure"
     @browser.type "morbidity_event_new_place_exposure_attributes__name", @orginal_place_name
@@ -54,17 +53,14 @@ describe 'Adding multiple place exposures to a CMR' do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.type "//div[@class='place_exposure'][1]//input[contains(@id, '_name')]", @new_place_name
     @browser.type "//div[@class='place_exposure'][1]//input[contains(@id, '_date_of_exposure')]", @new_date_of_exposure
     save_cmr(@browser).should be_true
     click_core_tab(@browser, "Epidemiological")
-    @browser.is_text_present(@new_place_name).should be_true
-    @browser.is_text_present('Pool').should be_true
     @browser.is_text_present(@new_date_of_exposure).should be_true
     @browser.is_text_present(@date_of_exposure).should_not be_true
   end
 
-  it "should adding a new place exposure from the CMR's edit mode" do
+  it "should allow adding a new place exposure from the CMR's edit mode" do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
@@ -75,14 +71,13 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Food Establishment').should be_true
     @browser.is_text_present('The Stuffed Mushroom').should be_true
-    @browser.is_text_present(@new_date_of_exposure).should be_true
   end
 
   it "should delete a place exposure from the CMR's edit mode" do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.click "//div[@id='epi_tab']//div[@id='place_exposures']/div[1]/span[3]/span/a[2]/img"
+    @browser.click "//div[@id='epi_tab']//div[@id='existing_places']/div[1]/span[4]/a[2]/img"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Pool').should be_true
@@ -94,7 +89,6 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.click "link=Edit place details"
     @browser.wait_for_page_to_load
     # Address
-    @browser.select "place_event_active_place__place_place_type_id", "label=Other"
     @browser.type "place_event_active_place__address_street_number", "555"
     @browser.type "place_event_active_place__address_street_name", "Main St."
     @browser.type "place_event_active_place__address_unit_number", "D"
