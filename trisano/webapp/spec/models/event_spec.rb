@@ -1556,6 +1556,15 @@ describe MorbidityEvent do
 
     describe 'generating age at onset from earliest encounter date' do
 
+      it 'should use the disease onset date' do
+        onset = Date.today.years_ago(3)
+        @event_hash['disease'] = {'disease_onset_date' => onset }
+        with_event do |event|
+          event.age_info.age_at_onset.should == 11
+          event.age_info.age_type.code_description.should == 'years'
+        end
+      end        
+
       it 'should use the date the disease was diagnosed' do
         date_diagnosed = Date.today.years_ago(3)
         @event_hash['disease'] = {'date_diagnosed' => date_diagnosed }
@@ -1605,7 +1614,7 @@ describe MorbidityEvent do
         end
       end
 
-      it 'should use the earliet of all lab dates' do
+      it 'should use the earliet lab collection date' do
         @event_hash['new_lab_attributes'] = {"unique_string_1" => {'name' => 'Quest', 
             "new_lab_result_attributes" => [{'lab_result_text' => 'pos',
                 'lab_test_date' => Date.today.years_ago(1),

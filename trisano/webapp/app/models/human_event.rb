@@ -345,22 +345,24 @@ class HumanEvent < Event
 
   def set_age_at_onset
     birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
-    onset = onset_candidate_dates.compact.sort.first
-    # return unless birthdate && onset
+    onset = onset_candidate_dates.compact.first
     self.age_info = AgeInfo.create_from_dates(birthdate, onset)
   end
 
   def onset_candidate_dates
-    dates = [self.event_onset_date]
+    dates = [safe_call_chain(:disease, :disease_onset_date)]
     dates << safe_call_chain(:disease, :date_diagnosed)
+    collections = []
+    test_dates = []
     self.labs.each do |l| 
-      l.lab_results.each do |r| 
-        dates << r.collection_date 
-        dates << r.lab_test_date
-      end
+      l.lab_results.collect{|r| collections << r.collection_date}
+      l.lab_results.collect{|r| test_dates << r.lab_test_date}
     end
-    dates << self.created_at.to_date unless self.created_at.nil?
+    dates << collections.compact.sort
+    dates << test_dates.compact.sort
     dates << self.first_reported_PH_date
-    dates
+    dates << self.event_onset_date
+    dates << self.created_at.to_date unless self.created_at.nil?
+    dates.flatten
   end
 end
