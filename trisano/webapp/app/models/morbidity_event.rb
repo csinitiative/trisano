@@ -127,10 +127,12 @@ class MorbidityEvent < HumanEvent
 
   def update_reporting_agency_with_new(attributes)
     agency = attributes.delete(:name)
+    agency_types = attributes.delete(:agency_types) || []
     self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
     new_agency =  Entity.new
     new_agency.entity_type = 'place'
-    new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
+    new_place = new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
+    agency_types.each { |id| new_place.reporting_agency_types << ReportingAgencyType.new(:code_id => id) }
     self.reporting_agency.secondary_entity = new_agency
   end
 
@@ -138,7 +140,7 @@ class MorbidityEvent < HumanEvent
   def active_reporting_agency=(attributes)
     if attributes.has_key?(:id)
       update_reporting_agency_with_existing(attributes)
-    elsif not attributes[:name].blank? # eventually use has_key? and let validation verify 'blankness'
+    elsif attributes.has_key?(:name)
       update_reporting_agency_with_new(attributes)
     else
       if self.reporting_agency

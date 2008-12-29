@@ -115,5 +115,19 @@ describe Place do
     end
   end
 
+  describe 'reporting agency types' do
+    before :each do
+      @place = Place.new(:name => 'Metroid', :place_type_id => Code.other_place_type_id)
+      @place.reporting_agency_types << ReportingAgencyType.new(:code_id => codes(:place_type_hospital).id)
+      @place.reporting_agency_types << ReportingAgencyType.new(:code_id => codes(:place_type_lab).id)
+    end
+
+    it 'should make a valid description' do
+      lambda { @place.save }.should change{ReportingAgencyType.count}.by(2)
+      @place.agency_types_description.should == 'Hospital / ICP and Laboratory'
+    end
+
+  end
+
 end
 

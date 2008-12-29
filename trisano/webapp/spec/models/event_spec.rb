@@ -1059,7 +1059,7 @@ describe MorbidityEvent do
         before(:each) do
           @date = 'August 10, 2008'
           new_reporter_hash = {
-            "active_reporting_agency" => {:name => 'Agency 1', :last_name => "Starr", :first_name => "Brenda"}
+            "active_reporting_agency" => {:name => 'Agency 1', :last_name => "Starr", :first_name => "Brenda", :agency_types => ['2201', '2203', '2204']}
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_reporter_hash))
         end
@@ -1078,7 +1078,11 @@ describe MorbidityEvent do
         it "should create a new person" do
           lambda {@event.save}.should change {Person.count}.by(2)
           @event.reporter.secondary_entity.person_temp.last_name.should == 'Starr'
-        end    
+        end
+
+        it "should create new reporting agency types" do
+          lambda{@event.save}.should change{ReportingAgencyType.count}.by(3)
+        end
       end
 
       describe "Receiving an existing agency" do

@@ -18,6 +18,8 @@
 class Place < ActiveRecord::Base
   belongs_to :place_type, :class_name => 'Code'
   belongs_to :entity 
+  has_many :reporting_agency_types
+  has_many :agency_types, :through => :reporting_agency_types, :source => :code
 
   validates_presence_of :name
 
@@ -71,10 +73,21 @@ class Place < ActiveRecord::Base
       jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
       jurisdictions
     end
+
+    def agency_type_codes
+      %w(H L C O S DC CF LCF)
+    end
+
+    def agency_types
+      Code.find(:all, :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', agency_type_codes])
+    end
   end
 
   def place_description
     place_type.code_description if place_type
   end
 
+  def agency_types_description
+    agency_types.collect {|type| type.code_description}.sort.to_sentence :skip_last_comma => true
+  end
 end
