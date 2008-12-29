@@ -49,5 +49,3 @@ else
 end
 
 config.logger = DEFAULT_LOGGER
-
-

@@ -136,24 +136,25 @@ module EventsHelper
     end
   end
 
-  def add_clinician_link(name)
-    link_to_function name do |page|
+  def add_clinician_link(name, options={})
+    options = {:id => 'add_clinician_link'}.merge(options)
+    link_to_function name, nil, options do |page|
       page.insert_html :bottom, "clinicians", :partial => 'events/clinician' , :object => Participation.new_clinician_participation
       page << "$$('#morbidity_event_new_clinician_attributes__last_name').last().value=$F('clinicians_search')"
     end
   end
 
-  def add_reporting_agency_link(name, form)
-    link_to_function name do |page|
+  def add_reporting_agency_link(name, form, options={})
+    options = {:id => 'add_reporting_agency_link'}.merge(options)
+    link_to_function name, nil, options do |page|
       page.update_reporting_agency(nil, form)
       page << "$('morbidity_event_active_reporting_agency_name').value=$F('reporting_agency_search')"
     end
   end
 
   def update_reporting_agency(reporting_agency, form=nil)
-    page[:reporting_agency].hide
     page.replace_html(:reporting_agency, :partial => 'events/reporting_agency' , :locals => {:template => form, :reporting_agency => reporting_agency})
-    page.visual_effect :blind_down, :reporting_agency, :duration => 1
+    page.visual_effect :highlight, :reporting_agency, :duration => 3
   end  
 
   def basic_morbidity_event_controls(event, with_show=true, with_export_options=false)

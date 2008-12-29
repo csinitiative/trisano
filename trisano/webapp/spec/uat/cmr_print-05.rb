@@ -55,11 +55,11 @@ describe 'Print CMR page' do
     @browser.click "link=Add a diagnosing facility"
     @browser.select "morbidity_event_new_diagnostic_attributes__secondary_entity_id", "label=American Fork Hospital"
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "//div[@id='diagnostics']/div[2]/span[1]/select", "label=CHRISTUS St Joseph Villa"
+    @browser.select "//div[@id='diagnostics']/div[2]/span[1]/select", "label=Castleview Hospital"
     @browser.click "link=Add a diagnosing facility"
     @browser.select "//div[@id='diagnostics']/div[3]/span[1]/select", "label=Dixie Regional Medical Center"
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "//div[@id='diagnostics']/div[4]/span[1]/select", "label=CHRISTUS St Joseph Villa"
+    @browser.select "//div[@id='diagnostics']/div[4]/span[1]/select", "label=Castleview Hospital"
     @browser.click "link=Add a hospital"
     @browser.select "morbidity_event_new_hospital_attributes__secondary_entity_id", "label=Ashley Regional Medical Center"
     @browser.type "morbidity_event_new_hospital_attributes__admission_date", "1/1/1901"
@@ -72,6 +72,8 @@ describe 'Print CMR page' do
 
     add_treatment(@browser, {:treatment => "White Russian", :treatment_given => "label=Yes", :treatment_date => "1/17/1901"})
     
+    @browser.click "//a[@id='add_clinician_link']"
+    sleep(1)       
     @browser.type "morbidity_event_new_clinician_attributes__last_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__first_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__middle_name", "A"
@@ -181,7 +183,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('2009-12-12').should be_true
     @browser.is_text_present('Unknown').should be_true
     @browser.is_text_present('American Fork Hospital').should be_true
-    @browser.is_text_present('CHRISTUS St Joseph Villa').should be_true
+    @browser.is_text_present('Castleview Hospital').should be_true
     @browser.is_text_present('Dixie Regional Medical Center').should be_true
     @browser.is_text_present('Ashley Regional Medical Center').should be_true
     @browser.is_text_present('1901-01-01').should be_true

@@ -1080,6 +1080,58 @@ describe MorbidityEvent do
           @event.reporter.secondary_entity.person_temp.last_name.should == 'Starr'
         end    
       end
+
+      describe "Receiving an existing agency" do
+        before :each do
+          @date = "August 10, 2008"
+          reporter_hash = {
+            "active_reporting_agency" => {:id => "2", :last_name => "Starr", :first_name => "Brenda"}
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(reporter_hash))
+        end
+
+        it "should create new reporter and reporting agency participations linked to the event" do
+          lambda {@event.save!}.should change {Participation.count}.by(3)
+          @event.participations.find_by_role_id(codes(:participant_reported_by).id).should_not be_nil
+          @event.participations.find_by_role_id(codes(:participant_reporting_agency).id).should_not be_nil
+        end
+
+        it "should not create a new place" do
+          lambda {@event.save}.should_not change {Place.count}
+          @event.reporting_agency.secondary_entity.place_temp.name.should == 'Alta View Hospital'
+        end
+
+      end
+
+      describe "With an existing agency" do
+        before :each do
+          reporter_hash = {
+            "active_reporting_agency" => {:id => "2", :last_name => "Starr", :first_name => "Brenda" }
+          }
+          @event = MorbidityEvent.create(@event_hash.merge(reporter_hash))
+        end 
+        
+        describe "updating" do
+          it 'should not add any new participations' do
+            reporter_hash = {
+              "active_reporting_agency" => {:id => "5", :last_name => "Starr", :first_name => "Brenda" }
+            }
+            lambda {@event.update_attributes(@event_hash.merge(reporter_hash))}.should_not change {Participation.count}
+            @event.reporting_agency.secondary_entity.place_temp.name.should == "Bear River Valley Hospital"
+          end
+        end
+        
+        describe "deleting" do
+          it "should destroy the agency participation" do
+            reporter_hash = {
+              "active_reporting_agency" => { :last_name => "Starr", :first_name => "Brenda" }
+            }
+            lambda {@event.update_attributes(@event_hash.merge(reporter_hash))}.should change {Participation.count}.by(-1)
+            @event.reporting_agency.should be_nil
+          end
+        end
+      end
+
     end
 
     describe "Handling telephone numbers" do

@@ -160,7 +160,8 @@ module TrisanoHelper
         browser.is_element_present("disable_tabs"))
   end
   
-  def click_nav_cmrs(browser)
+  def click_nav_cmrs(browser)b
+
     browser.click 'link=CMRS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
@@ -214,7 +215,8 @@ module TrisanoHelper
   def save_cmr(browser)
     browser.click "save_and_exit_btn"
     browser.wait_for_page_to_load($load_time)    
-    return browser.is_text_present("successfully")
+    browser.is_text_present("successfully").should be_true
+    return true
   end
 
   def save_and_continue(browser)
@@ -267,7 +269,9 @@ module TrisanoHelper
 
   def add_reporting_info(browser, result_attributes)
     click_core_tab(browser, REPORTING)
-    type_field_by_order(browser, "model_auto_completer_tf", 0, result_attributes[:agency])
+    @browser.click("//a[@id='add_reporting_agency_link']")
+    sleep(1)
+    type_field_by_order(browser, "morbidity_event_active_reporting_agency_name", 0, result_attributes[:agency])
     browser.type "morbidity_event_active_reporting_agency_first_name", result_attributes[:first_name]
     browser.type "morbidity_event_active_reporting_agency_last_name", result_attributes[:last_name]
     browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", result_attributes[:phone_type]

@@ -94,6 +94,8 @@ describe 'User functionality for creating and saving CMRs' do
   it 'should save the reporting info' do
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Reporting")
+    @browser.click("//a[@id='add_reporting_agency_link']")
+    sleep(1)
     @browser.type("//input[contains(@name, '[active_reporting_agency][name]')]", 'Happy Jacks Health Store')
     save_cmr(@browser).should be_true
   end

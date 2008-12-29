@@ -20,17 +20,18 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe 'form builder reporting core-field questions for morbidity reports' do
   
   # $dont_kill_browser = true
-    
+   
   [{:name => 'Reporting agency', :tab_name => REPORTING},
-    {:name => 'Reporter first name', :tab_name => REPORTING},
-    {:name => 'Reporter last name', :tab_name => REPORTING},
-    {:name => 'Reporter phone type', :tab_name => REPORTING},
-    {:name => 'Reporter area code', :tab_name => REPORTING},
-    {:name => 'Reporter phone number', :tab_name => REPORTING},
-    {:name => 'Reporter extension', :tab_name => REPORTING}
+   {:name => 'Reporter first name', :tab_name => REPORTING},
+   {:name => 'Reporter last name', :tab_name => REPORTING},
+   {:name => 'Reporter phone type', :tab_name => REPORTING},
+   {:name => 'Reporter area code', :tab_name => REPORTING},
+   {:name => 'Reporter phone number', :tab_name => REPORTING},
+   {:name => 'Reporter extension', :tab_name => REPORTING}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
+      pending 'Reporting agency follow ups need tlc' if test[:name] == 'Reporting agency'
       form_name = get_unique_name(2) + " rp_f"
       cmr_last_name = get_unique_name(1) + " rp_f"
       disease_name = "Rocky Mountain spotted fever"
@@ -48,12 +49,16 @@ describe 'form builder reporting core-field questions for morbidity reports' do
       
       create_basic_investigatable_cmr(@browser, cmr_last_name, disease_name, jurisdiction)
       edit_cmr(@browser)
+      click_core_tab(@browser, test[:tab_name])
+      @browser.click "//a[@id='add_reporting_agency_link']"
+      sleep(1)
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       answer_investigator_question(@browser, before_question, before_answer)
       answer_investigator_question(@browser, after_question, after_answer)
 
       save_cmr(@browser)
+      click_core_tab(@browser, test[:tab_name])
       @browser.is_text_present(before_answer).should be_true
       @browser.is_text_present(after_answer).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true

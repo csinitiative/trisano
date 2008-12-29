@@ -10,5 +10,6 @@
     - else
       = agency_form.hidden_field(:id)
       = reporting_agency.name || "&nbsp;"
-    = link_to_function "Remove", "$(this).up().remove();"
-    %hr
+  = link_to_function "Remove", nil, :id => 'remove_reporting_agency_link' do |page|
+    - page << "$(this).siblings().each(function(s){s.remove()});$(this).remove();"
+  %hr

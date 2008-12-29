@@ -32,7 +32,6 @@ class MorbidityEvent < HumanEvent
     event.diagnosing_health_facilities << Participation.new_diagnostic_participation
     event.contacts << Participation.new_contact_participation
     event.place_exposures << Participation.new_exposure_participation
-    event.reporting_agency = Participation.new_reporting_agency_participation
     event.reporter = Participation.new_reporter_participation
     event.notes.build
     event
@@ -120,37 +119,35 @@ class MorbidityEvent < HumanEvent
     self.reporter
   end
 
-  # This hurts my head
-  def active_reporting_agency=(attributes)
+  def update_reporting_agency_with_existing(attributes)
+    place = Place.find(attributes.delete(:id))
+    self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
+    self.reporting_agency.secondary_entity = place.entity    
+  end
 
-    # Handle the reporting agency.  Note, it's an auto-complete: user might have entered a new one or chosen an existing one.
+  def update_reporting_agency_with_new(attributes)
     agency = attributes.delete(:name)
-    entity_id = attributes.delete('secondary_entity_id')
+    self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
+    new_agency =  Entity.new
+    new_agency.entity_type = 'place'
+    new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
+    self.reporting_agency.secondary_entity = new_agency
+  end
 
-    # First, the reporting agency
-    unless agency.blank?
-      # If there's no reporting agency associated with this event, then build the participation
-      self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
-
-      if entity_id.blank?
-        # The entered agency was not chosen from the autocomplete list, create it
-        new_agency =  Entity.new
-        new_agency.entity_type = 'place'
-        new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
-        self.reporting_agency.secondary_entity = new_agency
-      else
-        # Otherwise assign the (now) existing entity id to the participation
-        self.reporting_agency.secondary_entity_id = entity_id
-      end
+  # hopefully, this will hurt less now
+  def active_reporting_agency=(attributes)
+    if attributes.has_key?(:id)
+      update_reporting_agency_with_existing(attributes)
+    elsif not attributes[:name].blank? # eventually use has_key? and let validation verify 'blankness'
+      update_reporting_agency_with_new(attributes)
     else
-      
-      # The reporting agency is blank and there's an existing agency (i.e., the user blanked out the save value), delete the agency participation
-      unless self.reporting_agency.nil?
-        self.reporting_agency.destroy
+      if self.reporting_agency
+        self.reporting_agency.destroy 
+        self.reporting_agency.reset
       end
-    end
+    end      
 
-    # Now the reporter and reporter phone
+    # Now the reporter and reporter phone (this part still hurts)
 
     # If there is a saved reporter and the user has blanked it out, delete reporter participation
     self.reporter.destroy if attributes.values_blank? && self.reporter
