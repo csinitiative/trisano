@@ -160,8 +160,7 @@ module TrisanoHelper
         browser.is_element_present("disable_tabs"))
   end
   
-  def click_nav_cmrs(browser)b
-
+  def click_nav_cmrs(browser)
     browser.click 'link=CMRS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
@@ -447,6 +446,17 @@ module TrisanoHelper
     id = get_resource_id(browser, name)
     if id > 0 
       browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/push')]"
+      browser.wait_for_page_to_load "30000"
+      return true
+    else
+      return false
+    end
+  end
+  
+    def click_deactivate_form(browser, name)
+    id = get_resource_id(browser, name)
+    if id > 0 
+      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/deactivate')]"
       browser.wait_for_page_to_load "30000"
       return true
     else

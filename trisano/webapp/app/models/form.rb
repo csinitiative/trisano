@@ -145,8 +145,8 @@ class Form < ActiveRecord::Base
         self.status = "Inactive"
         version_to_archive = most_recent_version
         version_to_archive.status = "Archived"
-        self.save
-        version_to_archive.save
+        self.save!
+        version_to_archive.save!
         return true
       end
     rescue Exception => ex
