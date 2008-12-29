@@ -159,6 +159,27 @@ class FormsController < AdminController
       end
     end
   end
+  
+  def deactivate
+    @form = Form.find(params[:id])
+
+    if @form.deactivate
+      respond_to do |format|
+        flash[:notice] = "Form was successfully deactivated"
+        format.html { redirect_to forms_path }
+        format.js   { render(:update) {|page| page.redirect_to forms_path} }
+      end
+    else
+      flash[:error] = "Unable to deactivate the form"
+      respond_to do |format|
+        format.html { redirect_to forms_path }
+        format.js   do
+          @rjs_errors = @form.errors
+          render :template => "rjs-error"
+        end
+      end
+    end
+  end
 
   def rollback
     @form = Form.find(params[:id])

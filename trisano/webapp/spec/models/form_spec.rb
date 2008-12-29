@@ -843,5 +843,44 @@ describe Form do
     end
     
   end
+
+  describe "when deactivating a form" do
+
+    before(:each) do
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements.should be_true
+    end
+
+    it "should not deactivate a form that is not published" do
+      @form.deactivate.should be_nil
+      @form.errors.empty?.should be_false
+    end
+
+    it "should not deactivate a form that is already inactive" do
+      @published_form = @form.publish
+      @published_form.should_not be_nil
+      @form.deactivate.should be_true
+      @form.errors.empty?.should be_true
+      @form.deactivate.should be_nil
+      @form.errors.empty?.should be_false
+    end
+    
+    it "should make the published master copy inactive" do
+      @published_form = @form.publish
+      @published_form.should_not be_nil
+      @form.deactivate.should be_true
+      @form.errors.empty?.should be_true
+      @form.status.should eql("Inactive")
+    end
+
+    it "should archive the live version" do
+      @published_form = @form.publish
+      @published_form.should_not be_nil
+      @form.deactivate.should be_true
+      @form.errors.empty?.should be_true
+      @form.most_recent_version.status.should eql("Archived")
+    end
+    
+  end
     
 end

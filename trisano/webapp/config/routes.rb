@@ -47,7 +47,8 @@ ActionController::Routing::Routes.draw do |map|
     :member => {
     :copy => :post,
     :export => :post,
-    :push => :post
+    :push => :post,
+    :deactivate => :post
   }
 
   map.resources :external_codes

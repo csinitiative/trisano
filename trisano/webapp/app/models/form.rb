@@ -132,7 +132,27 @@ class Form < ActiveRecord::Base
       logger.error ex
       return nil
     end
+  end
+  
+  def deactivate
+    unless self.status == "Published"
+      self.errors.add_to_base("A form must have a status of 'Published' in order to be deactivated.")
+      return nil
+    end
     
+    begin
+      transaction do
+        self.status = "Inactive"
+        version_to_archive = most_recent_version
+        version_to_archive.status = "Archived"
+        self.save
+        version_to_archive.save
+        return true
+      end
+    rescue Exception => ex
+      logger.error ex
+      return nil
+    end
   end
 
   def copy

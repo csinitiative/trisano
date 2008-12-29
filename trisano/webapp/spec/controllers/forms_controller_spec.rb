@@ -774,4 +774,59 @@ describe FormsController do
     end
   end
   
+    describe "handling POST /forms/deactivate" do
+    
+    describe 'on successful deactivate' do
+      
+      before :each do 
+        mock_user
+        @form = mock_model(Form)
+        @form.stub!(:name).and_return("Test Form")
+        @form.stub!(:deactivate).and_return(1)
+        Form.stub!(:find).and_return(@form)
+      end
+      
+      def do_post
+        post :deactivate, :id => '1'
+      end
+
+      it 'should redirect to forms listing' do
+        do_post
+        response.should redirect_to(forms_path)
+      end
+      
+      it 'should populate the flash notice' do
+        do_post
+        flash[:notice].should eql("Form was successfully deactivated")
+      end
+      
+    end
+    
+    describe 'on failed deactivate' do
+      
+      before :each do 
+        mock_user
+        @form = mock_model(Form)
+        @form.stub!(:name).and_return("Test Form")
+        @form.stub!(:deactivate).and_return(nil)
+        Form.stub!(:find).and_return(@form)
+      end
+      
+      def do_post
+        post :deactivate, :id => '1'
+      end
+
+      it 'should redirect to forms listing' do
+        do_post
+        response.should redirect_to(forms_path)
+      end
+      
+      it 'should populate the flash error' do
+        do_post
+        flash[:error].should eql("Unable to deactivate the form") 
+      end
+      
+    end
+  end
+  
 end

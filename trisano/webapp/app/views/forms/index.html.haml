@@ -16,11 +16,6 @@
 - content_for :title do
   Forms
 
-//- content_for :name do
-
-//- content_for :tools do
-//  = link_to 'New form', new_form_path
-
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
@@ -60,6 +55,8 @@
             - if form.status == "Published"
               |
               = link_to 'Push', push_form_path(form), :method => :post
+              |
+              = link_to 'Deactivate', deactivate_form_path(form), :method => :post
         %td
           %ul
             - form.diseases.each do |disease|

@@ -16,9 +16,6 @@
 - content_for :title do
   Form:
   = h @form.name
-  
-//- content_for :name do
-//  = @form.name
 
 - content_for :tools do
   = link_to 'Forms', forms_path
@@ -56,6 +53,8 @@
           - if(@form.status == "Published")
             |
             = link_to 'Push', push_form_path(@form), :method => :post
+            |
+            = link_to 'Deactivate', deactivate_form_path(@form), :method => :post
       %td
         %ul
           - @form.diseases.each do |disease|
