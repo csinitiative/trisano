@@ -20,24 +20,8 @@
       TriSano:
       = yield :title
 
-    / = stylesheet_link_tag 'grid', 'structure', 'typography', 'action', 'tabview', :cache => 'styles'
-    = stylesheet_link_tag 'grid'
-    = stylesheet_link_tag 'structure'
-    = stylesheet_link_tag 'typography'
-    = stylesheet_link_tag 'action'
-    = stylesheet_link_tag 'tabview'
-
-    / = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'element-beta-min', 'tabview-min', :cache => 'base'
-    = javascript_include_tag 'prototype'
-    = javascript_include_tag 'effects'
-    = javascript_include_tag 'dragdrop'
-    = javascript_include_tag 'controls'
-    = javascript_include_tag 'application'
-    = javascript_include_tag 'autotab'
-    = javascript_include_tag 'sniffer'
-    = javascript_include_tag 'yahoo-dom-event'
-    = javascript_include_tag 'element-beta-min'
-    = javascript_include_tag 'tabview-min'
+    = stylesheet_link_tag 'grid', 'structure', 'typography', 'action', 'tabview', :cache => 'styles'
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'element-beta-min', 'tabview-min', :cache => 'base'
 
     / Calendar
     = calendar_date_select_includes
