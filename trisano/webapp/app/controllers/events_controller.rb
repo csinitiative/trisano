@@ -105,6 +105,27 @@ class EventsController < ApplicationController
     render :partial => "events/place_exposures_from_live_search", :layout => false, :locals => {:place_show => @place, :place_exposure => @place_exposure} 
   end
 
+  def auto_complete_for_reporting_agency_search
+    sql = <<-SQL
+      SELECT DISTINCT ON (entity_id) id, entity_id, place_type_id, name
+      FROM places
+      WHERE place_type_id IN 
+        (SELECT id 
+         FROM codes 
+         WHERE code_name = 'placetype' 
+           AND the_code IN ('H', 'L', 'C', 'O', 'S', 'DC', 'CF', 'LCF'))
+        AND LOWER(name) LIKE ?
+        LIMIT 10 
+    SQL
+    @places = Place.find_by_sql([sql, params[:place_name].downcase + '%']).sort_by(&:name)
+    render :partial => 'events/reporting_agency_choices', :layout => false, :locals => {:places => @places}
+  end
+
+  def reporting_agency_search_selection
+    @place = Place.find(params[:id])
+    render(:update) { |page| page.update_reporting_agency(@place) }
+  end
+    
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     if RAILS_ENV == "production"

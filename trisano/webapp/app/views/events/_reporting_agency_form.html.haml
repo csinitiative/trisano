@@ -31,13 +31,12 @@
 
     = error_messages_for :object => reporting_agency
 
-    -# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
-    -agency_core_path = "#{f.object_name}[active_reporting_agency][active_secondary_entity][place]"
-
-    - f.fields_for(:active_reporting_agency, reporting_agency, :core_path => agency_core_path, :builder => ExtendedFormBuilder) do |agency_form|
-      - core_element :name, agency_form, :vert do
-        = agency_form.label("Reporting Agency")
-        = model_auto_completer "morbidity_event[active_reporting_agency][name]", reporting_agency.nil? ? "" : reporting_agency.name, "morbidity_event[active_reporting_agency][secondary_entity_id]", reporting_agency.nil? ? "" : reporting_agency.entity_id, { :allow_free_text => true, :append_random_suffix => true, :action => 'auto_complete_for_event_reporting_agency'}, { :size => 25 }, { :skip_style => false }
+    = live_search('Search for a Reporting Agency', :search_field => 'reporting_agency_search', :select => 'place_name')
+    = add_reporting_agency_link('Create a new reporting agency', f)
+    %hr
+    #reporting_agency
+      - if reporting_agency
+        = render(:partial => 'events/reporting_agency', :locals => {:reporting_agency => reporting_agency, :template => f})
 
     - reporter_name = Person.new
     - reporter_ent_loc = EntitiesLocation.new
@@ -66,7 +65,6 @@
         = agency_form.core_text_field(:first_name, {:size => 25, :maxlength => 25}, @event, @can_investigate)
     
     - f.fields_for(:active_reporting_agency, reporter_ent_loc, :core_path => reporter_loc_core_path, :builder => ExtendedFormBuilder) do |agency_form|
-      = agency_form.hidden_field(:id)
       - core_element :entity_location_type_id, agency_form, :horiz do
         = agency_form.label(:entity_location_type_id, "Phone type")
         = agency_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event, @can_investigate)

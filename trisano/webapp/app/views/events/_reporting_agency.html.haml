@@ -1,0 +1,14 @@
+-# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
+- agency_key = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency]"
+- agency_core_path = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency][active_secondary_entity][place]"
+
+- fields_for(agency_key, reporting_agency, :core_path => agency_core_path, :builder => ExtendedFormBuilder) do |agency_form|
+  - core_element :name, agency_form, :vert do
+    = agency_form.label(:name, "Reporting Agency")
+    - unless reporting_agency
+      = agency_form.text_field(:name, :size => 25)
+    - else
+      = agency_form.hidden_field(:id)
+      = reporting_agency.name || "&nbsp;"
+    = link_to_function "Remove", "$(this).up().remove();"
+    %hr

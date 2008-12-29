@@ -143,11 +143,18 @@ module EventsHelper
     end
   end
 
-  def add_reporting_agency_link(name)
+  def add_reporting_agency_link(name, form)
     link_to_function name do |page|
-      page.insert_html :bottom, "reporting_agencies", :partial => 'events/reporting_agency' , :object => Participation.new_reporting_agency_participation
+      page.update_reporting_agency(nil, form)
+      page << "$('morbidity_event_active_reporting_agency_name').value=$F('reporting_agency_search')"
     end
   end
+
+  def update_reporting_agency(reporting_agency, form=nil)
+    page[:reporting_agency].hide
+    page.replace_html(:reporting_agency, :partial => 'events/reporting_agency' , :locals => {:template => form, :reporting_agency => reporting_agency})
+    page.visual_effect :blind_down, :reporting_agency, :duration => 1
+  end  
 
   def basic_morbidity_event_controls(event, with_show=true, with_export_options=false)
     can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
