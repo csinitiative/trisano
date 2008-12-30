@@ -20,6 +20,8 @@
 -unless entity_data.address_entities_locations.empty?
   - l = entity_data.address_entities_locations.last.location; a = l.current_address;
 
+- event_data = @event.active_patient.participations_contact || ParticipationsContact.new
+
 - event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:active_primary_entity, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |primary_form|
     - primary_form.fields_for(:person, entity_data.person, :builder => ExtendedFormBuilder) do |person_form|
@@ -33,4 +35,4 @@
         =render :partial => 'events/people/demographics_show', :locals => {:entity_data => entity_data, :person => p, :person_form => person_form}
 
   - active_patient_form.fields_for(:participations_contact, @event.active_patient.participations_contact, :builder => ExtendedFormBuilder) do |contact_form|
-    =render :partial => 'events/people/disposition_show', :locals => {:event_info => @event.active_patient.participations_contact, :contact_form => contact_form}
+    =render :partial => 'events/people/disposition_show', :locals => {:event_info => event_data, :contact_form => contact_form}

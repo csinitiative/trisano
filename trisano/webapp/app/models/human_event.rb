@@ -72,7 +72,10 @@ class HumanEvent < Event
     self.patient.existing_treatment_attributes = attributes.delete(:existing_treatment_attributes) if attributes.has_key?(:existing_treatment_attributes)
     
     # Contacts only, update only
-    self.patient.participations_contact.attributes = attributes.delete(:participations_contact) if attributes.has_key?(:participations_contact)
+    if attributes.has_key?(:participations_contact)
+      self.patient.build_participations_contact unless self.patient.participations_contact
+      self.patient.participations_contact.attributes = attributes.delete(:participations_contact) if attributes.has_key?(:participations_contact)
+    end
 
     self.patient.primary_entity.attributes = attributes
   end
