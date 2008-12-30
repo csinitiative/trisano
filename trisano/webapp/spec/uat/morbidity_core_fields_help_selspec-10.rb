@@ -29,7 +29,6 @@ describe "help text for morbidity core fields" do
 
   core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}.each do |core_field|
     it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
-      puts core_field['name']
       @browser.click("//div[@id='rot'][1]//a[text()='#{core_field['name']}']")
       @browser.wait_for_page_to_load
       @browser.click("link=Edit")
@@ -48,6 +47,7 @@ describe "help text for morbidity core fields" do
     end
               
     it "should have #{core_field['event_type']} help bubble after #{core_field['name']}" do
+      @browser.click "//a[@id='add_reporting_agency_link']" if core_field['name'] == 'Reporting agency'
       assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
       @browser.click("link=ADMIN")
       @browser.wait_for_page_to_load
