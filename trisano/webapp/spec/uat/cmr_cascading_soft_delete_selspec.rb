@@ -18,7 +18,7 @@
 require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ $dont_kill_browser = true
 
 describe 'Soft deleting events' do
   
@@ -56,7 +56,6 @@ describe 'Soft deleting events' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.patientname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
-    @browser.is_text_present("Delete").should be_false
   end
   
   it "should should have soft deleted the contact event" do
@@ -67,7 +66,7 @@ describe 'Soft deleting events' do
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.contactname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_text_present("Delete").should be_false
   end
-  
+
   it "should should have soft deleted the place event" do
     @browser.click("link=#{@cmr_last_name}")
     @browser.wait_for_page_to_load($load_time)
@@ -99,5 +98,5 @@ describe 'Soft deleting events' do
 
   it "should find at least one deleted person, which should be grey" do
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].getStyle('color') == "rgb(51, 51, 51)"}).should eql("true")
-  end  
+  end
 end
