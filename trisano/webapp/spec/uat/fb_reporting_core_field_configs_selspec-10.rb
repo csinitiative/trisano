@@ -31,11 +31,11 @@ describe 'form builder reporting core-field questions for morbidity reports' do
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
-      pending 'Reporting agency follow ups need tlc' if test[:name] == 'Reporting agency'
-      form_name = get_unique_name(2) + " rp_f"
+      form_name = get_unique_name(2) + " rp_f"      
       cmr_last_name = get_unique_name(1) + " rp_f"
       disease_name = "Rocky Mountain spotted fever"
       jurisdiction = "Central Utah Public Health Department"
+      reporting_agency = get_unique_name(1) + " rp_f"
       before_question = "b4 #{test[:name]} " + get_unique_name(2)
       after_question = "af #{test[:name]} " + get_unique_name(2)
       before_answer = "b4 #{test[:name]} answer" + get_unique_name(2)
@@ -52,10 +52,13 @@ describe 'form builder reporting core-field questions for morbidity reports' do
       click_core_tab(@browser, test[:tab_name])
       @browser.click "//a[@id='add_reporting_agency_link']"
       sleep(1)
+      @browser.type("//input[@id='morbidity_event_active_reporting_agency_name']", reporting_agency)
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
-      answer_investigator_question(@browser, before_question, before_answer)
-      answer_investigator_question(@browser, after_question, after_answer)
+      @browser.type("//label[text() ='#{before_question}']/../input[@type='text']",
+                    before_answer)
+      @browser.type("//label[text() ='#{after_question}']/../input[@type='text']",
+                    after_answer)
 
       save_cmr(@browser)
       click_core_tab(@browser, test[:tab_name])
