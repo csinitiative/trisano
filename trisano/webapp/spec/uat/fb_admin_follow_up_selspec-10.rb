@@ -53,11 +53,11 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     # Enter the answer that meets the follow-up condition
     click_core_tab(@browser, INVESTIGATION)
     answer_investigator_question(@browser, @original_question_text, "Yes")
-    pending "This doesn't work on Hudson" do
-      watch_for_answer_spinner(@original_question_text) do
-        @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-      end
+
+    watch_for_answer_spinner(@original_question_text) do
+      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
     end
+
     @browser.is_text_present(@follow_up_question_text).should be_true
     assert_tooltip_exists(@browser, @follow_up_help_text).should be_true
         
