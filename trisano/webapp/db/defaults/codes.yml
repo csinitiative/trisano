@@ -972,6 +972,16 @@
   code_description: "Group Living Environment"
   sort_order: 70
 
+- code_name: "placetype"
+  the_code: 'PUB'
+  code_description: 'Public'
+  sort_order: 71
+
+- code_name: 'placetype'
+  the_code: 'OOS'
+  code_description: 'Out-of-state Public Health Agency'
+  sort_order: 73
+
   ### PARTICIPATION RELATIONSHIPS ###
   
 - code_name: "participant"

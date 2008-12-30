@@ -113,11 +113,11 @@ class EventsController < ApplicationController
         (SELECT id 
          FROM codes 
          WHERE code_name = 'placetype' 
-           AND the_code IN ('H', 'L', 'C', 'O', 'S', 'DC', 'CF', 'LCF'))
+           AND the_code IN (?))
         AND LOWER(name) LIKE ?
         LIMIT 10 
     SQL
-    @places = Place.find_by_sql([sql, params[:place_name].downcase + '%']).sort_by(&:name)
+    @places = Place.find_by_sql([sql, Place.agency_type_codes, params[:place_name].downcase + '%']).sort_by(&:name)
     render :partial => 'events/reporting_agency_choices', :layout => false, :locals => {:places => @places}
   end
 

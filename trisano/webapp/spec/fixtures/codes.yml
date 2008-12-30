@@ -92,30 +92,35 @@ place_type_hospital:
   code_name: "placetype"
   the_code: "H"
   code_description: "Hospital / ICP"
+  sort_order: 10
 
 place_type_jurisdiction:
   id: 2202
   code_name: "placetype"
   the_code: "J"
   code_description: "Jurisdiction"
+  sort_order: 20
 
 place_type_lab:
   id: 2203
   code_name: "placetype"
   the_code: "L"
   code_description: "Laboratory"
+  sort_order: 30
 
 place_type_clinic:
   id: 2204
   code_name: "placetype"
   the_code: "C"
   code_description: "Clinic / Doctor's Office"
+  sort_order: 40
 
 place_type_other:
   id: 2206
   code_name: "placetype"
   the_code: "O"
   code_description: "Other"
+  sort_order: 50
 
 participant_interested_party:
   id: 2301

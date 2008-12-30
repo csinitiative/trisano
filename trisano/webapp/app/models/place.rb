@@ -75,11 +75,13 @@ class Place < ActiveRecord::Base
     end
 
     def agency_type_codes
-      %w(H L C O S DC CF LCF)
+      %w(H L C O S DC CF LCF PUB OOS)
     end
 
     def agency_types
-      Code.find(:all, :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', agency_type_codes])
+      Code.find(:all, 
+                :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', agency_type_codes],
+                :order => 'sort_order ASC')
     end
   end
 
@@ -88,6 +90,10 @@ class Place < ActiveRecord::Base
   end
 
   def agency_types_description
-    agency_types.collect {|type| type.code_description}.sort.to_sentence :skip_last_comma => true
+    unless agency_types.empty?
+      agency_types.sort_by(&:sort_order).collect {|type| type.code_description}.to_sentence :skip_last_comma => true
+    else
+      place_type.code_description unless place_type.nil?
+    end
   end
 end
