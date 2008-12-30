@@ -18,26 +18,24 @@
 
 /- content_for :name do
 
-- content_for :tools do
-  
-  = link_to 'Diseases', diseases_path
-  |
-  = link_to 'CDC Export Configuration', export_columns_path
-  |
-  = link_to 'Core Fields', core_fields_path
-  |
-  = link_to 'Forms', forms_path
-  |
-  = link_to 'Users', users_path
-  |
-  = link_to 'Codes', codes_path
-  |
-  = link_to 'Event Queues', event_queues_path
-  |
-  = link_to 'CDC Export', url_for(:controller => 'export', :action => 'cdc', :format => 'dat')
-  |
-  = link_to 'IBIS Export', url_for(:controller => 'export', :action => 'ibis', :format => 'xml')
+%h2 System Configuration
 
+= link_to 'Manage Users', users_path, :id => "admin_users"
 %br
+= link_to 'Manage Disease Information', diseases_path, :id => "admin_diseases"
 %br
+= link_to 'Manage Event Routing Queues', event_queues_path, :id => "admin_queues"
 %br
+= link_to 'Add Help Text to Core Fields', core_fields_path, :id => "admin_help_text"
+%br
+= link_to 'Manage System Codes', codes_path, :id => "admin_codes"
+%br
+= link_to 'Configure System for CDC Export', export_columns_path, :id => "admin_cdc_config"
+
+%h2 Export Event Information
+= link_to 'CDC Export', cdc_events_path, :id => "admin_cdc_export"
+%br
+= link_to 'IBIS Export', ibis_events_path, :id => "admin_ibis_export"
+
+%h2 Disease Specific Forms
+= link_to 'Manage Forms', forms_path, :id => "admin_forms"

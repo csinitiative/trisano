@@ -17,17 +17,39 @@
 class CdcExport < ActiveRecord::Base
 
   class << self
-    def weekly_cdc_export
-      where = [%Q|cdc_update=true AND (("mmwr_week"=#{this_mmwr_week} OR "mmwr_week"=#{last_mmwr_week}) AND "mmwr_year"=#{this_mmwr_year})|]
+    def weekly_cdc_export(start_mmwr, end_mmwr)
+      raise ArgumentError unless start_mmwr.is_a?(Mmwr) && end_mmwr.is_a?(Mmwr)
+      where = []
+      where << <<-END_WHERE_CLAUSE
+        (
+          ((mmwr_week=#{start_mmwr.mmwr_week} AND mmwr_year=#{start_mmwr.mmwr_year}) OR (mmwr_week=#{end_mmwr.mmwr_week} AND mmwr_year=#{end_mmwr.mmwr_year}))
+          OR
+          (cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')
+        )
+      END_WHERE_CLAUSE
+      # The following issues 133 separate selects to generate the where clause component.  What's it doing?
       where << Disease.disease_status_where_clause
       where << "exp_deleted_at IS NULL"
+
       events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
 
-    def weekly_cdc_deletes
-      where = ['(cdc_update=true AND sent_to_cdc=true) AND ((exp_deleted_at IS  NOT NULL)']      
+    def annual_cdc_export(mmwr_year)
+      where = []
+      where << "mmwr_year='#{mmwr_year}'"
+      # The following issues 133 separate selects to generate the where clause component.  What's it doing?
+      where << Disease.disease_status_where_clause
+      where << "exp_deleted_at IS NULL"
+
+      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
+      events.map!{ |event| event.extend(Export::Cdc::Record) }     
+      events
+    end
+
+    def cdc_deletes(start_mmwr, end_mmwr)
+      where = [ "sent_to_cdc=true AND ((exp_deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
@@ -55,22 +77,13 @@ class CdcExport < ActiveRecord::Base
       records
     end
 
-    # set updated to false and sent to true for all cdc records
+    # set sent to true for all cdc records
     def reset_sent_status(cdc_records)
       event_ids = cdc_records.compact.collect {|record| record.event_id}
-      Event.update_all('cdc_update=false, sent_to_cdc=true', ['id IN (?)', event_ids])
+      Event.update_all('sent_to_cdc=true', ['id IN (?)', event_ids])
     end
 
     private
-
-    def this_mmwr_week
-      mmwr = Mmwr.new
-      mmwr.mmwr_week
-    end
-
-    def last_mmwr_week
-      this_mmwr_week - 1
-    end
 
     def this_mmwr_year
       mmwr = Mmwr.new

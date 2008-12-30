@@ -265,57 +265,39 @@ class Event < ActiveRecord::Base
       CoreField.event_fields(self.to_s.underscore)
     end
 
-    def new_ibis_records
+    def active_ibis_records(start_date, end_date)
       # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect, record has not been soft-deleted
-      new_records = Event.find_by_sql("
-                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                                      WHERE (e.sent_to_ibis = FALSE
-                                      OR e.sent_to_ibis IS NULL)
-                                      AND e.deleted_at IS NULL
-                                      AND d.event_id = e.id
-                                      AND d.disease_id IS NOT NULL 
-                                      AND e.udoh_case_status_id = c.id
-                                      AND c.code_name = 'case'
-                                      AND c.the_code IN ('C', 'P', 'S') 
-        ")
+      Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
+                          WHERE e.deleted_at IS NULL
+                          AND d.event_id = e.id
+                          AND d.disease_id IS NOT NULL 
+                          AND e.udoh_case_status_id = c.id
+                          AND c.code_name = 'case'
+                          AND c.the_code IN ('C', 'P', 'S') 
+                          AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
+                        ")
     end
       
-    def updated_ibis_records
-      # New: Record has been sent to IBIS, record has been updated, record has a disease, record is confirmed, probable, or suspect, record has not been soft-deleted
-      updated_records = Event.find_by_sql("
-                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                                      WHERE e.sent_to_ibis = TRUE
-                                      AND e.ibis_update = TRUE
-                                      AND e.deleted_at IS NULL
-                                      AND d.event_id = e.id
-                                      AND d.disease_id IS NOT NULL 
-                                      AND e.udoh_case_status_id = c.id
-                                      AND c.code_name = 'case'
-                                      AND c.the_code IN ('C', 'P', 'S') 
-        ")
-    end
-
-    def deleted_ibis_records
+    def deleted_ibis_records(start_date, end_date)
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect OR record has been soft-deleted
-      updated_records = Event.find_by_sql("
-                                      SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                                      WHERE e.sent_to_ibis = TRUE
-                                      AND e.ibis_update = TRUE
-                                      AND d.event_id = e.id
-                                      AND d.disease_id IS NOT NULL 
-                                      AND e.udoh_case_status_id = c.id
-                                      AND c.code_name = 'case'
-                                      AND (c.the_code NOT IN ('C', 'P', 'S') OR e.deleted_at IS NOT NULL)
-        ")
+      Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
+                          WHERE e.sent_to_ibis = TRUE
+                          AND d.event_id = e.id
+                          AND d.disease_id IS NOT NULL 
+                          AND e.udoh_case_status_id = c.id
+                          AND c.code_name = 'case'
+                          AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
+                          AND e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'
+                        ")
     end
 
-    def exportable_ibis_records
-      new_ibis_records + updated_ibis_records + deleted_ibis_records
+    def exportable_ibis_records(start_date, end_date)
+      active_ibis_records(start_date, end_date) + deleted_ibis_records(start_date, end_date)
     end
 
     def reset_ibis_status(events)
       event_ids = events.compact.collect {|record| record.event_id}
-      Event.update_all('ibis_update=false, sent_to_ibis=true', ['id IN (?)', event_ids])
+      Event.update_all('sent_to_ibis=true', ['id IN (?)', event_ids])
     end
       
   end

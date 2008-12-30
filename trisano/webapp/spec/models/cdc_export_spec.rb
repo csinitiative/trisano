@@ -23,7 +23,11 @@ describe CdcExport do
     event = MorbidityEvent.new(event_hash)
     event.save!
     event.reload    
-    records =  CdcExport.weekly_cdc_export.collect {|record| [record, event]}
+
+    start_mmwr = Mmwr.new(Date.today - 7)
+    end_mmwr = Mmwr.new
+
+    records =  CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).collect {|record| [record, event]}
     yield records if block_given?
   end
 
@@ -33,7 +37,9 @@ describe CdcExport do
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
       Event.reset_ibis_status(samples)
-      CdcExport.weekly_cdc_export.should be_empty
+      start_mmwr = Mmwr.new(Date.today - 7)
+      end_mmwr = Mmwr.new
+      CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).should_not be_empty
       events = samples.collect {|sample| Event.find(sample.event_id)}
     end
     yield events if block_given?
@@ -48,7 +54,7 @@ describe CdcExport do
 
   def soft_delete_a_record(event_hash = @event_hash)
     with_sent_events do |events|
-      event_hash['deleted_at'] = Date.parse('2008-1-1')
+      event_hash['deleted_at'] = Date.today
       events[0].update_attributes(event_hash)
     end
   end
@@ -256,25 +262,25 @@ describe CdcExport do
     end
 
     describe 'resetting sent and updated flags' do
-      it 'should mark an event a not updated and sent after processing' do
+      it 'should mark an event sent after processing' do
         with_cdc_records do |records|
           samples = records.collect {|record| record[0]}
           CdcExport.reset_sent_status(samples)
           Event.reset_ibis_status(samples)
           event = records[0][1]
           event.reload
-          event.should_not be_a_cdc_update
           event.should be_sent_to_cdc
-          event.should_not be_a_ibis_update
           event.should be_sent_to_ibis
         end
       end
 
-      it 'should stop a record from appearing in the cdc export' do
+      it 'should not stop a record from appearing in the cdc export' do
         with_cdc_records do |records|
           samples = records.collect {|record| record[0]}
           CdcExport.reset_sent_status(samples)
-          CdcExport.weekly_cdc_export.should be_empty
+          start_mmwr = Mmwr.new(Date.today - 7)
+          end_mmwr = Mmwr.new
+          CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).should_not be_empty
         end
       end
     end
@@ -284,13 +290,15 @@ describe CdcExport do
       it 'should update when imported from changes' do
         with_sent_events do |events|
           events.should_not be_empty
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
+          # events[0].cdc_updated_at = nil
+          # events[0].ibis_updated_at = nil
           events[0].update_attributes 'imported_from_id' => external_codes(:imported_from_unknown).id
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -298,13 +306,13 @@ describe CdcExport do
           
       it 'should update when disease changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'disease' => {'disease_id' => diseases(:anthrax).id}})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -312,13 +320,13 @@ describe CdcExport do
 
       it 'should update when patient\'s county of residence changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({"active_patient" => {"address" => {"county_id" => external_codes(:county_summit).id}}})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -326,14 +334,14 @@ describe CdcExport do
 
       it 'should update when race changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({"active_patient" => {"race_ids" => [external_codes(:race_black).id]}})
           events[0].save
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -341,13 +349,13 @@ describe CdcExport do
 
       it 'should update when birth gender changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'active_patient' => {'person' => {'birth_gender_id' => external_codes(:gender_male).id}}})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -355,13 +363,13 @@ describe CdcExport do
 
       it 'should update when ethnicity changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'active_patient' => {'person' => {'ethnicity_id' => external_codes(:ethnicity_hispanic).id}}})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -369,13 +377,13 @@ describe CdcExport do
 
       it 'should update when birth date changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'active_patient' => {'person' => {'birth_date' => Date.parse('12/31/1975')}}})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -383,13 +391,13 @@ describe CdcExport do
 
       it 'should update when onset date changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'event_onset_date' => Date.today - 1})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -397,13 +405,13 @@ describe CdcExport do
 
       it 'should update when delted_at changes' do
         with_sent_events do |events|
-          events[0].should_not be_a_cdc_update
-          events[0].should_not be_a_ibis_update
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].update_attributes({:deleted_at => Date.parse('2008-1-1')})
-          events[0].should be_a_cdc_update
-          events[0].should be_a_ibis_update
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
+          events[0].update_attributes({:deleted_at => Date.today})
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
         end
@@ -412,10 +420,13 @@ describe CdcExport do
   end
 
   describe 'finding deleted cdc records' do
+    fixtures :events, :disease_events
     
     before(:each)do
       delete_a_record 
-      @deletes = CdcExport.weekly_cdc_deletes
+      start_mmwr = Mmwr.new(Date.today - 7)
+      end_mmwr = Mmwr.new
+      @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
     end
 
     it 'should return deleted records' do
@@ -460,12 +471,15 @@ describe CdcExport do
   end
 
   describe 'soft deleted records' do
+    fixtures :events, :disease_events
     
     describe 'that have already been sent' do
 
       it 'should appear in the cdc export as deleted records' do
         soft_delete_a_record 
-        CdcExport.weekly_cdc_deletes.length.should == 1
+        start_mmwr = Mmwr.new(Date.today - 7)
+        end_mmwr = Mmwr.new
+        CdcExport.cdc_deletes(start_mmwr, end_mmwr).length.should == 1
       end
 
       it 'should not appear in verification records' do
@@ -474,7 +488,7 @@ describe CdcExport do
       end
 
       it 'should not generate an update record' do
-        with_cdc_records(@event_hash.merge(:deleted_at => Date.parse('2008-1-1'))) do |records|
+        with_cdc_records(@event_hash.merge(:deleted_at => Date.today)) do |records|
           records.size.should == 0
         end
       end
@@ -483,6 +497,7 @@ describe CdcExport do
   end    
 
   describe "displaying summary records for AIDS" do
+    fixtures :events, :disease_events
 
     it "should display the summary record for AIDS" do 
       with_sent_events do
@@ -523,6 +538,7 @@ describe CdcExport do
   end
 
   describe "multiple verification records" do
+    fixtures :events, :disease_events
 
     before :each do
       with_sent_events
@@ -545,6 +561,7 @@ describe CdcExport do
   end
 
   describe "runnning export w/ no valid disease exports" do
+    fixtures :events, :disease_events
     
     before :all do
     end

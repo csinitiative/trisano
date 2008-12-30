@@ -20,6 +20,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
+
+  # When we get to Rails 2.1 restrict here for GET only
+  map.resources :cdc_events, :collection => { :current_week => :get, :current_ytd => :get, :by_range => :get }
+    
+  map.resources :ibis_events, :collection => { :by_range => :get }
   
   map.home '', :controller => 'dashboard'
   
@@ -30,9 +35,6 @@ ActionController::Routing::Routes.draw do |map|
     search.search        'search'
   end
 
-  map.export 'export/cdc.:format',  :controller => 'export', :action => 'cdc'
-  map.export 'export/ibis.:format', :controller => 'export', :action => 'ibis'
-  
   map.admin 'admin', :controller => 'admin'
   map.open_library 'forms/import', :controller => 'forms', :action => 'import'
   map.open_library 'forms/library_admin/:type', :controller => 'forms', :action => 'library_admin'

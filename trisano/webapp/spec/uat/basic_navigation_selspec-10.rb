@@ -79,7 +79,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     
     it 'should navigate successfully to the Users page' do
       click_nav_admin(@browser).should be_true
-      @browser.click('link=Users')
+      @browser.click('id=admin_users')
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Users').should be_true
     end

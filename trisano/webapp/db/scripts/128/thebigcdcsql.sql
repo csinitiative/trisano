@@ -78,7 +78,7 @@ SELECT  DISTINCT
 , age_at_onset
 , age_type_id
 , event_id
-, cdc_update
+, cdc_updated_at
 , sent_to_cdc
 , exp_deleted_at
 FROM
@@ -86,7 +86,7 @@ FROM
 SELECT events.id AS event_id
   , events."MMWR_week" AS mmwr_week
   , events."MMWR_year" AS mmwr_year
-  , events.cdc_update AS cdc_update
+  , events.cdc_updated_at AS cdc_updated_at
   , events.sent_to_cdc AS sent_to_cdc
   , events.udoh_case_status_id AS udoh_case_status_id  
   , events.deleted_at AS exp_deleted_at
@@ -108,10 +108,6 @@ SELECT events.id AS event_id
   , county.the_code AS county_code
   , ageType.the_code AS age_type
   , gender.the_code AS gender
-  , CASE 
-      WHEN events.cdc_update = true THEN 'T'
-      ELSE 'F'
-      END
   , CASE 
       WHEN events.sent_to_cdc = true THEN 'T'
       ELSE 'F'

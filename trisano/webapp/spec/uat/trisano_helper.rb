@@ -192,16 +192,7 @@ module TrisanoHelper
   def click_nav_admin(browser)
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Admin Dashboard") and
-        browser.is_element_present("link=Forms") and
-        browser.is_element_present("link=Users") and
-        browser.is_element_present("link=Codes") and
-        browser.is_element_present("link=Event Queues") and
-        browser.is_element_present("link=Diseases") and
-        browser.is_element_present("link=Core Fields") and
-        browser.is_element_present("link=CDC Export") and
-        browser.is_element_present("link=IBIS Export") 
-    )
+    return(browser.is_text_present("Admin Dashboard"))
   end
   
   def edit_cmr(browser)
@@ -333,7 +324,7 @@ module TrisanoHelper
   def navigate_to_disease_admin(browser)
     browser.open "/trisano/cmrs"
     click_nav_admin(browser)
-    browser.click("link=Diseases")
+    browser.click("id=admin_diseases")
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Diseases"))
   end
@@ -341,7 +332,7 @@ module TrisanoHelper
   def navigate_to_export_admin(browser)
     browser.open "/trisano/cmrs"
     click_nav_admin(browser)
-    browser.click("link=CDC Export Configuration")
+    browser.click("id=admin_cdc_config")
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Export Columns"))
   end

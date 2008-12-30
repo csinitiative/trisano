@@ -48,11 +48,22 @@ describe 'Admin CDC Export' do
   it "should display a link for cdc export" do
     @browser.click("link=ADMIN")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('CDC Export').should be_true
+    @browser.is_element_present('id=admin_cdc_export').should be_true
+  end
+
+  it "should offer a page for selecting cdc export reports" do
+    @browser.click("id=admin_cdc_export")
+    @browser.wait_for_page_to_load($load_time)
+    @browser.is_text_present("Generate CDC Export File")
+  end
+
+  it "should pop up a file save dialog" do
+    # Don't know how to test this.
   end
 
   it "should produce a cdc record for the cmr" do
-    @browser.click("link=CDC Export")
+    # The .txt extension runs the same code as is associated with the link, but sends the output to the screen
+    @browser.open "/trisano/cdc_events/current_week.txt"
     @browser.wait_for_page_to_load($load_time)
     source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
     records = source.split("\n")
@@ -60,15 +71,13 @@ describe 'Admin CDC Export' do
     records[1][17..21].should == '11590'
   end
     
-  it "should not produce cdc record for next export" do
-    @browser.go_back
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click("link=CDC Export")
+  it "should produce the same cdc record for next export" do
+    @browser.open "/trisano/cdc_events/current_week.txt"
     @browser.wait_for_page_to_load($load_time)
     source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
     records = source.split("\n")
     records[0][8..12].should == '00001'
-    records.length.should == 1
+    records[1][17..21].should == '11590'
   end
 
   it "should update imported from" do
@@ -82,10 +91,7 @@ describe 'Admin CDC Export' do
   end
 
   it "should produce cdc record for cmr" do
-    @browser.click("link=ADMIN")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('CDC Export').should be_true    
-    @browser.click("link=CDC Export")
+    @browser.open "/trisano/cdc_events/current_week.txt"
     @browser.wait_for_page_to_load($load_time)
     source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
     records = source.split("\n")
@@ -104,10 +110,8 @@ describe 'Admin CDC Export' do
   end
   
   it "should produce a delete record for the cmr" do
-    @browser.click("link=ADMIN")
-    @browser.wait_for_page_to_load
-    @browser.click("link=CDC Export")
-    @browser.wait_for_page_to_load
+    @browser.open "/trisano/cdc_events/current_week.txt"
+    @browser.wait_for_page_to_load($load_time)
     @browser.get_html_source.gsub(/<\/?[^>]*>/, "")[0...1].should == 'D'
   end
 

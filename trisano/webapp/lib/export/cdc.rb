@@ -40,20 +40,19 @@ module Export
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
         if export_attributes_changed?(old_attributes)
-          self.ibis_update = self.cdc_update = true
+          self.cdc_updated_at = Date.today if self.sent_to_cdc
+          self.ibis_updated_at = Date.today if self.sent_to_ibis
         end
         # IBIS export is also interested in a few more
-         unless self.ibis_update 
-          if ibis_attributes_changed?(old_attributes)
-            self.ibis_update = true
-          end
+        if ibis_attributes_changed?(old_attributes) && sent_to_ibis
+          self.ibis_updated_at = Date.today
         end
       end
       
       private
       
       def export_attributes_changed?(old_attributes)
-        return true if new_record?
+        return false if new_record?
         return false unless old_attributes                
         
         nested_attribute_paths.each do |k, call_path|
@@ -74,7 +73,7 @@ module Export
       end
 
       def nested_attribute_changed?(nested_key, call_path)
-        nested_attributes[nested_key] != safe_call_chain(*call_path)
+        nested_attributes[nested_key] != safe_call_chain(*call_path) if nested_attributes
       end
 
       def nested_attribute_paths

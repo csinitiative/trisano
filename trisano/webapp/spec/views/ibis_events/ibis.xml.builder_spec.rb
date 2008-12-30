@@ -21,7 +21,7 @@ describe "/export/ibis.xml.builder" do
 
   before(:each) do
     assigns[:events_to_export] = [mock_ibis_event, mock_deleted_ibis_event]
-    render "export/ibis.xml.builder"
+    render "ibis_events/ibis.xml.builder"
   end
 
   it "should render valid XML IBIS output" do
@@ -110,6 +110,7 @@ def mock_ibis_event
   m.stub!(:first_reported_PH_date).and_return(Date.new(2008,1,10))
 
   m.stub!(:sent_to_cdc).and_return(true)
+  m.stub!(:deleted_at).and_return(nil)
 
   @jurisdiction = mock_model(Place)
   @jurisdiction.stub!(:short_name).and_return("Bear River")
@@ -135,5 +136,6 @@ def mock_deleted_ibis_event
   m.stub!(:type).and_return('MorbidityEvent')
   m.stub!(:record_number).and_return("20080002")
   m.stub!(:udoh_case_status).and_return(@udoh_code_2)
+  m.stub!(:deleted_at).and_return(nil)
   m
 end

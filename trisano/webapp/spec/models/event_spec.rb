@@ -34,6 +34,7 @@ describe MorbidityEvent do
     event.reload
     yield event if block_given?
   end
+
   describe "Managing Jurisdictions" do
   end
 
@@ -1653,39 +1654,49 @@ describe MorbidityEvent do
       }
     end
 
-    it 'should return true for a new record, not yet sent to cdc or ibis' do
+    it 'should return false for a new record, not yet sent to cdc or ibis' do
       with_event do |event|
         event.should_not be_a_new_record
-        event.should be_a_cdc_update
-        event.should be_a_ibis_update
+        event.cdc_updated_at.should be_nil
+        event.ibis_updated_at.should be_nil
         event.should_not be_sent_to_cdc
         event.should_not be_sent_to_ibis
       end
     end
 
-    it 'should set cdc and ibis update when first_reported_PH_date value changes' do
+    it 'should set cdc and ibis update when first_reported_PH_date value changes if already sent' do
       with_event do |event|
-        event.cdc_update = false
+        event.cdc_updated_at.should be_nil
+        event.first_reported_PH_date = Date.today - 1
+        event.save.should be_true
+        event.cdc_updated_at.should be_nil
+        event.ibis_updated_at.should be_nil
+
+        event.sent_to_cdc = event.sent_to_ibis = true
         event.first_reported_PH_date = Date.today
         event.save.should be_true
-        event.should be_a_cdc_update
-        event.should be_a_ibis_update
+        event.cdc_updated_at.should == Date.today
+        event.ibis_updated_at.should == Date.today
       end
     end
-    
-    it 'should need cdc update when udoh case status id changes' do
+
+    it 'should set cdc and ibis update date when udoh case status id changes' do
       with_event do |event|
+        event.sent_to_cdc = event.sent_to_ibis = true
         event.udoh_case_status = ExternalCode.find(:first, :conditions => "code_name = 'case'")
         event.save.should be_true
-        event.should be_a_cdc_update
+        event.cdc_updated_at.should == Date.today
+        event.ibis_updated_at.should == Date.today
       end
     end
        
-    it 'should need ibis update when event deleted' do
+    it 'should set cdc and ibis update when event deleted' do
       with_event do |event|
+        event.sent_to_cdc = event.sent_to_ibis = true
         event.soft_delete
         event.save.should be_true
-        event.should be_a_cdc_update
+        event.cdc_updated_at.should == Date.today
+        event.ibis_updated_at.should == Date.today
       end
     end
   end
@@ -1720,7 +1731,7 @@ describe MorbidityEvent do
             "disease"             => { "disease_id" => anthrax.id },
             "udoh_case_status_id" => confirmed.id,
             "sent_to_ibis"        => true,
-            "ibis_update"         => true,
+            "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis4"
           } )
         # DELETED: Sent to IBIS, has disease, not confirmed
@@ -1728,7 +1739,7 @@ describe MorbidityEvent do
             "disease"             => { "disease_id" => anthrax.id },
             "udoh_case_status_id" => discarded.id,
             "sent_to_ibis"        => true,
-            "ibis_update"         => true,
+            "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis5"
           } )
         # DELETED: Sent to IBIS, has disease, confirmed but deleted
@@ -1736,37 +1747,31 @@ describe MorbidityEvent do
             "disease"             => { "disease_id" => anthrax.id },
             "udoh_case_status_id" => confirmed.id,
             "sent_to_ibis"        => true,
-            "ibis_update"         => true,
+            "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis5",
             "deleted_at"          => Time.now
           } )
       end
 
-      it "should find new records" do
-        events = Event.new_ibis_records
-        events.size.should == 2   # 1 above and 1 in the fixtures
+      it "should find active (new and updated) records" do
+        events = Event.active_ibis_records(Date.today - 1, Date.today + 1)
+        events.size.should == 3   # 2 above and 1 in the fixtures
         events.collect! { |event| Event.find(event.event_id) }
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
         event_names.include?("Ibis3").should be_true
-      end
-
-      it "should find updated records" do
-        events = Event.updated_ibis_records
-        events.collect! { |event| Event.find(event.event_id) }
-        events.size.should == 1
-        events.first.event_name.should ==  "Ibis4"
+        event_names.include?("Ibis4").should be_true
       end
 
       it "should find deleted records" do
-        events = Event.deleted_ibis_records
+        events = Event.deleted_ibis_records(Date.today - 1, Date.today + 1)
         events.collect! { |event| Event.find(event.event_id) }
         events.size.should == 2
         events.first.event_name.should ==  "Ibis5"
       end
 
       it "should find all IBIS exportable records" do
-        events = Event.exportable_ibis_records
+        events = Event.exportable_ibis_records(Date.today - 1, Date.today + 1)
         events.collect! { |event| Event.find(event.event_id) }
         events.size.should == 5   # 4 above and 1 in the fixtures
         event_names = events.collect { |event| event.event_name }

@@ -2,9 +2,15 @@ xml.Table {
   for event in @events_to_export
     xml.ComdisRecord {
       xml.RecordID(event.record_number)
-      update_flag = (%w( C P S ).include?(event.udoh_case_status.the_code) ? 1 : 0)
+
+      if event.deleted_at || ! %w( C P S ).include?(event.udoh_case_status.the_code)
+        update_flag = 1
+      else
+        update_flag = 0
+      end
+
       xml.UpdateFlag(update_flag)
-      if update_flag == 1
+      if update_flag == 0
         xml.CaseCount(1)
         xml.Event(event.disease.disease.cdc_code)
 
