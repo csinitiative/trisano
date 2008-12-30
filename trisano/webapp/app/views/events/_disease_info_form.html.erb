@@ -34,11 +34,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <% end %>
         <% core_element :disease_onset_date, d, :horiz do %>
           <%= d.label(:disease_onset_date, "Onset date") %>
-          <%= d.calendar_date_select(:disease_onset_date, :year_range => 5.years.ago..0.years.from_now) %>
+          <%= d.calendar_date_select(:disease_onset_date, :year_range => 100.years.ago..0.years.from_now) %>
         <% end %>
         <% core_element :date_diagnosed, d, :horiz do %>
           <%= d.label(:date_diagnosed) %>
-          <%= d.calendar_date_select(:date_diagnosed, :year_range => 5.years.ago..0.years.from_now) %>
+          <%= d.calendar_date_select(:date_diagnosed, :year_range => 100.years.ago..0.years.from_now) %>
         <% end %>
       </fieldset>
     
