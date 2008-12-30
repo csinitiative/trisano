@@ -2,10 +2,10 @@
 - agency_key = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency]"
 - agency_core_path = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency][active_secondary_entity][place]"
 - agency_types_name = agency_key + "[agency_types][]"
-- agency_type_ids = []
+- agency_type_ids = reporting_agency.nil? ? [] : reporting_agency.reporting_agency_types.collect(&:code_id)
 
 - fields_for(agency_key, reporting_agency, :core_path => agency_core_path, :builder => ExtendedFormBuilder) do |agency_form|
-  - if  reporting_agency.nil?
+  - if  reporting_agency.nil? || reporting_agency.new_record?
     - core_element :name, agency_form, :horiz do
       = agency_form.label(:name, "Reporting Agency")
       = agency_form.text_field(:name, :size => 25)
