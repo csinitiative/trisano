@@ -38,7 +38,7 @@ describe 'Sytem functionality for routing and workflow' do
     end
 
     # We need a queue first
-    @browser.click "link=Event Queues"
+    @browser.click "admin_queues"
     @browser.wait_for_page_to_load $load_time
     
     @browser.click "create_event_queue"
@@ -235,7 +235,7 @@ describe 'Sytem functionality for routing and workflow' do
     switch_user(@browser, "default_user").should be_true
     @browser.click "link=ADMIN"
     @browser.wait_for_page_to_load
-    @browser.click "link=Users"
+    @browser.click "admin_users"
     @browser.wait_for_page_to_load($load_time)    
     @browser.click "//input[@value='Create new user']"
     @browser.wait_for_page_to_load($load_time)
@@ -299,7 +299,7 @@ describe 'Sytem functionality for routing and workflow' do
     # By Queue
     @browser.open "/trisano/admin"
     @browser.wait_for_page_to_load($load_time)
-    @browser.click "link=Event Queues"
+    @browser.click "admin_queues"
     @browser.wait_for_page_to_load($load_time)
     
     @browser.click "create_event_queue"

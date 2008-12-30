@@ -324,7 +324,7 @@ module TrisanoHelper
   def navigate_to_disease_admin(browser)
     browser.open "/trisano/cmrs"
     click_nav_admin(browser)
-    browser.click("id=admin_diseases")
+    browser.click("admin_diseases")
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Diseases"))
   end
@@ -332,7 +332,7 @@ module TrisanoHelper
   def navigate_to_export_admin(browser)
     browser.open "/trisano/cmrs"
     click_nav_admin(browser)
-    browser.click("id=admin_cdc_config")
+    browser.click("admin_cdc_config")
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Export Columns"))
   end

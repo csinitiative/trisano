@@ -54,7 +54,7 @@ describe "help text for contact core fields" do
       assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
       @browser.click("link=ADMIN")
       @browser.wait_for_page_to_load
-      @browser.click("link=Core Fields")
+      @browser.click("admin_help_text")
       @browser.wait_for_page_to_load
     end
       

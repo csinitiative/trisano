@@ -33,7 +33,7 @@ describe 'CMR pagination' do
     @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
-    @browser.is_text_present('Route locally to:').should be_true
+    @browser.is_text_present('Route to').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=#{@queue_name}-UtahCounty"
     @browser.wait_for_page_to_load
   end
@@ -50,7 +50,7 @@ describe 'CMR pagination' do
       switch_user(@browser, "default_user")
     end
 
-    @browser.click "link=Event Queues"
+    @browser.click "admin_queues"
     @browser.wait_for_page_to_load($load_time)
     
     @browser.click "create_event_queue"

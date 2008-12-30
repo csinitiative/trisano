@@ -43,7 +43,7 @@ describe 'System functionality for routing and workflow' do
       switch_user(@browser, "default_user")
     end
 
-    @browser.click "link=Event Queues"
+    @browser.click "admin_queues"
     @browser.wait_for_page_to_load $load_time
     
     @browser.click "create_event_queue"
