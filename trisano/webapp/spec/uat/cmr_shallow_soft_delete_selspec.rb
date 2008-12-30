@@ -60,7 +60,7 @@ describe 'Soft deleting individual events' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.contactname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
-    @browser.is_text_present("Delete").should be_false
+    @browser.is_element_present("soft-delete").should be_false
   end
   
   it "should should soft delete the place event" do
@@ -75,7 +75,7 @@ describe 'Soft deleting individual events' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.placename-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
-    @browser.is_text_present("Delete").should be_false
+    @browser.is_element_present("soft-delete").should be_false
   end
 
 end
