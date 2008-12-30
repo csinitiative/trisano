@@ -29,7 +29,6 @@
   - clinician_telephone = clinician_telephone_entities_location.location.telephones.last
 
   = error_messages_for :object => [clinician_person, clinician_telephone]
-
   - fields_for(prefix_with_array, clinician_person, :builder => ExtendedFormBuilder) do |clinician_fields|
     %span{:class => 'horiz'}
       = clinician_fields.label(:last_name)
