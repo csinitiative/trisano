@@ -18,7 +18,7 @@
 require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 
- $dont_kill_browser = true
+ # $dont_kill_browser = true
 
 describe 'Soft deleting events' do
   
@@ -86,7 +86,7 @@ describe 'Soft deleting events' do
   end
 
   it "should find at least one deleted event, which should be grey" do
-    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].getStyle('color') == "rgb(51, 51, 51)"}).should eql("true")
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].childNodes[1].getStyle('color') == "rgb(25, 25, 112)"}).should eql("true")
   end
 
   it "should search for deleted people" do
@@ -97,6 +97,6 @@ describe 'Soft deleting events' do
   end
 
   it "should find at least one deleted person, which should be grey" do
-    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].getStyle('color') == "rgb(51, 51, 51)"}).should eql("true")
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('tr.search-inactive')[0].childNodes[1].getStyle('color') == "rgb(25, 25, 112)"}).should eql("true")
   end
 end
