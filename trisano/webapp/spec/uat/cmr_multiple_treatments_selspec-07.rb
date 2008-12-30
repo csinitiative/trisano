@@ -20,7 +20,7 @@ require 'active_support'
 
 describe 'Adding multiple treatments to a CMR' do
   
-  #$dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @browser.open "/trisano/cmrs"
@@ -59,9 +59,8 @@ describe 'Adding multiple treatments to a CMR' do
   end
 
   it "should allow editing a treatemt" do
-    pending "No XPath way to narrow down to this element as ends-with does not seem to be supported in FF."
     edit_cmr(@browser)
-    @browser.type "//div[@class='treatment'][1]//input[ends-with(@id, '_treatment')]", "Eye of newt"
+    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_type')]", "Eye of newt"
     click_core_tab(@browser, "Clinical")
     save_cmr(@browser).should be_true
     @browser.is_text_present('Eye of newt').should be_true

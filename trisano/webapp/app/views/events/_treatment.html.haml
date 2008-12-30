@@ -30,7 +30,7 @@
         - auto_complete_prefix = prefix + "[#{treatment.id}]"
 
       - core_element :treatment, treatment_fields, :horiz do
-        = trisano_auto_complete("#{auto_complete_prefix}[treatment]", "treatment", treatment, "treatment", "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
+        = trisano_auto_complete("#{auto_complete_prefix}[treatment]", "treatment_type", treatment, "treatment", "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
 
       - core_element :treatment_date, treatment_fields, :horiz do
         = treatment_fields.label(:treatment_date, 'Date of Treatment')
