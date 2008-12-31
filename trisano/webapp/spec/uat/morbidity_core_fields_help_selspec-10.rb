@@ -28,6 +28,10 @@ describe "help text for morbidity core fields" do
   end
 
   core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}.each do |core_field|
+
+    # Special exception for reporting agenct, as a link needs to be clicked to bring this field into view.
+    next if core_field['name'].downcase.include?("reporting agency")
+
     it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
       @browser.click("//div[@id='rot'][1]//a[text()='#{core_field['name']}']")
       @browser.wait_for_page_to_load
@@ -37,8 +41,6 @@ describe "help text for morbidity core fields" do
       @browser.click '//input[@value="Update"]'
       @browser.wait_for_page_to_load
       @browser.is_text_present('Core field was successfully updated').should be_true
-      @browser.click "link=< Back to Core Fields"
-      @browser.wait_for_page_to_load
     end 
 
     it "should navigate to a morbidity event edit view" do
@@ -49,9 +51,7 @@ describe "help text for morbidity core fields" do
     it "should have #{core_field['event_type']} help bubble after #{core_field['name']}" do
       @browser.click "//a[@id='add_reporting_agency_link']" if core_field['name'] == 'Reporting agency'
       assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
-      @browser.click("link=ADMIN")
-      @browser.wait_for_page_to_load
-      @browser.click("admin_help_text")
+      @browser.open("/trisano/core_fields")
       @browser.wait_for_page_to_load
     end
       

@@ -24,12 +24,16 @@
 %div{:class => 'lab', :style => "clear: both;"}
   = error_messages_for :object => lab_place
 
-  = trisano_auto_complete("#{prefix}[name]", "lab_name", lab_place, "name", "Lab name", {:size => 25, :maxlength => 50, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
+  -# Hacky, hacky, hack
+  - core_path = @event.class.to_s.underscore + "[lab_result]"
+  - fields_for(:unused, Object.new, :core_path => core_path) do |a|
+    - core_element("lab_name", a, :horiz) do
+      = trisano_auto_complete("#{prefix}[name]", "lab_name", lab_place, "name", "Lab name", {:size => 25, :maxlength => 50, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
 
   %span{:style => "position: relative; top: 18px; left: 10px"}
     = link_to_function "Remove lab and its results" , "$(this).up('.lab').remove()", {:id => "remove_lab_link"}
 
-  = render :partial => "events/lab_result", :collection => lab.lab_results, :locals => {:prefix => prefix}
+  = render :partial => "events/lab_result", :collection => lab.lab_results, :locals => {:prefix => prefix, :core_path => core_path}
   %div{:id => "new_lab_result_holder_#{lab_id}"}
 
   %p{:style => "margin-left: 20px"}

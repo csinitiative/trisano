@@ -46,7 +46,7 @@ class CoreFieldElement < FormElement
     
     available_core_fields = []
     eval(form.event_type.camelcase).exposed_attributes.each do |attribute|
-      unless (fields_in_use.include?(attribute[1][:name]))
+      unless (fields_in_use.include?(attribute[1][:name]) || !attribute[1][:fb_accessible])
         field_attributes = [attribute[1][:name], attribute[0]]
         available_core_fields << field_attributes
       end

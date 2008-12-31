@@ -513,7 +513,7 @@ module EventsHelper
     result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)    
     end
-    result << "<span id=\"#{identifier}_help_text_#{element.id}\" style=\"display: none;\">#{help_text}</span>"
+    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{help_text}</span>"
   end
 
   def render_core_field_help_text(attribute, form_builder, block)

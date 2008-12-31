@@ -58,6 +58,13 @@ describe CoreFieldElement do
       available_core_fields.size.should ==  53
       available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_false
     end
+
+    it "should not return any fields that are not accessible to form builder" do
+      @core_field_element.parent_element_id = @form.form_base_element.id
+      available_core_fields = @core_field_element.available_core_fields
+      available_core_fields.detect { |field| field[1] == core_fields(:core_field_morb_lab_result_lab_name) }.should be_nil
+    end
+
   end
   
   describe "when created with 'save and add to form'" do

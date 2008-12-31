@@ -554,8 +554,11 @@ pre
 input.submit
   :clear both
 
-select
-  :display block
+// The following style was causing help icons to render under the select widget.
+// Commenting instead of deleting in case someone remembers why we put this here in the first place.
+
+/ select
+/   :display block
 
 div.uploadStatus
   :margin 5px

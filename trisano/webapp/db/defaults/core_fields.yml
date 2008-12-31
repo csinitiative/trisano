@@ -6,6 +6,7 @@ core_field_00083:
   field_type: date
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00077: 
   key: contact_event[active_patient][active_primary_entity][person][date_of_death]
   can_follow_up: false
@@ -13,6 +14,7 @@ core_field_00077:
   field_type: date
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00025: 
   key: morbidity_event[active_patient][participations_risk_factor][risk_factors]
   can_follow_up: true
@@ -20,6 +22,7 @@ core_field_00025:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00075: 
   key: contact_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]
   can_follow_up: true
@@ -27,6 +30,7 @@ core_field_00075:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00027: 
   key: morbidity_event[results_reported_to_clinician_date]
   can_follow_up: false
@@ -34,6 +38,7 @@ core_field_00027:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00082: 
   key: contact_event[active_patient][participations_risk_factor][pregnant_id]
   can_follow_up: true
@@ -41,6 +46,7 @@ core_field_00082:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00076: 
   key: contact_event[active_patient][active_primary_entity][person][age_at_onset]
   can_follow_up: true
@@ -48,6 +54,7 @@ core_field_00076:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00026: 
   key: morbidity_event[active_patient][participations_risk_factor][risk_factors_notes]
   can_follow_up: false
@@ -55,6 +62,7 @@ core_field_00026:
   field_type: multi_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00080: 
   key: contact_event[active_patient][active_primary_entity][person][primary_language_id]
   can_follow_up: true
@@ -62,6 +70,7 @@ core_field_00080:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00079: 
   key: contact_event[active_patient][active_primary_entity][person][ethnicity_id]
   can_follow_up: true
@@ -69,6 +78,7 @@ core_field_00079:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00028: 
   key: morbidity_event[first_reported_PH_date]
   can_follow_up: false
@@ -76,6 +86,7 @@ core_field_00028:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00081: 
   key: contact_event[imported_from_id]
   can_follow_up: true
@@ -83,6 +94,7 @@ core_field_00081:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00078: 
   key: contact_event[active_patient][active_primary_entity][person][birth_gender_id]
   can_follow_up: true
@@ -90,6 +102,7 @@ core_field_00078:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00029: 
   key: morbidity_event[lhd_case_status_id]
   can_follow_up: false
@@ -97,6 +110,7 @@ core_field_00029:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00020: 
   key: morbidity_event[active_patient][participations_risk_factor][food_handler_id]
   can_follow_up: true
@@ -104,6 +118,7 @@ core_field_00020:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00067: 
   key: contact_event[active_patient][active_primary_entity][address][street_number]
   can_follow_up: true
@@ -111,6 +126,7 @@ core_field_00067:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00066: 
   key: contact_event[active_patient][active_primary_entity][person][middle_name]
   can_follow_up: true
@@ -118,6 +134,7 @@ core_field_00066:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00090: 
   key: contact_event[active_patient][participations_risk_factor][risk_factors_notes]
   can_follow_up: false
@@ -125,6 +142,7 @@ core_field_00090:
   field_type: multi_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00068: 
   key: contact_event[active_patient][active_primary_entity][address][street_name]
   can_follow_up: true
@@ -132,6 +150,7 @@ core_field_00068:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00021: 
   key: morbidity_event[active_patient][participations_risk_factor][healthcare_worker_id]
   can_follow_up: true
@@ -139,6 +158,7 @@ core_field_00021:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00092: 
   key: contact_event[disease][disease_onset_date]
   can_follow_up: false
@@ -146,6 +166,7 @@ core_field_00092:
   field_type: date
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00023: 
   key: morbidity_event[active_patient][participations_risk_factor][day_care_association_id]
   can_follow_up: true
@@ -153,6 +174,7 @@ core_field_00023:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00022: 
   key: morbidity_event[active_patient][participations_risk_factor][group_living_id]
   can_follow_up: true
@@ -160,6 +182,7 @@ core_field_00022:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00069: 
   key: contact_event[active_patient][active_primary_entity][address][unit_number]
   can_follow_up: true
@@ -167,6 +190,7 @@ core_field_00069:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00024: 
   key: morbidity_event[active_patient][participations_risk_factor][occupation]
   can_follow_up: true
@@ -174,6 +198,7 @@ core_field_00024:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00091: 
   key: contact_event[disease][disease_id]
   can_follow_up: false
@@ -181,6 +206,7 @@ core_field_00091:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00061: 
   key: place_event[active_place][active_primary_entity][address][state_id]
   can_follow_up: true
@@ -188,6 +214,7 @@ core_field_00061:
   field_type: drop_down
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00095: 
   key: contact_event[disease][died_id]
   can_follow_up: true
@@ -195,6 +222,7 @@ core_field_00095:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00094: 
   key: contact_event[disease][hospitalized_id]
   can_follow_up: true
@@ -202,6 +230,7 @@ core_field_00094:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00062: 
   key: place_event[active_place][active_primary_entity][address][county_id]
   can_follow_up: true
@@ -209,6 +238,7 @@ core_field_00062:
   field_type: drop_down
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00063: 
   key: place_event[active_place][active_primary_entity][address][postal_code]
   can_follow_up: true
@@ -216,6 +246,7 @@ core_field_00063:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00093: 
   key: contact_event[disease][date_diagnosed]
   can_follow_up: false
@@ -223,6 +254,7 @@ core_field_00093:
   field_type: date
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00009: 
   key: morbidity_event[active_patient][active_primary_entity][address][county_id]
   can_follow_up: true
@@ -230,6 +262,7 @@ core_field_00009:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00008: 
   key: morbidity_event[active_patient][active_primary_entity][address][state_id]
   can_follow_up: true
@@ -237,6 +270,7 @@ core_field_00008:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00064: 
   key: contact_event[active_patient][active_primary_entity][person][last_name]
   can_follow_up: true
@@ -244,6 +278,7 @@ core_field_00064:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00065: 
   key: contact_event[active_patient][active_primary_entity][person][first_name]
   can_follow_up: true
@@ -251,6 +286,7 @@ core_field_00065:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00096: 
   key: contact_event[treatments]
   can_follow_up: false
@@ -258,6 +294,7 @@ core_field_00096:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00007: 
   key: morbidity_event[active_patient][active_primary_entity][address][city]
   can_follow_up: true
@@ -265,6 +302,7 @@ core_field_00007:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00089: 
   key: contact_event[active_patient][participations_risk_factor][risk_factors]
   can_follow_up: true
@@ -272,6 +310,7 @@ core_field_00089:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00072: 
   key: contact_event[active_patient][active_primary_entity][address][county_id]
   can_follow_up: true
@@ -279,6 +318,7 @@ core_field_00072:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00006: 
   key: morbidity_event[active_patient][active_primary_entity][address][unit_number]
   can_follow_up: true
@@ -286,6 +326,7 @@ core_field_00006:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00088: 
   key: contact_event[active_patient][participations_risk_factor][occupation]
   can_follow_up: true
@@ -293,6 +334,7 @@ core_field_00088:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00071: 
   key: contact_event[active_patient][active_primary_entity][address][state_id]
   can_follow_up: true
@@ -300,6 +342,7 @@ core_field_00071:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00005: 
   key: morbidity_event[active_patient][active_primary_entity][address][street_name]
   can_follow_up: true
@@ -307,6 +350,7 @@ core_field_00005:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00087: 
   key: contact_event[active_patient][participations_risk_factor][day_care_association_id]
   can_follow_up: true
@@ -314,6 +358,7 @@ core_field_00087:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00070: 
   key: contact_event[active_patient][active_primary_entity][address][city]
   can_follow_up: true
@@ -321,6 +366,7 @@ core_field_00070:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00004: 
   key: morbidity_event[active_patient][active_primary_entity][address][street_number]
   can_follow_up: true
@@ -328,6 +374,7 @@ core_field_00004:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00086: 
   key: contact_event[active_patient][participations_risk_factor][group_living_id]
   can_follow_up: true
@@ -335,6 +382,7 @@ core_field_00086:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00074: 
   key: contact_event[active_patient][active_primary_entity][person][birth_date]
   can_follow_up: false
@@ -342,6 +390,7 @@ core_field_00074:
   field_type: date
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00003: 
   key: morbidity_event[active_patient][active_primary_entity][person][middle_name]
   can_follow_up: true
@@ -349,6 +398,7 @@ core_field_00003:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00085: 
   key: contact_event[active_patient][participations_risk_factor][healthcare_worker_id]
   can_follow_up: true
@@ -356,6 +406,7 @@ core_field_00085:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00073: 
   key: contact_event[active_patient][active_primary_entity][address][postal_code]
   can_follow_up: true
@@ -363,6 +414,7 @@ core_field_00073:
   field_type: single_line_text
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00002: 
   key: morbidity_event[active_patient][active_primary_entity][person][first_name]
   can_follow_up: true
@@ -370,6 +422,7 @@ core_field_00002:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00060: 
   key: place_event[active_place][active_primary_entity][address][city]
   can_follow_up: true
@@ -377,6 +430,7 @@ core_field_00060:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00084: 
   key: contact_event[active_patient][participations_risk_factor][food_handler_id]
   can_follow_up: true
@@ -384,6 +438,7 @@ core_field_00084:
   field_type: drop_down
   event_type: contact_event
   help_text: 
+  fb_accessible: true
 core_field_00056: 
   key: place_event[active_place][active_primary_entity][place][place_type_id]
   can_follow_up: false
@@ -391,6 +446,7 @@ core_field_00056:
   field_type: drop_down
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00055: 
   key: place_event[active_place][active_primary_entity][place][name]
   can_follow_up: true
@@ -398,6 +454,7 @@ core_field_00055:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00001: 
   key: morbidity_event[active_patient][active_primary_entity][person][last_name]
   can_follow_up: true
@@ -405,6 +462,7 @@ core_field_00001:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00054: 
   key: morbidity_event[treatments]
   can_follow_up: false
@@ -412,6 +470,7 @@ core_field_00054:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00049: 
   key: morbidity_event[disease][date_diagnosed]
   can_follow_up: false
@@ -419,6 +478,7 @@ core_field_00049:
   field_type: date
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00053: 
   key: morbidity_event[places]
   can_follow_up: false
@@ -426,6 +486,7 @@ core_field_00053:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00048: 
   key: morbidity_event[disease][disease_onset_date]
   can_follow_up: false
@@ -433,6 +494,7 @@ core_field_00048:
   field_type: date
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00010: 
   key: morbidity_event[active_patient][active_primary_entity][address][postal_code]
   can_follow_up: true
@@ -440,6 +502,7 @@ core_field_00010:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00052: 
   key: morbidity_event[contacts]
   can_follow_up: false
@@ -447,6 +510,7 @@ core_field_00052:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00039: 
   key: morbidity_event[imported_from_id]
   can_follow_up: true
@@ -454,6 +518,7 @@ core_field_00039:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00051: 
   key: morbidity_event[disease][died_id]
   can_follow_up: true
@@ -461,6 +526,7 @@ core_field_00051:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00050: 
   key: morbidity_event[disease][hospitalized_id]
   can_follow_up: true
@@ -468,6 +534,7 @@ core_field_00050:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00016: 
   key: morbidity_event[active_patient][active_primary_entity][person][ethnicity_id]
   can_follow_up: true
@@ -475,13 +542,15 @@ core_field_00016:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00040: 
   key: morbidity_event[active_reporting_agency][active_secondary_entity][place][name]
   can_follow_up: false
   name: Reporting agency
-  field_type: drop_down
+  field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00033: 
   key: morbidity_event[active_jurisdiction][secondary_entity_id]
   can_follow_up: false
@@ -489,6 +558,7 @@ core_field_00033:
   field_type: multi_select
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00041: 
   key: morbidity_event[active_reporter][active_secondary_entity][person][first_name]
   can_follow_up: true
@@ -496,6 +566,7 @@ core_field_00041:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00017: 
   key: morbidity_event[active_patient][active_primary_entity][person][primary_language_id]
   can_follow_up: true
@@ -503,6 +574,7 @@ core_field_00017:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00031: 
   key: morbidity_event[outbreak_associated_id]
   can_follow_up: true
@@ -510,6 +582,7 @@ core_field_00031:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00018: 
   key: morbidity_event[active_patient][participations_risk_factor][pregnant_id]
   can_follow_up: true
@@ -517,6 +590,7 @@ core_field_00018:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00032: 
   key: morbidity_event[outbreak_name]
   can_follow_up: true
@@ -524,6 +598,7 @@ core_field_00032:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00042: 
   key: morbidity_event[active_reporter][active_secondary_entity][person][last_name]
   can_follow_up: true
@@ -531,6 +606,7 @@ core_field_00042:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00030: 
   key: morbidity_event[udoh_case_status_id]
   can_follow_up: false
@@ -538,6 +614,7 @@ core_field_00030:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00019: 
   key: morbidity_event[active_patient][participations_risk_factor][pregnancy_due_date]
   can_follow_up: false
@@ -545,6 +622,7 @@ core_field_00019:
   field_type: date
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00038: 
   key: morbidity_event[review_completed_UDOH_date]
   can_follow_up: false
@@ -552,6 +630,7 @@ core_field_00038:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00011: 
   key: morbidity_event[active_patient][active_primary_entity][person][birth_date]
   can_follow_up: false
@@ -559,6 +638,7 @@ core_field_00011:
   field_type: date
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00046: 
   key: morbidity_event[active_reporter][active_secondary_entity][telephone][extension]
   can_follow_up: true
@@ -566,6 +646,7 @@ core_field_00046:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00047: 
   key: morbidity_event[disease][disease_id]
   can_follow_up: false
@@ -573,6 +654,7 @@ core_field_00047:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00012: 
   key: morbidity_event[active_patient][active_primary_entity][person][approximate_age_no_birthday]
   can_follow_up: true
@@ -580,6 +662,7 @@ core_field_00012:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00037: 
   key: morbidity_event[event_name]
   can_follow_up: true
@@ -587,6 +670,7 @@ core_field_00037:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00013: 
   key: morbidity_event[active_patient][active_primary_entity][person][age_at_onset]
   can_follow_up: true
@@ -594,6 +678,7 @@ core_field_00013:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00035: 
   key: morbidity_event[investigation_started_date]
   can_follow_up: false
@@ -601,6 +686,7 @@ core_field_00035:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00043: 
   key: morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]
   can_follow_up: true
@@ -608,6 +694,7 @@ core_field_00043:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00059: 
   key: place_event[active_place][active_primary_entity][address][unit_number]
   can_follow_up: true
@@ -615,6 +702,7 @@ core_field_00059:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00014: 
   key: morbidity_event[active_patient][active_primary_entity][person][date_of_death]
   can_follow_up: false
@@ -622,6 +710,7 @@ core_field_00014:
   field_type: date
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00036: 
   key: morbidity_event[investigation_completed_LHD_date]
   can_follow_up: false
@@ -629,6 +718,7 @@ core_field_00036:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00057: 
   key: place_event[active_place][active_primary_entity][address][street_number]
   can_follow_up: true
@@ -636,6 +726,7 @@ core_field_00057:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00034: 
   key: morbidity_event[event_status]
   can_follow_up: false
@@ -643,6 +734,7 @@ core_field_00034:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00044: 
   key: morbidity_event[active_reporter][active_secondary_entity][telephone][area_code]
   can_follow_up: true
@@ -650,6 +742,7 @@ core_field_00044:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00058: 
   key: place_event[active_place][active_primary_entity][address][street_name]
   can_follow_up: true
@@ -657,6 +750,7 @@ core_field_00058:
   field_type: single_line_text
   event_type: place_event
   help_text: 
+  fb_accessible: true
 core_field_00015: 
   key: morbidity_event[active_patient][active_primary_entity][person][birth_gender_id]
   can_follow_up: true
@@ -664,6 +758,7 @@ core_field_00015:
   field_type: single_line_text
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_00045: 
   key: morbidity_event[active_reporter][active_secondary_entity][telephone][phone_number]
   can_follow_up: true
@@ -671,21 +766,189 @@ core_field_00045:
   field_type: drop_down
   event_type: morbidity_event
   help_text: 
+  fb_accessible: true
 core_field_acuity:
   key: morbidity_event[acuity]
   can_follow_up: true
   name: Acuity
   field_type: single_line_text
   event_type: morbidity_event
+  help_text: 
+  fb_accessible: true
 core_field_other_data_1:
   key: morbidity_event[other_data_1]
   can_follow_up: true
   name: Other Data (First Field)
   field_type: single_line_text
   event_type: morbidity_event
+  help_text: 
+  fb_accessible: true
 core_field_other_data_2:
   key: morbidity_event[other_data_2]
   can_follow_up: true
   name: Other Data (Second Field)
   field_type: single_line_text
   event_type: morbidity_event
+  help_text: 
+  fb_accessible: true
+core_field_morb_lab_result_lab_name:
+  key: morbidity_event[lab_result][lab_name]
+  name: Lab results | Lab name
+  event_type: morbidity_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_test_type:
+  key: morbidity_event[lab_result][test_type]
+  name: Lab results | Test type
+  event_type: morbidity_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_test_detail:
+  key: morbidity_event[lab_result][test_detail]
+  name: Lab results | Test detail
+  event_type: morbidity_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_lab_result_text:
+  key: morbidity_event[lab_result][lab_result_text]
+  name: Lab results | Test result
+  event_type: morbidity_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_reference_range:
+  key: morbidity_event[lab_result][reference_range]
+  name: Lab results | Reference range
+  event_type: morbidity_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_interpretation:
+  key: morbidity_event[lab_result][interpretation]
+  name: Lab results | Interpretation
+  event_type: morbidity_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_specimen_source:
+  key: morbidity_event[lab_result][specimen_source]
+  name: Lab results | Specimen source
+  event_type: morbidity_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_collection_date:
+  key: morbidity_event[lab_result][collection_date]
+  name: Lab results | Collection date
+  event_type: morbidity_event
+  field_type: date
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_lab_test_date:
+  key: morbidity_event[lab_result][lab_test_date]
+  name: Lab results | Lab Test date
+  event_type: morbidity_event
+  field_type: date
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_morb_lab_result_specimen_sent_to_uphl:
+  key: morbidity_event[lab_result][specimen_sent_to_uphl]
+  name: Lab results | Specimen sent to UPHL
+  event_type: morbidity_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_lab_name:
+  key: contact_event[lab_result][lab_name]
+  name: Lab results | Lab name
+  event_type: contact_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_test_type:
+  key: contact_event[lab_result][test_type]
+  name: Lab results | Test type
+  event_type: contact_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_test_detail:
+  key: contact_event[lab_result][test_detail]
+  name: Lab results | Test detail
+  event_type: contact_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_lab_result_text:
+  key: contact_event[lab_result][lab_result_text]
+  name: Lab results | Test result
+  event_type: contact_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_reference_range:
+  key: contact_event[lab_result][reference_range]
+  name: Lab results | Reference range
+  event_type: contact_event
+  field_type: single_line_text
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_interpretation:
+  key: contact_event[lab_result][interpretation]
+  name: Lab results | Interpretation
+  event_type: contact_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_specimen_source:
+  key: contact_event[lab_result][specimen_source]
+  name: Lab results | Specimen source
+  event_type: contact_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_collection_date:
+  key: contact_event[lab_result][collection_date]
+  name: Lab results | Collection date
+  event_type: contact_event
+  field_type: date
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_lab_test_date:
+  key: contact_event[lab_result][lab_test_date]
+  name: Lab results | Lab Test date
+  event_type: contact_event
+  field_type: date
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+core_field_contact_lab_result_specimen_sent_to_uphl:
+  key: contact_event[lab_result][specimen_sent_to_uphl]
+  name: Lab results | Specimen sent to UPHL
+  event_type: contact_event
+  field_type: drop_down
+  help_text:
+  fb_accessible: false
+  can_follow_up: false
+

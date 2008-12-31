@@ -37,8 +37,6 @@ describe "help text for contact core fields" do
       @browser.click '//input[@value="Update"]'
       @browser.wait_for_page_to_load
       @browser.is_text_present('Core field was successfully updated').should be_true
-      @browser.click "link=< Back to Core Fields"
-      @browser.wait_for_page_to_load
     end 
 
     it "should navigate to a contact edit view" do
