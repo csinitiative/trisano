@@ -13,5 +13,9 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%span{ :class => "vert" }
-  = disease.disease_name
+%tr{:id => "associated_disease_#{disease.id}"}
+  %td
+    = disease.disease_name
+  %td
+    .tools{:style => "position: absolute; right: 15px;"}
+      = link_to_remote 'Remove', :url => {:action => 'dissociate_disease', :id => @export_column.id, :disease_id => disease.id}

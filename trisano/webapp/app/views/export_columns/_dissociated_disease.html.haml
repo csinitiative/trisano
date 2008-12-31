@@ -1,0 +1,5 @@
+%tr{:id => "dissociated_disease_#{dissociated_disease.id}"}
+  %td= dissociated_disease.disease_name
+  %td
+    .tools{:style => "position: absolute; right: 15px;"}
+      = link_to_remote 'Add', :url => {:action => 'associate_disease', :id => @export_column.id, :disease_id => dissociated_disease.id}

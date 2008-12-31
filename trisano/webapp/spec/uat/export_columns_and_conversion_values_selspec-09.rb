@@ -78,7 +78,7 @@ describe 'adding an export column' do
   end
 
   it "should allow editing an export conversion value" do
-    @browser.click("//table[3]//a[1]") # The first link in the third table is the Edit conversion value link.  Yeah, I know.
+    @browser.click("//table[4]//a[1]") # The first link in the third table is the Edit conversion value link.  Yeah, I know.
     @browser.wait_for_page_to_load($load_time)
     @browser.type "export_conversion_value_value_to", "999"
     @browser.click "export_conversion_value_submit"
@@ -88,7 +88,7 @@ describe 'adding an export column' do
   end
 
   it "should allow deleting of an export conversion value" do
-    @browser.click("//table[3]//a[2]") # The second link in the third table is the Delete conversion value link.  Yeah, I know.
+    @browser.click("//table[4]//a[2]") # The second link in the third table is the Delete conversion value link.  Yeah, I know.
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("999").should_not be_true
   end

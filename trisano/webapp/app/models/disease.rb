@@ -32,6 +32,13 @@ class Disease < ActiveRecord::Base
       end
     end
 
+    def find_all_excluding(ids, options = {:order => 'disease_name ASC'})
+      unless ids.empty?
+        options.merge!(:conditions => ['id NOT IN (?)', ids])
+      end
+      find_active(:all, options)
+    end
+
     def collect_diseases
       diseases = []
       find(:all).each do |disease|

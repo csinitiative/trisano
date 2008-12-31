@@ -37,13 +37,14 @@ describe "/export_columns/show.html.haml" do
     @export_column.should_receive(:start_position).and_return(69)
     @export_column.should_receive(:length_to_output).and_return(1)
     @export_column.should_receive(:export_conversion_values).and_return([])
+    @export_column.should_receive(:disease_ids).and_return([disease1.id, disease2.id])
 
     assigns[:export_column] = @export_column
   end
 
   it "should render associated diseases in view" do
     render "/export_columns/show.html.haml"
-    response.should have_tag('span', :text => 'Hepatitis A, acute')
-    response.should have_tag('span', :text => 'Mumps')
+    response.should have_tag('td', :text => 'Hepatitis A, acute')
+    response.should have_tag('td', :text => 'Mumps')
   end
 end

@@ -65,4 +65,32 @@ class ExportColumnsController < AdminController
     redirect_to(export_columns_url)
   end
 
+  def associate_disease
+    @export_column = ExportColumn.find(params[:id])
+    @disease = Disease.find(params[:disease_id])
+    @export_column.diseases << @disease
+    
+    if @export_column.save
+      render :update do |page|
+        page.insert_html(:before, :associated_disease_link, :partial => 'disease', :locals => {:disease => @disease})
+        page << "$('dissociated_disease_#{@disease.id}').remove()"
+        page << "$('associated_disease_link').previous().highlight()"
+      end        
+    end
+  end
+
+  def dissociate_disease
+    @export_column = ExportColumn.find(params[:id])
+    @disease = Disease.find(params[:disease_id])
+    @export_column.diseases.delete(@disease)
+    
+    if @export_column.save
+      render :update do |page|
+        page.insert_html(:top, :disease_table, :partial => 'dissociated_disease', :locals => {:dissociated_disease => @disease})
+        page << "$('associated_disease_#{@disease.id}').remove()"
+        page << "$('dissociated_disease_#{@disease.id}').highlight()"
+      end
+    end
+  end
+
 end

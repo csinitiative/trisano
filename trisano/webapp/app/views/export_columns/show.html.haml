@@ -42,13 +42,18 @@
             Show
             |
             = link_to('Delete', export_column_path(@export_column), :method => :delete)
-  %table.list
+  %table.list{:id => 'associated_diseases'}
     %tr
-      %th.forminformation
+      %th.forminformation{:colspan => 2}
         Associated Diseases
-    %tr
-      %td
-        = render :partial => 'disease', :collection => @export_column.diseases
+    = render :partial => 'disease', :collection => @export_column.diseases
+    %tr#associated_disease_link
+      %td{:colspan => '2'}
+        = link_to_function('Select associated diseases') {|page| page.visual_effect('toggle_blind', 'disease_list', :duration => 1)}
+  #disease_list{:style => 'display: none;'}
+    %table.list{:id => 'disease_table'}
+      = render :partial => 'dissociated_disease', :collection => Disease.find_all_excluding(@export_column.disease_ids)
+  %table.list
     %tr
       %th.forminformation
         Edit Export Column
