@@ -119,7 +119,7 @@ describe CdcExport do
 
     it "should display the last 2 digits of the mmwr year" do
       with_cdc_records do |records|
-        expected_date = Date.today.strftime('%y')
+        expected_date = Mmwr.new.mmwr_year.to_s[2..3]
         records[0].first.to_cdc[4..5].should == expected_date
       end
     end
@@ -446,7 +446,7 @@ describe CdcExport do
     end
 
     it "should report the last two digits of the mmwr year" do
-      expected_date = Date.today.strftime('%y')
+      expected_date = Mmwr.new.mmwr_year.to_s[2..3]
       @deletes[0].to_cdc[4..5].should == expected_date
     end
 
@@ -497,7 +497,7 @@ describe CdcExport do
   end    
 
   describe "displaying summary records for AIDS" do
-    fixtures :events, :disease_events
+    fixtures :events, :disease_events, :diseases
 
     it "should display the summary record for AIDS" do 
       with_sent_events do
@@ -530,7 +530,7 @@ describe CdcExport do
     end
 
     it "should display the MMWR year as 2 digits" do
-      year = Date.today.strftime('%y')
+      year = Mmwr.new.mmwr_year.to_s[2..3]
       with_sent_events do
         CdcExport.verification_records[0].to_cdc[13..14].should == year
       end
