@@ -116,3 +116,19 @@ function safe_disable(target) {
     }
 }
 
+function toggle_save_buttons(state) {
+  btn1 = document.getElementById('save_and_exit_btn');
+  btn2 = document.getElementById('save_and_continue_btn');
+
+  var btns = new Array(btn1, btn2);
+  $A(btns).each(function(btn) {
+    if (btn) {
+      if (state == 'on') {
+        btn.disabled=false
+        } else {
+        btn.disabled=true;
+      }
+    }
+  })
+}
+

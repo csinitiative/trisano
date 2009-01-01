@@ -108,7 +108,6 @@ class ValueSetElementsController <  AdminController
       @value_element.save!
       @form = Form.find(@value_element.form_id)
     rescue Exception => ex
-      p ex
       logger.debug ex
       flash[:error] = 'Unable to toggle the value at this time.'
       render :template => 'rjs-error'

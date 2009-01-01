@@ -159,8 +159,10 @@ module ApplicationHelper
     end
 
     # The display: inline style is to get IE to render the two buttons side by side.
-    out =  button_to_function("Save & Continue", "post_and_return('#{form_id}')", :id => "save_and_continue_btn", :onclick => "this.disabled=true; safe_disable('save_and_exit_btn')")
-    out += button_to_function("Save & Exit", "post_and_exit('#{form_id}')", :id => "save_and_exit_btn", :onclick => "this.disabled=true; safe_disable('save_and_continue_btn')")
+    out =  button_to_function("Save & Continue", "post_and_return('#{form_id}')", :id => "save_and_continue_btn", :onclick => "toggle_save_buttons('off');")
+    out += button_to_function("Save & Exit", "post_and_exit('#{form_id}')", :id => "save_and_exit_btn", :onclick => "toggle_save_buttons('off');")
+    out += "<small>&nbsp;" + link_to_function("Enable", "toggle_save_buttons('on')", :style => "color: white;", :onmouseout => "UnTip()", :onmouseover => "TagToTip('save_button_help', FADEOUT, 500, FADEIN, 500)") + "</small>"
+    out += "<div id='save_button_help' style='display: none;'>Click here to enable the save buttons if they are grayed out when they shouldn't be.</div>"
   end
 
   # Extremely simlisting auto_complete helper, 'cause the default one don't worky.  Makes a lot of assumptions, but what we need for now.

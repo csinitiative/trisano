@@ -3,7 +3,6 @@
 
   -# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
   -core_path = "#{fb_form.object_name}[place]"
-  -p core_path
 
   -f.fields_for(:place, entity_data.place, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :name, p, :horiz do
