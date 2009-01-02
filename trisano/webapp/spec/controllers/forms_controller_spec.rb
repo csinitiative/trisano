@@ -650,6 +650,8 @@ describe FormsController do
 
       it 'should redirect to forms listing' do
         @form.should_receive(:export).and_return(nil)
+        @form.errors.should_receive(:empty?).and_return(false)
+        @form.errors.should_receive(:[]).and_return("error message")
         @controller.should_not_receive(:send_file).with(("test_form.zip"))
         do_post
         response.should redirect_to(forms_path)

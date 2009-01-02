@@ -107,4 +107,20 @@ second_tab_core_follow_up_q:
   data_type: "single_line_text"
   size: 
   short_name: "2nd_tab_core_fu_q"
+  
+hep_core_follow_up_q:
+  id: "13"
+  form_element_id: "204"
+  question_text: "Sure?"
+  help_text: 
+  data_type: "single_line_text"
+  size: 
+  
+hep_cdc_q:
+  id: "14"
+  form_element_id: "205"
+  question_text: "Jaundiced?"
+  help_text: 
+  data_type: "radio_button"
+  size: 
 

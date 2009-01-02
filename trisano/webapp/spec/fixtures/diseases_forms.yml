@@ -35,3 +35,7 @@ tuberculosis_form_7:
 follow_up_element_test_form:
   disease_id: 1
   form_id: 1
+  
+hep_a_form:
+  disease_id: 5
+  form_id: 8

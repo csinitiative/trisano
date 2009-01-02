@@ -58,4 +58,13 @@ checken_pox_TB_form_for_LHD_2:
   is_template: true
   status: "Live"
   event_type: "morbidity_event"
+  
+hep_a_form:
+  id: 8
+  name: "Hep A"
+  description: ""
+  jurisdiction_id: 
+  is_template: true
+  status: "Live"
+  event_type: "morbidity_event"
 

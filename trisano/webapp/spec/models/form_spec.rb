@@ -655,32 +655,112 @@ describe Form do
     end
 
   end
+
+  describe 'when affecting export/import lookup info' do
+
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values, :external_codes
+    
+    it 'should build the correct external code lookup values for an element after an external code has changed' do
+      @core_follow_up = FormElement.find(form_elements(:core_follow_up_for_hep_a_form).id)
+      @core_follow_up.code_condition_lookup.should eql("yesno|Y")
+      @code_to_change = ExternalCode.find(external_codes(:yesno_yes).id)
+      @code_to_change.code_name = "YessirNossir"
+      @code_to_change.the_code = "YS"
+      @code_to_change.save!
+      @core_follow_up.code_condition_lookup.should eql("YessirNossir|YS")
+    end
+    
+    it 'should build the correct export column lookup values for an element after an export column has changed' do
+      @cdc_question = FormElement.find(form_elements(:cdc_question_for_hep_a_form).id)
+      @cdc_question.cdc_export_column_lookup.should eql("Hepatitis|JAUNDICED")
+      
+      @export_column_to_change = ExportColumn.find(export_columns(:hep_jaundiced).id)
+      @export_column_to_change.export_column_name = "acupunctured?"
+      @export_column_to_change.save!
+      
+      @export_disease_group_to_change = @export_column_to_change.export_disease_group
+      @export_disease_group_to_change.name = "Hep"
+      @export_disease_group_to_change.save!
+
+      @cdc_question.cdc_export_column_lookup.should eql("Hep|acupunctured?")
+    end
+    
+    it 'should build the correct export conversion value lookup values for an element after an export conversion value has changed' do
+      @cdc_yes_value = FormElement.find(form_elements(:cdc_yes_value_for_hep_a_form).id)
+      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hepatitis|JAUNDICED|Yes|1")
+      
+      @conversion_value_to_change = ExportConversionValue.find(export_conversion_values(:jaundiced_yes).id)
+      @conversion_value_to_change.value_from = "Yessir"
+      @conversion_value_to_change.value_to = "11"
+      @conversion_value_to_change.save!
+      
+      @export_column_to_change = ExportColumn.find(export_columns(:hep_jaundiced).id)
+      @export_column_to_change.export_column_name = "acupunctured?"
+      @export_column_to_change.save!
+      
+      @export_disease_group_to_change = @export_column_to_change.export_disease_group
+      @export_disease_group_to_change.name = "Hep"
+      @export_disease_group_to_change.save!
+
+      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hep|acupunctured?|Yessir|11")
+    end
+    
+  end
   
   describe 'when exporting' do
     
-    fixtures :forms, :form_elements, :questions
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values, :external_codes
     
     it 'should create a zip file with the exported form' do
-      @form = Form.find(1)
+      @form = Form.find(forms(:hep_a_form).id)
       export_file_path = @form.export
-      form_name_for_file =  forms(:test_form).name.downcase.sub(" ", "_")
+      export_file_path.should_not be_nil
+      form_name_for_file =  forms(:hep_a_form).name.downcase.sub(" ", "_")
 
       export_file_path[export_file_path.rindex("/")+1...export_file_path.size].should eql(form_name_for_file + ".zip")
 
       Zip::ZipFile.foreach(export_file_path) do |file|
         ["elements", "form"].include?(file.name).should be_true
       end
-      
     end
+    
+    it 'should fail if a code behind a condition cannot be found' do
+      @form = Form.find(forms(:hep_a_form).id)
+      ExternalCode.destroy(external_codes(:yesno_yes).id)
+      @form.export.should be_nil
+      @form.errors.empty?.should be_false
+    end
+    
+    it 'should fail if an export column cannot be found' do
+      @form = Form.find(forms(:hep_a_form).id)
+      ExportColumn.destroy(export_columns(:hep_jaundiced).id)
+      @form.export.should be_nil
+      @form.errors.empty?.should be_false
+    end
+    
+    it "should fail if an export column's group cannot be found" do
+      @form = Form.find(forms(:hep_a_form).id)
+      ExportDiseaseGroup.destroy(export_disease_groups(:hep_group).id)
+      @form.export.should be_nil
+      @form.errors.empty?.should be_false
+    end
+
+    it "should fail if an export conversion value cannot be found" do
+      @form = Form.find(forms(:hep_a_form).id)
+      ExportConversionValue.destroy(export_conversion_values(:jaundiced_yes).id)
+      @form.export.should be_nil
+      @form.errors.empty?.should be_false
+    end
+
   end
   
   describe 'when importing' do
     
-    fixtures :forms, :form_elements, :questions
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
     
     before(:each) do
-      @original_form = Form.find(1)
-      @imported_form = Form.import(fixture_file_upload('files/test_form.zip', 'application/zip'))
+      @original_form = Form.find(forms(:hep_a_form).id)
+      @imported_form = Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip'))
     end
     
     it 'should match the original name' do
@@ -733,10 +813,34 @@ describe Form do
     
     it 'should import the export column data' do
       default_view = @imported_form.investigator_view_elements_container.children[0]
-      demo_section = default_view.children[0]
-      demo_group = demo_section.children[0]
-      demo_q1 = demo_group.children[0]
-      demo_q1.export_column_id.should eql(form_elements(:demo_group_q1).export_column_id)
+      cdc_q = default_view.children[1]
+      cdc_q.export_column_id.should eql(form_elements(:cdc_question_for_hep_a_form).export_column_id)
+    end
+    
+  end
+  
+  describe 'when importing into a changed or different environment' do
+    
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+    
+    it 'should fail if a code behind a condition cannot be found' do
+      ExternalCode.destroy(external_codes(:yesno_yes).id)
+      lambda { Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip')) }.should raise_error(RuntimeError)
+    end
+    
+    it 'should fail if an export column cannot be found' do
+      ExportColumn.destroy(export_columns(:hep_jaundiced).id)
+      lambda { Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip')) }.should raise_error(RuntimeError)
+    end
+    
+    it "should fail if an export column's group cannot be found" do
+      ExportDiseaseGroup.destroy(export_disease_groups(:hep_group).id)
+      lambda { Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip')) }.should raise_error(RuntimeError)
+    end
+    
+    it "should fail if an export conversion value cannot be found" do
+      ExportConversionValue.destroy(export_conversion_values(:jaundiced_yes).id)
+      lambda { Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip')) }.should raise_error(RuntimeError)
     end
     
   end

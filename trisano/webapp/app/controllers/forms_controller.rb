@@ -201,7 +201,9 @@ class FormsController < AdminController
       response.headers['Content-type'] = "application/zip"
       send_file export_file_path
     else
-      flash[:error] = 'Unable to export the form. Please contact your administrator.'
+      error_message = "Unable to export the form."
+      error_message << " #{@form.errors["base"]}" unless @form.errors.empty?
+      flash[:error] = error_message
       redirect_to forms_path
     end
   end
@@ -213,10 +215,11 @@ class FormsController < AdminController
       return
     end
     
-    if (@form = Form.import(params[:form][:import]))
+    begin
+      @form = Form.import(params[:form][:import])
       redirect_to(@form)
-    else
-      flash[:error] = 'Unable to import the form. Please contact your administrator.'
+    rescue Exception => ex
+      flash[:error] = "Unable to import the form. #{ex.message}."
       redirect_to forms_path
     end
   end

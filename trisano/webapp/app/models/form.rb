@@ -266,7 +266,7 @@ class Form < ActiveRecord::Base
       push_count
     rescue Exception => ex
       logger.error ex
-      self.errors.add_to_base("There an error occurred while pushing the form.")
+      self.errors.add_to_base("An error occurred while pushing the form.")
       return nil
     end
 
@@ -282,7 +282,11 @@ class Form < ActiveRecord::Base
       form_elements_file_name = "elements"
     
       File::open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
-      File::open("#{base_path}#{form_elements_file_name}", 'w') { |file|  file << self.form_element_cache.full_set.patched_array_to_json(:methods => [:type, :question]) }
+      File::open("#{base_path}#{form_elements_file_name}", 'w') do |file|
+        file << self.form_element_cache.full_set.patched_array_to_json(:methods => [
+            :type, :question, :code_condition_lookup, :cdc_export_column_lookup, :cdc_export_conversion_value_lookup
+          ])
+      end
 
       File.delete(zip_file_path) if File.file?(zip_file_path)
 
@@ -297,17 +301,25 @@ class Form < ActiveRecord::Base
       File.chmod(0644, zip_file_path)
       return zip_file_path
     rescue Exception => ex
+      self.errors.add_to_base(ex.message)
       logger.error ex
       return nil
     end
   end
   
   def self.import(form_upload)
-    base_path = "/tmp/"
-    uploaded_file_name = form_upload.original_filename
-    File::open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
-    Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
-      import_form(zip.read("form"), zip.read("elements"))
+    begin
+      imported_form = nil
+      base_path = "/tmp/"
+      uploaded_file_name = form_upload.original_filename
+      File::open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
+      Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
+        imported_form = import_form(zip.read("form"), zip.read("elements"))
+      end
+      return imported_form
+    rescue Exception => ex
+      logger.error ex
+      raise ex
     end
   end
 
@@ -344,11 +356,13 @@ class Form < ActiveRecord::Base
   # Builds an array of structural error messages. Returns an empty array if all
   #  is well.  Does not go against the cache and does not utilize the
   #  ActiveRecord::Validations#errors array.
+  #
+  # Offloads non-form-specific validation to FormElement.structural_errors
   def structural_errors
-    structural_errors = []
+    structural_errors = form_base_element.structural_errors
+
     structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
-    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where form_id = #{self.id} and lft > rgt;").size > 0
-    
+
     if form_base_element.children_count == 3
       structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].attributes["type"] == "InvestigatorViewElementContainer"
       structural_errors << "Core view element container is the wrong type" unless form_base_element.children[1].attributes["type"] == "CoreViewElementContainer"
@@ -457,6 +471,7 @@ class Form < ActiveRecord::Base
         form = Form.new(ActiveSupport::JSON.decode(form_import_string))
         form.rolled_back_from_id = nil
         form.template_id = nil
+        form.jurisdiction_id = nil
         form.status = "Not Published"
         form.save!
         import_elements(elements_import_string, form.id)
@@ -465,7 +480,7 @@ class Form < ActiveRecord::Base
       end
     rescue Exception => ex
       logger.error ex
-      return nil
+      raise ex
     end
   end
 
@@ -485,12 +500,57 @@ class Form < ActiveRecord::Base
       values[:rgt] = "'#{sanitize_sql(["%s",  e["rgt"]])}'"
       values[:is_active] = "#{sanitize_sql(["%s", e["is_active"]])}"
       values[:tree_id] = "#{sanitize_sql(["%s", tree_id])}"
-      values[:condition] =  null_safe_sanitize(e["condition"])
       values[:core_path] = null_safe_sanitize(e["core_path"])
-      values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
       values[:help_text] = null_safe_sanitize(e["help_text"])
-      values[:export_column_id] = null_safe_sanitize(e["export_column_id"])
-      values[:export_conversion_value_id] = null_safe_sanitize(e["export_conversion_value_id"])
+      values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
+
+      # Debt: Break these out into methods. They do the lookups for codes and export values to get the correct
+      # IDs for the system receiving the form import.
+      unless e["export_column_id"].nil?
+        begin
+          disease_group_name, export_column_name = e["cdc_export_column_lookup"].split("|")
+          disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
+          export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
+          values[:export_column_id] = export_column.id
+        rescue
+          if (e["type"] == "QuestionElement")
+            element_type = "question"
+            identifier = e["question"]["question_text"]
+          else
+            element_type = "value set"
+            identifier = e["name"]
+          end
+          raise "Unable to find export column data (#{disease_group_name}:#{export_column_name}) required to import #{element_type} '#{identifier}'"
+        end
+      else
+        values[:export_column_id] =  null_safe_sanitize(e["export_column_id"])
+      end
+      
+      unless e["export_conversion_value_id"].nil?
+        begin
+          disease_group_name, export_column_name, value_from, value_to = e["cdc_export_conversion_value_lookup"].split("|")
+          disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
+          export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
+          export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from_and_value_to(export_column.id, value_from, value_to)
+          values[:export_conversion_value_id] = export_conversion_value.id
+        rescue
+          raise "Unable to find export conversion value data (#{disease_group_name}:#{export_column_name}:#{value_from}:#{value_to}) required to import a value."
+        end
+      else
+        values[:export_conversion_value_id] =  null_safe_sanitize(e["export_conversion_value_id"])
+      end
+      
+      if e["is_condition_code"] == true
+        begin
+          code_name, the_code  = e["code_condition_lookup"].split("|")
+          external_code = ExternalCode.find_by_code_name_and_the_code(code_name, the_code)
+          values[:condition] = external_code.id
+        rescue
+          raise "Unable to find the system code (#{code_name}:#{the_code}) required to import a core follow up on #{e["core_path"]}"
+        end
+      else
+        values[:condition] =  null_safe_sanitize(e["condition"])
+      end
 
       result = insert_element(values)
       parent_id_map[e["id"]] = result

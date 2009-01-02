@@ -239,5 +239,49 @@ class FormElement < ActiveRecord::Base
     end
     return true
   end
+  
+  def code_condition_lookup
+    if self.is_condition_code
+      begin
+        external_code = ExternalCode.find(self.condition)
+        return "#{external_code.code_name}|#{external_code.the_code}"
+      rescue Exception => ex
+        logger.error ex
+        raise "The external code for the condition on #{self.core_path} could not be found."
+      end
+    end
+  end
+  
+  def cdc_export_column_lookup
+    if self.export_column_id
+      begin
+        export_column = ExportColumn.find(self.export_column_id, :include => :export_disease_group)
+        return "#{export_column.export_disease_group.name}|#{export_column.export_column_name}"
+      rescue Exception => ex 
+        if self.attributes["type"] == "QuestionElement"
+          element_type = "question"
+          identifier = self.question.question_text
+        else
+          element_type = "value set"
+          identifier = self.name
+        end
+        logger.error ex
+        raise "The export column and/or disease group for the #{element_type} '#{identifier}' could not be found."
+      end
+    end
+  end
+  
+  def cdc_export_conversion_value_lookup
+    if self.export_conversion_value_id
+      begin
+        export_conversion_value = ExportConversionValue.find(self.export_conversion_value_id)
+        export_column = ExportColumn.find(export_conversion_value.export_column_id, :include => :export_disease_group)
+        return "#{export_column.export_disease_group.name}|#{export_column.export_column_name}|#{export_conversion_value.value_from}|#{export_conversion_value.value_to}"
+      rescue Exception => ex
+        logger.error ex
+        raise "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
+      end
+    end
+  end
 
 end

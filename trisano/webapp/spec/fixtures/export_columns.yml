@@ -38,7 +38,8 @@ hep_jaundiced:
    start_position: '69'
    length_to_output: '1'
    data_type: 'radio_button'
-
+   export_disease_group_id : 1
+   
 hep_datedx:
    id: 3
    export_name_id: 1
@@ -51,6 +52,7 @@ hep_datedx:
    start_position: '61'
    length_to_output: '8'
    data_type: 'date'
+   export_disease_group_id : 1
    
 hep_vaccineyea:
    id: 4
@@ -64,6 +66,7 @@ hep_vaccineyea:
    start_position: '118'
    length_to_output: '2'
    data_type: 'single_line_text'
+   export_disease_group_id : 1
 
 hep_drop_down:
    id: 5
@@ -77,6 +80,7 @@ hep_drop_down:
    start_position: '70'
    length_to_output: '1'
    data_type: 'drop_down'
+   export_disease_group_id : 1
 
 hep_check_box:
    id: 6
@@ -90,6 +94,7 @@ hep_check_box:
    start_position: '71'
    length_to_output: '1'
    data_type: 'check_box'
+   export_disease_group_id : 1
    
 hep_phone:
    id: 7
@@ -103,6 +108,7 @@ hep_phone:
    start_position: '72'
    length_to_output: '13'
    data_type: 'phone'
+   export_disease_group_id : 1
 
 hep_multi_line:
    id: 8
@@ -116,6 +122,7 @@ hep_multi_line:
    start_position: '86'
    length_to_output: '20'
    data_type: 'multi_line_text'
+   export_disease_group_id : 1
 
 birth_gender_id:
   id: 14
@@ -128,3 +135,4 @@ birth_gender_id:
   start_position: 43
   length_to_output: 1
   name: 'SEX'
+  export_disease_group_id : 1

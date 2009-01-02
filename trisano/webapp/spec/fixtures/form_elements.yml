@@ -370,3 +370,143 @@ core_field_container_for_second_form:
   description: 
   rgt: "7"
   parent_id: "100"
+
+base_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "1"
+  type: FormBaseElement
+  id: "200"
+  description: 
+  rgt: "24"
+  parent_id: 
+
+investigator_container_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "2"
+  type: InvestigatorViewElementContainer
+  id: "201"
+  description: 
+  rgt: "19"
+  parent_id: "200"
+
+default_view_for_hep_a_form:
+  name: Default View
+  form_id: "8"
+  tree_id: "7"
+  lft: "3"
+  type: ViewElement
+  id: "202"
+  description: 
+  rgt: "18"
+  parent_id: "201"
+
+core_follow_up_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "4"
+  type: FollowUpElement
+  id: "203"
+  description: 
+  rgt: "7"
+  parent_id: "202"
+  condition: 1402
+  core_path: morbidity_event[disease][died_id]
+  is_condition_code: t
+
+follow_up_question_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "5"
+  type: QuestionElement
+  id: "204"
+  description: 
+  rgt: "6"
+  parent_id: "203"
+
+cdc_question_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "8"
+  type: QuestionElement
+  id: "205"
+  description: 
+  rgt: "17"
+  parent_id: "202"
+  export_column_id: 2
+
+cdc_value_set_for_hep_a_form:
+  name: "CDC ACUPUNCT"
+  form_id: "8"
+  tree_id: "7"
+  lft: "9"
+  type: ValueSetElement
+  id: "206"
+  description: 
+  rgt: "16"
+  parent_id: "205"
+  export_column_id: 2
+
+cdc_yes_value_for_hep_a_form:
+  name: "Yes"
+  form_id: "8"
+  tree_id: "7"
+  lft: "10"
+  type: ValueElement
+  id: "207"
+  description: 
+  rgt: "11"
+  parent_id: "206"
+  export_conversion_value_id: 7
+
+cdc_no_value_for_hep_a_form:
+  name: "No"
+  form_id: "8"
+  tree_id: "7"
+  lft: "12"
+  type: ValueElement
+  id: "208"
+  description: 
+  rgt: "13"
+  parent_id: "206"
+  export_conversion_value_id: 8
+  
+cdc_unk_value_for_hep_a_form:
+  name: "Unknown"
+  form_id: "8"
+  tree_id: "7"
+  lft: "14"
+  type: ValueElement
+  id: "209"
+  description: 
+  rgt: "15"
+  parent_id: "206"
+  export_conversion_value_id: 9
+
+core_view_container_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "20"
+  type: CoreViewElementContainer
+  id: "210"
+  description: 
+  rgt: "21"
+  parent_id: "200"
+
+core_field_container_for_hep_a_form:
+  name: 
+  form_id: "8"
+  tree_id: "7"
+  lft: "22"
+  type: CoreFieldElementContainer
+  id: "211"
+  description: 
+  rgt: "23"
+  parent_id: "200"
