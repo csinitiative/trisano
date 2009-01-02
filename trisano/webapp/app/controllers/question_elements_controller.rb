@@ -111,7 +111,7 @@ class QuestionElementsController <  AdminController
     ExportColumn.find(
       :all,
       :select => "distinct (id), name",
-      :conditions => ["diseases_export_columns.disease_id IN (?)", disease_ids],
+      :conditions => ["diseases_export_columns.disease_id IN (?) AND export_columns.type_data = ?", disease_ids, 'FORM'],
       :joins => "LEFT JOIN diseases_export_columns ON diseases_export_columns.export_column_id = export_columns.id",
       :order => "name"
     )

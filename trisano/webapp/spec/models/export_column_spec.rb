@@ -77,4 +77,38 @@ describe ExportColumn do
 
   it "should test some more validations" do
   end
+
+  describe 'core_export_columns_for' do
+    fixtures :diseases, :export_names
+
+    before(:each) do
+      ec = ExportColumn.create(:type_data => 'CORE', 
+                               :name => 'Sample Export Column',
+                               :length_to_output => 1, 
+                               :start_position => 75, 
+                               :table_name => 'events', 
+                               :column_name => 'event_onset_date',
+                               :export_column_name => 'sample_export_column',
+                               :export_name_id => 1)
+      ec.diseases << diseases(:aids)
+      ec.save!
+    end
+
+    it 'should return an empty array if no diseases are passed' do
+      ExportColumn.core_export_columns_for(nil).should be_empty
+    end
+
+    it 'should return an empty array if an empty list of disease ids are passed' do
+      ExportColumn.core_export_columns_for([]).should be_empty
+    end
+    
+    it 'should only return export columns associated w/ disease ids' do
+      ecs = ExportColumn.core_export_columns_for([4])
+      ecs.size.should == 1
+      ecs.each do |ec|
+        ec.diseases.each {|d| d.disease_name.should == 'AIDS'}
+      end
+    end
+
+  end
 end

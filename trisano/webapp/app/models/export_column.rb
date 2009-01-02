@@ -29,6 +29,14 @@ class ExportColumn < ActiveRecord::Base
     def valid_types
       @valid_types ||= type_data_array.map { |type| type.last }
     end
+
+    def core_export_columns_for(disease_ids) 
+      find(:all,
+           :select => "distinct (id), name",
+           :conditions => ["diseases_export_columns.disease_id IN (?) AND export_columns.type_data = ?", disease_ids, 'CORE'],
+           :joins => "LEFT JOIN diseases_export_columns ON diseases_export_columns.export_column_id = export_columns.id",
+           :order => "name")
+    end
   end
 
   validates_presence_of :export_name_id, :type_data, :export_column_name, :start_position, :length_to_output

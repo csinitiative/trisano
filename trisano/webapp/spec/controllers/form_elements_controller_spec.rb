@@ -373,4 +373,23 @@ describe FormElementsController do
     end
     
   end
+
+  describe 'handling POST /form_elements/update_export_column/1' do
+    before(:each) do 
+      mock_user
+      @form_element = mock(FormElement)
+      @form_element.should_receive(:export_column_id=).once.with(nil)
+      @form_element.should_receive(:save!).once
+      FormElement.stub!(:find).and_return(@form_element)
+    end
+
+    def do_post
+      post :update_export_column, :id => '1'
+    end
+
+    it 'should update the form elements export column' do
+      do_post
+    end
+
+  end
 end

@@ -132,10 +132,21 @@ module FormsHelper
         result << "<b style='color: #CC0000;'>Core field configuration is invalid: #{element.name}</b><br/><small>Invalid core field path is: #{element.core_path}</small>"
       else
         result << "<table><tr>"
-        result << "<td class='tab'>#{element.name}</td>"
+        result << "<td class='tab'>#{element.name}"        
+        result << "<span class=\"cdc_export_info\" id=\"cdc-export-info-#{element.id}\" "
+        result << "style=\"display: none;\"" if element.export_column_id.nil?
+        result << ">&nbsp;&nbsp;<em>(exporting to CDC)</em></span>"
+        result << "</td>"
       end
 
-      result << "<td class='actions'>" << delete_core_field_link(element)
+      result << "<td class='actions'>"
+      result << include_in_cdc_export_link(element) << ("&nbsp;"*2)
+      result << delete_core_field_link(element)
+      result << "</td></tr>"
+      result << "<tr>"
+      result << "<td colspan=\"2\">"
+      result << "<span id=\"cdc-export-for-#{element.id}\" style=\"display: none;\">"
+      result << core_field_cdc_select(element) + '</span>'
       result << "</td></tr></table>"
       
       if include_children && form_elements_cache.children?(element)
@@ -426,6 +437,13 @@ module FormsHelper
   end
   
   private
+
+  def include_in_cdc_export_link(element)
+    link = link_to_function("Add to CDC export", nil, :id => "cdc-export-#{element.id.to_s}") do |page|
+      page.toggle("cdc-export-for-#{element.id}")
+    end
+    "<small>#{link}</small>"
+  end
   
   def delete_view_link(element)
     "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/#{element.id.to_s}', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-view' id='delete-view-#{element.id.to_s}'>" << image_tag("delete.png", :border => 0, :alt => "Delete Tab") << "</a>"
@@ -516,4 +534,30 @@ module FormsHelper
     result << "</a></small>"
   end
 
+  def core_field_cdc_select(element)
+    export_columns = ExportColumn.core_export_columns_for(element.form.disease_ids)
+    if export_columns.empty?
+      result = "No core export columns have been associated with this form's diseases"
+    else
+      options_tags = "<option value=\"\"></option>"
+      options_tags +=  export_columns.collect do |column|
+        result =  "<option value=\"#{column.id}\" "
+        result << "select=\"select\" " if element.export_column_id == column.id 
+        result << ">#{column.name}</option>"
+      end.join(' ')
+      result = select_tag("core-export-columns-#{element.id}", options_tags, :onchange => set_export_column_on(element))
+      result << image_tag('redbox_spinner.gif', :alt => 'Working...', :id => "core_export_#{element.id}_spinner", :style => 'display: none;')
+    end
+    result
+  end
+
+  def set_export_column_on(element)
+    <<-UPDATE_EXPORT_COLUMN.gsub(/\s+/, ' ')
+      new Ajax.Request('../../form_elements/update_export_column/#{element.id.to_s}', {asynchronous:true, evalScripts:true,
+        parameters: {export_column_id: $F(this)},
+        onCreate: function(){$('core_export_#{element.id}_spinner').show()},
+        onComplete: function(){$('core_export_#{element.id}_spinner').hide()}});
+      return false;
+    UPDATE_EXPORT_COLUMN
+  end
 end

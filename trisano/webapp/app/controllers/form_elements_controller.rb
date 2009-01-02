@@ -111,4 +111,14 @@ class FormElementsController <  AdminController
       render :template => 'rjs-error'
     end
   end
+
+  def update_export_column
+    @form_element = FormElement.find(params[:id])
+    @form_element.export_column_id = params[:export_column_id]
+    @form_element.save!
+    render(:update) do |page|
+      page << "$('cdc-export-info-#{params[:id]}').#{(params[:export_column_id].blank? ? 'hide' : 'show')}();"
+    end
+  end      
+    
 end
