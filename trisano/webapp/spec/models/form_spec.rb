@@ -662,8 +662,8 @@ describe Form do
     
     it 'should build the correct external code lookup values for an element after an external code has changed' do
       @core_follow_up = FormElement.find(form_elements(:core_follow_up_for_hep_a_form).id)
-      @core_follow_up.code_condition_lookup.should eql("yesno|Y")
-      @code_to_change = ExternalCode.find(external_codes(:yesno_yes).id)
+      @core_follow_up.code_condition_lookup.should eql("yesno|M")
+      @code_to_change = ExternalCode.find(external_codes(:yesno_maybe).id)
       @code_to_change.code_name = "YessirNossir"
       @code_to_change.the_code = "YS"
       @code_to_change.save!
@@ -726,7 +726,7 @@ describe Form do
     
     it 'should fail if a code behind a condition cannot be found' do
       @form = Form.find(forms(:hep_a_form).id)
-      ExternalCode.destroy(external_codes(:yesno_yes).id)
+      ExternalCode.destroy(external_codes(:yesno_maybe).id)
       @form.export.should be_nil
       @form.errors.empty?.should be_false
     end
@@ -824,7 +824,7 @@ describe Form do
     fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
     
     it 'should fail if a code behind a condition cannot be found' do
-      ExternalCode.destroy(external_codes(:yesno_yes).id)
+      ExternalCode.destroy(external_codes(:yesno_maybe).id)
       lambda { Form.import(fixture_file_upload('files/hep_a.zip', 'application/zip')) }.should raise_error(RuntimeError)
     end
     

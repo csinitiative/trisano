@@ -414,7 +414,7 @@ core_follow_up_for_hep_a_form:
   description: 
   rgt: "7"
   parent_id: "202"
-  condition: 1402
+  condition: 1404
   core_path: morbidity_event[disease][died_id]
   is_condition_code: t
 

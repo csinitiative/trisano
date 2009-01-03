@@ -16,9 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExternalCode < ActiveRecord::Base
-  # If this is removed, adjust the query below in #find_codes_for_autocomplete
-  # That query was a workaround for a defect in acts_as_auditable
-  acts_as_auditable
 
   belongs_to :jurisdiction, :class_name => 'Place', :foreign_key => :jurisdiction_id
 
@@ -65,7 +62,7 @@ class ExternalCode < ActiveRecord::Base
     return [] if condition.nil?
     condition = sanitize_sql(["%s", condition.downcase])
     limit = sanitize_sql(["%s", limit])
-    find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' AND live is TRUE AND next_ver is NULL order by code_description limit #{limit};")
+    find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' order by code_description limit #{limit};")
   end
 
   def self.find_cases(*args)

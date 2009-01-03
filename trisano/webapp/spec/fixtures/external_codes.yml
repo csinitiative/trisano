@@ -232,6 +232,12 @@ yesno_no:
   the_code: "N"
   code_description: "No"
 
+yesno_maybe:
+  id: 1404
+  code_name: "yesno"
+  the_code: "M"
+  code_description: "Maybe"
+
 specimen_blood:
   id: 1501
   code_name: "specimen"
