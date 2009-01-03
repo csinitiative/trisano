@@ -4308,11 +4308,11 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MSTATE'
-   name: "FIPS Code for Mother's County of Residence"
+   name: "FIPS Code for Mother's State of Residence"
    table_name:
    column_name:
    is_required:
-   start_position: '84'
+   start_position: '85'
    length_to_output: '2'
    export_name: 'CDC'
    data_type: 'single_line_text'
@@ -4320,7 +4320,7 @@
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
    export_column_name: 'MCOUNTY'
-   name: "FIPS Code for Mother's City of Residence"
+   name: "FIPS Code for Mother's County of Residence"
    table_name:
    column_name:
    is_required:
@@ -4783,7 +4783,7 @@
    start_position: '200'
    length_to_output: '7'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'single_line_text'
    
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
@@ -4807,7 +4807,7 @@
    start_position: '214'
    length_to_output: '4'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
@@ -4819,7 +4819,7 @@
    start_position: '218'
    length_to_output: '4'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
@@ -4831,7 +4831,7 @@
    start_position: '222'
    length_to_output: '4'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'
@@ -4855,7 +4855,7 @@
    start_position: '234'
    length_to_output: '4'
    export_name: 'CDC'
-   data_type: 'radio_button'
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Congenital Syphilis'
    type_data: 'FORM'

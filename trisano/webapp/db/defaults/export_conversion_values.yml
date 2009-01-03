@@ -8091,20 +8091,20 @@
 
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'TITERB'
-   value_from: 'weakly reactive'
-   value_to: '0'
+   value_from: 
+   value_to: '9999'
    sort_order: 1
 
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'TITERC'
-   value_from: 'weakly reactive'
-   value_to: '0'
+   value_from: 
+   value_to: '9999'
    sort_order: 1
 
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'TITERD'
-   value_from: 'weakly reactive'
-   value_to: '0'
+   value_from: 
+   value_to: '9999'
    sort_order: 1
 
  - disease_code_group: 'Congenital Syphilis'
@@ -8231,4 +8231,10 @@
    export_column_name: 'RTDATE'
    value_from: 
    value_to: '99999999'
+   sort_order: 
+
+ - disease_code_group: 'Congenital Syphilis'
+   export_column_name: 'INFTITER'
+   value_from: 
+   value_to: '9999'
    sort_order: 
