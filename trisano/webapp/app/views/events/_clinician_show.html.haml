@@ -1,7 +1,8 @@
 -# This injects an existing clinician into a form
 
 - clinician = clinician_show
-- prefix_with_array = "morbidity_event[existing_clinician_attributes][]"
+- event_type = "" unless event_type
+- prefix_with_array = "#{event_type}[existing_clinician_attributes][]"
 
 %div.existing_clinician{:style => 'margin-top: 20px'}
   - fields_for(prefix_with_array, clinician, :builder => ExtendedFormBuilder) do |clinician_fields|

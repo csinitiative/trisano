@@ -58,10 +58,6 @@
 
   %fieldset.form
     %legend
-      Diagnosing health facilities  
-    
-  %fieldset.form
-    %legend
       Hospitalized health facilities  
     - if @event.hospitalized_health_facilities.empty?
       %h3 No hospitalized health facilities have been recorded for this event
@@ -136,14 +132,19 @@
               -unless clinician_phone_loc.nil? 
                 = (l(clinician_phone_loc.entity_location_type) || "Unspecified Locaiton") + ": " + clinician_phone.simple_format
 
+  %fieldset.form
+    %legend
+      Diagnostic Facilities  
+
     - if @event.diagnosing_health_facilities.empty?
       %h3 No diganosing health facilities have been recorded for this event
     - else
-      %br
       %table.list
         %tr
           %th Diagnosing health facility
+          %th Type
 
         - for diagnostic in @event.diagnosing_health_facilities
           %tr
             %td= diagnostic.secondary_entity.place_temp.name if diagnostic.secondary_entity
+            %td= diagnostic.secondary_entity.place_temp.place_type.code_description if diagnostic.secondary_entity && diagnostic.secondary_entity.place_temp.place_type

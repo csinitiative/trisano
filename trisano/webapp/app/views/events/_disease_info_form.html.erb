@@ -113,10 +113,22 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   
     <fieldset class="form">
       <legend>Clinicians</legend>
-      <%= render :partial => "events/clinicians_form" %>
+
+      <%= render :partial => "events/clinicians_form", :locals => {:f => f} %>
+    </fieldset>
+
+    <fieldset class="form">
+      <legend>Diagnostic Facilities</legend>
+
       <div id="diagnostics">
-        <% diagnosing_health_facilities = (@event.diagnosing_health_facilities.size > 0 ? @event.diagnosing_health_facilities : [Participation.new_diagnostic_participation]) %>
-        <%= render :partial => "events/diagnostic", :collection => diagnosing_health_facilities %>
+
+        <%= live_search('Search for a diagnosing facility', :search_field => 'diagnostic_search', :select => 'place_name', :results => 'existing_diagnostic_facilities', :event_type => f.object_name ) %>
+        <br />
+        <br />
+        <div id='existing_diagnostic_facilities'>
+          <% diagnosing_health_facilities = (@event.diagnosing_health_facilities.size > 0 ? @event.diagnosing_health_facilities : [Participation.new_diagnostic_participation]) %>
+          <%= render :partial => "events/diagnostic", :collection => diagnosing_health_facilities %>
+        </div>
       </div>
       
       <p style="clear: both;"> <%= add_diagnostic_link "Add a diagnosing facility" %> </p>

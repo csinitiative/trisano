@@ -86,7 +86,7 @@ class EventsController < ApplicationController
 
   def clinicians_search_selection
     @clinician = Person.find(params[:id])
-    render :partial => "events/clinician_show", :layout => false, :locals => {:clinician_show => @clinician} 
+    render :partial => "events/clinician_show", :layout => false, :locals => {:clinician_show => @clinician, :event_type => params[:event_type]} 
   end
   
   def auto_complete_for_places_search
@@ -103,6 +103,15 @@ class EventsController < ApplicationController
     @place = Place.find_by_entity_id(params[:id])
     @place_exposure = Participation.new_exposure_participation
     render :partial => "events/place_exposures_from_live_search", :layout => false, :locals => {:place_show => @place, :place_exposure => @place_exposure} 
+  end
+
+  def auto_complete_for_diagnostic_search
+    auto_complete_for_places_search
+  end
+
+  def diagnostic_search_selection
+    @diagnostic = Place.find_by_entity_id(params[:id])
+    render :partial => "events/diagnostics_from_live_search", :layout => false, :locals => {:diagnostic => @diagnostic, :event_type => params[:event_type]} 
   end
 
   def auto_complete_for_reporting_agency_search

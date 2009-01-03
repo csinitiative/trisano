@@ -136,11 +136,11 @@ module EventsHelper
     end
   end
 
-  def add_clinician_link(name, options={})
+  def add_clinician_link(name, event_type, options={})
     options = {:id => 'add_clinician_link'}.merge(options)
     link_to_function name, nil, options do |page|
       page.insert_html :bottom, "clinicians", :partial => 'events/clinician' , :object => Participation.new_clinician_participation
-      page << "$$('#morbidity_event_new_clinician_attributes__last_name').last().value=$F('clinicians_search')"
+      page << "$$('##{event_type}_new_clinician_attributes__last_name').last().value=$F('clinicians_search')"
     end
   end
 
@@ -987,9 +987,9 @@ module EventsHelper
     options[:update]       ||= options[:search_field] + '_choices' 
     options[:param_name]   ||= options[:select] if options[:select]    
     options[:method]       ||= 'get'
-    options[:url]          ||= {:action => "auto_complete_for_#{options[:search_field]}"}
+    options[:url]          ||= {:controller => "morbidity_events", :action => "auto_complete_for_#{options[:search_field]}"}
     options[:results]      ||= options[:search_field] + '_results'
-    options[:after_update_element_url] ||= {:action => options[:search_field] + '_selection'}
+    options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
     options[:after_update_element]     ||= live_search_callback(:update => options[:results], 
                                                                 :url => options[:after_update_element_url])    
     <<-HTML

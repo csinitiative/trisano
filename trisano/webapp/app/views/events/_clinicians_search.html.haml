@@ -18,7 +18,7 @@
   - clinicians.each do |clinician|
     %li{:name => "#{clinician.id}"}
       %span.last_name= clinician.last_name
-      %span.first_name= ", #{clinician.first_name}"
+      %span.first_name= ", #{clinician.first_name}" unless clinician.first_name.blank?
       - if clinician.middle_name
         %span.middle_name= clinician.middle_name
       - if clinician.telephone

@@ -680,36 +680,68 @@ describe MorbidityEvent do
     describe "Handling diagnosing facilities" do
 
       describe "Receiving a new diagnosing facility" do
+        fixtures :events, :places, :entities, :participations, :participations_places
 
         before(:each) do
           new_diagnostic_hash = {
-            "new_diagnostic_attributes" => 
-              [
-              {"secondary_entity_id" => places(:AVH).id}
-            ]
+            "new_diagnostic_attributes" => [ {"name" => "Joe's Diagnostic Center", :place_type_id => codes(:place_type_other).id, "entity_id" => ""} ] 
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_diagnostic_hash))
         end
 
+        it "should create a new place" do
+          lambda {@event.save}.should change {Place.count}.by(1)
+        end    
+
         it "should create a new participation linked to the event" do
           lambda {@event.save}.should change {Participation.count}.by(2)
-          @event.participations.find_by_role_id(codes(:participant_diagnosing_health_facility).id).should_not be_nil
+          diagnostic = @event.diagnosing_health_facilities.first.secondary_entity
+          diagnostic.place_temp.name.should == "Joe's Diagnostic Center"
+          diagnostic.place_temp.place_type.code_description.should == codes(:place_type_other).code_description
         end
-
       end
 
-      describe "Receiving an edited diagnosing facility" do
-        fixtures :participations_places
+      describe "Receiving an existing diagnosing facility, but new to this event" do
+        fixtures :events, :places, :entities, :participations, :participations_places
+        before(:each) do
+          new_diagnostic_hash = { "new_diagnostic_attributes" => [ { "entity_id" => entities(:AVH).id } ] }
+          @event = MorbidityEvent.new(@event_hash.merge(new_diagnostic_hash))
+        end
+
+        it "should NOT create a new place" do
+          lambda {@event.save}.should change {Place.count}.by(0)
+        end    
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          diagnostic = @event.diagnosing_health_facilities.first.secondary_entity
+          diagnostic.place_temp.name.should == entities(:AVH).place_temp.name
+          diagnostic.place_temp.place_type.code_description.should == entities(:AVH).place_temp.place_type.code_description
+        end
+      end
+
+      describe "Existing event receiving 2 new (1 really new) and 1 deleted facilities" do
+        fixtures :events, :places, :entities, :participations, :participations_places
+
         before(:each) do
           @existing_diagnostic_hash = {
-            "existing_diagnostic_attributes" => { "#{participations(:marks_diagnosed_at).id}" => {"secondary_entity_id" => "#{entities(:BRVH).id}"} }
+            "existing_diagnostic_attributes" => {},
+            "new_diagnostic_attributes" => 
+            [
+              {"name" => "Joe's Diagnostic Center", :place_type_id => codes(:place_type_other).id, "entity_id" => ""},
+              {"entity_id" => entities(:AVH).id}
+            ]
           }
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
 
-        it "should update the existing diagnosing facility" do
-          lambda {@event.update_attributes(@existing_diagnostic_hash)}.should_not change {Participation.count}
-          @event.diagnosing_health_facilities.first.secondary_entity.current_place.name.should == "Bear River Valley Hospital"
+        it "should delete the existing diagnosing facility" do
+          org_facility = @event.diagnosing_health_facilities.first.secondary_entity_id
+          lambda {@event.update_attributes(@existing_diagnostic_hash)}.should change {Participation.count}.by(1)
+          new_facilities = @event.diagnosing_health_facilities.collect { |dhf| dhf.secondary_entity_id }
+          new_facilities.size.should == 2
+          new_facilities.include?(org_facility).should_not be_true
+          new_facilities.include?(entities(:AVH).id).should be_true
         end
       end
 

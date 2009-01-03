@@ -15,10 +15,10 @@
 
 %div{:id => "clinicians"}
   %span{:class => 'vert'}
-    = live_search('Search for an existing clinician', :search_field => 'clinicians_search', :results => 'existing_clinicians', :select => 'last_name')
+    = live_search('Search for an existing clinician', :search_field => 'clinicians_search', :results => 'existing_clinicians', :select => 'last_name', :event_type => f.object_name)
   #existing_clinicians
     = render :partial => "events/clinician_show", :collection => @event.clinicians.reject{|c| c.secondary_entity.new_record?}.collect{|c| c.secondary_entity.person_temp} 
   -# We only want to display this form for unsaved records (like if there is a validation failure).
   = render :partial => 'events/clinician', :collection => @event.clinicians.select{|c| c.secondary_entity.new_record?}
-%p{:style => "clear: both;"}= add_clinician_link "Add a clinician"
+%p{:style => "clear: both;"}= add_clinician_link "Add a clinician", event_type = f.object_name
 

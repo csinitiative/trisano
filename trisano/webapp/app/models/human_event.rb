@@ -235,16 +235,23 @@ class HumanEvent < Event
     diagnostic_attributes.each do |attributes|
       next if attributes.values_blank?
       diagnostic_participation = diagnosing_health_facilities.build(:role_id => Event.participation_code('Diagnosed At'))
-      # Diagnostic facilities are a drop down of existing places, not an autocomplete.  Just assgn.
-      diagnostic_participation.secondary_entity_id = attributes.delete("secondary_entity_id")
+
+      if attributes["entity_id"].blank?
+        diagnostic_entity = diagnostic_participation.build_secondary_entity
+        diagnostic_entity.entity_type = 'place'
+        diagnostic_entity.build_place_temp(attributes)
+      else
+        diagnostic_entity = Entity.find(attributes["entity_id"])
+        diagnostic_participation.secondary_entity = diagnostic_entity
+      end
     end
   end
 
   def existing_diagnostic_attributes=(diagnostic_attributes)
     diagnosing_health_facilities.reject(&:new_record?).each do |diagnostic|
       attributes = diagnostic_attributes[diagnostic.id.to_s]
+      # You can't edit diagnostic facilities, but you can delete the linkage.  So, if they're there, do nothing
       if attributes && !attributes.values_blank?
-        diagnostic.secondary_entity_id = attributes.delete("secondary_entity_id")
       else
         diagnosing_health_facilities.delete(diagnostic)
       end
