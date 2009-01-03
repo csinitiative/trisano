@@ -24,13 +24,13 @@
 
     - fields_for(prefix_with_array, diagnostic_facility, :builder => ExtendedFormBuilder) do |diagnostic_fields|
       = hidden_field_tag("#{prefix}[#{diagnostic.id}][entity_id]", diagnostic_facility.entity_id)
-      %span{:class => 'horiz'}
+      %span{:id => "diagnosing_facility_#{diagnostic.id}", :class => 'horiz'}
         =diagnostic_fields.label(:name)
         -if disallow_place_edit
           =h(diagnostic_facility.name)
         - else
           =diagnostic_fields.text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
-      %span{:class => 'horiz'}
+      %span{:id => "diagnosing_type_#{diagnostic.id}", :class => 'horiz'}
         =diagnostic_fields.label(:place_type_id, 'Type')
         -if disallow_place_edit
           - if diagnostic_facility.place_type.blank?
@@ -41,5 +41,5 @@
           =diagnostic_fields.dropdown_code_field(:place_type_id, 'placetype')
 
       %label="&nbsp;"
-      =link_to_function image_tag('delete.png', :border => 0), "$(this).up('.diagnostic').remove()", {:id => "remove_diagnostic_result_link"}
+      =link_to_function image_tag('delete.png', :border => 0, :id => "remove_diagnostic_result_link"), "$(this).up('.diagnostic').remove()", {:id => "remove_diagnostic_result_link"}
       %hr

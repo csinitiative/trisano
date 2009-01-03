@@ -21,6 +21,11 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Adding multiple diagnosing health facilities to a CMR' do
   
+  before(:all) do
+    @facility_name_1 = get_unique_name(2) + " dhf-uat"
+    @facility_name_2 = get_unique_name(2) + " dhf-uat"
+  end
+
   it "should allow adding new health facilities to a new CMR" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
@@ -28,34 +33,45 @@ describe 'Adding multiple diagnosing health facilities to a CMR' do
     @browser.type "morbidity_event_active_patient__person_first_name", "Johnny"
 
     click_core_tab(@browser, "Clinical")
-    @browser.click "link=Add a diagnosing facility"
-    sleep(1)
-    @browser.select "//div[@class='diagnostic'][1]//select", "label=Allen Memorial Hospital"
-    @browser.select "//div[@class='diagnostic'][2]//select", "label=Gunnison Valley Hospital"
+    @browser.type "diagnostic_search", "b"
+    sleep(2)
+    @browser.click "//div[@id='diagnostic_search_choices']/ul/li[2]/span[1]"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", @facility_name_1
+    @browser.select "morbidity_event_new_diagnostic_attributes__place_type_id", "label=School"
 
     save_cmr(@browser).should be_true
 
     @browser.is_text_present('CMR was successfully created.').should be_true
-    @browser.is_text_present('Allen Memorial Hospital').should be_true
-    @browser.is_text_present('Gunnison Valley Hospital').should be_true
+    @browser.is_text_present('Beaver Valley Hospital').should be_true
+    @browser.is_text_present('Hospital / ICP').should be_true
+    @browser.is_text_present(@facility_name_1).should be_true
+    @browser.is_text_present("school").should be_true
   end
 
   it "should allow removing a diagnosing facility" do
     edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
-    @browser.click "remove_diagnostic_result_link"
-    @browser.click "morbidity_event_submit"
-    sleep(3)
-    @browser.is_text_present('Allen Memorial Hospital').should_not be_true
+    value = "//div[@id='existing_diagnostic_facilities']/div[1]/span[contains(@id, 'diagnosing_facility')]/text()[2]"
+    @browser.click "//div[@id='existing_diagnostic_facilities']//a"
+    save_cmr(@browser).should be_true
+    @browser.is_text_present(value).should_not be_true
   end
 
-  it "should allow editing a diagnosing facility" do
+  it "should allow adding new diagnosing facilities from edit mode" do
     edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
-    @browser.select("//div[@class='diagnostic']//select", "label=Alta View Hospital")
-    @browser.click "morbidity_event_submit"
-    sleep(3)
-    @browser.is_text_present('Alta View Hospital').should be_true
-  end
+    @browser.type "diagnostic_search", "b"
+    sleep(2)
+    @browser.click "//div[@id='diagnostic_search_choices']/ul/li[2]/span[1]"
+    @browser.click "link=Add a diagnosing facility"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", @facility_name_2
+    @browser.select "morbidity_event_new_diagnostic_attributes__place_type_id", "label=Pool"
 
+    save_cmr(@browser).should be_true
+    @browser.is_text_present('CMR was successfully created.').should be_true
+    @browser.is_text_present('Beaver Valley Hospital').should be_true
+    @browser.is_text_present('Hospital / ICP').should be_true
+    @browser.is_text_present(@facility_name_2).should be_true
+    @browser.is_text_present("Pool").should be_true
+  end
 end

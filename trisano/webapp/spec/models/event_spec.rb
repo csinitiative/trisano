@@ -677,6 +677,87 @@ describe MorbidityEvent do
 
     end
 
+    describe "Handling clinicians" do
+
+      describe "Receiving a new clinician" do
+        fixtures :events, :people, :entities, :participations, :participations_places
+
+        before(:each) do
+          new_clinician_hash = {
+            "new_clinician_attributes" => [ {:last_name => "Bombay", :entity_id => ""} ] 
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_clinician_hash))
+        end
+
+        it "should create a new person" do
+          lambda {@event.save}.should change {Person.count}.by(2)
+        end    
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          clinician = @event.clinicians.first.secondary_entity
+          clinician.person_temp.last_name.should == "Bombay"
+        end
+      end
+
+      describe "Receiving an existing clinician, but new to this event" do
+        fixtures :events, :people, :entities, :participations, :participations_places
+        before(:each) do
+          new_clinician_hash = { "new_clinician_attributes" => [ { :entity_id => entities(:Johnson).id } ] }
+          @event = MorbidityEvent.new(@event_hash.merge(new_clinician_hash))
+        end
+
+        it "should NOT create a new person" do
+          lambda {@event.save}.should change {Person.count}.by(1)
+        end    
+
+        it "should create a new participation linked to the event" do
+          lambda {@event.save}.should change {Participation.count}.by(2)
+          clinician = @event.clinicians.first.secondary_entity
+          clinician.person_temp.last_name.should == entities(:Johnson).person_temp.last_name
+        end
+      end
+
+      describe "Existing event receiving 2 new (1 really new) and 1 deleted clinician" do
+        fixtures :events, :people, :entities, :participations, :participations_places
+
+        before(:each) do
+          @existing_clinician_hash = {
+            "existing_clinician_attributes" => {},
+            "new_clinician_attributes" => 
+            [
+              {:last_name => "Kildare", :entity_id => ""},
+              {:entity_id => entities(:Johnson).id}
+            ]
+          }
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should delete the existing person" do
+          org_person = @event.clinicians.first.secondary_entity_id
+          lambda {@event.update_attributes(@existing_clinician_hash)}.should change {Participation.count}.by(1)
+          new_clinicians = @event.clinicians.collect { |clin| clin.secondary_entity_id }
+          new_clinicians.size.should == 2
+          new_clinicians.include?(org_person).should_not be_true
+          new_clinicians.include?(entities(:Johnson).id).should be_true
+        end
+      end
+
+      describe "Receiving empty clinicians data" do
+        fixtures :events, :people, :entities, :participations, :participations_places
+        before(:each) do
+          @existing_clinician_hash = {
+            "existing_clinician_attributes" => {}
+          }
+          @event = MorbidityEvent.find(events(:marks_cmr).id)
+        end
+
+        it "should delete existing clinician" do
+          lambda {@event.update_attributes(@existing_clinician_hash)}.should change {Participation.count}.by(-1)
+        end
+      end
+    end  
+
     describe "Handling diagnosing facilities" do
 
       describe "Receiving a new diagnosing facility" do
@@ -2176,37 +2257,4 @@ describe MorbidityEvent do
     end
   end
 
-  describe "existing clinician handling" do
-    fixtures :users
-
-    before(:each) do
-      @user = users(:default_user)
-      User.stub!(:current_user).and_return(@user)
-      @event_hash = {
-        "active_patient" => {
-          "person" => {
-            "last_name"=>"Green"
-          }
-        },
-        "existing_clinician_attributes" => {'1' => {}}
-      }
-      @event = MorbidityEvent.create(@event_hash)
-    end
-    
-    it "should add an existing clinician if a new id is found" do
-      @event.clinicians.should_not be_empty
-      @event.clinicians.size.should == 1
-    end
-
-    it "should not change anything if clinician already exists" do
-      @event.update_attributes({"existing_clinician_attributes" => {'1' => {}}})
-      @event.clinicians.size.should == 1
-    end
-
-    it "should delete participation is the clinician is removed" do
-      @event.update_attributes({"existing_clinician_attributes" => {}})
-      @event.clinicians.should be_empty
-    end
-
-  end
 end

@@ -30,6 +30,7 @@
 
   = error_messages_for :object => [clinician_person, clinician_telephone]
   - fields_for(prefix_with_array, clinician_person, :builder => ExtendedFormBuilder) do |clinician_fields|
+    = clinician_fields.hidden_field(:entity_id)
     %span{:class => 'horiz'}
       = clinician_fields.label(:last_name)
       = clinician_fields.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')

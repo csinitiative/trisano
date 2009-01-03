@@ -122,3 +122,11 @@ has_anthrax_jurisdiction:
   secondary_entity_id: 75
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
+
+marks_clinician:
+  id: 16
+  role_id: !str 2308
+  secondary_entity_id: !str 2
+  primary_entity_id: 
+  created_at: <%= Time.now.to_s :db %> 
+  event_id: !str 1

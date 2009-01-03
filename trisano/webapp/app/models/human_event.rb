@@ -263,39 +263,41 @@ class HumanEvent < Event
       code = attributes.delete(:entity_location_type_id)
       next if attributes.values_blank?
 
-      person = {}
-      person[:last_name] = attributes.delete(:last_name)
-      person[:first_name] = attributes.delete(:first_name)
-      person[:middle_name] = attributes.delete(:middle_name)
-
       clinician_participation = clinicians.build(:role_id => Event.participation_code('Treated By'))
-      clinician_entity = clinician_participation.build_secondary_entity
-      clinician_entity.entity_type = "person"
-      clinician_entity.build_person_temp( person )
+      if attributes[:entity_id].blank?
+        person = {}
+        person[:last_name] = attributes.delete(:last_name)
+        person[:first_name] = attributes.delete(:first_name)
+        person[:middle_name] = attributes.delete(:middle_name)
+        attributes.delete(:entity_id) # Get this out of the way
 
-      next if attributes.values_blank?
-      el = clinician_entity.telephone_entities_locations.build(
-             :entity_location_type_id => code, 
-             :primary_yn_id => ExternalCode.yes_id,
-             :location_type_id => Code.telephone_location_type_id)
-      el.build_location.telephones.build(attributes)
+        clinician_entity = clinician_participation.build_secondary_entity
+        clinician_entity.entity_type = "person"
+        clinician_entity.build_person_temp( person )
+
+        next if attributes.values_blank?
+        el = clinician_entity.telephone_entities_locations.build(
+               :entity_location_type_id => code, 
+               :primary_yn_id => ExternalCode.yes_id,
+               :location_type_id => Code.telephone_location_type_id)
+        el.build_location.telephones.build(attributes)
+      else
+        clinician_entity = Entity.find(attributes[:entity_id])
+        clinician_participation.secondary_entity = clinician_entity
+      end
     end
   end
 
   def existing_clinician_attributes=(clinician_attributes)
     # first, preserve existing and delete removed
     clinicians.reject(&:new_record?).each do |clinician|
-      id = clinician.secondary_entity.person_temp.id.to_s
-      unless clinician_attributes.delete(id)
-        clinicians.delete(clinician) 
+      attributes = clinician_attributes[clinician.id.to_s]
+      # You can't edit clinicians but you can delete the linkage.  So, if they're there, do nothing
+      if attributes && !attributes.values_blank?
+      else
+        clinicians.delete(clinician)
       end
     end
-
-    # then create references to any newly added ones
-    clinician_attributes.each do |id, hash|
-      clinician_participation = clinicians.build(:role_id => Event.participation_code('Treated By'))
-      clinician_participation.secondary_entity = Person.find(id).entity
-    end      
   end
 
   def lab_results
