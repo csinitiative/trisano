@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe 'export/cdc' do
-  fixtures :events, :disease_events, :diseases, :export_conversion_values, :export_columns, :diseases_export_columns
+  fixtures :events, :participations, :disease_events, :diseases, :export_conversion_values, :export_columns, :diseases_export_columns
 
   before(:each) do
     @results = {

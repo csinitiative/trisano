@@ -68,9 +68,9 @@ module Export
       include Export::Cdc::CdcWriter
 
       def export_core_field_configs
-        self.form_references.collect do |form_ref|          
-          form_ref.form.form_elements.find(:all, 
-                                           :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
+        forms = self.form_references.empty? ? self.get_investigation_forms : self.form_references.collect{|fr| fr.form}
+        forms.collect do |form|          
+          form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
         end.flatten
       end
 

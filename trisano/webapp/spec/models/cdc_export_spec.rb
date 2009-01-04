@@ -17,7 +17,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
-  fixtures :diseases, :diseases_external_codes, :export_columns, :export_conversion_values
+  fixtures :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities
 
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)
@@ -78,6 +78,9 @@ describe CdcExport do
           "birth_gender_id" => external_codes(:gender_female).id,
           "birth_date" => Date.parse('01/01/1975')
         }          
+      },
+      "active_jurisdiction" => {
+        "secondary_entity_id" => '75'
       }
     }
   end
