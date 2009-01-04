@@ -31,9 +31,9 @@ layout = Logging::Layouts::Pattern.new :pattern => "[%d] [%-5l] %m\n"
 
 # Default logfile, history kept for 10 days
 TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= '/var/log/trisano/'
-if TRISANO_LOG_LOCATION.split('').last != '/'
-  TRISANO_LOG_LOCATION = TRISANO_LOG_LOCATION + '/'
-end
+#if TRISANO_LOG_LOCATION.split('').last != '/'
+#  TRISANO_LOG_LOCATION = TRISANO_LOG_LOCATION + '/'
+#end
 default_appender = Logging::Appenders::RollingFile.new 'default', :filename => TRISANO_LOG_LOCATION + 'trisano.log', :age => 'daily', :keep => 10, :safe => true, :layout => layout
 
 DEFAULT_LOGGER = Logging::Logger['server']
