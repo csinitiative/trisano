@@ -138,7 +138,8 @@ describe CdcExport do
 
     it "should display the MMWR week as 2 digits" do
       with_cdc_records do |records|
-        records[0].first.to_cdc[15..16].should == records[0][1].MMWR_week.to_s
+        padded_week = records[0][1].MMWR_week < 10 ? " " + records[0][1].MMWR_week.to_s : records[0][1].MMWR_week.to_s
+        records[0].first.to_cdc[15..16].should == padded_week
       end
     end
 
@@ -461,7 +462,8 @@ describe CdcExport do
 
     it "should report the mmwr week" do
       event = Event.find(@deletes[0].event_id)
-      @deletes[0].to_cdc[15..16].should == event.MMWR_week.to_s
+      padded_week = event.MMWR_week < 10 ? " " + event.MMWR_week.to_s : event.MMWR_week.to_s
+      @deletes[0].to_cdc[15..16].should == padded_week
     end
 
     it 'should cut off the filler' do
