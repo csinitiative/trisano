@@ -1319,6 +1319,11 @@ li {
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px; }
 
+ul.with_bullets li {
+  padding-left: 20px;
+  margin: 8px;
+  background: url(../images/bullet.gif) no-repeat; }
+
 pre {
   background-color: #eee;
   padding: 10px;
@@ -1359,8 +1364,7 @@ pre {
 input.submit {
   clear: both; }
 
-select {
-  display: block; }
+
 
 div.uploadStatus {
   margin: 5px; }
