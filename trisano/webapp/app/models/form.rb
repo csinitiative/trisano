@@ -529,6 +529,8 @@ class Form < ActiveRecord::Base
       unless e["export_conversion_value_id"].nil?
         begin
           disease_group_name, export_column_name, value_from, value_to = e["cdc_export_conversion_value_lookup"].split(FormElement.export_lookup_separator)
+          value_from = value_from.blank? ? nil : value_from
+          value_to = value_to.blank? ? nil : value_to
           disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
           export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
           export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from_and_value_to(export_column.id, value_from, value_to)
