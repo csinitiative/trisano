@@ -38,6 +38,8 @@ class Participation < ActiveRecord::Base
   validates_associated :lab_results
   validates_associated :hospitals_participation
   validates_associated :participations_treatments
+  validates_associated :participations_place
+  validates_associated :participations_contact
 
   after_update :save_multiples
 

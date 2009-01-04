@@ -4,6 +4,7 @@
   -# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
   -core_path = "#{fb_form.object_name}[place]"
 
+  = error_messages_for :object => event.active_place.participations_place
   -f.fields_for(:place, entity_data.place, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :name, p, :horiz do
       =p.label(:name)
@@ -11,6 +12,7 @@
     -core_element :place_type_id, p, :horiz do
       =p.label(:place_type_id, 'Type')
       =h(entity_data.place.place_type.code_description) unless entity_data.place.place_type.nil?
+
   -f.fields_for(:place, event.active_place.participations_place, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :date_of_exposure, p, :horiz do
       =p.label(:date_of_exposure)

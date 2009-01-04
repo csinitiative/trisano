@@ -32,7 +32,8 @@
       -else
         =render :partial => 'events/places/address_show', :locals => { :address => entity_data.address, :current_place => current_patient}
 
-      -if entity_data.telephone_entities_locations.empty?
+      -# Note, there should only ever be one record in telephone_entities_locations
+      -if entity_data.telephone_entities_locations.empty? || entity_data.telephone_entities_locations.all? { |phone| phone.new_record? }
         =render :partial => 'events/people/phones_form', :locals => {:f => f, :fb_form => current_patient, :event => event, :entity_data => entity_data, :namespace => 'active_place'}        
       -else
         =render :partial => 'events/people/phones_show', :locals => {:entity_data => entity_data}
