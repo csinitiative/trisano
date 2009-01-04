@@ -33,21 +33,11 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_test_type
-    # acts_as_auditable code getting in the way of this.
-    # @items = ExternalCode.find(:all,
-    #   :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'gender'", '%' + params[:test_type].downcase + '%'],
-    #   :order => "code_description",
-    #   :limit => 10
-    # )
-    
-    @items = ExternalCode.find_by_sql(["SELECT code_description 
-                                        FROM external_codes 
-                                        WHERE LOWER(code_description) LIKE ? 
-                                        AND code_name = 'lab_test_type' 
-                                        ORDER BY sort_order 
-                                        LIMIT 10", 
-        '%' + params[:test_type].downcase + '%'])
-
+    @items = ExternalCode.find(:all,
+      :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'lab_test_type'", '%' + params[:test_type].downcase + '%'],
+      :order => "code_description",
+      :limit => 10
+    )
     render :inline => "<%= auto_complete_result(@items, 'code_description') %>"
   end
 
@@ -74,13 +64,10 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_clinicians_search
-    sql = <<-SQL
-      SELECT DISTINCT ON (l.id) l.id, l.last_name, l.first_name, l.middle_name, l.entity_id 
-      FROM participations p 
-        LEFT OUTER JOIN people l ON (p.secondary_entity_id = l.entity_id)
-      WHERE p.role_id = ? and LOWER(l.last_name) LIKE ?
-    SQL
-    @clinicians = Person.find_by_sql([sql, Code.treated_by_type_id, params[:last_name].downcase + '%'])
+    @clinicians = Person.find(:all, 
+                              :conditions => ["LOWER(last_name) LIKE ? AND person_type = 'clinician'", params[:last_name].downcase + '%'],
+                              :order => "last_name, first_name",
+                              :limit => 10)
     render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
   end
 

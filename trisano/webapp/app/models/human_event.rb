@@ -265,10 +265,11 @@ class HumanEvent < Event
 
       clinician_participation = clinicians.build(:role_id => Event.participation_code('Treated By'))
       if attributes[:entity_id].blank?
-        person = {}
+        person = {:person_type => "clinician"}
         person[:last_name] = attributes.delete(:last_name)
         person[:first_name] = attributes.delete(:first_name)
         person[:middle_name] = attributes.delete(:middle_name)
+
         attributes.delete(:entity_id) # Get this out of the way
 
         clinician_entity = clinician_participation.build_secondary_entity
