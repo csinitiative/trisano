@@ -662,17 +662,17 @@ describe Form do
     
     it 'should build the correct external code lookup values for an element after an external code has changed' do
       @core_follow_up = FormElement.find(form_elements(:core_follow_up_for_hep_a_form).id)
-      @core_follow_up.code_condition_lookup.should eql("yesno|M")
+      @core_follow_up.code_condition_lookup.should eql("yesno#{FormElement.export_lookup_separator}M")
       @code_to_change = ExternalCode.find(external_codes(:yesno_maybe).id)
       @code_to_change.code_name = "YessirNossir"
       @code_to_change.the_code = "YS"
       @code_to_change.save!
-      @core_follow_up.code_condition_lookup.should eql("YessirNossir|YS")
+      @core_follow_up.code_condition_lookup.should eql("YessirNossir#{FormElement.export_lookup_separator}YS")
     end
     
     it 'should build the correct export column lookup values for an element after an export column has changed' do
       @cdc_question = FormElement.find(form_elements(:cdc_question_for_hep_a_form).id)
-      @cdc_question.cdc_export_column_lookup.should eql("Hepatitis|JAUNDICED")
+      @cdc_question.cdc_export_column_lookup.should eql("Hepatitis#{FormElement.export_lookup_separator}JAUNDICED")
       
       @export_column_to_change = ExportColumn.find(export_columns(:hep_jaundiced).id)
       @export_column_to_change.export_column_name = "acupunctured?"
@@ -682,12 +682,12 @@ describe Form do
       @export_disease_group_to_change.name = "Hep"
       @export_disease_group_to_change.save!
 
-      @cdc_question.cdc_export_column_lookup.should eql("Hep|acupunctured?")
+      @cdc_question.cdc_export_column_lookup.should eql("Hep#{FormElement.export_lookup_separator}acupunctured?")
     end
     
     it 'should build the correct export conversion value lookup values for an element after an export conversion value has changed' do
       @cdc_yes_value = FormElement.find(form_elements(:cdc_yes_value_for_hep_a_form).id)
-      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hepatitis|JAUNDICED|Yes|1")
+      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hepatitis#{FormElement.export_lookup_separator}JAUNDICED#{FormElement.export_lookup_separator}Yes#{FormElement.export_lookup_separator}1")
       
       @conversion_value_to_change = ExportConversionValue.find(export_conversion_values(:jaundiced_yes).id)
       @conversion_value_to_change.value_from = "Yessir"
@@ -702,7 +702,7 @@ describe Form do
       @export_disease_group_to_change.name = "Hep"
       @export_disease_group_to_change.save!
 
-      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hep|acupunctured?|Yessir|11")
+      @cdc_yes_value.cdc_export_conversion_value_lookup.should eql("Hep#{FormElement.export_lookup_separator}acupunctured?#{FormElement.export_lookup_separator}Yessir#{FormElement.export_lookup_separator}11")
     end
     
   end

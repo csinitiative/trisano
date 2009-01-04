@@ -508,7 +508,7 @@ class Form < ActiveRecord::Base
       # IDs for the system receiving the form import.
       unless e["export_column_id"].nil?
         begin
-          disease_group_name, export_column_name = e["cdc_export_column_lookup"].split("|")
+          disease_group_name, export_column_name = e["cdc_export_column_lookup"].split(FormElement.export_lookup_separator)
           disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
           export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
           values[:export_column_id] = export_column.id
@@ -528,7 +528,7 @@ class Form < ActiveRecord::Base
       
       unless e["export_conversion_value_id"].nil?
         begin
-          disease_group_name, export_column_name, value_from, value_to = e["cdc_export_conversion_value_lookup"].split("|")
+          disease_group_name, export_column_name, value_from, value_to = e["cdc_export_conversion_value_lookup"].split(FormElement.export_lookup_separator)
           disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
           export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
           export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from_and_value_to(export_column.id, value_from, value_to)
@@ -542,7 +542,7 @@ class Form < ActiveRecord::Base
       
       if e["is_condition_code"] == true
         begin
-          code_name, the_code  = e["code_condition_lookup"].split("|")
+          code_name, the_code  = e["code_condition_lookup"].split(FormElement.export_lookup_separator)
           external_code = ExternalCode.find_by_code_name_and_the_code(code_name, the_code)
           values[:condition] = external_code.id
         rescue

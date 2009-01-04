@@ -22,6 +22,8 @@ class FormElement < ActiveRecord::Base
   belongs_to :form
   has_one :question
   belongs_to :export_column
+
+  @@export_lookup_separator = "|||"
   
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
   # post-saving activities in the transaction
@@ -247,7 +249,7 @@ class FormElement < ActiveRecord::Base
     if self.is_condition_code
       begin
         external_code = ExternalCode.find(self.condition)
-        return "#{external_code.code_name}|#{external_code.the_code}"
+        return "#{external_code.code_name}#{@@export_lookup_separator}#{external_code.the_code}"
       rescue Exception => ex
         logger.error ex
         raise "The external code for the condition on #{self.core_path} could not be found."
@@ -259,7 +261,7 @@ class FormElement < ActiveRecord::Base
     if self.export_column_id
       begin
         export_column = ExportColumn.find(self.export_column_id, :include => :export_disease_group)
-        return "#{export_column.export_disease_group.name}|#{export_column.export_column_name}"
+        return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}"
       rescue Exception => ex 
         if self.attributes["type"] == "QuestionElement"
           element_type = "question"
@@ -279,7 +281,7 @@ class FormElement < ActiveRecord::Base
       begin
         export_conversion_value = ExportConversionValue.find(self.export_conversion_value_id)
         export_column = ExportColumn.find(export_conversion_value.export_column_id, :include => :export_disease_group)
-        return "#{export_column.export_disease_group.name}|#{export_column.export_column_name}|#{export_conversion_value.value_from}|#{export_conversion_value.value_to}"
+        return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}#{@@export_lookup_separator}#{export_conversion_value.value_from}#{@@export_lookup_separator}#{export_conversion_value.value_to}"
       rescue Exception => ex
         logger.error ex
         raise "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
@@ -287,4 +289,8 @@ class FormElement < ActiveRecord::Base
     end
   end
 
+  def self.export_lookup_separator
+    @@export_lookup_separator
+  end
+  
 end
