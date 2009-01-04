@@ -486,7 +486,7 @@ describe CdcExport do
 
       it 'should not appear in verification records' do
         soft_delete_a_record
-        CdcExport.verification_records.should be_empty
+        CdcExport.verification_records(Mmwr.new.mmwr_year).should be_empty
       end
 
       it 'should not generate an update record' do
@@ -503,38 +503,38 @@ describe CdcExport do
 
     it "should display the summary record for AIDS" do 
       with_sent_events do
-        CdcExport.verification_records.length.should == 1
+        CdcExport.verification_records(Mmwr.new.mmwr_year).length.should == 1
       end
     end
 
     it "should display 'V' for the record type" do
       with_sent_events do
-        CdcExport.verification_records[0].to_cdc[0...1].should == 'V'
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[0...1].should == 'V'
       end
     end
 
     it "should display '49' for the state" do
       with_sent_events do
-        CdcExport.verification_records[0].to_cdc[1..2].should == '49'
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[1..2].should == '49'
       end
     end
 
     it "should display '10560' for event code" do
       with_sent_events do
-        CdcExport.verification_records[0].to_cdc[3..7].should == '10560'
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[3..7].should == '10560'
       end
     end
 
     it "should display the counts of AIDS sent to CDC for the year" do
       with_sent_events do
-        CdcExport.verification_records[0].to_cdc[8..12].should == '00001'
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00001'
       end
     end
 
     it "should display the MMWR year as 2 digits" do
       year = Mmwr.new.mmwr_year.to_s[2..3]
       with_sent_events do
-        CdcExport.verification_records[0].to_cdc[13..14].should == year
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[13..14].should == year
       end
     end
   end
@@ -550,11 +550,11 @@ describe CdcExport do
     end
     
     it "should display two verification records" do
-      CdcExport.verification_records.length.should == 2
+      CdcExport.verification_records(Mmwr.new.mmwr_year).length.should == 2
     end
 
     it "should keep proper counts" do
-      records = CdcExport.verification_records
+      records = CdcExport.verification_records(Mmwr.new.mmwr_year)
       records.sort!{|a, b| a.count <=> b.count}
       records[0].to_cdc[8..12].should == '00001'
       records[1].to_cdc[8..12].should == '00002'
@@ -570,7 +570,7 @@ describe CdcExport do
 
     it "should not blow up if there are no disease export statuses" do      
       ActiveRecord::Base.connection.execute('truncate table diseases_external_codes')
-      CdcExport.verification_records
+      CdcExport.verification_records(Mmwr.new.mmwr_year)
     end
   
   end

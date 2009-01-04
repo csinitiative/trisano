@@ -66,8 +66,8 @@ class CdcExport < ActiveRecord::Base
       events
     end
 
-    def verification_records
-      where = "where exp_year='#{this_mmwr_year.to_s[2..3]}' AND exp_deleted_at IS NULL"
+    def verification_records(mmwr_year)
+      where = "where exp_year='#{mmwr_year.to_s[2..3]}' AND exp_deleted_at IS NULL"
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
       group_by = "GROUP BY exp_event, exp_state, exp_year"
@@ -82,13 +82,5 @@ class CdcExport < ActiveRecord::Base
       event_ids = cdc_records.compact.collect {|record| record.event_id}
       Event.update_all('sent_to_cdc=true', ['id IN (?)', event_ids])
     end
-
-    private
-
-    def this_mmwr_year
-      mmwr = Mmwr.new
-      mmwr.mmwr_year
-    end
-
   end
 end

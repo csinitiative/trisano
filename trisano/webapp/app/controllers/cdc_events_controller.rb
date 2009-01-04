@@ -66,7 +66,7 @@ class CdcEventsController < AdminController
   def current_ytd
     mmwr_year = params[:mmwr_year] || Mmwr.new.mmwr_year
     @events = []
-    @events << CdcExport.verification_records
+    @events << CdcExport.verification_records(mmwr_year)
     @events << CdcExport.annual_cdc_export(mmwr_year)
     @events.flatten!
     respond_to do |format|
@@ -105,7 +105,7 @@ class CdcEventsController < AdminController
 
   def weekly_events(start_mmwr, end_mmwr)
     events = []
-    events << CdcExport.verification_records
+    events << CdcExport.verification_records(end_mmwr.mmwr_year)
     events << CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
     events << CdcExport.cdc_deletes(start_mmwr, end_mmwr)
     events.flatten!
