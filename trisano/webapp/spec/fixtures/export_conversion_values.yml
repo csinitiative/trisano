@@ -130,3 +130,24 @@ gender_female:
   export_column_id: 14
   value_from: 'F'
   value_to: '2'  
+
+pregnant_yes:
+  id: 21
+  export_column_id: 15
+  value_from: 'Y'
+  value_to: '1'
+  sort_order: 10
+
+pregnant_no:
+  id: 22
+  export_column_id: 15
+  value_from: 'N'
+  value_to: '2'
+  sort_order: 20
+
+pregnant_unk:
+  id: 23
+  export_column_id: 15
+  value_from: 'UNK'
+  value_to: '9'
+  sort_order: 30

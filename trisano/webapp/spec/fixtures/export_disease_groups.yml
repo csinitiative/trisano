@@ -3,3 +3,7 @@
 hep_group:
   id: 1
   name: Hepatitis
+
+std_group:
+  id: 2
+  name: 'STD'

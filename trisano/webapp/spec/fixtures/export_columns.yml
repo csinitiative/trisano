@@ -136,3 +136,16 @@ birth_gender_id:
   length_to_output: 1
   name: 'SEX'
   export_disease_group_id : 1
+
+pregnant_extended_id:
+  id: 15
+  export_name_id: 1
+  type_data: 'CORE'
+  export_column_name: 'PREGNANT'
+  table_name: 'participations_risk_factors'
+  column_name: 'pregnant_id'
+  is_required: 'Y'
+  start_position: 75
+  length_to_output: 1
+  name: 'Pregnant CDC'
+  export_disease_group_id: 2

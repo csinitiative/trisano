@@ -50,7 +50,6 @@ class ExportColumn < ActiveRecord::Base
       self.errors.add_to_base("Table Name must be blank if Data Source is Formbuilder") unless table_name.blank?
       self.errors.add_to_base("Column Name must be blank if Data Source is Formbuilder") unless column_name.blank?
     when "CORE"
-      self.errors.add_to_base("Data Type must be blank if Data Source is Core") unless data_type.blank?
       self.errors.add_to_base("Table Name required if Data Source is Core") if table_name.blank?
       self.errors.add_to_base("Column Name required if Data Source is Core") if column_name.blank?
     when "FIXED"

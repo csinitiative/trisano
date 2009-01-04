@@ -16,9 +16,12 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class FormElement < ActiveRecord::Base
+  include Export::Cdc::FormElementExt
+
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
   has_one :question
+  belongs_to :export_column
   
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
   # post-saving activities in the transaction

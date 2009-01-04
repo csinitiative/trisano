@@ -17,6 +17,35 @@
 
 module Export
   module Cdc
+    module CdcWriter
+      def write(value, options)
+        return if value.nil?
+        options = {
+          :length => 1, 
+          :starting => 0,
+          :result => ''}.merge(options)
+        diff = (options[:starting] + options[:length]) - options[:result].length
+        options[:result] << ' ' * diff if diff > 0
+        options[:result][options[:starting], options[:length]] = value
+        options[:result]
+      end
+
+      def convert_value(value, conversion)        
+        if conversion
+          converted_value = conversion.value_to
+          case
+          when conversion.conversion_type == 'date' && value            
+            converted_value = Date.parse(value.to_s).strftime("%m/%d/%y")
+          when conversion.conversion_type == 'single_line_text' && value
+            length_to_output = conversion.export_column.length_to_output
+            converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
+          end
+          converted_value
+        end
+      end
+
+    end
+
     module HumanEvent
       def nested_attribute_paths
         { 'disease_id' => [:disease, :disease_id],
@@ -36,7 +65,39 @@ module Export
     end
 
     module EventRules
-      
+      include Export::Cdc::CdcWriter
+
+      def export_core_field_configs
+        self.form_references.collect do |form_ref|          
+          form_ref.form.form_elements.find(:all, 
+                                           :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
+        end.flatten
+      end
+
+      def write_conversion_for(config, options)
+        write(value_converted_using(config),
+              :starting => config.export_column.start_position - 1,
+              :length   => config.export_column.length_to_output,
+              :result   => options[:to] || '')
+      end
+
+      def value_converted_using(config)
+        begin
+          value = safe_call_chain(*config.call_chain)
+        rescue Exception => ex
+          logger.error("CDC export value could not be retrieved: " + ex.message)
+          return ''
+        end
+        value = value.the_code if value.respond_to? :the_code
+        case config.export_column.data_type
+        when "date", "single_line_text"
+          conversion = config.export_column.export_conversion_values.first
+        else
+          conversion = config.export_column.export_conversion_values.find_by_value_from(value)
+        end
+        convert_value(value, conversion)
+      end
+
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
         if export_attributes_changed?(old_attributes)
@@ -98,7 +159,8 @@ module Export
     end
 
     module AnswerRules
-      
+      include Export::Cdc::CdcWriter
+
       def Answer.export_answers(*args)
         args = [:all] if args.empty?
         with_scope(:find => {:conditions => ['export_conversion_value_id is not null']}) do
@@ -106,34 +168,17 @@ module Export
         end
       end
 
-      def convert_value        
-        if export_conversion_value
-          value = export_conversion_value.value_to
-          case
-          when conversion_type == 'date' && self.text_answer
-            value = Date.parse(self.text_answer).strftime("%m/%d/%y")
-          when conversion_type == 'single_line_text' && self.text_answer
-            value = self.text_answer.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
-          end
-          value
-        end
-      end
-
       # modifies result string based on export conversion
       # rules. Result is lengthened if needed. Returns the value that
       # was inserted.
       def write_export_conversion_to(result)
-        diff = (start_position + length_to_output) - result.length    
-        result << ' ' * diff if diff > 0
-        result[start_position, length_to_output] = convert_value
-        result
+        write(convert_value(self.text_answer, export_conversion_value), 
+              :starting => start_position, 
+              :length => length_to_output,
+              :result => result)
       end
-
+    
       private
-
-      def conversion_type
-        safe_call_chain(:export_conversion_value, :export_column, :data_type)
-      end
 
       # Returns the start position, adjusted for zero based indexes.
       def start_position
@@ -147,6 +192,14 @@ module Export
 
     end
 
+    module FormElementExt
+      def call_chain
+        if core_path
+          path = core_path.scan(/\[([^\[\]]*)\]/).collect{|group| group[0].gsub(/_id$/, '')}
+        end
+      end
+    end
+   
     module Record
 
       def cdc_export_fields
@@ -203,15 +256,10 @@ module Export
       def disease_specific_records
         result = ''
         event = Event.find(event_id)
-        if event.disease && event.disease.disease
-          conversion_value_ids = event.disease.disease.export_conversion_value_ids
-          disease_filter = {:conditions => ['text_answer is not null AND export_conversion_value_id in (?)', conversion_value_ids]}
-        end
-        options = (disease_filter || {}).merge(:order => 'id DESC')
-        answers = event.answers.export_answers(:all, options)
-        answers.each {|answer| answer.write_export_conversion_to(result)}
+        event_answer_conversions(event, result)
+        core_field_conversions(event, result)
         (result[60...result.length] || '').rstrip  
-      end
+      end      
 
       def method_missing(method, *args)
         if self.has_key? method.to_s
@@ -219,6 +267,24 @@ module Export
           send(method, args)
         else
           super
+        end
+      end
+
+      private
+
+      def event_answer_conversions(event, result)
+        if event.disease && event.disease.disease
+          conversion_value_ids = event.disease.disease.export_conversion_value_ids
+          disease_filter = {:conditions => ['text_answer is not null AND export_conversion_value_id in (?)', conversion_value_ids]}
+        end
+        options = (disease_filter || {}).merge(:order => 'id DESC')
+        answers = event.answers.export_answers(:all, options)
+        answers.each {|answer| answer.write_export_conversion_to(result)}
+      end
+
+      def core_field_conversions(event, result)
+        event.export_core_field_configs.each do |config|
+          event.write_conversion_for(config, :to => result)
         end
       end
 

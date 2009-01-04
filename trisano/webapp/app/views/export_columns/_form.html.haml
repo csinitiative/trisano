@@ -15,16 +15,15 @@
 
 %table.list
   %tr
-    %th.forminformation
+    %th.forminformation{:colspan => '2'}
       Associated Diseases
   %tr
-    %td
-      = render :partial => 'disease', :collection => @export_column.diseases
+    = render :partial => 'disease', :collection => @export_column.diseases
   %tr
-    %th.forminformation
+    %th.forminformation{:colspan => '2'}
       Edit Export Column
   %tr
-    %td
+    %td{:colspan => '2'}
       %span{ :class => "horiz" }
         = f.label(:name, "Descriptive Name")
         = f.text_field(:name)
