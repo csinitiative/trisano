@@ -493,7 +493,7 @@ module EventsHelper
     end
   end
 
-  def tooltip(html_id, options={:fadein => 500, :fadeout => 500})
+  def tooltip(html_id, options={:fadein => 500, :fadeout => 500, :width => -400})
     tool_tip_command = ["'#{html_id}'"]
     tool_tip_command << options.map{|k,v| [k.to_s.upcase, v]} if options
     "<a id=\"#{html_id}_hotspot\" href=\"#\" onmouseover=\"TagToTip(#{tool_tip_command.flatten.join(', ')})\" onmouseout=\"UnTip()\">#{yield}</a>"
@@ -513,7 +513,7 @@ module EventsHelper
     result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)    
     end
-    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{help_text}</span>"
+    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{simple_format(help_text)}</span>"
   end
 
   def render_core_field_help_text(attribute, form_builder, block)
