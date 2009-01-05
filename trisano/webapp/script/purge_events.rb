@@ -84,6 +84,6 @@ ActiveRecord::Base.connection.select_value("select setval('participation_hospita
 ActiveRecord::Base.connection.select_value("select setval('lab_results_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('participations_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('events_id_seq', 1)")
-ActiveRecord::Base.connection.select_value("select setval('events_record_number_seq', 2008000001)")
+ActiveRecord::Base.connection.select_value("select setval('events_record_number_seq', 2009000001)")
 puts "success - reset sequences"
 
