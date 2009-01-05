@@ -21,9 +21,9 @@ describe "/export_columns/show.html.haml" do
   
   before(:each) do
     disease1 = mock_model(Disease)
-    disease1.should_receive(:disease_name).and_return('Hepatitis A, acute')
+    disease1.should_receive(:disease_name).twice.and_return('Hepatitis A, acute')
     disease2 = mock_model(Disease)
-    disease2.should_receive(:disease_name).and_return('Mumps')
+    disease2.should_receive(:disease_name).twice.and_return('Mumps')
     @export_column = mock_model(ExportColumn)
     @export_column.should_receive(:name).twice.and_return('Export Column Name')
     @export_column.should_receive(:diseases).and_return([disease1, disease2])
@@ -37,14 +37,13 @@ describe "/export_columns/show.html.haml" do
     @export_column.should_receive(:start_position).and_return(69)
     @export_column.should_receive(:length_to_output).and_return(1)
     @export_column.should_receive(:export_conversion_values).and_return([])
-    @export_column.should_receive(:disease_ids).and_return([disease1.id, disease2.id])
 
     assigns[:export_column] = @export_column
   end
 
   it "should render associated diseases in view" do
     render "/export_columns/show.html.haml"
-    response.should have_tag('td', :text => 'Hepatitis A, acute')
-    response.should have_tag('td', :text => 'Mumps')
+    response.should have_tag('span', :text => 'Hepatitis A, acute')
+    response.should have_tag('span', :text => 'Mumps')
   end
 end
