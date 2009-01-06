@@ -16,13 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
-  include ActionView::Helpers::TagHelper
-  include ActionView::Helpers::AssetTagHelper
-
-  def initialize(object_name, object, template, options, proc)
-    super
-    @controller = eval('@controller', proc.binding)
-  end
 
   def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
     core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
@@ -234,7 +227,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def follow_up_spinner_for(id)
-    '&nbsp;' * 2 + image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => 'Working...', :size => '16x16', :style => 'display: none;')
+    '&nbsp;' * 2 + @template.image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => 'Working...', :size => '16x16', :style => 'display: none;')
   end    
 
   def conversion_id_for(question_element, value_from)
