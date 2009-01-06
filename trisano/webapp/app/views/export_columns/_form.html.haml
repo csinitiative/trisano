@@ -56,7 +56,7 @@
       -# Copied over from views/question_elements/_new.html.haml
       - fb_colm_names = [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]]
       %span{ :class =>  "horiz" }
-        = f.label(:data_type, "Data type (if source is Formbuilder)")
+        = f.label(:data_type, "Data type")
         = f.collection_select(:data_type, fb_colm_names, :last, :first, :include_blank => true)
 
       %span{ :class => "horiz" }
