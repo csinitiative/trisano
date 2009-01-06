@@ -19,6 +19,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::AssetTagHelper
 
+  def initialize(object_name, object, template, options, proc)
+    super
+    @controller = eval('@controller', proc.binding)
+  end
+
   def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
     core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
       text_field(attribute, options)
