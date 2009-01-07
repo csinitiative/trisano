@@ -1,4 +1,6 @@
 
+ ##### Hepatitis #####
+
  - disease_code_group: 'Hepatitis'
    type_data: 'CORE'
    export_column_name: 'OUTBREAK'
@@ -32,6 +34,56 @@
    is_required:
    start_position: '76'
    length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ ##### Lyme #####
+
+ - disease_code_group: 'Lyme'
+   type_data: 'CORE'
+   export_column_name: 'COUNTY'
+   name: 'Core County'
+   table_name: 'addresses'
+   column_name: 'county_id'
+   is_required:
+   start_position: '163'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Lyme'
+   type_data: 'CORE'
+   export_column_name: 'HOSPITALIZ'
+   name: 'Core Hospitalized'
+   table_name: 'disease_events'
+   column_name: 'hospitalized_id'
+   is_required:
+   start_position: '126'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Lyme'
+   type_data: 'CORE'
+   export_column_name: 'PREGNANT'
+   name: 'Core Pregnant'
+   table_name: 'participations_risk_factors'
+   column_name: 'pregnant_id'
+   is_required:
+   start_position: '147'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Lyme'
+   type_data: 'CORE'
+   export_column_name: 'STATE'
+   name: 'Core State'
+   table_name: 'addresses'
+   column_name: 'state_id'
+   is_required:
+   start_position: '148'
+   length_to_output: '15'
    export_name: 'CDC'
    data_type:
 
