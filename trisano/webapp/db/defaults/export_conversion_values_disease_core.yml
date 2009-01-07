@@ -240,37 +240,37 @@
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Lyme'
@@ -626,37 +626,37 @@
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Measles'
@@ -674,19 +674,19 @@
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Measles'
@@ -720,37 +720,37 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Mumps-Rubella'
@@ -768,19 +768,19 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
    value_from: 'Yes'
-   value_to: '1'
+   value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
    value_from: 'No'
-   value_to: '2'
+   value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
    value_from: 'Unknown'
-   value_to: '9'
+   value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Mumps-Rubella'
@@ -789,5 +789,85 @@
    value_to: '99999'
    sort_order: 1
 
+ ##### Pertussis #####
 
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ONSET'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBNAME'
+   value_from:
+   value_to: '999999999999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'Yes'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'No'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'Unknown'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ZIPCODE'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+
+ ##### STD #####
+
+ - disease_code_group: 'STD'
+   export_column_name: 'ZIP'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
 
