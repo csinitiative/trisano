@@ -3,55 +3,55 @@
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'OUTBREAK'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: '1'
    sort_order: 1
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'OUTBREAK'
-   value_from: 'No'
+   value_from: 'N'
    value_to: '2'
    sort_order: 2
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'OUTBREAK'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: '9'
    sort_order: 3
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'HANDLER'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: '1'
    sort_order: 1
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'HANDLER'
-   value_from: 'No'
+   value_from: 'N'
    value_to: '2'
    sort_order: 2
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'HANDLER'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: '9'
    sort_order: 3
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'DAYCARE1'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: '1'
    sort_order: 1
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'DAYCARE1'
-   value_from: 'No'
+   value_from: 'N'
    value_to: '2'
    sort_order: 2
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'DAYCARE1'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: '9'
    sort_order: 3
 
@@ -625,37 +625,37 @@
 
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'DEATH'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'HOSPITAL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
@@ -673,19 +673,19 @@
 
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Measles'
    export_column_name: 'OUTBREL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
@@ -699,19 +699,19 @@
 
  - disease_code_group: 'Meningitis'
    export_column_name: 'DAYCARE'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: '1'
    sort_order: 1
 
  - disease_code_group: 'Meningitis'
    export_column_name: 'DAYCARE'
-   value_from: 'No'
+   value_from: 'N'
    value_to: '2'
    sort_order: 2
 
  - disease_code_group: 'Meningitis'
    export_column_name: 'DAYCARE'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: '9'
    sort_order: 3
 
@@ -719,37 +719,37 @@
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DEATH'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'HOSPITAL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
@@ -767,19 +767,19 @@
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'OUTBREL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
@@ -793,37 +793,37 @@
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'DIED'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'DIED'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'DIED'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'HOSPITAL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'HOSPITAL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'HOSPITAL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
@@ -841,19 +841,19 @@
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'OUTBREL'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'OUTBREL'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'OUTBREL'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
