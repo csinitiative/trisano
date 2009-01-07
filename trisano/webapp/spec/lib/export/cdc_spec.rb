@@ -40,4 +40,17 @@ describe 'export/cdc' do
     @results.disease_specific_records.strip.should == '08'
   end
 
+  describe 'writing the result' do
+    include Export::Cdc::CdcWriter
+
+    before :each do
+      @result = ' ' * 10 + 'Beaver'
+    end
+
+    it 'should not shorten string when inserting values shorter then :length' do
+      write('Utah', :starting => 0, :length => 10, :result => @result)
+      @result.should == 'Utah      Beaver'
+    end
+  end
+
 end

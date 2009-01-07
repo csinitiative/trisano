@@ -27,12 +27,14 @@ module Export
           :length => 1, 
           :starting => 0,
           :result => ''}.merge(options)
+
+
         diff = (options[:starting] + options[:length]) - options[:result].length
         options[:result] << ' ' * diff if diff > 0
         unless (current = options[:result][options[:starting], options[:length]]).strip.blank?
           DEFAULT_LOGGER.warn("CDC Export: Overwriting #{current} with #{value} using these options: #{options.inspect} on #{self.inspect}")
         end
-        options[:result][options[:starting], options[:length]] = value
+        options[:result][options[:starting], options[:length]] = value.ljust(options[:length])[0, options[:length]] 
         options[:result]
       end
 
