@@ -1,0 +1,56 @@
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+
+

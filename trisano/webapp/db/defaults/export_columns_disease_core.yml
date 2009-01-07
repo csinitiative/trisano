@@ -1,0 +1,39 @@
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'CORE'
+   export_column_name: 'OUTBREAK'
+   name: 'Core outbreak'
+   table_name: 'events'
+   column_name: 'outbreak_associated_id'
+   is_required:
+   start_position: '82'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'CORE'
+   export_column_name: 'HANDLER'
+   name: 'Core food handler'
+   table_name: 'participations_risk_factors'
+   column_name: 'food_handler_id'
+   is_required:
+   start_position: '80'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Hepatitis'
+   type_data: 'CORE'
+   export_column_name: 'DAYCARE1'
+   name: 'Core day care'
+   table_name: 'participations_risk_factors'
+   column_name: 'day_care_association_id'
+   is_required:
+   start_position: '76'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+
+
