@@ -1,7 +1,8 @@
 event_export_column:
-  id: 1
+  id: 30
   export_name_id: 1
-  type_data: "FIXED"
+#  type_data: "FIXED"
+  type_data: "CORE"
   export_column_name: "EVENT"
   table_name: "diseases"
   column_name: "id"
@@ -12,8 +13,41 @@ event_export_column:
   updated_at: 
   name:
     
-case_status_export_column:
-  id: 19
+county_export_column:
+  id: 31
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "COUNTY"
+  table_name: "addresses"
+  column_name: "county_id"
+  is_required: "N"
+  start_position: 28
+  length_to_output: 3
+
+ethnicity_export_column:
+  id: 32
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "ETHNICITY"
+  table_name: "people"
+  column_name: "ethnicity_id"
+  is_required: "N"
+  start_position: 45
+  length_to_output: 1
+
+race_export_column:
+  id: 33
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "RACE"
+  table_name: "people_races"
+  column_name: "race_id"
+  is_required: "N"
+  start_position: 44
+  length_to_output: 1
+
+casestatus_export_column:
+  id: 34
   export_name_id: 1
   type_data: "CORE"
   export_column_name: "CASESTATUS"
@@ -22,9 +56,17 @@ case_status_export_column:
   is_required: "N"
   start_position: 53
   length_to_output: 1
-  created_at: 
-  updated_at: 
-  name:
+
+imported_export_column:
+  id: 35
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "IMPORTED"
+  table_name: "events"
+  column_name: "imported_from_id"
+  is_required: "N"
+  start_position: 54
+  length_to_output: 1
 
 hep_jaundiced:
    id: 2

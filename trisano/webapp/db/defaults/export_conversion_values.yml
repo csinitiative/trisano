@@ -1,4 +1,103 @@
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis C virus infection, past or present'
+   value_to: '10106'
 
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis C, acute'
+   value_to: '10101'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis Delta co- or super-infection, acute (Hepatitis D)'
+   value_to: '10102'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis E, acute'
+   value_to: '10103'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Listeriosis'
+   value_to: '10640'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Lyme disease'
+   value_to: '11080'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Lymphogranuloma venereum (LGV)'
+   value_to: '10306'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Meningococcal disease (Neisseria meningitidis)'
+   value_to: '10150'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Nongonococcal urethritis (NGU)'
+   value_to: '10307'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Pelvic Inflammatory Disease (PID), Unknown Etiology'
+   value_to: '10309'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Pertussis'
+   value_to: '10190'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Syphilis, congenital'
+   value_to: '10316'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Syphilis, early latent'
+   value_to: '10313'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Syphilis, late with clinical manifestations other than neurosyphilis'
+   value_to: '10318'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Syphilis, primary'
+   value_to: '10311'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Chlamydia trachomatis genital infection'
+   value_to: '10274'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Gonorrhea'
+   value_to: '10280'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Haemophilus influenzae, invasive disease'
+   value_to: '10590'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis A, acute'
+   value_to: '10110'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis B virus infection, chronic'
+   value_to: '10105'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis B, acute'
+   value_to: '10100'
+
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis B, virus infection perinatal'
+   value_to: '10104'
+ 
+ - export_column_name: 'EVENT'
+   value_from: 'Syphilis, secondary'
+   value_to: '10312'
+ 
+ - export_column_name: 'EVENT'
+   value_from: 'Measles (rubeola), total'
+   value_to: '10140'
+ 
+ - export_column_name: 'EVENT'
+   value_from: 'Hepatitis, viral unspecified'
+   value_to: '10120'
+ 
  - export_column_name: 'EVENT'
    value_from: 'AIDS'
    value_to: '10560'
