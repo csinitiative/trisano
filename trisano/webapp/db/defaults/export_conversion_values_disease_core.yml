@@ -239,37 +239,37 @@
 
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Lyme'
    export_column_name: 'HOSPITALIZ'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
-   value_from: 'Yes'
+   value_from: 'Y'
    value_to: 'Y'
    sort_order: 1
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
-   value_from: 'No'
+   value_from: 'N'
    value_to: 'N'
    sort_order: 2
 
  - disease_code_group: 'Lyme'
    export_column_name: 'PREGNANT'
-   value_from: 'Unknown'
+   value_from: 'UNK'
    value_to: 'U'
    sort_order: 3
 
