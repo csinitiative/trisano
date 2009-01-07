@@ -695,3 +695,99 @@
    value_to: '99999'
    sort_order: 1
 
+  ##### Meningitis #####
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+  ##### Mumps-Rubella #####
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'ONSET'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBNAME'
+   value_from:
+   value_to: '999999999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'Yes'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'No'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'Unknown'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'ZIPCODE'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+
+
+

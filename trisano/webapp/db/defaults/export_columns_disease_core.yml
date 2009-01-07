@@ -161,3 +161,92 @@
    export_name: 'CDC'
    data_type:
 
+ ##### Meningitis #####
+
+ - disease_code_group: 'Meningitis'
+   type_data: 'CORE'
+   export_column_name: 'DAYCARE'
+   name: 'Core day care'
+   table_name: 'participations_risk_factors'
+   column_name: 'day_care_association_id'
+   is_required:
+   start_position: '61'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ ##### Mumps-Rubella #####
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'DEATH'
+   name: 'Core Death'
+   table_name: 'disease_events'
+   column_name: 'died_id'
+   is_required:
+   start_position: '104'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'HOSPITAL'
+   name: 'Core Hospitalized'
+   table_name: 'disease_events'
+   column_name: 'hospitalized_id'
+   is_required:
+   start_position: '121'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'ONSET'
+   name: 'Core Onset'
+   table_name: 'events'
+   column_name: 'event_onset_date'
+   is_required:
+   start_position: '77'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'OUTBNAME'
+   name: 'Core Outbreak Name'
+   table_name: 'events'
+   column_name: 'outbreak_name'
+   is_required:
+   start_position: '232'
+   length_to_output: '15'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'OUTBREL'
+   name: 'Core Outbreak Related'
+   table_name: 'events'
+   column_name: 'outbreak_associated_id'
+   is_required:
+   start_position: '231'
+   length_to_output: '1'
+   export_name: 'CDC'
+   data_type:
+
+ - disease_code_group: 'Mumps-Rubella'
+   type_data: 'CORE'
+   export_column_name: 'ZIPCODE'
+   name: 'Core Zipcode'
+   table_name: 'addresses'
+   column_name: 'postal_code'
+   is_required:
+   start_position: '71'
+   length_to_output: '5'
+   export_name: 'CDC'
+   data_type:
+
+
