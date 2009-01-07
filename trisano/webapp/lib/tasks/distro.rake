@@ -126,6 +126,7 @@ namespace :trisano do
         FileUtils.mkdir(dirname)
       end            
       # dump sans access privs/acl & sans object owner - we grant auth on restore to make moving dump files between envIRONments easier
+      puts "#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{dirname}/#{dump_file_name}"
       success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{dirname}/#{dump_file_name}")
       puts "Created dump file: #{dirname}/#{dump_file_name}"
       unless success
