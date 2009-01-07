@@ -45,8 +45,12 @@ module Export
           when conversion.conversion_type == 'date' && value            
             converted_value = Date.parse(value.to_s).strftime("%m/%d/%y")
           when conversion.conversion_type == 'single_line_text' && value
-            length_to_output = conversion.export_column.length_to_output
-            converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
+            length_to_output = conversion.length_to_output
+            if value.strip =~ /^[\d+]{4}$/ && length_to_output == 2 # really just trying to catch years
+              converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
+            else
+              converted_value = value.ljust(length_to_output)[0, length_to_output].strip
+            end
           end
           converted_value
         else

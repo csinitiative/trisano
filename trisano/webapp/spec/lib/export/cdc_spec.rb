@@ -53,4 +53,33 @@ describe 'export/cdc' do
     end
   end
 
+  describe 'converting values' do
+    include Export::Cdc::CdcWriter
+
+    before :each do      
+      @conversion = mock(ExportConversionValue)
+      @conversion.should_receive(:value_to).once.and_return 'error'
+      @conversion.should_receive(:conversion_type).twice.and_return 'single_line_text'
+    end
+    
+    it 'should grab the right side of numbers (to get two digit years)' do      
+      @conversion.should_receive(:length_to_output).once.and_return 2
+      convert_value('2009', @conversion).should == '09'
+    end
+
+    it 'should ljust string values' do
+      @conversion.should_receive(:length_to_output).once.and_return 4
+      convert_value('Homer', @conversion).should == 'Home'
+    end
+
+    it 'should strip whitespace values' do
+      @conversion.should_receive(:length_to_output).once.and_return 8
+      convert_value('Homer', @conversion).should == 'Homer'
+    end
+
+    it 'should not rjust long postal codes' do
+      @conversion.should_receive(:length_to_output).once.and_return 5
+      convert_value('46062-5888', @conversion).should == '46062'
+    end
+  end
 end

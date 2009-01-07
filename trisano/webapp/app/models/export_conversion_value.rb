@@ -21,6 +21,9 @@ class ExportConversionValue < ActiveRecord::Base
   validates_numericality_of :sort_order, :allow_blank => true
   validates_uniqueness_of :sort_order, :scope => :export_column_id, :allow_blank => true
 
+  delegate :length_to_output, :to => :export_column
+  delegate :data_type, :to => :export_column
+
   def conversion_type
     safe_call_chain(:export_column, :data_type)
   end
