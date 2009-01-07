@@ -19,13 +19,19 @@ module Export
   module Cdc
     module CdcWriter
       def write(value, options)
-        return if value.nil?
+        if value.nil?
+          DEFAULT_LOGGER.info("CDC Export: Export using options #{options.inspect} on #{self.inspect} cancelled because the value was 'nil'")
+          return
+        end
         options = {
           :length => 1, 
           :starting => 0,
           :result => ''}.merge(options)
         diff = (options[:starting] + options[:length]) - options[:result].length
         options[:result] << ' ' * diff if diff > 0
+        unless (current = options[:result][options[:starting], options[:length]]).strip.blank?
+          DEFAULT_LOGGER.warn("CDC Export: Overwriting #{current} with #{value} using these options: #{options.inspect} on #{self.inspect}")
+        end
         options[:result][options[:starting], options[:length]] = value
         options[:result]
       end
@@ -41,6 +47,9 @@ module Export
             converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
           end
           converted_value
+        else
+          DEFAULT_LOGGER.warn("CDC Export: '#{value ? value.inspect : 'nil'}' was not exported for #{self.inspect} because there was no export conversion was associated with it")
+          return nil
         end
       end
 
@@ -69,6 +78,7 @@ module Export
 
       def export_core_field_configs
         forms = self.form_references.empty? ? self.get_investigation_forms : self.form_references.collect{|fr| fr.form}
+        DEFAULT_LOGGER.info("CDC Export: No forms associated with this event: #{self.record_number}") if forms.empty?
         forms.collect do |form|          
           form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
         end.flatten
@@ -85,8 +95,8 @@ module Export
         begin
           value = safe_call_chain(*config.call_chain)
         rescue Exception => ex
-          logger.error("CDC export value could not be retrieved: " + ex.message)
-          return ''
+          DEFAULT_LOGGER.error("CDC Export: Value could not be retrieved: " + ex.message)
+          return
         end
         value = value.the_code if value.respond_to? :the_code
         case config.export_column.data_type
@@ -151,7 +161,7 @@ module Export
       def export_conversion_value_ids
         ids = []
         self.export_columns.each do |column|
-          ids <<  column.export_conversion_values.collect {|value| value.id}
+          ids << column.export_conversion_values.collect {|value| value.id}
         end
         ids.flatten
       end
@@ -230,6 +240,7 @@ module Export
       end
       
       def to_cdc
+        DEFAULT_LOGGER.debug("to_cdc on #{self.inspect}")
         cdc_export_fields.map { |field| send field }.join
       end
 
@@ -279,6 +290,7 @@ module Export
         end
         options = (disease_filter || {}).merge(:order => 'id DESC')
         answers = event.answers.export_answers(:all, options)
+        DEFAULT_LOGGER.info("CDC export: No exported answers for event #{event.record_number}") if answers.empty?
         answers.each {|answer| answer.write_export_conversion_to(result)}
       end
 
@@ -286,6 +298,7 @@ module Export
         event.export_core_field_configs.each do |config|
           event.write_conversion_for(config, :to => result)
         end
+        DEFAULT_LOGGER.info("CDC Export: No additinal Core fields export for event #{event.record_number}") if event.export_core_field_configs.empty?
       end
 
     end
