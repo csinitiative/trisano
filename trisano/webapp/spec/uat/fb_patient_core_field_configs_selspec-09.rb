@@ -22,14 +22,14 @@ describe 'form builder patient core-field questions for morbidity reports' do
   #$dont_kill_browser = true
   
   [{:name => 'Patient last name', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient middle name', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient date of birth', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient age', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient date of death', :tab_name => CLINICAL},
-       {:name => 'Patient birth gender', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient ethnicity', :tab_name => DEMOGRAPHICS},
-       {:name => 'Patient primary language', :tab_name => DEMOGRAPHICS}
+   {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient middle name', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient date of birth', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient age', :tab_name => DEMOGRAPHICS}, 
+   {:name => 'Patient date of death', :tab_name => CLINICAL},
+   {:name => 'Patient birth gender', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient ethnicity', :tab_name => DEMOGRAPHICS},
+   {:name => 'Patient primary language', :tab_name => DEMOGRAPHICS}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do
@@ -57,17 +57,9 @@ describe 'form builder patient core-field questions for morbidity reports' do
       answer_investigator_question(@browser, after_question, after_answer)
 
       save_cmr(@browser)
-      if test[:name] == "Patient age"
-        pending "defect tri1138" do
-          @browser.is_text_present(before_answer).should be_true
-          @browser.is_text_present(after_answer).should be_true
-        end
-      else
-        @browser.is_text_present(before_answer).should be_true
-        @browser.is_text_present(after_answer).should be_true
-      end
-
-      
+      @browser.is_text_present(before_answer).should be_true
+      @browser.is_text_present(after_answer).should be_true
+            
       assert_tab_contains_question(@browser, test[:tab_name], before_question).should be_true
       assert_tab_contains_question(@browser, test[:tab_name], after_question).should be_true
       

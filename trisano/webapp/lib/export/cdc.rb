@@ -185,21 +185,9 @@ module Export
       # was inserted.
       def write_export_conversion_to(result)
         write(convert_value(self.text_answer, export_conversion_value), 
-              :starting => start_position, 
-              :length => length_to_output,
+              :starting => export_conversion_value.export_column.start_position - 1, 
+              :length => export_conversion_value.export_column.length_to_output,
               :result => result)
-      end
-    
-      private
-
-      # Returns the start position, adjusted for zero based indexes.
-      def start_position
-        pos = safe_call_chain(:export_conversion_value, :export_column, :start_position)
-        pos - 1 if pos
-      end
-
-      def length_to_output
-        safe_call_chain(:export_conversion_value, :export_column, :length_to_output)
       end
 
     end
