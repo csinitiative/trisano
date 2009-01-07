@@ -434,6 +434,18 @@
    value_from: 'UT'
    value_to: '1'
 
+ - export_column_name: 'OUTBREAK'
+   value_from: 'Y'
+   value_to: '1'
+
+ - export_column_name: 'OUTBREAK'
+   value_from: 'N'
+   value_to: '2'
+
+ - export_column_name: 'OUTBREAK'
+   value_from: 'UNK'
+   value_to: '9'
+
 ##### Hepatitis #####
 
  - disease_code_group: 'Hepatitis'

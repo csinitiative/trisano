@@ -261,7 +261,7 @@ describe CdcExport do
 
     it "should display outbreak as a one digit code" do
       with_cdc_records do |records|
-        records[0][0].to_cdc[54...55].should == '0'
+        records[0][0].to_cdc[54...55].should == '9'
       end
     end
 
