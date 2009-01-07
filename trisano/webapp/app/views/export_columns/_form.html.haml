@@ -35,7 +35,10 @@
 
       %span{ :class => "horiz" }
         = f.label(:export_column_name, "CDC Column Name")
-        = f.text_field(:export_column_name, :class => 'required')
+        - if @export_column.type_data == "CORE"
+          = @export_column.export_column_name
+        - else
+          = f.text_field(:export_column_name, :class => 'required') 
 
       %span{ :class =>  "horiz" }
         - unless editing
