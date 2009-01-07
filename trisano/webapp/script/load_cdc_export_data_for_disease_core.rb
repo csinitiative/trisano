@@ -17,6 +17,7 @@
 
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns_disease_core.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values_disease_core.yml")
+disease_code_groups = YAML::load_file("#{RAILS_ROOT}/db/defaults/disease_code_groups.yml")
 
 
 ExportColumn.transaction do
@@ -62,6 +63,17 @@ ExportColumn.transaction do
     
     if export_column.new_record?
       export_column.save!
+
+      disease_code_group = disease_code_groups.find {|d| d["disease"] == ec['disease_code_group'] }
+      disease_codes = disease_code_group["codes"].split("|").uniq
+
+      disease_codes.each do |disease_code|
+        disease = Disease.find_by_cdc_code(disease_code)
+
+        unless disease.nil?
+          disease.export_columns << export_column
+        end
+      end
 
       # Find the export conversion values for this disease group and export column name
       conversion_values = export_conversion_values.find_all do |ecv|
