@@ -22,7 +22,7 @@ class CdcOutbreakFixes < ActiveRecord::Migration
   def self.up
     if RAILS_ENV == 'production'
       transaction do
-        ec = ExportColumn.find_by_export_column_name_and_type_date('OUTBREAK', 'CORE')
+        ec = ExportColumn.find_by_export_column_name_and_type_data_and_export_disease_group_id('OUTBREAK', 'CORE', nil)
         ExportConversionValue.create(:export_column_id => ec.id, :value_from => 'Y', :value_to => '1', :sort_order => '10')
         ExportConversionValue.create(:export_column_id => ec.id, :value_from => 'N', :value_to => '2', :sort_order => '20')
         ExportConversionValue.create(:export_column_id => ec.id, :value_from => 'UNK', :value_to => '9', :sort_order => '30')

@@ -192,25 +192,25 @@ FROM
       ON  valgender.value_from  = gender.the_code
     LEFT  OUTER JOIN export_conversion_values valcounty
       ON  valcounty.value_from  = county.the_code
-      AND valcounty.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'COUNTY')
+      AND valcounty.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'COUNTY' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valoutbreak
       ON  valoutbreak.value_from  = outbreak.the_code
-      AND valoutbreak.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'OUTBREAK')
+      AND valoutbreak.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'OUTBREAK' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valrace
       ON  valrace.value_from = race.the_code
-      AND valrace.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'RACE')
+      AND valrace.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'RACE' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valethnicity
       ON  valethnicity.value_from = ethnicity.the_code
-      AND valethnicity.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'ETHNICITY')
+      AND valethnicity.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'ETHNICITY' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valcasestatus
       ON  valcasestatus.value_from = events.event_status
 --      ON  valcasestatus.value_from = events.udoh_case_status_id
-      AND valcasestatus.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'CASESTATUS')
+      AND valcasestatus.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'CASESTATUS' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valimported
       ON  valimported.value_from = imported.the_code
-      AND valimported.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'IMPORTED')
+      AND valimported.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'IMPORTED' AND export_disease_group_id IS NULL)
     LEFT  OUTER JOIN export_conversion_values valdisease
       ON  valdisease.value_from = diseases.disease_name
-      AND valdisease.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'EVENT')
+      AND valdisease.export_column_id = (SELECT id from export_columns WHERE type_data = 'CORE' AND export_column_name = 'EVENT' AND export_disease_group_id IS NULL)
    ) AS b
 ;
