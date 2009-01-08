@@ -123,7 +123,7 @@
    start_position: '77'
    length_to_output: '8'
    export_name: 'CDC'
-   data_type:
+   data_type: 'date'
 
  - disease_code_group: 'Measles'
    type_data: 'CORE'
@@ -135,7 +135,7 @@
    start_position: '234'
    length_to_output: '15'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Measles'
    type_data: 'CORE'
@@ -159,7 +159,7 @@
    start_position: '71'
    length_to_output: '5'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  ##### Meningitis #####
 
@@ -211,7 +211,7 @@
    start_position: '77'
    length_to_output: '8'
    export_name: 'CDC'
-   data_type:
+   data_type: 'date'
 
  - disease_code_group: 'Mumps-Rubella'
    type_data: 'CORE'
@@ -223,7 +223,7 @@
    start_position: '232'
    length_to_output: '15'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Mumps-Rubella'
    type_data: 'CORE'
@@ -247,7 +247,7 @@
    start_position: '71'
    length_to_output: '5'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  ##### Pertussis #####
 
@@ -285,7 +285,7 @@
    start_position: '77'
    length_to_output: '8'
    export_name: 'CDC'
-   data_type:
+   data_type: 'date'
 
  - disease_code_group: 'Pertussis'
    type_data: 'CORE'
@@ -297,7 +297,7 @@
    start_position: '268'
    length_to_output: '18'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  - disease_code_group: 'Pertussis'
    type_data: 'CORE'
@@ -321,7 +321,7 @@
    start_position: '71'
    length_to_output: '5'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
  ##### STD #####
 
@@ -335,5 +335,5 @@
    start_position: '65'
    length_to_output: '5'
    export_name: 'CDC'
-   data_type:
+   data_type: 'single_line_text'
 
