@@ -50,6 +50,8 @@ class ExportColumnsController < AdminController
 
   def update
     @export_column = ExportColumn.find(params[:id])
+    params[:export_column][:disease_ids] ||= [] unless params[:export_column].nil?
+    
     
     if @export_column.update_attributes(params[:export_column])
       flash[:notice] = 'Export Column was successfully updated.'

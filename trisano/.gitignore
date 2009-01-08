@@ -1,5 +1,4 @@
 *~
-.gitignore
 TAGS
 *#
 .#*
@@ -12,3 +11,4 @@ patches*
 webapp/db/*.sql
 distro/database/trisano_schema.sql
 *.dump_obfu
+dump
