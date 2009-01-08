@@ -9,7 +9,7 @@ log = File.new("uat.out",  "w")
 # redirect stderr to log file
 $stderr = log
 
-Dir["spec/uat/*.rb"].each do |path|
+Dir["spec/uat/*#{ARGV[0]}.rb"].each do |path|
   cmd  = "spec #{path}"
   puts "Launching #{cmd}"
   $stdout.flush
