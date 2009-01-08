@@ -43,6 +43,7 @@ module Export
           converted_value = conversion.value_to
           case
           when conversion.conversion_type == 'date' && value
+            return converted_value if value.blank?
             begin
               date = Date.parse(value.to_s)
               converted_value = date.strftime("%m/%d/%y")
@@ -104,7 +105,7 @@ module Export
 
       def value_converted_using(config)
         begin
-          value = safe_call_chain(*config.call_chain)
+          value = safe_call_chain(*config.call_chain) || ''
         rescue Exception => ex
           DEFAULT_LOGGER.error("CDC Export: Value could not be retrieved: " + ex.message)
           return
