@@ -225,9 +225,9 @@ module EventsHelper
       case transition.state_code
       when "ACPTD-LHD", "RJCTD-LHD", "UI", "RJCTD-INV", "APP-LHD", "RO-MGR", "CLOSED", "RO-STATE"
         action_controls += radio_button_tag(transition.state_code,
-                                     transition.state_code, 
-                                     false, 
-                                     :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
+          transition.state_code,
+          false,
+          :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
         action_controls += transition.action_phrase 
       when "ASGD-INV"
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
@@ -360,23 +360,21 @@ module EventsHelper
   def concat_core_field(mode, before_or_after, attribute, form_builder, block)
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
-    if (@event.attributes["type"] != "MorbidityEvent" || @can_investigate)
-      @event.form_references.each do |form_reference|
-        core_path = form_builder.options[:core_path] || form_builder.object_name
-        configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
-        configs.each do |config|
-          element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
+    @event.form_references.each do |form_reference|
+      core_path = form_builder.options[:core_path] || form_builder.object_name
+      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
+      configs.each do |config|
+        element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
           
-          case mode
-          when :edit
-            concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
-          when :show
-            concat(show_investigator_view(element, form_reference.form, @event_form), block.binding)
-          when :print
-            concat(print_investigator_view(element, form_reference.form, @event_form), block.binding)
-          end
-          
+        case mode
+        when :edit
+          concat(render_investigator_view(element, @event_form, form_reference.form), block.binding)
+        when :show
+          concat(show_investigator_view(element, form_reference.form, @event_form), block.binding)
+        when :print
+          concat(print_investigator_view(element, form_reference.form, @event_form), block.binding)
         end
+          
       end
     end
   end
@@ -991,7 +989,7 @@ module EventsHelper
     options[:results]      ||= options[:search_field] + '_results'
     options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
     options[:after_update_element]     ||= live_search_callback(:update => options[:results], 
-                                                                :url => options[:after_update_element_url])    
+      :url => options[:after_update_element_url])
     <<-HTML
       #{auto_complete_stylesheet}
       #{content_tag(:label, label, :for => options[:search_field])}

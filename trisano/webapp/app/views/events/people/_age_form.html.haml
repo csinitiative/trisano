@@ -24,10 +24,10 @@
   -f.fields_for(:person, entity_data.person, :core_path => core_path, :builder => ExtendedFormBuilder) do |p|
     -core_element :birth_date, p, :horiz do
       =p.label(:birth_data, "Date of Birth")
-      =p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event, @can_investigate )
+      =p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event )
     -core_element :approximate_age_no_birthday, p, :horiz do
       =p.label(:approximate_age_no_birthday, "Age")
-      =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event, @can_investigate)
+      =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event)
     -core_element :age_at_onset, p, :horiz do
       =p.label :age_at_onset
       =@event.age_info

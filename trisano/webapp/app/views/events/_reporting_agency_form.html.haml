@@ -59,26 +59,26 @@
     - f.fields_for(:active_reporting_agency, reporter_name, :core_path => reporter_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       - core_element :last_name, agency_form, :horiz do
         = agency_form.label(:last_name, "Reporter last name")
-        = agency_form.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, @event, @can_investigate)
+        = agency_form.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, @event)
       - core_element :first_name, agency_form, :horiz do
         = agency_form.label(:first_name, "Reporter first name")
-        = agency_form.core_text_field(:first_name, {:size => 25, :maxlength => 25}, @event, @can_investigate)
+        = agency_form.core_text_field(:first_name, {:size => 25, :maxlength => 25}, @event)
     
     - f.fields_for(:active_reporting_agency, reporter_ent_loc, :core_path => reporter_loc_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       - core_element :entity_location_type_id, agency_form, :horiz do
         = agency_form.label(:entity_location_type_id, "Phone type")
-        = agency_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event, @can_investigate)
+        = agency_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {}, @event)
     
     - f.fields_for(:active_reporting_agency, reporter_phone, :core_path => reporter_phone_core_path, :builder => ExtendedFormBuilder) do |agency_form|
       - core_element :area_code, agency_form, :horiz do
         = agency_form.label(:area_code)
-        = agency_form.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, @event, @can_investigate)
+        = agency_form.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'}, @event)
       - core_element :phone_number, agency_form, :horiz do
         = agency_form.label(:phone_number)
-        = agency_form.core_text_field(:phone_number, {:size => 8}, @event, @can_investigate)
+        = agency_form.core_text_field(:phone_number, {:size => 8}, @event)
       - core_element :extension, agency_form, :horiz do
         = agency_form.label(:extension)
-        = agency_form.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event, @can_investigate)
+        = agency_form.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event)
 
     %span.vert
     - core_element :results_reported_to_clinician_date, f, :horiz do

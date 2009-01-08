@@ -17,27 +17,27 @@
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
-  def core_text_field(attribute, options = {}, event =nil, can_investigate =nil)
-    core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
+  def core_text_field(attribute, options = {}, event =nil)
+    core_follow_up(attribute, options, event) do |attribute, options|
       text_field(attribute, options)
     end
   end
   
-  def core_calendar_date_select(attribute, options = {}, event =nil, can_investigate =nil)
-    core_follow_up(attribute, options, event, can_investigate) do |attribute, options|
+  def core_calendar_date_select(attribute, options = {}, event =nil)
+    core_follow_up(attribute, options, event) do |attribute, options|
       calendar_date_select(attribute, options)
     end
   end
   
-  def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil, can_investigate =nil)
-    core_follow_up(attribute, html_options, event, can_investigate) do |attribute, html_options|
+  def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
+    core_follow_up(attribute, html_options, event) do |attribute, html_options|
       options[:include_blank] = true unless options[:include_blank] == false
       self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
     end
   end
 
-  def core_dropdown_field(attribute, collection, value_method, text_method, options={}, html_options={}, event=nil, can_investigate=nil)
-    core_follow_up(attribute, html_options, event, can_investigate) do |attribute, html_options|
+  def core_dropdown_field(attribute, collection, value_method, text_method, options={}, html_options={}, event=nil)
+    core_follow_up(attribute, html_options, event) do |attribute, html_options|
       options[:include_blank] = true unless options[:include_blank] == false
       self.collection_select(attribute, collection, value_method, text_method, options, html_options)
     end
@@ -201,8 +201,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   
   private
 
-  def core_follow_up(attribute, options = {}, event = nil, can_investigate = nil)
-    change_event = core_follow_up_event(attribute, event, can_investigate)
+  def core_follow_up(attribute, options = {}, event = nil)
+    change_event = core_follow_up_event(attribute, event)
     options[:onchange] = change_event unless change_event.blank?    
     spinner = change_event.blank? ? '' : follow_up_spinner_for(core_path[attribute])
     field = block_given? ? yield(attribute, options) : ''
@@ -215,17 +215,15 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return FALSE
   end
 
-  def core_follow_up_event(attribute, event, can_investigate)
+  def core_follow_up_event(attribute, event)
     return if  (event.nil? || event.form_references.nil?) 
     result = ""
 
     unless (core_path.nil?)
-      if (event.attributes["type"] != "MorbidityEvent" || can_investigate)
-        event.form_references.each do |form_reference|
-          if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}").size > 0)
-            result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path[attribute]}');"
-            break
-          end
+      event.form_references.each do |form_reference|
+        if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}").size > 0)
+          result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path[attribute]}');"
+          break
         end
       end
     end

@@ -51,21 +51,6 @@ class User < ActiveRecord::Base
     is_entitled_to?(:administer)
   end
   
-  # Not used.  Probably not valuable.  Consider deleting.
-  def is_investigator?
-    is_entitled_to?(:investigate_event)
-  end
-  
-  # Not used.  Probably not valuable.  Consider deleting.
-  def has_role_in?(jurisdiction)
-    role_memberships.detect { |rm| rm.jurisdiction.id ==  jurisdiction.id }.nil? ? false : true
-  end
-  
-  # Not used.  Probably not valuable.  Consider deleting.
-  def has_entitlement_in?(jurisdiction)
-    entitlements.detect { |ent| ent.jurisdiction.id == jurisdiction.id }.nil? ? false : true
-  end
-  
   def is_entitled_to_in?(privilege, jurisdiction_ids)
     j_ids = Array(jurisdiction_ids).map!{ |j_id| j_id.to_i }
     entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && j_ids.include?(ent.jurisdiction_id) }.nil? ? false : true

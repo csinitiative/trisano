@@ -47,18 +47,18 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% end -%>
       <% core_element :outbreak_associated_id, f, :horiz do -%>
         <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
-        <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}, {}, @event, @can_investigate) %>
+        <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}, {}, @event) %>
       <% end -%>
       <% core_element :outbreak_name, f, :horiz do -%>
         <%= f.label(:outbreak_name, "Outbreak") %>
-        <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event, @can_investigate) %>
+        <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event) %>
       <% end -%>
     </fieldset>
     <fieldset class="form">
       <legend>Auditing / Investigation</legend>
       <% core_element :event_name, f, :horiz do -%>
         <%= f.label(:event_name) %>
-        <%= f.core_text_field(:event_name, {:size => 25, :maxlength => 100}, @event, @can_investigate) %>
+        <%= f.core_text_field(:event_name, {:size => 25, :maxlength => 100}, @event) %>
       <% end -%>
       <%= yield :jurisdiction_selection %>
       <% unless RAILS_ENV == "production" %>
