@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+puts "Loading CDC export data"
+
 export_names = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_names.yml")
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values.yml")

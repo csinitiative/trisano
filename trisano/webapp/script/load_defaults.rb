@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+puts "Loading defaults"
+
 # Diseases are represented as an array of strings
 
 diseases = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases.yml")

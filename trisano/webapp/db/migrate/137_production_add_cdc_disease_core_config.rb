@@ -17,9 +17,9 @@
 
 class ProductionAddCdcDiseaseCoreConfig < ActiveRecord::Migration
   def self.up
-        if RAILS_ENV == 'production'
-          ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
-        end
+    if RAILS_ENV == 'production'
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
+    end
   end
 
   def self.down

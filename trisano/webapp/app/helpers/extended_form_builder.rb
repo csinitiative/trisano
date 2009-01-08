@@ -97,7 +97,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     cdc_attributes = []
     input_element = case question.data_type
     when :single_line_text
-      html_options[:size] = question.size
+      unless (question.size.nil?)
+        html_options[:maxlength] = question.size
+        html_options[:size] = question.size
+      end
       html_options[:onchange] = text_answer_event if follow_ups
       text_field(:text_answer, html_options)
     when :multi_line_text

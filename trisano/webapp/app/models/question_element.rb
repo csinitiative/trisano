@@ -28,6 +28,7 @@ class QuestionElement < FormElement
     unless export_column.nil?
       return nil if export_column.data_type.blank?
       question_instance.data_type = export_column.data_type
+      question_instance.size = export_column.length_to_output
     end
     
     self.question = question_instance

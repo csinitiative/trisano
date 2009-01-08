@@ -333,6 +333,23 @@ describe QuestionElement do
       retrieved_question_element.children.size.should eql(0)
       retrieved_question_element.question.data_type.should eql(export_columns(:hep_vaccineyea).data_type.to_sym)
     end
+
+    it "should set the size on questions for single_line_text types" do
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form.save_and_initialize_form_elements
+
+      question_element = QuestionElement.new({
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :export_column_id => "4",
+          :question_attributes => {
+            :question_text => "Vaccine year"
+          }
+        })
+
+      question_element.save_and_add_to_form.should_not be_nil
+      retrieved_question_element = FormElement.find(question_element.id)
+      retrieved_question_element.question.size.should eql(export_columns(:hep_vaccineyea).length_to_output)
+    end
     
     it "should not bootstrap a value set for multi_line_text types" do
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
