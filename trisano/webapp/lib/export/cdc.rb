@@ -42,8 +42,13 @@ module Export
         if conversion
           converted_value = conversion.value_to
           case
-          when conversion.conversion_type == 'date' && value            
-            converted_value = Date.parse(value.to_s).strftime("%m/%d/%y")
+          when conversion.conversion_type == 'date' && value
+            begin
+              date = Date.parse(value.to_s)
+              converted_value = date.strftime("%m/%d/%y")
+            rescue Exception => ex
+              DEFAULT_LOGGER.warn "CDC Export: Failed to convert value because #{ex.message}"
+            end
           when conversion.conversion_type == 'single_line_text' && value
             length_to_output = conversion.length_to_output
             if value.strip =~ /^[\d+]{4}$/ && length_to_output == 2 # really just trying to catch years
