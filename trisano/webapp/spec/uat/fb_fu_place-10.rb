@@ -21,15 +21,18 @@ require 'date'
 describe 'form builder place core field configs for places' do
   
   # $dont_kill_browser = true
-
-  fields = [{:name => 'Name', :label => 'place_event_active_place__place_name', :entry_type => 'type', :fu_value => 'Shantytown', :no_fu_value => 'Shantyville'},
-    {:name => 'Street number', :label => 'place_event_active_place__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Street name', :label => 'place_event_active_place__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Unit number', :label => 'place_event_active_place__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'City', :label => 'place_event_active_place__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'State', :label => 'place_event_active_place__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-    {:name => 'County', :label => 'place_event_active_place__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-    {:name => 'Zip code', :label => 'place_event_active_place__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
+  #### NOTE: Currently, it is not possible to change a place name after it is created. As a result ####
+  #### there are "unless" statements throughout this test on items that depend on changing the     ####
+  #### value of a place field to prevent it from failing on 'Name'                                 ####
+  fields = [{:name => 'Name', :label => 'morbidity_event_new_place_exposure_attributes__name', :entry_type => 'type', :fu_value => 'Shantytown', :no_fu_value => 'Shantyville'},
+        {:name => 'Name', :label => 'place_event_active_place__place_name', :entry_type => 'type', :fu_value => 'Shantytown', :no_fu_value => 'Shantyville'},
+        {:name => 'Street number', :label => 'place_event_active_place__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+        {:name => 'Street name', :label => 'place_event_active_place__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
+        {:name => 'Unit number', :label => 'place_event_active_place__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+        {:name => 'City', :label => 'place_event_active_place__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
+        {:name => 'State', :label => 'place_event_active_place__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
+        {:name => 'County', :label => 'place_event_active_place__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
+        {:name => 'Zip code', :label => 'place_event_active_place__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
   ]                                    
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
@@ -38,7 +41,7 @@ describe 'form builder place core field configs for places' do
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
     {:name => 'Checkboxes', :values => ["Pink","Red","Purple"], :answer_code => "2", :answer => "Red", :entry_type => "check"},
     {:name => 'Date', :values => nil, :answer => "12/12/2008", :entry_type => "type"},
-    {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
+    {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}
   ]
   
   fields.each do |test|  
@@ -76,7 +79,7 @@ describe 'form builder place core field configs for places' do
     it "should create a cmr with a place" do
       create_basic_investigatable_cmr(@browser, (get_unique_name(1))[0..18], disease_name_text, jurisdiction_text)
       edit_cmr(@browser).should be_true
-      add_place(@browser, {:name => get_unique_name(1)})
+      test[:name] == 'Name' ? add_place(@browser, {:name => test[:fu_value]}) : add_place(@browser, {:name => get_unique_name(1)})
       save_cmr(@browser).should be_true
     end
     
@@ -84,21 +87,22 @@ describe 'form builder place core field configs for places' do
       @browser.click("edit-place-event")
       @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present(form_name).should be_true
-      
-      data_types.each do |data_type|
-        follow_up_question = inv_question_pre + data_type[:name]
-        @browser.is_text_present(follow_up_question).should be_false
-      end
+
+      unless test[:name] == 'Name'
+        data_types.each do |data_type|
+          follow_up_question = inv_question_pre + data_type[:name]
+          @browser.is_text_present(follow_up_question).should be_false
+        end
           
-      case test[:entry_type]
-      when 'type' 
-        @browser.type(test[:label], test[:fu_value])
-      when 'click' 
-        @browser.click(test[:label], test[:fu_value])
-      when 'select' 
-        @browser.select(test[:label], test[:fu_value])
+        case test[:entry_type]
+        when 'type'
+          @browser.type(test[:label], test[:fu_value])
+        when 'click'
+          @browser.click(test[:label], test[:fu_value])
+        when 'select'
+          @browser.select(test[:label], test[:fu_value])
+        end
       end
-      
       
       @browser.click("//ul[@id='tabs']/li[2]/a/em")
       @browser.is_text_present(form_name).should be_true
@@ -110,56 +114,59 @@ describe 'form builder place core field configs for places' do
       end
     end
     
-    it "should remove all the investigator questions when the value is changed to #{test[:no_fu_value]}" do         
-      case test[:entry_type]
-      when 'type' 
-        @browser.type(test[:label], test[:no_fu_value])
-      when 'click' 
-        @browser.click(test[:label], test[:no_fu_value])
-      when 'select' 
-        @browser.select(test[:label], test[:no_fu_value])
-      end
+    it "should remove all the investigator questions when the value is changed to #{test[:no_fu_value]}" do
+      unless test[:name] == 'Name'
+        case test[:entry_type]
+        when 'type'
+          @browser.type(test[:label], test[:no_fu_value])
+        when 'click'
+          @browser.click(test[:label], test[:no_fu_value])
+        when 'select'
+          @browser.select(test[:label], test[:no_fu_value])
+        end
       
-      @browser.click("//ul[@id='tabs']/li[2]/a/em")
-      @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
+        @browser.click("//ul[@id='tabs']/li[2]/a/em")
+        @browser.is_text_present(form_name).should be_true
+        sleep 2 #Giving the investigator form questions time to show up
       
-      data_types.each do |data_type|
-        follow_up_question = inv_question_pre + data_type[:name]
-        @browser.is_text_present(follow_up_question).should be_false
+        data_types.each do |data_type|
+          follow_up_question = inv_question_pre + data_type[:name]
+          @browser.is_text_present(follow_up_question).should be_false
+        end
       end
     end
     
-    it "should show the form and questions when the value is changed back to #{test[:fu_value]}" do  
-      case test[:entry_type]
-      when 'type' 
-        @browser.type(test[:label], test[:fu_value])
-      when 'click' 
-        @browser.click(test[:label], test[:fu_value])
-      when 'select' 
-        @browser.select(test[:label], test[:fu_value])
+    it "should show the form and questions when the value is changed back to #{test[:fu_value]}" do
+      unless test[:name] == 'Name'
+        case test[:entry_type]
+        when 'type'
+          @browser.type(test[:label], test[:fu_value])
+        when 'click'
+          @browser.click(test[:label], test[:fu_value])
+        when 'select'
+          @browser.select(test[:label], test[:fu_value])
+        end
+      
+        @browser.click("//ul[@id='tabs']/li[2]/a/em")
+        @browser.is_text_present(form_name).should be_true
+        sleep 2 #Giving the investigator form questions time to show up
+      
+        data_types.each do |data_type|
+          follow_up_question = inv_question_pre + data_type[:name]
+          @browser.is_text_present(follow_up_question).should be_true
+        end
       end
-      
-      @browser.click("//ul[@id='tabs']/li[2]/a/em")
-      @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
-      
-      data_types.each do |data_type|
-        follow_up_question = inv_question_pre + data_type[:name]
-        @browser.is_text_present(follow_up_question).should be_true
-      end
-      
       # This isn't strictly necessary since nothing has changed... but the next tests won't work other wise...
       save_place_event(@browser).should be_true
     end
     
     data_types.each do |data_type|
       follow_up_question = inv_question_pre + data_type[:name]
-      it "should save values for #{follow_up_question}" do 
+      it "should save values for #{follow_up_question}" do
         edit_cmr(@browser)
         @browser.click("//ul[@id='tabs']/li[2]/a/em")
-        @browser.is_text_present(follow_up_question).should be_true    
-        case data_type[:entry_type]   
+        @browser.is_text_present(follow_up_question).should be_true
+        case data_type[:entry_type]
         when 'select'
           answer_multi_select_investigator_question(@browser, follow_up_question, data_type[:answer]).should be_true
           save_place_event(@browser).should be_true
@@ -171,12 +178,12 @@ describe 'form builder place core field configs for places' do
         when 'check'
           answer_check_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_place_event(@browser).should be_true
-          @browser.is_text_present(data_type[:answer]).should be_true 
+          @browser.is_text_present(data_type[:answer]).should be_true
         when 'radio'
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_place_event(@browser).should be_true
-          @browser.is_text_present(data_type[:answer]).should be_true 
-        end       
+          @browser.is_text_present(data_type[:answer]).should be_true
+        end
       end
     end
   end

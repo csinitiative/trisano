@@ -43,23 +43,26 @@ describe 'Print CMR page' do
     @browser.select('morbidity_event_active_patient__person_ethnicity_id', 'label=Not Hispanic or Latino')
     @browser.add_selection('morbidity_event_active_patient_race_ids', 'label=White')
     @browser.select('morbidity_event_active_patient__person_primary_language_id', 'label=Hmong')
-#    save_cmr(@browser).should be_true
+    save_and_continue(@browser).should be_true
   end
   
   it 'should edit the CMR to include clinical info' do
- #   edit_cmr(@browser).should be_true
     click_core_tab(@browser, CLINICAL)
     @browser.select "morbidity_event_disease_disease_id", "label=Botulism, foodborne"
     @browser.type "morbidity_event_disease_disease_onset_date", "12/12/2002"
     @browser.type "morbidity_event_disease_date_diagnosed", "12/12/2003"
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "morbidity_event_new_diagnostic_attributes__secondary_entity_id", "label=American Fork Hospital"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", "American Fork Hospital"
+    save_and_continue(@browser).should be_true
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "//div[@id='diagnostics']/div[2]/span[1]/select", "label=Castleview Hospital"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", "Castleview Hospital"
+    save_and_continue(@browser).should be_true
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "//div[@id='diagnostics']/div[3]/span[1]/select", "label=Dixie Regional Medical Center"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", "Dixie Regional Medical Center"
+    save_and_continue(@browser).should be_true
     @browser.click "link=Add a diagnosing facility"
-    @browser.select "//div[@id='diagnostics']/div[4]/span[1]/select", "label=Castleview Hospital"
+    @browser.type "morbidity_event_new_diagnostic_attributes__name", "Castleview Hospital"
+    save_and_continue(@browser).should be_true
     @browser.click "link=Add a hospital"
     @browser.select "morbidity_event_new_hospital_attributes__secondary_entity_id", "label=Ashley Regional Medical Center"
     @browser.type "morbidity_event_new_hospital_attributes__admission_date", "1/1/1901"
@@ -71,9 +74,9 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_active_patient__participations_risk_factor_pregnancy_due_date", "12/12/2009"
 
     add_treatment(@browser, {:treatment => "White Russian", :treatment_given => "label=Yes", :treatment_date => "1/17/1901"})
-    
+
     @browser.click "//a[@id='add_clinician_link']"
-    sleep(1)       
+    sleep(1)
     @browser.type "morbidity_event_new_clinician_attributes__last_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__first_name", "Mario"
     @browser.type "morbidity_event_new_clinician_attributes__middle_name", "A"
@@ -83,7 +86,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_new_clinician_attributes__extension", "555"
   #  save_cmr(@browser).should be_true
   end
-  
+
   it 'should edit the CMR to include lab info' do
    # edit_cmr(@browser).should be_true
     add_lab_result(@browser, {:lab_name => "Venture Complex",
@@ -96,15 +99,15 @@ describe 'Print CMR page' do
                               :sent_to_uphl => "Unknown"})
     #save_cmr(@browser).should be_true
   end
-  
+
   it 'should edit the CMR to include contacts' do
    # edit_cmr(@browser).should be_true
     click_core_tab(@browser, CONTACTS)
     add_contact(@browser, {:last_name => "Lina", :first_name => "Inverse"},1)
-    add_contact(@browser, {:last_name => "Steve", :first_name => "Jobbs"},2)    
+    add_contact(@browser, {:last_name => "Steve", :first_name => "Jobbs"},2)
     #save_cmr(@browser).should be_true
   end
-  
+
   it 'should edit the CMR to include EPI info' do
     #edit_cmr(@browser).should be_true
 
@@ -119,7 +122,7 @@ describe 'Print CMR page' do
     @browser.select "morbidity_event_imported_from_id", "label=Unknown"
     #save_cmr(@browser).should be_true
   end
-  
+
   it 'should edit the CMR to include reporting info' do
     #edit_cmr(@browser).should be_true
     add_reporting_info(@browser, {:agency => "why",

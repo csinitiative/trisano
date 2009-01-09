@@ -40,7 +40,7 @@ describe 'Creating a new cmr from an existing patient' do
   it 'should start with a simple cmr' do
     create_basic_investigatable_cmr(@browser, @last_name, @disease_name, @jurisdiction).should be_true
     @calculated_values[:record_number] = get_record_number(@browser)
-    @calculated_values[:record_number].should =~ /^2008/
+    @calculated_values[:record_number].should =~ /^#{Date.today.year()}/
   end
 
   it 'should create a new cmr based w/ the same patient' do
