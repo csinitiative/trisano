@@ -30,9 +30,6 @@
       - core_element_show :date_diagnosed, d, :horiz do
         = d.label(:date_diagnosed)
         = @event.disease.date_diagnosed unless @event.disease.nil? || @event.disease.disease.nil?
-      - core_element_show :hospitalized_id, d, :horiz do
-        = d.label(:hospitalized)
-        = l @event.disease.hospitalized unless @event.disease.nil?
       %span.vert
       - core_element_show :died_id, d, :horiz do
         = d.label(:died_id)
@@ -57,12 +54,15 @@
   %span{:clear => 'all'}
 
   %fieldset.form
+    - core_element_show :hospitalized_id, event_form, :horiz do
+      = event_form.label(:hospitalized)
+      = l @event.disease.hospitalized unless @event.disease.nil?    
     %legend
-      Hospitalized health facilities  
+      Hospitalized health facilities
     - if @event.hospitalized_health_facilities.empty?
       %h3 No hospitalized health facilities have been recorded for this event
     - else
-      %table.list
+      %table.list{:style => 'margin-top: 20px;'}
         %tr
           %th Hospitalized health facility
           %th Admission date
