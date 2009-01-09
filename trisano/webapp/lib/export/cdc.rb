@@ -28,7 +28,6 @@ module Export
           :starting => 0,
           :result => ''}.merge(options)
 
-
         diff = (options[:starting] + options[:length]) - options[:result].length
         options[:result] << ' ' * diff if diff > 0
         unless (current = options[:result][options[:starting], options[:length]]).strip.blank?
@@ -48,13 +47,14 @@ module Export
               date = Date.parse(value.to_s)
               converted_value = date.strftime("%m/%d/%y")
             rescue Exception => ex
-              DEFAULT_LOGGER.warn "CDC Export: Failed to convert value because #{ex.message}"
+              DEFAULT_LOGGER.warn "CDC Export: Failed to convert value '#{value}' because: #{ex.message}"
             end
           when conversion.conversion_type == 'single_line_text' && value
             length_to_output = conversion.length_to_output
             if value.strip =~ /^[\d+]{4}$/ && length_to_output == 2 # really just trying to catch years
-              converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
-            else
+              DEFAULT_LOGGER.debug("CDC Export: Treating a text field as a two digit year - #{conversion.inspect}")
+              converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]              
+            else                                   
               converted_value = value.ljust(length_to_output)[0, length_to_output].strip
             end
           end

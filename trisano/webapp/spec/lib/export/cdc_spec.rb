@@ -85,11 +85,25 @@ describe 'export/cdc' do
       convert_value('46062-5888', @conversion).should == '46062'
     end
 
-    it 'should not blow up in invalid dates' do
+    it 'should not blow up on invalid dates' do
       @conversion.should_receive(:conversion_type).once.and_return 'date'
       value = ''
       lambda{value = convert_value('not-a-date', @conversion)}.should_not raise_error
       value.should == 'error'
     end
+
   end
+
+  describe 'core path method calling' do    
+
+    it 'should not blow up on broken configs' do
+      mock_config = mock(FormElement)
+      mock_config.should_receive(:call_chain).once.and_return([:not_a_method])
+      value = ''
+      lambda{value = MorbidityEvent.new.value_converted_using(mock_config)}.should_not raise_error
+      value.should be_nil
+    end
+      
+  end
+
 end
