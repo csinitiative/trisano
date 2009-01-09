@@ -863,6 +863,12 @@
    value_to: '99999'
    sort_order: 1
 
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEHEAL'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
  ##### STD #####
 
  - disease_code_group: 'STD'

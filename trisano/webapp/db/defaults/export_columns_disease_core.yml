@@ -323,6 +323,18 @@
    export_name: 'CDC'
    data_type: 'single_line_text'
 
+ - disease_code_group: 'Pertussis'
+   type_data: 'CORE'
+   export_column_name: 'DATEHEAL'
+   name: 'Core Earliest Date Reported'
+   table_name: 'events'
+   column_name: 'first_reported_PH_date'
+   is_required:
+   start_position: '250'
+   length_to_output: '8'
+   export_name: 'CDC'
+   data_type: 'date'
+
  ##### STD #####
 
  - disease_code_group: 'STD'
