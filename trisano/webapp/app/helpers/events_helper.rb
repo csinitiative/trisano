@@ -511,7 +511,7 @@ module EventsHelper
     result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)    
     end
-    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{simple_format(help_text)}</span>"
+    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{simple_format(strip_tags(help_text))}</span>"
   end
 
   def render_core_field_help_text(attribute, form_builder, block)
@@ -706,7 +706,7 @@ module EventsHelper
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-      result << "<label>#{question.question_text}&nbsp;"
+      result << "<label>#{strip_tags(question.question_text)}&nbsp;"
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
       answer = form_elements_cache.answer(element, @event)
@@ -860,7 +860,7 @@ module EventsHelper
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-      result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
+      result << "<span class='print-label'>#{strip_tags(question.question_text)}:</span>&nbsp;"
       answer = form_elements_cache.answer(element, @event)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
       result << "</div>"

@@ -295,7 +295,7 @@ module FormsHelper
       result << "&nbsp;&nbsp;" << delete_question_link(element)
       result << "</td></tr></table>"
       
-      result << "#{question.question_text}"
+      result << "#{strip_tags(question.question_text)}"
       result << "&nbsp;&nbsp;<small>[" 
       result << "#{question.short_name}, " unless question.short_name.blank?
       result << question.data_type_before_type_cast.humanize
