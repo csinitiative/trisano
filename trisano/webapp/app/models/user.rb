@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
     jurisdictions.each do |j|
       investigators += Privilege.investigate_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
     end
-    investigators.uniq
+    investigators.uniq.sort_by { |investigator| investigator.best_name }
   end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app
