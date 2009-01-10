@@ -740,12 +740,11 @@ body, p, ol, ul {
 
 h3 {
   font-family: helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: bold;
   display: block;
   padding: 0px 0px 0px 0px;
-  color: #333;
-  text-decoration: underline; }
+  color: #333; }
 
 h4 {
   font-family: helvetica, sans-serif;
@@ -753,8 +752,7 @@ h4 {
   font-weight: bold;
   display: block;
   padding: 0px 0px 0px 0px;
-  color: #333;
-  text-decoration: underline; }
+  color: #333; }
 
 label {
   font-family: helvetica, sans-serif;
