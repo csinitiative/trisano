@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright (C) 2007, 2008, The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -15,21 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-user = nil
-begin
-  User.transaction do
-    puts "Removing the user with uid of 'utah'"
-    user = User.find_by_uid("utah")
-    
-    if user
-      # ActiveRecord will trickle down and delete role_memberships and entitlements
-      user.destroy
-    else
-      raise "User with uid of 'utah' not found"
-    end
-  end
-rescue
-  puts "Unable to delete user: #{$!}"
-else
-  puts "Successfully removed user: #{user.user_name}"
-end
+# Purges events from the production database.
+
+. setenv.sh
+
+jruby -S rake -f ../webapp/Rakefile trisano:distro:set_priv_database_yml
+jruby ../webapp/script/runner -e production ../webapp/script/purge_default_users.rb
