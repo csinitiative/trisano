@@ -241,10 +241,10 @@ module EventsHelper
         action_controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.state_code))
       end
     end
-  
-    action_controls = "<span style='color: gray'> None</span>" if action_controls.blank?
 
-    unless (action_controls + routing_controls).blank?
+    if action_controls.blank? && routing_controls.blank?
+      controls = "<span style='color: gray'>Insufficient privileges to act on this event</span>" if action_controls.blank?
+    else
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[event_status]", '')}

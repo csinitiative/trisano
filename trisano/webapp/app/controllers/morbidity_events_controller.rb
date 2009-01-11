@@ -203,7 +203,13 @@ class MorbidityEventsController < EventsController
     rescue Exception => ex
       flash[:error] = 'Unable to route CMR.' + ex.message
     end
-    redirect_to request.env["HTTP_REFERER"]
+    if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id])
+      flash[:notice] = 'Event successfully routed.'
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:notice] = "Event successfully routed, but you have insufficent privileges to view it in it's new jurisdiction"
+      redirect_to cmrs_url
+    end
   end
 
   def state
