@@ -243,7 +243,7 @@ module EventsHelper
     end
 
     if action_controls.blank? && routing_controls.blank?
-      controls = "<span style='color: gray'>Insufficient privileges to act on this event</span>" if action_controls.blank?
+      controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
     else
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
