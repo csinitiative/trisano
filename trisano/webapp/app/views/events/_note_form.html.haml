@@ -23,7 +23,7 @@
   -# prefix
   
   #notes 
-    - if @event.new_record?
+    - if @event.notes.empty?
       %b New record:  No existing notes.
     - else
       %b Earlier notes

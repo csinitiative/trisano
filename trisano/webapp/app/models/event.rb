@@ -429,11 +429,11 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def new_note_attributes=(attributes)
+  def new_note_attributes=(notes_attributes)
     # There can only be one new note
-    return if attributes.values_blank?
-    note = notes.build(attributes)
-    note.user = User.current_user
+    return if notes_attributes.values_blank?
+    self.notes.build(notes_attributes)
+    self.notes.last.user = User.current_user
   end  
   
   def existing_note_attributes=(notes_attributes)

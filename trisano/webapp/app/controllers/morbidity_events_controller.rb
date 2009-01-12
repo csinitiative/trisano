@@ -112,13 +112,12 @@ class MorbidityEventsController < EventsController
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
     end
     
-    @event.new_note_attributes = {:note => @event.instance_eval(Event.states["NEW"].note_text) }
-
     respond_to do |format|
       if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          @event.add_note(@event.instance_eval(Event.states["NEW"].note_text))
         end
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
