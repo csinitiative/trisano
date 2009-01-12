@@ -1,4 +1,4 @@
-#export_options{:style => "display: none; width: 40%"}
+#export_options{:style => "display: none; width: 40%; position: relative"}
   %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
     %b Include these repeating aspects in the export:
     %br
@@ -27,6 +27,9 @@
       %label.horiz
         = check_box_tag("export_options[]", "treatments")
         %span Treatments
-      = submit_tag("Export", :id => "export_btn", :class => "vert", :style => "display: block; position: relative; top: 1em; left: 23em;")
-    = link_to_function "Close", "Effect.SlideUp('export_options')"
-    %br
+      -# This div is needed to keep IE from drawing a button as wide as the form.
+      %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
+        = submit_tag("Export", :id => "export_btn")
+    %p.vert
+      %br
+      = link_to_function "Close", "Effect.SlideUp('export_options')"
