@@ -376,7 +376,7 @@ describe Form do
       
       second_tab = investigator_view_element_container.children[1]
       second_tab.form_id.should eql(@published_form.id)
-      second_tab.children_count.should eql(2)
+      second_tab.children_count.should eql(3)
       
       second_tab_q = second_tab.children[0]
       second_tab_q.class.name.should eql("QuestionElement")

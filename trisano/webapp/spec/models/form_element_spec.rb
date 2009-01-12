@@ -437,3 +437,21 @@ describe "when executing an operation that requires form element structure valid
   end
 
 end
+
+describe "when normalizing conditions" do
+
+  it "should trim leading and trailing whitespace" do
+    condition = "   yes   "
+    condition = FormElement.normalize_condition(condition)
+    condition.should eql("yes")
+    condition.strip!.should be_nil
+  end
+
+  it "should downcase" do
+    condition = "yEs"
+    condition = FormElement.normalize_condition(condition)
+    condition.should eql("yes")
+    condition.downcase!.should be_nil
+  end
+
+end

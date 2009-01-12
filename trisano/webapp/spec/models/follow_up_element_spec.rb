@@ -283,16 +283,12 @@ describe FollowUpElement do
     fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
     
     before(:each) do
-      
-      # Debt: Building and saving an event because the fixture-driven event is not currently valid (rake fails loading event fixtures)
       @event = MorbidityEvent.new
       @event.patient = participations(:marks_interested_party)
       @event.disease_event = disease_events(:marks_chicken_pox)
       @event.jurisdiction = participations(:marks_jurisdiction)
       @event.save(false)
-      
       @no_follow_up_answer = Answer.create(:event_id => @event.id, :question_id => questions(:second_tab_core_follow_up_q).id, :text_answer => "YES!")
-      
     end
     
     it "should return follow-up element with a 'show' attribute for matching core path with matching condition" do
@@ -307,7 +303,34 @@ describe FollowUpElement do
       # Debt: The magic container for core follow ups needs to go probably
       follow_ups[0][0].should eql("show")
       follow_ups[0][1].is_a?(FollowUpElement).should be_true
-      
+    end
+
+    it "should return follow-up element with a 'show' attribute for matching core path with matching condition even if case differs" do
+      params = {}
+
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_string_follow_up).core_path
+      params[:response] = "DOnNer"
+
+      follow_ups = FollowUpElement.process_core_condition(params)
+
+      # Debt: The magic container for core follow ups needs to go probably
+      follow_ups[0][0].should eql("show")
+      follow_ups[0][1].is_a?(FollowUpElement).should be_true
+    end
+
+    it "should return follow-up element with a 'show' attribute for matching core path with matching condition even there are leading and trailing spaces" do
+      params = {}
+
+      params[:event_id] = @event.id
+      params[:core_path] = form_elements(:second_tab_core_string_follow_up).core_path
+      params[:response] = "     Donner    "
+
+      follow_ups = FollowUpElement.process_core_condition(params)
+
+      # Debt: The magic container for core follow ups needs to go probably
+      follow_ups[0][0].should eql("show")
+      follow_ups[0][1].is_a?(FollowUpElement).should be_true
     end
     
     it "should return follow-up element with a 'hide' attribute for matching core path without a matching condition" do

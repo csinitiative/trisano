@@ -36,36 +36,19 @@ class QuestionElement < FormElement
       build_cdc_value_set unless export_column.nil?
     end
   end
-  
+
+  # Used to process follow-ups to questions in a form, not follow-ups to core
+  # fields. For core-field processing, see FollowUpElement#process_condition
   def process_condition(answer, event_id, form_elements_cache=nil)
     result = nil
+    potential_follow_ups = retrieve_follow_ups(form_elements_cache)
+    condition = parse_condition_from_answer(answer)
     
-    if form_elements_cache.nil?
-      follow_ups = self.children_by_type("FollowUpElement")
-    else
-      follow_ups = form_elements_cache.children_by_type("FollowUpElement", self)
-    end
-    
-    if (answer.is_a? Answer)
-      condition = answer.text_answer
-    else
-      condition = answer[:response]
-    end
-    
-    follow_ups.each do |follow_up|
-      if (follow_up.condition == condition)
+    potential_follow_ups.each do |follow_up|
+      if (FormElement.normalize_condition(follow_up.condition) == FormElement.normalize_condition(condition))
         result = follow_up
       else
-        unless (event_id.blank?)
-          # Debt: We could add a method that does this against the cache
-          question_elements_to_delete = QuestionElement.find(:all, :include => :question,
-            :conditions => ["lft > ? and rgt < ? and tree_id = ?", follow_up.lft, follow_up.rgt, follow_up.tree_id])
-          
-          question_elements_to_delete.each do |question_element|
-            answer = Answer.find_by_event_id_and_question_id(event_id, question_element.question.id)
-            answer.destroy unless answer.nil?
-          end
-        end
+        FormElement.delete_answers_to_follow_ups(event_id, follow_up)
       end
     end
     
@@ -121,6 +104,28 @@ class QuestionElement < FormElement
           :export_conversion_value_id => value.id
         })
       value_set.add_child(value_element)
+    end
+  end
+
+  private
+
+  # Follow ups can come out of the form element cache, if one has already
+  # been initialized, otherwise, go to the database.
+  def retrieve_follow_ups(form_elements_cache)
+    if form_elements_cache.nil?
+      return self.children_by_type("FollowUpElement")
+    else
+      return form_elements_cache.children_by_type("FollowUpElement", self)
+    end
+  end
+
+  # An answer can either be an instance of Answer, or just a string from a
+  # parameter. Return the
+  def parse_condition_from_answer(answer)
+    if (answer.is_a? Answer)
+      return answer.text_answer
+    else
+      return answer[:response]
     end
   end
   

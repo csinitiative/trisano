@@ -422,8 +422,21 @@ describe QuestionElement do
     end
     
     it "should return follow-up element for matching condition" do
-      
       answer = Answer.create(:text_answer => "Yes", :question_id => @question.id)
+      follow_up_from_processing = @question_element.process_condition(answer, @event_id)
+      follow_up_from_processing.should_not be_nil
+      follow_up_from_processing.id.should eql(@yes_follow_up_element.id)
+    end
+
+    it "should return follow-up element for matching condition even if the case is not identical" do
+      answer = Answer.create(:text_answer => "yEs", :question_id => @question.id)
+      follow_up_from_processing = @question_element.process_condition(answer, @event_id)
+      follow_up_from_processing.should_not be_nil
+      follow_up_from_processing.id.should eql(@yes_follow_up_element.id)
+    end
+
+    it "should return follow-up element for matching condition even if there is leading and trailing space on the answer" do
+      answer = Answer.create(:text_answer => "    Yes     ", :question_id => @question.id)
       follow_up_from_processing = @question_element.process_condition(answer, @event_id)
       follow_up_from_processing.should_not be_nil
       follow_up_from_processing.id.should eql(@yes_follow_up_element.id)

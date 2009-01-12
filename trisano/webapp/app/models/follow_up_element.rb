@@ -42,7 +42,7 @@ class FollowUpElement < FormElement
         return true
       end
     rescue
-        return nil
+      return nil
     end
   end
   
@@ -60,7 +60,9 @@ class FollowUpElement < FormElement
   def condition_id
     @condition_id
   end
-  
+
+  # Used to process follow-ups to core-fields in a form, not follow-ups to standard
+  # question elements. For question-element processing, see QuestionElement#process_condition
   def self.process_core_condition(params)
     result = []
     investigation_forms = []
@@ -77,21 +79,14 @@ class FollowUpElement < FormElement
 
     investigation_forms.each do |form|
       form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
-        if (params[:response] == follow_up.condition)
+        if (FormElement.normalize_condition(params[:response]) == FormElement.normalize_condition(follow_up.condition))
           # Debt: The magic container for core follow ups needs to go probably
           result << ["show", follow_up]
         else
           result << ["hide", follow_up]
           
           unless (params[:event_id].blank?)
-            # Debt: We could add a method that does this against the cache
-            question_elements_to_delete = QuestionElement.find(:all, :include => :question,
-              :conditions => ["lft > ? and rgt < ? and tree_id = ?", follow_up.lft, follow_up.rgt, follow_up.tree_id])
-              
-            question_elements_to_delete.each do |question_element|
-              answer = Answer.find_by_event_id_and_question_id(params[:event_id], question_element.question.id)
-              answer.destroy unless answer.nil?
-            end
+            FormElement.delete_answers_to_follow_ups(params[:event_id], follow_up)
           end
         end
       end
@@ -143,6 +138,5 @@ class FollowUpElement < FormElement
       self.is_condition_code = false
     end
   end
-  
   
 end

@@ -1,49 +1,49 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 base:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "1"
   type: FormBaseElement
   id: "1"
-  description: 
-  rgt: "50"
-  parent_id: 
+  description:
+  rgt: "54"
+  parent_id:
 
 investigator_container:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "2"
   type: InvestigatorViewElementContainer
   id: "27"
-  description: 
-  rgt: "45"
+  description:
+  rgt: "49"
   parent_id: "1"
 
 core_container:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
-  lft: "46"
+  lft: "50"
   type: CoreViewElementContainer
   id: "28"
-  description: 
-  rgt: "47"
+  description:
+  rgt: "51"
   parent_id: "1"
 
 core_field_container:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
-  lft: "48"
+  lft: "52"
   type: CoreFieldElementContainer
   id: "29"
-  description: 
-  rgt: "49"
+  description:
+  rgt: "53"
   parent_id: "1"
-    
+
 default_view:
   name: Default View
   form_id: "1"
@@ -51,10 +51,10 @@ default_view:
   lft: "3"
   type: ViewElement
   id: "2"
-  description: 
+  description:
   rgt: "32"
   parent_id: "27"
-    
+
 demographic_section:
   name: Demographics
   form_id: "1"
@@ -66,7 +66,7 @@ demographic_section:
   help_text: "Read this help text."
   rgt: "13"
   parent_id: "2"
- 
+
 demographic_group:
   name: Standard Demographics
   form_id: "1"
@@ -74,42 +74,42 @@ demographic_group:
   lft: "5"
   type: GroupElement
   id: "4"
-  description: 
+  description:
   rgt: "12"
   parent_id: "3"
 
 demo_group_q1:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "6"
   type: QuestionElement
   id: "5"
-  description: 
+  description:
   rgt: "7"
   parent_id: "4"
   export_column_id: 1
-  export_conversion_value_id: 
+  export_conversion_value_id:
 
 demo_group_q2:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "8"
   type: QuestionElement
   id: "6"
-  description: 
+  description:
   rgt: "9"
   parent_id: "4"
 
 demo_group_q3:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "10"
   type: QuestionElement
   id: "7"
-  description: 
+  description:
   rgt: "11"
   parent_id: "4"
 
@@ -120,40 +120,40 @@ lab_section:
   lft: "14"
   type: SectionElement
   id: "8"
-  description: 
+  description:
   rgt: "21"
   parent_id: "2"
 
 lab_section_q1:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "15"
   type: QuestionElement
   id: "9"
-  description: 
+  description:
   rgt: "16"
   parent_id: "8"
 
 lab_section_q2:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "17"
   type: QuestionElement
   id: "10"
-  description: 
+  description:
   rgt: "18"
   parent_id: "8"
 
 lab_section_q3:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "19"
   type: QuestionElement
   id: "11"
-  description: 
+  description:
   rgt: "20"
   parent_id: "8"
 
@@ -164,7 +164,7 @@ food_section:
   lft: "22"
   type: SectionElement
   id: "12"
-  description: 
+  description:
   rgt: "31"
   parent_id: "2"
 
@@ -175,40 +175,40 @@ standard_food_group:
   lft: "23"
   type: GroupElement
   id: "13"
-  description: 
+  description:
   rgt: "28"
   parent_id: "12"
 
 food_group_q1:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "24"
   type: QuestionElement
   id: "14"
-  description: 
+  description:
   rgt: "25"
   parent_id: "13"
 
 food_group_q2:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "26"
   type: QuestionElement
   id: "15"
-  description: 
+  description:
   rgt: "27"
   parent_id: "13"
 
 food_section_q1:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "29"
   type: QuestionElement
   id: "16"
-  description: 
+  description:
   rgt: "30"
   parent_id: "12"
 
@@ -219,177 +219,201 @@ second_tab:
   lft: "33"
   type: ViewElement
   id: "17"
-  description: 
-  rgt: "44"
+  description:
+  rgt: "48"
   parent_id: "27"
 
 second_tab_q:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "34"
   type: QuestionElement
   id: "18"
-  description: 
+  description:
   rgt: "39"
   parent_id: "17"
 
 second_tab_follow_up_container:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "35"
   type: FollowUpElement
   id: "19"
-  description: 
+  description:
   rgt: "38"
   parent_id: "18"
   condition: "Yes"
 
 second_tab_follow_up_q:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "36"
   type: QuestionElement
   id: "20"
-  description: 
+  description:
   rgt: "37"
   parent_id: "19"
 
 second_tab_core_follow_up:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "40"
   type: FollowUpElement
   id: "21"
-  description: 
+  description:
   rgt: "43"
   parent_id: "17"
   condition: "3"
   core_path: "event[active_patient][active_primary_entity][person][birth_gender_id]"
 
 second_tab_core_follow_up_q:
-  name: 
+  name:
   form_id: "1"
   tree_id: "1"
   lft: "41"
   type: QuestionElement
   id: "22"
-  description: 
+  description:
   rgt: "42"
   parent_id: "21"
+
+second_tab_core_string_follow_up:
+  name:
+  form_id: "1"
+  tree_id: "1"
+  lft: "44"
+  type: FollowUpElement
+  id: "30"
+  description:
+  rgt: "47"
+  parent_id: "17"
+  condition: "Donner"
+  core_path: "morbidity_event[active_patient][person][last_name]"
+
+second_tab_core_string_follow_up_q:
+  name:
+  form_id: "1"
+  tree_id: "1"
+  lft: "45"
+  type: QuestionElement
+  id: "31"
+  description:
+  rgt: "46"
+  parent_id: "30"
 
 
 
 anthrax_form_all_jurisdictions_1_base:
-  name: 
+  name:
   form_id: "2"
   tree_id: "2"
   lft: "1"
   type: FormBaseElement
   id: "23"
-  description: 
+  description:
   rgt: "2"
-  parent_id: 
+  parent_id:
 
 anthrax_form_all_jurisdictions_2_base:
-  name: 
+  name:
   form_id: "3"
   tree_id: "3"
   lft: "1"
   type: FormBaseElement
   id: "24"
-  description: 
+  description:
   rgt: "2"
-  parent_id: 
+  parent_id:
 
 anthrax_form_for_LHD_1_base:
-  name: 
+  name:
   form_id: "4"
   tree_id: "4"
   lft: "1"
   type: FormBaseElement
   id: "25"
-  description: 
+  description:
   rgt: "2"
-  parent_id: 
+  parent_id:
 
 anthrax_form_for_LHD_base:
-  name: 
+  name:
   form_id: "5"
   tree_id: "5"
   lft: "1"
   type: FormBaseElement
   id: "26"
-  description: 
+  description:
   rgt: "2"
-  parent_id: 
+  parent_id:
 
 base_for_second_form:
-  name: 
+  name:
   form_id: "7"
   tree_id: "6"
   lft: "1"
   type: FormBaseElement
   id: "100"
-  description: 
+  description:
   rgt: "8"
-  parent_id: 
+  parent_id:
 
 investigator_container_for_second_form:
-  name: 
+  name:
   form_id: "7"
   tree_id: "6"
   lft: "2"
   type: InvestigatorViewElementContainer
   id: "101"
-  description: 
+  description:
   rgt: "3"
   parent_id: "100"
 
 core_view_container_for_second_form:
-  name: 
+  name:
   form_id: "7"
   tree_id: "6"
   lft: "4"
   type: CoreViewElementContainer
   id: "102"
-  description: 
+  description:
   rgt: "5"
   parent_id: "100"
 
 core_field_container_for_second_form:
-  name: 
+  name:
   form_id: "7"
   tree_id: "6"
   lft: "6"
   type: CoreFieldElementContainer
   id: "103"
-  description: 
+  description:
   rgt: "7"
   parent_id: "100"
 
 base_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "1"
   type: FormBaseElement
   id: "200"
-  description: 
+  description:
   rgt: "24"
-  parent_id: 
+  parent_id:
 
 investigator_container_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "2"
   type: InvestigatorViewElementContainer
   id: "201"
-  description: 
+  description:
   rgt: "19"
   parent_id: "200"
 
@@ -400,18 +424,18 @@ default_view_for_hep_a_form:
   lft: "3"
   type: ViewElement
   id: "202"
-  description: 
+  description:
   rgt: "18"
   parent_id: "201"
 
 core_follow_up_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "4"
   type: FollowUpElement
   id: "203"
-  description: 
+  description:
   rgt: "7"
   parent_id: "202"
   condition: 1404
@@ -419,24 +443,24 @@ core_follow_up_for_hep_a_form:
   is_condition_code: t
 
 follow_up_question_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "5"
   type: QuestionElement
   id: "204"
-  description: 
+  description:
   rgt: "6"
   parent_id: "203"
 
 cdc_question_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "8"
   type: QuestionElement
   id: "205"
-  description: 
+  description:
   rgt: "17"
   parent_id: "202"
   export_column_id: 2
@@ -448,7 +472,7 @@ cdc_value_set_for_hep_a_form:
   lft: "9"
   type: ValueSetElement
   id: "206"
-  description: 
+  description:
   rgt: "16"
   parent_id: "205"
   export_column_id: 2
@@ -460,7 +484,7 @@ cdc_yes_value_for_hep_a_form:
   lft: "10"
   type: ValueElement
   id: "207"
-  description: 
+  description:
   rgt: "11"
   parent_id: "206"
   export_conversion_value_id: 7
@@ -472,11 +496,11 @@ cdc_no_value_for_hep_a_form:
   lft: "12"
   type: ValueElement
   id: "208"
-  description: 
+  description:
   rgt: "13"
   parent_id: "206"
   export_conversion_value_id: 8
-  
+
 cdc_unk_value_for_hep_a_form:
   name: "Unknown"
   form_id: "8"
@@ -484,29 +508,29 @@ cdc_unk_value_for_hep_a_form:
   lft: "14"
   type: ValueElement
   id: "209"
-  description: 
+  description:
   rgt: "15"
   parent_id: "206"
   export_conversion_value_id: 9
 
 core_view_container_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "20"
   type: CoreViewElementContainer
   id: "210"
-  description: 
+  description:
   rgt: "21"
   parent_id: "200"
 
 core_field_container_for_hep_a_form:
-  name: 
+  name:
   form_id: "8"
   tree_id: "7"
   lft: "22"
   type: CoreFieldElementContainer
   id: "211"
-  description: 
+  description:
   rgt: "23"
   parent_id: "200"

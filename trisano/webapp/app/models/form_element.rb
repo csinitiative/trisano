@@ -173,7 +173,6 @@ class FormElement < ActiveRecord::Base
         end
       end
     end
-    
   end
   
   def validate_form_structure
@@ -292,5 +291,26 @@ class FormElement < ActiveRecord::Base
   def self.export_lookup_separator
     @@export_lookup_separator
   end
-  
+
+  # Deletes answers to questions under a follow up. Used to clear out answers
+  # to a follow up that no longer applies because its condition no longer matches
+  # the answer provided by the user.
+  def self.delete_answers_to_follow_ups(event_id, follow_up)
+    return unless follow_up.is_a?(FollowUpElement)
+    unless (event_id.blank?)
+      question_elements_to_delete = QuestionElement.find(:all, :include => :question,
+        :conditions => ["lft > ? and rgt < ? and tree_id = ?", follow_up.lft, follow_up.rgt, follow_up.tree_id])
+
+      question_elements_to_delete.each do |question_element|
+        answer = Answer.find_by_event_id_and_question_id(event_id, question_element.question.id)
+        answer.destroy unless answer.nil?
+      end
+    end
+  end
+
+  # Gets conditions on follow-ups into a known state for comparison.
+  def self.normalize_condition(condition)
+    condition.strip.downcase unless condition.nil?
+  end
+
 end
