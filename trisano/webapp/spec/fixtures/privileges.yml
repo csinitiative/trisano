@@ -2,12 +2,12 @@
 
 view:
   id: 1
-  priv_name: view
+  priv_name: view_event
   description: 
 
 update:
   id: 2
-  priv_name: update
+  priv_name: update_event
   description:
 
 administer:

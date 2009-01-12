@@ -132,7 +132,7 @@ class Participation < ActiveRecord::Base
 
     def new_jurisdiction_participation
       jurisdiction = Participation.new(:role_id => Event.participation_code('Jurisdiction'))
-      jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create).first || Place.jurisdiction_by_name("Unassigned")).entity
+      jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
       jurisdiction
     end
 
