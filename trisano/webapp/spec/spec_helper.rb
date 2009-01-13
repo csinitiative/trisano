@@ -288,3 +288,5 @@ def mock_person_entity
   entity.stub!(:race_ids).and_return([201])
   entity
 end
+
+require File.join(File.dirname(__FILE__), 'rails_ext') unless ActiveRecord::Base.respond_to? :find_by_sql_with_capture

@@ -62,8 +62,7 @@ class Person < ActiveRecord::Base
       raw_terms = options[:fulltext_terms].split(" ")
       
       raw_terms.each do |word|
-        soundex_code = Text::Soundex.soundex(word)
-        soundex_codes << soundex_code.downcase unless soundex_code.nil?
+        soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
         fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
       end
       
@@ -137,14 +136,12 @@ class Person < ActiveRecord::Base
   end
   
   # Soundex codes are generated at save time.
-  # Debt: Strip out apostrophes and hyphens? We'd have to do the same on the 
-  # query side. Perhaps abstract Soundex generation out somewhere.
   def generate_soundex_codes
     if !first_name.blank?
-      self.first_name_soundex = Text::Soundex.soundex(first_name)
+      self.first_name_soundex = first_name.to_soundex
     end
     
-    self.last_name_soundex = Text::Soundex.soundex(last_name)
+    self.last_name_soundex = last_name.to_soundex
   end
   
 end

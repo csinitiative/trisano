@@ -62,8 +62,14 @@ describe Person, "with first and last names" do
     @person = Person.new(:last_name => last_name, :first_name => first_name)
     
     @person.save.should be_true
-    @person.first_name_soundex.should eql(Text::Soundex.soundex(first_name))
-    @person.last_name_soundex.should eql(Text::Soundex.soundex(last_name))
+    @person.first_name_soundex.should eql(first_name.to_soundex)
+    @person.last_name_soundex.should eql(last_name.to_soundex)
+  end
+
+  it "should still soundex names w/ non-alpha chars" do
+    @person = Person.create(:last_name => "O'Conner", :first_name => 'Johnny-5')
+    @person.first_name_soundex.should_not be_nil
+    @person.last_name_soundex.should_not be_nil
   end
 
   it "should have full name 'Robert Ford'" do
@@ -189,6 +195,30 @@ describe Person, "with one or more races" do
     person = Person.new(:last_name => 'Entwistle')
     person.stub!(:entity).and_return(entity)
     person.race_description.should be_nil
+  end
+
+end
+
+describe Person, 'find by ts' do
+  before(:all) do
+    # a little hack because PG adapters don't consistently escape single quotes      
+    begin
+      PostgresPR
+      @oreilly_string = "o\\\\'reilly"
+    rescue
+      @oreilly_string = "o''reilly"
+    end
+  end
+
+  before(:each) do
+    @conn = ActiveRecord::Base.connection
+    Person.reset_last_query
+  end
+    
+  it 'should include soundex codes for fulltext search' do
+    Person.find_by_ts(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
+    Person.last_query.should_not be_nil
+    Person.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
   end
 
 end

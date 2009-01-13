@@ -79,6 +79,7 @@ Rails::Initializer.run do |config|
     require 'utilities'
     require "routing/state"
     require 'will_paginate'
+    require 'core_ext/string'
   end
 
 end

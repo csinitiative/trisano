@@ -656,8 +656,7 @@ class Event < ActiveRecord::Base
       raw_terms = options[:fulltext_terms].split(" ")
       
       raw_terms.each do |word|
-        soundex_code = Text::Soundex.soundex(word)
-        soundex_codes << soundex_code.downcase unless soundex_code.nil?
+        soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
         fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
       end
       

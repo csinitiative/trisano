@@ -2257,4 +2257,27 @@ describe MorbidityEvent do
     end
   end
 
+  describe 'find by criteria' do
+    before(:all) do
+      # a little hack because PG adapters don't consistently escape single quotes      
+      begin
+        PostgresPR
+        @oreilly_string = "o\\\\'reilly"
+      rescue
+        @oreilly_string = "o''reilly"
+      end
+    end
+
+    before(:each) do
+      Event.reset_last_query
+    end
+    
+    it 'should include soundex codes for fulltext search' do
+      Event.find_by_criteria(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
+      Event.last_query.should_not be_nil
+        Event.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
+    end
+    
+  end
+
 end
