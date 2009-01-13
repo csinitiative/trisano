@@ -165,8 +165,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
         browser.is_text_present("Existing Reports") and
-        browser.is_element_present("link=CMRS") and
-        browser.is_element_present("link=Export All to CSV")) 
+        browser.is_element_present("link=CMRS"))
   end
   
   def click_nav_search(browser)

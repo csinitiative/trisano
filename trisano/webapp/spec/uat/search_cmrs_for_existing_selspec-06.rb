@@ -44,12 +44,6 @@ describe 'User functionality for searching for existing users' do
     end
   end
 
-  it 'should find a person named Charles Chuckles when viewing all CMRs' do
-    @browser.open "/trisano/cmrs"
-    click_nav_cmrs(@browser).should be_true
-    @browser.is_text_present('Chuckles, Charles').should be_true
-  end
-  
   it 'should find a person named Charles Chuckles when searching by Chuckles' do
     navigate_to_people_search(@browser).should be_true
     @browser.type('name', 'Chuckles')
