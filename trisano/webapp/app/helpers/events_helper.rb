@@ -595,7 +595,7 @@ module EventsHelper
   
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
-      result = ""    
+      result = ""
       include_children = false
     
       unless (ajax_render)
@@ -610,7 +610,7 @@ module EventsHelper
           end
         end
 
-        if (element.condition == core_value.to_s)
+        if (element.condition_match?(core_value.to_s))
           include_children = true
         end
       end
@@ -777,7 +777,7 @@ module EventsHelper
           end
         end
 
-        if (element.condition == core_value.to_s)
+        if (element.condition_match?(core_value.to_s))
           include_children = true
         end
       end
@@ -928,7 +928,7 @@ module EventsHelper
         end
       end
     
-      if (element.condition == core_value.to_s)
+      if (element.condition_match?(core_value.to_s))
         questions = form_elements_cache.children(element)
     
         if questions.size > 0

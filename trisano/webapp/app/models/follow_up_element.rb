@@ -45,6 +45,11 @@ class FollowUpElement < FormElement
       return nil
     end
   end
+
+  def condition_match?(string_condition)
+    return if self.condition.nil? || string_condition.nil?
+    return self.condition.strip.downcase == string_condition.strip.downcase
+  end
   
   def self.condition_string_from_code(code_id)
     code = ExternalCode.find(code_id)
@@ -79,7 +84,7 @@ class FollowUpElement < FormElement
 
     investigation_forms.each do |form|
       form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
-        if (FormElement.normalize_condition(params[:response]) == FormElement.normalize_condition(follow_up.condition))
+        if (follow_up.condition_match?(params[:response]))
           # Debt: The magic container for core follow ups needs to go probably
           result << ["show", follow_up]
         else

@@ -391,5 +391,21 @@ describe FollowUpElement do
     end
     
   end
-  
+
+  describe "when comparing conditions" do
+
+    it "should handle leading and trailing whitespace" do
+      follow_up = FollowUpElement.new(:condition => "Yes")
+      condition = "   yes   "
+      follow_up.condition_match?(condition).should be_true
+    end
+
+    it "should handle downcasing" do
+      follow_up = FollowUpElement.new(:condition => "Yes")
+      condition = "yEs"
+      follow_up.condition_match?(condition).should be_true
+    end
+
+  end
+
 end

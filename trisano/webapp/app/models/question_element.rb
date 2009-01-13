@@ -45,7 +45,7 @@ class QuestionElement < FormElement
     condition = parse_condition_from_answer(answer)
     
     potential_follow_ups.each do |follow_up|
-      if (FormElement.normalize_condition(follow_up.condition) == FormElement.normalize_condition(condition))
+      if (follow_up.condition_match?(condition))
         result = follow_up
       else
         FormElement.delete_answers_to_follow_ups(event_id, follow_up)

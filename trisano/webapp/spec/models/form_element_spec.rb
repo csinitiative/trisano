@@ -53,7 +53,6 @@ describe FormElement do
     view_children = @form_base_element.children_by_type("ViewElement")
     view_children.size.should == 2
     view_children[0].is_a?(ViewElement).should be_true
-    
   end
   
 end
@@ -434,24 +433,6 @@ describe "when executing an operation that requires form element structure valid
     end
 
     default_view.reorder_element_children([3, 8, 12]).should be_nil
-  end
-
-end
-
-describe "when normalizing conditions" do
-
-  it "should trim leading and trailing whitespace" do
-    condition = "   yes   "
-    condition = FormElement.normalize_condition(condition)
-    condition.should eql("yes")
-    condition.strip!.should be_nil
-  end
-
-  it "should downcase" do
-    condition = "yEs"
-    condition = FormElement.normalize_condition(condition)
-    condition.should eql("yes")
-    condition.downcase!.should be_nil
   end
 
 end

@@ -308,9 +308,4 @@ class FormElement < ActiveRecord::Base
     end
   end
 
-  # Gets conditions on follow-ups into a known state for comparison.
-  def self.normalize_condition(condition)
-    condition.strip.downcase unless condition.nil?
-  end
-
 end
