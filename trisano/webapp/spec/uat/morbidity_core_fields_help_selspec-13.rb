@@ -50,6 +50,7 @@ describe "help text for morbidity core fields" do
               
     it "should have #{core_field['event_type']} help bubble after #{core_field['name']}" do
       @browser.click "//a[@id='add_reporting_agency_link']" if core_field['name'] == 'Reporting agency'
+      sleep 3
       assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
       @browser.open("/trisano/core_fields")
       @browser.wait_for_page_to_load
