@@ -38,29 +38,56 @@
 
           %span{ :class => "horiz" }
             %b
+              Status
+            %br
+            = @disease.active? ? 'Active' :  'Inactive'
+
+          %span{ :class => "horiz" }
+            %b
               CDC/NETSS code
             %br
             = @disease.cdc_code
 
           %span{ :class => "horiz" }
             %b
-              Status
+              Sent to CDC when event status is:
             %br
-            = @disease.active? ? 'Active' :  'Inactive'
+            = @disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', ')
 
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_disease_path(@disease)
             |
             Show
-    - unless @disease.export_columns.empty?
-      %table.list
-        %tr
-          %th.forminformation
-            CDC Export Columns
-        %tr
-          %td.forminformation
-            %ul
-              - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
-                %li
-                  = export_column.export_column_name
+  %table.list
+    %tr
+      %th.forminformation{:style => "width: 5%"}
+        Lead-in Questions
+      %th
+    %tr
+      %td{:style => "width: 5%"}
+        Contact
+      %td
+        = @disease.contact_lead_in        
+    %tr
+      %td{:style => "width: 5%"}
+        Place
+      %td
+        = @disease.place_lead_in        
+    %tr
+      %td{:style => "width: 5%"}
+        Treatment
+      %td
+        = @disease.treatment_lead_in        
+
+  - unless @disease.export_columns.empty?
+    %table.list
+      %tr
+        %th.forminformation
+          CDC Export Columns
+      %tr
+        %td.forminformation
+          %ul
+            - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
+              %li
+                = export_column.export_column_name

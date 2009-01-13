@@ -30,6 +30,10 @@ describe "/diseases/show.html.haml" do
     @disease.stub!(:active?).and_return(true)
     @disease.stub!(:cdc_code).and_return("123456")
     @disease.stub!(:export_columns).and_return([@export_column_1, @export_column_2])
+    @disease.stub!(:external_codes).and_return([])
+    @disease.stub!(:contact_lead_in).and_return("")
+    @disease.stub!(:place_lead_in).and_return("")
+    @disease.stub!(:treatment_lead_in).and_return("")
     assigns[:disease] = @disease
   end
 
