@@ -24,7 +24,7 @@ describe "help text for morbidity core fields" do
   core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'core_fields.yml'))
 
   before :all do
-    @browser.open '/trisano/core_fields'
+#    @browser.open '/trisano/core_fields'
   end
 
   core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}.each do |core_field|
@@ -33,6 +33,8 @@ describe "help text for morbidity core fields" do
     next if core_field['name'].downcase.include?("reporting agency")
     
     it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
+      @browser.open("/trisano/core_fields")
+      @browser.wait_for_page_to_load
       @browser.click("//div[@id='rot'][1]//a[text()='#{core_field['name']}']")
       @browser.wait_for_page_to_load
       @browser.click("link=Edit")
@@ -42,9 +44,7 @@ describe "help text for morbidity core fields" do
       @browser.wait_for_page_to_load
       @browser.is_text_present('Core field was successfully updated').should be_true
       @browser.is_text_present("#{core_field['name']} help").should be_true
-      @browser.click("link=< Back to Core Fields")
-      @browser.wait_for_page_to_load
-    end 
+    end
 
     it "should navigate to a morbidity event edit view" do
       @browser.click("link=NEW CMR")
@@ -52,10 +52,8 @@ describe "help text for morbidity core fields" do
     end
 
     it "should have #{core_field['event_type']} help bubble after #{core_field['name']}" do
-      #@browser.click "//a[@id='add_reporting_agency_link']" if core_field['name'] == 'Reporting agency'
-      assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
-      @browser.open("/trisano/core_fields")
-      @browser.wait_for_page_to_load
+      @browser.click "//a[@id='add_reporting_agency_link']" if core_field['name'] == 'Reporting agency'
+      assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true     
     end
       
   end
