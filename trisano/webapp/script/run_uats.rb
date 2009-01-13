@@ -24,7 +24,6 @@ class UserAcceptanceTest
       1 .. @concurrent.to_i.times do |c|
         t = Thread.new {
           log = File.new("uat.#{s}-#{c}.#{@port}.out", "w")
-          $stderr = log # redirect stderr to log file
           while (path = nextUAT()) do
             cmd  = "spec #{path}"
             puts "Launching #{s}-#{c}:#{@port} => #{cmd}"
