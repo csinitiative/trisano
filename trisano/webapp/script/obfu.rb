@@ -93,7 +93,8 @@ def get_obfu_config
         {:field_loc => 6, :type => 'text', :word_count => 1},  # first_name
         {:field_loc => 7, :type => 'text', :word_count => 1},  # middle_name 
         {:field_loc => 8, :type => 'text', :word_count => 1},  # last_name
-        {:field_loc => 9, :type => 'date', :keep_year => true} # birth_date
+        {:field_loc => 9, :type => 'date', :keep_year => true}, # birth_date
+        {:field_loc => 10, :type => 'date', :keep_year => true} # date_of_death
       ]
     },
     {#COPY addresses (id, location_id, county_id, state_id, street_number, street_name, unit_number, postal_code, created_at, updated_at, city) FROM stdin;
@@ -117,9 +118,29 @@ def get_obfu_config
     },
     {#COPY hospitals_participations (id, participation_id, hospital_record_number, admission_date, discharge_date, created_at, updated_at, medical_record_number)
       :table_name => 'hospitals_participations', :fields => [
+        {:field_loc => 4, :type => 'date', :keep_year => true}, # admission_date
+        {:field_loc => 5, :type => 'date', :keep_year => true}, # discharge_date
         {:field_loc => 8, :type => 'num', :digits => 20}, # medical_record_number
       ]
+    },
+    {#COPY disease_events (id, event_id, disease_id, hospitalized_id, died_id, disease_onset_date, date_diagnosed, created_at, updated_at)
+      :table_name => 'disease_events', :fields => [
+        #{:field_loc => 6, :type => 'date', :keep_year => true}, # disease_onset_date
+        {:field_loc => 7, :type => 'date', :keep_year => true} # date_diagnosed
+      ]
+    },
+    {#COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, treatment)
+      :table_name => 'participations_treatments', :fields => [
+        {:field_loc => 5, :type => 'date', :keep_year => true} # treatment_date
+      ]
+    },
+    {#COPY lab_results (id, specimen_source_id, collection_date, lab_test_date, specimen_sent_to_uphl_yn_id, lab_result_text, created_at, updated_at, participation_id, test_type, test_detail, interpretation_id, reference_range)
+      :table_name => 'lab_results', :fields => [
+        {:field_loc => 3, :type => 'date', :keep_year => true}, # collection_date
+        {:field_loc => 4, :type => 'date', :keep_year => true} # lab_test_date
+      ]
     }
+
   ]
 end
 
