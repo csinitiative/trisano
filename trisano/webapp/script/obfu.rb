@@ -101,7 +101,8 @@ def get_obfu_config
         {:field_loc => 5, :type => 'num', :digits => 5},  # street_number
         {:field_loc => 6, :type => 'text', :word_count => 2},  # street_name, 
         {:field_loc => 7, :type => 'num', :digits => 3},  # unit_number, 
-        {:field_loc => 8, :type => 'num', :digits => 5} # postal_code
+        {:field_loc => 8, :type => 'num', :digits => 5}, # postal_code
+        {:field_loc => 11, :type => 'text', :word_count => 1},  # street_name,
       ]
     },
     {#COPY event_queues (id, queue_name, jurisdiction_id) FROM stdin;
@@ -112,6 +113,11 @@ def get_obfu_config
     {#COPY organizations (id, entity_id, organization_type_id, organization_status_id, organization_name, duration_start_date, duration_end_date, created_at, updated_at) FROM stdin;
       :table_name => 'organizations', :fields => [
         {:field_loc => 5, :type => 'text', :word_count => 3}  # organization_name, 
+      ]
+    },
+    {#COPY hospitals_participations (id, participation_id, hospital_record_number, admission_date, discharge_date, created_at, updated_at, medical_record_number)
+      :table_name => 'hospitals_participations', :fields => [
+        {:field_loc => 8, :type => 'num', :digits => 20}, # medical_record_number
       ]
     }
   ]
