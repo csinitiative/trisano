@@ -172,7 +172,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     if question.data_type == :check_box || question.data_type == :radio_button
-      result += @template.content_tag(:label, strip_tags(question.question_text)) + " " + input_element      
+      result += @template.content_tag(:label, sanitize(question.question_text, :tags => %w(br))) + " " + input_element
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       unless question_element.export_column.blank?
         result += "\n" + @template.hidden_field_tag(field_name + "[#{field_index}]" + '[export_conversion_value_id]', export_conversion_value_id(event, question)) 
@@ -180,7 +180,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     else
       result += @template.content_tag(:label) do
-        strip_tags question.question_text 
+        sanitize(question.question_text, :tags => %w(br))
       end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
