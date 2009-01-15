@@ -38,12 +38,12 @@ class CdcExport < ActiveRecord::Base
 
     def annual_cdc_export(mmwr_year)
       where = []
-      where << "mmwr_year='#{mmwr_year}'"
+      where << '"MMWR_year"=' + mmwr_year
       # The following issues 133 separate selects to generate the where clause component.  What's it doing?
       where << Disease.disease_status_where_clause
-      where << "exp_deleted_at IS NULL"
+      where << "deleted_at IS NULL"
 
-      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
+      events = get_cdc_events(where.compact.join(' AND '))
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
