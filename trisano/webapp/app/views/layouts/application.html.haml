@@ -84,8 +84,14 @@
           .footlogo
             = image_tag("foot.png", :border => 0)
           .foottext
-            %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Feedback
+            %a{:href => 'http://www.trisano.org/collaborate/'} TriSano Support
             |
-            %a{:href => 'http://www.trisano.org'}TriSano.org
+            %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Community Feedback
+            |
+            %a{:href => 'http://www.trisano.org'} TriSano.org
             |
             = yield :enable_save_buttons 
+          .foottext
+            Copyright © 2009 Collaborative Software Foundation
+            |
+            %a{:href => 'http://www.trisano.org/collaborate/licenses/'} License         

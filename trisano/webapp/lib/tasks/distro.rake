@@ -42,6 +42,7 @@ namespace :trisano do
       @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
       @runtime_timeout = config['runtime_timeout'] unless validate_config_attribute(config, 'runtime_timeout')
       @dump_file = config['dump_file_name'] 
+      @support_url = config['support_url'] 
       ENV["PGPASSWORD"] = @priv_password 
     end
 
@@ -216,9 +217,18 @@ namespace :trisano do
       end
       puts "Success restoring TriSano db: #{@database} from #{dirname}/#{@dump_file}"     
     end
+
+    desc "Overwrites the TriSano Support URL with what is in the config.yml support_url attribute"
+    task :overwrite_support_url do
+      puts "starting overwrite"
+      initialize_config
+      if ! @support_url.nil?
+        puts "overwriting TriSano Support URL with #{@support_url}"
+      end
+    end
     
     desc "Package the application with the settings from config.yml"
-    task :package_app do
+    task :package_app => [:overwrite_support_url] do
       initialize_config
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"

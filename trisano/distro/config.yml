@@ -12,4 +12,5 @@ min_runtimes: 2 # minimum number of trisano runtimes
 max_runtimes: 5 # maximum number of trisano runtimes 
 runtime_timeout: 5 # number of seconds that web app thread should wait before generating HTTP 503 and informing user to try again
 dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
+support_url: # the URL of the TriSano Support system. Defaults to http://www.trisano.org/collaborate/ 
 
