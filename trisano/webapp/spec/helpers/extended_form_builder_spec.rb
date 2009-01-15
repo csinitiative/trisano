@@ -17,23 +17,24 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-include ApplicationHelper
 
 def configure_request
   request = mock(Object)
   request.stub!(:xhr?).and_return(@xhr_request)
-  self.stub!(:request).and_return(request)
+  @template = Object.new
+  @template.extend(ApplicationHelper)
+  @template.stub!(:request).and_return(request)
 end
 
 def configure_radio_buttons
-  @form_builder = ExtendedFormBuilder.new(nil, nil, self, nil, nil)
+  @form_builder = ExtendedFormBuilder.new(nil, nil, @template, nil, nil)
   @radio_buttons = [{:id => 1, :export_conversion_value_id => 200},
                     {:id => 2, :export_conversion_value_id => 201}]
   @result = @form_builder.send(:rb_export_js, @radio_buttons, 'test_id')
 end
 
 def configure_drop_downs
-  @form_builder = ExtendedFormBuilder.new(nil, nil, self, nil, nil)
+  @form_builder = ExtendedFormBuilder.new(nil, nil, @template, nil, nil)
   @select_options = [{:value => 1, :export_conversion_value_id => 200},
                      {:value => 2, :export_conversion_value_id => 201}]
 
