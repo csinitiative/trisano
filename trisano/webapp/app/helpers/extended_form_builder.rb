@@ -253,30 +253,26 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def rb_export_js(radio_buttons, id)
-    script = "<script type=\"text/javascript\">\n"
-    script << "Event.observe(window, 'load', function() {\n"    
-
-    radio_buttons.each do |radio_button|
-      script << "$('#{radio_button[:id]}').observe('click', function() { "
-      script << "$('#{id}').writeAttribute('value', '#{radio_button[:export_conversion_value_id]}') });\n"
+    @template.on_loaded_or_eval do
+      radio_buttons.collect do |radio_button|
+        <<-JS
+        $('#{radio_button[:id]}').observe('click', function() { 
+        $('#{id}').writeAttribute('value', '#{radio_button[:export_conversion_value_id]}') });
+        JS
+      end.join
     end
-    
-    script << "});</script>\n"
-    script
   end
 
   def dd_export_js(option_elements, hidden_conversion_field, id)
-    script = "<script type=\"text/javascript\">\n"
-    script << "Event.observe(window, 'load', function() {\n"    
-
-    script << "$('#{id}').observe('change', function() {\n"
-    option_elements.each do |option_element|
-      script << "  if (this.value == '#{option_element[:value]}') { "
-      script << "$('#{hidden_conversion_field}').writeAttribute('value', '#{option_element[:export_conversion_value_id]}') }\n"
+    @template.on_loaded_or_eval do
+      script = "$('#{id}').observe('change', function() {\n"
+      option_elements.each do |option_element|
+        script << "  if (this.value == '#{option_element[:value]}') { "
+        script << "$('#{hidden_conversion_field}').writeAttribute('value', '#{option_element[:export_conversion_value_id]}') }\n"
+      end
+      script << "});"
+      script
     end
-    
-    script << "}); });</script>\n"
-    script
   end
 
   def export_conversion_value_id(event, question)

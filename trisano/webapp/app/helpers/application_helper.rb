@@ -184,4 +184,18 @@ module ApplicationHelper
     HTML
   end
 
+  # If this is an html request, then the script will be run when the
+  # dom finishes loading. If it's an Ajax request, then the script
+  # will be sent as is, so that the it can be eval-ed when the browser
+  # is ready.
+  def on_loaded_or_eval(&block)
+    return unless block_given?
+    <<-JS
+      <script type="text/javascript">
+        #{"document.observe('dom:loaded', function() {" unless request.xhr?}
+        #{block.call}
+        #{"\});" unless request.xhr?}
+      </script>
+    JS
+  end
 end
