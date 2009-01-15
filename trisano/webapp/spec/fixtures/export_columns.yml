@@ -177,7 +177,6 @@ birth_gender_id:
   start_position: 43
   length_to_output: 1
   name: 'SEX'
-  export_disease_group_id : 1
 
 pregnant_extended_id:
   id: 15

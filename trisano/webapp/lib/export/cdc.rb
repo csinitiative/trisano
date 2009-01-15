@@ -212,6 +212,30 @@ module Export
    
     module Record
 
+      def county_export_columns
+        @county_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'COUNTY' AND export_disease_group_id IS NULL")
+      end
+
+      def sex_export_columns
+        @sex_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'SEX' AND export_disease_group_id IS NULL")
+      end
+
+      def race_export_columns
+        @race_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'RACE' AND export_disease_group_id IS NULL")
+      end
+
+      def ethnicity_export_columns
+        @ethnicity_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'ETHNICITY' AND export_disease_group_id IS NULL")
+      end
+
+      def imported_export_columns
+        @imported_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'IMPORTED' AND export_disease_group_id IS NULL")
+      end
+
+      def outbreak_export_columns
+        @outbreak_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'OUTBREAK' AND export_disease_group_id IS NULL")
+      end
+
       def cdc_export_fields
         %w(exp_rectype
            exp_update
@@ -264,22 +288,157 @@ module Export
         cdc_code.value_to
       end
 
+      def exp_rectype
+        'M'
+      end
+      
+      def exp_update
+        ' '
+      end
+
+      def exp_state
+        '49'
+      end
+
+      def exp_year
+        self.MMWR_year.to_s[2..3]
+      end
+
+      def exp_caseid
+        self.record_number[4..9]
+      end
+      
+      def exp_site
+        'S01'
+      end
+
+      def exp_week
+        self.MMWR_week.to_s.rjust(2, '0')
+      end
+           
+      def exp_event
+        safe_call_chain(:disease_event, :disease, :cdc_code) || '99999'
+      end
+
+      def exp_count
+        '00001'
+      end
+
+      def exp_county
+        county = safe_call_chain(:patient, :primary_entity, :address_entities_locations, :last, :location, :addresses, :last, :county, :the_code)
+        if county
+          county_export_columns.export_conversion_values.find_by_value_from(county).value_to
+        else
+          '999'
+        end
+      end
+
+      def exp_birthdate
+        exp_patient = self.patient.primary_entity.person 
+        if exp_patient.birth_date
+          exp_patient.birth_date.strftime("%Y%m%d")
+        else
+          '99999999'
+        end
+      end
+
+      def exp_agetype
+        if self.age_type
+          self.age_type.the_code
+        else
+          '9'
+        end
+      end
+
+      def exp_sex 
+        sex = self.patient.primary_entity.person.birth_gender
+        if sex
+          sex_export_columns.export_conversion_values.find_by_value_from(sex.the_code).value_to
+        else
+          '9'
+        end
+      end
+
+      def exp_race
+        race = nil
+        races = self.patient.primary_entity.races
+        unless races.empty?
+          race = races.first.the_code
+        end
+
+        if race
+          race_export_columns.export_conversion_values.find_by_value_from(race).value_to
+        else
+          '9'
+        end
+      end
+
+      def exp_ethnicity
+        ethnicity = self.patient.primary_entity.person.ethnicity
+        if ethnicity
+          ethnicity_export_columns.export_conversion_values.find_by_value_from(ethnicity.the_code).value_to
+        else
+          '9'
+        end
+      end
+
+      def exp_eventdate
+        event_date = safe_call_chain(:disease_event, :disease_onset_date)
+        event_date = safe_call_chain(:disease_event, :date_diagnosed) unless event_date 
+        event_date = safe_call_chain(:definitive_lab_result, :lab_test_date) unless event_date 
+        event_date = self.first_reported_PH_date unless event_date 
+        if event_date
+          event_date.strftime("%y%m%d")
+        else
+          '999999'
+        end
+      end
+
+      def exp_datetype
+        date_type = '1' if safe_call_chain(:disease_event, :disease_onset_date)
+        date_type = '2' if safe_call_chain(:disease_event, :date_diagnosed) unless date_type 
+        date_type = '3' if safe_call_chain(:definitive_lab_result, :lab_test_date) unless date_type 
+        date_type = '5' if self.first_reported_PH_date unless date_type 
+        date_type || '9'
+      end
+
+      def exp_imported
+        imported = self.imported_from
+        if imported
+          imported_export_columns.export_conversion_values.find_by_value_from(imported.the_code).value_to
+        else
+          '9'
+        end
+      end
+
+      def exp_outbreak
+        outbreak = self.outbreak_associated
+        if outbreak_associated
+          outbreak_export_columns.export_conversion_values.find_by_value_from(outbreak_associated.the_code).value_to
+        else
+          '9'
+        end
+      end
+
       def disease_specific_records
         result = ''
-        event = Event.find(event_id)
-        event_answer_conversions(event, result)
-        core_field_conversions(event, result)
+        # Debt: Ultimately, passing in self here can go.  It's a legacy of the SQL view that was returning hashses
+        # instead of Event objects. Leaving it in for now for simplicity's sake
+        event_answer_conversions(self, result)
+        core_field_conversions(self, result)
         (result[60...result.length] || '').rstrip  
       end      
 
-      def method_missing(method, *args)
-        if self.has_key? method.to_s
-          self.class.send(:define_method, method, lambda {self[method.to_s]})
-          send(method, args)
-        else
-          super
-        end
-      end
+      # Debt:  This is no longer needed.  It's also a vestige of the SQL view.  Keeping it in for now, in case I'm
+      # surprised by the real world and something like this will fix it
+      # def method_missing(method, *args)
+      #   if self.has_key? method.to_s
+      #     self.class.send(:define_method, method, lambda {self[method.to_s]})
+      #     send(method, args)
+      #   else
+      #     super
+      #   end
+      # end
 
       private
 
@@ -343,6 +502,10 @@ module Export
 
       def count
         self['count'].rjust(5, '0')
+      end
+
+      def exp_event
+        self['cdc_code']
       end
     end
   end

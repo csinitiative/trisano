@@ -48,7 +48,7 @@ describe EventQueue do
   end
 
   describe "deleting an event queue" do
-    fixtures :event_queues, :events, :users
+    fixtures :event_queues, :users, :events, :participations, :entities
 
     before(:each) do
       @user = users(:default_user)

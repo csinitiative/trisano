@@ -58,3 +58,6 @@ Existing_Lab_Two:
   id: 110
   entity_type: "place"
 
+Queue_Guy:
+  id: 111
+  entity_type: "person"

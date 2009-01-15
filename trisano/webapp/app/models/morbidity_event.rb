@@ -82,6 +82,8 @@ class MorbidityEvent < HumanEvent
   validates_associated :reporting_agency
   validates_associated :reporter
 
+  before_save :generate_mmwr
+
   def new_place_exposure_attributes=(place_exposure_attributes)
     place_exposure_attributes.each do |attributes|
       next if attributes.values_blank?
@@ -369,6 +371,17 @@ class MorbidityEvent < HumanEvent
 
   private
   
+  def generate_mmwr
+    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date, 
+      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed, 
+      :labresultdate => definitive_lab_result.nil? ? nil : definitive_lab_result.lab_test_date,
+      :firstreportdate => self.first_reported_PH_date }
+    mmwr = Mmwr.new(epi_dates)
+    
+    self.MMWR_week = mmwr.mmwr_week
+    self.MMWR_year = mmwr.mmwr_year
+  end
+
   # Expects string of space separated event states e.g. new, acptd-lhd, etc.
   def self.get_allowed_states(query_states=nil)
     system_states = Event.get_state_keys

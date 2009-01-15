@@ -17,7 +17,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
-  fixtures :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities
 
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)
@@ -32,7 +31,7 @@ describe CdcExport do
   end
 
   def with_sent_events(event_hash = @event_hash)
-    events = []
+    records = []
     with_cdc_records do |records|
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
@@ -40,9 +39,10 @@ describe CdcExport do
       start_mmwr = Mmwr.new(Date.today - 7)
       end_mmwr = Mmwr.new
       CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).should_not be_empty
-      events = samples.collect {|sample| Event.find(sample.event_id)}
+      # A little bit of indirection, cause the events returned from weekly_cdc_export are marked readonly by active-record.
+      records = samples.collect { |sample| Event.find(sample.id) }
     end
-    yield events if block_given?
+    yield records if block_given?
   end
 
   def delete_a_record(event_hash = @event_hash)
@@ -64,7 +64,8 @@ describe CdcExport do
       "imported_from_id" => external_codes(:imported_from_utah).id,
       "udoh_case_status_id" => external_codes(:case_status_probable).id,
       "disease" => {
-        "disease_id" => diseases(:aids).id
+        "disease_id" => diseases(:aids).id,
+        "disease_onset_date" => Date.today
       },
       "active_patient" => {
         "address" => {
@@ -86,6 +87,7 @@ describe CdcExport do
   end
     
   describe 'running cdc export' do
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
 
     it 'should produce core data records (no disease specific fields) that are 60 chars long' do
       with_cdc_records do |records|
@@ -141,7 +143,7 @@ describe CdcExport do
 
     it "should display the MMWR week as 2 digits" do
       with_cdc_records do |records|
-        padded_week = records[0][1].MMWR_week < 10 ? records[0][1].MMWR_week.to_s + " " : records[0][1].MMWR_week.to_s
+        padded_week = records[0][1].MMWR_week < 10 ? records[0][1].MMWR_week.to_s.rjust(2, '0') : records[0][1].MMWR_week.to_s
         records[0].first.to_cdc[15..16].should == padded_week
       end
     end
@@ -298,8 +300,6 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          # events[0].cdc_updated_at = nil
-          # events[0].ibis_updated_at = nil
           events[0].update_attributes 'imported_from_id' => external_codes(:imported_from_unknown).id
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
@@ -424,7 +424,7 @@ describe CdcExport do
   end
 
   describe 'finding deleted cdc records' do
-    fixtures :events, :disease_events
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
     
     before(:each)do
       delete_a_record 
@@ -455,8 +455,7 @@ describe CdcExport do
     end
 
     it "should report the last 6 digits of the case id" do
-      event = Event.find(@deletes[0].event_id)
-      @deletes[0].to_cdc[6..11].should == event.record_number[-6, 6]
+      @deletes[0].to_cdc[6..11].should == @deletes[0].record_number[-6, 6]
     end
 
     it "should report the 3 digit site code" do
@@ -464,8 +463,7 @@ describe CdcExport do
     end
 
     it "should report the mmwr week" do
-      event = Event.find(@deletes[0].event_id)
-      padded_week = event.MMWR_week < 10 ? event.MMWR_week.to_s + " " : event.MMWR_week.to_s
+      padded_week = @deletes[0].MMWR_week < 10 ? @deletes[0].MMWR_week.to_s.rjust(2, '0') : @deletes[0].MMWR_week.to_s
       @deletes[0].to_cdc[15..16].should == padded_week
     end
 
@@ -476,7 +474,7 @@ describe CdcExport do
   end
 
   describe 'soft deleted records' do
-    fixtures :events, :disease_events
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
     
     describe 'that have already been sent' do
 
@@ -543,7 +541,7 @@ describe CdcExport do
   end
 
   describe "multiple verification records" do
-    fixtures :events, :disease_events
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
 
     before :each do
       with_sent_events
@@ -566,7 +564,7 @@ describe CdcExport do
   end
 
   describe "runnning export w/ no valid disease exports" do
-    fixtures :events, :disease_events
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
     
     before :all do
     end
@@ -575,7 +573,6 @@ describe CdcExport do
       ActiveRecord::Base.connection.execute('truncate table diseases_external_codes')
       CdcExport.verification_records(Mmwr.new.mmwr_year)
     end
-  
   end
 
 end

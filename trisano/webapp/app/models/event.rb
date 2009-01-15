@@ -20,7 +20,6 @@ class Event < ActiveRecord::Base
   include Export::Cdc::EventRules
   
   after_update :save_associations
-  before_save :generate_mmwr
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
 
@@ -296,10 +295,9 @@ class Event < ActiveRecord::Base
     end
 
     def reset_ibis_status(events)
-      event_ids = events.compact.collect {|record| record.event_id}
+      event_ids = events.compact.collect {|record| record.id if record.id}
       Event.update_all('sent_to_ibis=true', ['id IN (?)', event_ids])
     end
-      
   end
 
   def under_investigation?
@@ -787,7 +785,7 @@ class Event < ActiveRecord::Base
 
   def get_investigation_forms
     if self.form_references.empty?
-      return if self.disease.nil? || self.disease.disease_id.blank?
+      return [] if self.disease.nil? || self.disease.disease_id.blank?
       i = -1
       Form.get_published_investigation_forms(self.disease.disease_id, self.active_jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
         self.form_references[i += 1] = FormReference.new(:form_id => form.id)
@@ -832,17 +830,6 @@ class Event < ActiveRecord::Base
     self.record_number = record_number
   end
   
-  def generate_mmwr
-    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date, 
-      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed, 
-      #      :labresultdate => @lab.lab_result.nil? ? nil : @lab.lab_result.lab_test_date, 
-      :firstreportdate => self.first_reported_PH_date }
-    mmwr = Mmwr.new(epi_dates)
-    
-    self.MMWR_week = mmwr.mmwr_week
-    self.MMWR_year = mmwr.mmwr_year
-  end
-
   def set_event_onset_date
     self.event_onset_date = Date.today
   end

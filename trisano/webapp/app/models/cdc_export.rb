@@ -22,16 +22,16 @@ class CdcExport < ActiveRecord::Base
       where = []
       where << <<-END_WHERE_CLAUSE
         (
-          ((mmwr_week=#{start_mmwr.mmwr_week} AND mmwr_year=#{start_mmwr.mmwr_year}) OR (mmwr_week=#{end_mmwr.mmwr_week} AND mmwr_year=#{end_mmwr.mmwr_year}))
+          (("MMWR_week"=#{start_mmwr.mmwr_week} AND "MMWR_year"=#{start_mmwr.mmwr_year}) OR ("MMWR_week"=#{end_mmwr.mmwr_week} AND "MMWR_year"=#{end_mmwr.mmwr_year}))
           OR
           (cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')
         )
       END_WHERE_CLAUSE
       # The following issues 133 separate selects to generate the where clause component.  What's it doing?
       where << Disease.disease_status_where_clause
-      where << "exp_deleted_at IS NULL"
+      where << "deleted_at IS NULL"
 
-      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.compact.join(' AND ')})")
+      events = get_cdc_events(where.compact.join(' AND '))
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
@@ -49,7 +49,7 @@ class CdcExport < ActiveRecord::Base
     end
 
     def cdc_deletes(start_mmwr, end_mmwr)
-      where = [ "sent_to_cdc=true AND ((exp_deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
+      where = [ "sent_to_cdc=true AND ((deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
@@ -61,26 +61,37 @@ class CdcExport < ActiveRecord::Base
         end
       end      
       where << ")"
-      events = ActiveRecord::Base.connection.select_all("select * from v_export_cdc where (#{where.join(' ')})")
+      events = get_cdc_events(where.join(' '))
       events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
       events
     end
 
     def verification_records(mmwr_year)
-      where = "where exp_year='#{mmwr_year.to_s[2..3]}' AND exp_deleted_at IS NULL"
+      select = 'COUNT(*), events."MMWR_year", diseases.cdc_code' 
+      where = '"MMWR_year"=' + mmwr_year.to_s + ' AND deleted_at IS NULL'
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
-      group_by = "GROUP BY exp_event, exp_state, exp_year"
-      select = "SELECT COUNT(*), exp_event, exp_state, exp_year FROM v_export_cdc"
-      records = ActiveRecord::Base.connection.select_all("#{select} #{where} #{group_by}")
+      group_by = 'disease_events.disease_id, events."MMWR_year", diseases.cdc_code'
+      records = get_cdc_events(where, select, group_by)
       records.map!{|record| record.extend(Export::Cdc::VerificationRecord)}
       records
     end
 
     # set sent to true for all cdc records
     def reset_sent_status(cdc_records)
-      event_ids = cdc_records.compact.collect {|record| record.event_id}
+      event_ids = cdc_records.compact.select {|record| record.id if record.id}
       Event.update_all('sent_to_cdc=true', ['id IN (?)', event_ids])
+    end
+
+    def get_cdc_events(where_clause, select_list=nil, group_by_clause=nil)
+      # Consider refining this to minimize the number of SQL calls made later by the fetch and conver calls
+      options = { :joins => "INNER JOIN disease_events ON events.id = disease_events.event_id INNER JOIN diseases ON disease_events.disease_id = diseases.id",
+                  :conditions => where_clause # + " AND disease_events.disease_id IS NOT NULL"
+                }
+      options[:select] = select_list if select_list
+      options[:group] = group_by_clause if group_by_clause
+
+      MorbidityEvent.find(:all, options)
     end
   end
 end

@@ -135,3 +135,9 @@ some_active_jurisdiction:
   id: 17
   role_id: 2305
   event_id: 4
+
+patient_for_event_queue:
+  id: 18
+  role_id: 2301
+  event_id: 6
+  primary_entity_id: 111

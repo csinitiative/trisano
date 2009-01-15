@@ -26,6 +26,7 @@ class CdcEventsController < AdminController
 
     @events = weekly_events(start_mmwr, end_mmwr)
     CdcExport.reset_sent_status(@events)
+
     respond_to do |format|
       format.dat {
         headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_weeks_#{start_mmwr.mmwr_week}-#{end_mmwr.mmwr_week}.dat\""

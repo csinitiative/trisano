@@ -11,11 +11,14 @@ tuberculosis:
 anthrax:
   id: 3
   disease_name: "Anthrax"
+  cdc_code: "10350"
 
 aids:
   id: 4
   disease_name: "AIDS"
+  cdc_code: "10560"
 
 hep_a:
   id: 5
   disease_name: "Hepatitis A, acute"
+  cdc_code: "10110"

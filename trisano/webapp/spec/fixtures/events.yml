@@ -34,6 +34,7 @@ no_disease_cmr:
 cdc_answers_cmr:
   id: 4
   event_status: 'UI'
+  record_number: "456789"
   type: MorbidityEvent
 
 has_anthrax_cmr:
@@ -45,3 +46,4 @@ has_event_queue:
   event_status: "ASGD-INV"
   event_queue_id: 1
   event_onset_date: 2008-03-11
+  type: MorbidityEvent

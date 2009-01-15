@@ -80,3 +80,9 @@ lab_guy:
   first_name: "Joe"
   updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
+
+queue_guy:
+  id: 7
+  entity_id: 111
+  last_name: "Labguy"
+  first_name: "Joe"

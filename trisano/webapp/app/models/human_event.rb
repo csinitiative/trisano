@@ -313,6 +313,12 @@ class HumanEvent < Event
     )
   end
 
+  def definitive_lab_result
+    # CDC calculations expect one lab result.  Choosing the most recent to be it
+    return nil if lab_results.empty?
+    self.lab_results.sort_by { |lab_result| lab_result.lab_test_date || Date.parse("01/01/0000") }.last
+  end
+
   def save_associations
     patient.save(false)
     patient.primary_entity.save(false)
