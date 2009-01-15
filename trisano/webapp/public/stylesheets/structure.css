@@ -133,13 +133,13 @@ legend {
   display: block; }
 
 #foot {
-  width: 420px;
-  padding: 50px 0px 100px 0px; }
+  width: 500px;
+  padding: 150px 0px 100px 0px; }
 
 .footlogo {
-  width: 25px;
+  width: 40px;
   float: left; }
 
 .foottext {
-  width: 395px;
+  width: 460px;
   float: left; }

@@ -162,23 +162,21 @@ label {
 
 .foottext {
   font-family: helvetica, sans-serif;
-  font-size: 10px;
-  font-weight: 100;
   padding: 0px 0px 0px 0px;
-  color: #999; }
-  .foottext a {
-    color: #999;
-    font-weight: bold;
-    text-decoration: none; }
-    .foottext a:hover {
-      color: #090;
-      font-weight: bold;
-      text-decoration: underline; }
-    .foottext a:visited {
+  color: #999;
+  font-weight: light; }
+  .foottext .top {
+    font-size: 13px; }
+  .foottext .bottom {
+    font-size: 10px;
+    color: #999; }
+    .foottext .bottom a {
       color: #999;
       font-weight: bold;
       text-decoration: none; }
-    .foottext a:active {
-      color: #090;
-      font-weight: bold;
-      text-decoration: none; }
+      .foottext .bottom a:hover {
+        color: #333;
+        text-decoration: none; }
+      .foottext .bottom a:visited {
+        color: #999;
+        text-decoration: none; }

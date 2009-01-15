@@ -84,14 +84,15 @@
           .footlogo
             = image_tag("foot.png", :border => 0)
           .foottext
-            %a{:href => 'http://www.trisano.org/collaborate/'} TriSano Support
-            |
-            %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} TriSano Community Feedback
-            |
-            %a{:href => 'http://www.trisano.org'} TriSano.org
-            |
-            = yield :enable_save_buttons 
-          .foottext
-            Copyright © 2009 Collaborative Software Foundation
-            |
-            %a{:href => 'http://www.trisano.org/collaborate/licenses/'} License         
+            .top
+              Copyright © 2009 Collaborative Software Foundation
+            .bottom
+              %a{:href => 'http://www.trisano.org/collaborate/'} Support
+              |
+              %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} Feedback
+              |
+              %a{:href => 'http://www.trisano.org'} About TriSano
+              |
+              %a{:href => 'http://www.trisano.org/collaborate/licenses/'} License
+              = yield :enable_save_buttons
+                   
