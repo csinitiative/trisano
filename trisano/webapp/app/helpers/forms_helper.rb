@@ -226,13 +226,13 @@ module FormsHelper
     begin
       result = "<ul id='section_#{element.id}' class='sortable fb-section'>"
       result << "<table><tr>"
-      result << "<td class='section'>#{element.name}</td>"
+      result << "<td class='section'>#{strip_tags(element.name)}</td>"
       result << "<td class='actions'>" 
       result << edit_section_link(element)
       result << "&nbsp;&nbsp;" << add_question_link(element, "section") if (include_children)
       result << "&nbsp;&nbsp;" << delete_section_link(element)
       result << "</td></tr>"
-      result << "<tr><td colspan='2' class='instructions'>#{element.description.gsub("\n", '<br/>')}</td></tr>" unless element.description.blank?
+      result << "<tr><td colspan='2' class='instructions'>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</td></tr>" unless element.description.blank?
       result << "</table>"
     
       result << "<div id='section-mods-#{element.id.to_s}'></div>"

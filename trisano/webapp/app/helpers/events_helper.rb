@@ -442,7 +442,7 @@ module EventsHelper
       hide_id = section_id + "_hide";
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
-      result << "<legend>#{element.name} "
+      result << "<legend>#{strip_tags(element.name)} "
       
       unless element.help_text.blank?
         result << render_help_text(element) 
@@ -453,7 +453,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     
@@ -646,7 +646,7 @@ module EventsHelper
       hide_id = section_id + "_hide";
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
-      result << "<legend>#{element.name} "
+      result << "<legend>#{strip_tags(element.name)} "
       
       unless element.help_text.blank?
         result << render_help_text(element) 
@@ -657,7 +657,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
     
       section_children = form_elements_cache.children(element)
     
@@ -809,8 +809,8 @@ module EventsHelper
   def  print_investigator_section(form_elements_cache, element, f)
     begin
       result = "<div class='print-section'>"
-      result << "<br/>#{element.name}<br/>"
-      result << "<span class='print-instructions'>#{element.description.gsub("\n", '<br/>')}</span>" unless element.description.blank?
+      result << "<br/>#{strip_tags(element.name)}<br/>"
+      result << "<span class='print-instructions'>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</span>" unless element.description.blank?
       result << "<hr/>"
 
       section_children = form_elements_cache.children(element)
