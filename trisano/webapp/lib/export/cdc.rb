@@ -37,17 +37,17 @@ module Export
         options[:result]
       end
 
-      def convert_value(value, conversion)        
+      def convert_value(value, conversion)
         if conversion
           converted_value = conversion.value_to
           case
-          when conversion.conversion_type == 'date' && value
-            return converted_value if value.blank?
+          when conversion.conversion_type == 'date'
             begin
               date = Date.parse(value.to_s)
-              converted_value = date.strftime("%m/%d/%y")
-            rescue Exception => ex
-              DEFAULT_LOGGER.warn "CDC Export: Failed to convert value '#{value}' because: #{ex.message}"
+              converted_value = date.strftime(converted_value)
+            rescue Exception => ex              
+              DEFAULT_LOGGER.debug "CDC Export: Failed to convert date value '#{value}' because: #{ex.message}"
+              return '9' * conversion.length_to_output
             end
           when conversion.conversion_type == 'single_line_text' && value
             length_to_output = conversion.length_to_output

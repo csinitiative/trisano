@@ -64,7 +64,7 @@ datedx_format:
   id: 10
   export_column_id: 3
   value_from: 
-  value_to: '99999999'
+  value_to: '%m/%d/%y'
   sort_order: 
   
 vaccineyea_format:

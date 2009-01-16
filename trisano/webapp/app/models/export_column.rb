@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+# TODO a good candidate for STI
 class ExportColumn < ActiveRecord::Base
   belongs_to :export_name
   has_many :export_conversion_values, :order => "sort_order ASC", :dependent => :destroy

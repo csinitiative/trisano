@@ -55,40 +55,80 @@ describe 'export/cdc' do
 
     before :each do      
       @conversion = mock(ExportConversionValue)
-      @conversion.should_receive(:value_to).once.and_return 'error'
     end
     
     it 'should grab the right side of numbers (to get two digit years)' do      
       @conversion.should_receive(:conversion_type).twice.and_return 'single_line_text'
       @conversion.should_receive(:length_to_output).once.and_return 2
+      @conversion.should_receive(:value_to).once.and_return('error')
       convert_value('2009', @conversion).should == '09'
     end
 
     it 'should ljust string values' do
       @conversion.should_receive(:conversion_type).twice.and_return 'single_line_text'
       @conversion.should_receive(:length_to_output).once.and_return 4
+      @conversion.should_receive(:value_to).once.and_return('error')
       convert_value('Homer', @conversion).should == 'Home'
     end
 
     it 'should strip whitespace values' do
       @conversion.should_receive(:conversion_type).twice.and_return 'single_line_text'
       @conversion.should_receive(:length_to_output).once.and_return 8
+      @conversion.should_receive(:value_to).once.and_return('error')
       convert_value('Homer', @conversion).should == 'Homer'
     end
 
     it 'should not rjust long postal codes' do
       @conversion.should_receive(:conversion_type).twice.and_return 'single_line_text'
       @conversion.should_receive(:length_to_output).once.and_return 5
+      @conversion.should_receive(:value_to).once.and_return('error')
       convert_value('46062-5888', @conversion).should == '46062'
     end
 
-    it 'should not blow up on invalid dates' do
+    # strftime rules
+
+    it 'should convert dates to mm/dd/yy if value_to is %m/%d/%y' do
       @conversion.should_receive(:conversion_type).once.and_return 'date'
+      @conversion.should_receive(:value_to).once.and_return('%m/%d/%y')
       value = ''
-      lambda{value = convert_value('not-a-date', @conversion)}.should_not raise_error
-      value.should == 'error'
+      lambda{value = convert_value('January 12th, 2009', @conversion)}.should_not raise_error
+      value.should == '01/12/09'
     end
 
+    it 'should convert dates to YYYYMMDD if value_to is %Y%m%d' do
+      @conversion.should_receive(:conversion_type).once.and_return 'date'
+      @conversion.should_receive(:value_to).once.and_return('%Y%m%d')
+      value = ''
+      lambda{value = convert_value('January 12th, 2009', @conversion)}.should_not raise_error
+      value.should == '20090112'
+    end
+
+    it 'should replace blank dates with field width 9s' do
+      @conversion.should_receive(:conversion_type).once.and_return 'date'
+      @conversion.should_receive(:value_to).once.and_return('%Y%m%d')
+      @conversion.should_receive(:length_to_output).once.and_return(8)
+      value = ''
+      lambda{value = convert_value('', @conversion)}.should_not raise_error
+      value.should == '99999999'
+    end
+
+    it 'should replace invalid dates with field width 9s' do
+      @conversion.should_receive(:conversion_type).once.and_return 'date'
+      @conversion.should_receive(:value_to).once.and_return('%Y%m%d')
+      @conversion.should_receive(:length_to_output).once.and_return(8)
+      value = ''
+      lambda{value = convert_value('not_a_date', @conversion)}.should_not raise_error
+      value.should == '99999999'
+    end
+
+    it 'should replace nil dates with field width 9s' do
+      @conversion.should_receive(:conversion_type).once.and_return 'date'
+      @conversion.should_receive(:length_to_output).once.and_return(8)
+      @conversion.should_receive(:value_to).once.and_return('%Y%m%d')
+      value = ''
+      lambda{value = convert_value(nil, @conversion)}.should_not raise_error
+      value.should == '99999999'
+    end
   end
 
   describe 'core path method calling' do    
