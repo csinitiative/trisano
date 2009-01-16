@@ -316,7 +316,7 @@
 
  - export_column_name: 'BIRTHDATE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
 
  - export_column_name: 'AGE'
    value_from: 
@@ -451,7 +451,7 @@
  - disease_code_group: 'Hepatitis'
    export_column_name: 'DATEDX'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Hepatitis'
@@ -901,13 +901,13 @@
  - disease_code_group: 'Hepatitis'
    export_column_name: 'TRANSFROM'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Hepatitis'
    export_column_name: 'TRANS'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
    
  - disease_code_group: 'Hepatitis'
@@ -1305,7 +1305,7 @@
  - disease_code_group: 'Meningitis'
    export_column_name: 'FIRSTCULT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
    
  - disease_code_group: 'Meningitis'
@@ -1887,7 +1887,7 @@
  - disease_code_group: 'Meningitis'
    export_column_name: 'VACDATE1'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
    
  - disease_code_group: 'Meningitis'
@@ -1923,7 +1923,7 @@
  - disease_code_group: 'Meningitis'
    export_column_name: 'VACDATE2'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Meningitis'
@@ -1959,7 +1959,7 @@
  - disease_code_group: 'Meningitis'
    export_column_name: 'VACDATE3'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Meningitis'
@@ -1995,7 +1995,7 @@
  - disease_code_group: 'Meningitis'
    export_column_name: 'VACDATE4'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Meningitis'
@@ -2201,13 +2201,13 @@
  - disease_code_group: 'Lyme'
    export_column_name: 'DIAGNOSIS'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Lyme'
    export_column_name: 'REPORTED'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Lyme'
@@ -2401,7 +2401,7 @@
  - disease_code_group: 'Measles'
    export_column_name: 'ONSET'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Measles'
@@ -2719,7 +2719,7 @@
  - disease_code_group: 'Measles'
    export_column_name: 'DATEIGM'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
    
  - disease_code_group: 'Measles'
@@ -2761,13 +2761,13 @@
  - disease_code_group: 'Measles'
    export_column_name: 'DATEACUT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Measles'
    export_column_name: 'DATECONV'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
      
  - disease_code_group: 'Measles'
@@ -2899,25 +2899,25 @@
  - disease_code_group: 'Measles'
    export_column_name: 'VACDATE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Measles'
    export_column_name: 'VACDATE01'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Measles'
    export_column_name: 'VACDATE02'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
      
  - disease_code_group: 'Measles'
    export_column_name: 'VACDATE03'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Measles'
@@ -3085,13 +3085,13 @@
  - disease_code_group: 'Measles'
    export_column_name: 'DATEHEAL'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Measles'
    export_column_name: 'DATEINVE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Measles'
@@ -3309,7 +3309,7 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'ONSET'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
@@ -3645,7 +3645,7 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DATEIGM'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
@@ -3687,13 +3687,13 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DATEACUT'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DATECONV'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
      
  - disease_code_group: 'Mumps-Rubella'
@@ -3771,25 +3771,25 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'VACDATE'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'VACDATE01'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'VACDATE02'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'VACDATE03'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
@@ -3879,13 +3879,13 @@
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DATEHEAL'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
    export_column_name: 'DATEINVE'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Mumps-Rubella'
@@ -4451,7 +4451,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'ONSET'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -4529,7 +4529,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'FINALINT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -4733,7 +4733,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATEFIR'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -4793,7 +4793,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATESEC'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
      
  - disease_code_group: 'Pertussis'
@@ -4865,7 +4865,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATECULT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
  
  - disease_code_group: 'Pertussis'
@@ -4913,7 +4913,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATEDFA'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
      
  - disease_code_group: 'Pertussis'
@@ -4961,13 +4961,13 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'FIRSPEC'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
      
  - disease_code_group: 'Pertussis'
    export_column_name: 'SECSPEC'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5015,7 +5015,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATEPCR'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5051,13 +5051,13 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'LASTPERT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE1'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5141,7 +5141,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE2'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5225,7 +5225,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE3'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5309,7 +5309,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE4'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5393,7 +5393,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE5'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5478,7 +5478,7 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'VACDATE6'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -5658,13 +5658,13 @@
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATEHEAL'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
    export_column_name: 'DATEINVE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Pertussis'
@@ -6002,7 +6002,7 @@
  - disease_code_group: 'Tetanus'
    export_column_name: 'WOUNDDAT'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Tetanus'
@@ -6674,7 +6674,7 @@
  - disease_code_group: 'Tetanus'
    export_column_name: 'DATEEXP'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Tetanus'
@@ -6686,13 +6686,13 @@
  - disease_code_group: 'Tetanus'
    export_column_name: 'MBIRTH'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Tetanus'
    export_column_name: 'MARRIVAL'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'Tetanus'
@@ -6836,7 +6836,7 @@
  - disease_code_group: 'Tetanus'
    export_column_name: 'REPORTED'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
    
@@ -7133,7 +7133,7 @@
  - disease_code_group: 'STD'
    export_column_name: 'DX_DATE'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'STD'
@@ -7223,7 +7223,7 @@
  - disease_code_group: 'STD'
    export_column_name: 'SPEC_DATE'
    value_from:
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order:
 
  - disease_code_group: 'STD'
@@ -7567,7 +7567,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'MBIRTH'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7609,7 +7609,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'LMP'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7633,7 +7633,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'PNCDATE1'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7663,7 +7663,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'DATEA'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7687,7 +7687,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'DATEB'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7711,7 +7711,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'DATEC'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
      
  - disease_code_group: 'Congenital Syphilis'
@@ -7735,7 +7735,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'DATED'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
      
  - disease_code_group: 'Congenital Syphilis'
@@ -7933,7 +7933,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'DEATHDAT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -7963,7 +7963,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'REACDATE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
@@ -8221,7 +8221,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'TREATDAT'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
      
  - disease_code_group: 'INFTITER Syphilis'
@@ -8341,7 +8341,7 @@
  - disease_code_group: 'Congenital Syphilis'
    export_column_name: 'RTDATE'
    value_from: 
-   value_to: '99999999'
+   value_to: '%m/%d/%y'
    sort_order: 
 
  - disease_code_group: 'Congenital Syphilis'
