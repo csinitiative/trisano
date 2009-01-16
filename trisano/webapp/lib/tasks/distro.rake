@@ -71,6 +71,11 @@ namespace :trisano do
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
     end    
 
+    def change_text_in_file(file, regex_to_find, text_to_put_in_place)
+      text= File.read file
+      File.open(file, 'w+'){|f| f << text.gsub(regex_to_find, text_to_put_in_place)}
+    end
+
     def create_db_user 
       puts "Creating TriSano user: #{@trisano_user}."
       success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
@@ -226,6 +231,7 @@ namespace :trisano do
       initialize_config
       if ! @support_url.nil?
         puts "overwriting TriSano Support URL with #{@support_url}"
+        change_text_in_file('../webapp/app/views/layouts/application.html.haml', "http://www.trisano.org/collaborate/", @support_url) 
       end
     end
     
