@@ -127,8 +127,10 @@ namespace :trisano do
         FileUtils.mkdir(dirname)
       end            
       # dump sans access privs/acl & sans object owner - we grant auth on restore to make moving dump files between envIRONments easier
-      puts "#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{dirname}/#{dump_file_name}"
-      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{dirname}/#{dump_file_name}")
+      filename = "#{dirname}/#{dump_file_name}"
+      puts "#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O > #{filename}"
+      File.open(filename, 'w') {|f| f.write("\\set ON_ERROR_STOP\n\n") }
+      success = system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O >> #{filename}")
       puts "Created dump file: #{dirname}/#{dump_file_name}"
       unless success
         puts "Failed to create #{dirname}/#{dump_file_name}"
@@ -201,12 +203,12 @@ namespace :trisano do
       dirname = './dump'
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'") do |ok, res|
         if ! ok
-          puts "Failed creating database: #{@database} with error #{res.exitstatus}"
+          raise "Failed creating database: #{@database} with error #{res.exitstatus}. Try running drop_db_and_user.rb."
         end
       end
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}") do |ok, res|
         if ! ok
-          puts "Failed importing dumpfile: #{@dump_file} into database #{@database} with error #{res.exitstatus}"
+          raise "Failed importing dumpfile: #{@dump_file} into database #{@database} with error #{res.exitstatus}"
         end
       end
       if ! create_db_user
