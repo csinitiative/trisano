@@ -50,7 +50,7 @@ production:
   adapter: postgresql
   # adapter: jdbcpostgresql
   encoding: unicode
-  database: trisano_prod
+  database: trisano_production
   username: nedss
   password: password
   host: localhost
