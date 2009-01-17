@@ -54,13 +54,14 @@
   %span{:clear => 'all'}
 
   %fieldset.form
-    - core_element_show :hospitalized_id, event_form, :horiz do
-      = event_form.label(:hospitalized)
-      = l @event.disease.hospitalized unless @event.disease.nil?    
+    - event_form.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |disease_form|
+      - core_element_show :hospitalized_id, disease_form, :horiz do
+        = event_form.label(:hospitalized)
+        = @event.disease ? l(@event.disease.hospitalized) : '&nbsp;'
     %legend
       Hospitalized health facilities
     - if @event.hospitalized_health_facilities.empty?
-      %h3 No hospitalized health facilities have been recorded for this event
+      %h3{:style => 'clear: both;'} No hospitalized health facilities have been recorded for this event
     - else
       %table.list{:style => 'margin-top: 20px;'}
         %tr
