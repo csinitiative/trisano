@@ -278,7 +278,8 @@ class MorbidityEventsController < EventsController
   
   def lab_result_form
     @event = MorbidityEvent.new
-    render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix]}
+    core_path = @event.class.to_s.underscore + "[lab_result]"
+    render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix], :core_path => core_path}
   end
   
   def treatment_form
