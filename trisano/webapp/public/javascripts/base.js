@@ -7306,10 +7306,10 @@ function toggle_investigator_forms(id_to_show) {
 
 }
 
-function sendConditionRequest(element, event_id, question_element_id, spinner_id) {
+function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
   if (typeof spinner_id == "undefined")
     spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
-  new Ajax.Request('../../question_elements/process_condition?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
+  new Ajax.Request(path + '?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
     asynchronous: true,
     evalScripts:  true,
     onCreate:     function() { $(spinner_id).show(); },
@@ -7317,10 +7317,10 @@ function sendConditionRequest(element, event_id, question_element_id, spinner_id
   });
 }
 
-function sendCoreConditionRequest(element, event_id, core_path, spinner_id) {
+function sendCoreConditionRequest(path, element, event_id, core_path, spinner_id) {
   if (typeof spinner_id == "undefined")
     spinner_id = core_path + '_spinner';
-  new Ajax.Request('../../follow_up_elements/process_core_condition?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {
+  new Ajax.Request(path +'?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {
     asynchronous: true,
     evalScripts:  true,
     onCreate:     function() { $(spinner_id).show(); },

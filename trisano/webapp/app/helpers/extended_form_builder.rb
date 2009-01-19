@@ -17,6 +17,7 @@
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::SanitizeHelper
+  include ActionController::UrlWriter
 
   def core_text_field(attribute, options = {}, event =nil)
     core_follow_up(attribute, options, event) do |attribute, options|
@@ -91,8 +92,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       conditions = []
       follow_ups.each { |follow_up| conditions << "#{follow_up.condition},#{follow_up.id}"}
       conditions = conditions.join(",")
-      text_answer_event = "sendConditionRequest(this, '#{event.id}', '#{question_element.id}');"
-      select_answer_event = "sendConditionRequest(this, '#{event.id}', '#{question_element.id}');"
+      text_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
+      select_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
     end
 
     cdc_attributes = []
@@ -226,7 +227,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     unless (core_path.nil?)
       event.form_references.each do |form_reference|
         if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}").size > 0)
-          result = "sendCoreConditionRequest(this, '#{event.id}', '#{core_path[attribute]}');"
+          result = "sendCoreConditionRequest('#{process_core_condition_path}', this, '#{event.id}', '#{core_path[attribute]}');"
           break
         end
       end
