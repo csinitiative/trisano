@@ -146,7 +146,7 @@ describe 'Print CMR page' do
     #edit_cmr(@browser).should be_true
     click_core_tab(@browser, ADMIN)
     @browser.select "morbidity_event_lhd_case_status_id", "label=Confirmed"
-    @browser.select "morbidity_event_udoh_case_status_id", "label=Not a Case"
+    @browser.select "morbidity_event_state_case_status_id", "label=Not a Case"
     @browser.select "morbidity_event_outbreak_associated_id", "label=Yes"
     @browser.type "morbidity_event_outbreak_name", "POCKET MONSTERS"
     @browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=Central Utah Public Health Department"
@@ -154,7 +154,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_investigation_started_date", "12/3/2003"
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
-    @browser.type "morbidity_event_review_completed_UDOH_date", "12/5/1963"
+    @browser.type "morbidity_event_review_completed_by_state_date", "12/5/1963"
     @browser.type "morbidity_event_acuity", "Extra Keen"
     save_cmr(@browser).should be_true
     print_cmr(@browser).should be_true

@@ -260,7 +260,7 @@ class MorbidityEventsController < EventsController
     when "RO-MGR"
       @event.investigation_completed_LHD_date = nil
     when "CLOSED"
-      @event.review_completed_UDOH_date = Date.today
+      @event.review_completed_by_state_date = Date.today
     end
 
     if @event.save

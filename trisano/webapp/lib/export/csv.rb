@@ -302,7 +302,7 @@ module Export
           event_data << ["patient_MMWR_year", "read_attribute('MMWR_year')"]
 
           event_data << ["patient_lhd_case_status", "lhd_case_status.code_description if lhd_case_status"]
-          event_data << ["patient_udoh_case_status", "udoh_case_status.code_description if udoh_case_status"]
+          event_data << ["patient_state_case_status", "state_case_status.code_description if state_case_status"]
           event_data << ["patient_outbreak_associated", "outbreak_associated.code_description if outbreak_associated"]
           event_data << ["patient_outbreak_name", "outbreak_name"]
 
@@ -312,7 +312,7 @@ module Export
           event_data << ["patient_event_status", "event_status"]
           event_data << ["patient_investigation_started_date", "investigation_started_date"]
           event_data << ["patient_investigation_completed_lhd_date", "investigation_completed_LHD_date"]
-          event_data << ["patient_review_completed_UDOH_date", "review_completed_UDOH_date"]
+          event_data << ["patient_review_completed_by_state_date", "review_completed_by_state_date"]
 
           event_data << ["patient_investigator", "investigator.best_name if investigator"]
           event_data << ["patient_sent_to_cdc", "sent_to_cdc"]

@@ -43,7 +43,7 @@ describe "Bulk loading CMR's for CDC export" do
       @browser.click "//ul[@id='tabs']/li[7]/a/em"
       @browser.click "//ul[@id='tabs']/li[9]/a/em"
       @browser.select "morbidity_event_lhd_case_status_id", "label=Confirmed"
-      @browser.select "morbidity_event_udoh_case_status_id", "label=Confirmed"
+      @browser.select "morbidity_event_state_case_status_id", "label=Confirmed"
       @browser.type "morbidity_event_outbreak_name", "Random"
       @browser.select "morbidity_event_outbreak_associated_id", "label=Yes"
       @browser.click "save_and_continue_btn"

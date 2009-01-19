@@ -33,7 +33,7 @@ class Event < ActiveRecord::Base
   belongs_to :investigator, :class_name => 'User'
   belongs_to :imported_from, :class_name => 'ExternalCode'
   belongs_to :lhd_case_status, :class_name => 'ExternalCode'
-  belongs_to :udoh_case_status, :class_name => 'ExternalCode'
+  belongs_to :state_case_status, :class_name => 'ExternalCode'
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
 
   belongs_to :event_queue
@@ -270,7 +270,7 @@ class Event < ActiveRecord::Base
                           WHERE e.deleted_at IS NULL
                           AND d.event_id = e.id
                           AND d.disease_id IS NOT NULL 
-                          AND e.udoh_case_status_id = c.id
+                          AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
                           AND c.the_code IN ('C', 'P', 'S') 
                           AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
@@ -283,7 +283,7 @@ class Event < ActiveRecord::Base
                           WHERE e.sent_to_ibis = TRUE
                           AND d.event_id = e.id
                           AND d.disease_id IS NOT NULL 
-                          AND e.udoh_case_status_id = c.id
+                          AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
                           AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
                           AND e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'

@@ -6,14 +6,14 @@ marks_cmr:
   outbreak_name: ""
   first_reported_PH_date: 
   event_onset_date: !str 2008-03-11
-  review_completed_UDOH_date: 
+  review_completed_by_state_date: 
   imported_from_id: !str 2102
   investigation_started_date: 
   results_reported_to_clinician_date: 
   event_name: Marks Chicken Pox
   MMWR_week: !str 10
   event_status: "NEW"
-  udoh_case_status_id: !str 1802
+  state_case_status_id: !str 1802
   lhd_case_status_id: !str 1802
   MMWR_year: !str 2006
   id: !str 1

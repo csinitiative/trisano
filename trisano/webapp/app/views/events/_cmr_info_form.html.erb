@@ -41,9 +41,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= f.label(:lhd_case_status_id, "LHD case status") %>
         <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
       <% end -%>
-      <% core_element :udoh_case_status_id, f, :horiz do -%>
-        <%= f.label(:udoh_case_status_id, "UDOH case status") %>
-        <%= f.dropdown_code_field(:udoh_case_status_id, 'case', {}) %>
+      <% core_element :state_case_status_id, f, :horiz do -%>
+        <%= f.label(:state_case_status_id, "State case status") %>
+        <%= f.dropdown_code_field(:state_case_status_id, 'case', {}) %>
       <% end -%>
       <% core_element :outbreak_associated_id, f, :horiz do -%>
         <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
@@ -74,9 +74,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>
           <%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %>
         <% end -%>
-        <% core_element :review_completed_UDOH_date, f, :horiz do -%>
-          <%= f.label(:review_completed_UDOH_date, "Date review completed by UDOH") %>
-          <%= f.calendar_date_select(:review_completed_UDOH_date, :year_range => 5.years.ago..0.years.from_now) %>
+        <% core_element :review_completed_by_state_date, f, :horiz do -%>
+          <%= f.label(:review_completed_by_state_date, "Date review completed by state") %>
+          <%= f.calendar_date_select(:review_completed_by_state_date, :year_range => 5.years.ago..0.years.from_now) %>
         <% end -%>
       <% end -%>
       <% core_element :acuity, f, :horiz do -%>

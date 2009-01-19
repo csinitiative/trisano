@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'Admin CDC Export' do
   
-# $dont_kill_browser = true
+$dont_kill_browser = true
 
   before :all do
     @browser.open "/trisano/cmrs"
@@ -41,7 +41,7 @@ describe 'Admin CDC Export' do
   
   it "should create a basic cmr" do
     create_basic_investigatable_cmr(@browser, @unique_name, @disease_name, "Bear River Health Department") do |browser|
-      browser.select("morbidity_event_udoh_case_status_id", "label=Probable")
+      browser.select("morbidity_event_state_case_status_id", "label=Probable")
     end.should be_true
   end
 
@@ -105,7 +105,7 @@ describe 'Admin CDC Export' do
     @browser.click("link=CMRS")
     @browser.wait_for_page_to_load($load_time)
     edit_cmr(@browser).should be_true
-    @browser.select("morbidity_event_udoh_case_status_id", "label=Unknown")
+    @browser.select("morbidity_event_state_case_status_id", "label=Unknown")
     save_cmr(@browser).should be_true
   end
   

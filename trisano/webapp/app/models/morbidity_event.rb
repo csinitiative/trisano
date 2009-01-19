@@ -223,7 +223,7 @@ class MorbidityEvent < HumanEvent
           :investigator_id => nil,
           :investigation_started_date => nil,
           :investigation_completed_LHD_date => nil,
-          :review_completed_UDOH_date => nil)
+          :review_completed_by_state_date => nil)
         self.add_note(self.instance_eval(Event.states[self.event_status].note_text) + "\n#{note}")
       end
 

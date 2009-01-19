@@ -209,7 +209,7 @@ def event_header(event_type)
       header_array << "patient_MMWR_week"
       header_array << "patient_MMWR_year"
       header_array << "patient_lhd_case_status"
-      header_array << "patient_udoh_case_status"
+      header_array << "patient_state_case_status"
       header_array << "patient_outbreak_associated"
       header_array << "patient_outbreak_name"
       header_array << "patient_event_name"
@@ -218,7 +218,7 @@ def event_header(event_type)
       header_array << "patient_event_status"
       header_array << "patient_investigation_started_date"
       header_array << "patient_investigation_completed_lhd_date"
-      header_array << "patient_review_completed_UDOH_date"
+      header_array << "patient_review_completed_by_state_date"
       header_array << "patient_investigator"
       header_array << "patient_sent_to_cdc"
       header_array << "acuity"
@@ -306,7 +306,7 @@ def event_output(event_type, m)
     out << "#{m.read_attribute("MMWR_week")},"
     out << "#{m.read_attribute("MMWR_year")},"
     out << "#{m.lhd_case_status.code_description},"
-    out << "#{m.udoh_case_status.code_description},"
+    out << "#{m.state_case_status.code_description},"
     out << "#{m.outbreak_associated.code_description},"
     out << "#{m.outbreak_name},"
     out << "#{m.event_name},"
@@ -315,7 +315,7 @@ def event_output(event_type, m)
     out << "#{m.event_status},"
     out << "#{m.investigation_started_date},"
     out << "#{m.investigation_completed_LHD_date},"
-    out << "#{m.review_completed_UDOH_date},"
+    out << "#{m.review_completed_by_state_date},"
     out << "#{m.investigator.best_name},"
     out << "#{m.sent_to_cdc},"
     out << "#{m.acuity},"
@@ -412,7 +412,7 @@ def csv_mock_event(event_type)
   m.stub!(:age_type).and_return(simple_reference)
   m.stub!(:imported_from).and_return(simple_reference)
   m.stub!(:lhd_case_status).and_return(simple_reference)
-  m.stub!(:udoh_case_status).and_return(simple_reference)
+  m.stub!(:state_case_status).and_return(simple_reference)
   m.stub!(:outbreak_associated).and_return(simple_reference)
   m.stub!(:outbreak_name).and_return("an outbreak")
 
@@ -421,7 +421,7 @@ def csv_mock_event(event_type)
   m.stub!(:event_status).and_return("NEW")
   m.stub!(:investigation_started_date).and_return("2008-01-06")
   m.stub!(:investigation_completed_lhd_date).and_return("2008-01-07")
-  m.stub!(:review_completed_UDOH_date).and_return("2008-01-08")
+  m.stub!(:review_completed_by_state_date).and_return("2008-01-08")
   m.stub!(:results_reported_to_clinician_date).and_return("2008-01-09")
   m.stub!(:first_reported_PH_date).and_return("2008-01-10")
   m.stub!(:investigation_completed_LHD_date).and_return("2008-01-11")

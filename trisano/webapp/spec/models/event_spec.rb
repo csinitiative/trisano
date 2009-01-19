@@ -1793,10 +1793,10 @@ describe MorbidityEvent do
       end
     end
 
-    it 'should set cdc and ibis update date when udoh case status id changes' do
+    it 'should set cdc and ibis update date when state case status id changes' do
       with_event do |event|
         event.sent_to_cdc = event.sent_to_ibis = true
-        event.udoh_case_status = ExternalCode.find(:first, :conditions => "code_name = 'case'")
+        event.state_case_status = ExternalCode.find(:first, :conditions => "code_name = 'case'")
         event.save.should be_true
         event.cdc_updated_at.should == Date.today
         event.ibis_updated_at.should == Date.today
@@ -1836,13 +1836,13 @@ describe MorbidityEvent do
         # NEW: Not sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis3", } },
             "disease"             => { "disease_id" => anthrax.id },
-            "udoh_case_status_id" => confirmed.id,
+            "state_case_status_id" => confirmed.id,
             "event_name"          => "Ibis3"
           } )
         # UPDATED: Sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
             "disease"             => { "disease_id" => anthrax.id },
-            "udoh_case_status_id" => confirmed.id,
+            "state_case_status_id" => confirmed.id,
             "sent_to_ibis"        => true,
             "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis4"
@@ -1850,7 +1850,7 @@ describe MorbidityEvent do
         # DELETED: Sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
             "disease"             => { "disease_id" => anthrax.id },
-            "udoh_case_status_id" => discarded.id,
+            "state_case_status_id" => discarded.id,
             "sent_to_ibis"        => true,
             "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis5"
@@ -1858,7 +1858,7 @@ describe MorbidityEvent do
         # DELETED: Sent to IBIS, has disease, confirmed but deleted
         MorbidityEvent.create( { "active_patient"      => { "person" => { "last_name"=>"Ibis4", } }, 
             "disease"             => { "disease_id" => anthrax.id },
-            "udoh_case_status_id" => confirmed.id,
+            "state_case_status_id" => confirmed.id,
             "sent_to_ibis"        => true,
             "ibis_updated_at"     => Date.today,
             "event_name"          => "Ibis5",

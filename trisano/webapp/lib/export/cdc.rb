@@ -142,7 +142,7 @@ module Export
           return true if nested_attribute_changed?(k, call_path)
         end
                 
-        export_fields = %w(event_onset_date first_reported_PH_date udoh_case_status_id imported_from_id deleted_at)
+        export_fields = %w(event_onset_date first_reported_PH_date state_case_status_id imported_from_id deleted_at)
         old_attributes.select {|k, v| export_fields.include?(k)}.reject do |field, value|
           self.attributes[field] == value
         end.size > 0
@@ -255,7 +255,7 @@ module Export
            exp_ethnicity
            exp_eventdate
            exp_datetype
-           udoh_case_status_id
+           state_case_status_id
            exp_imported
            exp_outbreak
            future
@@ -277,8 +277,8 @@ module Export
       end
       
       # This is a cheat. Sometime we should go back and fix the view.
-      def udoh_case_status_id
-        return '9' unless status_code = self['udoh_case_status_id']
+      def state_case_status_id
+        return '9' unless status_code = self['state_case_status_id']
         external_code = ExternalCode.find(status_code)
         case_status_export_column = ExportColumn.find_by_export_column_name("CASESTATUS")
         

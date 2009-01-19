@@ -25,9 +25,9 @@
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label(:lhd_case_status_id, 'LHD case status')
       = l(@event.lhd_case_status) || '&nbsp;'
-    - core_element_show :udoh_case_status_id, event_form, :horiz do
-      = event_form.label(:udoh_case_status_id, 'UDOH case status')
-      = l(@event.udoh_case_status)
+    - core_element_show :state_case_status_id, event_form, :horiz do
+      = event_form.label(:state_case_status_id, 'State case status')
+      = l(@event.state_case_status)
     - core_element_show :outbreak_associated_id, event_form, :horiz do
       = event_form.label :outbreak_associated_id, 'Outbreak associated'
       = l(@event.outbreak_associated) || '&nbsp;'
@@ -66,9 +66,9 @@
     - core_element_show :event_name, event_form, :horiz do
       = event_form.label :event_name 
       = h(@event.event_name)
-    - core_element_show :review_completed_UDOH_date, event_form, :horiz do
-      = event_form.label :review_completed_UDOH_date, 'Date review completed by UDOH' 
-      = h(@event.review_completed_UDOH_date)
+    - core_element_show :review_completed_by_state_date, event_form, :horiz do
+      = event_form.label :review_completed_by_state_date, 'Date review completed by state' 
+      = h(@event.review_completed_by_state_date)
     - core_element_show :acuity, event_form, :horiz do
       = event_form.label :acuity
       = h(@event.acuity)

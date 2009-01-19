@@ -69,7 +69,7 @@ describe 'CDC export follow ups' do
     @browser.select("//select[@id='morbidity_event_disease_disease_id']",
                     "Mumps")
     click_core_tab(@browser, ADMIN)
-    @browser.select("morbidity_event_udoh_case_status_id", 'Confirmed')
+    @browser.select("morbidity_event_state_case_status_id", 'Confirmed')
     @browser.click("//input[@value='Save & Continue']")
     @browser.wait_for_page_to_load
     click_core_tab(@browser, CLINICAL)

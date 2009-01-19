@@ -61,8 +61,8 @@ def mock_ibis_event
   @ethnic_code = mock_model(Code)
   @ethnic_code.stub!(:the_code).and_return("H")
 
-  @udoh_code = mock_model(Code)
-  @udoh_code.stub!(:the_code).and_return("C")
+  @state_code = mock_model(Code)
+  @state_code.stub!(:the_code).and_return("C")
 
   @person = mock_model(Person)
   @person.stub!(:last_name).and_return("Lastname")
@@ -104,7 +104,7 @@ def mock_ibis_event
   m.stub!(:event_onset_date).and_return(Date.new(2008,1,5))
   m.stub!(:age_info).and_return(OpenStruct.new({:in_years => 30}))
 
-  m.stub!(:udoh_case_status).and_return(@udoh_code)
+  m.stub!(:state_case_status).and_return(@state_code)
 
   m.stub!(:disease).and_return(@disease_event)
   m.stub!(:first_reported_PH_date).and_return(Date.new(2008,1,10))
@@ -129,13 +129,13 @@ def mock_ibis_event
 end
 
 def mock_deleted_ibis_event
-  @udoh_code_2 = mock_model(Code)
-  @udoh_code_2.stub!(:the_code).and_return("NC")
+  @state_code_2 = mock_model(Code)
+  @state_code_2.stub!(:the_code).and_return("NC")
 
   m = mock_model(MorbidityEvent)
   m.stub!(:type).and_return('MorbidityEvent')
   m.stub!(:record_number).and_return("20080002")
-  m.stub!(:udoh_case_status).and_return(@udoh_code_2)
+  m.stub!(:state_case_status).and_return(@state_code_2)
   m.stub!(:deleted_at).and_return(nil)
   m
 end

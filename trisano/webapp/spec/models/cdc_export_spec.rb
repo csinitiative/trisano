@@ -62,7 +62,7 @@ describe CdcExport do
   before :each do
     @event_hash = {
       "imported_from_id" => external_codes(:imported_from_utah).id,
-      "udoh_case_status_id" => external_codes(:case_status_probable).id,
+      "state_case_status_id" => external_codes(:case_status_probable).id,
       "disease" => {
         "disease_id" => diseases(:aids).id,
         "disease_onset_date" => Date.today

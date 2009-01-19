@@ -684,9 +684,9 @@ core_field_00042:
   help_text: 
   fb_accessible: true
 core_field_00030: 
-  key: morbidity_event[udoh_case_status_id]
+  key: morbidity_event[state_case_status_id]
   can_follow_up: false
-  name: UDOH case status
+  name: State case status
   id: 30
   field_type: drop_down
   event_type: morbidity_event
@@ -702,9 +702,9 @@ core_field_00019:
   help_text: 
   fb_accessible: true
 core_field_00038: 
-  key: morbidity_event[review_completed_UDOH_date]
+  key: morbidity_event[review_completed_by_state_date]
   can_follow_up: false
-  name: Date review completed by UDOH
+  name: Date review completed by by state
   id: 38
   field_type: single_line_text
   event_type: morbidity_event

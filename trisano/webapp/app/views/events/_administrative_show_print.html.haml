@@ -47,9 +47,9 @@
 - core_element_print :lhd_case_status_id, event_form, :horiz do
   %span.print-label LHD case status:
   %span.print-value= l(@event.lhd_case_status) || '&nbsp;'
-- core_element_print :udoh_case_status_id, event_form, :vert do
-  %span.print-label UDOH case status:
-  %span.print-value= l(@event.udoh_case_status) || '&nbsp;'
+- core_element_print :state_case_status_id, event_form, :vert do
+  %span.print-label State case status:
+  %span.print-value= l(@event.state_case_status) || '&nbsp;'
 - core_element_print :outbreak_associated_id, event_form, :horiz do
   %span.print-label Outbreak associated:
   %span.print-value= l(@event.outbreak_associated) || '&nbsp;'
@@ -78,9 +78,9 @@
 - core_element_print :event_name, event_form, :horiz do
   %span.print-label Event name:
   %span.print-value= h(@event.event_name) || '&nbsp;'
-- core_element_print :review_completed_UDOH_date, event_form, :horiz do
-  %span.print-label Date review completed by UDOH:
-  %span.print-value= h(@event.review_completed_UDOH_date) || '&nbsp;'
+- core_element_print :review_completed_by_state_date, event_form, :horiz do
+  %span.print-label Date review completed by state:
+  %span.print-value= h(@event.review_completed_by_state_date) || '&nbsp;'
 - core_element_print :acuity, event_form, :vert do
   %span.print-label Acuity:
   %span.print-value= h(@event.acuity) || '&nbsp;'

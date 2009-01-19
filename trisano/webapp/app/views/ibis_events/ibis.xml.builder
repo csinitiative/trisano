@@ -3,7 +3,7 @@ xml.Table {
     xml.ComdisRecord {
       xml.RecordID(event.record_number)
 
-      if event.deleted_at || ! %w( C P S ).include?(event.udoh_case_status.the_code)
+      if event.deleted_at || ! %w( C P S ).include?(event.state_case_status.the_code)
         update_flag = 1
       else
         update_flag = 0
@@ -51,7 +51,7 @@ xml.Table {
         xml.Ethnic(get_ibis_ethnicity(event.active_patient.primary_entity.person.ethnicity))
         xml.Race(get_ibis_race(event.patient.primary_entity.races))
         xml.Sex(get_ibis_sex(event.active_patient.primary_entity.person.birth_gender))
-        xml.Status(get_ibis_status(event.udoh_case_status))
+        xml.Status(get_ibis_status(event.state_case_status))
 
         xml.Year(event.record_number[0..3])
       end

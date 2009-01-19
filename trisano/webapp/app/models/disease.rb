@@ -66,13 +66,13 @@ class Disease < ActiveRecord::Base
 
   def case_status_where_clause
     codes = external_codes.collect(&:id)
-    "(disease_id='#{self.id}' AND udoh_case_status_id IN (#{codes.join(',')}))" unless codes.empty?
+    "(disease_id='#{self.id}' AND state_case_status_id IN (#{codes.join(',')}))" unless codes.empty?
 
   end
 
   def invalid_case_status_where_clause
     codes = external_codes.collect(&:id)
-    "(disease_id='#{self.id}' AND udoh_case_status_id NOT IN (#{codes.join(',')}))" unless codes.empty?
+    "(disease_id='#{self.id}' AND state_case_status_id NOT IN (#{codes.join(',')}))" unless codes.empty?
   end
 
   private
