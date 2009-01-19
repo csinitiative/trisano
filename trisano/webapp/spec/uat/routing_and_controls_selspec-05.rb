@@ -216,7 +216,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     switch_user(@browser, "surveillance_mgr").should be_true
     @browser.is_text_present("Routing disabled").should be_true
-    @browser.is_text_present("Action required: None").should be_true
+    @browser.is_text_present("Insufficient privileges to transition this event").should be_true
   end
 
   it "should deny access altogether when entitlements are outside any jurisdiction." do
