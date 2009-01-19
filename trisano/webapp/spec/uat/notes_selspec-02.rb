@@ -35,7 +35,6 @@ describe 'Associating notes with an event.' do
     @browser.type('morbidity_event_active_patient__person_last_name', "Smith")
 
     click_core_tab(@browser, NOTES)
-    @browser.is_text_present("New record: No existing notes.").should be_true
   end
 
   it "should show an appropriate message for existing events with no notes." do
