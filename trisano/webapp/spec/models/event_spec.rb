@@ -1346,7 +1346,7 @@ describe MorbidityEvent do
     end
 
     describe "Handling notes" do
-      fixtures :notes, :users
+      fixtures :events, :participations, :entities, :entities_locations, :locations, :addresses, :telephones, :people, :places, :users, :participations_places, :notes
 
       describe "Receiving a new note" do
 
@@ -1407,7 +1407,7 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :entities, :users, :participations_places
+    fixtures :events, :participations, :entities, :entities_locations, :locations, :addresses, :telephones, :people, :places, :users, :participations_places
 
     before(:each) do
       @user = users(:default_user)
