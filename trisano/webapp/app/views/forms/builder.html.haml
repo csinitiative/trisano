@@ -94,12 +94,10 @@
           %span
             = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
 
-  %ul
-    %li
-      #builder-mods
-      #core-builder-mods
-      #core-field-builder-mods
-      #library-admin
+  #builder-mods
+  #core-builder-mods
+  #core-field-builder-mods
+  #library-admin
 
   %formbuilder
     - if @form.errors.empty?
