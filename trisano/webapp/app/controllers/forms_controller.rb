@@ -273,7 +273,7 @@ class FormsController < AdminController
   def library_admin
     begin
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
-      @type = params[:id].blank? ? "question_element" : params[:id]
+      @type = params[:type].blank? ? "question_element" : params[:type]
     rescue Exception => ex
       flash[:error] = "Unable to open the library."
       render :template => 'rjs-error'
