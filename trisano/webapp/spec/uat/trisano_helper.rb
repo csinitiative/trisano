@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/spec_helper' 
+require File.dirname(__FILE__) + '/spec_helper'
+require 'yaml'
 
 module TrisanoHelper
   #Define constants for standard resources
@@ -223,7 +224,7 @@ module TrisanoHelper
     if note == 1
       browser.click "link=With Notes"
     else
-        browser.click "link=Print"
+      browser.click "link=Print"
     end
     browser.wait_for_pop_up '_blank', $load_time
     browser.select_window '_blank'
@@ -443,7 +444,7 @@ module TrisanoHelper
     end
   end
   
-    def click_deactivate_form(browser, name)
+  def click_deactivate_form(browser, name)
     id = get_resource_id(browser, name)
     if id > 0 
       browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/deactivate')]"
