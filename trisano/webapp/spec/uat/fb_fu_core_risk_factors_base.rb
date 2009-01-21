@@ -18,19 +18,10 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'date'
  
-describe 'form builder patient-level address follow-ups for contact events' do
+describe 'form builder core fields risk factor followups for morbidity events', :shared => true do
   
-#  $dont_kill_browser = true
+  #$dont_kill_browser = true
 
-  fields = [{:name => 'Contact street number', :label => 'contact_event_active_patient__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact street name', :label => 'contact_event_active_patient__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Contact unit number', :label => 'contact_event_active_patient__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact city', :label => 'contact_event_active_patient__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'Contact state', :label => 'contact_event_active_patient__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-    {:name => 'Contact county', :label => 'contact_event_active_patient__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-    {:name => 'Contact zip code', :label => 'contact_event_active_patient__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
-  ]
-  
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
@@ -40,20 +31,18 @@ describe 'form builder patient-level address follow-ups for contact events' do
     {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
   ]
   
-  fields.each do |test|  
+  $fields.each do |test|
     disease_name_text = get_random_disease()
     jurisdiction_text = get_random_jurisdiction
     form_name = DateTime.now.to_s[0..15] + " " + disease_name_text
     inv_question_pre = get_unique_name(1) + " "
         
     it "should create a form to add follow-up questions to" do  
-      event_type = "Contact event"
+      event_type = "Morbidity event"
       create_new_form_and_go_to_builder(@browser, form_name, disease_name_text, jurisdiction_text, event_type).should be_true
     end
     
-    it "should create a contact follow-up container" do
-      cmr_last_name = get_unique_name(1) + " cpl_f"
-      contact_last_name = get_unique_name(1) + " cpl_f"    
+    it "should create a follow-up container" do
       add_core_follow_up_to_view(@browser, "Default View", test[:code].nil? ? test[:fu_value] : test[:code], test[:name]).should be_true
     end
     
@@ -67,23 +56,17 @@ describe 'form builder patient-level address follow-ups for contact events' do
       end
     end
  
-  
     it "should publish the form" do
       publish_form(@browser).should be_true
     end
   
-    it "should create a cmr with a contact" do
+    it "should create a cmr" do
       create_basic_investigatable_cmr(@browser, (get_unique_name(1))[0..18], disease_name_text, jurisdiction_text)
-      edit_cmr(@browser).should be_true  
-      
-      add_contact(@browser, {:last_name => get_unique_name(1), :first_name => "Contact", :disposition => "Unable to locate"})
-      save_cmr(@browser).should be_true
     end
     
     it "should add all the followup questions when #{test[:name]} is assigned the value #{test[:fu_value]}" do  
-      @browser.click("//ul[@id='tabs']/li[4]/a/em")
-      @browser.click("edit-contact-event")
-      @browser.wait_for_page_to_load($load_time)
+      click_core_tab(@browser, "Investigation")
+      edit_cmr(@browser)
       
       @browser.is_text_present(form_name).should be_true
       
@@ -101,10 +84,9 @@ describe 'form builder patient-level address follow-ups for contact events' do
         @browser.select(test[:label], test[:fu_value])
       end
       
-      @browser.click("//ul[@id='tabs']/li[5]/a/em")
+      click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
       sleep 2 #Giving the investigator form questions time to show up
-      
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_true
@@ -121,10 +103,9 @@ describe 'form builder patient-level address follow-ups for contact events' do
         @browser.select(test[:label], test[:no_fu_value])
       end
       
-      @browser.click("//ul[@id='tabs']/li[5]/a/em")
+      click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
-      
+      sleep 2 #Giving the investigator form questions time to show up    
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_false
@@ -141,43 +122,51 @@ describe 'form builder patient-level address follow-ups for contact events' do
         @browser.select(test[:label], test[:fu_value])
       end
       
-      @browser.click("//ul[@id='tabs']/li[5]/a/em")
+      click_core_tab(@browser, "Demographics")
+      click_core_tab(@browser, "Investigation")
       @browser.is_text_present(form_name).should be_true
       sleep 2 #Giving the investigator form questions time to show up
-      
+            
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_true
       end
       
       # This isn't strictly necessary since nothing has changed... but the next tests won't work other wise...
-      save_contact_event(@browser).should be_true
+      save_cmr(@browser).should be_true
     end
     
     data_types.each do |data_type|
       follow_up_question = inv_question_pre + data_type[:name]
       it "should save values for #{follow_up_question}" do 
         edit_cmr(@browser)
-        @browser.click("//ul[@id='tabs']/li[5]/a/em")
+        click_core_tab(@browser, "Investigation")
         @browser.is_text_present(follow_up_question).should be_true    
         case data_type[:entry_type]   
         when 'select'
           answer_multi_select_investigator_question(@browser, follow_up_question, data_type[:answer]).should be_true
-          save_contact_event(@browser).should be_true
+          save_cmr(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true
         when 'type'
           answer_investigator_question(@browser, follow_up_question, data_type[:answer]).should be_true
-          save_contact_event(@browser).should be_true
+          save_cmr(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true
         when 'check'
           answer_check_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
-          save_contact_event(@browser).should be_true
+          save_cmr(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true 
         when 'radio'
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
-          save_contact_event(@browser).should be_true
-          @browser.is_text_present(data_type[:answer]).should be_true 
-        end       
+          save_cmr(@browser).should be_true
+          @browser.is_text_present(data_type[:answer]).should be_true
+        end
+        
+        print_cmr(@browser).should be_true
+        @browser.is_text_present(follow_up_question).should be_true
+        @browser.is_text_present(data_type[:answer]).should be_true 
+        @browser.close()
+        @browser.select_window 'null'
+        
       end
     end
   end

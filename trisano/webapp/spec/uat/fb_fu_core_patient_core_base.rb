@@ -18,19 +18,10 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'date'
  
-describe 'form builder core risk factor followups for morbidity events' do
+describe 'form builder patient-level core field followups for morbidity events', :shared => true do
   
-  #$dont_kill_browser = true
+  #  $dont_kill_browser = true
 
-  fields = [{:name => 'Pregnant', :label => 'morbidity_event_active_patient__participations_risk_factor_pregnant_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
-    {:name => 'Food handler', :label => 'morbidity_event_active_patient__participations_risk_factor_food_handler_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)',  :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-    {:name => 'Healthcare worker', :label => 'morbidity_event_active_patient__participations_risk_factor_healthcare_worker_id', :entry_type => 'select', :code => 'Code: No (yesno)',  :fu_value => 'No', :no_fu_value => 'Unknown'},
-    {:name => 'Group living', :label => 'morbidity_event_active_patient__participations_risk_factor_group_living_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-    {:name => 'Day care association', :label => 'morbidity_event_active_patient__participations_risk_factor_day_care_association_id', :entry_type => 'select', :code => 'Code: No (yesno)', :fu_value => 'No', :no_fu_value => 'Unknown'},
-    {:name => 'Occupation', :label => 'morbidity_event_active_patient__participations_risk_factor_occupation', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Risk factors', :label => 'morbidity_event_active_patient__participations_risk_factor_risk_factors', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
-  ]                                                  
-  
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
@@ -40,7 +31,7 @@ describe 'form builder core risk factor followups for morbidity events' do
     {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
   ]
   
-  fields.each do |test|  
+  $fields.each do |test|
     disease_name_text = get_random_disease()
     jurisdiction_text = get_random_jurisdiction
     form_name = DateTime.now.to_s[0..15] + " " + disease_name_text
@@ -167,7 +158,7 @@ describe 'form builder core risk factor followups for morbidity events' do
         when 'radio'
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_cmr(@browser).should be_true
-          @browser.is_text_present(data_type[:answer]).should be_true
+          @browser.is_text_present(data_type[:answer]).should be_true 
         end
         
         print_cmr(@browser).should be_true

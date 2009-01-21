@@ -16,45 +16,16 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) + '/contact_core_fields_help_base'
 require 'yaml'
 
 describe "help text for contact core fields" do
   # $dont_kill_browser = true
   
   core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'core_fields.yml'))
+  
+  $test_core_fields = core_fields.collect{|k,v| v}.select{|f| f['event_type'] == 'contact_event'}[0,10]
 
-  before :all do
-    @browser.open '/trisano/core_fields'
-  end
-
-  core_fields.collect{|k,v| v}.select{|f| f['event_type'] == 'contact_event'}.each do |core_field|
-    it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
-      @browser.click("//div[@id='rot'][2]//a[text()='#{core_field['name']}']")
-      @browser.wait_for_page_to_load
-      @browser.click("link=Edit")
-      @browser.wait_for_page_to_load
-      @browser.type "core_field_help_text", "#{core_field['name']} help"
-      @browser.click '//input[@value="Update"]'
-      @browser.wait_for_page_to_load
-      @browser.is_text_present('Core field was successfully updated').should be_true
-    end 
-
-    it "should navigate to a contact edit view" do
-      create_basic_investigatable_cmr(@browser, 'Biel', 'Lead poisoning', 'Bear River Health Department')
-      edit_cmr(@browser).should be_true
-      add_contact(@browser, {:last_name => 'Davies', :first_name => "John", :disposition => "Unable to locate"})
-      save_cmr(@browser).should be_true
-      click_link_by_order(@browser, "edit-contact-event", 1)
-      @browser.wait_for_page_to_load($load_time)
-    end
-              
-    it "should have #{core_field['event_type']} help bubble after #{core_field['name']}" do
-      assert_tooltip_exists(@browser, "#{core_field['name']} help").should be_true
-      @browser.click("link=ADMIN")
-      @browser.wait_for_page_to_load
-      @browser.click("admin_help_text")
-      @browser.wait_for_page_to_load
-    end
-      
-  end
+  it_should_behave_like "help text for all contact core fields"
+    
 end

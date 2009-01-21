@@ -23,7 +23,7 @@ describe "help text for morbidity core fields" do
   
   core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'core_fields.yml'))
 
-  $test_core_fields = core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}[60,10]
+  $test_core_fields = core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}[50,10]
   
   it_should_behave_like "help text for morbidity core fields"
 end

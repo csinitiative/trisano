@@ -16,14 +16,16 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
-require File.dirname(__FILE__) + '/morbidity_core_fields_help_base'
+require File.dirname(__FILE__) + '/contact_core_fields_help_base'
+require 'yaml'
 
-describe "help text for morbidity core fields" do
-  #   $dont_kill_browser = true
+describe "help text for contact core fields" do
+  # $dont_kill_browser = true
   
   core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'core_fields.yml'))
-
-  $test_core_fields = core_fields.collect{ |k,v| v }.select{|f| f['event_type'] == 'morbidity_event'}[60,10]
   
-  it_should_behave_like "help text for morbidity core fields"
+  $test_core_fields = core_fields.collect{|k,v| v}.select{|f| f['event_type'] == 'contact_event'}[20,10]
+
+  it_should_behave_like "help text for all contact core fields"
+    
 end
