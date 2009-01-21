@@ -18,9 +18,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FollowUpElement do
+  fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
+  
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-    @form.save_and_initialize_form_elements
+    @form = forms(:test_form)
     @question_element = QuestionElement.new({
         :parent_element_id => @form.investigator_view_elements_container.id,
         :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
@@ -30,6 +31,10 @@ describe FollowUpElement do
     @follow_up_element.form_id = 1
     @follow_up_element.condition = "Yes"
     @follow_up_element.parent_element_id = @question_element.id
+  end
+
+  after(:each) do
+    Form.delete(@form)
   end
 
   it "should be valid" do
@@ -132,8 +137,7 @@ describe FollowUpElement do
   describe "when updating a core follow-up with type-ahead support in the UI" do
     
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      @form.save_and_initialize_form_elements
+      @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
@@ -219,8 +223,7 @@ describe FollowUpElement do
   describe "when created with 'save and add to form' with type-ahead support in the UI" do
     
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      @form.save_and_initialize_form_elements
+      @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
@@ -279,8 +282,6 @@ describe FollowUpElement do
   end
   
   describe "when processing conditional logic for core follow ups'" do
-    
-    fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
     
     before(:each) do
       @event = MorbidityEvent.new
