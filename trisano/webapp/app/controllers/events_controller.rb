@@ -23,11 +23,11 @@ class EventsController < ApplicationController
   before_filter :set_tab_index
   
   def auto_complete_for_lab_name
-    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
-      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
+    @items = Place.find(:all, :select => "DISTINCT ON (LOWER(TRIM(name))) name", 
+      :conditions => [ "LOWER(name) LIKE ? and place_type_id = 
                        (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code = 'L')", params[:lab_name].downcase + '%'],
-      :order => "entity_id, created_at ASC, name ASC",
-      :limit => 10
+      :order => "LOWER(TRIM(name)) ASC",
+      :limit => 20
     )
     render :inline => "<%= auto_complete_result(@items, 'name') %>"
   end
@@ -36,17 +36,17 @@ class EventsController < ApplicationController
     @items = ExternalCode.find(:all,
       :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'lab_test_type'", '%' + params[:test_type].downcase + '%'],
       :order => "code_description",
-      :limit => 10
+      :limit => 20
     )
     render :inline => "<%= auto_complete_result(@items, 'code_description') %>"
   end
 
   def auto_complete_for_lab_result
-    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (lab_result_text) lab_result_text 
+    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (LOWER(TRIM(lab_result_text))) lab_result_text 
                                         FROM lab_results 
                                         WHERE LOWER(lab_result_text) LIKE ? 
-                                        ORDER BY lab_result_text 
-                                        LIMIT 10", 
+                                        ORDER BY LOWER(TRIM(lab_result_text)) 
+                                        LIMIT 20", 
         '%' + params[:lab_result].downcase + '%'])
 
     render :inline => "<%= auto_complete_result(@items, 'lab_result_text') %>"
@@ -57,7 +57,7 @@ class EventsController < ApplicationController
                                         FROM participations_treatments 
                                         WHERE LOWER(treatment) LIKE ? 
                                         ORDER BY treatment 
-                                        LIMIT 10", 
+                                        LIMIT 20", 
         '%' + params[:treatment].downcase + '%'])
 
     render :inline => "<%= auto_complete_result(@items, 'treatment') %>"
@@ -67,7 +67,7 @@ class EventsController < ApplicationController
     @clinicians = Person.find(:all, 
                               :conditions => ["LOWER(last_name) LIKE ? AND person_type = 'clinician'", params[:last_name].downcase + '%'],
                               :order => "last_name, first_name",
-                              :limit => 10)
+                              :limit => 20)
     render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
   end
 
@@ -77,11 +77,11 @@ class EventsController < ApplicationController
   end
   
   def auto_complete_for_places_search
-    @places = Place.find(:all, :select => "entity_id, name, place_type_id",
+    @places = Place.find(:all, :select => "DISTINCT ON (LOWER(TRIM(name)), place_type_id) entity_id, name, place_type_id",
       :conditions => [ "LOWER(name) LIKE ? and place_type_id IN
                        (SELECT id FROM codes WHERE code_name = 'placetype'  and the_code != 'J')", params[:place_name].downcase + '%'],
-      :order => "name ASC",
-      :limit => 10
+      :order => "LOWER(TRIM(name)) ASC",
+      :limit => 20
     )
     render :partial => "events/places_search", :layout => false, :locals => {:places => @places}
   end
@@ -103,7 +103,7 @@ class EventsController < ApplicationController
 
   def auto_complete_for_reporting_agency_search
     sql = <<-SQL
-      SELECT DISTINCT ON (entity_id) id, entity_id, place_type_id, name
+      SELECT DISTINCT ON (LOWER(TRIM(name)), place_type_id) id, entity_id, place_type_id, name
       FROM places
       WHERE place_type_id IN 
         (SELECT id 
@@ -111,9 +111,10 @@ class EventsController < ApplicationController
          WHERE code_name = 'placetype' 
            AND the_code IN (?))
         AND LOWER(name) LIKE ?
-        LIMIT 10 
+      ORDER BY LOWER(TRIM(name)), place_type_id
+      LIMIT 20 
     SQL
-    @places = Place.find_by_sql([sql, Place.agency_type_codes, params[:place_name].downcase + '%']).sort_by(&:name)
+    @places = Place.find_by_sql([sql, Place.agency_type_codes, params[:place_name].downcase + '%'])
     render :partial => 'events/reporting_agency_choices', :layout => false, :locals => {:places => @places}
   end
 

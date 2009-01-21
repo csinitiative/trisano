@@ -26,8 +26,13 @@ class Place < ActiveRecord::Base
   class << self
 
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.
-    def hospitals
-      find_all_by_place_type_id(Code.find_by_code_name_and_the_code('placetype', 'H').id, :order => 'name')
+    def hospitals(unique=false)
+      if unique
+        select = "DISTINCT ON (name) *)"
+      else
+        select = "*"
+      end
+      find(:all, :select => select, :conditions => ["place_type_id = ?", Code.find_by_code_name_and_the_code('placetype', 'H').id], :order => 'name')
     end
 
     def jurisdictions
