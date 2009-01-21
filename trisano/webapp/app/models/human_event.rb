@@ -16,7 +16,13 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEvent < Event
-  include Export::Cdc::HumanEvent
+  include Export::Cdc::HumanEvent  
+
+  validates_numericality_of :age_at_onset,
+    :allow_nil => true,
+    :greater_than_or_equal_to => 0,
+    :only_integer => true,
+    :message => 'is negative. This is usually caused by an incorrect onset date or birth date.'
 
   before_validation_on_create :set_age_at_onset
   before_validation_on_update :set_age_at_onset
@@ -365,11 +371,12 @@ class HumanEvent < Event
   def set_age_at_onset
     birthdate = safe_call_chain(:active_patient, :primary_entity, :person_temp, :birth_date)
     onset = onset_candidate_dates.compact.first
-    self.age_info = AgeInfo.create_from_dates(birthdate, onset)
+    self.age_info = AgeInfo.create_from_dates(birthdate, onset)    
   end
 
   def onset_candidate_dates
-    dates = [safe_call_chain(:disease, :disease_onset_date)]
+    dates = []
+    dates << safe_call_chain(:disease, :disease_onset_date)
     dates << safe_call_chain(:disease, :date_diagnosed)
     collections = []
     test_dates = []
