@@ -510,7 +510,9 @@ class Form < ActiveRecord::Base
         begin
           disease_group_name, export_column_name = e["cdc_export_column_lookup"].split(FormElement.export_lookup_separator)
           disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
+          raise if disease_group.nil?
           export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
+          raise if export_column.nil?
           values[:export_column_id] = export_column.id
         rescue
           if (e["type"] == "QuestionElement")
@@ -532,8 +534,11 @@ class Form < ActiveRecord::Base
           value_from = value_from.blank? ? nil : value_from
           value_to = value_to.blank? ? nil : value_to
           disease_group = ExportDiseaseGroup.find_by_name(disease_group_name)
+          raise if disease_group.nil?
           export_column = ExportColumn.find_by_export_column_name_and_export_disease_group_id(export_column_name, disease_group.id)
+          raise if export_column.nil?
           export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from_and_value_to(export_column.id, value_from, value_to)
+          raise if export_conversion_value.nil?
           values[:export_conversion_value_id] = export_conversion_value.id
         rescue
           raise "Unable to find export conversion value data (#{disease_group_name}:#{export_column_name}:#{value_from}:#{value_to}) required to import a value."
@@ -546,6 +551,7 @@ class Form < ActiveRecord::Base
         begin
           code_name, the_code  = e["code_condition_lookup"].split(FormElement.export_lookup_separator)
           external_code = ExternalCode.find_by_code_name_and_the_code(code_name, the_code)
+          raise if external_code.nil?
           values[:condition] = external_code.id
         rescue
           raise "Unable to find the system code (#{code_name}:#{the_code}) required to import a core follow up on #{e["core_path"]}"
