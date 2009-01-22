@@ -250,9 +250,9 @@ class FormsController < AdminController
     
     if @question_element.add_to_library(@group_element)
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
-      render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.type }
+      render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.class.name }
     else
-      flash[:error] = "Unable to copy #{@question_element.type.humanize} to library."
+      flash[:error] = "Unable to copy #{@question_element.class.name.humanize} to library."
       render :template => 'rjs-error'
     end
   end

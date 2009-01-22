@@ -114,7 +114,7 @@ class FormElement < ActiveRecord::Base
     begin
       transaction do
         library_element = FormElement.find(lib_element_id)
-        if (library_element.attributes['type'] == "ValueSetElement" && !can_receive_value_set?)
+        if (library_element.class.name == "ValueSetElement" && !can_receive_value_set?)
           errors.add_to_base("Can't complete copy. A question can only have one value set")
           raise
         end
@@ -232,9 +232,9 @@ class FormElement < ActiveRecord::Base
   
   def can_receive_value_set?
     begin
-      if (self.attributes['type'] == "QuestionElement")
+      if (self.class.name == "QuestionElement")
         future_siblings = self.children
-        existing_value_set = future_siblings.detect {|sibling| sibling.attributes['type'] == "ValueSetElement"}
+        existing_value_set = future_siblings.detect {|sibling| sibling.class.name == "ValueSetElement"}
         return false unless (existing_value_set.nil?)
       end
     rescue Exception => ex
@@ -262,7 +262,7 @@ class FormElement < ActiveRecord::Base
         export_column = ExportColumn.find(self.export_column_id, :include => :export_disease_group)
         return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}"
       rescue Exception => ex 
-        if self.attributes["type"] == "QuestionElement"
+        if self.class.name == "QuestionElement"
           element_type = "question"
           identifier = self.question.question_text
         else

@@ -361,12 +361,12 @@ class Form < ActiveRecord::Base
   def structural_errors
     structural_errors = form_base_element.structural_errors
 
-    structural_errors << "Form base element is invalid" unless form_base_element.attributes["type"] == "FormBaseElement"
+    structural_errors << "Form base element is invalid" unless form_base_element.class.name == "FormBaseElement"
 
     if form_base_element.children_count == 3
-      structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].attributes["type"] == "InvestigatorViewElementContainer"
-      structural_errors << "Core view element container is the wrong type" unless form_base_element.children[1].attributes["type"] == "CoreViewElementContainer"
-      structural_errors << "Core field element container is the wrong type" unless form_base_element.children[2].attributes["type"] == "CoreFieldElementContainer"
+      structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].class.name == "InvestigatorViewElementContainer"
+      structural_errors << "Core view element container is the wrong type" unless form_base_element.children[1].class.name == "CoreViewElementContainer"
+      structural_errors << "Core field element container is the wrong type" unless form_base_element.children[2].class.name == "CoreFieldElementContainer"
     else
       structural_errors << "Form does not contain the correct top-level containers"
     end
@@ -412,7 +412,7 @@ class Form < ActiveRecord::Base
     elements.each do |e|
       values = {}
       values[:form_id] = to_form.id
-      values[:type] = "'#{sanitize_sql(["%s", e.attributes["type"]])}'"
+      values[:type] = "'#{sanitize_sql(["%s", e.class.name])}'"
       values[:name] = null_safe_sanitize(e.name)
       values[:description] = null_safe_sanitize(e.description)
       values[:parent_id] = null_safe_sanitize(parent_id_map[e.parent_id])
@@ -430,7 +430,7 @@ class Form < ActiveRecord::Base
       result = insert_element(values)
       parent_id_map[e.id] = result
       inactive_element_ids << result if e.is_active == false
-      copy_question(result, e) if (e.attributes["type"] == "QuestionElement")
+      copy_question(result, e) if (e.class.name == "QuestionElement")
     end
     
     unless (include_inactive)

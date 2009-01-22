@@ -40,7 +40,7 @@ module CacheableTree
   end
   
   def children_by_type(type, element = @root_element)
-    full_set.collect { |node| if (node.parent_id == element.id && node.type == type.to_s)
+    full_set.collect { |node| if (node.parent_id == element.id && node.class.name == type.to_s)
         node
       end
     }.compact
@@ -54,7 +54,7 @@ module CacheableTree
   end
   
   def children_count_by_type(type,  element = @root_element)
-    full_set.collect { |node| if (node.parent_id == element.id && node.type == type.to_s)
+    full_set.collect { |node| if (node.parent_id == element.id && node.class.name == type.to_s)
         node
       end
     }.compact.size
@@ -70,7 +70,7 @@ module CacheableTree
   
   def all_follow_ups_by_core_path(core_path, element = @root_element)
     full_set.collect { |node|
-      if ((node.core_path == core_path) && (node.type == "FollowUpElement") && (node.lft > element.lft) && (node.rgt < element.rgt))
+      if ((node.core_path == core_path) && (node.class.name == "FollowUpElement") && (node.lft > element.lft) && (node.rgt < element.rgt))
         node
       end
     }.compact
@@ -78,7 +78,7 @@ module CacheableTree
   
   def all_cached_field_configs_by_core_path(core_path, element = @root_element)
     full_set.collect { |node|
-      if ((node.core_path == core_path) && (node.type == "CoreFieldElement") && (node.lft > element.lft) && (node.rgt < element.rgt))
+      if ((node.core_path == core_path) && (node.class.name == "CoreFieldElement") && (node.lft > element.lft) && (node.rgt < element.rgt))
         node
       end
     }.compact
