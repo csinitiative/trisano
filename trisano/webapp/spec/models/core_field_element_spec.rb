@@ -18,11 +18,16 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreFieldElement do
-  fixtures :core_fields, :forms, :form_elements
-
+ 
   before(:each) do
-    @form = forms(:test_form)
+    @form = Form.new(:name => 'Test form', :event_type => 'morbidity_event')
+    @form.save_and_initialize_form_elements
     @core_field_element = CoreFieldElement.new
+    MorbidityEvent.stub!(:exposed_attributes).and_return({ 'key_1' => {:name => 'field_1', :fb_accessible => true}, 
+                                                           'key_2' => {:name => 'field_2', :fb_accessible => true}, 
+                                                           'key_3' => {:name => 'field_3', :fb_accessible => true},
+                                                           'key_4' => {:name => 'field_4', :fb_accessible => false}})
+
     @core_field_element.core_path = MorbidityEvent.exposed_attributes.keys[0]
   end
 
@@ -39,7 +44,7 @@ describe CoreFieldElement do
     it "should return all core field names when none are in use" do
       @core_field_element.parent_element_id = @form.form_base_element.id
       available_core_fields = @core_field_element.available_core_fields
-      available_core_fields.size.should == 54
+      available_core_fields.size.should == 3
       available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_true
     end
     
@@ -54,14 +59,14 @@ describe CoreFieldElement do
        
       @core_field_element.parent_element_id = @form.core_field_elements_container.id
       available_core_fields = @core_field_element.available_core_fields
-      available_core_fields.size.should ==  53
+      available_core_fields.size.should ==  2
       available_core_fields.flatten.include?(MorbidityEvent.exposed_attributes.keys[0]).should be_false
     end
 
     it "should not return any fields that are not accessible to form builder" do
       @core_field_element.parent_element_id = @form.form_base_element.id
       available_core_fields = @core_field_element.available_core_fields
-      available_core_fields.detect { |field| field[1] == core_fields(:core_field_morb_lab_result_lab_name) }.should be_nil
+      available_core_fields.detect { |field| field[1] == 'key_4' }.should be_nil
     end
 
   end
