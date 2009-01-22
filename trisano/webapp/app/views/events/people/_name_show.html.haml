@@ -24,4 +24,6 @@
   -core_element_show :middle_name, person_form, :horiz do
     =person_form.label(:middle_name) 
     =person.middle_name 
-    
+  -core_element_show :parent_guardian, event_form, :horiz do
+    =event_form.label(:parent_guardian, "Parent/Guardian")
+    =event.parent_guardian

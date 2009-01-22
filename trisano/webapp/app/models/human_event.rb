@@ -18,6 +18,8 @@
 class HumanEvent < Event
   include Export::Cdc::HumanEvent  
 
+  validates_length_of :parent_guardian, :maximum => 255, :allow_blank => true
+
   validates_numericality_of :age_at_onset,
     :allow_nil => true,
     :greater_than_or_equal_to => 0,

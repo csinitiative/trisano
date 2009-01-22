@@ -17,13 +17,13 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe HumanEvent, 'setting the age at onset'  do
+def with_human_event(event_hash=@event_hash, &block)    
+  event = HumanEvent.new(event_hash)
+  block.call(event) if block_given?
+  event                        
+end
 
-  def with_human_event(event_hash=@event_hash, &block)    
-    event = HumanEvent.new(event_hash)
-    block.call(event) if block_given?
-    event                        
-  end
+describe HumanEvent, 'age at onset'  do
 
   before(:each) do
     @event_hash = {
@@ -37,7 +37,7 @@ describe HumanEvent, 'setting the age at onset'  do
     }
   end
 
-  it 'should not store an age at onset if there is no birthday' do
+  it 'should not be saved if there is no birthday' do
     with_human_event do |event|
       event.send(:set_age_at_onset)
       event.age_info.age_at_onset.should be_nil
@@ -45,7 +45,7 @@ describe HumanEvent, 'setting the age at onset'  do
     end
   end
     
-  it 'should store the age at onset and age type' do    
+  it 'should be saved, along w/ an age type' do    
     with_human_event do |event|     
       event.safe_call_chain(:active_patient, :primary_entity, :person_temp).birth_date = 20.years.ago
       event.send(:set_age_at_onset)
@@ -55,7 +55,7 @@ describe HumanEvent, 'setting the age at onset'  do
     end
   end
 
-  it 'should not be valid if age at onset is negative' do
+  it 'should not be valid if negative' do
     with_human_event do |event|
       event.safe_call_chain(:active_patient, :primary_entity, :person_temp).birth_date = DateTime.tomorrow
       event.send(:set_age_at_onset)
@@ -65,3 +65,42 @@ describe HumanEvent, 'setting the age at onset'  do
     end
   end 
 end
+
+describe HumanEvent, 'parent/guardian field' do
+
+  it 'should exist' do
+    with_human_event do |event|
+      event.respond_to?(:parent_guardian).should be_true
+    end
+  end
+
+  it 'should accept text longer then 50 chars' do
+    with_human_event do |event|
+      event.parent_guardian = 'r' * 51
+      lambda{event.save!}.should_not raise_error
+    end
+  end
+
+  it 'should be invalid for string longer then 255 (db limit)' do
+    with_human_event do |event|
+      event.parent_guardian = 'q' * 256
+      event.should_not be_valid
+    end
+  end
+
+  it 'should allow nil' do
+    with_human_event do |event|
+      event.parent_guardian = nil
+      lambda{event.save!}.should_not raise_error
+    end
+  end
+
+  it 'should allow blank data' do
+    with_human_event do |event|
+      event.parent_guardian = ''
+      lambda{event.save!}.should_not raise_error
+    end
+  end
+
+end
+

@@ -60,7 +60,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <% tabbed_content(tabs, @tab_index) do %>
     <div id="demographic_tab">
       <% patient_entity = @event.active_patient.primary_entity %>
-      <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+      <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
     </div>
   

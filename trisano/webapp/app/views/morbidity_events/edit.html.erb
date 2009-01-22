@@ -78,7 +78,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="demographic_tab">
       <% event_form.fields_for(:active_patient, @event.active_patient.primary_entity, :builder => ExtendedFormBuilder) do |current_patient| %>
         <%= render :partial => "events/people/form", 
-                   :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event, :rendering_pt => true } %>
+                   :locals => { :f => current_patient, :entity_data => @event.active_patient.primary_entity, :event => @event, :event_form => event_form } %>
       <% end %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
     </div>

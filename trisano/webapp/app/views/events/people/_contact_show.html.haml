@@ -28,7 +28,7 @@
 
       %fieldset
         %legend Person Information
-        =render :partial => 'events/people/name_show', :locals => {:person => p, :person_form => person_form}
+        =render :partial => 'events/people/name_show', :locals => {:person => p, :person_form => person_form, :event_form => event_form, :event => event}
         =render :partial => 'events/people/address_show', :locals => {:location => l, :address => a, :current_patient => primary_form}
         =render :partial => 'events/people/age_show', :locals => {:person => p, :person_form => person_form}
         =render :partial => 'events/people/phones_show', :locals => {:entity_data => entity_data}
