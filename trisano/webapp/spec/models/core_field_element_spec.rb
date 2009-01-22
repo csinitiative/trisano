@@ -18,11 +18,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreFieldElement do
-  fixtures :core_fields
+  fixtures :core_fields, :forms, :form_elements
 
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-    @form.save_and_initialize_form_elements
+    @form = forms(:test_form)
     @core_field_element = CoreFieldElement.new
     @core_field_element.core_path = MorbidityEvent.exposed_attributes.keys[0]
   end
