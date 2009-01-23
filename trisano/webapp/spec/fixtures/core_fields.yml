@@ -704,7 +704,7 @@ core_field_00019:
 core_field_00038: 
   key: morbidity_event[review_completed_by_state_date]
   can_follow_up: false
-  name: Date review completed by by state
+  name: Date review completed by state
   id: 38
   field_type: single_line_text
   event_type: morbidity_event

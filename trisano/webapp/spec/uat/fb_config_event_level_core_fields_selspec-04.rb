@@ -30,7 +30,7 @@ describe 'Add disease-specific questions around any event-level field' do
     {:name => 'Date investigation started', :tab_name  => ADMIN},
     {:name => 'Date investigation completed', :tab_name  => ADMIN},
     {:name => 'Event name', :tab_name  => ADMIN},
-    {:name => 'Date review completed by State', :tab_name  => ADMIN},
+    {:name => 'Date review completed by state', :tab_name  => ADMIN},
     {:name => 'Imported from', :tab_name => EPI},
     {:name => 'Age at onset', :tab_name => DEMOGRAPHICS}
   ].each do |test| 
