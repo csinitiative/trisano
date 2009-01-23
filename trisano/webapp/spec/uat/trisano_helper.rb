@@ -462,7 +462,7 @@ module TrisanoHelper
     return save_cmr(browser)
   end
 
-  def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label)
+  def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label=nil)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_active_patient__person_last_name", last_name
     browser.type("morbidity_event_active_patient__address_street_number", "22")
@@ -470,7 +470,7 @@ module TrisanoHelper
     click_core_tab(browser, CLINICAL)
     browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
-    browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}"
+    browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}" if jurisdiction_label
     yield browser if block_given?
     return save_cmr(browser)
   end

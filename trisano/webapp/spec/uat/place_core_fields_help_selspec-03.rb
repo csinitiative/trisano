@@ -42,7 +42,7 @@ describe "help text for place core fields" do
     end 
 
     it "should navigate to a place event edit view" do
-      create_basic_investigatable_cmr(@browser, 'Biel', 'Lead poisoning', 'Bear River Health Department')
+      create_basic_investigatable_cmr(@browser, 'Biel', 'Lead poisoning')
       edit_cmr(@browser).should be_true
       add_place(@browser, {:name => 'Davis Autoparts'})
       save_cmr(@browser).should be_true
