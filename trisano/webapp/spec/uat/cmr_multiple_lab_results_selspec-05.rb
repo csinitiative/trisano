@@ -80,17 +80,25 @@ describe 'Adding multiple lab results to a CMR' do
     lab_name_2 = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
     # Targets the 2nd lab result of the first lab to have 2 or more lab results
     test_type = @browser.get_value("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//input[contains(@name, 'test_type')]")
-    @browser.click("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//a")
+    p "Here it comes the delete of..."
+    p test_type
+    sleep(3)
+    @browser.click("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//a[@id='remove_lab_result_link']")
+    p "All gone?"
+    sleep(3)
+    p "Saving"
     save_cmr(@browser).should be_true
     @browser.is_text_present(test_type).should_not be_true
     @browser.is_text_present(lab_name_1).should be_true
     @browser.is_text_present(lab_name_2).should be_true
+    p "Waddya see?"
+    sleep(3)
   end
 
   it "should allow deleting a lab and all its lab results" do
     edit_cmr(@browser).should be_true
     lab_name = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
-    @browser.click("//div[@id='labs']/div[@class='lab'][2]/span/a")
+    @browser.click("//div[@id='labs']/div[@class='lab'][2]/span/a[@id='remove_lab_link']")
     save_cmr(@browser).should be_true
     @browser.is_text_present(lab_name).should_not be_true
   end
