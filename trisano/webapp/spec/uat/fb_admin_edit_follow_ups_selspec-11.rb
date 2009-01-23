@@ -66,23 +66,21 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     # Enter the answer that meets the core follow-up condition after the edit
     click_core_tab(@browser, CLINICAL)
     @browser.select("morbidity_event_disease_died_id", "label=Yes")
-    sleep(1)
-    @browser.is_text_present(@core_follow_up_question_text).should be_true
+    wait_for_element_present("//label[text()='#@core_follow_up_question_text']", @browser)
     click_core_tab(@browser, "Investigation") 
     
     # Enter the answer that meets the follow-up condition before the edit
     answer_investigator_question(@browser, @question_for_follow_up, "Yes")
-    watch_for_answer_spinner(@question_for_follow_up) do
-      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-    end
+    #watch_for_answer_spinner(@question_for_follow_up) do
+    #  @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
+    #end
     @browser.is_text_present(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition after the edit
     answer_investigator_question(@browser, @question_for_follow_up, "No")
-    watch_for_answer_spinner(@question_for_follow_up) do
-      @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
-    end
-    @browser.is_text_present(@follow_up_question_text).should be_true
-
+    #watch_for_answer_spinner(@question_for_follow_up) do
+    #  @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
+    #end
+    wait_for_element_present("//label[text()='#@follow_up_question_text']", @browser)
   end
 end
