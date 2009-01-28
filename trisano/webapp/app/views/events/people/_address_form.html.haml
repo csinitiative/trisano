@@ -53,3 +53,7 @@
       - core_element :postal_code, a, :horiz do
         = a.label(:postal_code, "Zip code")
         = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
+
+    -if @event.class == ContactEvent
+      %fieldset.vert
+        = button_to_function('Copy From Original Patient', "contact_parent_address(#{@event.id})")

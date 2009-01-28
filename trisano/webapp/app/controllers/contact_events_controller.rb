@@ -71,6 +71,19 @@ class ContactEventsController < EventsController
     end
   end
 
+  def copy_address
+      @event = ContactEvent.find(params[:id])
+      original_address = @event.parent_event.active_patient.primary_entity.address
+      #JSON to pass.  We shan't use a loop because we don't want all members.
+      response.headers['X-JSON'] = "{street_number: \"" + original_address.street_number.to_s +
+        "\", street_name: \"" + original_address.street_name + 
+        "\", unit_number: \"" + original_address.unit_number.to_s +
+        "\", city: \"" + original_address.city +
+        "\", state_id: \"" + original_address.state_id.to_s +
+        "\", county_id: \"" + original_address.county_id.to_s +
+        "\", postal_code: \"" + original_address.postal_code.to_s + "\"}"
+  end
+
   def destroy
     head :method_not_allowed
   end
