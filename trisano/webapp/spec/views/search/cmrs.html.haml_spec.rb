@@ -37,8 +37,7 @@ describe "/search/cmrs.html.haml" do
   end
   
   it "should show results when results are present" do
-    
-    cmr = mock_model(Object)
+    cmr = mock('search result')
     cmr.stub!(:record_number).and_return("20083453")
     cmr.stub!(:event_id).and_return("1234567")
     cmr.stub!(:entity_id).and_return("12")
@@ -46,7 +45,6 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:middle_name).and_return("J")
     cmr.stub!(:last_name).and_return("Johnson")
     cmr.stub!(:disease_name).and_return("Chicken Pox")
-    cmr.stub!(:event_onset_date).and_return("2008/12/12")
     cmr.stub!(:birth_date).and_return("1977/1/12")
     cmr.stub!(:gender).and_return("Male")
     cmr.stub!(:city).and_return("Provo")
@@ -56,6 +54,7 @@ describe "/search/cmrs.html.haml" do
     cmr.stub!(:event_status).and_return("NEW")
     cmr.stub!(:jurisdiction_name).and_return("Weber-Morgan Health District")
     cmr.stub!(:deleted_at).and_return(nil)
+    cmr.should_receive(:disease_onset_date).and_return('2008-12-12')
 
     assigns[:cmrs] = [cmr]
     assigns[params[:disease]] = "1"
@@ -72,6 +71,9 @@ describe "/search/cmrs.html.haml" do
     response.should_not have_text("Your search returned no results.")
     response.should have_tag("div.tools") do
       with_tag('a', "Export All to CSV")
+    end
+    response.should have_tag("table.tabular") do
+      with_tag('td', '2008-12-12')
     end
   end
   

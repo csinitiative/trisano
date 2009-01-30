@@ -171,7 +171,7 @@
           %td
             = cmr.jurisdiction_name
           %td
-            = cmr.event_onset_date
+            = cmr.disease_onset_date || '&nbsp;'
 
   - if User.current_user.is_entitled_to?(:create_event)
     = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
