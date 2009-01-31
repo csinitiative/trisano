@@ -314,6 +314,10 @@
    value_from: 'WB'
    value_to: '057'
 
+ - export_column_name: 'COUNTY'
+   value_from: 'OS'
+   value_to: '999'
+
  - export_column_name: 'BIRTHDATE'
    value_from: 
    value_to: '%m/%d/%y'
