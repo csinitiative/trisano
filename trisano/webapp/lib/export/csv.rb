@@ -39,6 +39,7 @@ module Export
       # disease in the event search form, which sets the show_answers option.
       options[:show_answers] = events.size == 1 ? true : false unless options[:show_answers]
       options[:export_options] ||= []
+      options[:disease] = disease_for_single_event(events.first) if ((events.size == 1) && (options[:disease].nil?))
 
       output = ""
       event_type = nil
@@ -376,6 +377,14 @@ module Export
     treatment_data << ["treatment_given", "treatment_given_yn.code_description if treatment_given_yn"]
     treatment_data << ["treatment", "treatment.treatment"]  # 2nd element should be just "treatment," but that's not working for reasons unknown
     treatment_data << ["treatment_date", "treatment_date"]
+  end
+
+  def Csv.disease_for_single_event(event)
+    begin
+      Disease.find(event.disease_id) unless event.disease_id.blank?
+    rescue
+      nil
+    end
   end
 
 end
