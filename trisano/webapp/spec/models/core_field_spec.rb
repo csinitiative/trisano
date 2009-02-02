@@ -18,28 +18,39 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreField do
-  fixtures :core_fields
 
   before :each do
-    @core_field = CoreField.find(1)
+    @core_field = CoreField.create(:key => 'morbidity_event[test_field]',
+                                   :event_type => 'morbidity_event')
   end
 
   it "should update help test" do
     @core_field.help_text = 'Here is some help text'
     @core_field.save.should be_true
-    CoreField.find(1).help_text.should == 'Here is some help text'
+    CoreField.find(:first).help_text.should == 'Here is some help text'
+  end
+
+  it 'should provide hashes based on event type' do
+    CoreField.event_fields('morbidity_event').size.should > 0
+    MorbidityEvent.exposed_attributes.size.should == 1
+    ContactEvent.exposed_attributes.size.should == 0
+    PlaceEvent.exposed_attributes.size.should == 0
+  end
+
+  it 'should return fields based on key' do
+    hash = CoreField.event_fields('morbidity_event')
+    hash['morbidity_event[test_field]'].should_not be_nil
   end
 
   it "should memoize fields for rendering" do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[results_reported_to_clinician_date]'][:help_text].should be_blank
-    CoreField.update_all("help_text='some help text'", ['key=?', 'morbidity_event[results_reported_to_clinician_date]'])
-    CoreField.event_fields('morbidity_event')['morbidity_event[results_reported_to_clinician_date]'][:help_text].should be_blank
+    hash['morbidity_event[test_field]'][:help_text].should be_blank
+    CoreField.update_all("help_text='some help text'", ['key=?', 'morbidity_event[test_field]'])
+    CoreField.event_fields('morbidity_event')['morbidity_event[test_field]'][:help_text].should be_blank
     CoreField.flush_memoization_cache
-    CoreField.event_fields('morbidity_event')['morbidity_event[results_reported_to_clinician_date]'][:help_text].should == 'some help text'
+    CoreField.event_fields('morbidity_event')['morbidity_event[test_field]'][:help_text].should == 'some help text'
   end
 
-    
 end
     
   
