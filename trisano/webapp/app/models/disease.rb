@@ -64,10 +64,16 @@ class Disease < ActiveRecord::Base
         
   end
 
+  def live_forms(event_type = "MorbidityEvent")
+    Form.find(:all,
+      :joins => "INNER JOIN diseases_forms df ON df.form_id = id",
+      :conditions => ["df.disease_id = ? AND status = 'Live' AND event_type = ?",  self.id, event_type.underscore]
+    )
+  end
+
   def case_status_where_clause
     codes = external_codes.collect(&:id)
     "(disease_id='#{self.id}' AND state_case_status_id IN (#{codes.join(',')}))" unless codes.empty?
-
   end
 
   def invalid_case_status_where_clause

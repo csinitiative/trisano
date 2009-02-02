@@ -34,14 +34,14 @@ describe FormElementCache do
     @form_base_element.add_child(@section_element)
     @form_base_element.add_child(@core_field_config)
     
-    @question = Question.create(:question_text => "Eh?", :data_type => "Single-line text")
+    @question = Question.create(:question_text => "Eh?", :data_type => "Single-line text", :short_name => "eh")
     @question_element_1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question)
     @section_element.add_child(@question_element_1)
     
     @follow_up = FollowUpElement.create(:tree_id => tree_id, :form_id => 1, :condition => "Yes", :core_path => "event[something]")
     @question_element_1.add_child(@follow_up)
     
-    @fu_question = Question.create(:question_text => "Eh?", :data_type => "Single-line text")
+    @fu_question = Question.create(:question_text => "Eh?", :data_type => "Single-line text", :short_name => "eh")
     @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @fu_question)
     @follow_up.add_child(@follow_up_q1)
     
@@ -133,6 +133,11 @@ describe FormElementCache do
     answer.should_not be_nil
     answer.text_answer.should eql(@answer_2.text_answer)
     answer.is_a?(Answer).should be_true
+  end
+
+  it "should return questions with shortnames as exportable" do
+    @form_element_cache = FormElementCache.new(@form_base_element)
+    @form_element_cache.exportable_questions.size.should eql(2)
   end
   
 end

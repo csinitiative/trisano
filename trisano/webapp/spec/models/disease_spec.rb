@@ -48,7 +48,26 @@ describe Disease do
     Disease.find_active(:all).size.should == 1
   end
 
+  it "should return its live forms" do
+    @disease.save.should be_true
 
+    form = Form.new({
+        :name => "Test Form",
+        :event_type => "morbidity_event",
+        :disease_ids => [@disease.id]
+      }
+    )
+    
+    form.save_and_initialize_form_elements
+    @disease.live_forms.should be_empty
+    published_form = form.publish
+    published_form.should_not be_nil
+    live_forms = @disease.live_forms
+    live_forms.should_not be_empty
+    live_forms[0].id.should eql(published_form.id)
+    live_forms = @disease.live_forms("PlaceEvent")
+    live_forms.should be_empty
+  end
   
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do

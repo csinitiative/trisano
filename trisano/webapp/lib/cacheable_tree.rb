@@ -99,5 +99,13 @@ module CacheableTree
       end
     }
   end
+
+  def exportable_questions
+    full_set.collect{|node|
+      if ((node.class.name == "QuestionElement") && !node.question.short_name.blank?)
+        node.question
+      end
+    }.compact
+  end
   
 end

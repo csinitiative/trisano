@@ -74,8 +74,9 @@ describe Export::Csv do
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
       e = csv_mock_event(:morbidity)
-      a = to_arry( Export::Csv.export( e, :export_options => ["labs", "treatments"] ) )
-      a[1].should =~ /#{event_output(:morbidity, e) + "," + lab_output + "," + treatment_output}/
+      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
+      a[0].include?("disease_specific_morb_q").should be_true
+      a[1].should =~ /#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}/
     end
   end
 
@@ -231,7 +232,7 @@ def event_header(event_type)
   header_array.join(",")
 end
 
-def event_output(event_type, m)
+def event_output(event_type, m, options={})
   out = ""
   out << "#{m.id},"
   out << "#{m.record_number},"
@@ -321,6 +322,11 @@ def event_output(event_type, m)
     out << "#{m.acuity},"
     out << "#{m.other_data_1},"
     out << "#{m.other_data_2},"
+
+    if options[:disease]
+      out << "#{m.answers[0].text_answer},"
+    end
+
   end
   out << "#{m.created_at},"
   out << "#{m.updated_at}"
@@ -394,6 +400,7 @@ def csv_mock_event(event_type)
   if event_type == :morbidity
     m = mock_model(MorbidityEvent)
     m.stub!(:type).and_return('MorbidityEvent')
+    m.stub!(:answers).and_return([mock_model(Answer, { :short_name => "morb_q", :text_answer => "morb_q answer"})])
   elsif event_type == :contact
     m = mock_model(ContactEvent)
     m.stub!(:type).and_return('ContactEvent')
@@ -443,7 +450,6 @@ def csv_mock_event(event_type)
   m.stub!(:diagnosing_health_facilities).and_return([])
   m.stub!(:clinicians).and_return([])
   m.stub!(:contacts).and_return([])
-  m.stub!(:answers).and_return([])
   m.should_receive(:acuity).twice.and_return('Difficult')
   m.should_receive(:other_data_1).twice.and_return('First Other Data')
   m.should_receive(:other_data_2).twice.and_return('Second Other Data')
@@ -462,8 +468,22 @@ def csv_mock_event(event_type)
   @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(simple_reference)
   m.stub!(:lab_results).and_return([@lab_result])
 
-
   m
+end
+
+def csv_mock_disease
+  morbidity_question = mock_model(Question)
+  morbidity_question.stub!(:short_name).and_return("morb_q")
+
+  morbidity_form = mock_model(Form)
+  morbidity_form.stub!(:exportable_questions).and_return([morbidity_question])
+
+  d = mock_model(Disease)
+  d.stub!(:live_forms).with("MorbidityEvent").and_return([morbidity_form])
+  d.stub!(:live_forms).with("ContactEvent").and_return([])
+  d.stub!(:live_forms).with("PlaceEvent").and_return([])
+  
+  d
 end
 
 def simple_reference 

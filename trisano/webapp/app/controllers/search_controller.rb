@@ -154,6 +154,7 @@ class SearchController < ApplicationController
     # formbuilder answers to be output and limit the repeating elements, respectively.
     @show_answers = !params[:disease].blank?
     @export_options = params[:export_options] || []
+    @disease = Disease.find(params[:disease]) unless params[:disease].blank?
 
     respond_to do |format|
       format.html

@@ -42,6 +42,10 @@ class Form < ActiveRecord::Base
   def core_field_elements_container
     form_element_cache.children[2]
   end
+
+  def exportable_questions
+    form_element_cache.exportable_questions
+  end
   
   # Returns true if there's something interesting for the investigation tab to
   # render.

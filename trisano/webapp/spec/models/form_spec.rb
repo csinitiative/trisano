@@ -188,6 +188,17 @@ describe Form do
     
   end
 
+  describe "when using form-structure convenience methods" do
+
+    fixtures :forms, :form_elements, :questions
+
+    it "should return the exportable questions" do
+      form = Form.find(1)
+      form.exportable_questions.size.should eql(12)
+    end
+
+  end
+
   describe "when checking for renderable investigation view elements" do
     
     def prepare_form
