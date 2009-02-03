@@ -829,7 +829,6 @@ label {
         text-decoration: none; }
 
 
-
 .search-active td {
   border: 1px solid #C1DAD7;
   background: #fff;
@@ -840,7 +839,8 @@ label {
   border: 1px solid #C1DAD7;
   background: #ededed;
   padding: 3px 3px 3px 9px;
-  color: #191970; }
+  color: #191970;
+  text-decoration: line-through; }
 
 .list-of-forms {
   float: left;
