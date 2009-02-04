@@ -55,5 +55,5 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  json-jruby           Ruby License      Daniel Luz http://json-jruby.rubyforge.org/ 
  will-paginate        MIT               Copyright (c) 2007 PJ Hyett and Mislav Marohnić 
  ci-reporter          MIT               copyright (c) 2006-2007 Nick Sieger <nicksieger@gmail.com>
-
+ activerecord-jdbc    BSD               Nick Sieger <nick@nicksieger.com> and Ola Bini<olabini@gmail.com> with lots of help from the JRuby community.
 
