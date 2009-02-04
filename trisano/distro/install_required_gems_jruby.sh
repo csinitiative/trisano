@@ -25,7 +25,9 @@ GEM_DIR=../lib/gems/
 
 echo "installing gems"
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-openssl-0.2.3.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/postgres-pr-0.4.0.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-jdbc-adapter-0.9.1.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-jdbcpostgresql-adapter-0.9.1.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jdbc-postgres-8.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/builder-2.1.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.0.5.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.0.5.gem
