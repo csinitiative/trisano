@@ -44,6 +44,7 @@
           %tr.roll
             %td.forminformation
               %small
+                = "#{note.note_type.humanize}, " unless note.note_type.blank?
                 = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
             %td
               - prefix = event_prefix_for_multi_models("existing", "_note_attributes") + "[]"
@@ -72,9 +73,12 @@
       -# note = current_note.nil? ? Note.new | current_note
       - note = current_note || Note.new
       - f.fields_for(:new_note_attributes, note, :builder => ExtendedFormBuilder) do |note_fields|
-        %span{:class => "horiz"}
+        %span{:class => "vert"}
           = note_fields.label(:note, "New note")
           ~ note_fields.text_area(:note, :size => "50x5")
+        %span{:class => "vert"}
+          = note_fields.label(:is_admin)
+          = note_fields.check_box(:note_type, {}, "administrative", "clinical")
 
 %fieldset
   %legend

@@ -10,6 +10,9 @@
         %span.print-label User:
         %span.print-value= note.user.best_name
       .left
+        %span.print-label Note type:
+        %span.print-value= note.note_type.humanize unless note.note_type.blank?
+      .left
         %span.print-label Date note created:
         %span.print-value= note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
 

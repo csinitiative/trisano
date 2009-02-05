@@ -725,7 +725,7 @@ describe MorbidityEvent do
           @existing_clinician_hash = {
             "existing_clinician_attributes" => {},
             "new_clinician_attributes" => 
-            [
+              [
               {:last_name => "Kildare", :entity_id => ""},
               {:entity_id => entities(:Johnson).id}
             ]
@@ -808,7 +808,7 @@ describe MorbidityEvent do
           @existing_diagnostic_hash = {
             "existing_diagnostic_attributes" => {},
             "new_diagnostic_attributes" => 
-            [
+              [
               {"name" => "Joe's Diagnostic Center", :place_type_id => codes(:place_type_other).id, "entity_id" => ""},
               {"entity_id" => entities(:AVH).id}
             ]
@@ -1354,24 +1354,45 @@ describe MorbidityEvent do
           @user = users(:default_user)
           User.stub!(:current_user).and_return(@user)
           new_note_hash = {
-            "new_note_attributes" => {"note" => "This is a note"}
+            "new_note_attributes" => {"note" => "This is a note", "note_type" => "administrative"}
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_note_hash))
         end
 
-        it "should create a new note linked to the event" do
+        it "should create a new admin note linked to the event" do
           lambda {@event.save}.should change {Note.count}.by(1)
           @event.notes.first.note.should == "This is a note"
+          @event.notes.first.note_type.should == "administrative"
         end
+
       end
 
-      describe "Receiving an empty note" do
+      describe "Receiving a new clinical note" do
 
         before(:each) do
           @user = users(:default_user)
           User.stub!(:current_user).and_return(@user)
           new_note_hash = {
-            "new_note_attributes" => {}
+            "new_note_attributes" => {"note" => "This is a note", "note_type" => "clinical" }
+          }
+          @event = MorbidityEvent.new(@event_hash.merge(new_note_hash))
+        end
+
+        it "should create a new clinical note linked to the event" do
+          lambda {@event.save}.should change {Note.count}.by(1)
+          @event.notes.first.note.should == "This is a note"
+          @event.notes.first.note_type.should == "clinical"
+        end
+
+      end
+
+      describe "Receiving an empty note (no note text, as note type will come across regardless)" do
+
+        before(:each) do
+          @user = users(:default_user)
+          User.stub!(:current_user).and_return(@user)
+          new_note_hash = {
+            "new_note_attributes" => { "note" => "", "note_type" => "administrative"}
           }
           @event = MorbidityEvent.new(@event_hash.merge(new_note_hash))
         end
@@ -1403,6 +1424,30 @@ describe MorbidityEvent do
           strikethroughs.include?(false).should be_true
         end
       end
+
+      describe "adding notes through add_note" do
+
+        before(:each) do
+          @event = MorbidityEvent.new(@event_hash)
+          @user = users(:default_user)
+          User.stub!(:current_user).and_return(@user)
+          @event.save
+        end
+        
+        it "should create an admin note by default" do
+          @event.add_note("New note")
+          @event.notes.first.note.should == "New note"
+          @event.notes.first.note_type.should == "administrative"
+        end
+
+        it "should create a note of the provided type" do
+          @event.add_note("New note", "clinical")
+          @event.notes.first.note.should == "New note"
+          @event.notes.first.note_type.should == "clinical"
+        end
+        
+      end
+
     end
   end
 
@@ -2275,7 +2320,7 @@ describe MorbidityEvent do
     it 'should include soundex codes for fulltext search' do
       Event.find_by_criteria(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
       Event.last_query.should_not be_nil
-        Event.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
+      Event.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
     end
     
   end
