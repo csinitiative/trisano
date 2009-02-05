@@ -201,6 +201,13 @@ module TrisanoHelper
     return(browser.is_text_present("Person Information") and
         browser.is_text_present("Street number"))
   end
+
+  def show_cmr(browser)
+    browser.click "link=Show"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Person Information") and
+        browser.is_text_present("Street number"))
+  end
   
   def save_cmr(browser)
     browser.click "save_and_exit_btn"
