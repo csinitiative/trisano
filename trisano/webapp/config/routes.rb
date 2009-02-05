@@ -82,25 +82,25 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs, 
     :controller => :morbidity_events,
     :member => {
-      :state => :post,
-      :jurisdiction => :post,
-      :soft_delete => :post
-    },
+    :state => :post,
+    :jurisdiction => :post,
+    :soft_delete => :post
+  },
     :new => {
-      :lab_form => :get,
-      :lab_result_form => :get,
-      :treatment_form => :get
-    }
+    :lab_form => :get,
+    :lab_result_form => :get,
+    :treatment_form => :get
+  }
 
   map.resources :contact_events, 
     :member => {
-      :soft_delete => :post
-    },
+    :soft_delete => :post
+  },
     :new => {
-      :lab_form => :get,
-      :lab_result_form => :get,
-      :treatment_form => :get
-    }
+    :lab_form => :get,
+    :lab_result_form => :get,
+    :treatment_form => :get
+  }
 
   map.resources :place_events, :member => {
     :soft_delete => :post
@@ -108,6 +108,9 @@ ActionController::Routing::Routes.draw do |map|
 
   # These are the forms in use with and available to an event
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]
+
+  # These are the tasks in use with and available to an event
+  map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :create]
 
   map.resources :codes, :controller => :external_codes
 

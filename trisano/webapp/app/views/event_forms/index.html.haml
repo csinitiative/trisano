@@ -16,52 +16,8 @@
 - content_for :title do
   Event Forms
 
-//- content_for :tools do
-
-//- content_for :tools_two do
-
 - content_for :name do
-  %table.list
-    %tr
-      %th.forminformation
-        = if @event.is_a? MorbidityEvent then "Patient Name" elsif @event.is_a? ContactEvent then "Contact Name" else "Place Name" end
-      %th Jurisdictions
-      %th
-    %tr
-      - if @event.is_a? PlaceEvent
-        - name = @event.active_place.primary_entity.place_temp.name
-      - else
-        - patient = @event.active_patient.primary_entity.person
-        - name = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
-        
-      %td.forminformation
-        .patientname
-          = name
-        %small
-          Date:
-          = @event.event_onset_date
-      %td
-        %b
-          = @event.primary_jurisdiction.short_name
-        %div{:id => 'secondary_jurisdictions'}
-          %small
-            = @event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
-            %br
-      %td.tools
-        -# Why, oh why, didn't we name the cmrs resource morbidity_events?  Coulda avoided this.
-        - if @event.is_a? MorbidityEvent
-          - show_path = cmr_path(@event)
-          - edit_path = edit_cmr_path(@event)
-        - elsif @event.is_a? ContactEvent
-          - show_path = contact_event_path(@event)
-          - edit_path = edit_contact_event_path(@event)
-        - else
-          - show_path = place_event_path(@event)
-          - edit_path = edit_place_event_path(@event)
-
-        =link_to "Show", show_path
-        |
-        =link_to "Edit", edit_path
+  = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
 
 #forms_in_use
   #rot

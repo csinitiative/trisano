@@ -42,3 +42,8 @@
             - else
               %div{:id => "note_#{note.id}"}= note_body
           %td
+
+%fieldset
+  %legend
+    Tasks
+  = render(:partial => 'event_tasks/list', :locals => { :event => @event })
