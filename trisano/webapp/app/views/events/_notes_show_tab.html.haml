@@ -15,36 +15,12 @@
 
 
 %fieldset
-  %legend Notes Information
-
-  - if @event.notes.empty?
-    %fieldset.form
-      %legend Notes
-      %h3 No notes have been recorded for this event
-  - else
-
-    - for note in @event.notes
-      %table.list
-        %tr
-          %th.forminformation
-            = note.user.best_name
-          %th
-        %tr.roll
-          %td.forminformation
-            %small
-              = "#{note.note_type.humanize}, " unless note.note_type.blank?
-              = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
-          %td
-        %tr
-          %td
-            - note_body = simple_format(note.note)
-            - if note.struckthrough?
-              %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
-            - else
-              %div{:id => "note_#{note.id}"}= note_body
-          %td
-
-%fieldset
   %legend
-    Tasks
-  = render(:partial => 'event_tasks/list', :locals => { :event => @event })
+    Notes Information
+
+  #notes
+    #note-list
+      = render :partial => 'event_notes/show', :locals => { :notes => @event.notes }
+
+  #tasks
+    = render(:partial => 'event_tasks/list', :locals => { :event => @event })

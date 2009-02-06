@@ -22,50 +22,10 @@
   - current_note = nil
   -# prefix
   
-  #notes 
-    - if @event.notes.empty?
-      %b New record:  No existing notes.
-    - else
-      %b Earlier notes
-      #existing-notes
-      %table.list
-        - no_saved_notes = true
-        - for note in @event.notes
-          -# This can happen if validation fails and this form is re-rendered
-          - if note.new_record?
-            - current_note = note
-            - next
-          - no_saved_notes = false
-          #existing-note
-          %tr
-            %th.forminformation
-              = note.user.best_name
-            %th
-          %tr.roll
-            %td.forminformation
-              %small
-                = "#{note.note_type.humanize}, " unless note.note_type.blank?
-                = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
-            %td
-              - prefix = event_prefix_for_multi_models("existing", "_note_attributes") + "[]"
-              - fields_for(prefix, note, :builder => ExtendedFormBuilder) do |note_fields|
-                %div{:style => "position: absolute; right: 30px;"}
-                  %small
-                    Strike Through
-                    = note_fields.check_box :struckthrough, :onclick => "toggle_strike_through('note_#{note.id}')"
-          %tr
-            %td
-              - note_body = simple_format(note.note)
-              - if note.struckthrough?
-                %div{:id => "note_#{note.id}", :class => 'struck-through'}
-                  = note_body
-              - else
-                %div{:id => "note_#{note.id}"}
-                  = note_body
-            %td
-          - if no_saved_notes
-            %b No notes have been recorded for this event
-    
+  #notes
+    #note-list
+      = render :partial => 'event_notes/edit', :locals => { :notes => @event.notes }
+
     #new-note
       -# notes = (@event.notes.size > 0 ? @event.notes : [Note.new])
       =# error_messages_for :object => note

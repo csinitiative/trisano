@@ -13,33 +13,9 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#tasks
-  %fieldset.form
-    %legend
-      Event Tasks
-
-    - tasks = Task.find_all_by_event_id(event.id)
-
-    - unless tasks.empty?
-      %table.list
-        %tr
-          %th Name
-          %th Details/Notes
-          %th Category
-          %th Priority
-          %th User
-        - for task in tasks
-          %tr
-            %td
-              =task.name
-            %td
-              =task.description
-            %td
-              =task.category.humanize unless task.category.blank?
-            %td
-              =task.priority.humanize unless task.priority.blank?
-            %td
-              =task.user.best_name unless task.user.blank?
-
-    - else
-      No tasks.
+&nbsp;&nbsp;&nbsp;
+= link_to_remote("All", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :mode => mode }, :method => :get )
+&nbsp;|&nbsp;
+= link_to_remote("Administrative", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'administrative', :mode => mode }, :method => :get )
+&nbsp;|&nbsp;
+= link_to_remote("Clinical", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'clinical', :mode => mode }, :method => :get )

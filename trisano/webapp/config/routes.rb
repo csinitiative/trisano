@@ -112,6 +112,9 @@ ActionController::Routing::Routes.draw do |map|
   # These are the tasks in use with and available to an event
   map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :create]
 
+  # These are the tasks in use with and available to an event
+  map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]
+
   map.resources :codes, :controller => :external_codes
 
   map.resources :core_fields

@@ -41,9 +41,6 @@ describe 'Associating notes with an event.' do
     save_and_continue(@browser)
 
     @browser.is_element_present("id=existing-notes").should be_true
-    pending 'Curently there is no indication that no prior notes exist' do
-      @browser.is_text_present("New record: No existing notes.").should be_true
-    end
   end
 
   it "should allow adding one note" do
@@ -77,11 +74,8 @@ describe 'Associating notes with an event.' do
     save_cmr(@browser)
     @browser.click "edit-contact-event"
     @browser.wait_for_page_to_load $load_time 
-    @browser.is_element_present("id=existing-notes").should be_true
 
-    pending 'Curently there is no indication that no prior notes exist' do
-      @browser.is_text_present("No notes have been recorded for this event").should be_true
-    end
+    @browser.is_text_present("New record: No existing notes.").should be_true
     @browser.type "contact_event_new_note_attributes_note", "My first contact note."
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
@@ -91,10 +85,7 @@ describe 'Associating notes with an event.' do
     @browser.wait_for_page_to_load $load_time 
     @browser.click "edit-place-event"
     @browser.wait_for_page_to_load $load_time 
-    @browser.is_element_present("id=existing-notes").should be_true
-    pending 'Curently there is no indication that no prior notes exist' do
-      @browser.is_text_present("No notes have been recorded for this event").should be_true
-    end
+    @browser.is_text_present("New record: No existing notes.").should be_true
     @browser.type "place_event_new_note_attributes_note", "My first place note."
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
