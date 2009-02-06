@@ -30,34 +30,54 @@ describe 'Associating notes with an event.' do
   it "It should show an appropriate message for new events." do
     @browser.open "/trisano/cmrs"
     @browser.wait_for_page_to_load $load_time
-
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_active_patient__person_last_name', "Smith")
-
     click_core_tab(@browser, NOTES)
-  end
-
-  it "should show an appropriate message for existing events with no notes." do
     save_and_continue(@browser)
 
     @browser.is_element_present("id=existing-notes").should be_true
+    @browser.is_text_present("Event created for jurisdiction Unassigned.").should be_true
+    note_count(@browser).should == 1
   end
 
-  it "should allow adding one note" do
-    @browser.type "morbidity_event_new_note_attributes_note", "My first note."
+  it "should allow adding one clinical note" do
+    add_note(@browser, "morbidity_event", "My first clinical note.")
     save_and_continue(@browser)
-
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first note.").should be_true
+    note_count(@browser).should == 2
+    @browser.is_text_present("My first clinical note.").should be_true
   end
 
-  it "should allow adding one note" do
-    @browser.type "morbidity_event_new_note_attributes_note", "My second note."
+  it "should allow adding one admin note" do
+    add_note(@browser, "morbidity_event", "My first admin note.", { :is_admin => true })
     save_and_continue(@browser)
-
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first note.").should be_true
-    @browser.is_text_present("My second note.").should be_true
+    note_count(@browser).should == 3
+    @browser.is_text_present("My first admin note.").should be_true
+  end
+
+  it "should filter notes for morbidity events" do
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser, "Clinical").should eql(1)
+
+    @browser.click("admin-notes")
+    sleep(2)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser, "Clinical").should eql(0)
+    
+    @browser.click("clinical-notes")
+    sleep(2)
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(0)
+    note_count(@browser, "Clinical").should eql(1)
+    
+    @browser.click("all-notes")
+    sleep(2)
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser, "Clinical").should eql(1)
   end
 
   it "should allow a note to be struck through" do
@@ -76,19 +96,76 @@ describe 'Associating notes with an event.' do
     @browser.wait_for_page_to_load $load_time 
 
     @browser.is_text_present("New record: No existing notes.").should be_true
-    @browser.type "contact_event_new_note_attributes_note", "My first contact note."
+    add_note(@browser, "contact_event", "My first clinical, contact note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first contact note.").should be_true
+    @browser.is_text_present("My first clinical, contact note.").should be_true
+    note_count(@browser).should eql(1)
+
+    add_note(@browser, "contact_event", "My first admin, contact note.", :is_admin => true)
+    save_and_continue(@browser)
+    @browser.is_element_present("css=DIV#existing-notes").should be_true
+    @browser.is_text_present("My first admin, contact note.").should be_true
+
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(1)
+
+    @browser.click("admin-notes")
+    sleep(2)
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(0)
+
+    @browser.click("clinical-notes")
+    sleep(2)
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(0)
+    note_count(@browser, "Clinical").should eql(1)
+
+    @browser.click("all-notes")
+    sleep(2)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("link=Smith")
     @browser.wait_for_page_to_load $load_time 
     @browser.click "edit-place-event"
-    @browser.wait_for_page_to_load $load_time 
+    @browser.wait_for_page_to_load $load_time
+
     @browser.is_text_present("New record: No existing notes.").should be_true
-    @browser.type "place_event_new_note_attributes_note", "My first place note."
+    add_note(@browser, "place_event", "My first clinical, place note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first place note.").should be_true
+    @browser.is_text_present("My first clinical, place note.").should be_true
+
+    add_note(@browser, "place_event", "My first admin, place note.", :is_admin => true)
+    save_and_continue(@browser)
+    @browser.is_element_present("css=DIV#existing-notes").should be_true
+    @browser.is_text_present("My first admin, place note.").should be_true
+
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(1)
+
+    @browser.click("admin-notes")
+    sleep(2)
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(0)
+
+    @browser.click("clinical-notes")
+    sleep(2)
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(0)
+    note_count(@browser, "Clinical").should eql(1)
+
+    @browser.click("all-notes")
+    sleep(2)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(1)
+
   end
 end

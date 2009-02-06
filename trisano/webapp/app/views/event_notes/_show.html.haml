@@ -31,7 +31,9 @@
         %tr.roll
           %td.forminformation
             %small
-              = "#{note.note_type.humanize}, " unless note.note_type.blank?
+              - unless note.note_type.blank?
+                %span{ :class => 'note-type' }
+                  = "#{note.note_type.humanize} "
               = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
           %td
         %tr

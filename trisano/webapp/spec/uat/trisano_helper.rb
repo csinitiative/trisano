@@ -1048,6 +1048,19 @@ module TrisanoHelper
     end
   end
 
+  def add_note(browser, event_type, note_text, options={:is_admin => false})
+    browser.type "#{event_type}_new_note_attributes_note", note_text
+    browser.click("#{event_type}_new_note_attributes_note_type") if options[:is_admin]
+  end
+  
+  def note_count(browser, note_type="All")
+    if note_type == "All"
+      return browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('span.note-type').length}).to_i
+    else
+      browser.get_eval("selenium.browserbot.getCurrentWindow().$$('span.note-type').findAll(function(n) { return n.innerHTML.indexOf('#{note_type}') > 0; }).length").to_i
+    end
+  end
+  
   private
   
   def assert_contains(browser, container_element, element)

@@ -14,8 +14,8 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 &nbsp;&nbsp;&nbsp;
-= link_to_remote("All", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :mode => mode }, :method => :get )
+= link_to_remote("All", { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :mode => mode }, :method => :get }, { :id => 'all-notes' } )
 &nbsp;|&nbsp;
-= link_to_remote("Administrative", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'administrative', :mode => mode }, :method => :get )
+= link_to_remote("Administrative", { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'administrative', :mode => mode }, :method => :get }, { :id => 'admin-notes' } )
 &nbsp;|&nbsp;
-= link_to_remote("Clinical", :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'clinical', :mode => mode }, :method => :get )
+= link_to_remote("Clinical", { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'clinical', :mode => mode }, :method => :get }, { :id => 'clinical-notes' } )
