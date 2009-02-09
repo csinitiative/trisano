@@ -17,12 +17,13 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe 'Adding a task to a CMR' do
+describe 'Adding a task to a contact' do
   
   #$dont_kill_browser = true
   
   before(:all) do
-    @cmr_last_name = get_random_word << " task-uat"
+    @cmr_last_name = get_random_word << " ctask-uat"
+    @contact_last_name = get_random_word << " ctask-uat"
     @disease = get_random_disease
     @task_name = get_random_word << " name task-uat"
     @task_with_notes_name = get_random_word << " task-uat"
@@ -31,18 +32,25 @@ describe 'Adding a task to a CMR' do
   
   after(:all) do
     @cmr_last_name = nil
+    @contact_last_name = nil
     @disease = nil
     @task_name = nil
     @task_with_notes_name = nil
     @task_with_notes_notes = nil
   end
   
-  it "should create a basic CMR" do
+  it "should create a basic CMR and a contact" do
     @browser.open "/trisano/cmrs"
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease).should be_true
+    edit_cmr(@browser)
+    add_contact(@browser, { :last_name => @contact_last_name } )
+    save_cmr(@browser)
+    @browser.click("edit-contact-event")
+    @browser.wait_for_page_to_load($load_time)
+    show_contact(@browser)
   end
 
-  it 'should add a task with no notes from show mode' do
+  it 'should add a task with no notes from contact show mode' do
     add_task(@browser, {
         :task_name => @task_name,
         :task_category => 'Appointment',
@@ -51,8 +59,8 @@ describe 'Adding a task to a CMR' do
       }).should be_true
   end
 
-  it 'should add a task with notes from show mode' do
-    show_cmr(@browser)
+  it 'should add a task with notes from contact show mode' do
+    show_contact(@browser)
     add_task(@browser, {
         :task_name => @task_with_notes_name,
         :task_notes => @task_with_notes_notes,
@@ -62,21 +70,21 @@ describe 'Adding a task to a CMR' do
       }).should be_true
   end
 
-  it 'should display the tasks in edit mode' do
-    edit_cmr(@browser)
+  it 'should display the tasks in contact edit mode' do
+    edit_contact(@browser)
     @browser.is_text_present(@task_name).should be_true
     @browser.is_text_present(@task_with_notes_name).should be_true
   end
   
-  it 'should display the tasks in show mode' do
-    show_cmr(@browser)
+  it 'should display the tasks in contact show mode' do
+    show_contact(@browser)
     @browser.is_text_present(@task_name).should be_true
     @browser.is_text_present(@task_with_notes_name).should be_true
   end
 
-  it 'should only have added one note in addition to the standard admin CMR creation note' do
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(1)
+  it 'should only have added one note to the contact' do
+    note_count(@browser).should eql(1)
+    note_count(@browser, "Administrative").should eql(0)
     note_count(@browser, "Clinical").should eql(1)
   end
   

@@ -237,8 +237,22 @@ module TrisanoHelper
     browser.select_window '_blank'
     return(browser.is_text_present('Utah Public Health'))
   end
-  
-  def add_contact(browser, contact_attributes, index = 1)
+
+  def show_contact(browser)
+    browser.click "link=Show"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Person Information") and
+        browser.is_text_present("Street number"))
+  end
+
+  def edit_contact(browser)
+    browser.click "link=Edit"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Person Information") and
+        browser.is_text_present("Street number"))
+  end
+
+    def add_contact(browser, contact_attributes, index = 1)
     click_core_tab(browser, CONTACTS)
     browser.click "link=Add a contact"
     sleep(1)
@@ -1061,14 +1075,14 @@ module TrisanoHelper
     end
   end
 
-  def add_task(browser, options={})
+  def add_task(browser, task_attributes={})
     browser.click("link=Add Task")
     browser.wait_for_page_to_load($load_time)
-    browser.type("task_name", options[:task_name])
-    browser.type("task_notes", options[:task_notes]) if options[:task_notes]
-    browser.select("task_category", options[:task_category]) if options[:task_category]
-    browser.select("task_priority", options[:task_priority]) if options[:task_priority]
-    browser.type("task_due_date", options[:task_due_date]) if options[:task_due_date]
+    browser.type("task_name", task_attributes[:task_name])
+    browser.type("task_notes", task_attributes[:task_notes]) if task_attributes[:task_notes]
+    browser.select("task_category", task_attributes[:task_category]) if task_attributes[:task_category]
+    browser.select("task_priority", task_attributes[:task_priority]) if task_attributes[:task_priority]
+    browser.type("task_due_date", task_attributes[:task_due_date]) if task_attributes[:task_due_date]
     browser.click("task_submit")
     browser.wait_for_page_to_load($load_time)
     return ( (browser.is_text_present("Task was successfully created.")) and (browser.is_text_present(@show_task_name)) )
