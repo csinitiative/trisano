@@ -1451,6 +1451,59 @@ describe MorbidityEvent do
     end
   end
 
+  describe "Handling tasks" do
+    fixtures :users
+
+    before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
+      @event = MorbidityEvent.new(@event_hash)
+      @event.save!
+    end
+
+    it "should create a new clinical note linked to the event if task notes are populated" do
+      task = Task.new({
+          :name => "Do it",
+          :due_date => 1.day.from_now,
+          :notes => "Some details",
+          :event_id => @event.id,
+          :user_id => @user.id
+        })
+
+      task.save.should_not be_nil
+
+      @event.notes.reload
+      @event.notes.size.should == 1
+
+      @event.notes.collect { |note|
+        if (note.note_type == "clinical")
+          note
+        end
+      }.compact.size.should eql(1)
+
+      @event.notes.collect { |note|
+        if (note.note_type == "clinical")
+          note
+        end
+      }.compact[0].note.should eql("Some details")
+      
+    end
+
+    it "should not create a new clinical note linked to the event if task notes are not populated" do
+      task = Task.new({
+          :name => "Do it",
+          :due_date => 1.day.from_now,
+          :event_id => @event.id,
+          :user_id => @user.id
+        })
+
+      task.save.should_not be_nil
+      @event.notes.reload
+      @event.notes.size.should == 0
+    end
+
+  end
+
   describe "Routing an event" do
     fixtures :events, :participations, :entities, :entities_locations, :locations, :addresses, :telephones, :people, :places, :users, :participations_places
 

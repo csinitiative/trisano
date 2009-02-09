@@ -44,6 +44,7 @@ class Event < ActiveRecord::Base
 
   has_many :form_references
   has_many :answers
+  has_many :tasks, :order => 'due_date ASC'
 
   def self.primary_jurisdiction_code_id
     @@primary_jurisdiction_code_id ||= Code.primary_jurisdiction_participant_type_id
@@ -443,9 +444,7 @@ class Event < ActiveRecord::Base
   end
 
   def add_note(message, note_type="administrative")
-    note = Note.new(:note => message, :note_type => note_type)
-    note.user = User.current_user
-    self.notes << note
+    self.notes << Note.new(:note => message, :note_type => note_type, :user => User.current_user)
   end  
 
   # This method is used to add user selected fields and, if the timing is just right,

@@ -35,8 +35,8 @@
       = f.text_field(:name, :size => 20)
 
     %span{ :class => "vert" }
-      = f.label(:description, "Task details")
-      = f.text_field(:description, :size => 20)
+      = f.label(:notes, "Notes")
+      = f.text_area(:notes, :rows => 5, :cols => 50)
 
     %span{ :class => "vert" }
       = f.label(:category)
