@@ -190,6 +190,7 @@ module EventsHelper
         controls <<  " | "
         controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
       end
+      controls << (" | " << link_to('Add Task', new_event_task_path(event)) ) if can_update
     end
 
     controls
