@@ -1060,6 +1060,19 @@ module TrisanoHelper
       browser.get_eval("selenium.browserbot.getCurrentWindow().$$('span.note-type').findAll(function(n) { return n.innerHTML.indexOf('#{note_type}') > 0; }).length").to_i
     end
   end
+
+  def add_task(browser, options={})
+    browser.click("link=Add Task")
+    browser.wait_for_page_to_load($load_time)
+    browser.type("task_name", options[:task_name])
+    browser.type("task_notes", options[:task_notes]) if options[:task_notes]
+    browser.select("task_category", options[:task_category]) if options[:task_category]
+    browser.select("task_priority", options[:task_priority]) if options[:task_priority]
+    browser.type("task_due_date", options[:task_due_date]) if options[:task_due_date]
+    browser.click("task_submit")
+    browser.wait_for_page_to_load($load_time)
+    return ( (browser.is_text_present("Task was successfully created.")) and (browser.is_text_present(@show_task_name)) )
+  end
   
   private
   

@@ -24,15 +24,17 @@ describe 'Adding a task to a CMR' do
   before(:all) do
     @cmr_last_name = get_random_word << " task-uat"
     @disease = get_random_disease
-    @show_task_name = get_random_word << " task-uat"
-    @show_task_description = get_random_word << " task-uat"
+    @task_name = get_random_word << " name task-uat"
+    @task_with_notes_name = get_random_word << " task-uat"
+    @task_with_notes_notes = get_random_word << " task-uat"
   end
   
   after(:all) do
     @cmr_last_name = nil
     @disease = nil
-    @show_task_name = nil
-    @show_task_description = nil
+    @task_name = nil
+    @task_with_notes_name = nil
+    @task_with_notes_notes = nil
   end
   
   it "should create a basic CMR" do
@@ -40,28 +42,49 @@ describe 'Adding a task to a CMR' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease).should be_true
   end
 
-  it 'should add a task from show mode' do
-    @browser.click("link=Add Task")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.type("task_name", @show_task_name)
-    @browser.type("task_description", @show_task_description)
-    @browser.select("task_category", "Appointment")
-    @browser.select("task_priority", "Low")
-    @browser.type("task_due_date", "September 23, 2020")
-    @browser.click("task_submit")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Task was successfully created.").should be_true
-    @browser.is_text_present(@show_task_name).should be_true
+  it 'should add a task with no notes from show mode' do
+    add_task(@browser, {
+        :task_name => @task_name,
+        :task_category => 'Appointment',
+        :task_priority => 'Low',
+        :task_due_date => 'September 23, 2020'
+      }).should be_true
   end
 
-  it 'should display the task in edit mode' do
+  it 'should add a task with notes from show mode' do
+    show_cmr(@browser)
+    add_task(@browser, {
+        :task_name => @task_with_notes_name,
+        :task_notes => @task_with_notes_notes,
+        :task_category => 'Appointment',
+        :task_priority => 'Low',
+        :task_due_date => 'September 23, 2020'
+      }).should be_true
+  end
+
+  it 'should display the tasks in edit mode' do
     edit_cmr(@browser)
-    @browser.is_text_present(@show_task_name).should be_true
+    @browser.is_text_present(@task_name).should be_true
+    @browser.is_text_present(@task_with_notes_name).should be_true
   end
   
   it 'should display the task in show mode' do
     show_cmr(@browser)
-    @browser.is_text_present(@show_task_name).should be_true
+    @browser.is_text_present(@task_name).should be_true
+    @browser.is_text_present(@task_with_notes_name).should be_true
   end
+
+  it 'should only have added one note in addition to the standard admin CMR creation note' do
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser, "Clinical").should eql(1)
+  end
+  
+  it 'should display the task notes as a clinical note' do
+    @browser.click("clinical-notes")
+    sleep(2)
+    @browser.get_eval("selenium.browserbot.getCurrentWindow().$$('div[id^=note_]').findAll(function(n) { return n.innerHTML.indexOf('#{@task_with_notes_notes}') > 0; }).length").to_i.should eql(1)
+  end
+
 
 end
