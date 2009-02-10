@@ -1181,9 +1181,19 @@
   code_description: 'unknown'
   the_code: '9'
 
+  ### TASK CATEGORIES ###
 
+- code_name: "task_category"
+  the_code:  "APT"
+  code_description: "Appointment"
+  sort_order: 5
 
+- code_name: "task_category"
+  the_code:  "CB"
+  code_description: "Call Back"
+  sort_order: 10
 
-
-
-
+- code_name: "task_category"
+  the_code:  "TM"
+  code_description: "Treatment"
+  sort_order: 15

@@ -40,7 +40,7 @@
 
     %span{ :class => "vert" }
       = f.label(:category)
-      = f.select(:category, [["Appointment", "appointment"], ["Call Back", "call_back"], ["Treatment", "treatment"]], {:include_blank => true})
+      = f.collection_select(:category_id, ExternalCode.find_all_by_code_name('task_category', :order => 'sort_order'), :id, :code_description, {:include_blank => true})
 
     %span{ :class => "vert" }
       = f.label(:priority)

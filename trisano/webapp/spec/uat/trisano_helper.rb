@@ -1080,7 +1080,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     browser.type("task_name", task_attributes[:task_name])
     browser.type("task_notes", task_attributes[:task_notes]) if task_attributes[:task_notes]
-    browser.select("task_category", task_attributes[:task_category]) if task_attributes[:task_category]
+    browser.select("task_category_id", task_attributes[:task_category]) if task_attributes[:task_category]
     browser.select("task_priority", task_attributes[:task_priority]) if task_attributes[:task_priority]
     browser.type("task_due_date", task_attributes[:task_due_date]) if task_attributes[:task_due_date]
     browser.click("task_submit")

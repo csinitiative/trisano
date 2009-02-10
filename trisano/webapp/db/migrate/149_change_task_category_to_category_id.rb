@@ -15,21 +15,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class AdditionalPlaceTypes < ActiveRecord::Migration
+require "migration_helpers"
+
+class ChangeTaskCategoryToCategoryId < ActiveRecord::Migration
+  extend MigrationHelpers
   def self.up
-    if RAILS_ENV =~ /production/
-      transaction do
-        [{:code_name => 'placetype', :the_code => 'PUB', :code_description => 'Public', :sort_order => '71'},
-         {:code_name => 'placetype', :the_code => 'OOS', :code_description => 'Out-of-state Public Health Agency', :sort_order => '73'}
-        ].each do |code|
-          unless Code.find_by_code_name_and_the_code(code[:code_name], code[:the_code])
-            Code.create(code)
-          end
-        end
-      end
-    end
+    rename_column :tasks, :category, :category_id
+    change_column :tasks, :category_id, :integer
+    add_foreign_key :tasks, :category_id, :external_codes
   end
 
   def self.down
+    remove_foreign_key :tasks, :category_id
+    rename_column :tasks, :category_id, :category
+    change_column :tasks, :category, :string
   end
+  
 end

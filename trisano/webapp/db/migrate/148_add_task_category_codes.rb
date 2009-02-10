@@ -15,15 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class AdditionalPlaceTypes < ActiveRecord::Migration
+class AddTaskCategoryCodes < ActiveRecord::Migration
+
   def self.up
     if RAILS_ENV =~ /production/
       transaction do
-        [{:code_name => 'placetype', :the_code => 'PUB', :code_description => 'Public', :sort_order => '71'},
-         {:code_name => 'placetype', :the_code => 'OOS', :code_description => 'Out-of-state Public Health Agency', :sort_order => '73'}
+        [{:code_name => 'task_category', :the_code => 'APT', :code_description => 'Appointment', :sort_order => '5'},
+          {:code_name => 'task_category', :the_code => 'CB', :code_description => 'Call Back', :sort_order => '10'},
+          {:code_name => 'task_category', :the_code => 'TM', :code_description => 'Treatment', :sort_order => '15'}
         ].each do |code|
-          unless Code.find_by_code_name_and_the_code(code[:code_name], code[:the_code])
-            Code.create(code)
+          unless ExternalCode.find_by_code_name_and_the_code(code[:code_name], code[:the_code])
+            ExternalCode.create(code)
           end
         end
       end
@@ -32,4 +34,5 @@ class AdditionalPlaceTypes < ActiveRecord::Migration
 
   def self.down
   end
+
 end

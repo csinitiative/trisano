@@ -17,5 +17,19 @@ describe Task do
     @task.errors.size.should == 1
     @task.errors.on(:name).should_not be_nil
   end
-  
+
+  describe 'working with categories' do
+    fixtures :users
+
+    it 'should return its category name' do
+      @task.save.should_not be_nil
+      @task.category_name.should be_nil
+      category_code = ExternalCode.create({:code_name => 'task_category', :the_code => 'APT', :code_description => 'Appointment', :sort_order => '99'})
+      @task.category = category_code
+      @task.save.should_not be_nil
+      @task.category_name.should eql("Appointment")
+      @task.category_id.should eql(category_code.id)
+    end
+  end
+
 end
