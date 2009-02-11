@@ -68,6 +68,7 @@ class CdcEventsController < AdminController
     end
 
     @events = weekly_events(start_mmwr, end_mmwr)
+    CdcExport.reset_sent_status(@events)
     respond_to do |format|
       format.dat {
         headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_weeks_#{start_mmwr.mmwr_week}-#{end_mmwr.mmwr_week}.dat\""
@@ -82,6 +83,7 @@ class CdcEventsController < AdminController
     @events << CdcExport.verification_records(mmwr_year)
     @events << CdcExport.annual_cdc_export(mmwr_year)
     @events.flatten!
+    CdcExport.reset_sent_status(@events)
     respond_to do |format|
       format.dat {
         headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_year#{mmwr_year}.dat\""

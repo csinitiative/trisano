@@ -25,11 +25,7 @@
       %fieldset
         %legend 
           Person Information
-          %span{:id => 'person_info_hide', :onClick => "Element.hide('person_form'); Element.hide('person_info_hide'); Element.show('person_info_show'); return false;"}
-            [Hide]
-          %span{:id => 'person_info_show', :onClick => "Element.show('person_form'); Element.hide('person_info_show'); Element.show('person_info_hide'); return false;", :style => "display: none;"}
-            [Show]
-
+          
         = render :partial => 'events/people/name_show', :locals => {:person => entity_data.person, :person_form => person_form, :event => event, :event_form => event_form} 
         = render :partial => 'events/people/address_show', :locals => {:location => l, :address => a, :current_patient => primary_form}
         = render :partial => 'events/people/age_show', :locals => {:person => entity_data.person, :person_form => person_form}

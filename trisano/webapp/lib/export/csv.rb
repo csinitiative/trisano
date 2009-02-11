@@ -351,7 +351,8 @@ module Export
     exportable_questions[event.class.name.underscore.to_sym].each do |question|
       answer = event.answers.detect { |answer| answer.short_name == question.short_name }
       text_answer = answer.nil? ? "" : answer.text_answer
-      answers << ["disease_specific_#{question.short_name}", "'#{text_answer}'"]
+      escaped_answer = text_answer.blank? ? "" : text_answer.gsub(/'/, "\\\\'")
+      answers << ["disease_specific_#{question.short_name}", "'#{escaped_answer}'"]
     end
     answers
   end
