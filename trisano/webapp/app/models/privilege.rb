@@ -27,5 +27,9 @@ class Privilege < ActiveRecord::Base
     def investigate_event
       find_by_priv_name('investigate_event')
     end
+
+    def update_event
+      find_by_priv_name('update_event')
+    end
   end
 end

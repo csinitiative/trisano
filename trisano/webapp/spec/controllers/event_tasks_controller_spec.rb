@@ -21,15 +21,16 @@ describe EventTasksController do
   
   before(:each) do
     mock_user
-    @event = mock_model(Event, :to_param => "1")
+    @event = mock_event
     @event.stub!(:id).and_return(1)
     Event.stub!(:find).and_return(@event)
   end
 
-  describe "handling GET /events/1/tasks" do
+  describe "handling GET /events/1/tasks with update event entitlement" do
 
     before(:each) do
       @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
       Task.stub!(:new).and_return(@task)
     end
   
@@ -55,10 +56,54 @@ describe EventTasksController do
     
   end
 
-  describe "handling GET /events/1/tasks/new" do
+  describe "handling GET /events/1/tasks without update event entitlement" do
 
     before(:each) do
       @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(false)
+      Task.stub!(:new).and_return(@task)
+    end
+
+    def do_get
+      get :index, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 403
+    end
+
+    it "should contain permissions error" do
+      do_get
+      response.body.include?("Permission denied").should == true
+    end
+
+  end
+
+  describe "handling GET /events/1/tasks without a valid event" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+    end
+
+    def do_get
+      get :index, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 404
+    end
+
+  end
+
+  describe "handling GET /events/1/tasks/new with update event entitlement" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
       Task.stub!(:new).and_return(@task)
     end
 
@@ -84,10 +129,55 @@ describe EventTasksController do
 
   end
 
-  describe "handling POST /events/1/tasks" do
+  describe "handling GET /events/1/tasks/new without update event entitlement" do
 
     before(:each) do
       @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(false)
+      Task.stub!(:new).and_return(@task)
+    end
+
+    def do_get
+      get :new, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 403
+    end
+
+    it "should contain permissions error" do
+      do_get
+      response.body.include?("Permission denied").should == true
+    end
+
+  end
+
+  describe "handling GET /events/1/tasks/new without a valid event" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+    end
+
+    def do_get
+      get :new, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 404
+    end
+
+  end
+
+  describe "handling POST /events/1/tasks with update event entitlement" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @task.stub!(:user_id).and_return(nil)
       Task.stub!(:new).and_return(@task)
     end
 
@@ -126,7 +216,54 @@ describe EventTasksController do
       end
 
     end
-    
+  end
+
+  describe "handling POST /events/1/tasks without update event entitlement" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(false)
+      @task.stub!(:user_id).and_return(nil)
+      Task.stub!(:new).and_return(@task)
+    end
+
+    describe "with save attempt" do
+
+      def do_post
+        request.env['HTTP_REFERER'] = "/some_path"
+        post :create
+      end
+
+      it "should not be successful" do
+        do_post
+        response.response_code.should == 403
+      end
+
+      it "should contain permissions error" do
+        do_post
+        response.body.include?("Permission denied").should == true
+      end
+
+    end
+  end
+
+  describe "handling POST /events/1/tasks without a valid event" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+    end
+
+    def do_get
+      get :create, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 404
+    end
+
   end
 
 end

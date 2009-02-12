@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class EventNotesController < AdminController
+class EventNotesController < ApplicationController
 
   before_filter :find_event
+  before_filter :can_view?
 
   def index
     @mode = params[:mode].blank? ? 'show' : params[:mode]
@@ -30,6 +31,14 @@ class EventNotesController < AdminController
   end
 
   private
+
+  def can_view?
+    @event ||= Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
+      return
+    end
+  end
 
   def find_event
     begin

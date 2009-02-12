@@ -20,16 +20,17 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe EventNotesController do
   before(:each) do
     mock_user
-    @event = mock_model(Event, :to_param => "1")
+    @event = mock_event
     Event.stub!(:find).and_return(@event)
   end
 
-  describe "handling GET /events/1/notes" do
+  describe "handling GET /events/1/notes with view event entitlement" do
 
     before(:each) do
       @note_1 = mock_model(Note)
       @note_2 = mock_model(Note)
       Note.stub!(:find).and_return([@note_1, @note_2])
+      @user.stub!(:is_entitled_to_in?).and_return(true)
     end
   
     def do_get
@@ -52,7 +53,44 @@ describe EventNotesController do
       assigns[:event].should == @event
       assigns[:notes].should == [@note_1, @note_2]
     end
-    
+  end
+
+  describe "handling GET /events/1/notes without view event entitlement" do
+
+    before(:each) do
+      @user.stub!(:is_entitled_to_in?).and_return(false)
+    end
+
+    def do_get
+      get :index, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 403
+    end
+
+    it "should contain permissions error" do
+      do_get
+      response.body.include?("Permission denied").should == true
+    end
+  end
+
+  describe "handling GET /events/1/notes without a valid event" do
+
+    before(:each) do
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+    end
+
+    def do_get
+      get :index, :event_id => "1"
+    end
+
+    it "should not be successful" do
+      do_get
+      response.response_code.should == 404
+    end
   end
 
 end

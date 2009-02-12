@@ -19,15 +19,18 @@ Surveillance Manager:
   - route_event_to_any_lhd
   - accept_event_for_lhd
   - route_event_to_investigator
+  - assign_task_to_user
 LHD Manager:
   - create_event
   - view_event
   - update_event
   - route_event_to_any_lhd
   - approve_event_at_lhd
+  - assign_task_to_user
 State Manager:
   - create_event
   - view_event
   - update_event
   - route_event_to_any_lhd
   - approve_event_at_state
+  - assign_task_to_user

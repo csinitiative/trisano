@@ -54,6 +54,16 @@ describe User, "loaded from fixtures" do
   it "should have one admin jurisdiction id" do
     @user.admin_jurisdiction_ids.size.should == 1
   end
+
+  describe "getting potential task assignees" do
+    it "should find users with update event in the provided jurisdiction" do
+      assignees = User.task_assignees_for_jurisdictions(entities(:Southeastern_District).id)
+      assignees.size.should == 1
+
+      assignees = User.task_assignees_for_jurisdictions(entities(:Summit_County).id)
+      assignees.size.should == 0
+    end
+  end
   
 end
 
@@ -348,5 +358,5 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @user.role_memberships.length.should == 1
       end
     end
- end
+  end
 end

@@ -9,3 +9,14 @@ default_user:
   initials: 
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
 
+admin_user:
+  id: 2
+  uid:
+  user_name: admin_user
+  last_name: Smythe
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings: 
+

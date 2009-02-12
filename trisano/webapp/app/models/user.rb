@@ -61,7 +61,6 @@ class User < ActiveRecord::Base
   end
 
   def jurisdictions_for_privilege(privilege)
-    # entitlements.collect { |ent| ent.jurisdiction.current_place if ent.privilege.priv_name.to_sym == privilege }.compact!
     Place.jurisdictions_for_privilege_by_user_id(id, privilege)
   end
 
@@ -114,6 +113,15 @@ class User < ActiveRecord::Base
       investigators += Privilege.investigate_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
     end
     investigators.uniq.sort_by { |investigator| investigator.best_name }
+  end
+
+  def self.task_assignees_for_jurisdictions(jurisdictions)
+    jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
+    assignees = []
+    jurisdictions.each do |j|
+      assignees += Privilege.update_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
+    end
+    assignees.uniq.sort_by { |assignee| assignee.best_name }
   end
   
   # Convenience methods to find/set the current user on the thread from anywhere in the app

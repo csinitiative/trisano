@@ -25,4 +25,17 @@ describe Privilege do
   it "should be valid" do
     @privilege.should be_valid
   end
+
+  describe "using convenience finders" do
+    fixtures :privileges
+
+    it "should find the update event privilege" do
+      Privilege.update_event.id.should == privileges(:update).id
+    end
+    
+    it "should find the investigate event privilege" do
+      Privilege.investigate_event.id.should == privileges(:investigate_event).id
+    end
+  end
+
 end
