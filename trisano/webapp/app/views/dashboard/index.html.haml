@@ -22,6 +22,25 @@
   %script
     detect();
 
+.vert
+  %h2
+    Tasks
+  - unless @tasks.nil? || @tasks.empty?
+    - for task in @tasks
+      %table
+        %thead
+          %th Name
+          %th Due date
+          %th Category
+          %th Priority
+        %tbody
+          %td= task.name     ? h(task.name) : '&nbsp;'
+          %td= task.due_date ? h(format_date(task.due_date)) : '&nbsp;'
+          %td= task.category ? h(l(task.category)) : '&nbsp;'
+          %td= task.priority ? h(task.priority) : '&nbsp;'
+  - else
+    %span No tasks pending.
+    
 %br
 %br
 %br
