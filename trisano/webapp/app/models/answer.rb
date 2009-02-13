@@ -71,6 +71,19 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def before_save
+    if is_date
+      convert_date
+    end
+  end
+
+  def convert_date
+    unless self.text_answer.blank?
+      dt = Date.parse(self.text_answer)
+      self.text_answer = dt.to_s
+    end
+  end
+
   def short_name
     question.short_name unless question.nil? || question.short_name.blank?
   end

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class SearchController < ApplicationController
@@ -27,11 +27,11 @@ class SearchController < ApplicationController
 
     # Is there some more elegant way to do this when you don't want the message hanging around?
     flash[:error] = ""
-    
+
     begin
       if !params[:name].blank? || !params[:birth_date].blank?
         people = Person.find_by_ts(:fulltext_terms => params[:name], :birth_date => params[:birth_date])
-        
+
         unless people.empty?
           @people = people.collect do |person|
             event = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
@@ -49,19 +49,19 @@ class SearchController < ApplicationController
         end
 
         parse_names_from_fulltext_search
-                
+
       end
     rescue
       flash[:error] = "There was a problem with your search criteria. Please try again. #{$!}"
     end
-        
+
   end
-  
+
   def cmrs
 
     flash[:error] = ""
     error_details = []
-    
+
     @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
     if @jurisdictions.nil?
       error_details << "You do not have view permissions in any jurisdiction"
@@ -76,14 +76,14 @@ class SearchController < ApplicationController
     @genders = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'", :order => "id")
 
     @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
-    
+
     @event_statuses = Event.get_states_and_descriptions
 
     @counties = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'", :order => "id")
 
     begin
      if not params.values_blank?
-        
+
         if !params[:birth_date].blank?
           begin
             if (params[:birth_date].length == 4 && params[:birth_date].to_i != 0)
@@ -95,7 +95,7 @@ class SearchController < ApplicationController
             error_details << "Invalid birth date format"
           end
         end
-        
+
         if !params[:entered_on_start].blank?
           begin
             entered_on_start = parse_american_date(params[:entered_on_start])
@@ -103,18 +103,18 @@ class SearchController < ApplicationController
             error_details << "Invalid entered-on start date format"
           end
         end
-        
+
         if !params[:entered_on_end].blank?
           begin
-            entered_on_end = parse_american_date(params[:entered_on_end])
+            entered_on_end = parse_american_date(params[:entered_on_end], 1)
           rescue
             error_details << "Invalid entered-on end date format"
           end
         end
-        
+
         raise if (!error_details.empty?)
-        
-        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name], 
+
+        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name],
                                        :disease => params[:disease],
                                        :gender => params[:gender],
                                        :sw_last_name => params[:sw_last_name],
@@ -128,18 +128,18 @@ class SearchController < ApplicationController
                                        :jurisdiction_id => params[:jurisdiction_id],
                                        :event_type => params[:event_type]
                                       )
-           
+
        if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
          @first_name = params[:sw_first_name]
          @last_name = params[:sw_last_name]
        elsif !params[:name].blank?
          parse_names_from_fulltext_search
        end
-            
+
      end
     rescue Exception => ex
       flash[:error] = "There was a problem with your search criteria"
-      
+
       # Debt: Error display details are pretty weak. Good enough for now.
       if (!error_details.empty?)
         flash[:error] += "<ul>"
@@ -148,9 +148,9 @@ class SearchController < ApplicationController
         end
         flash[:error] += "</ul>"
       end
-    end      
-    
-    # For some reason can't communicate with template via :locals on the render line.  @show_answers and @export_options are used for csv export to cause 
+    end
+
+    # For some reason can't communicate with template via :locals on the render line.  @show_answers and @export_options are used for csv export to cause
     # formbuilder answers to be output and limit the repeating elements, respectively.
     @show_answers = !params[:disease].blank?
     @export_options = params[:export_options] || []
@@ -162,21 +162,21 @@ class SearchController < ApplicationController
     end
 
   end
-  
+
   def auto_complete_model_for_city
     entered_city = params[:city]
-    @addresses = Address.find(:all, 
-                        :select => "distinct city", 
-                        :conditions => [ "city ILIKE ?", 
+    @addresses = Address.find(:all,
+                        :select => "distinct city",
+                        :conditions => [ "city ILIKE ?",
                           entered_city + '%'],
                         :order => "city ASC",
                         :limit => 10
                        )
     render :inline => '<ul><% for address in @addresses %><li id="city_<%= address.city %>"><%= h address.city  %></li><% end %></ul>'
   end
-  
+
   private
-  
+
   def parse_names_from_fulltext_search
     name_list = params[:name].split(" ")
     if name_list.size == 1
@@ -187,10 +187,10 @@ class SearchController < ApplicationController
       @first_name, @middle_name, @last_name = name_list
     end
   end
-  
-  def parse_american_date(date)
+
+  def parse_american_date(date, offset = 0)
      american_date = '%m/%d/%Y'
-     Date.strptime(date, american_date).to_s
+     (Date.strptime(date, american_date) + offset).to_s
   end
-    
+
 end

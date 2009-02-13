@@ -41,4 +41,6 @@
         =l(address.county) 
       -core_element_show :district, address_form, :horiz do
         =address_form.label(:district)
-        =l(address.district)
+          -if address.county && address.county.jurisdiction
+          -jurisdiction_name = address.county.jurisdiction.name
+        =jurisdiction_name.blank? ? '' : jurisdiction_name
