@@ -41,4 +41,31 @@ describe Answer do
     @answer.errors.on(:text_answer).should_not be_nil
   end
 
+  it 'should format a date-picker style date (i.e. January 12, 1987) as a YYYY-MM-DD date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = 'January 12, 1987'
+    @answer.save!
+    @answer.text_answer.should == '1987-01-12'
+  end
+
+  it 'should format a MM/DD/YYYY date as a YYYY-MM-DD date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '1/12/1987'
+    @answer.save!
+    @answer.text_answer.should == '1987-01-12'
+  end
+
+  it 'should format a MM-DD-YYYY date as a YYYY-MM-DD date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '12-1-1987'
+    @answer.save!
+    @answer.text_answer.should == '1987-01-12'
+  end
+
+  it 'should not validate an invalid date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '1987-1-12'
+    @answer.should_not be_valid
+  end
+
 end
