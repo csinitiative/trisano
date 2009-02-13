@@ -1083,6 +1083,7 @@ module TrisanoHelper
     browser.select("task_category_id", task_attributes[:task_category]) if task_attributes[:task_category]
     browser.select("task_priority", task_attributes[:task_priority]) if task_attributes[:task_priority]
     browser.type("task_due_date", task_attributes[:task_due_date]) if task_attributes[:task_due_date]
+    browser.select("task_user_id", task_attributes[:task_user_id]) if task_attributes[:task_user_id]
     browser.click("task_submit")
     browser.wait_for_page_to_load($load_time)
     return ( (browser.is_text_present("Task was successfully created.")) and (browser.is_text_present(@show_task_name)) )
