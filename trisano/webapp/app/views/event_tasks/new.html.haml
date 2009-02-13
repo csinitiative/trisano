@@ -68,4 +68,4 @@
 #existing-tasks
   %h2
     Existing Tasks
-  = render(:partial => 'event_tasks/list', :locals => { :event => @event })
+  = render(:partial => 'event_tasks/list', :locals => { :tasks => @event.tasks })

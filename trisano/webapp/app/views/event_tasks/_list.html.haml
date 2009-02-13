@@ -18,31 +18,31 @@
     %legend
       Event Tasks
 
-    - tasks = event.tasks
-
     - unless tasks.empty?
-      %table.list
-        %tr
-          %th Due&nbsp;date
-          %th Name
-          %th Notes
-          %th Category
-          %th Priority
-          %th Assigned&nbsp;to
-        - for task in tasks
+      %table.list        
+        %thead
           %tr
-            %td
-              =task.due_date
-            %td
-              =h task.name
-            %td
-              =h task.notes
-            %td
-              =task.category_name
-            %td
-              =task.priority.humanize unless task.priority.blank?
-            %td
-              =task.user.best_name unless task.user.blank?
+            %th Due&nbsp;date
+            %th Name
+            %th Notes
+            %th Category
+            %th Priority
+            %th Assigned&nbsp;to
+        %tbody
+          - for task in tasks
+            %tr
+              %td
+                =task.due_date         ? h(task.due_date) : '&nbsp;'
+              %td
+                =task.name             ? h(task.name) : '&nbsp;'
+              %td
+                =task.notes            ? h(task.notes) : '&nbsp;'
+              %td
+                =task.category_name    ? h(task.category_name) : '&nbsp;'
+              %td
+                =!task.priority.blank? ? h(task.priority.humanize) : '&nbsp;'
+              %td
+                =!task.user.blank?     ? h(task.user.best_name) : '&nbsp;'
 
     - else
       No tasks.

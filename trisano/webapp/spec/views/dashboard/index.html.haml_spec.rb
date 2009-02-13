@@ -47,11 +47,15 @@ describe "/dashboard/index.html.haml" do
         :name          => 'First task',
         :due_date      => Date.today,
         :category_name => 'Treatment',
-        :priority      => 'P1'}
+        :priority      => 'P1',
+        :notes         => 'Sample notes'}
       @task = mock(@values[:name])
       @values.each do |method, value|
         @task.should_receive(method).twice.and_return(value)
       end
+      @user = mock('user')
+      @user.should_receive(:best_name).and_return('User Name')
+      @task.should_receive(:user).twice.and_return(@user)
       @tasks = [@task]
       assigns[:tasks] = @tasks
     end
@@ -64,17 +68,17 @@ describe "/dashboard/index.html.haml" do
 
     it 'should have columns for name, date, priority, category' do
       render 'dashboard/index.html.haml'
-      ['name', 'priority', 'due date', 'category'].each do |text|
+      ['name', 'notes', 'priority', 'due&nbsp;date', 'category', 'assigned&nbsp;to'].each do |text|
         response.should have_tag("th", :text => text.capitalize)
       end
     end
 
     it 'should render field data for tasks' do
       render 'dashboard/index.html.haml'
-      response.should have_tag("td", :text => format_date(@values.delete(:due_date)))
       @values.each do |key, value|
         response.should have_tag("td", :text => value)        
       end
+      response.should have_tag("td", :text => 'User Name')
     end
 
   end

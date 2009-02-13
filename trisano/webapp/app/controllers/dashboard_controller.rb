@@ -18,6 +18,6 @@
 class DashboardController < ApplicationController
 
   def index
-    # Nothing to do at the moment as the dashboard is static
+    @tasks = Task.find_all_by_user_id(User.current_user.id)
   end
 end

@@ -23,6 +23,8 @@ describe DashboardController do
     
     before(:each) do
       mock_user
+      @task = mock('a task')
+      Task.should_receive(:find_all_by_user_id).with(User.current_user.id).and_return([@task])
     end
     
     def do_get
@@ -42,6 +44,15 @@ describe DashboardController do
     it "should assign a user" do
       do_get
       User.current_user.nil?.should be_false
+    end
+
+    it "should find user tasks" do
+      do_get
+    end
+
+    it "should assign tasks" do
+      do_get
+      assigns[:tasks].should == [@task]
     end
     
   end
