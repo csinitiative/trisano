@@ -34,10 +34,10 @@
           %th Category
           %th Priority
         %tbody
-          %td= task.name     ? h(task.name) : '&nbsp;'
-          %td= task.due_date ? h(format_date(task.due_date)) : '&nbsp;'
-          %td= task.category ? h(l(task.category)) : '&nbsp;'
-          %td= task.priority ? h(task.priority) : '&nbsp;'
+          %td= task.name          ? h(task.name) : '&nbsp;'
+          %td= task.due_date      ? h(format_date(task.due_date)) : '&nbsp;'
+          %td= task.category_name ? h(task.category_name) : '&nbsp;'
+          %td= task.priority      ? h(task.priority) : '&nbsp;'
   - else
     %span No tasks pending.
     

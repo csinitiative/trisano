@@ -43,13 +43,11 @@ describe "/dashboard/index.html.haml" do
   describe 'with user tasks' do
 
     before(:each) do
-      treatment_category = mock('treatment category')
-      treatment_category.should_receive(:code_description).at_least(1).times.and_return('Treatment')
       @values = {
-        :name     => 'First task',
-        :due_date => Date.today,
-        :category => treatment_category,
-        :priority => 'P1'}
+        :name          => 'First task',
+        :due_date      => Date.today,
+        :category_name => 'Treatment',
+        :priority      => 'P1'}
       @task = mock(@values[:name])
       @values.each do |method, value|
         @task.should_receive(method).twice.and_return(value)
@@ -73,7 +71,6 @@ describe "/dashboard/index.html.haml" do
 
     it 'should render field data for tasks' do
       render 'dashboard/index.html.haml'
-      response.should have_tag("td", :text => l(@values.delete(:category)))
       response.should have_tag("td", :text => format_date(@values.delete(:due_date)))
       @values.each do |key, value|
         response.should have_tag("td", :text => value)        
