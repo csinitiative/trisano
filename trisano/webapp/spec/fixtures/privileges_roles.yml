@@ -1,36 +1,194 @@
 
-admin_view:
-  id: 1
-  role_id: 1
-  privilege_id: 1
-  jurisdiction_id: 75
-
-admin_update:
-  id: 2
-  role_id: 1
-  privilege_id: 2
-  jurisdiction_id: 75
+# Administrator
 
 admin_administer:
-  id: 3
+  id: 1
   role_id: 1
   privilege_id: 3
   jurisdiction_id: 75
 
+# Investigator
+
 investigator_view:
-  id: 4
+  id: 2
   role_id: 2
   privilege_id: 1
   jurisdiction_id: 75
 
 investigator_update:
-  id: 5
+  id: 3
   role_id: 2
   privilege_id: 2
   jurisdiction_id: 75
 
 investigator_investigate:
-  id: 6
+  id: 4
   role_id: 2
   privilege_id: 4
   jurisdiction_id: 75
+
+investigator_route_event_to_any_lhd:
+  id: 5
+  role_id: 2
+  privilege_id: 7
+  jurisdiction_id: 75
+
+investigator_accept_event_for_investigation:
+  id: 6
+  role_id: 2
+  privilege_id: 10
+  jurisdiction_id: 75
+
+investigator_create_event:
+  id: 7
+  role_id: 2
+  privilege_id: 11
+  jurisdiction_id: 75
+
+# State manager
+
+state_manager_view_event:
+  id: 8
+  role_id: 3
+  privilege_id: 1
+  jurisdiction_id: 75
+
+state_manager_update_event:
+  id: 9
+  role_id: 3
+  privilege_id: 2
+  jurisdiction_id: 75
+
+state_manager_approve_event_at_state:
+  id: 10
+  role_id: 3
+  privilege_id: 6
+  jurisdiction_id: 75
+
+state_manager_route_event_to_any_lhd:
+  id: 11
+  role_id: 3
+  privilege_id: 7
+  jurisdiction_id: 75
+
+state_manager_create_event:
+  id: 12
+  role_id: 3
+  privilege_id: 11
+  jurisdiction_id: 75
+
+state_manager_assign_task_to_user:
+  id: 13
+  role_id: 3
+  privilege_id: 12
+  jurisdiction_id: 75
+
+# Data entry technician:
+
+data_entry_technician_view_event:
+  id: 14
+  role_id: 4
+  privilege_id: 1
+  jurisdiction_id: 75
+
+data_entry_technician_update_event:
+  id: 15
+  role_id: 4
+  privilege_id: 2
+  jurisdiction_id: 75
+
+data_entry_technician_route_event_to_any_lhd:
+  id: 16
+  role_id: 4
+  privilege_id: 7
+  jurisdiction_id: 75
+
+data_entry_technician_create_event:
+  id: 17
+  role_id: 4
+  privilege_id: 11
+  jurisdiction_id: 75
+
+# LHD manager
+
+lhd_manager_view_event:
+  id: 18
+  role_id: 5
+  privilege_id: 1
+  jurisdiction_id: 75
+
+lhd_manager_update_event:
+  id: 19
+  role_id: 5
+  privilege_id: 2
+  jurisdiction_id: 75
+
+lhd_manager_approve_event_at_lhd:
+  id: 20
+  role_id: 5
+  privilege_id: 5
+  jurisdiction_id: 75
+
+lhd_manager_route_event_to_any_lhd:
+  id: 21
+  role_id: 5
+  privilege_id: 7
+  jurisdiction_id: 75
+
+lhd_manager_create_event:
+  id: 22
+  role_id: 5
+  privilege_id: 11
+  jurisdiction_id: 75
+
+lhd_manager_assign_task_to_user:
+  id: 23
+  role_id: 5
+  privilege_id: 12
+  jurisdiction_id: 75
+
+# Surveillance manager
+
+surveillance_manager_view_event:
+  id: 24
+  role_id: 6
+  privilege_id: 1
+  jurisdiction_id: 75
+
+surveillance_manager_update_event:
+  id: 25
+  role_id: 6
+  privilege_id: 2
+  jurisdiction_id: 75
+
+surveillance_manager_route_event_to_any_lhd:
+  id: 26
+  role_id: 6
+  privilege_id: 7
+  jurisdiction_id: 75
+
+surveillance_manager_accept_event_for_lhd:
+  id: 27
+  role_id: 6
+  privilege_id: 8
+  jurisdiction_id: 75
+
+surveillance_manager_route_event_to_investigator:
+  id: 28
+  role_id: 6
+  privilege_id: 9
+  jurisdiction_id: 75
+
+surveillance_manager_create_event:
+  id: 29
+  role_id: 6
+  privilege_id: 11
+  jurisdiction_id: 75
+
+surveillance_manager_assign_task_to_user:
+  id: 30
+  role_id: 6
+  privilege_id: 12
+  jurisdiction_id: 75
+
+  

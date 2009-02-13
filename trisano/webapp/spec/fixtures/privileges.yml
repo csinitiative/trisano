@@ -19,3 +19,43 @@ investigate_event:
   id: 4
   priv_name: investigate_event
   description: 
+
+approve_event_at_lhd:
+  id: 5
+  priv_name: approve_event_at_lhd
+  description:
+
+approve_event_at_state:
+  id: 6
+  priv_name: approve_event_at_state
+  description:
+
+route_event_to_any_lhd:
+  id: 7
+  priv_name: route_event_to_any_lhd
+  description:
+
+accept_event_for_lhd:
+  id: 8
+  priv_name: accept_event_for_lhd
+  description:
+
+route_event_to_investigator:
+  id: 9
+  priv_name: route_event_to_investigator
+  description:
+
+accept_event_for_investigation:
+  id: 10
+  priv_name: accept_event_for_investigation
+  description:
+
+create_event:
+  id: 11
+  priv_name: create_event
+  description:
+
+assign_task_to_user:
+  id: 12
+  priv_name: assign_task_to_user
+  description:
