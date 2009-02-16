@@ -19,4 +19,9 @@ class Task < ActiveRecord::Base
     end
   end
 
+  # simplifies sorting
+  def user_name
+    self.user.best_name unless self.user.blank?
+  end
+
 end

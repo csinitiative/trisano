@@ -23,8 +23,6 @@ describe DashboardController do
     
     before(:each) do
       mock_user
-      @task = mock('a task')
-      Task.should_receive(:find_all_by_user_id).with(User.current_user.id).and_return([@task])
     end
     
     def do_get
@@ -46,15 +44,6 @@ describe DashboardController do
       User.current_user.nil?.should be_false
     end
 
-    it "should find user tasks" do
-      do_get
-    end
-
-    it "should assign tasks" do
-      do_get
-      assigns[:tasks].should == [@task]
-    end
-    
   end
  
   describe "handling GET /dashboard with no logged in user" do
@@ -68,5 +57,27 @@ describe DashboardController do
     end
     
   end
+
+  describe "handling ajax GET /dashboard" do
+    
+    def do_xhr
+      user = mock('mock user')
+      controller.should_receive(:load_user)
+      User.should_receive(:current_user).and_return(user)
+      xhr :get, :index
+    end    
+
+    it 'should respond to xhr requests' do
+      do_xhr
+      response.should be_success
+    end
+
+    it 'should render the list tasks partial' do
+      do_xhr
+      response.should render_template('event_tasks/_list.html.haml')
+    end
+      
+  end
+
   
 end

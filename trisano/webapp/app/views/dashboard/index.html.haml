@@ -25,10 +25,8 @@
 .vert
   %h2
     Tasks
-  - unless @tasks.nil? || @tasks.empty?
-    = render :partial => 'event_tasks/list', :locals => {:tasks => @tasks}
-  - else
-    %span No tasks pending.
+  #tasks
+    = render :partial => 'event_tasks/list', :locals => {:task_owner => User.current_user}
     
 %br
 %br

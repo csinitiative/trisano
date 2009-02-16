@@ -17,7 +17,17 @@
 
 class DashboardController < ApplicationController
 
+  # Creating a controller for a single user task ajax call seemed a
+  # little heavy. If a full user task mvc shows up, this call should
+  # be merged in there.
   def index
-    @tasks = Task.find_all_by_user_id(User.current_user.id)
+    respond_to do |format|
+      format.html      
+      format.js do
+        # Hmmm. not sure why I had to add the .html.haml here.
+        render :partial => 'event_tasks/list.html.haml', :locals => {:task_owner => User.current_user} 
+      end
+    end
   end
+
 end

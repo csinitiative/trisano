@@ -23,6 +23,8 @@ class User < ActiveRecord::Base
   
   has_many :entitlements, :include => [:privilege, :jurisdiction], :dependent => :delete_all
   has_many :privileges, :through => :entitlements
+
+  has_many :tasks, :order => 'due_date ASC'
   
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name
@@ -41,7 +43,7 @@ class User < ActiveRecord::Base
   
   def best_name
     return given_name unless self.given_name.blank?
-    return "#{first_name} #{last_name}" unless self.last_name.blank?
+    return "#{first_name} #{last_name}".strip unless self.last_name.blank?
     return user_name unless self.user_name.blank?
     return uid
   end

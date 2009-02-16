@@ -99,6 +99,24 @@ describe EventTasksController do
 
   end
 
+  describe "handling ajax GET /events/1/tasks" do
+    
+    def do_xhr
+      xhr :get, :index, :event_id => "1"
+    end    
+
+    it 'should respond to xhr requests' do
+      do_xhr
+      response.should be_success
+    end
+
+    it 'should render the list tasks partial' do
+      do_xhr
+      response.should render_template('_list.html.haml')
+    end
+      
+  end
+
   describe "handling GET /events/1/tasks/new with update event entitlement" do
 
     before(:each) do

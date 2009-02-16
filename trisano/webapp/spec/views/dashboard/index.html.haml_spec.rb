@@ -22,6 +22,12 @@ include ApplicationHelper
 describe "/dashboard/index.html.haml" do
   
   describe 'without user tasks' do
+
+    before(:each) do
+      @user = mock('current user')
+      @user.stub!(:tasks).and_return([])
+      User.stub!(:current_user).and_return(@user)
+    end
     
     it 'should not render the table' do
       render 'dashboard/index.html.haml'
@@ -35,7 +41,7 @@ describe "/dashboard/index.html.haml" do
                              
     it 'should have a "no tasks" message' do
       render 'dashboard/index.html.haml'
-      response.should have_tag('span', :text => 'No tasks pending.')
+      response.should have_tag('span', :text => 'No tasks')
     end
 
   end
@@ -48,16 +54,16 @@ describe "/dashboard/index.html.haml" do
         :due_date      => Date.today,
         :category_name => 'Treatment',
         :priority      => 'P1',
-        :notes         => 'Sample notes'}
+        :notes         => 'Sample notes',
+        :user_name     => 'Default User'}
       @task = mock(@values[:name])
+      @tasks = [@task]
       @values.each do |method, value|
-        @task.should_receive(method).twice.and_return(value)
+        @task.should_receive(method).at_least(2).times.and_return(value)
       end
       @user = mock('user')
-      @user.should_receive(:best_name).and_return('User Name')
-      @task.should_receive(:user).twice.and_return(@user)
-      @tasks = [@task]
-      assigns[:tasks] = @tasks
+      @user.should_receive(:tasks).and_return(@tasks)
+      User.should_receive(:current_user).and_return(@user)
     end
 
     it 'should render tasks table on dashboard' do
@@ -68,8 +74,16 @@ describe "/dashboard/index.html.haml" do
 
     it 'should have columns for name, date, priority, category' do
       render 'dashboard/index.html.haml'
-      ['name', 'notes', 'priority', 'due&nbsp;date', 'category', 'assigned&nbsp;to'].each do |text|
-        response.should have_tag("th", :text => text.capitalize)
+      [%w(Name              name),
+       %w(Notes             notes),
+       %w(Priority          priority),
+       %w(Due&nbsp;date     due_date), 
+       %w(Category          category_name), 
+       %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
+        response.should have_tag("th") do
+          with_tag("a[onclick*=tasks_ordered_by=#{order_by}]")
+          with_tag("a", :text => text)
+        end
       end
     end
 
@@ -78,7 +92,18 @@ describe "/dashboard/index.html.haml" do
       @values.each do |key, value|
         response.should have_tag("td", :text => value)        
       end
-      response.should have_tag("td", :text => 'User Name')
+      response.should have_tag("td", :text => 'Default User')
+    end
+
+    describe 'and with sort params' do
+      
+      %w(name due_date notes category_name priority user_name).each do |meth|
+        it "should sort tasks by ##{meth}" do
+          params[:tasks_ordered_by] = meth
+          render 'dashboard/index.html.haml'
+        end
+      end
+
     end
 
   end

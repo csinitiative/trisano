@@ -13,36 +13,40 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#tasks
-  %fieldset.form
-    %legend
-      Event Tasks
-
-    - unless tasks.empty?
-      %table.list        
-        %thead
+%fieldset.form
+  %legend
+    Event Tasks
+  
+  - urls_hash =  %w(due_date name notes category_name priority user_name).inject({}) do |memo, field|
+    - memo[field] = task_owner.is_a?(Event) ? event_tasks_path(task_owner, :tasks_ordered_by => field) : params.merge(:tasks_ordered_by => field)
+    - memo
+  - tasks = task_owner.tasks
+  - unless tasks.empty?
+    %table.list        
+      %thead
+        %tr
+          %th= link_to_remote('Due&nbsp;date',    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])
+          %th= link_to_remote('Name',             :update => 'tasks', :method => :get, :url => urls_hash['name'])
+          %th= link_to_remote('Notes',            :update => 'tasks', :method => :get, :url => urls_hash['notes'])
+          %th= link_to_remote('Category',         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
+          %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
+          %th= link_to_remote('Assigned&nbsp;to', :update => 'tasks', :method => :get, :url => urls_hash['user_name'])
+      %tbody
+        - tasks = tasks.sort_by{|task| task.send(params[:tasks_ordered_by]) || ''} unless params[:tasks_ordered_by].nil?
+        - for task in tasks
           %tr
-            %th Due&nbsp;date
-            %th Name
-            %th Notes
-            %th Category
-            %th Priority
-            %th Assigned&nbsp;to
-        %tbody
-          - for task in tasks
-            %tr
-              %td
-                =task.due_date         ? h(task.due_date) : '&nbsp;'
-              %td
-                =task.name             ? h(task.name) : '&nbsp;'
-              %td
-                =task.notes            ? h(task.notes) : '&nbsp;'
-              %td
-                =task.category_name    ? h(task.category_name) : '&nbsp;'
-              %td
-                =!task.priority.blank? ? h(task.priority.humanize) : '&nbsp;'
-              %td
-                =!task.user.blank?     ? h(task.user.best_name) : '&nbsp;'
+            %td
+              =task.due_date         ? h(task.due_date) : '&nbsp;'
+            %td
+              =task.name             ? h(task.name) : '&nbsp;'
+            %td
+              =task.notes            ? h(task.notes) : '&nbsp;'
+            %td
+              =task.category_name    ? h(task.category_name) : '&nbsp;'
+            %td
+              =!task.priority.blank? ? h(task.priority.humanize) : '&nbsp;'
+            %td
+              =task.user_name        ? h(task.user_name) : '&nbsp;'
 
-    - else
-      No tasks.
+  - else
+    %span No tasks

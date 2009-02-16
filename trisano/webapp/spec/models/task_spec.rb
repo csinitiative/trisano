@@ -32,4 +32,13 @@ describe Task do
     end
   end
 
+  describe '#user_name' do
+    fixtures :users
+
+    it "should return the user's best name" do
+      @task.user_name.should == 'Johnson'
+    end
+  
+  end
+      
 end

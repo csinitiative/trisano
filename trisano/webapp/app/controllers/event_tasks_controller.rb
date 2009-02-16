@@ -21,9 +21,17 @@ class EventTasksController < ApplicationController
   before_filter :can_update?
   
   def index
-    @task = Task.new
-    @task.event_id = @event.id
-    render :action => 'new'
+    respond_to do |format|
+      format.html do
+        @task = Task.new
+        @task.event_id = @event.id
+        render :action => 'new'
+      end
+      format.js do
+        #Hmmmmm. Why do I have to add the .html.haml onto the partial?
+        render :partial => 'list.html.haml', :locals => { :task_owner => @event }
+      end
+    end
   end
 
   def new

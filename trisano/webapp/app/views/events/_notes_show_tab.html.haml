@@ -23,4 +23,4 @@
       = render :partial => 'event_notes/show', :locals => { :notes => @event.notes }
 
   #tasks
-    = render(:partial => 'event_tasks/list', :locals => { :tasks => @event.tasks })
+    = render(:partial => 'event_tasks/list', :locals => { :task_owner => @event })

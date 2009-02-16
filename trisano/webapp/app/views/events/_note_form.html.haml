@@ -45,4 +45,5 @@
     Tasks
     %span{:id => 'tasks_hide', :onClick => "Element.hide('tasks'); Element.hide('tasks_hide'); Element.show('tasks_show'); return false;"} [Hide]
     %span{:id => 'tasks_show', :onClick => "Element.show('tasks'); Element.hide('tasks_show'); Element.show('tasks_hide'); return false;", :style => "display: none;"} [Show]
-  = render(:partial => 'event_tasks/list', :locals => { :tasks => @event.tasks })
+  #tasks
+    = render(:partial => 'event_tasks/list', :locals => { :task_owner => @event })
