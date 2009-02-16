@@ -107,4 +107,42 @@ describe "/dashboard/index.html.haml" do
     end
 
   end
+
+  describe 'with nil field comparisons in user tasks' do
+    before(:each) do
+      @values = {
+        :name          => 'First task',
+        :due_date      => Date.today,
+        :category_name => 'Treatment',
+        :priority      => 'P1',
+        :notes         => 'Sample notes',
+        :user_name     => 'Default User'}
+      @nils   = {
+        :name          => nil,
+        :due_date      => nil,
+        :category_name => nil,
+        :priority      => nil,
+        :notes         => nil,
+        :user_name     => nil}
+      @task_values = mock(@values[:name])
+      @task_nils   = mock('nil task')
+      @tasks = [@task_values, @task_nils]
+      @values.each do |method, value|
+        @task_values.stub!(method).and_return(value)
+        @task_nils.stub!(method).and_return(nil)
+      end
+      @user = mock('user')
+      @user.should_receive(:tasks).and_return(@tasks)
+      User.should_receive(:current_user).and_return(@user)
+    end
+
+    %w(name due_date notes category_name priority user_name).each do |meth|
+      it "should handle nils when sorting by ##{meth}" do
+        params[:tasks_ordered_by] = meth
+        render 'dashboard/index.html.haml'
+      end
+    end
+
+  end
+
 end

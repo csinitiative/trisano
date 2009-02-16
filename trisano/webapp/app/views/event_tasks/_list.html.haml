@@ -32,7 +32,7 @@
           %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
           %th= link_to_remote('Assigned&nbsp;to', :update => 'tasks', :method => :get, :url => urls_hash['user_name'])
       %tbody
-        - tasks = tasks.sort_by{|task| task.send(params[:tasks_ordered_by]) || ''} unless params[:tasks_ordered_by].nil?
+        - tasks = tasks.sort_by{|task| task.send(params[:tasks_ordered_by]).to_s || ''} unless params[:tasks_ordered_by].nil?
         - for task in tasks
           %tr
             %td
