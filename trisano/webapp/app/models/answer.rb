@@ -72,7 +72,9 @@ class Answer < ActiveRecord::Base
   end
 
   def before_save
-    self.text_answer = date_answer.to_s
+    if self.is_date and !self.blank?
+      self.text_answer = date_answer.to_s
+    end
   end
 
   def short_name
