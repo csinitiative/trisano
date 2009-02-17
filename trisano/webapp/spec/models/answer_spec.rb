@@ -55,14 +55,34 @@ describe Answer do
     @answer.text_answer.should == '1987-01-12'
   end
 
-  it 'should format a MM-DD-YYYY date as a YYYY-MM-DD date' do
+  it 'should format a MM/DD/YY date as a YYYY-MM-DD date' do
     @answer.question.data_type = 'date'
-    @answer.text_answer = '12-1-1987'
+    @answer.text_answer = '01/21/09'
     @answer.save!
-    @answer.text_answer.should == '1987-01-12'
+    @answer.text_answer.should == '2009-01-21'
   end
 
-  it 'should not validate an invalid date' do
+  it 'should format a MM-DD-YY date as a YYYY-MM-DD date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '01-21-09'
+    @answer.save!
+    @answer.text_answer.should == '2009-01-21'
+  end
+
+  it 'should format a MM-DD-YYYY date as a YYYY-MM-DD date' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '01-21-2009'
+    @answer.save!
+    @answer.text_answer.should == '2009-01-21'
+  end
+
+  it 'a DD-MM-YYYY date should fail validation' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '21-01-2009'
+    @answer.should_not be_valid
+  end
+
+  it 'a YYYY-MM-DD date should fail validation' do
     @answer.question.data_type = 'date'
     @answer.text_answer = '1987-1-12'
     @answer.should_not be_valid
