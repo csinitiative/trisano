@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Task do
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
+
   before(:each) do
     mock_user
     @task = Task.new
@@ -39,8 +41,7 @@ describe Task do
   end
 
   describe 'working with categories' do
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
-
+    
     it 'should return its category name' do
       mock_user
       @task.save.should_not be_nil
@@ -54,7 +55,6 @@ describe Task do
   end
 
   describe 'working with task assignment' do
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :entities, :places
 
     before(:each) do
       @user = users(:default_user)
@@ -97,7 +97,6 @@ describe Task do
   end
 
   describe 'generating notes' do
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :entities, :places
     
     before(:each) do
       @event_hash = {
