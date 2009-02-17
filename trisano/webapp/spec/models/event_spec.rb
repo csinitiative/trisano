@@ -1466,10 +1466,10 @@ describe MorbidityEvent do
           :name => "Do it",
           :due_date => 1.day.from_now,
           :notes => "Some details",
-          :event_id => @event.id,
-          :user_id => @user.id
+          :event_id => @event.id
         })
 
+      task.user_id = @user.id
       task.save.should_not be_nil
 
       @event.notes.reload
@@ -1485,7 +1485,7 @@ describe MorbidityEvent do
         if (note.note_type == "clinical")
           note
         end
-      }.compact[0].note.should eql("Some details")
+      }.compact[0].note.should eql("Task created.\n\nName: Do it\nNotes: Some details")
       
     end
 

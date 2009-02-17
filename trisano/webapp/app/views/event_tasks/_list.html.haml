@@ -16,13 +16,14 @@
 %fieldset.form
   %legend
     Event Tasks
-  
+
   - urls_hash =  %w(due_date name notes category_name priority user_name).inject({}) do |memo, field|
     - memo[field] = task_owner.is_a?(Event) ? event_tasks_path(task_owner, :tasks_ordered_by => field) : params.merge(:tasks_ordered_by => field)
     - memo
   - tasks = task_owner.tasks
   - unless tasks.empty?
-    %table.list        
+    #task-message{ :align => 'center' }
+    %table.list
       %thead
         %tr
           %th= link_to_remote('Due&nbsp;date',    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])
@@ -31,6 +32,7 @@
           %th= link_to_remote('Category',         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
           %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
           %th= link_to_remote('Assigned&nbsp;to', :update => 'tasks', :method => :get, :url => urls_hash['user_name'])
+          %th &nbsp;
       %tbody
         - tasks = tasks.sort_by{|task| task.send(params[:tasks_ordered_by]).to_s || ''} unless params[:tasks_ordered_by].nil?
         - for task in tasks
@@ -47,6 +49,8 @@
               =!task.priority.blank? ? h(task.priority.humanize) : '&nbsp;'
             %td
               =task.user_name        ? h(task.user_name) : '&nbsp;'
+            %td
+              =task_action_links(task)
 
   - else
     %span No tasks

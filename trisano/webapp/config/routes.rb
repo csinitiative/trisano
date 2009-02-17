@@ -110,9 +110,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]
 
   # These are the tasks in use with and available to an event
-  map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :create]
+  map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :create, :update]
 
-  # These are the tasks in use with and available to an event
+  # These are the notes in use with and available to an event
   map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]
 
   map.resources :codes, :controller => :external_codes

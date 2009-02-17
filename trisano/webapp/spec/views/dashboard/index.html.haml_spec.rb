@@ -56,7 +56,12 @@ describe "/dashboard/index.html.haml" do
         :priority      => 'P1',
         :notes         => 'Sample notes',
         :user_name     => 'Default User'}
+
       @task = mock(@values[:name])
+      @task.stub!(:id).and_return(1)
+      @task.stub!(:status).and_return('pending')
+      @task.stub!(:event_id).and_return(1)
+
       @tasks = [@task]
       @values.each do |method, value|
         @task.should_receive(method).at_least(2).times.and_return(value)
@@ -75,11 +80,11 @@ describe "/dashboard/index.html.haml" do
     it 'should have columns for name, date, priority, category' do
       render 'dashboard/index.html.haml'
       [%w(Name              name),
-       %w(Notes             notes),
-       %w(Priority          priority),
-       %w(Due&nbsp;date     due_date), 
-       %w(Category          category_name), 
-       %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
+        %w(Notes             notes),
+        %w(Priority          priority),
+        %w(Due&nbsp;date     due_date),
+        %w(Category          category_name),
+        %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
         response.should have_tag("th") do
           with_tag("a[onclick*=tasks_ordered_by=#{order_by}]")
           with_tag("a", :text => text)
@@ -126,6 +131,15 @@ describe "/dashboard/index.html.haml" do
         :user_name     => nil}
       @task_values = mock(@values[:name])
       @task_nils   = mock('nil task')
+
+      @task_values.stub!(:id).and_return(1)
+      @task_values.stub!(:status).and_return('pending')
+      @task_values.stub!(:event_id).and_return(1)
+
+      @task_nils.stub!(:id).and_return(2)
+      @task_nils.stub!(:status).and_return('pending')
+      @task_nils.stub!(:event_id).and_return(1)
+
       @tasks = [@task_values, @task_nils]
       @values.each do |method, value|
         @task_values.stub!(method).and_return(value)

@@ -79,6 +79,7 @@ def mock_user
   @user = mock_model(User)
   User.stub!(:find_by_uid).and_return(@user)
   User.stub!(:current_user).and_return(@user)
+  @user.stub!(:id).and_return(1)
   @user.stub!(:uid).and_return("utah")
   @user.stub!(:user_name).and_return("default_user")
   @user.stub!(:first_name).and_return("Johnny")

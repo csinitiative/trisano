@@ -205,7 +205,7 @@ describe EventTasksController do
         request.env['HTTP_REFERER'] = "/some_path"
         @task.should_receive(:user_id=).once()
         @task.should_receive(:save).and_return(true)
-        post :create
+        post :create, :task => {}
       end
 
       it "should create a new task" do
@@ -225,7 +225,7 @@ describe EventTasksController do
       def do_post
         @task.should_receive(:user_id=).once()
         @task.should_receive(:save).and_return(false)
-        post :create
+        post :create, :task => {}
       end
 
       it "should re-render 'new'" do
@@ -282,6 +282,65 @@ describe EventTasksController do
       response.response_code.should == 404
     end
 
+  end
+
+  describe "handling PUT /events/1/task/1 with update event entitlement" do
+
+    before(:each) do
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @task.stub!(:user_id).and_return(nil)
+
+      @proxy = mock('proxy')
+      @proxy.stub!(:find).and_return(@task)
+      @event.stub!(:tasks).and_return(@proxy)
+    end
+
+    describe "with successful update" do
+
+      def do_put
+        @task.should_receive(:update_attributes).and_return(true)
+        put :update, :task => {}
+      end
+
+      it "should find the task requested" do
+        do_put
+      end
+
+      it "should render 'update'" do
+        do_put
+        response.should render_template('update')
+      end
+
+      it "should set the flash notice to a success message" do
+        do_put
+        flash[:notice].should eql("Task was successfully updated.")
+      end
+
+    end
+
+    describe "with failed update" do
+
+      def do_put
+        @task.should_receive(:update_attributes).and_return(false)
+        put :update, :task => {}
+      end
+
+      it "should find the task requested" do
+        do_put
+      end
+
+      it "should render 'update'" do
+        do_put
+        response.should render_template('update')
+      end
+
+      it "should set the flash error to a failure message" do
+        do_put
+        flash[:error].should eql("Could not update task.")
+      end
+
+    end
   end
 
 end

@@ -58,7 +58,7 @@ describe User, "loaded from fixtures" do
   describe "getting potential task assignees" do
     it "should find users with update event in the provided jurisdiction" do
       assignees = User.task_assignees_for_jurisdictions(entities(:Southeastern_District).id)
-      assignees.size.should == 1
+      assignees.size.should == 2
 
       assignees = User.task_assignees_for_jurisdictions(entities(:Summit_County).id)
       assignees.size.should == 0
