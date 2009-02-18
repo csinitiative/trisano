@@ -19,5 +19,5 @@
   %span.vert= "Show tasks for the last #{text_field_tag(:look_back, params[:look_back], :size => '3')} day#{params[:look_back] == '1' ? '' : 's'} (leave blank for all overdue tasks)."
   %span.vert= "Show tasks for the next #{text_field_tag(:look_ahead, params[:look_ahead], :size => '3')} day#{params[:look_ahead] == '1' ? '' : 's'} (leave blank for all pending tasks)."
   %span.vert Leaving a field blank shows all tasks in that direction.
-  %span.horiz= submit_tag 'Update'
+  %span.horiz= submit_tag 'Update', :id => 'update_tasks_filter'
   %span.vert= link_to_function('Close', "Effect.BlindUp('task_view_settings')")
