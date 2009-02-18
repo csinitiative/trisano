@@ -39,7 +39,9 @@
           - tasks = tasks.sort_by do |task|
             - (task.send(meth) || (meth.to_s == 'due_date' ? '9' : '')).to_s
         - for task in tasks
-          %tr
+          - task_class = task.status.blank? ? "task" : "task-#{task.status.gsub("_", "-")}"
+
+          %tr{ :class => task_class }
             %td
               =task.due_date         ? h(task.due_date) : '&nbsp;'
             %td

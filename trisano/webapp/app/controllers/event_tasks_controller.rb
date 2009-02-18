@@ -42,7 +42,7 @@ class EventTasksController < ApplicationController
   def create
     @task = Task.new(params[:task])
 
-    if params[:task][:user_id]
+    if !params[:task][:user_id].blank?
       @task.user_id = params[:task][:user_id]
     else
       @task.user_id = User.current_user.id

@@ -23,7 +23,7 @@ module TasksHelper
     if task.status != "complete"
       result << link_to_remote("Complete", :url => { :controller => :event_tasks, :action => "update", :event_id => task.event_id, :id => task.id, 'task[status]' => "complete" }, :method => :put )
     else
-      result << "Complete"
+      result << "<b>Complete</b>"
     end
 
     result << "&nbsp;|&nbsp;"
@@ -31,7 +31,7 @@ module TasksHelper
     if task.status != "not_applicable"
       result << link_to_remote("N/A", :url => { :controller => :event_tasks, :action => "update", :event_id => task.event_id, :id => task.id, 'task[status]' => "not_applicable" }, :method => :put )
     else
-      result << "N/A"
+      result << "<b>N/A</b>"
     end
     
   end
