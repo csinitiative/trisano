@@ -7,11 +7,17 @@ describe Task do
     mock_user
     @task = Task.new
     @task.user_id = 1
+    @task.due_date = 1.day.from_now
     @task.name = "New task"
   end
 
   it "should be valid" do
     @task.should be_valid
+  end
+  
+  it 'should not be valid with out a due date' do
+    @task.due_date = nil
+    @task.should_not be_valid
   end
 
   it "should be in pending status after initial creation" do

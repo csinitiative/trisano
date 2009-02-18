@@ -25,6 +25,10 @@
 .vert
   %h2
     Tasks
+  %span.horz= task_filter_description(params)
+  %span.vert= link_to_function('Change filter', "Effect.BlindDown('task_view_settings')")
+  #task_view_settings{:style => 'display: none;'}
+    = render :partial => 'filter_tasks_form'
   #tasks
     = render :partial => 'event_tasks/list', :locals => {:task_owner => User.current_user}
     

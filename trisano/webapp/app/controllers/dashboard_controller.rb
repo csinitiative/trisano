@@ -21,13 +21,31 @@ class DashboardController < ApplicationController
   # little heavy. If a full user task mvc shows up, this call should
   # be merged in there.
   def index
-    respond_to do |format|
-      format.html      
+    respond_to do |format|      
+      @user = User.current_user
+      format.html do
+        if has_a_filter_applied?(params)
+          query_options = {
+            :look_ahead => params[:look_ahead], 
+            :look_back => params[:look_back]}
+          @user.update_attribute(:task_view_settings, query_options)
+        elsif @user.has_task_view_settings?
+          redirect_to url_for(params.merge(@user.task_view_settings))
+          return
+        end        
+        render
+      end
       format.js do
         # Hmmm. not sure why I had to add the .html.haml here.
-        render :partial => 'event_tasks/list.html.haml', :locals => {:task_owner => User.current_user} 
+        render :partial => 'event_tasks/list.html.haml', :locals => {:task_owner => @user} 
       end
     end
+  end
+
+  private 
+
+  def has_a_filter_applied?(params)
+    params.has_key?(:look_ahead) || params.has_key?(:look_back)
   end
 
 end

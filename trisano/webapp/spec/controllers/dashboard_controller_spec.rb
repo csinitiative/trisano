@@ -28,20 +28,63 @@ describe DashboardController do
     def do_get
       get :index
     end
+
+    describe 'with filter applied' do
+      
+      before(:each) do
+        @controller.should_receive(:has_a_filter_applied?).and_return(true)
+        User.current_user.should_receive(:update_attribute).with(:task_view_settings, an_instance_of(Hash))
+      end
+
+      it "should be successful" do
+        do_get
+        response.should be_success
+      end
     
-    it "should be successful" do
-      do_get
-      response.should be_success
+      it "should render index template" do
+        do_get
+        response.should render_template('index')
+      end
+    
+      it "should assign a user" do
+        do_get
+        User.current_user.nil?.should be_false
+      end
     end
-    
-    it "should render index template" do
-      do_get
-      response.should render_template('index')
-    end
-    
-    it "should assign a user" do
-      do_get
-      User.current_user.nil?.should be_false
+
+    describe 'with no filter applied' do
+      before(:each) do
+        @controller.should_receive(:has_a_filter_applied?).and_return(false)
+      end
+
+      describe 'and the user has no task view settings' do
+        before(:each) do
+          @user.should_receive(:has_task_view_settings?).and_return(false)
+        end
+
+        it "should be redirected" do          
+          do_get
+          response.should be_success
+        end
+
+      end
+
+      describe 'and the user has task view settings' do
+        before(:each) do
+          @user.should_receive(:has_task_view_settings?).and_return(true)
+          @user.should_receive(:task_view_settings).and_return({:look_ahead => '1'})
+        end
+        
+        it 'should be redirected' do
+          do_get
+          response.should be_redirect
+        end
+        
+        it 'should redirect to dashboard with filters applied' do
+          do_get
+          response.should redirect_to('/?look_ahead=1')
+        end
+      end
     end
 
   end
@@ -79,5 +122,17 @@ describe DashboardController do
       
   end
 
-  
+  describe "#has_filter_applied?" do
+    it 'should be true if :look_ahead is a parameter' do
+      @controller.send(:has_a_filter_applied?, :look_ahead => '1').should be_true
+    end
+
+    it 'should be true if :look_back is a parameter' do
+      @controller.send(:has_a_filter_applied?, :look_back => '1').should be_true
+    end
+
+    it 'should return false unless :look_ahead or :look_back is present' do
+      @controller.send(:has_a_filter_applied?, {}).should be_false
+    end
+  end
 end

@@ -1504,6 +1504,98 @@ describe MorbidityEvent do
 
   end
 
+  describe 'filtering events' do
+    fixtures :users
+
+    before(:each) do
+      @user = users(:default_user)
+      User.stub!(:current_user).and_return(@user)
+      @event = MorbidityEvent.new(@event_hash)
+      @event.save!
+    end
+    
+    def create_task(custom_settings={})
+      task = Task.new({
+        :name => 'Do it',
+        :due_date => 1.day.from_now,
+        :event_id => @event.id,
+        :user_id  => @user.id
+      }.merge(custom_settings))
+      # don't really care if it's valid, just need to find it.
+      task.save(false)
+      yield @event, task
+    end
+
+    describe 'with only look ahead set' do
+
+      it 'should show future tasks that fall within filter' do
+        create_task do |event, task|
+          tasks = event.filter_tasks({:look_ahead => '1'})
+          tasks.size.should == 1
+        end
+      end
+
+      it 'should not show future tasks that fall outside the filter' do
+        create_task(:due_date => 3.days.from_now) do |event, task|
+          tasks = event.filter_tasks({:look_ahead => '1'})
+          tasks.size.should == 0
+        end
+      end
+
+      it 'should show today\'s tasks if look_ahead is set to zero' do
+        create_task(:due_date => 0.days.from_now) do |event, task|
+          event.filter_tasks(:look_ahead => '0').size.should == 1
+        end
+      end
+
+      it 'should show all old tasks if look_back is not set' do
+        create_task(:due_date => 1.day.ago) do |event, task|
+          event.filter_tasks(:look_ahead => '1').size.should == 1
+        end
+      end
+
+    end
+    
+    describe 'with only look back is set' do
+
+      it 'should show old tasks that fall within the filter' do
+        create_task(:due_date => 1.day.ago) do |event, task|
+          event.filter_tasks(:look_back => '3').size.should == 1
+        end
+      end
+      
+      it 'should not show old tasks that fall outside the filter' do
+        create_task(:due_date => 3.days.ago) do |event, task|
+          event.filter_tasks(:look_back => '1').size.should == 0
+        end
+      end
+
+    end
+
+    describe 'with look ahead and look back set' do
+      
+      it 'should show tasks between ends of filter' do
+        create_task(:due_date => 0.days.from_now) do |event, task|
+          event.filter_tasks(:look_back => '1', :look_ahead => '1').size.should == 1
+        end
+      end
+
+      it 'should not show tasks too far in the future' do
+        create_task(:due_date => 2.days.from_now) do |event, task|
+          event.filter_tasks(:look_back => '1', :look_ahead => '1').size.should == 0
+        end
+      end
+
+      it 'should not show tasks too far in the past' do
+        create_task(:due_date => 2.days.ago) do |event, task|
+          event.filter_tasks(:look_back => '1', :look_ahead => '1').size.should == 0
+        end
+      end
+
+    end
+
+  end
+
   describe "Routing an event" do
     fixtures :events, :participations, :entities, :entities_locations, :locations, :addresses, :telephones, :people, :places, :users, :participations_places
 

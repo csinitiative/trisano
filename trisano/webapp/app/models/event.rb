@@ -17,6 +17,7 @@
 
 class Event < ActiveRecord::Base
   include Blankable
+  include TaskFilter
   include Export::Cdc::EventRules
   
   after_update :save_associations
@@ -823,7 +824,7 @@ class Event < ActiveRecord::Base
   end
 
   private
-  
+
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")

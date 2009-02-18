@@ -16,7 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class User < ActiveRecord::Base
-  
+  include TaskFilter
+
   # Debt? Mess with these includes, see if they are helping or hurting
   has_many :role_memberships, :include => [:role, :jurisdiction], :dependent => :delete_all
   has_many :roles, :through => :role_memberships, :uniq => true
@@ -38,6 +39,7 @@ class User < ActiveRecord::Base
   validates_length_of :generational_qualifer, :maximum => 8, :allow_blank => true
 
   serialize :event_view_settings, Hash
+  serialize :task_view_settings, Hash
 
   after_validation :clear_base_error
   
@@ -135,6 +137,10 @@ class User < ActiveRecord::Base
   def self.current_user
     Thread.current[:user]
   end  
+  
+  def has_task_view_settings?
+    !task_view_settings.nil?
+  end
   
   protected
   

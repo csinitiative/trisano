@@ -1,0 +1,23 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the 
+-# terms of the GNU Affero General Public License as published by the 
+-# Free Software Foundation, either version 3 of the License, 
+-# or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but 
+-# WITHOUT ANY WARRANTY; without even the implied warranty of 
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License 
+-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- form_tag(home_path, :method => :get) do
+  %span.vert= "Show tasks for the last #{text_field_tag(:look_back, params[:look_back], :size => '3')} day#{params[:look_back] == '1' ? '' : 's'} (leave blank for all overdue tasks)."
+  %span.vert= "Show tasks for the next #{text_field_tag(:look_ahead, params[:look_ahead], :size => '3')} day#{params[:look_ahead] == '1' ? '' : 's'} (leave blank for all pending tasks)."
+  %span.vert Leaving a field blank shows all tasks in that direction.
+  %span.horiz= submit_tag 'Update'
+  %span.vert= link_to_function('Close', "Effect.BlindUp('task_view_settings')")

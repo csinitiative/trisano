@@ -81,6 +81,7 @@ Rails::Initializer.run do |config|
     require "routing/state"
     require 'will_paginate'
     require 'core_ext/string'
+    require 'task_filter'
   end
 
 end

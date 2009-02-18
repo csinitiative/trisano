@@ -26,6 +26,7 @@ class Task < ActiveRecord::Base
   validates_presence_of :user_id, :name
   validates_length_of :name, :maximum => 255, :allow_blank => true
   validates_inclusion_of :status, :in => VALID_STATUSES, :message => "is not valid"
+  validates_date :due_date
 
   before_validation :set_status
   before_save :create_note
