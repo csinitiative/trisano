@@ -55,35 +55,12 @@ describe DashboardController do
     describe 'with no filter applied' do
       before(:each) do
         @controller.should_receive(:has_a_filter_applied?).and_return(false)
+        @user.should_receive(:task_view_settings).and_return({:look_ahead => '0', :look_back => '0'})
       end
 
-      describe 'and the user has no task view settings' do
-        before(:each) do
-          @user.should_receive(:has_task_view_settings?).and_return(false)
-        end
-
-        it "should be redirected" do          
-          do_get
-          response.should be_success
-        end
-
-      end
-
-      describe 'and the user has task view settings' do
-        before(:each) do
-          @user.should_receive(:has_task_view_settings?).and_return(true)
-          @user.should_receive(:task_view_settings).and_return({:look_ahead => '1'})
-        end
-        
-        it 'should be redirected' do
-          do_get
-          response.should be_redirect
-        end
-        
-        it 'should redirect to dashboard with filters applied' do
-          do_get
-          response.should redirect_to('/?look_ahead=1')
-        end
+      it 'should redirect to dashboard with default filters applied' do
+        do_get
+        response.should redirect_to('/?look_ahead=0&look_back=0')
       end
     end
 

@@ -634,8 +634,8 @@ describe User, 'task view settings' do
     @user = User.create(:uid => 'tu', :user_name => 'taskowner')
   end
 
-  it 'should default to nil' do
-    @user.task_view_settings.should == nil
+  it 'should default to showing only today\'s tasks' do
+    @user.task_view_settings.should == {:look_back => 0, :look_ahead => 0}
   end
   
   it 'should store :days_back settings' do
@@ -644,9 +644,4 @@ describe User, 'task view settings' do
     @user.task_view_settings.should == {:days_back => 3}
   end
   
-  describe '#has_task_view_settings?' do
-    it 'should return false if task_view_settings are nil' do
-      @user.has_task_view_settings?.should be_false
-    end
-  end
 end

@@ -137,9 +137,9 @@ class User < ActiveRecord::Base
   def self.current_user
     Thread.current[:user]
   end  
-  
-  def has_task_view_settings?
-    !task_view_settings.nil?
+
+  def task_view_settings
+    read_attribute(:task_view_settings) || {:look_ahead => 0, :look_back => 0}
   end
   
   protected

@@ -29,11 +29,10 @@ class DashboardController < ApplicationController
             :look_ahead => params[:look_ahead], 
             :look_back => params[:look_back]}
           @user.update_attribute(:task_view_settings, query_options)
-        elsif @user.has_task_view_settings?
+          render
+        else
           redirect_to url_for(params.merge(@user.task_view_settings))
-          return
         end        
-        render
       end
       format.js do
         # Hmmm. not sure why I had to add the .html.haml here.
