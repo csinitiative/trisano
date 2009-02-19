@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-page.replace_html 'tasks', :partial => "tasks/list.html.haml", :locals => { :task_owner => @event }
+page.replace_html 'tasks', :partial => "tasks/list.html.haml", :locals => { :task_owner => @user }
   
-if !flash[:notice].nil?
-  page.replace_html 'task-message', "<span style='color:green'>#{flash[:notice]}</span>"
-  flash[:notice] = nil
-elsif !flash[:error].nil?
-  page.replace_html 'task-message', "<span style='color:red'>#{flash[:error]} #{@task.errors[:base] unless @task.errors[:base].nil?}</span>"
-  flash[:error] = nil
+if !flash[:notice].empty?
+  page.replace_html 'task-message', "<span style='color:green'>" + flash[:notice] + "</span>"
+  flash[:notice] = ""
+elsif !flash[:error].empty?
+  page.replace_html 'task-message', "<span style='color:red'>" + flash[:error] + "</span>"
+  flash[:error] = ""
 end

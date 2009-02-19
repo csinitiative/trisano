@@ -15,52 +15,23 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class EventTasksController < ApplicationController
+class UserTasksController < ApplicationController
 
-  before_filter :find_event
-  before_filter :can_update?
-  
+  before_filter :find_user
+
+  # we only respond to an ajax request.
   def index
     respond_to do |format|
-      format.html do
-        @task = Task.new
-        @task.event_id = @event.id
-        render :action => 'new'
-      end
       format.js do
         #Hmmmmm. Why do I have to add the .html.haml onto the partial?
-        render :partial => 'tasks/list.html.haml', :locals => { :task_owner => @event }
-      end
-    end
-  end
-
-  def new
-    @task = Task.new
-    @task.event_id = @event.id
-  end
-
-  def create
-    @task = Task.new(params[:task])
-
-    if !params[:task][:user_id].blank?
-      @task.user_id = params[:task][:user_id]
-    else
-      @task.user_id = User.current_user.id
-    end
-    
-    respond_to do |format|
-      if @task.save
-        flash[:notice] = 'Task was successfully created.'
-        format.html {redirect_to request.env["HTTP_REFERER"] }
-      else
-        format.html { render :action => "new" }
+        render :partial => "tasks/list.html.haml", :locals => {:task_owner => @user}
       end
     end
   end
 
   def update
-    @task = @event.tasks.find(params[:id])
-
+    @task = @user.tasks.find(params[:id])
+    
     # Updates currently only come in through a simple status-changing Ajax call
     if @task.update_attributes(params[:task])
       flash[:notice] = 'Task was successfully updated.'
@@ -72,17 +43,9 @@ class EventTasksController < ApplicationController
 
   private
 
-  def can_update?
-    @event ||= Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
-      return
-    end
-  end
-
-  def find_event
+  def find_user
     begin
-      @event = Event.find(params[:event_id])
+      @user = User.find(params[:user_id])
     rescue
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
     end

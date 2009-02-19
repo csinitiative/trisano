@@ -26,6 +26,7 @@ describe "/dashboard/index.html.haml" do
     before(:each) do
       @user = mock('current user')
       @user.stub!(:filter_tasks).and_return([])
+      @user.should_receive(:id).exactly(6).times.and_return(1)
       User.stub!(:current_user).and_return(@user)
       @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
     end
@@ -61,7 +62,7 @@ describe "/dashboard/index.html.haml" do
       @task = mock(@values[:name])
       @task.stub!(:id).and_return(1)
       @task.stub!(:status).and_return('pending')
-      @task.stub!(:event_id).and_return(1)
+      @task.should_receive(:user_id).and_return(1)
 
       @tasks = [@task]
       @values.each do |method, value|
@@ -69,8 +70,12 @@ describe "/dashboard/index.html.haml" do
       end
       @user = mock('user')
       @user.should_receive(:filter_tasks).and_return(@tasks)
+      @user.should_receive(:id).exactly(6).times.and_return(1)
       User.should_receive(:current_user).and_return(@user)
       @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
+      params[:look_back] = '0'
+      params[:look_ahead] = '0'
+      params['task'] = {'status' => 'complete'}
     end
 
     it 'should render tasks table on dashboard' do
@@ -87,11 +92,18 @@ describe "/dashboard/index.html.haml" do
         %w(Due&nbsp;date     due_date),
         %w(Category          category_name),
         %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
-        response.should have_tag("th") do
-          with_tag("a[onclick*=tasks_ordered_by=#{order_by}]")
-          with_tag("a", :text => text)
-        end
+        response.should have_tag("th a[onclick*=tasks_ordered_by=#{order_by}]", :text => text)
+        response.should have_tag("th a[onclick*=look_back=0]", :text => text)
       end
+    end
+
+    it 'should have controls that contain sorting and filtering params' do
+      render 'dashboard/index.html.haml'
+      response.should have_tag("td a[onclick*=look_back=0]", :text => 'Complete')
+      response.should have_tag("td a[onclick*=look_ahead=0]", :text => 'Complete')
+      response.should have_tag("td a[onclick*=look_back=0]", :text => 'N/A')
+      response.should have_tag("td a[onclick*=look_ahead=0]", :text => 'N/A')
+      response.should_not have_tag("td a[onclick*=complete]", :text => 'N/A')
     end
 
     it 'should render field data for tasks' do
@@ -175,11 +187,11 @@ describe "/dashboard/index.html.haml" do
 
       @task_values.stub!(:id).and_return(1)
       @task_values.stub!(:status).and_return('pending')
-      @task_values.stub!(:event_id).and_return(1)
+      @task_values.should_receive(:user_id).and_return(1)
 
       @task_nils.stub!(:id).and_return(2)
       @task_nils.stub!(:status).and_return('pending')
-      @task_nils.stub!(:event_id).and_return(1)
+      @task_nils.should_receive(:user_id).and_return(1)
 
       @tasks = [@task_values, @task_nils]
       @values.each do |method, value|
@@ -187,8 +199,9 @@ describe "/dashboard/index.html.haml" do
         @task_nils.stub!(method).and_return(nil)
       end
       @user = mock('user')
-      @user.should_receive(:filter_tasks).and_return(@tasks)
-      User.should_receive(:current_user).and_return(@user)
+      @user.should_receive(:filter_tasks).and_return(@tasks)      
+      @user.should_receive(:id).exactly(6).times.and_return(1)
+      User.should_receive(:current_user).and_return(@user)      
       @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
     end
 

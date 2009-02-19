@@ -78,27 +78,6 @@ describe DashboardController do
     
   end
 
-  describe "handling ajax GET /dashboard" do
-    
-    def do_xhr
-      user = mock('mock user')
-      controller.should_receive(:load_user)
-      User.should_receive(:current_user).and_return(user)
-      xhr :get, :index
-    end    
-
-    it 'should respond to xhr requests' do
-      do_xhr
-      response.should be_success
-    end
-
-    it 'should render the list tasks partial' do
-      do_xhr
-      response.should render_template('event_tasks/_list.html.haml')
-    end
-      
-  end
-
   describe "#has_filter_applied?" do
     it 'should be true if :look_ahead is a parameter' do
       @controller.send(:has_a_filter_applied?, :look_ahead => '1').should be_true

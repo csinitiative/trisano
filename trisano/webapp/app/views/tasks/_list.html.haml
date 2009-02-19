@@ -17,9 +17,7 @@
   %legend
     Event Tasks
 
-  - urls_hash =  %w(due_date name notes category_name priority user_name).inject({}) do |memo, field|
-    - memo[field] = task_owner.is_a?(Event) ? event_tasks_path(task_owner, :tasks_ordered_by => field) : params.merge(:tasks_ordered_by => field)
-    - memo
+  - urls_hash = sort_urls(task_owner)
   - tasks = task_owner.filter_tasks(params)
   - unless tasks.empty?
     #task-message{ :align => 'center' }
@@ -55,7 +53,10 @@
             %td
               =task.user_name        ? h(task.user_name) : '&nbsp;'
             %td
-              =task_action_links(task)
+              - if task_owner.is_a?(Event)
+                = event_task_action_links(task)
+              - else
+                = user_task_action_links(task)
 
   - else
     %span No tasks

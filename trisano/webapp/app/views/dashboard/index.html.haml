@@ -30,7 +30,7 @@
   #task_view_settings{:style => 'display: none;'}
     = render :partial => 'filter_tasks_form'
   #tasks
-    = render :partial => 'event_tasks/list', :locals => {:task_owner => User.current_user}
+    = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
     
 %br
 %br

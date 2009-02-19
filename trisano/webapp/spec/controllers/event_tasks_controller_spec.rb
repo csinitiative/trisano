@@ -112,7 +112,7 @@ describe EventTasksController do
 
     it 'should render the list tasks partial' do
       do_xhr
-      response.should render_template('_list.html.haml')
+      response.should render_template('tasks/_list.html.haml')
     end
       
   end

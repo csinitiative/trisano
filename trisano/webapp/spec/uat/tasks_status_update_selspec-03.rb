@@ -60,13 +60,13 @@ describe 'Marking a task as completed or as not applicable' do
 
   it 'should mark the task as complete from the task page' do
     @browser.click("link=Complete")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
     @browser.get_html_source.include?("task-complete").should be_true
   end
 
   it 'should mark the task as not applicable from the task page' do
     @browser.click("link=N/A")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 
@@ -79,26 +79,26 @@ describe 'Marking a task as completed or as not applicable' do
   
   it 'should mark the task as not applicable from the CMR edit page' do
     @browser.click("link=N/A")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 
   it 'should mark the task as complete from the CMR show page' do
     show_cmr(@browser)
     @browser.click("link=Complete")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
     @browser.get_html_source.include?("task-complete").should be_true
   end
 
   it 'should mark the task as not applicable from the CMR show page' do
     @browser.click("link=N/A")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 
   it 'all of the status changes should have generated clinical notes' do
     @browser.click("clinical-notes")
-    sleep(2)
+    sleep(3)
     note_count(@browser, "Clinical").should eql(6)
   end
 
