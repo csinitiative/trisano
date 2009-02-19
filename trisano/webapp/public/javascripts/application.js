@@ -133,13 +133,76 @@ function toggle_save_buttons(state) {
 }
 
 function contact_parent_address(id) {
-    new Ajax.Request('../../contact_events/copy_address/' + id, {
-        asynchronous: true,
-        evalScripts:  true,
-        onComplete: function(transport, json) { 
-            for (var key in json) 
-                if (json[key])
-                    document.getElementById('contact_event_active_patient__address_' + key).value = json[key];
-        }
-    });
+  new Ajax.Request('../../contact_events/copy_address/' + id, {
+    asynchronous: true,
+    evalScripts:  true,
+    onComplete: function(transport, json) { 
+      for (var key in json) 
+        if (json[key])
+          document.getElementById('contact_event_active_patient__address_' + key).value = json[key];
+    }
+  });
+}
+
+function global_shortcuts_init() {
+  shortcut.add("Ctrl+Shift+N", function() {
+    window.location = "/cmrs/new";
+  });
+  
+  shortcut.add("Ctrl+Shift+M", function() {
+    window.location = "/forms";
+  });
+
+  shortcut.add("Ctrl+Shift+.",function() {
+    window.location = "/search/people";
+  });
+
+  shortcut.add("Ctrl+Shift+Question",function(){
+    window.location = "/search/cmrs";
+  });
+
+  shortcut.add("Ctrl+Shift+,",function(){
+    window.location = "/cmrs";
+  });
+}
+
+function cmr_shortcuts_init() {
+  shortcut.add("Ctrl+Shift+X", function(e) {
+    myTabs.set('activeIndex', (
+        myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
+        0 : myTabs.get('activeIndex') + 1
+      ));
+    
+    //Grab the first thing to focus in the tab
+    YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+  }, 
+  { 
+    'type':'keypress',
+    'propagate':false,
+    'target':document 
+  });
+
+  shortcut.add("Ctrl+Shift+Z", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    myTabs.set('activeIndex', (
+        myTabs.get('activeIndex') == 0 ?
+        myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
+      ));
+    
+    YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+  },
+  { 
+    'type':'keypress',
+    'propagate':false,
+    'target':document 
+  });
+
+  shortcut.add("Ctrl+Shift+S", function() {
+    document.getElementById('save_and_exit_btn').focus();
+  });
 }

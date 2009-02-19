@@ -13,6 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+
 !!!
 %html
   %head
@@ -21,12 +22,12 @@
       = yield :title
 
     = stylesheet_link_tag 'grid', 'structure', 'typography', 'action', 'tabview', :cache => 'styles'
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'element-beta-min', 'tabview-min', :cache => 'base'
-
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'shortcut', 'element-beta-min', 'tabview-min', :cache => 'base'
+    
     / Calendar
     = calendar_date_select_includes
 
-  %body.yui-skin-sam
+  %body.yui-skin-sam{:onload=>"global_shortcuts_init();"}
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
