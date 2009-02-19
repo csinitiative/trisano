@@ -2,24 +2,24 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Event < ActiveRecord::Base
   include Blankable
   include TaskFilter
   include Export::Cdc::EventRules
-  
+
   after_update :save_associations
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
@@ -57,8 +57,8 @@ class Event < ActiveRecord::Base
 
   has_one :jurisdiction, :class_name => 'Participation', :conditions => ["role_id = ?", primary_jurisdiction_code_id]
 
-  has_many :contacts, 
-    :class_name => 'Participation',  
+  has_many :contacts,
+    :class_name => 'Participation',
     :foreign_key => "event_id",
     :conditions => ["role_id = ?", Code.contact_type_id],
     :order => 'created_at ASC',
@@ -121,7 +121,7 @@ class Event < ActiveRecord::Base
     Routing::State.states
   end
 
-  states['NEW'] = Routing::State.new({ 
+  states['NEW'] = Routing::State.new({
     :transitions => ["ASGD-LHD"],
     :action_phrase => nil,
     :priv_required => :create_event,
@@ -257,8 +257,8 @@ class Event < ActiveRecord::Base
     # A hash that provides a basic field index for the event forms. It maps the event form
     # attribute keys to some metadata that is used to drive core field and core follow-up
     # configurations in form builder.
-    # 
-    # Names do not have to match the field name on the form views. Names are used to 
+    #
+    # Names do not have to match the field name on the form views. Names are used to
     # drive the drop downs for core field and core follow up configurations. So more context
     # can be given to these names than might appear on the actual event forms, because in
     # drop down in form builder, 'Last name' isn't going to be enough information for the user.
@@ -271,20 +271,20 @@ class Event < ActiveRecord::Base
       Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                           WHERE e.deleted_at IS NULL
                           AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL 
+                          AND d.disease_id IS NOT NULL
                           AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
-                          AND c.the_code IN ('C', 'P', 'S') 
+                          AND c.the_code IN ('C', 'P', 'S')
                           AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
                         ")
     end
-      
+
     def deleted_ibis_records(start_date, end_date)
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect OR record has been soft-deleted
       Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                           WHERE e.sent_to_ibis = TRUE
                           AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL 
+                          AND d.disease_id IS NOT NULL
                           AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
                           AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
@@ -341,7 +341,7 @@ class Event < ActiveRecord::Base
 
     self.build_disease_event if self.disease_event.nil?
     self.disease_event.attributes = attributes
-  end  
+  end
 
   def new_contact_attributes=(contact_attributes)
     contact_attributes.each do |attributes|
@@ -389,7 +389,7 @@ class Event < ActiveRecord::Base
         event_data[:contact_type_id] = attributes.delete(:contact_type_id)
 
         contact.secondary_entity.person_temp.attributes = person
-        
+
         unless event_data.values_blank?
           contact.build_participations_contact if contact.participations_contact.nil?
           contact.participations_contact.attributes = event_data
@@ -434,8 +434,8 @@ class Event < ActiveRecord::Base
     return if notes_attributes["note"].blank?
     self.notes.build(notes_attributes)
     self.notes.last.user = User.current_user
-  end  
-  
+  end
+
   def existing_note_attributes=(notes_attributes)
     # existing notes can't be deleted or edited, but they can be marked as struck through
     notes.reject(&:new_record?).each do |note|
@@ -446,7 +446,7 @@ class Event < ActiveRecord::Base
 
   def add_note(message, note_type="administrative")
     self.notes << Note.new(:note => message, :note_type => note_type, :user => User.current_user)
-  end  
+  end
 
   # This method is used to add user selected fields and, if the timing is just right,
   # auto-assigned fields to an event.
@@ -454,7 +454,7 @@ class Event < ActiveRecord::Base
     forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
 
     # Accepts either form_ids or forms.  If forms, convert to form_ids
-    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end } 
+    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end }
 
     # Remember if this event has forms persisted with it already
     event_has_saved_forms = self.form_references.size > 0
@@ -509,19 +509,19 @@ class Event < ActiveRecord::Base
     else
       answers.each { |answer| answer.attributes = attributes[answer.id.to_s] }
     end
-  end  
+  end
 
   def new_answers=(attributes)
     answers.build(attributes)
   end
-  
+
   def new_checkboxes=(attributes)
     attributes.each { |key, value| answers.build(:question_id => key, :check_box_answer => value[:check_box_answer]) }
   end
-  
+
   def new_radio_buttons=(attributes)
     attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer], :export_conversion_value_id => value[:export_conversion_value_id]) }
-  end  
+  end
 
   def get_or_initialize_answer(question_id)
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
@@ -543,7 +543,7 @@ class Event < ActiveRecord::Base
     where_clause = " p3.type != 'PlaceEvent'"
     order_by_clause = "p3.type DESC, p3.primary_last_name, p3.primary_first_name ASC"
     issue_query = false
-    
+
     if !options[:event_type].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
@@ -555,7 +555,7 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
       where_clause += " p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
     end
-    
+
     if !options[:gender].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
@@ -566,15 +566,15 @@ class Event < ActiveRecord::Base
       else
         where_clause += "p3.primary_birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
       end
-      
+
     end
-    
+
     if !options[:event_status].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
       where_clause += "p3.event_status = '" + sanitize_sql_for_conditions(["%s", options[:event_status]]) + "'"
     end
-    
+
     if !options[:city].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
@@ -586,19 +586,21 @@ class Event < ActiveRecord::Base
       where_clause += " AND " unless where_clause.empty?
       where_clause += "a.county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
     end
-    
+
     if !options[:jurisdiction_id].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
       where_clause += "p3.jurisdiction_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+      jurisdiction = "j.entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
     else
       where_clause += " AND " unless where_clause.empty?
       allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
       allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
       allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
       where_clause += "p3.jurisdiction_id IN (" + allowed_ids_str.chop + ")"
+      jurisdiction = "j.entity_id IN ("+ allowed_ids_str.chop + ")"
     end
-    
+
     # Debt: The UI shows the user a format to use. Something a bit more robust
     # could be in place.
     if !options[:birth_date].blank?
@@ -611,66 +613,66 @@ class Event < ActiveRecord::Base
         where_clause += " AND " unless where_clause.empty?
         where_clause += "p3.primary_birth_date = '" + sanitize_sql_for_conditions(["%s", options[:birth_date]]) + "'"
       end
-      
+
     end
-    
+
     # Problem?
     if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
       issue_query = true
       where_clause += " AND " unless where_clause.empty?
-      
+
       if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-        where_clause += "p3.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + 
+        where_clause += "p3.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) +
           "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
       elsif !options[:entered_on_start].blank?
         where_clause += "p3.created_at > '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
       else
         where_clause += "p3.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
       end
-     
+
     end
-    
+
     # Debt: The sql_term building is duplicated in Person. Where do you
-    # factor out code common to models? Also, it may be that we don't 
+    # factor out code common to models? Also, it may be that we don't
     # need two different search avenues (CMR and People).
     if !options[:sw_last_name].blank? || !options[:sw_first_name].blank?
-    
+
       issue_query = true
-      
+
       where_clause += " AND " unless where_clause.empty?
-      
+
       if !options[:sw_last_name].blank?
         where_clause += "p3.primary_last_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_last_name]]) + "%'"
       end
-      
+
       if !options[:sw_first_name].blank?
         where_clause += " AND " unless options[:sw_last_name].blank?
         where_clause += "p3.primary_first_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_first_name]]) + "%'"
       end
-      
+
     elsif !options[:fulltext_terms].blank?
       issue_query = true
       soundex_codes = []
       raw_terms = options[:fulltext_terms].split(" ")
-      
+
       raw_terms.each do |word|
         soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
         fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
       end
-      
+
       fulltext_terms << soundex_codes unless soundex_codes.empty?
       sql_terms = fulltext_terms.join(" | ")
-      
+
       where_clause += " AND " unless where_clause.empty?
       where_clause += "vector @@ to_tsquery('#{sql_terms}')"
       order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
-      
+
     end
-    
+
     query = "
-    SELECT 
-           p3.event_id, 
-           p3.type, 
+    SELECT
+           p3.event_id,
+           p3.type,
            p3.primary_entity_id AS entity_id,
            p3.primary_first_name AS first_name,
            p3.primary_middle_name AS middle_name,
@@ -682,33 +684,33 @@ class Event < ActiveRecord::Base
            p3.event_onset_date,
            p3.primary_birth_gender_id AS birth_gender_id,
            p3.event_status,
-           p3.jurisdiction_id,
-           p3.jurisdiction_name, 
+           j.jurisdiction_id,
+           j.jurisdiction_name,
            p3.vector,
            p3.disease_onset_date,
            p3.created_at,
            p3.deleted_at,
            c.code_description AS gender,
-           a.city, 
+           a.city,
            co.code_description AS county
-    FROM 
-           ( SELECT 
+    FROM
+           ( SELECT DISTINCT ON(event_id)
                     p1.event_id, p1.type, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
                     p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
                     p1.event_status, p1.disease_onset_date, p1.created_at, p1.deleted_at, p2.jurisdiction_id, p2.jurisdiction_name
-             FROM 
-                    ( SELECT 
+             FROM
+                    ( SELECT
                              p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
                              people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
                              d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
                              people.birth_gender_id as primary_birth_gender_id,
                              e.event_status as event_status, e.type as type,
                              e.created_at, e.deleted_at, disease_events.disease_onset_date as disease_onset_date
-                      FROM   
+                      FROM
                              events e
-                      INNER JOIN  
+                      INNER JOIN
                              participations p on p.event_id = e.id
-                      INNER JOIN 
+                      INNER JOIN
                              ( SELECT DISTINCT ON
                                       (entity_id) *
                                FROM
@@ -716,51 +718,53 @@ class Event < ActiveRecord::Base
                                ORDER BY entity_id, created_at DESC
                               ) AS people
                                 ON people.entity_id = p.primary_entity_id
-                      LEFT OUTER JOIN 
-                            ( SELECT DISTINCT ON 
-                                     (event_id) * 
-                              FROM   
-                                     disease_events  
+                      LEFT OUTER JOIN
+                            ( SELECT DISTINCT ON
+                                     (event_id) *
+                              FROM
+                                     disease_events
                               ORDER BY event_id, created_at DESC
-                            ) AS disease_events 
+                            ) AS disease_events
                               ON disease_events.event_id = e.id
-                      LEFT OUTER JOIN 
+                      LEFT OUTER JOIN
                             diseases d ON disease_events.disease_id = d.id
-                      WHERE  
-                            p.primary_entity_id IS NOT NULL 
+                      WHERE
+                            p.primary_entity_id IS NOT NULL
                       AND   p.secondary_entity_id IS NULL
                     ) AS p1
-             FULL OUTER JOIN 
+             FULL OUTER JOIN
                    (
-                     SELECT 
-                            secondary_entity_id AS jurisdiction_id, 
+                     SELECT
+                            secondary_entity_id AS jurisdiction_id,
                             j.name AS jurisdiction_name,
                             p.event_id AS event_id
-                     FROM   
+                     FROM
                             events e
-                     INNER JOIN 
+                     INNER JOIN
                             participations p ON p.event_id = e.id
-                     LEFT OUTER JOIN 
+                     LEFT OUTER JOIN
                             codes c ON c.id = p.role_id
-                     LEFT OUTER JOIN 
-                           ( SELECT DISTINCT ON 
-                                    (entity_id) entity_id, 
-                                    name 
-                             FROM 
-                                    places 
-                             ORDER BY 
+                     LEFT OUTER JOIN
+                           ( SELECT DISTINCT ON
+                                    (entity_id) entity_id,
+                                    name
+                             FROM
+                                    places
+                             ORDER BY
                                     entity_id, created_at DESC
                            ) AS j ON j.entity_id = p.secondary_entity_id
-                     WHERE  c.code_description = 'Jurisdiction'
+                     WHERE  (c.the_code = 'J'
+                     OR c.the_code = 'SJ')
+                     AND #{jurisdiction}
                    ) AS p2 ON p1.event_id = p2.event_id
            ) AS p3
-    LEFT OUTER JOIN 
-           ( SELECT DISTINCT ON 
+    LEFT OUTER JOIN
+           ( SELECT DISTINCT ON
                     (entity_id) entity_id, location_id
              FROM
                     entities_locations, external_codes
              WHERE
-                    external_codes.code_name = 'yesno'  
+                    external_codes.code_name = 'yesno'
              AND
                     external_codes.the_code = 'Y'
              AND
@@ -768,19 +772,42 @@ class Event < ActiveRecord::Base
              ORDER BY
                     entity_id, entities_locations.created_at DESC
            ) AS el ON el.entity_id = p3.primary_entity_id
-    LEFT OUTER JOIN 
+    LEFT OUTER JOIN
            locations l ON l.id = el.location_id
-    LEFT OUTER JOIN 
+    LEFT OUTER JOIN
            addresses a ON a.location_id = l.id
-    LEFT OUTER JOIN 
+    LEFT OUTER JOIN
            external_codes co ON co.id = a.county_id
-    LEFT OUTER JOIN 
+    LEFT OUTER JOIN
            external_codes c ON c.id = p3.primary_birth_gender_id
-    WHERE 
+    LEFT OUTER JOIN
+          (
+            SELECT
+                    j.name AS jurisdiction_name,
+                    secondary_entity_id AS jurisdiction_id,
+                    p.event_id AS event_id
+            FROM
+                    events e
+            INNER JOIN
+                    participations p ON p.event_id = e.id
+            LEFT OUTER JOIN
+                    codes c ON c.id = p.role_id
+            LEFT OUTER JOIN
+                  ( SELECT DISTINCT ON
+                          (entity_id) entity_id,
+                          name
+                    FROM
+                          places
+                    ORDER BY
+                          entity_id, created_at DESC
+                  ) AS j ON j.entity_id = p.secondary_entity_id
+            WHERE c.the_code = 'J'
+    ) as j on j.event_id = p3.event_id
+    WHERE
            #{where_clause}
-    ORDER BY 
+    ORDER BY
            #{order_by_clause}"
-    
+
     find_by_sql(query) if issue_query
   end
 
@@ -809,7 +836,7 @@ class Event < ActiveRecord::Base
   def nested_attributes
     @nested_attributes
   end
-   
+
   # after find doesn't work unless its part of the actual class.
   def after_find
     self.cache_old_attributes
@@ -830,7 +857,7 @@ class Event < ActiveRecord::Base
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
     self.record_number = record_number
   end
-  
+
   def set_event_onset_date
     self.event_onset_date = Date.today
   end

@@ -21,6 +21,10 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'User functionality for searching for existing users' do
 
+  before(:all) do
+    @name = (get_unique_name(1))[0..18]
+  end
+
   it 'should find or add Charles Chuckles in Provo, Utah county' do
     @browser.open "/trisano/cmrs"
     click_nav_cmrs(@browser).should be_true
@@ -161,4 +165,37 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Charles Laurel').should be_true
   end
 
+  it "should create a cmr and route it to Davis County HD with Utah County HD as a secondary jurisdiction" do
+    @browser.open "/trisano/cmrs"
+    create_basic_investigatable_cmr(@browser, @name, "Pertussis", "Davis County Health Department")
+    @browser.click "link=Route to Local Health Depts."
+    @browser.click "Utah_County"
+    @browser.click "route_event_btn"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present("Davis County").should be_true
+    @browser.is_text_present("Utah County").should be_true
+end
+
+  it "should always display the primary jurisdiction in search results" do
+    navigate_to_cmr_search(@browser).should be_true
+    @browser.type('name', @name)
+    @browser.select "disease", "label=Pertussis"
+    @browser.click "//input[@type='submit']"
+    @browser.wait_for_page_to_load "30000"
+    @browser.get_text("//div[@id='main-content']/div[1]/table/tbody/tr[2]/td[8]").should == "Davis County Health Department"
+  end
+
+  it "should find the cmr searching on the primary jurisdiction" do
+    @browser.select "//select[@name='jurisdiction_id']", "label=Davis County Health Department"
+    @browser.click "//input[@type='submit']"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present(@name).should be_true
+  end
+
+  it "should find the cmr searching on the secondary jurisdiction" do
+    @browser.select "//select[@name='jurisdiction_id']", "label=Utah County Health Department"
+    @browser.click "//input[@type='submit']"
+    @browser.wait_for_page_to_load "30000"
+    @browser.is_text_present(@name).should be_true
+  end
 end
