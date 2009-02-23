@@ -16,8 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Task < ActiveRecord::Base
-
-  VALID_STATUSES = %w( pending complete not_applicable )
   
   belongs_to :user
   belongs_to :event

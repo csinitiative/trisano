@@ -151,6 +151,11 @@ module TrisanoHelper
     wordlist = ["Out of State","Weber-Morgan Health Department","Wasatch County Health Department","Utah State","Utah County Health Department","TriCounty Health Department","Tooele County Health Department","Summit County Public Health Department","Southwest Utah Public Health Department","Southeastern Utah District Health Department","Salt Lake Valley Health Department","Davis County Health Department","Central Utah Public Health Department","Bear River Health Department","Unassigned"]
     wordlist[rand(wordlist.size)]
   end
+
+  def click_logo(browser)
+    browser.click 'logo'
+    browser.wait_for_page_to_load($load_time)
+  end
   
   def click_nav_new_cmr(browser)
     browser.click 'link=NEW CMR'
@@ -252,7 +257,7 @@ module TrisanoHelper
         browser.is_text_present("Street number"))
   end
 
-    def add_contact(browser, contact_attributes, index = 1)
+  def add_contact(browser, contact_attributes, index = 1)
     click_core_tab(browser, CONTACTS)
     browser.click "link=Add a contact"
     sleep(1)
@@ -1086,12 +1091,42 @@ module TrisanoHelper
     browser.select("task_user_id", task_attributes[:task_user_id]) if task_attributes[:task_user_id]
     browser.click("task_submit")
     browser.wait_for_page_to_load($load_time)
-    return ( (browser.is_text_present("Task was successfully created.")) and (browser.is_text_present(@show_task_name)) )
+    return browser.is_text_present("Task was successfully created.")
+  end
+
+  # Debt: Dups add_task
+  def edit_task(browser, task_attributes={})
+    browser.click("link=Edit task")
+    browser.wait_for_page_to_load($load_time)
+    browser.type("task_name", task_attributes[:task_name])
+    browser.type("task_notes", task_attributes[:task_notes]) if task_attributes[:task_notes]
+    browser.select("task_category_id", task_attributes[:task_category]) if task_attributes[:task_category]
+    browser.select("task_status", task_attributes[:task_status]) if task_attributes[:task_status]
+    browser.select("task_priority", task_attributes[:task_priority]) if task_attributes[:task_priority]
+    browser.type("task_due_date", task_attributes[:task_due_date]) if task_attributes[:task_due_date]
+    browser.select("task_user_id", task_attributes[:task_user_id]) if task_attributes[:task_user_id]
+    browser.click("task_submit")
+    browser.wait_for_page_to_load($load_time)
+    return browser.is_text_present("Task was successfully updated.")
   end
 
   def update_task_status(browser, status_label)
     browser.select('css=select[id^=task-status-change-]', "label=#{status_label}")
     sleep 3 # Debt: Feed off something else so this sleep can get dumped
+  end
+
+  def change_task_filter(browser, options = {})
+    browser.click("link=Change filter")
+    sleep 3
+    browser.type("look_ahead", options[:look_ahead]) unless options[:look_ahead].nil?
+    browser.type("look_back", options[:look_back]) unless options[:look_back].nil?
+    browser.click("update_tasks_filter")
+    browser.wait_for_page_to_load($load_time)
+  end
+
+  def is_text_present_in(browser, html_id, text)
+    result = browser.get_eval("selenium.browserbot.getCurrentWindow().$('#{html_id}').innerHTML.indexOf('#{text}') > 0")
+    (result == "false") ? false : true
   end
   
   private

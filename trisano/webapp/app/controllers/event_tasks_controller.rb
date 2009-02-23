@@ -64,6 +64,7 @@ class EventTasksController < ApplicationController
 
   def update
     @task = @event.tasks.find(params[:id])
+    @task.user_id = params[:task][:user_id] unless params[:task][:user_id].blank?
     
     respond_to do |format|
       if @task.update_attributes(params[:task])
