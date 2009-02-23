@@ -184,7 +184,7 @@ function global_shortcuts_init() {
 }
 
 function cmr_shortcuts_init() {
-  shortcut.add("Ctrl+Shift+X", function(e) {
+  shortcut.add("Ctrl+Shift+X", function() {
     myTabs.set('activeIndex', (
         myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
         0 : myTabs.get('activeIndex') + 1
@@ -194,16 +194,9 @@ function cmr_shortcuts_init() {
     YAHOO.util.Dom.getElementsBy(function(el) {
         return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
       }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-  }, 
-  { 
-    'type':'keypress',
-    'propagate':false,
-    'target':document 
   });
 
-  shortcut.add("Ctrl+Shift+Z", function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+  shortcut.add("Ctrl+Shift+Z", function() {
     myTabs.set('activeIndex', (
         myTabs.get('activeIndex') == 0 ?
         myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
@@ -212,11 +205,6 @@ function cmr_shortcuts_init() {
     YAHOO.util.Dom.getElementsBy(function(el) {
         return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
       }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-  },
-  { 
-    'type':'keypress',
-    'propagate':false,
-    'target':document 
   });
 
   shortcut.add("Ctrl+Shift+S", function() {
