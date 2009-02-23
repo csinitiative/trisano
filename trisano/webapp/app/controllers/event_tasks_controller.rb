@@ -39,6 +39,10 @@ class EventTasksController < ApplicationController
     @task.event_id = @event.id
   end
 
+  def edit
+    @task = @event.tasks.find(params[:id])
+  end
+
   def create
     @task = Task.new(params[:task])
 
@@ -60,12 +64,16 @@ class EventTasksController < ApplicationController
 
   def update
     @task = @event.tasks.find(params[:id])
-
-    # Updates currently only come in through a simple status-changing Ajax call
-    if @task.update_attributes(params[:task])
-      flash[:notice] = 'Task was successfully updated.'
-    else
-      flash[:error] = 'Could not update task.'
+    
+    respond_to do |format|
+      if @task.update_attributes(params[:task])
+        flash[:notice] = 'Task was successfully updated.'
+        format.html { redirect_to request.env["HTTP_REFERER"] }
+        format.js { }
+      else
+        format.html { render :action => "edit" }
+        format.js { flash[:error] = 'Could not update task.' }
+      end
     end
     
   end

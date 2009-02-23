@@ -110,7 +110,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]
 
   # These are the tasks in use with and available to an event
-  map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :create, :update]
+  map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :edit, :create, :update]
 
   # These are the tasks for a particular user.
   map.resources :tasks, :path_prefix => '/users/:user_id',   :name_prefix => 'user_',  :controller => 'user_tasks',  :only => [:index, :update]   

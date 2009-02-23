@@ -190,6 +190,37 @@ describe EventTasksController do
 
   end
 
+  describe "handling GET /events/1/tasks/1/edit" do
+
+    before(:each) do
+      mock_user
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @proxy = mock('proxy')
+      @proxy.stub!(:find).and_return(@task)
+      @event.stub!(:tasks).and_return(@proxy)
+    end
+
+    def do_get
+      get :edit, :event_id => "1", :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+
+    it "should render edit template" do
+      do_get
+      response.should render_template('edit')
+    end
+
+    it "should assign the found task for the view" do
+      do_get
+      assigns[:task].should equal(@task)
+    end
+  end
+
   describe "handling POST /events/1/tasks with update event entitlement" do
 
     before(:each) do
@@ -287,6 +318,7 @@ describe EventTasksController do
   describe "handling PUT /events/1/task/1 with update event entitlement" do
 
     before(:each) do
+      request.env['HTTP_REFERER'] = "/some_path"
       @task = mock_model(Task)
       @user.stub!(:is_entitled_to_in?).and_return(true)
       @task.stub!(:user_id).and_return(nil)
@@ -303,8 +335,51 @@ describe EventTasksController do
         put :update, :task => {}
       end
 
-      it "should find the task requested" do
+      it "should redirect to the referer" do
         do_put
+        response.should redirect_to("/some_path")
+      end
+
+      it "should set the flash notice to a success message" do
+        do_put
+        flash[:notice].should eql("Task was successfully updated.")
+      end
+
+    end
+
+    describe "with failed update" do
+
+      def do_put
+        @task.should_receive(:update_attributes).and_return(false)
+        put :update, :task => {}
+      end
+
+      it "should re-render 'edit'" do
+        do_put
+        response.should render_template('edit')
+      end
+
+    end
+  end
+
+    describe "handling PUT /events/1/task/1 with update event entitlement through Ajax request" do
+
+    before(:each) do
+      request.env["HTTP_ACCEPT"] = "application/javascript"
+      @task = mock_model(Task)
+      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @task.stub!(:user_id).and_return(nil)
+
+      @proxy = mock('proxy')
+      @proxy.stub!(:find).and_return(@task)
+      @event.stub!(:tasks).and_return(@proxy)
+    end
+
+    describe "with successful update" do
+
+      def do_put
+        @task.should_receive(:update_attributes).and_return(true)
+        put :update, :task => {}
       end
 
       it "should render 'update'" do
@@ -324,10 +399,6 @@ describe EventTasksController do
       def do_put
         @task.should_receive(:update_attributes).and_return(false)
         put :update, :task => {}
-      end
-
-      it "should find the task requested" do
-        do_put
       end
 
       it "should render 'update'" do

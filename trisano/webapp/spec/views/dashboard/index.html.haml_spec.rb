@@ -51,6 +51,8 @@ describe "/dashboard/index.html.haml" do
   describe 'with user tasks' do
 
     before(:each) do
+      @event = mock('event')
+      
       @values = {
         :name          => 'First task',
         :due_date      => Date.today,
@@ -62,8 +64,9 @@ describe "/dashboard/index.html.haml" do
       @task = mock(@values[:name])
       @task.stub!(:id).and_return(1)
       @task.stub!(:status).and_return('pending')
+      @task.stub!(:event).and_return(@event)
       @task.should_receive(:user_id).and_return(1)
-
+      
       @tasks = [@task]
       @values.each do |method, value|
         @task.should_receive(method).at_least(2).times.and_return(value)
@@ -99,11 +102,11 @@ describe "/dashboard/index.html.haml" do
 
     it 'should have controls that contain sorting and filtering params' do
       render 'dashboard/index.html.haml'
-      response.should have_tag("td a[onclick*=look_back=0]", :text => 'Complete')
-      response.should have_tag("td a[onclick*=look_ahead=0]", :text => 'Complete')
-      response.should have_tag("td a[onclick*=look_back=0]", :text => 'N/A')
-      response.should have_tag("td a[onclick*=look_ahead=0]", :text => 'N/A')
-      response.should_not have_tag("td a[onclick*=complete]", :text => 'N/A')
+      response.should have_tag("td select[onchange*=look_back=0]")
+      response.should have_tag("td select[onchange*=look_ahead=0]")
+      response.should have_tag("td select[onchange*=look_back=0]")
+      response.should have_tag("td select[onchange*=look_ahead=0]")
+      response.should_not have_tag("td select[onchange*=complete]")
     end
 
     it 'should render field data for tasks' do
@@ -168,6 +171,8 @@ describe "/dashboard/index.html.haml" do
 
   describe 'with nil field comparisons in user tasks' do
     before(:each) do
+      @event = mock('event')
+      
       @values = {
         :name          => 'First task',
         :due_date      => Date.today,
@@ -187,10 +192,12 @@ describe "/dashboard/index.html.haml" do
 
       @task_values.stub!(:id).and_return(1)
       @task_values.stub!(:status).and_return('pending')
+      @task_values.stub!(:event).and_return(@event)
       @task_values.should_receive(:user_id).and_return(1)
 
       @task_nils.stub!(:id).and_return(2)
       @task_nils.stub!(:status).and_return('pending')
+      @task_nils.stub!(:event).and_return(@event)
       @task_nils.should_receive(:user_id).and_return(1)
 
       @tasks = [@task_values, @task_nils]

@@ -18,43 +18,72 @@
 module TasksHelper
 
   def event_task_action_links(task)
-    task_action_links(task, :controller => :event_tasks, :event_id => task.event_id)
+    task_action_links(task, :controller => :event_tasks, :owner_id => task.event_id)
   end
 
   def user_task_action_links(task)
-    task_action_links(task, :controller => :user_tasks, :user_id => task.user_id)
+    task_action_links(task, :controller => :user_tasks, :owner_id => task.user_id)
   end
   
   def task_action_links(task, options = {})
+    result = ""
     options = (params || {}).merge(options)
     options = options.merge(:action => 'update', :id => task.id)
-
-    result = ""
-    if task.status != "complete"
-      result << link_to_remote("Complete", :url => options.merge(:task => {'status' => 'complete'}), :method => :put )
-    else
-      result << "<b>Complete</b>"
+    path = update_status_path(options)
+    
+    result << %Q{<select id="task-status-change-#{task.id}" onchange="updateStatusRequest('#{path}', this.value)">}
+    result << options_for_select(Task.status_array, task.status)
+    result << "</select>"
+    result << "<br/>"
+    
+    if task.event.is_a?(MorbidityEvent)
+      result << link_to("Edit&nbsp;event", edit_cmr_path(task.event))
+    elsif
+      result << link_to("Edit&nbsp;event", edit_contact_event_path(task.event))
     end
 
     result << "&nbsp;|&nbsp;"
-    
-    if task.status != "not_applicable"
-      result << link_to_remote("N/A", :url => options.merge(:task => {'status' => "not_applicable"}), :method => :put )
-    else
-      result << "<b>N/A</b>"
-    end
-    
+    result << link_to("Edit&nbsp;task", edit_event_task_path(task.event, task))
   end
 
   def sort_urls(task_owner)
     prefix = task_owner.is_a?(Event) ? 'event' : 'user'
     %w(due_date name notes category_name priority user_name).inject({}) do |memo, field|
       memo[field] = params.merge(:controller => "#{prefix}_tasks".to_sym,
-                                 :action => :index,
-                                 "#{prefix}_id".to_sym => task_owner.id, 
-                                 :tasks_ordered_by => field)
+        :action => :index,
+        "#{prefix}_id".to_sym => task_owner.id,
+        :tasks_ordered_by => field)
       memo
     end
   end
+
+  private
+
+  # Manually builds the URL for updating via the Ajaxy status drop-down. Doesn't do a
+  # straight merge of options because there can be some extra cruft in there that
+  # throws off the update. Could be cleaned up a bit, but works as is across the various
+  # places the task list is displayed.
+  def update_status_path(options)
+    result = ""
+    
+    url_options = {
+      :controller => options[:controller],
+      :action => options["action"],
+      :id => options["id"]
+    }
+    
+    if options[:controller].to_s.split('_')[0] == "event"
+      url_options[:event_id] = options["owner_id"]
+    else
+      url_options[:user_id] = options["owner_id"]
+    end
+
+    url_options[:look_back] = options[:look_back] unless options[:look_back].nil?
+    url_options[:look_ahead] = options[:look_ahead] unless options[:look_ahead].nil?
+    url_options[:tasks_ordered_by] = options[:tasks_ordered_by] unless options[:tasks_ordered_by].nil?
+
+    result << url_for( url_options )
+  end
+
     
 end

@@ -23,9 +23,19 @@ class Task < ActiveRecord::Base
   belongs_to :event
   belongs_to :category, :class_name => 'ExternalCode', :foreign_key => :category_id
 
+  class << self
+    def status_array
+      [["Pending", "pending"], ["Complete", "complete"], ["Not applicable", "not_applicable"]]
+    end
+
+    def valid_statuses
+      @valid_statuses ||= status_array.map { |status| status.last }
+    end
+  end
+  
   validates_presence_of :user_id, :name
   validates_length_of :name, :maximum => 255, :allow_blank => true
-  validates_inclusion_of :status, :in => VALID_STATUSES, :message => "is not valid"
+  validates_inclusion_of :status, :in => self.valid_statuses, :message => "is not valid"
   validates_date :due_date
 
   before_validation :set_status

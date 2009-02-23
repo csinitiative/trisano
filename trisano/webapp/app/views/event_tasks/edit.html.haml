@@ -14,24 +14,23 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Add Event Task
+  Edit Event Task
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
 
-#new-task-form
+#edit-task-form
 
   %h2
-    New Task
+    Edit Task
 
   = error_messages_for :task
 
-  - form_for(@task, :url => event_tasks_path(@event)) do |f|
+  - form_for(:task, @task, :url => { :controller => 'event_tasks', :action => 'update' }, :html => { :method => :put } ) do |f|
     = render :partial => "form", :locals => { :f => f }
-
     %br{ :clear => 'all' }
     %br
-    = f.submit "Create"
+    = f.submit "Update"
 
 %br
 

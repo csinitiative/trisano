@@ -40,7 +40,7 @@ describe Task do
 
   it 'should allow updates with valid statuses' do
     @task.save!
-    Task::VALID_STATUSES.each do |status|
+    Task.valid_statuses.each do |status|
       @task.status = status
       @task.save.should be_true
     end

@@ -59,40 +59,34 @@ describe 'Marking a task as completed or as not applicable' do
   end
 
   it 'should mark the task as complete from the task page' do
-    @browser.click("link=Complete")
-    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Complete")
     @browser.get_html_source.include?("task-complete").should be_true
   end
 
   it 'should mark the task as not applicable from the task page' do
-    @browser.click("link=N/A")
-    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Not applicable")
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 
   it 'should mark the task as complete from the CMR edit page' do
     edit_cmr(@browser)
-    @browser.click("link=Complete")
-    sleep 2 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Complete")
     @browser.get_html_source.include?("task-complete").should be_true
   end
-  
+
   it 'should mark the task as not applicable from the CMR edit page' do
-    @browser.click("link=N/A")
-    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Not applicable")
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 
   it 'should mark the task as complete from the CMR show page' do
     show_cmr(@browser)
-    @browser.click("link=Complete")
-    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Complete")
     @browser.get_html_source.include?("task-complete").should be_true
   end
 
   it 'should mark the task as not applicable from the CMR show page' do
-    @browser.click("link=N/A")
-    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+    update_task_status(@browser, "Not applicable")
     @browser.get_html_source.include?("task-not-applicable").should be_true
   end
 

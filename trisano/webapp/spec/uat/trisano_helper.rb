@@ -1088,6 +1088,11 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return ( (browser.is_text_present("Task was successfully created.")) and (browser.is_text_present(@show_task_name)) )
   end
+
+  def update_task_status(browser, status_label)
+    browser.select('css=select[id^=task-status-change-]', "label=#{status_label}")
+    sleep 3 # Debt: Feed off something else so this sleep can get dumped
+  end
   
   private
   
