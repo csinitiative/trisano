@@ -23,10 +23,7 @@ class DashboardController < ApplicationController
   def index
     @user = User.current_user
     if has_a_filter_applied?(params)
-      query_options = {
-        :look_ahead => params[:look_ahead], 
-        :look_back => params[:look_back]}
-      @user.update_attribute(:task_view_settings, query_options)
+      @user.store_as_task_view_settings(params)
       render
     else
       redirect_to url_for(params.merge(@user.task_view_settings))

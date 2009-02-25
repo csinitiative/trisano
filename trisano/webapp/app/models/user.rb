@@ -127,9 +127,13 @@ class User < ActiveRecord::Base
     end
     assignees.uniq.sort_by { |assignee| assignee.best_name }
   end
-  
+
+  def self.default_task_assignees
+    User.task_assignees_for_jurisdictions(
+      User.current_user.jurisdictions_for_privilege(:assign_task_to_user))
+  end
+
   # Convenience methods to find/set the current user on the thread from anywhere in the app
-  
   def self.current_user=(user)
     Thread.current[:user] = user
   end
@@ -141,6 +145,15 @@ class User < ActiveRecord::Base
   def task_view_settings
     read_attribute(:task_view_settings) || {:look_ahead => 0, :look_back => 0}
   end
+
+  def store_as_task_view_settings(view_settings)    
+    unless view_settings.nil?
+      view_settings.each do |k, v|
+        view_settings.delete(k) unless task_view_filters.include?(k)
+      end
+    end
+    update_attribute(:task_view_settings, view_settings)
+  end
   
   protected
   
@@ -148,4 +161,10 @@ class User < ActiveRecord::Base
     errors.delete(:role_memberships)
   end
 
+  private 
+
+  def task_view_filters
+    [:look_ahead, :look_back, :disease_filter, :tasks_ordered_by]
+  end
+  
 end

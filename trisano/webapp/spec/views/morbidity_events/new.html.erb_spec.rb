@@ -18,11 +18,15 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe '/morbidity_events/new.html.erb' do
-
+  
   before(:each) do
     @user = mock_user
     User.stub!(:current_user).and_return(@user)
-
+    @update_event = mock('update_event')
+    @entitlements = mock('entitlements')
+    @entitlements.stub!(:for_jurisdiction).and_return([])
+    @update_event.stub!(:entitlements).and_return(@entitlements)
+    Privilege.stub!(:update_event).and_return(@update_event)
     @event = MorbidityEvent.new_event_tree
     
     assigns[:event] = @event

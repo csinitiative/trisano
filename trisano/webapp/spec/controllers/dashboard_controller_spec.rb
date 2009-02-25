@@ -33,7 +33,7 @@ describe DashboardController do
       
       before(:each) do
         @controller.should_receive(:has_a_filter_applied?).and_return(true)
-        User.current_user.should_receive(:update_attribute).with(:task_view_settings, an_instance_of(Hash))
+        User.current_user.should_receive(:store_as_task_view_settings).with(an_instance_of(Hash))
       end
 
       it "should be successful" do

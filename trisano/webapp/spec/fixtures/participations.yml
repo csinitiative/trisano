@@ -141,3 +141,9 @@ patient_for_event_queue:
   role_id: 2301
   event_id: 6
   primary_entity_id: 111
+
+task_jurisdiction:
+  id: 1001
+  role_id: 2305
+  event_id: 1001
+  secondary_entity_id: 102

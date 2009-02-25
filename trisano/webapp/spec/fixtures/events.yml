@@ -47,3 +47,8 @@ has_event_queue:
   event_queue_id: 1
   event_onset_date: 2008-03-11
   type: MorbidityEvent
+
+task_event:
+  id: 1001
+  type: MorbidityEvent
+  

@@ -63,8 +63,20 @@ describe User, "loaded from fixtures" do
       assignees = User.task_assignees_for_jurisdictions(entities(:Summit_County).id)
       assignees.size.should == 0
     end
+
+    describe 'using default rules for task assignees' do 
+      before(:each) do
+        @user = users :default_user
+        User.current_user = @user
+      end
+
+      it 'should return users in jurisdiction where current user has assign_task_to_user rights' do
+        User.default_task_assignees.size.should == 2
+      end
+    end
   end
-  
+
+
 end
 
 describe User, "Setting role memberships and entitlements via User attributes" do
@@ -643,5 +655,36 @@ describe User, 'task view settings' do
     @user.save!
     @user.task_view_settings.should == {:days_back => 3}
   end
+
+  describe '#store_as_task_view_settings' do
+    it 'should reset to default settings w/  nil' do
+      @user.store_as_task_view_settings(nil)
+      @user.reload
+      @user.task_view_settings.should == {:look_back => 0, :look_ahead => 0}
+    end
+
+    it 'should only store values that are meaningful as view settings' do
+      settings_hash = {
+        :look_ahead => 0, 
+        :look_back => 0, 
+        :disease_filter => [0, 1],
+        :junk_value => 0,
+        :tasks_ordered_by => :due_date}
+      @user.store_as_task_view_settings(settings_hash)
+      @user.task_view_settings.should == {
+        :look_ahead => 0,
+        :look_back => 0,
+        :disease_filter => [0, 1], 
+        :tasks_ordered_by => :due_date}
+    end
+      
+
+    it 'should store an empty hash' do
+      @user.store_as_task_view_settings({})
+      @user.reload
+      @user.task_view_settings.should == {}
+    end
+  end
   
 end
+

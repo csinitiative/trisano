@@ -76,7 +76,7 @@ class Task < ActiveRecord::Base
 
   def validate_task_assignment
     unless self.user_id.blank?
-      task_assignee_ids = User.task_assignees_for_jurisdictions(User.current_user.jurisdictions_for_privilege(:assign_task_to_user)).collect { |user| user.id }
+      task_assignee_ids = User.default_task_assignees.collect(&:id)      
       self.errors.add_to_base("Insufficient privileges for task assignment.") unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
     end
   end

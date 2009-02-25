@@ -72,8 +72,11 @@ describe Task do
     end
 
     it 'should allow assignment to a user with the update_cmr privilege' do
-      @task.user_id = users(:update_cmr_user).id
-      @task.save.should be_true
+      @assignees = mock('assignees')
+      @assignees.should_receive(:id).and_return(3)
+      User.stub!(:default_task_assignees).and_return([@assignees])
+      @task.user_id = users(:update_cmr_user).id      
+      @task.save!
     end
 
     it 'should not allow assignment to a user with the view_cmr privilege' do

@@ -17,20 +17,26 @@
 
 module TaskFilter
   
-  def filter_tasks(options={})    
-    association = self.is_a?(Event) ? 'event_id' : 'user_id'
-    look_ahead = convert_integer(options[:look_ahead])
-    look_back  = convert_integer(options[:look_back])
-    case
-    when look_back && look_ahead
-      Task.find(:all, :conditions => ["#{association} = ? and due_date between ? and ?", self.id, Date.today - look_back, Date.today + look_ahead])
-    when look_ahead
-      Task.find(:all, :conditions => ["#{association} = ? and due_date <= ?", self.id, Date.today + look_ahead])
-    when look_back
-      Task.find(:all, :conditions => ["#{association} = ? and due_date >= ?", self.id, Date.today - look_back])
+  def filter_tasks(options={})
+    filters = [:days_filter, :disease_filter, :jurisdictions_filter, :task_status_filter]
+    conditions = {:sql => [], :values => []}
+    if self === Event
+      conditions[:sql] << "tasks.events_id = ?"
+      conditions[:values] = self.id
     else
-      self.tasks
+      filters.unshift(:users_filter)
     end
+
+    filters.each do |filter|
+      sql, values = send(filter, options)
+      conditions[:sql] << sql if sql
+      conditions[:values] += values if values
+    end    
+
+    find_options = {}
+    find_options[:conditions] = [conditions[:sql].join(' AND ')] + conditions[:values]
+    find_options[:include] = { :event => { :disease_event => { :disease => {} }, :all_jurisdictions => { :secondary_entity => { :places => {} } } } }
+    Task.find(:all, find_options)
   end
 
   private
@@ -44,6 +50,52 @@ module TaskFilter
     end
   end
 
+  def users_filter(options)
+    users = (options[:users] || []).collect(&:to_i)
+    allowed_users = User.default_task_assignees.collect(&:id)
+    viewable_users = users.select {|user| allowed_users.include?(user)}
+    user_ids = [User.current_user.id] + viewable_users
+    ['tasks.user_id IN (?)', [user_ids.uniq]]
+  end
+
+  def jurisdictions_filter(options)
+    if options[:jurisdictions]
+      jurisdictions = options[:jurisdictions].collect(&:to_i)
+      allowed_jurisdictions = User.current_user.jurisdictions_for_privilege(:approve_event_at_state).collect(&:id)
+      viewable_jurisdictions = jurisdictions.select {|j| allowed_jurisdictions.include?(j)}
+      ['places.id IN (?)', [viewable_jurisdictions.uniq]]
+    else
+      [nil, nil]
+    end
+  end
+
+  def days_filter(options)
+    look_ahead = convert_integer(options[:look_ahead])
+    look_back  = convert_integer(options[:look_back])
+    case
+    when look_back && look_ahead
+      ["tasks.due_date between ? and ?", [Date.today - look_back, Date.today + look_ahead]]
+    when look_ahead
+      ["tasks.due_date <= ?", [Date.today + look_ahead]]
+    when look_back
+      ["tasks.due_date >= ?", [Date.today - look_back]]
+    else
+      [nil, nil]
+    end
+  end
+
+  def disease_filter(options)
+    result = [nil, nil]
+    unless options[:disease_filter].nil?
+      result[0] =  "diseases.id IN (?)"
+      result[1] = [options[:disease_filter]]
+    end
+    result
+  end
+
+  def task_status_filter(options)
+    filter = options[:task_statuses] || []
+    statuses = filter.empty? ? Task.valid_statuses : filter
+    ['tasks.status IN (?)', [statuses]]
+  end
 end
-
-
