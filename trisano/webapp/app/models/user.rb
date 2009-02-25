@@ -148,11 +148,9 @@ class User < ActiveRecord::Base
   end
 
   def store_as_task_view_settings(params)    
-    unless params.nil?
-      view_settings = params.dup
-      view_settings.each do |k, v|
-        view_settings.delete(k) unless User.task_view_filters.include?(k)
-      end
+    view_settings = {}
+    (params || []).each do |key, value|       
+      view_settings[key] = value if User.task_view_filters.include?(key.to_sym)
     end
     update_attribute(:task_view_settings, view_settings)
   end

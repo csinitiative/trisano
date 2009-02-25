@@ -19,5 +19,12 @@
   %span.vert= "Show tasks for the last #{text_field_tag(:look_back, params[:look_back], :size => '3')} day#{params[:look_back] == '1' ? '' : 's'} (leave blank for all overdue tasks)."
   %span.vert= "Show tasks for the next #{text_field_tag(:look_ahead, params[:look_ahead], :size => '3')} day#{params[:look_ahead] == '1' ? '' : 's'} (leave blank for all pending tasks)."
   %span.vert Leaving a field blank shows all tasks in that direction.
+  %span.vert
+    %label Disease Filter
+  %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
+    %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
+      - Disease.find(:all).each do |disease|
+        = "<label>" + check_box_tag("disease_filter[]", disease.id, (params[:disease_filter] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + disease.disease_name + "</label>"
+
   %span.horiz= submit_tag 'Update', :id => 'update_tasks_filter'
   %span.vert= link_to_function('Close', "Effect.BlindUp('task_view_settings')")

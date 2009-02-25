@@ -161,6 +161,21 @@ describe "/dashboard/index.html.haml" do
         response.should have_tag("input#look_ahead")
       end
 
+      it 'should have a disease filter label' do
+        render 'dashboard/index.html.haml'
+        response.should have_tag("label", :text => 'Disease Filter')
+      end
+
+      it 'should have a list of disease check boxes' do
+        disease = mock('disease')
+        disease.should_receive(:id).twice.and_return('id')
+        disease.should_receive(:disease_name).twice.and_return('Sample Disease')
+        Disease.should_receive(:find).with(:all).and_return([disease])
+        render 'dashboard/index.html.haml'
+        response.should have_tag("label input[type=checkbox]")
+        response.should have_tag("label", :text => /Sample Disease/)
+      end
+
       it 'should have a submit button' do
         render 'dashboard/index.html.haml'
         response.should have_tag("input[type=submit]")
