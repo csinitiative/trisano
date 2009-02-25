@@ -22,6 +22,12 @@ describe '/morbidity_events/show.html.erb' do
   before(:each) do
     @user = mock_user
     User.stub!(:current_user).and_return(@user)
+
+    @update_event = mock('update_event')
+    @entitlements = mock('entitlements')
+    @entitlements.stub!(:for_jurisdiction).and_return([])
+    @update_event.stub!(:entitlements).and_return(@entitlements)
+    Privilege.stub!(:update_event).and_return(@update_event)
     
     @patient_entity = mock('patient entity')
     @patient_entity.stub!(:person).and_return(Person.new(:last_name => 'Biel'))
