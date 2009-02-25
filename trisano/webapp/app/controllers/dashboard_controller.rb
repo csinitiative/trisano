@@ -22,7 +22,7 @@ class DashboardController < ApplicationController
   # be merged in there.
   def index
     @user = User.current_user
-    if has_a_filter_applied?(params)
+    if has_a_filter_applied?(params)      
       @user.store_as_task_view_settings(params)
       render
     else
@@ -33,7 +33,7 @@ class DashboardController < ApplicationController
   private 
 
   def has_a_filter_applied?(params)
-    params.has_key?(:look_ahead) || params.has_key?(:look_back)
+    params.keys.any? { |param| User.task_view_filters.include?(param.to_sym) }
   end
 
 end

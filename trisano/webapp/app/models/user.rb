@@ -143,17 +143,24 @@ class User < ActiveRecord::Base
   end  
 
   def task_view_settings
-    read_attribute(:task_view_settings) || {:look_ahead => 0, :look_back => 0}
+    settings = read_attribute(:task_view_settings) || {}
+    settings.empty? ? {:look_ahead => 0, :look_back => 0} : settings
   end
 
-  def store_as_task_view_settings(view_settings)    
-    unless view_settings.nil?
+  def store_as_task_view_settings(params)    
+    unless params.nil?
+      view_settings = params.dup
       view_settings.each do |k, v|
-        view_settings.delete(k) unless task_view_filters.include?(k)
+        view_settings.delete(k) unless User.task_view_filters.include?(k)
       end
     end
     update_attribute(:task_view_settings, view_settings)
   end
+
+  def self.task_view_filters
+    [:look_ahead, :look_back, :disease_filter, :tasks_ordered_by]
+  end
+
   
   protected
   
@@ -161,10 +168,4 @@ class User < ActiveRecord::Base
     errors.delete(:role_memberships)
   end
 
-  private 
-
-  def task_view_filters
-    [:look_ahead, :look_back, :disease_filter, :tasks_ordered_by]
-  end
-  
 end

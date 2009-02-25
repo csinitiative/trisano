@@ -679,10 +679,10 @@ describe User, 'task view settings' do
     end
       
 
-    it 'should store an empty hash' do
+    it 'should treat an empty hash as default settings' do
       @user.store_as_task_view_settings({})
       @user.reload
-      @user.task_view_settings.should == {}
+      @user.task_view_settings.should == {:look_back => 0, :look_ahead => 0}
     end
   end
   
