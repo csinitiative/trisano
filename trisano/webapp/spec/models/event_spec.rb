@@ -487,6 +487,7 @@ describe MorbidityEvent do
           }
           @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
+          mock_user
         end
 
         it "should delete existing lab results and participation" do
