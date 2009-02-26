@@ -463,6 +463,7 @@ describe MorbidityEvent do
               }
             }
           }
+          mock_user
           @new_lab_hash = @event_hash.merge(existing_lab_hash_1)
           @event = MorbidityEvent.find(events(:marks_cmr).id)
         end
