@@ -149,6 +149,12 @@ namespace :trisano do
       initialize_config
       replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
     end
+
+    desc "Sets the database.yml to use the application user info"
+    task :set_trisano_database_yml do
+      initialize_config
+      replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)            
+    end
     
     desc "Create the database, the user, and apply security permissions"
     task :create_db_dbuser_permissions  do
