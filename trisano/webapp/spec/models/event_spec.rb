@@ -1863,6 +1863,7 @@ describe MorbidityEvent do
           }
         }
       }
+      mock_user
     end
 
     it 'should return false for a new record, not yet sent to cdc or ibis' do

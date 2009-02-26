@@ -210,12 +210,6 @@ describe PlaceEventsController do
       do_post
       flash[:notice].should eql("The event was successfully marked as deleted.")
     end
-
-    it "should add a note" do
-      @event.should_receive(:soft_delete).and_return(true)
-      @event.should_receive(:add_note)
-      do_post
-    end
   end
   
   describe "handling failed POST /place_events/1/soft_delete with update entitlement" do

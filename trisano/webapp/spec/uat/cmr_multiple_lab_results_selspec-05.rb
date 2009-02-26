@@ -91,6 +91,7 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.is_text_present(test_type).should_not be_true
     @browser.is_text_present(lab_name_1).should be_true
     @browser.is_text_present(lab_name_2).should be_true
+    @browser.is_text_present("Lab result deleted").should be_true
     p "Waddya see?"
     sleep(3)
   end
@@ -101,5 +102,6 @@ describe 'Adding multiple lab results to a CMR' do
     @browser.click("//div[@id='labs']/div[@class='lab'][2]/span/a[@id='remove_lab_link']")
     save_cmr(@browser).should be_true
     @browser.is_text_present(lab_name).should_not be_true
+    @browser.is_text_present("Lab and all its results deleted").should be_true
   end
 end

@@ -492,6 +492,7 @@ class Event < ActiveRecord::Base
   def transactional_soft_delete
     if self.deleted_at.nil?
       self.deleted_at = Time.new
+      self.add_note("Event deleted")
       self.save!
       # Go back to this event's parent (if any), loop through it's participations, and sever the one that is related to this event.
       # DEBT: Starting to get ugly.  We need to have just one reference from an event to a related event.

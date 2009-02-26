@@ -190,6 +190,7 @@ class HumanEvent < Event
             lab_result.attributes = result_attributes
           else
             lab.lab_results.delete(lab_result)
+            self.add_note("Lab result deleted")
           end
         end
 
@@ -207,6 +208,7 @@ class HumanEvent < Event
       else
         # The lab and all its results have been deleted
         labs.delete(lab)
+        self.add_note("Lab and all its results deleted")
       end
     end
   end
