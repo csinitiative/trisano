@@ -52,3 +52,4 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-wil
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.1.12.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.1.12.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/cucumber-0.1.16.gem

@@ -44,6 +44,7 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  auto_complete        MIT               Copyright (c) 2007 David Heinemeier Hansson
  haml                 MIT               Copyright (c) 2006-2007 Hampton Catlin
  rspec                MIT               Copyright (c) 2005-2007 The RSpec Development Team,  Copyright (c) 2005-2007 Thomas Fuchs
+ cucumber             MIT               Copyright (c) 2008 Aslak Hellesøy
  Yahoo YUI            BSD               Copyright (c) 2008, Yahoo! Inc.
  SASS Gridification   MIT               Copyright (c) 2008 Lorin Tackett
  autotab              MIT               Michael J. Sepcot (michael.sepcot@gmail.com)
