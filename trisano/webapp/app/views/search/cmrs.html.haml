@@ -139,11 +139,11 @@
         Onset Date
       - for cmr in @cmrs
         - if cmr.class == MorbidityEvent
-          - path = cmr_path(cmr.event_id)
-          - html_id = "show-cmr-link-#{cmr.event_id}"
+          - path = cmr_path(cmr)
+          - html_id = "show-cmr-link-#{cmr.id}"
         - else
-          - path = contact_event_path(cmr.event_id)
-          - html_id = "show-contact-link-#{cmr.event_id}"
+          - path = contact_event_path(cmr)
+          - html_id = "show-contact-link-#{cmr.id}"
 
         - if (cmr.deleted_at.nil?)
           - result_class = 'search-active tabular'
@@ -151,27 +151,29 @@
           - result_class = 'search-inactive tabular'
         %tr{:class => result_class}
           %td
-            -# = link_to("#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})", path, :id => html_id)
             = link_to("#{cmr.record_number}", path, :id => html_id)
             &nbsp;&nbsp;
             %small="(#{cmr.class.to_s.underscore.humanize})"
+          - entity = cmr.interested_party.person_entity
+          - person = entity.person
+          - address = entity.address
           %td
-            = "#{cmr.first_name} #{cmr.last_name}"
+            = "#{person.full_name}"
           %td
-            - if  !cmr.birth_date.blank?
-              = "#{calculate_age cmr.birth_date.to_date} / #{cmr.birth_date}"
+            - if  !person.birth_date.blank?
+              = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"
           %td
-            = cmr.gender
+            = l(person.birth_gender)
           %td
-            = cmr.disease_name
+            = cmr.safe_call_chain(:disease_event, :disease, :disease_name)
           %td
-            = cmr.city
+            = address.city if address
           %td
-            = cmr.county
+            = l(address.county) if address
           %td
-            = cmr.jurisdiction_name
+            = cmr.primary_jurisdiction.name
           %td
-            = cmr.disease_onset_date || '&nbsp;'
+            = cmr.safe_call_chain(:disease_event, :disease_onset_date) || '&nbsp;'
 
   - if User.current_user.is_entitled_to?(:create_event)
     = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})

@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class MorbidityEventsController < EventsController
+  include EventsHelper
 
   before_filter :capture_old_attributes, :only => [:update]
 
@@ -266,6 +267,7 @@ class MorbidityEventsController < EventsController
   private
   
   def prepopulate
+    @event = setup_human_event_tree(@event)
     # Perhaps include a message if we know the names were split out of a full text search
     @event.interested_party.person_entity.person.first_name = params[:first_name]
     @event.interested_party.person_entity.person.middle_name = params[:middle_name]

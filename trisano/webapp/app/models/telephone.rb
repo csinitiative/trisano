@@ -40,7 +40,6 @@ class Telephone < ActiveRecord::Base
     number.strip
   end
 
-
   protected
   def validate
     if attributes.all? {|k, v| v.blank?}

@@ -23,8 +23,8 @@ class Entity < ActiveRecord::Base
   has_many :email_addresses
   has_one :address
 
-  # /lib/task_filter mandates this.
   has_one :place
+  has_one :person
 
   accepts_nested_attributes_for :telephones, :email_addresses, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
   accepts_nested_attributes_for :address, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }

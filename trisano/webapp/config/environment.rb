@@ -48,7 +48,7 @@ Rails::Initializer.run do |config|
   config.action_controller.session_store = :cookie_store 
   config.action_controller.session = {
     :key => '_trisano_session',
-    :secret      => 'dec289bfea4950e50e37af2854f59c2a7a96c0a8d24ef218517b08a5790a272ae2b2ee0c2fe5aa18217a599b20b322c5596fd3983a42240aef4ce71a37102d41'
+    :secret      => 'aec289bfea4950e50e37af2854f59c2a7a96c0a8d24ef218517b08a5790a272ae2b2ee0c2fe5aa18217a599b20b322c5596fd3983a42240aef4ce71a37102d41'
   }
 
   # Use the database for sessions instead of the cookie-based default,

@@ -307,6 +307,129 @@ class Event < ActiveRecord::Base
       event_ids = events.compact.collect {|record| record.id if record.id}
       Event.update_all('sent_to_ibis=true', ['id IN (?)', event_ids])
     end
+
+    def generate_event_search_where_clause(options)
+      fulltext_terms = []
+      where_clause = " participations.type != 'PlaceEvent'"
+      order_by_clause = "participations.type DESC, last_name, first_name ASC"
+      issue_query = false
+
+      if !options[:disease].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += " disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
+      end
+
+      if !options[:gender].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+
+        if options[:gender] == "Unspecified"
+          # Debt:  The 'AND event_id IS NOT NULL' is kind of a hack.  Will do until this query is examined more closely.
+          where_clause += "birth_gender_id IS NULL"
+        else
+          where_clause += "birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
+        end
+      end
+
+      if !options[:event_status].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "event_status = '" + sanitize_sql_for_conditions(["%s", options[:event_status]]) + "'"
+      end
+
+      if !options[:city].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "city ILIKE '" + sanitize_sql_for_conditions(["%s", options[:city]]) + "%'"
+      end
+
+      if !options[:county].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
+      end
+
+      if !options[:jurisdiction_id].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+        where_clause += " OR associated_jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+      else
+        where_clause += " AND " unless where_clause.empty?
+        allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
+        allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
+        allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
+        where_clause += "jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
+        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
+      end
+
+      # Debt: The UI shows the user a format to use. Something a bit more robust
+      # could be in place.
+      if !options[:birth_date].blank?
+        if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
+          issue_query = true
+          where_clause += " AND " unless where_clause.empty?
+          where_clause += "EXTRACT(YEAR FROM birth_date) = '" + sanitize_sql_for_conditions(["%s",options[:birth_date]]) + "'"
+        else
+          issue_query = true
+          where_clause += " AND " unless where_clause.empty?
+          where_clause += "birth_date = '" + sanitize_sql_for_conditions(["%s", options[:birth_date]]) + "'"
+        end
+      end
+
+      # Problem?
+      if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
+        issue_query = true
+        where_clause += " AND " unless where_clause.empty?
+
+        if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
+          where_clause += "events.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) +
+            "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
+        elsif !options[:entered_on_start].blank?
+          where_clause += "events.created_at > '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
+        else
+          where_clause += "events.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
+        end
+      end
+
+      # Debt: The sql_term building is duplicated in Person. Where do you
+      # factor out code common to models? Also, it may be that we don't
+      # need two different search avenues (CMR and People).
+      if !options[:sw_last_name].blank? || !options[:sw_first_name].blank?
+
+        issue_query = true
+
+        where_clause += " AND " unless where_clause.empty?
+
+        if !options[:sw_last_name].blank?
+          where_clause += "last_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_last_name]]) + "%'"
+        end
+
+        if !options[:sw_first_name].blank?
+          where_clause += " AND " unless options[:sw_last_name].blank?
+          where_clause += "first_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_first_name]]) + "%'"
+        end
+
+      elsif !options[:fulltext_terms].blank?
+        issue_query = true
+        soundex_codes = []
+        raw_terms = options[:fulltext_terms].split(" ")
+
+        raw_terms.each do |word|
+          soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
+          fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
+        end
+
+        fulltext_terms << soundex_codes unless soundex_codes.empty?
+        sql_terms = fulltext_terms.join(" | ")
+
+        where_clause += " AND " unless where_clause.empty?
+        where_clause += "vector @@ to_tsquery('#{sql_terms}')"
+        order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+      end
+      [where_clause, order_by_clause, issue_query]
+    end
   end
 
   def under_investigation?
@@ -453,276 +576,24 @@ class Event < ActiveRecord::Base
   # Debt: Consolidate sanitize_sql_for_conditions calls where possible
   def self.find_by_criteria(*args)
     options = args.extract_options!
-    fulltext_terms = []
-    where_clause = " p3.type != 'PlaceEvent'"
-    order_by_clause = "p3.type DESC, p3.primary_last_name, p3.primary_first_name ASC"
-    issue_query = false
+    return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 
 
-    if !options[:event_type].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += " p3.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) + "'"
-    end
+    where_clause, order_by_clause, issue_query = Event.generate_event_search_where_clause(options)
 
-    if !options[:disease].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += " p3.disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
-    end
-
-    if !options[:gender].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-
-      if options[:gender] == "Unspecified"
-        # Debt:  The 'AND event_id IS NOT NULL' is kind of a hack.  Will do until this query is examined more closely.
-        where_clause += "p3.primary_birth_gender_id IS NULL AND event_id IS NOT NULL"
-      else
-        where_clause += "p3.primary_birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
+    if issue_query
+      event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
+      event_types.inject([]) do | results, event_type|
+        results += event_type.find(:all,
+                        :include => [ { :interested_party => { :person_entity => [:person, :address] } },
+                                        :disease_event,
+                                        :jurisdiction,
+                                        :associated_jurisdictions
+                                    ],
+                        :conditions => where_clause,
+                        :order => order_by_clause)
+        results
       end
-
     end
-
-    if !options[:event_status].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += "p3.event_status = '" + sanitize_sql_for_conditions(["%s", options[:event_status]]) + "'"
-    end
-
-    if !options[:city].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += "a.city ILIKE '" + sanitize_sql_for_conditions(["%s", options[:city]]) + "%'"
-    end
-
-    if !options[:county].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += "a.county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
-    end
-
-    if !options[:jurisdiction_id].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += "p3.jurisdiction_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
-      jurisdiction = "j.entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
-    else
-      where_clause += " AND " unless where_clause.empty?
-      allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
-      allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
-      allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
-      where_clause += "p3.jurisdiction_id IN (" + allowed_ids_str.chop + ")"
-      jurisdiction = "j.entity_id IN ("+ allowed_ids_str.chop + ")"
-    end
-
-    # Debt: The UI shows the user a format to use. Something a bit more robust
-    # could be in place.
-    if !options[:birth_date].blank?
-      if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "EXTRACT(YEAR FROM p3.primary_birth_date) = '" + sanitize_sql_for_conditions(["%s",options[:birth_date]]) + "'"
-      else
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "p3.primary_birth_date = '" + sanitize_sql_for_conditions(["%s", options[:birth_date]]) + "'"
-      end
-
-    end
-
-    # Problem?
-    if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
-      issue_query = true
-      where_clause += " AND " unless where_clause.empty?
-
-      if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-        where_clause += "p3.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) +
-          "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
-      elsif !options[:entered_on_start].blank?
-        where_clause += "p3.created_at > '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
-      else
-        where_clause += "p3.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
-      end
-
-    end
-
-    # Debt: The sql_term building is duplicated in Person. Where do you
-    # factor out code common to models? Also, it may be that we don't
-    # need two different search avenues (CMR and People).
-    if !options[:sw_last_name].blank? || !options[:sw_first_name].blank?
-
-      issue_query = true
-
-      where_clause += " AND " unless where_clause.empty?
-
-      if !options[:sw_last_name].blank?
-        where_clause += "p3.primary_last_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_last_name]]) + "%'"
-      end
-
-      if !options[:sw_first_name].blank?
-        where_clause += " AND " unless options[:sw_last_name].blank?
-        where_clause += "p3.primary_first_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_first_name]]) + "%'"
-      end
-
-    elsif !options[:fulltext_terms].blank?
-      issue_query = true
-      soundex_codes = []
-      raw_terms = options[:fulltext_terms].split(" ")
-
-      raw_terms.each do |word|
-        soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-        fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
-      end
-
-      fulltext_terms << soundex_codes unless soundex_codes.empty?
-      sql_terms = fulltext_terms.join(" | ")
-
-      where_clause += " AND " unless where_clause.empty?
-      where_clause += "vector @@ to_tsquery('#{sql_terms}')"
-      order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
-
-    end
-
-    query = "
-    SELECT
-           p3.event_id,
-           p3.type,
-           p3.primary_entity_id AS entity_id,
-           p3.primary_first_name AS first_name,
-           p3.primary_middle_name AS middle_name,
-           p3.primary_last_name AS last_name,
-           p3.primary_birth_date AS birth_date,
-           p3.disease_id,
-           p3.disease_name,
-           p3.primary_record_number AS record_number,
-           p3.event_onset_date,
-           p3.primary_birth_gender_id AS birth_gender_id,
-           p3.event_status,
-           j.jurisdiction_id,
-           j.jurisdiction_name,
-           p3.vector,
-           p3.disease_onset_date,
-           p3.created_at,
-           p3.deleted_at,
-           c.code_description AS gender,
-           a.city,
-           co.code_description AS county
-    FROM
-           ( SELECT DISTINCT ON(event_id)
-                    p1.event_id, p1.type, p1.primary_entity_id, p1.vector, p1.primary_first_name, p1.primary_middle_name, p1.primary_last_name,
-                    p1.primary_birth_date, p1.disease_id, p1.disease_name, p1.primary_record_number, p1.event_onset_date, p1.primary_birth_gender_id,
-                    p1.event_status, p1.disease_onset_date, p1.created_at, p1.deleted_at, p2.jurisdiction_id, p2.jurisdiction_name
-             FROM
-                    ( SELECT
-                             p.event_id as event_id, people.vector as vector, people.entity_id as primary_entity_id, people.first_name as primary_first_name,
-                             people.last_name as primary_last_name, people.middle_name as primary_middle_name, people.birth_date as primary_birth_date,
-                             d.id as disease_id, d.disease_name as disease_name, record_number as primary_record_number, event_onset_date as event_onset_date,
-                             people.birth_gender_id as primary_birth_gender_id,
-                             e.event_status as event_status, e.type as type,
-                             e.created_at, e.deleted_at, disease_events.disease_onset_date as disease_onset_date
-                      FROM
-                             events e
-                      INNER JOIN
-                             participations p on p.event_id = e.id
-                      INNER JOIN
-                             ( SELECT DISTINCT ON
-                                      (entity_id) *
-                               FROM
-                                      people
-                               ORDER BY entity_id, created_at DESC
-                              ) AS people
-                                ON people.entity_id = p.primary_entity_id
-                      LEFT OUTER JOIN
-                            ( SELECT DISTINCT ON
-                                     (event_id) *
-                              FROM
-                                     disease_events
-                              ORDER BY event_id, created_at DESC
-                            ) AS disease_events
-                              ON disease_events.event_id = e.id
-                      LEFT OUTER JOIN
-                            diseases d ON disease_events.disease_id = d.id
-                      WHERE
-                            p.primary_entity_id IS NOT NULL
-                      AND   p.secondary_entity_id IS NULL
-                    ) AS p1
-             FULL OUTER JOIN
-                   (
-                     SELECT
-                            secondary_entity_id AS jurisdiction_id,
-                            j.name AS jurisdiction_name,
-                            p.event_id AS event_id
-                     FROM
-                            events e
-                     INNER JOIN
-                            participations p ON p.event_id = e.id
-                     LEFT OUTER JOIN
-                            codes c ON c.id = p.role_id
-                     LEFT OUTER JOIN
-                           ( SELECT DISTINCT ON
-                                    (entity_id) entity_id,
-                                    name
-                             FROM
-                                    places
-                             ORDER BY
-                                    entity_id, created_at DESC
-                           ) AS j ON j.entity_id = p.secondary_entity_id
-                     WHERE  (c.the_code = 'J'
-                     OR c.the_code = 'SJ')
-                     AND #{jurisdiction}
-                   ) AS p2 ON p1.event_id = p2.event_id
-           ) AS p3
-    LEFT OUTER JOIN
-           ( SELECT DISTINCT ON
-                    (entity_id) entity_id, location_id
-             FROM
-                    entities_locations, external_codes
-             WHERE
-                    external_codes.code_name = 'yesno'
-             AND
-                    external_codes.the_code = 'Y'
-             AND
-                    entities_locations.primary_yn_id = external_codes.id
-             ORDER BY
-                    entity_id, entities_locations.created_at DESC
-           ) AS el ON el.entity_id = p3.primary_entity_id
-    LEFT OUTER JOIN
-           locations l ON l.id = el.location_id
-    LEFT OUTER JOIN
-           addresses a ON a.location_id = l.id
-    LEFT OUTER JOIN
-           external_codes co ON co.id = a.county_id
-    LEFT OUTER JOIN
-           external_codes c ON c.id = p3.primary_birth_gender_id
-    LEFT OUTER JOIN
-          (
-            SELECT
-                    j.name AS jurisdiction_name,
-                    secondary_entity_id AS jurisdiction_id,
-                    p.event_id AS event_id
-            FROM
-                    events e
-            INNER JOIN
-                    participations p ON p.event_id = e.id
-            LEFT OUTER JOIN
-                    codes c ON c.id = p.role_id
-            LEFT OUTER JOIN
-                  ( SELECT DISTINCT ON
-                          (entity_id) entity_id,
-                          name
-                    FROM
-                          places
-                    ORDER BY
-                          entity_id, created_at DESC
-                  ) AS j ON j.entity_id = p.secondary_entity_id
-            WHERE c.the_code = 'J'
-    ) as j on j.event_id = p3.event_id
-    WHERE
-           #{where_clause}
-    ORDER BY
-           #{order_by_clause}"
-
-    find_by_sql(query) if issue_query
   end
 
   def get_investigation_forms

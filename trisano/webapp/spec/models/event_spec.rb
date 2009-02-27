@@ -1186,14 +1186,9 @@ describe MorbidityEvent do
       end
     end
 
-    before(:each) do
-      Event.reset_last_query
-    end
-    
     it 'should include soundex codes for fulltext search' do
-      Event.find_by_criteria(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
-      Event.last_query.should_not be_nil
-      Event.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
+      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
+      where_clause.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
     end
     
   end
