@@ -637,6 +637,11 @@ ActiveRecord::Schema.define(:version => 146) do
   end
 
 # Not everything can be done in ruby. Here's some of the ugliness.
+  begin
+    execute "CREATE LANGUAGE plpgsql;"
+  rescue
+    # No-op, language probably already exists. If not, the next execution will fail.
+  end
 
   # can't forget these
   execute 'CREATE SEQUENCE events_record_number_seq START WITH 2009000001 INCREMENT BY 1 MAXVALUE 2009999999 MINVALUE 2009000001 CACHE 1'
