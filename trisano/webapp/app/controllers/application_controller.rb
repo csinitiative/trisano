@@ -33,8 +33,9 @@ class ApplicationController < ActionController::Base
   
   protected
 
+  # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
   def can_view_event?
-    @event ||= Event.find(params[:id])
+    @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
       render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
       return
@@ -42,14 +43,16 @@ class ApplicationController < ActionController::Base
 
   end
 
+  # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
   def can_update_event?
-    @event ||= Event.find(params[:id])
+    @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
       render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
       return
     end
   end
 
+  # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
   def find_event
     begin
       @event = Event.find(params[:event_id])
