@@ -29,12 +29,6 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activereco
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-jdbcpostgresql-adapter-0.9.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jdbc-postgres-8.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/builder-2.1.2.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.0.5.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.0.5.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.0.5.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.0.5.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.0.5.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.0.5.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hpricot-0.6-java.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hpricot-0.6.161-java.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyforge-1.0.0.gem
