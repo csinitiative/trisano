@@ -18,7 +18,7 @@
 class EventNotesController < ApplicationController
 
   before_filter :find_event
-  before_filter :can_view?
+  before_filter :can_view_event?
 
   def index
     @mode = params[:mode].blank? ? 'show' : params[:mode]
@@ -28,24 +28,6 @@ class EventNotesController < ApplicationController
       conditions << params[:note_type]
     end
     @notes = Note.find(:all, :conditions => conditions, :order => "created_at ASC")
-  end
-
-  private
-
-  def can_view?
-    @event ||= Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
-      return
-    end
-  end
-
-  def find_event
-    begin
-      @event = Event.find(params[:event_id])
-    rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-    end
   end
   
 end

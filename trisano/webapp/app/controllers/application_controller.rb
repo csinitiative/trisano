@@ -32,6 +32,32 @@ class ApplicationController < ActionController::Base
   before_filter :load_user
   
   protected
+
+  def can_view_event?
+    @event ||= Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
+      return
+    end
+
+  end
+
+  def can_update_event?
+    @event ||= Event.find(params[:id])
+    unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
+      return
+    end
+  end
+
+  def find_event
+    begin
+      @event = Event.find(params[:event_id])
+    rescue
+      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+    end
+  end
+  
   
   #
   # Logging a bit chatty just for initial deployments. We can turn it down later.

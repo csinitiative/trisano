@@ -15,6 +15,14 @@
 
 %fieldset
   %legend
+    Attachments
+    %span{:id => 'attachments_hide', :onClick => "Element.hide('attachments'); Element.hide('attachments_hide'); Element.show('attachments_show'); return false;"} [Hide]
+    %span{:id => 'attachments_show', :onClick => "Element.show('attachments'); Element.hide('attachments_show'); Element.show('attachments_hide'); return false;", :style => "display: none;"} [Show]
+  #attachments
+    = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
+
+%fieldset
+  %legend
     Notes
     %span{:id => 'notes_hide', :onClick => "Element.hide('notes'); Element.hide('notes_hide'); Element.show('notes_show'); return false;"} [Hide]
     %span{:id => 'notes_show', :onClick => "Element.show('notes'); Element.hide('notes_show'); Element.show('notes_hide'); return false;", :style => "display: none;"} [Show]

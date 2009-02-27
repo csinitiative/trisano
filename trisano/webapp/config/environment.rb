@@ -74,6 +74,7 @@ Rails::Initializer.run do |config|
     require "active_record/errors.rb"
     require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
     require "active_support/activesupport_json_unicode_patch.rb"
+    require "attachment_fu/attachment_fu_validation_patch.rb"
     require "soundex/Soundex.rb"
     require "mmwr/mmwr.rb"
     require "blankable.rb"
@@ -95,3 +96,14 @@ if RAILS_ENV == "development" || RAILS_ENV == "test" || RAILS_ENV == "uattest"
 else
   TRISANO_UID = nil
 end
+
+Mime::Type.register("application/pdf",  :pdf)
+Mime::Type.register('image/jpg', :jpg, ['image/jpeg'], ['jpeg'])
+Mime::Type.register("image/gif",  :gif)
+Mime::Type.register("image/png",  :png)
+Mime::Type.register("image/tiff",  :tiff, [], ['tif'])
+Mime::Type.register("application/msword", :doc)
+Mime::Type.register("application/vnd.oasis.opendocument.text", :odt)
+Mime::Type.register("application/vnd.ms-excel",  :xls, ['application/x-msexcel', 'application/ms-excel'])
+Mime::Type.register("application/vnd.oasis.opendocument.spreadsheet",  :ods)
+

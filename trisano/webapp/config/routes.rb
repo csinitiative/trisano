@@ -117,6 +117,9 @@ ActionController::Routing::Routes.draw do |map|
   # These are the notes in use with and available to an event
   map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]
 
+  # An event's attachments
+  map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments'
+
   map.resources :codes, :controller => :external_codes
 
   map.resources :core_fields

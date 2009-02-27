@@ -13,15 +13,12 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+= f.hidden_field :event_id
 
-%fieldset
+%span{ :class => "vert" }
+  = f.label(:file)
+  = f.file_field :uploaded_data
 
-  #attachments
-    = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
-
-  #notes
-    #note-list
-      = render :partial => 'event_notes/show', :locals => { :notes => @event.notes }
-
-  #tasks
-    = render(:partial => 'tasks/list', :locals => { :task_owner => @event })
+%span{ :class => "vert" }
+  = f.label(:category)
+  = f.select(:category, [["Correspondence", "correspondence"], ["Laboratory results", "lab"], ["Letter", "letter"], ["X-ray", "x-ray"]], {:include_blank => true})

@@ -18,7 +18,8 @@
 class EventTasksController < ApplicationController
 
   before_filter :find_event
-  before_filter :can_update?
+  before_filter :can_update_event?, :only => [:create, :update]
+  before_filter :can_view_event?, :only => [:index, :new, :edit]
   
   def index
     respond_to do |format|
@@ -79,21 +80,4 @@ class EventTasksController < ApplicationController
     
   end
 
-  private
-
-  def can_update?
-    @event ||= Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
-      return
-    end
-  end
-
-  def find_event
-    begin
-      @event = Event.find(params[:event_id])
-    rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-    end
-  end
 end

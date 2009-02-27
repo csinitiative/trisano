@@ -26,7 +26,7 @@ describe EventTasksController do
     Event.stub!(:find).and_return(@event)
   end
 
-  describe "handling GET /events/1/tasks with update event entitlement" do
+  describe "handling GET /events/1/tasks with view event entitlement" do
 
     before(:each) do
       @task = mock_model(Task)
@@ -56,7 +56,7 @@ describe EventTasksController do
     
   end
 
-  describe "handling GET /events/1/tasks without update event entitlement" do
+  describe "handling GET /events/1/tasks without view event entitlement" do
 
     before(:each) do
       @task = mock_model(Task)
