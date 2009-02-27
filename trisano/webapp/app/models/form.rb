@@ -20,7 +20,7 @@ require 'zip/zipfilesystem'
 
 class Form < ActiveRecord::Base
   has_and_belongs_to_many :diseases, :order => "disease_id"
-  belongs_to :jurisdiction, :class_name => "Entity", :foreign_key => "jurisdiction_id"
+  belongs_to :jurisdiction, :class_name => "PlaceEntity", :foreign_key => "jurisdiction_id"
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]

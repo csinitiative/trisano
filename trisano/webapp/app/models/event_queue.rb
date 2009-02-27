@@ -14,7 +14,7 @@
 # If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EventQueue < ActiveRecord::Base
-  belongs_to :jurisdiction, :class_name => 'Entity', :foreign_key => :jurisdiction_id
+  belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
   validates_presence_of :queue_name, :jurisdiction_id
   before_save :replace_white_space
   before_destroy :fix_up_events

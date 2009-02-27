@@ -26,8 +26,8 @@ describe "/forms/show.html.haml" do
 
     @place = mock_model(Place)
     @place.stub!(:name).and_return("Davis")
-    @entity = mock_model(Entity)
-    @entity.stub!(:current_place).and_return(@place)
+    @entity = mock_model(PlaceEntity)
+    @entity.stub!(:place).and_return(@place)
 
     @form = mock_model(Form)
     @form.stub!(:name).and_return("Anthrax Form")

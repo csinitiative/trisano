@@ -60,7 +60,7 @@ def invalidate_tree(tree_root)
 end
 
 def mock_user
-  @jurisdiction = mock_model(Entity)
+  @jurisdiction = mock_model(PlaceEntity)
   @place = mock_model(Place)
 
   @user = mock_model(User)
@@ -91,7 +91,7 @@ def mock_user
   @role_membership.stub!(:is_admin?).and_return(true)
   @role_membership.stub!(:id=).and_return(1)
   @jurisdiction.stub!(:places).and_return([@place])
-  @jurisdiction.stub!(:current_place).and_return(@place)
+  @jurisdiction.stub!(:place).and_return(@place)
   @place.stub!(:name).and_return("Southeastern District")
   @place.stub!(:entity_id).and_return("1")
   

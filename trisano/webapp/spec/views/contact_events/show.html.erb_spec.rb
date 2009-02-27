@@ -45,7 +45,7 @@ describe '/contact_events/show.html.erb' do
     @jurisdiction_place.stub!(:entity_id).and_return(1)
 
     @jurisdiction_place_entity = mock('jurisdiction place entity')
-    @jurisdiction_place_entity.stub!(:current_place).and_return(@jurisdiction_place)
+    @jurisdiction_place_entity.stub!(:place).and_return(@jurisdiction_place)
 
     @active_jurisdiction = mock('jurisdiction participation')
     @active_jurisdiction.stub!(:secondary_entity).and_return(@jurisdiction_place_entity)

@@ -37,7 +37,7 @@
           .formname
             =@event_queue.queue_name
           .tools
-            = @event_queue.jurisdiction.current_place.name
+            = @event_queue.jurisdiction.place.name
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_event_queue_path(@event_queue)

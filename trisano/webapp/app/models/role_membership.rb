@@ -20,7 +20,7 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :user
   belongs_to :role
   
-  belongs_to :jurisdiction, :class_name => 'Entity', :foreign_key => :jurisdiction_id
+  belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
   
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
     :message => "is already assigned this role for this jurisdiction"

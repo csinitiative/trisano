@@ -21,7 +21,7 @@
       - fields_for "user[role_membership_attributes][]", role do |rm_form|
         -# You can only add and remove roles, not update them
         - unless role.new_record?
-          = role.jurisdiction.current_place.name
+          = role.jurisdiction.place.name
           .tools
             = role.role.role_name
 
