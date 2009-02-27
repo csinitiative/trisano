@@ -156,7 +156,7 @@ function contact_parent_address(id) {
     onComplete: function(transport, json) { 
       for (var key in json) 
         if (json[key])
-          document.getElementById('contact_event_active_patient__address_' + key).value = json[key];
+          document.getElementById('contact_event_interested_party_attributes_person_entity_attributes_address_attributes_' + key).value = json[key];
     }
   });
 }
