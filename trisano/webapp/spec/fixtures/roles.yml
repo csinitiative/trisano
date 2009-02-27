@@ -1,0 +1,26 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+administrator:
+  id: 1
+  role_name: administrator
+
+investigator:
+  id: 2
+  role_name: investigator
+
+state_manager:
+  id: 3
+  role_name: State Manager
+
+data_entry_technician:
+  id: 4
+  role_name: Data Entry Technician
+
+lhd_manager:
+  id: 5
+  role_name: LHD Manager
+
+surveillance_manager:
+  id: 6
+  role_name: Surveillance Manager
+

@@ -1,0 +1,54 @@
+
+marks_cmr:
+  investigation_completed_LHD_date: 
+  outbreak_associated_id: !str 1403
+  record_number: !str 2008500001
+  outbreak_name: ""
+  first_reported_PH_date: 
+  event_onset_date: !str 2008-03-11
+  review_completed_by_state_date: 
+  imported_from_id: !str 2102
+  investigation_started_date: 
+  results_reported_to_clinician_date: 
+  event_name: Marks Chicken Pox
+  MMWR_week: !str 10
+  event_status: "NEW"
+  state_case_status_id: !str 1802
+  lhd_case_status_id: !str 1802
+  MMWR_year: !str 2006
+  id: !str 1
+  created_at: <%= Time.now.to_s :db %> 
+  type: MorbidityEvent
+  deleted_at: 
+
+under_investigation_cmr:
+  id: 2
+  event_status: "UI"
+  type: MorbidityEvent
+
+no_disease_cmr:
+  id: 3
+  event_status: "NEW"
+  type: MorbidityEvent
+
+cdc_answers_cmr:
+  id: 4
+  event_status: 'UI'
+  record_number: "456789"
+  type: MorbidityEvent
+
+has_anthrax_cmr:
+  id: 5
+  type: MorbidityEvent
+
+has_event_queue:
+  id: 6
+  event_status: "ASGD-INV"
+  event_queue_id: 1
+  event_onset_date: 2008-03-11
+  type: MorbidityEvent
+
+task_event:
+  id: 1001
+  type: MorbidityEvent
+  

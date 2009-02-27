@@ -1,0 +1,78 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  List Morbidity Events
+
+- content_for :name do
+  Existing Reports
+
+
+- content_for :tools do
+  = new_cmr_link 'New Morbidity Report'
+  |
+  - unless @events.empty? 
+    = link_to_function('Export All to CSV', nil) do |page|
+      - page[:export_options].visual_effect :slide_down
+    = "|"
+  = link_to_function('Change View', nil) do |page|
+    - page[:change_view].visual_effect :slide_down
+
+- content_for :tools_two do
+  = new_cmr_button "Create New Morbidity Report"
+
+= render :partial => "export_options", :locals => { :path => formatted_cmrs_path('csv') }
+
+#change_view{:style => "display: none"}
+  - form_tag(cmrs_path, :method => :get) do
+    %span.horiz
+      %label Events
+      = select_tag("states[]", options_from_collection_for_select(Event.get_states_and_descriptions, :state, :description), :size => 5, :multiple => true)
+    %span.horiz
+      %label Queues
+      - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+      = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true)
+    %label Investigators
+    - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+    = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true)
+    %label Diseases
+    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true)
+    %br
+    = check_box_tag("do_not_show_deleted")
+    = "Do not show deleted records&nbsp;&nbsp;"
+    = check_box_tag("set_as_default_view")
+    = "Set as default view&nbsp;&nbsp;"
+    = submit_tag("Change View", :id => "change_view_btn")
+  = link_to_function "Close", "Effect.BlindUp('change_view')"
+  %p
+
+#rot
+  %table.list
+    %tr
+      - query_params = request.query_parameters
+      - query_params.delete('commit')
+      %th.forminformation
+        = link_to("Patient Name", cmrs_path(query_params.merge(:sort_order => 'patient')))
+      %th
+        = link_to("Disease", cmrs_path(query_params.merge(:sort_order => 'disease')))
+      %th
+        = link_to("Jurisdiction", cmrs_path(query_params.merge(:sort_order => 'jurisdiction')))
+      %th
+        = link_to("Status", cmrs_path(query_params.merge(:sort_order => 'status')))
+
+      = render :partial => 'morbidity_events/event', :collection => @events
+
+  %br
+  = will_paginate @events

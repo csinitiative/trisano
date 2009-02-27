@@ -1,0 +1,30 @@
+-# Nasty ugly hack to avoid having to do surgery on formbuilder after renaming the HTML fields
+- agency_key = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency]"
+- agency_core_path = "#{template ? template.object_name : 'morbidity_event'}[active_reporting_agency][active_secondary_entity][place]"
+- agency_types_name = agency_key + "[agency_types][]"
+- agency_type_ids = reporting_agency.nil? ? [] : reporting_agency.reporting_agency_types.collect(&:code_id)
+
+- fields_for(agency_key, reporting_agency, :core_path => agency_core_path, :builder => ExtendedFormBuilder) do |agency_form|
+  - if  reporting_agency.nil? || reporting_agency.new_record?
+    - core_element :name, agency_form, :horiz do
+      = agency_form.label(:name, "Reporting Agency")
+      = agency_form.text_field(:name, :size => 25)
+    - core_element :agency_type, agency_form, :vert do
+      = agency_form.label(:agency_types)
+      %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
+        %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
+          - Place.agency_types.each do |type|
+            = "<label>" + check_box_tag(agency_types_name, type.id, agency_type_ids.include?(type.id), :id => type.code_description.tr(" ", "_")) + type.code_description + "</label>"
+  - else
+    - core_element :name, agency_form, :horiz do
+      = agency_form.hidden_field(:id)
+      = agency_form.label(:name, "Reporting Agency")
+      = reporting_agency.name || "&nbsp;"
+    - core_element :agency_type, agency_form, :horiz do
+      = agency_form.label(:agency_types)
+      = reporting_agency.agency_types_description.to_s + '&nbsp;'
+      
+  %label &nbsp;
+  = link_to_function "Remove", nil, :id => 'remove_reporting_agency_link' do |page|
+    - page << "$(this).siblings().each(function(s){s.remove()});$(this).remove();"
+  %hr

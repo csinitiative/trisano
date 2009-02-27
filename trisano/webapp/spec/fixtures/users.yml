@@ -1,0 +1,56 @@
+default_user:
+  id: 1
+  uid: utah
+  user_name: default_user
+  last_name: Johnson
+  given_name: 
+  first_name: 
+  generational_qualifer: 
+  initials: 
+  event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
+
+admin_user:
+  id: 2
+  uid:
+  user_name: admin_user
+  last_name: Smythe
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings:
+
+update_cmr_user:
+  id: 3
+  uid:
+  user_name: update_user
+  last_name: Quarrells
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings:
+
+view_cmr_user:
+  id: 4
+  uid:
+  user_name: view_user
+  last_name: Thompson
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings:
+
+update_davis_user:
+  id: 5
+  uid:
+  user_name: update_in_davis
+  last_name: Quarrells
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings:
+
+

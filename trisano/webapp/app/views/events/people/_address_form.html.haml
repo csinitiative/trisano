@@ -1,0 +1,49 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-# 
+-# This file is part of TriSano.
+-# 
+-# TriSano is free software: you can redistribute it and/or modify it under the 
+-# terms of the GNU Affero General Public License as published by the 
+-# Free Software Foundation, either version 3 of the License, or 
+-# (at your option) any later version.
+-# 
+-# TriSano is distributed in the hope that it will be useful, but 
+-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+-# for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along 
+-# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset.form
+  %legend Address
+  - f.fields_for(:address, :builder => ExtendedFormBuilder) do |a|
+
+    %fieldset.vert
+      - core_element :street_number, a, :horiz do
+        = a.label(:street_number)
+        = a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
+      - core_element :street_name, a, :horiz do
+        = a.label(:street_name)
+        = a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event)
+      - core_element :unit_number, a, :horiz do
+        = a.label(:unit_number)
+        = a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event)
+
+    %fieldset.vert
+      - core_element :city, a, :horiz do
+        = a.label(:city, "City")
+        = a.core_text_field(:city, {:size => 30, :maxlength=> 255}, event)
+      - core_element :state_id, a, :horiz do
+        = a.label(:state_id, "State")
+        = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {}, event)
+      - core_element :county_id, a, :horiz do
+        = a.label(:county_id, "County")
+        = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {}, event)
+      - core_element :postal_code, a, :horiz do
+        = a.label(:postal_code, "Zip code")
+        = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
+
+    -if event.is_a?(ContactEvent)
+      %fieldset.vert
+        = button_to_function('Copy From Original Patient', "contact_parent_address(#{@event.id})")

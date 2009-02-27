@@ -1,0 +1,60 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the
+-# terms of the GNU Affero General Public License as published by the
+-# Free Software Foundation, either version 3 of the License,
+-# or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+-# This injects an existing place exposure into a form
+-# Debt: Could be merged with _editable_place_exposure.html.haml
+
+-# Hack.  This template is rendered from both the ordinary CMR form and via the live-search
+-# Ajax callback.  During the latter we do not have the proper namespace set up for form
+-# fields.  This does that.
+- place_form = nil
+- if defined? f
+  - place_form = f
+- else
+  - uniq_id = Time.now.to_i
+  - fields_for(event_type + "[place_child_events_attributes][#{uniq_id}]", @place) do |pe|
+    - place_form = pe
+
+- place = place_form.object.interested_place.place_entity.place
+%div.existing_place{:style => 'margin-top: 20px; clear: both;'}
+  
+  -# "place_child_events_attributes"=>{"5"=>{"interested_place_attributes"=>{"place_entity_attributes"=>{"place_attributes"=>{"name"=>"newplace", "place_type_id"=>"1"}}},
+
+  - place_form.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
+    = ip.hidden_field(:primary_entity_id)
+    %span.horiz
+      %label Name
+      = h(place.name)
+    %span.horiz
+      %label Type
+      = h(place.place_type.code_description) unless place.place_type.nil?
+
+  - place_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pe_form|
+    %span{:class => 'horiz'}
+      =pe_form.label(:date_of_exposure)
+      =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+    %span.horiz
+    - unless place_form.object.new_record?
+      %span.horiz
+        = place_form.label :_delete, "Remove"
+        = place_form.check_box :_delete
+
+      =# link_to_function image_tag('delete.png', :border => 0), "$(this).up('.existing_place').remove()", {:id => "remove_existing_place_link"}
+
+    = place_form.label('&nbsp;')
+    = link_to("Edit place details", edit_place_event_path(place_form.object), {:id => "edit-place-event"}) unless place_form.object.new_record?
+  %hr

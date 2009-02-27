@@ -1,0 +1,90 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset
+  %legend
+    Investigative Information
+
+  %fieldset.list-of-forms.form
+    %legend
+      Forms in Use
+    - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
+      %p 
+        %em None
+    - else
+      %ul{:id => "investigation_form_list", :style => 'margin-bottom: 10px'}
+        - form_count = 0
+        - for form_reference in @event.investigation_form_references
+          - form_count += 1
+          - if(form_count == 1)
+            %input{:type => 'hidden', :id => 'active_form', :name => 'active_form', :value => "#{form_reference.form.id}"}
+          %li
+            = link_to_function "#{form_reference.form.name}", "toggle_investigator_forms(\"#{form_reference.form.id}\")"
+        - for form_reference in @event.core_only_form_references
+          %li
+            = "#{form_reference.form.name} (core only)"
+            %small= "&nbsp;v. #{form_reference.form.version}"
+    = link_to "Add forms to this event", event_forms_path(@event)
+
+  %fieldset.form
+    %legend Forms
+
+    %div{:id => 'investigation_form'}
+      %table{:width => '100%', :cellpadding => '3', :cellspacing => '0'}
+        %tr
+          %td{:width => '80%', :align => 'left', :valign => 'top'}
+            - form_count = 0
+            - for form_reference in @event.investigation_form_references
+              - form_count += 1
+              - form = form_reference.form
+              - display_style = (form_count == 1) ? "inline" : "none"
+              
+              %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style}; vertical-align: top"}
+                %span{:class => 'investigator-form-title'}
+                  = form_reference.form.name
+                %br{:clear => 'all'}
+                - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
+                  - has_multiple_user_defined_tabs = true
+                  %script{:type => "text/javascript"}
+                    = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{form.id}\");"
+                  %div{:id => "user_defined_tabs_#{form.id}", :class => "yui-navset"}
+                    %ul{:id => "user_defined_tab_list_#{form.id}", :class => "yui-nav"}
+                      -  view_count = 0
+                      - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+                        - view_count += 1
+                        - if view_count == 1
+                          %li{:class => "selected"}
+                            %a{:href => "#ut_#{view.id}"}
+                              %em
+                                = view.name
+                        - else
+                          %li
+                            %a{:href => "#ut_#{view.id}"}
+                              %em
+                                = view.name
+                    %div{:class => "yui-content"}
+                      - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+                        %div{:id => "ut_#{view.id}"}
+                          =show_investigator_view(view, form)
+                          
+                              
+                - else
+                  = show_investigator_view(form.investigator_view_elements_container.children[0], form)
+                
+                %br{:clear => "all"}
+                %div{:align => "right"}
+                  %small
+                    Version 
+                    = form_reference.form.version

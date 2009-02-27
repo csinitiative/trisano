@@ -1,0 +1,56 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+%fieldset
+  %legend 
+    Contact Information
+    %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"} [Hide]
+    %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
+
+  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
+    = h @event.disease.disease.contact_lead_in
+    %br
+    %br
+
+  -# Handles pre- and post-questions and help for contacts as a whole
+  - core_element :contacts, f, :vert do
+
+    %div{:id => "contact_child_events"}  
+      - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
+        = render :partial => "events/contact", :locals => { :f => c }
+
+      - blank_contact = ContactEvent.new
+      - blank_contact.build_participations_contact
+      - blank_contact.build_interested_party
+      - blank_contact.interested_party.build_person_entity
+      - blank_contact.interested_party.person_entity.build_person
+      - blank_contact.interested_party.person_entity.telephones.build
+
+      %p= add_record_link f, :contact_child_events, "Add a contact", :object => blank_contact, :partial => "events/contact"
+
+    %div{:id => "morbidity_child_events"}  
+      %fieldset
+        %legend Contacts | Elevated to morbidity Events
+        - if @event.morbidity_child_events
+          = render :partial => 'events/contact_show', :locals => { :contacts => @event.morbidity_child_events }
+        - else
+          %b None
+
+    - if @event.parent_event
+      %div{:id => "morbidity_parent_event"}  
+        %fieldset
+          %legend Parent Patient | Current patient was a contact of
+          = render :partial => 'events/contact_show', :locals => { :contacts => [@event.parent_event] }

@@ -1,0 +1,74 @@
+- code_name: "lab_test_type"
+  the_code:  "CULTURE"
+  code_description: "Culture"
+  sort_order: 10
+
+- code_name: "lab_test_type"
+  the_code:  "EIA"
+  code_description: "EIA/ELISA"
+  sort_order: 20
+
+- code_name: "lab_test_type"
+  the_code:  "DNA"
+  code_description: "DNA probe (or other non-amplification technique)"
+  sort_order: 30
+
+- code_name: "lab_test_type"
+  the_code:  "PCR"
+  code_description: "PCR (or other nucleic amplification technique)"
+  sort_order: 40
+
+- code_name: "lab_test_type"
+  the_code:  "IgM"
+  code_description: "Serology – IgM"
+  sort_order: 50
+
+- code_name: "lab_test_type"
+  the_code:  "IgG"
+  code_description: "Serology – IgG"
+  sort_order: 60
+
+- code_name: "lab_test_type"
+  the_code:  "TOTAL"
+  code_description: "Serology – Total"
+  sort_order: 70
+
+- code_name: "lab_test_type"
+  the_code:  "BLOT"
+  code_description: "Western Blot (or other confirmatory test method)"
+  sort_order: 80
+
+- code_name: "lab_test_type"
+  the_code:  "TYPING"
+  code_description: "Typing"
+  sort_order: 90
+
+- code_name: "lab_test_type"
+  the_code:  "RAPID"
+  code_description: "Rapid Test"
+  sort_order: 100
+
+- code_name: "lab_test_type"
+  the_code:  "SKIN"
+  code_description: "TB Skin Test"
+  sort_order: 110
+
+- code_name: "lab_test_type"
+  the_code:  "QUANT"
+  code_description: "Quantiferon"
+  sort_order: 120
+
+- code_name: "lab_test_type"
+  the_code:  "TREP"
+  code_description: "Treponemal Test"
+  sort_order: 130
+
+- code_name: "lab_test_type"
+  the_code:  "NON-TREP"
+  code_description: "Non-Treponemal Test"
+  sort_order: 140
+
+- code_name: "lab_test_type"
+  the_code:  "OTHER"
+  code_description: "Other"
+  sort_order: 150

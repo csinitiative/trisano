@@ -1,0 +1,33 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset.form
+  %legend Name
+
+  -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+    = error_messages_for :object => p.object
+    -core_element :last_name, p, :horiz do
+      =p.label(:last_name)
+      =p.core_text_field(:last_name, {:size => 25, :class => "required", :maxlength => 25}, event)
+    -core_element :first_name, p, :horiz do
+      =p.label(:first_name)
+      =p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, event)
+    -core_element :middle_name, p, :horiz do
+      =p.label(:middle_name)
+      =p.core_text_field(:middle_name, {:size => 25, :maxlength => 25}, event)
+
+    -core_element :parent_guardian, event_form, :horiz do
+      =event_form.label :parent_guardian, 'Parent/Guardian'
+      =event_form.core_text_field(:parent_guardian, {:size => 35, :maxlength => 255}, event)

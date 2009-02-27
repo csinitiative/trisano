@@ -1,0 +1,192 @@
+event_export_column:
+  id: 30
+  export_name_id: 1
+#  type_data: "FIXED"
+  type_data: "CORE"
+  export_column_name: "EVENT"
+  table_name: "diseases"
+  column_name: "id"
+  is_required: "Y"
+  start_position: 18
+  length_to_output: 5
+  created_at: 
+  updated_at: 
+  name:
+    
+county_export_column:
+  id: 31
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "COUNTY"
+  table_name: "addresses"
+  column_name: "county_id"
+  is_required: "N"
+  start_position: 28
+  length_to_output: 3
+
+ethnicity_export_column:
+  id: 32
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "ETHNICITY"
+  table_name: "people"
+  column_name: "ethnicity_id"
+  is_required: "N"
+  start_position: 45
+  length_to_output: 1
+
+race_export_column:
+  id: 33
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "RACE"
+  table_name: "people_races"
+  column_name: "race_id"
+  is_required: "N"
+  start_position: 44
+  length_to_output: 1
+
+casestatus_export_column:
+  id: 34
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "CASESTATUS"
+  table_name: "events"
+  column_name: "event_status"
+  is_required: "N"
+  start_position: 53
+  length_to_output: 1
+
+imported_export_column:
+  id: 35
+  export_name_id: 1
+  type_data: "CORE"
+  export_column_name: "IMPORTED"
+  table_name: "events"
+  column_name: "imported_from_id"
+  is_required: "N"
+  start_position: 54
+  length_to_output: 1
+
+hep_jaundiced:
+   id: 2
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'JAUNDICED'
+   name: 'Jaundiced?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '69'
+   length_to_output: '1'
+   data_type: 'radio_button'
+   export_disease_group_id : 1
+   
+hep_datedx:
+   id: 3
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'DATEDX'
+   name: 'Date Dx'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '61'
+   length_to_output: '8'
+   data_type: 'date'
+   export_disease_group_id : 1
+   
+hep_vaccineyea:
+   id: 4
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'VACCINEYEA'
+   name: 'Vaccine Year'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '118'
+   length_to_output: '2'
+   data_type: 'single_line_text'
+   export_disease_group_id : 1
+
+hep_drop_down:
+   id: 5
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'DROPDOWN'
+   name: 'Drop down?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '70'
+   length_to_output: '1'
+   data_type: 'drop_down'
+   export_disease_group_id : 1
+
+hep_check_box:
+   id: 6
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'CHECKBOX'
+   name: 'Check box?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '71'
+   length_to_output: '1'
+   data_type: 'check_box'
+   export_disease_group_id : 1
+   
+hep_phone:
+   id: 7
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'PHONE'
+   name: 'Phone?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '72'
+   length_to_output: '13'
+   data_type: 'phone'
+   export_disease_group_id : 1
+
+hep_multi_line:
+   id: 8
+   export_name_id: 1
+   type_data: 'FORM'
+   export_column_name: 'MULTILINE'
+   name: 'Multi-line?'
+   table_name: 
+   column_name: 
+   is_required: 
+   start_position: '86'
+   length_to_output: '20'
+   data_type: 'multi_line_text'
+   export_disease_group_id : 1
+
+birth_gender_id:
+  id: 14
+  export_name_id: 1
+  type_data: 'CORE'
+  export_column_name: 'SEX'
+  table_name: 'people'
+  column_name: 'birth_gender_id'
+  is_required: 'N'
+  start_position: 43
+  length_to_output: 1
+  name: 'SEX'
+
+pregnant_extended_id:
+  id: 15
+  export_name_id: 1
+  type_data: 'CORE'
+  export_column_name: 'PREGNANT'
+  table_name: 'participations_risk_factors'
+  column_name: 'pregnant_id'
+  is_required: 'Y'
+  start_position: 75
+  length_to_output: 1
+  name: 'Pregnant CDC'
+  export_disease_group_id: 2

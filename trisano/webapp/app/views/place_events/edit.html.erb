@@ -1,0 +1,80 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<script type="text/javascript">
+  setTimeout("Element.update('flash-message');", 3000);
+</script>
+
+<% place_name = @event.interested_place.place_entity.place.name %>
+
+<% content_for :title do %>
+  Edit Place Event: <%= place_name %>
+<% end %>
+
+<% content_for :name do %>
+  <%= place_name -%>
+
+  <%- original_patient = @event.parent_event %>
+  <span style='position: absolute; right: 0;'>
+    <span>Original Patient: <%= link_to("#{original_patient.interested_party.person_entity.person.full_name}", cmr_path(original_patient)) -%></span>
+    <p style='font-size: 12px; font-weight: light;'><%= original_patient.safe_call_chain(:disease_event, :disease, :disease_name) %></p>
+  </span>
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= save_buttons(@event) %> 
+<% end %>
+
+<% content_for :tools do %>
+  <%= link_to_function('Show', "send_url_with_tab_index('#{place_event_path(@event)}')") %>
+<% end %>
+
+<% @form_index = 0 %>
+
+<%= error_messages_for :object => @event %>
+
+<div id="follow-up-error"></div>
+
+<% form_for(setup_place_event_tree(@event), :url => place_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
+  <%  @event_form = event_form %>
+
+  <% tabs = []
+     tabs << %w(place_tab Place)
+     tabs << %w(investigation_tab Investigation)
+     tabs << %w(notes_tab Notes)
+  %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="place_tab">
+      <%= render :partial => "events/places/form", :locals => { :f => event_form } %>
+      <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Place" } %>
+    </div>
+    <div id="investigation_tab">
+      <p>
+        <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
+      </p>
+    </div>
+    <div id="notes_tab">
+      <p>
+        <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+      </p>
+    </div>
+  <% end %>
+  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;" %>
+<% end %>

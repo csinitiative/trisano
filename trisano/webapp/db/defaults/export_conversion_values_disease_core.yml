@@ -1,0 +1,879 @@
+
+ ##### Hepatitis #####
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'Y'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'N'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'OUTBREAK'
+   value_from: 'UNK'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'Y'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'N'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'HANDLER'
+   value_from: 'UNK'
+   value_to: '9'
+   sort_order: 3
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'Y'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'N'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Hepatitis'
+   export_column_name: 'DAYCARE1'
+   value_from: 'UNK'
+   value_to: '9'
+   sort_order: 3
+
+ ##### Lyme #####
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'BV'
+   value_to: 'Beaver'
+   sort_order: 1
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'BE'
+   value_to: 'Box Elder'
+   sort_order: 2
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'CA'
+   value_to: 'Cache'
+   sort_order: 3
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'CR'
+   value_to: 'Carbon'
+   sort_order: 4
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'DG'
+   value_to: 'Daggett'
+   sort_order: 5
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'DV'
+   value_to: 'Davis'
+   sort_order: 6
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'DU'
+   value_to: 'Duchesne'
+   sort_order: 7
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'EM'
+   value_to: 'Emery'
+   sort_order: 8
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'GA'
+   value_to: 'Garfield'
+   sort_order: 9
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'GR'
+   value_to: 'Grand'
+   sort_order: 10
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'IR'
+   value_to: 'Iron'
+   sort_order: 11
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'JU'
+   value_to: 'Juab'
+   sort_order: 12
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'KA'
+   value_to: 'Kane'
+   sort_order: 13
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'MI'
+   value_to: 'Millard'
+   sort_order: 14
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'MO'
+   value_to: 'Morgan'
+   sort_order: 15
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'PL'
+   value_to: 'Piute'
+   sort_order: 16
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'RI'
+   value_to: 'Rich'
+   sort_order: 17
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'SL'
+   value_to: 'Salt Lake'
+   sort_order: 18
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'SJ'
+   value_to: 'San Juan'
+   sort_order: 19
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'SP'
+   value_to: 'Sanpete'
+   sort_order: 20
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'SV'
+   value_to: 'Sevier'
+   sort_order: 21
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'SM'
+   value_to: 'Summit'
+   sort_order: 22
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'TL'
+   value_to: 'Tooele'
+   sort_order: 23
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'UI'
+   value_to: 'Uintah'
+   sort_order: 24
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'UT'
+   value_to: 'Utah'
+   sort_order: 25
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'WS'
+   value_to: 'Wasatch'
+   sort_order: 26
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'WA'
+   value_to: 'Washington'
+   sort_order: 27
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'WN'
+   value_to: 'Wayne'
+   sort_order: 28
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'WB'
+   value_to: 'Weber'
+   sort_order: 29
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'COUNTY'
+   value_from: 'OS'
+   value_to: 'Out-of-state'
+   sort_order: 30
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'HOSPITALIZ'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'PREGNANT'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'UT'
+   value_to: 'Utah'
+   sort_order: 1
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'AL'
+   value_to: 'Alabama'
+   sort_order: 2
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'AK'
+   value_to: 'Alaska'
+   sort_order: 3
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'AS'
+   value_to: 'American Samoa'
+   sort_order: 4
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'AZ'
+   value_to: 'Arizona'
+   sort_order: 5
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'CA'
+   value_to: 'California'
+   sort_order: 6
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'CO'
+   value_to: 'Colorado'
+   sort_order: 7
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'CT'
+   value_to: 'Connecticut'
+   sort_order: 8
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'DE'
+   value_to: 'Delaware'
+   sort_order: 9
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'DC'
+   value_to: 'District of Columbia'
+   sort_order: 10
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'FM'
+   value_to: 'Federated States of Micronesia'
+   sort_order: 11
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'FL'
+   value_to: 'Florida'
+   sort_order: 12
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'GA'
+   value_to: 'Georgia'
+   sort_order: 13
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'GU'
+   value_to: 'Guam'
+   sort_order: 14
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'HI'
+   value_to: 'Hawaii'
+   sort_order: 15
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'ID'
+   value_to: 'Idaho'
+   sort_order: 16
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'IL'
+   value_to: 'Illinois'
+   sort_order: 17
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'IN'
+   value_to: 'Indiana'
+   sort_order: 18
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'IA'
+   value_to: 'Iowa'
+   sort_order: 19
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'KS'
+   value_to: 'Kansas'
+   sort_order: 20
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'KY'
+   value_to: 'Kentucky'
+   sort_order: 21
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'LA'
+   value_to: 'Louisiana'
+   sort_order: 22
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'ME'
+   value_to: 'Maine'
+   sort_order: 23
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MH'
+   value_to: 'Marshall Islands'
+   sort_order: 24
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MD'
+   value_to: 'Maryland'
+   sort_order: 25
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MA'
+   value_to: 'Massachusetts'
+   sort_order: 26
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MI'
+   value_to: 'Michigan'
+   sort_order: 27
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MN'
+   value_to: 'Minnesota'
+   sort_order: 28
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MS'
+   value_to: 'Mississippi'
+   sort_order: 29
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MO'
+   value_to: 'Missouri'
+   sort_order: 30
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MT'
+   value_to: 'Montana'
+   sort_order: 31
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NE'
+   value_to: 'Nebraska'
+   sort_order: 32
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NV'
+   value_to: 'Nevada'
+   sort_order: 33
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NH'
+   value_to: 'New Hampshire'
+   sort_order: 34
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NJ'
+   value_to: 'New Jersey'
+   sort_order: 35
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NM'
+   value_to: 'New Mexico'
+   sort_order: 36
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NY'
+   value_to: 'New York'
+   sort_order: 37
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'NC'
+   value_to: 'North Carolina'
+   sort_order: 38
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'ND'
+   value_to: 'North Dakota'
+   sort_order: 39
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'MP'
+   value_to: 'Northern Mariana Islands'
+   sort_order: 40
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'OH'
+   value_to: 'Ohio'
+   sort_order: 41
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'OK'
+   value_to: 'Oklahoma'
+   sort_order: 42
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'OR'
+   value_to: 'Oregon'
+   sort_order: 43
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'OOC'
+   value_to: 'Out of Country'
+   sort_order: 44
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'Palau'
+   value_to: 'Morgan'
+   sort_order: 45
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'PA'
+   value_to: 'Pennsylvania'
+   sort_order: 46
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'PR'
+   value_to: 'Puerto Rico'
+   sort_order: 47
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'RI'
+   value_to: 'Rhode Island'
+   sort_order: 48
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'SC'
+   value_to: 'South Carolina'
+   sort_order: 49
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'SD'
+   value_to: 'South Dakota'
+   sort_order: 50
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'TN'
+   value_to: 'Tennessee'
+   sort_order: 51
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'TX'
+   value_to: 'Texas'
+   sort_order: 52
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'VT'
+   value_to: 'Vermont'
+   sort_order: 53
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'VA'
+   value_to: 'Virginia'
+   sort_order: 54
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'WA'
+   value_to: 'Washington'
+   sort_order: 55
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'WV'
+   value_to: 'West Virginia'
+   sort_order: 56
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'WI'
+   value_to: 'Wisconsin'
+   sort_order: 57
+
+ - disease_code_group: 'Lyme'
+   export_column_name: 'STATE'
+   value_from: 'WY'
+   value_to: 'Wyoming'
+   sort_order: 58
+
+ ##### Measles #####
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'DEATH'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'HOSPITAL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'ONSET'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBNAME'
+   value_from:
+   value_to: '999999999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'OUTBREL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Measles'
+   export_column_name: 'ZIPCODE'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+
+  ##### Meningitis #####
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'Y'
+   value_to: '1'
+   sort_order: 1
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'N'
+   value_to: '2'
+   sort_order: 2
+
+ - disease_code_group: 'Meningitis'
+   export_column_name: 'DAYCARE'
+   value_from: 'UNK'
+   value_to: '9'
+   sort_order: 3
+
+  ##### Mumps-Rubella #####
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'DEATH'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'HOSPITAL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'ONSET'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBNAME'
+   value_from:
+   value_to: '999999999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'OUTBREL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Mumps-Rubella'
+   export_column_name: 'ZIPCODE'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+
+ ##### Pertussis #####
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DIED'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'HOSPITAL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ONSET'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBNAME'
+   value_from:
+   value_to: '999999999999999999'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'Y'
+   value_to: 'Y'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'N'
+   value_to: 'N'
+   sort_order: 2
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'OUTBREL'
+   value_from: 'UNK'
+   value_to: 'U'
+   sort_order: 3
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'ZIPCODE'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+
+ - disease_code_group: 'Pertussis'
+   export_column_name: 'DATEHEAL'
+   value_from:
+   value_to: '999999999'
+   sort_order: 1
+
+ ##### STD #####
+
+ - disease_code_group: 'STD'
+   export_column_name: 'ZIP'
+   value_from:
+   value_to: '99999'
+   sort_order: 1
+

@@ -1,0 +1,21 @@
+.place_exposure
+  - f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
+    -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+        #new_place_exposure
+          = error_messages_for :object => p.object
+          %span{:class => 'horiz'}
+            = p.label(:name)
+            = p.text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
+          %span{:class => 'horiz'}
+            = p.label(:place_type_id, 'Type')
+            = p.dropdown_code_field(:place_type_id, 'placetype')
+
+  - f.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pp_form|
+    %span.horiz
+      =pp_form.label(:date_of_exposure)
+      =pp_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+    %span.horiz
+      =pp_form.label('&nbsp;')
+
+  %hr

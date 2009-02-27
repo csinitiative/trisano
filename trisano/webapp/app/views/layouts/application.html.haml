@@ -1,0 +1,99 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+!!!
+%html
+  %head
+    %title 
+      TriSano:
+      = yield :title
+
+    = stylesheet_link_tag 'grid', 'structure', 'typography', 'action', 'tabview', :cache => 'styles'
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'shortcut', 'element-beta-min', 'tabview-min', :cache => 'base'
+    
+    / Calendar
+    = calendar_date_select_includes
+
+  %body.yui-skin-sam{:onload=>"global_shortcuts_init();"}
+    = javascript_include_tag 'wz_tooltip'
+    #head
+      .container
+        .left
+          %a{:href => home_path, :id => 'logo'}
+            = image_tag("logo.png", :border => 0)
+        .right
+          .areas
+            - if User.current_user.is_entitled_to?(:create_event)
+              = link_to 'NEW CMR', new_cmr_path
+              |
+            = link_to 'CMRS', cmrs_path_with_defaults
+            |
+            - if User.current_user.is_admin?
+              = link_to 'FORMS', forms_path
+              |
+            = link_to 'SEARCH', search_path
+            - if User.current_user.is_admin?
+              |
+              = link_to 'ADMIN', admin_path
+          .user
+            - if RAILS_ENV == "production"
+              = current_user_name
+            - else 
+              - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
+              - form_tag(url_for(:controller => "events", :action => "change_user")) do
+                %span{:id => "user_name"}= current_user_name + ":"
+                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.submit()", :style => "display: inline")
+    #bar
+      .container
+        .left.areas_title
+          = yield :title
+        .right.action1
+          = yield :tools_two
+    #title_area
+      .container
+        - if flash[:notice]
+          #flash-message.notice-message
+            = flash[:notice]
+        - elsif flash[:error]
+          #flash-message.error-message
+            = flash[:error]
+        .name
+          = yield :name
+        .tools
+          = yield :tools
+    #main-content
+      %script
+        header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
+        Element.setStyle('main-content', {top: header_height})
+      .container
+        = yield
+      .container
+        #foot
+          .footlogo
+            = image_tag("foot.png", :border => 0)
+          .foottext
+            .top
+              Copyright © 2009 Collaborative Software Foundation
+            .bottom
+              %a{:href => 'http://www.trisano.org/collaborate/'} Support
+              |
+              %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} Feedback
+              |
+              %a{:href => 'http://www.trisano.org'} About TriSano
+              |
+              %a{:href => 'http://www.trisano.org/collaborate/licenses/'} License
+              = yield :enable_save_buttons
+                   

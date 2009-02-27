@@ -1,0 +1,17 @@
+%fieldset.form
+  %legend Place Name
+
+  -f.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+    = error_messages_for :object => p.object
+    -core_element :name, p, :horiz do
+      =p.label(:name)
+      =h(p.object.name)
+    -core_element :place_type_id, p, :horiz do
+      =p.label(:place_type_id, 'Type')
+      =h(p.object.place_type.code_description) unless p.object.place_type.nil?
+
+  -event_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |p|
+    -core_element :date_of_exposure, p, :horiz do
+      =p.label(:date_of_exposure)
+      =p.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+  

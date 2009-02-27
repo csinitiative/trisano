@@ -1,0 +1,26 @@
+- disease: 'Hepatitis'
+  codes: '10110|10105|10100|10104|10106|10101|10102|10103|10120'
+  
+- disease: 'Meningitis'
+  codes: '10150|10590|10650|10640'
+  
+- disease: 'Lyme'
+  codes: '11080'
+  
+- disease: 'Measles'
+  codes: '10140'
+  
+- disease: 'Mumps-Rubella'
+  codes: '10180|10200'
+  
+- disease: 'Pertussis'
+  codes: '10190'
+  
+- disease: 'Tetanus'
+  codes: '10210'
+  
+- disease: 'STD'
+  codes: '10311|10312|10313|10314|10315|10318|10273|10274|10276|10280|10306|10307|10308|10309'
+  
+- disease: 'Congenital Syphilis'
+  codes: '10316'

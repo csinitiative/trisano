@@ -1,0 +1,380 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+case_status_unknown:
+  id: 1801
+  code_name: "case"
+  the_code: "U"
+  code_description: "Unknown"
+
+case_status_confirmed:
+  id: 1802
+  code_name: "case"
+  the_code: "C"
+  code_description: "Confirmed"
+
+case_status_probable:
+  id: 1803
+  code_name: "case"
+  the_code: "P"
+  code_description: "Probable"
+
+case_status_suspect:
+  id: 1804
+  code_name: "case"
+  the_code: "S"
+  code_description: "Suspect"
+
+case_status_notcase:
+  id: 1805
+  code_name: "case"
+  the_code: "NC"
+  code_description: "Not Case"
+
+case_status_chroniccarrier:
+  id: 1806
+  code_name: "case"
+  the_code: "CC"
+  code_description: "Chronic Carrier"
+
+case_status_discarded:
+  id: 1807
+  code_name: "case"
+  the_code: "D"
+  code_description: "Discarded"
+
+#################################
+
+gender_male:
+  id: 1
+  code_name: "gender"
+  the_code:  "M"
+  code_description: "Male"
+
+gender_female:
+  id: 2
+  code_name: "gender"
+  the_code:  "F"
+  code_description: "Female"
+
+gender_unknown:
+  id: 3
+  code_name: "gender"
+  the_code:  "U"
+  code_description: "Unknown"
+
+ethnicity_hispanic:
+  id: 101
+  code_name: "ethnicity"
+  the_code:  "H"
+  code_description: "Hispanic or Latino"
+
+ethnicity_non_hispanic:
+  id: 102
+  code_name: "ethnicity"
+  the_code:  "NH"
+  code_description: "Not Hispanic or Latino"
+
+ethnicity_other:
+  id: 103
+  code_name: "ethnicity"
+  the_code:  "O"
+  code_description: "Other"
+
+ethnicity_unknown:
+  id: 104
+  code_name: "ethnicity"
+  the_code:  "U"
+  code_description: "Unknown"
+
+race_white:
+  id: 201
+  code_name: "race"
+  the_code:  "W"
+  code_description: "White"
+
+race_black:
+  id: 202
+  code_name: "race"
+  the_code:  "B"
+  code_description: "Black / African-American"
+
+race_indian:
+  id: 203
+  code_name: "race"
+  the_code:  "AA"
+  code_description: "American Indian"
+
+race_asian:
+  id: 204
+  code_name: "race"
+  the_code:  "A"
+  code_description: "Asian"
+
+race_alaskan:
+  id: 205
+  code_name: "race"
+  the_code:  "AK"
+  code_description: "Alaskan Native"
+
+race_hawaiian:
+  id: 206
+  code_name: "race"
+  the_code:  "H"
+  code_description: "Native Hawaiian / Pacific Islander"
+
+language_english:
+  id: 301
+  code_name: "language"
+  the_code:  "EN"
+  code_description: "English"
+
+language_spanish:
+  id: 302
+  code_name: "language"
+  the_code:  "ES"
+  code_description: "Spanish"
+
+state_utah:
+  id: 1001
+  code_name: "state"
+  the_code:  "UT"
+  code_description: "Utah"
+
+state_alabama:
+  id: 1002
+  code_name: "state"
+  the_code:  "AL"
+  code_description: "Alabama"
+
+state_alaska:
+  id: 1003
+  code_name: "state"
+  the_code:  "AK"
+  code_description: "Alaska"
+
+state_arizona:
+  id: 1004
+  code_name: "state"
+  the_code:  "AZ"
+  code_description: "Arizona"
+
+state_arkansas:
+  id: 1005
+  code_name: "state"
+  the_code:  "AR"
+  code_description: "Arkansas"
+
+county_salt_lake:
+  id: 1101
+  code_name: "county"
+  the_code:  "SL"
+  code_description: "Salt Lake"
+  jurisdiction_id: 103
+
+county_summit:
+  id: 1102
+  code_name: "county"
+  the_code:  "SU"
+  code_description: "Summit"
+  jurisdiction_id: 103
+
+district_alpine:
+  id: 1201
+  code_name: "district"
+  the_code:  "AL"
+  code_description: "Alpine"
+
+district_beaver:
+  id: 1202
+  code_name: "district"
+  the_code:  "BV"
+  code_description: "Beaver"
+
+location_home:
+  id: 1301
+  code_name: "location"
+  the_code:  "H"
+  code_description: "Home"
+
+location_work:
+  id: 1302
+  code_name: "location"
+  the_code:  "W"
+  code_description: "Work"
+
+location_unspecified:
+  id: 1303
+  code_name: "location"
+  the_code:  "U"
+  code_description: "Unspecified"
+
+location_mobile:
+  id: 1304
+  code_name: "location"
+  the_code:  "M"
+  code_description: "Mobile"
+
+yesno_unknown:
+  id: 1401
+  code_name: "yesno"
+  the_code: "U"
+  code_description: "Unknown"
+
+yesno_yes:
+  id: 1402
+  code_name: "yesno"
+  the_code: "Y"
+  code_description: "Yes"
+
+yesno_no:
+  id: 1403
+  code_name: "yesno"
+  the_code: "N"
+  code_description: "No"
+
+yesno_maybe:
+  id: 1404
+  code_name: "yesno"
+  the_code: "M"
+  code_description: "Maybe"
+
+specimen_blood:
+  id: 1501
+  code_name: "specimen"
+  the_code: "B"
+  code_description: "Blood"
+
+specimen_urine:
+  id: 1502
+  code_name: "specimen"
+  the_code: "U"
+  code_description: "Urine"
+
+specimen_stool:
+  id: 1503
+  code_name: "specimen"
+  the_code: "S"
+  code_description: "Stool"
+
+specimen_tissue:
+  id: 1504
+  code_name: "specimen"
+  the_code: "T"
+  code_description: "Tissue"
+
+imported_from_unknown:
+  id: 2101
+  code_name: "imported"
+  the_code: "U"
+  code_description: "Unknown"
+
+imported_from_utah:
+  id: 2102
+  code_name: "imported"
+  the_code: "UT"
+  code_description: "Utah"
+
+imported_from_other_country:
+  id: 2103
+  code_name: "imported"
+  the_code: "F"
+  code_description: "Outside U.S."
+
+imported_from_other_state:
+  id: 2104
+  code_name: "imported"
+  the_code: "US"
+  code_description: "Other U.S. State"
+
+telephonelocationtype_unknown:
+  id: 2105
+  code_name: "telephonelocationtype"
+  the_code: "UNK"
+  code_description: "Unknown"
+  sort_order: 5
+
+telephonelocationtype_home:
+  id: 2106
+  code_name: "telephonelocationtype"
+  the_code: "HT"
+  code_description: "Home"
+  sort_order: 10
+
+telephonelocationtype_work:
+  id: 2107
+  code_name: "telephonelocationtype"
+  the_code: "WT"
+  code_description: "Work"
+  sort_order: 15
+
+telephonelocationtype_mobile:
+  id: 2108
+  code_name: "telephonelocationtype"
+  the_code: "MT"
+  code_description: "Mobile"
+  sort_order: 20
+
+## Contact dispositions codes
+
+contactdispositiontype_ooj:
+  id: 2200
+  code_name: 'contactdispositiontype'
+  the_code: 'OOJ'
+  code_description: 'Out of jurisdiction'
+  sort_order: 100
+
+contactdispositiontype_not_infected:
+  id: 2201
+  code_name: "contactdispositiontype"
+  the_code: "NI"
+  code_description: "Not Infected"
+  sort_order: 60
+
+## Contact type codes
+
+contact_type_sexual:
+  id: 2250
+  code_name: 'contact_type'
+  the_code: 'SEXUAL'
+  code_description: 'Sexual'
+  sort_order: 10
+
+contact_type_household:
+  id: 2251
+  code_name: "contact_type"
+  the_code: "HOUSEHOLD"
+  code_description: "Household"
+  sort_order: 20
+
+## age type codes
+
+age_type_days:
+  id: 2300
+  code_name: "age_type"
+  the_code: 3
+  code_description: "days"
+
+age_type_weeks:
+  id: 2301
+  code_name: "age_type"
+  the_code: 2
+  code_description: "weeks"
+
+age_type_months:
+  id: 2302
+  code_name: "age_type"
+  the_code: 1
+  code_description: "months"
+
+age_type_years:
+  id: 2303
+  code_name: "age_type"
+  the_code: 0
+  code_description: "years"
+
+age_type_unknown:
+  id: 2304
+  code_name: "age_type"
+  the_code: 9
+  code_description: "unknown"
+  

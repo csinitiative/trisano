@@ -1,0 +1,109 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<script type="text/javascript">
+  cmr_shortcuts_init();
+</script>
+
+<% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
+
+<% content_for :title do %>
+  View Morbidity Event: <%= patient_name %>
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= button_to("Create New Morbidity Report", {:action => "new"}, { :method => :get }) %>
+<% end %>
+
+<% content_for :tools do %>
+<% end %>
+
+<% content_for :name do %>
+<table class='list'>
+  <tr>
+    <th class='forminformation'>Patient Name</th>
+    <th>Disease</th>
+    <th>Jurisdictions</th>
+    <th>Status</th>
+  </tr>
+  <%= render :partial => 'morbidity_events/event', :locals => {:event => @event, :with_show => false, :with_export_options => true, :extra_tools => " | " + link_to('Back to list of CMRs', cmrs_path_with_defaults) } %>
+</table>
+<% end %>
+
+<%= render :partial => 'morbidity_events/export_options', :locals => { :path => formatted_cmr_path(@event, 'csv') } %>
+
+<% fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+  <% tabs = []
+     tabs << %w(demographic_tab Demographic)
+     tabs << %w(clinical_tab Clinical)
+     tabs << %w(lab_info_tab Laboratory)
+     tabs << %w(contacts_tab Contacts)
+     tabs << %w(epi_tab Epidemiological)
+     tabs << %w(reporting_tab Reporting)
+     tabs << %w(investigation_tab Investigation)
+     tabs << %w(notes_tab Notes)
+     tabs << %w(administrative_tab Administrative)
+  %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="demographic_tab">
+      <% patient_entity = @event.interested_party.person_entity %>
+      <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
+    </div>
+  
+    <div id="clinical_tab">
+      <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form }%>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
+    </div>
+  
+    <div id="lab_info_tab">
+      <%= render :partial => "events/lab_info_show_tab" %>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
+    </div>
+  
+    <div id="contacts_tab">
+      <%= render :partial => "events/contact_show_tab",  :locals => { :f => event_form } %>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Contacts" } %>
+    </div>
+  
+    <div id="epi_tab">
+      <%= render :partial => "events/epidemiological_show_tab", :locals => { :event_form => event_form }%>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
+    </div>
+  
+    <div id="reporting_tab">
+      <%#= render :partial => "events/reporting_show_tab", :locals => { :event_form => event_form }%>
+      <%#= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Reporting" } %>
+    </div>
+  
+    <div id="investigation_tab">
+      <%= render :partial => "events/investigation_show_tab" %>
+    </div>
+
+    <div id="notes_tab">
+      <%= render :partial => "events/notes_show_tab" %>
+    </div>
+
+    <div id="administrative_tab">
+      <%= render :partial => "events/admin_show_tab", :locals => { :event_form => event_form }%>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,50 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the
+-# terms of the GNU Affero General Public License as published by the
+-# Free Software Foundation, either version 3 of the License,
+-# or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License
+-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+-# This injects an existing clinician into a form
+
+-# Hack.  This template is rendered from both the ordinary CMR form and via the live-search
+-# Ajax callback.  During the latter we do not have the proper namespace set up for form
+-# fields.  This does that.
+- person_form = nil
+- if defined? f
+  - person_form = f
+- else
+  - uniq_id = Time.now.to_i
+  - fields_for(event_type + "[clinicians_attributes][#{uniq_id}]", @clinician) do |pe|
+    - person_form = pe
+
+- person = person_form.object.person_entity.person
+%div.existing_clinician{:style => 'margin-top: 20px; clear: both;'}
+  = person_form.hidden_field(:secondary_entity_id)
+  %span.horiz
+    %label Last Name
+    = h(person.last_name)
+  %span.horiz  
+    %label First Name
+    = h(person.first_name) || "&nbsp;"
+  %span.horiz
+    %label Middle Name
+    = h(person.middle_name) || "&nbsp;"
+  %span.horiz
+    %label Telephone
+    = h(person.safe_call_chain(:primary_phone, :simple_format)) || "&nbsp;"
+
+  - if defined? f
+    %span.horiz
+      = person_form.label :_delete, "Remove:"
+      = person_form.check_box :_delete

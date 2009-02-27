@@ -1,0 +1,79 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<% place_name = @event.interested_place.place_entity.place.name %>
+
+<% content_for :title do %>
+  View Place Event: <%= place_name %> 
+<% end %>
+
+<% content_for :name do %>
+  <table class='list'>
+    <tr>
+      <th class='forminformation'>Place Name</th>
+      <th>Assigned Jurisidiction</th>
+      <th>Original Patient</th>
+    </tr>
+    <tr>
+      <td class='forminformation'>
+        <% place_name(@event) do %>
+          <%= place_name %>
+        <% end %>
+        <small>Date: <%= @event.event_onset_date %></small>
+        <div class='tools'>
+          <%= basic_place_event_controls(@event, false) %>
+        </div>
+      </td>
+      <td>
+        <b><%= @event.primary_jurisdiction.short_name %></b>
+      </td>
+      <td>
+        <%- original_patient = @event.parent_event %>
+        <%= link_to("#{original_patient.interested_party.person_entity.person.full_name}", cmr_path(original_patient)) -%>
+        <p style='font-size: 12px; font-weight: light;'><%= original_patient.safe_call_chain(:disease_event, :disease, :disease_name) %></p>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<% content_for :tools do %>
+<% end %>
+
+<% fields_for(setup_place_event_tree(@event), :url => place_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+  <% tabs = []
+     tabs << %w(place_tab Place)
+     tabs << %w(investigation_tab Investigation)
+     tabs << %w(notes_tab Notes)
+  %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="place_tab">
+      <%= render :partial => "events/places/show", :locals => { :event_form => event_form } %>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Place" } %>
+    </div>
+  
+    <div id="investigation_tab">
+      <%= render :partial => "events/investigation_show_tab" %>
+    </div>
+
+    <div id="notes_tab">
+      <%= render :partial => "events/notes_show_tab" %>
+    </div>
+  <% end %>
+<% end %>

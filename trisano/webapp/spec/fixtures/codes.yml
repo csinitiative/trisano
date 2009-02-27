@@ -1,0 +1,214 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+investigation_status_unknown:
+  id: 1701
+  code_name: "investigation"
+  the_code: "U"
+  code_description: "Unknown"
+
+investigation_status_nyo:
+  id: 1702
+  code_name: "investigation"
+  the_code: "NYO"
+  code_description: "Not Yet Open"
+
+investigation_status_open:
+  id: 1703
+  code_name: "investigation"
+  the_code: "O"
+  code_description: "Open"
+
+investigation_status_closed:
+  id: 1704
+  code_name: "investigation"
+  the_code: "C"
+  code_description: "Closed"
+
+# >>> These look like legacy codes, should probably be removed
+event_type_ons:
+  id: 2001
+  code_name: "eventtype"
+  the_code: "ONS"
+  code_description: "ONS"
+
+event_type_diag:
+  id: 2002
+  code_name: "eventtype"
+  the_code: "DIAG"
+  code_description: "Diag"
+
+event_type_lt:
+  id: 2003
+  code_name: "eventtype"
+  the_code: "LT"
+  code_description: "LT"
+
+event_type_rc:
+  id: 2004
+  code_name: "eventtype"
+  the_code: "RC"
+  code_description: "RC"
+
+event_type_rs:
+  id: 2005
+  code_name: "eventtype"
+  the_code: "RS"
+  code_description: "RS"
+
+event_type_un:
+  id: 2006
+  code_name: "eventtype"
+  the_code: "UN"
+  code_description: "RS"
+
+# <<<
+
+imported_from_unknown:
+  id: 2101
+  code_name: "imported"
+  the_code: "U"
+  code_description: "Unknown"
+
+imported_from_utah:
+  id: 2102
+  code_name: "imported"
+  the_code: "UT"
+  code_description: "Utah"
+
+imported_from_other_country:
+  id: 2103
+  code_name: "imported"
+  the_code: "F"
+  code_description: "Outside U.S."
+
+imported_from_other_state:
+  id: 2104
+  code_name: "imported"
+  the_code: "US"
+  code_description: "Other U.S. State"
+
+place_type_hospital:
+  id: 2201
+  code_name: "placetype"
+  the_code: "H"
+  code_description: "Hospital / ICP"
+  sort_order: 10
+
+place_type_jurisdiction:
+  id: 2202
+  code_name: "placetype"
+  the_code: "J"
+  code_description: "Jurisdiction"
+  sort_order: 20
+
+place_type_lab:
+  id: 2203
+  code_name: "placetype"
+  the_code: "L"
+  code_description: "Laboratory"
+  sort_order: 30
+
+place_type_clinic:
+  id: 2204
+  code_name: "placetype"
+  the_code: "C"
+  code_description: "Clinic / Doctor's Office"
+  sort_order: 40
+
+place_type_other:
+  id: 2206
+  code_name: "placetype"
+  the_code: "O"
+  code_description: "Other"
+  sort_order: 50
+
+participant_interested_party:
+  id: 2301
+  code_name: "participant"
+  the_code: "I"
+  code_description: "Interested Party"
+
+participant_hospitalized_at:
+  id: 2302
+  code_name: "participant"
+  the_code: "H"
+  code_description: "Hospitalized At"
+
+participant_reported_by:
+  id: 2303
+  code_name: "participant"
+  the_code: "RB"
+  code_description: "Reported By"
+
+participant_reporting_agency:
+  id: 2304
+  code_name: "participant"
+  the_code: "RA"
+  code_description: "Reporting Agency"
+
+participant_jurisdiction:
+  id: 2305
+  code_name: "participant"
+  the_code: "J"
+  code_description: "Jurisdiction"
+
+participant_treatment:
+  id: 2306
+  code_name: "participant"
+  the_code: "TW"
+  code_description: "Treated With"
+
+participant_contact:
+  id: 2307
+  code_name: "participant"
+  the_code: "CO"
+  code_description: "Contact"
+
+participant_clinician:
+  id: 2308
+  code_name: "participant"
+  the_code: "TB"
+  code_description: "Treated By"
+
+participant_diagnosing_health_facility:
+  id: 2309
+  code_name: "participant"
+  the_code: "DA"
+  code_description: "Diagnosed At"
+  sort_order: 55
+
+participant_testing_lab:
+  id: 2310
+  code_name: "participant"
+  the_code: "EB"
+  code_description: "Tested By"
+
+participant_place_exposure:
+  id: 2400
+  code_name: "participant"
+  the_code: "PE"
+  code_description: "Place Exposure"
+
+participant_place_of_interest:
+  id: 2410
+  code_name: "participant"
+  the_code: "PoI"
+  code_description: "Place of Interest"
+
+participant_secondary_jurisdiction:
+  id: 2415
+  code_name: "participant"
+  the_code: "SJ"
+  code_description: "Secondary Jurisdiction"
+
+address_location_type:
+  id: 2311
+  code_name: "locationtype"
+  the_code: "ALT"
+  code_description: "Address Location Type"
+
+telephone_location_type:
+  id: 2312
+  code_name: "locationtype"
+  the_code: "TLT"
+  code_description: "Telephone Location Type"

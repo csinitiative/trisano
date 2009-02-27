@@ -1,0 +1,51 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- lab_form = nil
+- uniq_id = Time.now.to_i
+
+- if defined? f
+  - lab_form = f
+- else
+  - fields_for(prefix + "[labs_attributes][#{uniq_id}]", lab, :builder => ExtendedFormBuilder) do |lr|
+    - lab_form = lr
+
+- lab_id = lab_form.object.id || uniq_id
+
+%div{:class => 'lab', :style => "clear: both;"}
+  = error_messages_for :object => lab_form.object
+
+  -# TGRII: Remember to handle core-field-configs for labs as a whole.  Review the trunk code.
+
+  - lab_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+    - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+
+      - core_element(:name, p, :horiz) do
+        = trisano_auto_complete("#{p.object_name}[name]", "lab_name_", p.object.name, "Lab", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
+
+      - if defined?(f) && !f.object.new_record?
+        %span.horiz
+          = f.label :_delete, "Remove lab (with results)"
+          = f.check_box :_delete
+
+  - lab_form.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result_fields|
+    = render :partial => "events/lab_result", :locals => { :f => lab_result_fields }
+
+  %div{:id => "new_lab_result_holder_#{lab_id}"}
+
+  %p{:style => "clear: both; margin-left: 20px"}
+    = add_lab_result_link "Add a new lab result to this lab", @event, lab_form.object_name, lab_id
+
+  %hr{:style => "height: 2px; color: black; background-color: black"}

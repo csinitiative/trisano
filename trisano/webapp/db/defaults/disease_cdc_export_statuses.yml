@@ -1,0 +1,485 @@
+
+AIDS:
+  confirmed:
+  probable:
+  suspect: 
+  unknown:
+
+Anthrax:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Bacterial meningitis, other:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Botulism, foodborne:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Botulism, infant:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Botulism, other:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Brucellosis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Campylobacteriosis:
+  confirmed: 
+  probable:
+  suspect:
+  unknown:
+
+Chancroid:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Chlamydia trachomatis genital infection:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Cholera:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Coccidioidomycosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Cryptosporidiosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Cyclosporidiosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Dengue:
+  confirmed: 
+  probable: 
+  suspect: 
+  unknown: 
+
+Dengue hemorrhagic fever:
+  confirmed: 
+  probable: 
+  suspect: 
+  unknown: 
+
+Diptheria:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Eastern Equine Encephalitis Virus (invasive disease)**:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Ehrlichiosis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Giardiasis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Gonorrhea:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Haemophilus influenzae, invasive disease:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Hansen disease (Leprosy):
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Hantavirus infection:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: X
+
+Hemolytic Uremic syndrome (post-diarrheal):
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Hepatitis A, acute:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Hepatitis B, acute:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Hepatitis B virus infection, chronic:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Hepatitis B virus infection perinatal:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Hepatitis C, acute:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Hepatitis C virus infection, past or present:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+HIV:
+  confirmed: 
+  probable: 
+  suspect: 
+  unknown: 
+
+Influenza-associated mortality:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Legionellosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Listeriosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Lyme disease:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Malaria:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Measles (rubeola), total:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: X
+
+Meningococcal disease (Neisseria meningitidis):
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Mumps:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Neurosyphilis:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Pelvic Inflammatory Disease (PID), Unknown Etiology:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Pertussis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Plague:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Poliomyelitis (paralytic):
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Psittacosis :
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Q fever:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Rabies, animal :
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: X
+
+Rabies, human:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Rocky Mountain spotted fever :
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Rubella:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: X
+
+Rubella (congenital syndrome):
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Salmonellosis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+SARS:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Shiga toxin producing Escherichia coli:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Shigellosis:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Smallpox:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+St. Louis Encephalitis virus**:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Streptococcal disease, invasive, Group A:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Streptococcal disease, invasive, Group B:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Streptococcal toxic-shock syndrome:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Streptococcus pneumoniae, invasive, drug-resistant:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+Streptococcus pneumoniae, invasive disease (<5 years):
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Syphilis, congenital:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, early latent:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, late latent:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, late with clinical manifestations other than neurosyphilis:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, primary:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, secondary:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, total primary and secondary:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Syphilis, unknown latent:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Tetanus:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: X
+
+Staphylococcal toxic-shock syndrome:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Trichinosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Tuberculosis:
+  confirmed: X
+  probable: 
+  suspect: 
+  unknown: 
+
+Tularemia:
+  confirmed: X
+  probable: X
+  suspect: X
+  unknown: X
+
+Typhoid fever:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Varicella:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: X
+
+West Nile virus infection:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Western Equine Encephalitis virus (invasive disease)**:
+  confirmed: X
+  probable: X
+  suspect: 
+  unknown: 
+
+Yellow Fever:
+  confirmed: X
+  probable: X
+  suspect: 

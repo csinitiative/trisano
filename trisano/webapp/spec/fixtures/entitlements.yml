@@ -1,0 +1,66 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+default_user_admin_priv_in_southeast_district:
+  privilege_id: 3
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 1
+  id: 1
+  created_at: <%= Time.now.to_s :db %>
+
+default_user_view_priv_in_southeast_district:
+  privilege_id: 1
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 1
+  id: 2
+  created_at: <%= Time.now.to_s :db %>
+
+default_user_update_priv_in_southeast_district:
+  privilege_id: 2
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 1
+  id: 3
+  created_at: <%= Time.now.to_s :db %>
+
+default_user_assign_task_priv_in_southeast_district:
+  privilege_id: 12
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 1
+  id: 4
+  created_at: <%= Time.now.to_s :db %>
+
+admin_user_admin_priv_in_southeast_district:
+  privilege_id: 3
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 2
+  id: 5
+  created_at: <%= Time.now.to_s :db %>
+
+update_user_update_priv_in_southeast_district:
+  privilege_id: 2
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 3
+  id: 6
+  created_at: <%= Time.now.to_s :db %>
+
+view_user_update_priv_in_southeast_district:
+  privilege_id: 1
+  jurisdiction_id: 75
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 4
+  id: 7
+  created_at: <%= Time.now.to_s :db %>
+
+update_user_update_priv_in_davis:
+  privilege_id: 2
+  jurisdiction_id: 102
+  updated_at: <%= Time.now.to_s :db %>
+  user_id: 5
+  id: 8
+  created_at: <%= Time.now.to_s :db %>
+

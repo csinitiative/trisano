@@ -1,0 +1,84 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<script type="text/javascript">
+    cmr_shortcuts_init();
+</script>
+
+<% content_for :title do %>
+  New Morbidity Event
+<% end %>
+
+<% content_for :name do %>
+  New CMR
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= save_buttons(@event) %> 
+<% end %>
+
+<% content_for :tools do %>
+  <%= link_to 'Back to list', cmrs_path %>
+<% end %>
+
+<%= error_messages_for :object => @event %>
+
+<% form_for(setup_human_event_tree(@event), :url => cmrs_path, :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
+  <% @event_form = event_form %>
+
+  <%# We put this here to keep jurisdiction from being changed in edit mode %>
+  <% jurisdictions = User.current_user.jurisdictions_for_privilege(:create_event) %>
+  <% content_for :jurisdiction_selection do %>
+    <% event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
+      <% core_element :secondary_entity_id, j, :horiz do -%>
+        <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
+        <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+      <% end -%>
+    <% end %>
+  <% end %>
+
+  <% tabs = []
+     tabs << %w(demographic_tab Demographic)
+     tabs << %w(clinical_tab Clinical)
+     tabs << %w(lab_info_tab Laboratory)
+     tabs << %w(contacts_tab Contacts)
+     tabs << %w(epi_tab Epidemiological)
+     tabs << %w(reporting_tab Reporting)
+     tabs << %w(investigation_tab Investigation)
+     tabs << %w(notes_tab Notes)
+     tabs << %w(administrative_tab Administrative)
+  %>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="demographic_tab">
+      <%#= render :partial => "events/people/form", :locals => { :f => event_form, :entity_data => @event.active_patient.person_entity, :event => @event, :event_form => event_form } %>
+      <%= render :partial => "events/people/form", :locals => { :f => event_form , :event => @event} %>
+    </div>
+    <div id="clinical_tab"><%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %></div>
+    <div id="lab_info_tab"><%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %></div>
+    <div id="contacts_tab"><%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %></div>
+    <div id="epi_tab"><%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %></div>
+    <div id="reporting_tab"><%#= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %></div>
+    <div id="investigation_tab"><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></div>
+    <div id="notes_tab"><%= render :partial => 'events/note_form', :locals => {:f => event_form} %></div>
+    <div id="administrative_tab"><%= render :partial => 'events/cmr_info_form', :locals => {:f => event_form} %></div>
+  <% end %>
+
+  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;"%>
+<% end %>

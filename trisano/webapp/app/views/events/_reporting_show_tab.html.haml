@@ -1,0 +1,74 @@
+%fieldset
+  %legend
+    Reporting Information
+  %fieldset.form
+    %legend
+      Agency
+    - if @event.active_reporting_agency.nil?
+      - fb_part = Participation.new
+      - fb_entity = Entity.new
+      - agency_data = Place.new
+    - else
+      - fb_part = @event.active_reporting_agency
+      - fb_entity = @event.active_reporting_agency.secondary_entity
+      - agency_data = @event.active_reporting_agency.secondary_entity.place_temp
+
+    - event_form.fields_for(:active_reporting_agency, fb_part, :builder => ExtendedFormBuilder) do |agency_form|
+      - agency_form.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |entity_form|
+        - entity_form.fields_for(:place, agency_data, :builder => ExtendedFormBuilder) do |place_form|
+          - core_element_show :name, place_form, :horiz do
+            = place_form.label(:name, 'Agency name')
+            = agency_data.name
+
+    - reporter_name = Person.new
+    - reporter_ent_loc = EntitiesLocation.new
+    - reporter_phone = Telephone.new
+
+    - fb_part = Participation.new
+    - fb_entity = Entity.new
+
+    - if !@event.reporter.nil?
+      - fb_part = @event.reporter
+      - fb_entity = @event.reporter.secondary_entity
+      - if !@event.reporter.secondary_entity.person_temp.nil?
+        - reporter_name = @event.reporter.secondary_entity.person_temp
+      - if !@event.reporter.secondary_entity.telephone_entities_locations.empty?
+        - reporter_ent_loc = @event.reporter.secondary_entity.telephone_entities_locations.last
+        - reporter_phone = reporter_ent_loc.location.telephones.last
+
+    - event_form.fields_for(:active_reporter, fb_part, :builder => ExtendedFormBuilder) do |participant_fields|
+      - participant_fields.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |agency_fields|
+        - agency_fields.fields_for(:person, reporter_name, :builder => ExtendedFormBuilder) do |reporter_fields|
+
+          %span.vert
+          - core_element_show :first_name, reporter_fields, :horiz do
+            = reporter_fields.label(:first_name)
+            = reporter_name.first_name
+          - core_element_show :last_name, reporter_fields, :horiz do
+            = reporter_fields.label(:last_name)
+            = reporter_name.last_name
+
+        %span.vert
+        - agency_fields.fields_for(:telephone_entities_location, reporter_ent_loc, :builder => ExtendedFormBuilder) do |el|
+          - core_element_show :entity_location_type_id, el, :horiz do
+            = el.label(:entity_location_type_id, "Phone type")
+            = l reporter_ent_loc.entity_location_type
+
+        - agency_fields.fields_for(:telephone, reporter_phone, :builder => ExtendedFormBuilder) do |phone_fields|
+          - core_element_show :area_code, phone_fields, :horiz do
+            = phone_fields.label(:area_code)
+            = reporter_phone.area_code
+          - core_element_show :phone_number, phone_fields, :horiz do
+            = phone_fields.label(:phone_number)
+            = reporter_phone.phone_number
+          - core_element_show :extension, phone_fields, :horiz do
+            = phone_fields.label(:extension)
+            = reporter_phone.extension
+
+          %span.vert
+          - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
+            = event_form.label(:results_reported_to_clinician_date)
+            = h(@event.results_reported_to_clinician_date) || '&nbsp;'
+          - core_element_show :first_reported_PH_date, event_form, :horiz do
+            = event_form.label(:first_reported_PH_date, 'Date first reported to public health')
+            = h(@event.first_reported_PH_date) || '&nbsp;'

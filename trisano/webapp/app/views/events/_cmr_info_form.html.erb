@@ -1,0 +1,88 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<fieldset>
+  <legend>Administrative Information 
+    <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
+    <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
+  </legend>
+  <div id='cmr_info_form'>
+    <% if not @event.record_number.blank? %>
+      <span class="label">Record number:</span> <%= @event.record_number %>
+    <% end %>
+
+    <% if not @event.MMWR_year.blank? %>
+      <span class="label">MMWR year:</span> <%= @event.MMWR_year %>
+      <span class="label">MMWR week:</span> <%= @event.MMWR_week %>
+    <% end %>
+    <br />
+    <span class="label">Date record created:</span>
+    <%= @event.event_onset_date %>
+    <p/>
+    <fieldset class="form">
+      <legend>Case / Outbreak</legend>
+      <% core_element :lhd_case_status_id, f, :horiz do -%>
+        <%= f.label(:lhd_case_status_id, "LHD case status") %>
+        <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
+      <% end -%>
+      <% core_element :state_case_status_id, f, :horiz do -%>
+        <%= f.label(:state_case_status_id, "State case status") %>
+        <%= f.dropdown_code_field(:state_case_status_id, 'case', {}) %>
+      <% end -%>
+      <% core_element :outbreak_associated_id, f, :horiz do -%>
+        <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
+        <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}, {}, @event) %>
+      <% end -%>
+      <% core_element :outbreak_name, f, :horiz do -%>
+        <%= f.label(:outbreak_name, "Outbreak") %>
+        <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event) %>
+      <% end -%>
+    </fieldset>
+    <fieldset class="form">
+      <legend>Auditing / Investigation</legend>
+      <% core_element :event_name, f, :horiz do -%>
+        <%= f.label(:event_name) %>
+        <%= f.core_text_field(:event_name, {:size => 25, :maxlength => 100}, @event) %>
+      <% end -%>
+      <%= yield :jurisdiction_selection %>
+      <% unless RAILS_ENV == "production" %>
+        <% core_element :event_status, f, :horiz do -%>
+          <%= f.label(:event_status) %>
+          <%= f.core_dropdown_field(:event_status, Event.get_states_and_descriptions, :state, :description, {:include_blank => false}) %>
+        <% end -%>
+        <% core_element :investigation_started_date, f, :horiz do -%>
+          <%= f.label(:investigation_started_date, "Date investigation started") %>
+          <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>
+        <% end -%>
+        <% core_element :investigation_completed_LHD_date, f, :horiz do -%>
+          <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>
+          <%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %>
+        <% end -%>
+        <% core_element :review_completed_by_state_date, f, :horiz do -%>
+          <%= f.label(:review_completed_by_state_date, "Date review completed by state") %>
+          <%= f.calendar_date_select(:review_completed_by_state_date, :year_range => 5.years.ago..0.years.from_now) %>
+        <% end -%>
+      <% end -%>
+      <% core_element :acuity, f, :horiz do -%>
+        <%= f.label(:acuity) %>
+        <%= f.core_text_field(:acuity, {:size => 25, :maxlength => 255}) %>
+      <% end -%>
+    </fieldset>
+  </div>
+</fieldset>

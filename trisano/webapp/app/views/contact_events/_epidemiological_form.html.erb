@@ -1,0 +1,78 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<fieldset>
+  <legend>Epidemiological Information
+    <span id='epi_info_hide' onClick="Element.hide('epi_info_form'); Element.hide('epi_info_hide'); Element.show('epi_info_show'); return false;">[Hide]</span>
+    <span id='epi_info_show' onClick="Element.show('epi_info_form'); Element.hide('epi_info_show'); Element.show('epi_info_hide'); return false;" style="display: none;">[Show]</span>
+  </legend>
+  <div id='epi_info_form'>
+    <% f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ap| -%>
+      <% ap.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |rf| -%>
+        <fieldset class="form">
+          <legend>Contact Oriented</legend>
+          <% core_element :food_handler_id, rf, :horiz do %>
+            <%= rf.label(:food_handler_id) %>
+            <%= rf.dropdown_code_field(:food_handler_id, 'yesno', {}, {}, @event) %>
+          <% end %>
+          <% core_element :healthcare_worker_id, rf, :horiz do %>
+            <%= rf.label(:healthcare_worker_id) %>
+            <%= rf.dropdown_code_field(:healthcare_worker_id, 'yesno', {}, {}, @event) %>
+          <% end %>
+          <% core_element :group_living_id, rf, :horiz do %>
+            <%= rf.label(:group_living_id) %>
+            <%= rf.dropdown_code_field(:group_living_id, 'yesno', {}, {}, @event) %>
+          <% end %>
+          <% core_element :day_care_association_id, rf, :horiz do %>
+            <%= rf.label(:day_care_association_id) %>
+            <%= rf.dropdown_code_field(:day_care_association_id, 'yesno', {}, {}, @event) %>
+          <% end %>
+          <% core_element :occupation, rf, :horiz do %>
+            <%= rf.label(:occupation) %>
+            <%= rf.core_text_field(:occupation, {:size => 25, :maxlength => 255}, @event) %>
+          <% end %>          
+        </fieldset>
+        <br />
+        <fieldset class="form">
+          <legend>Other</legend>
+          <% core_element :imported_from_id, f, :horiz do -%>
+            <%= f.label(:imported_from_id) %>
+            <%= f.dropdown_code_field(:imported_from_id, 'imported', {}, {}, @event) %>
+          <% end -%>    
+          <% core_element :risk_factors, rf, :horiz do %>
+            <%= rf.label(:risk_factors) %>
+            <%= rf.core_text_field(:risk_factors,{:size => 25, :maxlength => 255}, @event) %>
+          <% end %>
+          <% core_element :risk_factors_notes, rf, :horiz do %>
+            <%= rf.label(:risk_factors_notes) %>
+            <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
+          <% end %>
+          <% core_element :other_data_1, f, :vert do -%>
+            <%= f.label(:other_data_1, 'Other data 1') %>
+            <%= f.text_field(:other_data_1, :size => 30, :maxlength => 255) %>
+          <% end -%>
+          <% core_element :other_data_2, f, :horiz do -%>
+            <%= f.label(:other_data_2, "Other data 2") %>
+            <%= f.text_field(:other_data_2, :size => 30, :maxlength => 255) %>
+          <% end -%>
+        </fieldset>
+      <% end %>
+    <% end %>
+  </div>
+</fieldset>

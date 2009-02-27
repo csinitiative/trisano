@@ -1,0 +1,86 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%span.section-header
+  Administrative Information
+
+%span{:class => "horiz"}
+  %span.print-label Record number
+  %span.print-value= @event.record_number
+
+%span{:class => "vert"}
+  %span.print-label Date record created
+  %span.print-value= @event.event_onset_date
+
+%span{:class => "horiz"}
+  %span.print-label MMWR year
+  %span.print-value= @event.MMWR_year
+
+%span{:class => "vert"}
+  %span.print-label MMWR week
+  %span.print-value= @event.MMWR_week
+
+%span{:class => "vert"}
+  %span.print-label Jurisdiction of Residence
+  - patient_entity = @event.active_patient.primary_entity
+  - if patient_entity
+    - unless patient_entity.address_entities_locations.empty?
+      - address = patient_entity.address_entities_locations.last.location.addresses.last
+      - if address && address.county && address.county.jurisdiction
+        - jurisdiction_name = address.county.jurisdiction.name
+  %span.print-value= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
+
+%span.subsection-header
+  Case / Outbreak
+- core_element_print :lhd_case_status_id, event_form, :horiz do
+  %span.print-label LHD case status:
+  %span.print-value= l(@event.lhd_case_status) || '&nbsp;'
+- core_element_print :state_case_status_id, event_form, :vert do
+  %span.print-label State case status:
+  %span.print-value= l(@event.state_case_status) || '&nbsp;'
+- core_element_print :outbreak_associated_id, event_form, :horiz do
+  %span.print-label Outbreak associated:
+  %span.print-value= l(@event.outbreak_associated) || '&nbsp;'
+- core_element_print :outbreak_name, event_form, :vert do
+  %span.print-label Outbreak name:
+  %span.print-value= h(@event.outbreak_name) || '&nbsp;'
+
+%span.subsection-header
+  Investigation
+- event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j|
+  - core_element_print :secondary_entity_id, j, :horiz do
+    %span.print-label Jurisdiction responsible for investigation:
+    %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
+  - core_element_print :event_status, event_form, :vert do
+    %span.print-label Event status:
+    %span.print-value= h(@event.current_state.description) || '&nbsp;'
+  - core_element_print :investigation_started_date, event_form, :horiz do
+    %span.print-label Date investigation started:
+    %span.print-value= h(@event.investigation_started_date) || '&nbsp;'
+  - core_element_print :investigation_completed_LHD_date, event_form, :vert do
+    %span.print-label Date invesitgation completed:
+    %span.print-value= h(@event.investigation_completed_LHD_date) || '&nbsp;'
+
+%span.subsection-header
+  Auditing
+- core_element_print :event_name, event_form, :horiz do
+  %span.print-label Event name:
+  %span.print-value= h(@event.event_name) || '&nbsp;'
+- core_element_print :review_completed_by_state_date, event_form, :horiz do
+  %span.print-label Date review completed by state:
+  %span.print-value= h(@event.review_completed_by_state_date) || '&nbsp;'
+- core_element_print :acuity, event_form, :vert do
+  %span.print-label Acuity:
+  %span.print-value= h(@event.acuity) || '&nbsp;'

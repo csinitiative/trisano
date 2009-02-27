@@ -1,0 +1,59 @@
+== Contact Information
+
+TriSano
+http://www.trisano.org
+
+IRC: #trisano on freenode
+
+Collaborative Software Foundation
+1 SW Columbia Street, #640
+Portland, OR 97258
+Phone: 503.295.7970
+Fax: 503.295.7789
+
+== Contributors
+
+See CONTRIBUTORS file.
+
+== License
+
+See COPYING file.
+
+=== License and Copyright Information regarding Dependant Third-Party Software
+
+TriSano is dependant on the following packages. They are known to be compatible with the TriSano
+license (See COPYING file).
+
+http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
+
+*Package*            *License*         *Copyright / Creator*
+ ruby                 Ruby License      Copyright (c) 1999-2007 Yukihiro "Matz" Matsumoto
+ JRuby                LGPL              See http://jruby.org for Copyright holders
+ rails                MIT               Copyright © 2004 David Heinemeier Hansson
+ jruby-openssl        BSD and MIT       Copyright (C) 2007 Ola Bini <ola.bini@gmail.com>
+ hpricot              MIT               Copyright (c) 2006 why the lucky stiff
+ mechanize            GPLv2             Copyright (c) 2005 by Michael Neumann (mneumann@ntecs.de), Copyright (c) 2007 by Aaron Patterson (aaronp@rubyforge.org) 
+ rest-open-uri        MIT               Leonard Richardson
+ postgres-pr          Ruby License      Michael Neumann  
+ warbler              MIT               Copyright 2007-2008 Sun Microsystems, Inc.
+ Selenium             Apache 2          http://selenium.openqa.org/about/contributors.html
+ rubyforge            MIT               http://rubyforge.org/  
+ rake                 MIT               Copyright 2003, 2004 by Jim Weirich
+ hoe                  MIT               Copyright (c) Ryan Davis, Zen Spider Software
+ builder              MIT               Copyright 2004 by Jim Weirich (jim@weirichhouse.org)
+ auto_complete        MIT               Copyright (c) 2007 David Heinemeier Hansson
+ haml                 MIT               Copyright (c) 2006-2007 Hampton Catlin
+ rspec                MIT               Copyright (c) 2005-2007 The RSpec Development Team,  Copyright (c) 2005-2007 Thomas Fuchs
+ Yahoo YUI            BSD               Copyright (c) 2008, Yahoo! Inc.
+ SASS Gridification   MIT               Copyright (c) 2008 Lorin Tackett
+ autotab              MIT               Michael J. Sepcot (michael.sepcot@gmail.com)
+ logging              Ruby License      Tim Pease http://rubyforge.org/projects/logging
+ flexmock             MIT               Jim Weirich http://rubyforge.org/projects/flexmock/
+ lockfile             Ruby License      http://rubyforge.org/projects/codeforpeople/
+ rubyzip              Ruby License      Thomas Sondergaard http://rubyzip.sourceforge.net/
+ json                 Ruby License      Florian Frank http://json.rubyforge.org/ 
+ json-jruby           Ruby License      Daniel Luz http://json-jruby.rubyforge.org/ 
+ will-paginate        MIT               Copyright (c) 2007 PJ Hyett and Mislav Marohnić 
+ ci-reporter          MIT               copyright (c) 2006-2007 Nick Sieger <nicksieger@gmail.com>
+ activerecord-jdbc    BSD               Nick Sieger <nick@nicksieger.com> and Ola Bini<olabini@gmail.com> with lots of help from the JRuby community.
+ shortcut             BSD               Binny V A http://www.openjs.com/scripts/events/keyboard_shortcuts/

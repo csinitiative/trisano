@@ -1,0 +1,63 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
+  - ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+
+    -# Filter out soft-deleted records
+    - next if f.object.deleted_at
+
+    %div{:class => 'contact', :style => "clear: both;"}
+      - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+        = error_messages_for :object => p.object
+        %span.horiz
+          = p.label(:last_name)
+          = p.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')
+        %span.horiz
+          = p.label(:first_name)
+          = p.text_field(:first_name, :size => 20, :maxlength => 25)
+
+      - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+        %span.horiz
+          = pc_fields.label(:disposition_id)
+          = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+        %span.horiz
+          = pc_fields.label(:contact_type_id)
+          = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+
+        - unless f.object.new_record?
+          %span.horiz
+            = f.label :_delete, "Remove"
+            = f.check_box :_delete
+
+      - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |tel_form|
+        %span.vert
+          = error_messages_for :object => tel_form.object
+          - core_element :entity_location_type_id, tel_form, :horiz do
+            = tel_form.label(:entity_location_type_id, "Phone type")
+            = tel_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+          %span.horiz
+            = tel_form.label(:area_code)
+            = tel_form.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'})
+          %span.horiz
+            = tel_form.label(:phone_number)
+            = tel_form.core_text_field(:phone_number, {:size => 8})
+          %span.horiz
+            = tel_form.label(:extension)
+            = tel_form.core_text_field(:extension, {:size => 6, :maxlength => 6})
+
+            = (link_to("Edit contact event", edit_contact_event_path(f.object), {:id => "edit-contact-event"})) unless f.object.new_record?
+
+      %hr

@@ -1,0 +1,72 @@
+###############
+# Hospitals
+#
+AVH:
+  id: 2
+  name: "Alta View Hospital"
+  short_name: "AVH"
+  place_type_id: 2201
+  entity_id: 4
+
+BRVH:
+  id: 5
+  name: "Bear River Valley Hospital"
+  short_name: "BRVH"
+  place_type_id: 2201
+  entity_id: 7
+
+###############
+# Jurisidictions
+#
+Southeastern_District:
+  id: 73
+  name: "Southeastern District"
+  short_name: "SED"
+  place_type_id: 2202
+  entity_id: 75
+
+Davis_County:
+  id: 101
+  name: "Davis County Health Department"
+  short_name: "Davis County"
+  place_type_id: 2202
+  entity_id: 102
+
+Summit_County:
+  id: 103
+  name: "Summit County Health Department"
+  short_name: "Summit County"
+  place_type_id: 2202
+  entity_id: 104
+
+unassigned_jurisdiction:
+  id: 105
+  name: 'Unassigned'
+  short_name: 'Unassigned'
+  place_type_id: 2202
+  entity_id: 105
+
+###############
+# Labs
+#
+Existing_Lab_One:
+  id: 100
+  name: "Existing Lab One"
+  place_type_id: 2203
+  entity_id: 100 
+
+Existing_Lab_Two:
+  id: 110
+  name: "Existing Lab Two"
+  place_type_id: 2203
+  entity_id: 110 
+
+##############
+#
+# Other places
+#
+Davis_Nat:
+  id: 102
+  name: "Davis Natatorium"
+  place_type_id: 2206
+  entity_id: 103
