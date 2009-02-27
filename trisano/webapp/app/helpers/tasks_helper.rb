@@ -48,7 +48,7 @@ module TasksHelper
 
   def sort_urls(task_owner)
     prefix = task_owner.is_a?(Event) ? 'event' : 'user'
-    %w(due_date name notes category_name priority user_name).inject({}) do |memo, field|
+    %w(due_date name notes category_name priority user_name status).inject({}) do |memo, field|
       memo[field] = params.merge(:controller => "#{prefix}_tasks".to_sym,
         :action => :index,
         "#{prefix}_id".to_sym => task_owner.id,
