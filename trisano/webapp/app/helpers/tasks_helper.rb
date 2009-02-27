@@ -78,9 +78,9 @@ module TasksHelper
       url_options[:user_id] = options["owner_id"]
     end
 
-    url_options[:look_back] = options[:look_back] unless options[:look_back].nil?
-    url_options[:look_ahead] = options[:look_ahead] unless options[:look_ahead].nil?
-    url_options[:tasks_ordered_by] = options[:tasks_ordered_by] unless options[:tasks_ordered_by].nil?
+    User.task_view_params.each do |param|
+      url_options[param] = options[param] unless options[param].nil?
+    end
 
     result << url_for( url_options )
   end

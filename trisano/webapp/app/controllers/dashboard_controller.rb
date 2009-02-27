@@ -33,7 +33,7 @@ class DashboardController < ApplicationController
   private 
 
   def has_a_filter_applied?(params)
-    params.keys.any? { |param| User.task_view_filters.include?(param.to_sym) }
+    params.keys.any? { |param| User.task_view_params.include?(param.to_sym) }
   end
 
 end

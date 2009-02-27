@@ -149,17 +149,16 @@ class User < ActiveRecord::Base
 
   def store_as_task_view_settings(params)    
     view_settings = {}
-    (params || []).each do |key, value|       
-      view_settings[key] = value if User.task_view_filters.include?(key.to_sym)
+    (params || []).each do |key, value|
+      view_settings[key] = value if User.task_view_params.include?(key.to_sym)
     end
     update_attribute(:task_view_settings, view_settings)
   end
 
-  def self.task_view_filters
-    [:look_ahead, :look_back, :disease_filter, :tasks_ordered_by]
+  def self.task_view_params
+    [:users, :look_ahead, :look_back, :disease_filter, :task_statuses, :tasks_ordered_by]
   end
 
-  
   protected
   
   def clear_base_error

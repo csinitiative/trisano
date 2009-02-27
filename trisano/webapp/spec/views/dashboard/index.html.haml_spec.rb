@@ -21,13 +21,20 @@ include ApplicationHelper
 
 describe "/dashboard/index.html.haml" do
   
+  before(:each) do
+    @assignees = []
+    User.stub!(:default_task_assignees).and_return(@assignees)
+    @user = mock_model(User)
+    @jurisdictions = []
+    @user.stub!(:jurisdictions_for_privilege).with(:approve_event_at_state).and_return(@jurisdictions)
+  end
+
   describe 'without user tasks' do
 
     before(:each) do
       # All the ordinary mocks had to be made into mock models to provide the right whatnots to
       # Rails 2.3 and Rspec 1.1.12.  Things like to_param I imagine, for constucting URLs.
       # @user = mock('current user')
-      @user = mock_model(User)
       @user.stub!(:filter_tasks).and_return([])
       @user.should_receive(:id).exactly(6).times.and_return(1)
       User.stub!(:current_user).and_return(@user)
@@ -77,10 +84,10 @@ describe "/dashboard/index.html.haml" do
         @task.should_receive(method).at_least(2).times.and_return(value)
       end
       #@user = mock('user')
-      @user = mock_model(User)
+      #@user = mock_model(User)
       @user.should_receive(:filter_tasks).and_return(@tasks)
       @user.should_receive(:id).exactly(6).times.and_return(1)
-      User.should_receive(:current_user).and_return(@user)
+      User.stub!(:current_user).and_return(@user)
       @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
       params[:look_back] = '0'
       params[:look_ahead] = '0'
@@ -183,6 +190,33 @@ describe "/dashboard/index.html.haml" do
         response.should have_tag("label", :text => /Sample Disease/)
       end
 
+      it 'should have a list of user check boxes' do
+        User.stub!(:default_task_assignees).and_return([@user])
+        @user.should_receive(:best_name).twice.and_return('default_user')
+        render 'dashboard/index.html.haml'
+        response.should have_tag("label", :task => 'default_user') do
+          with_tag("input[type=checkbox]")
+        end
+      end
+          
+
+      it 'should have a list of jurisdiction check boxes' do
+        jurisdiction = mock_model(Place)
+        jurisdiction.should_receive(:name).twice.and_return('some jurisdiction')
+        @jurisdictions << jurisdiction
+        render 'dashboard/index.html.haml'
+        response.should have_tag("label", :task => 'some jurisdiction') do
+          with_tag("input[type=checkbox]")
+        end
+      end
+          
+      it 'should have a list of task state check boxes' do
+        render 'dashboard/index.html.haml'
+        response.should have_tag("label", :task => 'Complete') do
+          with_tag("input[type=checkbox]")
+        end
+      end
+
       it 'should have a submit button' do
         render 'dashboard/index.html.haml'
         response.should have_tag("input[type=submit]")
@@ -231,10 +265,10 @@ describe "/dashboard/index.html.haml" do
         @task_nils.stub!(method).and_return(nil)
       end
       # @user = mock('user')
-      @user = mock_model(User)
+      #@user = mock_model(User)
       @user.should_receive(:filter_tasks).and_return(@tasks)      
       @user.should_receive(:id).exactly(6).times.and_return(1)
-      User.should_receive(:current_user).and_return(@user)      
+      User.stub!(:current_user).and_return(@user)      
       @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
     end
 

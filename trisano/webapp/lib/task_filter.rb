@@ -18,16 +18,16 @@
 module TaskFilter
   
   def filter_tasks(options={})
-    filters = [:days_filter, :disease_filter, :jurisdictions_filter, :task_status_filter]
+    filter_methods = [:days_filter, :disease_filter, :jurisdictions_filter, :task_status_filter]
     conditions = {:sql => [], :values => []}
     if self === Event
       conditions[:sql] << "tasks.events_id = ?"
       conditions[:values] = self.id
     else
-      filters.unshift(:users_filter)
+      filter_methods.unshift(:users_filter)
     end
 
-    filters.each do |filter|
+    filter_methods.each do |filter|
       sql, values = send(filter, options)
       conditions[:sql] << sql if sql
       conditions[:values] += values if values
@@ -51,11 +51,14 @@ module TaskFilter
   end
 
   def users_filter(options)
-    users = (options[:users] || []).collect(&:to_i)
-    allowed_users = User.default_task_assignees.collect(&:id)
-    viewable_users = users.select {|user| allowed_users.include?(user)}
-    user_ids = [User.current_user.id] + viewable_users
-    ['tasks.user_id IN (?)', [user_ids.uniq]]
+    if options[:users].nil? || options[:users].empty?
+      viewable_users = [User.current_user.id]
+    else
+      users = options[:users].collect(&:to_i)
+      allowed_users = User.default_task_assignees.collect(&:id)
+      viewable_users = users.select {|user| allowed_users.include?(user)}
+    end
+    ['tasks.user_id IN (?)', [viewable_users.uniq]]
   end
 
   def jurisdictions_filter(options)
