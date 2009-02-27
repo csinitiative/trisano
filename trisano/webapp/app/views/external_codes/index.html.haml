@@ -26,30 +26,30 @@
 
 - for code_type in @code_types
 
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        = code_type.code_name.capitalize,'&#160; Codes'
-      %th
-        Type
-      %th
-    - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
-    %tr.roll
-      %td
-        .formname
-          = link_to code.the_code, code_path(code)
-        .tools
-          = code.code_description
-      %td
-        .formname
-          &#160;
-        .tools
-          = code.code_name
-      %td
-        .tools{:style => "position: absolute; right: 15px;"}
-          = link_to("Edit", edit_code_path(code))
-          |
-          = link_to("Show", code_path(code))
-          |
-          = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
+  #rot
+    %table.list
+      %tr
+        %th.forminformation
+          = code_type.code_name.capitalize,'&#160; Codes'
+        %th
+          Type
+        %th
+      - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
+        %tr.roll
+          %td
+            .formname
+              = link_to code.the_code, code_path(code)
+            .tools
+              = code.code_description
+          %td
+            .formname
+              &#160;
+            .tools
+            = code.code_name
+          %td
+            .tools{:style => "position: absolute; right: 15px;"}
+              = link_to("Edit", edit_code_path(code))
+              |
+              = link_to("Show", code_path(code))
+              |
+              = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
