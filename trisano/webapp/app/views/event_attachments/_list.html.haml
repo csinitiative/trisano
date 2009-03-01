@@ -32,15 +32,15 @@
         - for attachment in attachments
           %tr
             %td
-              = attachment.filename
+              =h attachment.filename
             %td
-              = attachment.category.humanize
+              =h attachment.category.humanize
             %td
-              = attachment.content_type
+              =h attachment.content_type
             %td
-              = attachment.size
+              =h attachment.size
             %td
-              = attachment.updated_at
+              =h attachment.updated_at
             %td
               = link_to("Open", event_attachment_path(attachment.event, attachment))
               

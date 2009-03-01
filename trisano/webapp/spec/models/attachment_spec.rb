@@ -33,4 +33,21 @@ describe Attachment do
     @attachment.should be_valid
   end
 
+  it 'should not allow an update with an invalid category' do
+    @attachment = Attachment.new( { :uploaded_data => fixture_file_upload('files/test-attachment', 'application/pdf') } )
+    @attachment.save!
+    @attachment.category = 'not_a_real_status'
+    @attachment.save.should be_false
+    @attachment.errors.on(:category).should_not be_nil
+  end
+
+  it 'should allow updates with valid categories' do
+    @attachment = Attachment.new( { :uploaded_data => fixture_file_upload('files/test-attachment', 'application/pdf') } )
+    @attachment.save!
+    Attachment.valid_categories.each do |status|
+      @attachment.category = status
+      @attachment.save.should be_true
+    end
+  end
+
 end

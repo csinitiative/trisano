@@ -18,6 +18,16 @@
 class Attachment < ActiveRecord::Base
 
   belongs_to :event
+
+  class << self
+    def category_array
+      [["Correspondence", "correspondence"], ["Laboratory results", "lab"], ["Letter", "letter"], ["X-ray", "x-ray"]]
+    end
+
+    def valid_categories
+      @valid_categories ||= category_array.map { |category| category.last }
+    end
+  end
   
   has_attachment :storage => :db_file,
     :size => (1..10.megabyte),
@@ -37,7 +47,8 @@ class Attachment < ActiveRecord::Base
 
   validates_attachment :content_type => "The file you uploaded was not a supported file type.",
     :size         => "The file you uploaded was larger than the maximum size of 10MB"
-
+  validates_inclusion_of :category, :in => self.valid_categories, :message => "is not valid", :allow_blank => true
+  
   attr_accessible :event_id, :category
 
 end

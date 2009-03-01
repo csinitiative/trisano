@@ -21,4 +21,4 @@
 
 %span{ :class => "vert" }
   = f.label(:category)
-  = f.select(:category, [["Correspondence", "correspondence"], ["Laboratory results", "lab"], ["Letter", "letter"], ["X-ray", "x-ray"]], {:include_blank => true})
+  = f.select(:category, Attachment.category_array, {:include_blank => true})
