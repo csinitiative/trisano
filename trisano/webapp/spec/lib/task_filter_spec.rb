@@ -34,7 +34,7 @@ describe TaskFilter do
                       :due_date => 1.day.from_now
                     }.merge(custom_settings))
     task.event = event
-    task.user =  user
+    task.user  = user
     task.save!
     yield(event, task) if block_given?
     task
@@ -226,5 +226,22 @@ describe TaskFilter do
     end
   end
 
+  describe 'event filters' do
+
+    before(:each) do
+      create_task(:event => @chicken_pox_event)
+      create_task(:event => @chicken_pox_event, :name => 'Done it', :due_date => 1.day.ago)
+      create_task(:event => @anthrax_event, :name => 'Ignore it')
+    end
+    
+    it 'should show only tasks associated with event' do
+      names = @chicken_pox_event.filter_tasks.collect(&:name)
+      names.include?('Done it').should be_true
+      names.include?('Do it').should be_true
+      names.include?('Ignore it').should_not be_true
+      names.size.should == 2
+    end
+
+  end
 end
 

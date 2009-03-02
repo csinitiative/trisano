@@ -20,9 +20,9 @@ module TaskFilter
   def filter_tasks(options={})
     filter_methods = [:days_filter, :disease_filter, :jurisdictions_filter, :task_status_filter]
     conditions = {:sql => [], :values => []}
-    if self === Event
-      conditions[:sql] << "tasks.events_id = ?"
-      conditions[:values] = self.id
+    if self.is_a? Event
+      conditions[:sql] << "tasks.event_id = ?"
+      conditions[:values] << self.id
     else
       filter_methods.unshift(:users_filter)
     end
@@ -30,6 +30,7 @@ module TaskFilter
     filter_methods.each do |filter|
       sql, values = send(filter, options)
       conditions[:sql] << sql if sql
+      # build the conditional
       conditions[:values] += values if values
     end    
 
