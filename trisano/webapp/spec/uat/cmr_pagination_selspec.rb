@@ -68,21 +68,21 @@ describe 'CMR pagination' do
   end
 
   it 'should create maximum number of cmrs for a single page' do
-    10.times { create_and_route_cmr }
+    25.times { create_and_route_cmr }
   end
 
   it 'should change view to special queue' do
     @browser.click "link=CMRS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=#{@queue_name}-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load
   end
 
 
   it 'should not display pagination' do 
-    @browser.is_element_present("//a[@class='next_page']").should_not be_true
+    @browser.is_element_present("//a[@class='next_page']").should be_false
   end
 
   it 'should add one more cmr to the queue' do
@@ -93,7 +93,7 @@ describe 'CMR pagination' do
     @browser.click "link=CMRS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=#{@queue_name}-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load
     @browser.is_element_present("//a[@class='next_page']").should be_true    

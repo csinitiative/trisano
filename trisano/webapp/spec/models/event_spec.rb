@@ -1031,7 +1031,7 @@ describe MorbidityEvent do
   end                       
 
   describe 'new event from patient' do
-    fixtures :users, :participations
+    fixtures :users, :participations, :entities, :places, :people
     
     def with_new_event_from_patient(patient)
       event = MorbidityEvent.new_event_from_patient(patient)
@@ -1192,4 +1192,12 @@ describe MorbidityEvent do
     end
     
   end
+end
+
+describe Event, 'pagination' do
+  
+  it 'should default to 25 records per page' do
+    Event.per_page.should == 25
+  end
+
 end
