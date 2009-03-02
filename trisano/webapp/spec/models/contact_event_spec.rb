@@ -49,8 +49,6 @@ describe ContactEvent do
       
       before(:each) do
         mock_user
-        @user = users(:default_user)
-        User.stub!(:current_user).and_return(@user)
 
         contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
                                                                                                                                    "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
@@ -69,6 +67,44 @@ describe ContactEvent do
       it "should have the same disease as the original" do
         @contact_event.disease_event.disease_id.should == diseases(:chicken_pox).id
       end
+    end
+  end
+
+  describe "Promoting a contact to a cmr" do
+    fixtures :diseases, :entities, :forms, :diseases_forms
+
+    before(:each) do
+      mock_user
+      
+      @c = ContactEvent.new
+      @c.build_disease_event(:disease => diseases(:anthrax))
+      @c.build_jurisdiction(:secondary_entity_id => entities(:Davis_County).id)
+      @c.get_investigation_forms
+      @c.save
+      @m = @c.promote_to_morbidity_event
+    end
+
+    it "should freeze the contact event" do
+      @c.should be_frozen
+    end
+
+    it "should return a morbidity event" do
+      @m.should be_an_instance_of(MorbidityEvent)
+    end
+
+    it "should leave contact forms intact" do
+      form_ids = @c.form_references.collect { |f| f.form_id }
+      form_ids.include?(forms(:anthrax_form_for_contact_event).id).should be_true
+    end
+
+    it "should add morbidity forms" do
+      form_ids = @c.form_references.collect { |f| f.form_id }
+      form_ids.include?(forms(:anthrax_form_all_jurisdictions_1).id).should be_true
+      form_ids.include?(forms(:anthrax_form_all_jurisdictions_2).id).should be_true
+    end
+
+    it "should be in a NEW state" do
+      @c.event_status.should == "NEW"
     end
   end
 end

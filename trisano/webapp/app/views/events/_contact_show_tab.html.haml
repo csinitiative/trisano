@@ -19,23 +19,27 @@
 
   = h @event.safe_call_chain(:disease_event, :disease, :contact_lead_in)
 
+  #contact_child_events
   - core_element_show :contacts, f, :vert do
     %fieldset.form
-      %legend Contacts | Not yet elevated to morbidity events
+      %legend Contacts  
+      %i Not yet elevated to morbidity events
       - if @event.contact_child_events.first.new_record?
         %h3 No contacts have been recorded for this event
       - else
         = render :partial => 'events/contact_show', :locals => { :contacts => @event.contact_child_events }
 
-    %fieldset.form
-      %legend Contacts | Elevated to morbidity Events
-      - if @event.morbidity_child_events.empty?
-        %h3 None
-      - else
+    - unless @event.morbidity_child_events.empty?
+      #morbidity_child_events  
+      %fieldset.form
+        %legend CMR Contacts 
+        %i Elevated to morbidity Events
         = render :partial => 'events/contact_show', :locals => { :contacts => @event.morbidity_child_events }
 
     - if @event.parent_event
+      #morbidity_parent_event
       %fieldset.form
-        %legend Parent Patient | Current patient was a contact of
+        %legend Parent CMR 
+        %i This patient is a contact of
         = render :partial => 'events/contact_show', :locals => { :contacts => [@event.parent_event] }
    

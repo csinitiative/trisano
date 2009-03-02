@@ -38,11 +38,18 @@ class ContactEvent < HumanEvent
   end
 
   def promote_to_morbidity_event
+    raise "Cannot promote an unsaved contact to a morbidity event" if self.new_record?
     self['type'] = MorbidityEvent.to_s
     self.event_status = "NEW"
-    self.add_note("Event promoted from a contact event")
     # Pull morb forms
-    self.freeze if ret = self.save
-    ret
+    self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, 'morbidity_event'))
+    self.add_note("Event changed from contact event to morbidity event")
+    if self.save
+      self.freeze
+      # Return a fresh copy from the db
+      MorbidityEvent.find(self.id)
+    else
+      false
+    end
   end
 end

@@ -426,6 +426,15 @@ module EventsHelper
     event
   end
 
+  def blank_contact
+    blank_contact = ContactEvent.new
+    blank_contact.build_participations_contact
+    blank_contact.build_interested_party
+    blank_contact.interested_party.build_person_entity
+    blank_contact.interested_party.person_entity.build_person
+    blank_contact.interested_party.person_entity.telephones.build
+    blank_contact
+  end
 
   private
   

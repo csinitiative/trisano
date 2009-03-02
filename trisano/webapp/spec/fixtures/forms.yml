@@ -68,3 +68,11 @@ hep_a_form:
   status: "Live"
   event_type: "morbidity_event"
 
+anthrax_form_for_contact_event:
+  id: 9
+  name: "Anthrax Form - Contact"
+  description: "Anthrax form - contact."
+  jurisdiction_id:
+  status: "Live"
+  event_type: "contact_event"
+

@@ -574,7 +574,6 @@ class Event < ActiveRecord::Base
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  # Debt: Consolidate sanitize_sql_for_conditions calls where possible
   def self.find_by_criteria(*args)
     options = args.extract_options!
     return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 

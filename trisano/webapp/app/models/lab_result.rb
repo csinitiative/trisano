@@ -35,7 +35,7 @@ class LabResult < ActiveRecord::Base
   validates_length_of :test_detail, :maximum => 255, :allow_blank => true
 
   def lab_name
-    participation.secondary_entity.place_temp.name unless participation.nil?
+    participation.secondary_entity.place.name unless participation.nil?
   end
 
   def validate

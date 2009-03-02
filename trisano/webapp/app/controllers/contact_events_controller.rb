@@ -88,8 +88,8 @@ class ContactEventsController < EventsController
   end
 
   def event_type
-    if @event.promote_to_morbidity_event    
-      redirect_to cmr_path(@event.id)
+    if m_event = @event.promote_to_morbidity_event    
+      redirect_to cmr_path(m_event)
     else
       flash[:error] = 'Could not promote to morbidity event.'
       render :action => "show"

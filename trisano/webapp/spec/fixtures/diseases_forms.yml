@@ -39,3 +39,7 @@ follow_up_element_test_form:
 hep_a_form:
   disease_id: 5
   form_id: 8
+
+anthrax_form_for_contact_event:
+  disease_id: 3
+  form_id: 9

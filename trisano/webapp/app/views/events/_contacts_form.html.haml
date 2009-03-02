@@ -28,29 +28,22 @@
   -# Handles pre- and post-questions and help for contacts as a whole
   - core_element :contacts, f, :vert do
 
-    %div{:id => "contact_child_events"}  
+    #contact_child_events
       - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
         = render :partial => "events/contact", :locals => { :f => c }
 
-      - blank_contact = ContactEvent.new
-      - blank_contact.build_participations_contact
-      - blank_contact.build_interested_party
-      - blank_contact.interested_party.build_person_entity
-      - blank_contact.interested_party.person_entity.build_person
-      - blank_contact.interested_party.person_entity.telephones.build
-
       %p= add_record_link f, :contact_child_events, "Add a contact", :object => blank_contact, :partial => "events/contact"
 
-    %div{:id => "morbidity_child_events"}  
-      %fieldset
-        %legend Contacts | Elevated to morbidity Events
-        - if @event.morbidity_child_events
+    - unless @event.morbidity_child_events.empty?
+      #morbidity_child_events  
+        %fieldset
+          %legend CMR Contacts 
+          %i Elevated to morbidity Events
           = render :partial => 'events/contact_show', :locals => { :contacts => @event.morbidity_child_events }
-        - else
-          %b None
 
     - if @event.parent_event
-      %div{:id => "morbidity_parent_event"}  
+      #morbidity_parent_event
         %fieldset
-          %legend Parent Patient | Current patient was a contact of
+          %legend Parent CMR 
+          %i This patient is a contact of
           = render :partial => 'events/contact_show', :locals => { :contacts => [@event.parent_event] }
