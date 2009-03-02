@@ -53,6 +53,10 @@ class Task < ActiveRecord::Base
   def validate
     validate_task_assignment
   end
+  
+  def disease_name
+    self.safe_call_chain(:event, :disease_event, :disease, :disease_name)
+  end
 
   private
 

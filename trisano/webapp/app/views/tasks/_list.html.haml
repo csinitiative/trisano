@@ -26,6 +26,8 @@
         %tr
           %th= link_to_remote('Due&nbsp;date',    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])
           %th= link_to_remote('Name',             :update => 'tasks', :method => :get, :url => urls_hash['name'])
+          - unless task_owner.is_a? Event
+            %th= link_to_remote('Disease',        :update => 'tasks', :method => :get, :url => urls_hash['disease_name'])
           %th= link_to_remote('Notes',            :update => 'tasks', :method => :get, :url => urls_hash['notes'])
           %th= link_to_remote('Category',         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
           %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
@@ -44,6 +46,9 @@
               =task.due_date         ? h(task.due_date) : '&nbsp;'
             %td
               =task.name             ? h(task.name) : '&nbsp;'
+            - unless task_owner.is_a? Event
+              %td
+                =task.disease_name   ? h(task.disease_name) : '&nbsp;'
             %td
               =task.notes            ? h(task.notes) : '&nbsp;'
             %td

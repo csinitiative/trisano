@@ -70,12 +70,13 @@ describe "/dashboard/index.html.haml" do
         :category_name => 'Treatment',
         :priority      => 'P1',
         :notes         => 'Sample notes',
-        :user_name     => 'Default User'}
+        :user_name     => 'Default User', 
+        :status        => 'pending',
+        :disease_name  => 'ATBF'}
 
       # @task = mock(@values[:name])
       @task = mock_model(Task)
       @task.stub!(:id).and_return(1)
-      @task.stub!(:status).and_return('pending')
       @task.stub!(:event).and_return(@event)
       @task.should_receive(:user_id).and_return(1)
       
@@ -125,7 +126,13 @@ describe "/dashboard/index.html.haml" do
     it 'should render field data for tasks' do
       render 'dashboard/index.html.haml'
       @values.each do |key, value|
-        response.should have_tag("td", :text => value)        
+        unless key == :status
+          response.should have_tag("td", :text => value)        
+        else
+          response.should have_tag("td select") do
+            with_tag("option[selected=selected]", :text => 'Pending')
+          end
+        end
       end
       response.should have_tag("td", :text => 'Default User')
     end
@@ -236,14 +243,18 @@ describe "/dashboard/index.html.haml" do
         :category_name => 'Treatment',
         :priority      => 'P1',
         :notes         => 'Sample notes',
-        :user_name     => 'Default User'}
+        :user_name     => 'Default User',
+        :status        => 'pending',
+        :disease_name  => 'ATBF'}
       @nils   = {
         :name          => nil,
         :due_date      => nil,
         :category_name => nil,
         :priority      => nil,
         :notes         => nil,
-        :user_name     => nil}
+        :user_name     => nil,
+        :status        => nil,
+        :disease_name  => nil}
       # @task_values = mock(@values[:name])
       @task_values = mock_model(Task)
       # @task_nils   = mock('nil task')
