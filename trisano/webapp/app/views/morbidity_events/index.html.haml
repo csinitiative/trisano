@@ -29,6 +29,7 @@
     = "|"
   = link_to_function('Change View', nil) do |page|
     - page[:change_view].visual_effect :slide_down
+    
 
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
@@ -49,6 +50,9 @@
     = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true)
     %label Diseases
     = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true)
+    %label Items per page
+    - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
+    = select_tag('per_page', page_options)
     %br
     = check_box_tag("do_not_show_deleted")
     = "Do not show deleted records&nbsp;&nbsp;"

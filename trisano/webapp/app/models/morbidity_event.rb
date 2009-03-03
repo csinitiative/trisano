@@ -276,6 +276,8 @@ class MorbidityEvent < HumanEvent
       :order => order_by,
       :page => options[:page]
     }
+    find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
+
 
     MorbidityEvent.paginate(:all, find_options)
   rescue Exception => ex

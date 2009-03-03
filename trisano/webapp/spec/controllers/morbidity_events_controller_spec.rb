@@ -46,7 +46,7 @@ describe MorbidityEventsController do
     end
   
     it "should find all events" do
-      MorbidityEvent.should_receive(:find).and_return([@event])
+      MorbidityEvent.should_receive(:find_all_for_filtered_view).with(kind_of(Hash)).and_return([@event])
       do_get
     end
   

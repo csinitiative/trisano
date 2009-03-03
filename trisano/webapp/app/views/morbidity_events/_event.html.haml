@@ -17,8 +17,9 @@
     %b
       = event.primary_jurisdiction.short_name
     %br
-    .tools
-      = jurisdiction_routing_control(event)
+    - unless params[:per_page].to_i > 25
+      .tools
+        = jurisdiction_routing_control(event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
@@ -35,5 +36,6 @@
         %small
           Investigator:&nbsp;
           %b= event.investigator.best_name
-    .tools
-      = state_controls(event)
+    - unless params[:per_page].to_i > 25
+      .tools
+        = state_controls(event)

@@ -32,6 +32,10 @@ class MorbidityEventsController < EventsController
   end
 
   def index
+    if params[:per_page].to_i > 100
+      render :text => 'TriSano cannot process more then 100 cmrs per page', :layout => 'application', :status => 400 and return
+    end
+
     begin
       @export_options = params[:export_options]
 
@@ -43,7 +47,8 @@ class MorbidityEventsController < EventsController
         :order_by => params[:sort_order],
         :do_not_show_deleted => params[:do_not_show_deleted],
         :set_as_default_view => params[:set_as_default_view],
-        :page => params[:page]
+        :page => params[:page],
+        :per_page => params[:per_page]
       )
     rescue
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
