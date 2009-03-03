@@ -42,8 +42,12 @@ class ContactEvent < HumanEvent
     self['type'] = MorbidityEvent.to_s
     self.event_status = "NEW"
     # Pull morb forms
-    self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, 'morbidity_event'))
+    if self.disease_event && self.disease_event.disease
+      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
+      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
+    end
     self.add_note("Event changed from contact event to morbidity event")
+
     if self.save
       self.freeze
       # Return a fresh copy from the db

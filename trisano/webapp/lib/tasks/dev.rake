@@ -77,6 +77,13 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_disease_export_statuses.rb"
     end
 
+    # Debt: dry this up
+    desc "Prep work for feature (cucumber) runs"
+    task :feature_prep do
+     ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
+     ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
+    end
+
   end
   
 end

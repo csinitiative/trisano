@@ -26,8 +26,7 @@ class PlaceEvent < Event
     contact.add_note("Place event created.")
   end
 
-  ### TGRII: Do I still want this?
-  # after_save :set_primary_entity_on_secondary_participations
+  after_save :set_primary_entity_on_secondary_participations
 
   class << self
     def core_views

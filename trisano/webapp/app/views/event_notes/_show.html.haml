@@ -23,6 +23,7 @@
     = render :partial => 'event_notes/filter_nav', :locals => { :notes => @event.notes, :mode => 'show' }
 
     - for note in notes
+      - next if note.new_record?
       %table.list
         %tr
           %th.forminformation

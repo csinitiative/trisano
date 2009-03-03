@@ -21,6 +21,7 @@ class Note < ActiveRecord::Base
   validates_presence_of :note
 
   before_save do |note|
-    note.user = User.current_user
+    user = User.current_user || User.find_by_uid("utah") # For 'feature' setup only
+    note.user = user
   end
 end
