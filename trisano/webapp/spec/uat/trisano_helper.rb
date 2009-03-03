@@ -316,7 +316,7 @@ module TrisanoHelper
   
   def add_place(browser, place_attributes, index = 1)
     click_core_tab(browser, EPI)
-    browser.click "link=New Place Exposure"
+    browser.click "link=Add a Place Exposure"
     sleep(1)
     browser.type("//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", place_attributes[:name])
   end
@@ -490,13 +490,13 @@ module TrisanoHelper
 
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label=nil)
     click_nav_new_cmr(browser)
-    browser.type "morbidity_event_active_patient__person_last_name", last_name
-    browser.type("morbidity_event_active_patient__address_street_number", "22")
-    browser.type("morbidity_event_active_patient__address_street_name", "Happy St.")
+    browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", last_name
+    browser.type("morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_street_number", "22")
+    browser.type("morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_street_name", "Happy St.")
     click_core_tab(browser, CLINICAL)
-    browser.select "morbidity_event_disease_disease_id", "label=#{disease_label}"
+    browser.select "morbidity_event_disease_event_attributes_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)
-    browser.select "morbidity_event_active_jurisdiction_secondary_entity_id", "label=#{jurisdiction_label}" if jurisdiction_label
+    browser.select "morbidity_event_jurisdiction_attributes_secondary_entity_id", "label=#{jurisdiction_label}" if jurisdiction_label
     yield browser if block_given?
     return save_cmr(browser)
   end

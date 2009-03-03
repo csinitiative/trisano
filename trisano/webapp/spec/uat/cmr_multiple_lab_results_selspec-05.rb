@@ -83,15 +83,15 @@ describe 'Adding multiple lab results to a CMR' do
     p "Here it comes the delete of..."
     p test_type
     sleep(3)
-    @browser.click("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//a[@id='remove_lab_result_link']")
+    @browser.click("//div[@id='labs']/div[@class='lab']//div[contains(@class, 'lab_result')][2]//input[contains(@id, '_delete')]")
+
     p "All gone?"
     sleep(3)
     p "Saving"
     save_cmr(@browser).should be_true
-    @browser.is_text_present(test_type).should_not be_true
+    @browser.is_text_present(test_type).should be_false
     @browser.is_text_present(lab_name_1).should be_true
     @browser.is_text_present(lab_name_2).should be_true
-    @browser.is_text_present("Lab result deleted").should be_true
     p "Waddya see?"
     sleep(3)
   end
@@ -99,9 +99,11 @@ describe 'Adding multiple lab results to a CMR' do
   it "should allow deleting a lab and all its lab results" do
     edit_cmr(@browser).should be_true
     lab_name = @browser.get_value("//div[@id='labs']/div[@class='lab'][2]//input[contains(@name, 'name')]")
-    @browser.click("//div[@id='labs']/div[@class='lab'][2]/span/a[@id='remove_lab_link']")
+    p "Gonna delete..."
+    p lab_name
+    @browser.click("//div[@id='labs']/div[@class='lab'][2]/span//input[contains(@id, '_delete')]")
     save_cmr(@browser).should be_true
-    @browser.is_text_present(lab_name).should_not be_true
+    @browser.is_text_present(lab_name).should be_false
     @browser.is_text_present("Lab and all its results deleted").should be_true
   end
 end
