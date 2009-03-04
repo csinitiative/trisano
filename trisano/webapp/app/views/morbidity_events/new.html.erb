@@ -18,7 +18,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
 <script type="text/javascript">
-    cmr_shortcuts_init();
+  cmr_shortcuts_init();
 </script>
 
 <% content_for :title do %>
@@ -30,7 +30,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :tools_two do %>
-  <%= save_buttons(@event) %> 
+  <%= save_buttons(@event) %>
 <% end %>
 
 <% content_for :tools do %>
@@ -48,24 +48,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <% event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
       <% core_element :secondary_entity_id, j, :horiz do -%>
         <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
-        <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+        <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %>
       <% end -%>
     <% end %>
   <% end %>
 
-  <% tabs = []
-     tabs << %w(demographic_tab Demographic)
-     tabs << %w(clinical_tab Clinical)
-     tabs << %w(lab_info_tab Laboratory)
-     tabs << %w(contacts_tab Contacts)
-     tabs << %w(epi_tab Epidemiological)
-     tabs << %w(reporting_tab Reporting)
-     tabs << %w(investigation_tab Investigation)
-     tabs << %w(notes_tab Notes)
-     tabs << %w(administrative_tab Administrative)
-  %>
-
-  <% tabbed_content(tabs, @tab_index) do %>
+  <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
     <div id="demographic_tab">
       <%#= render :partial => "events/people/form", :locals => { :f => event_form, :entity_data => @event.active_patient.person_entity, :event => @event, :event_form => event_form } %>
       <%= render :partial => "events/people/form", :locals => { :f => event_form , :event => @event} %>
@@ -73,6 +61,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="clinical_tab"><%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %></div>
     <div id="lab_info_tab"><%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %></div>
     <div id="contacts_tab"><%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %></div>
+    <div id="encounters_tab"><%= render :partial => 'events/encounters_form', :locals => {:f => event_form} %></div>
     <div id="epi_tab"><%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %></div>
     <div id="reporting_tab"><%#= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %></div>
     <div id="investigation_tab"><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></div>

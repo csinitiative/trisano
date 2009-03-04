@@ -52,6 +52,7 @@ class HumanEvent < Event
     :dependent => :destroy
 
   belongs_to :participations_contact
+  belongs_to :participations_encounter
 
   accepts_nested_attributes_for :interested_party
   accepts_nested_attributes_for :hospitalization_facilities, 
@@ -67,6 +68,7 @@ class HumanEvent < Event
     :allow_destroy => true, 
     :reject_if => proc { |attrs| rewrite_attrs(attrs) }
   accepts_nested_attributes_for :participations_contact, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :participations_encounter, :reject_if => proc { |attrs| attrs.all? { |k, v| ((k == "user_id") ||  (k == "encounter_location_type")) ? true : v.blank? } }
 
   def self.rewrite_attrs(attrs)
     entity_attrs = attrs["place_entity_attributes"]

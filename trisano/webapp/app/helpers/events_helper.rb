@@ -2,24 +2,24 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'csv'
 require 'ostruct'
 
 module EventsHelper
-  
+
   def core_element(attribute, form_builder, css_class, &block)
     concat_core_field(:edit, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>")
@@ -37,7 +37,7 @@ module EventsHelper
     concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
     concat_core_field(:show, :after, attribute, form_builder, block)
   end
-  
+
   def core_element_print(attribute, form_builder, css_class, &block)
     concat_core_field(:print, :before, attribute, form_builder, block)
     concat("<span class='#{css_class}'>")
@@ -45,47 +45,47 @@ module EventsHelper
     concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
     concat_core_field(:print, :after, attribute, form_builder, block)
   end
-  
+
   def render_investigator_view(view, f, form=nil)
     return "" if view.nil?
     result = ""
-    
+
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
-    
+
     form_elements_cache.children(view).each do |element|
       result << render_investigator_element(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
+
   # Debt? Some duplication here of render_investigator_view
   def show_investigator_view(view, form=nil, f = nil)
     return "" if view.nil?
     result = ""
-    
+
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
-    
+
     form_elements_cache.children(view).each do |element|
       result << show_investigator_element(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
+
   def print_investigator_view(view, form=nil, f = nil)
     return "" if view.nil?
     result = ""
-    
+
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
-    
+
     form_elements_cache.children(view).each do |element|
       result << print_investigator_element(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
+
   def new_or_existing?(model)
     model.new_record? ? 'new' : 'existing'
   end
@@ -102,7 +102,7 @@ module EventsHelper
     options[:partial] ||= method.to_s.singularize
     options[:form_builder_local] ||= :f
     options[:insert] ||= method
-    
+
     link_to_function(caption) do |page|
       form_builder.fields_for(method, options[:object], :child_index => 'NEW_RECORD', :builder => ExtendedFormBuilder) do |f|
         html = render(:partial => options[:partial], :locals => { options[:form_builder_local] => f })
@@ -136,35 +136,13 @@ module EventsHelper
   def update_reporting_agency(reporting_agency, form=nil)
     page.replace_html(:reporting_agency, :partial => 'events/reporting_agency' , :locals => {:template => form, :reporting_agency => reporting_agency})
     page.visual_effect :highlight, :reporting_agency, :duration => 3
-  end  
-
-  def basic_morbidity_event_controls(event, with_show=true, with_export_options=false)
-    can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-    controls = ""
-    controls << (link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") << " | ") if with_show
-    controls << (link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')") << " | ") if can_update
-    controls << link_to('Print', cmr_path(event, :format => "print") , :target => "_blank") << " ("
-    controls << link_to('With Notes', cmr_path(event, :format => "print", :note => "1") , :target => "_blank") << ") | "
-    controls << (link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete') << " | ")  if can_update && event.deleted_at.nil?
-    controls << (link_to('Add Task', new_event_task_path(event)) << " | ") if can_update
-    controls << (link_to('Add Attachment', new_event_attachment_path(event)) << " | ") if can_update
-    if with_export_options
-      controls << link_to_function('Export to CSV', nil) do |page|
-        page[:export_options].visual_effect :slide_down
-      end
-    else
-      controls << link_to('Export to CSV', cmr_path(event) + '.csv')
-    end
-    controls << ' | ' +  link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.interested_party.person_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
-
-    controls
   end
 
   def basic_contact_event_controls(event, with_show=true)
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
     controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") if with_show
-    
+
     if can_update
       controls <<  " | "  if with_show
       controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
@@ -184,7 +162,7 @@ module EventsHelper
     can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
     controls << link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") if with_show
-    
+
     if can_update
       controls <<  " | "  if with_show
       controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")
@@ -193,7 +171,7 @@ module EventsHelper
         controls << link_to('Delete', soft_delete_place_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
       end
     end
-     
+
     controls
   end
 
@@ -206,7 +184,7 @@ module EventsHelper
       User.current_user.is_entitled_to_in?(transition_state.required_privilege, j_id)
     end
 
-    routing_controls = action_controls = ""    
+    routing_controls = action_controls = ""
     allowed_transitions.each do |transition|
       case transition.state_code
       when "ACPTD-LHD", "RJCTD-LHD", "UI", "RJCTD-INV", "APP-LHD", "RO-MGR", "CLOSED", "RO-STATE"
@@ -214,12 +192,12 @@ module EventsHelper
           transition.state_code,
           false,
           :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
-        action_controls += transition.action_phrase 
+        action_controls += transition.action_phrase
       when "ASGD-INV"
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        routing_controls += "<div>#{transition.action_phrase}:&nbsp;" 
+        routing_controls += "<div>#{transition.action_phrase}:&nbsp;"
         routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
-        
+
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
         routing_controls += "<div>Route to investigator:&nbsp;"
         routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
@@ -238,7 +216,7 @@ module EventsHelper
         <br/>
         Action required: #{action_controls}
         <br/>
-        #{routing_controls} 
+        #{routing_controls}
         </form>
       ]
     end
@@ -248,7 +226,7 @@ module EventsHelper
   def jurisdiction_routing_control(event)
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
-      
+
       controls += link_to_function('Route to Local Health Depts.', nil) do |page|
         page["routing_controls_#{event.id}"].visual_effect :appear, :duration => 0.5
       end
@@ -256,7 +234,7 @@ module EventsHelper
       controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
-      controls += "<span>Investigating jurisdiction: &nbsp;</span>" 
+      controls += "<span>Investigating jurisdiction: &nbsp;</span>"
       controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id))
       controls += "<br />Also grant access to:"
 
@@ -303,39 +281,39 @@ module EventsHelper
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
   def patient_name(event, &block)
     return if event.nil?
-    
+
     if event.deleted_at.nil?
       concat("<div class='patientname'>")
     else
       concat("<div class='patientname-inactive'>")
     end
-    
+
     yield
     concat("</div>")
   end
-  
+
   def contact_name(event, &block)
     return if event.nil?
-    
+
     if event.deleted_at.nil?
       concat("<div class='contactname'>")
     else
       concat("<div class='contactname-inactive'>")
     end
-    
+
     yield
     concat("</div>")
   end
-  
+
   def place_name(event, &block)
     return if event.nil?
-    
+
     if event.deleted_at.nil?
       concat("<div class='placename'>")
     else
       concat("<div class='placename-inactive'>")
     end
-    
+
     yield
     concat("</div>")
   end
@@ -417,11 +395,18 @@ module EventsHelper
         place.interested_place.build_place_entity unless place.interested_place.place_entity
         place.interested_place.place_entity.build_place unless place.interested_place.place_entity.place
       end
+
+      event.encounter_child_events.build if event.encounter_child_events.empty?
+
+      event.encounter_child_events.each do |encounter|
+        encounter.build_participations_encounter unless encounter.participations_encounter
+        encounter.build_interested_party unless encounter.interested_party
+      end
     end
     event.notes.build if event.notes.empty?
     event.build_jurisdiction unless event.jurisdiction
 
-#    event.reporter = Participation.new_reporter_participation
+    #    event.reporter = Participation.new_reporter_participation
 
     event
   end
@@ -437,7 +422,7 @@ module EventsHelper
   end
 
   private
-  
+
   def concat_core_field(mode, before_or_after, attribute, form_builder, block)
     return if  (@event.nil? || @event.form_references.nil?)
     # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
@@ -446,7 +431,7 @@ module EventsHelper
       configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
       configs.each do |config|
         element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
-          
+
         case mode
         when :edit
           concat(render_investigator_view(element, @event_form, form_reference.form))
@@ -455,16 +440,16 @@ module EventsHelper
         when :print
           concat(print_investigator_view(element, form_reference.form, @event_form))
         end
-          
+
       end
     end
   end
-  
+
   def render_investigator_element(form_elements_cache, element, f)
     result = ""
-   
+
     case element.class.name
-   
+
     when "SectionElement"
       result << render_investigator_section(form_elements_cache, element, f)
     when "GroupElement"
@@ -474,16 +459,16 @@ module EventsHelper
     when "FollowUpElement"
       result << render_investigator_follow_up(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
+
   # Show mode counterpart to #render_investigator_element
   def show_investigator_element(form_elements_cache, element, f)
     result = ""
-    
+
     case element.class.name
-      
+
     when "SectionElement"
       result << show_investigator_section(form_elements_cache, element, f)
     when "GroupElement"
@@ -493,16 +478,16 @@ module EventsHelper
     when "FollowUpElement"
       result << show_investigator_follow_up(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
-  # Print mode counterpart to #render_investigator_element and #show_investigator_element 
+
+  # Print mode counterpart to #render_investigator_element and #show_investigator_element
   def print_investigator_element(form_elements_cache, element, f)
     result = ""
-    
+
     case element.class.name
-      
+
     when "SectionElement"
       result << print_investigator_section(form_elements_cache, element, f)
     when "GroupElement"
@@ -512,10 +497,10 @@ module EventsHelper
     when "FollowUpElement"
       result << print_investigator_follow_up(form_elements_cache, element, f)
     end
-    
+
     result
   end
-  
+
   def render_investigator_section(form_elements_cache, element, f)
     begin
       result = "<br/>"
@@ -524,9 +509,9 @@ module EventsHelper
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
       result << "<legend>#{strip_tags(element.name)} "
-      
+
       unless element.help_text.blank?
-        result << render_help_text(element) 
+        result << render_help_text(element)
         result << "&nbsp;"
       end
 
@@ -535,30 +520,30 @@ module EventsHelper
       result << "</legend>"
       result << "<div id='#{section_id}'>"
       result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
-    
+
       section_children = form_elements_cache.children(element)
-    
+
       if section_children.size > 0
         section_children.each do |child|
           result << render_investigator_element(form_elements_cache, child, f)
         end
       end
-    
+
       result << "</div></fieldset><br/>"
-    
+
       return result
     rescue
       logger.warn($!.message)
       return "Could not render section element (#{element.id})"
     end
   end
-  
+
   def render_investigator_group(form_elements_cache, element, f)
     begin
       result = ""
 
       group_children = form_elements_cache.children(element)
-    
+
       if group_children.size > 0
         group_children.each do |child|
           result << render_investigator_element(form_elements_cache, child, f)
@@ -576,7 +561,7 @@ module EventsHelper
     tool_tip_command = ["'#{html_id}'"]
     tool_tip_command << options.map{|k,v| [k.to_s.upcase, v]} if options
     "<a id=\"#{html_id}_hotspot\" href=\"#\" onmouseover=\"TagToTip(#{tool_tip_command.flatten.join(', ')})\" onmouseout=\"UnTip()\">#{yield}</a>"
-  end  
+  end
 
   def render_help_text(element)
     if element.is_a?(QuestionElement)
@@ -586,11 +571,11 @@ module EventsHelper
       return if element.help_text.blank?
       help_text = element.help_text
     end
-    
+
     identifier = element.class.name.underscore[0..element.class.name.underscore.index("_")-1]
-    
+
     result = tooltip("#{identifier}_help_text_#{element.id}") do
-      image_tag('help.png', :border => 0)    
+      image_tag('help.png', :border => 0)
     end
     result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{simple_format(sanitize(help_text, :tags => %w(br)))}</span>"
   end
@@ -609,9 +594,9 @@ module EventsHelper
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-    
+
       @answer_object = @event.get_or_initialize_answer(question.id)
-     
+
       result << error_messages_for(:answer_object)
       if (f.nil?)
         fields_for(@event) do |f|
@@ -630,7 +615,7 @@ module EventsHelper
       end
 
       follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
-      
+
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{element.id}'>"
         result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
@@ -638,29 +623,29 @@ module EventsHelper
       else
         result << "<div id='follow_up_investigate_#{element.id}'></div>"
       end
-    
+
       result << "</div>"
-    
+
       result << "<br clear='all'/>" if question_style == "vert"
-    
+
       return result
     rescue
       logger.warn("Formbuilder rendering: #{$!.message}")
       return "Could not render question element (#{element.id})"
     end
   end
-  
+
   def render_investigator_follow_up(form_elements_cache, element, f)
     begin
       result = ""
-    
+
       unless element.core_path.blank?
         result << render_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
         return result
       end
-    
+
       questions = form_elements_cache.children(element)
-    
+
       if questions.size > 0
         questions.each do |child|
           result << render_investigator_element(form_elements_cache, child, f)
@@ -673,12 +658,12 @@ module EventsHelper
       return "Could not render follow up element (#{element.id})"
     end
   end
-  
+
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
       result = ""
       include_children = false
-    
+
       unless (ajax_render)
         # Debt: Replace with shorter eval technique
         core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
@@ -695,12 +680,12 @@ module EventsHelper
           include_children = true
         end
       end
-    
+
       result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
-    
+
       if (include_children || ajax_render)
         questions = form_elements_cache.children(element)
-    
+
         if questions.size > 0
           questions.each do |child|
             result << render_investigator_element(form_elements_cache, child, f)
@@ -709,16 +694,16 @@ module EventsHelper
       end
 
       result << "</div>" unless ajax_render
-    
+
       return result
     rescue
       logger.warn($!.message)
       return "Could not render core follow up element (#{element.id})"
     end
   end
-  
+
   # Show mode counterpart to #render_investigator_section
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  show_investigator_section(form_elements_cache, element, f)
     begin
@@ -728,44 +713,44 @@ module EventsHelper
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
       result << "<legend>#{strip_tags(element.name)} "
-      
+
       unless element.help_text.blank?
-        result << render_help_text(element) 
+        result << render_help_text(element)
         result << "&nbsp;"
       end
-      
+
       result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[Hide]</span>"
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
       result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
-    
+
       section_children = form_elements_cache.children(element)
-    
+
       if section_children.size > 0
         section_children.each do |child|
           result << show_investigator_element(form_elements_cache, child, f)
         end
       end
-    
+
       result << "</div></fieldset><br/>"
-    
+
       return result
     rescue
       logger.warn($!.message)
       return "Could not render section element (#{element.id})"
     end
   end
-  
+
   # Show mode counterpart to #render_investigator_group
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def show_investigator_group(form_elements_cache, element, f)
     begin
       result = ""
 
       group_children = form_elements_cache.children(element)
-    
+
       if group_children.size > 0
         group_children.each do |child|
           result << show_investigator_element(form_elements_cache, child, f)
@@ -778,9 +763,9 @@ module EventsHelper
       return "Could not render group element (#{element.id})"
     end
   end
-  
+
   # Show mode counterpart to #render_investigator_question
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def show_investigator_question(form_elements_cache, element, f)
     begin
@@ -795,13 +780,13 @@ module EventsHelper
       result << "</div>"
 
       follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
-      
+
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{element.id}'>"
         result << show_investigator_follow_up(form_elements_cache, follow_up_group, f)
         result << "</div>"
       end
-      
+
       result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
@@ -809,21 +794,21 @@ module EventsHelper
       return "Could not show question element (#{element.id})"
     end
   end
-  
+
   # Show mode counterpart to #render_investigator_follow_up
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def show_investigator_follow_up(form_elements_cache, element, f)
     begin
       result = ""
-    
+
       unless element.core_path.blank?
         result << show_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
         return result
       end
-    
+
       questions = form_elements_cache.children(element)
-    
+
       if questions.size > 0
         questions.each do |child|
           result << show_investigator_element(form_elements_cache, child, f)
@@ -836,16 +821,16 @@ module EventsHelper
       return "Could not render follow up element (#{element.id})"
     end
   end
-  
+
   # Show mode counterpart to #render_investigator_core_follow_up
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def show_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
       result = ""
-    
+
       include_children = false
-    
+
       unless (ajax_render)
         # Debt: Replace with shorter eval technique
         core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
@@ -862,12 +847,12 @@ module EventsHelper
           include_children = true
         end
       end
-    
+
       result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
-    
+
       if (include_children || ajax_render)
         questions = form_elements_cache.children(element)
-    
+
         if questions.size > 0
           questions.each do |child|
             result << show_investigator_element(form_elements_cache, child, f)
@@ -876,16 +861,16 @@ module EventsHelper
       end
 
       result << "</div>" unless ajax_render
-    
+
       return result
     rescue
       logger.warn($!.message)
       return "Could not render core follow up element (#{element.id})"
     end
   end
-  
+
   # Print mode counterpart to #render_investigator_section
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  print_investigator_section(form_elements_cache, element, f)
     begin
@@ -910,9 +895,9 @@ module EventsHelper
       return "Could not render section element (#{element.id})<br/>"
     end
   end
-  
+
   # Print mode counterpart to #render_investigator_group
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def print_investigator_group(form_elements_cache, element, f)
     begin
@@ -932,9 +917,9 @@ module EventsHelper
       return "Could not render group element (#{element.id})<br/>"
     end
   end
-  
+
   # Print mode counterpart to #render_investigator_question
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def print_investigator_question(form_elements_cache, element, f)
     begin
@@ -961,43 +946,43 @@ module EventsHelper
       return "Could not show question element (#{element.id})<br/>"
     end
   end
-  
+
   # Print mode counterpart to #render_investigator_follow_up
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def print_investigator_follow_up(form_elements_cache, element, f)
     begin
       result = ""
-    
+
       unless element.core_path.blank?
         result << print_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
         return result
       end
-    
+
       questions = form_elements_cache.children(element)
-    
+
       if questions.size > 0
         questions.each do |child|
           result << print_investigator_element(form_elements_cache, child, f)
         end
       end
-    
+
       return result
     rescue
       logger.warn($!.message)
       return "Could not render follow up element (#{element.id})<br/>"
     end
   end
-  
+
   # Print mode counterpart to #render_investigator_core_follow_up
-  # 
+  #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def print_investigator_core_follow_up(form_elements_cache, element, f)
     begin
       result = ""
-    
+
       include_children = false
-    
+
       # Debt: Replace with shorter eval technique
       core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
       core_value = @event
@@ -1008,17 +993,17 @@ module EventsHelper
           break
         end
       end
-    
+
       if (element.condition_match?(core_value.to_s))
         questions = form_elements_cache.children(element)
-    
+
         if questions.size > 0
           questions.each do |child|
             result << print_investigator_element(form_elements_cache, child, f)
           end
         end
       end
-    
+
       return result
     rescue
       logger.warn($!.message)
@@ -1049,13 +1034,13 @@ module EventsHelper
       function(e, s) {
         var id = $(s).readAttribute('#{options[:attribute]}');
         new Ajax.Updater('#{options[:update]}', '#{url_for(options[:url])}', {
-          asynchronous: true, 
+          asynchronous: true,
           evalScripts: true,
           parameters: {id: id},
           method: 'get',
           insertion: Insertion.Bottom
         });
-      }  
+      }
     JS
   end
 
@@ -1063,13 +1048,13 @@ module EventsHelper
     options[:search_field] ||= 'search_field'
     options[:alt]          ||= 'Searching...'
     options[:indicator]    ||= options[:search_field] + '_spinner'
-    options[:update]       ||= options[:search_field] + '_choices' 
-    options[:param_name]   ||= options[:select] if options[:select]    
+    options[:update]       ||= options[:search_field] + '_choices'
+    options[:param_name]   ||= options[:select] if options[:select]
     options[:method]       ||= 'get'
     options[:url]          ||= {:controller => "morbidity_events", :action => "auto_complete_for_#{options[:search_field]}"}
     options[:results]      ||= options[:search_field] + '_results'
     options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
-    options[:after_update_element]     ||= live_search_callback(:update => options[:results], 
+    options[:after_update_element]     ||= live_search_callback(:update => options[:results],
       :url => options[:after_update_element_url])
     <<-HTML
       #{auto_complete_stylesheet}

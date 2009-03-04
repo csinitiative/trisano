@@ -18,8 +18,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
 <script type="text/javascript">
-    setTimeout("Element.update('flash-message');", 3000);
-    cmr_shortcuts_init();
+  setTimeout("Element.update('flash-message');", 3000);
+  cmr_shortcuts_init();
 </script>
 
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
@@ -29,7 +29,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :tools_two do %>
-  <%= save_buttons(@event) %> 
+  <%= save_buttons(@event) %>
 <% end %>
 
 <% content_for :name do %>
@@ -57,25 +57,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j| %>
         <% core_element :secondary_entity_id, j, :horiz do -%>
           <%= j.label(:secondary_entity_id, "Jurisdiction responsible for investigation") %>
-          <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %> 
+          <%= j.collection_select(:secondary_entity_id, jurisdictions, :entity_id, :name) %>
         <% end -%>
       <% end %>
     <% end %>
   <% end %>
 
-  <% tabs = []
-     tabs << %w(demographic_tab Demographic)
-     tabs << %w(clinical_tab Clinical)
-     tabs << %w(lab_info_tab Laboratory)
-     tabs << %w(contacts_tab Contacts)
-     tabs << %w(epi_tab Epidemiological)
-     tabs << %w(reporting_tab Reporting)
-     tabs << %w(investigation_tab Investigation)
-     tabs << %w(notes_tab Notes)
-     tabs << %w(administrative_tab Administrative)
-  %>
-
-  <% tabbed_content(tabs, @tab_index) do %>
+  <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
     <div id="demographic_tab">
       <%= render :partial => "events/people/form", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
@@ -96,6 +84,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <p>
         <%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Contacts" } %>
+      </p>
+    </div>
+    <div id="encounters_tab">
+      <p>
+        <%= render :partial => 'events/encounters_form', :locals => {:f => event_form} %>
       </p>
     </div>
     <div id="epi_tab">

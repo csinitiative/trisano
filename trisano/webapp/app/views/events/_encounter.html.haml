@@ -1,0 +1,48 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- next if f.object.deleted_at
+
+%div{:class => 'encounter', :style => "clear: both;"}
+
+  - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
+
+    %span.horiz
+      =pe_fields.label(:user_id, "Investigator")
+      - options = f.object.new_record? ? {:selected => User.current_user.id} : {}
+      =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name, options)
+
+    %span.horiz
+      =pe_fields.label(:encounter_date)
+      =pe_fields.calendar_date_select(:encounter_date, :year_range => 5.years.ago..0.years.from_now)
+
+    %span.horiz
+      =pe_fields.label(:encounter_location_type, "Location")
+      - options = f.object.new_record? ? {:selected => "clinic"} : {}
+      =pe_fields.select(:encounter_location_type, ParticipationsEncounter.location_type_array, options)
+
+    - unless f.object.new_record?
+      %span.horiz
+        = f.label :_delete, "Remove"
+        = f.check_box :_delete
+
+    %span.vert
+      =pe_fields.label(:description)
+      =pe_fields.text_area(:description, { :rows => 5, :cols => 50 })
+
+    %br
+    /= (link_to("Edit encounter event", edit_encounter_event_path(f.object), {:id => "edit-encounter-event"})) unless f.object.new_record?
+
+    %hr

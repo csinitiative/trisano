@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class CreateAttachments < ActiveRecord::Migration
+  extend MigrationHelpers
+  
   def self.up
     create_table :attachments do |t|
       t.integer :size
@@ -36,9 +38,15 @@ class CreateAttachments < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_foreign_key :attachments, :db_file_id, :db_files
+    add_foreign_key :attachments, :event_id, :events
+    add_index :attachments, :event_id
+
   end
 
   def self.down
+    remove_foreign_key :attachments, :db_file_id
+    remove_foreign_key :attachments, :event_id
     drop_table :attachments
     drop_table :db_files
   end

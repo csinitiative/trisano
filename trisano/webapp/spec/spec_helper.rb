@@ -78,7 +78,8 @@ def mock_user
   @user.stub!(:jurisdictions_for_privilege).and_return([@place])
   @user.stub!(:is_entitled_to?).and_return(true)
   @user.stub!(:event_view_settings).and_return(nil)
-  
+  @user.stub!(:best_name).and_return("Johnny Johnson")
+
   @role_membership = mock_model(RoleMembership)
   @role = mock_model(Role)
   

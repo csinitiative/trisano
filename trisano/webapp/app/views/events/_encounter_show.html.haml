@@ -1,0 +1,26 @@
+%table.list
+  %tr
+    %th Investigator
+    %th Encounter Date
+    %th Description
+    %th Location
+    %th &nbsp
+
+  - for encounter in encounters
+
+    - if encounter.deleted_at
+      - style = {:class => 'struck-through'}
+    - else
+      - style = {}
+
+    - encounter_event_data = encounter.participations_encounter
+
+    %tr
+      %td{style}=h(encounter_event_data.user.best_name)
+      %td{style}=h(encounter_event_data.encounter_date)
+      %td{style}=h(encounter_event_data.description)
+      %td{style}=h(encounter_event_data.encounter_location_type)
+      %td
+        .tools
+          /= link_to("Edit encounter event", edit_encounter_event_path(encounter), {:id => "edit-encounter-event"}) unless encounter.new_record?
+

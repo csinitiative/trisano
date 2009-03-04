@@ -64,18 +64,28 @@ class Event < ActiveRecord::Base
       @active_places ||= PlaceEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
+
   has_many :contact_child_events, :class_name => 'ContactEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
       @active_contacts = nil if reload
       @active_contacts ||= ContactEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
-  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id' do
+  
+  has_many :encounter_child_events, :class_name => 'EncounterEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
-      @active_contacts = nil if reload
-      @active_contacts ||= Event.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+      @active_encounters = nil if reload
+      @active_encounters ||= EncounterEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
+
+  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id' do
+    def active(reload=false)
+      @active_events = nil if reload
+      @active_events ||= Event.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+    end
+  end
+  
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
@@ -96,6 +106,9 @@ class Event < ActiveRecord::Base
   accepts_nested_attributes_for :place_child_events,
     :allow_destroy => true,
     :reject_if => proc { |attrs| check_place_attrs(attrs) }
+  accepts_nested_attributes_for :encounter_child_events,
+    :allow_destroy => true,
+    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
   accepts_nested_attributes_for :notes,
     :reject_if => proc { |attrs| attrs['note'].blank?}
 
@@ -114,6 +127,18 @@ class Event < ActiveRecord::Base
     (place_empty && exposure_empty) ? true : false
   end
 
+  def self.check_encounter_attrs(attrs)
+   encounter_empty = attrs["participations_encounter_attributes"].all? do |k, v|
+     if ((k == "user_id") ||  (k == "encounter_location_type"))
+       true
+     else
+        v.blank?
+     end
+   end
+   
+   encounter_empty ? true : false
+  end
+
   validates_date :event_onset_date
   validates_existence_of :investigator, :allow_nil => true
   validates_length_of :event_name, :maximum => 100, :allow_blank => true
@@ -130,101 +155,101 @@ class Event < ActiveRecord::Base
   end
 
   states['NEW'] = Routing::State.new({ 
-    :transitions => ["ASGD-LHD"],
-    :action_phrase => nil,
-    :priv_required => :create_event,
-    :description => "New",
-    :state_code => "NEW",
-    :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'
-  })
+      :transitions => ["ASGD-LHD"],
+      :action_phrase => nil,
+      :priv_required => :create_event,
+      :description => "New",
+      :state_code => "NEW",
+      :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'
+    })
   states['ASGD-LHD'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"],
-    :action_phrase => nil,
-    :priv_required => :route_event_to_any_lhd,
-    :description => "Assigned to Local Health Dept.",
-    :state_code => "ASGD-LHD",
-    :note_text => '"Routed to jurisdiction #{self.primary_jurisdiction.name}."'
-  })
+      :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"],
+      :action_phrase => nil,
+      :priv_required => :route_event_to_any_lhd,
+      :description => "Assigned to Local Health Dept.",
+      :state_code => "ASGD-LHD",
+      :note_text => '"Routed to jurisdiction #{self.primary_jurisdiction.name}."'
+    })
   states['ACPTD-LHD'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "ASGD-INV"],
-    :action_phrase => "Accept",
-    :priv_required => :accept_event_for_lhd,
-    :description => "Accepted by Local Health Dept.",
-    :state_code => "ACPTD-LHD",
-    :note_text => '"Accepted by #{self.primary_jurisdiction.name}."'
-  })
+      :transitions => ["ASGD-LHD", "ASGD-INV"],
+      :action_phrase => "Accept",
+      :priv_required => :accept_event_for_lhd,
+      :description => "Accepted by Local Health Dept.",
+      :state_code => "ACPTD-LHD",
+      :note_text => '"Accepted by #{self.primary_jurisdiction.name}."'
+    })
   states['RJCTD-LHD'] = Routing::State.new({
-    :transitions => ["ASGD-LHD"],
-    :action_phrase => "Reject",
-    :priv_required => :accept_event_for_lhd,
-    :description => "Rejected by Local Health Dept.",
-    :state_code => "RJCTD-LHD",
-    :note_text => '"Rejected by #{self.primary_jurisdiction.name}."'
-  })
+      :transitions => ["ASGD-LHD"],
+      :action_phrase => "Reject",
+      :priv_required => :accept_event_for_lhd,
+      :description => "Rejected by Local Health Dept.",
+      :state_code => "RJCTD-LHD",
+      :note_text => '"Rejected by #{self.primary_jurisdiction.name}."'
+    })
   states['ASGD-INV'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"],
-    :action_phrase => "Route to queue",
-    :priv_required => :route_event_to_investigator,
-    :description => "Assigned to Investigator",
-    :state_code => "ASGD-INV",
-    :note_text => 'if self.investigator then "Routed to investigator #{self.investigator.best_name}." else "Routed to queue #{self.event_queue.queue_name}." end'
-  })
+      :transitions => ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"],
+      :action_phrase => "Route to queue",
+      :priv_required => :route_event_to_investigator,
+      :description => "Assigned to Investigator",
+      :state_code => "ASGD-INV",
+      :note_text => 'if self.investigator then "Routed to investigator #{self.investigator.best_name}." else "Routed to queue #{self.event_queue.queue_name}." end'
+    })
   states['UI'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
-    :action_phrase => "Accept",
-    :priv_required => :accept_event_for_investigation,
-    :description => "Under Investigation",
-    :state_code => "UI",
-    :note_text => '"Accepted for investigation."'
-  })
+      :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
+      :action_phrase => "Accept",
+      :priv_required => :accept_event_for_investigation,
+      :description => "Under Investigation",
+      :state_code => "UI",
+      :note_text => '"Accepted for investigation."'
+    })
   states['RJCTD-INV'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "ASGD-INV"],
-    :action_phrase => "Reject",
-    :priv_required => :accept_event_for_investigation,
-    :description => "Rejected by Investigator",
-    :state_code => "RJCTD-INV",
-    :note_text => '"Rejected for investigation."'
-  })
+      :transitions => ["ASGD-LHD", "ASGD-INV"],
+      :action_phrase => "Reject",
+      :priv_required => :accept_event_for_investigation,
+      :description => "Rejected by Investigator",
+      :state_code => "RJCTD-INV",
+      :note_text => '"Rejected for investigation."'
+    })
   states['IC'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
-    :action_phrase => "Mark Investigation Complete",
-    :priv_required => :investigate_event ,
-    :description => "Investigation Complete",
-    :state_code => "IC",
-    :note_text => '"Completed investigation."'
-  })
+      :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
+      :action_phrase => "Mark Investigation Complete",
+      :priv_required => :investigate_event ,
+      :description => "Investigation Complete",
+      :state_code => "IC",
+      :note_text => '"Completed investigation."'
+    })
   states['APP-LHD'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],
-    :action_phrase => "Approve",
-    :priv_required => :approve_event_at_lhd ,
-    :description => "Approved by LHD",
-    :state_code => "APP-LHD",
-    :note_text => '"Approved at #{self.primary_jurisdiction.name}."'
-  })
+      :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],
+      :action_phrase => "Approve",
+      :priv_required => :approve_event_at_lhd ,
+      :description => "Approved by LHD",
+      :state_code => "APP-LHD",
+      :note_text => '"Approved at #{self.primary_jurisdiction.name}."'
+    })
   states['RO-MGR'] = Routing::State.new({
-    :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
-    :action_phrase => "Reopen",
-    :priv_required => :approve_event_at_lhd ,
-    :description => "Reopened by Manager",
-    :state_code => "RO-MGR",
-    :note_text => '"Reopened by #{self.primary_jurisdiction.name} manager."'
-  })
+      :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
+      :action_phrase => "Reopen",
+      :priv_required => :approve_event_at_lhd ,
+      :description => "Reopened by Manager",
+      :state_code => "RO-MGR",
+      :note_text => '"Reopened by #{self.primary_jurisdiction.name} manager."'
+    })
   states['CLOSED'] = Routing::State.new({
-    :transitions => [],
-    :action_phrase => "Approve",
-    :priv_required => :approve_event_at_state ,
-    :description => "Approved by State",
-    :state_code => "CLOSED",
-    :note_text => '"Approved by State."'
-  })
+      :transitions => [],
+      :action_phrase => "Approve",
+      :priv_required => :approve_event_at_state ,
+      :description => "Approved by State",
+      :state_code => "CLOSED",
+      :note_text => '"Approved by State."'
+    })
   states['RO-STATE']  = Routing::State.new({
-    :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
-    :action_phrase => "Reopen",
-    :priv_required => :approve_event_at_state ,
-    :description => "Reopened by State",
-    :state_code => "RO-STATE",
-    :note_text => '"Reopened by State."'
-  })
+      :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
+      :action_phrase => "Reopen",
+      :priv_required => :approve_event_at_state ,
+      :description => "Reopened by State",
+      :state_code => "RO-STATE",
+      :note_text => '"Reopened by State."'
+    })
 
   @@ordered_states = []
   @@ordered_states << states['NEW']
@@ -284,7 +309,7 @@ class Event < ActiveRecord::Base
                           AND c.code_name = 'case'
                           AND c.the_code IN ('C', 'P', 'S') 
                           AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
-                        ")
+        ")
     end
       
     def deleted_ibis_records(start_date, end_date)
@@ -297,7 +322,7 @@ class Event < ActiveRecord::Base
                           AND c.code_name = 'case'
                           AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
                           AND e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'
-                        ")
+        ")
     end
 
     def exportable_ibis_records(start_date, end_date)
@@ -585,13 +610,13 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-                        :include => [ { :interested_party => { :person_entity => [:person, :address] } },
-                                        :disease_event,
-                                        :jurisdiction,
-                                        :associated_jurisdictions
-                                    ],
-                        :conditions => where_clause,
-                        :order => order_by_clause)
+          :include => [ { :interested_party => { :person_entity => [:person, :address] } },
+            :disease_event,
+            :jurisdiction,
+            :associated_jurisdictions
+          ],
+          :conditions => where_clause,
+          :order => order_by_clause)
         results
       end
     end
