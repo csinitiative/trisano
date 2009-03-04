@@ -1184,11 +1184,43 @@ describe MorbidityEvent do
       rescue
         @oreilly_string = "o''reilly"
       end
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Green"
+            }
+          }
+        },
+        "jurisdiction_attributes" => {
+          "secondary_entity_id" => 1
+        }
+      }
     end
 
     it 'should include soundex codes for fulltext search' do
       where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
       where_clause.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
+    end
+
+    describe 'searching for cases by disease' do
+      before(:each) do
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 1 }))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 1000}))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 2000}))
+      end
+
+      it 'should be done with a single disease' do
+        Event.find_by_criteria(:diseases => ['1'], :jurisdiction_id => '1').size.should == 1
+      end
+    
+      it 'should be done with multiple diseases' do
+        Event.find_by_criteria(:diseases => [1, 1000], :jurisdiction_id => '1').size.should == 2
+      end
+
+      it 'should ignore empty disease arrays' do
+        Event.find_by_criteria(:diseases => [], :jurisdiction_id => '1').size.should == 3
+      end
     end
     
   end

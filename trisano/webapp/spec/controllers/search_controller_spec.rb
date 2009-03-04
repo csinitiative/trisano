@@ -30,7 +30,21 @@ shared_examples_for "search cmrs with parameters" do
   end
   
   it "should execute a search" do
-    Event.should_receive(:find_by_criteria).and_return([@event])
+    criteria_hash = {
+      :fulltext_terms => nil,
+      :diseases => [2],
+      :gender => nil,
+      :sw_last_name => nil, 
+      :sw_first_name => nil,
+      :event_status => nil,
+      :birth_date => '',
+      :entered_on_start => nil,
+      :entered_on_end => nil,
+      :city => nil,
+      :county => nil,
+      :jurisdiction_id => nil,
+      :event_type => nil}
+    Event.should_receive(:find_by_criteria).with(criteria_hash).and_return([@event])
     do_get
   end
   
@@ -171,7 +185,7 @@ describe SearchController do
     end
   
     def do_get
-      get :cmrs, :disease => 2
+      get :cmrs, :diseases => [2]
     end
 
     it_should_behave_like "search cmrs with parameters"
@@ -190,7 +204,7 @@ describe SearchController do
     end
 
     def do_get
-      get :cmrs, :disease => 2, :format => 'csv'
+      get :cmrs, :diseases => [2], :format => 'csv'
     end
 
     it_should_behave_like "search cmrs with parameters"

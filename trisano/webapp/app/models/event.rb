@@ -315,10 +315,10 @@ class Event < ActiveRecord::Base
       order_by_clause = "participations.type DESC, last_name, first_name ASC"
       issue_query = false
 
-      if !options[:disease].blank?
+      if !options[:diseases].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += " disease_id = " + sanitize_sql_for_conditions(["%s", options[:disease]])
+        where_clause += " disease_id IN (" + options[:diseases].collect{|id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
       end
 
       if !options[:gender].blank?

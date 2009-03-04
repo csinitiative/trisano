@@ -118,7 +118,7 @@ class SearchController < ApplicationController
         raise if (!error_details.empty?)
 
         @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name],
-                                       :disease => params[:disease],
+                                       :diseases => params[:diseases],
                                        :gender => params[:gender],
                                        :sw_last_name => params[:sw_last_name],
                                        :sw_first_name => params[:sw_first_name],
