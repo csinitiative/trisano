@@ -9,13 +9,12 @@ def create_basic_event(event_type, last_name, disease, jurisdiction)
 end
 
 def create_published_form(event_type, form_name, disease)
-  returning Form.new do |form|
-    form.event_type = event_type + "_event"
-    form.name = form_name, 
-    form.disease_ids = [Disease.find_by_disease_name(disease).id]
-    form.save_and_initialize_form_elements
-    form.publish
-  end
+  form = Form.new
+  form.event_type = event_type + "_event"
+  form.name = form_name
+  form.disease_ids = [Disease.find_by_disease_name(disease).id]
+  form.save_and_initialize_form_elements
+  form.publish
 end
 
 def add_child_to_event(event, child_last_name)
