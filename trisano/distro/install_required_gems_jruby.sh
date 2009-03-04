@@ -51,7 +51,5 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/term-ansic
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/polyglot-0.2.4.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/diff-lcs-1.1.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/cucumber-0.1.16.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/term-ansicolor-1.0.3.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/polyglot-0.2.4.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/treetop-1.2.4.gem
 
