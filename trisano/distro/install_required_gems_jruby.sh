@@ -47,9 +47,3 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.1.
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.1.12.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/term-ansicolor-1.0.3.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/polyglot-0.2.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/diff-lcs-1.1.2.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/cucumber-0.1.16.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/treetop-1.2.4.gem
-
