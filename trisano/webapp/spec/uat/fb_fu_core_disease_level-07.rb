@@ -22,8 +22,8 @@ describe 'form builder core event level core field configs for contacts' do
   
   #$dont_kill_browser = true
 
-  fields = [{:name => 'Hospitalized', :label => 'morbidity_event_disease_hospitalized_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
-    {:name => 'Died', :label => 'morbidity_event_disease_died_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'}
+  fields = [{:name => 'Hospitalized', :label => 'morbidity_event_disease_event_attributes_hospitalized_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
+    {:name => 'Died', :label => 'morbidity_event_disease_event_attributes_died_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'}
   ]                                                 
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

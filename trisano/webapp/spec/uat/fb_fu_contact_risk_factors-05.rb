@@ -20,15 +20,15 @@ require 'date'
  
 describe 'form builder risk factor followups for contact events' do
   
-#  $dont_kill_browser = true
+  $dont_kill_browser = true
 
-  fields = [{:name => 'Pregnant', :label => 'contact_event_active_patient__participations_risk_factor_pregnant_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
-    {:name => 'Food handler', :label => 'contact_event_active_patient__participations_risk_factor_food_handler_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)',  :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-    {:name => 'Healthcare worker', :label => 'contact_event_active_patient__participations_risk_factor_healthcare_worker_id', :entry_type => 'select', :code => 'Code: No (yesno)',  :fu_value => 'No', :no_fu_value => 'Unknown'},
-    {:name => 'Group living', :label => 'contact_event_active_patient__participations_risk_factor_group_living_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-    {:name => 'Day care association', :label => 'contact_event_active_patient__participations_risk_factor_day_care_association_id', :entry_type => 'select', :code => 'Code: No (yesno)', :fu_value => 'No', :no_fu_value => 'Unknown'},
-    {:name => 'Occupation', :label => 'contact_event_active_patient__participations_risk_factor_occupation', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Risk factors', :label => 'contact_event_active_patient__participations_risk_factor_risk_factors', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
+  fields = [{:name => 'Pregnant', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_pregnant_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
+    {:name => 'Food handler', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_food_handler_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)',  :fu_value => 'Unknown', :no_fu_value => 'Yes'},
+    {:name => 'Healthcare worker', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_healthcare_worker_id', :entry_type => 'select', :code => 'Code: No (yesno)',  :fu_value => 'No', :no_fu_value => 'Unknown'},
+    {:name => 'Group living', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_group_living_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'},
+    {:name => 'Day care association', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_day_care_association_id', :entry_type => 'select', :code => 'Code: No (yesno)', :fu_value => 'No', :no_fu_value => 'Unknown'},
+    {:name => 'Occupation', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_occupation', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Risk factors', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_risk_factors', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
   ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
@@ -36,7 +36,7 @@ describe 'form builder risk factor followups for contact events' do
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
     {:name => 'Checkboxes', :values => ["Pink","Red","Purple"], :answer_code => "2", :answer => "Red", :entry_type => "check"},
-    {:name => 'Date', :values => nil, :answer => "12/12/2008", :entry_type => "type"},
+    {:name => 'Date', :values => nil, :answer => "2008-12-13", :entry_type => "type"},
     {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
   ]
   
@@ -103,7 +103,7 @@ describe 'form builder risk factor followups for contact events' do
       
       @browser.click("//ul[@id='tabs']/li[5]/a/em")
       @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
+      sleep 5 #Giving the investigator form questions time to show up
       
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
@@ -123,7 +123,7 @@ describe 'form builder risk factor followups for contact events' do
       
       @browser.click("//ul[@id='tabs']/li[5]/a/em")
       @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
+      sleep 5 #Giving the investigator form questions time to show up
       
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
@@ -143,7 +143,7 @@ describe 'form builder risk factor followups for contact events' do
       
       @browser.click("//ul[@id='tabs']/li[5]/a/em")
       @browser.is_text_present(form_name).should be_true
-      sleep 2 #Giving the investigator form questions time to show up
+      sleep 5 #Giving the investigator form questions time to show up
       
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
@@ -159,7 +159,8 @@ describe 'form builder risk factor followups for contact events' do
       it "should save values for #{follow_up_question}" do 
         edit_cmr(@browser)
         @browser.click("//ul[@id='tabs']/li[5]/a/em")
-        @browser.is_text_present(follow_up_question).should be_true    
+        @browser.is_text_present(follow_up_question).should be_true
+
         case data_type[:entry_type]   
         when 'select'
           answer_multi_select_investigator_question(@browser, follow_up_question, data_type[:answer]).should be_true

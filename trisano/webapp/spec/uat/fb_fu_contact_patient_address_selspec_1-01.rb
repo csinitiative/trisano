@@ -23,13 +23,9 @@ describe 'form builder patient-level address follow-ups for contact events' do
 
 #  $dont_kill_browser = true
 
-  $fields = [{:name => 'Contact street number', :label => 'contact_event_active_patient__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact street name', :label => 'contact_event_active_patient__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Contact unit number', :label => 'contact_event_active_patient__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-#    {:name => 'Contact city', :label => 'contact_event_active_patient__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-#    {:name => 'Contact state', :label => 'contact_event_active_patient__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-#    {:name => 'Contact county', :label => 'contact_event_active_patient__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-#    {:name => 'Contact zip code', :label => 'contact_event_active_patient__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
+  $fields = [{:name => 'Contact street number', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+    {:name => 'Contact street name', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
+    {:name => 'Contact unit number', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'}
   ]
 
   it_should_behave_like "form builder patient-level address follow-ups for fields on contact events"

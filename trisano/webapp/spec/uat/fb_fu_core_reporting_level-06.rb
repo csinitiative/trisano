@@ -22,13 +22,9 @@ describe 'form builder core event level core field configs for contacts' do
   
   #$dont_kill_browser = true
 
-  fields = [#{:name => 'Reporter first name', :label => 'morbidity_event_active_reporting_agency_first_name', :entry_type => 'type',:fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Reporter last name', :label => 'morbidity_event_active_reporting_agency_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    #    {:name => 'Reporter phone type', :label => 'morbidity_event_active_reporting_agency_extension', :entry_type => 'select', :code => 'Code: Mobile (telephonelocationtype)', :fu_value => 'Mobile', :no_fu_value => 'Work'},
-    #    {:name => 'Reporter area code', :label => 'morbidity_event_active_reporting_agency_area_code', :entry_type => 'type',:fu_value => '874', :no_fu_value => '878'},
-    #    {:name => 'Reporter phone number', :label => 'morbidity_event_active_reporting_agency_phone_number', :entry_type => 'type',:fu_value => '555-8777', :no_fu_value => '555-8998'},
-    #    {:name => 'Reporter extension', :label => 'morbidity_event_active_reportng_agency_extension', :entry_type => 'type',:fu_value => '33', :no_fu_value => '32'}
-  ]                                                  
+  fields = [
+    {:name => 'Reporter last name', :label => 'morbidity_event_active_reporting_agency_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
+    ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

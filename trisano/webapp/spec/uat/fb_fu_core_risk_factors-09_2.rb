@@ -23,13 +23,9 @@ describe 'form builder core risk factor followups for morbidity events' do
   
   #$dont_kill_browser = true
 
-  $fields = [#{:name => 'Pregnant', :label => 'morbidity_event_active_patient__participations_risk_factor_pregnant_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
-#    {:name => 'Food handler', :label => 'morbidity_event_active_patient__participations_risk_factor_food_handler_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)',  :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-    {:name => 'Healthcare worker', :label => 'morbidity_event_active_patient__participations_risk_factor_healthcare_worker_id', :entry_type => 'select', :code => 'Code: No (yesno)',  :fu_value => 'No', :no_fu_value => 'Unknown'},
-    {:name => 'Group living', :label => 'morbidity_event_active_patient__participations_risk_factor_group_living_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'},
-#    {:name => 'Day care association', :label => 'morbidity_event_active_patient__participations_risk_factor_day_care_association_id', :entry_type => 'select', :code => 'Code: No (yesno)', :fu_value => 'No', :no_fu_value => 'Unknown'},
-#    {:name => 'Occupation', :label => 'morbidity_event_active_patient__participations_risk_factor_occupation', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-#    {:name => 'Risk factors', :label => 'morbidity_event_active_patient__participations_risk_factor_risk_factors', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
+  $fields = [
+    {:name => 'Healthcare worker', :label => 'morbidity_event_interested_party_attributes_risk_factor_attributes_healthcare_worker_id', :entry_type => 'select', :code => 'Code: No (yesno)',  :fu_value => 'No', :no_fu_value => 'Unknown'},
+    {:name => 'Group living', :label => 'morbidity_event_interested_party_attributes_risk_factor_attributes_group_living_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'}
   ]                                                  
   
 it_should_behave_like "form builder core fields risk factor followups for morbidity events"
