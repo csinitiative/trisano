@@ -37,7 +37,9 @@ class SearchController < ApplicationController
 
         unless people.empty?
           @people = people.collect do |person|
-            event = Event.find(:first, :include => "participations", :conditions => ["participations.primary_entity_id = ? and participations.role_id = ?", person.entity_id, Event.participation_code('Interested Party')] )
+            event = Event.find(:first, 
+                               :include => :participations,
+                               :conditions => ["participations.primary_entity_id = ? AND participations.type = ?", person.entity_id, 'InterestedParty'])
             if event.nil?
               type = "No associated event"
               id = nil

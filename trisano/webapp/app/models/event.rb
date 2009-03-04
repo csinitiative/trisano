@@ -354,15 +354,15 @@ class Event < ActiveRecord::Base
       if !options[:jurisdiction_id].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
-        where_clause += " OR associated_jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+        where_clause += "(jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+        where_clause += " OR associated_jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]]) + ")"
       else
         where_clause += " AND " unless where_clause.empty?
         allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
         allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
         allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
-        where_clause += "jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
-        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
+        where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
+        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ") )"
       end
 
       # Debt: The UI shows the user a format to use. Something a bit more robust
@@ -576,11 +576,12 @@ class Event < ActiveRecord::Base
 
   def self.find_by_criteria(*args)
     options = args.extract_options!
+
     return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 
 
     where_clause, order_by_clause, issue_query = Event.generate_event_search_where_clause(options)
 
-    if issue_query
+    if issue_query || !options[:event_type].blank?
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,

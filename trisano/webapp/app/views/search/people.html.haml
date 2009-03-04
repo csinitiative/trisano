@@ -71,7 +71,7 @@
               - next
             = link_to("#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})", path, :id => html_id)
           - else
-            = "#{person[:person].first_name} #{person[:person].last_name} (No associated event)"
+            = "#{person[:person].first_name} #{person[:person].last_name} (#{person[:event_type].to_s.underscore.humanize})"
         %td
           - if  !person[:person].birth_date.blank?
             = "#{calculate_age person[:person].birth_date.to_date} / #{person[:person].birth_date}"

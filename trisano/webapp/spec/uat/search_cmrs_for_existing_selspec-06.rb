@@ -30,20 +30,21 @@ describe 'User functionality for searching for existing users' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Chuckles')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__person_last_name', 'Chuckles')
-      @browser.type('morbidity_event_active_patient__person_first_name', 'Charles')
-      @browser.type('morbidity_event_active_patient__address_city', 'Provo')
-      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
+      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', 'Chuckles')
+      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name', 'Charles')
+      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_city', 'Provo')
+      @browser.select('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_state_id', 'label=Utah')
+      @browser.select('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_county_id', 'label=Utah')
+      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_postal_code', '84602')
 
       click_core_tab(@browser, "Contacts")
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Laurel"
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Charles"
-
-      click_core_tab(@browser, "Reporting")
-      @browser.type "morbidity_event_active_reporting_agency_last_name", "Hardy"
-      @browser.type "morbidity_event_active_reporting_agency_first_name", "Charles"
+      
+      # uncomment when the reporting tab is restored.
+      # click_core_tab(@browser, "Reporting")
+      # @browser.type "morbidity_event_active_reporting_agency_last_name", "Hardy"
+      # @browser.type "morbidity_event_active_reporting_agency_first_name", "Charles"
       save_cmr(@browser).should be_true
     end
   end
@@ -63,7 +64,8 @@ describe 'User functionality for searching for existing users' do
     @browser.wait_for_page_to_load($load_time) 
     @browser.is_text_present('Charles Chuckles (Morbidity event)').should be_true
     @browser.is_text_present('Charles Laurel (Contact event)').should be_true
-    @browser.is_text_present('Charles Hardy (No associated event)').should be_true
+    # uncomment when reporting tab is resptored
+    # @browser.is_text_present('Charles Hardy (No associated event)').should be_true
   end
 
   it 'should find a person named Charles Chuckles when searching by Charlie Chuckles' do
@@ -140,7 +142,7 @@ describe 'User functionality for searching for existing users' do
     @browser.is_text_present('Export All to CSV').should be_true
   end
 
-  it "should find charles chuckles when searchin for morbidity events" do
+  it "should find charles chuckles when searching for morbidity events" do
     navigate_to_cmr_search(@browser).should be_true
     @browser.select "event_type", "label=Morbidity Event (CMR)"
     @browser.click("//input[@type='submit']")
@@ -179,7 +181,7 @@ end
   it "should always display the primary jurisdiction in search results" do
     navigate_to_cmr_search(@browser).should be_true
     @browser.type('name', @name)
-    @browser.select "disease", "label=Pertussis"
+    @browser.check "Pertussis"
     @browser.click "//input[@type='submit']"
     @browser.wait_for_page_to_load "30000"
     @browser.get_text("//div[@id='main-content']/div[1]/table/tbody/tr[2]/td[8]").should == "Davis County Health Department"
