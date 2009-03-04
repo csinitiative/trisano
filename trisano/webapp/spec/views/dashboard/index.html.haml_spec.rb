@@ -38,7 +38,6 @@ describe "/dashboard/index.html.haml" do
       @user.stub!(:filter_tasks).and_return([])
       @user.should_receive(:id).exactly(6).times.and_return(1)
       User.stub!(:current_user).and_return(@user)
-      @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
     end
     
     it 'should not render the table' do
@@ -89,7 +88,6 @@ describe "/dashboard/index.html.haml" do
       @user.should_receive(:filter_tasks).and_return(@tasks)
       @user.should_receive(:id).exactly(6).times.and_return(1)
       User.stub!(:current_user).and_return(@user)
-      @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
       params[:look_back] = '0'
       params[:look_ahead] = '0'
       params['task'] = {'status' => 'complete'}
@@ -149,11 +147,6 @@ describe "/dashboard/index.html.haml" do
     end
 
     describe 'with no task filters' do
-      it 'should show the \'no filters\' message' do
-        render 'dashboard/index.html.haml'
-        response.should have_tag('span', :text => 'Task filter message')
-      end
-      
       it 'should have task_view_settings tag' do
         render 'dashboard/index.html.haml'
         response.should have_tag('#task_view_settings[style="display: none;"]')
@@ -280,7 +273,6 @@ describe "/dashboard/index.html.haml" do
       @user.should_receive(:filter_tasks).and_return(@tasks)      
       @user.should_receive(:id).exactly(6).times.and_return(1)
       User.stub!(:current_user).and_return(@user)      
-      @controller.template.should_receive(:task_filter_description).with(params).and_return('Task filter message')
     end
 
     %w(name due_date notes category_name priority user_name).each do |meth|
