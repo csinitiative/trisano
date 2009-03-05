@@ -43,5 +43,4 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-will_pa
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.1.12.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.1.12.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/cucumber-0.1.16.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
