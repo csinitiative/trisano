@@ -48,6 +48,7 @@ describe MorbidityEvent do
     it { should have_many(:participations) }
     it { should have_many(:place_child_events) }
     it { should have_many(:contact_child_events) }
+    it { should have_many(:encounter_child_events) }
     it { should have_many(:child_events) }
     it { should belong_to(:parent_event) }
 
@@ -56,6 +57,7 @@ describe MorbidityEvent do
       it { should accept_nested_attributes_for(:disease_event) }
       it { should accept_nested_attributes_for(:contact_child_events) }
       it { should accept_nested_attributes_for(:place_child_events) }
+      it { should accept_nested_attributes_for(:encounter_child_events) }
       it { should accept_nested_attributes_for(:notes) }
 
       describe "destruction is allowed properly" do
@@ -63,7 +65,7 @@ describe MorbidityEvent do
 
         before(:each) do
           mock_user
-          @event = Event.new
+          @event = MorbidityEvent.new
         end
 
         it "Should not allow the primary jurisdiction to be deleted via a nested attribute" do
@@ -94,6 +96,13 @@ describe MorbidityEvent do
           @event.place_child_events[0].should be_marked_for_destruction
         end
 
+        it "Should allow encounter child events to be deleted via a nested attribute" do
+          @event.encounter_child_events.build
+          @event.save
+          @event.encounter_child_events_attributes = [ { "id" => "#{@event.encounter_child_events[0].id}", "_delete"=>"1"} ]
+          @event.encounter_child_events[0].should be_marked_for_destruction
+        end
+
         it "Should not allow notes to be deleted via a nested attribute" do
           @event.notes.build
           @event.save
@@ -121,22 +130,32 @@ describe MorbidityEvent do
 
         it "should reject contacts with no information" do
           @event.contact_child_events_attributes = [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "" },
-                                                                                                                          "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-                                                       "participations_contact_attributes" => {} } ]
+                  "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+              "participations_contact_attributes" => {} } ]
           @event.contact_child_events.should be_empty
         end
 
         it "should not reject contacts with some information" do
           @event.contact_child_events_attributes = [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "whatever" },
-                                                                                                                          "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-                                                       "participations_contact_attributes" => {} } ]
+                  "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+              "participations_contact_attributes" => {} } ]
           @event.contact_child_events.should_not be_empty
         end
 
         it "should reject place exposures with no information" do
           @event.place_child_events_attributes = [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "" } } },
-                                                     "participations_place_attributes" => {} } ]
+              "participations_place_attributes" => {} } ]
           @event.place_child_events.should be_empty
+        end
+
+        it "should reject encounters with only a user and a location" do
+          @event.encounter_child_events_attributes = [ { "participations_encounter_attributes" => { "user_id" => "1", "encounter_location_type" => "clinic" } } ]
+          @event.encounter_child_events.should be_empty
+        end
+
+        it "should not reject encounters with a user, location, and date" do
+          @event.encounter_child_events_attributes = [ { "participations_encounter_attributes" => { "user_id" => "1", "encounter_location_type" => "clinic", "encounter_date" => "March 11, 2009" } } ]
+          @event.encounter_child_events.should_not be_empty
         end
       end
     end
@@ -608,7 +627,7 @@ describe MorbidityEvent do
 
       it 'should use the lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -617,9 +636,9 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
-                                           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
+          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
+            "lab_results_attributes" => [ { "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -628,7 +647,7 @@ describe MorbidityEvent do
 
       it 'should use the lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -637,9 +656,9 @@ describe MorbidityEvent do
 
       it 'should use the earliet lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
-                                           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
+          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
+            "lab_results_attributes" => [ { "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -648,11 +667,11 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "pos", 
-                                                                             "collection_date" => Date.today.years_ago(1), "lab_test_date" => Date.today.years_ago(1) } ] },
-                                           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } }, 
-                                             "lab_results_attributes" => [ { "lab_result_text" => "neg", 
-                                                                             "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "lab_result_text" => "pos",
+                "collection_date" => Date.today.years_ago(1), "lab_test_date" => Date.today.years_ago(1) } ] },
+          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
+            "lab_results_attributes" => [ { "lab_result_text" => "neg",
+                "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 11
@@ -744,38 +763,38 @@ describe MorbidityEvent do
 
         # NON_IBIS: Not sent to IBIS, no disease, not confirmed
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
-                                 "event_name" => "Ibis1" } )
+            "event_name" => "Ibis1" } )
         # NON_IBIS: Not sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
-                                 "disease_event_attributes" => { "disease_id" => anthrax.id },
-                                 "event_name" => "Ibis2" } )
+            "disease_event_attributes" => { "disease_id" => anthrax.id },
+            "event_name" => "Ibis2" } )
         # NEW: Not sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis3" } } },
-                                 "disease_event_attributes" => { "disease_id" => anthrax.id },
-                                 "state_case_status_id" => confirmed.id,
-                                 "event_name" => "Ibis3" } )
+            "disease_event_attributes" => { "disease_id" => anthrax.id },
+            "state_case_status_id" => confirmed.id,
+            "event_name" => "Ibis3" } )
         # UPDATED: Sent to IBIS, has disease, confirmed
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } }, 
-                                 "disease_event_attributes" => { "disease_id" => anthrax.id },
-                                 "state_case_status_id" => confirmed.id,
-                                 "sent_to_ibis" => true,
-                                 "ibis_updated_at" => Date.today,
-                                 "event_name" => "Ibis4" } )
+            "disease_event_attributes" => { "disease_id" => anthrax.id },
+            "state_case_status_id" => confirmed.id,
+            "sent_to_ibis" => true,
+            "ibis_updated_at" => Date.today,
+            "event_name" => "Ibis4" } )
         # DELETED: Sent to IBIS, has disease, not confirmed
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } }, 
-                                 "disease_event_attributes" => { "disease_id" => anthrax.id },
-                                 "state_case_status_id" => discarded.id,
-                                 "sent_to_ibis" => true,
-                                 "ibis_updated_at" => Date.today,
-                                 "event_name" => "Ibis5" } )
+            "disease_event_attributes" => { "disease_id" => anthrax.id },
+            "state_case_status_id" => discarded.id,
+            "sent_to_ibis" => true,
+            "ibis_updated_at" => Date.today,
+            "event_name" => "Ibis5" } )
         # DELETED: Sent to IBIS, has disease, confirmed but deleted
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } }, 
-                                 "disease_event_attributes" => { "disease_id" => anthrax.id },
-                                 "state_case_status_id" => confirmed.id,
-                                 "sent_to_ibis" => true,
-                                 "ibis_updated_at" => Date.today,
-                                 "event_name" => "Ibis5",
-                                 "deleted_at" => Time.now } )
+            "disease_event_attributes" => { "disease_id" => anthrax.id },
+            "state_case_status_id" => confirmed.id,
+            "sent_to_ibis" => true,
+            "ibis_updated_at" => Date.today,
+            "event_name" => "Ibis5",
+            "deleted_at" => Time.now } )
       end
 
       it "should find active (new and updated) records" do
@@ -1143,10 +1162,10 @@ describe MorbidityEvent do
           }
         },
         "contact_child_events_attributes" => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
-                                                                                                                    "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-                                                 "participations_contact_attributes" => {} } ],
+                "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+            "participations_contact_attributes" => {} } ],
         "place_child_events_attributes"   => [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "Red" } } },
-                                                 "participations_place_attributes" => {} } ]
+            "participations_place_attributes" => {} } ]
       }
       @event = MorbidityEvent.new(@event_hash)
     end
