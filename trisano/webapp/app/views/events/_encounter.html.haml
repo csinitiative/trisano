@@ -43,6 +43,6 @@
       =pe_fields.text_area(:description, { :rows => 5, :cols => 50 })
 
     %br
-    /= (link_to("Edit encounter event", edit_encounter_event_path(f.object), {:id => "edit-encounter-event"})) unless f.object.new_record?
+    = (link_to("Edit encounter event", edit_encounter_event_path(f.object), {:id => "edit-encounter-event"})) unless f.object.new_record?
 
     %hr

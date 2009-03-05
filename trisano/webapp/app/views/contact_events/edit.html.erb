@@ -30,16 +30,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% content_for :name do %>
   <%= patient_name %>
-
-  <%- original_patient = @event.parent_event %>
   <span style='position: absolute; right: 0;'>
-    <span>Original Patient: <%= link_to("#{original_patient.interested_party.person_entity.person.first_name} #{original_patient.interested_party.person_entity.person.last_name}", cmr_path(original_patient)) -%></span>
-    <p style='font-size: 12px; font-weight: light;'><%= original_patient.safe_call_chain(:disease_event, :disease, :disease_name) %></p>
+    <%= original_patient_controls(@event) %>
   </span>
 <% end %>
 
 <% content_for :tools_two do %>
-  <%= save_buttons(@event) %> 
+  <%= save_buttons(@event) %>
 <% end %>
 
 <% content_for :tools do %>
@@ -55,13 +52,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% form_for(setup_human_event_tree(@event), :url => contact_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
   <% tabs = []
-     tabs << %w(demographic_tab Demographic)
-     tabs << %w(clinical_tab Clinical)
-     tabs << %w(lab_info_tab Laboratory)
-     tabs << %w(epi_tab Epidemiological)
-     tabs << %w(investigation_tab Investigation)
-     tabs << %w(notes_tab Notes)
-  %>
+  tabs << %w(demographic_tab Demographic)
+  tabs << %w(clinical_tab Clinical)
+  tabs << %w(lab_info_tab Laboratory)
+  tabs << %w(epi_tab Epidemiological)
+  tabs << %w(investigation_tab Investigation)
+  tabs << %w(notes_tab Notes)
+%>
 
   <% tabbed_content(tabs, @tab_index) do %>
     <div id="demographic_tab">

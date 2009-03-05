@@ -19,6 +19,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe EncounterEventsHelper do
 
+  describe "basic controls helpers" do
+
+    it 'should draw basic controls' do
+      pending
+    end
+
+  end
+  
   describe "building a list of users for the investigator drop down" do
 
     fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements

@@ -145,7 +145,9 @@ def mock_event
   pregnant.stub!(:code_description).and_return('No')
   
   jurisdiction.stub!(:secondary_entity_id).and_return(75)
+
   interested_party.stub!(:primary_entity).and_return(1)
+  interested_party.stub!(:person_entity).and_return(person)
    
   disease_event.stub!(:disease_id).and_return(1)
   disease_event.stub!(:hospital_id).and_return(13)
@@ -205,6 +207,7 @@ def mock_event
   event.stub!(:under_investigation?).and_return(true)
   event.stub!(:interested_party=)
   event.stub!(:get_investigation_forms).and_return(nil)
+  event.stub!(:safe_call_chain).with(:disease_event, :disease, :disease_name).and_return("Bubonic,Plague")
   event
 end
 

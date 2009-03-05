@@ -421,6 +421,15 @@ module EventsHelper
     blank_contact
   end
 
+  def original_patient_controls(event)
+    original_patient = event.parent_event
+    name = "#{original_patient.interested_party.person_entity.person.first_name} #{original_patient.interested_party.person_entity.person.last_name}"
+    %Q{
+        <span>Original Patient: #{link_to(name, cmr_path(original_patient))}</span>
+        <p style='font-size: 12px; font-weight: light;'>#{original_patient.safe_call_chain(:disease_event, :disease, :disease_name)}</p>
+    }
+  end
+
   private
 
   def concat_core_field(mode, before_or_after, attribute, form_builder, block)

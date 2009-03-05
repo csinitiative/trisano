@@ -1,0 +1,59 @@
+<!--
+Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, or 
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along 
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-->
+
+<script type="text/javascript">
+  cmr_shortcuts_init();
+</script>
+
+<% content_for :title do %>
+  View Encounter Event: <%= @event.participations_encounter.encounter_date %>
+<% end %>
+
+<% content_for :name do %>
+  <table class='list'>
+    <tr>
+      <th class='forminformation'>Encounter</th>
+      <th>Disease</th>
+      <th>Jurisdiction</th>
+      <th>Original Patient</th>
+    </tr>
+    <tr>
+      <td class='forminformation'>
+        Encounter on <%= @event.participations_encounter.encounter_date %>
+        <div class='tools'>
+          <%= basic_encounter_event_controls(@event, false) %>
+        </div>
+      </td>
+      <td>
+        <%= @event.safe_call_chain(:disease_event, :disease, :disease_name) %>
+      </td>
+      <td>
+        <b><%= @event.primary_jurisdiction.short_name %></b>
+      </td>
+      <td>
+       <%= original_patient_controls(@event) %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<% fields_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+  &nbsp;
+<% end %>
+

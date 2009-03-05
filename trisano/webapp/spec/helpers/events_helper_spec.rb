@@ -43,7 +43,7 @@ describe EventsHelper do
           pending "There are serious difficulties testing Haml helpers in RSpec.  Pending till figured out."
           form = state_controls(@event_1, @jurisdiction)
           # form test here
-            # radio button test here
+          # radio button test here
         end
           
       end
@@ -54,5 +54,17 @@ describe EventsHelper do
    
     # Repeat the above pattern as new state transitions are implemented
   end
-    
+
+  describe "original patient controls" do
+
+    it 'should display the patient name and disease for the parent event' do
+      @event = mock_event
+      @encounter_event = mock_model(EncounterEvent)
+      @encounter_event.stub!(:parent_event).and_return(@event)
+      helper.original_patient_controls(@encounter_event).include?("Groucho Marx").should be_true
+      helper.original_patient_controls(@encounter_event).include?("Bubonic,Plague").should be_true
+    end
+   
   end
+  
+end
