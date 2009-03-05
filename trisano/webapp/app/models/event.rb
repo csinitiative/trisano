@@ -543,7 +543,8 @@ class Event < ActiveRecord::Base
       # Lets be sure that there are no dups between the desired forms and the existing forms
       forms_to_add -= existing_or_viable_form_ids
     else
-      # Persist all passed in forms plus all viable forms
+      # Persist all passed in forms plus all viable forms while clearing form_references of any new records added above
+      self.form_references.clear
       forms_to_add += existing_or_viable_form_ids
     end
     Event.transaction do
