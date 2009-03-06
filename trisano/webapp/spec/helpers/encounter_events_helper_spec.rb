@@ -20,11 +20,32 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe EncounterEventsHelper do
 
   describe "basic controls helpers" do
-
-    it 'should draw basic controls' do
-      pending
+    before(:each) do
+      mock_user
+      @encounter_event = mock_event # Cheating here and feeding a morbidity event
+    end
+    
+    it 'should draw basic controls without show' do
+      result =  helper.basic_encounter_event_controls(@encounter_event, false)
+      result.include?("Show").should be_false
+      result.include?("Edit").should be_true
+      result.include?("Delete").should be_true
     end
 
+    it 'should draw basic controls with show' do
+      result =  helper.basic_encounter_event_controls(@encounter_event)
+      result.include?("Show").should be_true
+      result.include?("Edit").should be_true
+      result.include?("Delete").should be_true
+    end
+    
+    it 'should draw basic controls without delete' do
+      @encounter_event.stub!(:deleted_at).and_return(1.day.ago)
+      result =  helper.basic_encounter_event_controls(@encounter_event)
+      result.include?("Show").should be_true
+      result.include?("Edit").should be_true
+      result.include?("Delete").should be_false
+    end
   end
   
   describe "building a list of users for the investigator drop down" do

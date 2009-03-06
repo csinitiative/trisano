@@ -128,15 +128,15 @@ class Event < ActiveRecord::Base
   end
 
   def self.check_encounter_attrs(attrs)
-   encounter_empty = attrs["participations_encounter_attributes"].all? do |k, v|
-     if ((k == "user_id") ||  (k == "encounter_location_type"))
-       true
-     else
+    encounter_empty = attrs["participations_encounter_attributes"].all? do |k, v|
+      if ((k == "user_id") ||  (k == "encounter_location_type"))
+        true
+      else
         v.blank?
-     end
-   end
+      end
+    end
    
-   encounter_empty ? true : false
+    encounter_empty ? true : false
   end
 
   validates_date :event_onset_date
@@ -654,6 +654,39 @@ class Event < ActiveRecord::Base
     self.cache_old_attributes
   end
 
+  # Indicates whether an event supports tasks. Generally used by the UI in shared partials
+  # to determine whether task-specific layout should be included.
+  #
+  # Sub-classes can either override this method to return true or use a declarative option:
+  #
+  # supports :tasks
+  def supports_tasks?
+    false
+  end
+
+  # Indicates whether an event supports attachements. Generally used by the UI in shared partials
+  # to determine whether attachment-specific layout should be included.
+  #
+  # Sub-classes can either override this method to return true or use a declarative option:
+  #
+  # supports :attachments
+  def supports_attachments?
+    false
+  end
+
+  class << self
+    def supports(functionality)
+      return unless [:tasks, :attachments].include?(functionality)
+      supports_method = %Q{
+        def supports_#{functionality.to_s}?
+          true
+        end
+      }
+      class_eval(supports_method)
+    end
+  end
+
+  
   private
 
   def set_record_number

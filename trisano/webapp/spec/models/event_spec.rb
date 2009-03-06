@@ -1252,3 +1252,31 @@ describe Event, 'pagination' do
   end
 
 end
+
+describe Event, 'declarative task, attachment support' do
+
+  it 'should indicate that mobidity events support tasks and attachments' do
+    morbidity_event = MorbidityEvent.new
+    morbidity_event.supports_attachments?.should be_true
+    morbidity_event.supports_tasks?.should be_true
+  end
+
+  it 'should indicate that contact events support tasks and attachments' do
+    contact_event = ContactEvent.new
+    contact_event.supports_attachments?.should be_true
+    contact_event.supports_tasks?.should be_true
+  end
+
+  it 'should indicate that place events do not support tasks and attachments' do
+    place_event = PlaceEvent.new
+    place_event.supports_attachments?.should be_false
+    place_event.supports_tasks?.should be_false
+  end
+
+  it 'should indicate that encounter events not not support tasks and attachments' do
+    encounter_event = EncounterEvent.new
+    encounter_event.supports_attachments?.should be_false
+    encounter_event.supports_tasks?.should be_false
+  end
+  
+end

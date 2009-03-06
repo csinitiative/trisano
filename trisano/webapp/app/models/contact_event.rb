@@ -16,6 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ContactEvent < HumanEvent
+
+  supports :tasks
+  supports :attachments
+  
   before_create do |contact|
     contact.add_note("Contact event created.")
   end
@@ -34,7 +38,7 @@ class ContactEvent < HumanEvent
   # If you're wondering why calling #destroy on a contact event isn't deleting the record, this is why.
   # Override destroy to soft-delete record instead.  This makes it easier to work with :autosave.
   def destroy
-   self.soft_delete
+    self.soft_delete
   end
 
   def promote_to_morbidity_event
@@ -56,4 +60,5 @@ class ContactEvent < HumanEvent
       false
     end
   end
+  
 end

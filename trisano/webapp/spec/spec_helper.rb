@@ -208,6 +208,7 @@ def mock_event
   event.stub!(:interested_party=)
   event.stub!(:get_investigation_forms).and_return(nil)
   event.stub!(:safe_call_chain).with(:disease_event, :disease, :disease_name).and_return("Bubonic,Plague")
+  event.stub!(:deleted_at).and_return(nil)
   event
 end
 

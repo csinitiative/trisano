@@ -48,5 +48,22 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <div id="follow-up-error"></div>
 
 <% form_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
-  &nbsp;
+  <%  @event_form = event_form %>
+  <% tabs = []
+  tabs << %w(encounter_tab Encounter)
+  tabs << %w(notes_tab Notes)
+%>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="encounter_tab">
+      <%= render :partial => "encounter_edit_tab", :locals => { :f => event_form, :event => @event } %>
+    </div>
+    <div id="notes_tab">
+      <p>
+        <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+      </p>
+    </div>
+  <% end %>
+  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;" %>
+
 <% end %>

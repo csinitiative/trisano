@@ -47,13 +47,30 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <b><%= @event.primary_jurisdiction.short_name %></b>
       </td>
       <td>
-       <%= original_patient_controls(@event) %>
+        <%= original_patient_controls(@event) %>
       </td>
     </tr>
   </table>
 <% end %>
 
 <% fields_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-  &nbsp;
+  <%  @event_form = event_form %>
+  <% tabs = []
+  tabs << %w(encounter_tab Encounter)
+  tabs << %w(notes_tab Notes)
+%>
+
+  <% tabbed_content(tabs, @tab_index) do %>
+    <div id="encounter_tab">
+      <%= render :partial => "encounter_show_tab", :locals => { :f => event_form, :event => @event } %>
+    </div>
+    <div id="notes_tab">
+      <p>
+        <%= render :partial => "events/notes_show_tab" %>
+      </p>
+    </div>
+  <% end %>
+  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;" %>
+
 <% end %>
 

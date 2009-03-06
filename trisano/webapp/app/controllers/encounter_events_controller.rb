@@ -40,6 +40,28 @@ class EncounterEventsController < EventsController
   end
 
   def update
+    go_back = params.delete(:return)
+    @event.add_note("Edited event") unless go_back
+
+    respond_to do |format|
+      if @event.update_attributes(params[:encounter_event])
+        flash[:notice] = 'Encounter event was successfully updated.'
+        format.html {
+          if go_back
+            render :action => "edit"
+          else
+            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+            redirect_to(encounter_event_url(@event) + query_str)
+          end
+        }
+        format.xml  { head :ok }
+        format.js   { render :inline => "Encounter saved.", :status => :created }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        format.js   { render :inline => "Encounter event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+      end
+    end
   end
 
   def destroy

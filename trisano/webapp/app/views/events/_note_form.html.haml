@@ -13,13 +13,14 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset
-  %legend
-    Attachments
-    %span{:id => 'attachments_hide', :onClick => "Element.hide('attachments'); Element.hide('attachments_hide'); Element.show('attachments_show'); return false;"} [Hide]
-    %span{:id => 'attachments_show', :onClick => "Element.show('attachments'); Element.hide('attachments_show'); Element.show('attachments_hide'); return false;", :style => "display: none;"} [Show]
-  #attachments
-    = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
+- if @event.supports_attachments?
+  %fieldset
+    %legend
+      Attachments
+      %span{:id => 'attachments_hide', :onClick => "Element.hide('attachments'); Element.hide('attachments_hide'); Element.show('attachments_show'); return false;"} [Hide]
+      %span{:id => 'attachments_show', :onClick => "Element.show('attachments'); Element.hide('attachments_show'); Element.show('attachments_hide'); return false;", :style => "display: none;"} [Show]
+    #attachments
+      = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
 
 %fieldset
   %legend
@@ -51,10 +52,11 @@
           = note_fields.label(:is_admin)
           = note_fields.check_box(:note_type, {}, "administrative", "clinical")
 
-%fieldset
-  %legend
-    Tasks
-    %span{:id => 'tasks_hide', :onClick => "Element.hide('tasks'); Element.hide('tasks_hide'); Element.show('tasks_show'); return false;"} [Hide]
-    %span{:id => 'tasks_show', :onClick => "Element.show('tasks'); Element.hide('tasks_show'); Element.show('tasks_hide'); return false;", :style => "display: none;"} [Show]
-  #tasks
-    = render(:partial => 'tasks/list', :locals => { :task_owner => @event })
+- if @event.supports_tasks?
+  %fieldset
+    %legend
+      Tasks
+      %span{:id => 'tasks_hide', :onClick => "Element.hide('tasks'); Element.hide('tasks_hide'); Element.show('tasks_show'); return false;"} [Hide]
+      %span{:id => 'tasks_show', :onClick => "Element.show('tasks'); Element.hide('tasks_show'); Element.show('tasks_hide'); return false;", :style => "display: none;"} [Show]
+    #tasks
+      = render(:partial => 'tasks/list', :locals => { :task_owner => @event })

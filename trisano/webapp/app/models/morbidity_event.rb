@@ -16,6 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class MorbidityEvent < HumanEvent
+
+  supports :tasks
+  supports :attachments
   
   def self.new_event_from_patient(patient_entity)
     event = MorbidityEvent.new
