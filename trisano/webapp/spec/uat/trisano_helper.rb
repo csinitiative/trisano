@@ -213,12 +213,16 @@ module TrisanoHelper
     return(browser.is_text_present("Person Information") and
         browser.is_text_present("Street number"))
   end
-  
-  def save_cmr(browser)
+
+  def save_and_exit(browser)
     browser.click "save_and_exit_btn"
-    browser.wait_for_page_to_load($load_time)    
+    browser.wait_for_page_to_load($load_time)
     browser.is_text_present("successfully").should be_true
     return true
+  end
+
+  def save_cmr(browser)
+    save_and_exit(browser)
   end
 
   def save_and_continue(browser)
@@ -1067,9 +1071,9 @@ module TrisanoHelper
     end
   end
 
-  def add_note(browser, event_type, note_text, options={:is_admin => false})
-    browser.type "#{event_type}_new_note_attributes_note", note_text
-    browser.click("#{event_type}_new_note_attributes_note_type") if options[:is_admin]
+  def add_note(browser, note_text, options={:is_admin => false})
+    browser.type('css=textarea[id$=_note]', note_text)
+    browser.click('css=input[id$=_note_type]') if options[:is_admin]
   end
   
   def note_count(browser, note_type="All")

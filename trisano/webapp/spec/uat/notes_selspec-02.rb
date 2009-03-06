@@ -31,7 +31,7 @@ describe 'Associating notes with an event.' do
     @browser.open "/trisano/cmrs"
     @browser.wait_for_page_to_load $load_time
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', "Smith")
+    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', "Smith")
     click_core_tab(@browser, NOTES)
     save_and_continue(@browser)
 
@@ -41,7 +41,7 @@ describe 'Associating notes with an event.' do
   end
 
   it "should allow adding one clinical note" do
-    add_note(@browser, "morbidity_event", "My first clinical note.")
+    add_note(@browser, "My first clinical note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     note_count(@browser).should == 2
@@ -49,7 +49,7 @@ describe 'Associating notes with an event.' do
   end
 
   it "should allow adding one admin note" do
-    add_note(@browser, "morbidity_event", "My first admin note.", { :is_admin => true })
+    add_note(@browser, "My first admin note.", { :is_admin => true })
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     note_count(@browser).should == 3
@@ -96,13 +96,13 @@ describe 'Associating notes with an event.' do
     @browser.wait_for_page_to_load $load_time 
 
     @browser.is_text_present("New record: No existing notes.").should be_true
-    add_note(@browser, "contact_event", "My first clinical, contact note.")
+    add_note(@browser, "My first clinical, contact note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first clinical, contact note.").should be_true
     note_count(@browser).should eql(1)
 
-    add_note(@browser, "contact_event", "My first admin, contact note.", :is_admin => true)
+    add_note(@browser, "My first admin, contact note.", :is_admin => true)
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first admin, contact note.").should be_true
@@ -135,12 +135,12 @@ describe 'Associating notes with an event.' do
     @browser.wait_for_page_to_load $load_time
 
     @browser.is_text_present("New record: No existing notes.").should be_true
-    add_note(@browser, "place_event", "My first clinical, place note.")
+    add_note(@browser, "My first clinical, place note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first clinical, place note.").should be_true
 
-    add_note(@browser, "place_event", "My first admin, place note.", :is_admin => true)
+    add_note(@browser, "My first admin, place note.", :is_admin => true)
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first admin, place note.").should be_true
