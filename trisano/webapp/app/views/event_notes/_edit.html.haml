@@ -39,7 +39,9 @@
                   = "#{note.note_type.humanize} "
               = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
           %td
-            - f.fields_for(:notes, note, :builder => ExtendedFormBuilder) do |note_fields|
+            -# Not building on the builder object referenced with 'f' because this partial can be redrawn with Ajax
+            - fields_for("#{@event.class.name.underscore}[notes_attributes][#{note.id}]", note, :builder => ExtendedFormBuilder) do |note_fields|
+              = note_fields.hidden_field :id
               %div{:style => "position: absolute; right: 30px;"}
                 %small
                   Strike Through
