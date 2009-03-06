@@ -56,7 +56,7 @@
     %legend
       Hospitalized health facilities
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |disease_form|
-      - core_element_show :hospitalized_id, disease_form, :horiz do
+      - core_element_show :hospitalized_id, disease_form, :vert do
         = disease_form.label(:hospitalized)
         = @event.disease_event ? l(@event.disease_event.hospitalized) : '&nbsp;'
     - if @event.hospitalization_facilities.empty?

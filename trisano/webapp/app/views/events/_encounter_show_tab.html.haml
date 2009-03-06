@@ -25,4 +25,18 @@
       %h3 No encounters have been recorded for this event
     - else
       = render :partial => 'events/encounter_show', :locals => { :encounters => @event.encounter_child_events }
-   
+
+  %fieldset.form
+    %legend
+      Encounter notes
+
+    - unless @event.encounter_child_events.first.new_record?
+
+      - for encounter in @event.encounter_child_events
+        - pe = encounter.participations_encounter
+        %h3="Encounter on #{h pe.encounter_date}"
+        = render(:partial => 'event_notes/list', :locals => { :notes => encounter.notes })
+
+    - else
+      %h3 No encounter notes have been recorded for this event
+

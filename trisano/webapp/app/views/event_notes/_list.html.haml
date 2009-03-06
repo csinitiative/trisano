@@ -13,14 +13,25 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-
-  - if @event.notes.empty?
-    %h3 No notes have been recorded for this event
-  - else
-    %br
-    %b Notes
-    = render :partial => 'event_notes/filter_nav', :locals => { :notes => @event.notes, :mode => 'show' }
-    = render(:partial => 'event_notes/list', :locals => { :notes => notes })
-
-%br{:clear => 'all' }
+- for note in notes
+  %table.list
+    %tr
+      %th.forminformation
+        = note.user.best_name
+      %th
+    %tr.roll
+      %td.forminformation
+        %small
+          - unless note.note_type.blank?
+            %span{ :class => 'note-type' }
+              = "#{note.note_type.humanize} "
+          = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
+      %td
+    %tr
+      %td
+        - note_body = simple_format(note.note)
+        - if note.struckthrough?
+          %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
+        - else
+          %div{:id => "note_#{note.id}"}= note_body
+      %td
