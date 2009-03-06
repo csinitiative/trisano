@@ -16,7 +16,7 @@
 %table.list
   %tr
     %th.forminformation
-      = if event.is_a? MorbidityEvent then "Patient Name" elsif event.is_a? ContactEvent then "Contact Name" else "Place Name" end
+      = if (event.is_a? MorbidityEvent or event.is_a? EncounterEvent) then "Patient Name" elsif event.is_a? ContactEvent then "Contact Name" else "Place Name" end
     %th Jurisdictions
     %th
   %tr
@@ -47,9 +47,12 @@
       - elsif event.is_a? ContactEvent
         - show_path = contact_event_path(event)
         - edit_path = edit_contact_event_path(event)
-      - else
+      - elsif event.is_a? PlaceEvent
         - show_path = place_event_path(event)
         - edit_path = edit_place_event_path(event)
+      - else
+        - show_path = encounter_event_path(event)
+        - edit_path = edit_encounter_event_path(event)
 
       =link_to "Show", show_path
       |
