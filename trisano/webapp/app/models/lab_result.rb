@@ -22,7 +22,7 @@ class LabResult < ActiveRecord::Base
   belongs_to :participation
 
   before_destroy do |lab_result|
-    lab_result.participation.event.add_note("lab result deleted")
+    lab_result.participation.event.add_note("Lab result deleted")
   end
 
   validates_presence_of :lab_result_text 

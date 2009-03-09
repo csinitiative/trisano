@@ -33,7 +33,7 @@
 
       - for encounter in @event.encounter_child_events
         - pe = encounter.participations_encounter
-        %h3="Encounter on #{h pe.encounter_date}"
+        %h4="Encounter on #{h pe.encounter_date}"
         = render(:partial => 'event_notes/list', :locals => { :notes => encounter.notes })
 
     - else

@@ -14,9 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend Laboratory Information
+  %legend Encounter-specific Labs
 
-  = render(:partial => 'events/labs', :locals => { :labs => @event.labs })
+  - unless event.encounter_child_events.first.new_record?
 
-- if @event.is_a?(MorbidityEvent)
-  = render :partial => "events/encounter_specific_labs", :locals => { :event => @event}
+    - for encounter in event.encounter_child_events
+      - pe = encounter.participations_encounter
+      %h4="Encounter on #{h pe.encounter_date}"
+      = render(:partial => 'events/labs', :locals => { :labs => encounter.labs })
+
+  - else
+    %h3 No encounters have been recorded for this event
