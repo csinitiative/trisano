@@ -94,6 +94,8 @@ class Event < ActiveRecord::Base
     end
   end
 
+  has_one :address
+
   belongs_to :parent_event, :class_name => 'Event', :foreign_key => 'parent_id'
 
   accepts_nested_attributes_for :jurisdiction, 
@@ -111,6 +113,8 @@ class Event < ActiveRecord::Base
     :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
   accepts_nested_attributes_for :notes,
     :reject_if => proc { |attrs| attrs['note'].blank?}
+  accepts_nested_attributes_for :address, 
+    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def self.check_contact_attrs(attrs)
     person_empty = attrs["interested_party_attributes"]["person_entity_attributes"]["person_attributes"].all? { |k, v| v.blank? }
@@ -611,7 +615,8 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-          :include => [ { :interested_party => { :person_entity => [:person, :address] } },
+          :include => [ { :interested_party => { :person_entity => :person } },
+            :address,
             :disease_event,
             :jurisdiction,
             :associated_jurisdictions

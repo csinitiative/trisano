@@ -32,10 +32,10 @@ describe 'User functionality for searching for existing users' do
       click_nav_new_cmr(@browser).should be_true
       @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', 'Chuckles')
       @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name', 'Charles')
-      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_city', 'Provo')
-      @browser.select('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_state_id', 'label=Utah')
-      @browser.select('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_county_id', 'label=Utah')
-      @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_postal_code', '84602')
+      @browser.type('morbidity_event_address_attributes_city', 'Provo')
+      @browser.select('morbidity_event_address_attributes_state_id', 'label=Utah')
+      @browser.select('morbidity_event_address_attributes_county_id', 'label=Utah')
+      @browser.type('morbidity_event_address_attributes_postal_code', '84602')
 
       click_core_tab(@browser, "Contacts")
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Laurel"

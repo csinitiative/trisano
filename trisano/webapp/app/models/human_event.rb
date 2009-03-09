@@ -139,4 +139,5 @@ class HumanEvent < Event
     dates << self.created_at.to_date unless self.created_at.nil?
     dates.flatten
   end
+
 end

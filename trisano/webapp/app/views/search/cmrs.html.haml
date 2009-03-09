@@ -154,9 +154,9 @@
             = link_to("#{cmr.record_number}", path, :id => html_id)
             &nbsp;&nbsp;
             %small="(#{cmr.class.to_s.underscore.humanize})"
-          - entity = cmr.interested_party.person_entity
-          - person = entity.person
-          - address = entity.address
+          - entity  = cmr.interested_party.person_entity
+          - person  = entity.person
+          - address = cmr.address
           %td
             = "#{person.full_name}"
           %td

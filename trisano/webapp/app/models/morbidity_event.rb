@@ -26,6 +26,7 @@ class MorbidityEvent < HumanEvent
     event.build_jurisdiction
     event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
     event.event_status = 'NEW'
+    event.address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC').clone
     event
   end
   

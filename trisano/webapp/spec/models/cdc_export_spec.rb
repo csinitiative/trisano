@@ -69,9 +69,6 @@ describe CdcExport do
       },
       "interested_party_attributes" => {
         "person_entity_attributes" => {
-          "address_attributes" => {
-            "county_id" => external_codes(:county_salt_lake).id
-          },
           "race_ids" => [external_codes(:race_white).id],
           "person_attributes" => {
             "last_name"=>"Biel",
@@ -83,6 +80,9 @@ describe CdcExport do
       },
       "jurisdiction_attributes" => {
         "secondary_entity_id" => '75'
+      },
+      "address_attributes" => {
+        "county_id" => external_codes(:county_salt_lake).id
       }
     }
   end
@@ -168,7 +168,7 @@ describe CdcExport do
     end
 
     it "should display an unknown county code as 999" do
-      @event_hash["interested_party_attributes"]["person_entity_attributes"].delete("address_attributes")
+      @event_hash.delete("address_attributes")
       with_cdc_records do |records|
         records[0].first.to_cdc[27..29].should == '999'
       end
@@ -330,7 +330,7 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({"interested_party_attributes" => { "person_entity_attributes" => {"address_attributes" => {"county_id" => external_codes(:county_summit).id}}}})
+          events[0].update_attributes("address_attributes" => {"county_id" => external_codes(:county_summit).id})
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc

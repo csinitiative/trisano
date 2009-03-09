@@ -131,8 +131,8 @@ namespace :trisano do
         form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][birth_gender_id]", "")
         form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][ethnicity_id]", "")
         form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][primary_language_id]", "")
-        form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][address_attributes][state_id]", "")
-        form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][address_attributes][county_id]", "")
+        form.add_field!("morbidity_event[address_attributes][state_id]", "")
+        form.add_field!("morbidity_event[address_attributes][county_id]", "")
         form.add_field!("morbidity_event[jurisdiction_attributes][secondary_entity_id]", "55")
 
         page = agent.submit form      

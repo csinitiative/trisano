@@ -18,16 +18,14 @@
 class Entity < ActiveRecord::Base
   set_inheritance_column :entity_type
 
-  belongs_to :participation
   has_many :telephones
   has_many :email_addresses
-  has_one :address
+  has_many :addresses
 
   has_one :place
   has_one :person
 
   accepts_nested_attributes_for :telephones, :email_addresses, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
-  accepts_nested_attributes_for :address, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   attr_protected :entity_type
 

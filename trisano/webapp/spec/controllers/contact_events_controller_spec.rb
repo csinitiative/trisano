@@ -269,5 +269,29 @@ describe ContactEventsController do
       do_post
     end
   end
-  
+
+  describe 'handling GET contact_events/copy_address/1' do
+    before :each do
+      @address = mock_model(Address,
+                            :street_number => '555',
+                            :street_name   => 'Happy St.',
+                            :unit_number   => nil,
+                            :city          => 'Provo',
+                            :state_id      => '1',
+                            :county_id     => '2',
+                            :postal_code   => '99999')
+      @parent_event = mock_model(MorbidityEvent, :address => @address)
+      @event = mock_model(ContactEvent, :parent_event => @parent_event)
+      ContactEvent.should_receive(:find).with('1').and_return(@event)
+    end
+
+    def do_get
+      get :copy_address, :id => 1
+    end
+
+    it 'should return address as JSON' do
+      do_get
+    end
+  end
+      
 end

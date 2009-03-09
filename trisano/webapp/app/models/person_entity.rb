@@ -25,4 +25,5 @@ class PersonEntity < Entity
     :join_table => 'people_races', 
     :association_foreign_key => 'race_id', 
     :order => 'code_description'
+
 end

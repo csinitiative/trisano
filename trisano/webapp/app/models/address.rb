@@ -17,7 +17,10 @@
 
 class Address < ActiveRecord::Base
   set_table_name :addresses_temp
+  after_create :associate_longitudinal_data
 
+  belongs_to :event
+  belongs_to :entity
   belongs_to :county, :class_name => 'ExternalCode'
   belongs_to :district, :class_name => 'ExternalCode'
   belongs_to :state, :class_name => 'ExternalCode'
@@ -50,4 +53,11 @@ class Address < ActiveRecord::Base
       errors.add_to_base("At least one address field must have a value")
     end
   end
+
+  def associate_longitudinal_data
+    if event.try(:interested_party).try(:primary_entity_id)
+      update_attribute(:entity_id, event.interested_party.primary_entity_id)
+    end
+  end
+
 end

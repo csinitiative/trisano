@@ -70,7 +70,7 @@ module Export
     module HumanEvent
       def nested_attribute_paths
         { 'disease_id' => [:disease_event, :disease_id],
-          'county_id' => [:interested_party, :person_entity, :address, :county_id],
+          'county_id' => [:address, :county_id],
           'race_ids' => [:interested_party, :person_entity, :race_ids],
           'birth_gender_id' => [:interested_party, :person_entity, :person, :birth_gender_id],
           'birth_date' => [:interested_party, :person_entity, :person, :birth_date],
@@ -79,7 +79,7 @@ module Export
 
       def ibis_nested_attribute_paths
         { 'date_diagnosed' => [:disease_event, :date_diagnosed],
-          'postal_code' => [:interested_party, :person_entity, :address, :postal_code],
+          'postal_code' => [:address, :postal_code],
           'primary_jurisdiction' => [:jurisdiction, :secondary_entity_id]}
       end
 
@@ -325,7 +325,7 @@ module Export
       end
 
       def exp_county
-        county = safe_call_chain(:interested_party, :person_entity, :address, :county, :the_code)
+        county = safe_call_chain(:address, :county, :the_code)
         if county
           county_export_columns.export_conversion_values.find_by_value_from(county).value_to
         else

@@ -30,7 +30,7 @@ describe MorbidityEvent do
 
   def with_event(event_hash=@event_hash)
     event = MorbidityEvent.new event_hash
-    event.save
+    event.save!
     event.reload
     yield event if block_given?
   end
@@ -51,6 +51,7 @@ describe MorbidityEvent do
     it { should have_many(:encounter_child_events) }
     it { should have_many(:child_events) }
     it { should belong_to(:parent_event) }
+    it { should have_one(:address) }
 
     describe "nested attributes are assigned" do
       it { should accept_nested_attributes_for(:jurisdiction ) }
@@ -59,6 +60,7 @@ describe MorbidityEvent do
       it { should accept_nested_attributes_for(:place_child_events) }
       it { should accept_nested_attributes_for(:encounter_child_events) }
       it { should accept_nested_attributes_for(:notes) }
+      it { should accept_nested_attributes_for(:address) }
 
       describe "destruction is allowed properly" do
         fixtures :events
@@ -1047,36 +1049,96 @@ describe MorbidityEvent do
       result.last.should == '9'
     end
    
-  end                       
+  end                      
+
+  describe 'updating longitudinal data' do
+    before :each do
+      @event_hash = {
+        "address_attributes" => { "street_name" => "Example Lane" },
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        }
+      }
+    end
+
+    it 'should associate address with interested party\'s person_entity on create' do
+      with_event do |event|
+        event.interested_party.person_entity.person.last_name.should == 'Biel'
+        event.interested_party.primary_entity_id.should_not be_nil
+        event.address.entity_id.should_not be_nil
+        event.address.entity.person.last_name.should == "Biel"
+      end
+    end
+
+    it 'should associate address with interested party\'s person_entity on save' do
+      @event_hash.delete("address_attributes")
+      with_event do |event|
+        event.update_attributes("address_attributes" => { "street_name" => 'freshy' })
+        event.address.entity_id.should_not be_nil
+      end
+    end
+  end
 
   describe 'new event from patient' do
     fixtures :users, :participations, :entities, :places, :people
+    
+    before :each do
+      @event_hash = {
+        "address_attributes" => { "street_name" => "Example Lane" },
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        }
+      }
+      User.stub!(:current_user).and_return(users(:default_user))
+    end
     
     def with_new_event_from_patient(patient)
       event = MorbidityEvent.new_event_from_patient(patient)
       yield event if block_given?
     end
 
-    before(:each) do
-      @patient = participations(:Patient_Without_Disease)
-      User.stub!(:current_user).and_return(users(:default_user))
-    end
-      
     it 'should use the existing patient in the event tree' do
-      with_new_event_from_patient(@patient.primary_entity) do |event|
+      patient = nil
+      original_event = nil
+      with_event do |event| 
+        patient = event.interested_party.person_entity 
+        original_event = event
+      end
+      with_new_event_from_patient(patient) do |event|
         event.interested_party.primary_entity_id.should_not be_nil        
-        lambda {event.save!}.should_not change(Entity, :count)
-        event.interested_party.person_entity.person.last_name.should == 'Labguy'
-        event.interested_party.person_entity.id.should == participations(:Patient_Without_Disease).primary_entity.id
+        lambda {event.save!}.should_not change(Entity, :count)        
+        event.interested_party.person_entity.person.last_name.should == 'Biel'
+        event.interested_party.primary_entity_id = original_event.interested_party.primary_entity_id
         event.all_jurisdictions.size.should == 1
         event.jurisdiction.place_entity.place.name.should == 'Unassigned'
         event.primary_jurisdiction.should_not be_nil
         event.primary_jurisdiction.entity_id.should_not be_nil
         event.primary_jurisdiction.name.should == 'Unassigned'
         event.event_status.should == 'NEW'
-      end
-         
+      end         
     end 
+
+    it 'should copy most recent address record for the new record' do
+      patient = nil
+      original_event = nil
+      with_event do |event| 
+        patient = event.interested_party.person_entity 
+        original_event = event
+      end
+      with_new_event_from_patient(patient) do |event|
+        lambda {event.save!}.should change(Address, :count)
+        original_event.address.id.should_not == event.address.id
+        event.address.street_name.should == 'Example Lane'
+      end
+    end
 
   end
 

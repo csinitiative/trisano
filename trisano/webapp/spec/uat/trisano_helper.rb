@@ -306,9 +306,9 @@ module TrisanoHelper
     click_core_tab(browser, CLINICAL)
     browser.click("link=Add a treatment") unless index == 1
     sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select[contains(@id, 'treatment_given_yn_id')]", result_attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@id, 'treatment_type')]", result_attributes[:treatment])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@id, 'treatment_date')]", result_attributes[:treatment_date])
+    browser.select("//div[@class='treatment'][#{index}]//select", result_attributes[:treatment_given])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    result_attributes[:treatment])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", result_attributes[:treatment_date])
   end
 
   def save_contact_event(browser)
@@ -495,8 +495,8 @@ module TrisanoHelper
   def create_basic_investigatable_cmr(browser, last_name, disease_label, jurisdiction_label=nil)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", last_name
-    browser.type("morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_street_number", "22")
-    browser.type("morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_street_name", "Happy St.")
+    browser.type("morbidity_event_address_attributes_street_number", "22")
+    browser.type("morbidity_event_address_attributes_street_name", "Happy St.")
     click_core_tab(browser, CLINICAL)
     browser.select "morbidity_event_disease_event_attributes_disease_id", "label=#{disease_label}"
     click_core_tab(browser, ADMIN)

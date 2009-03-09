@@ -54,9 +54,8 @@
     %legend Investigation
     %span{:class => "horiz"}
       %label Jurisdiction of Residence
-      - patient_entity = @event.interested_party.person_entity
-      - if patient_entity
-        - address = patient_entity.primary_address
+      - if @event.address
+        - address = @event.address
         - if address && address.county && address.county.jurisdiction
           - jurisdiction_name = address.county.jurisdiction.name
       = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name 

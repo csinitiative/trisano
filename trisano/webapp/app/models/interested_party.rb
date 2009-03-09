@@ -17,6 +17,8 @@
 
 class InterestedParty < Participation
   belongs_to :person_entity,  :foreign_key => :primary_entity_id
+  after_create :associate_longitudinal_data
+
   has_one :risk_factor, :foreign_key => :participation_id, :class_name => 'ParticipationsRiskFactor', :order => 'created_at ASC'
   has_many :treatments, :foreign_key => :participation_id, :class_name => 'ParticipationsTreatment', :dependent => :destroy, :order => 'created_at ASC'
 
@@ -28,4 +30,13 @@ class InterestedParty < Participation
       errors.add_to_base("No information has been supplied for the interested party.")
     end
   end
+
+  private
+  
+  def associate_longitudinal_data
+    if event.try(:address)
+      event.address.update_attribute(:entity_id, primary_entity_id)
+    end
+  end
+  
 end

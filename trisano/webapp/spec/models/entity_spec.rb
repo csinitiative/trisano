@@ -22,6 +22,6 @@ describe Entity, "associations" do
   # it { should have_one(:participation) }
   it { should have_many(:telephones) }
   it { should have_many(:email_addresses) }
-  it { should have_one(:address) }
+  it { should have_many(:addresses) }
 end
 

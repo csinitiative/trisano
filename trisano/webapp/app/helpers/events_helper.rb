@@ -343,7 +343,7 @@ module EventsHelper
       event.build_participations_contact unless event.participations_contact
     end
 
-    event.interested_party.person_entity.build_address unless event.interested_party.person_entity.address
+    event.build_address unless event.address
     event.interested_party.person_entity.telephones.build if event.interested_party.person_entity.telephones.empty?
     event.interested_party.person_entity.email_addresses.build if event.interested_party.person_entity.email_addresses.empty?
 

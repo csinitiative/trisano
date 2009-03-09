@@ -71,7 +71,7 @@ class ContactEventsController < EventsController
 
   def copy_address
     @event = ContactEvent.find(params[:id])
-    original_address = @event.parent_event.interested_party.person_entity.address
+    original_address = @event.parent_event.address
     #JSON to pass.  We shan't use a loop because we don't want all members.
     response.headers['X-JSON'] = "{street_number: \"" + original_address.street_number.to_s +
       "\", street_name: \"" + original_address.street_name + 
