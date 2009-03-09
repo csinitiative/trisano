@@ -141,22 +141,22 @@ function toggle_save_buttons(state) {
     $A(btns).each(function(btn) {
         if (btn) {
             if (state == 'on') {
-                btn.disabled=false
+                btn.disabled=false;
             } else {
                 btn.disabled=true;
             }
         }
-    })
+    });
 }
 
 function contact_parent_address(id) {
   new Ajax.Request('../../contact_events/copy_address/' + id, {
     asynchronous: true,
     evalScripts:  true,
-    onComplete: function(transport, json) { 
-      for (var key in json) 
-        if (json[key])
-          document.getElementById('contact_event_interested_party_attributes_person_entity_attributes_address_attributes_' + key).value = json[key];
+    onComplete: function(transport, json) {
+      $H(json).each(function(pair) {
+        $('contact_event_address_attributes_' + pair.key).value = pair.value;
+      });
     }
   });
 }
@@ -165,7 +165,7 @@ function global_shortcuts_init() {
   shortcut.add("Ctrl+Shift+N", function() {
     window.location = "/cmrs/new";
   });
-  
+
   shortcut.add("Ctrl+Shift+M", function() {
     window.location = "/forms";
   });
@@ -189,7 +189,7 @@ function cmr_shortcuts_init() {
         myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
         0 : myTabs.get('activeIndex') + 1
       ));
-    
+
     //Grab the first thing to focus in the tab
     YAHOO.util.Dom.getElementsBy(function(el) {
         return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
@@ -201,7 +201,7 @@ function cmr_shortcuts_init() {
         myTabs.get('activeIndex') == 0 ?
         myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
       ));
-    
+
     YAHOO.util.Dom.getElementsBy(function(el) {
         return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
       }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();

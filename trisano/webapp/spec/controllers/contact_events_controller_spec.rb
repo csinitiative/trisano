@@ -286,11 +286,12 @@ describe ContactEventsController do
     end
 
     def do_get
-      get :copy_address, :id => 1
+      get :copy_address, :id => 1      
     end
 
     it 'should return address as JSON' do
       do_get
+      response.headers["X-JSON"].should == "{street_number: \"555\", street_name: \"Happy St.\", unit_number: \"\", city: \"Provo\", state_id: \"1\", county_id: \"2\", postal_code: \"99999\"}"
     end
   end
       

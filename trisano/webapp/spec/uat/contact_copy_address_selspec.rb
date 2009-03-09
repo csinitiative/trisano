@@ -20,7 +20,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'Copying an address from the Original Patient' do
   
-$dont_kill_browser = true
+# $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1) + "-copy-uat"
@@ -33,14 +33,14 @@ $dont_kill_browser = true
   it 'should create a new cmr with associated contacts and "save & continue".' do
     click_nav_new_cmr(@browser).should be_true
 
-    @browser.type 'morbidity_event_active_patient__person_last_name', @last_name
-    @browser.type 'morbidity_event_active_patient__address_street_name', 'Postin Place'
-    @browser.type 'morbidity_event_active_patient__address_street_number', '123'
-    @browser.type 'morbidity_event_active_patient__address_unit_number', '54'
-    @browser.type 'morbidity_event_active_patient__address_city', @city
-    @browser.select 'morbidity_event_active_patient__address_state_id', 'Utah'
-    @browser.select 'morbidity_event_active_patient__address_county_id', 'Beaver'
-    @browser.type 'morbidity_event_active_patient__address_postal_code', '12345'
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'last_name')]", @last_name
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'street_name')]", 'Postin Place'
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'street_number')]", '123'
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'unit_number')]", '54'
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'city')]", @city
+    @browser.select "//div[@id='person_form']//select[contains(@id, 'state_id')]", 'Utah'
+    @browser.select "//div[@id='person_form']//select[contains(@id, 'county_id')]", 'Beaver'
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'postal_code')]", '12345'
 
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", @first_contact
@@ -61,7 +61,7 @@ $dont_kill_browser = true
     @browser.wait_for_page_to_load($load_time)
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load($load_time)
-    @browser.type 'morbidity_event_active_patient__address_city', @city
+    @browser.type "//div[@id='person_form']//input[contains(@id, 'city')]", @city
     save_and_continue(@browser).should be_true
 
     click_core_tab(@browser, "Contacts")
@@ -71,16 +71,17 @@ $dont_kill_browser = true
 end
 
 def copy_address
-    @browser.click "//a[@id='edit-contact-event'][1]"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click "//input[@value='Copy From Original Patient']"
-    sleep(3)
-    save_cmr(@browser).should be_true
-    @browser.is_text_present('Postin Place').should be_true
-    @browser.is_text_present('123').should be_true
-    @browser.is_text_present('54').should be_true
-    @browser.is_text_present(@city).should be_true
-    @browser.is_text_present('Utah').should be_true
-    @browser.is_text_present('Beaver').should be_true
-    @browser.is_text_present('12345').should be_true
+  @browser.click "//a[@id='edit-contact-event'][1]"
+  @browser.wait_for_page_to_load($load_time)
+  @browser.click "//input[@value='Copy From Original Patient']"
+  sleep(5)
+  save_cmr(@browser).should be_true
+  @browser.is_text_present('Postin Place').should be_true
+  @browser.is_text_present('123').should be_true
+  @browser.is_text_present('54').should be_true
+  @browser.is_text_present(@city).should be_true
+  @browser.is_text_present('Utah').should be_true
+  @browser.is_text_present('Beaver').should be_true
+  @browser.is_text_present('12345').should be_true
 end
+
