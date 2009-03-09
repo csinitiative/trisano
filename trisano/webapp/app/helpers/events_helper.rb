@@ -322,7 +322,7 @@ module EventsHelper
     event.build_interested_place unless event.interested_place
     event.interested_place.build_place_entity unless event.interested_place.place_entity
     event.interested_place.place_entity.build_place unless event.interested_place.place_entity.place
-    event.interested_place.place_entity.build_address unless event.interested_place.place_entity.address
+    event.build_address unless event.address
     event.interested_place.place_entity.telephones.build if event.interested_place.place_entity.telephones.empty?
     event.interested_place.place_entity.email_addresses.build if event.interested_place.place_entity.email_addresses.empty?
     event.build_participations_place unless event.participations_place

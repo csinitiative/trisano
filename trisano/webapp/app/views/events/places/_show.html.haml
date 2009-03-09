@@ -21,5 +21,5 @@
     - active_place_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |primary_form|
       - primary_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
         = render :partial => 'events/places/name_show', :locals => {:f => place_form, :event_form => event_form}
-      = render :partial => 'events/places/address_show', :locals => {:f => primary_form}
+      = render :partial => 'events/places/address_show', :locals => {:f => event_form}
       = render :partial => 'events/people/phones_show', :locals => {:f => primary_form}

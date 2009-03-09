@@ -98,10 +98,6 @@ class Person < ActiveRecord::Base
     self.person_entity.primary_phone
   end
 
-  def primary_address
-    self.person_entity.primary_address
-  end
-
   def age
     (Date.today - self.birth_date.to_date).to_i / 365 unless self.birth_date.blank?
   end

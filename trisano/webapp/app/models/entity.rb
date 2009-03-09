@@ -44,7 +44,4 @@ class Entity < ActiveRecord::Base
     self.telephones.first 
   end
 
-  def primary_address
-    self.address
-  end
 end

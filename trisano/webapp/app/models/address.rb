@@ -55,8 +55,16 @@ class Address < ActiveRecord::Base
   end
 
   def associate_longitudinal_data
-    if event.try(:interested_party).try(:primary_entity_id)
-      update_attribute(:entity_id, event.interested_party.primary_entity_id)
+    if event.respond_to?(:interested_party)
+      if event.try(:interested_party).try(:primary_entity_id)
+        update_attribute(:entity_id, event.interested_party.primary_entity_id)
+      end
+    end
+
+    if event.respond_to?(:interested_place)
+      if event.try(:interested_place).try(:primary_entity_id)
+        update_attribute(:entity_id, event.interested_place.primary_entity_id)
+      end
     end
   end
 
