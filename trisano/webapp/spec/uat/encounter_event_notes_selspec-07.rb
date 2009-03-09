@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Encounter event notes' do
   
-  $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @cmr_last_name = get_random_word << " encounter-uat"

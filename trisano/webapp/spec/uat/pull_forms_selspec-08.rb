@@ -84,7 +84,7 @@ describe 'Pulling forms into an event' do
     @browser.is_element_present("//div[@id='forms_in_use']//tr[2]").should_not be_true
   end
 
-  it "should validate that event_forms showsthree potential forms" do
+  it "should validate that event_forms shows three potential forms" do
     @browser.is_element_present("//div[@id='forms_available']//*[contains(text(), @morb_anthrax_1)]").should be_true
     @browser.is_element_present("//div[@id='forms_available']//*[contains(text(), @morb_anthrax_2)]").should be_true
     @browser.is_element_present("//div[@id='forms_available']//*[contains(text(), @morb_malaria_1)]").should be_true
