@@ -57,6 +57,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%  @event_form = event_form %>
   <% tabs = []
   tabs << %w(encounter_tab Encounter)
+  tabs << %w(lab_info_tab Laboratory)
   tabs << %w(investigation_tab Investigation)
   tabs << %w(notes_tab Notes)
 %>
@@ -65,6 +66,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="encounter_tab">
       <%= render :partial => "encounter_show_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Encounter" } %>
+    </div>
+    <div id="lab_info_tab">
+      <%= render :partial => "events/lab_info_show_tab" %>
+      <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
     </div>
     <div id="investigation_tab">
       <%= render :partial => "events/investigation_show_tab" %>
@@ -78,4 +83,3 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;" %>
 
 <% end %>
-

@@ -51,6 +51,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%  @event_form = event_form %>
   <% tabs = []
   tabs << %w(encounter_tab Encounter)
+  tabs << %w(lab_info_tab Laboratory)
   tabs << %w(investigation_tab Investigation)
   tabs << %w(notes_tab Notes)
 %>
@@ -59,6 +60,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="encounter_tab">
       <%= render :partial => "encounter_edit_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Encounter" } %>
+    </div>
+    <div id="lab_info_tab">
+      <p>
+        <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form, :event => @event } %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
+      </p>
     </div>
     <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
     <div id="notes_tab">

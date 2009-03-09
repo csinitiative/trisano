@@ -28,7 +28,8 @@ class EncounterEvent < HumanEvent
   class << self
     def core_views
       [
-        ["Encounter", "Encounter"]
+        ["Encounter", "Encounter"],
+        ["Laboratory", "Laboratory"]
       ]
     end
   end
