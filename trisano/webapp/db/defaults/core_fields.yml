@@ -38,7 +38,7 @@ core_field_00071:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address][state_id]
+  key: contact_event[address][state_id]
 core_field_contact_lab_result_collection_date: 
   name: Lab results | Collection date
   help_text: 
@@ -62,7 +62,7 @@ core_field_00072:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address][county_id]
+  key: contact_event[address][county_id]
 core_field_00044: 
   name: Reporter area code
   help_text: 
@@ -86,7 +86,7 @@ core_field_00073:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address]{postal_code]
+  key: contact_event[address][postal_code]
 core_field_00045: 
   name: Reporter phone number
   help_text: 
@@ -430,7 +430,7 @@ core_field_00057:
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
-  key: place_event[interested_place][place_entity][address][street_number]
+  key: place_event[address][street_number]
 core_field_acuity: 
   name: Acuity
   help_text: 
@@ -462,7 +462,7 @@ core_field_00058:
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
-  key: place_event[interested_place][place_entity][address][street_name]
+  key: place_event[address][street_name]
 core_field_00086: 
   name: Group living
   help_text: 
@@ -478,7 +478,7 @@ core_field_00059:
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
-  key: place_event[interested_place][place_entity][address][unit_number]
+  key: place_event[address][unit_number]
 core_field_other_data_1: 
   name: Other Data (First Field)
   help_text: 
@@ -574,7 +574,7 @@ core_field_00060:
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
-  key: place_event[interested_place][place_entity][address][city]
+  key: place_event[address][city]
 core_field_00032: 
   name: Outbreak
   help_text: 
@@ -590,7 +590,7 @@ core_field_00004:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][street_number]
+  key: morbidity_event[address][street_number]
 core_field_00061: 
   name: State
   help_text: 
@@ -598,7 +598,7 @@ core_field_00061:
   can_follow_up: true
   event_type: place_event
   field_type: drop_down
-  key: place_event[interested_place][place_entity][address][state_id]
+  key: place_event[address][state_id]
 core_field_00033: 
   name: Jurisdiction responsible for investigation
   help_text: 
@@ -614,7 +614,7 @@ core_field_00005:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][street_name]
+  key: morbidity_event[address][street_name]
 core_field_00062: 
   name: County
   help_text: 
@@ -622,7 +622,7 @@ core_field_00062:
   can_follow_up: true
   event_type: place_event
   field_type: drop_down
-  key: place_event[interested_place][place_entity][address][county_id]
+  key: place_event[address][county_id]
 core_field_00034: 
   name: Event status
   help_text: 
@@ -638,7 +638,7 @@ core_field_00006:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][unit_number]
+  key: morbidity_event[address][unit_number]
 core_field_00090: 
   name: Risk factors notes
   help_text: 
@@ -654,7 +654,7 @@ core_field_00063:
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
-  key: place_event[interested_place][place_entity][address][postal_code]
+  key: place_event[address][postal_code]
 core_field_00035: 
   name: Date investigation started
   help_text: 
@@ -670,7 +670,7 @@ core_field_00007:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][city]
+  key: morbidity_event[address][city]
 core_field_00091: 
   name: Disease
   help_text: 
@@ -702,7 +702,7 @@ core_field_00008:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][state_id]
+  key: morbidity_event[address][state_id]
 core_field_00092: 
   name: Disease onset date
   help_text: 
@@ -734,7 +734,7 @@ core_field_00009:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][county_id]
+  key: morbidity_event[address][county_id]
 core_field_00093: 
   name: Disease date diagnosed
   help_text: 
@@ -806,7 +806,7 @@ core_field_00067:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address]{street_number]
+  key: contact_event[address][street_number]
 core_field_morb_lab_result_test_type: 
   name: Lab results | Test type
   help_text: 
@@ -838,7 +838,7 @@ core_field_00068:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address][street_name]
+  key: contact_event[address][street_name]
 core_field_contact_lab_result_test_type: 
   name: Lab results | Test type
   help_text: 
@@ -854,7 +854,7 @@ core_field_00010:
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][address][postal_code]
+  key: morbidity_event[address][postal_code]
 core_field_00069: 
   name: Contact unit number
   help_text: 
@@ -862,7 +862,7 @@ core_field_00069:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address][unit_number]
+  key: contact_event[address][unit_number]
 core_field_00011: 
   name: Patient date of birth
   help_text: 
@@ -950,4 +950,4 @@ core_field_00070:
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
-  key: contact_event[interested_party][person_entity][person][address][city]
+  key: contact_event[address][city]
