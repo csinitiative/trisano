@@ -280,11 +280,10 @@ class MorbidityEventsController < EventsController
     @event.interested_party.person_entity.person.middle_name = params[:middle_name]
     @event.interested_party.person_entity.person.last_name = params[:last_name]
     @event.interested_party.person_entity.person.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
-    @event.interested_party.person_entity.address.city = params[:city]
-    @event.interested_party.person_entity.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
+    @event.address.city = params[:city]
+    @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
-    @event.disease_event.disease_id = params[:disease]
   end
   
   def capture_old_attributes
