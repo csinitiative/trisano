@@ -117,6 +117,10 @@ class Event < ActiveRecord::Base
     :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def self.check_contact_attrs(attrs)
+    # Contact is an existing entity chosen from search
+    return false if attrs["interested_party_attributes"].has_key?('primary_entity_id') and !attrs["interested_party_attributes"][:primary_entity_id].blank?
+
+    # Contact is brand new
     person_empty = attrs["interested_party_attributes"]["person_entity_attributes"]["person_attributes"].all? { |k, v| v.blank? }
     phones_empty = attrs["interested_party_attributes"]["person_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
     disposition_empty = attrs["participations_contact_attributes"].all? { |k, v| v.blank? }

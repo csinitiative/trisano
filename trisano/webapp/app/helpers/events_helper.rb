@@ -1074,7 +1074,7 @@ module EventsHelper
     <<-HTML
       #{auto_complete_stylesheet}
       #{content_tag(:label, label, :for => options[:search_field])}
-      #{text_field_tag(options[:search_field])}
+      #{text_field_tag(options[:search_field], nil, :size => options[:field_width] || 25 )}
       #{image_tag('redbox_spinner.gif', :size => '16x16', :alt => options[:alt], :id => options[:indicator], :style => 'display: none;')}
       #{content_tag(:div, '', :class => 'auto_complete', :id => options[:update])}
       #{auto_complete_field(options[:search_field], extract_auto_complete_options(options))}
@@ -1082,7 +1082,7 @@ module EventsHelper
   end
 
   def extract_auto_complete_options(options)
-    allowed = [:select, :param_name, :update, :indicator, :method, :url, :after_update_element]
+    allowed = [:select, :param_name, :update, :indicator, :method, :url, :after_update_element, :min_chars, :frequency]
     Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
   end
 

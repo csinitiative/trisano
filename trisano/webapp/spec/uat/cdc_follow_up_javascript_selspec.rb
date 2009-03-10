@@ -61,7 +61,7 @@ describe 'CDC export follow ups' do
     @browser.wait_for_page_to_load
 
     # creat the cmr
-    @browser.click('link=NEW CMR')
+    @browser.open "/trisano/cmrs/new"
     @browser.wait_for_page_to_load
     @browser.type('morbidity_event_active_patient__person_last_name',
                   "#{get_unique_name(1)} mumpy cdc")

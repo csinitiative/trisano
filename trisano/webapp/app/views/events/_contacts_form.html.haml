@@ -27,6 +27,9 @@
 
   -# Handles pre- and post-questions and help for contacts as a whole
   - core_element :contacts, f, :vert do
+    = text_field_tag('contact_search_name')
+    = button_to_remote('Search', :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results')
+    %div#contact_search_results
 
     #contact_child_events
       - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|

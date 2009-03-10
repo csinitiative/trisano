@@ -21,8 +21,7 @@ describe 'invalid cmr' do
   #$dont_kill_browser = true
   
   before(:all) do
-    @browser.open "/trisano/cmrs"
-    @browser.click("link=NEW CMR")
+    @browser.open "/trisano/cmrs/new"
     @browser.wait_for_page_to_load
   end
 

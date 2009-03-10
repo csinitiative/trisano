@@ -43,7 +43,7 @@ describe "help text for morbidity core fields", :shared => true do
     end
 
     it "should navigate to a morbidity event edit view" do
-      @browser.click("link=NEW CMR")
+      @browser.open "/trisano/cmrs/new"
       @browser.wait_for_page_to_load
     end
 

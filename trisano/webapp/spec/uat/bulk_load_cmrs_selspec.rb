@@ -22,8 +22,7 @@ describe "Bulk loading CMR's for CDC export" do
   end
   (1..20).each do |i|
     it "describe what this thing should do here" do
-      @browser.open "/trisano/forms"
-      @browser.click "link=NEW CMR"
+      @browser.open "/trisano/cmrs/new"
       @browser.wait_for_page_to_load "30000"
       @browser.type "morbidity_event_active_patient__person_last_name", get_unique_name(2)
       @browser.select "morbidity_event_active_patient__address_state_id", "label=Utah"
