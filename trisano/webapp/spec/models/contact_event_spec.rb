@@ -56,7 +56,7 @@ describe ContactEvent do
                          :disease_event_attributes => {:disease_id => diseases(:chicken_pox).id} }
 
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
-        event.initialize_children
+        event.save
         @contact_event = event.contact_child_events[0]
       end
 

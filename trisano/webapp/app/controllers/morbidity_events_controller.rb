@@ -113,8 +113,6 @@ class MorbidityEventsController < EventsController
       render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
     end
     
-    @event.initialize_children
-
     respond_to do |format|
       if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
@@ -147,8 +145,6 @@ class MorbidityEventsController < EventsController
 
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note("Edited event") unless go_back
-
-    @event.initialize_children
 
     respond_to do |format|
       if @event.save
@@ -266,6 +262,12 @@ class MorbidityEventsController < EventsController
     else
       flash[:error] = 'Unable to change state of CMR.'
       redirect_to cmrs_path
+    end
+  end
+
+  def event_search
+    if params[:name]
+      @events = Event.search_by_name(params[:name])
     end
   end
 

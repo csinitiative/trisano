@@ -47,8 +47,9 @@ class EncounterEventsController < EventsController
       if @event.update_attributes(params[:encounter_event])
         flash[:notice] = 'Encounter event was successfully updated.'
         format.html {
+          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            render :action => "edit"
+            redirect_to(edit_encounter_event_url(@event) + query_str)
           else
             query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
             redirect_to(encounter_event_url(@event) + query_str)

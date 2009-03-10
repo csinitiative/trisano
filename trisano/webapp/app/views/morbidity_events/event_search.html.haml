@@ -1,0 +1,52 @@
+%h3 Before creating a new morbidity event, please search for the person in question.  You may find that:
+%ul.with_bullets
+  %li The event you're trying to create already exists, in which case you can either do nothing or edit the existing event.
+  %li The person in question is already in the system, in which case you can start a new CMR with that person's information.
+
+- form_tag event_search_cmrs_path, :method => :get do
+  = label_tag :name
+  = text_field_tag :name, params[:name]
+  = submit_tag "Search"
+
+%br
+- if defined? @events
+  -if @events.empty?
+    %b No results
+  -else
+    %table.list
+      %tr
+        %th Name
+        %th Birth Date
+        %th Gender
+        %th Jurisdiction
+        %th Created Date
+        %th Disease
+        %th Actions
+      - for event in @events do
+        - jurisdictions = event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
+        - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
+        - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
+        %tr
+          %td 
+            = event.party.last_comma_first + " (#{event.class.to_s.underscore.humanize})"
+          %td= event.party.birth_date
+          %td= l event.party.birth_gender_id
+          %td= event.primary_jurisdiction.short_name
+          %td= event.event_onset_date
+          - if can_update || can_view
+            %td= event.safe_call_chain(:disease_event, :disease, :disease_name)
+          - else
+            %td Private
+          - edit_path = event.is_a?(MorbidityEvent) ? edit_cmr_path(event) : edit_contact_event_path(event)
+          - view_path = event.is_a?(MorbidityEvent) ? cmr_path(event) : contact_event_path(event)
+          %td
+            - if can_update
+              = link_to("Edit", edit_path)
+              |
+            - if can_view
+              = link_to "Show", view_path
+              |
+            = link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.interested_party.person_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
+            
+  %br
+  = link_to("No match, start a new CMR", new_cmr_path)

@@ -138,6 +138,10 @@ module EventsHelper
     page.visual_effect :highlight, :reporting_agency, :duration => 3
   end
 
+  def uniq_id
+    Time.now.to_i
+  end
+
   def basic_contact_event_controls(event, with_show=true)
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
@@ -354,7 +358,9 @@ module EventsHelper
 
     event.hospitalization_facilities.build if event.hospitalization_facilities.empty?
     # Don't need to build place_entity and place here, since we can only assign from the UI
-    event.hospitalization_facilities[0].build_hospitals_participation unless event.hospitalization_facilities[0].hospitals_participation
+    event.hospitalization_facilities.each do |hospital|
+      hospital.build_hospitals_participation unless hospital.hospitals_participation
+    end
 
     event.clinicians.build if event.clinicians.empty?
     event.clinicians.each do |clinician|

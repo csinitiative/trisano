@@ -70,22 +70,34 @@ class HumanEvent < Event
   accepts_nested_attributes_for :participations_contact, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :participations_encounter, :reject_if => proc { |attrs| attrs.all? { |k, v| ((k == "user_id") ||  (k == "encounter_location_type")) ? true : v.blank? } }
 
-  def self.rewrite_attrs(attrs)
-    entity_attrs = attrs["place_entity_attributes"]
-    lab_attrs = entity_attrs["place_attributes"]
-    return true if (lab_attrs.all? { |k, v| v.blank? } && attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } })
+  class << self
+    def rewrite_attrs(attrs)
+      entity_attrs = attrs["place_entity_attributes"]
+      lab_attrs = entity_attrs["place_attributes"]
+      return true if (lab_attrs.all? { |k, v| v.blank? } && attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } })
 
-    # If there's a lab with the same name already in the database, use that instead.
-    lab_type_id = Code.lab_place_type_id
-    existing_lab = Place.find_by_name_and_place_type_id(lab_attrs["name"], lab_type_id)
-    if existing_lab
-      attrs["secondary_entity_id"] = existing_lab.entity_id
-      attrs.delete("place_entity_attributes")
-    else
-      lab_attrs["place_type_id"] = lab_type_id
+      # If there's a lab with the same name already in the database, use that instead.
+      lab_type_id = Code.lab_place_type_id
+      existing_lab = Place.find_by_name_and_place_type_id(lab_attrs["name"], lab_type_id)
+      if existing_lab
+        attrs["secondary_entity_id"] = existing_lab.entity_id
+        attrs.delete("place_entity_attributes")
+      else
+        lab_attrs["place_type_id"] = lab_type_id
+      end
+
+      return false
     end
 
-    return false
+    def new_event_from_patient(patient_entity)
+      event = MorbidityEvent.new
+      event.build_interested_party(:primary_entity_id => patient_entity.id)
+      event.build_jurisdiction
+      event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+      event.event_status = 'NEW'
+      event.address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC').clone
+      event
+    end
   end
 
   def lab_results
@@ -112,6 +124,10 @@ class HumanEvent < Event
         participation.update_attribute('primary_entity_id', self.interested_party.person_entity.id)
       end
     end
+  end
+
+  def party
+    @party ||= self.safe_call_chain(:interested_party, :person_entity, :person)
   end
 
   private

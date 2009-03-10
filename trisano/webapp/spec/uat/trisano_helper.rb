@@ -158,7 +158,7 @@ module TrisanoHelper
   end
   
   def click_nav_new_cmr(browser)
-    browser.click 'link=NEW CMR'
+    browser.open "/trisano/cmrs/new"
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("New Morbidity Event") and
         browser.is_text_present("New CMR") and

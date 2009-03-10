@@ -14,6 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - for note in notes
+  - next if note.id.nil?
   %table.list
     %tr
       %th.forminformation

@@ -1,5 +1,5 @@
 Given /^I am logged in as a super user$/ do
-  ENV["TRISANO_UID"] = "utah" 
+  log_in_as("default_user")
 end
 
 Given /^a (.+) event for last name (.+) with disease (.+) in jurisdiction (.+)$/ do |event_type, last_name, disease, jurisdiction|

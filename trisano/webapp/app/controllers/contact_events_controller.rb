@@ -52,8 +52,9 @@ class ContactEventsController < EventsController
       if @event.update_attributes(params[:contact_event])
         flash[:notice] = 'Contact event was successfully updated.'
         format.html { 
+          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            render :action => "edit"
+            redirect_to(edit_contact_event_url(@event) + query_str)
           else
             query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
             redirect_to(contact_event_url(@event) + query_str)

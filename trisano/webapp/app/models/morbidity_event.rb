@@ -16,20 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class MorbidityEvent < HumanEvent
-
+  
   supports :tasks
   supports :attachments
-  
-  def self.new_event_from_patient(patient_entity)
-    event = MorbidityEvent.new
-    event.build_interested_party(:primary_entity_id => patient_entity.id)
-    event.build_jurisdiction
-    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
-    event.event_status = 'NEW'
-    event.address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC').clone
-    event
-  end
-  
+
   def self.core_views
     [
       ["Demographics", "Demographics"], 
@@ -56,6 +46,7 @@ class MorbidityEvent < HumanEvent
   validates_associated :reporter
 
   before_save :generate_mmwr
+  before_save :initialize_children
 
   #TGRII: GET RID OF THIS WHEN REPORTING AGENCY DONE
   after_update :save_associations

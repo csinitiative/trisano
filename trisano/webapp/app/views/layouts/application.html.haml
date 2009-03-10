@@ -37,7 +37,7 @@
         .right
           .areas
             - if User.current_user.is_entitled_to?(:create_event)
-              = link_to 'NEW CMR', new_cmr_path
+              = link_to 'NEW CMR', event_search_cmrs_path # new_cmr_path
               |
             = link_to 'CMRS', cmrs_path_with_defaults
             |
@@ -53,7 +53,7 @@
               = current_user_name
             - else 
               - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
-              - form_tag(url_for(:controller => "events", :action => "change_user")) do
+              - form_tag(url_for(:controller => "events", :action => "change_user"), :id => "switch_user") do
                 %span{:id => "user_name"}= current_user_name + ":"
                 = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.submit()", :style => "display: inline")
     #bar

@@ -34,7 +34,7 @@
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
 
-= render :partial => "export_options", :locals => { :path => formatted_cmrs_path('csv') }
+= render :partial => "export_options", :locals => { :path => cmrs_path(:format => 'csv') }
 
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do

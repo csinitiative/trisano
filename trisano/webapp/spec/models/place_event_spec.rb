@@ -57,7 +57,7 @@ describe PlaceEvent do
                        :disease_event_attributes => {:disease_id => diseases(:chicken_pox).id} }
 
         event = MorbidityEvent.new(patient_attrs.merge(place_hash))
-        event.initialize_children
+        event.save
         @place_event = event.place_child_events[0]
       end
 

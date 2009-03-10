@@ -44,7 +44,7 @@
         - new_note = note if note.new_record?
 
       - new_note = new_note || Note.new
-      - f.fields_for(:notes, new_note, :builder => ExtendedFormBuilder) do |note_fields|
+      - f.fields_for(:notes, new_note, :child_index => uniq_id, :builder => ExtendedFormBuilder) do |note_fields|
         %span{:class => "vert"}
           = note_fields.label(:note, "New note")
           ~ note_fields.text_area(:note, :size => "50x5")
