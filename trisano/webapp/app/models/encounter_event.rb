@@ -29,6 +29,7 @@ class EncounterEvent < HumanEvent
     def core_views
       [
         ["Encounter", "Encounter"],
+        ["Clinical", "Clinical"],
         ["Laboratory", "Laboratory"]
       ]
     end

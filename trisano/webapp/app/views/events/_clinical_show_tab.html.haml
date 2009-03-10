@@ -82,29 +82,7 @@
                 %td= hospital.hospitals_participation.discharge_date
                 %td= hospital.hospitals_participation.medical_record_number
 
-  %fieldset.form
-    %legend
-      Treatments  
-
-    - unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
-      = h @event.disease_event.disease.treatment_lead_in
-
-    - core_element_show :treatments, event_form, :vert do
-
-      - if @event.interested_party.treatments.empty?
-        %h3 No treatments have been recorded for this event
-      - else
-        %table.list
-          %tr
-            %th Treatment Given
-            %th Treatment
-            %th Date of Treatment
-
-          - for treatment in @event.interested_party.treatments
-            %tr
-              %td= l treatment.treatment_given_yn
-              %td= treatment.treatment
-              %td= treatment.treatment_date
+  = render :partial => 'events/treatments_show', :locals => { :f => event_form, :event => @event }
 
   %fieldset.form
     %legend

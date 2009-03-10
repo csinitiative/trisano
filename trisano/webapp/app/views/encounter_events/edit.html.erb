@@ -3,17 +3,17 @@ Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 
 This file is part of TriSano.
 
-TriSano is free software: you can redistribute it and/or modify it under the 
-terms of the GNU Affero General Public License as published by the 
-Free Software Foundation, either version 3 of the License, or 
+TriSano is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-TriSano is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+TriSano is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
 for more details.
 
-You should have received a copy of the GNU Affero General Public License along 
+You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
@@ -51,6 +51,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%  @event_form = event_form %>
   <% tabs = []
   tabs << %w(encounter_tab Encounter)
+  tabs << %w(clinical_tab Clinical)
   tabs << %w(lab_info_tab Laboratory)
   tabs << %w(investigation_tab Investigation)
   tabs << %w(notes_tab Notes)
@@ -60,6 +61,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="encounter_tab">
       <%= render :partial => "encounter_edit_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Encounter" } %>
+    </div>
+    <div id="clinical_tab">
+      <p>
+        <%= render :partial => 'clinical_edit_tab', :locals => { :f => event_form } %>
+        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
+      </p>
     </div>
     <div id="lab_info_tab">
       <p>
