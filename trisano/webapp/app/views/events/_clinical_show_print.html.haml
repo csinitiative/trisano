@@ -13,8 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
--# TGRII: MADE SOME CHANGES HERE.  NEED TO MAKE MORE.  TACKLE WHEN TACKLING PRINTING.  MOVING ON
 %span.section-header
   Clinical Information
 
@@ -42,27 +40,17 @@
         %span.print-label Date of death:
         %span.print-value= entity_data.person.date_of_death
 
-- event_form.fields_for(:interested_party, @event.interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
-  - patient_fields.fields_for(:participations_risk_factor, @event.interested_party.participations_risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
+- event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
+  - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
     - core_element_print :pregnant_id, risk_factor_form, :horiz do
       %span.print-label Pregnant:
-      %span.print-value= l @event.interested_party.participations_risk_factor.pregnant unless @event.interested_party.nil? or @event.interested_party.participations_risk_factor.nil?
+      %span.print-value= l @event.safe_call_chain(:interested_party, :risk_factor, :pregnant)
     - core_element_print :pregnancy_due_date, risk_factor_form, :horiz do
       %span.print-label Pregnancy due date:
-      %span.print-value= @event.interested_party.participations_risk_factor.pregnancy_due_date unless @event.interested_party.nil? or @event.interested_party.participations_risk_factor.nil?
-
-%br
-%span.subsection-header Diagnosing health facilities
-- if @event.diagnosing_health_facilities.empty?
-  %b No diganosing health facilities have been recorded for this event
-- else
-  %ul
-    - for diagnostic in @event.diagnosing_health_facilities
-      %li.print-value
-        = diagnostic.secondary_entity.place_temp.name
+      %span.print-value= @event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date)
 
 %span.subsection-header Hospitalized health facilities
-- if @event.hospitalized_health_facilities.empty?
+- if @event.hospitalization_facilities.empty?
   %b No hospitalized health facilities have been recorded for this event
 - else
   .three-valued-row
@@ -76,46 +64,83 @@
       %span.print-label Record Number
     %br
     %hr
-    - for hospital in @event.hospitalized_health_facilities
-      .three-valued-row
-        .long
-          %span.print-value
-            = hospital.secondary_entity.place_temp.name
-        .short
-          %span.print-value
-            = hospital.hospitals_participation.admission_date unless hospital.hospitals_participation.nil?
-        .short
-          %span.print-value
-            = hospital.hospitals_participation.discharge_date unless hospital.hospitals_participation.nil?
-        .short
-          %span.print-value
-            = hospital.hospitals_participation.medical_record_number unless hospital.hospitals_participation.nil?
+
+    - for hospital in @event.hospitalization_facilities
+      - if hospital.place_entity
+        .three-valued-row
+          .long
+            %span.print-value
+              = hospital.place_entity.place.name
+          - if hospital.hospitals_participation.nil?
+            .short &nbsp;
+            .short &nbsp;
+            .short &nbsp;
+          - else
+            .short
+              %span.print-value
+                = hospital.hospitals_participation.admission_date
+            .short
+              %span.print-value
+                = hospital.hospitals_participation.discharge_date
+            .short
+              %span.print-value
+                = hospital.hospitals_participation.medical_record_number
+
 %br
+%span.subsection-header Diagnosing health facilities
+- if @event.diagnostic_facilities.empty?
+  %b No diganosing health facilities have been recorded for this event
+- else
+  .three-valued-row
+    .short
+      %span.print-label Name
+    .short
+      %span.print-label Type
+    .short
+      %span.print-label &nbsp;
+    %br
+    %hr
+  - for diagnostic in @event.diagnostic_facilities
+    .three-valued-row
+      .short
+        %span.print-value
+          = diagnostic.place_entity.place.name
+      .short
+        %span.print-value
+          = diagnostic.safe_call_chain(:place_entity, :place, :place_type, :code_description)
+      .short
+        %span.print-value
+          &nbsp;
 
 %span.subsection-header
   Treatments
 
-- unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.treatment_lead_in.blank?
+- unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
   %span.print-label=h @event.disease.disease.treatment_lead_in
   %br
   %br
 
 - core_element_print :treatments, event_form, :vert do
-  - if @event.interested_party.participations_treatments.empty?
+  - if @event.interested_party.treatments.empty?
     %b No treatments have been recorded for this case
   - else
     .three-valued-row
       %dif.left
         %span.print-label Treatment
       .left
+        %span.print-label Treatment Date
+      .left
         %span.print-label Treatment Given
       %br
       %hr
-      - for treatment in @event.interested_party.participations_treatments
+      - for treatment in @event.interested_party.treatments
         .three-valued-row
           .left
             %span.print-value
               = treatment.treatment
+          .left
+            %span.print-value
+              = treatment.treatment_date
           .left
             %span.print-value
               = l treatment.treatment_given_yn
@@ -132,24 +157,18 @@
       %span.print-label Phone
     %br
     %hr
-
     - for clinician in @event.clinicians
-      - clinician_entity = clinician.secondary_entity
-      - clinician_person = clinician_entity.person_temp
-
-      - clinician_phone_loc = clinician_entity.telephone_entities_locations.last
-      - clinician_phone = clinician_phone_loc.location.telephones.last unless clinician_phone_loc.nil?
+      - next if clinician.new_record?
+      - clinician_entity = clinician.person_entity
+      - clinician_person = clinician_entity.person
+      - clinician_phone  = clinician_entity.primary_phone
 
       .three-valued-row
         .left
           %span.print-value
-            = clinician_person.last_name + (clinician_person.first_name.blank? ? "" : fml(", ", clinician_person.first_name, ""))
+            = clinician_person.last_comma_first
         .left
           %span.print-value
-            -unless clinician_phone_loc.nil?
-              = (l(clinician_phone_loc.entity_location_type) || "Unspecified Locaiton") + ": " + clinician_phone.simple_format
-
-
-
+            = l(clinician_phone.entity_location_type) || ""  + ": " + clinician_phone.simple_format
 
 
