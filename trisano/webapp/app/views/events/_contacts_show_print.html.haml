@@ -16,85 +16,79 @@
 
 %span.section-header Contacts
 
-- unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
-  %span.print-label=h @event.disease.disease.contact_lead_in
-  %br
-  %br
+= h @event.safe_call_chain(:disease_event, :disease, :contact_lead_in)
 
 - core_element_print :contacts, f, :vert do
   - ran = nil
-  - if @event.contacts.empty?
+  - if @event.contact_child_events.first.new_record?
     %b No contacts have been recorded for this case
   - else
-  - for contact in @event.contacts
-    - entity = contact.secondary_entity
-    - person = entity.person
-    - event_data = contact.participations_contact
+    - for contact in @event.contact_child_events
+      - contact_entity = contact.interested_party.person_entity
+      - person = contact_entity.person
+      - contact_phone = contact_entity.primary_phone
+      - contact_event_data = contact.participations_contact
+      - address = contact.address
 
-    - entities_locations = entity.address_entities_locations
-    - no_location = entities_locations.empty?
-    - address = entities_locations.last.location.addresses.last unless no_location
-    - no_address = no_location || address.nil?
+      #name
+        - unless ran.nil?
+          %br
+          %hr
+        .three-valued-row
+          .left
+            %span.print-label Last Name:
+            %span.print-value
+              = person.last_name
+          .left
+            %span.print-label First Name:
+            %span.print-value
+              = person.first_name
+          .right
+            %span.print-label Middle Name:
+            %span.print-value
+              = person.middle_name
 
-    #name
-      - unless ran.nil?
-        %br
-        %hr
-      .three-valued-row
-        .left
-          %span.print-label Last Name:
-          %span.print-value
-            = person.last_name
-        .left
-          %span.print-label First Name:
-          %span.print-value
-            = person.first_name
-        .right
-          %span.print-label Middle Name:
-          %span.print-value
-            = person.middle_name
+      #address
+        .three-valued-row
+          .left
+            %span.print-label Address:
+            - unless address.nil?
+              %span.print-value
+                = "#{address.street_number} #{address.street_name}" + ((not address.unit_number.blank?) ? ", Unit #{address.unit_number}" : "")
+          .left
+            %span.print-label City:
+            - unless address.nil?
+              %span.print-value
+                = address.city
+          .right
+            %span.print-label State:
+            - unless address.nil?
+              %span.print-value
+                = l address.state
 
-    #address
-      .three-valued-row
-        .left
-          %span.print-label Address:
-          - unless no_address
-            %span.print-value
-              = "#{address.street_number} #{address.street_name}" + ((not address.unit_number.blank?) ? ", Unit #{address.unit_number}" : "")
-        .left
-          %span.print-label City:
-          - unless no_address
-            %span.print-value
-              = address.city
-        .right
-          %span.print-label State:
-          - unless no_address
-            %span.print-value
-              = l address.state
+        .three-valued-row
+          .left
+            %span.print-label County:
+            - unless address.nil?
+              %span.print-value
+                = l address.county
+          .left
+            %span.print-label Zip code:
+            - unless address.nil?
+              %span.print-value
+                = address.postal_code
 
-      .three-valued-row
-        .left
-          %span.print-label County:
-          - unless no_address
+      #event-data
+        .three-valued-row
+          .left
+            %span.print-label
+              Disposition:
             %span.print-value
-              = l address.county
-        .left
-          %span.print-label Zip code:
-          - unless no_address
+              = contact_event_data.disposition.code_description if contact_event_data and contact_event_data.disposition
+          .left
+            %span.print-label
+              Contact Type:
             %span.print-value
-              = address.postal_code
+              = contact_event_data.contact_type.code_description if contact_event_data and contact_event_data.contact_type
 
-    #event-data
-      .three-valued-row
-        .left
-          %span.print-label Disposition:
-          - unless event_data.nil? || event_data.disposition.nil?
-            %span.print-value
-              = event_data.disposition.code_description
-        .left
-          %span.print-label Contact Type:
-          - unless event_data.nil? || event_data.contact_type.nil?
-            %span.print-value
-              = event_data.contact_type.code_description
-
-    - ran = 1
+      - ran = 1

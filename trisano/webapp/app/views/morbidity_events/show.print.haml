@@ -47,15 +47,15 @@
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Clinical" }
 
   .brak#laboratory
-    /= render :partial => 'events/laboratory_show_print.html.haml'
+    = render :partial => 'events/laboratory_show_print.html.haml'
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Laboratory" }
 
   .brak#contacts
-    /= render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form }
+    = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
 
   .brak#epidemiological
-    /= render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form }
+    = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }
 
   #reporting
