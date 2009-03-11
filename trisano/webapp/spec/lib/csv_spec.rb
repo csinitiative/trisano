@@ -34,7 +34,7 @@ describe Export::Csv do
   end
 
   it "should expose an export method that takes an event or a list of events and an optional proc" do
-    pending "till csv is done"
+    #pending "till csv is done"
     lambda { Export::Csv.export(   MorbidityEvent.new(@event_hash)   )    }.should_not raise_error()
     lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] )    }.should_not raise_error()
     lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] ) { MorbidityEvent.new(@event_hash) } }.should_not raise_error()
@@ -44,12 +44,10 @@ describe Export::Csv do
 
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-      pending "till csv is done"
       to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
 
     it "should output content for a simple event" do
-      pending "till csv is done"
       a = to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash) ) )
       a.size.should == 2
       a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
@@ -58,11 +56,10 @@ describe Export::Csv do
 
   describe "when passed multiple simple events" do
     it "should iterate over each event" do
-      pending "till csv is done"
       second_person = "White"
       deleted_person = 'Gone'
-      eh = { :interestd_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
-      dh = { :interested_party_attributes  => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => Date.parse('2008-1-1')}
+      eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
+      dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => Date.parse('2008-1-1')}
 
       e1 = MorbidityEvent.new(@event_hash)
       e2 = MorbidityEvent.new( eh )
@@ -78,7 +75,6 @@ describe Export::Csv do
   # Debt: Does not yet test contacts and places
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
-      pending "till csv is done"
       e = csv_mock_event(:morbidity)
       a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
       a[0].include?("disease_specific_morb_q").should be_true
@@ -179,9 +175,9 @@ def event_header(event_type)
     header_array << "#{lead_in}_disease"
     header_array << "#{lead_in}_disease_onset_date"
     header_array << "#{lead_in}_date_diagnosed"
-    header_array << "#{lead_in}_diagnosing_health_facility"
+    header_array << "#{lead_in}_diagnostic_facility"
     header_array << "#{lead_in}_hospitalized"
-    header_array << "#{lead_in}_hospitalized_health_facility"
+    header_array << "#{lead_in}_hospitalization_facility"
     header_array << "#{lead_in}_hospital_admission_date"
     header_array << "#{lead_in}_hospital_discharge_date"
     header_array << "#{lead_in}_hospital_medical_record_no"
@@ -376,7 +372,6 @@ def csv_mock_event(event_type)
   @person.stub!(:disposition).and_return(simple_reference)
 
   entity = mock_model(PersonEntity)
-  entity.stub!(:address).and_return(nil)
   entity.stub!(:telephones).and_return([])
   entity.stub!(:person).and_return(@person)
   entity.stub!(:races).and_return([])
@@ -390,10 +385,10 @@ def csv_mock_event(event_type)
   @contact.stub!(:contact_type).and_return(simple_reference)
   @contact.stub!(:disposition).and_return(simple_reference)
 
-  patient = mock_model(InterestedParty)
-  patient.stub!(:personyentity).and_return(entity)
-  patient.stub!(:participations_treatments).and_return([@treatment])
-  patient.stub!(:participations_risk_factor).and_return(nil)
+  patient = mock_model(InterestedParty,
+                       :person_entity => entity,
+                       :treatments => [@treatment],
+                       :risk_factor => nil)
 
   @disease = mock_model(DiseaseEvent)
   @disease.stub!(:disease).and_return(simple_reference)
@@ -403,9 +398,9 @@ def csv_mock_event(event_type)
   @disease.stub!(:died).and_return(simple_reference)
 
   if event_type == :morbidity
-    m = mock_model(MorbidityEvent)
-    m.stub!(:type).and_return('MorbidityEvent')
-    m.stub!(:answers).and_return([mock_model(Answer, { :short_name => "morb_q", :text_answer => "morb_q answer"})])
+    m = mock_model(MorbidityEvent,
+                   :type => 'MorbidityEvent',
+                   :answers => [mock_model(Answer, { :short_name => "morb_q", :text_answer => "morb_q answer"})])
   elsif event_type == :contact
     m = mock_model(ContactEvent)
     m.stub!(:type).and_return('ContactEvent')
@@ -416,6 +411,7 @@ def csv_mock_event(event_type)
   end
 
   m.stub!(:id).and_return(1)
+  m.stub!(:address).and_return(nil)
   m.stub!(:record_number).and_return("20080001")
   m.stub!(:event_onset_date).and_return("2008-01-05")
   m.stub!(:read_attribute).with("MMWR_week").and_return(1)
@@ -429,7 +425,7 @@ def csv_mock_event(event_type)
   m.stub!(:outbreak_associated).and_return(simple_reference)
   m.stub!(:outbreak_name).and_return("an outbreak")
 
-  m.stub!(:disease).and_return(@disease)
+  m.stub!(:disease_event).and_return(@disease)
   m.stub!(:event_name).and_return("an event")
   m.stub!(:event_status).and_return("NEW")
   m.stub!(:investigation_started_date).and_return("2008-01-06")
@@ -448,11 +444,10 @@ def csv_mock_event(event_type)
   m.stub!(:interested_party).and_return(patient)
 
   m.stub!(:place_exposures).and_return([])
-  m.stub!(:reporting_agency).and_return(nil)
-  m.stub!(:reporter).and_return(nil)
+  m.stub!(:safe_call_chain).and_return(nil)
   m.stub!(:labs).and_return([])
-  m.stub!(:hospitalized_health_facilities).and_return([])
-  m.stub!(:diagnosing_health_facilities).and_return([])
+  m.stub!(:hospitalization_facilities).and_return([])
+  m.stub!(:diagnostic_facilities).and_return([])
   m.stub!(:clinicians).and_return([])
   m.stub!(:contacts).and_return([])
   m.should_receive(:acuity).twice.and_return('Difficult')

@@ -93,7 +93,7 @@ module Export
       #contacts don't have places
       num_places      = event.is_a?(MorbidityEvent) && options[:export_options].include?("places") ? event.place_child_events.active(true).size : 0
       num_lab_results = options[:export_options].include?("labs") ? event.lab_results.size : 0
-      num_treatments  = options[:export_options].include?("treatments") ? event.patient.participations_treatments.size : 0
+      num_treatments  = options[:export_options].include?("treatments") ? event.interested_party.treatments.size : 0
       loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
 
       # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
@@ -117,7 +117,7 @@ module Export
 
         if options[:export_options].include? "treatments"
           if ctr < num_treatments
-            treatment = event.patient.participations_treatments[ctr]
+            treatment = event.interested_party.treatments[ctr]
           else
             treatment = ParticipationsTreatment.new
           end
@@ -162,7 +162,13 @@ module Export
 
     def Csv.event_values(event, options, exportable_questions)
       if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-        event_data(event, options, exportable_questions).collect { |event_datum| event.instance_eval(event_datum.last) }
+        event_data(event, options, exportable_questions).collect do |event_datum| 
+          begin
+            event.instance_eval(event_datum.last) 
+          rescue Exception => ex
+            raise ex.message + event_datum.last
+          end
+        end
       else
         # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
         ed = event_data(event, options, exportable_questions).collect { nil }
@@ -172,11 +178,23 @@ module Export
     end
 
     def Csv.lab_values(lab_result)
-      lab_data.collect { |lab_datum| lab_result.instance_eval(lab_datum.last) }
+      lab_data.collect do |lab_datum| 
+        begin
+          lab_result.instance_eval(lab_datum.last)
+        rescue Exception => ex
+          raise ex.message + lab_datum.last
+        end
+      end
     end
 
     def Csv.treatment_values(treatment)
-      treatment_data.collect { |treatment_datum| treatment.instance_eval(treatment_datum.last) }
+      treatment_data.collect do |treatment_datum| 
+        begin
+          treatment.instance_eval(treatment_datum.last)
+        rescue Exception => ex
+          raise ex.message + treatment_datum.last
+        end
+      end
     end
 
     def Csv.csv_out(str, data)
@@ -202,114 +220,104 @@ module Export
       # Demographics
       if event.is_a?(PlaceEvent)
         event_data << ["place_event_id", "id"]
-        event_data << ["place_name", "place.primary_entity.place_temp.name"]
-        event_data << ["place_type", "place.primary_entity.place_temp.place_type.code_description if place.primary_entity.place_temp.place_type"]
-        event_data << ["place_date_of_exposure", "place.participations_place.date_of_exposure"]
+        event_data << ["place_name", "interested_place.place_entity.place.name"]
+        event_data << ["place_type", "interested_place.place_entity.place.place_type.try(:code_description)"]
+        event_data << ["place_date_of_exposure", "participations_place.try(:date_of_exposure)"]
       else
         event_data << ["#{event_type}_event_id", "id"]
         event_data << ["#{event_type}_record_number", "record_number"]
-        event_data << ["#{event_type}_last_name", "patient.primary_entity.person.last_name"]
-        event_data << ["#{event_type}_first_name", "patient.primary_entity.person.first_name"]
-        event_data << ["#{event_type}_middle_name", "patient.primary_entity.person.middle_name"]
+        event_data << ["#{event_type}_last_name", "interested_party.person_entity.person.last_name"]
+        event_data << ["#{event_type}_first_name", "interested_party.person_entity.person.first_name"]
+        event_data << ["#{event_type}_middle_name", "interested_party.person_entity.person.middle_name"]
       end
 
-      if event.is_a?(PlaceEvent)
-        event_data << ["place_address_street_number", "place.primary_entity.address_entities_locations.last.location.addresses.last.street_number if !place.primary_entity.address_entities_locations.empty?"]
-        event_data << ["place_address_street_name", "place.primary_entity.address_entities_locations.last.location.addresses.last.street_name if !place.primary_entity.address_entities_locations.empty?"]
-        event_data << ["place_address_unit_number", "place.primary_entity.address_entities_locations.last.location.addresses.last.unit_number if !place.primary_entity.address_entities_locations.empty?"]
-        event_data << ["place_address_city", "place.primary_entity.address_entities_locations.last.location.addresses.last.city if !place.primary_entity.address_entities_locations.empty?"]
-        event_data << ["place_address_state", "place.primary_entity.address_entities_locations.last.location.addresses.last.state.code_description if !place.primary_entity.address_entities_locations.empty? && place.primary_entity.address_entities_locations.last.location.addresses.last.state"]
-        event_data << ["place_address_county", "place.primary_entity.address_entities_locations.last.location.addresses.last.county.code_description if !place.primary_entity.address_entities_locations.empty? && place.primary_entity.address_entities_locations.last.location.addresses.last.county"]
-        event_data << ["place_address_postal_code", "place.primary_entity.address_entities_locations.last.location.addresses.last.postal_code if !place.primary_entity.address_entities_locations.empty?"]
-      else
-        event_data << ["#{event_type}_address_street_number", "patient.primary_entity.address_entities_locations.last.location.addresses.last.street_number if !patient.primary_entity.address_entities_locations.empty?"]
-        event_data << ["#{event_type}_address_street_name", "patient.primary_entity.address_entities_locations.last.location.addresses.last.street_name if !patient.primary_entity.address_entities_locations.empty?"]
-        event_data << ["#{event_type}_address_unit_number", "patient.primary_entity.address_entities_locations.last.location.addresses.last.unit_number if !patient.primary_entity.address_entities_locations.empty?"]
-        event_data << ["#{event_type}_address_city", "patient.primary_entity.address_entities_locations.last.location.addresses.last.city if !patient.primary_entity.address_entities_locations.empty?"]
-        event_data << ["#{event_type}_address_state", "patient.primary_entity.address_entities_locations.last.location.addresses.last.state.code_description if !patient.primary_entity.address_entities_locations.empty? && patient.primary_entity.address_entities_locations.last.location.addresses.last.state"]
-        event_data << ["#{event_type}_address_county", "patient.primary_entity.address_entities_locations.last.location.addresses.last.county.code_description if !patient.primary_entity.address_entities_locations.empty? && patient.primary_entity.address_entities_locations.last.location.addresses.last.county"]
-        event_data << ["#{event_type}_address_postal_code", "patient.primary_entity.address_entities_locations.last.location.addresses.last.postal_code if !patient.primary_entity.address_entities_locations.empty?"]
-      end
-
+      event_data << ["#{event_type}_address_street_number", "address.try(:street_number)"]
+      event_data << ["#{event_type}_address_street_name", "address.try(:street_name)"]
+      event_data << ["#{event_type}_address_unit_number", "address.try(:unit_number)"]
+      event_data << ["#{event_type}_address_city", "address.try(:city)"]
+      event_data << ["#{event_type}_address_state", "address.try(:state).try(:code_description)"]
+      event_data << ["#{event_type}_address_county", "address.try(:county).try(:code_description)"]
+      event_data << ["#{event_type}_address_postal_code", "address.try(:postal_code)"]
+      
       unless event.is_a?(PlaceEvent)
-        event_data << ["#{event_type}_birth_date", "patient.primary_entity.person.birth_date"]
-        event_data << ["#{event_type}_approximate_age_no_birthdate", "patient.primary_entity.person.approximate_age_no_birthday"]
+        event_data << ["#{event_type}_birth_date", "interested_party.person_entity.person.birth_date"]
+        event_data << ["#{event_type}_approximate_age_no_birthdate", "interested_party.person_entity.person.approximate_age_no_birthday"]
         event_data << ["#{event_type}_age_at_onset_in_years", "age_info.in_years"]
       end
 
       if event.is_a?(PlaceEvent)
-        event_data << ["place_phone_area_code", "place.primary_entity.telephone_entities_locations.last.location.telephones.last.area_code if !place.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["place_phone_phone_number", "place.primary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if !place.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["place_phone_extension", "place.primary_entity.telephone_entities_locations.last.location.telephones.last.extension if !place.primary_entity.telephone_entities_locations.empty?"]
+        event_data << ["place_phone_area_code", "interested_place.place_entity.telephones.last.try(:area_code)"]
+        event_data << ["place_phone_phone_number", "interested_place.place_entity.telephones.last.try(:phone_number)"]
+        event_data << ["place_phone_extension", "interested_place.place_entity.telephones.last.try(:extension)"]
       else
-        event_data << ["#{event_type}_phone_area_code", "patient.primary_entity.telephone_entities_locations.last.location.telephones.last.area_code if !patient.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_phone_phone_number", "patient.primary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if !patient.primary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_phone_extension", "patient.primary_entity.telephone_entities_locations.last.location.telephones.last.extension if !patient.primary_entity.telephone_entities_locations.empty?"]
+        event_data << ["#{event_type}_phone_area_code", "interested_party.person_entity.telephones.last.try(:area_code)"]
+        event_data << ["#{event_type}_phone_phone_number", "interested_party.person_entity.telephones.last.try(:phone_number)"]
+        event_data << ["#{event_type}_phone_extension", "interested_party.person_entity.telephones.last.try(:extension)"]
       end
 
       unless event.is_a?(PlaceEvent)
-        event_data << ["#{event_type}_birth_gender", "patient.primary_entity.person.birth_gender.code_description if patient.primary_entity.person.birth_gender"]
-        event_data << ["#{event_type}_ethnicity", "patient.primary_entity.person.ethnicity.code_description if patient.primary_entity.person.ethnicity"]
+        event_data << ["#{event_type}_birth_gender", "interested_party.person_entity.person.try(:birth_gender).try(:code_description)"]
+        event_data << ["#{event_type}_ethnicity", "interested_party.person_entity.person.try(:ethnicity).try(:code_description)"]
         
         # Cheating
         num_races = ExternalCode.count(:conditions => "code_name = 'race'")
         cnt = 0
-        unless event.patient.nil?
-          event.patient.primary_entity.races.each do |race|
+        unless (interested_party = event.interested_party).nil?
+          interested_party.person_entity.races.each do |race|
             cnt += 1
             event_data << ["#{event_type}_race_#{cnt}", "'#{race.code_description}'"]
           end
         end
         (num_races - cnt).times { |race_cnt| event_data << ["#{event_type}_race_#{cnt + race_cnt + 1}", ""] }
 
-        event_data << ["#{event_type}_language", "patient.primary_entity.person.primary_language.code_description if patient.primary_entity.person.primary_language"]
+        event_data << ["#{event_type}_language", "interested_party.person_entity.person.try(:primary_language).try(:code_description)"]
 
         if event.is_a?(ContactEvent)
-          event_data << ["contact_disposition", "patient.participations_contact.disposition.code_description if patient.participations_contact && patient.participations_contact.disposition"]
-          event_data << ["contact_type", "patient.participations_contact.contact_type.code_description if patient.participations_contact && patient.participations_contact.contact_type"]
+          event_data << ["contact_disposition", "participations_contact.try(:disposition).try(:code_description)"]
+          event_data << ["contact_type", "participations_contact.try(:contact_type).try(:code_description)"]
         end
 
         # Clinical
-        event_data << ["#{event_type}_disease", "disease.disease.disease_name if disease && disease.disease"]
-        event_data << ["#{event_type}_disease_onset_date", "disease.disease_onset_date if disease"]
-        event_data << ["#{event_type}_date_diagnosed", "disease.date_diagnosed if disease"]
-        event_data << ["#{event_type}_diagnosing_health_facility", "diagnosing_health_facilities.first.secondary_entity.place_temp.name if !diagnosing_health_facilities.empty? && diagnosing_health_facilities.first.secondary_entity"]
+        event_data << ["#{event_type}_disease", "disease_event.try(:disease).try(:disease_name)"]
+        event_data << ["#{event_type}_disease_onset_date", "disease_event.try(:disease_onset_date)"]
+        event_data << ["#{event_type}_date_diagnosed", "disease_event.try(:date_diagnosed)"]
+        event_data << ["#{event_type}_diagnostic_facility", "diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)"]
 
-        event_data << ["#{event_type}_hospitalized", "disease.hospitalized.code_description if (disease && disease.hospitalized)"]
-        event_data << ["#{event_type}_hospitalized_health_facility", "hospitalized_health_facilities.first.secondary_entity.place_temp.name if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.secondary_entity"]
-        event_data << ["#{event_type}_hospital_admission_date", "hospitalized_health_facilities.first.hospitals_participation.admission_date if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.hospitals_participation"]
-        event_data << ["#{event_type}_hospital_discharge_date", "hospitalized_health_facilities.first.hospitals_participation.discharge_date if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.hospitals_participation"]
-        event_data << ["#{event_type}_hospital_medical_record_no", "hospitalized_health_facilities.first.hospitals_participation.medical_record_number if !hospitalized_health_facilities.empty? && hospitalized_health_facilities.first.hospitals_participation"]
+        event_data << ["#{event_type}_hospitalized", "disease_event.try(:hospitalized).try(:code_description)"]
+        event_data << ["#{event_type}_hospitalization_facility", "hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)"]
+        event_data << ["#{event_type}_hospital_admission_date", "hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)"]
+        event_data << ["#{event_type}_hospital_discharge_date", "hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)"]
+        event_data << ["#{event_type}_hospital_medical_record_no", "hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)"]
 
-        event_data << ["#{event_type}_died", "disease.died.code_description if disease && disease.died"]
-        event_data << ["#{event_type}_date_of_death", "patient.primary_entity.person.date_of_death"]
-        event_data << ["#{event_type}_pregnant", "patient.participations_risk_factor.pregnant.code_description if patient.participations_risk_factor && patient.participations_risk_factor.pregnant"]
+        event_data << ["#{event_type}_died", "disease_event.try(:died).try(:code_description)"]
+        event_data << ["#{event_type}_date_of_death", "interested_party.person_entity.person.date_of_death"]
+        event_data << ["#{event_type}_pregnant", "interested_party.try(:risk_factor).try(:pregnant).try(:code_description)"]
 
-        event_data << ["#{event_type}_clinician_last_name", "clinicians.first.secondary_entity.person.last_name if !clinicians.empty?"]
-        event_data << ["#{event_type}_clinician_first_name", "clinicians.first.secondary_entity.person.first_name if !clinicians.empty?"]
-        event_data << ["#{event_type}_clinician_middle_name", "clinicians.first.secondary_entity.person.middle_name if !clinicians.empty?"]
-        event_data << ["#{event_type}_clinician_phone_area_code", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.area_code if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_clinician_phone_phone_number", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
-        event_data << ["#{event_type}_clinician_phone_extension", "clinicians.first.secondary_entity.telephone_entities_locations.last.location.telephones.last.extension if !clinicians.empty? && !clinicians.first.secondary_entity.telephone_entities_locations.empty?"]
+        event_data << ["#{event_type}_clinician_last_name", "clinicians.first.try(:person_entity).try(:person).try(:last_name)"]
+        event_data << ["#{event_type}_clinician_first_name", "clinicians.first.try(:person_entity).try(:person).try(:first_name)"]
+        event_data << ["#{event_type}_clinician_middle_name", "clinicians.first.try(:person_entity).try(:person).try(:middle_name)"]
+        event_data << ["#{event_type}_clinician_phone_area_code", "clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)"]
+        event_data << ["#{event_type}_clinician_phone_phone_number", "clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)"]
+        event_data << ["#{event_type}_clinician_phone_extension", "clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)"]
 
         # Edidemioligical
-        event_data << ["#{event_type}_food_handler", "patient.participations_risk_factor.food_handler.code_description if patient.participations_risk_factor && patient.participations_risk_factor.food_handler"]
-        event_data << ["#{event_type}_healthcare_worker", "patient.participations_risk_factor.healthcare_worker.code_description if patient.participations_risk_factor && patient.participations_risk_factor.healthcare_worker"]
-        event_data << ["#{event_type}_group_living", "patient.participations_risk_factor.group_living.code_description if patient.participations_risk_factor && patient.participations_risk_factor.group_living"]
-        event_data << ["#{event_type}_day_care_association", "patient.participations_risk_factor.day_care_association.code_description if patient.participations_risk_factor && patient.participations_risk_factor.day_care_association"]
-        event_data << ["#{event_type}_occupation", "patient.participations_risk_factor.occupation if patient.participations_risk_factor"]
-        event_data << ["#{event_type}_risk_factors", "patient.participations_risk_factor.risk_factors if patient.participations_risk_factor"]
-        event_data << ["#{event_type}_risk_factors_notes", "patient.participations_risk_factor.risk_factors_notes if patient.participations_risk_factor"]
-        event_data << ["#{event_type}_imported_from", "imported_from.code_description if imported_from"]
+        event_data << ["#{event_type}_food_handler", "interested_party.try(:risk_factor).try(:food_handler).try(:code_description)"]
+        event_data << ["#{event_type}_healthcare_worker", "interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)"]
+        event_data << ["#{event_type}_group_living", "interested_party.try(:risk_factor).try(:group_living).try(:code_description)"]
+        event_data << ["#{event_type}_day_care_association", "interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)"]
+        event_data << ["#{event_type}_occupation", "interested_party.try(:risk_factor).try(:occupation)"]
+        event_data << ["#{event_type}_risk_factors", "interested_party.risk_factor.try(:risk_factors)"]
+        event_data << ["#{event_type}_risk_factors_notes", "interested_party.risk_factor.try(:risk_factors_notes)"]
+        event_data << ["#{event_type}_imported_from", "imported_from.try(:code_description)"]
 
         if event.is_a?(MorbidityEvent)
           # Reporting
-          event_data << ["patient_reporting_agency", "reporting_agency.secondary_entity.place_temp.name if reporting_agency"]
-          event_data << ["patient_reporter_last_name", "reporter.secondary_entity.person.last_name if reporter && reporter.secondary_entity.person"]
-          event_data << ["patient_reporter_first_name", "reporter.secondary_entity.person.first_name if reporter && reporter.secondary_entity.person"]
-          event_data << ["patient_reporter_phone_area_code", "reporter.secondary_entity.telephone_entities_locations.last.location.telephones.last.area_code if reporter && !reporter.secondary_entity.telephone_entities_locations.empty?"]
-          event_data << ["patient_reporter_phone_phone_number", "reporter.secondary_entity.telephone_entities_locations.last.location.telephones.last.phone_number if reporter && !reporter.secondary_entity.telephone_entities_locations.empty?"]
-          event_data << ["patient_reporter_phone_extension", "reporter.secondary_entity.telephone_entities_locations.last.location.telephones.last.extension if reporter && !reporter.secondary_entity.telephone_entities_locations.empty?"]
+          event_data << ["patient_reporting_agency", "safe_call_chain(:reporting_agency, :secondary_entity, :place, :name)"]
+          event_data << ["patient_reporter_last_name", "safe_call_chain(:reporter, :secondary_entity, :person, :last_name)"]
+          event_data << ["patient_reporter_first_name", "safe_call_chain(:reporter, :secondary_entity, :person, :first_name)"]
+          event_data << ["patient_reporter_phone_area_code", "safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :area_code)"]
+          event_data << ["patient_reporter_phone_phone_number", "safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :phone_number)"]
+          event_data << ["patient_reporter_phone_extension", "safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :extension)"]
           event_data << ["patient_results_reported_to_clinician_date", "results_reported_to_clinician_date"]
           event_data << ["patient_first_reported_PH_date", "first_reported_PH_date"]
 
@@ -318,20 +326,20 @@ module Export
           event_data << ["patient_MMWR_week", "read_attribute('MMWR_week')"]
           event_data << ["patient_MMWR_year", "read_attribute('MMWR_year')"]
 
-          event_data << ["patient_lhd_case_status", "lhd_case_status.code_description if lhd_case_status"]
-          event_data << ["patient_state_case_status", "state_case_status.code_description if state_case_status"]
-          event_data << ["patient_outbreak_associated", "outbreak_associated.code_description if outbreak_associated"]
+          event_data << ["patient_lhd_case_status", "lhd_case_status.try(:code_description)"]
+          event_data << ["patient_state_case_status", "state_case_status.try(:code_description)"]
+          event_data << ["patient_outbreak_associated", "outbreak_associated.try(:code_description)"]
           event_data << ["patient_outbreak_name", "outbreak_name"]
 
           event_data << ["patient_event_name", "event_name"]
-          event_data << ["patient_jurisdiction_of_investigation", "primary_jurisdiction.name if primary_jurisdiction"]
-          event_data << ["patient_jurisdiction_of_residence", "patient.primary_entity.address_entities_locations.last.location.addresses.last.county.jurisdiction.name if !patient.primary_entity.address_entities_locations.empty? && patient.primary_entity.address_entities_locations.last.location.addresses.last.county && patient.primary_entity.address_entities_locations.last.location.addresses.last.county.jurisdiction"]
+          event_data << ["patient_jurisdiction_of_investigation", "primary_jurisdiction.try(:name)"]
+          event_data << ["patient_jurisdiction_of_residence", "address.try(:county).try(:jurisdiction).try(:name)"]
           event_data << ["patient_event_status", "event_status"]
           event_data << ["patient_investigation_started_date", "investigation_started_date"]
           event_data << ["patient_investigation_completed_lhd_date", "investigation_completed_LHD_date"]
           event_data << ["patient_review_completed_by_state_date", "review_completed_by_state_date"]
 
-          event_data << ["patient_investigator", "investigator.best_name if investigator"]
+          event_data << ["patient_investigator", "investigator.try(:best_name)"]
           event_data << ["patient_sent_to_cdc", "sent_to_cdc"]
           event_data << ["acuity", "acuity"]
           event_data << ["other_data_1", "other_data_1"]
@@ -365,17 +373,17 @@ module Export
     lab_data << ["lab_test_detail", "test_detail"]
     lab_data << ["lab_result", "lab_result_text"]
     lab_data << ["lab_reference_range", "reference_range"]
-    lab_data << ["lab_interpretation", "interpretation.code_description if interpretation"]
-    lab_data << ["lab_specimen_source", "specimen_source.code_description if specimen_source"]
+    lab_data << ["lab_interpretation", "interpretation.try(:code_description)"]
+    lab_data << ["lab_specimen_source", "specimen_source.try(:code_description)"]
     lab_data << ["lab_collection_date", "collection_date"]
     lab_data << ["lab_test_date", "lab_test_date"]
-    lab_data << ["lab_specimen_sent_to_uphl", "specimen_sent_to_uphl_yn.code_description if specimen_sent_to_uphl_yn"]
+    lab_data << ["lab_specimen_sent_to_uphl", "specimen_sent_to_uphl_yn.try(:code_description)"]
   end
 
   def Csv.treatment_data
     treatment_data = []
     treatment_data << ["treatment_record_id", "id"]
-    treatment_data << ["treatment_given", "treatment_given_yn.code_description if treatment_given_yn"]
+    treatment_data << ["treatment_given", "treatment_given_yn.try(:code_description)"]
     treatment_data << ["treatment", "treatment.treatment"]  # 2nd element should be just "treatment," but that's not working for reasons unknown
     treatment_data << ["treatment_date", "treatment_date"]
   end
