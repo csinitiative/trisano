@@ -18,4 +18,15 @@
   - places.each do |place|
     %li{:name => "#{place.entity_id}"}
       %span.place_name= place.name
-      %span.place_type= "(#{place.place_type.code_description})" unless place.place_type.nil?
+      %br
+      %span.place_type= "#{place.place_type.code_description}" unless place.place_type.nil?
+      - address = place.entity.addresses.last
+      - unless address.nil?
+        %br
+        %span.place_address
+          =h address.street_number
+          =h address.street_name
+          =h address.city
+          =h address.county.code_description unless address.county.nil?
+          =h address.postal_code
+      %br
