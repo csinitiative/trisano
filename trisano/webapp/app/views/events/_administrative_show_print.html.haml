@@ -34,13 +34,11 @@
 
 %span{:class => "vert"}
   %span.print-label Jurisdiction of Residence
-  - patient_entity = @event.active_patient.primary_entity
-  - if patient_entity
-    - unless patient_entity.address_entities_locations.empty?
-      - address = patient_entity.address_entities_locations.last.location.addresses.last
-      - if address && address.county && address.county.jurisdiction
-        - jurisdiction_name = address.county.jurisdiction.name
-  %span.print-value= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
+  - if @event.address
+    - address = @event.address
+    - if address && address.county && address.county.jurisdiction
+      - jurisdiction_name = address.county.jurisdiction.name
+    %span.print-value= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
 
 %span.subsection-header
   Case / Outbreak
@@ -59,7 +57,7 @@
 
 %span.subsection-header
   Investigation
-- event_form.fields_for(:active_jurisdiction, @event.active_jurisdiction, :builder => ExtendedFormBuilder) do |j|
+- event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j|
   - core_element_print :secondary_entity_id, j, :horiz do
     %span.print-label Jurisdiction responsible for investigation:
     %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?

@@ -63,7 +63,7 @@
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Reporting" }
 
   #administrative
-    /= render :partial => 'events/administrative_show_print.html.haml', :locals => { :event_form => event_form }
+    = render :partial => 'events/administrative_show_print.html.haml', :locals => { :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Administrative" }
 
   .brak#investigation
@@ -71,4 +71,4 @@
 
   -unless params[:note].nil?
     .brak#notes
-      /= render :partial => 'events/notes_show_print.html.haml'
+      = render :partial => 'events/notes_show_print.html.haml'
