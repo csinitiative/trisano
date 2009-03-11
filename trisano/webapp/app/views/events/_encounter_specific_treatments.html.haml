@@ -14,11 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend 
-    Clinical Information
-    %span{:id => 'clinical_info_hide', :onClick => "Element.hide('clinical'); Element.hide('clinical_info_hide'); Element.show('clinical_info_show'); return false;"} [Hide]
-    %span{:id => 'clinical_info_show', :onClick => "Element.show('clinical'); Element.hide('clinical_info_show'); Element.show('clinical_info_hide'); return false;", :style => "display: none;"} [Show]
+  %legend Encounter-specific Treatments
 
-  %div{ :id => 'clinical', :class => 'clinical', :style => "clear: both;"}
-    = render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event }
-    
+  - unless event.encounter_child_events.first.new_record?
+
+    - for encounter in event.encounter_child_events
+      - pe = encounter.participations_encounter
+      %h4="Encounter on #{h pe.encounter_date}"
+      = render :partial => "events/treatments_list", :locals => { :event => encounter }
+
+  - else
+    %h3 No encounters have been recorded for this event

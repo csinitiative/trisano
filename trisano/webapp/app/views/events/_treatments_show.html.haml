@@ -21,18 +21,7 @@
     = h @event.disease_event.disease.treatment_lead_in
 
   - core_element_show :treatments, f, :vert do
+    = render :partial => "events/treatments_list", :locals => { :event => @event}
 
-    - if @event.interested_party.treatments.empty?
-      %h3 No treatments have been recorded for this event
-    - else
-      %table.list
-        %tr
-          %th Treatment Given
-          %th Treatment
-          %th Date of Treatment
-
-        - for treatment in @event.interested_party.treatments
-          %tr
-            %td= l treatment.treatment_given_yn
-            %td= treatment.treatment
-            %td= treatment.treatment_date
+  - if @event.is_a?(MorbidityEvent)
+    = render :partial => "events/encounter_specific_treatments", :locals => { :event => @event }

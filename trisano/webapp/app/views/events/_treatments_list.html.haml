@@ -13,12 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset
-  %legend 
-    Clinical Information
-    %span{:id => 'clinical_info_hide', :onClick => "Element.hide('clinical'); Element.hide('clinical_info_hide'); Element.show('clinical_info_show'); return false;"} [Hide]
-    %span{:id => 'clinical_info_show', :onClick => "Element.show('clinical'); Element.hide('clinical_info_show'); Element.show('clinical_info_hide'); return false;", :style => "display: none;"} [Show]
+- if event.interested_party.treatments.empty?
+  %h3 No treatments have been recorded for this event
+- else
+  %table.list
+    %tr
+      %th Treatment Given
+      %th Treatment
+      %th Date of Treatment
 
-  %div{ :id => 'clinical', :class => 'clinical', :style => "clear: both;"}
-    = render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event }
-    
+    - for treatment in event.interested_party.treatments
+      %tr
+        %td= l treatment.treatment_given_yn
+        %td= treatment.treatment
+        %td= treatment.treatment_date
