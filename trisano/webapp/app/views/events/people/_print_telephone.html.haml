@@ -13,20 +13,10 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--if print_telephone.current_phone
+-unless print_telephone.new_record?
   %span.print-label
-    -if print_telephone.entity_location_type
-      =print_telephone.entity_location_type.code_description
-      phone
-    -else
-      Phone
-  %span.print-value=h(print_telephone.current_phone.simple_format)
+    =h(print_telephone.entity_location_type.try(:code_description) || "No type") + ": "
+  %span.print-value
+    =h(print_telephone.simple_format)
+  %hr
 
-  %span.print-label
-    Email
-  -unless print_telephone.current_phone.email_address.blank?
-    %span.print-value=h(print_telephone.current_phone.email_address)
-  -else
-    %span.print-value
-      &nbsp;
-  %br

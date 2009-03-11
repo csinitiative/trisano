@@ -15,5 +15,6 @@
 
 %span.subsection-header
   Telephone / Email
-=render :partial => 'events/people/print_telephone.html.haml', :collection => entity_data.telephone_entities_locations
+=render :partial => 'events/people/print_telephone.html.haml', :collection => f.object.telephones
+=render :partial => 'events/people/print_email.html.haml', :collection => f.object.email_addresses
 

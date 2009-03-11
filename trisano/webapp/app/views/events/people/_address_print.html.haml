@@ -16,7 +16,7 @@
 -unless address.nil?
   %span.subsection-header
     Address
-  -current_patient.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|
+  -f.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|
     -core_element_print :street_number, address_form, :horiz do
       %span.print-label Street number:
       %span.print-value=address.street_number

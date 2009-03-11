@@ -15,13 +15,13 @@
 
 %span.subsection-header
   Demographics
--core_element_print :birth_gender_id, person_form, :horiz do
+-core_element_print :birth_gender_id, f, :horiz do
   %span.print-label Birth gender:
   %span.print-value=person.birth_gender_description
--core_element_print :primary_language_id, person_form, :horiz do
+-core_element_print :primary_language_id, f, :horiz do
   %span.print-label Primary language:
   %span.print-value=person.primary_language_description
--core_element_print :ethnicity_id, person_form, :vert do
+-core_element_print :ethnicity_id,  f, :vert do
   %span.print-label Ethnicity:
   %span.print-value=person.ethnicity_description
 %span.vert
