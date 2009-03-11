@@ -29,7 +29,9 @@
       %th.forminformation
         Diseases
       %th
+        CDC Code
       %th
+        Actions
     - for disease in @diseases
       %tr.roll
         %td.forminformation
@@ -38,7 +40,7 @@
             .tools
               = disease.active? ? 'Active' :  'Inactive'
         %td
-          = disease.cdc_code
+          =h disease.cdc_code
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to('Edit', edit_disease_path(disease))
