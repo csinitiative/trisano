@@ -32,117 +32,32 @@ class MorbidityEvent < HumanEvent
     ]
   end
 
-  has_one :reporting_agency, 
-    :class_name => 'Participation', 
-    :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.reporting_agency_type_id]
+  has_one :reporting_agency, :foreign_key => "event_id"
+  has_one :reporter, :foreign_key => "event_id"
 
-  has_one :reporter, 
-    :class_name => 'Participation', 
-    :foreign_key => "event_id",
-    :conditions => ["role_id = ?", Code.reported_by_type_id]
+  accepts_nested_attributes_for :reporting_agency,
+    :allow_destroy => true,
+    :reject_if => proc { |attrs| check_agency_attrs(attrs) }
 
-  validates_associated :reporting_agency
-  validates_associated :reporter
+  accepts_nested_attributes_for :reporter, 
+    :allow_destroy => true, 
+    :reject_if => proc { |attrs| check_reporter_attrs(attrs) }
+
+  def self.check_agency_attrs(attrs)
+    return false if attrs.has_key?("secondary_entity_id") # Adding new record via search
+    place_empty = attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? }
+    phones_empty = attrs["place_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    (place_empty && phones_empty) ? true : false
+  end
+
+  def self.check_reporter_attrs(attrs)
+    person_empty = attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| v.blank? }
+    phones_empty = attrs["person_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    (person_empty && phones_empty) ? true : false
+  end
 
   before_save :generate_mmwr
   before_save :initialize_children
-
-  #TGRII: GET RID OF THIS WHEN REPORTING AGENCY DONE
-  after_update :save_associations
-
-  def active_reporting_agency
-    self.reporting_agency
-  end
-
-  def active_reporter
-    self.reporter
-  end
-
-  def update_reporting_agency_with_existing(attributes)
-    place = Place.find(attributes.delete(:id))
-    self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
-    self.reporting_agency.secondary_entity = place.entity    
-  end
-
-  def update_reporting_agency_with_new(attributes)
-    agency = attributes.delete(:name)
-    agency_types = attributes.delete(:agency_types) || []
-    self.build_reporting_agency(:role_id => Event.participation_code('Reporting Agency')) if self.reporting_agency.nil?
-    new_agency =  Entity.new
-    new_agency.entity_type = 'place'
-    new_place = new_agency.build_place_temp(:name => agency, :place_type_id => Code.other_place_type_id)
-    agency_types.each { |id| new_place.reporting_agency_types << ReportingAgencyType.new(:code_id => id) }
-    self.reporting_agency.secondary_entity = new_agency
-  end
-
-  # hopefully, this will hurt less now
-  def active_reporting_agency=(attributes)
-    if attributes.has_key?(:id)
-      update_reporting_agency_with_existing(attributes)
-    elsif attributes.has_key?(:name)
-      update_reporting_agency_with_new(attributes)
-    else
-      if self.reporting_agency
-        self.reporting_agency.destroy 
-        self.reporting_agency.reset
-      end
-    end      
-
-    # Now the reporter and reporter phone (this part still hurts)
-
-    # If there is a saved reporter and the user has blanked it out, delete reporter participation
-    self.reporter.destroy if attributes.values_blank? && self.reporter
-
-    return if attributes.values_blank?
-
-    # User can send either a reporter or a phone number or both.  Regardless we need a participation and an entity if we don't have one already
-    self.build_reporter(:role_id => Event.participation_code('Reported By')).build_secondary_entity if self.reporter.nil?
-    self.reporter.secondary_entity.entity_type = 'person'
-    
-    # Process the person, if any
-    last_name = attributes.delete(:last_name)
-    first_name = attributes.delete(:first_name)
-
-    # Build a person if we don't have one
-    self.reporter.secondary_entity.build_person_temp if self.reporter.secondary_entity.person_temp.nil?
-    self.reporter.secondary_entity.person_temp.attributes = { :last_name => last_name, :first_name => first_name }
-
-    # Now do the phone, if any (attached to person, not agency)
-    return if attributes.values_blank?
-
-    # This is the existing entity_location_id (pointing at the phone), if any
-    el_id = attributes.delete(:id).to_i
-
-    # If there's no ID, then they are adding a new phone
-    if el_id == 0 || el_id.blank?
-      code = attributes.delete(:entity_location_type_id)
-      # They might have selected a phone type (work, home, etc.) but nothing else, just bail.
-      return if attributes.values_blank?
-
-      # Build the phone
-      el = self.reporter.secondary_entity.telephone_entities_locations.build(
-        :entity_location_type_id => code,
-        :primary_yn_id => ExternalCode.yes_id,
-        :location_type_id => Code.telephone_location_type_id)
-      el.build_location.telephones.build(attributes)
-    else
-      # Don't just 'find' the existing phone, loop through the association array looking for it
-      self.reporter.secondary_entity.telephone_entities_locations.each do |tel_el|
-        if tel_el.id == el_id
-          # The user has blanked out the phone number of an existing reporter, delete it
-          if attributes.values_blank?
-            tel_el.destroy
-            tel_el.location.destroy
-          else
-            tel_el.entity_location_type_id = attributes.delete(:entity_location_type_id)
-            tel_el.location.telephones.last.attributes = attributes
-          end
-          break
-        end
-      end
-    end
-  end
 
   def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
@@ -278,26 +193,6 @@ class MorbidityEvent < HumanEvent
   rescue Exception => ex
     logger.error ex
     raise ex
-  end
-
-  def save_associations
-    if reporting_agency && !reporting_agency.frozen?
-      reporting_agency.save(false)
-      reporting_agency.secondary_entity.save(false)
-      reporting_agency.secondary_entity.place_temp.save(false)
-    end
-
-    if reporter && !reporter.frozen?
-      reporter.save(false)
-      reporter.secondary_entity.person_temp.save(false) if reporter.secondary_entity.person_temp
-
-      reporter.secondary_entity.telephone_entities_locations.each do |el|
-        unless el.frozen?
-          el.save(false)
-          el.location.telephones.each { |t| t.save(false) }
-        end
-      end
-    end
   end
 
   private

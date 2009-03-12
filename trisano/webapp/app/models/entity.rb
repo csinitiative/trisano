@@ -44,4 +44,7 @@ class Entity < ActiveRecord::Base
     self.telephones.first 
   end
 
+  def validate
+    errors.add_to_base("information is not complete.  Most likely you are adding phone or address information without a name") if (person.nil? and place.nil?)
+  end
 end

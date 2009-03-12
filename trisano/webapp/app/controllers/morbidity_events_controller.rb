@@ -20,17 +20,6 @@ class MorbidityEventsController < EventsController
 
   before_filter :capture_old_attributes, :only => [:update]
 
-  def auto_complete_for_event_reporting_agency
-    entered_name = params[:morbidity_event][:active_reporting_agency][:name]
-    @items = Place.find(:all, :select => "DISTINCT ON (entity_id) entity_id, name", 
-      :conditions => [ "LOWER(name) LIKE ? and place_type_id IN 
-                       (SELECT id FROM codes WHERE code_name = 'placetype' AND the_code IN ('H', 'L', 'C'))", entered_name.downcase + '%'],
-      :order => "entity_id, created_at ASC, name ASC",
-      :limit => 10
-    )
-    render :inline => '<ul><% for item in @items %><li id="reporting_agency_id_<%= item.entity_id %>"><%= h item.name %></li><% end %></ul>'
-  end
-
   def index
     if params[:per_page].to_i > 100
       render :text => 'TriSano cannot process more then 100 cmrs per page', :layout => 'application', :status => 400 and return

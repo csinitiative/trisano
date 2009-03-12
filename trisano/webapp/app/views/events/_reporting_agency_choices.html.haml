@@ -1,5 +1,5 @@
 %ul
   - places.each do |place|
-    %li{:name => "#{place.id}"}
+    %li{:name => "#{place.entity_id}"}
       %div.place_name= place.name
       %div.agency_type= "&nbsp;#{place.agency_types_description}"

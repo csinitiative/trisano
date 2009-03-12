@@ -132,8 +132,10 @@ class EventsController < ApplicationController
   end
 
   def reporting_agency_search_selection
-    @place = Place.find(params[:id])
-    render(:update) { |page| page.update_reporting_agency(@place) }
+    place_entity = PlaceEntity.find(params[:id])
+    agency = ReportingAgency.new
+    agency.place_entity = place_entity
+    render(:update) { |page| page.update_reporting_agency(agency) }
   end
     
   # This action is for development/testing purposes only.  This is not a "real" login action

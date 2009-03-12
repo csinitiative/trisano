@@ -86,17 +86,6 @@ module EventsHelper
     result
   end
 
-  def new_or_existing?(model)
-    model.new_record? ? 'new' : 'existing'
-  end
-
-  def event_prefix_for_multi_models(new_or_existing, attribute_name, namespace=nil, event=@event)
-    prefix = @event.class.to_s.underscore
-    prefix << "[#{namespace}]" if namespace
-    prefix << "[#{new_or_existing}#{attribute_name}]"
-    prefix
-  end
-
   def add_record_link(form_builder, method, caption, options = {})
     options[:object] ||= form_builder.object.class.reflect_on_association(method).klass.new
     options[:partial] ||= method.to_s.singularize
@@ -129,12 +118,12 @@ module EventsHelper
     options = {:id => 'add_reporting_agency_link'}.merge(options)
     link_to_function name, nil, options do |page|
       page.update_reporting_agency(nil, form)
-      page << "$('morbidity_event_active_reporting_agency_name').value=$F('reporting_agency_search')"
+      page << "$('morbidity_event_reporting_agency_attributes_place_entity_attributes_place_attributes_name').value=$F('reporting_agency_search')"
     end
   end
 
   def update_reporting_agency(reporting_agency, form=nil)
-    page.replace_html(:reporting_agency, :partial => 'events/reporting_agency' , :locals => {:template => form, :reporting_agency => reporting_agency})
+    page.replace_html(:reporting_agency, :partial => 'events/reporting_agency' , :locals => {:f => form, :reporting_agency => reporting_agency})
     page.visual_effect :highlight, :reporting_agency, :duration => 3
   end
 
@@ -408,11 +397,19 @@ module EventsHelper
         encounter.build_participations_encounter unless encounter.participations_encounter
         encounter.build_interested_party unless encounter.interested_party
       end
+
+      event.build_reporting_agency unless event.reporting_agency
+      event.reporting_agency.build_place_entity unless event.reporting_agency.place_entity
+      event.reporting_agency.place_entity.build_place unless event.reporting_agency.place_entity.place
+      event.reporting_agency.place_entity.telephones.build if event.reporting_agency.place_entity.telephones.empty?
+
+      event.build_reporter unless event.reporter
+      event.reporter.build_person_entity unless event.reporter.person_entity
+      event.reporter.person_entity.build_person unless event.reporter.person_entity.person
+      event.reporter.person_entity.telephones.build if event.reporter.person_entity.telephones.empty?
     end
     event.notes.build if event.notes.empty?
     event.build_jurisdiction unless event.jurisdiction
-
-    #    event.reporter = Participation.new_reporter_participation
 
     event
   end
@@ -1052,12 +1049,13 @@ module EventsHelper
           asynchronous: true,
           evalScripts: true,
           parameters: {id: id},
-          method: 'get',
-          insertion: Insertion.Bottom
+          #{('insertion: ' + options[:insertion_point] + ',') unless options[:insertion_point] == 'None'}
+          method: 'get'
         });
       }
     JS
   end
+          # insertion: Insertion.Bottom
 
   def live_search(label, options = {})
     options[:search_field] ||= 'search_field'
@@ -1068,8 +1066,9 @@ module EventsHelper
     options[:method]       ||= 'get'
     options[:url]          ||= {:controller => "morbidity_events", :action => "auto_complete_for_#{options[:search_field]}"}
     options[:results]      ||= options[:search_field] + '_results'
+    options[:insertion_point] ||= 'Insertion.Bottom'
     options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
-    options[:after_update_element]     ||= live_search_callback(:update => options[:results],
+    options[:after_update_element]     ||= live_search_callback(:update => options[:results], :insertion_point => options[:insertion_point],
       :url => options[:after_update_element_url])
     <<-HTML
       #{auto_complete_stylesheet}

@@ -24,7 +24,6 @@
 - if defined? f
   - person_form = f
 - else
-  - uniq_id = Time.now.to_i
   - fields_for(event_type + "[clinicians_attributes][#{uniq_id}]", @clinician) do |pe|
     - person_form = pe
 
