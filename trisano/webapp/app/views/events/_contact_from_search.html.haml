@@ -13,7 +13,7 @@
   %span.horiz
     = label_tag "Phone"
     -unless contact_phone.nil? 
-      %span.horiz= (l(contact_phone.entity_location_type) || "") + ": " + contact_phone.simple_format
+      %span.horiz= contact_phone.simple_format
 
 - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
   %span.horiz

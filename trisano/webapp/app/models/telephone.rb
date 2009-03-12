@@ -30,6 +30,7 @@ class Telephone < ActiveRecord::Base
   # A basic (###) ###-#### Ext. # format for phone numbers
   def simple_format
     number = ''
+    number << (self.entity_location_type.code_description + ": ") unless self.entity_location_type.blank?
     number << "(#{self.area_code}) " unless self.area_code.blank?
     if phone_number.blank? || phone_number.include?('-')
       number << (phone_number || "")

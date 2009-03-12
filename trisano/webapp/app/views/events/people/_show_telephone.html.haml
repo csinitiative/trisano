@@ -15,6 +15,5 @@
 
 -unless show_telephone.new_record?
   %p
-    =h(show_telephone.entity_location_type.try(:code_description) || "No type") + ": "
     =h(show_telephone.simple_format) 
     %hr

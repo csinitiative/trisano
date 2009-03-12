@@ -16,65 +16,39 @@
 %span.section-header
   Reporting Information
 
-- if @event.active_reporting_agency.nil?
-  - fb_part = Participation.new
-  - fb_entity = Entity.new
-  - agency_data = Place.new
-- else
-  - fb_part = @event.active_reporting_agency
-  - fb_entity = @event.active_reporting_agency.secondary_entity
-  - agency_data = @event.active_reporting_agency.secondary_entity.place_temp
-
-- event_form.fields_for(:active_reporting_agency, fb_part, :builder => ExtendedFormBuilder) do |agency_form|
-  - agency_form.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |entity_form|
-    - entity_form.fields_for(:place, agency_data, :builder => ExtendedFormBuilder) do |place_form|
+- event_form.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |agency_form|
+  - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |entity_form|
+    - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
       - core_element_print :name, place_form, :horiz do
         %span.print-label Agency name:
-        %span.print-value= agency_data.name
+        %span.print-value= place_form.object.name
+        %span.print-label Agency Phone:
+        %span.print-value= entity_form.object.primary_phone.simple_format
 
-- reporter_name = Person.new
-- reporter_ent_loc = EntitiesLocation.new
-- reporter_phone = Telephone.new
+- event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
+  - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+    - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
 
-- fb_part = Participation.new
-- fb_entity = Entity.new
-
-- if !@event.reporter.nil?
-  - fb_part = @event.reporter
-  - fb_entity = @event.reporter.secondary_entity
-  - if !@event.reporter.secondary_entity.person_temp.nil?
-    - reporter_name = @event.reporter.secondary_entity.person_temp
-  - if !@event.reporter.secondary_entity.telephone_entities_locations.empty?
-    - reporter_ent_loc = @event.reporter.secondary_entity.telephone_entities_locations.last
-    - reporter_phone = reporter_ent_loc.location.telephones.last
-
-- event_form.fields_for(:active_reporter, fb_part, :builder => ExtendedFormBuilder) do |participant_fields|
-  - participant_fields.fields_for(:active_secondary_entity, fb_entity, :builder => ExtendedFormBuilder) do |agency_fields|
-    - agency_fields.fields_for(:person, reporter_name, :builder => ExtendedFormBuilder) do |reporter_fields|
-
-      - core_element_print :first_name, reporter_fields, :horiz do
+      %br
+      - core_element_print :first_name, p, :horiz do
         %span.print-label First name:
-        %span.print-value= reporter_name.first_name
-      - core_element_print :last_name, reporter_fields, :vert do
+        %span.print-value= p.object.first_name
+      - core_element_print :last_name, p, :horiz do
         %span.print-label Last name:
-        %span.print-value= reporter_name.last_name
+        %span.print-value= p.object.last_name
 
-    - agency_fields.fields_for(:telephone_entities_location, reporter_ent_loc, :builder => ExtendedFormBuilder) do |el|
-      - core_element_print :entity_location_type_id, el, :horiz do
-        %span.print-label Phone type:
-        %span.print-value= l reporter_ent_loc.entity_location_type
-
-    - agency_fields.fields_for(:telephone, reporter_phone, :builder => ExtendedFormBuilder) do |phone_fields|
+    - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
       - core_element_print :area_code, phone_fields, :horiz do
         %span.print-label Area code:
-        %span.print-value= reporter_phone.area_code
+        %span.print-value= phone_fields.object.area_code
       - core_element_print :phone_number, phone_fields, :horiz do
         %span.print-label Phone number:
-        %span.print-value= reporter_phone.phone_number
+        %span.print-value= phone_fields.object.phone_number
       - core_element_print :extension, phone_fields, :horiz do
         %span.print-label Extension:
-        %span.print-value= reporter_phone.extension
+        %span.print-value= phone_fields.object.extension
 
+    %br
     - core_element_print :results_reported_to_clinician_date, event_form, :horiz do
       %span.print-label Results reported to clinician date:
       %span.print-value= h(@event.results_reported_to_clinician_date) || '&nbsp;'

@@ -15,7 +15,7 @@
 
 -unless print_telephone.new_record?
   %span.print-label
-    =h(print_telephone.entity_location_type.try(:code_description) || "No type") + ": "
+    Phone:
   %span.print-value
     =h(print_telephone.simple_format)
   %hr

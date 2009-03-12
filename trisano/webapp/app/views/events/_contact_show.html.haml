@@ -24,7 +24,7 @@
 
       %td{style} 
         -unless contact_phone.nil? 
-          = (l(contact_phone.entity_location_type) || "Unspecified Location") + ": " + contact_phone.simple_format
+          = contact_phone.simple_format
       %td
         .tools
           - if contact.is_a?(ContactEvent)
