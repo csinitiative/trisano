@@ -32,7 +32,7 @@
             = phone_fields.object.area_code
           - core_element_show :phone_number, phone_fields, :horiz do
             = phone_fields.label(:phone_number)
-            = phone_number(phone_fields.object.phone_number)
+            = phone_number(phone_fields.object.phone_number) if phone_fields.object.phone_number
           - core_element_show :extension, phone_fields, :horiz do
             = phone_fields.label(:extension)
             = phone_fields.object.extension
