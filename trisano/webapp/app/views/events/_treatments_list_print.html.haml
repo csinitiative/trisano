@@ -13,8 +13,25 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
-%span.print-value=h(print_email.email_address)
-%br
-
-
+- unless association_recorded?(event.interested_party.treatments)
+  %b{ :style => 'font-size: 11px' }="No treatments have been recorded for this #{event.class.name.underscore.humanize.downcase}"
+- else
+  .three-valued-row
+    %dif.left
+      %span.print-label Treatment
+    .left
+      %span.print-label Treatment Date
+    .right
+      %span.print-label Treatment Given
+    %br
+    - for treatment in event.interested_party.treatments
+      .three-valued-row
+        .left
+          %span.print-value
+            = treatment.treatment
+        .left
+          %span.print-value
+            = treatment.treatment_date
+        .right
+          %span.print-value
+            = l treatment.treatment_given_yn

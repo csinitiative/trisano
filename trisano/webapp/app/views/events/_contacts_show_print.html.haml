@@ -20,8 +20,8 @@
 
 - core_element_print :contacts, f, :vert do
   - ran = nil
-  - if @event.contact_child_events.first.new_record?
-    %b No contacts have been recorded for this case
+  - unless association_recorded?(@event.contact_child_events)
+    %b{ :style => 'font-size: 11px' }="No contacts have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
   - else
     - for contact in @event.contact_child_events
       - contact_entity = contact.interested_party.person_entity

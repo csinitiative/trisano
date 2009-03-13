@@ -437,6 +437,11 @@ module EventsHelper
     }
   end
 
+  def association_recorded?(association_collection)
+    return nil unless association_collection.respond_to?(:each)
+    (association_collection.empty? || association_collection.first.new_record?) ? false :true
+  end
+
   private
 
   def concat_core_field(mode, before_or_after, attribute, form_builder, block)

@@ -50,8 +50,8 @@
       %span.print-value= @event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date)
 
 %span.subsection-header Hospitalized health facilities
-- if @event.hospitalization_facilities.empty?
-  %b No hospitalized health facilities have been recorded for this event
+- unless association_recorded?(@event.hospitalization_facilities)
+  %b{ :style => 'font-size: 11px' }="No hospitalized health facilities have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
 - else
   .three-valued-row
     .long
@@ -63,7 +63,6 @@
     .short
       %span.print-label Record Number
     %br
-    %hr
 
     - for hospital in @event.hospitalization_facilities
       - if hospital.place_entity
@@ -76,20 +75,21 @@
             .short &nbsp;
             .short &nbsp;
           - else
+            -# Debt: Strings with NBSPs are to keep columns lined up when values are missing. CSS/Markup improvement prob. a better approach
             .short
               %span.print-value
-                = hospital.hospitals_participation.admission_date
+                ="#{hospital.hospitals_participation.admission_date}&nbsp;"
             .short
               %span.print-value
-                = hospital.hospitals_participation.discharge_date
+                ="#{hospital.hospitals_participation.discharge_date}&nbsp;"
             .short
               %span.print-value
-                = hospital.hospitals_participation.medical_record_number
+                ="#{hospital.hospitals_participation.medical_record_number}&nbsp;"
 
 %br
 %span.subsection-header Diagnosing health facilities
-- if @event.diagnostic_facilities.empty?
-  %b No diganosing health facilities have been recorded for this event
+- unless association_recorded?(@event.diagnostic_facilities)
+  %b{ :style => 'font-size: 11px' }="No diganosing health facilities have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
 - else
   .three-valued-row
     .short
@@ -99,7 +99,6 @@
     .short
       %span.print-label &nbsp;
     %br
-    %hr
   - for diagnostic in @event.diagnostic_facilities
     .three-valued-row
       .short
@@ -121,34 +120,11 @@
   %br
 
 - core_element_print :treatments, event_form, :vert do
-  - if @event.interested_party.treatments.empty?
-    %b No treatments have been recorded for this case
-  - else
-    .three-valued-row
-      %dif.left
-        %span.print-label Treatment
-      .left
-        %span.print-label Treatment Date
-      .left
-        %span.print-label Treatment Given
-      %br
-      %hr
-      - for treatment in @event.interested_party.treatments
-        .three-valued-row
-          .left
-            %span.print-value
-              = treatment.treatment
-          .left
-            %span.print-value
-              = treatment.treatment_date
-          .left
-            %span.print-value
-              = l treatment.treatment_given_yn
+  = render :partial => 'events/treatments_list_print.html.haml', :locals => { :event => @event }
 
 %span.subsection-header Clinicians
-%br
-- if @event.clinicians.empty?
-  %b No clinicians have been recorded for this case
+- unless association_recorded?(@event.clinicians)
+  %b{ :style => 'font-size: 11px' }="No clinicians have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
 - else
   .three-valued-row
     .left
@@ -156,7 +132,6 @@
     .left
       %span.print-label Phone
     %br
-    %hr
     - for clinician in @event.clinicians
       - next if clinician.new_record?
       - clinician_entity = clinician.person_entity

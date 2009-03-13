@@ -19,24 +19,24 @@
 
 - core_element_print :places, event_form, :vert do
   
-  -if @event.place_child_events.empty?
-    %b No place exposures have been recorded for this event
+  -unless association_recorded?(@event.place_child_events)
+    %b{ :style => 'font-size: 11px' }="No place exposures have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
   -else
     .three-valued-row
-      .short
-        %span.print-label Hospitalized health facility
-      .short
-        %span.print-label Admission date
-      .short
-        %span.print-label Discharge date
+      .left
+        %span.print-label Place Name
+      .left
+        %span.print-label Place Type
+      .right
+        %span.print-label Date of Exposure
       -@event.place_child_events.each do |pe|
         -place = pe.interested_place.place_entity.place
         .three-valued-row
-          .short
+          .left
             %span.print-value=h(place.name)
-          .short
+          .left
             %span.print-value=place.place_description
-          .short
+          .right
             %span.print-value=format_date(pe.participations_place.date_of_exposure)
   %br
           

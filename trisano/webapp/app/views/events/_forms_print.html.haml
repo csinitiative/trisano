@@ -13,8 +13,10 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+- for form_reference in event.investigation_form_references
+  %br
+  = form_reference.form.name
+  %br
 
-%span.print-value=h(print_email.email_address)
-%br
-
-
+  - for view in form_reference.form.investigator_view_elements_container.children_by_type("ViewElement")
+    = print_investigator_view(view, form_reference.form)

@@ -54,6 +54,10 @@
     = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
 
+  .brak#encounters
+    = render :partial => 'events/encounters_show_print.html.haml', :locals => { :f => event_form }
+    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Encounters" }
+
   .brak#epidemiological
     = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }

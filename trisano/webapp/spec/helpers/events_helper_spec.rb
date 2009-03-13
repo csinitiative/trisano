@@ -66,5 +66,39 @@ describe EventsHelper do
     end
    
   end
+
+  describe "association recorded helper" do
+
+    it 'should return false if the provided association is empty' do
+      @event = mock_event
+      @event.stub!(:child_contact_events).and_return([])
+      helper.association_recorded?(@event.child_contact_events).should be_false
+    end
+
+    it 'should return false if the first record in the association is a new record' do
+      @event = mock_event
+      @child_event_proxy = mock(Object)
+      @new_record = mock(Object)
+      @new_record.stub!(:new_record?).and_return(true)
+      @child_event_proxy.stub!(:respond_to?).and_return(true)
+      @child_event_proxy.stub!(:empty?).and_return(false)
+      @child_event_proxy.stub!(:first).and_return(@new_record)
+      @event.stub!(:child_contact_events).and_return(@child_event_proxy)
+      helper.association_recorded?(@event.child_contact_events).should be_false
+    end
+
+    it 'should return true if association has a persisted object in it' do
+      @event = mock_event
+      @child_event_proxy = mock(Object)
+      @new_record = mock(Object)
+      @new_record.stub!(:new_record?).and_return(false)
+      @child_event_proxy.stub!(:respond_to?).and_return(true)
+      @child_event_proxy.stub!(:empty?).and_return(false)
+      @child_event_proxy.stub!(:first).and_return(@new_record)
+      @event.stub!(:child_contact_events).and_return(@child_event_proxy)
+      helper.association_recorded?(@event.child_contact_events).should be_true
+    end
+
+  end
  
 end
