@@ -42,10 +42,9 @@
           = xp_column.export_column_name
         %td
           = xp_column.export_disease_group.name unless xp_column.export_disease_group.nil?
-        %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            = link_to('Edit', edit_export_column_path(xp_column))
-            |
-            = link_to('Show', export_column_path(xp_column))
-            |
-            = link_to('Delete', export_column_path(xp_column), :method => :delete)
+        %td.tools
+          = link_to('Edit', edit_export_column_path(xp_column))
+          |
+          = link_to('Show', export_column_path(xp_column))
+          |
+          = link_to('Delete', export_column_path(xp_column), :method => :delete)
