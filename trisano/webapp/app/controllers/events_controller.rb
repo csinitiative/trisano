@@ -185,8 +185,10 @@ class EventsController < ApplicationController
   
   def can_view?
     @event = Event.find(params[:id])
+    @display_view_warning = false
     unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
+      @display_view_warning = true
+      @event.add_note("Extra-jurisdictional, view-only access")
       return
     end
     reject_if_wrong_type(@event)

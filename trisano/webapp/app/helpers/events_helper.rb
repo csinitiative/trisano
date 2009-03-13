@@ -131,6 +131,10 @@ module EventsHelper
     Time.now.to_i
   end
 
+  def warning_banner
+    content_tag(:p, "You have accessed an out-of-jurisdiction event. Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')} if access was unintentional.  Access has been logged.", :class => 'banner-warning')
+  end
+
   def basic_contact_event_controls(event, with_show=true)
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""

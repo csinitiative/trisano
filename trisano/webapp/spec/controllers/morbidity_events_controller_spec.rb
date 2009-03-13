@@ -127,6 +127,7 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
+      @event.stub!(:add_note)
       Event.stub!(:find).and_return(@event)
       @user.stub!(:is_entitled_to_in?).and_return(false)
       @event.stub!(:read_attribute).and_return('MorbidityEvent') 
@@ -141,9 +142,10 @@ describe MorbidityEventsController do
       do_get
     end
   
-    it "should be be a 403" do
+    it "should log access and be successful" do
+      @event.should_receive(:add_note)
       do_get
-      response.response_code.should == 403
+      response.should be_success
     end
   
   end

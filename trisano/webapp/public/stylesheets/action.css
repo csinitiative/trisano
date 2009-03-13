@@ -567,6 +567,15 @@ div.progressBar div.background {
 .error-message {
   color: red; }
 
+.banner-warning {
+  text-align: center;
+  background: #FF4500;
+  font-size: 15px;
+  font-weight: medium;
+  color: white;
+  margin: 3px 0px 3px 0px;
+  padding: 3px 0px 3px 0px; }
+
 .investigator-form-title {
   font-size: 15px;
   font-weight: medium;

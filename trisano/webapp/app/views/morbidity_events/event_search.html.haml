@@ -43,9 +43,8 @@
             - if can_update
               = link_to("Edit", edit_path)
               |
-            - if can_view
-              = link_to "Show", view_path
-              |
+            = link_to "Show", view_path
+            |
             = link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.interested_party.person_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
             
   %br

@@ -83,12 +83,14 @@ describe PlaceEventsController do
         get :show, :id => "75"
       end
 
-      it "should be be a 403" do
+      it "should log access and be successful" do
+        @event.should_receive(:add_note)
         do_get
-        response.response_code.should == 403
+        response.should be_success
       end
-  
+
       it "should find the event requested" do
+        @event.should_receive(:add_note)
         Event.should_receive(:find).with("75").and_return(@event)
         do_get
       end
