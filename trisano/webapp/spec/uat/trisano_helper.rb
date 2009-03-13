@@ -27,6 +27,7 @@ module TrisanoHelper
   CLINICAL = "Clinical"
   LABORATORY = "Laboratory"
   CONTACTS = "Contacts"
+  ENCOUNTERS = "Encounters"
   EPI = "Epidemiological"
   REPORTING = "Reporting"
   INVESTIGATION = "Investigation"
@@ -56,6 +57,7 @@ module TrisanoHelper
     CLINICAL => "clinical_tab",
     LABORATORY => "lab_info_tab",
     CONTACTS => "contacts_tab",
+    ENCOUNTERS => "encounters_tab",
     EPI => "epi_tab",
     REPORTING => "reporting_tab",
     NOTES => 'notes_tab',
@@ -125,16 +127,18 @@ module TrisanoHelper
       browser.click('//li[3]/a/em')
     when CONTACTS
       browser.click('//li[4]/a/em')
-    when EPI
+    when ENCOUNTERS
       browser.click('//li[5]/a/em')
-    when REPORTING
+    when EPI
       browser.click('//li[6]/a/em')
-    when INVESTIGATION
+    when REPORTING
       browser.click('//li[7]/a/em')
-    when NOTES
+    when INVESTIGATION
       browser.click('//li[8]/a/em')
-    when ADMIN
+    when NOTES
       browser.click('//li[9]/a/em')
+    when ADMIN
+      browser.click('//li[10]/a/em')
     when PLACE
       browser.click('//li[1]/a/em')
     else
