@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Export::Csv do
+  fixtures :csv_fields
 
   before(:each) do
     @event_hash = {

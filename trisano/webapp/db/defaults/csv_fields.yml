@@ -1,0 +1,1549 @@
+--- 
+csv_field_00299: 
+  long_name: patient_reporter_phone_phone_number
+  sort_order: 580
+  group: event
+  evaluation: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :phone_number)
+  short_name: 
+  id: 299
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00373: 
+  long_name: contact_healthcare_worker
+  sort_order: 490
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)
+  short_name: 
+  id: 373
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00368: 
+  long_name: contact_clinician_middle_name
+  sort_order: 440
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:middle_name)
+  short_name: 
+  id: 368
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00320: 
+  long_name: other_data_1
+  sort_order: 790
+  group: event
+  evaluation: other_data_1
+  short_name: 
+  id: 320
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00369: 
+  long_name: contact_clinician_phone_area_code
+  sort_order: 450
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)
+  short_name: 
+  id: 369
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00298: 
+  long_name: patient_reporter_phone_area_code
+  sort_order: 570
+  group: event
+  evaluation: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :area_code)
+  short_name: 
+  id: 298
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00297: 
+  long_name: patient_reporter_first_name
+  sort_order: 560
+  group: event
+  evaluation: safe_call_chain(:reporter, :secondary_entity, :person, :first_name)
+  short_name: 
+  id: 297
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00372: 
+  long_name: contact_food_handler
+  sort_order: 480
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:food_handler).try(:code_description)
+  short_name: 
+  id: 372
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00280: 
+  long_name: patient_pregnant
+  sort_order: 390
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:pregnant).try(:code_description)
+  short_name: 
+  id: 280
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00376: 
+  long_name: contact_occupation
+  sort_order: 520
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:occupation)
+  short_name: 
+  id: 376
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00281: 
+  long_name: patient_clinician_last_name
+  sort_order: 400
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:last_name)
+  short_name: 
+  id: 281
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00374: 
+  long_name: contact_group_living
+  sort_order: 500
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:group_living).try(:code_description)
+  short_name: 
+  id: 374
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00375: 
+  long_name: contact_day_care_association
+  sort_order: 510
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)
+  short_name: 
+  id: 375
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00282: 
+  long_name: patient_clinician_first_name
+  sort_order: 410
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:first_name)
+  short_name: 
+  id: 282
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00378: 
+  long_name: contact_risk_factors_notes
+  sort_order: 540
+  group: event
+  evaluation: interested_party.risk_factor.try(:risk_factors_notes)
+  short_name: 
+  id: 378
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00283: 
+  long_name: patient_clinician_middle_name
+  sort_order: 420
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:middle_name)
+  short_name: 
+  id: 283
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00326: 
+  long_name: contact_last_name
+  sort_order: 20
+  group: event
+  evaluation: interested_party.person_entity.person.last_name
+  short_name: 
+  id: 326
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00241: 
+  long_name: patient_event_id
+  sort_order: 0
+  group: event
+  evaluation: id
+  short_name: 
+  id: 241
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00379: 
+  long_name: contact_imported_from
+  sort_order: 550
+  group: event
+  evaluation: imported_from.try(:code_description)
+  short_name: 
+  id: 379
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00363: 
+  long_name: contact_died
+  sort_order: 390
+  group: event
+  evaluation: disease_event.try(:died).try(:code_description)
+  short_name: 
+  id: 363
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00325: 
+  long_name: contact_record_number
+  sort_order: 10
+  group: event
+  evaluation: record_number
+  short_name: 
+  id: 325
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00380: 
+  long_name: contact_event_created_date
+  sort_order: 560
+  group: event
+  evaluation: created_at
+  short_name: 
+  id: 380
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00364: 
+  long_name: contact_date_of_death
+  sort_order: 400
+  group: event
+  evaluation: interested_party.person_entity.person.date_of_death
+  short_name: 
+  id: 364
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00377: 
+  long_name: contact_risk_factors
+  sort_order: 530
+  group: event
+  evaluation: interested_party.risk_factor.try(:risk_factors)
+  short_name: 
+  id: 377
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00284: 
+  long_name: patient_clinician_phone_area_code
+  sort_order: 430
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)
+  short_name: 
+  id: 284
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00285: 
+  long_name: patient_clinician_phone_phone_number
+  sort_order: 440
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name: 
+  id: 285
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00324: 
+  long_name: contact_event_id
+  sort_order: 0
+  group: event
+  evaluation: id
+  short_name: 
+  id: 324
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00323: 
+  long_name: patient_event_last_updated_date
+  sort_order: 820
+  group: event
+  evaluation: updated_at
+  short_name: 
+  id: 323
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00365: 
+  long_name: contact_pregnant
+  sort_order: 410
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:pregnant).try(:code_description)
+  short_name: 
+  id: 365
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00366: 
+  long_name: contact_clinician_last_name
+  sort_order: 420
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:last_name)
+  short_name: 
+  id: 366
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00286: 
+  long_name: patient_clinician_phone_extension
+  sort_order: 450
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)
+  short_name: 
+  id: 286
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00322: 
+  long_name: patient_event_created_date
+  sort_order: 810
+  group: event
+  evaluation: created_at
+  short_name: 
+  id: 322
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00287: 
+  long_name: patient_food_handler
+  sort_order: 460
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:food_handler).try(:code_description)
+  short_name: 
+  id: 287
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00321: 
+  long_name: other_data_2
+  sort_order: 800
+  group: event
+  evaluation: other_data_2
+  short_name: 
+  id: 321
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00367: 
+  long_name: contact_clinician_first_name
+  sort_order: 430
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:person).try(:first_name)
+  short_name: 
+  id: 367
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00246: 
+  long_name: patient_address_street_number
+  sort_order: 50
+  group: event
+  evaluation: address.try(:street_number)
+  short_name: 
+  id: 246
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00383: 
+  long_name: place_name
+  sort_order: 10
+  group: event
+  evaluation: interested_place.place_entity.place.name
+  short_name: 
+  id: 383
+  short_name_max: 10
+  event_type: place_event
+csv_field_00384: 
+  long_name: place_type
+  sort_order: 20
+  group: event
+  evaluation: interested_place.place_entity.place.place_type.try(:code_description)
+  short_name: 
+  id: 384
+  short_name_max: 10
+  event_type: place_event
+csv_field_00273: 
+  long_name: patient_hospitalized
+  sort_order: 320
+  group: event
+  evaluation: disease_event.try(:hospitalized).try(:code_description)
+  short_name: 
+  id: 273
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00329: 
+  long_name: contact_address_street_number
+  sort_order: 50
+  group: event
+  evaluation: address.try(:street_number)
+  short_name: 
+  id: 329
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00245: 
+  long_name: patient_middle_name
+  sort_order: 40
+  group: event
+  evaluation: interested_party.person_entity.person.middle_name
+  short_name: 
+  id: 245
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00271: 
+  long_name: patient_date_diagnosed
+  sort_order: 300
+  group: event
+  evaluation: disease_event.try(:date_diagnosed)
+  short_name: 
+  id: 271
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00244: 
+  long_name: patient_first_name
+  sort_order: 30
+  group: event
+  evaluation: interested_party.person_entity.person.first_name
+  short_name: 
+  id: 244
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00385: 
+  long_name: place_date_of_exposure
+  sort_order: 30
+  group: event
+  evaluation: participations_place.try(:date_of_exposure)
+  short_name: 
+  id: 385
+  short_name_max: 10
+  event_type: place_event
+csv_field_00272: 
+  long_name: patient_diagnostic_facility
+  sort_order: 310
+  group: event
+  evaluation: diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  id: 272
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00270: 
+  long_name: patient_disease_onset_date
+  sort_order: 290
+  group: event
+  evaluation: disease_event.try(:disease_onset_date)
+  short_name: 
+  id: 270
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00328: 
+  long_name: contact_middle_name
+  sort_order: 40
+  group: event
+  evaluation: interested_party.person_entity.person.middle_name
+  short_name: 
+  id: 328
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00381: 
+  long_name: contact_event_last_updated_date
+  sort_order: 570
+  group: event
+  evaluation: updated_at
+  short_name: 
+  id: 381
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00360: 
+  long_name: contact_hospital_admission_date
+  sort_order: 360
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  short_name: 
+  id: 360
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00243: 
+  long_name: patient_last_name
+  sort_order: 20
+  group: event
+  evaluation: interested_party.person_entity.person.last_name
+  short_name: 
+  id: 243
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00279: 
+  long_name: patient_date_of_death
+  sort_order: 380
+  group: event
+  evaluation: interested_party.person_entity.person.date_of_death
+  short_name: 
+  id: 279
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00400: 
+  long_name: lab_test_type
+  sort_order: 20
+  group: lab
+  evaluation: test_type
+  short_name: 
+  id: 400
+  short_name_max: 10
+  event_type: 
+csv_field_00242: 
+  long_name: patient_record_number
+  sort_order: 10
+  group: event
+  evaluation: record_number
+  short_name: 
+  id: 242
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00362: 
+  long_name: contact_hospital_medical_record_no
+  sort_order: 380
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  short_name: 
+  id: 362
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00382: 
+  long_name: place_event_id
+  sort_order: 0
+  group: event
+  evaluation: id
+  short_name: 
+  id: 382
+  short_name_max: 10
+  event_type: place_event
+csv_field_00361: 
+  long_name: contact_hospital_discharge_date
+  sort_order: 370
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  short_name: 
+  id: 361
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00327: 
+  long_name: contact_first_name
+  sort_order: 30
+  group: event
+  evaluation: interested_party.person_entity.person.first_name
+  short_name: 
+  id: 327
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00278: 
+  long_name: patient_died
+  sort_order: 370
+  group: event
+  evaluation: disease_event.try(:died).try(:code_description)
+  short_name: 
+  id: 278
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00389: 
+  long_name: place_address_city
+  sort_order: 70
+  group: event
+  evaluation: address.try(:city)
+  short_name: 
+  id: 389
+  short_name_max: 10
+  event_type: place_event
+csv_field_00277: 
+  long_name: patient_hospital_medical_record_no
+  sort_order: 360
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  short_name: 
+  id: 277
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00275: 
+  long_name: patient_hospital_admission_date
+  sort_order: 340
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  short_name: 
+  id: 275
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00249: 
+  long_name: patient_address_city
+  sort_order: 80
+  group: event
+  evaluation: address.try(:city)
+  short_name: 
+  id: 249
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00386: 
+  long_name: place_address_street_number
+  sort_order: 40
+  group: event
+  evaluation: address.try(:street_number)
+  short_name: 
+  id: 386
+  short_name_max: 10
+  event_type: place_event
+csv_field_00371: 
+  long_name: contact_clinician_phone_extension
+  sort_order: 470
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)
+  short_name: 
+  id: 371
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00370: 
+  long_name: contact_clinician_phone_phone_number
+  sort_order: 460
+  group: event
+  evaluation: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name: 
+  id: 370
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00276: 
+  long_name: patient_hospital_discharge_date
+  sort_order: 350
+  group: event
+  evaluation: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  short_name: 
+  id: 276
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00248: 
+  long_name: patient_address_unit_number
+  sort_order: 70
+  group: event
+  evaluation: address.try(:unit_number)
+  short_name: 
+  id: 248
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00274: 
+  long_name: patient_hospitalization_facility
+  sort_order: 330
+  group: event
+  evaluation: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  short_name: 
+  id: 274
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00387: 
+  long_name: place_address_street_name
+  sort_order: 50
+  group: event
+  evaluation: address.try(:street_name)
+  short_name: 
+  id: 387
+  short_name_max: 10
+  event_type: place_event
+csv_field_00247: 
+  long_name: patient_address_street_name
+  sort_order: 60
+  group: event
+  evaluation: address.try(:street_name)
+  short_name: 
+  id: 247
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00388: 
+  long_name: place_address_unit_number
+  sort_order: 60
+  group: event
+  evaluation: address.try(:unit_number)
+  short_name: 
+  id: 388
+  short_name_max: 10
+  event_type: place_event
+csv_field_00343: 
+  long_name: contact_ethnicity
+  sort_order: 190
+  group: event
+  evaluation: interested_party.person_entity.person.try(:ethnicity).try(:code_description)
+  short_name: 
+  id: 343
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00337: 
+  long_name: contact_approximate_age_no_birthdate
+  sort_order: 130
+  group: event
+  evaluation: interested_party.person_entity.person.approximate_age_no_birthday
+  short_name: 
+  id: 337
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00344: 
+  long_name: contact_race_1
+  sort_order: 200
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 0).try(:code_description)
+  short_name: 
+  id: 344
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00342: 
+  long_name: contact_birth_gender
+  sort_order: 180
+  group: event
+  evaluation: interested_party.person_entity.person.try(:birth_gender).try(:code_description)
+  short_name: 
+  id: 342
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00336: 
+  long_name: contact_birth_date
+  sort_order: 120
+  group: event
+  evaluation: interested_party.person_entity.person.birth_date
+  short_name: 
+  id: 336
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00341: 
+  long_name: contact_phone_extension
+  sort_order: 170
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:extension)
+  short_name: 
+  id: 341
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00338: 
+  long_name: contact_age_at_onset_in_years
+  sort_order: 140
+  group: event
+  evaluation: age_info.in_years
+  short_name: 
+  id: 338
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00339: 
+  long_name: contact_phone_area_code
+  sort_order: 150
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:area_code)
+  short_name: 
+  id: 339
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00340: 
+  long_name: contact_phone_phone_number
+  sort_order: 160
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:phone_number)
+  short_name: 
+  id: 340
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00396: 
+  long_name: place_event_created_date
+  sort_order: 140
+  group: event
+  evaluation: created_at
+  short_name: 
+  id: 396
+  short_name_max: 10
+  event_type: place_event
+csv_field_00397: 
+  long_name: place_event_last_updated_date
+  sort_order: 150
+  group: event
+  evaluation: updated_at
+  short_name: 
+  id: 397
+  short_name_max: 10
+  event_type: place_event
+csv_field_00289: 
+  long_name: patient_group_living
+  sort_order: 480
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:group_living).try(:code_description)
+  short_name: 
+  id: 289
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00395: 
+  long_name: place_phone_extension
+  sort_order: 130
+  group: event
+  evaluation: interested_place.place_entity.telephones.last.try(:extension)
+  short_name: 
+  id: 395
+  short_name_max: 10
+  event_type: place_event
+csv_field_00288: 
+  long_name: patient_healthcare_worker
+  sort_order: 470
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)
+  short_name: 
+  id: 288
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00399: 
+  long_name: lab_name
+  sort_order: 10
+  group: lab
+  evaluation: lab_name
+  short_name: 
+  id: 399
+  short_name_max: 10
+  event_type: 
+csv_field_00398: 
+  long_name: lab_record_id
+  sort_order: 0
+  group: lab
+  evaluation: id
+  short_name: 
+  id: 398
+  short_name_max: 10
+  event_type: 
+csv_field_00391: 
+  long_name: place_address_county
+  sort_order: 90
+  group: event
+  evaluation: address.try(:county).try(:code_description)
+  short_name: 
+  id: 391
+  short_name_max: 10
+  event_type: place_event
+csv_field_00332: 
+  long_name: contact_address_city
+  sort_order: 80
+  group: event
+  evaluation: address.try(:city)
+  short_name: 
+  id: 332
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00349: 
+  long_name: contact_race_6
+  sort_order: 250
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 5).try(:code_description)
+  short_name: 
+  id: 349
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00331: 
+  long_name: contact_address_unit_number
+  sort_order: 70
+  group: event
+  evaluation: address.try(:unit_number)
+  short_name: 
+  id: 331
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00348: 
+  long_name: contact_race_5
+  sort_order: 240
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 4).try(:code_description)
+  short_name: 
+  id: 348
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00390: 
+  long_name: place_address_state
+  sort_order: 80
+  group: event
+  evaluation: address.try(:state).try(:code_description)
+  short_name: 
+  id: 390
+  short_name_max: 10
+  event_type: place_event
+csv_field_00330: 
+  long_name: contact_address_street_name
+  sort_order: 60
+  group: event
+  evaluation: address.try(:street_name)
+  short_name: 
+  id: 330
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00347: 
+  long_name: contact_race_4
+  sort_order: 230
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 3).try(:code_description)
+  short_name: 
+  id: 347
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00335: 
+  long_name: contact_address_postal_code
+  sort_order: 110
+  group: event
+  evaluation: address.try(:postal_code)
+  short_name: 
+  id: 335
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00346: 
+  long_name: contact_race_3
+  sort_order: 220
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 2).try(:code_description)
+  short_name: 
+  id: 346
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00334: 
+  long_name: contact_address_county
+  sort_order: 100
+  group: event
+  evaluation: address.try(:county).try(:code_description)
+  short_name: 
+  id: 334
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00394: 
+  long_name: place_phone_phone_number
+  sort_order: 120
+  group: event
+  evaluation: interested_place.place_entity.telephones.last.try(:phone_number)
+  short_name: 
+  id: 394
+  short_name_max: 10
+  event_type: place_event
+csv_field_00392: 
+  long_name: place_address_postal_code
+  sort_order: 100
+  group: event
+  evaluation: address.try(:postal_code)
+  short_name: 
+  id: 392
+  short_name_max: 10
+  event_type: place_event
+csv_field_00345: 
+  long_name: contact_race_2
+  sort_order: 210
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 1).try(:code_description)
+  short_name: 
+  id: 345
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00393: 
+  long_name: place_phone_area_code
+  sort_order: 110
+  group: event
+  evaluation: interested_place.place_entity.telephones.last.try(:area_code)
+  short_name: 
+  id: 393
+  short_name_max: 10
+  event_type: place_event
+csv_field_00333: 
+  long_name: contact_address_state
+  sort_order: 90
+  group: event
+  evaluation: address.try(:state).try(:code_description)
+  short_name: 
+  id: 333
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00411: 
+  long_name: treatment
+  sort_order: 20
+  group: treatment
+  evaluation: treatment.treatment
+  short_name: 
+  id: 411
+  short_name_max: 10
+  event_type: 
+csv_field_00314: 
+  long_name: patient_investigation_started_date
+  sort_order: 730
+  group: event
+  evaluation: investigation_started_date
+  short_name: 
+  id: 314
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00412: 
+  long_name: treatment_date
+  sort_order: 30
+  group: treatment
+  evaluation: treatment_date
+  short_name: 
+  id: 412
+  short_name_max: 10
+  event_type: 
+csv_field_00264: 
+  long_name: patient_race_4
+  sort_order: 230
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 3).try(:code_description)
+  short_name: 
+  id: 264
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00312: 
+  long_name: patient_jurisdiction_of_residence
+  sort_order: 710
+  group: event
+  evaluation: address.try(:county).try(:jurisdiction).try(:name)
+  short_name: 
+  id: 312
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00410: 
+  long_name: treatment_given
+  sort_order: 10
+  group: treatment
+  evaluation: treatment_given_yn.try(:code_description)
+  short_name: 
+  id: 410
+  short_name_max: 10
+  event_type: 
+csv_field_00262: 
+  long_name: patient_race_2
+  sort_order: 210
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 1).try(:code_description)
+  short_name: 
+  id: 262
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00263: 
+  long_name: patient_race_3
+  sort_order: 220
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 2).try(:code_description)
+  short_name: 
+  id: 263
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00313: 
+  long_name: patient_event_status
+  sort_order: 720
+  group: event
+  evaluation: event_status
+  short_name: 
+  id: 313
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00316: 
+  long_name: patient_review_completed_by_state_date
+  sort_order: 750
+  group: event
+  evaluation: review_completed_by_state_date
+  short_name: 
+  id: 316
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00261: 
+  long_name: patient_race_1
+  sort_order: 200
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 0).try(:code_description)
+  short_name: 
+  id: 261
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00317: 
+  long_name: patient_investigator
+  sort_order: 760
+  group: event
+  evaluation: investigator.try(:best_name)
+  short_name: 
+  id: 317
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00315: 
+  long_name: patient_investigation_completed_lhd_date
+  sort_order: 740
+  group: event
+  evaluation: investigation_completed_LHD_date
+  short_name: 
+  id: 315
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00260: 
+  long_name: patient_ethnicity
+  sort_order: 190
+  group: event
+  evaluation: interested_party.person_entity.person.try(:ethnicity).try(:code_description)
+  short_name: 
+  id: 260
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00269: 
+  long_name: patient_disease
+  sort_order: 280
+  group: event
+  evaluation: disease_event.try(:disease).try(:disease_name)
+  short_name: 
+  id: 269
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00268: 
+  long_name: patient_language
+  sort_order: 270
+  group: event
+  evaluation: interested_party.person_entity.person.try(:primary_language).try(:code_description)
+  short_name: 
+  id: 268
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00311: 
+  long_name: patient_jurisdiction_of_investigation
+  sort_order: 700
+  group: event
+  evaluation: primary_jurisdiction.try(:name)
+  short_name: 
+  id: 311
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00266: 
+  long_name: patient_race_6
+  sort_order: 250
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 5).try(:code_description)
+  short_name: 
+  id: 266
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00267: 
+  long_name: patient_race_7
+  sort_order: 260
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 6).try(:code_description)
+  short_name: 
+  id: 267
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00265: 
+  long_name: patient_race_5
+  sort_order: 240
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 4).try(:code_description)
+  short_name: 
+  id: 265
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00310: 
+  long_name: patient_event_name
+  sort_order: 690
+  group: event
+  evaluation: event_name
+  short_name: 
+  id: 310
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00319: 
+  long_name: acuity
+  sort_order: 780
+  group: event
+  evaluation: acuity
+  short_name: 
+  id: 319
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00318: 
+  long_name: patient_sent_to_cdc
+  sort_order: 770
+  group: event
+  evaluation: sent_to_cdc
+  short_name: 
+  id: 318
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00302: 
+  long_name: patient_first_reported_PH_date
+  sort_order: 610
+  group: event
+  evaluation: first_reported_PH_date
+  short_name: 
+  id: 302
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00409: 
+  long_name: treatment_record_id
+  sort_order: 0
+  group: treatment
+  evaluation: id
+  short_name: 
+  id: 409
+  short_name_max: 10
+  event_type: 
+csv_field_00301: 
+  long_name: patient_results_reported_to_clinician_date
+  sort_order: 600
+  group: event
+  evaluation: results_reported_to_clinician_date
+  short_name: 
+  id: 301
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00250: 
+  long_name: patient_address_state
+  sort_order: 90
+  group: event
+  evaluation: address.try(:state).try(:code_description)
+  short_name: 
+  id: 250
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00300: 
+  long_name: patient_reporter_phone_extension
+  sort_order: 590
+  group: event
+  evaluation: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :extension)
+  short_name: 
+  id: 300
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00408: 
+  long_name: lab_specimen_sent_to_uphl
+  sort_order: 100
+  group: lab
+  evaluation: specimen_sent_to_uphl_yn.try(:code_description)
+  short_name: 
+  id: 408
+  short_name_max: 10
+  event_type: 
+csv_field_00406: 
+  long_name: lab_collection_date
+  sort_order: 80
+  group: lab
+  evaluation: collection_date
+  short_name: 
+  id: 406
+  short_name_max: 10
+  event_type: 
+csv_field_00407: 
+  long_name: lab_test_date
+  sort_order: 90
+  group: lab
+  evaluation: lab_test_date
+  short_name: 
+  id: 407
+  short_name_max: 10
+  event_type: 
+csv_field_00307: 
+  long_name: patient_state_case_status
+  sort_order: 660
+  group: event
+  evaluation: state_case_status.try(:code_description)
+  short_name: 
+  id: 307
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00405: 
+  long_name: lab_specimen_source
+  sort_order: 70
+  group: lab
+  evaluation: specimen_source.try(:code_description)
+  short_name: 
+  id: 405
+  short_name_max: 10
+  event_type: 
+csv_field_00308: 
+  long_name: patient_outbreak_associated
+  sort_order: 670
+  group: event
+  evaluation: outbreak_associated.try(:code_description)
+  short_name: 
+  id: 308
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00350: 
+  long_name: contact_race_7
+  sort_order: 260
+  group: event
+  evaluation: interested_party.person_entity.try(:races).try(:[], 6).try(:code_description)
+  short_name: 
+  id: 350
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00306: 
+  long_name: patient_lhd_case_status
+  sort_order: 650
+  group: event
+  evaluation: lhd_case_status.try(:code_description)
+  short_name: 
+  id: 306
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00404: 
+  long_name: lab_interpretation
+  sort_order: 60
+  group: lab
+  evaluation: interpretation.try(:code_description)
+  short_name: 
+  id: 404
+  short_name_max: 10
+  event_type: 
+csv_field_00402: 
+  long_name: lab_result
+  sort_order: 40
+  group: lab
+  evaluation: lab_result_text
+  short_name: 
+  id: 402
+  short_name_max: 10
+  event_type: 
+csv_field_00305: 
+  long_name: patient_MMWR_year
+  sort_order: 640
+  group: event
+  evaluation: read_attribute('MMWR_year')
+  short_name: 
+  id: 305
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00403: 
+  long_name: lab_reference_range
+  sort_order: 50
+  group: lab
+  evaluation: reference_range
+  short_name: 
+  id: 403
+  short_name_max: 10
+  event_type: 
+csv_field_00351: 
+  long_name: contact_language
+  sort_order: 270
+  group: event
+  evaluation: interested_party.person_entity.person.try(:primary_language).try(:code_description)
+  short_name: 
+  id: 351
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00303: 
+  long_name: patient_event_onset_date
+  sort_order: 620
+  group: event
+  evaluation: event_onset_date
+  short_name: 
+  id: 303
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00401: 
+  long_name: lab_test_detail
+  sort_order: 30
+  group: lab
+  evaluation: test_detail
+  short_name: 
+  id: 401
+  short_name_max: 10
+  event_type: 
+csv_field_00353: 
+  long_name: contact_type
+  sort_order: 290
+  group: event
+  evaluation: participations_contact.try(:contact_type).try(:code_description)
+  short_name: 
+  id: 353
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00352: 
+  long_name: contact_disposition
+  sort_order: 280
+  group: event
+  evaluation: participations_contact.try(:disposition).try(:code_description)
+  short_name: 
+  id: 352
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00304: 
+  long_name: patient_MMWR_week
+  sort_order: 630
+  group: event
+  evaluation: read_attribute('MMWR_week')
+  short_name: 
+  id: 304
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00257: 
+  long_name: patient_phone_phone_number
+  sort_order: 160
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:phone_number)
+  short_name: 
+  id: 257
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00290: 
+  long_name: patient_day_care_association
+  sort_order: 490
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)
+  short_name: 
+  id: 290
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00258: 
+  long_name: patient_phone_extension
+  sort_order: 170
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:extension)
+  short_name: 
+  id: 258
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00354: 
+  long_name: contact_disease
+  sort_order: 300
+  group: event
+  evaluation: disease_event.try(:disease).try(:disease_name)
+  short_name: 
+  id: 354
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00256: 
+  long_name: patient_phone_area_code
+  sort_order: 150
+  group: event
+  evaluation: interested_party.person_entity.telephones.last.try(:area_code)
+  short_name: 
+  id: 256
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00355: 
+  long_name: contact_disease_onset_date
+  sort_order: 310
+  group: event
+  evaluation: disease_event.try(:disease_onset_date)
+  short_name: 
+  id: 355
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00291: 
+  long_name: patient_occupation
+  sort_order: 500
+  group: event
+  evaluation: interested_party.try(:risk_factor).try(:occupation)
+  short_name: 
+  id: 291
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00356: 
+  long_name: contact_date_diagnosed
+  sort_order: 320
+  group: event
+  evaluation: disease_event.try(:date_diagnosed)
+  short_name: 
+  id: 356
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00357: 
+  long_name: contact_diagnostic_facility
+  sort_order: 330
+  group: event
+  evaluation: diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  id: 357
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00309: 
+  long_name: patient_outbreak_name
+  sort_order: 680
+  group: event
+  evaluation: outbreak_name
+  short_name: 
+  id: 309
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00358: 
+  long_name: contact_hospitalized
+  sort_order: 340
+  group: event
+  evaluation: disease_event.try(:hospitalized).try(:code_description)
+  short_name: 
+  id: 358
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00259: 
+  long_name: patient_birth_gender
+  sort_order: 180
+  group: event
+  evaluation: interested_party.person_entity.person.try(:birth_gender).try(:code_description)
+  short_name: 
+  id: 259
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00359: 
+  long_name: contact_hospitalization_facility
+  sort_order: 350
+  group: event
+  evaluation: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  short_name: 
+  id: 359
+  short_name_max: 10
+  event_type: contact_event
+csv_field_00252: 
+  long_name: patient_address_postal_code
+  sort_order: 110
+  group: event
+  evaluation: address.try(:postal_code)
+  short_name: 
+  id: 252
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00295: 
+  long_name: patient_reporting_agency
+  sort_order: 540
+  group: event
+  evaluation: safe_call_chain(:reporting_agency, :secondary_entity, :place, :name)
+  short_name: 
+  id: 295
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00296: 
+  long_name: patient_reporter_last_name
+  sort_order: 550
+  group: event
+  evaluation: safe_call_chain(:reporter, :secondary_entity, :person, :last_name)
+  short_name: 
+  id: 296
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00251: 
+  long_name: patient_address_county
+  sort_order: 100
+  group: event
+  evaluation: address.try(:county).try(:code_description)
+  short_name: 
+  id: 251
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00292: 
+  long_name: patient_risk_factors
+  sort_order: 510
+  group: event
+  evaluation: interested_party.risk_factor.try(:risk_factors)
+  short_name: 
+  id: 292
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00255: 
+  long_name: patient_age_at_onset_in_years
+  sort_order: 140
+  group: event
+  evaluation: age_info.in_years
+  short_name: 
+  id: 255
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00293: 
+  long_name: patient_risk_factors_notes
+  sort_order: 520
+  group: event
+  evaluation: interested_party.risk_factor.try(:risk_factors_notes)
+  short_name: 
+  id: 293
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00253: 
+  long_name: patient_birth_date
+  sort_order: 120
+  group: event
+  evaluation: interested_party.person_entity.person.birth_date
+  short_name: 
+  id: 253
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00294: 
+  long_name: patient_imported_from
+  sort_order: 530
+  group: event
+  evaluation: imported_from.try(:code_description)
+  short_name: 
+  id: 294
+  short_name_max: 10
+  event_type: morbidity_event
+csv_field_00254: 
+  long_name: patient_approximate_age_no_birthdate
+  sort_order: 130
+  group: event
+  evaluation: interested_party.person_entity.person.approximate_age_no_birthday
+  short_name: 
+  id: 254
+  short_name_max: 10
+  event_type: morbidity_event
