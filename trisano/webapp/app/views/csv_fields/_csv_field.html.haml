@@ -16,6 +16,7 @@
   %td
     = h(csv_field.long_name)
   %td
-    %span{:id => "short_name_#{csv_field.id}"}= h(csv_field.short_name)
-    = link_to("Edit", "#", :id => "edit_link_short_name_#{csv_field.id}")
+    %div
+      %span{:id => "short_name_#{csv_field.id}"}= h(csv_field.short_name)
+      = link_to("Edit", "#", :id => "edit_link_short_name_#{csv_field.id}")
     = in_place_editor "short_name_#{csv_field.id}", url_for(:action => :set_csv_field_short_name, :id => csv_field.id) 

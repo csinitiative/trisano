@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'Admin CDC Export' do
   
-$dont_kill_browser = true
+#$dont_kill_browser = true
 
   before :all do
     @browser.open "/trisano/cmrs"
