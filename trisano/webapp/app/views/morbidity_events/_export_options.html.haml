@@ -24,9 +24,14 @@
       %label.horiz
         = check_box_tag("export_options[]", "labs")
         %span Lab Results
-      %label.horiz
+      %label.vert
         = check_box_tag("export_options[]", "treatments")
         %span Treatments
+      %b Additional Options:
+      %br
+      %label.horiz
+        = check_box_tag("export_options[]", "use_short_names")
+        %span Use Short Column Names
       -# This div is needed to keep IE from drawing a button as wide as the form.
       %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
         = submit_tag("Export", :id => "export_btn")

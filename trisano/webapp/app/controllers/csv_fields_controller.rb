@@ -13,7 +13,7 @@ class CsvFieldsController < ApplicationController
     if @csv_field.save
       render :text => @csv_field.short_name
     else
-      render :text => @csv_field.errors.full_messages.join(','), :status => 500
+      render :text => @csv_field.errors.full_messages.join("\n"), :status => 500
     end
   end
 end

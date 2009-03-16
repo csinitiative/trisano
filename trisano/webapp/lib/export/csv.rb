@@ -77,8 +77,8 @@ module Export
 
     def Csv.output_header(event, output, options, exportable_questions)
       csv_header  = event_headers(event, options, exportable_questions)
-      csv_header += lab_headers if options[:export_options].include? "labs"
-      csv_header += treatment_headers if options[:export_options].include? "treatments"
+      csv_header += lab_headers(options) if options[:export_options].include? "labs"
+      csv_header += treatment_headers(options) if options[:export_options].include? "treatments"
       if event.is_a? MorbidityEvent
         csv_header += event_headers(PlaceEvent.new, options, exportable_questions) if options[:export_options].include? "places"
         csv_header += event_headers(ContactEvent.new, options, exportable_questions) if options[:export_options].include? "contacts"
@@ -152,12 +152,12 @@ module Export
       event_data(event, options, exportable_questions).map { |event_datum| event_datum.first }
     end
 
-    def Csv.lab_headers
-      lab_data.map { |lab_datum| lab_datum.first }
+    def Csv.lab_headers(options)
+      lab_data(options).map { |lab_datum| lab_datum.first }
     end
 
-    def Csv.treatment_headers
-      treatment_data.map { |treatment_datum| treatment_datum.first }
+    def Csv.treatment_headers(options)
+      treatment_data(options).map { |treatment_datum| treatment_datum.first }
     end
 
     def Csv.event_values(event, options, exportable_questions)
@@ -206,35 +206,36 @@ module Export
     def Csv.event_data(event, options, exportable_questions)
       meth = "#{event.class.to_s.underscore}_fields"
       event_data = CsvField.send(meth).map do |csv_field|
-        [csv_field.long_name, csv_field.evaluation]
+        [csv_field.send(column_name(options)), csv_field.evaluation]
       end
       if options[:show_answers]
-        event_data = event_data + (event_answers(event, exportable_questions) + event_data.slice!(-2, 2))
+        event_data = event_data + (event_answers(event, exportable_questions, options) + event_data.slice!(-2, 2))
       end
       event_data
     end
   end
   
-  def Csv.event_answers(event, exportable_questions)
+  def Csv.event_answers(event, exportable_questions, options)
     answers = []
     exportable_questions[event.class.name.underscore.to_sym].each do |question|
       answer = event.answers.detect { |answer| answer.short_name == question.short_name }
       text_answer = answer.nil? ? "" : answer.text_answer
       escaped_answer = text_answer.blank? ? "" : text_answer.gsub(/'/, "\\\\'")
-      answers << ["disease_specific_#{question.short_name}", "'#{escaped_answer}'"]
+      column_name = options[:export_options].include?('use_short_names') ? question.short_name : "disease_specific_#{question.short_name}"
+      answers << [column_name, "'#{escaped_answer}'"]
     end
     answers
   end
 
-  def Csv.lab_data
+  def Csv.lab_data(options = {})
     CsvField.lab_fields.map do |csv_field| 
-      [csv_field.long_name, csv_field.evaluation]
+      [csv_field.send(column_name(options)), csv_field.evaluation]
     end
   end
 
-  def Csv.treatment_data
+  def Csv.treatment_data(options = {})
     CsvField.treatment_fields.map do |csv_field|
-      [csv_field.long_name, csv_field.evaluation]
+      [csv_field.send(column_name(options)), csv_field.evaluation]
     end
   end
 
@@ -246,4 +247,7 @@ module Export
     end
   end
 
+  def Csv.column_name(options)
+    options[:export_options].try(:include?, 'use_short_names') ? :short_name : :long_name
+  end
 end
