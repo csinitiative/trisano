@@ -1,0 +1,51 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  CSV Export Columns
+
+#rot
+  %table.list{:id => 'morbidity_event_fields'}
+    %tr
+      %th.forminformation
+        Long Name
+      %th
+        Short Name
+    %tr
+      %td{:colspan => 2}
+        .formname
+          Morbidity Event Fields
+    = render @morbidity_event_fields
+    %tr
+      %td{:colspan => 2}
+        .formname
+          Contact Event Fields
+    = render @contact_event_fields
+    %tr
+      %td{:colspan => 2}
+        .formname
+          Place Event Fields
+    = render @place_event_fields
+    %tr
+      %td{:colspan => 2}
+        .formname
+          Lab Fields
+    = render @lab_fields
+    %tr
+      %td{:colspan => 2}
+        .formname
+          Treatment Fields
+    = render @treatment_fields
+          
