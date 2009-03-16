@@ -70,7 +70,7 @@ describe 'Sorting tasks on the Dashboard' do
     @browser.type('look_back',  7)
     @browser.click('update_tasks_filter')
     @browser.wait_for_page_to_load
-    ['Name', 'Notes', 'Category', 'Priority'].each do |column|
+    ['Name', 'Description', 'Category', 'Priority'].each do |column|
       @browser.click("link=#{column}")
       sleep(3)
       @browser.get_text("//tbody/tr[1]/td[1]").should == (Date.today + 1).strftime("%Y-%m-%d")

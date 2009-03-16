@@ -228,7 +228,7 @@ describe MorbidityEvent do
         if (note.note_type == "clinical")
           note
         end
-      }.compact[0].note.should eql("Task created.\n\nName: Do it\nNotes: Some details")
+      }.compact[0].note.should eql("Task created.\n\nName: Do it\nDescription: Some details")
       
     end
 

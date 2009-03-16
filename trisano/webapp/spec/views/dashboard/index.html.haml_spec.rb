@@ -102,7 +102,7 @@ describe "/dashboard/index.html.haml" do
     it 'should have columns for name, date, priority, category' do
       render 'dashboard/index.html.haml'
       [%w(Name              name),
-        %w(Notes             notes),
+        %w(Description     notes),
         %w(Priority          priority),
         %w(Due&nbsp;date     due_date),
         %w(Category          category_name),

@@ -20,7 +20,7 @@
   = f.text_field(:name, :size => 20)
 
 %span{ :class => "vert" }
-  = f.label(:notes, "Notes")
+  = f.label(:notes, "Description")
   = f.text_area(:notes, :rows => 5, :cols => 50)
 
 - unless @task.new_record?

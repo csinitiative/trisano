@@ -64,7 +64,7 @@ class Task < ActiveRecord::Base
     return if self.event.nil?
     if new_record?
       unless self.notes.blank?
-        self.event.add_note("Task created.\n\nName: #{self.name}\nNotes: #{self.notes}", "clinical")
+        self.event.add_note("Task created.\n\nName: #{self.name}\nDescription: #{self.notes}", "clinical")
       end
     else
       existing_task = Task.find(self.id)

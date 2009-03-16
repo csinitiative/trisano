@@ -145,7 +145,7 @@ describe Task do
       @task.notes = "This is a note on a task."
       @task.save.should be_true
       @event.notes.size.should == 1
-      @event.notes.first.note.should == "Task created.\n\nName: New task\nNotes: This is a note on a task."
+      @event.notes.first.note.should == "Task created.\n\nName: New task\nDescription: This is a note on a task."
     end
 
     it 'should not create a clinical note on the event when creating a task with the notes unpopulated' do

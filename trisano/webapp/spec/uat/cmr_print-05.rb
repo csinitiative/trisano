@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 $sleep_time = 5
 
 describe 'Print CMR page' do
