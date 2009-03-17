@@ -16,8 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Telephone < ActiveRecord::Base
-  set_table_name :telephones_temp
-
   belongs_to :entity
   belongs_to  :entity_location_type, :class_name => 'ExternalCode'
 

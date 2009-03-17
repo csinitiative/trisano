@@ -16,7 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Address < ActiveRecord::Base
-  set_table_name :addresses_temp
   after_create :associate_longitudinal_data
 
   belongs_to :event
