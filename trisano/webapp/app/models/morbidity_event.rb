@@ -91,7 +91,7 @@ class MorbidityEvent < HumanEvent
 
       # if an passed-in ID is not in the existing secondary jurisdiction IDs, add
       (secondary_jurisdiction_ids - existing_secondary_jurisdiction_ids).each do |id_to_add|
-        associated_jurisdictions.create(:secondary_entity_id => id_to_add, :role_id => Event.participation_code('Secondary Jurisdiction'))
+        associated_jurisdictions.create(:secondary_entity_id => id_to_add)
       end
 
       # Add any new forms to this event  I guess we'll keep any old ones for now.

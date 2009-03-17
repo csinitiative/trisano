@@ -71,8 +71,6 @@ puts "success - replace hospitals"
 puts "resetting sequences ..."
 ActiveRecord::Base.connection.select_value("select setval('telephones_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('addresses_id_seq', 1)")
-ActiveRecord::Base.connection.select_value("select setval('entities_locations_id_seq', 1)")
-ActiveRecord::Base.connection.select_value("select setval('locations_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('disease_events_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('survey_answers_id_seq', 1)")
 ActiveRecord::Base.connection.select_value("select setval('form_references_id_seq', 1)")

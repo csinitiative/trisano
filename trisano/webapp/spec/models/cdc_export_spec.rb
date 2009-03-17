@@ -88,7 +88,7 @@ describe CdcExport do
   end
     
   describe 'running cdc export' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places
 
     it 'should produce core data records (no disease specific fields) that are 60 chars long' do
       with_cdc_records do |records|
@@ -430,7 +430,7 @@ describe CdcExport do
   end
 
   describe 'finding deleted cdc records' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places
     
     before(:each)do
       delete_a_record 
@@ -480,7 +480,7 @@ describe CdcExport do
   end
 
   describe 'soft deleted records' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places
     
     describe 'that have already been sent' do
 
@@ -547,7 +547,7 @@ describe CdcExport do
   end
 
   describe "multiple verification records" do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places
 
     before :each do
       with_sent_events
@@ -570,7 +570,7 @@ describe CdcExport do
   end
 
   describe "runnning export w/ no valid disease exports" do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :entities_locations, :locations, :addresses, :people_races, :places
+    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places
     
     before :all do
     end

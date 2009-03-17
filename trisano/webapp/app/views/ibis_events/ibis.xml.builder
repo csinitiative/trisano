@@ -29,8 +29,7 @@ xml.Table {
         reported_date = event.first_reported_PH_date ? event.first_reported_PH_date.strftime("%m/%d/%Y") : event.first_reported_PH_date
         xml.ReportedDate(reported_date)
 
-        addresses = event.patient.primary_entity.address_entities_locations
-        address = unless addresses.empty? then addresses.last.location.addresses.last else nil end
+        address = event.address
 
         zip_code = address ? address.postal_code : ""
         xml.ZipCode(zip_code[0..4])
@@ -48,9 +47,9 @@ xml.Table {
         xml.InvestigationHealthDistrict(investigation_jurisdiction)
         xml.ResidenceHealthDistrict(residence_jurisdiction)
 
-        xml.Ethnic(get_ibis_ethnicity(event.active_patient.primary_entity.person.ethnicity))
-        xml.Race(get_ibis_race(event.patient.primary_entity.races))
-        xml.Sex(get_ibis_sex(event.active_patient.primary_entity.person.birth_gender))
+        xml.Ethnic(get_ibis_ethnicity(event.interested_party.person_entity.person.ethnicity))
+        xml.Race(get_ibis_race(event.interested_party.person_entity.races))
+        xml.Sex(get_ibis_sex(event.interested_party.person_entity.person.birth_gender))
         xml.Status(get_ibis_status(event.state_case_status))
 
         xml.Year(event.record_number[0..3])

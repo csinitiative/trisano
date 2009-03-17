@@ -29,17 +29,6 @@ class Entity < ActiveRecord::Base
 
   attr_protected :entity_type
 
-  # For backwards compatibility.  Can be removed when formbuilder usage is purged.
-  def telephone_entities_location
-    self.telephone_entities_locations.last
-  end
-
-  # For backwards compatibility.  Can be removed when formbuilder usage is purged.
-  def telephone
-    return nil if self.telephone_entities_locations.empty?
-    self.telephone_entities_locations.last.location.telephones.last
-  end
-
   def primary_phone
     self.telephones.first 
   end

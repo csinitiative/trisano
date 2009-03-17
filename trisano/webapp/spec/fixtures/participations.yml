@@ -1,6 +1,5 @@
 marks_interested_party:
   comment: 
-  role_id: !str 2301
   secondary_entity_id: 
   participation_status_id: 
   id: !str 1
@@ -11,7 +10,6 @@ marks_interested_party:
 
 marks_current_treatment:
   comment: 
-  role_id: !str 2306
   secondary_entity_id: 
   participation_status_id: 
   id: !str 2
@@ -22,7 +20,6 @@ marks_current_treatment:
 
 marks_hospitalized_at:
   id: !str 3
-  role_id: !str 2302
   secondary_entity_id: !str 7
   participation_status_id: 
   primary_entity_id: 
@@ -32,7 +29,6 @@ marks_hospitalized_at:
 
 marks_jurisdiction:
   comment: 
-  role_id: !str 2305
   secondary_entity_id: !str 75
   participation_status_id: 
   id: !str 4
@@ -43,7 +39,6 @@ marks_jurisdiction:
 
 # marks_reporting_agency:
 #   comment: 
-#   role_id: !str 2304
 #   secondary_entity_id: !str 4
 #   participation_status_id: 
 #   id: !str 5
@@ -54,7 +49,6 @@ marks_jurisdiction:
 
 # marks_reported_by:
 #   comment: 
-#   role_id: !str 2303
 #   secondary_entity_id: !str 87
 #   participation_status_id: 
 #   id: !str 6
@@ -65,7 +59,6 @@ marks_jurisdiction:
 
 Lab_Guy_Tested_By:
   id: 8
-  role_id: 2310
   secondary_entity_id: 100
   participation_status_id: 
   primary_entity_id:
@@ -76,7 +69,6 @@ Lab_Guy_Tested_By:
 Patient_Without_Disease:
   id: 9
   event_id: 3
-  role_id: 2301
   primary_entity_id: 101
   created_at: <%= Time.now.to_s :db %> 
   type: InterestedParty
@@ -84,7 +76,6 @@ Patient_Without_Disease:
 patient_without_disease_jurisdiction:
   id: 10
   event_id: 3
-  role_id: 2305
   secondary_entity_id: 75
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
@@ -92,7 +83,6 @@ patient_without_disease_jurisdiction:
 
 marks_diagnosed_at:
   id: 11
-  role_id: 2309
   secondary_entity_id: 7
   participation_status_id: 
   primary_entity_id: 
@@ -102,7 +92,6 @@ marks_diagnosed_at:
 
 marks_contact_1:
   id: 12
-  role_id: !str 2307
   secondary_entity_id: !str 1
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
@@ -111,7 +100,6 @@ marks_contact_1:
 
 marks_place_exposure:
   id: 13
-  role_id: !str 2400
   secondary_entity_id: !str 103
   primary_entity_id:
   created_at: <%= Time.now.to_s :db %>
@@ -120,7 +108,6 @@ marks_place_exposure:
 
 marks_contact_2:
   id: 14
-  role_id: !str 2307
   secondary_entity_id: !str 2
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
@@ -130,7 +117,6 @@ marks_contact_2:
 has_anthrax_jurisdiction:
   id: 15
   event_id: 5
-  role_id: 2305
   secondary_entity_id: 75
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
@@ -138,7 +124,6 @@ has_anthrax_jurisdiction:
 
 marks_clinician:
   id: 16
-  role_id: !str 2308
   secondary_entity_id: !str 2
   primary_entity_id: 
   created_at: <%= Time.now.to_s :db %> 
@@ -147,20 +132,17 @@ marks_clinician:
 
 some_active_jurisdiction:
   id: 17
-  role_id: 2305
   event_id: 4
   type: Jurisdiction 
 
 patient_for_event_queue:
   id: 18
-  role_id: 2301
   event_id: 6
   primary_entity_id: 111
   type: InterestedParty
 
 task_jurisdiction:
   id: 1001
-  role_id: 2305
   event_id: 1001
   secondary_entity_id: 102
   type: Jurisdiction

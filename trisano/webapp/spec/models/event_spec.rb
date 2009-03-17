@@ -248,7 +248,7 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :participations, :entities, :entities_locations, :locations, :addresses, :telephones, :people, :places, :users, :participations_places
+    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :users, :participations_places
 
     before(:each) do
       @user = users(:default_user)
@@ -1188,18 +1188,19 @@ describe MorbidityEvent do
     end
 
     describe 'searching for cases by disease' do
+      fixtures :diseases
       before(:each) do
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 1 }))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 1000}))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => 2000}))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:chicken_pox).id }))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:tuberculosis).id}))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:anthrax).id}))
       end
 
       it 'should be done with a single disease' do
-        Event.find_by_criteria(:diseases => ['1'], :jurisdiction_id => '1').size.should == 1
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_id => '1').size.should == 1
       end
     
       it 'should be done with multiple diseases' do
-        Event.find_by_criteria(:diseases => [1, 1000], :jurisdiction_id => '1').size.should == 2
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_id => '1').size.should == 2
       end
 
       it 'should ignore empty disease arrays' do

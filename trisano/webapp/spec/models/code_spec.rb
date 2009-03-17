@@ -26,15 +26,8 @@ describe Code do
     @code.should be_valid
   end
 
-  describe 'Interested Party' do
-    fixtures :codes
-
-    it 'should exist' do 
-      Code.interested_party.should_not be_nil
-    end
-  end
-
   describe 'Jurisdiction place type' do
+    fixtures :codes
     it 'should exist' do
       Code.jurisdiction_place_type_id.should_not be_nil
     end

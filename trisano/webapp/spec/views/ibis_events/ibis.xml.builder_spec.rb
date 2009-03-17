@@ -74,19 +74,12 @@ def mock_ibis_event
   @address.stub!(:postal_code).and_return("12345")
   @address.stub!(:county).and_return(OpenStruct.new({:jusrisdiction => "whatever"}))
 
-  location = mock_model(Location)
-  location.stub!(:addresses).and_return([@address])
-
-  entity_location = mock_model(EntitiesLocation)
-  entity_location.stub!(:location).and_return(location)
-
-  entity = mock_model(Entity)
-  entity.stub!(:address_entities_locations).and_return([entity_location])
+  entity = mock_model(PersonEntity)
   entity.stub!(:person).and_return(@person)
   entity.stub!(:races).and_return([])
 
-  patient = mock_model(Participation)
-  patient.stub!(:primary_entity).and_return(entity)
+  patient = mock_model(InterestedParty)
+  patient.stub!(:person_entity).and_return(entity)
 
   @disease = mock_model(Disease)
   @disease.stub!(:cdc_code).and_return("10000")
@@ -116,8 +109,8 @@ def mock_ibis_event
   @jurisdiction.stub!(:short_name).and_return("Bear River")
 
   m.stub!(:primary_jurisdiction).and_return(@jurisdiction)
-  m.stub!(:patient).and_return(patient)
-  m.stub!(:active_patient).and_return(patient)
+  m.stub!(:interested_party).and_return(patient)
+  m.stub!(:address).and_return(@address)
 
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
