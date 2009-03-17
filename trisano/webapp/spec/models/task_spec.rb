@@ -36,25 +36,25 @@ describe Task do
     @task.due_date = nil
     @task.should_not be_valid
   end
-
+  
   it "should be in pending status after initial creation" do
     @task.save!
     @task.status.should == 'pending'
   end
-
+  
   it 'should produce an error if the name is too long' do
     @task.name = 's' * 256
     @task.should_not be_valid
     @task.errors.on(:name).should_not be_nil
   end
-
+  
   it 'should not allow an update with an invalid status' do
     @task.save!
     @task.status = 'not_a_real_status'
     @task.save.should be_false
     @task.errors.on(:status).should_not be_nil
   end
-
+  
   it 'should allow updates with valid statuses' do
     @task.save!
     Task.valid_statuses.each do |status|
@@ -62,9 +62,9 @@ describe Task do
       @task.save.should be_true
     end
   end
-
+  
   describe 'working with categories' do
-    
+
     it 'should return its category name' do
       mock_user
       @task.save.should_not be_nil
@@ -76,7 +76,7 @@ describe Task do
       @task.category_id.should eql(category_code.id)
     end
   end
-
+  
   describe 'working with task assignment' do
 
     before(:each) do
@@ -92,7 +92,7 @@ describe Task do
       @assignees = mock('assignees')
       @assignees.should_receive(:id).and_return(3)
       User.stub!(:default_task_assignees).and_return([@assignees])
-      @task.user_id = users(:update_cmr_user).id      
+      @task.user_id = users(:update_cmr_user).id
       @task.save!
     end
 
@@ -119,11 +119,11 @@ describe Task do
       @task.user_id = users(:admin_user).id
       @task.save.should be_true
     end
-    
-  end
 
+  end
+  
   describe 'generating notes' do
-    
+
     before(:each) do
       @event_hash = {
         "interested_party_attributes" => {
@@ -155,7 +155,7 @@ describe Task do
       @task.save.should be_true
       @event.notes.size.should == 0
     end
-    
+
     it 'should create a clinical note on the event when updating a task with a status change' do
       @event.save.should be_true
       @task.event = @event
@@ -174,16 +174,111 @@ describe Task do
       @task.save.should be_true
       @event.notes.size.should == 0
     end
-    
-  end
 
+  end
+  
   describe '#user_name' do
     fixtures :users
 
     it "should return the user's best name" do
       @task.user_name.should == 'Johnson'
     end
-  
+
   end
-      
+  
+  describe 'repeating tasks' do
+
+    it 'should not accept an interval without an until' do
+      @task.interval = :year
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should not accept an until without an interval' do
+      @task.until = 2.years.from_now
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should allow creation with valid intervals' do
+      @task.until = 1.week.from_now
+      Task.valid_intervals.each do |interval|
+        @task.interval = interval
+        @task.save.should be_true
+      end
+    end
+    
+    it 'should not allow creation with an invalid interval' do
+      @task.until = 1.week.from_now
+      @task.interval = :oh_sometimes
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should establish repeating tasks if all required repeating task attributes are present' do
+      @task.interval = :week
+      @task.until = 2.years.from_now
+      @task.save.should be_true
+      @task.repeating_tasks.size.should > 0
+      @task.repeating_task_id.should eql(@task.id)
+    end
+
+    it 'should accept a daily interval until two years from now' do
+      @task.interval = :day
+      @task.until = 2.years.from_now
+      @task.save.should be_true
+      (730..731).include?(@task.repeating_tasks.size).should be_true
+    end
+    
+    it 'should accept a weekly interval until two years from now' do
+      @task.interval = :week
+      @task.until = 2.years.from_now
+      @task.save.should be_true
+      @task.repeating_tasks.size.should == 105
+    end
+    
+    it 'should accept a monthly interval until two years from now' do
+      @task.interval = :month
+      @task.until = 2.years.from_now
+      @task.save.should be_true
+      @task.repeating_tasks.size.should == 24
+    end
+
+    it 'should accept a yearly interval until two years from now' do
+      @task.interval = :year
+      @task.until = 2.years.from_now
+      @task.save.should be_true
+      @task.repeating_tasks.size.should == 2
+    end
+
+    it 'should not accept a daily interval until more than two years from now' do
+      @task.interval = :day
+      @task.until = (2.years.from_now) + 1.day
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should not accept a weekly interval until more than two years from now' do
+      @task.interval = :week
+      @task.until = (2.years.from_now) + 1.day
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should not accept a monthly interval until more than two years from now' do
+      @task.interval = :month
+      @task.until = (2.years.from_now) + 1.day
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+    
+    it 'should not accept a yearly interval until more than two years from now' do
+      @task.interval = :year
+      @task.until = (2.years.from_now) + 1.day
+      @task.save.should be_false
+      @task.errors[:base].should_not be_nil
+    end
+
+  end
+
 end

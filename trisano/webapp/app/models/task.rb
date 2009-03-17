@@ -20,7 +20,8 @@ class Task < ActiveRecord::Base
   belongs_to :user
   belongs_to :event
   belongs_to :category, :class_name => 'ExternalCode', :foreign_key => :category_id
-
+  has_many :repeating_tasks, :class_name => 'Task', :foreign_key => :repeating_task_id
+  
   class << self
     def status_array
       [["Pending", "pending"], ["Complete", "complete"], ["Not applicable", "not_applicable"]]
@@ -28,6 +29,14 @@ class Task < ActiveRecord::Base
 
     def valid_statuses
       @valid_statuses ||= status_array.map { |status| status.last }
+    end
+
+    def interval_array
+      [["Daily", "day"], ["Weekly", "week"], ["Month", "month"], ["Yearly", "year"]]
+    end
+
+    def valid_intervals
+      @valid_intervals ||= interval_array.map { |interval| interval.last }
     end
   end
   
@@ -38,8 +47,10 @@ class Task < ActiveRecord::Base
 
   before_validation :set_status
   before_save :create_note
+  after_create :create_repeating_tasks
 
-  attr_protected :user_id
+  attr_protected :user_id, :repeating_task_id
+  attr_accessor :interval, :until
 
   def category_name
     self.category.code_description unless self.category.nil?
@@ -52,6 +63,7 @@ class Task < ActiveRecord::Base
 
   def validate
     validate_task_assignment
+    validate_repeating_task_attributes
   end
   
   def disease_name
@@ -59,6 +71,17 @@ class Task < ActiveRecord::Base
   end
 
   private
+
+  def should_repeat?
+    (!self.interval.blank? && !self.until.blank?)
+  end
+
+  def clone_for_repeating
+    task = self.clone
+    task.until = nil
+    task.interval = nil
+    task
+  end
 
   def create_note
     return if self.event.nil?
@@ -78,10 +101,40 @@ class Task < ActiveRecord::Base
     self.status = "pending" if new_record?
   end
 
+  def create_repeating_tasks
+    if should_repeat?
+      begin
+        self.repeating_task_id = self.id
+        self.save
+        date = self.due_date + 1.send(self.interval)
+
+        while (date <= self.until.to_date)
+          task = clone_for_repeating
+          task.due_date = date
+          task.save
+          date += 1.send(self.interval)
+        end
+      rescue Exception => ex
+        logger.error ex
+        self.errors.add_to_base("Unable to create repeating tasks.")
+        return false
+      end
+    end
+  end
+
   def validate_task_assignment
     unless self.user_id.blank?
       task_assignee_ids = User.default_task_assignees.collect(&:id)      
       self.errors.add_to_base("Insufficient privileges for task assignment.") unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
+    end
+  end
+
+  def validate_repeating_task_attributes
+    self.errors.add_to_base("A repeating task requires an interval and an 'until' date.") if ( (!self.interval.blank? && self.until.blank?) ||  (self.interval.blank? && !self.until.blank?) )
+
+    if should_repeat?
+      self.errors.add_to_base("The task interval is invalid") unless(Task.valid_intervals.include?(self.interval.to_s))
+      self.errors.add_to_base("The until date must fall within the next two years") unless(self.until <= 2.years.from_now)
     end
   end
   
