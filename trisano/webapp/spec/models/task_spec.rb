@@ -32,8 +32,13 @@ describe Task do
     @task.should be_valid
   end
   
-  it 'should not be valid with out a due date' do
+  it 'should not be valid without a due date' do
     @task.due_date = nil
+    @task.should_not be_valid
+  end
+
+  it 'should not be valid with a due date more than 2 years from now' do
+    @task.due_date = (2.years.from_now) + 1.day
     @task.should_not be_valid
   end
   
@@ -189,94 +194,124 @@ describe Task do
   describe 'repeating tasks' do
 
     it 'should not accept an interval without an until' do
-      @task.interval = :year
+      @task.repeating_interval = :year
       @task.save.should be_false
       @task.errors[:base].should_not be_nil
     end
     
     it 'should not accept an until without an interval' do
-      @task.until = 2.years.from_now
+      @task.until_date = 2.years.from_now
       @task.save.should be_false
       @task.errors[:base].should_not be_nil
     end
     
     it 'should allow creation with valid intervals' do
-      @task.until = 1.week.from_now
+      @task.until_date = 1.week.from_now
       Task.valid_intervals.each do |interval|
-        @task.interval = interval
+        @task.repeating_interval = interval
         @task.save.should be_true
       end
     end
     
     it 'should not allow creation with an invalid interval' do
-      @task.until = 1.week.from_now
-      @task.interval = :oh_sometimes
+      @task.until_date = 1.week.from_now
+      @task.repeating_interval = :oh_sometimes
       @task.save.should be_false
-      @task.errors[:base].should_not be_nil
+      @task.errors[:repeating_interval].should_not be_nil
+    end
+
+    it 'should not allow creation with an until date that comes after the original task due date' do
+      @task.until_date = 1.week.ago
+      @task.repeating_interval = :week
+      @task.save.should be_false
+      @task.errors[:until_date].should_not be_nil
     end
     
     it 'should establish repeating tasks if all required repeating task attributes are present' do
-      @task.interval = :week
-      @task.until = 2.years.from_now
+      @task.repeating_interval = :week
+      @task.until_date = 2.years.from_now
       @task.save.should be_true
       @task.repeating_tasks.size.should > 0
       @task.repeating_task_id.should eql(@task.id)
     end
 
     it 'should accept a daily interval until two years from now' do
-      @task.interval = :day
-      @task.until = 2.years.from_now
+      @task.repeating_interval = :day
+      @task.until_date = 2.years.from_now
       @task.save.should be_true
       (730..731).include?(@task.repeating_tasks.size).should be_true
     end
     
     it 'should accept a weekly interval until two years from now' do
-      @task.interval = :week
-      @task.until = 2.years.from_now
+      @task.repeating_interval = :week
+      @task.until_date = 2.years.from_now
       @task.save.should be_true
       @task.repeating_tasks.size.should == 105
     end
     
     it 'should accept a monthly interval until two years from now' do
-      @task.interval = :month
-      @task.until = 2.years.from_now
+      @task.repeating_interval = :month
+      @task.until_date = 2.years.from_now
       @task.save.should be_true
       @task.repeating_tasks.size.should == 24
     end
 
     it 'should accept a yearly interval until two years from now' do
-      @task.interval = :year
-      @task.until = 2.years.from_now
+      @task.repeating_interval = :year
+      @task.until_date = 2.years.from_now
       @task.save.should be_true
       @task.repeating_tasks.size.should == 2
     end
 
     it 'should not accept a daily interval until more than two years from now' do
-      @task.interval = :day
-      @task.until = (2.years.from_now) + 1.day
+      @task.repeating_interval = :day
+      @task.until_date = (2.years.from_now) + 1.day
       @task.save.should be_false
-      @task.errors[:base].should_not be_nil
+      @task.errors[:until_date].should_not be_nil
     end
     
     it 'should not accept a weekly interval until more than two years from now' do
-      @task.interval = :week
-      @task.until = (2.years.from_now) + 1.day
+      @task.repeating_interval = :week
+      @task.until_date = (2.years.from_now) + 1.day
       @task.save.should be_false
-      @task.errors[:base].should_not be_nil
+      @task.errors[:until_date].should_not be_nil
     end
     
     it 'should not accept a monthly interval until more than two years from now' do
-      @task.interval = :month
-      @task.until = (2.years.from_now) + 1.day
+      @task.repeating_interval = :month
+      @task.until_date = (2.years.from_now) + 1.day
       @task.save.should be_false
-      @task.errors[:base].should_not be_nil
+      @task.errors[:until_date].should_not be_nil
     end
     
     it 'should not accept a yearly interval until more than two years from now' do
-      @task.interval = :year
-      @task.until = (2.years.from_now) + 1.day
+      @task.repeating_interval = :year
+      @task.until_date = (2.years.from_now) + 1.day
       @task.save.should be_false
-      @task.errors[:base].should_not be_nil
+      @task.errors[:until_date].should_not be_nil
+    end
+
+    it 'should only create one clinical note for all tasks added' do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Green"
+            }
+          }
+        }
+      }
+
+      @event = MorbidityEvent.new(@event_hash)
+      @event.save.should be_true
+      @event.notes.size.should == 0
+      @task.event = @event
+      @task.notes = "This is a note on a task."
+      @task.repeating_interval = :year
+      @task.until_date = (2.years.from_now)
+      @task.save.should be_true
+      @event.notes.size.should == 1
+      @event.notes.first.note.include?("Repeats every #{@task.repeating_interval.to_s.downcase} until #{@task.until_date.to_s}").should be_true
     end
 
   end

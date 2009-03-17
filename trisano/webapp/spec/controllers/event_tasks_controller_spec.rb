@@ -233,7 +233,6 @@ describe EventTasksController do
     describe "with successful save" do
 
       def do_post
-        request.env['HTTP_REFERER'] = "/some_path"
         @task.should_receive(:user_id=).once()
         @task.should_receive(:save).and_return(true)
         post :create, :task => {}
@@ -244,9 +243,9 @@ describe EventTasksController do
         do_post
       end
 
-      it "should redirect to the referer" do
+      it "should redirect to the event tasks path" do
         do_post
-        response.should redirect_to("/some_path")
+        response.should redirect_to(event_tasks_path(@event))
       end
 
     end
@@ -318,7 +317,6 @@ describe EventTasksController do
   describe "handling PUT /events/1/task/1 with update event entitlement" do
 
     before(:each) do
-      request.env['HTTP_REFERER'] = "/some_path"
       @task = mock_model(Task)
       @user.stub!(:is_entitled_to_in?).and_return(true)
       @task.stub!(:user_id).and_return(nil)
@@ -335,9 +333,9 @@ describe EventTasksController do
         put :update, :task => {}
       end
 
-      it "should redirect to the referer" do
+      it "should redirect to the edit event tasks path" do
         do_put
-        response.should redirect_to("/some_path")
+        response.should redirect_to(edit_event_task_path(@event, @task))
       end
 
       it "should set the flash notice to a success message" do
@@ -362,7 +360,7 @@ describe EventTasksController do
     end
   end
 
-    describe "handling PUT /events/1/task/1 with update event entitlement through Ajax request" do
+  describe "handling PUT /events/1/task/1 with update event entitlement through Ajax request" do
 
     before(:each) do
       request.env["HTTP_ACCEPT"] = "application/javascript"

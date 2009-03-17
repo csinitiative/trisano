@@ -56,7 +56,7 @@ class EventTasksController < ApplicationController
     respond_to do |format|
       if @task.save
         flash[:notice] = 'Task was successfully created.'
-        format.html {redirect_to request.env["HTTP_REFERER"] }
+        format.html { redirect_to event_tasks_path(@event) }
       else
         format.html { render :action => "new" }
       end
@@ -70,7 +70,7 @@ class EventTasksController < ApplicationController
     respond_to do |format|
       if @task.update_attributes(params[:task])
         flash[:notice] = 'Task was successfully updated.'
-        format.html { redirect_to request.env["HTTP_REFERER"] }
+        format.html { redirect_to edit_event_task_path(@event, @task) }
         format.js { }
       else
         format.html { render :action => "edit" }

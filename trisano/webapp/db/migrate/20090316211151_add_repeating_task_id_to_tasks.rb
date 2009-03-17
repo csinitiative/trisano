@@ -18,9 +18,13 @@
 class AddRepeatingTaskIdToTasks < ActiveRecord::Migration
   def self.up
     add_column :tasks, :repeating_task_id, :integer
+    add_column :tasks, :until_date, :date
+    add_column :tasks, :repeating_interval, :string
   end
 
   def self.down
     remove_column :tasks, :repeating_task_id
+    remove_column :tasks, :until_date
+    remove_column :tasks, :repeating_interval
   end
 end

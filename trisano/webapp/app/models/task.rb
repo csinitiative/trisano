@@ -32,7 +32,7 @@ class Task < ActiveRecord::Base
     end
 
     def interval_array
-      [["Daily", "day"], ["Weekly", "week"], ["Month", "month"], ["Yearly", "year"]]
+      [["Daily", "day"], ["Weekly", "week"], ["Monthly", "month"], ["Yearly", "year"]]
     end
 
     def valid_intervals
@@ -44,13 +44,14 @@ class Task < ActiveRecord::Base
   validates_length_of :name, :maximum => 255, :allow_blank => true
   validates_inclusion_of :status, :in => self.valid_statuses, :message => "is not valid"
   validates_date :due_date
-
+  validates_date :until_date, :allow_nil => true
+  
   before_validation :set_status
   before_save :create_note
   after_create :create_repeating_tasks
 
   attr_protected :user_id, :repeating_task_id
-  attr_accessor :interval, :until
+  attr_accessor :child_task
 
   def category_name
     self.category.code_description unless self.category.nil?
@@ -62,6 +63,10 @@ class Task < ActiveRecord::Base
   end
 
   def validate
+    unless (self.due_date.blank?)
+      self.errors.add(:due_date, "must fall within the next two years") unless(self.due_date <= 2.years.from_now.to_date)
+    end
+
     validate_task_assignment
     validate_repeating_task_attributes
   end
@@ -73,21 +78,24 @@ class Task < ActiveRecord::Base
   private
 
   def should_repeat?
-    (!self.interval.blank? && !self.until.blank?)
+    (!self.repeating_interval.blank? && !self.until_date.blank?)
   end
 
   def clone_for_repeating
     task = self.clone
-    task.until = nil
-    task.interval = nil
+    task.until_date = nil
+    task.repeating_interval = nil
+    task.child_task = true
     task
   end
 
   def create_note
     return if self.event.nil?
     if new_record?
-      unless self.notes.blank?
-        self.event.add_note("Task created.\n\nName: #{self.name}\nDescription: #{self.notes}", "clinical")
+      if !child_task && !self.notes.blank?
+        note = "Task created.\n\nName: #{self.name}\nDescription: #{self.notes}"
+        note << "\n\nRepeats every #{self.repeating_interval.to_s.downcase} until #{self.until_date.to_s}" if should_repeat?
+        self.event.add_note(note, "clinical")
       end
     else
       existing_task = Task.find(self.id)
@@ -106,13 +114,13 @@ class Task < ActiveRecord::Base
       begin
         self.repeating_task_id = self.id
         self.save
-        date = self.due_date + 1.send(self.interval)
+        date = self.due_date + 1.send(self.repeating_interval)
 
-        while (date <= self.until.to_date)
+        while (date <= self.until_date.to_date)
           task = clone_for_repeating
           task.due_date = date
           task.save
-          date += 1.send(self.interval)
+          date += 1.send(self.repeating_interval)
         end
       rescue Exception => ex
         logger.error ex
@@ -130,11 +138,14 @@ class Task < ActiveRecord::Base
   end
 
   def validate_repeating_task_attributes
-    self.errors.add_to_base("A repeating task requires an interval and an 'until' date.") if ( (!self.interval.blank? && self.until.blank?) ||  (self.interval.blank? && !self.until.blank?) )
+    self.errors.add_to_base("A repeating task requires an interval and an until date.") if ( (!self.repeating_interval.blank? && self.until_date.blank?) ||  (self.repeating_interval.blank? && !self.until_date.blank?) )
 
     if should_repeat?
-      self.errors.add_to_base("The task interval is invalid") unless(Task.valid_intervals.include?(self.interval.to_s))
-      self.errors.add_to_base("The until date must fall within the next two years") unless(self.until <= 2.years.from_now)
+      self.errors.add(:repeating_interval, "The task interval is invalid") unless(Task.valid_intervals.include?(self.repeating_interval.to_s))
+      self.errors.add(:until_date, "date must fall within the next two years") unless(self.until_date.to_time <= 2.years.from_now)
+      unless self.due_date.blank?
+        self.errors.add(:until_date, "date must come after the original due date") unless(self.until_date.to_time > self.due_date)
+      end
     end
   end
   
