@@ -22,7 +22,7 @@
     - core_element :treatment, f, :horiz do
       -# Hack.  That NEW_RECORD you see below is a magic string.  It matches the string in the events_helper#add_record_link.
       -# Debt: Change this.  Expedient for now.
-      = trisano_auto_complete("#{f.object_name}[treatment]", "treatment_NEW_RECORD", f.object.treatment, "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
+      = trisano_auto_complete(f, :treatment, "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
 
     - core_element :treatment_date, f, :horiz do
       = f.label(:treatment_date, 'Date of Treatment')

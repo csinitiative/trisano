@@ -25,7 +25,7 @@ class LabResult < ActiveRecord::Base
     lab_result.participation.event.add_note("Lab result deleted")
   end
 
-  validates_presence_of :lab_result_text 
+  validates_presence_of :test_type 
 
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
@@ -41,6 +41,10 @@ class LabResult < ActiveRecord::Base
   def validate
     if !collection_date.blank? && !lab_test_date.blank?
       errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
+    end
+
+    if interpretation.blank? && lab_result_text.blank?
+      errors.add_to_base("One or both of 'Test result' or 'Interpretation' must be provided.")
     end
   end
 end

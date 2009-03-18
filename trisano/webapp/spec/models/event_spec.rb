@@ -532,7 +532,7 @@ describe MorbidityEvent do
 
       it 'should use the lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-            "lab_results_attributes" => [ { "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -541,9 +541,9 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-            "lab_results_attributes" => [ { "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -552,7 +552,7 @@ describe MorbidityEvent do
 
       it 'should use the lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-            "lab_results_attributes" => [ { "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -561,9 +561,9 @@ describe MorbidityEvent do
 
       it 'should use the earliet lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-            "lab_results_attributes" => [ { "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -572,10 +572,10 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } }, 
-            "lab_results_attributes" => [ { "lab_result_text" => "pos",
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos",
                 "collection_date" => Date.today.years_ago(1), "lab_test_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "lab_result_text" => "neg",
+            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg",
                 "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2

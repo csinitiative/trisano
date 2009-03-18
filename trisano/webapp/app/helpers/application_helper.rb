@@ -168,20 +168,22 @@ module ApplicationHelper
   end
 
   # Extremely simplistic auto_complete helper, 'cause the default one don't worky.  Makes a lot of assumptions, but what we need for now.
-  def trisano_auto_complete(name, id_prefix, value, label, tag_options, completion_options)
+  def trisano_auto_complete(form, method_name, label, tag_options, completion_options)
+    method_name = method_name.to_s
     rand_id = Digest::SHA1.hexdigest(Time.now.to_s.split(//).sort_by {rand}.join)
-    tf_id = "#{id_prefix}_#{rand_id}"
+    tf_id = "#{form.object_name.gsub(/\]\[|\[|\]$/, '_')}#{method_name}_#{rand_id}"
     tag_options.merge!({:id => tf_id})
     completion_options.merge!(:method => :get, :indicator => "#{tf_id}_lab_spinner")
     return <<-HTML
       #{auto_complete_stylesheet}
-      #{"<label for='#{tf_id}'>#{label}</label>"}
-      #{text_field_tag(name, value, tag_options )}
+      #{form.label(method_name, label)}
+      #{form.text_field(method_name, tag_options)}
       #{image_tag 'redbox_spinner.gif', :id => "#{tf_id}_lab_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'}
       #{content_tag("div", "", :id => "#{tf_id}_auto_complete", :class => "auto_complete")}
       #{auto_complete_field tf_id, completion_options}
     HTML
   end
+
 
   # If this is an html request, then the script will be run when the
   # dom finishes loading. If it's an Ajax request, then the script

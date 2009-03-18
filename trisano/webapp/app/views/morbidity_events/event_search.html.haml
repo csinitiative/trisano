@@ -30,7 +30,7 @@
           %td 
             = event.party.last_comma_first + " (#{event.class.to_s.underscore.humanize})"
           %td= event.party.birth_date
-          %td= l event.party.birth_gender_id
+          %td= l event.party.birth_gender
           %td= event.primary_jurisdiction.short_name
           %td= event.event_onset_date
           - if can_update || can_view
