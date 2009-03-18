@@ -53,7 +53,7 @@ class Event < ActiveRecord::Base
   has_many :form_references
   has_many :answers, :autosave => true
   has_many :tasks, :order => 'due_date ASC'
-  has_many :notes, :order => 'updated_at ASC', :dependent => :destroy
+  has_many :notes, :order => 'created_at ASC', :dependent => :destroy
   has_many :attachments, :order => 'updated_at DESC'
 
   has_many :participations

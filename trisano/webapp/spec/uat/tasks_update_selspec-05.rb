@@ -26,6 +26,8 @@ describe 'Updating a task' do
     @disease = get_random_disease
     @task_name = get_random_word << " name task-uat"
     @task_notes = get_random_word << " notes task-uat"
+    @due_date = date_for_calendar_select(Date.today + 1)
+    @edited_due_date = date_for_calendar_select(Date.today + 2)
   end
   
   after(:all) do
@@ -33,6 +35,8 @@ describe 'Updating a task' do
     @disease = nil
     @task_name = nil
     @task_notes = nil
+    @due_date = nil
+    @edited_due_date = nil
   end
   
   it "should create a basic CMR" do
@@ -46,14 +50,14 @@ describe 'Updating a task' do
         :task_notes => @task_notes,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 25, 2020'
+        :task_due_date => @due_date
       }).should be_true
 
     is_text_present_in(@browser, "tasks", @task_name).should be_true
     is_text_present_in(@browser, "tasks", @task_notes).should be_true
     is_text_present_in(@browser, "tasks", "Appointment").should be_true
     is_text_present_in(@browser, "tasks", "Low").should be_true
-    is_text_present_in(@browser, "tasks", "2020-09-25").should be_true
+    is_text_present_in(@browser, "tasks", (Date.today + 1).strftime("%Y-%m-%d")).should be_true
     is_text_present_in(@browser, "tasks", "default_user").should be_true
 
   end
@@ -65,7 +69,7 @@ describe 'Updating a task' do
         :task_status => "Complete",
         :task_category => 'Treatment',
         :task_priority => 'High',
-        :task_due_date => 'September 26, 2020',
+        :task_due_date => @edited_due_date,
         :task_user_id => 'state_manager'
       }).should be_true
 
@@ -75,14 +79,14 @@ describe 'Updating a task' do
     is_text_present_in(@browser, "tasks", @task_notes).should be_false
     is_text_present_in(@browser, "tasks", "Appointment").should be_false
     is_text_present_in(@browser, "tasks", "Low").should be_false
-    is_text_present_in(@browser, "tasks", "2020-09-25").should be_false
+    is_text_present_in(@browser, "tasks", (Date.today + 1).strftime("%Y-%m-%d")).should be_false
     is_text_present_in(@browser, "tasks", "default_user").should be_false
     
     is_text_present_in(@browser, "tasks", "New name").should be_true
     is_text_present_in(@browser, "tasks", "New notes").should be_true
     is_text_present_in(@browser, "tasks", "Treatment").should be_true
     is_text_present_in(@browser, "tasks", "High").should be_true
-    is_text_present_in(@browser, "tasks", "2020-09-26").should be_true
+    is_text_present_in(@browser, "tasks", (Date.today + 2).strftime("%Y-%m-%d")).should be_true
     is_text_present_in(@browser, "tasks", "state_manager").should be_true
 
   end

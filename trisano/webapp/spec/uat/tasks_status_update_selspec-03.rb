@@ -36,12 +36,14 @@ describe 'Marking a task as completed or as not applicable' do
     @cmr_last_name = get_random_word << " ts-uat"
     @disease = get_random_disease
     @task_name = get_random_word << " ts-uat"
+    @due_date = date_for_calendar_select(Date.today + 1)
   end
   
   after(:all) do
     @cmr_last_name = nil
     @disease = nil
     @task_name = nil
+    @due_date = nil
   end
   
   it "should create a basic CMR" do
@@ -54,7 +56,7 @@ describe 'Marking a task as completed or as not applicable' do
         :task_name => @task_name,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020'
+        :task_due_date => @due_date
       }).should be_true
   end
 

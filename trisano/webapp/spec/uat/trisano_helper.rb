@@ -1096,6 +1096,8 @@ module TrisanoHelper
     browser.select("task_category_id", task_attributes[:task_category]) if task_attributes[:task_category]
     browser.select("task_priority", task_attributes[:task_priority]) if task_attributes[:task_priority]
     browser.type("task_due_date", task_attributes[:task_due_date]) if task_attributes[:task_due_date]
+    browser.type("task_until_date", task_attributes[:task_until_date]) if task_attributes[:task_until_date]
+    browser.select("task_repeating_interval", task_attributes[:task_repeating_interval]) if task_attributes[:task_repeating_interval]
     browser.select("task_user_id", task_attributes[:task_user_id]) if task_attributes[:task_user_id]
     browser.click("task_submit")
     browser.wait_for_page_to_load($load_time)
@@ -1135,6 +1137,10 @@ module TrisanoHelper
   def is_text_present_in(browser, html_id, text)
     result = browser.get_eval("selenium.browserbot.getCurrentWindow().$('#{html_id}').innerHTML.indexOf('#{text}') > 0")
     (result == "false") ? false : true
+  end
+
+  def date_for_calendar_select(date)
+    date.strftime("%B %d, %Y")
   end
   
   private

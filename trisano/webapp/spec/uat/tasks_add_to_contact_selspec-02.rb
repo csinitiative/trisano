@@ -28,6 +28,7 @@ describe 'Adding a task to a contact' do
     @task_name = get_random_word << " name task-uat"
     @task_with_notes_name = get_random_word << " task-uat"
     @task_with_notes_notes = get_random_word << " task-uat"
+    @due_date = date_for_calendar_select(Date.today + 1)
   end
   
   after(:all) do
@@ -37,6 +38,7 @@ describe 'Adding a task to a contact' do
     @task_name = nil
     @task_with_notes_name = nil
     @task_with_notes_notes = nil
+    @due_date = nil
   end
   
   it "should create a basic CMR and a contact" do
@@ -55,7 +57,7 @@ describe 'Adding a task to a contact' do
         :task_name => @task_name,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020'
+        :task_due_date => @due_date
       }).should be_true
   end
 
@@ -66,7 +68,7 @@ describe 'Adding a task to a contact' do
         :task_notes => @task_with_notes_notes,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020'
+        :task_due_date => @due_date
       }).should be_true
   end
 
@@ -83,8 +85,8 @@ describe 'Adding a task to a contact' do
   end
 
   it 'should only have added one note to the contact' do
-    note_count(@browser).should eql(1)
-    note_count(@browser, "Administrative").should eql(0)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(1)
     note_count(@browser, "Clinical").should eql(1)
   end
   

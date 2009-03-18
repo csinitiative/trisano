@@ -28,6 +28,7 @@ describe 'Adding a task to a CMR' do
     @task_with_notes_name = get_random_word << " task-uat"
     @task_with_notes_notes = get_random_word << " task-uat"
     @task_assigned_name = get_random_word << " task-uat"
+    @due_date = date_for_calendar_select(DateTime.now + 1)
   end
   
   after(:all) do
@@ -49,7 +50,7 @@ describe 'Adding a task to a CMR' do
         :task_name => @task_name,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020'
+        :task_due_date => @due_date
       }).should be_true
   end
 
@@ -60,7 +61,7 @@ describe 'Adding a task to a CMR' do
         :task_notes => @task_with_notes_notes,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020'
+        :task_due_date => @due_date
       }).should be_true
   end
 
@@ -70,7 +71,7 @@ describe 'Adding a task to a CMR' do
         :task_name => @task_assigned_name,
         :task_category => 'Appointment',
         :task_priority => 'Low',
-        :task_due_date => 'September 23, 2020',
+        :task_due_date => @due_date,
         :task_user_id => 'data_entry_tech'
       }).should be_true
   end
