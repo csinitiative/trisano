@@ -2,23 +2,28 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 #Some helpers in the script
-def get_random_number(digits)
-  dig = 10**digits -1
-  rand(dig).to_s
+def get_random_number(words)
+  wordlist1 = ["2","3","4","5","6","7","8","9"]
+  wordlist2 = ["0","1","2","3","4","5","6","7","8","9"]
+  result = wordlist1[rand(8)]
+  (words - 1).times do
+    result = result + wordlist2[rand(10)]
+  end
+  result
 end
 
 def get_random_words(words)
@@ -27,7 +32,7 @@ def get_random_words(words)
   (words - 1).times do
     result = result + wordlist[rand(319)]
   end
-  result    
+  result
 end
 
 def get_random_email
@@ -40,16 +45,16 @@ def get_random_date(keep_year, cur_value)
 end
 
 def set_value(line, field)
-  
+
   start_loc = line.index("\t")
   rep = field[:field_loc] - 2
-  
+
   #puts "rep: " + rep.to_s
-  
+
   rep.times do
     start_loc = line.index("\t", start_loc + 1)
   end
-  
+
   #puts "start_loc: " + start_loc.to_s
   stop_loc = line.index("\t", start_loc + 1)
   stop_loc.nil? ? stop_loc = line.size - 1 : stop_loc = stop_loc
@@ -69,12 +74,16 @@ def set_value(line, field)
     when 'text'
       value = get_random_words(field[:word_count])
     when 'date'
-      value = get_random_date(field[:keep_year], cur_value)
+      #value = get_random_date(field[:keep_year], cur_value)
+      value = cur_value #Disabling date obfu temporarily
+      #value = "2009-02-01"
+    when 'nil'
+      value = ""
     end
   end
   #puts "value: " + value
   line[0..start_loc] + value + line[stop_loc..line.size]
-  
+
 end
 
 #set up the object for tracking what to obfu
@@ -88,32 +97,38 @@ def get_obfu_config
         {:field_loc => 9, :type => 'email'} # email
       ]
     },
+    {#COPY notes (id, note, struckthrough, user_id, created_at, updated_at, event_id)
+      :table_name => 'notes', :fields => [
+        {:field_loc => 2, :type => 'text', :word_count => 10}  # note
+      ]
+    },
     {#COPY people (id, entity_id, birth_gender_id, ethnicity_id, primary_language_id, first_name, middle_name, last_name, birth_date, date_of_death, created_at, updated_at, food_handler_id, age_type_id, approximate_age_no_birthday, first_name_soundex, last_name_soundex, vector, live, next_ver, previous_ver, disposition_id) FROM stdin;
       :table_name => 'people', :fields => [
         {:field_loc => 6, :type => 'text', :word_count => 1},  # first_name
-        {:field_loc => 7, :type => 'text', :word_count => 1},  # middle_name 
+        {:field_loc => 7, :type => 'text', :word_count => 1},  # middle_name
         {:field_loc => 8, :type => 'text', :word_count => 1},  # last_name
         {:field_loc => 9, :type => 'date', :keep_year => true}, # birth_date
-        {:field_loc => 10, :type => 'date', :keep_year => true} # date_of_death
+        {:field_loc => 10, :type => 'date', :keep_year => true}, # date_of_death
+        {:field_loc => 18, :type => 'nil'} # vector
       ]
     },
     {#COPY addresses (id, location_id, county_id, state_id, street_number, street_name, unit_number, postal_code, created_at, updated_at, city) FROM stdin;
       :table_name => 'addresses', :fields => [
         {:field_loc => 5, :type => 'num', :digits => 5},  # street_number
-        {:field_loc => 6, :type => 'text', :word_count => 2},  # street_name, 
-        {:field_loc => 7, :type => 'num', :digits => 3},  # unit_number, 
+        {:field_loc => 6, :type => 'text', :word_count => 2},  # street_name,
+        {:field_loc => 7, :type => 'num', :digits => 3},  # unit_number,
         {:field_loc => 8, :type => 'num', :digits => 5}, # postal_code
         {:field_loc => 11, :type => 'text', :word_count => 1},  # street_name,
       ]
     },
     {#COPY event_queues (id, queue_name, jurisdiction_id) FROM stdin;
       :table_name => 'event_queues', :fields => [
-        {:field_loc => 2, :type => 'text', :word_count => 3}  # queue_name, 
+        {:field_loc => 2, :type => 'text', :word_count => 3}  # queue_name,
       ]
     },
     {#COPY organizations (id, entity_id, organization_type_id, organization_status_id, organization_name, duration_start_date, duration_end_date, created_at, updated_at) FROM stdin;
       :table_name => 'organizations', :fields => [
-        {:field_loc => 5, :type => 'text', :word_count => 3}  # organization_name, 
+        {:field_loc => 5, :type => 'text', :word_count => 3}  # organization_name,
       ]
     },
     {#COPY hospitals_participations (id, participation_id, hospital_record_number, admission_date, discharge_date, created_at, updated_at, medical_record_number)
@@ -158,27 +173,27 @@ counter = 0
 
 while (line = file_in.gets)
   tables.each do |table|
-    if active_table == table[:table_name] 
+    if active_table == table[:table_name]
       if line.index("\\.").nil?
         #Change the values in this line
-        #puts line                 
+        #puts line
         table[:fields].each do |field|
           line = set_value(line, field)
           counter = counter + 1
         end
         #puts line
-      else        
+      else
         puts "Updated " + counter.to_s + " rows in table: " + table[:table_name] + "."
         active_table = nil
         counter = 0
       end
     end
-    if line.index("COPY " + table[:table_name] + " ") != nil 
-      active_table = table[:table_name]    
+    if line.index("COPY " + table[:table_name] + " ") != nil
+      active_table = table[:table_name]
     end
   end
   file_out.puts(line)
-  
+
 end
 
 file_in.close
