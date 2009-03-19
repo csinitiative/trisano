@@ -35,7 +35,6 @@ describe Export::Csv do
   end
 
   it "should expose an export method that takes an event or a list of events and an optional proc" do
-    #pending "till csv is done"
     lambda { Export::Csv.export(   MorbidityEvent.new(@event_hash)   )    }.should_not raise_error()
     lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] )    }.should_not raise_error()
     lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] ) { MorbidityEvent.new(@event_hash) } }.should_not raise_error()
@@ -77,8 +76,8 @@ describe Export::Csv do
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
       e = csv_mock_event(:morbidity)
-      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
-      a[0].include?("disease_specific_morb_q").should be_true
+      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )      
+      a[0].include?("disease_specific_morb_q").should be_true      
       a[1].should =~ /#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}/
     end
   end
@@ -325,14 +324,13 @@ def event_output(event_type, m, options={})
     out << "#{m.acuity},"
     out << "#{m.other_data_1},"
     out << "#{m.other_data_2},"
+    out << "#{m.created_at},"
+    out << "#{m.updated_at},"
 
     if options[:disease]
-      out << "#{m.answers[0].text_answer},"
+      out << "#{m.answers[0].text_answer}"
     end
-
   end
-  out << "#{m.created_at},"
-  out << "#{m.updated_at}"
 end
 
 def lab_output

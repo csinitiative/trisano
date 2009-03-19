@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009 TheCollaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -28,20 +28,18 @@ module Export
       events = [events] unless events.respond_to?(:each)
       return if events.empty?
       raise ArgumentError unless events.first.is_a? Event
-      full_export(events, options, &proc)      
+      full_export(events, options)      
     end
 
     private
 
-    def Csv.full_export(events, options, &proc)
+    def Csv.full_export(events, options)
       # Formbuilder answers are only displayed if there is only one row to output or the user chose a specific
       # disease in the event search form, which sets the show_answers option.
       options[:show_answers] = events.size == 1 ? true : false unless options[:show_answers]
       options[:export_options] ||= []
       options[:disease] = disease_for_single_event(events.first) if ((events.size == 1) && (options[:disease].nil?))
 
-      output = ""
-      event_type = nil
       exportable_questions = {
         :morbidity_event => [],
         :contact_event => [],
@@ -59,194 +57,255 @@ module Export
         place_forms.each { |form| exportable_questions[:place_event].concat(form.exportable_questions) }
       end
       
-      events.each do |event|
-        # Give the user a chance to convert an event into some other event.  Used mainly by search.
-        event = proc.call(event) if proc
-        
-        unless event.deleted_at
-          # Check to see if we're moving from one event type to another so as to spit out new headers
-          event_break = (event_type == event.class.name) ? false : true
-          event_type  = event.class.name
-          output_header(event, output, options, exportable_questions) if event_break
-          output_body(event, output, options, exportable_questions)
-        end
-      end
-      output
+      LineExporter.events_csv(events, options, exportable_questions)
     end
 
-    def Csv.output_header(event, output, options, exportable_questions)
-      csv_header  = event_headers(event, options, exportable_questions)
-      csv_header += lab_headers(options) if options[:export_options].include? "labs"
-      csv_header += treatment_headers(options) if options[:export_options].include? "treatments"
-      if event.is_a? MorbidityEvent
-        csv_header += event_headers(PlaceEvent.new, options, exportable_questions) if options[:export_options].include? "places"
-        csv_header += event_headers(ContactEvent.new, options, exportable_questions) if options[:export_options].include? "contacts"
+    def Csv.disease_for_single_event(event)
+      begin
+        Disease.find(event.disease_id) unless event.disease_id.blank?
+      rescue
+        nil
       end
-      csv_out(output, csv_header)
     end
 
-    # A root-level event is either a morbidity or a contact, not a place
-    def Csv.output_body(event, output, options, exportable_questions)
-      # A contact's only contact is the original patient
-      num_contacts    = options[:export_options].include?("contacts") ? event.contact_child_events.active(true).size : 0
-      #contacts don't have places
-      num_places      = event.is_a?(MorbidityEvent) && options[:export_options].include?("places") ? event.place_child_events.active(true).size : 0
-      num_lab_results = options[:export_options].include?("labs") ? event.lab_results.size : 0
-      num_treatments  = options[:export_options].include?("treatments") ? event.interested_party.treatments.size : 0
-      loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
-
-      # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
-      # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
-      loop_event = event
-      loop_ctr.times do |ctr| 
-        csv_row   = event_values(loop_event, options, exportable_questions).map { |value| value.to_s.gsub(/,/,' ') }
-
-        # Blank out the main event for successive rows, but not the ID
-        loop_event = event.class.new
-        loop_event.id = event.id
-
-        if options[:export_options].include? "labs"
-          if ctr < num_lab_results
-            lab_result = event.lab_results[ctr]
-          else
-            lab_result = LabResult.new
-          end
-          csv_row += lab_values(lab_result).map { |value| value.to_s.gsub(/,/,' ') }
+    class LineExporter
+      class << self
+        def events_csv(events, options, exportable_questions)
+          exporter = new(events, options, exportable_questions)
+          exporter.to_csv
         end
+      end
+      
+      attr_reader :events, :options, :exportable_questions, :output
+      private     :events, :options, :exportable_questions, :output
 
-        if options[:export_options].include? "treatments"
-          if ctr < num_treatments
-            treatment = event.interested_party.treatments[ctr]
-          else
-            treatment = ParticipationsTreatment.new
+      def initialize(events, options, exportable_questions)
+        @events = events
+        @options = options
+        @exportable_questions = exportable_questions
+      end
+
+      def to_csv
+        @output = ""
+        event_type = nil
+        events.each do |event|
+          unless event.deleted_at
+            # Check to see if we're moving from one event type to another so as to spit out new headers
+            event_break = (event_type == event.class.name) ? false : true
+            event_type  = event.class.name
+            output_header(event) if event_break
+            output_body(event)
           end
-          csv_row += treatment_values(treatment).map { |value| value.to_s.gsub(/,/,' ') }
         end
+        output
+      end
 
+      def exporting_labs?
+        export_options.include? "labs"
+      end
+
+      def exporting_treatments?
+        export_options.include? "treatments"
+      end
+
+      def exporting_places?
+        export_options.include? "places"
+      end
+
+      def exporting_contacts?
+        export_options.include? "contacts"
+      end
+      
+      def exporting_using_short_names?
+        export_options.try(:include?, 'use_short_names')
+      end
+
+      def showing_answers?
+        options[:show_answers]
+      end
+
+      private
+
+      def export_options
+        options[:export_options]
+      end
+      
+      def output_header(event)
+        csv_header  = event_headers(event)
+        csv_header += lab_headers if exporting_labs?
+        csv_header += treatment_headers if exporting_treatments?
         if event.is_a? MorbidityEvent
-          if options[:export_options].include? "places"
-            if ctr < num_places
-              place_event = event.place_child_events.active[ctr]
-            else
-              place_event = PlaceEvent.new
-            end
-            csv_row += event_values(place_event, options, exportable_questions).map { |value| value.to_s.gsub(/,/,' ') }
-          end
-
-          if options[:export_options].include? "contacts"
-            if ctr < num_contacts
-              contact_event = event.contact_child_events.active[ctr]
-            else
-              contact_event = ContactEvent.new
-            end
-            csv_row += event_values(contact_event, options, exportable_questions).map { |value| value.to_s.gsub(/,/,' ') }
-          end
+          csv_header += event_headers(PlaceEvent) if exporting_places?
+          csv_header += event_headers(ContactEvent) if exporting_contacts?
         end
-
-        csv_out(output, csv_row)
+        csv_out(csv_header)
       end
-    end
 
-    def Csv.event_headers(event, options, exportable_questions)
-      event_data(event, options, exportable_questions).map { |event_datum| event_datum.first }
-    end
+      def event_headers(event)
+        event_data(event).map { |event_datum| event_datum.first }
+      end
 
-    def Csv.lab_headers(options)
-      lab_data(options).map { |lab_datum| lab_datum.first }
-    end
+      def lab_headers
+        lab_data.map { |lab_datum| lab_datum.first }
+      end
 
-    def Csv.treatment_headers(options)
-      treatment_data(options).map { |treatment_datum| treatment_datum.first }
-    end
+      def treatment_headers
+        treatment_data.map { |treatment_datum| treatment_datum.first }
+      end
 
-    def Csv.event_values(event, options, exportable_questions)
-      if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-        event_data(event, options, exportable_questions).collect do |event_datum| 
+      # A root-level event is either a morbidity or a contact, not a place
+      def output_body(event)
+        # A contact's only contact is the original patient
+        num_contacts    = exporting_contacts? ? event.contact_child_events.active(true).size : 0
+        #contacts don't have places
+        num_places      = event.is_a?(MorbidityEvent) && exporting_places? ? event.place_child_events.active(true).size : 0
+        num_lab_results = exporting_labs? ? event.lab_results.size : 0
+        num_treatments  = exporting_treatments? ? event.interested_party.treatments.size : 0
+        loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
+
+        # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
+        # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
+        loop_event = event
+        loop_ctr.times do |ctr| 
+          csv_row = event_values(loop_event).map { |value| value.to_s.gsub(/,/,' ') }
+
+          # Blank out the main event for successive rows, but not the ID
+          loop_event = event.class.new
+          loop_event.id = event.id
+
+          if exporting_labs?
+            if ctr < num_lab_results
+              lab_result = event.lab_results[ctr]
+            else
+              lab_result = LabResult.new
+            end
+            csv_row += lab_values(lab_result).map { |value| value.to_s.gsub(/,/,' ') }
+          end
+
+          if exporting_treatments?
+            if ctr < num_treatments
+              treatment = event.interested_party.treatments[ctr]
+            else
+              treatment = ParticipationsTreatment.new
+            end
+            csv_row += treatment_values(treatment).map { |value| value.to_s.gsub(/,/,' ') }
+          end
+
+          if event.is_a? MorbidityEvent
+            if exporting_places?
+              if ctr < num_places
+                place_event = event.place_child_events.active[ctr]
+              else
+                place_event = PlaceEvent.new
+              end
+              csv_row += event_values(place_event).map { |value| value.to_s.gsub(/,/,' ') }
+            end
+
+            if exporting_contacts?
+              if ctr < num_contacts
+                contact_event = event.contact_child_events.active[ctr]
+              else
+                contact_event = ContactEvent.new
+              end
+              csv_row += event_values(contact_event).map { |value| value.to_s.gsub(/,/,' ') }
+            end
+          end
+          
+          csv_out(csv_row)
+        end
+      end
+
+      def event_values(event)
+        if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
+          event_data(event).collect do |event_datum| 
+            begin
+              event.instance_eval(event_datum.last) 
+            rescue Exception => ex
+              raise ex.message + event_datum.last
+            end
+          end
+        else
+          # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
+          ed = event_data(event).collect { nil }
+          ed[0] = event.id
+          ed
+        end
+      end
+
+      def lab_values(lab_result)
+        lab_data.collect do |lab_datum| 
           begin
-            event.instance_eval(event_datum.last) 
+            lab_result.instance_eval(lab_datum.last)
           rescue Exception => ex
-            raise ex.message + event_datum.last
+            raise ex.message + lab_datum.last
           end
         end
-      else
-        # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
-        ed = event_data(event, options, exportable_questions).collect { nil }
-        ed[0] = event.id
-        ed
       end
-    end
-
-    def Csv.lab_values(lab_result)
-      lab_data.collect do |lab_datum| 
-        begin
-          lab_result.instance_eval(lab_datum.last)
-        rescue Exception => ex
-          raise ex.message + lab_datum.last
+      
+      def treatment_values(treatment)
+        treatment_data.collect do |treatment_datum| 
+          begin
+            treatment.instance_eval(treatment_datum.last)
+          rescue Exception => ex
+            raise ex.message + treatment_datum.last
+          end
         end
       end
-    end
 
-    def Csv.treatment_values(treatment)
-      treatment_data.collect do |treatment_datum| 
-        begin
-          treatment.instance_eval(treatment_datum.last)
-        rescue Exception => ex
-          raise ex.message + treatment_datum.last
+      def event_data(event_or_class)
+        clazz = event_or_class.is_a?(Class) ? event_or_class : event_or_class.class
+        meth = "#{clazz.to_s.underscore}_fields"
+        event_data = CsvField.send(meth).map do |csv_field|
+          [csv_field.send(short_or_long_name), script_for(csv_field)]
+        end        
+        if showing_answers? and event_or_class.respond_to?(:answers)
+          event_data += event_answers(event_or_class)
         end
+        event_data
       end
-    end
-
-    def Csv.csv_out(str, data)
-      CSV::Writer.generate(str) do |writer|
-        writer << data
-      end
-    end
-
-    def Csv.event_data(event, options, exportable_questions)
-      meth = "#{event.class.to_s.underscore}_fields"
-      event_data = CsvField.send(meth).map do |csv_field|
-        [csv_field.send(column_name(options)), csv_field.evaluation]
-      end
-      if options[:show_answers]
-        event_data = event_data + (event_answers(event, exportable_questions, options) + event_data.slice!(-2, 2))
-      end
-      event_data
-    end
-  end
   
-  def Csv.event_answers(event, exportable_questions, options)
-    answers = []
-    exportable_questions[event.class.name.underscore.to_sym].each do |question|
-      answer = event.answers.detect { |answer| answer.short_name == question.short_name }
-      text_answer = answer.nil? ? "" : answer.text_answer
-      escaped_answer = text_answer.blank? ? "" : text_answer.gsub(/'/, "\\\\'")
-      column_name = options[:export_options].include?('use_short_names') ? question.short_name : "disease_specific_#{question.short_name}"
-      answers << [column_name, "'#{escaped_answer}'"]
-    end
-    answers
-  end
+      def event_answers(event)
+        answers = []
+        exportable_questions[event.class.name.underscore.to_sym].each do |question|
+          answer = event.answers.detect { |answer| answer.short_name == question.short_name }
+          text_answer = answer.nil? ? "" : answer.text_answer
+          escaped_answer = text_answer.blank? ? "" : text_answer.gsub(/'/, "\\\\'")
+          column_name = exporting_using_short_names? ? question.short_name : "disease_specific_#{question.short_name}"
+          answers << [column_name, "'#{escaped_answer}'"]
+        end
+        answers
+      end
 
-  def Csv.lab_data(options = {})
-    CsvField.lab_fields.map do |csv_field| 
-      [csv_field.send(column_name(options)), csv_field.evaluation]
-    end
-  end
+      def lab_data
+        CsvField.lab_fields.map do |csv_field| 
+          [csv_field.send(short_or_long_name), script_for(csv_field)]
+        end
+      end
 
-  def Csv.treatment_data(options = {})
-    CsvField.treatment_fields.map do |csv_field|
-      [csv_field.send(column_name(options)), csv_field.evaluation]
-    end
-  end
+      def treatment_data
+        CsvField.treatment_fields.map do |csv_field|      
+          [csv_field.send(short_or_long_name), script_for(csv_field)]
+        end
+      end
 
-  def Csv.disease_for_single_event(event)
-    begin
-      Disease.find(event.disease_id) unless event.disease_id.blank?
-    rescue
-      nil
-    end
-  end
+      def short_or_long_name
+        exporting_using_short_names? ? :short_name : :long_name
+      end
 
-  def Csv.column_name(options)
-    options[:export_options].try(:include?, 'use_short_names') ? :short_name : :long_name
+      def script_for(csv_field)
+        if options[csv_field.long_name] == 'use_code'
+          csv_field.use_code || csv_field.use_description
+        else
+          csv_field.use_description
+        end
+      end
+
+      def csv_out(data)
+        CSV::Writer.generate(output) do |writer|
+          writer << data
+        end
+      end
+
+    end
   end
 end

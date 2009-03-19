@@ -1035,8 +1035,8 @@ module EventsHelper
   # Renders events as csv. Optional block gives you the opportunity to
   # handle each event before it is converted to csv. This is handy for
   # looking up an actual event from a set of find_by_sql records.
-  def render_events_csv(events, options={}, &proc)
-    Export::Csv.export(events, options, &proc)
+  def render_events_csv(events, options={})
+    Export::Csv.export(events, options)
   end
 
   # wraps up remote function so it can be used in a prototype callback
