@@ -24,7 +24,6 @@ module Export
     # be either morbidity events, contact events or a mix of both (ideally sorted first by event type).  
     # For morbidities and contacts we need to output labs and treatments, if any, on separate lines.  Also, 
     # for morbidities only we need to output any contact or place (exposure) events associated with the event.
-
     def Csv.export(events, options={}, &proc)
       events = [events] unless events.respond_to?(:each)
       return if events.empty?

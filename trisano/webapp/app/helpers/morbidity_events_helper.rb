@@ -55,4 +55,26 @@ module MorbidityEventsHelper
     controls
   end
 
+  # grrr. sometimes a refresh leaves stuff checked. this makes sure
+  # the right code/description options are displayed if that happens.
+  def set_options_availability
+    <<-JS
+      <script type="text/javascript">
+        document.observe('dom:loaded', function() {
+          $$('#export_options_').each(function(field) {
+            if (field.checked) {
+              if (field.value == 'contacts')
+                $('contact_code_field_options').show();
+              else if (field.value == 'places')
+                $('place_code_field_options').show();
+              else if (field.value == 'labs')
+                $('lab_code_field_options').show();
+              else if (field.value == 'treatments')
+                $('treatment_code_field_options').show();
+            }
+          });
+        });
+      </script>
+    JS
+  end
 end

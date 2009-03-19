@@ -16,22 +16,91 @@
         - else
           = hidden_field_tag(key, value)
       %label.horiz
-        = check_box_tag("export_options[]", "contacts")
+        = check_box_tag("export_options[]", "contacts", false, :onclick => "$('contact_code_field_options').toggle();")
         %span Contacts
       %label.horiz
-        = check_box_tag("export_options[]", "places")
+        = check_box_tag("export_options[]", "places", false, :onclick => "$('place_code_field_options').toggle();")
         %span Place Exposures
       %label.horiz
-        = check_box_tag("export_options[]", "labs")
+        = check_box_tag("export_options[]", "labs", false, :onclick => "$('lab_code_field_options').toggle();")
         %span Lab Results
       %label.vert
-        = check_box_tag("export_options[]", "treatments")
+        = check_box_tag("export_options[]", "treatments", false, :onclick => "$('treatment_code_field_options').toggle();")
         %span Treatments
       %b Additional Options:
       %br
-      %label.horiz
+      %label.vert
         = check_box_tag("export_options[]", "use_short_names")
         %span Use Short Column Names
+      %b Codes and Descriptions:      
+      %div{:style => 'width: 25em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
+        %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
+          #morbidity_code_field_options
+            %table
+              %thead
+                %tr
+                  %th CMR Field
+                  %th Description
+                  %th Code
+              %tbody
+                - CsvField.morbidity_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag field.long_name, 'use_description', true
+                    %td= radio_button_tag field.long_name, 'use_code'
+          #contact_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th Contact Field
+                  %th Description
+                  %th Code
+              %tbody
+                - CsvField.contact_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag field.long_name, 'use_description', true
+                    %td= radio_button_tag field.long_name, 'use_code'
+          #place_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th Place Field
+                  %th Description
+                  %th Code
+              %tbody
+                - CsvField.place_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag field.long_name, 'use_description', true
+                    %td= radio_button_tag field.long_name, 'use_code'
+          #lab_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th Lab Field
+                  %th Description
+                  %th Code
+              %tbody
+                - CsvField.lab_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag field.long_name, 'use_description', true
+                    %td= radio_button_tag field.long_name, 'use_code'
+          #treatment_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th Treatment Field
+                  %th Description
+                  %th Code
+              %tbody
+                - CsvField.treatment_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag field.long_name, 'use_description', true
+                    %td= radio_button_tag field.long_name, 'use_code'
+          = set_options_availability
       -# This div is needed to keep IE from drawing a button as wide as the form.
       %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
         = submit_tag("Export", :id => "export_btn")
