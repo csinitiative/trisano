@@ -256,7 +256,7 @@ class MorbidityEventsController < EventsController
 
   def event_search
     if params[:name]
-      @events = Event.search_by_name(params[:name])
+      @events = HumanEvent.search_by_name(params[:name])
     end
   end
 

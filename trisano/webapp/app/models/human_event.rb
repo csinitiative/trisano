@@ -99,6 +99,34 @@ class HumanEvent < Event
       event.address = entity_address ? entity_address.clone : nil
       event
     end
+
+    def search_by_name(name)
+      soundex_codes = []
+      fulltext_terms = []
+      raw_terms = name.split(" ")
+
+      raw_terms.each do |word|
+        soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
+        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+      end
+
+      fulltext_terms << soundex_codes unless soundex_codes.empty?
+      sql_terms = fulltext_terms.join(" | ")
+
+      where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
+      order_by_clause = " ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id ASC;"
+
+      options = { :include => [ { :interested_party => { :person_entity => :person } }, :disease_event ],
+                  :conditions => where_clause,
+                  :order => order_by_clause }
+
+      # This may or may not be a Rails bug, but in order for HumanEvent to know that MorbidityEvent and ContactEvent are
+      # its descendents, and thus generate the proper where clause, Rails needs to have 'seen' these classes at least
+      # once, so do something innocuous in order to ensure this.
+      MorbidityEvent.object_id; ContactEvent.object_id
+      self.all(options)
+    end
+
   end
 
   def lab_results

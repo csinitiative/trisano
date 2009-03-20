@@ -34,3 +34,10 @@ Feature: Searching for existing people or events before adding a CMR
 
     When I search for "Jones"
     Then the disease should show as 'private'
+
+  Scenario: People with multiple events are grouped together
+    Given there are 2 morbidity events for a single person with the last name Jones
+    And I am logged in as a super user
+    
+    When I search for "Jones"
+    Then I should see two morbidity events under one name

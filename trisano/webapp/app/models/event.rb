@@ -632,28 +632,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def self.search_by_name(name)
-    soundex_codes = []
-    fulltext_terms = []
-    raw_terms = name.split(" ")
-
-    raw_terms.each do |word|
-      soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-      fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
-    end
-
-    fulltext_terms << soundex_codes unless soundex_codes.empty?
-    sql_terms = fulltext_terms.join(" | ")
-
-    where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
-    order_by_clause = " ts_rank(people.vector, '#{sql_terms}') DESC, people.last_name, people.first_name ASC;"
-
-    options = { :include => [ { :interested_party => { :person_entity => :person } }, :disease_event ],
-                :conditions => where_clause,
-                :order => order_by_clause }
-    MorbidityEvent.all(options) + ContactEvent.all(options)
-  end
-
   def get_investigation_forms
     if self.form_references.empty?
       return [] if self.disease_event.nil? || self.disease_event.disease_id.blank?
