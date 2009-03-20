@@ -37,8 +37,7 @@ class ApplicationController < ActionController::Base
   def can_view_event?
     @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have view privileges for this jurisdiction", :status => 403
-      return
+      render :partial => 'events/permission_denied', :locals => { :reason => "You do not have view privileges for this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
     end
 
   end
@@ -47,8 +46,7 @@ class ApplicationController < ActionController::Base
   def can_update_event?
     @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
-      return
+      render :partial => 'events/permission_denied', :locals => { :reason => "You do not have update privileges for this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
     end
   end
 

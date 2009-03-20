@@ -177,8 +177,7 @@ class EventsController < ApplicationController
   def can_update?
     @event ||= Event.find(params[:id])
     unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :text => "Permission denied: You do not have update privileges for this jurisdiction", :status => 403
-      return
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have update privileges for this jurisdiction", :event => @event }, :status => 403 and return
     end
     reject_if_wrong_type(@event)
   end

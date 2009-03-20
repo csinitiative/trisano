@@ -72,7 +72,7 @@ describe EventNotesController do
 
     it "should contain permissions error" do
       do_get
-      response.body.include?("Permission denied").should == true
+      response.should render_template('events/permission_denied')
     end
   end
 

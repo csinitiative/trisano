@@ -47,7 +47,7 @@ class FormsController < AdminController
   def edit
     @form = Form.find(params[:id])
     if not @form.is_template
-      render :text => "permission denied: this form id is not a template form", :status => 403
+      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
     end
   end
 
@@ -114,7 +114,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
     @form.structure_valid?
     if not @form.is_template
-      render :text => "Permission denied: This form id is not a template form", :status => 403
+      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
     end
   end
   

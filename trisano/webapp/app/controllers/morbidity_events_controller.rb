@@ -65,7 +65,7 @@ class MorbidityEventsController < EventsController
 
   def new
     unless User.current_user.is_entitled_to?(:create_event)
-      render :text => "Permission denied: You do not have privileges to create a CMR", :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have privileges to create a CMR", :event => nil }, :layout => true, :status => 403 and return
     end
 
     @event = MorbidityEvent.new
@@ -99,7 +99,7 @@ class MorbidityEventsController < EventsController
     @event.event_onset_date = Date.today
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.primary_jurisdiction.entity_id)
-      render :text => "Permission denied: You do not have create privileges for this jurisdiction", :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have create priveleges in this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
@@ -171,7 +171,7 @@ class MorbidityEventsController < EventsController
 
     # user cannot route events _from_ a jurisdiction for which they do not have the 'route_event_to_any_lhd' privilege
     unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, @event.jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have sufficent privileges to route events from this jurisdiction", :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have sufficient privileges to route events from this jurisdiction", :event => @event }, :status => 403, :layout => true and return
     end
 
     begin
@@ -208,7 +208,7 @@ class MorbidityEventsController < EventsController
 
     # Check if the user is allowed to change the event to the passed in state
     unless User.current_user.is_entitled_to_in?(priv_required, @event.jurisdiction.secondary_entity_id)
-      render :text => "Permission denied: You do not have sufficent privileges to make this change", :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have sufficient privileges to make this change", :event => nil }, :layout => true, :status => 403 and return
     end
     
     # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
