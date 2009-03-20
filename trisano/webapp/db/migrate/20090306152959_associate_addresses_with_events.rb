@@ -4,6 +4,11 @@ class AssociateAddressesWithEvents < ActiveRecord::Migration
   def self.up
     add_column :addresses, :event_id, :integer
     add_foreign_key :addresses, :event_id, :events
+
+    if RAILS_ENV == 'production'
+      eval(File.read("#{RAILS_ROOT}/script/associate_addresses_to_events.rb"))
+    end
+
   end
 
   def self.down
