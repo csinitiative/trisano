@@ -23,6 +23,11 @@ class FormElement < ActiveRecord::Base
   has_one :question
   belongs_to :export_column
 
+  named_scope :library_roots, :conditions => {
+    :parent_id => nil,
+    :form_id => nil
+    }
+
   @@export_lookup_separator = "|||"
   
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other

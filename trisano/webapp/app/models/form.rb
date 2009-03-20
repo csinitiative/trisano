@@ -327,6 +327,50 @@ class Form < ActiveRecord::Base
     end
   end
 
+  def self.export_library
+    begin
+      base_path = "/tmp/"
+      zip_file_path = "#{base_path}library-export.zip"
+      form_elements_file_name = "library-elements"
+      library_elements = []
+
+      FormElement.library_roots.each do |library_root|
+        library_root_json = FormElementCache.new(library_root).full_set.patched_array_to_json(:methods => [
+            :type, :question, :code_condition_lookup, :cdc_export_column_lookup, :cdc_export_conversion_value_lookup
+          ])
+        library_elements << library_root_json[1...library_root_json.size-1]
+      end
+        
+      File::open("#{base_path}#{form_elements_file_name}", 'w') do |file|
+        file << ("[" << library_elements.join(",") << "]")
+      end
+
+      File.delete(zip_file_path) if File.file?(zip_file_path)
+      Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) { |zip| zip.add( form_elements_file_name, "#{base_path}#{form_elements_file_name}") }
+      File.delete("#{base_path}#{form_elements_file_name}")
+      File.chmod(0644, zip_file_path)
+      return zip_file_path
+    rescue Exception => ex
+      logger.error ex
+      raise ex
+    end
+  end
+
+  def self.import_library(form_upload)
+    begin
+      base_path = "/tmp/"
+      uploaded_file_name = form_upload.original_filename
+      File::open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
+      Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
+        import_elements(zip.read("library-elements"))
+      end
+      return true
+    rescue Exception => ex
+      logger.error ex
+      raise ex
+    end
+  end
+
   def most_recent_version(form_id = nil)
     form_id = form_id.nil? ? self.id : form_id
     Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
@@ -488,14 +532,14 @@ class Form < ActiveRecord::Base
     end
   end
 
-  def self.import_elements(element_import_string, form_id)
+  def self.import_elements(element_import_string, form_id = nil)
     elements = ActiveSupport::JSON.decode(element_import_string)
     parent_id_map = {}
     tree_id = Form.next_tree_id
       
     elements.each do |e|
       values = {}
-      values[:form_id] = form_id
+      values[:form_id] = null_safe_sanitize(form_id)
       values[:type] = "'#{sanitize_sql(["%s", e["type"]])}'"
       values[:name] = null_safe_sanitize(e["name"])
       values[:description] = null_safe_sanitize(e["description"])

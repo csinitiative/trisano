@@ -830,6 +830,78 @@ describe Form do
     end
     
   end
+
+  describe 'when exporting the library' do
+    
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    before(:each) do
+      FormElement.find(form_elements(:second_tab_q)).add_to_library.should_not be_nil
+      FormElement.find(form_elements(:core_follow_up_for_hep_a_form)).add_to_library.should_not be_nil
+      FormElement.find(form_elements(:cdc_question_for_hep_a_form)).add_to_library.should_not be_nil
+    end
+    
+    it 'should export all elements in the library to a file' do
+      export_file_path = Form.export_library
+      export_file_path.should_not be_nil
+      export_file_path[export_file_path.rindex("/")+1...export_file_path.size].should eql("library-export.zip")
+
+      Zip::ZipFile.foreach(export_file_path) do |file|
+        ["library-elements"].include?(file.name).should be_true
+      end
+    end
+
+    it 'should fail if a code behind a condition cannot be found' do
+      ExternalCode.destroy(external_codes(:yesno_maybe).id)
+      lambda {  Form.export_library }.should raise_error
+    end
+
+    it 'should fail if an export column cannot be found' do
+      ExportColumn.destroy(export_columns(:hep_jaundiced).id)
+      lambda {  Form.export_library }.should raise_error
+    end
+
+    it "should fail if an export column's group cannot be found" do
+      ExportDiseaseGroup.destroy(export_disease_groups(:hep_group).id)
+      lambda {  Form.export_library }.should raise_error
+    end
+
+    it "should fail if an export conversion value cannot be found" do
+      ExportConversionValue.destroy(export_conversion_values(:jaundiced_yes).id)
+      lambda {  Form.export_library }.should raise_error
+    end
+
+  end
+
+  describe 'when importing the library' do
+
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    it 'should add all of the elements in the file to the library' do
+      lambda { Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should change { FormElement.library_roots.size }.by(3)
+    end
+
+    it 'should fail if a code behind a condition cannot be found' do
+      ExternalCode.destroy(external_codes(:yesno_maybe).id)
+      lambda {  Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should raise_error
+    end
+
+    it 'should fail if an export column cannot be found' do
+      ExportColumn.destroy(export_columns(:hep_jaundiced).id)
+      lambda {  Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should raise_error
+    end
+
+    it "should fail if an export column's group cannot be found" do
+      ExportDiseaseGroup.destroy(export_disease_groups(:hep_group).id)
+      lambda {  Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should raise_error
+    end
+
+    it "should fail if an export conversion value cannot be found" do
+      ExportConversionValue.destroy(export_conversion_values(:jaundiced_yes).id)
+      lambda {  Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should raise_error
+    end
+
+  end
   
   describe 'when importing into a changed or different environment' do
     
@@ -921,9 +993,9 @@ describe Form do
       # contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
       #   :disease => {:disease_id => diseases(:anthrax).id} }
       contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
-                                                                                                                                 "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-                                                              "participations_contact_attributes" => {},
-                                                              "disease_event_attributes" => { "disease_id" => diseases(:anthrax).id} } ] }
+                "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+            "participations_contact_attributes" => {},
+            "disease_event_attributes" => { "disease_id" => diseases(:anthrax).id} } ] }
 
       event = MorbidityEvent.new(@event_hash.merge(contact_hash))
       # contact_events = ContactEvent.initialize_from_morbidity_event(event)

@@ -200,7 +200,7 @@ class FormsController < AdminController
     if export_file_path
       response.headers['Content-type'] = "application/zip"
       send_file export_file_path
-      head :ok    # Makes RSpec happy with rails 2.3
+      #head :ok    # Makes RSpec happy with rails 2.3, but breaks behavior in browser
     else
       error_message = "Unable to export the form."
       error_message << " #{@form.errors["base"]}" unless @form.errors.empty?

@@ -435,4 +435,17 @@ describe "when executing an operation that requires form element structure valid
     default_view.reorder_element_children([3, 8, 12]).should be_nil
   end
 
+  describe 'library roots named scope' do
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    it 'should return only library roots' do
+      library_copy = nil
+      form_element = FormElement.find(form_elements(:second_tab_q))
+      lambda { library_copy = form_element.add_to_library }.should change {FormElement.library_roots.size}.by(1)
+      FormElement.library_roots.detect { |root| root.id == library_copy.id }.should_not be_nil
+      FormElement.library_roots.detect { |root| root.id == form_element.id }.should be_nil
+    end
+    
+  end
+
 end
