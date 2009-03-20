@@ -611,7 +611,7 @@ csv_field_00116:
   sort_order: 140
   export_group: event
   long_name: contact_age_at_onset_in_years
-  use_description: age_info.in_years
+  use_description: age_info.try(:in_years)
   short_name: 
   use_code: 
   event_type: contact_event
@@ -1291,7 +1291,7 @@ csv_field_00045:
   sort_order: 140
   export_group: event
   long_name: patient_age_at_onset_in_years
-  use_description: age_info.in_years
+  use_description: age_info.try(:in_years)
   short_name: 
   use_code: 
   event_type: morbidity_event

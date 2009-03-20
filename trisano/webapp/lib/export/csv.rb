@@ -221,7 +221,7 @@ module Export
             begin
               event.instance_eval(event_datum.last) 
             rescue Exception => ex
-              raise ex.message + event_datum.last
+              raise "#{ex.message}: #{event_datum.join('|')}"
             end
           end
         else
@@ -237,7 +237,7 @@ module Export
           begin
             lab_result.instance_eval(lab_datum.last)
           rescue Exception => ex
-            raise ex.message + lab_datum.last
+            raise "#{ex.message}: #{lab_datum.join('|')}"
           end
         end
       end
@@ -247,7 +247,7 @@ module Export
           begin
             treatment.instance_eval(treatment_datum.last)
           rescue Exception => ex
-            raise ex.message + treatment_datum.last
+            raise "#{ex.message}: #{treatment_datum.join('|')}"
           end
         end
       end
@@ -292,7 +292,7 @@ module Export
         exporting_using_short_names? ? :short_name : :long_name
       end
 
-      def script_for(csv_field)
+      def script_for(csv_field)        
         if options[csv_field.long_name] == 'use_code'
           csv_field.use_code || csv_field.use_description
         else

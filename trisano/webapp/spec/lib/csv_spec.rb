@@ -82,6 +82,34 @@ describe Export::Csv do
     end
   end
 
+  describe 'picking codes over descriptions' do
+    before(:each) do
+      @county = mock_model(ExternalCode, :jurisdiction => nil)
+      @address = mock_model(Address,
+                            :street_number => nil,
+                            :street_name => nil,
+                            :unit_number => nil,
+                            :city => nil,
+                            :state => nil,
+                            :county => @county,
+                            :postal_code => nil)
+      @event = csv_mock_event(:morbidity)
+    end
+
+    it 'should return county code, not name' do
+      @event.stub!(:address).and_return(@address)
+      @county.should_receive(:the_code).and_return('56')      
+      Export::Csv.export(@event, {'patient_address_county' => 'use_code'})
+    end
+    
+    it 'should pick cdc code, rather then disease name' do
+      d = mock_model(Disease)
+      d.should_receive(:cdc_code).and_return('10110')
+      @disease.should_receive(:disease).and_return(d)
+      Export::Csv.export(@event, {'patient_disease' => 'use_code'})
+    end
+  end
+
 end
 
 def to_arry(string)
@@ -449,10 +477,10 @@ def csv_mock_event(event_type)
   m.stub!(:diagnostic_facilities).and_return([])
   m.stub!(:clinicians).and_return([])
   m.stub!(:contacts).and_return([])
-  m.should_receive(:acuity).twice.and_return('Difficult')
-  m.should_receive(:other_data_1).twice.and_return('First Other Data')
-  m.should_receive(:other_data_2).twice.and_return('Second Other Data')
-  m.should_receive(:deleted_at).and_return(nil)
+  m.stub!(:acuity).twice.and_return('Difficult')
+  m.stub!(:other_data_1).and_return('First Other Data')
+  m.stub!(:other_data_2).and_return('Second Other Data')
+  m.stub!(:deleted_at).and_return(nil)
 
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
