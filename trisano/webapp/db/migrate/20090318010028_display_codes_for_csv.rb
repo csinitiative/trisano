@@ -8,6 +8,15 @@ class DisplayCodesForCsv < ActiveRecord::Migration
     remove_column :csv_fields, :short_name_max
     remove_column :csv_fields, :evaluation
     remove_column :csv_fields, :group
+
+    if RAILS_ENV == 'production'
+      
+      say 'Loading CSV configuration'
+
+      eval(File.read("#{RAILS_ROOT}/script/load_csv_defaults.rb"))
+
+    end
+
   end
 
   def self.down
