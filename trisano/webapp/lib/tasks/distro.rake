@@ -59,7 +59,7 @@ namespace :trisano do
     def replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)
       puts "creating database.yml based on contents of config.yml in #{WEB_APP_CONFIG_DIR}"
       db_config = { environment => 
-          { 'adapter' => 'postgresql', 
+          { 'adapter' => 'jdbcpostgresql',
           'encoding' => 'unicode', 
           'database' => database, 
           'username' => nedss_user, 
