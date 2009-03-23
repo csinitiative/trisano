@@ -29,7 +29,7 @@ class UserAcceptanceTest
             puts "Launching #{s}-#{c}:#{@port} => #{cmd}"
             $stdout.flush
             log.write "#{cmd}\n"
-            output = `export SEL_RC_SERVER=#{s}; export RC_PORT=#{@port}; #{cmd} 2>&1`
+            output = `astop; astart; export SEL_RC_SERVER=#{s}; export RC_PORT=#{@port}; #{cmd} 2>&1`
             if (output.match(/(\d+) examples?, (\d+) failures?/))
               @lock.synchronize {
                 @results[path] = { "examples" => $1.to_i,
