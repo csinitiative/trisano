@@ -26,7 +26,7 @@ class FormElement < ActiveRecord::Base
   named_scope :library_roots, :conditions => {
     :parent_id => nil,
     :form_id => nil
-    }
+  }
 
   @@export_lookup_separator = "|||"
   
@@ -288,7 +288,18 @@ class FormElement < ActiveRecord::Base
         return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}#{@@export_lookup_separator}#{export_conversion_value.value_from}#{@@export_lookup_separator}#{export_conversion_value.value_to}"
       rescue Exception => ex
         logger.error ex
-        raise "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
+        message = "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
+
+        if self.form_id.blank?
+          message << " The library element at fault is the #{self.root.class.name.underscore.humanize} "
+          if self.root.class.name == "QuestionElement"
+            message << "'#{self.root.question.question_text}'."
+          else
+            message << "'#{self.root.name}'."
+          end
+        end
+        
+        raise message
       end
     end
   end

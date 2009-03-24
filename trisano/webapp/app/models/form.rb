@@ -362,7 +362,18 @@ class Form < ActiveRecord::Base
       uploaded_file_name = form_upload.original_filename
       File::open("#{base_path}#{uploaded_file_name}", 'w') { |file| file << form_upload.read }
       Zip::ZipFile.open("#{base_path}#{uploaded_file_name}") do |zip|
-        import_elements(zip.read("library-elements"))
+        
+        begin
+          zip_contents = zip.read("library-elements")
+        rescue
+          raise "The zip file did not contain a form library export. Please ensure you aren't trying to import a single form."
+        end
+
+        raise "The import file did not contain any content." if zip_contents.blank?
+
+        transaction do
+          import_elements(zip_contents)
+        end
       end
       return true
     rescue Exception => ex
@@ -534,6 +545,7 @@ class Form < ActiveRecord::Base
 
   def self.import_elements(element_import_string, form_id = nil)
     elements = ActiveSupport::JSON.decode(element_import_string)
+    raise "The import file did not contain any content." if elements.empty?
     parent_id_map = {}
     tree_id = Form.next_tree_id
       

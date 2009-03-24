@@ -58,7 +58,7 @@ class LibraryElementsController < AdminController
       redirect_to library_elements_path
     rescue Exception => ex
       logger.debug ex.backtrace
-      flash[:error] = "Unable to import the library elements. #{ex.message}."
+      flash[:error] = "Unable to import the library elements. #{ex.message}"
       redirect_to library_elements_path
     end
   end

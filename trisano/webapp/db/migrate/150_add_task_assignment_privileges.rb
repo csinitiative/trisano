@@ -47,9 +47,9 @@ class AddTaskAssignmentPrivileges < ActiveRecord::Migration
           jurisdictions_handled = []
 
           user.role_memberships.each do |rm|
-            if ( (managerial_role_ids.include?(rm.role.id)) && (!jurisdictions_handled.include?(rm.jurisdiction.id)) )
-              Entitlement.create({ :user => user, :privilege => assign_task_priv, :jurisdiction_id => rm.jurisdiction.id })
-              jurisdictions_handled << rm.jurisdiction.id
+            if ( (managerial_role_ids.include?(rm.role.id)) && (!jurisdictions_handled.include?(rm.jurisdiction_id)) )
+              Entitlement.create({ :user => user, :privilege => assign_task_priv, :jurisdiction_id => rm.jurisdiction_id })
+              jurisdictions_handled << rm.jurisdiction_id
             end
           end
         end
