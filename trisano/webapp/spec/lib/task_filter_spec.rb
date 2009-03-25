@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe TaskFilter do
-  fixtures :diseases, :users, :events, :disease_events, :participations, :entities, :places
+  fixtures :diseases, :users, :events, :disease_events, :participations, :entities, :places, :places_types
 
   before(:each) do
     @user = User.find(1)

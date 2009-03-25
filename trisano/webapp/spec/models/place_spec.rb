@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Place do
 
-  fixtures :places
+  fixtures :places, :places_types
 
   before(:each) do
     @place = Place.new
@@ -37,68 +37,13 @@ describe Place do
     end
   end
 
-  # The following tests are for basic activerecord functionality that would not ordinarily be tested.
-  # They are here in anticipation of acts_as_auditable
-
-  describe "when created and retrieved" do
-
-    before(:each) do
-      @place.name = "Abbott Labs"
-      @place.short_name = "Abbott"
-      @place.place_type = codes(:place_type_lab)
-    end
-
-    it "should add a new row" do
-      lambda { @place.save }.should change { Place.count }.by(1)
-    end
-
-    it "should return what was just created" do
-      @place.save
-      place = Place.find_by_name("Abbott Labs")
-      place.should_not be_nil
-      place.name.should == "Abbott Labs"
-      place.short_name.should == "Abbott"
-      place.place_type.should eql(codes(:place_type_lab))
-    end
-  end
-
   describe "finding exising places" do
-    fixtures :codes, :places
+    fixtures :codes, :places, :places_types
     
     it "should be able to find 'Unassigned' jurisdiction by name" do
       Place.jurisdiction_by_name('Unassigned').should_not be_nil
     end
 
-  end
-
-  describe "when updated and retrieved" do
-
-    before(:each) do
-      @place.name = "Abbott Labs"
-      @place.short_name = "Abbott"
-      @place.place_type = codes(:place_type_lab)
-      @place.save
-
-      @place = Place.find_by_name("Abbott Labs")
-      @place.short_name = "AL"
-      @place.save
-
-      @places = Place.find_all_by_name("Abbott Labs")
-      @place = @places.first
-    end
-
-    it "should return just one row" do
-      @places.length.should == 1
-    end
-
-    it "should return what was just updated" do
-      @place.short_name.should == "AL"
-    end
-
-    it "should maintain non-updated values" do
-      @place.name.should == "Abbott Labs"
-      @place.place_type.should eql(codes(:place_type_lab))
-    end
   end
 
   describe "class method" do
@@ -115,16 +60,17 @@ describe Place do
     end
   end
 
-  describe 'reporting agency types' do
+  describe 'multiple place types' do
     before :each do
-      @place = Place.new(:name => 'Metroid', :place_type_id => Code.other_place_type_id)
-      @place.reporting_agency_types << ReportingAgencyType.new(:code_id => codes(:place_type_hospital).id)
-      @place.reporting_agency_types << ReportingAgencyType.new(:code_id => codes(:place_type_lab).id)
+      @place = Place.new(:name => 'Metroid')
+      @place.place_types << codes(:place_type_hospital)
+      @place.place_types << codes(:place_type_lab)
     end
 
     it 'should make a valid description' do
-      lambda { @place.save }.should change{ReportingAgencyType.count}.by(2)
-      @place.agency_types_description.should == 'Hospital / ICP and Laboratory'
+      @place.save
+      @place.place_types.size.should == 2
+      @place.formatted_place_descriptions.should == 'Hospital / ICP and Laboratory'
     end
 
   end

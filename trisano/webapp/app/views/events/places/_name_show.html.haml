@@ -20,8 +20,8 @@
     =f.label(:name)
     =f.object.name
   -core_element_show :place_type_id, f, :horiz do
-    =f.label(:place_type_id, 'Type')
-    =f.object.place_type.code_description if f.object.place_type
+    =f.label(:place_type_id, 'Types')
+    =f.object.formatted_place_descriptions unless f.object.place_types.empty?
   -event_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |exposure_form|
     -core_element_show :date_of_exposure, exposure_form, :horiz do
       =exposure_form.label(:date_of_exposure)

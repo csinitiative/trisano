@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FollowUpElement do
-  fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions
+  fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions, :places_types
   
   before(:each) do
     @form = forms(:test_form)

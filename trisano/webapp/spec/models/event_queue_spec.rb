@@ -34,7 +34,7 @@ describe EventQueue do
     @event_queue.should_not be_valid
   end
 
-  fixtures :event_queues, :entities, :places
+  fixtures :event_queues, :entities, :places, :places_types
 
   it "should be associated with a jurisdiction" do
     event_queues(:enterics_queue).jurisdiction.place.name.should == "Southeastern District"
@@ -78,7 +78,7 @@ describe EventQueue do
   describe "class methods" do
     describe "queues_for_jurisdictions" do
 
-      fixtures :event_queues, :entities, :places
+      fixtures :event_queues, :entities, :places, :places_types
 
       it "should return the event_queues associated with an array of jurisdictions" do
         EventQueue.queues_for_jurisdictions([event_queues(:joecool_queue).jurisdiction_id]).size.should == 1

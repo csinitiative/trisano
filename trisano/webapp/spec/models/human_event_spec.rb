@@ -81,7 +81,7 @@ describe HumanEvent, 'associations'  do
     end
 
     describe "empty attributes are handled correctly" do
-      fixtures :events, :entities, :places
+      fixtures :events, :entities, :places, :places_types
 
       before(:each) do
         @event = HumanEvent.new

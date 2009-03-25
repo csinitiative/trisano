@@ -30,7 +30,9 @@ ActiveRecord::Base.transaction do
   Note.delete_all
 
   # Keep the Jurisdictions intact!!!
-  Place.delete_all("place_type_id != #{Code.jurisdiction_place_type_id} OR place_type_id IS NULL")
+  Place.all(:include => :place_types).each do |place|
+    place.destroy unless Place.jurisdictions.include?(place)
+  end
   Person.delete_all
 
   # No model for this join table

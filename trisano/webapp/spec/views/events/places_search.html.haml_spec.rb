@@ -24,11 +24,11 @@ describe "/events/_places_search.html.haml" do
   before(:each) do
     mock_user
     @place = mock_model(Place)
-    @place_type = mock_model(ExternalCode)
+    @place_type = mock_model(Code)
     @county = mock_model(ExternalCode)
-    @place_entity = mock_model(Entity)
+    @place_entity = mock_model(PlaceEntity)
     @address = mock_model(Address)
-    @place_type.stub!(:code_description).and_return("Warm Wading Pool")
+    @place_types.stub!(:code_description).and_return("Warm Wading Pool")
     @county.stub!(:code_description).and_return("Beaver")
     @place_entity.stub!(:addresses).and_return([@address])
     @address.stub!(:street_number).and_return("123")
@@ -39,8 +39,9 @@ describe "/events/_places_search.html.haml" do
     @place.stub!(:entity_id).and_return(66)
     @place.stub!(:entity).and_return(66)
     @place.stub!(:name).and_return("Eastside Waders Super Special Wading Pool")
-    @place.stub!(:place_type).and_return(@place_type)
+    @place.stub!(:place_types).and_return([@place_type])
     @place.stub!(:entity).and_return(@place_entity)
+    @place.stub!(:formatted_place_descriptions).and_return(@place_types.code_description)
   end
 
   describe 'place auto-complete' do

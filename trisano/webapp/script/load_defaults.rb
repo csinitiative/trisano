@@ -42,16 +42,17 @@ end
 # Hospitals are represented as an array of strings
 
 hospitals = YAML::load_file "#{RAILS_ROOT}/db/defaults/hospitals.yml"
+hospital_type = Code.find_by_code_name_and_the_code("placetype", "H")
 Entity.transaction do
   hospitals.each do |hospital|
-    hospital_type_id = Code.find_by_code_name_and_the_code("placetype", "H").id
     h = PlaceEntity.find(:first, 
-      :include => :place, 
+      :include => { :place => :place_types }, 
       :select => "places.name", 
-      :conditions => ["places.place_type_id = ? and places.name = ?", hospital_type_id, hospital])
+      :conditions => ["codes.code_name = 'placetype' AND codes.the_code = 'H' AND places.name = ?", hospital])
     if h.nil?
       e = PlaceEntity.new
-      e.build_place(:name => hospital, :place_type_id => hospital_type_id)
+      e.build_place(:name => hospital)
+      e.place.place_types << hospital_type
       e.save
     end
   end
@@ -60,17 +61,17 @@ end
 # Jurisdictions are represented as an array of strings
 
 jurisdictions = YAML::load_file "#{RAILS_ROOT}/db/defaults/jurisdictions.yml"
+jurisdiction_type = Code.find_by_code_name_and_the_code("placetype", "J")
 Entity.transaction do
   jurisdictions.each do |jurisdiction|
-    jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
     j = PlaceEntity.find(:first, 
-      :include => :place, 
+      :include => { :place => :place_types }, 
       :select => "places.name", 
-      :conditions => ["places.place_type_id = ? and places.name = ?", jurisdiction_type_id, jurisdiction['name'] ])
-
+      :conditions => ["codes.code_name = 'placetype' AND codes.the_code = 'J' AND places.name = ?", jurisdiction['name'] ])
     if j.nil?
       e = PlaceEntity.new
-      e.build_place(:name => jurisdiction['name'], :short_name => jurisdiction['short_name'], :place_type_id => jurisdiction_type_id)
+      e.build_place(:name => jurisdiction['name'], :short_name => jurisdiction['short_name'])
+      e.place.place_types << jurisdiction_type
       e.save
     end
   end
@@ -119,11 +120,9 @@ Entitlement.transaction do
   
   # Give these users all roles in all jurisdictions
   user = User.find_by_user_name('default_user')
-                  
-  jurisdiction_type_id = Code.find_by_code_name_and_the_code("placetype", "J").id
   jurisdictions = PlaceEntity.find(:all, 
-    :include => :place, 
-    :conditions => ["places.place_type_id = ?", jurisdiction_type_id])
+    :include => { :place => :place_types },
+    :conditions => "codes.code_name = 'placetype' AND codes.the_code = 'J'")
     
   roles = Role.find(:all)
   roles_for_default_users = []
@@ -236,7 +235,7 @@ ExternalCode.transaction do
   ].each do |relationship|
     begin
       code = ExternalCode.find_by_code_name_and_code_description('county', relationship[:county_name])
-      place = Place.find_by_place_type_id_and_short_name(Code.jurisdiction_place_type_id, relationship[:health_district])
+      place = Place.find(:first, :include => :place_types, :conditions => "codes.the_code = 'J' AND short_name = '#{relationship[:health_district]}'")
       raise "Couldn't find jurisdiction #{relationship[:health_district]}" unless place
       code.jurisdiction = place
       code.save!

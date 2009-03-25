@@ -81,7 +81,7 @@ end
 
 describe User, "Setting role memberships and entitlements via User attributes" do
 
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :entities, :places
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :entities, :places, :places_types
   
   describe "on a new user" do
     before(:each) do

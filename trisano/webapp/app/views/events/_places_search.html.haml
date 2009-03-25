@@ -19,7 +19,7 @@
     %li{:name => "#{place.entity_id}"}
       %span.place_name= place.name
       %br
-      %span.place_type= "#{place.place_type.code_description}" unless place.place_type.nil?
+      %span.place_type= "&nbsp;&nbsp;#{place.formatted_place_descriptions}"
       - address = place.entity.addresses.last
       - unless address.nil?
         %br

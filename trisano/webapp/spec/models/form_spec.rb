@@ -931,7 +931,7 @@ describe Form do
   
   describe 'when pushing to events' do
     
-    fixtures :diseases, :entities, :places, :users
+    fixtures :diseases, :entities, :places, :places_types, :users
     
     before(:each) do
       @user = users(:default_user)

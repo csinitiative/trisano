@@ -22,6 +22,5 @@
           =place_fields.label(:name)
           =place_fields.text_field(:name, :size => 25, :maxlength => 255,:class => 'required_if_others')
         %span.horiz
-          =place_fields.label(:place_type_id, 'Type')
-          =place_fields.dropdown_code_field(:place_type_id, 'placetype')
+          = diagnostic_type_selector(place_fields)
   %hr

@@ -124,4 +124,4 @@
         - for diagnostic in @event.diagnostic_facilities
           %tr
             %td= diagnostic.place_entity.place.name
-            %td= diagnostic.safe_call_chain(:place_entity, :place, :place_type, :code_description)
+            %td= diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions)

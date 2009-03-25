@@ -1,0 +1,35 @@
+AVH_hospital:
+  place_id: 2
+  type_id: 2201
+
+BRVH_hospital:
+  place_id: 5
+  type_id: 2201
+
+Southeastern_District_jurisdiction:
+  place_id: 73
+  type_id: 2202
+
+Davis_County_jurisdiction:
+  place_id: 101
+  type_id: 2202
+
+Summit_County_jurisdiction:
+  place_id: 103
+  type_id: 2202
+
+unassigned_jurisdiction_jurisdiction:
+  place_id: 105
+  type_id: 2202
+
+Existing_Lab_One_lab:
+  place_id: 100
+  type_id: 2203
+
+Existing_Lab_Two_lab:
+  place_id: 110
+  type_id: 2203
+
+Davis_Nat_other:
+  place_id: 102
+  type_id: 2206

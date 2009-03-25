@@ -15,29 +15,10 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--# This injects an existing place exposure into a form
-
--# Debt: Could be merged with _editable_place_exposure.html.haml
-
-- place_form = nil
-- if defined? f
-  - place_form = f
-- else
-  - uniq_id = Time.now.to_i
-  - fields_for(event_type + "[diagnostic_facilities_attributes][#{uniq_id}]", @diagnostic) do |pe|
-    - place_form = pe
-
-- place = place_form.object.place_entity.place
-%div.existing_diagnostic{:style => 'clear:both; margin-top: 20px'}
-  = place_form.hidden_field(:secondary_entity_id)
-  %span.horiz
-    %label Name
-    = h(place.name)
-  %span.horiz
-    %label Types
-    = h(place.formatted_place_descriptions)
-
-  - if defined? f
-    %span.horiz
-      = place_form.label :_delete, "Remove:"
-      = place_form.check_box :_delete
+= f.label(:places_types, 'Types')
+%div{ :style => 'border: 1px solid; height: 5em; width: 20em; overflow: auto; margin-bottom: 3px' }
+  - field_name = f.object_name + "[place_type_ids][]"
+  -# 'types' is passed in as a local.  It contains a method name dictating what types of types (argh) to display: e.g. epi_types or agency_types
+  - Place.send(types).each do |type|
+    - field_id = (f.object_name. + "place_type_#{type.the_code}").gsub(/[\[\]]/, "_")
+    = "<label>" + check_box_tag(field_name, type.id, f.object.place_type_ids.include?(type.id), :id => field_id ) + type.code_description + "</label>"

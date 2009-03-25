@@ -114,7 +114,7 @@ describe MorbidityEvent do
       end
 
       describe "empty attributes are handled correctly" do
-        fixtures :events, :entities, :places
+        fixtures :events, :entities, :places, :places_types
 
         before(:each) do
           @event = Event.new
@@ -248,7 +248,7 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :users, :participations_places
+    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :places_types, :users, :participations_places
 
     before(:each) do
       @user = users(:default_user)
@@ -734,7 +734,7 @@ describe MorbidityEvent do
 
   describe 'when executing a view-filtering search' do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases, :disease_events, :places
+    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases, :disease_events, :places, :places_types
 
     before :each do
       
@@ -987,7 +987,7 @@ describe MorbidityEvent do
   end
 
   describe 'new event from patient' do
-    fixtures :users, :participations, :entities, :places, :people
+    fixtures :users, :participations, :entities, :places, :places_types, :people
     
     before :each do
       @event_hash = {

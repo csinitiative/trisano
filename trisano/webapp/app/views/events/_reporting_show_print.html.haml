@@ -22,6 +22,8 @@
       - core_element_print :name, place_form, :horiz do
         %span.print-label Agency name:
         %span.print-value= place_form.object.name
+        %span.print-label Types:
+        %span.print-value= place_form.object.formatted_place_descriptions
         %span.print-label Agency Phone:
         %span.print-value= entity_form.object.primary_phone.simple_format
 

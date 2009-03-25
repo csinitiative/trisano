@@ -93,7 +93,7 @@ describe ExternalCode do
   end
 
   describe 'county codes' do
-    fixtures :external_codes, :places
+    fixtures :external_codes, :places, :places_types
 
     it 'should have a related jurisdiction' do
       codes = ExternalCode.find_all_by_code_name('county')

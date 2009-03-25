@@ -69,8 +69,8 @@ class MorbidityEvent < HumanEvent
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == self.jurisdiction.secondary_entity_id
-        proposed_jurisdiction = Entity.find(jurisdiction_id) # Will raise an exception if record not found
-        raise "New jurisdiction is not a jurisdiction" if proposed_jurisdiction.place.place_type_id != Code.find_by_code_name_and_the_code('placetype', 'J').id
+        proposed_jurisdiction = PlaceEntity.find(jurisdiction_id) # Will raise an exception if record not found
+        raise "New jurisdiction is not a jurisdiction" unless Place.jurisdictions.include?(proposed_jurisdiction.place)
         self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
         self.update_attributes(:event_queue_id => nil,
           :investigator_id => nil,
@@ -81,7 +81,6 @@ class MorbidityEvent < HumanEvent
       end
 
       # Handle secondary jurisdictions
-      #
       existing_secondary_jurisdiction_ids = associated_jurisdictions.collect { |participation| participation.secondary_entity_id }
 
       # if an existing secondary jurisdiction ID is not in the passed-in ids, delete

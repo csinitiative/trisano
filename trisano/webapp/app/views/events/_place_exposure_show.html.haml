@@ -32,16 +32,14 @@
 - place = place_form.object.interested_place.place_entity.place
 %div.existing_place{:style => 'margin-top: 20px; clear: both;'}
   
-  -# "place_child_events_attributes"=>{"5"=>{"interested_place_attributes"=>{"place_entity_attributes"=>{"place_attributes"=>{"name"=>"newplace", "place_type_id"=>"1"}}},
-
   - place_form.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
     = ip.hidden_field(:primary_entity_id)
     %span.horiz
       %label Name
       = h(place.name)
     %span.horiz
-      %label Type
-      = h(place.place_type.code_description) unless place.place_type.nil?
+      %label Types
+      = h place.formatted_place_descriptions
 
   - place_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pe_form|
     %span{:class => 'horiz'}

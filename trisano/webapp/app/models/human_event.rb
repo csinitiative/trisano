@@ -77,13 +77,12 @@ class HumanEvent < Event
       return true if (lab_attrs.all? { |k, v| v.blank? } && attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } })
 
       # If there's a lab with the same name already in the database, use that instead.
-      lab_type_id = Code.lab_place_type_id
-      existing_lab = Place.find_by_name_and_place_type_id(lab_attrs["name"], lab_type_id)
-      if existing_lab
-        attrs["secondary_entity_id"] = existing_lab.entity_id
+      existing_labs = Place.labs_by_name(lab_attrs["name"])
+      unless existing_labs.empty?
+        attrs["secondary_entity_id"] = existing_labs.first.entity_id
         attrs.delete("place_entity_attributes")
       else
-        lab_attrs["place_type_id"] = lab_type_id
+        lab_attrs["place_type_ids"] = [Code.lab_place_type_id]
       end
 
       return false
@@ -114,7 +113,7 @@ class HumanEvent < Event
       sql_terms = fulltext_terms.join(" | ")
 
       where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
-      order_by_clause = " ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id ASC;"
+      order_by_clause = " ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
 
       options = { :include => [ { :interested_party => { :person_entity => :person } }, :disease_event ],
                   :conditions => where_clause,

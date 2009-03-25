@@ -6,9 +6,9 @@
     -core_element :name, p, :horiz do
       =p.label(:name)
       =h(p.object.name)
-    -core_element :place_type_id, p, :horiz do
-      =p.label(:place_type_id, 'Type')
-      =h(p.object.place_type.code_description) unless p.object.place_type.nil?
+    -core_element :place_type_ids, p, :horiz do
+      =p.label(:place_type_ids, 'Types')
+      =h(p.object.formatted_place_descriptions)
 
   -event_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |p|
     -core_element :date_of_exposure, p, :horiz do

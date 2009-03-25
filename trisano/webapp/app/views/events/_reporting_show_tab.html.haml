@@ -9,6 +9,9 @@
           - core_element_show :name, place_form, :horiz do
             = place_form.label(:name, 'Agency name')
             = place_form.object.name
+          %span.horiz
+            = label_tag('Types')
+            = place_form.object.formatted_place_descriptions
           = label_tag('Agency phone')
           = entity_form.object.primary_phone.simple_format
 

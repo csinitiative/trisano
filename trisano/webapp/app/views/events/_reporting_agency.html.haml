@@ -28,8 +28,6 @@
   - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
     - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
       = error_messages_for :object => reporting_agency
-      - agency_type_ids = reporting_agency.new_record? ? [] : reporting_agency.reporting_agency_types.collect(&:code_id)
-
       - core_element :name, p, :horiz do
         = p.label(:name, "Reporting Agency Name")
         = p.text_field(:name, :size => 25, :class => 'required_if_others')
@@ -46,26 +44,15 @@
           = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event)
 
       - core_element :agency_type, p, :vert do
-        = p.label(:agency_types)
-        %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
-          %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
-            - field_name = p.object_name + "[agency_type_ids][]"
-            - Place.agency_types.each do |type|
-              - field_id = (p.object_name. + "[agency_type][#{type.the_code}]").gsub(/[\[\]]/, "_")
-              = "<label>" + check_box_tag(field_name, type.id, agency_type_ids.include?(type.id), :id => field_id ) + type.code_description + "</label>"
+        = agency_type_selector(p)
 - else  
-  - if agency_form.object.new_record?
-    - # The user has added a new reporting agency from an existing place
-  - else
-    - # The event already has a saved reporting agency
-
   - core_element :name, agency_form, :horiz do
     = agency_form.hidden_field(:secondary_entity_id)
     = agency_form.label(:name, "Reporting Agency")
     = reporting_agency.name || "&nbsp;"
   - core_element :agency_type, agency_form, :horiz do
     = agency_form.label(:agency_types)
-    = reporting_agency.agency_types_description.to_s + '&nbsp;'
+    = reporting_agency.formatted_place_descriptions
 
   - unless agency_form.object.new_record?
     %span.horiz

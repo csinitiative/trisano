@@ -43,7 +43,7 @@
 
         %tr
           %td{style}=h(place.name)
-          %td{style}=place.place_description
+          %td{style}=place.formatted_place_descriptions
           %td{style}=format_date(pe.participations_place.date_of_exposure)
           %td.tools
             =link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"}) unless pe.new_record?
