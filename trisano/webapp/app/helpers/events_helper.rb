@@ -285,7 +285,7 @@ module EventsHelper
       concat("<div class='patientname-inactive'>")
     end
 
-    yield
+    yield event.interested_party.person_entity.person
     concat("</div>")
   end
 

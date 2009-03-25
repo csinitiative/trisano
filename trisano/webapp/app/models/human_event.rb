@@ -127,6 +127,95 @@ class HumanEvent < Event
       self.all(options)
     end
 
+    def find_all_for_filtered_view(options = {})
+      conditions = ["jurisdictions.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
+      conjunction = "AND"
+
+      states = get_allowed_states(options[:states])
+      if states.empty?
+        raise
+      else
+        conditions[0] += " #{conjunction} event_status IN (?)"
+        conditions << states
+      end
+    
+      if options[:diseases]
+        conditions[0] += " #{conjunction} disease_id IN (?)"
+        conditions << options[:diseases]
+      end
+
+      if options[:investigators]
+        conditions[0] += " #{conjunction} investigator_id IN (?)"
+        conditions << options[:investigators]
+      end
+
+      if options[:queues]
+        queue_ids, queue_names = get_allowed_queues(options[:queues])
+
+        if queue_ids.empty?
+          raise
+        else
+          conditions[0] += " #{conjunction} event_queue_id IN (?)"
+          conditions << queue_ids
+        end
+      end
+
+      if options[:do_not_show_deleted]
+        conditions[0] += " AND deleted_at IS NULL"
+      end
+
+      order_by = case options[:order_by]
+                 when 'patient'
+                   "people.last_name, people.first_name, diseases.disease_name, places.name, events.event_status"
+                 when 'disease'
+                   "diseases.disease_name, people.last_name, people.first_name, places.name, events.event_status"
+                 when 'jurisdiction'
+                   "places.name, people.last_name, people.first_name, diseases.disease_name, events.event_status"
+                 when 'status'
+                   # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
+                   "events.event_status, people.last_name, people.first_name, diseases.disease_name, places.name"
+                 else
+                   "events.updated_at DESC"
+                 end
+
+      # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
+      conditions[0] += " AND jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"
+    
+      # Similar to above comment, we now need to explicitly spell out the joins.  By the way, we're doing this join just so we can sort by different fields
+      joins = "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id
+               LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id
+               LEFT JOIN places ON places.entity_id = place_entities.id
+
+               LEFT JOIN participations patients ON patients.event_id = events.id
+               LEFT JOIN entities person_entities ON person_entities.id = patients.primary_entity_id
+               LEFT JOIN people ON people.entity_id = person_entities.id"
+
+      if options[:diseases]
+        joins << " LEFT JOIN disease_events ON disease_events.event_id = events.id"
+      else
+        joins << " LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id"
+      end
+      joins << " LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
+
+      query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
+      User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"
+
+      find_options = {
+        :joins => joins,
+        :conditions => conditions,
+        :order => order_by,
+        :page => options[:page]
+      }
+      find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
+
+      # Need to make sure to load models so STI sql building works correctly.
+      ContactEvent; MorbidityEvent
+      HumanEvent.paginate(:all, find_options)
+    rescue Exception => ex
+      logger.error ex
+      raise ex
+    end
+
   end
 
   def lab_results

@@ -35,5 +35,5 @@ describe MorbidityEventsHelper do
       helper.morbidity_event_tabs.find { |tab| tab[0] == "administrative_tab"  }.should_not be_nil
     end
   end
-    
+
 end

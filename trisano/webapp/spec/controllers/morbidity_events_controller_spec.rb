@@ -26,7 +26,7 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      MorbidityEvent.stub!(:find).and_return([@event])
+      HumanEvent.stub!(:find).and_return([@event])
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
       @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end

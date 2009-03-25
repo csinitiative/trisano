@@ -76,7 +76,7 @@
       %th
         = link_to("Status", cmrs_path(query_params.merge(:sort_order => 'status')))
 
-      = render :partial => 'morbidity_events/event', :collection => @events
+      = render @events
 
   %br
   = will_paginate @events

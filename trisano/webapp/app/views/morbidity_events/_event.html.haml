@@ -4,6 +4,8 @@
   %td.forminformation
     - patient_name(event) do
       = patient.last_comma_first
+      %div{ :style => 'font-style: italic; font-size: small;'}
+        = event.class.name.titleize
     %small
       Date:
       = event.event_onset_date

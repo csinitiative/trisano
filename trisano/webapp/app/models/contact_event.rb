@@ -22,6 +22,7 @@ class ContactEvent < HumanEvent
   
   before_create do |contact|
     contact.add_note("Contact event created.")
+    contact.event_status = "NEW"
   end
 
   class << self
