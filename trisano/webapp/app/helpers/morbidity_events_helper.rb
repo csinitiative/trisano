@@ -45,7 +45,7 @@ module MorbidityEventsHelper
     controls << "<br />"
     if with_export_options
       controls << link_to_function('Export to CSV', nil) do |page|
-        page[:export_options].visual_effect :slide_down
+        page[:export_options].visual_effect :appear
       end
     else
       controls << link_to('Export to CSV', cmr_path(event) + '.csv')

@@ -113,7 +113,7 @@
 - if !@cmrs.blank?
   %div{ :class => 'tools' }
     = link_to_function('Export All to CSV', nil) do |page|
-      - page[:export_options].visual_effect :slide_down
+      - page[:export_options].visual_effect :appear
 
   = render :partial => "morbidity_events/export_options", :locals => { :path => cmrs_format_path(params.merge(:format => 'csv')) }
 

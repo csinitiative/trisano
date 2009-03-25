@@ -106,4 +106,4 @@
         = submit_tag("Export", :id => "export_btn")
     %p.vert
       %br
-      = link_to_function "Close", "Effect.SlideUp('export_options')"
+      = link_to_function "Close", "Effect.Fade('export_options', { duration: 0.3 })"
