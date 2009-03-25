@@ -13,10 +13,15 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= f.hidden_field :parent_element_id
-= f.hidden_field :form_id
+%div{:id => "edit-value-form"}
 
-%p
-  %label Value Set Name
-  %br
-  = f.text_field :name
+  = error_messages_for :value_element
+
+  - remote_form_for(value_element, :html => { :method => 'put', :name => 'value-element-edit-form'}, :loading => "$('edit_value_submit_#{@value_element.id}').disabled = 'disabled';" ) do |f|
+
+    = render :partial => 'form', :locals => { :f => f }
+
+    %p
+      = f.submit("Update", :id => "edit_value_submit_#{@value_element.id}")
+      &nbsp;&nbsp;
+      = link_to_function "Close", "$('value-mods-#{@value_element.id}').down('form').reset(); Effect.BlindUp($('value-mods-#{@value_element.id}'), { duration: 0.1 })"

@@ -66,6 +66,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :section_elements
 
   map.resources :value_set_elements
+
+  map.resources :value_elements
   
   map.resources :core_view_elements
   
@@ -82,17 +84,17 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs, 
     :controller => :morbidity_events,
     :collection => {
-      :event_search => :get
-    },
+    :event_search => :get
+  },
     :member => {
-      :state => :post,
-      :jurisdiction => :post,
-      :soft_delete => :post
-    },
+    :state => :post,
+    :jurisdiction => :post,
+    :soft_delete => :post
+  },
     :new => {
-      :lab_form => :get,
-      :lab_result_form => :get
-    }
+    :lab_form => :get,
+    :lab_result_form => :get
+  }
 
   map.resources :contact_events, 
     :member => {
@@ -116,9 +118,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :library_elements,
     :only => [:index],
     :collection => {
-      :import => :post,
-      :export => :post
-    }
+    :import => :post,
+    :export => :post
+  }
 
   # These are the forms in use with and available to an event
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]

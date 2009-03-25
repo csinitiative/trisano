@@ -13,10 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= f.hidden_field :parent_element_id
-= f.hidden_field :form_id
 
-%p
-  %label Value Set Name
-  %br
-  = f.text_field :name
+%div{:id => "fb-inplace-container", :class => "fb-container"} 
+  = error_messages_for :value_element
+  %div{:id => "new-value-form", :class => 'fb-inplace-form'}
+
+    - remote_form_for(value_element, :html => {:name => 'value-element-new-form'}, :loading => "$('create_value_submit_#{@value_element.parent_element_id}').disabled = 'disabled';" ) do |f|
+
+      = render :partial => 'form', :locals => { :f => f }
+
+      %p
+        = f.submit("Create", :id => "create_value_submit_#{@value_element.parent_element_id}")
+        &nbsp;&nbsp;
+        = link_to_function "Close", "$('value-mods-#{@value_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-mods-#{@value_element.parent_element_id}'), { duration: 0.1 })"
+

@@ -286,8 +286,7 @@ class FormElement < ActiveRecord::Base
         export_conversion_value = ExportConversionValue.find(self.export_conversion_value_id)
         export_column = ExportColumn.find(export_conversion_value.export_column_id, :include => :export_disease_group)
         return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}#{@@export_lookup_separator}#{export_conversion_value.value_from}#{@@export_lookup_separator}#{export_conversion_value.value_to}"
-      rescue Exception => ex
-        logger.error ex
+      rescue
         message = "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
 
         if self.form_id.blank?

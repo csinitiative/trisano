@@ -394,7 +394,8 @@ module FormsHelper
       result << "<td class='actions'>"
       if include_children
         result << edit_value_set_link(element) if (element.export_column_id.blank?)
-        result << "&nbsp;&nbsp;" << add_to_library_link(element) if (element.export_column_id.blank?)
+        result << "&nbsp;&nbsp;" << add_value_link(element) if (element.export_column_id.blank?)
+        result << "&nbsp;&nbsp;" << add_to_library_link(element) if (element.export_column_id.blank? && (form_elements_cache.children?(element) > 0))
       end
     
       result << "&nbsp;&nbsp;" << delete_value_set_link(element) if (element.export_column_id.blank?)
@@ -402,6 +403,7 @@ module FormsHelper
     
       result << "<div id='library-mods-#{element.id.to_s}'></div>" if include_children
       result << "<div id='value-set-mods-#{element.id.to_s}'></div>" if include_children
+      result << "<div id='value-mods-#{element.id.to_s}'></div>" if include_children
     
       if include_children && form_elements_cache.children?(element)
         result << "<ul id='value_set_#{element.id.to_s}_children' class='fb-value-set-children'>"
@@ -428,8 +430,12 @@ module FormsHelper
         result << element.name
       end
       
-      result << "&nbsp;<i>(Inactive)</i></span>" unless element.is_active
-      result << " " << toggle_value_link(element) << "</li>"
+      result << "&nbsp;&nbsp;<i>(Inactive)</i></span>" unless element.is_active
+      result << "&nbsp;&nbsp;" << toggle_value_link(element)
+      result << "&nbsp;&nbsp;" << edit_value_link(element) if (element.export_conversion_value_id.blank?)
+      result << "&nbsp;&nbsp;" << delete_value_link(element) if (element.export_conversion_value_id.blank?)
+      result << "<div id='value-mods-#{element.id.to_s}'></div>" if include_children
+      result << "</li>"
       return result
     rescue
       return "<li>Could not render value element (#{element.id})</li>"
@@ -517,9 +523,21 @@ module FormsHelper
   def edit_value_set_link(element)
     "<small><a class='fb-edit-value-set' href='#' onclick=\"new Ajax.Request('../../value_set_elements/#{element.id.to_s}/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit value set</a></small>"
   end
-  
+
   def delete_value_set_link(element)
     "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/#{element.id.to_s}', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-value-set' id='delete-value-set-#{element.id.to_s}'>" << image_tag("delete.png", :border => 0, :alt => "Delete Value Set") << "</a>"
+  end
+
+  def add_value_link(element)
+    "<small><a class='fb-add-value' href='#' onclick=\"new Ajax.Request('../../value_elements/new?form_element_id=#{element.id.to_s}', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Add value</a></small>"
+  end
+
+  def edit_value_link(element)
+    "<small><a class='fb-edit-value' href='#' onclick=\"new Ajax.Request('../../value_elements/#{element.id.to_s}/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit</a></small>"
+  end
+
+  def delete_value_link(element)
+    "<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/#{element.id.to_s}', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-value' id='delete-value-#{element.id.to_s}'>" << image_tag("delete.png", :border => 0, :alt => "Delete Value") << "</a>"
   end
   
   def toggle_value_link(element)
