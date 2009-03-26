@@ -17,8 +17,9 @@
 
 class QuestionElement < FormElement
   has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
+  has_one :value_set_element, :class_name => "ValueSetElement", :foreign_key => 'parent_id', :include => [:value_elements], :dependent => :destroy
   belongs_to :export_column
-
+  
   attr_accessor :parent_element_id
   
   validates_associated :question
@@ -68,7 +69,7 @@ class QuestionElement < FormElement
   end
 
   def is_multi_valued?
-    question_instance.data_type == :drop_down || question_instance.data_type == :radio_button || question_instance.data_type == :check_box
+    question_instance.is_multi_valued?
   end
 
   def is_multi_valued_and_empty?

@@ -75,10 +75,39 @@ class Answer < ActiveRecord::Base
     if self.is_date and !self.blank?
       self.text_answer = date_answer.to_s
     end
+
+    set_answer_code
   end
 
   def short_name
     question.short_name unless question.nil? || question.short_name.blank?
+  end
+
+  private
+
+  def set_answer_code
+    if (question.is_multi_valued? && question.question_element.export_column_id.blank?)
+      begin
+        if question.data_type == :check_box
+          self.code = concat_checkbox_codes
+        else
+          self.code = question.question_element.value_set_element.value_elements.find_by_name(text_answer).code
+        end
+      rescue Exception => ex
+        # Nothing above should cause an exception, unless the form structure is off, in which case this code probably wouldn't even run. Just log a warning.
+        logger.warn ex
+      end
+    end
+  end
+
+  def concat_checkbox_codes
+    codes = []
+
+    self.text_answer.split("\n").each do |check_box_value|
+      codes << question.question_element.value_set_element.value_elements.find_by_name(check_box_value).code
+    end
+
+    codes.join("\n")
   end
 
 end

@@ -18,7 +18,25 @@
 class Question < ActiveRecord::Base
   
   belongs_to :question_element, :foreign_key => "form_element_id"
-  
+
+  class << self
+    def data_type_array
+      [
+        ["Single line text", "single_line_text"],
+        ["Multi-line text", "multi_line_text"],
+        ["Drop-down select list", "drop_down"],
+        ["Radio buttons", "radio_button"],
+        ["Checkboxes", "check_box"],
+        ["Date", "date"],
+        ["Phone Number", "phone"]
+      ]
+    end
+
+    def valid_data_types
+      @valid_data_types ||= data_type_array.map { |data_type| data_type.last }
+    end
+  end
+
   validates_presence_of :question_text
   validates_presence_of :data_type, :unless => :core_data
   validates_presence_of :core_data_attr, :if => :core_data
@@ -27,6 +45,17 @@ class Question < ActiveRecord::Base
 
   def data_type
     read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
+  end
+
+  def is_multi_valued?
+    self.data_type == :drop_down || self.data_type == :radio_button || self.data_type == :check_box
+  end
+
+  def validate
+    # Bypassing validates_inclusion_of in order to work around the data_type to_sym method
+    unless Question.valid_data_types.include? data_type.to_s
+      errors.add(:data_type, "is not vaild") if core_data.blank?
+    end
   end
 
 end

@@ -148,6 +148,7 @@ class FormElement < ActiveRecord::Base
     e.is_condition_code = node_to_copy.is_condition_code
     e.export_column_id = node_to_copy.export_column_id
     e.export_conversion_value_id = node_to_copy.export_conversion_value_id
+    e.code = node_to_copy.code
     e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
     e.save!
     parent.add_child e unless parent.nil?

@@ -4,10 +4,11 @@ demo_q1:
   id: "1"
   form_element_id: "5"
   question_text: "Demo 1: "
-  help_text:
+  help_text: "help text"
   data_type: "single_line_text"
-  size:
+  size: 30
   short_name: "demo_q1"
+  style: "horizontal"
 
 demo_q2:
   id: "2"
@@ -133,3 +134,18 @@ hep_cdc_q:
   data_type: "radio_button"
   size:
 
+hep_b_core_follow_up_q:
+  id: "16"
+  form_element_id: "304"
+  question_text: "Sure?"
+  help_text:
+  data_type: "single_line_text"
+  size:
+
+hep_non_cdc_q:
+  id: "17"
+  form_element_id: "305"
+  question_text: "Not jaundiced?"
+  help_text:
+  data_type: "radio_button"
+  size:

@@ -920,8 +920,9 @@ describe MorbidityEvent do
   describe 'form builder cdc export fields' do
     fixtures :diseases, :export_conversion_values, :export_columns
 
-    before(:each) do      
-      @question = Question.create(:data_type => 'radio_buttons', :question_text => 'Contact?' )
+    before(:each) do
+      @question = Question.create(:data_type => 'radio_button', :question_text => 'Contact?' )
+      @question_element = QuestionElement.create(:question => @question)
       @event = MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } }, 
           "disease_event_attributes"        => { "disease_id" => diseases(:hep_a).id },
           "event_name"     => "CdcExportHepA",

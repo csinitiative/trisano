@@ -76,3 +76,11 @@ anthrax_form_for_contact_event:
   status: "Live"
   event_type: "contact_event"
 
+hep_b_form:
+  id: 10
+  name: "Hep B"
+  description: ""
+  jurisdiction_id:
+  is_template: true
+  status: "Live"
+  event_type: "morbidity_event"

@@ -34,22 +34,22 @@ describe FormElementCache do
     @form_base_element.add_child(@section_element)
     @form_base_element.add_child(@core_field_config)
     
-    @question = Question.create(:question_text => "Eh?", :data_type => "Single-line text", :short_name => "eh")
+    @question = Question.create(:question_text => "Eh?", :data_type => "single_line_text", :short_name => "eh")
     @question_element_1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question)
     @section_element.add_child(@question_element_1)
     
     @follow_up = FollowUpElement.create(:tree_id => tree_id, :form_id => 1, :condition => "Yes", :core_path => "event[something]")
     @question_element_1.add_child(@follow_up)
     
-    @fu_question = Question.create(:question_text => "Eh?", :data_type => "Single-line text", :short_name => "eh")
+    @fu_question = Question.create(:question_text => "Eh?", :data_type => "single_line_text", :short_name => "eh")
     @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @fu_question)
     @follow_up.add_child(@follow_up_q1)
     
-    @question_2 = Question.create(:question_text => "Really?", :data_type => "Single-line text")
+    @question_2 = Question.create(:question_text => "Really?", :data_type => "single_line_text")
     @question_element_2 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_2)
     @section_element.add_child(@question_element_2)
     
-    @question_3 = Question.create(:question_text => "?", :data_type => "Single-line text")
+    @question_3 = Question.create(:question_text => "?", :data_type => "single_line_text")
     @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_3)
     @section_element.add_child(@question_element_3)
     

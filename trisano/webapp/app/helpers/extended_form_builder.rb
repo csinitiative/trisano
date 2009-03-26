@@ -73,7 +73,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     result = ""
     question = question_element.question
     
-    if [:drop_down, :check_box, :radio_button].include? question.data_type 
+    if question.is_multi_valued?
       if form_elements_cache.children(question_element).empty?
         return ""
       else

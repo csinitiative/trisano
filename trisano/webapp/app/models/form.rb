@@ -459,7 +459,7 @@ class Form < ActiveRecord::Base
   end
 
   def self.next_tree_id
-    Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+    ActiveRecord::Base.connection.execute("SELECT nextval('tree_id_generator')").first["nextval"].to_i
   end
   
   def self.copy_form_elements(from_form, to_form, include_inactive = true)
@@ -485,6 +485,7 @@ class Form < ActiveRecord::Base
       values[:help_text] = null_safe_sanitize(e.help_text)
       values[:export_column_id] = null_safe_sanitize(e.export_column_id)
       values[:export_conversion_value_id] = null_safe_sanitize(e.export_conversion_value_id)
+      values[:code] = null_safe_sanitize(e.code)
 
       result = insert_element(values)
       parent_id_map[e.id] = result
@@ -547,9 +548,10 @@ class Form < ActiveRecord::Base
     elements = ActiveSupport::JSON.decode(element_import_string)
     raise "The import file did not contain any content." if elements.empty?
     parent_id_map = {}
-    tree_id = Form.next_tree_id
-      
+    tree_id = Form.next_tree_id unless form_id.nil?
+
     elements.each do |e|
+      tree_id = Form.next_tree_id if (form_id.nil? && e["parent_id"].nil?)
       values = {}
       values[:form_id] = null_safe_sanitize(form_id)
       values[:type] = "'#{sanitize_sql(["%s", e["type"]])}'"
@@ -563,6 +565,7 @@ class Form < ActiveRecord::Base
       values[:core_path] = null_safe_sanitize(e["core_path"])
       values[:help_text] = null_safe_sanitize(e["help_text"])
       values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
+      values[:code] = null_safe_sanitize(e["code"])
 
       # Debt: Break these out into methods. They do the lookups for codes and export values to get the correct
       # IDs for the system receiving the form import.
@@ -638,11 +641,11 @@ class Form < ActiveRecord::Base
     sql = "INSERT INTO form_elements "
     sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
     sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
-    sql << "export_conversion_value_id, created_at, updated_at) "
+    sql << "export_conversion_value_id, code, created_at, updated_at) "
     sql << "VALUES (#{ values[:form_id]}, #{values[:type]} , #{values[:name]}, #{values[:description]}, "
     sql << "#{values[:parent_id]}, #{values[:lft]}, #{values[:rgt]}, false, null, #{values[:is_active]}, "
     sql << "#{values[:tree_id]}, #{ values[:condition]}, #{values[:core_path]}, #{values[:is_condition_code]}, "
-    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, now(), now());"
+    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, #{values[:code]}, now(), now());"
     ActiveRecord::Base.connection.insert(sql)
   end
 

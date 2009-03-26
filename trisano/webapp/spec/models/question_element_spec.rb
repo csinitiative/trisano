@@ -27,31 +27,6 @@ describe QuestionElement do
     @question_element.should be_valid
   end
   
-  it "should determine if it is multi-valued" do
-    
-    question_element = QuestionElement.new({:question_attributes => {:data_type => "single_line_text"}})
-    question_element.is_multi_valued?.should be_false
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "multi_line_text"}})
-    question_element.is_multi_valued?.should be_false
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "drop_down"}})
-    question_element.is_multi_valued?.should be_true
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "radio_button"}})
-    question_element.is_multi_valued?.should be_true
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "check_box"}})
-    question_element.is_multi_valued?.should be_true
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "date"}})
-    question_element.is_multi_valued?.should be_false
-    
-    question_element.update_attributes({:question_attributes => {:data_type => "phone"}})
-    question_element.is_multi_valued?.should be_false
-    
-  end
-  
   it "should determine if it is multi-valued and empty" do
     
     question_element = QuestionElement.new({:tree_id => 1})

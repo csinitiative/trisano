@@ -43,4 +43,41 @@ describe Question do
     @question.errors.on(:question_text).should_not be_nil
   end
 
+  it 'should produce an error if the data type is not valid' do
+    @question.data_type = "not_good_pie"
+    @question.should_not be_valid
+    @question.errors.size.should == 1
+    @question.errors.on(:data_type).should_not be_nil
+  end
+
+  it 'should be valid with any of the valid data types' do
+    Question.valid_data_types.each do |data_type|
+      @question.data_type = data_type
+      @question.should be_valid
+    end
+  end
+
+  it "should determine if it is multi-valued" do
+    @question.data_type = "single_line_text"
+    @question.is_multi_valued?.should be_false
+
+    @question.data_type = "multi_line_text"
+    @question.is_multi_valued?.should be_false
+
+    @question.data_type = "drop_down"
+    @question.is_multi_valued?.should be_true
+
+    @question.data_type = "radio_button"
+    @question.is_multi_valued?.should be_true
+
+    @question.data_type = "check_box"
+    @question.is_multi_valued?.should be_true
+
+    @question.data_type = "date"
+    @question.is_multi_valued?.should be_false
+
+    @question.data_type = "phone"
+    @question.is_multi_valued?.should be_false
+  end
+  
 end

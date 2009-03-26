@@ -88,4 +88,106 @@ describe Answer do
     @answer.should_not be_valid
   end
 
+  describe 'when saving an answer to a multi-valued question' do
+
+    before(:each) do
+      @question = Question.new({ :question_text => "Did you eat the fish?", :data_type => "radio_button" })
+      @question_element = QuestionElement.create({ :question => @question })
+      @value_set_element = ValueSetElement.create({ :name => "Coded Yes/No" })
+      @yes_value_element = ValueSetElement.create({ :name => "Yes", :code => "1" })
+      @no_value_element = ValueSetElement.create({ :name => "No", :code => "2" })
+
+      @question_element.add_child(@value_set_element)
+      @value_set_element.add_child(@yes_value_element)
+      @value_set_element.add_child(@no_value_element)
+
+      @answer = Answer.new :question => @question
+    end
+
+    it 'should set the code on the answer for a radio button' do
+      @question.data_type = "radio_button"
+      @question.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should eql("1")
+
+      @answer.text_answer = "No"
+      @answer.save!
+      @answer.code.should eql("2")
+    end
+
+    it 'should set the code on the answer for a drop down select' do
+      @question.data_type = "drop_down"
+      @question.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should eql("1")
+
+      @answer.text_answer = "No"
+      @answer.save!
+      @answer.code.should eql("2")
+    end
+
+    it 'should set the code on the answer for a check box' do
+      @question.data_type = "check_box"
+      @question.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should eql("1")
+
+      @answer.text_answer = "No"
+      @answer.save!
+      @answer.code.should eql("2")
+    end
+
+    it 'should set multiple codes on the answer for a check box with multiple selections' do
+      @question.data_type = "check_box"
+      @question.save!
+      @answer.text_answer = "Yes\nNo\n"
+      @answer.save!
+      @answer.code.should eql("1\n2")
+    end
+
+    it 'should not set the code on the answer for a single line text input' do
+      @question.data_type = "single_line_text"
+      @question.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should be_nil
+    end
+
+    it 'should not set the code on the answer for a multi line text input' do
+      @question.data_type = "multi_line_text"
+      @question.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should be_nil
+    end
+
+    it 'should not set the code on the answer for a date' do
+      @question.data_type = "date"
+      @question.save!
+      @answer.text_answer = "01/21/09"
+      @answer.save!
+      @answer.code.should be_nil
+    end
+
+    it 'should not set the code on the answer for a phone input' do
+      @question.data_type = "phone"
+      @question.save!
+      @answer.text_answer = "503-555-5555"
+      @answer.save!
+      @answer.code.should be_nil
+    end
+
+    it 'should not set the code on the answer if the question is a CDC question' do
+      @question_element.export_column_id = 1
+      @question_element.save!
+      @answer.text_answer = "Yes"
+      @answer.save!
+      @answer.code.should be_nil
+    end
+
+  end
+
 end

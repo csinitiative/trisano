@@ -467,6 +467,7 @@ describe Form do
       published_form.disease_ids.length.should == form_to_publish.disease_ids.length
       published_form.disease_ids.sort.should == form_to_publish.disease_ids.sort
     end
+
   end
   
   describe "when published a second time" do
@@ -481,6 +482,26 @@ describe Form do
       second_version.status.should eql("Live")
       first_version.reload
       first_version.status.should eql("Archived")
+    end
+    
+  end
+
+  describe "when publishing a form that contains values with codes" do
+
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    before(:each) do
+      @form_to_publish = Form.find(forms(:hep_b_form).id)
+      @published_form = @form_to_publish.publish
+    end
+
+    it "should copy the codes" do
+      default_view = @published_form.investigator_view_elements_container.children[0]
+      question_of_interest = default_view.children[1]
+      value_set_of_interest = question_of_interest.children[0]
+      value_set_of_interest.children[0].code.should == form_elements(:coded_yes_value_for_hep_b_form).code
+      value_set_of_interest.children[1].code.should == form_elements(:coded_no_value_for_hep_b_form).code
+      value_set_of_interest.children[2].code.should == form_elements(:coded_unk_value_for_hep_b_form).code
     end
     
   end
@@ -668,6 +689,26 @@ describe Form do
 
   end
 
+    describe "when copying a form that contains values with codes" do
+
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    before(:each) do
+      @original_form = Form.find(forms(:hep_b_form).id)
+      @copied_form = @original_form.copy
+    end
+
+    it "should copy the codes" do
+      default_view = @copied_form.investigator_view_elements_container.children[0]
+      question_of_interest = default_view.children[1]
+      value_set_of_interest = question_of_interest.children[0]
+      value_set_of_interest.children[0].code.should == form_elements(:coded_yes_value_for_hep_b_form).code
+      value_set_of_interest.children[1].code.should == form_elements(:coded_no_value_for_hep_b_form).code
+      value_set_of_interest.children[2].code.should == form_elements(:coded_unk_value_for_hep_b_form).code
+    end
+
+  end
+
   describe 'when affecting export/import lookup info' do
 
     fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values, :external_codes
@@ -839,6 +880,7 @@ describe Form do
       FormElement.find(form_elements(:second_tab_q)).add_to_library.should_not be_nil
       FormElement.find(form_elements(:core_follow_up_for_hep_a_form)).add_to_library.should_not be_nil
       FormElement.find(form_elements(:cdc_question_for_hep_a_form)).add_to_library.should_not be_nil
+      FormElement.find(form_elements(:coded_value_set_for_hep_b_form)).add_to_library.should_not be_nil
     end
     
     it 'should export all elements in the library to a file' do
@@ -878,7 +920,24 @@ describe Form do
     fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
 
     it 'should add all of the elements in the file to the library' do
-      lambda { Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should change { FormElement.library_roots.size }.by(3)
+      lambda { Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip')) }.should change { FormElement.library_roots.size }.by(4)
+    end
+
+    it 'should give each tree in the library a different tree id' do
+      Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip'))
+      tree_ids = []
+      FormElement.library_roots.each do |root|
+        tree_ids.include?(root.tree_id).should be_false
+        tree_ids << root.tree_id
+      end
+    end
+
+    it 'should have maintained the code on coded values' do
+      Form.import_library(self.fixture_file_upload('files/library-export.zip', 'application/zip'))
+      coded_value_set = FormElement.library_roots.detect { |root| root.name == form_elements(:coded_value_set_for_hep_b_form).name}
+      coded_value_set.children[0].code.should eql(form_elements(:coded_yes_value_for_hep_b_form).code)
+      coded_value_set.children[1].code.should eql(form_elements(:coded_no_value_for_hep_b_form).code)
+      coded_value_set.children[2].code.should eql(form_elements(:coded_unk_value_for_hep_b_form).code)
     end
 
     it 'should fail if a code behind a condition cannot be found' do
@@ -1077,5 +1136,16 @@ describe Form do
     end
     
   end
-    
+
+  describe 'Form#next_tree_id' do
+
+    it 'should return tree_ids in sequence, even when called multiple times in a transaction' do
+      Form.transaction do
+        first_tree_id = Form.next_tree_id
+        second_tree_id = Form.next_tree_id
+        second_tree_id.should eql(first_tree_id +1)
+      end
+    end
+  end
+  
 end
