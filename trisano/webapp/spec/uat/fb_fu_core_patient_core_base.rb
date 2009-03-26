@@ -51,7 +51,11 @@ describe 'form builder patient-level core field followups for morbidity events',
       it "should create a follow up question: " + follow_up_question do       
         add_question_to_follow_up(@browser, test[:name], {:question_text => follow_up_question, :data_type => data_type[:name]}).should be_true
         if data_type[:values] != nil 
-          add_value_set_to_question(@browser, follow_up_question, "Value Set " + get_unique_name(2), data_type[:values][0], data_type[:values][1], data_type[:values][2]).should be_true
+          add_value_set_to_question(@browser,
+            follow_up_question,
+            "Value Set " + get_unique_name(2),
+            [{ :name => data_type[:values][0] }, { :name => data_type[:values][1] }, { :name => data_type[:values][2] }]
+          ).should be_true
         end
       end
     end

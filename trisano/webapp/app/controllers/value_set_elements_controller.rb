@@ -68,8 +68,6 @@ class ValueSetElementsController <  AdminController
 
   def update
     
-    params[:value_set_element][:existing_value_element_attributes] ||= {}
-    
     @value_set_element = ValueSetElement.find(params[:id])
 
     respond_to do |format|

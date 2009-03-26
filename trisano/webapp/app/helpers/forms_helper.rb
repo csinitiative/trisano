@@ -529,11 +529,11 @@ module FormsHelper
   end
 
   def add_value_link(element)
-    "<small><a class='fb-add-value' href='#' onclick=\"new Ajax.Request('../../value_elements/new?form_element_id=#{element.id.to_s}', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Add value</a></small>"
+    "<small><a class='fb-add-value' href='#' onclick=\"new Ajax.Request('../../value_elements/new?form_element_id=#{element.id.to_s}', {method:'get', asynchronous:true, evalScripts:true}); return false;\" id='add-value-#{element.id.to_s}'>Add value</a></small>"
   end
 
   def edit_value_link(element)
-    "<small><a class='fb-edit-value' href='#' onclick=\"new Ajax.Request('../../value_elements/#{element.id.to_s}/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\">Edit</a></small>"
+    "<small><a class='fb-edit-value' href='#' onclick=\"new Ajax.Request('../../value_elements/#{element.id.to_s}/edit', {method:'get', asynchronous:true, evalScripts:true}); return false;\" id='edit-value-#{element.id.to_s}'>Edit</a></small>"
   end
 
   def delete_value_link(element)

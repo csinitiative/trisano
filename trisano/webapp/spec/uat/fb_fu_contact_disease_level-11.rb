@@ -20,7 +20,7 @@ require 'date'
  
 describe 'form builder disease followups for contact events' do
   
-#  $dont_kill_browser = true
+  #  $dont_kill_browser = true
 
   fields = [{:name => 'Hospitalized', :label => 'contact_event_disease_event_attributes_disease_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
     {:name => 'Died', :label => 'contact_event_disease_event_attributes_died_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'}
@@ -57,7 +57,11 @@ describe 'form builder disease followups for contact events' do
       it "should create a follow up question: " + follow_up_question do       
         add_question_to_follow_up(@browser, test[:name], {:question_text => follow_up_question, :data_type => data_type[:name]}).should be_true
         if data_type[:values] != nil 
-          add_value_set_to_question(@browser, follow_up_question, "Value Set " + get_unique_name(2), data_type[:values][0], data_type[:values][1], data_type[:values][2]).should be_true
+          add_value_set_to_question(@browser,
+            follow_up_question,
+            "Value Set " + get_unique_name(2),
+            [{ :name => data_type[:values][0] }, { :name => data_type[:values][1] }, { :name => data_type[:values][2] }]
+          ).should be_true
         end
       end
     end

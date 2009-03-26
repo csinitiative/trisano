@@ -72,16 +72,24 @@ describe 'Form Builder Admin' do
         :data_type => "Drop-down select list"
       }
     ).should be_true
-    
-    add_value_set_to_question(@browser, @question_one_with_value_set, @value_set_one_name, @value_set_one_value_one, @value_set_one_value_two, @value_set_one_value_three).should be_true
+
+    add_value_set_to_question(@browser,
+      @question_one_with_value_set,
+      @value_set_one_name,
+      [{ :name => @value_set_one_value_one }, { :name => @value_set_one_value_two }, { :name => @value_set_one_value_three }]
+    ).should be_true
     
     add_question_to_view(@browser, "Default View", {
         :question_text => @question_two_with_value_set, 
         :data_type => "Drop-down select list"
       }
     ).should be_true
-    
-    add_value_set_to_question(@browser, @question_two_with_value_set, @value_set_two_name, @value_set_two_value_one, @value_set_two_value_two, @value_set_two_value_three).should be_true
+
+    add_value_set_to_question(@browser,
+      @question_two_with_value_set,
+      @value_set_two_name,
+      [{ :name => @value_set_two_value_one }, { :name => @value_set_two_value_two }, { :name => @value_set_two_value_three }]
+    ).should be_true
     
   end
   

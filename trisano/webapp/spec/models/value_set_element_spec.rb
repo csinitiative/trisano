@@ -100,19 +100,4 @@ describe ValueSetElement do
     end
   end
   
-  describe "when updated to remove a value element" do
-    it "should adjust the nested set of the form" do
-      @value_set_element.save_and_add_to_form
-      @value = ValueElement.create(:name => "Yes", :tree_id => @value_set_element.tree_id, :parent_element_id => @value_set_element.id)
-      @value_set_element.add_child(@value)
-      @form.form_base_element.reload
-      starting_form_rgt = @form.form_base_element.rgt
-      @value_set_element.existing_value_element_attributes={}
-      @value_set_element.update_and_validate(:name => "Updated Name")
-      @form.form_base_element.reload
-      @form.form_base_element.rgt.should == starting_form_rgt - 2
-    end
-
-  end
-  
 end

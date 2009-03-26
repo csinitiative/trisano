@@ -58,7 +58,11 @@ describe 'Form Builder Admin Delete Element Functionality' do
     add_section_to_view(@browser, "Default View", {:section_name => @section_name})
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
     add_question_to_view(@browser, "Default View", {:question_text => @value_set_question_text, :data_type => "Drop-down select list"})
-    add_value_set_to_question(@browser, @value_set_question_text, @value_set_name, @value_set_value_one, @value_set_value_two, @value_set_value_three) 
+    add_value_set_to_question(@browser,
+      @value_set_question_text,
+      @value_set_name,
+      [{ :name => @value_set_value_one }, { :name => @value_set_value_two }, { :name => @value_set_value_three }]
+    ).should be_true
     add_core_field_config(@browser, "Patient last name").should be_true
     add_question_to_before_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_before_question_text, :data_type => "Single line text"}).should be_true
     add_question_to_after_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_after_question_text, :data_type => "Single line text"}).should be_true

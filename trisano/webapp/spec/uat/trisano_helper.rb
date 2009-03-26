@@ -762,23 +762,25 @@ module TrisanoHelper
     wait_for_element_not_present("edit-section-form", browser)
   end
   
-  # This method is pretty weak. Always does a three-value value set. Could be beefed up to take a variable number of values.
-  def add_value_set_to_question(browser, question_text, value_set_name, value_one, value_two, value_three)
+  def add_value_set_to_question(browser, question_text, value_set_name, value_attributes=[])
     element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
     browser.click("add-value-set-#{element_id}")
     wait_for_element_present("new-value-set-form", browser)
     browser.type "value_set_element_name", value_set_name
-    browser.click "link=Add a value"
-    browser.click "link=Add a value"
-    browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_new_value_element_attributes__name")
-    browser.type "value_set_element_new_value_element_attributes__name", value_one
-    browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", value_two
-    browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", value_three
     browser.click "//input[contains(@id, 'create_value_set_submit')]"
     wait_for_element_not_present("new-value-set-form")
     browser.is_text_present(value_set_name).should be_true
-    
+    value_set_id = browser.get_value("id=modified-element")
+
+    value_attributes.each do |attributes|
+      browser.click("add-value-#{value_set_id}")
+      wait_for_element_present("new-value-form", browser)
+      browser.type "value_element_name", attributes[:name]
+      browser.type "value_element_code", attributes[:code] if attributes[:code]
+      browser.click "//input[contains(@id, 'create_value_submit')]"
+      wait_for_element_not_present("new-value-form")
+    end
+
     if browser.is_text_present(value_set_name)
       return true
     else

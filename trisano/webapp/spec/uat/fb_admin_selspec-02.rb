@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-  # $dont_kill_browser = true
+ $dont_kill_browser = true
 
 describe 'Form Builder Admin' do
   
@@ -106,39 +106,23 @@ def add_questions
 end
 
 def add_value_sets
-  @browser.click "link=Add value set"
-  wait_for_element_present("new-value-set-form")
-  @browser.type "value_set_element_name", "Yes/No/Maybe"
-  @browser.click "link=Add a value"
-  @browser.click "link=Add a value"
-  @browser.click "link=Add a value"
-  wait_for_element_present("value_set_element_new_value_element_attributes__name")
-  @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-  @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-  @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Maybe"
-  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-  wait_for_element_not_present("new-value-set-form")
-  @browser.is_text_present("Yes/No/Maybe").should be_true
-  @browser.click "link=Add value set"
-  wait_for_element_present("new-value-set-form")
-  @browser.type "value_set_element_name", "Yes/No"
-  @browser.click "link=Add a value"
-  @browser.click "link=Add a value"
-  wait_for_element_present("value_set_element_new_value_element_attributes__name")
-  @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-  @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-  wait_for_element_not_present("new-value-set-form")
-  @browser.click "link=Add value set"
-  wait_for_element_present("new-value-set-form")
-  @browser.type "value_set_element_name", "Yes/No"
-  @browser.click "link=Add a value"
-  @browser.click "link=Add a value"
-  wait_for_element_present("value_set_element_new_value_element_attributes__name")
-  @browser.type "value_set_element_new_value_element_attributes__name", "Yes"
-  @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "No"
-  @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-  wait_for_element_not_present("new-value-set-form")
+  add_value_set_to_question(@browser,
+    "Did you go into the tall grass?",
+    "Yes/No/Maybe",
+    [{ :name => "Yes" }, { :name => "No" }, { :name => "Maybe" }]
+  ).should be_true
+
+  add_value_set_to_question(@browser,
+    @question_to_inactivate_text,
+    "Yes/No",
+    [{ :name => "Yes" }, { :name => "No" }]
+  ).should be_true
+
+  add_value_set_to_question(@browser,
+    @question_to_edit_text,
+    "Yes/No",
+    [{ :name => "Yes" }, { :name => "No" }]
+  ).should be_true
 end
 
 def reorder_elements
@@ -152,33 +136,14 @@ def edit_value_sets
   @browser.click "link=Edit value set"
   wait_for_element_present("edit-value-set-form")
   @browser.is_element_present("edit-value-set-form").should be_true
-  @browser.type "value_set_element_name", "Edited"
-  @browser.click "link=Remove"
-  @browser.click "link=Remove"
+  @browser.type "value_set_element_name", "Edited value set"
   @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
   wait_for_element_not_present("edit-value-set-form")
-  @browser.click "link=Edit value set"
-  wait_for_element_present("edit-value-set-form")
-    
-  @browser.type "document.forms['value-set-element-edit-form'].elements[4]", "Edited value"
-    
-  @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
-  wait_for_element_not_present("edit-value-set-form")
-  
+
   @browser.click "link=Inactivate"
   sleep(2)
-  @browser.is_text_present("Edited value").should be_true
-  @browser.is_text_present("Maybe").should be_false
+  @browser.is_text_present("Edited value set").should be_true
   @browser.is_text_present("Inactive").should be_true
-  
-  @browser.click "link=Edit value set"
-  wait_for_element_present("edit-value-set-form")
-  @browser.click "link=Add a value"
-  wait_for_element_present("value_set_element_new_value_element_attributes__name")
-  @browser.type "value_set_element_new_value_element_attributes__name", "Added after value"
-  @browser.click "//input[contains(@id, 'edit_value_set_submit')]"
-  wait_for_element_not_present("edit-value-set-form")
-  @browser.is_text_present("Added after value").should be_true
 end
 
 def add_and_populate_tab

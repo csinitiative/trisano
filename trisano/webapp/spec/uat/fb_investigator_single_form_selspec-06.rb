@@ -69,20 +69,13 @@ describe "Form Builder Investigator Single Form" do
     @browser.is_text_present("Drop down").should be_true
   end
 
-  it "should add a value set to the drop down question" do    
-    @browser.click "link=Add value set"
-    wait_for_element_present("new-value-set-form")
-    @browser.type "value_set_element_name", "Value Set: Drop down values"
-    @browser.click "link=Add a value"
-    @browser.click "link=Add a value"
-    @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_new_value_element_attributes__name")
-    @browser.type "value_set_element_new_value_element_attributes__name", "Value One"
-    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Value Two"
-    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Value Three"
-    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-    #wait_for_element_not_present("new-value-set-form")
-    sleep 3
+  it "should add a value set to the drop down question" do
+    add_value_set_to_question(@browser,
+      "Q3",
+      "Value Set: Drop down values",
+      [{ :name => "Value One" }, { :name => "Value Two" }, { :name => "Value Three" }]
+    ).should be_true
+    
     @browser.is_text_present("Value Set: Drop down values").should be_true
     @browser.is_text_present("Value Three").should be_true
     @browser.is_text_present("Value Two").should be_true
@@ -101,18 +94,12 @@ describe "Form Builder Investigator Single Form" do
   end
   
   it "should add a value set to the check box question" do
-    @browser.click "link=Add value set"
-    wait_for_element_present("new-value-set-form")
-    @browser.type "value_set_element_name", "Check box values"
-    @browser.click "link=Add a value"
-    @browser.click "link=Add a value"
-    @browser.click "link=Add a value"
-    wait_for_element_present("value_set_element_new_value_element_attributes__name")
-    @browser.type "value_set_element_new_value_element_attributes__name", "First Value"
-    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][1]", "Second Value"
-    @browser.type "document.forms['value-set-element-new-form'].elements['value_set_element[new_value_element_attributes][][name]'][2]", "Third Value"
-    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-    wait_for_element_not_present("new-value-set-form")
+    add_value_set_to_question(@browser,
+      "Check boxes",
+      "Check box values",
+      [{ :name => "First Value" }, { :name => "Second Value" }, { :name => "Third Value" }]
+    ).should be_true
+    
     @browser.is_text_present("Value Set: Check box values").should be_true    
     @browser.is_text_present("First Value").should be_true
     @browser.is_text_present("Second Value").should be_true
@@ -138,12 +125,12 @@ describe "Form Builder Investigator Single Form" do
     @browser.click "//input[contains(@id, 'create_question_submit')]"
     wait_for_element_not_present("new-question-form")
     @browser.is_text_present("Checkboxes with null value set").should be_true
+
+    add_value_set_to_question(@browser,
+      "Checkboxes with null value set",
+      "Value set with no values"
+    ).should be_true
     
-    @browser.click "link=Add value set"
-    wait_for_element_present("new-value-set-form")
-    @browser.type "value_set_element_name", "Value set with no values"
-    @browser.click "//input[contains(@id, 'create_value_set_submit')]"
-    wait_for_element_not_present("new-value-set-form")
     @browser.is_text_present("Value set with no values").should be_true
   end
   
