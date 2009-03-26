@@ -17,44 +17,83 @@
 
 module Routing
 
-  class State
+  module Workflow
+    class << self
+      def included(recipient)
+        recipient.instance_eval do
+          def workflow(&proc)
+            @states = {}
+            @ordered_states = []
+            proc.call if block_given?
+          end
 
-    class << self       
-      def states
-        @@states ||= {}
+          def states
+            @states
+          end
+
+          def ordered_states
+            @ordered_states
+          end
+
+          def state(name, &proc)
+            s = Routing::State.new(self, &proc)
+            states[name] = s
+            ordered_states << s
+            s
+          end
+
+          def action_phrases_for(*state_names)
+            state_names.collect do |state_name|
+              if states[state_name].try(:action_phrase)
+                OpenStruct.new(:phrase => states[state_name].action_phrase, 
+                               :state => state_name)
+              end
+            end.compact
+          end
+
+          def get_state_keys
+            states.keys
+          end
+
+          def get_states_and_descriptions
+            ordered_states.map do |state| 
+              OpenStruct.new(:state => state.state_code, 
+                             :description => state.description)
+            end
+          end
+        end
+
+        recipient.class_eval do
+          # not the best home for this, but it keeps all the state
+          # stuff together.
+          def current_state
+            if self.respond_to?(:event_status)
+              self.class.states.try(:[], self.event_status)
+            end
+          end
+        end
+                              
       end
-    end
-    
-    def initialize(options = {})
-      @options = options
-    end
 
-    def required_privilege
-      @options[:priv_required]
+    end
+  end
+
+  class State
+    attr_accessor :required_privilege,
+                  :action_phrase,
+                  :transitions,
+                  :state_code,
+                  :description,
+                  :note_text
+
+    def initialize(state_holder, &proc)
+      @state_holder = state_holder
+      @transitions = []
+      proc.call(self) if block_given?
     end
 
     def allows_transition_to?(proposed_state)
-      @options[:transitions].include?(proposed_state)
-    end
-
-    def action_phrase
-      @options[:action_phrase]
-    end
-
-    def transitions
-      @options[:transitions] ||= []
-    end
-
-    def state_code
-      @options[:state_code]
-    end
-    
-    def description
-      @options[:description]
-    end
-
-    def note_text
-      @options[:note_text]
+      transitions.include?(proposed_state)
     end
 
     # returns transitions for this state if they have action
@@ -62,13 +101,12 @@ module Routing
     # states (based on privileges and what not).
     def renderable_transitions(&block)
       transitions.collect do |transition|
-        transition_state = Routing::State.states[transition]
+        transition_state = @state_holder.states[transition]
         if transition_state.action_phrase
           transition_state unless block_given? && !yield(transition_state)
         end
       end.compact
     end      
-
   end
 
 end

@@ -158,139 +158,7 @@ class Event < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 25
 
-  def self.states
-    Routing::State.states
-  end
-
-  states['NEW'] = Routing::State.new({ 
-      :transitions => ["ASGD-LHD"],
-      :action_phrase => nil,
-      :priv_required => :create_event,
-      :description => "New",
-      :state_code => "NEW",
-      :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'
-    })
-  states['ASGD-LHD'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"],
-      :action_phrase => nil,
-      :priv_required => :route_event_to_any_lhd,
-      :description => "Assigned to Local Health Dept.",
-      :state_code => "ASGD-LHD",
-      :note_text => '"Routed to jurisdiction #{self.primary_jurisdiction.name}."'
-    })
-  states['ACPTD-LHD'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "ASGD-INV"],
-      :action_phrase => "Accept",
-      :priv_required => :accept_event_for_lhd,
-      :description => "Accepted by Local Health Dept.",
-      :state_code => "ACPTD-LHD",
-      :note_text => '"Accepted by #{self.primary_jurisdiction.name}."'
-    })
-  states['RJCTD-LHD'] = Routing::State.new({
-      :transitions => ["ASGD-LHD"],
-      :action_phrase => "Reject",
-      :priv_required => :accept_event_for_lhd,
-      :description => "Rejected by Local Health Dept.",
-      :state_code => "RJCTD-LHD",
-      :note_text => '"Rejected by #{self.primary_jurisdiction.name}."'
-    })
-  states['ASGD-INV'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"],
-      :action_phrase => "Route to queue",
-      :priv_required => :route_event_to_investigator,
-      :description => "Assigned to Investigator",
-      :state_code => "ASGD-INV",
-      :note_text => 'if self.investigator then "Routed to investigator #{self.investigator.best_name}." else "Routed to queue #{self.event_queue.queue_name}." end'
-    })
-  states['UI'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
-      :action_phrase => "Accept",
-      :priv_required => :accept_event_for_investigation,
-      :description => "Under Investigation",
-      :state_code => "UI",
-      :note_text => '"Accepted for investigation."'
-    })
-  states['RJCTD-INV'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "ASGD-INV"],
-      :action_phrase => "Reject",
-      :priv_required => :accept_event_for_investigation,
-      :description => "Rejected by Investigator",
-      :state_code => "RJCTD-INV",
-      :note_text => '"Rejected for investigation."'
-    })
-  states['IC'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
-      :action_phrase => "Mark Investigation Complete",
-      :priv_required => :investigate_event ,
-      :description => "Investigation Complete",
-      :state_code => "IC",
-      :note_text => '"Completed investigation."'
-    })
-  states['APP-LHD'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "CLOSED", "RO-STATE"],
-      :action_phrase => "Approve",
-      :priv_required => :approve_event_at_lhd ,
-      :description => "Approved by LHD",
-      :state_code => "APP-LHD",
-      :note_text => '"Approved at #{self.primary_jurisdiction.name}."'
-    })
-  states['RO-MGR'] = Routing::State.new({
-      :transitions => ["ASGD-LHD", "IC", "ASGD-INV"],
-      :action_phrase => "Reopen",
-      :priv_required => :approve_event_at_lhd ,
-      :description => "Reopened by Manager",
-      :state_code => "RO-MGR",
-      :note_text => '"Reopened by #{self.primary_jurisdiction.name} manager."'
-    })
-  states['CLOSED'] = Routing::State.new({
-      :transitions => [],
-      :action_phrase => "Approve",
-      :priv_required => :approve_event_at_state ,
-      :description => "Approved by State",
-      :state_code => "CLOSED",
-      :note_text => '"Approved by State."'
-    })
-  states['RO-STATE']  = Routing::State.new({
-      :transitions => ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"],
-      :action_phrase => "Reopen",
-      :priv_required => :approve_event_at_state ,
-      :description => "Reopened by State",
-      :state_code => "RO-STATE",
-      :note_text => '"Reopened by State."'
-    })
-
-  @@ordered_states = []
-  @@ordered_states << states['NEW']
-  @@ordered_states << states['ASGD-LHD']
-  @@ordered_states << states['ACPTD-LHD']
-  @@ordered_states << states['RJCTD-LHD']
-  @@ordered_states << states['ASGD-INV']
-  @@ordered_states << states['UI']
-  @@ordered_states << states['RJCTD-INV']
-  @@ordered_states << states['IC']
-  @@ordered_states << states['APP-LHD']
-  @@ordered_states << states['RO-MGR']
-  @@ordered_states << states['CLOSED']
-  @@ordered_states << states['RO-STATE']
-
   class << self
-
-    def action_phrases_for(*state_names)
-      state_names.collect do |state_name|
-        if states[state_name].action_phrase
-          OpenStruct.new(:phrase => states[state_name].action_phrase, :state => state_name)
-        end
-      end.compact
-    end
-
-    def get_state_keys
-      Event.states.keys
-    end
-
-    def get_states_and_descriptions
-      @@ordered_states.map { |state| OpenStruct.new( :state => state.state_code, :description => state.description) }
-    end
-
     def participation_code(description)
       Code.find_by_code_name_and_code_description('participant', description).id
     end
@@ -470,10 +338,6 @@ class Event < ActiveRecord::Base
     ['UI', 'IC', 'RO-MGR'].include?(self.event_status)
   end
 
-  def current_state
-    Event.states[self.event_status]
-  end
-
   # returns only the references for forms that should be rendered on
   # the investigation tab
   def investigation_form_references
@@ -529,7 +393,7 @@ class Event < ActiveRecord::Base
       child.build_jurisdiction(parent_jurisdiction.attributes) unless parent_jurisdiction.nil?
     end
   end
-                                             
+  
   # This method is used to add user selected forms and, if the timing is just right,
   # auto-assigned forms to an event.
   def add_forms(forms_to_add)
@@ -557,10 +421,10 @@ class Event < ActiveRecord::Base
     end
     Event.transaction do
       unless (forms_to_add.all? do |form_id|
-            # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
-            Form.find(form_id)
-            self.form_references.create(:form_id => form_id)
-          end)
+                # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
+                Form.find(form_id)
+                self.form_references.create(:form_id => form_id)
+              end)
         raise "Unable to process new forms"
       end
     end
@@ -619,7 +483,7 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-          :include => [ { :interested_party => { :person_entity => :person } },
+                                   :include => [ { :interested_party => { :person_entity => :person } },
             :address,
             :disease_event,
             :jurisdiction,

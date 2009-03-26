@@ -364,20 +364,20 @@ describe MorbidityEvent do
 
   describe "The get_required_priv() class method" do
     it "should return :accept_event_for_lhd when the state is ACPTD-LHD or RJCT-LHD" do
-      Event.states['ACPTD-LHD'].required_privilege.should == :accept_event_for_lhd
-      Event.states['RJCTD-LHD'].required_privilege.should == :accept_event_for_lhd
+      MorbidityEvent.states['ACPTD-LHD'].required_privilege.should == :accept_event_for_lhd
+      MorbidityEvent.states['RJCTD-LHD'].required_privilege.should == :accept_event_for_lhd
     end
   end
 
   describe "The state#transitions method" do
     it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
-      Event.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC", "ASGD-INV"]
+      MorbidityEvent.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC", "ASGD-INV"]
     end
   end
 
   describe "The action_phrases_for() class method" do
     it "should return an array of structs containing the right phrases and states" do
-      s = Event.action_phrases_for('RO-STATE', 'APP-LHD')
+      s = MorbidityEvent.action_phrases_for('RO-STATE', 'APP-LHD')
       s.first.phrase.should == "Reopen"
       s.first.state.should == "RO-STATE"
       s.last.phrase.should == "Approve"
@@ -386,7 +386,7 @@ describe MorbidityEvent do
   end
 
   describe "state description" do
-    before(:each) { @event = Event.new(:event_status => "ACPTD-LHD") }
+    before(:each) { @event = MorbidityEvent.new(:event_status => "ACPTD-LHD") }
 
     it "should come from the state#description method" do
       @event.current_state.description.should == "Accepted by Local Health Dept."
@@ -397,7 +397,7 @@ describe MorbidityEvent do
   describe "The state#allow_transitions_to? method" do
 
     before(:each) do
-      @event = Event.new
+      @event = MorbidityEvent.new
     end
 
     it "should return true when transitioning from ACPTD-LHD to ASGD-INV" do

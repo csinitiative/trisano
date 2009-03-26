@@ -16,9 +16,106 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class MorbidityEvent < HumanEvent
-  
+  include Routing::Workflow
+
   supports :tasks
   supports :attachments
+
+  workflow do
+    state 'NEW' do |s|
+      s.transitions = ["ASGD-LHD"]
+      s.required_privilege = :create_event
+      s.description = "New"
+      s.state_code = "NEW"
+      s.note_text = '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'
+    end
+    state 'ASGD-LHD' do |s|
+      s.transitions = ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"]
+      s.required_privilege = :route_event_to_any_lhd
+      s.description = "Assigned to Local Health Dept."
+      s.state_code = "ASGD-LHD"
+      s.note_text = '"Routed to jurisdiction #{self.primary_jurisdiction.name}."'
+    end
+    state 'ACPTD-LHD' do |s|
+      s.transitions = ["ASGD-LHD", "ASGD-INV"]
+      s.action_phrase = "Accept"
+      s.required_privilege = :accept_event_for_lhd
+      s.description = "Accepted by Local Health Dept."
+      s.state_code = "ACPTD-LHD"
+      s.note_text = '"Accepted by #{self.primary_jurisdiction.name}."'
+    end
+    state 'RJCTD-LHD' do |s|
+      s.transitions = ["ASGD-LHD"]
+      s.action_phrase = "Reject"
+      s.required_privilege = :accept_event_for_lhd
+      s.description = "Rejected by Local Health Dept."
+      s.state_code = "RJCTD-LHD"
+      s.note_text = '"Rejected by #{self.primary_jurisdiction.name}."'
+    end
+    state 'ASGD-INV' do |s|
+      s.transitions = ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"]
+      s.action_phrase = "Route to queue"
+      s.required_privilege = :route_event_to_investigator
+      s.description = "Assigned to Investigator"
+      s.state_code = "ASGD-INV"
+      s.note_text = 'if self.investigator then "Routed to investigator #{self.investigator.best_name}." else "Routed to queue #{self.event_queue.queue_name}." end'
+    end
+    state 'UI' do |s|
+      s.transitions = ["ASGD-LHD", "IC", "ASGD-INV"]
+      s.action_phrase = "Accept"
+      s.required_privilege = :accept_event_for_investigation
+      s.description = "Under Investigation"
+      s.state_code = "UI"
+      s.note_text = '"Accepted for investigation."'
+    end
+    state 'RJCTD-INV' do |s|
+      s.transitions = ["ASGD-LHD", "ASGD-INV"]
+      s.action_phrase = "Reject"
+      s.required_privilege = :accept_event_for_investigation
+      s.description = "Rejected by Investigator"
+      s.state_code = "RJCTD-INV"
+      s.note_text = '"Rejected for investigation."'
+    end
+    state 'IC' do |s|
+      s.transitions = ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"]
+      s.action_phrase = "Mark Investigation Complete"
+      s.required_privilege = :investigate_event 
+      s.description = "Investigation Complete"
+      s.state_code = "IC"
+      s.note_text = '"Completed investigation."'
+    end
+    state 'APP-LHD' do |s|
+      s.transitions = ["ASGD-LHD", "CLOSED", "RO-STATE"]
+      s.action_phrase = "Approve"
+      s.required_privilege = :approve_event_at_lhd 
+      s.description = "Approved by LHD"
+      s.state_code = "APP-LHD"
+      s.note_text = '"Approved at #{self.primary_jurisdiction.name}."'
+    end
+    state 'RO-MGR' do |s|
+      s.transitions = ["ASGD-LHD", "IC", "ASGD-INV"]
+      s.action_phrase = "Reopen"
+      s.required_privilege = :approve_event_at_lhd 
+      s.description = "Reopened by Manager"
+      s.state_code = "RO-MGR"
+      s.note_text = '"Reopened by #{self.primary_jurisdiction.name} manager."'
+    end
+    state 'CLOSED' do |s|
+      s.action_phrase = "Approve"
+      s.required_privilege = :approve_event_at_state 
+      s.description = "Approved by State"
+      s.state_code = "CLOSED"
+      s.note_text = '"Approved by State."'
+    end
+    state 'RO-STATE' do |s|
+      s.transitions = ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"]
+      s.action_phrase = "Reopen"
+      s.required_privilege = :approve_event_at_state 
+      s.description = "Reopened by State"
+      s.state_code = "RO-STATE"
+      s.note_text = '"Reopened by State."'
+    end  
+  end
 
   def self.core_views
     [
@@ -77,7 +174,7 @@ class MorbidityEvent < HumanEvent
           :investigation_started_date => nil,
           :investigation_completed_LHD_date => nil,
           :review_completed_by_state_date => nil)
-        self.add_note(self.instance_eval(Event.states[self.event_status].note_text) + "\n#{note}")
+        self.add_note(self.instance_eval(MorbidityEvent.states[self.event_status].note_text) + "\n#{note}")
       end
 
       # Handle secondary jurisdictions
@@ -120,7 +217,7 @@ class MorbidityEvent < HumanEvent
 
   # Expects string of space separated event states e.g. new, acptd-lhd, etc.
   def self.get_allowed_states(query_states=nil)
-    system_states = Event.get_state_keys
+    system_states = self.get_state_keys
     return system_states if query_states.nil?
     query_states.collect! { |state| state.upcase }
     system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
