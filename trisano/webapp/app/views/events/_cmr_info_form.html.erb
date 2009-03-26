@@ -64,7 +64,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% unless RAILS_ENV == "production" %>
         <% core_element :event_status, f, :horiz do -%>
           <%= f.label(:event_status) %>
-          <%= f.core_dropdown_field(:event_status, Event.get_states_and_descriptions, :state, :description, {:include_blank => false}) %>
+          <%= f.core_dropdown_field(:event_status, MorbidityEvent.get_states_and_descriptions, :state, :description, {:include_blank => false}) %>
         <% end -%>
         <% core_element :investigation_started_date, f, :horiz do -%>
           <%= f.label(:investigation_started_date, "Date investigation started") %>

@@ -107,7 +107,7 @@ class MorbidityEventsController < EventsController
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
-          @event.add_note(@event.instance_eval(Event.states["NEW"].note_text))
+          @event.add_note(@event.instance_eval(MorbidityEvent.states["NEW"].note_text))
         end
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
