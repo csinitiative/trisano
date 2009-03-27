@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
- #$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Managing users' do
   
@@ -57,16 +57,8 @@ describe 'Managing users' do
     uid = get_unique_name(1)+get_unique_name(1)
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
-
-    @browser.click "link=Add Role"
-    @browser.click "link=Add Role"
-
-    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
-
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
-
+    add_role(@browser, { :role => "Administrator", :jurisdiction => "TriCounty Health Department" }, 1)
+    add_role(@browser, { :role => "Investigator", :jurisdiction => "TriCounty Health Department" }, 2)
     save_and_verify_user(uid, uname)
 
     @browser.is_text_present("Administrator").should be_true
@@ -79,85 +71,62 @@ describe 'Managing users' do
     uid = get_unique_name(1)+get_unique_name(1)
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
-
-    @browser.click "link=Add Role"
-    @browser.click "link=Add Role"
-
-    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Davis County Health Department"
-
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
-
+    add_role(@browser, { :role => "Administrator", :jurisdiction => "Davis County Health Department" }, 1)
+    add_role(@browser, { :role => "Investigator", :jurisdiction => "TriCounty Health Department" }, 2)
     save_and_verify_user(uid, uname)
-
+  
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Investigator").should be_true
     @browser.is_text_present("Davis County").should be_true
     @browser.is_text_present("TriCounty").should be_true
   end
-
+  
   it "should allow adding a role to an existing user" do
     go_to_new_user_page
     uid = get_unique_name(1)+get_unique_name(1)
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
-    
-    @browser.click "link=Add Role"
-    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Bear River Health Department"
-
+    add_role(@browser, { :role => "Administrator", :jurisdiction => "Bear River Health Department" }, 1)
     save_and_verify_user(uid, uname)
-
+  
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Bear River").should be_true
-
-    @browser.click("link=Edit")  
-    @browser.wait_for_page_to_load($load_time)    
-    @browser.click "link=Add Role"
-    @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=TriCounty Health Department"
-
+  
+    @browser.click("link=Edit")
+    @browser.wait_for_page_to_load($load_time)
+    add_role(@browser, { :role => "Investigator", :jurisdiction => "TriCounty Health Department" }, 2)
     @browser.click "user_submit"
     @browser.wait_for_page_to_load($load_time)
-
+  
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Investigator").should be_true
     @browser.is_text_present("Bear River").should be_true
     @browser.is_text_present("TriCounty").should be_true
   end
-
+  
   it "should allow deleting all roles of an existing user" do
     go_to_new_user_page
     uid = get_unique_name(1)+get_unique_name(1)
     uname = get_unique_name(2)
     enter_user_info(uid, uname)
-
-    @browser.click "link=Add Role"
-    @browser.click "link=Add Role"
-
-    @browser.select "user_role_membership_attributes__role_id", "label=Administrator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Davis County Health Department"
-
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[3]/select", "label=Investigator"
-    @browser.select "//div[@id='role_memberships']/tr[2]/td[2]/select", "label=TriCounty Health Department"
-
+    add_role(@browser, { :role => "Administrator", :jurisdiction => "Davis County Health Department" }, 1)
+    add_role(@browser, { :role => "Investigator", :jurisdiction => "TriCounty Health Department" }, 2)
     save_and_verify_user(uid, uname)
-
+  
     @browser.is_text_present("Administrator").should be_true
     @browser.is_text_present("Davis").should be_true
     @browser.is_text_present("Investigator").should be_true
     @browser.is_text_present("TriCounty").should be_true
-
-    @browser.click("link=Edit")  
-    @browser.wait_for_page_to_load($load_time) 
-    
+  
+    @browser.click("link=Edit")
+    @browser.wait_for_page_to_load($load_time)
+  
     @browser.click "remove_role_membership_link"
     @browser.click "remove_role_membership_link"
-
+  
     @browser.click "user_submit"
     @browser.wait_for_page_to_load($load_time)
-
+  
     @browser.is_text_present("Administrator").should be_false
     @browser.is_text_present("Investigator").should be_false
     @browser.is_text_present("Davis County").should be_false

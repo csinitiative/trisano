@@ -291,13 +291,6 @@ module TrisanoHelper
     browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    result_attributes[:treatment])
     browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", result_attributes[:treatment_date])
   end
-
-  def save_contact_event(browser)
-    browser.click "save_and_exit_btn"
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Contact event was successfully created.") or
-        browser.is_text_present("Contact event was successfully updated."))
-  end
   
   def navigate_to_people_search(browser)
     click_nav_search(browser)
@@ -316,56 +309,6 @@ module TrisanoHelper
         browser.is_text_present("By name") and
         browser.is_text_present("Additional criteria") and
         browser.is_text_present("Date or year of birth"))
-  end
-  
-  def navigate_to_disease_admin(browser)
-    browser.open "/trisano/cmrs"
-    click_nav_admin(browser)
-    browser.click("admin_diseases")
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Diseases"))
-  end
-  
-  def navigate_to_export_admin(browser)
-    browser.open "/trisano/cmrs"
-    click_nav_admin(browser)
-    browser.click("admin_cdc_config")
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Export Columns"))
-  end
-
-  def create_disease(browser, disease_attributes)
-    modify_disease(browser, disease_attributes)
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Disease was successfully created."))
-  end
-
-  def modify_disease(browser, disease_attributes)
-    browser.type("disease_disease_name", disease_attributes[:disease_name]) if disease_attributes[:disease_name]
-    browser.type("disease_cdc_code", disease_attributes[:cdc_code]) if disease_attributes[:cdc_code]
-    browser.click("disease_active") if disease_attributes[:disease_active]
-    browser.type("disease_contact_lead_in", disease_attributes[:contact_lead_in]) if disease_attributes[:contact_lead_in]
-    browser.type("disease_place_lead_in", disease_attributes[:place_lead_in]) if disease_attributes[:place_lead_in]
-    browser.type("disease_treatment_lead_in", disease_attributes[:treatment_lead_in]) if disease_attributes[:treatment_lead_in]
-    if disease_attributes[:external_codes]
-      disease_attributes[:external_codes].each do |id, msg|
-        browser.send(msg, [id])
-      end
-    end
-    browser.click("disease_submit")
-  end    
-
-  def click_edit_disease(browser, disease_name)
-    disease_id = get_resource_id(browser, disease_name)
-    browser.click("//a[contains(@href, 'diseases/#{disease_id}/edit')]")
-    browser.wait_for_page_to_load($load_time)
-  end
-
-  def edit_disease(browser, disease_name, disease_attributes)
-    click_edit_disease(browser, disease_name)
-    modify_disease(browser, disease_attributes)
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Disease was successfully updated."))
   end
   
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
@@ -409,49 +352,6 @@ module TrisanoHelper
     end
   end
   
-  def click_build_form(browser, name)
-    id = get_resource_id(browser, name)
-    if id > 0 
-      browser.click "//a[contains(@href, '/trisano/forms/builder/" + id.to_s + "')]"
-      browser.wait_for_page_to_load "30000"
-      return 0
-    else
-      return -1
-    end
-  end
-  
-  def click_form_export(browser, name)
-    id = get_resource_id(browser, name)
-    if id > 0 
-      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/export')]"
-      return true
-    else
-      return false
-    end
-  end
-  
-  def click_push_form(browser, name)
-    id = get_resource_id(browser, name)
-    if id > 0 
-      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/push')]"
-      browser.wait_for_page_to_load "30000"
-      return true
-    else
-      return false
-    end
-  end
-  
-  def click_deactivate_form(browser, name)
-    id = get_resource_id(browser, name)
-    if id > 0 
-      browser.click "//a[contains(@href, '/trisano/forms/" + id.to_s + "/deactivate')]"
-      browser.wait_for_page_to_load "30000"
-      return true
-    else
-      return false
-    end
-  end
- 
   def create_simplest_cmr(browser, last_name)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", last_name
@@ -528,63 +428,6 @@ module TrisanoHelper
       return false
     end
     return true
-  end
-  
-  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity event')
-    browser.open "/trisano/cmrs"
-    browser.click "link=FORMS"
-    browser.wait_for_page_to_load($load_time)
-    browser.click "//input[@value='Create new form']"
-    browser.wait_for_page_to_load($load_time)
-    browser.type "form_name", form_name
-    browser.select "form_event_type", "label=#{type}"
-    if disease_label.respond_to?(:each)
-      disease_label.each { |label| browser.click(label.tr(" ", "_")) }
-    else
-      browser.click(disease_label.tr(" ", "_"))
-    end
-    browser.select "form_jurisdiction_id", "label=#{jurisdiction_label}"
-    browser.click "form_submit"    
-    browser.wait_for_page_to_load($load_time)
-    if browser.is_text_present("Form was successfully created.") != true 
-      return(false)
-    end
-    sleep 3
-    browser.click "link=Detail"
-    browser.wait_for_page_to_load($load_time)
-    return browser.is_text_present("Publish") 
-  end
-  
-  def edit_form_and_go_to_builder(browser, form_attributes ={})
-    browser.type "form_name", form_attributes[:form_name] unless form_attributes[:form_name].nil?
-    browser.select "form_event_type", "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
-    #puts "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
-    unless form_attributes[:disease].nil?
-      if form_attributes[:disease].respond_to?(:each)
-        form_attributes[:disease].each { |label| browser.click(label.tr(" ", "_")) }
-      else
-        browser.click( form_attributes[:disease].tr(" ", "_"))
-      end
-    end
-    
-    browser.select "form_jurisdiction_id", "label=#{ form_attributes[:jurisdiction]}" unless form_attributes[:jurisdiction].nil?
-    browser.click "form_submit"    
-    browser.wait_for_page_to_load($load_time)
-    if browser.is_text_present("Form was successfully updated.") != true 
-      return(false)
-    end
-    browser.click "link=Detail"
-   
-    browser.wait_for_page_to_load($load_time)
-    return browser.is_element_present("publish_btn")
-    #return browser.is_text_present("Form Builder") 
-  end
-  
-  # Must be called from the builder view
-  def open_form_builder_library_admin(browser)
-    browser.click("open-library-admin")
-    wait_for_element_present("library-admin-container")
-    return(browser.is_text_present("Library Administration"))
   end
     
   def switch_user(browser, user_id)

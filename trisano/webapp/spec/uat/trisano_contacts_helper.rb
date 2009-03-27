@@ -41,5 +41,12 @@ module TrisanoContactsHelper
     browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
     browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
   end
+
+  def save_contact_event(browser)
+    browser.click "save_and_exit_btn"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Contact event was successfully created.") or
+        browser.is_text_present("Contact event was successfully updated."))
+  end
   
 end

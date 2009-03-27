@@ -29,11 +29,15 @@ require File.dirname(__FILE__) + '/selenium'
 require File.dirname(__FILE__) + '/trisano_helper'
 require File.dirname(__FILE__) + '/trisano_contacts_helper'
 require File.dirname(__FILE__) + '/trisano_places_helper'
+require File.dirname(__FILE__) + '/trisano_admin_helper'
+require File.dirname(__FILE__) + '/trisano_forms_helper'
 
 Spec::Runner.configure do |config|
   include TrisanoHelper
   include TrisanoContactsHelper
   include TrisanoPlacesHelper
+  include TrisanoAdminHelper
+  include TrisanoFormsHelper
 
   $trisano_download_file_url = ENV['TRISANO_DOWNLOAD_FILE_URL'] ||= "/home/#{ENV['USERNAME']}/downloads/"
 
