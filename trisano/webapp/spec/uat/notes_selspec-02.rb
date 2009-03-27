@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ # $dont_kill_browser = true
 
 describe 'Associating notes with an event.' do
 
@@ -89,32 +89,32 @@ describe 'Associating notes with an event.' do
   end
 
   it "should work with contacts and places" do
-    @browser.type "morbidity_event_new_contact_attributes__last_name", "Jones" 
-    @browser.type "morbidity_event_new_place_exposure_attributes__name", "PS 207"
+    add_contact(@browser, { :last_name => "Jones"})
+    add_place(@browser, { :name => "PS 207" })
     save_cmr(@browser)
     @browser.click "edit-contact-event"
     @browser.wait_for_page_to_load $load_time 
 
-    @browser.is_text_present("New record: No existing notes.").should be_true
+    @browser.is_text_present("Contact event created.").should be_true
     add_note(@browser, "My first clinical, contact note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first clinical, contact note.").should be_true
-    note_count(@browser).should eql(1)
+    note_count(@browser).should eql(2)
 
     add_note(@browser, "My first admin, contact note.", :is_admin => true)
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first admin, contact note.").should be_true
 
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("admin-notes")
     sleep(2)
-    note_count(@browser).should eql(1)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(0)
 
     @browser.click("clinical-notes")
@@ -125,8 +125,8 @@ describe 'Associating notes with an event.' do
 
     @browser.click("all-notes")
     sleep(2)
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("link=Smith")
@@ -134,7 +134,7 @@ describe 'Associating notes with an event.' do
     @browser.click "edit-place-event"
     @browser.wait_for_page_to_load $load_time
 
-    @browser.is_text_present("New record: No existing notes.").should be_true
+    @browser.is_text_present("Place event created.").should be_true
     add_note(@browser, "My first clinical, place note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
@@ -145,14 +145,14 @@ describe 'Associating notes with an event.' do
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     @browser.is_text_present("My first admin, place note.").should be_true
 
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("admin-notes")
     sleep(2)
-    note_count(@browser).should eql(1)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(2)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(0)
 
     @browser.click("clinical-notes")
@@ -163,8 +163,8 @@ describe 'Associating notes with an event.' do
 
     @browser.click("all-notes")
     sleep(2)
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(1)
+    note_count(@browser).should eql(3)
+    note_count(@browser, "Administrative").should eql(2)
     note_count(@browser, "Clinical").should eql(1)
 
   end

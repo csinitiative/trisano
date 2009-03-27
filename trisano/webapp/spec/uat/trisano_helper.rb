@@ -250,29 +250,6 @@ module TrisanoHelper
     browser.select_window '_blank'
     return(browser.is_text_present('Utah Public Health'))
   end
-
-  def show_contact(browser)
-    browser.click "link=Show"
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Person Information") and
-        browser.is_text_present("Street number"))
-  end
-
-  def edit_contact(browser)
-    browser.click "link=Edit"
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Person Information") and
-        browser.is_text_present("Street number"))
-  end
-
-  def add_contact(browser, contact_attributes, index = 1)
-    click_core_tab(browser, CONTACTS)
-    browser.click "link=Add a contact"
-    sleep(1)
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
-    browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
-  end
   
   #NOTE: This only works for multiple labs if you save the CMR with each new lab report
   def add_lab_result(browser, result_attributes, index = 1)
@@ -322,20 +299,6 @@ module TrisanoHelper
         browser.is_text_present("Contact event was successfully updated."))
   end
   
-  def add_place(browser, place_attributes, index = 1)
-    click_core_tab(browser, EPI)
-    browser.click "link=Add a Place Exposure"
-    sleep(1)
-    browser.type("//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", place_attributes[:name])
-  end
-
-  def save_place_event(browser)
-    browser.click "save_and_exit_btn"
-    browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Place event was successfully created.") or
-        browser.is_text_present("Place event was successfully updated."))
-  end
-
   def navigate_to_people_search(browser)
     click_nav_search(browser)
     @browser.click('link=People Search')
