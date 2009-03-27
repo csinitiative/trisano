@@ -612,8 +612,6 @@ module TrisanoHelper
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
 
-    
-
   end
 
   #
@@ -636,6 +634,10 @@ module TrisanoHelper
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_admission_date')]", attributes[:admission_date]) if attributes[:admission_date]
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_discharge_date')]", attributes[:discharge_date]) if attributes[:discharge_date]
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
+  end
+
+  def remove_hospital(browser, index = 1)
+    browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_delete')]")
   end
 
   def add_treatment(browser, result_attributes, index = 1)
@@ -661,7 +663,7 @@ module TrisanoHelper
   end
 
   def remove_clinician(browser, index=1)
-     browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
+    browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
   end
 
   #
