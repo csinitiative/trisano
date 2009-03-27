@@ -24,8 +24,11 @@ describe 'Print CMR page' do
   it 'should create a CMR with demographic info' do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', 'Lebowski')
-    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name', 'Jeffrey')
+    add_demographic_info(@browser, {
+        :last_name => "Lebowski",
+        :first_name => "Jeffrey"
+      })
+
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_middle_name', '`The Dude`')
     @browser.type('morbidity_event_address_attributes_street_number', '123')
     @browser.type('morbidity_event_address_attributes_street_name', 'Fake Street')
@@ -184,12 +187,12 @@ describe 'Print CMR page' do
     @browser.is_text_present('Hmong').should be_true
     @browser.is_text_present('Not Hispanic or Latino').should be_true
   
-#    @browser.is_text_present('2009-03-10').should be_true
-#    @browser.is_text_present('Encounter desc').should be_true
-#    @browser.is_text_present('Encounter lab name').should be_true
-#    @browser.is_text_present('Encounter lab type').should be_true
-#    @browser.is_text_present('Encounter treatment').should be_true
-#    @browser.is_text_present('2009-03-11').should be_true
+    #    @browser.is_text_present('2009-03-10').should be_true
+    #    @browser.is_text_present('Encounter desc').should be_true
+    #    @browser.is_text_present('Encounter lab name').should be_true
+    #    @browser.is_text_present('Encounter lab type').should be_true
+    #    @browser.is_text_present('Encounter treatment').should be_true
+    #    @browser.is_text_present('2009-03-11').should be_true
 
     @browser.is_text_present('2002-12-12').should be_true
     @browser.is_text_present('2003-12-12').should be_true
@@ -216,10 +219,10 @@ describe 'Print CMR page' do
     @browser.is_text_present('Inverse').should be_true
     @browser.is_text_present('Steve').should be_true
     @browser.is_text_present('Jobbs').should be_true
-#    @browser.is_text_present('Unemployed').should be_true
+    #    @browser.is_text_present('Unemployed').should be_true
     @browser.is_text_present('Whatever, Man').should be_true
     @browser.is_text_present('what').should be_true
-#    @browser.is_text_present('how').should be_true
+    #    @browser.is_text_present('how').should be_true
     @browser.is_text_present('why').should be_true
     @browser.is_text_present('5550150').should be_true
     @browser.is_text_present('2004-12-12').should be_true

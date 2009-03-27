@@ -24,12 +24,8 @@ describe 'Adding partial treatments to a CMR' do
   it 'should allow a treatment to be added w/out a date specified' do
     @browser.open '/trisano/cmrs'
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "Smith"
-    @browser.type "morbidity_event_active_patient__person_first_name", "Jersey"
-    click_core_tab(@browser, "Clinical")
-
+    add_demographic_info(@browser, { :last_name => "Smith", :first_name => "Jersey" })
     add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes"})
-    
     save_cmr(@browser).should be_true
     @browser.is_text_present('Treatment Date').should be_true
     @browser.is_text_present('Leeches').should be_true

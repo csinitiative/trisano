@@ -603,6 +603,20 @@ module TrisanoHelper
   end
 
   #
+  # Demographic Tab
+  #
+
+  def add_demographic_info(browser, attributes)
+    click_core_tab(browser, DEMOGRAPHICS)
+    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
+    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
+    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
+
+    
+
+  end
+
+  #
   # Clinical Tab
   #
 
