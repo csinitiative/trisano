@@ -16,7 +16,7 @@
 %div{:class => 'diagnostic', :style => "clear: both;"}
   - f.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |df|
     - df.fields_for(:place, :builder => ExtendedFormBuilder) do |place_fields|
-      #new_diagnostic_facility
+      %div{:class => 'new_diagnostic_facility' }
         = error_messages_for :object => place_fields.object
         %span.horiz
           =place_fields.label(:name)

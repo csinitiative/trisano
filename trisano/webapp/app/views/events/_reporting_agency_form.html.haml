@@ -64,10 +64,11 @@
 
     %fieldset.form
       %legend Reported Dates
-      %span.vert
-      - core_element :results_reported_to_clinician_date, f, :horiz do
-        = f.label(:results_reported_to_clinician_date)
-        = f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now)
-      - core_element :first_reported_PH_date, f, :horiz do
-        = f.label(:first_reported_PH_date, "Date first reported to public health")
-        = f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now)
+      #reported_dates
+        %span.vert
+        - core_element :results_reported_to_clinician_date, f, :horiz do
+          = f.label(:results_reported_to_clinician_date)
+          = f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now)
+        - core_element :first_reported_PH_date, f, :horiz do
+          = f.label(:first_reported_PH_date, "Date first reported to public health")
+          = f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now)

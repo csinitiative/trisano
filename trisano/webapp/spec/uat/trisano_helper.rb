@@ -109,7 +109,6 @@ module TrisanoHelper
   # Use get_full_cmr to create a cmr with only the last name filled in
   # It uses random words for the last name field
   def get_nil_cmr()
-    
   end
 
   def current_user(browser = @browser)
@@ -156,11 +155,15 @@ module TrisanoHelper
     wordlist[rand(wordlist.size)]
   end
 
+  #
+  # General navigation and controls
+  #
+
   def click_logo(browser)
     browser.click 'logo'
     browser.wait_for_page_to_load($load_time)
   end
-  
+
   def click_nav_new_cmr(browser)
     browser.open "/trisano/cmrs/new"
     browser.wait_for_page_to_load($load_time)
@@ -250,67 +253,26 @@ module TrisanoHelper
     browser.select_window '_blank'
     return(browser.is_text_present('Utah Public Health'))
   end
-  
-  #NOTE: This only works for multiple labs if you save the CMR with each new lab report
-  def add_lab_result(browser, result_attributes, index = 1)
-    click_core_tab(browser, LABORATORY)
-    browser.click("link=Add a new lab result") unless index == 1
-    sleep(1)
-    #TODO verify this works for multiples...
-    type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
-    type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
-    type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
-    result_xpath = "//div[@id='labs']/div[1]/div[starts-with(@class,'lab_result')][#{index}]//"
-    browser.select(result_xpath + "select[contains(@id, 'interpretation')]", result_attributes[:lab_interpretation])
-    browser.select(result_xpath + "select[contains(@id, 'specimen_source_id')]", result_attributes[:lab_specimen_source])
-    browser.type(result_xpath + "input[contains(@id, 'collection_date')]", result_attributes[:lab_collection_date])
-    browser.type(result_xpath + "input[contains(@id, 'lab_test_date')]", result_attributes[:lab_test_date])
-    browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
-  end
 
-  def add_reporting_info(browser, result_attributes)
-    click_core_tab(browser, REPORTING)
-    @browser.click("//a[@id='add_reporting_agency_link']")
-    sleep(1)
-    type_field_by_order(browser, "morbidity_event_active_reporting_agency_name", 0, result_attributes[:agency])
-    browser.type "morbidity_event_active_reporting_agency_first_name", result_attributes[:first_name]
-    browser.type "morbidity_event_active_reporting_agency_last_name", result_attributes[:last_name]
-    browser.select "morbidity_event_active_reporting_agency_entity_location_type_id", result_attributes[:phone_type]
-    browser.type "morbidity_event_active_reporting_agency_area_code", result_attributes[:area_code]
-    browser.type "morbidity_event_active_reporting_agency_extension", result_attributes[:extension]
-    browser.type "morbidity_event_active_reporting_agency_phone_number", result_attributes[:phone_number]
-    browser.type "morbidity_event_results_reported_to_clinician_date", result_attributes[:clinician_date]
-    browser.type "morbidity_event_first_reported_PH_date", result_attributes[:PH_date]
-  end
-
-  def add_treatment(browser, result_attributes, index = 1)
-    click_core_tab(browser, CLINICAL)
-    browser.click("link=Add a treatment") unless index == 1
-    sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select", result_attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    result_attributes[:treatment])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", result_attributes[:treatment_date])
-  end
-  
   def navigate_to_people_search(browser)
     click_nav_search(browser)
     @browser.click('link=People Search')
     @browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("People Search") and 
+    return(browser.is_text_present("People Search") and
         browser.is_text_present("Name") and
         browser.is_text_present("Date of birth"))
   end
-  
+
   def navigate_to_cmr_search(browser)
     click_nav_search(browser)
     @browser.click('link=Event Search')
     @browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Search") and 
+    return(browser.is_text_present("Search") and
         browser.is_text_present("By name") and
         browser.is_text_present("Additional criteria") and
         browser.is_text_present("Date or year of birth"))
   end
-  
+
   #Use click_link_by_order to click the Nth element in a list of links of the same element type
   def click_link_by_order(browser, element_id_prefix, order)
     links = browser.get_all_links
@@ -434,317 +396,6 @@ module TrisanoHelper
     browser.select("user_id", "label=#{user_id}")
     browser.wait_for_page_to_load "30000"
     return browser.is_text_present("#{user_id}:")
-  end
-  
-  def add_view(browser, name)
-    browser.click("add-tab")
-    wait_for_element_present("new-view-form")
-    browser.type("view_element_name", name)
-    browser.click "//input[contains(@id, 'create_view_submit')]"
-    wait_for_element_not_present("new-view-form")
-    if browser.is_text_present(name)
-      return browser.get_value("id=modified-element")
-    else
-      return false
-    end
-  end
-  
-  def add_section_to_view(browser, view_name, section_attributes = {})
-    element_id = get_form_element_id(browser, view_name, VIEW_ID_PREFIX)
-    browser.click("add-section-#{element_id}")
-    wait_for_element_present("new-section-form", browser)
-    browser.type("section_element_name", section_attributes[:section_name])
-    browser.type("section_element_description", section_attributes[:description]) unless section_attributes[:description].nil?
-    browser.type("section_element_help_text", section_attributes[:help_text]) unless section_attributes[:help_text].nil?
-    browser.click "//input[contains(@id, 'create_section_submit')]"
-    wait_for_element_not_present("new-section-form", browser)
-    if browser.is_text_present(section_attributes[:section_name])
-      return browser.get_value("id=modified-element")
-    else
-      return false      
-    end
-  end
-
-  # Takes the name of the tab to which the question should be added and the question's attributes.  
-  def add_question_to_view(browser, element_name, question_attributes = {})
-    return add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
-  end
-  
-  # Takes the name of the section to which the question should be added and the question's attributes.
-  def add_question_to_section(browser, element_name, question_attributes = {})
-    return add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
-  end
-  
-  # Takes the name of the follow-up container to which the question should be added and the question's attributes.
-  def add_question_to_follow_up(browser, element_name, question_attributes = {})
-    #    puts 'element_name: ' + element_name
-    #    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
-    #    puts question_attributes.to_s
-    return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
-  end
-  
-  # Takes the name of the before core field confg to which the question should be added and the question's attributes.
-  def add_question_to_before_core_field_config(browser, element_name, question_attributes = {})
-    return add_question_to_core_field_config(browser, element_name, BEFORE_CORE_FIELD_ID_PREFIX, question_attributes)
-  end
-  
-  # Takes the name of the after core field confg to which the question should be added and the question's attributes.
-  def add_question_to_after_core_field_config(browser, element_name, question_attributes = {})
-    return add_question_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, question_attributes)
-  end
-
-  def add_all_questions_from_group_to_view(browser, element_name, group_name)
-
-    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
-    browser.click("add-question-#{element_id}")
-    wait_for_element_present("new-question-form", browser)
-    browser.click("link=Show all groups")
-    
-    # Debt: If this UI sticks, add something to key off of instead of using this sleep
-    sleep(2)
-    
-    browser.click("link=Click to add all questions in group: #{group_name}")
-    wait_for_element_not_present("new-question-form", browser)
-    
-    if browser.is_text_present(group_name)
-      return true
-    else
-      return false      
-    end
-  end
-  
-  # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
-  def add_follow_up_to_question(browser, question_text, condition)
-    return add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)
-  end
-  
-  # Takes the name of the view to which the follow-up should be added and the follow-up's attributes.
-  def add_core_follow_up_to_view(browser, element_name, condition, core_label)
-    return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
-  end
-  
-  def add_core_follow_up_to_after_core_field(browser, element_name, condition, core_label)
-    return add_follow_up_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, condition, core_label)
-  end
-
-  def add_invalid_core_follow_up_to_view(browser, element_name, condition, invalid_core_path)
-    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
-    browser.click("add-follow-up-#{element_id}")
-    wait_for_element_present("new-follow-up-form", browser)
-    browser.type "model_auto_completer_tf", condition
-    browser.select "follow_up_element_core_path", "label=Patient birth gender"
-    browser.get_eval("element = window.document.getElementById(\"follow_up_element_core_path\").options[1]; element.value = '#{invalid_core_path}'; element.selected = true")
-    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
-    wait_for_element_not_present("new-follow-up-form", browser)
-  end
-  
-  
-  def edit_core_follow_up(browser, element_name, condition, core_label)
-    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
-    browser.click("edit-follow-up-#{element_id}")
-    wait_for_element_present("edit-follow-up-form", browser)
-    browser.type "model_auto_completer_tf", condition
-    sleep 1 # Give the type ahead a second to breath, otherwise the edit doesn't stick
-    browser.select "follow_up_element_core_path", "label=#{core_label}"
-    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
-    wait_for_element_not_present("edit-follow-up-form", browser)
-  end
-  
-  def edit_follow_up(browser, element_name, condition)
-    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
-    browser.click("edit-follow-up-#{element_id}")
-    wait_for_element_present("edit-follow-up-form", browser)
-    browser.type "follow_up_element_condition", condition
-    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
-    wait_for_element_not_present("edit-follow-up-form", browser)
-  end
-  
-  def edit_section(browser, element_name, section_text)
-    element_id = get_form_element_id(browser, element_name, SECTION_ID_PREFIX)
-    browser.click("edit-section-#{element_id}")
-    wait_for_element_present("section-element-edit-form", browser)
-    browser.type "section_element_name", section_text
-    browser.click "//input[contains(@id, 'edit_section_submit')]"
-    wait_for_element_not_present("edit-section-form", browser)
-  end
-  
-  def add_value_set_to_question(browser, question_text, value_set_name, value_attributes=[])
-    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
-    browser.click("add-value-set-#{element_id}")
-    wait_for_element_present("new-value-set-form", browser)
-    browser.type "value_set_element_name", value_set_name
-    browser.click "//input[contains(@id, 'create_value_set_submit')]"
-    wait_for_element_not_present("new-value-set-form")
-    browser.is_text_present(value_set_name).should be_true
-    value_set_id = browser.get_value("id=modified-element")
-
-    value_attributes.each do |attributes|
-      browser.click("add-value-#{value_set_id}")
-      wait_for_element_present("new-value-form", browser)
-      browser.type "value_element_name", attributes[:name]
-      browser.type "value_element_code", attributes[:code] if attributes[:code]
-      browser.click "//input[contains(@id, 'create_value_submit')]"
-      wait_for_element_not_present("new-value-form")
-    end
-
-    if browser.is_text_present(value_set_name)
-      return true
-    else
-      return false      
-    end
-  end
-  
-  def add_value_set_from_library_to_question(browser, question_text, value_set_name)
-    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
-    browser.click("add-value-set-#{element_id}")
-    wait_for_element_present("new-value-set-form", browser)
-    browser.type "lib_filter", value_set_name
-    sleep(2)
-    browser.click "link=#{value_set_name}"
-    wait_for_element_not_present("new-value-set-form")
-
-    # Debt: Not the best test since it could be on the form already
-    if browser.is_text_present(value_set_name)
-      return true
-    else
-      return false      
-    end
-  end
-  
-  def add_core_tab_configuration(browser, core_view_name)
-    browser.click("add-core-tab")
-    wait_for_element_present("new-core-view-form", browser)
-    browser.select("core_view_element_name", "label=#{core_view_name}")
-    browser.click "//input[contains(@id, 'create_core_view_submit')]"
-    wait_for_element_not_present("new-core-view-form", browser)
-  end
-  
-  def add_core_field_config(browser, core_field_name)
-    browser.click("add-core-field")
-    wait_for_element_present("new_core_field_element", browser)
-    browser.select("core_field_element_core_path", "label=#{core_field_name}")
-    browser.click "//input[contains(@id, 'create_core_field_submit')]"
-    wait_for_element_not_present("new_core_field_element", browser)
-  end
-  
-  def add_question_to_library(browser, question_text, group_name=nil)
-    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
-    browser.click("add-element-to-library-#{element_id}")
-    wait_for_element_present("new-group-form")
-
-    if (group_name.nil?)
-      browser.click "link=No Group"
-    else
-      begin
-        browser.click "link=Add element to: #{group_name}"
-      rescue
-        browser.type "group_element_name", group_name
-        browser.click "group_element_submit"  
-        sleep(2)
-        browser.click "link=Add element to: #{group_name}"
-      end
-      
-    end
-   
-    sleep(2)
-    browser.click "link=Close"
-    # Debt: Find something to do an assertion off of
-  end
-  
-  def add_value_set_to_library(browser, value_set_name, group_name=nil)
-    element_id = get_form_element_id(browser, value_set_name, VALUE_SET_ID_PREFIX)
-    browser.click("add-element-to-library-#{element_id}")
-    wait_for_element_present("new-group-form")
-
-    if (group_name.nil?)
-      browser.click "link=No Group"
-    else
-      browser.type "group_element_name", group_name
-      browser.click "group_element_submit"  
-      sleep(2)
-      browser.click "link=Add element to: #{group_name}"
-    end
-   
-    sleep(2)
-    browser.click "link=Close"
-    # Debt: Find something to do an assertion off of
-  end
-  
-  # The delete helpers that follow could be dried up a bit, passing through to a single
-  # delete_element method, but that would probably involve synching up the ids used 
-  # on the action links so they use underscores instead of dashes as separators:
-  #    * Use delete_question_34 instead of delete-question-34 in the views
-  #    * Then utilize the element prefix constants to dry things up
-  
-  # Deletes the view with the name provided
-  def delete_view(browser, name)
-    element_id = get_form_element_id(browser, name, VIEW_ID_PREFIX)
-    browser.click("delete-view-#{element_id}")
-    browser.get_confirmation()
-    return(!browser.is_text_present("delete-view-#{element_id}"))
-  end
-  
-  # Deletes the section with the name provided
-  def delete_section(browser, name)
-    element_id = get_form_element_id(browser, name, SECTION_ID_PREFIX)
-    browser.click("delete-section-#{element_id}")
-    browser.get_confirmation()   
-    return(!browser.is_text_present("delete-section-#{element_id}"))
-  end
-  
-  # Deletes the group with the name provided
-  def delete_group(browser, name)
-    element_id = get_form_element_id(browser, name, GROUP_ID_PREFIX)
-    browser.click("delete-group-#{element_id}")
-    browser.get_confirmation()   
-    return(!browser.is_text_present("delete-group-#{element_id}"))
-  end
-  
-  # Deletes the question with the name provided
-  def delete_question(browser, name)
-    element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
-    browser.click("delete-question-#{element_id}")
-    browser.get_confirmation()
-    return(!browser.is_text_present("delete-question-#{element_id}"))
-  end
-  
-  def delete_question_from_library(browser, name)
-    element_id = get_library_element_id(browser, name, QUESTION_ID_PREFIX)
-    browser.click("delete-question-#{element_id}")
-    browser.get_confirmation()
-    return(!browser.is_text_present("delete-question-#{element_id}"))
-  end
-  
-  # Deletes the value set with the name provided
-  def delete_value_set(browser, name)
-    element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
-    browser.click("delete-value-set-#{element_id}")
-    browser.get_confirmation()   
-    return(!browser.is_text_present("delete-value-set-#{element_id}"))
-  end
-  
-  # Deletes the core field config with the name provided
-  def delete_core_field_config(browser, name)
-    element_id = get_form_element_id(browser, name, CORE_FIELD_ID_PREFIX)
-    browser.click("delete-core-field-#{element_id}")
-    browser.get_confirmation()   
-    return(!browser.is_text_present("delete-core-field-#{element_id}"))
-  end
-  
-  # Deletes the follow up with the name provided
-  def delete_follow_up(browser, name)
-    element_id = get_form_element_id(browser, name, FOLLOW_UP_ID_PREFIX)
-    browser.click("delete-follow-up-#{element_id}")
-    browser.get_confirmation()
-    sleep(2)
-    return(!browser.is_text_present("delete-follow-up-#{element_id}"))
-  end
-  
-  def publish_form(browser)
-    browser.click '//input[@value="Publish"]'
-    return false if browser.is_editable('//input[@value="Publishing..."]')
-    browser.wait_for_page_to_load($publish_time)
-    return(browser.is_text_present("Form was successfully published "))
   end
   
   #TODO
@@ -949,6 +600,94 @@ module TrisanoHelper
 
   def date_for_calendar_select(date)
     date.strftime("%B %d, %Y")
+  end
+
+  #
+  # Clinical Tab
+  #
+
+  # Need to add support for place type: place_attributes_place_type_H
+  def add_diagnostic_facility(browser, attributes, index = 1)
+    click_core_tab(browser, CLINICAL)
+    browser.click "link=Add a Diagnostic Facility" unless index == 1
+    sleep(1)
+    browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
+  end
+
+  def add_hospital(browser, attributes, index = 1)
+    click_core_tab(browser, CLINICAL)
+    browser.click "link=Add a Hospital" unless index == 1
+    sleep(1)
+    browser.select("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:name]}")
+    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_admission_date')]", attributes[:admission_date]) if attributes[:admission_date]
+    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_discharge_date')]", attributes[:discharge_date]) if attributes[:discharge_date]
+    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
+  end
+
+  def add_treatment(browser, result_attributes, index = 1)
+    click_core_tab(browser, CLINICAL)
+    browser.click("link=Add a treatment") unless index == 1
+    sleep(1)
+    browser.select("//div[@class='treatment'][#{index}]//select", result_attributes[:treatment_given])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    result_attributes[:treatment])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", result_attributes[:treatment_date])
+  end
+
+  def add_clinician(browser, attributes, index = 1)
+    click_core_tab(browser, CLINICAL)
+    browser.click("link=Add a Clinician") unless index == 1
+    sleep(1)
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_last_name')]", attributes[:last_name])
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
+    browser.select("//div[@id='clinicians']//div[@class='clinician'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:phone_type]}") if attributes[:phone_type]
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+  end
+
+  #
+  # Lab Tab
+  #
+
+  #NOTE: This only works for multiple labs if you save the CMR with each new lab report
+  def add_lab_result(browser, result_attributes, index = 1)
+    click_core_tab(browser, LABORATORY)
+    browser.click("link=Add a new lab result") unless index == 1
+    sleep(1)
+    #TODO verify this works for multiples...
+    type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
+    type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
+    type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
+    result_xpath = "//div[@id='labs']/div[1]/div[starts-with(@class,'lab_result')][#{index}]//"
+    browser.select(result_xpath + "select[contains(@id, 'interpretation')]", result_attributes[:lab_interpretation])
+    browser.select(result_xpath + "select[contains(@id, 'specimen_source_id')]", result_attributes[:lab_specimen_source])
+    browser.type(result_xpath + "input[contains(@id, 'collection_date')]", result_attributes[:lab_collection_date])
+    browser.type(result_xpath + "input[contains(@id, 'lab_test_date')]", result_attributes[:lab_test_date])
+    browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
+  end
+
+  #
+  # Reporting Tab
+  #
+
+  # Add support for place type
+  def add_reporting_info(browser, attributes)
+    click_core_tab(browser, REPORTING)
+    sleep(1)
+    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_name')]", attributes[:name]) if attributes[:name]
+    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+
+    browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
+    browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:first_name]) if attributes[:first_name]
+    browser.type("//div[@id='reporter']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+    browser.type("//div[@id='reporter']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+    browser.type("//div[@id='reporter']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+
+    browser.type("//div[@id='reported_dates']//input[contains(@id, '_clinician_date')]", attributes[:clinician_date]) if attributes[:clinician_date]
+    browser.type("//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", attributes[:PH_date]) if attributes[:PH_date]
   end
   
   private

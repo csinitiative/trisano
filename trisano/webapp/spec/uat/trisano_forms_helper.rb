@@ -118,5 +118,316 @@ module TrisanoFormsHelper
     wait_for_element_present("library-admin-container")
     return(browser.is_text_present("Library Administration"))
   end
+
+  def add_view(browser, name)
+    browser.click("add-tab")
+    wait_for_element_present("new-view-form")
+    browser.type("view_element_name", name)
+    browser.click "//input[contains(@id, 'create_view_submit')]"
+    wait_for_element_not_present("new-view-form")
+    if browser.is_text_present(name)
+      return browser.get_value("id=modified-element")
+    else
+      return false
+    end
+  end
+
+  def add_section_to_view(browser, view_name, section_attributes = {})
+    element_id = get_form_element_id(browser, view_name, VIEW_ID_PREFIX)
+    browser.click("add-section-#{element_id}")
+    wait_for_element_present("new-section-form", browser)
+    browser.type("section_element_name", section_attributes[:section_name])
+    browser.type("section_element_description", section_attributes[:description]) unless section_attributes[:description].nil?
+    browser.type("section_element_help_text", section_attributes[:help_text]) unless section_attributes[:help_text].nil?
+    browser.click "//input[contains(@id, 'create_section_submit')]"
+    wait_for_element_not_present("new-section-form", browser)
+    if browser.is_text_present(section_attributes[:section_name])
+      return browser.get_value("id=modified-element")
+    else
+      return false
+    end
+  end
+
+  # Takes the name of the tab to which the question should be added and the question's attributes.
+  def add_question_to_view(browser, element_name, question_attributes = {})
+    return add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
+  end
+
+  # Takes the name of the section to which the question should be added and the question's attributes.
+  def add_question_to_section(browser, element_name, question_attributes = {})
+    return add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
+  end
+
+  # Takes the name of the follow-up container to which the question should be added and the question's attributes.
+  def add_question_to_follow_up(browser, element_name, question_attributes = {})
+    #    puts 'element_name: ' + element_name
+    #    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
+    #    puts question_attributes.to_s
+    return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
+  end
+
+  # Takes the name of the before core field confg to which the question should be added and the question's attributes.
+  def add_question_to_before_core_field_config(browser, element_name, question_attributes = {})
+    return add_question_to_core_field_config(browser, element_name, BEFORE_CORE_FIELD_ID_PREFIX, question_attributes)
+  end
+
+  # Takes the name of the after core field confg to which the question should be added and the question's attributes.
+  def add_question_to_after_core_field_config(browser, element_name, question_attributes = {})
+    return add_question_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, question_attributes)
+  end
+
+  def add_all_questions_from_group_to_view(browser, element_name, group_name)
+
+    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
+    browser.click("add-question-#{element_id}")
+    wait_for_element_present("new-question-form", browser)
+    browser.click("link=Show all groups")
+
+    # Debt: If this UI sticks, add something to key off of instead of using this sleep
+    sleep(2)
+
+    browser.click("link=Click to add all questions in group: #{group_name}")
+    wait_for_element_not_present("new-question-form", browser)
+
+    if browser.is_text_present(group_name)
+      return true
+    else
+      return false
+    end
+  end
+
+  # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
+  def add_follow_up_to_question(browser, question_text, condition)
+    return add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)
+  end
+
+  # Takes the name of the view to which the follow-up should be added and the follow-up's attributes.
+  def add_core_follow_up_to_view(browser, element_name, condition, core_label)
+    return add_follow_up_to_element(browser, element_name, VIEW_ID_PREFIX, condition, core_label)
+  end
+
+  def add_core_follow_up_to_after_core_field(browser, element_name, condition, core_label)
+    return add_follow_up_to_core_field_config(browser, element_name, AFTER_CORE_FIELD_ID_PREFIX, condition, core_label)
+  end
+
+  def add_invalid_core_follow_up_to_view(browser, element_name, condition, invalid_core_path)
+    element_id = get_form_element_id(browser, element_name, VIEW_ID_PREFIX)
+    browser.click("add-follow-up-#{element_id}")
+    wait_for_element_present("new-follow-up-form", browser)
+    browser.type "model_auto_completer_tf", condition
+    browser.select "follow_up_element_core_path", "label=Patient birth gender"
+    browser.get_eval("element = window.document.getElementById(\"follow_up_element_core_path\").options[1]; element.value = '#{invalid_core_path}'; element.selected = true")
+    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
+    wait_for_element_not_present("new-follow-up-form", browser)
+  end
+
+
+  def edit_core_follow_up(browser, element_name, condition, core_label)
+    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
+    browser.click("edit-follow-up-#{element_id}")
+    wait_for_element_present("edit-follow-up-form", browser)
+    browser.type "model_auto_completer_tf", condition
+    sleep 1 # Give the type ahead a second to breath, otherwise the edit doesn't stick
+    browser.select "follow_up_element_core_path", "label=#{core_label}"
+    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
+    wait_for_element_not_present("edit-follow-up-form", browser)
+  end
+
+  def edit_follow_up(browser, element_name, condition)
+    element_id = get_form_element_id(browser, element_name, FOLLOW_UP_ID_PREFIX)
+    browser.click("edit-follow-up-#{element_id}")
+    wait_for_element_present("edit-follow-up-form", browser)
+    browser.type "follow_up_element_condition", condition
+    browser.click "//input[contains(@id, 'edit_follow_up_submit')]"
+    wait_for_element_not_present("edit-follow-up-form", browser)
+  end
+
+  def edit_section(browser, element_name, section_text)
+    element_id = get_form_element_id(browser, element_name, SECTION_ID_PREFIX)
+    browser.click("edit-section-#{element_id}")
+    wait_for_element_present("section-element-edit-form", browser)
+    browser.type "section_element_name", section_text
+    browser.click "//input[contains(@id, 'edit_section_submit')]"
+    wait_for_element_not_present("edit-section-form", browser)
+  end
+
+  def add_value_set_to_question(browser, question_text, value_set_name, value_attributes=[])
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-value-set-#{element_id}")
+    wait_for_element_present("new-value-set-form", browser)
+    browser.type "value_set_element_name", value_set_name
+    browser.click "//input[contains(@id, 'create_value_set_submit')]"
+    wait_for_element_not_present("new-value-set-form")
+    browser.is_text_present(value_set_name).should be_true
+    value_set_id = browser.get_value("id=modified-element")
+
+    value_attributes.each do |attributes|
+      browser.click("add-value-#{value_set_id}")
+      wait_for_element_present("new-value-form", browser)
+      browser.type "value_element_name", attributes[:name]
+      browser.type "value_element_code", attributes[:code] if attributes[:code]
+      browser.click "//input[contains(@id, 'create_value_submit')]"
+      wait_for_element_not_present("new-value-form")
+    end
+
+    if browser.is_text_present(value_set_name)
+      return true
+    else
+      return false
+    end
+  end
+
+  def add_value_set_from_library_to_question(browser, question_text, value_set_name)
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-value-set-#{element_id}")
+    wait_for_element_present("new-value-set-form", browser)
+    browser.type "lib_filter", value_set_name
+    sleep(2)
+    browser.click "link=#{value_set_name}"
+    wait_for_element_not_present("new-value-set-form")
+
+    # Debt: Not the best test since it could be on the form already
+    if browser.is_text_present(value_set_name)
+      return true
+    else
+      return false
+    end
+  end
+
+  def add_core_tab_configuration(browser, core_view_name)
+    browser.click("add-core-tab")
+    wait_for_element_present("new-core-view-form", browser)
+    browser.select("core_view_element_name", "label=#{core_view_name}")
+    browser.click "//input[contains(@id, 'create_core_view_submit')]"
+    wait_for_element_not_present("new-core-view-form", browser)
+  end
+
+  def add_core_field_config(browser, core_field_name)
+    browser.click("add-core-field")
+    wait_for_element_present("new_core_field_element", browser)
+    browser.select("core_field_element_core_path", "label=#{core_field_name}")
+    browser.click "//input[contains(@id, 'create_core_field_submit')]"
+    wait_for_element_not_present("new_core_field_element", browser)
+  end
+
+  def add_question_to_library(browser, question_text, group_name=nil)
+    element_id = get_form_element_id(browser, question_text, QUESTION_ID_PREFIX)
+    browser.click("add-element-to-library-#{element_id}")
+    wait_for_element_present("new-group-form")
+
+    if (group_name.nil?)
+      browser.click "link=No Group"
+    else
+      begin
+        browser.click "link=Add element to: #{group_name}"
+      rescue
+        browser.type "group_element_name", group_name
+        browser.click "group_element_submit"
+        sleep(2)
+        browser.click "link=Add element to: #{group_name}"
+      end
+
+    end
+
+    sleep(2)
+    browser.click "link=Close"
+    # Debt: Find something to do an assertion off of
+  end
+
+  def add_value_set_to_library(browser, value_set_name, group_name=nil)
+    element_id = get_form_element_id(browser, value_set_name, VALUE_SET_ID_PREFIX)
+    browser.click("add-element-to-library-#{element_id}")
+    wait_for_element_present("new-group-form")
+
+    if (group_name.nil?)
+      browser.click "link=No Group"
+    else
+      browser.type "group_element_name", group_name
+      browser.click "group_element_submit"
+      sleep(2)
+      browser.click "link=Add element to: #{group_name}"
+    end
+
+    sleep(2)
+    browser.click "link=Close"
+    # Debt: Find something to do an assertion off of
+  end
+
+  # The delete helpers that follow could be dried up a bit, passing through to a single
+  # delete_element method, but that would probably involve synching up the ids used
+  # on the action links so they use underscores instead of dashes as separators:
+  #    * Use delete_question_34 instead of delete-question-34 in the views
+  #    * Then utilize the element prefix constants to dry things up
+
+  # Deletes the view with the name provided
+  def delete_view(browser, name)
+    element_id = get_form_element_id(browser, name, VIEW_ID_PREFIX)
+    browser.click("delete-view-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-view-#{element_id}"))
+  end
+
+  # Deletes the section with the name provided
+  def delete_section(browser, name)
+    element_id = get_form_element_id(browser, name, SECTION_ID_PREFIX)
+    browser.click("delete-section-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-section-#{element_id}"))
+  end
+
+  # Deletes the group with the name provided
+  def delete_group(browser, name)
+    element_id = get_form_element_id(browser, name, GROUP_ID_PREFIX)
+    browser.click("delete-group-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-group-#{element_id}"))
+  end
+
+  # Deletes the question with the name provided
+  def delete_question(browser, name)
+    element_id = get_form_element_id(browser, name, QUESTION_ID_PREFIX)
+    browser.click("delete-question-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-question-#{element_id}"))
+  end
+
+  def delete_question_from_library(browser, name)
+    element_id = get_library_element_id(browser, name, QUESTION_ID_PREFIX)
+    browser.click("delete-question-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-question-#{element_id}"))
+  end
+
+  # Deletes the value set with the name provided
+  def delete_value_set(browser, name)
+    element_id = get_form_element_id(browser, name, VALUE_SET_ID_PREFIX)
+    browser.click("delete-value-set-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-value-set-#{element_id}"))
+  end
+
+  # Deletes the core field config with the name provided
+  def delete_core_field_config(browser, name)
+    element_id = get_form_element_id(browser, name, CORE_FIELD_ID_PREFIX)
+    browser.click("delete-core-field-#{element_id}")
+    browser.get_confirmation()
+    return(!browser.is_text_present("delete-core-field-#{element_id}"))
+  end
+
+  # Deletes the follow up with the name provided
+  def delete_follow_up(browser, name)
+    element_id = get_form_element_id(browser, name, FOLLOW_UP_ID_PREFIX)
+    browser.click("delete-follow-up-#{element_id}")
+    browser.get_confirmation()
+    sleep(2)
+    return(!browser.is_text_present("delete-follow-up-#{element_id}"))
+  end
+
+  def publish_form(browser)
+    browser.click '//input[@value="Publish"]'
+    return false if browser.is_editable('//input[@value="Publishing..."]')
+    browser.wait_for_page_to_load($publish_time)
+    return(browser.is_text_present("Form was successfully published "))
+  end
   
 end
