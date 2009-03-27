@@ -660,6 +660,10 @@ module TrisanoHelper
     browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
   end
 
+  def remove_clinician(browser, index=1)
+     browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
+  end
+
   #
   # Lab Tab
   #

@@ -38,24 +38,21 @@ describe 'Adding multiple clinicians to a CMR' do
   
   it "should allow multiple clinicians to be saved with a new CMR" do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "multi-clinician"
-    @browser.type "morbidity_event_active_patient__person_first_name", "test"
+    add_demographic_info(@browser, { :last_name => "multi-clinician", :first_name => "test" })
 
-    click_core_tab(@browser, "Clinical")
-    @browser.click "link=Add a clinician"
-    @browser.click "link=Add a clinician"
-    sleep(1)
+    add_clinician(@browser, {
+        :last_name => @original_last_name_1,
+        :first_name => "John",
+        :phone_number => "5551212"
+      }, 1)
 
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'last_name')]", @original_last_name_1
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'first_name')]", "John"
-    @browser.type "//div[@class='clinician'][1]//input[contains(@id, 'phone_number')]", "5551212"
-
-    @browser.type "//div[@class='clinician'][2]//input[contains(@id, 'last_name')]", @original_last_name_2
-    @browser.type "//div[@class='clinician'][2]//input[contains(@id, 'first_name')]", "Joe"
-    @browser.type "//div[@class='clinician'][2]//input[contains(@id, 'phone_number')]", "5552323"
+    add_clinician(@browser, {
+        :last_name => @original_last_name_2,
+        :first_name => "Joe",
+        :phone_number => "5552323"
+      }, 2)
 
     save_cmr(@browser).should be_true
-
     @browser.is_text_present('CMR was successfully created.').should be_true
     @browser.is_text_present(@original_last_name_1).should be_true
     @browser.is_text_present("555-1212").should be_true
@@ -65,8 +62,7 @@ describe 'Adding multiple clinicians to a CMR' do
 
   it "should allow removing a clinician" do
     edit_cmr(@browser)
-    click_core_tab(@browser, "Clinical")
-    @browser.click "remove_existing_clinician_link"
+    remove_clinician(@browser)
     save_cmr(@browser).should be_true
     @browser.is_text_present(@original_last_name_1).should_not be_true
   end
