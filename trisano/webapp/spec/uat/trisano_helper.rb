@@ -621,9 +621,14 @@ module TrisanoHelper
   # Need to add support for place type: place_attributes_place_type_H
   def add_diagnostic_facility(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
-    browser.click "link=Add a Diagnostic Facility" unless index == 1
+    browser.click "link=Add a Diagnostic Facility"
     sleep(1)
     browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
+    browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+  end
+
+  def remove_diagnostic_facility(browser, index=1)
+    browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_delete')]")
   end
 
   def add_hospital(browser, attributes, index = 1)
@@ -640,13 +645,13 @@ module TrisanoHelper
     browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_delete')]")
   end
 
-  def add_treatment(browser, result_attributes, index = 1)
+  def add_treatment(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
     browser.click("link=Add a treatment") unless index == 1
     sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select", result_attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    result_attributes[:treatment])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", result_attributes[:treatment_date])
+    browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    attributes[:treatment])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
   end
 
   def add_clinician(browser, attributes, index = 1)
@@ -687,6 +692,19 @@ module TrisanoHelper
     browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
   end
 
+  #
+  # Encounters Tab
+  #
+
+  def add_encounter(browser, attributes, index = 1)
+    click_core_tab(browser, ENCOUNTERS)
+    sleep(1)
+    browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_user_id')]", "label=#{attributes[:user]}") if attributes[:user]
+    browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//input[contains(@id, '_encounter_date')]", attributes[:encounter_date]) if attributes[:encounter_date]
+    browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//textarea[contains(@id, '_description')]", attributes[:description]) if attributes[:description]
+    browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_location_type')]", "label=#{attributes[:location_type]}") if attributes[:location_type]
+  end
+  
   #
   # Reporting Tab
   #
