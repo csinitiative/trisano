@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Encounter event labs' do
   
-  # $dont_kill_browser = true
+ # $dont_kill_browser = true
   
   before(:all) do
     @cmr_last_name = get_random_word << " en-l-uat"
@@ -48,8 +48,7 @@ describe 'Encounter event labs' do
 
   it 'should add an encounter' do
     edit_cmr(@browser)
-    @browser.type('css=input[id$=participations_encounter_attributes_encounter_date]', @encounter_date)
-    @browser.type('css=textarea[id$=participations_encounter_attributes_description]', @encounter_description)
+    add_encounter(@browser, { :encounter_date => @encounter_date, :description => @encounter_description })
     save_cmr(@browser)
     @browser.is_text_present("2009-03-10").should be_true
     @browser.is_text_present(@encounter_description).should be_true
@@ -58,9 +57,7 @@ describe 'Encounter event labs' do
   it 'should add a lab to the encounter' do
     @browser.click("link=Edit encounter event")
     @browser.wait_for_page_to_load($load_time)
-    @browser.type('css=input[id^=lab_name_]', @lab_name)
-    @browser.type('css=input[id^=test_type_]', @lab_test_type_1)
-    @browser.type('css=input[id^=lab_result_]', @lab_result_1)
+    add_lab_result(@browser, { :lab_name => @lab_name, :lab_test_type => @lab_test_type_1, :lab_result_text => @lab_result_1 })
     save_and_exit(@browser)
     @browser.is_text_present(@lab_name).should be_true
     @browser.is_text_present(@lab_test_type_1).should be_true

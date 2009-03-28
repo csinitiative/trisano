@@ -675,21 +675,26 @@ module TrisanoHelper
   # Lab Tab
   #
 
-  #NOTE: This only works for multiple labs if you save the CMR with each new lab report
-  def add_lab_result(browser, result_attributes, index = 1)
+  def add_lab_result(browser, attributes, lab_index = 1, result_index = 1)
     click_core_tab(browser, LABORATORY)
-    browser.click("link=Add a new lab result") unless index == 1
+    browser.click("link=Add a new lab result") unless lab_index == 1
     sleep(1)
+
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:lab_name]) if attributes[:lab_name]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_test_type')]", attributes[:lab_test_type]) if attributes[:lab_test_type]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
+
+
     #TODO verify this works for multiples...
-    type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
-    type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
-    type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
-    result_xpath = "//div[@id='labs']/div[1]/div[starts-with(@class,'lab_result')][#{index}]//"
-    browser.select(result_xpath + "select[contains(@id, 'interpretation')]", result_attributes[:lab_interpretation])
-    browser.select(result_xpath + "select[contains(@id, 'specimen_source_id')]", result_attributes[:lab_specimen_source])
-    browser.type(result_xpath + "input[contains(@id, 'collection_date')]", result_attributes[:lab_collection_date])
-    browser.type(result_xpath + "input[contains(@id, 'lab_test_date')]", result_attributes[:lab_test_date])
-    browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
+    #    type_field_by_order(browser, "lab_name", 0, result_attributes[:lab_name])
+    #    type_field_by_order(browser, "test_type", 0, result_attributes[:lab_test_type])
+    #    type_field_by_order(browser, "lab_result", 0, result_attributes[:lab_result_text])
+    #    result_xpath = "//div[@id='labs']/div[1]/div[starts-with(@class,'lab_result')][#{index}]//"
+    #    browser.select(result_xpath + "select[contains(@id, 'interpretation')]", result_attributes[:lab_interpretation])
+    #    browser.select(result_xpath + "select[contains(@id, 'specimen_source_id')]", result_attributes[:lab_specimen_source])
+    #    browser.type(result_xpath + "input[contains(@id, 'collection_date')]", result_attributes[:lab_collection_date])
+    #    browser.type(result_xpath + "input[contains(@id, 'lab_test_date')]", result_attributes[:lab_test_date])
+    #    browser.select(result_xpath + "select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{result_attributes[:sent_to_uphl]}")
   end
 
   #
