@@ -253,7 +253,7 @@ describe Task do
       @task.repeating_interval = :month
       @task.until_date = 2.years.from_now
       @task.save.should be_true
-      @task.repeating_tasks.size.should == 24
+      (24..25).include?(@task.repeating_tasks.size).should be_true
     end
 
     it 'should accept a yearly interval until two years from now' do
