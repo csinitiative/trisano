@@ -54,8 +54,8 @@ describe 'form builder patient-level address core field configs for contacts' do
       save_cmr(@browser).should be_true
       click_link_by_order(@browser, "edit-contact-event", 1)
       @browser.wait_for_page_to_load($load_time)
-      
-      @browser.type "contact_event_active_patient__address_street_number", "21"
+
+      add_demographic_info(@browser, { :approximate_age_no_birthday => "21" })
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       answer_investigator_question(@browser, before_question, before_answer)

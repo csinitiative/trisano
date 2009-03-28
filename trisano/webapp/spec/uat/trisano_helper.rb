@@ -612,6 +612,11 @@ module TrisanoHelper
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
 
+
+    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
+
+
+
   end
 
   #

@@ -30,8 +30,8 @@ describe 'form builder patient-level core field configs for contact events' do
     {:name => 'Contact birth gender', :tab_name => DEMOGRAPHICS},
     {:name => 'Contact ethnicity', :tab_name => DEMOGRAPHICS},
     {:name => 'Contact primary language', :tab_name => DEMOGRAPHICS}
-  ].each do |test| 
-  
+  ].each do |test|
+    
     it "should support before and after on the '#{test[:name]}' field" do
       form_name = get_unique_name(2) + " cpl_f"
       cmr_last_name = get_unique_name(1) + " cpl_f"
@@ -58,8 +58,8 @@ describe 'form builder patient-level core field configs for contact events' do
       save_cmr(@browser).should be_true
       click_link_by_order(@browser, "edit-contact-event", 1)
       @browser.wait_for_page_to_load($load_time)
-      
-      @browser.type "contact_event_active_patient__person_approximate_age_no_birthday", "21"
+
+      add_demographic_info(@browser, { :approximate_age_no_birthday => "21" })
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       assert_tooltip_exists(@browser, before_help_text).should be_true
