@@ -84,16 +84,18 @@ describe 'Print CMR page' do
       })
   end
   
-  #  it 'should edit the CMR to include lab info' do
-  #    add_lab_result(@browser, {:lab_name => "Venture Complex",
-  #        :lab_test_type => "Necromancy",
-  #        :lab_result_text => "Zombies",
-  #        :lab_interpretation => "Other",
-  #        :lab_specimen_source => "Blood",
-  #        :lab_collection_date => "12/12/2002",
-  #        :lab_test_date => "12/13/2005",
-  #        :sent_to_uphl => "Unknown"})
-  #  end
+  it 'should edit the CMR to include lab info' do
+    add_lab_result(@browser, {:lab_name => "Venture Complex",
+        :lab_test_type => "Necromancy",
+        :lab_result_text => "Zombies",
+        :lab_interpretation => "Other",
+        :lab_specimen_source => "Blood",
+        :lab_collection_date => "12/12/2002",
+        :lab_test_date => "12/13/2005",
+        :sent_to_uphl => "Unknown"
+      })
+
+  end
   
   it 'should edit the CMR to include contacts' do
     click_core_tab(@browser, CONTACTS)
@@ -101,27 +103,21 @@ describe 'Print CMR page' do
     add_contact(@browser, {:last_name => "Steve", :first_name => "Jobbs"},2)
   end
   
-  #  it 'should edit the CMR to include encounters' do
-  #    click_core_tab(@browser, ENCOUNTERS)
-  #    @browser.type('css=input[id$=participations_encounter_attributes_encounter_date]', "March 10, 2009")
-  #    @browser.type('css=textarea[id$=participations_encounter_attributes_description]', "Encounter desc")
-  #    save_cmr(@browser)
-  #    @browser.click("link=Edit encounter event")
-  #    @browser.wait_for_page_to_load($load_time)
-  #    @browser.type('css=input[id^=lab_name_]', "Encounter lab name")
-  #    @browser.type('css=input[id^=test_type_]', "Encounter lab type")
-  #    @browser.type('css=input[id^=lab_result_]', "Encounter lab result")
-  #    @browser.select('css=select[id$=_treatment_given_yn_id]', 'label=Yes')
-  #    @browser.type('css=input[id^=treatment_NEW_RECORD]', "Encounter treatment")
-  #    @browser.type('css=input[id$=_treatment_date]', "March 11, 2009")
-  #    save_and_exit(@browser)
-  #    @browser.click("link=Jeffrey Lebowski")
-  #    @browser.wait_for_page_to_load($load_time)
-  #  end
-  
+  it 'should edit the CMR to include encounters' do
+    add_encounter(@browser, { :encounter_date => "March 10, 2009", :description => "Encounter desc" })
+    save_cmr(@browser)
+    @browser.click("link=Edit encounter event")
+    @browser.wait_for_page_to_load($load_time)
+    add_lab_result(@browser, { :lab_name => "Encounter lab name", :lab_test_type => "Encounter lab type", :lab_result_text => "Encounter lab result" })
+    add_treatment(@browser, { :treatment_given => "Yes", :treatment => "Encounter treatment", :treatment_date => "March 11, 2009"})
+    save_and_exit(@browser)
+    @browser.click("link=Jeffrey Lebowski")
+    @browser.wait_for_page_to_load($load_time)
+  end
   
   it 'should edit the CMR to include EPI info' do
     click_core_tab(@browser, EPI)
+    edit_cmr(@browser)
     @browser.select "morbidity_event_interested_party_attributes_risk_factor_attributes_food_handler_id", "label=No"
     @browser.select "morbidity_event_interested_party_attributes_risk_factor_attributes_healthcare_worker_id", "label=Yes"
     @browser.select "morbidity_event_interested_party_attributes_risk_factor_attributes_group_living_id", "label=No"
@@ -170,7 +166,7 @@ describe 'Print CMR page' do
     print_cmr(@browser).should be_true
     @browser.is_text_present('Confidential Case Report').should be_true
     @browser.is_text_present('Lebowski').should be_true
-    #@browser.is_text_present('Botulism, foodborne').should be_true
+    @browser.is_text_present('Botulism, foodborne').should be_true
     @browser.is_text_present('Lebowski').should be_true
     @browser.is_text_present('Jeffrey').should be_true
     @browser.is_text_present('`The Dude`').should be_true
@@ -187,12 +183,12 @@ describe 'Print CMR page' do
     @browser.is_text_present('Hmong').should be_true
     @browser.is_text_present('Not Hispanic or Latino').should be_true
   
-    #    @browser.is_text_present('2009-03-10').should be_true
-    #    @browser.is_text_present('Encounter desc').should be_true
-    #    @browser.is_text_present('Encounter lab name').should be_true
-    #    @browser.is_text_present('Encounter lab type').should be_true
-    #    @browser.is_text_present('Encounter treatment').should be_true
-    #    @browser.is_text_present('2009-03-11').should be_true
+    @browser.is_text_present('2009-03-10').should be_true
+    @browser.is_text_present('Encounter desc').should be_true
+    @browser.is_text_present('Encounter lab name').should be_true
+    @browser.is_text_present('Encounter lab type').should be_true
+    @browser.is_text_present('Encounter treatment').should be_true
+    @browser.is_text_present('2009-03-11').should be_true
 
     @browser.is_text_present('2002-12-12').should be_true
     @browser.is_text_present('2003-12-12').should be_true
@@ -210,11 +206,11 @@ describe 'Print CMR page' do
     @browser.is_text_present('No').should be_true
     @browser.is_text_present('White Russian').should be_true
     @browser.is_text_present('Mario').should be_true
-    #    @browser.is_text_present('Venture Complex').should be_true
-    #    @browser.is_text_present('Necromancy').should be_true
-    #    @browser.is_text_present('Blood').should be_true
-    #    @browser.is_text_present('Zombies').should be_true
-    #    @browser.is_text_present('2005-12-13').should be_true
+    @browser.is_text_present('Venture Complex').should be_true
+    @browser.is_text_present('Necromancy').should be_true
+    @browser.is_text_present('Blood').should be_true
+    @browser.is_text_present('Zombies').should be_true
+    @browser.is_text_present('2005-12-13').should be_true
     @browser.is_text_present('Lina').should be_true
     @browser.is_text_present('Inverse').should be_true
     @browser.is_text_present('Steve').should be_true
