@@ -510,9 +510,3 @@ module Export
     end
   end
 end
-
-p "Up Here"
-Answer.send(:include, Export::Cdc::AnswerRules)
-p "Here"
-Disease.send(:include, Export::Cdc::DiseaseRules)
-p "Here too"

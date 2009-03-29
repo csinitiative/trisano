@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Disease < ActiveRecord::Base
+  include Export::Cdc::DiseaseRules
 
   before_save :update_cdc_code
   
