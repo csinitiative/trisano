@@ -56,8 +56,8 @@ describe 'form builder core field configs for places' do
       save_cmr(@browser).should be_true
       click_link_by_order(@browser, "edit-place-event", 1)
       @browser.wait_for_page_to_load($load_time)
-      
-      @browser.type "place_event_active_place__address_street_number", "21"
+
+      add_place_info(@browser, { :street_number => "21" })
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       answer_investigator_question(@browser, before_question, before_answer)

@@ -39,5 +39,12 @@ module TrisanoPlacesHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Edit Place Event"))
   end
+
+  def add_place_info(browser, attributes)
+    browser.type("//div[@id='place_tab']//div[@id='place_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
+
+    # Fill in the rest...
+
+  end
   
 end

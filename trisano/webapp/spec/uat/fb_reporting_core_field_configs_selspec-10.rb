@@ -24,7 +24,6 @@ describe 'form builder reporting core-field questions for morbidity reports' do
   [{:name => 'Reporting agency', :tab_name => REPORTING},
    {:name => 'Reporter first name', :tab_name => REPORTING},
    {:name => 'Reporter last name', :tab_name => REPORTING},
-   {:name => 'Reporter phone type', :tab_name => REPORTING},
    {:name => 'Reporter area code', :tab_name => REPORTING},
    {:name => 'Reporter phone number', :tab_name => REPORTING},
    {:name => 'Reporter extension', :tab_name => REPORTING}
@@ -48,11 +47,9 @@ describe 'form builder reporting core-field questions for morbidity reports' do
       publish_form(@browser).should be_true
       
       create_basic_investigatable_cmr(@browser, cmr_last_name, disease_name, jurisdiction)
-      edit_cmr(@browser)
-      click_core_tab(@browser, test[:tab_name])
-      @browser.click "//a[@id='add_reporting_agency_link']"
-      sleep(1)
-      @browser.type("//input[@id='morbidity_event_active_reporting_agency_name']", reporting_agency)
+      edit_cmr(@browser)      
+      add_reporting_info(@browser, { :name => reporting_agency })
+
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       @browser.type("//label[text() ='#{before_question}']/../input[@type='text']",
