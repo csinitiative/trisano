@@ -751,6 +751,7 @@ module TrisanoHelper
   def add_admin_info(browser, attributes)
     click_core_tab(browser, ADMIN)
     sleep(1)
+    browser.select("//div[@id='administrative_tab']//select[contains(@id, '_event_status')]", "label=#{attributes[:event_status]}") if attributes[:event_status]
     browser.select("//div[@id='administrative_tab']//select[contains(@id, '_state_case_status_id')]", "label=#{attributes[:state_case_status]}") if attributes[:state_case_status]
 
 
