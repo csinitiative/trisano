@@ -20,30 +20,30 @@
 
   = h @event.safe_call_chain(:disease, :disease, :place_lead_in)
 
-  -# TGRII: Fix this up
-  -# core_element_show :places, place_form, :vert do
 
-  -if @event.place_child_events.empty?
-    %h3 No place exposures have been recorded for this event
-  -else
-    %table.list
-      %tr
-        %th Place Name
-        %th Place Type
-        %th Date of Exposure
-        %th
+  - core_element_show :places, event_form, :vert do
 
-      -@event.place_child_events.each do |pe|
-        -place = pe.interested_place.place_entity.place
-
-        - if pe.deleted_at
-          - style = {:class => 'struck-through'}
-        - else
-          - style = {}
-
+    -if @event.place_child_events.empty?
+      %h3 No place exposures have been recorded for this event
+    -else
+      %table.list
         %tr
-          %td{style}=h(place.name)
-          %td{style}=place.formatted_place_descriptions
-          %td{style}=format_date(pe.participations_place.date_of_exposure)
-          %td.tools
-            =link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"}) unless pe.new_record?
+          %th Place Name
+          %th Place Type
+          %th Date of Exposure
+          %th
+
+        -@event.place_child_events.each do |pe|
+          -place = pe.interested_place.place_entity.place
+
+          - if pe.deleted_at
+            - style = {:class => 'struck-through'}
+          - else
+            - style = {}
+
+          %tr
+            %td{style}=h(place.name)
+            %td{style}=place.formatted_place_descriptions
+            %td{style}=format_date(pe.participations_place.date_of_exposure)
+            %td.tools
+              =link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"}) unless pe.new_record?
