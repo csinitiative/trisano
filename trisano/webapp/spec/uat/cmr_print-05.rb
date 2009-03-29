@@ -215,7 +215,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('Inverse').should be_true
     @browser.is_text_present('Steve').should be_true
     @browser.is_text_present('Jobbs').should be_true
-    #    @browser.is_text_present('Unemployed').should be_true
+    @browser.is_text_present('Unemployed').should be_true
     @browser.is_text_present('Whatever, Man').should be_true
     @browser.is_text_present('what').should be_true
     #    @browser.is_text_present('how').should be_true

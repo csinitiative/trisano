@@ -36,6 +36,10 @@
       %span.print-label Day care association:
       %span.print-value= l @event.interested_party.risk_factor.day_care_association unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
+    - core_element_print :occupation, risk_factor_form, :horiz do
+      %span.print-label Occupation:
+      %span.print-value= @event.interested_party.risk_factor.occupation unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+
 %span.subsection-header
   Place Exposures
 
