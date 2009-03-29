@@ -26,13 +26,10 @@ describe 'invalid cmr' do
   end
 
   it 'should preserve the reporting agency field data' do
-    click_core_tab(@browser, REPORTING)
-    @browser.click("//a[@id='add_reporting_agency_link']")
-    @browser.type("//input[@id='morbidity_event_active_reporting_agency_name']", 'The Venture Compound')
-    @browser.check("//div[@id='reporting_agency']//input[@id='School']")
+    add_reporting_info(@browser, { :name => "The Venture Compound", :place_type => "S" })
     save_and_continue(@browser)
     click_core_tab(@browser, REPORTING)
-    @browser.get_value("//input[@id='morbidity_event_active_reporting_agency_name']").should == 'The Venture Compound'
-    @browser.is_checked("//div[@id='reporting_agency']//input[@id='School']").should == true
+    @browser.get_value("//input[@id='morbidity_event_reporting_agency_attributes_place_entity_attributes_place_attributes_name']").should == 'The Venture Compound'
+    @browser.is_checked("//div[@id='reporting_agency']//input[contains(@id, '_S')]").should == true
   end
 end

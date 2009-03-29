@@ -724,11 +724,12 @@ module TrisanoHelper
   # Reporting Tab
   #
 
-  # Add support for place type
   def add_reporting_info(browser, attributes)
     click_core_tab(browser, REPORTING)
     sleep(1)
     browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_name')]", attributes[:name]) if attributes[:name]
+    browser.click("//div[@id='reporting_agencies']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+
     browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
     browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
     browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
