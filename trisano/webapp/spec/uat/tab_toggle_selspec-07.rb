@@ -59,7 +59,7 @@ describe 'Tab Toggling Functionality' do
         :extension => "22"
       }, 2)
     save_cmr(@browser).should be_true
-    edit_contact(@browser)
+    edit_contact_event(@browser)
     verify_tab_behavior(@browser)
   end
   

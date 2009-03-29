@@ -53,7 +53,9 @@ module TrisanoContactsHelper
         browser.is_text_present("Contact event was successfully updated."))
   end
 
-  def edit_contact(browser)
+  # To navigate to a contact from the morbidity event
+  # TODO: Add multiples support
+  def edit_contact_event(browser)
     browser.click "link=Edit contact event"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Edit Contact Event"))

@@ -18,9 +18,9 @@
 require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder patient-level address core field configs for contacts' do
-  
+
   # $dont_kill_browser = true
-  
+
   [{:name => 'Contact street number', :tab_name => DEMOGRAPHICS},
     {:name => 'Contact street name', :tab_name => DEMOGRAPHICS},
     {:name => 'Contact unit number', :tab_name => DEMOGRAPHICS},
@@ -52,15 +52,13 @@ describe 'form builder patient-level address core field configs for contacts' do
       edit_cmr(@browser).should be_true
       add_contact(@browser, {:last_name => contact_last_name, :first_name => "John", :disposition => "Unable to locate"})
       save_cmr(@browser).should be_true
-      click_link_by_order(@browser, "edit-contact-event", 1)
-      @browser.wait_for_page_to_load($load_time)
-
-      add_demographic_info(@browser, { :approximate_age_no_birthday => "21" })
+      edit_contact_event(@browser)
+      add_demographic_info(@browser, { :approximate_age_no_birthday => "21", :street_number => "21" })
       @browser.is_text_present(before_question).should be_true
       @browser.is_text_present(after_question).should be_true
       answer_investigator_question(@browser, before_question, before_answer)
       answer_investigator_question(@browser, after_question, after_answer)
-
+      
       save_contact_event(@browser)
       @browser.is_text_present(before_answer).should be_true
       @browser.is_text_present(after_answer).should be_true
