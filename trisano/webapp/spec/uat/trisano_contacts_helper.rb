@@ -40,6 +40,10 @@ module TrisanoContactsHelper
     browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
     browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
     browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
+    
+    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_area_code')]", contact_attributes[:area_code])
+    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_phone_number')]", contact_attributes[:phone_number])
+    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_extension')]", contact_attributes[:extension])
   end
 
   def save_contact_event(browser)
@@ -47,6 +51,12 @@ module TrisanoContactsHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Contact event was successfully created.") or
         browser.is_text_present("Contact event was successfully updated."))
+  end
+
+  def edit_contact(browser)
+    browser.click "link=Edit contact event"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Edit Contact Event"))
   end
   
 end

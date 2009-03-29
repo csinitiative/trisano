@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
- #$dont_kill_browser = true
+#$dont_kill_browser = true
 
 describe 'Tab Toggling Functionality' do
 
@@ -34,14 +34,9 @@ describe 'Tab Toggling Functionality' do
   
   it 'should show Edit Place Exposure tabs properly' do
     edit_cmr(@browser).should be_true
-    sleep(3)
-    click_core_tab(@browser, "Epidemiological")
-    @browser.type "morbidity_event_new_place_exposure_attributes__name", 'Davis Natatorium'
-    @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Pool"
+    add_place(@browser, { :name => "Davis Natatorium", :place_type => "P" })
     save_cmr(@browser).should be_true
-    #click_core_tab(@browser, "Epidemiological")
-    @browser.click "link=Edit place details"
-    @browser.wait_for_page_to_load($load_time)
+    edit_place(@browser).should be_true
     verify_tab_behavior(@browser)
   end
   
@@ -53,24 +48,18 @@ describe 'Tab Toggling Functionality' do
   
   it 'should show Edit Contact Event tabs properly' do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "Headroom"
-    @browser.type "morbidity_event_active_patient__person_first_name", "Max"
-    click_core_tab(@browser, "Contacts")
-    @browser.click "link=Add a contact"
-    sleep(1)
-    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
-    @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Lou"
-    @browser.select "//div[@class='contact'][1]//select[contains(@id, 'disposition')]", "label=Unable to locate"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'last_name')]", "Abbott"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'first_name')]", "Bud"
-    @browser.select "//div[@class='contact'][2]//select[contains(@id, 'entity_location_type_id')]", "label=Home"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'area_code')]", "202"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'phone_number')]", "5551212"
-    @browser.type "//div[@class='contact'][2]//input[contains(@id, 'extension')]", "22"
+    add_demographic_info(@browser, { :last_name => "Headroom", :first_name => "Max" })
+    add_contact(@browser, { :last_name => "Costello", :first_name => "Lou", :disposition => "Unable to locate" })
+    add_contact(@browser, {
+        :last_name => "Abbott",
+        :first_name => "Bud",
+        :disposition => "Other" ,
+        :area_code => "202",
+        :phone_number => "5551212",
+        :extension => "22"
+      }, 2)
     save_cmr(@browser).should be_true
-    #click_core_tab(@browser, "Contacts")
-    @browser.click "edit-contact-event"
-    @browser.wait_for_page_to_load($load_time)
+    edit_contact(@browser)
     verify_tab_behavior(@browser)
   end
   

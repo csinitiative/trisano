@@ -628,6 +628,8 @@ module TrisanoHelper
     browser.select("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]", "label=#{attributes[:disease]}") if attributes[:disease]
     browser.select("//div[@id='clinical_tab']//select[contains(@id, '_pregnant_id')]", "label=#{attributes[:pregnant]}") if attributes[:pregnant]
 
+
+
     # Fill in the rest...
 
   end

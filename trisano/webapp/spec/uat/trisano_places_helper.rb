@@ -19,11 +19,12 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 module TrisanoPlacesHelper
 
-  def add_place(browser, place_attributes, index = 1)
+  def add_place(browser, attributes, index = 1)
     click_core_tab(browser, EPI)
     browser.click "link=Add a Place Exposure"
     sleep(1)
-    browser.type("//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", place_attributes[:name])
+    browser.type("//div[@id='place_child_events']//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", attributes[:name])
+    browser.click("//div[@id='place_child_events']//div[@class='place_exposure'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
   end
 
   def save_place_event(browser)
@@ -31,6 +32,12 @@ module TrisanoPlacesHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Place event was successfully created.") or
         browser.is_text_present("Place event was successfully updated."))
+  end
+
+  def edit_place(browser)
+    browser.click "link=Edit place details"
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Edit Place Event"))
   end
   
 end
