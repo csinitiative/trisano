@@ -16,7 +16,7 @@
 %span.section-header
   Clinical Information
 
-- event_form.fields_for(:disease, @event.disease, :builder => ExtendedFormBuilder) do |d|
+- event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
   - core_element_print :disease_id, d, :horiz do
     %span.print-label Disease:
     %span.print-value= @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
