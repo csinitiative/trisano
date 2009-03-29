@@ -37,9 +37,10 @@
 
     - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
       - active_patient_form.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |primary_form|
-        - core_element_show :date_of_death, primary_form, :horiz do
-          = primary_form.label(:date_of_death)
-          = @event.interested_party.person_entity.person.date_of_death
+        - primary_form.fields_for(:person, @event.interested_party.person_entity.person, :builder => ExtendedFormBuilder) do |person_form|
+          - core_element_show :date_of_death, person_form, :horiz do
+            = person_form.label(:date_of_death)
+            = @event.interested_party.person_entity.person.date_of_death
 
     - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
       - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
