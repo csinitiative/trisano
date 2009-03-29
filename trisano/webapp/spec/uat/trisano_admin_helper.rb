@@ -75,6 +75,14 @@ module TrisanoAdminHelper
 
   # User Admin Helpers
 
+  def navigate_to_user_admin(browser)
+    browser.open "/trisano/cmrs"
+    click_nav_admin(browser)
+    browser.click("link=Manage Users")
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Users"))
+  end
+  
   def add_role(browser, role_attributes, index = 1)
     browser.click "link=Add Role"
     sleep(1)

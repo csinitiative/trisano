@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+ $dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -55,20 +55,10 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present('Utah County Health Department').should be_true
   end
 
-  it "should present all controls" do
-    @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("New Morbidity Report").should be_true
-
-    # We need a CMR too
+  it "create a new morbidity event" do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @person_1)
+    add_demographic_info(@browser, {  :last_name => @person_1})
     save_cmr(@browser).should be_true
-
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route to Local Health Depts.").should be_true
   end
 
   it "should allow routing to a new jurisdiction with a note" do
@@ -148,14 +138,9 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it "should allow for secondary jurisdictions" do
-    # We need another CMR 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @person_3)
+    add_demographic_info(@browser, {  :last_name => @person_3})
     save_cmr(@browser).should be_true
-
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route to Local Health Depts.").should be_true
 
     @browser.click "link=Route to Local Health Depts."
     @browser.click "Davis_County"  #On
@@ -230,41 +215,26 @@ describe 'Sytem functionality for routing and workflow' do
   end
 
   it 'should allow creating a new investigator' do
-    @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load($load_time)
     switch_user(@browser, "default_user").should be_true
-    @browser.click "link=ADMIN"
-    @browser.wait_for_page_to_load
-    @browser.click "admin_users"
-    @browser.wait_for_page_to_load($load_time)    
+    navigate_to_user_admin(@browser)
     @browser.click "//input[@value='Create new user']"
     @browser.wait_for_page_to_load($load_time)
-
     @browser.type "user_uid", @uid
     @browser.type "user_user_name", @uname
-
-    @browser.click "link=Add Role"
-    @browser.select "user_role_membership_attributes__role_id", "label=Investigator"
-    @browser.select "user_role_membership_attributes__jurisdiction_id", "label=Central Utah Public Health Department"
-
+    add_role(@browser, { :role => "Investigator", :jurisdiction => "Central Utah Public Health Department"})
     @browser.click "user_submit"
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('User was successfully created.').should be_true
     @browser.is_text_present(@uid).should be_true
     @browser.is_text_present(@uname).should be_true
-
     @browser.is_text_present("Investigator").should be_true
     @browser.is_text_present("Central Utah Public Health Department").should be_true
   end
 
   it 'should be able to route a cmr to an individual investigator' do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @person_1)
+    add_demographic_info(@browser, {  :last_name => @person_1})
     save_cmr(@browser).should be_true
-
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("Edit").should be_true
-    @browser.is_text_present("Route to Local Health Depts.").should be_true
 
     @browser.click "link=Route to Local Health Depts."
     @browser.select "jurisdiction_id", "label=Central Utah"
@@ -276,21 +246,19 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click("ACPTD-LHD")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
-    
+
     @browser.is_text_present('Route to investigator:').should be_true
     @browser.select "morbidity_event__investigator_id", "label=#{@uname}"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Investigator:  #{@uname}").should be_true
     @browser.is_text_present("Routed to investigator #{@uname}").should be_true
-    
+
     @browser.is_text_present("Route to queue").should be_true
     @browser.is_text_present("Assigned to Investigator").should be_true
   end
 
   it "should allow for filtering the view" do
-    @browser.open "/trisano"
-    @browser.wait_for_page_to_load($load_time)
     current_user = @browser.get_selected_label("user_id")
     if current_user != "default_user"
       switch_user(@browser, "default_user")
@@ -301,7 +269,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
     @browser.click "admin_queues"
     @browser.wait_for_page_to_load($load_time)
-    
+
     @browser.click "create_event_queue"
     @browser.wait_for_page_to_load($load_time)
 
@@ -315,16 +283,11 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present('JoeInvestigator').should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @person_2)
+    add_demographic_info(@browser, {  :last_name => @person_2})
     save_cmr(@browser).should be_true
 
-    @browser.open "/trisano/cmrs"
-    @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("NEW CMR").should be_true
-    @browser.is_text_present("New Morbidity Report").should be_true
-
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', get_unique_name(2))
+    add_demographic_info(@browser, {  :last_name => get_unique_name(2)})
     save_cmr(@browser).should be_true
 
     @browser.open "/trisano/cmrs"
@@ -362,7 +325,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
-    
+
     # By state and queue
     @browser.add_selection "//div[@id='change_view']//select[@id='states[]']", "label=New"
     @browser.add_selection "//div[@id='change_view']//select[@id='queues[]']", "label=Enterics-UtahCounty"
