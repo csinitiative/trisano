@@ -48,19 +48,19 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
     # Enter the answer that meets the follow-up condition
     click_core_tab(@browser, DEMOGRAPHICS)
     watch_for_core_field_spinner('birth_gender_id') do 
-      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
+      add_demographic_info(@browser, { :birth_gender => "Female" })
     end
     @browser.is_text_present(@follow_up_question_text).should be_true
 
     # Enter an answer that does not meet the follow-up condition
     watch_for_core_field_spinner('birth_gender_id') do
-      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Male")
+      add_demographic_info(@browser, { :birth_gender => "Male" })
     end
     @browser.is_text_present(@follow_up_question_text).should be_false
 
     # Back to a match, enter follow up answer and submit
     watch_for_core_field_spinner('birth_gender_id') do
-      @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")
+      add_demographic_info(@browser, { :birth_gender => "Female" })
     end
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
 
@@ -70,7 +70,7 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
     edit_cmr(@browser)
 
     # Enter an answer that does not meet the follow-up condition
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Male")
+    add_demographic_info(@browser, { :birth_gender => "Male" })
     sleep(7)
 
     save_cmr(@browser)
