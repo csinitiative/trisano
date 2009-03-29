@@ -615,7 +615,7 @@ module TrisanoHelper
 
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
 
-
+    # Fill in the rest...
 
   end
 
@@ -623,7 +623,15 @@ module TrisanoHelper
   # Clinical Tab
   #
 
-  # Need to add support for place type: place_attributes_place_type_H
+  def add_clinical_info(browser, attributes)
+    click_core_tab(browser, CLINICAL)
+    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]", "label=#{attributes[:disease]}") if attributes[:disease]
+    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_pregnant_id')]", "label=#{attributes[:pregnant]}") if attributes[:pregnant]
+
+    # Fill in the rest...
+
+  end
+
   def add_diagnostic_facility(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
     browser.click "link=Add a Diagnostic Facility"
@@ -728,6 +736,20 @@ module TrisanoHelper
 
     browser.type("//div[@id='reported_dates']//input[contains(@id, '_clinician_date')]", attributes[:clinician_date]) if attributes[:clinician_date]
     browser.type("//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", attributes[:PH_date]) if attributes[:PH_date]
+  end
+
+  #
+  # Admin Tab
+  #
+
+  def add_admin_info(browser, attributes)
+    click_core_tab(browser, ADMIN)
+    sleep(1)
+    browser.select("//div[@id='administrative_tab']//select[contains(@id, '_state_case_status_id')]", "label=#{attributes[:state_case_status]}") if attributes[:state_case_status]
+
+
+    # Fill in the rest...
+
   end
   
   private

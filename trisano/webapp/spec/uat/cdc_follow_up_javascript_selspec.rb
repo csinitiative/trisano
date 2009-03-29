@@ -60,25 +60,17 @@ describe 'CDC export follow ups' do
     @browser.click("//input[@value='Publish']")
     @browser.wait_for_page_to_load
 
-    # creat the cmr
     @browser.open "/trisano/cmrs/new"
     @browser.wait_for_page_to_load
-    @browser.type('morbidity_event_active_patient__person_last_name',
-                  "#{get_unique_name(1)} mumpy cdc")
-    click_core_tab(@browser, CLINICAL)
-    @browser.select("//select[@id='morbidity_event_disease_disease_id']",
-                    "Mumps")
-    click_core_tab(@browser, ADMIN)
-    @browser.select("morbidity_event_state_case_status_id", 'Confirmed')
-    @browser.click("//input[@value='Save & Continue']")
-    @browser.wait_for_page_to_load
-    click_core_tab(@browser, CLINICAL)
-    @browser.select("//select[@id='morbidity_event_active_patient__participations_risk_factor_pregnant_id']",
-                    "Yes")
+
+    add_demographic_info(@browser, { :last_name => "#{get_unique_name(1)} mumpy cdc" })
+    add_clinical_info(@browser, { :disease => "Mumps" })
+    add_admin_info(@browser, { :state_case_status => "Confirmed" })
+    save_and_continue(@browser)
+    add_clinical_info(@browser, { :pregnant => "Yes" })
     wait_for_element_present("//label[text()='#{@field_name}']")
     @browser.select("//label[text()='#{@field_name}']/../select", "Second trimester")
-    @browser.click("//input[@value='Save & Exit']")
-    @browser.wait_for_page_to_load
+    save_cmr(@browser)
     
     # check the cdc output
     @browser.open "/trisano/cdc_events/current_week.txt"
