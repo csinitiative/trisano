@@ -86,19 +86,24 @@ class MorbidityEventsController < EventsController
   def create
     go_back = params.delete(:return)
     
-    if params[:from_patient]
-      @event = MorbidityEvent.new_event_from_patient(Entity.find(params[:from_patient]))
+    if params[:from_event]
+      org_event = HumanEvent.find(params[:from_event])
+      components = params[:event_components]
+      @event = org_event.clone_event(components)
+
+      # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
+      @event.add_note("Event derived from " + ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) )) if components && !components.empty?
     else
       @event = MorbidityEvent.new(params[:morbidity_event])
+
+      # Allow for test scripts and developers to jump directly to the "under investigation" state
+      if RAILS_ENV == 'production'
+        @event.primary_jurisdiction.name == "Unassigned" ? @event.event_status = "NEW" : @event.event_status = "ACPTD-LHD"
+      end
+      @event.event_onset_date = Date.today
     end
 
-    # Allow for test scripts and developers to jump directly to the "under investigation" state
-    if RAILS_ENV == 'production'
-      @event.primary_jurisdiction.name == "Unassigned" ? @event.event_status = "NEW" : @event.event_status = "ACPTD-LHD"
-    end
-    @event.event_onset_date = Date.today
-
-    unless User.current_user.is_entitled_to_in?(:create_event, @event.primary_jurisdiction.entity_id)
+    unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have create priveleges in this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
     end
     

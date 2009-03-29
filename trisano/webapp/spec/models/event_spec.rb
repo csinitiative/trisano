@@ -987,65 +987,6 @@ describe MorbidityEvent do
     end
   end
 
-  describe 'new event from patient' do
-    fixtures :users, :participations, :entities, :places, :places_types, :people
-    
-    before :each do
-      @event_hash = {
-        "address_attributes" => { "street_name" => "Example Lane" },
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Biel",
-            }
-          }
-        }
-      }
-      User.stub!(:current_user).and_return(users(:default_user))
-    end
-    
-    def with_new_event_from_patient(patient)
-      event = MorbidityEvent.new_event_from_patient(patient)
-      yield event if block_given?
-    end
-
-    it 'should use the existing patient in the event tree' do
-      patient = nil
-      original_event = nil
-      with_event do |event| 
-        patient = event.interested_party.person_entity 
-        original_event = event
-      end
-      with_new_event_from_patient(patient) do |event|
-        event.interested_party.primary_entity_id.should_not be_nil        
-        lambda {event.save!}.should_not change(Entity, :count)        
-        event.interested_party.person_entity.person.last_name.should == 'Biel'
-        event.interested_party.primary_entity_id = original_event.interested_party.primary_entity_id
-        event.all_jurisdictions.size.should == 1
-        event.jurisdiction.place_entity.place.name.should == 'Unassigned'
-        event.primary_jurisdiction.should_not be_nil
-        event.primary_jurisdiction.entity_id.should_not be_nil
-        event.primary_jurisdiction.name.should == 'Unassigned'
-        event.event_status.should == 'NEW'
-      end         
-    end 
-
-    it 'should copy most recent address record for the new record' do
-      patient = nil
-      original_event = nil
-      with_event do |event| 
-        patient = event.interested_party.person_entity 
-        original_event = event
-      end
-      with_new_event_from_patient(patient) do |event|
-        lambda {event.save!}.should change(Address, :count)
-        original_event.address.id.should_not == event.address.id
-        event.address.street_name.should == 'Example Lane'
-      end
-    end
-
-  end
-
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
@@ -1246,4 +1187,315 @@ describe Event, 'declarative task, attachment support' do
     encounter_event.supports_tasks?.should be_false
   end
   
+end
+
+describe Event, 'cloning an event' do
+  fixtures :users, :places, :places_types, :diseases, :entities
+
+  before :each do
+    User.stub!(:current_user).and_return(users(:default_user))
+
+    @event_hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name"=>"Biel",
+          }
+        }
+      }
+    }
+  end
+
+  describe "shallow clone" do
+    before :each do
+      @event_hash["address_attributes"] = { "street_name" => "Example Lane" }
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event
+    end
+
+    it "should copy over demographic information only" do
+      @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
+      @new_event.primary_jurisdiction.name.should == "Unassigned"
+      @new_event.event_status.should == "NEW"
+
+      # Only interested party and jurisdiction, nothing else
+      lambda {@new_event.save!}.should change(Participation, :count).by(2)
+
+    end
+
+    it "should create a new address instance and link it up" do
+      lambda {@new_event.save!}.should change(Address, :count)
+      @new_event.address.id.should_not == @org_event.address.id
+      @new_event.address.street_name.should == 'Example Lane'
+    end
+
+  end
+
+  describe "deep clone" do
+    it "should first do a shallow clone" do
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event
+
+      @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
+      @new_event.primary_jurisdiction.name.should == "Unassigned"
+      @new_event.event_status.should == "NEW"
+    end
+
+    it "should copy over disease information, but not the actual disease" do
+      @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id, 
+                                                 :hospitalized_id => external_codes(:yesno_yes), 
+                                                 :died_id => external_codes(:yesno_no),
+                                                 :disease_onset_date => Date.today - 1, 
+                                                 :date_diagnosed => Date.today
+                                                }
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @new_event.disease_event.disease_id.should be_blank
+      @new_event.disease_event.hospitalized_id.should == @org_event.disease_event.hospitalized_id
+      @new_event.disease_event.died_id.should == @org_event.disease_event.died_id
+      @new_event.disease_event.disease_onset_date.should == @org_event.disease_event.disease_onset_date
+      @new_event.disease_event.date_diagnosed.should == @org_event.disease_event.date_diagnosed
+    end
+
+    it "should copy over hospitalization data" do
+      @event_hash["hospitalization_facilities_attributes"] = [
+        {
+          :secondary_entity_id => entities(:AVH).id, 
+          :hospitals_participation_attributes => {
+            :admission_date => Date.today - 4,
+            :discharge_date => Date.today - 3,
+            :medical_record_number => "1234"
+          } 
+        },
+        {
+          :secondary_entity_id => entities(:BRVH).id, 
+          :hospitals_participation_attributes => {
+            :admission_date => Date.today - 2,
+            :discharge_date => Date.today - 1,
+            :medical_record_number => "5678"
+          } 
+        }
+      ]
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @new_event.hospitalization_facilities.size.should == 2
+      @new_event.hospitalization_facilities.each do |h|
+        if h.secondary_entity_id == entities(:AVH).id
+          h.hospitals_participation.admission_date.should == Date.today - 4
+          h.hospitals_participation.discharge_date.should == Date.today - 3
+          h.hospitals_participation.medical_record_number == "1234"
+        elsif h.secondary_entity_id == entities(:BRVH).id
+          h.hospitals_participation.admission_date.should == Date.today - 2
+          h.hospitals_participation.discharge_date.should == Date.today - 1
+          h.hospitals_participation.medical_record_number == "5678"
+        else
+          # Forcing a stupid error, we should not get here.
+          "hosiptalization facilites".should == "AVH and BRVH"
+        end
+      end
+    end
+
+    it "should copy over treatment data" do
+      @event_hash["interested_party_attributes"]["treatments_attributes"] =
+        [
+          {
+            :treatment_given_yn_id => external_codes(:yesno_no).id,
+            :treatment_date => Date.today,
+            :treatment => "Leeches"
+          },
+          {
+            :treatment_given_yn_id => external_codes(:yesno_yes).id,
+            :treatment_date => Date.today - 1,
+            :treatment => "Maggots"
+          }
+      ] 
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @new_event.interested_party.treatments.size.should == 2
+      @new_event.interested_party.treatments.each do |t|
+        if t.treatment == "Leeches"
+          t.treatment_given_yn_id.should == external_codes(:yesno_no).id
+          t.treatment_date.should == Date.today
+        elsif t.treatment == "Maggots"
+          t.treatment_given_yn_id.should == external_codes(:yesno_yes).id
+          t.treatment_date.should == Date.today - 1
+        else
+          # Forcing a stupid error, we should not get here.
+          "treatments ".should == "Leecehs and Maggots"
+        end
+      end
+    end
+
+    it "should copy over risk factor data" do 
+      @event_hash["interested_party_attributes"]["risk_factor_attributes"] =
+          {
+            :food_handler_id => external_codes(:yesno_no).id,
+            :healthcare_worker_id => external_codes(:yesno_yes).id,
+            :group_living_id => external_codes(:yesno_no).id,
+            :day_care_association_id => external_codes(:yesno_yes).id,
+            :pregnant_id => external_codes(:yesno_no).id,
+            :pregnancy_due_date => Date.today ,
+            :risk_factors => "Smokes",
+            :risk_factors_notes => "A lot",
+            :occupation => "Smoker"
+          }
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      org_rf = @org_event.interested_party.risk_factor
+      new_rf = @new_event.interested_party.risk_factor
+
+      org_rf.food_handler_id.should == new_rf.food_handler_id
+      org_rf.healthcare_worker_id.should == new_rf.healthcare_worker_id
+      org_rf.group_living_id.should == new_rf.group_living_id
+      org_rf.day_care_association_id.should == new_rf.day_care_association_id
+      org_rf.pregnant_id.should == new_rf.pregnant_id
+      org_rf.risk_factors.should == new_rf.risk_factors
+      org_rf.risk_factors_notes.should == new_rf.risk_factors_notes
+      org_rf.occupation.should == new_rf.occupation
+   end
+
+    it "should copy over clinician data" do
+      @event_hash["clinicians_attributes"] = [
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name"=>"Bombay",
+            "person_type" => 'clinician'
+          }
+        }
+      ]
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @org_event.clinicians.first.secondary_entity_id.should == @new_event.clinicians.first.secondary_entity_id
+    end
+
+    it "should copy over diagnostic data" do
+       @event_hash["diagnostic_facilities_attributes"] = [
+        "place_entity_attributes" => {
+          "place_attributes" => {
+            "name"=>"DiagOne",
+          }
+        }
+      ]
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @org_event.diagnostic_facilities.first.secondary_entity_id.should == @new_event.diagnostic_facilities.first.secondary_entity_id
+    end
+
+    it "should copy over lab data" do
+      @event_hash["labs_attributes"] = [
+        { 
+          "place_entity_attributes" => {
+            "place_attributes" => {
+              "name"=>"LabOne",
+            }
+          },
+          "lab_results_attributes" => [
+            { "specimen_source_id" => external_codes(:specimen_blood),
+              "collection_date" => Date.today,
+              "lab_test_date" => Date.today,
+              "specimen_sent_to_uphl_yn_id" => external_codes(:yesno_yes),
+              "lab_result_text" => "Scary",
+              "test_type" => "Painful",
+              "test_detail" => "Blood drawn",
+              "interpretation_id" => external_codes(:state_alaska), # It's not really important what it is, just that it's there.  Tired of adding fixtures.
+              "reference_range" => "one"
+            }
+          ]
+        }
+      ]
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['lab'])
+
+      @org_event.labs.first.secondary_entity_id.should == @new_event.labs.first.secondary_entity_id
+      
+      org_result = @org_event.labs.first.lab_results.first
+      new_result = @new_event.labs.first.lab_results.first
+
+      org_result.specimen_source_id.should == new_result.specimen_source_id 
+      org_result.collection_date.should == new_result.collection_date 
+      org_result.lab_test_date.should == new_result.lab_test_date 
+      org_result.specimen_sent_to_uphl_yn_id.should == new_result.specimen_sent_to_uphl_yn_id 
+      org_result.lab_result_text.should == new_result.lab_result_text 
+      org_result.test_type.should == new_result.test_type 
+      org_result.test_detail.should == new_result.test_detail 
+      org_result.interpretation_id.should == new_result.interpretation_id 
+      org_result.reference_range.should == new_result.reference_range 
+   end
+    
+    it "should copy over reporting data" do
+      @event_hash["reporting_agency_attributes"] =
+        { 
+          "place_entity_attributes" => {
+            "place_attributes" => {
+              "name"=>"AgencyOne",
+            }
+          }
+        }
+      @event_hash["reporter_attributes"] =
+        { 
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Starr",
+            }
+          }
+        }
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['reporting'])
+
+      @org_event.reporting_agency.secondary_entity_id.should == @new_event.reporting_agency.secondary_entity_id
+      @org_event.reporter.secondary_entity_id.should == @new_event.reporter.secondary_entity_id
+    end
+    
+    it "should copy over forms and answers" do
+      @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id}
+      @event_hash["jurisdiction_attributes"] = {:secondary_entity_id => entities(:Davis_County).id}
+
+      form = Form.new
+      form.event_type = "morbidity_event"
+      form.name = "AIDS Form"
+      form.disease_ids = [diseases(:chicken_pox).id]
+      form.save_and_initialize_form_elements
+      question_element = QuestionElement.new(
+        {
+          :parent_element_id => form.investigator_view_elements_container.id,
+          :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text" } 
+        }
+      )
+      question_element.save_and_add_to_form
+      form.publish
+
+      @org_event = MorbidityEvent.new(@event_hash)
+      @org_event.get_investigation_forms
+      @org_event.answers = { "1" => { :question_id => question_element.question.id, :text_answer => "Nothin'"} }
+      @org_event.save
+
+      @new_event = @org_event.clone_event(['disease_specific'])
+
+      @org_event.form_references.first.form_id.should == @new_event.form_references.first.form_id
+      @org_event.answers.first.text_answer.should == @new_event.answers.first.text_answer
+      @org_event.answers.first.question_id.should == @new_event.answers.first.question_id
+    end
+
+    it "should copy over clinical notes" do
+      @event_hash["notes_attributes"] = [ { "note" => "note 1", "note_type" => "clinical" }, { "note" => "note 2", "note_type" => "administrative" } ]
+
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['notes'])
+
+      new_notes = @new_event.notes.size.should == 1
+      @new_event.notes.first.note.should == "note 1"
+    end
+
+  end
 end

@@ -88,17 +88,6 @@ class HumanEvent < Event
       return false
     end
 
-    def new_event_from_patient(patient_entity)
-      event = MorbidityEvent.new
-      event.build_interested_party(:primary_entity_id => patient_entity.id)
-      event.build_jurisdiction
-      event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
-      event.event_status = 'NEW'
-      entity_address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC')
-      event.address = entity_address ? entity_address.clone : nil
-      event
-    end
-
     def search_by_name(name)
       soundex_codes = []
       fulltext_terms = []
@@ -245,6 +234,71 @@ class HumanEvent < Event
 
   def party
     @party ||= self.safe_call_chain(:interested_party, :person_entity, :person)
+  end
+
+  # Perform a shallow (event_coponents = nil) or deep (event_components != nil) copy of an event.
+  # Can't simply do a single clone or a series of clones because there are some attributes we need
+  # to leave behind, certain relationships that need to be severed, and we need to make a copy of 
+  # the address for longitudinal purposes.
+  def copy_event(new_event, event_components)
+    super(new_event, event_components)
+
+    org_entity = self.interested_party.person_entity
+    new_event.build_interested_party(:primary_entity_id => org_entity.id)
+    entity_address = org_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC')
+    new_event.address = entity_address ? entity_address.clone : nil
+    new_event.imported_from_id = self.imported_from_id
+    new_event.parent_guardian = self.parent_guardian
+    new_event.other_data_1 = self.other_data_1
+    new_event.other_data_2 = self.other_data_2
+    
+    return unless event_components   # Shallow, demographics only, copy
+
+    # If event_components is not nil, then continue on with a deep copy
+
+    if event_components.include?("clinical")
+      self.hospitalization_facilities.each do |h|
+        new_h = new_event.hospitalization_facilities.build(:secondary_entity_id => h.secondary_entity_id)
+        if attrs = h.hospitals_participation.attributes
+          attrs.delete('participation_id')
+          new_h.build_hospitals_participation(attrs)
+        end
+      end
+
+      self.interested_party.treatments.each do |t|
+        attrs = t.attributes
+        attrs.delete('participation_id')
+        new_event.interested_party.treatments.build(attrs)
+      end
+
+      if rf = self.interested_party.risk_factor
+        attrs = self.interested_party.risk_factor.attributes
+        attrs.delete('participation_id')
+        new_event.interested_party.build_risk_factor(attrs)
+      end
+
+      self.clinicians.each do |c|
+        new_event.clinicians.build(:secondary_entity_id => c.secondary_entity_id)
+      end
+
+      self.diagnostic_facilities.each do |d|
+        new_event.diagnostic_facilities.build(:secondary_entity_id => d.secondary_entity_id)
+      end
+    end
+
+    if event_components.include?("lab")
+      self.labs.each do |l|
+        lab = new_event.labs.build(:secondary_entity_id => l.secondary_entity_id)
+        l.lab_results.each do |lr|
+          attrs = lr.attributes
+          attrs.delete('participation_id')
+          lab.lab_results.build(attrs)
+        end
+      end
+    end
+
+    if event_components.include?("notes")
+    end
   end
 
   private

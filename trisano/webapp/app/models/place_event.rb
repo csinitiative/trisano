@@ -42,6 +42,14 @@ class PlaceEvent < Event
    self.soft_delete
   end
 
+  def copy_event(new_event, event_components)
+    super
+    # When we get a story asking for it, this is where we will copy over the place participation: interested_place
+
+    # When we get a story asking for it, this is where we will copy over the (now poorly named) participations_places info to a new event.
+    # That is, date_of_exposure
+  end
+
   private
 
   def set_primary_entity_on_secondary_participations

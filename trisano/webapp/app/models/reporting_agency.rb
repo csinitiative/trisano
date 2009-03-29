@@ -21,7 +21,7 @@ class ReportingAgency < Participation
 
   def self.check_place_attrs(attrs)
     place_empty = attrs["place_attributes"].all? { |k, v| v.blank? }
-    phones_empty = attrs["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    phones_empty = attrs.has_key?("telephones_attributes") && attrs["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
     (place_empty && phones_empty) ? true : false
   end
 

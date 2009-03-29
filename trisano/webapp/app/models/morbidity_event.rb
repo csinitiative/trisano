@@ -143,13 +143,13 @@ class MorbidityEvent < HumanEvent
   def self.check_agency_attrs(attrs)
     return false if attrs.has_key?("secondary_entity_id") # Adding new record via search
     place_empty = attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? }
-    phones_empty = attrs["place_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    phones_empty = attrs["place_entity_attributes"].has_key?("telephones_attributes") && attrs["place_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
     (place_empty && phones_empty) ? true : false
   end
 
   def self.check_reporter_attrs(attrs)
     person_empty = attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| v.blank? }
-    phones_empty = attrs["person_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    phones_empty = attrs["person_entity_attributes"].has_key?("telephones_attributes") && attrs["person_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
     (person_empty && phones_empty) ? true : false
   end
 
@@ -202,6 +202,23 @@ class MorbidityEvent < HumanEvent
     end
   end
   
+  def copy_event(new_event, event_components)
+    super(new_event, event_components)
+
+    if event_components.include?("contacts")
+      # Deferred for now, due to lack of clarity.  Should the cloned event point at the very same contacts (can't do this right now because
+      # a contact can currently have only one parent -- surgery required to allow events to have more than one parent) or should it create
+      # independent clones of the contact events?  Prolly, the former.
+    end
+
+    if event_components.include?("reporting")
+      new_event.build_reporting_agency(:secondary_entity_id => self.reporting_agency.secondary_entity_id) if self.reporting_agency
+      new_event.build_reporter(:secondary_entity_id => self.reporter.secondary_entity_id) if self.reporter
+      new_event.first_reported_PH_date = self.first_reported_PH_date
+      new_event.results_reported_to_clinician_date = self.results_reported_to_clinician_date
+    end
+  end
+
   private
   
   def generate_mmwr

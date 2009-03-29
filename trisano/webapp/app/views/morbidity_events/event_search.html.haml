@@ -57,7 +57,7 @@
               |
             = link_to "Show", view_path
             |
-            = link_to('Create New Patient Event', {:controller => 'morbidity_events', :action => 'create', :return => 'true', :from_patient => event.interested_party.person_entity.id}, {:method => :post}) if User.current_user.is_entitled_to?(:create_event)
+            = link_to('Create and edit CMR using this person', cmrs_path(:from_event => event, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
             
   %br
   = link_to("No match, start a new CMR", new_cmr_path)

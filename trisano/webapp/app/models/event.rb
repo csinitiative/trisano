@@ -547,6 +547,53 @@ class Event < ActiveRecord::Base
     false
   end
 
+  def clone_event(event_components=[])
+    event_components = [] if event_components.nil?
+    _event = self.class.new
+    self.copy_event(_event, event_components)
+    _event 
+  end
+
+  def copy_event(new_event, event_components)
+    new_event.event_name = "Copy of #{self.event_name}" if self.event_name
+    new_event.build_jurisdiction
+    new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+    new_event.primary_jurisdiction.name == "Unassigned" ? new_event.event_status = "NEW" : new_event.event_status = "ACPTD-LHD"
+    new_event.event_onset_date = Date.today
+    new_event.acuity = self.acuity
+
+    if event_components.include?("clinical")
+      if self.disease_event
+        new_event.build_disease_event(:hospitalized_id =>  self.disease_event.hospitalized_id, 
+                                      :died_id => self.disease_event.hospitalized_id,
+                                      :disease_onset_date => self.disease_event.disease_onset_date,
+                                      :date_diagnosed => self.disease_event.date_diagnosed)
+      end
+    end
+
+    if event_components.include?("disease_specific")
+      self.form_references.each do |form|
+        new_event.form_references.build(:form_id => form.form_id)
+      end
+
+      self.answers.each do |answer|
+        new_event.answers.build(:question_id => answer.question_id,
+                               :text_answer => answer.text_answer,
+                               :export_conversion_value_id => answer.export_conversion_value_id)
+      end
+    end
+
+    if event_components.include?("notes")
+      self.notes.each do |note|
+        if note.note_type == "clinical"
+          attrs = note.attributes
+          attrs.delete('event_id')
+          new_event.notes.build(attrs)
+        end
+      end
+    end
+  end
+
   class << self
     def supports(functionality)
       return unless [:tasks, :attachments].include?(functionality)

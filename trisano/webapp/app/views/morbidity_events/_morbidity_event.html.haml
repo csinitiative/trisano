@@ -26,8 +26,8 @@
       = morbidity_event.event_onset_date
     .tools
       - with_show = with_show.nil? ? true : with_show
-      - with_export_options = with_export_options.nil? ? false : with_export_options
-      = basic_morbidity_event_controls(morbidity_event, with_show, with_export_options) + extra_tools
+      - with_full_options = with_full_options.nil? ? false : with_full_options
+      = basic_morbidity_event_controls(morbidity_event, with_show, with_full_options) + extra_tools
   %td
     %b= morbidity_event.try(:disease).try(:disease).try(:disease_name)
   %td
