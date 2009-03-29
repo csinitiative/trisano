@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'form builder patient core-field questions for morbidity reports' do
   
-  #$dont_kill_browser = true
+  $dont_kill_browser = true
   
   [{:name => 'Patient last name', :tab_name => DEMOGRAPHICS},
    {:name => 'Patient first name', :tab_name => DEMOGRAPHICS},

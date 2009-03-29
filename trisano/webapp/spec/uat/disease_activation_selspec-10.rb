@@ -43,7 +43,7 @@ describe 'adding and activating diseases' do
 
   it 'inactive diseases should not appear in disease list for new cmrs' do
     click_nav_new_cmr(@browser)
-    @browser.get_select_options('morbidity_event_disease_disease_id').include?(@disease_name).should_not be_true
+    @browser.get_select_options("//div[@id='disease_info_form']//select[contains(@id, '_disease_id')]").include?(@disease_name).should_not be_true
   end
 
   it 'should activate disease from admin screen' do
@@ -58,7 +58,7 @@ describe 'adding and activating diseases' do
 
   it 'active diseases should appear in the disease list for new cmrs' do
     click_nav_new_cmr(@browser)
-    @browser.get_select_options('morbidity_event_disease_disease_id').include?(@disease_name).should be_true
+    @browser.get_select_options("//div[@id='disease_info_form']//select[contains(@id, '_disease_id')]").include?(@disease_name).should be_true
   end
 
 end
