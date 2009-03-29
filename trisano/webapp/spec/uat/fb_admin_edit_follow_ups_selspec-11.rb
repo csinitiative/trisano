@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) << '/spec_helper'
 
-#  $dont_kill_browser = true
+ #  $dont_kill_browser = true
 
 describe 'Form Builder Admin Edit Follow-Up Functionality' do
   
@@ -59,13 +59,13 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     # Enter the answer that meets the core follow-up condition before the edit
     click_core_tab(@browser, DEMOGRAPHICS)
     @browser.is_element_present("//img[contains(@id, 'birth_gender_id')]").should be_false
-    @browser.select("morbidity_event_active_patient__person_birth_gender_id", "label=Female")    
+    add_demographic_info(@browser, { :birth_gender => "Female" })
     @browser.is_text_present(@core_follow_up_question_text).should be_false
-    click_core_tab(@browser, "Investigation")     
+    click_core_tab(@browser, "Investigation")
 
     # Enter the answer that meets the core follow-up condition after the edit
     click_core_tab(@browser, CLINICAL)
-    @browser.select("morbidity_event_disease_died_id", "label=Yes")
+    add_clinical_info(@browser, { :died => "Yes" })
     wait_for_element_present("//label[text()='#@core_follow_up_question_text']", @browser)
     click_core_tab(@browser, "Investigation") 
     

@@ -612,11 +612,13 @@ module TrisanoHelper
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
 
-
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
 
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
 
+    browser.select("//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", "label=#{attributes[:birth_gender]}") if attributes[:birth_gender]
+
+    
     # Fill in the rest...
 
   end
@@ -628,9 +630,8 @@ module TrisanoHelper
   def add_clinical_info(browser, attributes)
     click_core_tab(browser, CLINICAL)
     browser.select("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]", "label=#{attributes[:disease]}") if attributes[:disease]
+    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_died_id')]", "label=#{attributes[:died]}") if attributes[:died]
     browser.select("//div[@id='clinical_tab']//select[contains(@id, '_pregnant_id')]", "label=#{attributes[:pregnant]}") if attributes[:pregnant]
-
-
 
     # Fill in the rest...
 
