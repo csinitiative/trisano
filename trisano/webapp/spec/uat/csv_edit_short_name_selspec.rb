@@ -19,26 +19,27 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'CSV configuration' do
 
-# $dont_kill_browser = true
+ # $dont_kill_browser = true
 
   before :all do
     @browser.open "/trisano/cmrs"
-    @unique_name = get_unique_name(1) + " csv short name"
+    @unique_name = get_unique_name(1)
+    @unique_name = @unique_name[0..10] if @unique_name.size > 10
   end
 
   it 'should open csv config page' do
-    @browser.click("link=ADMIN")
-    @browser.wait_for_page_to_load
+    click_nav_admin(@browser)
     @browser.click("//a[@id='admin_csv_config']")
     @browser.wait_for_page_to_load
   end
 
   it 'should edit short names from csv records' do
-    @browser.click("//table[@id='morbidity_event_fields']//td[contains(text(), 'patient_event_id')]/../td[2]/a")
+    @browser.click("//table[@id='morbidity_event_fields']//td[contains(text(), 'patient_event_id')]/../td[2]/div/a")
     wait_for_element_present("//form[contains(@id, '-inplaceeditor')]")
-    @browser.type("//input[@class='editor_field']", 'event_id')
+    @browser.type("//input[@class='editor_field']", @unique_name)
     @browser.click("//input[@class='editor_ok_button']")
     wait_for_element_not_present("//form[contains(@id, '-inplaceeditor')]")
+    # Needs some assertions
   end
 
 end
