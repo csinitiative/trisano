@@ -162,29 +162,29 @@ function contact_parent_address(id) {
 }
 
 function global_shortcuts_init() {
-  shortcut.add("Ctrl+Shift+N", function() {
+  shortcut.add("Meta+N", function() {
     window.location = "/cmrs/new";
   });
 
-  shortcut.add("Ctrl+Shift+M", function() {
+  shortcut.add("Meta+M", function() {
     window.location = "/forms";
   });
 
-  shortcut.add("Ctrl+Shift+.",function() {
+  shortcut.add("Meta+.",function() {
     window.location = "/search/people";
   });
 
-  shortcut.add("Ctrl+Shift+Question",function(){
+  shortcut.add("Meta+Question",function(){
     window.location = "/search/cmrs";
   });
 
-  shortcut.add("Ctrl+Shift+,",function(){
+  shortcut.add("Meta+,",function(){
     window.location = "/cmrs";
   });
 }
 
 function cmr_shortcuts_init() {
-  shortcut.add("Ctrl+Shift+X", function() {
+  shortcut.add("Meta+X", function() {
     myTabs.set('activeIndex', (
         myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
         0 : myTabs.get('activeIndex') + 1
@@ -196,7 +196,7 @@ function cmr_shortcuts_init() {
       }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
   });
 
-  shortcut.add("Ctrl+Shift+Z", function() {
+  shortcut.add("Meta+Z", function() {
     myTabs.set('activeIndex', (
         myTabs.get('activeIndex') == 0 ?
         myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
@@ -207,7 +207,7 @@ function cmr_shortcuts_init() {
       }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
   });
 
-  shortcut.add("Ctrl+Shift+S", function() {
+  shortcut.add("Meta+S", function() {
     document.getElementById('save_and_exit_btn').focus();
   });
 }
