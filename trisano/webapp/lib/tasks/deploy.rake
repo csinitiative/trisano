@@ -209,7 +209,7 @@ namespace :trisano do
       sh "rm -rf ./distro/*.txt"
       
       cd TRISANO_DIST_DIR
-      sh "tar czf #{filename} ./#{tformated}"
+      sh "tar czfh #{filename} ./#{tformated}"
     end
 
   end
