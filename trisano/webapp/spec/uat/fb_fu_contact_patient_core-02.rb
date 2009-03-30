@@ -22,13 +22,13 @@ describe 'form builder patient-level followups for contact events' do
   
   #  $dont_kill_browser = true
 
-  fields = [{:name => 'Contact last name', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Contact first name', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Contact middle name', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_middle_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Contact age', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_approximate_age_no_birthday', :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'},
-    {:name => 'Contact birth gender', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_gender_id', :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
-    {:name => 'Contact ethnicity', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_ethnicity_id', :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'},
-    {:name => 'Contact primary language', :label => 'contact_event_interested_party_attributes_person_entity_attributes_person_attributes_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
+  fields = [{:name => 'Contact last name', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]", :entry_type => 'type', :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact first name', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact middle name', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Contact age', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'},
+    {:name => 'Contact birth gender', :label => "demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
+    {:name => 'Contact ethnicity', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '__ethnicity_id')]", :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'},
+    {:name => 'Contact primary language', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_primary_language_id')]", :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
   ]                                                  
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

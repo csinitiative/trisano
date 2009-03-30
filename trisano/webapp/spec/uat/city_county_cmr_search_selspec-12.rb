@@ -27,11 +27,13 @@ describe 'User functionality for searching for CMRs by city and county' do
   it 'should find or add Chuckles in Provo, Utah county' do
     if !@browser.is_text_present('chuckles')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__person_last_name', 'chuckles')
-      @browser.type('morbidity_event_active_patient__address_city', 'Provo')
-      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
+      add_demographic_info(@browser, {
+          :last_name => "chuckles",
+          :city => "Provo",
+          :state => "Utah",
+          :county => "Utah",
+          :postal_code => "84602"
+        })
       save_cmr(@browser).should be_true
     end
   end
@@ -40,11 +42,13 @@ describe 'User functionality for searching for CMRs by city and county' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Joker')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__person_last_name', 'Joker')
-      @browser.type('morbidity_event_active_patient__address_city', 'Orem')
-      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__address_postal_code', '84606')
+      add_demographic_info(@browser, {
+          :last_name => "Joker",
+          :city => "Orem",
+          :state => "Utah",
+          :county => "Utah",
+          :postal_code => "84606"
+        })
       save_cmr(@browser).should be_true
     end
   end
@@ -53,12 +57,15 @@ describe 'User functionality for searching for CMRs by city and county' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Smurf, Papa')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__person_last_name', 'Smurf')
-      @browser.type('morbidity_event_active_patient__person_first_name', 'Papa')
-      @browser.type('morbidity_event_active_patient__address_city', 'Provo')
-      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__address_postal_code', '84602')
+      click_nav_new_cmr(@browser).should be_true
+      add_demographic_info(@browser, {
+          :last_name => "Smurf",
+          :first_name => "Papa",
+          :city => "Provo",
+          :state => "Utah",
+          :county => "Utah",
+          :postal_code => "84602"
+        })
       save_cmr(@browser).should be_true
     end
   end
@@ -67,11 +74,13 @@ describe 'User functionality for searching for CMRs by city and county' do
     click_nav_cmrs(@browser).should be_true
     if !@browser.is_text_present('Gidget')
       click_nav_new_cmr(@browser).should be_true
-      @browser.type('morbidity_event_active_patient__person_last_name', 'Gidget')
-      @browser.type('morbidity_event_active_patient__address_city', 'Orem')
-      @browser.select('morbidity_event_active_patient__address_state_id', 'label=Utah')
-      @browser.select('morbidity_event_active_patient__address_county_id', 'label=Utah')
-      @browser.type('morbidity_event_active_patient__address_postal_code', '84606')
+      add_demographic_info(@browser, {
+          :last_name => "Gidget",
+          :city => "Orem",
+          :state => "Utah",
+          :county => "Utah",
+          :postal_code => "84606"
+        })
       save_cmr(@browser).should be_true
     end
   end
