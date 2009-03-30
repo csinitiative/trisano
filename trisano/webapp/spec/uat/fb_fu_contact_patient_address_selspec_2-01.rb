@@ -24,8 +24,8 @@ describe 'form builder patient-level address follow-ups for contact events' do
 #  $dont_kill_browser = true
 
   $fields = [
-    {:name => 'Contact city', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-    {:name => 'Contact state', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'}
+    {:name => 'Contact city', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_city')]", :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
+    {:name => 'Contact state', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_state_id')]", :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'}
   ]
 
   it_should_behave_like "form builder patient-level address follow-ups for fields on contact events"

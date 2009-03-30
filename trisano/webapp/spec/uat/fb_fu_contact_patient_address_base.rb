@@ -27,7 +27,7 @@ describe 'form builder patient-level address follow-ups for fields on contact ev
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
     {:name => 'Checkboxes', :values => ["Pink","Red","Purple"], :answer_code => "2", :answer => "Red", :entry_type => "check"},
-    {:name => 'Date', :values => nil, :answer => "12/12/2008", :entry_type => "type"},
+    {:name => 'Date', :values => nil, :answer => "2008-12-24", :entry_type => "type"},
     {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
   ]
 

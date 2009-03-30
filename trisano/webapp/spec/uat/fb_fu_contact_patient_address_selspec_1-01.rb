@@ -23,9 +23,9 @@ describe 'form builder patient-level address follow-ups for contact events' do
 
 #  $dont_kill_browser = true
 
-  $fields = [{:name => 'Contact street number', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-    {:name => 'Contact street name', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-    {:name => 'Contact unit number', :label => 'contact_event_interested_party_attributes_person_entity_attributes_address_attributes_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'}
+  $fields = [{:name => 'Contact street number', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
+    {:name => 'Contact street name', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_name')]", :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
+    {:name => 'Contact unit number', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_unit_number')]", :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'}
   ]
 
   it_should_behave_like "form builder patient-level address follow-ups for fields on contact events"
