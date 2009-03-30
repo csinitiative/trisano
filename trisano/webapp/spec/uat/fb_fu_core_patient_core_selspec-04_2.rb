@@ -25,7 +25,7 @@ describe 'form builder patient-level followups for morbidity events' do
 
   $fields = [
     {:name => 'Patient birth gender', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", :entry_type => 'select', :code => 'Code: Female (gender)', :fu_value => 'Female', :no_fu_value => 'Male'},
-    {:name => 'Patient ethnicity', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '__ethnicity_id')]", :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'}
+    {:name => 'Patient ethnicity', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_ethnicity_id')]", :entry_type => 'select', :code => 'Code: Hispanic or Latino (ethnicity)', :fu_value => 'Hispanic or Latino', :no_fu_value => 'Not Hispanic or Latino'}
   ]
   
   it_should_behave_like "form builder patient-level core field followups for morbidity events"

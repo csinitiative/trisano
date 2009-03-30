@@ -26,14 +26,14 @@ describe 'form builder core event level core field configs for contacts' do
     {:name => 'Outbreak', :label => 'morbidity_event_outbreak_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
     {:name => 'Event name', :label => 'morbidity_event_event_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
     {:name => 'Imported from', :label => 'morbidity_event_imported_from_id', :entry_type => 'select', :code => 'Code: Outside U.S. (imported)', :fu_value => 'Outside U.S.', :no_fu_value => 'Acquired in Utah'}
-  ]                                                  
+  ]
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
     {:name => 'Checkboxes', :values => ["Pink","Red","Purple"], :answer_code => "2", :answer => "Red", :entry_type => "check"},
-    {:name => 'Date', :values => nil, :answer => "12/12/2008", :entry_type => "type"},
+    {:name => 'Date', :values => nil, :answer => "2008-12-24", :entry_type => "type"},
     {:name => 'Phone Number', :values => nil, :answer => "555-555-5555", :entry_type => "type"}    
   ]
   
