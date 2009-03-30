@@ -21,8 +21,8 @@ require 'date'
 describe 'form builder disease followups for contact events' do
   
   #  $dont_kill_browser = true
-
-  fields = [{:name => 'Hospitalized', :label => 'contact_event_disease_event_attributes_disease_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
+  
+  fields = [{:name => 'Hospitalized', :label => 'contact_event_disease_event_attributes_hospitalized_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
     {:name => 'Died', :label => 'contact_event_disease_event_attributes_died_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)', :fu_value => 'Unknown', :no_fu_value => 'Yes'}
   ]                                                  
   
@@ -74,7 +74,6 @@ describe 'form builder disease followups for contact events' do
     it "should create a cmr with a contact" do
       create_basic_investigatable_cmr(@browser, (get_unique_name(1))[0..18], disease_name_text, jurisdiction_text)
       edit_cmr(@browser).should be_true  
-      
       add_contact(@browser, {:last_name => get_unique_name(1), :first_name => "Contact", :disposition => "Unable to locate"})
       save_cmr(@browser).should be_true
     end
@@ -155,7 +154,7 @@ describe 'form builder disease followups for contact events' do
     
     data_types.each do |data_type|
       follow_up_question = inv_question_pre + data_type[:name]
-      it "should save values for #{follow_up_question}" do 
+      it "should save values for #{follow_up_question}" do
         edit_cmr(@browser)
         @browser.click("//ul[@id='tabs']/li[5]/a/em")
         @browser.is_text_present(follow_up_question).should be_true    
@@ -176,7 +175,7 @@ describe 'form builder disease followups for contact events' do
           answer_radio_investigator_question(@browser, follow_up_question, data_type[:answer_code]).should be_true
           save_contact_event(@browser).should be_true
           @browser.is_text_present(data_type[:answer]).should be_true 
-        end       
+        end
       end
     end
   end
