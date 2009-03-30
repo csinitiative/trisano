@@ -623,6 +623,10 @@ module TrisanoHelper
       browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
     
       browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
+      
+      # //div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_name')]
+      # //div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_unit_number')]
+      # //div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_city')]
 
       browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
 

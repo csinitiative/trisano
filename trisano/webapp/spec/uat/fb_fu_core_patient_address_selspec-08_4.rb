@@ -24,7 +24,7 @@ describe 'form builder patient-level address core followups for morbidity events
   #  $dont_kill_browser = true
 
   $fields = [
-    {:name => 'Patient zip code', :label => 'morbidity_event_interested_party_attributes_person_entity_attributes_address_attributes_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
+    {:name => 'Patient zip code', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_postal_code')]", :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
   ]                                                 
   
 it_should_behave_like "form builder patient-level address core field followups for morbidity events"
