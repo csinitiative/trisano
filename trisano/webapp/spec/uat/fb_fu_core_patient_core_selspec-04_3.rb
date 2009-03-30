@@ -24,7 +24,7 @@ describe 'form builder patient-level followups for morbidity events' do
   #  $dont_kill_browser = true
 
   $fields = [
-    {:name => 'Patient primary language', :label => 'morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_primary_language_id', :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
+    {:name => 'Patient primary language', :label => "//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_primary_language_id')]", :entry_type => 'select', :code => 'Code: English (language)', :fu_value => 'English', :no_fu_value => 'Japanese'}
   ]                                                  
   
   it_should_behave_like "form builder patient-level core field followups for morbidity events"

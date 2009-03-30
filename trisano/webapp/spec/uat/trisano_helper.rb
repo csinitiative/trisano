@@ -628,6 +628,7 @@ module TrisanoHelper
 
       browser.select("//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", "label=#{attributes[:birth_gender]}") if attributes[:birth_gender]
 
+      # //div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '__ethnicity_id')]
 
       # Fill in the rest...
 

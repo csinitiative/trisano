@@ -24,8 +24,8 @@ describe 'form builder patient-level followups for morbidity events' do
   #  $dont_kill_browser = true
 
   $fields = [
-    {:name => 'Patient middle name', :label => 'morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_middle_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
-    {:name => 'Patient age', :label => 'morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_approximate_age_no_birthday', :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'}
+    {:name => 'Patient middle name', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)},
+    {:name => 'Patient age', :label => "//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", :entry_type => 'type', :fu_value => '24', :no_fu_value => '44'}
   ]                                                  
   
   it_should_behave_like "form builder patient-level core field followups for morbidity events"
