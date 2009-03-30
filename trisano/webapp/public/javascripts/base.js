@@ -1,5 +1,5 @@
-/*  Prototype JavaScript framework, version 1.6.0.1
- *  (c) 2005-2007 Sam Stephenson
+/*  Prototype JavaScript framework, version 1.6.0.3
+ *  (c) 2005-2008 Sam Stephenson
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.
  *  For details, see the Prototype web site: http://www.prototypejs.org/
@@ -7,23 +7,26 @@
  *--------------------------------------------------------------------------*/
 
 var Prototype = {
-  Version: '1.6.0.1',
+  Version: '1.6.0.3',
 
   Browser: {
-    IE:     !!(window.attachEvent && !window.opera),
-    Opera:  !!window.opera,
+    IE:     !!(window.attachEvent &&
+      navigator.userAgent.indexOf('Opera') === -1),
+    Opera:  navigator.userAgent.indexOf('Opera') > -1,
     WebKit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
-    Gecko:  navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') == -1,
+    Gecko:  navigator.userAgent.indexOf('Gecko') > -1 &&
+      navigator.userAgent.indexOf('KHTML') === -1,
     MobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)
   },
 
   BrowserFeatures: {
     XPath: !!document.evaluate,
+    SelectorsAPI: !!document.querySelector,
     ElementExtensions: !!window.HTMLElement,
     SpecificElementExtensions:
-      document.createElement('div').__proto__ &&
-      document.createElement('div').__proto__ !==
-        document.createElement('form').__proto__
+      document.createElement('div')['__proto__'] &&
+      document.createElement('div')['__proto__'] !==
+        document.createElement('form')['__proto__']
   },
 
   ScriptFragment: '<script[^>]*>([\\S\\s]*?)<\/script>',
@@ -83,12 +86,13 @@ Class.Methods = {
       var property = properties[i], value = source[property];
       if (ancestor && Object.isFunction(value) &&
           value.argumentNames().first() == "$super") {
-        var method = value, value = Object.extend((function(m) {
+        var method = value;
+        value = (function(m) {
           return function() { return ancestor[m].apply(this, arguments) };
-        })(property).wrap(method), {
-          valueOf:  function() { return method },
-          toString: function() { return method.toString() }
-        });
+        })(property).wrap(method);
+
+        value.valueOf = method.valueOf.bind(method);
+        value.toString = method.toString.bind(method);
       }
       this.prototype[property] = value;
     }
@@ -110,7 +114,7 @@ Object.extend(Object, {
     try {
       if (Object.isUndefined(object)) return 'undefined';
       if (object === null) return 'null';
-      return object.inspect ? object.inspect() : object.toString();
+      return object.inspect ? object.inspect() : String(object);
     } catch (e) {
       if (e instanceof RangeError) return '...';
       throw e;
@@ -167,11 +171,12 @@ Object.extend(Object, {
   },
 
   isElement: function(object) {
-    return object && object.nodeType == 1;
+    return !!(object && object.nodeType == 1);
   },
 
   isArray: function(object) {
-    return object && object.constructor === Array;
+    return object != null && typeof object == "object" &&
+      'splice' in object && 'join' in object;
   },
 
   isHash: function(object) {
@@ -197,7 +202,8 @@ Object.extend(Object, {
 
 Object.extend(Function.prototype, {
   argumentNames: function() {
-    var names = this.toString().match(/^[\s\(]*function[^(]*\((.*?)\)/)[1].split(",").invoke("strip");
+    var names = this.toString().match(/^[\s\(]*function[^(]*\(([^\)]*)\)/)[1]
+      .replace(/\s+/g, '').split(',');
     return names.length == 1 && !names[0] ? [] : names;
   },
 
@@ -231,6 +237,11 @@ Object.extend(Function.prototype, {
     }, timeout);
   },
 
+  defer: function() {
+    var args = [0.01].concat($A(arguments));
+    return this.delay.apply(this, args);
+  },
+
   wrap: function(wrapper) {
     var __method = this;
     return function() {
@@ -246,8 +257,6 @@ Object.extend(Function.prototype, {
     };
   }
 });
-
-Function.prototype.defer = Function.prototype.delay.curry(0.01);
 
 Date.prototype.toJSON = function() {
   return '"' + this.getUTCFullYear() + '-' +
@@ -529,7 +538,7 @@ if (Prototype.Browser.WebKit || Prototype.Browser.IE) Object.extend(String.proto
     return this.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   },
   unescapeHTML: function() {
-    return this.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+    return this.stripTags().replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
   }
 });
 
@@ -546,7 +555,7 @@ Object.extend(String.prototype.escapeHTML, {
   text: document.createTextNode('')
 });
 
-with (String.prototype.escapeHTML) div.appendChild(text);
+String.prototype.escapeHTML.div.appendChild(String.prototype.escapeHTML.text);
 
 var Template = Class.create({
   initialize: function(template, pattern) {
@@ -578,7 +587,7 @@ var Template = Class.create({
       }
 
       return before + String.interpret(ctx);
-    }.bind(this));
+    });
   }
 });
 Template.Pattern = /(^|.|\r|\n)(#\{(.*?)\})/;
@@ -588,10 +597,9 @@ var $break = { };
 var Enumerable = {
   each: function(iterator, context) {
     var index = 0;
-    iterator = iterator.bind(context);
     try {
       this._each(function(value) {
-        iterator(value, index++);
+        iterator.call(context, value, index++);
       });
     } catch (e) {
       if (e != $break) throw e;
@@ -600,47 +608,46 @@ var Enumerable = {
   },
 
   eachSlice: function(number, iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
     var index = -number, slices = [], array = this.toArray();
+    if (number < 1) return array;
     while ((index += number) < array.length)
       slices.push(array.slice(index, index+number));
     return slices.collect(iterator, context);
   },
 
   all: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var result = true;
     this.each(function(value, index) {
-      result = result && !!iterator(value, index);
+      result = result && !!iterator.call(context, value, index);
       if (!result) throw $break;
     });
     return result;
   },
 
   any: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var result = false;
     this.each(function(value, index) {
-      if (result = !!iterator(value, index))
+      if (result = !!iterator.call(context, value, index))
         throw $break;
     });
     return result;
   },
 
   collect: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var results = [];
     this.each(function(value, index) {
-      results.push(iterator(value, index));
+      results.push(iterator.call(context, value, index));
     });
     return results;
   },
 
   detect: function(iterator, context) {
-    iterator = iterator.bind(context);
     var result;
     this.each(function(value, index) {
-      if (iterator(value, index)) {
+      if (iterator.call(context, value, index)) {
         result = value;
         throw $break;
       }
@@ -649,17 +656,16 @@ var Enumerable = {
   },
 
   findAll: function(iterator, context) {
-    iterator = iterator.bind(context);
     var results = [];
     this.each(function(value, index) {
-      if (iterator(value, index))
+      if (iterator.call(context, value, index))
         results.push(value);
     });
     return results;
   },
 
   grep: function(filter, iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var results = [];
 
     if (Object.isString(filter))
@@ -667,7 +673,7 @@ var Enumerable = {
 
     this.each(function(value, index) {
       if (filter.match(value))
-        results.push(iterator(value, index));
+        results.push(iterator.call(context, value, index));
     });
     return results;
   },
@@ -695,9 +701,8 @@ var Enumerable = {
   },
 
   inject: function(memo, iterator, context) {
-    iterator = iterator.bind(context);
     this.each(function(value, index) {
-      memo = iterator(memo, value, index);
+      memo = iterator.call(context, memo, value, index);
     });
     return memo;
   },
@@ -710,10 +715,10 @@ var Enumerable = {
   },
 
   max: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var result;
     this.each(function(value, index) {
-      value = iterator(value, index);
+      value = iterator.call(context, value, index);
       if (result == null || value >= result)
         result = value;
     });
@@ -721,10 +726,10 @@ var Enumerable = {
   },
 
   min: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var result;
     this.each(function(value, index) {
-      value = iterator(value, index);
+      value = iterator.call(context, value, index);
       if (result == null || value < result)
         result = value;
     });
@@ -732,10 +737,10 @@ var Enumerable = {
   },
 
   partition: function(iterator, context) {
-    iterator = iterator ? iterator.bind(context) : Prototype.K;
+    iterator = iterator || Prototype.K;
     var trues = [], falses = [];
     this.each(function(value, index) {
-      (iterator(value, index) ?
+      (iterator.call(context, value, index) ?
         trues : falses).push(value);
     });
     return [trues, falses];
@@ -750,19 +755,20 @@ var Enumerable = {
   },
 
   reject: function(iterator, context) {
-    iterator = iterator.bind(context);
     var results = [];
     this.each(function(value, index) {
-      if (!iterator(value, index))
+      if (!iterator.call(context, value, index))
         results.push(value);
     });
     return results;
   },
 
   sortBy: function(iterator, context) {
-    iterator = iterator.bind(context);
     return this.map(function(value, index) {
-      return {value: value, criteria: iterator(value, index)};
+      return {
+        value: value,
+        criteria: iterator.call(context, value, index)
+      };
     }).sort(function(left, right) {
       var a = left.criteria, b = right.criteria;
       return a < b ? -1 : a > b ? 1 : 0;
@@ -806,20 +812,24 @@ Object.extend(Enumerable, {
 function $A(iterable) {
   if (!iterable) return [];
   if (iterable.toArray) return iterable.toArray();
-  var length = iterable.length, results = new Array(length);
+  var length = iterable.length || 0, results = new Array(length);
   while (length--) results[length] = iterable[length];
   return results;
 }
 
 if (Prototype.Browser.WebKit) {
-  function $A(iterable) {
+  $A = function(iterable) {
     if (!iterable) return [];
-    if (!(Object.isFunction(iterable) && iterable == '[object NodeList]') &&
-        iterable.toArray) return iterable.toArray();
-    var length = iterable.length, results = new Array(length);
+    // In Safari, only use the `toArray` method if it's not a NodeList.
+    // A NodeList is a function, has an function `item` property, and a numeric
+    // `length` property. Adapted from Google Doctype.
+    if (!(typeof iterable === 'function' && typeof iterable.length ===
+        'number' && typeof iterable.item === 'function') && iterable.toArray)
+      return iterable.toArray();
+    var length = iterable.length || 0, results = new Array(length);
     while (length--) results[length] = iterable[length];
     return results;
-  }
+  };
 }
 
 Array.from = $A;
@@ -962,8 +972,8 @@ Object.extend(Number.prototype, {
     return this + 1;
   },
 
-  times: function(iterator) {
-    $R(0, this, true).each(iterator);
+  times: function(iterator, context) {
+    $R(0, this, true).each(iterator, context);
     return this;
   },
 
@@ -1010,7 +1020,9 @@ var Hash = Class.create(Enumerable, (function() {
     },
 
     get: function(key) {
-      return this._object[key];
+      // simulating poorly supported hasOwnProperty
+      if (this._object[key] !== Object.prototype[key])
+        return this._object[key];
     },
 
     unset: function(key) {
@@ -1050,14 +1062,14 @@ var Hash = Class.create(Enumerable, (function() {
     },
 
     toQueryString: function() {
-      return this.map(function(pair) {
+      return this.inject([], function(results, pair) {
         var key = encodeURIComponent(pair.key), values = pair.value;
 
         if (values && typeof values == 'object') {
           if (Object.isArray(values))
-            return values.map(toQueryPair.curry(key)).join('&');
-        }
-        return toQueryPair(key, values);
+            return results.concat(values.map(toQueryPair.curry(key)));
+        } else results.push(toQueryPair(key, values));
+        return results;
       }).join('&');
     },
 
@@ -1298,7 +1310,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 
       var contentType = response.getHeader('Content-type');
       if (this.options.evalJS == 'force'
-          || (this.options.evalJS && contentType
+          || (this.options.evalJS && this.isSameOrigin() && contentType
           && contentType.match(/^\s*(text|application)\/(x-)?(java|ecma)script(;.*)?\s*$/i)))
         this.evalResponse();
     }
@@ -1316,9 +1328,18 @@ Ajax.Request = Class.create(Ajax.Base, {
     }
   },
 
+  isSameOrigin: function() {
+    var m = this.url.match(/^\s*https?:\/\/[^\/]*/);
+    return !m || (m[0] == '#{protocol}//#{domain}#{port}'.interpolate({
+      protocol: location.protocol,
+      domain: document.domain,
+      port: location.port ? ':' + location.port : ''
+    }));
+  },
+
   getHeader: function(name) {
     try {
-      return this.transport.getResponseHeader(name);
+      return this.transport.getResponseHeader(name) || null;
     } catch (e) { return null }
   },
 
@@ -1391,7 +1412,8 @@ Ajax.Response = Class.create({
     if (!json) return null;
     json = decodeURIComponent(escape(json));
     try {
-      return json.evalJSON(this.request.options.sanitizeJSON);
+      return json.evalJSON(this.request.options.sanitizeJSON ||
+        !this.request.isSameOrigin());
     } catch (e) {
       this.request.dispatchException(e);
     }
@@ -1404,7 +1426,8 @@ Ajax.Response = Class.create({
         this.responseText.blank())
           return null;
     try {
-      return this.responseText.evalJSON(options.sanitizeJSON);
+      return this.responseText.evalJSON(options.sanitizeJSON ||
+        !this.request.isSameOrigin());
     } catch (e) {
       this.request.dispatchException(e);
     }
@@ -1546,6 +1569,7 @@ if (!Node.ELEMENT_NODE) {
     return Element.writeAttribute(cache[tagName].cloneNode(false), attributes);
   };
   Object.extend(this.Element, element || { });
+  if (element) this.Element.prototype = element.prototype;
 }).call(window);
 
 Element.cache = { };
@@ -1562,12 +1586,14 @@ Element.Methods = {
   },
 
   hide: function(element) {
-    $(element).style.display = 'none';
+    element = $(element);
+    element.style.display = 'none';
     return element;
   },
 
   show: function(element) {
-    $(element).style.display = '';
+    element = $(element);
+    element.style.display = '';
     return element;
   },
 
@@ -1608,24 +1634,28 @@ Element.Methods = {
         Object.isElement(insertions) || (insertions && (insertions.toElement || insertions.toHTML)))
           insertions = {bottom:insertions};
 
-    var content, t, range;
+    var content, insert, tagName, childNodes;
 
-    for (position in insertions) {
+    for (var position in insertions) {
       content  = insertions[position];
       position = position.toLowerCase();
-      t = Element._insertionTranslations[position];
+      insert = Element._insertionTranslations[position];
 
       if (content && content.toElement) content = content.toElement();
       if (Object.isElement(content)) {
-        t.insert(element, content);
+        insert(element, content);
         continue;
       }
 
       content = Object.toHTML(content);
 
-      range = element.ownerDocument.createRange();
-      t.initializeRange(element, range);
-      t.insert(element, range.createContextualFragment(content.stripScripts()));
+      tagName = ((position == 'before' || position == 'after')
+        ? element.parentNode : element).tagName.toUpperCase();
+
+      childNodes = Element._getContentFromAnonymousElement(tagName, content.stripScripts());
+
+      if (position == 'top' || position == 'after') childNodes.reverse();
+      childNodes.each(insert.curry(element));
 
       content.evalScripts.bind(content).defer();
     }
@@ -1670,7 +1700,7 @@ Element.Methods = {
   },
 
   descendants: function(element) {
-    return $(element).getElementsBySelector("*");
+    return $(element).select("*");
   },
 
   firstDescendant: function(element) {
@@ -1709,32 +1739,31 @@ Element.Methods = {
     element = $(element);
     if (arguments.length == 1) return $(element.parentNode);
     var ancestors = element.ancestors();
-    return expression ? Selector.findElement(ancestors, expression, index) :
-      ancestors[index || 0];
+    return Object.isNumber(expression) ? ancestors[expression] :
+      Selector.findElement(ancestors, expression, index);
   },
 
   down: function(element, expression, index) {
     element = $(element);
     if (arguments.length == 1) return element.firstDescendant();
-    var descendants = element.descendants();
-    return expression ? Selector.findElement(descendants, expression, index) :
-      descendants[index || 0];
+    return Object.isNumber(expression) ? element.descendants()[expression] :
+      Element.select(element, expression)[index || 0];
   },
 
   previous: function(element, expression, index) {
     element = $(element);
     if (arguments.length == 1) return $(Selector.handlers.previousElementSibling(element));
     var previousSiblings = element.previousSiblings();
-    return expression ? Selector.findElement(previousSiblings, expression, index) :
-      previousSiblings[index || 0];
+    return Object.isNumber(expression) ? previousSiblings[expression] :
+      Selector.findElement(previousSiblings, expression, index);
   },
 
   next: function(element, expression, index) {
     element = $(element);
     if (arguments.length == 1) return $(Selector.handlers.nextElementSibling(element));
     var nextSiblings = element.nextSiblings();
-    return expression ? Selector.findElement(nextSiblings, expression, index) :
-      nextSiblings[index || 0];
+    return Object.isNumber(expression) ? nextSiblings[expression] :
+      Selector.findElement(nextSiblings, expression, index);
   },
 
   select: function() {
@@ -1848,23 +1877,16 @@ Element.Methods = {
 
   descendantOf: function(element, ancestor) {
     element = $(element), ancestor = $(ancestor);
-    var originalAncestor = ancestor;
 
     if (element.compareDocumentPosition)
       return (element.compareDocumentPosition(ancestor) & 8) === 8;
 
-    if (element.sourceIndex && !Prototype.Browser.Opera) {
-      var e = element.sourceIndex, a = ancestor.sourceIndex,
-       nextAncestor = ancestor.nextSibling;
-      if (!nextAncestor) {
-        do { ancestor = ancestor.parentNode; }
-        while (!(nextAncestor = ancestor.nextSibling) && ancestor.parentNode);
-      }
-      if (nextAncestor) return (e > a && e < nextAncestor.sourceIndex);
-    }
+    if (ancestor.contains)
+      return ancestor.contains(element) && ancestor !== element;
 
     while (element = element.parentNode)
-      if (element == originalAncestor) return true;
+      if (element == ancestor) return true;
+
     return false;
   },
 
@@ -1879,7 +1901,7 @@ Element.Methods = {
     element = $(element);
     style = style == 'float' ? 'cssFloat' : style.camelize();
     var value = element.style[style];
-    if (!value) {
+    if (!value || value == 'auto') {
       var css = document.defaultView.getComputedStyle(element, null);
       value = css ? css[style] : null;
     }
@@ -1918,7 +1940,7 @@ Element.Methods = {
 
   getDimensions: function(element) {
     element = $(element);
-    var display = $(element).getStyle('display');
+    var display = element.getStyle('display');
     if (display != 'none' && display != null) // Safari bug
       return {width: element.offsetWidth, height: element.offsetHeight};
 
@@ -1947,7 +1969,7 @@ Element.Methods = {
       element.style.position = 'relative';
       // Opera returns the offset relative to the positioning context, when an
       // element is position relative but top and left have not been defined
-      if (window.opera) {
+      if (Prototype.Browser.Opera) {
         element.style.top = 0;
         element.style.left = 0;
       }
@@ -2002,9 +2024,9 @@ Element.Methods = {
       valueL += element.offsetLeft || 0;
       element = element.offsetParent;
       if (element) {
-        if (element.tagName == 'BODY') break;
+        if (element.tagName.toUpperCase() == 'BODY') break;
         var p = Element.getStyle(element, 'position');
-        if (p == 'relative' || p == 'absolute') break;
+        if (p !== 'static') break;
       }
     } while (element);
     return Element._returnOffset(valueL, valueT);
@@ -2012,7 +2034,7 @@ Element.Methods = {
 
   absolutize: function(element) {
     element = $(element);
-    if (element.getStyle('position') == 'absolute') return;
+    if (element.getStyle('position') == 'absolute') return element;
     // Position.prepare(); // To be done manually by Scripty when it needs it.
 
     var offsets = element.positionedOffset();
@@ -2036,7 +2058,7 @@ Element.Methods = {
 
   relativize: function(element) {
     element = $(element);
-    if (element.getStyle('position') == 'relative') return;
+    if (element.getStyle('position') == 'relative') return element;
     // Position.prepare(); // To be done manually by Scripty when it needs it.
 
     element.style.position = 'relative';
@@ -2087,7 +2109,7 @@ Element.Methods = {
 
     element = forElement;
     do {
-      if (!Prototype.Browser.Opera || element.tagName == 'BODY') {
+      if (!Prototype.Browser.Opera || (element.tagName && (element.tagName.toUpperCase() == 'BODY'))) {
         valueT -= element.scrollTop  || 0;
         valueL -= element.scrollLeft || 0;
       }
@@ -2153,46 +2175,6 @@ Element._attributeTranslations = {
   }
 };
 
-
-if (!document.createRange || Prototype.Browser.Opera) {
-  Element.Methods.insert = function(element, insertions) {
-    element = $(element);
-
-    if (Object.isString(insertions) || Object.isNumber(insertions) ||
-        Object.isElement(insertions) || (insertions && (insertions.toElement || insertions.toHTML)))
-          insertions = { bottom: insertions };
-
-    var t = Element._insertionTranslations, content, position, pos, tagName;
-
-    for (position in insertions) {
-      content  = insertions[position];
-      position = position.toLowerCase();
-      pos      = t[position];
-
-      if (content && content.toElement) content = content.toElement();
-      if (Object.isElement(content)) {
-        pos.insert(element, content);
-        continue;
-      }
-
-      content = Object.toHTML(content);
-      tagName = ((position == 'before' || position == 'after')
-        ? element.parentNode : element).tagName.toUpperCase();
-
-      if (t.tags[tagName]) {
-        var fragments = Element._getContentFromAnonymousElement(tagName, content.stripScripts());
-        if (position == 'top' || position == 'after') fragments.reverse();
-        fragments.each(pos.insert.curry(element));
-      }
-      else element.insertAdjacentHTML(pos.adjacency, content.stripScripts());
-
-      content.evalScripts.bind(content).defer();
-    }
-
-    return element;
-  };
-}
-
 if (Prototype.Browser.Opera) {
   Element.Methods.getStyle = Element.Methods.getStyle.wrap(
     function(proceed, element, style) {
@@ -2237,12 +2219,36 @@ if (Prototype.Browser.Opera) {
 }
 
 else if (Prototype.Browser.IE) {
-  $w('positionedOffset getOffsetParent viewportOffset').each(function(method) {
+  // IE doesn't report offsets correctly for static elements, so we change them
+  // to "relative" to get the values, then change them back.
+  Element.Methods.getOffsetParent = Element.Methods.getOffsetParent.wrap(
+    function(proceed, element) {
+      element = $(element);
+      // IE throws an error if element is not in document
+      try { element.offsetParent }
+      catch(e) { return $(document.body) }
+      var position = element.getStyle('position');
+      if (position !== 'static') return proceed(element);
+      element.setStyle({ position: 'relative' });
+      var value = proceed(element);
+      element.setStyle({ position: position });
+      return value;
+    }
+  );
+
+  $w('positionedOffset viewportOffset').each(function(method) {
     Element.Methods[method] = Element.Methods[method].wrap(
       function(proceed, element) {
         element = $(element);
+        try { element.offsetParent }
+        catch(e) { return Element._returnOffset(0,0) }
         var position = element.getStyle('position');
-        if (position != 'static') return proceed(element);
+        if (position !== 'static') return proceed(element);
+        // Trigger hasLayout on the offset parent so that IE6 reports
+        // accurate offsetTop and offsetLeft values for position: fixed.
+        var offsetParent = element.getOffsetParent();
+        if (offsetParent && offsetParent.getStyle('position') === 'fixed')
+          offsetParent.setStyle({ zoom: 1 });
         element.setStyle({ position: 'relative' });
         var value = proceed(element);
         element.setStyle({ position: position });
@@ -2250,6 +2256,14 @@ else if (Prototype.Browser.IE) {
       }
     );
   });
+
+  Element.Methods.cumulativeOffset = Element.Methods.cumulativeOffset.wrap(
+    function(proceed, element) {
+      try { element.offsetParent }
+      catch(e) { return Element._returnOffset(0,0) }
+      return proceed(element);
+    }
+  );
 
   Element.Methods.getStyle = function(element, style) {
     element = $(element);
@@ -2324,7 +2338,10 @@ else if (Prototype.Browser.IE) {
   };
 
   Element._attributeTranslations.write = {
-    names: Object.clone(Element._attributeTranslations.read.names),
+    names: Object.extend({
+      cellpadding: 'cellPadding',
+      cellspacing: 'cellSpacing'
+    }, Element._attributeTranslations.read.names),
     values: {
       checked: function(element, value) {
         element.checked = !!value;
@@ -2339,7 +2356,7 @@ else if (Prototype.Browser.IE) {
   Element._attributeTranslations.has = {};
 
   $w('colSpan rowSpan vAlign dateTime accessKey tabIndex ' +
-      'encType maxLength readOnly longDesc').each(function(attr) {
+      'encType maxLength readOnly longDesc frameBorder').each(function(attr) {
     Element._attributeTranslations.write.names[attr.toLowerCase()] = attr;
     Element._attributeTranslations.has[attr.toLowerCase()] = attr;
   });
@@ -2392,7 +2409,7 @@ else if (Prototype.Browser.WebKit) {
       (value < 0.00001) ? 0 : value;
 
     if (value == 1)
-      if(element.tagName == 'IMG' && element.width) {
+      if(element.tagName.toUpperCase() == 'IMG' && element.width) {
         element.width++; element.width--;
       } else try {
         var n = document.createTextNode(' ');
@@ -2444,7 +2461,7 @@ if (Prototype.Browser.IE || Prototype.Browser.Opera) {
   };
 }
 
-if (document.createElement('div').outerHTML) {
+if ('outerHTML' in document.createElement('div')) {
   Element.Methods.replace = function(element, content) {
     element = $(element);
 
@@ -2482,45 +2499,25 @@ Element._returnOffset = function(l, t) {
 
 Element._getContentFromAnonymousElement = function(tagName, html) {
   var div = new Element('div'), t = Element._insertionTranslations.tags[tagName];
-  div.innerHTML = t[0] + html + t[1];
-  t[2].times(function() { div = div.firstChild });
+  if (t) {
+    div.innerHTML = t[0] + html + t[1];
+    t[2].times(function() { div = div.firstChild });
+  } else div.innerHTML = html;
   return $A(div.childNodes);
 };
 
 Element._insertionTranslations = {
-  before: {
-    adjacency: 'beforeBegin',
-    insert: function(element, node) {
-      element.parentNode.insertBefore(node, element);
-    },
-    initializeRange: function(element, range) {
-      range.setStartBefore(element);
-    }
+  before: function(element, node) {
+    element.parentNode.insertBefore(node, element);
   },
-  top: {
-    adjacency: 'afterBegin',
-    insert: function(element, node) {
-      element.insertBefore(node, element.firstChild);
-    },
-    initializeRange: function(element, range) {
-      range.selectNodeContents(element);
-      range.collapse(true);
-    }
+  top: function(element, node) {
+    element.insertBefore(node, element.firstChild);
   },
-  bottom: {
-    adjacency: 'beforeEnd',
-    insert: function(element, node) {
-      element.appendChild(node);
-    }
+  bottom: function(element, node) {
+    element.appendChild(node);
   },
-  after: {
-    adjacency: 'afterEnd',
-    insert: function(element, node) {
-      element.parentNode.insertBefore(node, element.nextSibling);
-    },
-    initializeRange: function(element, range) {
-      range.setStartAfter(element);
-    }
+  after: function(element, node) {
+    element.parentNode.insertBefore(node, element.nextSibling);
   },
   tags: {
     TABLE:  ['<table>',                '</table>',                   1],
@@ -2532,7 +2529,6 @@ Element._insertionTranslations = {
 };
 
 (function() {
-  this.bottom.initializeRange = this.top.initializeRange;
   Object.extend(this.tags, {
     THEAD: this.tags.TBODY,
     TFOOT: this.tags.TBODY,
@@ -2544,7 +2540,7 @@ Element.Methods.Simulated = {
   hasAttribute: function(element, attribute) {
     attribute = Element._attributeTranslations.has[attribute] || attribute;
     var node = $(element).getAttributeNode(attribute);
-    return node && node.specified;
+    return !!(node && node.specified);
   }
 };
 
@@ -2553,9 +2549,9 @@ Element.Methods.ByTag = { };
 Object.extend(Element, Element.Methods);
 
 if (!Prototype.BrowserFeatures.ElementExtensions &&
-    document.createElement('div').__proto__) {
+    document.createElement('div')['__proto__']) {
   window.HTMLElement = { };
-  window.HTMLElement.prototype = document.createElement('div').__proto__;
+  window.HTMLElement.prototype = document.createElement('div')['__proto__'];
   Prototype.BrowserFeatures.ElementExtensions = true;
 }
 
@@ -2570,7 +2566,7 @@ Element.extend = (function() {
         element.nodeType != 1 || element == window) return element;
 
     var methods = Object.clone(Methods),
-      tagName = element.tagName, property, value;
+      tagName = element.tagName.toUpperCase(), property, value;
 
     // extend methods for specific tags
     if (ByTag[tagName]) Object.extend(methods, ByTag[tagName]);
@@ -2666,7 +2662,7 @@ Element.addMethods = function(methods) {
     if (window[klass]) return window[klass];
 
     window[klass] = { };
-    window[klass].prototype = document.createElement(tagName).__proto__;
+    window[klass].prototype = document.createElement(tagName)['__proto__'];
     return window[klass];
   }
 
@@ -2692,12 +2688,18 @@ Element.addMethods = function(methods) {
 
 document.viewport = {
   getDimensions: function() {
-    var dimensions = { };
-    var B = Prototype.Browser;
+    var dimensions = { }, B = Prototype.Browser;
     $w('width height').each(function(d) {
       var D = d.capitalize();
-      dimensions[d] = (B.WebKit && !document.evaluate) ? self['inner' + D] :
-        (B.Opera) ? document.body['client' + D] : document.documentElement['client' + D];
+      if (B.WebKit && !document.evaluate) {
+        // Safari <3.0 needs self.innerWidth/Height
+        dimensions[d] = self['inner' + D];
+      } else if (B.Opera && parseFloat(window.opera.version()) < 9.5) {
+        // Opera <9.5 needs document.body.clientWidth/Height
+        dimensions[d] = document.body['client' + D]
+      } else {
+        dimensions[d] = document.documentElement['client' + D];
+      }
     });
     return dimensions;
   },
@@ -2716,14 +2718,24 @@ document.viewport = {
       window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop);
   }
 };
-/* Portions of the Selector class are derived from Jack Slocum’s DomQuery,
+/* Portions of the Selector class are derived from Jack Slocum's DomQuery,
  * part of YUI-Ext version 0.40, distributed under the terms of an MIT-style
  * license.  Please see http://www.yui-ext.com/ for more information. */
 
 var Selector = Class.create({
   initialize: function(expression) {
     this.expression = expression.strip();
-    this.compileMatcher();
+
+    if (this.shouldUseSelectorsAPI()) {
+      this.mode = 'selectorsAPI';
+    } else if (this.shouldUseXPath()) {
+      this.mode = 'xpath';
+      this.compileXPathMatcher();
+    } else {
+      this.mode = "normal";
+      this.compileMatcher();
+    }
+
   },
 
   shouldUseXPath: function() {
@@ -2738,16 +2750,29 @@ var Selector = Class.create({
 
     // XPath can't do namespaced attributes, nor can it read
     // the "checked" property from DOM nodes
-    if ((/(\[[\w-]*?:|:checked)/).test(this.expression))
+    if ((/(\[[\w-]*?:|:checked)/).test(e))
       return false;
 
     return true;
   },
 
-  compileMatcher: function() {
-    if (this.shouldUseXPath())
-      return this.compileXPathMatcher();
+  shouldUseSelectorsAPI: function() {
+    if (!Prototype.BrowserFeatures.SelectorsAPI) return false;
 
+    if (!Selector._div) Selector._div = new Element('div');
+
+    // Make sure the browser treats the selector as valid. Test on an
+    // isolated element to minimize cost of this check.
+    try {
+      Selector._div.querySelector(this.expression);
+    } catch(e) {
+      return false;
+    }
+
+    return true;
+  },
+
+  compileMatcher: function() {
     var e = this.expression, ps = Selector.patterns, h = Selector.handlers,
         c = Selector.criteria, le, p, m;
 
@@ -2765,7 +2790,7 @@ var Selector = Class.create({
         p = ps[i];
         if (m = e.match(p)) {
           this.matcher.push(Object.isFunction(c[i]) ? c[i](m) :
-    	      new Template(c[i]).evaluate(m));
+            new Template(c[i]).evaluate(m));
           e = e.replace(m[0], '');
           break;
         }
@@ -2804,8 +2829,27 @@ var Selector = Class.create({
 
   findElements: function(root) {
     root = root || document;
-    if (this.xpath) return document._getElementsByXPath(this.xpath, root);
-    return this.matcher(root);
+    var e = this.expression, results;
+
+    switch (this.mode) {
+      case 'selectorsAPI':
+        // querySelectorAll queries document-wide, then filters to descendants
+        // of the context element. That's not what we want.
+        // Add an explicit context to the selector if necessary.
+        if (root !== document) {
+          var oldId = root.id, id = $(root).identify();
+          e = "#" + id + " " + e;
+        }
+
+        results = $A(root.querySelectorAll(e)).map(Element.extend);
+        root.id = oldId;
+
+        return results;
+      case 'xpath':
+        return document._getElementsByXPath(this.xpath, root);
+      default:
+       return this.matcher(root);
+    }
   },
 
   match: function(element) {
@@ -2896,10 +2940,10 @@ Object.extend(Selector, {
       'first-child': '[not(preceding-sibling::*)]',
       'last-child':  '[not(following-sibling::*)]',
       'only-child':  '[not(preceding-sibling::* or following-sibling::*)]',
-      'empty':       "[count(*) = 0 and (count(text()) = 0 or translate(text(), ' \t\r\n', '') = '')]",
+      'empty':       "[count(*) = 0 and (count(text()) = 0)]",
       'checked':     "[@checked]",
-      'disabled':    "[@disabled]",
-      'enabled':     "[not(@disabled)]",
+      'disabled':    "[(@disabled) and (@type!='hidden')]",
+      'enabled':     "[not(@disabled) and (@type!='hidden')]",
       'not': function(m) {
         var e = m[6], p = Selector.patterns,
             x = Selector.xpath, le, v;
@@ -2959,13 +3003,13 @@ Object.extend(Selector, {
   },
 
   criteria: {
-    tagName:      'n = h.tagName(n, r, "#{1}", c);   c = false;',
-    className:    'n = h.className(n, r, "#{1}", c); c = false;',
-    id:           'n = h.id(n, r, "#{1}", c);        c = false;',
-    attrPresence: 'n = h.attrPresence(n, r, "#{1}"); c = false;',
+    tagName:      'n = h.tagName(n, r, "#{1}", c);      c = false;',
+    className:    'n = h.className(n, r, "#{1}", c);    c = false;',
+    id:           'n = h.id(n, r, "#{1}", c);           c = false;',
+    attrPresence: 'n = h.attrPresence(n, r, "#{1}", c); c = false;',
     attr: function(m) {
       m[3] = (m[5] || m[6]);
-      return new Template('n = h.attr(n, r, "#{1}", "#{3}", "#{2}"); c = false;').evaluate(m);
+      return new Template('n = h.attr(n, r, "#{1}", "#{3}", "#{2}", c); c = false;').evaluate(m);
     },
     pseudo: function(m) {
       if (m[6]) m[6] = m[6].replace(/"/g, '\\"');
@@ -2989,8 +3033,9 @@ Object.extend(Selector, {
     tagName:      /^\s*(\*|[\w\-]+)(\b|$)?/,
     id:           /^#([\w\-\*]+)(\b|$)/,
     className:    /^\.([\w\-\*]+)(\b|$)/,
-    pseudo:       /^:((first|last|nth|nth-last|only)(-child|-of-type)|empty|checked|(en|dis)abled|not)(\((.*?)\))?(\b|$|(?=\s)|(?=:))/,
-    attrPresence: /^\[([\w]+)\]/,
+    pseudo:
+/^:((first|last|nth|nth-last|only)(-child|-of-type)|empty|checked|(en|dis)abled|not)(\((.*?)\))?(\b|$|(?=\s|[:+~>]))/,
+    attrPresence: /^\[((?:[\w]+:)?[\w]+)\]/,
     attr:         /\[((?:[\w-]*:)?[\w-]+)\s*(?:([!^$*~|]?=)\s*((['"])([^\4]*?)\4|([^'"][^\]]*?)))?\]/
   },
 
@@ -3014,7 +3059,7 @@ Object.extend(Selector, {
 
     attr: function(element, matches) {
       var nodeValue = Element.readAttribute(element, matches[1]);
-      return Selector.operators[matches[2]](nodeValue, matches[3]);
+      return nodeValue && Selector.operators[matches[2]](nodeValue, matches[5] || matches[6]);
     }
   },
 
@@ -3029,14 +3074,15 @@ Object.extend(Selector, {
 
     // marks an array of nodes for counting
     mark: function(nodes) {
+      var _true = Prototype.emptyFunction;
       for (var i = 0, node; node = nodes[i]; i++)
-        node._counted = true;
+        node._countedByPrototype = _true;
       return nodes;
     },
 
     unmark: function(nodes) {
       for (var i = 0, node; node = nodes[i]; i++)
-        node._counted = undefined;
+        node._countedByPrototype = undefined;
       return nodes;
     },
 
@@ -3044,15 +3090,15 @@ Object.extend(Selector, {
     // "ofType" flag indicates whether we're indexing for nth-of-type
     // rather than nth-child
     index: function(parentNode, reverse, ofType) {
-      parentNode._counted = true;
+      parentNode._countedByPrototype = Prototype.emptyFunction;
       if (reverse) {
         for (var nodes = parentNode.childNodes, i = nodes.length - 1, j = 1; i >= 0; i--) {
           var node = nodes[i];
-          if (node.nodeType == 1 && (!ofType || node._counted)) node.nodeIndex = j++;
+          if (node.nodeType == 1 && (!ofType || node._countedByPrototype)) node.nodeIndex = j++;
         }
       } else {
         for (var i = 0, j = 1, nodes = parentNode.childNodes; node = nodes[i]; i++)
-          if (node.nodeType == 1 && (!ofType || node._counted)) node.nodeIndex = j++;
+          if (node.nodeType == 1 && (!ofType || node._countedByPrototype)) node.nodeIndex = j++;
       }
     },
 
@@ -3061,8 +3107,8 @@ Object.extend(Selector, {
       if (nodes.length == 0) return nodes;
       var results = [], n;
       for (var i = 0, l = nodes.length; i < l; i++)
-        if (!(n = nodes[i])._counted) {
-          n._counted = true;
+        if (!(n = nodes[i])._countedByPrototype) {
+          n._countedByPrototype = Prototype.emptyFunction;
           results.push(Element.extend(n));
         }
       return Selector.handlers.unmark(results);
@@ -3102,7 +3148,7 @@ Object.extend(Selector, {
 
     nextElementSibling: function(node) {
       while (node = node.nextSibling)
-	      if (node.nodeType == 1) return node;
+        if (node.nodeType == 1) return node;
       return null;
     },
 
@@ -3114,7 +3160,7 @@ Object.extend(Selector, {
 
     // TOKEN FUNCTIONS
     tagName: function(nodes, root, tagName, combinator) {
-      tagName = tagName.toUpperCase();
+      var uTagName = tagName.toUpperCase();
       var results = [], h = Selector.handlers;
       if (nodes) {
         if (combinator) {
@@ -3127,7 +3173,7 @@ Object.extend(Selector, {
           if (tagName == "*") return nodes;
         }
         for (var i = 0, node; node = nodes[i]; i++)
-          if (node.tagName.toUpperCase() == tagName) results.push(node);
+          if (node.tagName.toUpperCase() === uTagName) results.push(node);
         return results;
       } else return root.getElementsByTagName(tagName);
     },
@@ -3174,16 +3220,18 @@ Object.extend(Selector, {
       return results;
     },
 
-    attrPresence: function(nodes, root, attr) {
+    attrPresence: function(nodes, root, attr, combinator) {
       if (!nodes) nodes = root.getElementsByTagName("*");
+      if (nodes && combinator) nodes = this[combinator](nodes);
       var results = [];
       for (var i = 0, node; node = nodes[i]; i++)
         if (Element.hasAttribute(node, attr)) results.push(node);
       return results;
     },
 
-    attr: function(nodes, root, attr, value, operator) {
+    attr: function(nodes, root, attr, value, operator, combinator) {
       if (!nodes) nodes = root.getElementsByTagName("*");
+      if (nodes && combinator) nodes = this[combinator](nodes);
       var handler = Selector.operators[operator], results = [];
       for (var i = 0, node; node = nodes[i]; i++) {
         var nodeValue = Element.readAttribute(node, attr);
@@ -3262,7 +3310,7 @@ Object.extend(Selector, {
       var h = Selector.handlers, results = [], indexed = [], m;
       h.mark(nodes);
       for (var i = 0, node; node = nodes[i]; i++) {
-        if (!node.parentNode._counted) {
+        if (!node.parentNode._countedByPrototype) {
           h.index(node.parentNode, reverse, ofType);
           indexed.push(node.parentNode);
         }
@@ -3289,7 +3337,7 @@ Object.extend(Selector, {
     'empty': function(nodes, value, root) {
       for (var i = 0, results = [], node; node = nodes[i]; i++) {
         // IE treats comments as element nodes
-        if (node.tagName == '!' || (node.firstChild && !node.innerHTML.match(/^\s*$/))) continue;
+        if (node.tagName == '!' || node.firstChild) continue;
         results.push(node);
       }
       return results;
@@ -3300,14 +3348,15 @@ Object.extend(Selector, {
       var exclusions = new Selector(selector).findElements(root);
       h.mark(exclusions);
       for (var i = 0, results = [], node; node = nodes[i]; i++)
-        if (!node._counted) results.push(node);
+        if (!node._countedByPrototype) results.push(node);
       h.unmark(exclusions);
       return results;
     },
 
     'enabled': function(nodes, value, root) {
       for (var i = 0, results = [], node; node = nodes[i]; i++)
-        if (!node.disabled) results.push(node);
+        if (!node.disabled && (!node.type || node.type !== 'hidden'))
+          results.push(node);
       return results;
     },
 
@@ -3327,18 +3376,29 @@ Object.extend(Selector, {
   operators: {
     '=':  function(nv, v) { return nv == v; },
     '!=': function(nv, v) { return nv != v; },
-    '^=': function(nv, v) { return nv.startsWith(v); },
+    '^=': function(nv, v) { return nv == v || nv && nv.startsWith(v); },
+    '$=': function(nv, v) { return nv == v || nv && nv.endsWith(v); },
+    '*=': function(nv, v) { return nv == v || nv && nv.include(v); },
     '$=': function(nv, v) { return nv.endsWith(v); },
     '*=': function(nv, v) { return nv.include(v); },
     '~=': function(nv, v) { return (' ' + nv + ' ').include(' ' + v + ' '); },
-    '|=': function(nv, v) { return ('-' + nv.toUpperCase() + '-').include('-' + v.toUpperCase() + '-'); }
+    '|=': function(nv, v) { return ('-' + (nv || "").toUpperCase() +
+     '-').include('-' + (v || "").toUpperCase() + '-'); }
+  },
+
+  split: function(expression) {
+    var expressions = [];
+    expression.scan(/(([\w#:.~>+()\s-]+|\*|\[.*?\])+)\s*(,|$)/, function(m) {
+      expressions.push(m[1].strip());
+    });
+    return expressions;
   },
 
   matchElements: function(elements, expression) {
-    var matches = new Selector(expression).findElements(), h = Selector.handlers;
+    var matches = $$(expression), h = Selector.handlers;
     h.mark(matches);
     for (var i = 0, results = [], element; element = elements[i]; i++)
-      if (element._counted) results.push(element);
+      if (element._countedByPrototype) results.push(element);
     h.unmark(matches);
     return results;
   },
@@ -3351,11 +3411,7 @@ Object.extend(Selector, {
   },
 
   findChildElements: function(element, expressions) {
-    var exprs = expressions.join(',');
-    expressions = [];
-    exprs.scan(/(([\w#:.~>+()\s-]+|\*|\[.*?\])+)\s*(,|$)/, function(m) {
-      expressions.push(m[1].strip());
-    });
+    expressions = Selector.split(expressions.join(','));
     var results = [], h = Selector.handlers;
     for (var i = 0, l = expressions.length, selector; i < l; i++) {
       selector = new Selector(expressions[i].strip());
@@ -3366,13 +3422,22 @@ Object.extend(Selector, {
 });
 
 if (Prototype.Browser.IE) {
-  // IE returns comment nodes on getElementsByTagName("*").
-  // Filter them out.
-  Selector.handlers.concat = function(a, b) {
-    for (var i = 0, node; node = b[i]; i++)
-      if (node.tagName !== "!") a.push(node);
-    return a;
-  };
+  Object.extend(Selector.handlers, {
+    // IE returns comment nodes on getElementsByTagName("*").
+    // Filter them out.
+    concat: function(a, b) {
+      for (var i = 0, node; node = b[i]; i++)
+        if (node.tagName !== "!") a.push(node);
+      return a;
+    },
+
+    // IE improperly serializes _countedByPrototype in (inner|outer)HTML.
+    unmark: function(nodes) {
+      for (var i = 0, node; node = nodes[i]; i++)
+        node.removeAttribute('_countedByPrototype');
+      return nodes;
+    }
+  });
 }
 
 function $$() {
@@ -3392,7 +3457,7 @@ var Form = {
     var data = elements.inject({ }, function(result, element) {
       if (!element.disabled && element.name) {
         key = element.name; value = $(element).getValue();
-        if (value != null && (element.type != 'submit' || (!submitted &&
+        if (value != null && element.type != 'file' && (element.type != 'submit' || (!submitted &&
             submit !== false && (!submit || key == submit) && (submitted = true)))) {
           if (key in result) {
             // a key is already present; construct an array of values
@@ -3553,7 +3618,6 @@ Form.Element.Methods = {
 
   disable: function(element) {
     element = $(element);
-    element.blur();
     element.disabled = true;
     return element;
   },
@@ -3593,22 +3657,22 @@ Form.Element.Serializers = {
     else element.value = value;
   },
 
-  select: function(element, index) {
-    if (Object.isUndefined(index))
+  select: function(element, value) {
+    if (Object.isUndefined(value))
       return this[element.type == 'select-one' ?
         'selectOne' : 'selectMany'](element);
     else {
-      var opt, value, single = !Object.isArray(index);
+      var opt, currentValue, single = !Object.isArray(value);
       for (var i = 0, length = element.length; i < length; i++) {
         opt = element.options[i];
-        value = this.optionValue(opt);
+        currentValue = this.optionValue(opt);
         if (single) {
-          if (value == index) {
+          if (currentValue == value) {
             opt.selected = true;
             return;
           }
         }
-        else opt.selected = index.include(value);
+        else opt.selected = value.include(currentValue);
       }
     }
   },
@@ -3779,8 +3843,23 @@ Event.Methods = (function() {
     isRightClick:  function(event) { return isButton(event, 2) },
 
     element: function(event) {
-      var node = Event.extend(event).target;
-      return Element.extend(node.nodeType == Node.TEXT_NODE ? node.parentNode : node);
+      event = Event.extend(event);
+
+      var node          = event.target,
+          type          = event.type,
+          currentTarget = event.currentTarget;
+
+      if (currentTarget && currentTarget.tagName) {
+        // Firefox screws up the "click" event when moving between radio buttons
+        // via arrow keys. It also screws up the "load" and "error" events on images,
+        // reporting the document as the target instead of the original image.
+        if (type === 'load' || type === 'error' ||
+          (type === 'click' && currentTarget.tagName.toLowerCase() === 'input'
+            && currentTarget.type === 'radio'))
+              node = currentTarget;
+      }
+      if (node.nodeType == Node.TEXT_NODE) node = node.parentNode;
+      return Element.extend(node);
     },
 
     findElement: function(event, expression) {
@@ -3791,11 +3870,15 @@ Event.Methods = (function() {
     },
 
     pointer: function(event) {
+      var docElement = document.documentElement,
+      body = document.body || { scrollLeft: 0, scrollTop: 0 };
       return {
         x: event.pageX || (event.clientX +
-          (document.documentElement.scrollLeft || document.body.scrollLeft)),
+          (docElement.scrollLeft || body.scrollLeft) -
+          (docElement.clientLeft || 0)),
         y: event.pageY || (event.clientY +
-          (document.documentElement.scrollTop || document.body.scrollTop))
+          (docElement.scrollTop || body.scrollTop) -
+          (docElement.clientTop || 0))
       };
     },
 
@@ -3840,7 +3923,7 @@ Event.extend = (function() {
     };
 
   } else {
-    Event.prototype = Event.prototype || document.createEvent("HTMLEvents").__proto__;
+    Event.prototype = Event.prototype || document.createEvent("HTMLEvents")['__proto__'];
     Object.extend(Event.prototype, methods);
     return Prototype.K;
   }
@@ -3850,9 +3933,9 @@ Object.extend(Event, (function() {
   var cache = Event.cache;
 
   function getEventID(element) {
-    if (element._eventID) return element._eventID;
+    if (element._prototypeEventID) return element._prototypeEventID[0];
     arguments.callee.id = arguments.callee.id || 1;
-    return element._eventID = ++arguments.callee.id;
+    return element._prototypeEventID = [++arguments.callee.id];
   }
 
   function getDOMEventName(eventName) {
@@ -3880,7 +3963,7 @@ Object.extend(Event, (function() {
           return false;
 
       Event.extend(event);
-      handler.call(element, event)
+      handler.call(element, event);
     };
 
     wrapper.handler = handler;
@@ -3905,8 +3988,18 @@ Object.extend(Event, (function() {
         cache[id][eventName] = null;
   }
 
+
+  // Internet Explorer needs to remove event handlers on page unload
+  // in order to avoid memory leaks.
   if (window.attachEvent) {
     window.attachEvent("onunload", destroyCache);
+  }
+
+  // Safari has a dummy event handler on page unload so that it won't
+  // use its bfcache. Safari <= 3.1 has an issue with restoring the "document"
+  // object when page is returned to via the back button using its bfcache.
+  if (Prototype.Browser.WebKit) {
+    window.addEventListener('unload', Prototype.emptyFunction, false);
   }
 
   return {
@@ -3962,11 +4055,12 @@ Object.extend(Event, (function() {
       if (element == document && document.createEvent && !element.dispatchEvent)
         element = document.documentElement;
 
+      var event;
       if (document.createEvent) {
-        var event = document.createEvent("HTMLEvents");
+        event = document.createEvent("HTMLEvents");
         event.initEvent("dataavailable", true, true);
       } else {
-        var event = document.createEventObject();
+        event = document.createEventObject();
         event.eventType = "ondataavailable";
       }
 
@@ -3995,20 +4089,21 @@ Element.addMethods({
 Object.extend(document, {
   fire:          Element.Methods.fire.methodize(),
   observe:       Element.Methods.observe.methodize(),
-  stopObserving: Element.Methods.stopObserving.methodize()
+  stopObserving: Element.Methods.stopObserving.methodize(),
+  loaded:        false
 });
 
 (function() {
   /* Support for the DOMContentLoaded event is based on work by Dan Webb,
      Matthias Miller, Dean Edwards and John Resig. */
 
-  var timer, fired = false;
+  var timer;
 
   function fireContentLoadedEvent() {
-    if (fired) return;
+    if (document.loaded) return;
     if (timer) window.clearInterval(timer);
     document.fire("dom:loaded");
-    fired = true;
+    document.loaded = true;
   }
 
   if (document.addEventListener) {
@@ -4224,51 +4319,51 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 
 Element.addMethods();
 
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2008 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // Contributors:
 //  Justin Palmer (http://encytemedia.com/)
 //  Mark Pilgrim (http://diveintomark.org/)
 //  Martin Bialasinki
-// 
+//
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
-// For details, see the script.aculo.us web site: http://script.aculo.us/ 
+// For details, see the script.aculo.us web site: http://script.aculo.us/
 
-// converts rgb() and #xxx to #xxxxxx format,  
-// returns self (or first argument) if not convertable  
-String.prototype.parseColor = function() {  
+// converts rgb() and #xxx to #xxxxxx format,
+// returns self (or first argument) if not convertable
+String.prototype.parseColor = function() {
   var color = '#';
-  if (this.slice(0,4) == 'rgb(') {  
-    var cols = this.slice(4,this.length-1).split(',');  
-    var i=0; do { color += parseInt(cols[i]).toColorPart() } while (++i<3);  
-  } else {  
-    if (this.slice(0,1) == '#') {  
-      if (this.length==4) for(var i=1;i<4;i++) color += (this.charAt(i) + this.charAt(i)).toLowerCase();  
-      if (this.length==7) color = this.toLowerCase();  
-    }  
-  }  
-  return (color.length==7 ? color : (arguments[0] || this));  
+  if (this.slice(0,4) == 'rgb(') {
+    var cols = this.slice(4,this.length-1).split(',');
+    var i=0; do { color += parseInt(cols[i]).toColorPart() } while (++i<3);
+  } else {
+    if (this.slice(0,1) == '#') {
+      if (this.length==4) for(var i=1;i<4;i++) color += (this.charAt(i) + this.charAt(i)).toLowerCase();
+      if (this.length==7) color = this.toLowerCase();
+    }
+  }
+  return (color.length==7 ? color : (arguments[0] || this));
 };
 
 /*--------------------------------------------------------------------------*/
 
-Element.collectTextNodes = function(element) {  
+Element.collectTextNodes = function(element) {
   return $A($(element).childNodes).collect( function(node) {
-    return (node.nodeType==3 ? node.nodeValue : 
+    return (node.nodeType==3 ? node.nodeValue :
       (node.hasChildNodes() ? Element.collectTextNodes(node) : ''));
   }).flatten().join('');
 };
 
-Element.collectTextNodesIgnoreClass = function(element, className) {  
+Element.collectTextNodesIgnoreClass = function(element, className) {
   return $A($(element).childNodes).collect( function(node) {
-    return (node.nodeType==3 ? node.nodeValue : 
-      ((node.hasChildNodes() && !Element.hasClassName(node,className)) ? 
+    return (node.nodeType==3 ? node.nodeValue :
+      ((node.hasChildNodes() && !Element.hasClassName(node,className)) ?
         Element.collectTextNodesIgnoreClass(node, className) : ''));
   }).flatten().join('');
 };
 
 Element.setContentZoom = function(element, percent) {
-  element = $(element);  
-  element.setStyle({fontSize: (percent/100) + 'em'});   
+  element = $(element);
+  element.setStyle({fontSize: (percent/100) + 'em'});
   if (Prototype.Browser.WebKit) window.scrollBy(0,0);
   return element;
 };
@@ -4296,28 +4391,23 @@ var Effect = {
   Transitions: {
     linear: Prototype.K,
     sinoidal: function(pos) {
-      return (-Math.cos(pos*Math.PI)/2) + 0.5;
+      return (-Math.cos(pos*Math.PI)/2) + .5;
     },
     reverse: function(pos) {
       return 1-pos;
     },
     flicker: function(pos) {
-      var pos = ((-Math.cos(pos*Math.PI)/4) + 0.75) + Math.random()/4;
+      var pos = ((-Math.cos(pos*Math.PI)/4) + .75) + Math.random()/4;
       return pos > 1 ? 1 : pos;
     },
     wobble: function(pos) {
-      return (-Math.cos(pos*Math.PI*(9*pos))/2) + 0.5;
+      return (-Math.cos(pos*Math.PI*(9*pos))/2) + .5;
     },
-    pulse: function(pos, pulses) { 
-      pulses = pulses || 5; 
-      return (
-        ((pos % (1/pulses)) * pulses).round() == 0 ? 
-              ((pos * pulses * 2) - (pos * pulses * 2).floor()) : 
-          1 - ((pos * pulses * 2) - (pos * pulses * 2).floor())
-        );
+    pulse: function(pos, pulses) {
+      return (-Math.cos((pos*((pulses||5)-.5)*2)*Math.PI)/2) + .5;
     },
-    spring: function(pos) { 
-      return 1 - (Math.cos(pos * 4.5 * Math.PI) * Math.exp(-pos * 6)); 
+    spring: function(pos) {
+      return 1 - (Math.cos(pos * 4.5 * Math.PI) * Math.exp(-pos * 6));
     },
     none: function(pos) {
       return 0;
@@ -4338,14 +4428,14 @@ var Effect = {
   tagifyText: function(element) {
     var tagifyStyle = 'position:relative';
     if (Prototype.Browser.IE) tagifyStyle += ';zoom:1';
-    
+
     element = $(element);
     $A(element.childNodes).each( function(child) {
       if (child.nodeType==3) {
         child.nodeValue.toArray().each( function(character) {
           element.insertBefore(
             new Element('span', {style: tagifyStyle}).update(
-              character == ' ' ? String.fromCharCode(160) : character), 
+              character == ' ' ? String.fromCharCode(160) : character),
               child);
         });
         Element.remove(child);
@@ -4354,13 +4444,13 @@ var Effect = {
   },
   multiple: function(element, effect) {
     var elements;
-    if (((typeof element == 'object') || 
-        Object.isFunction(element)) && 
+    if (((typeof element == 'object') ||
+        Object.isFunction(element)) &&
        (element.length))
       elements = element;
     else
       elements = $(element).childNodes;
-      
+
     var options = Object.extend({
       speed: 0.1,
       delay: 0.0
@@ -4382,7 +4472,7 @@ var Effect = {
     var options = Object.extend({
       queue: { position:'end', scope:(element.id || 'global'), limit: 1 }
     }, arguments[2] || { });
-    Effect[element.visible() ? 
+    Effect[element.visible() ?
       Effect.PAIRS[effect][1] : Effect.PAIRS[effect][0]](element, options);
   }
 };
@@ -4394,20 +4484,20 @@ Effect.DefaultOptions.transition = Effect.Transitions.sinoidal;
 Effect.ScopedQueue = Class.create(Enumerable, {
   initialize: function() {
     this.effects  = [];
-    this.interval = null;    
+    this.interval = null;
   },
   _each: function(iterator) {
     this.effects._each(iterator);
   },
   add: function(effect) {
     var timestamp = new Date().getTime();
-    
-    var position = Object.isString(effect.options.queue) ? 
+
+    var position = Object.isString(effect.options.queue) ?
       effect.options.queue : effect.options.queue.position;
-    
+
     switch(position) {
       case 'front':
-        // move unstarted effects after this effect  
+        // move unstarted effects after this effect
         this.effects.findAll(function(e){ return e.state=='idle' }).each( function(e) {
             e.startOn  += effect.finishOn;
             e.finishOn += effect.finishOn;
@@ -4421,13 +4511,13 @@ Effect.ScopedQueue = Class.create(Enumerable, {
         timestamp = this.effects.pluck('finishOn').max() || timestamp;
         break;
     }
-    
+
     effect.startOn  += timestamp;
     effect.finishOn += timestamp;
 
     if (!effect.options.queue.limit || (this.effects.length < effect.options.queue.limit))
       this.effects.push(effect);
-    
+
     if (!this.interval)
       this.interval = setInterval(this.loop.bind(this), 15);
   },
@@ -4440,7 +4530,7 @@ Effect.ScopedQueue = Class.create(Enumerable, {
   },
   loop: function() {
     var timePos = new Date().getTime();
-    for(var i=0, len=this.effects.length;i<len;i++) 
+    for(var i=0, len=this.effects.length;i<len;i++)
       this.effects[i] && this.effects[i].loop(timePos);
   }
 });
@@ -4449,7 +4539,7 @@ Effect.Queues = {
   instances: $H(),
   get: function(queueName) {
     if (!Object.isString(queueName)) return queueName;
-    
+
     return this.instances.get(queueName) ||
       this.instances.set(queueName, new Effect.ScopedQueue());
   }
@@ -4474,23 +4564,35 @@ Effect.Base = Class.create({
     this.fromToDelta  = this.options.to-this.options.from;
     this.totalTime    = this.finishOn-this.startOn;
     this.totalFrames  = this.options.fps*this.options.duration;
-    
-    eval('this.render = function(pos){ '+
-      'if (this.state=="idle"){this.state="running";'+
-      codeForEvent(this.options,'beforeSetup')+
-      (this.setup ? 'this.setup();':'')+ 
-      codeForEvent(this.options,'afterSetup')+
-      '};if (this.state=="running"){'+
-      'pos=this.options.transition(pos)*'+this.fromToDelta+'+'+this.options.from+';'+
-      'this.position=pos;'+
-      codeForEvent(this.options,'beforeUpdate')+
-      (this.update ? 'this.update(pos);':'')+
-      codeForEvent(this.options,'afterUpdate')+
-      '}}');
-    
+
+    this.render = (function() {
+      function dispatch(effect, eventName) {
+        if (effect.options[eventName + 'Internal'])
+          effect.options[eventName + 'Internal'](effect);
+        if (effect.options[eventName])
+          effect.options[eventName](effect);
+      }
+
+      return function(pos) {
+        if (this.state === "idle") {
+          this.state = "running";
+          dispatch(this, 'beforeSetup');
+          if (this.setup) this.setup();
+          dispatch(this, 'afterSetup');
+        }
+        if (this.state === "running") {
+          pos = (this.options.transition(pos) * this.fromToDelta) + this.options.from;
+          this.position = pos;
+          dispatch(this, 'beforeUpdate');
+          if (this.update) this.update(pos);
+          dispatch(this, 'afterUpdate');
+        }
+      };
+    })();
+
     this.event('beforeStart');
     if (!this.options.sync)
-      Effect.Queues.get(Object.isString(this.options.queue) ? 
+      Effect.Queues.get(Object.isString(this.options.queue) ?
         'global' : this.options.queue.scope).add(this);
   },
   loop: function(timePos) {
@@ -4499,9 +4601,9 @@ Effect.Base = Class.create({
         this.render(1.0);
         this.cancel();
         this.event('beforeFinish');
-        if (this.finish) this.finish(); 
+        if (this.finish) this.finish();
         this.event('afterFinish');
-        return;  
+        return;
       }
       var pos   = (timePos - this.startOn) / this.totalTime,
           frame = (pos * this.totalFrames).round();
@@ -4513,7 +4615,7 @@ Effect.Base = Class.create({
   },
   cancel: function() {
     if (!this.options.sync)
-      Effect.Queues.get(Object.isString(this.options.queue) ? 
+      Effect.Queues.get(Object.isString(this.options.queue) ?
         'global' : this.options.queue.scope).remove(this);
     this.state = 'finished';
   },
@@ -4551,10 +4653,10 @@ Effect.Parallel = Class.create(Effect.Base, {
 Effect.Tween = Class.create(Effect.Base, {
   initialize: function(object, from, to) {
     object = Object.isString(object) ? $(object) : object;
-    var args = $A(arguments), method = args.last(), 
+    var args = $A(arguments), method = args.last(),
       options = args.length == 5 ? args[3] : null;
     this.method = Object.isFunction(method) ? method.bind(object) :
-      Object.isFunction(object[method]) ? object[method].bind(object) : 
+      Object.isFunction(object[method]) ? object[method].bind(object) :
       function(value) { object[method] = value };
     this.start(Object.extend({ from: from, to: to }, options || { }));
   },
@@ -4618,7 +4720,7 @@ Effect.Move = Class.create(Effect.Base, {
 
 // for backwards compatibility
 Effect.MoveBy = function(element, toTop, toLeft) {
-  return new Effect.Move(element, 
+  return new Effect.Move(element,
     Object.extend({ x: toLeft, y: toTop }, arguments[3] || { }));
 };
 
@@ -4640,15 +4742,15 @@ Effect.Scale = Class.create(Effect.Base, {
   setup: function() {
     this.restoreAfterFinish = this.options.restoreAfterFinish || false;
     this.elementPositioning = this.element.getStyle('position');
-    
+
     this.originalStyle = { };
     ['top','left','width','height','fontSize'].each( function(k) {
       this.originalStyle[k] = this.element.style[k];
     }.bind(this));
-      
+
     this.originalTop  = this.element.offsetTop;
     this.originalLeft = this.element.offsetLeft;
-    
+
     var fontSize = this.element.getStyle('font-size') || '100%';
     ['em','px','%','pt'].each( function(fontSizeType) {
       if (fontSize.indexOf(fontSizeType)>0) {
@@ -4656,9 +4758,9 @@ Effect.Scale = Class.create(Effect.Base, {
         this.fontSizeType = fontSizeType;
       }
     }.bind(this));
-    
+
     this.factor = (this.options.scaleTo - this.options.scaleFrom)/100;
-    
+
     this.dims = null;
     if (this.options.scaleMode=='box')
       this.dims = [this.element.offsetHeight, this.element.offsetWidth];
@@ -4733,17 +4835,16 @@ Effect.Highlight = Class.create(Effect.Base, {
 
 Effect.ScrollTo = function(element) {
   var options = arguments[1] || { },
-    scrollOffsets = document.viewport.getScrollOffsets(),
-    elementOffsets = $(element).cumulativeOffset(),
-    max = (window.height || document.body.scrollHeight) - document.viewport.getHeight();  
+  scrollOffsets = document.viewport.getScrollOffsets(),
+  elementOffsets = $(element).cumulativeOffset();
 
   if (options.offset) elementOffsets[1] += options.offset;
 
   return new Effect.Tween(null,
     scrollOffsets.top,
-    elementOffsets[1] > max ? max : elementOffsets[1],
+    elementOffsets[1],
     options,
-    function(p){ scrollTo(scrollOffsets.left, p.round()) }
+    function(p){ scrollTo(scrollOffsets.left, p.round()); }
   );
 };
 
@@ -4755,9 +4856,9 @@ Effect.Fade = function(element) {
   var options = Object.extend({
     from: element.getOpacity() || 1.0,
     to:   0.0,
-    afterFinishInternal: function(effect) { 
+    afterFinishInternal: function(effect) {
       if (effect.options.to!=0) return;
-      effect.element.hide().setStyle({opacity: oldOpacity}); 
+      effect.element.hide().setStyle({opacity: oldOpacity});
     }
   }, arguments[1] || { });
   return new Effect.Opacity(element,options);
@@ -4773,15 +4874,15 @@ Effect.Appear = function(element) {
     effect.element.forceRerendering();
   },
   beforeSetup: function(effect) {
-    effect.element.setOpacity(effect.options.from).show(); 
+    effect.element.setOpacity(effect.options.from).show();
   }}, arguments[1] || { });
   return new Effect.Opacity(element,options);
 };
 
 Effect.Puff = function(element) {
   element = $(element);
-  var oldStyle = { 
-    opacity: element.getInlineOpacity(), 
+  var oldStyle = {
+    opacity: element.getInlineOpacity(),
     position: element.getStyle('position'),
     top:  element.style.top,
     left: element.style.left,
@@ -4789,12 +4890,12 @@ Effect.Puff = function(element) {
     height: element.style.height
   };
   return new Effect.Parallel(
-   [ new Effect.Scale(element, 200, 
-      { sync: true, scaleFromCenter: true, scaleContent: true, restoreAfterFinish: true }), 
-     new Effect.Opacity(element, { sync: true, to: 0.0 } ) ], 
-     Object.extend({ duration: 1.0, 
+   [ new Effect.Scale(element, 200,
+      { sync: true, scaleFromCenter: true, scaleContent: true, restoreAfterFinish: true }),
+     new Effect.Opacity(element, { sync: true, to: 0.0 } ) ],
+     Object.extend({ duration: 1.0,
       beforeSetupInternal: function(effect) {
-        Position.absolutize(effect.effects[0].element)
+        Position.absolutize(effect.effects[0].element);
       },
       afterFinishInternal: function(effect) {
          effect.effects[0].element.hide().setStyle(oldStyle); }
@@ -4806,12 +4907,12 @@ Effect.BlindUp = function(element) {
   element = $(element);
   element.makeClipping();
   return new Effect.Scale(element, 0,
-    Object.extend({ scaleContent: false, 
-      scaleX: false, 
+    Object.extend({ scaleContent: false,
+      scaleX: false,
       restoreAfterFinish: true,
       afterFinishInternal: function(effect) {
         effect.element.hide().undoClipping();
-      } 
+      }
     }, arguments[1] || { })
   );
 };
@@ -4819,15 +4920,15 @@ Effect.BlindUp = function(element) {
 Effect.BlindDown = function(element) {
   element = $(element);
   var elementDimensions = element.getDimensions();
-  return new Effect.Scale(element, 100, Object.extend({ 
-    scaleContent: false, 
+  return new Effect.Scale(element, 100, Object.extend({
+    scaleContent: false,
     scaleX: false,
     scaleFrom: 0,
     scaleMode: {originalHeight: elementDimensions.height, originalWidth: elementDimensions.width},
     restoreAfterFinish: true,
     afterSetup: function(effect) {
-      effect.element.makeClipping().setStyle({height: '0px'}).show(); 
-    },  
+      effect.element.makeClipping().setStyle({height: '0px'}).show();
+    },
     afterFinishInternal: function(effect) {
       effect.element.undoClipping();
     }
@@ -4842,16 +4943,16 @@ Effect.SwitchOff = function(element) {
     from: 0,
     transition: Effect.Transitions.flicker,
     afterFinishInternal: function(effect) {
-      new Effect.Scale(effect.element, 1, { 
+      new Effect.Scale(effect.element, 1, {
         duration: 0.3, scaleFromCenter: true,
         scaleX: false, scaleContent: false, restoreAfterFinish: true,
-        beforeSetup: function(effect) { 
+        beforeSetup: function(effect) {
           effect.element.makePositioned().makeClipping();
         },
         afterFinishInternal: function(effect) {
           effect.element.hide().undoClipping().undoPositioned().setStyle({opacity: oldOpacity});
         }
-      })
+      });
     }
   }, arguments[1] || { }));
 };
@@ -4863,16 +4964,16 @@ Effect.DropOut = function(element) {
     left: element.getStyle('left'),
     opacity: element.getInlineOpacity() };
   return new Effect.Parallel(
-    [ new Effect.Move(element, {x: 0, y: 100, sync: true }), 
+    [ new Effect.Move(element, {x: 0, y: 100, sync: true }),
       new Effect.Opacity(element, { sync: true, to: 0.0 }) ],
     Object.extend(
       { duration: 0.5,
         beforeSetup: function(effect) {
-          effect.effects[0].element.makePositioned(); 
+          effect.effects[0].element.makePositioned();
         },
         afterFinishInternal: function(effect) {
           effect.effects[0].element.hide().undoPositioned().setStyle(oldStyle);
-        } 
+        }
       }, arguments[1] || { }));
 };
 
@@ -4900,7 +5001,7 @@ Effect.Shake = function(element) {
     new Effect.Move(effect.element,
       { x: -distance, y: 0, duration: split, afterFinishInternal: function(effect) {
         effect.element.undoPositioned().setStyle(oldStyle);
-  }}) }}) }}) }}) }}) }});
+  }}); }}); }}); }}); }}); }});
 };
 
 Effect.SlideDown = function(element) {
@@ -4908,9 +5009,9 @@ Effect.SlideDown = function(element) {
   // SlideDown need to have the content of the element wrapped in a container element with fixed height!
   var oldInnerBottom = element.down().getStyle('bottom');
   var elementDimensions = element.getDimensions();
-  return new Effect.Scale(element, 100, Object.extend({ 
-    scaleContent: false, 
-    scaleX: false, 
+  return new Effect.Scale(element, 100, Object.extend({
+    scaleContent: false,
+    scaleX: false,
     scaleFrom: window.opera ? 0 : 1,
     scaleMode: {originalHeight: elementDimensions.height, originalWidth: elementDimensions.width},
     restoreAfterFinish: true,
@@ -4918,11 +5019,11 @@ Effect.SlideDown = function(element) {
       effect.element.makePositioned();
       effect.element.down().makePositioned();
       if (window.opera) effect.element.setStyle({top: ''});
-      effect.element.makeClipping().setStyle({height: '0px'}).show(); 
+      effect.element.makeClipping().setStyle({height: '0px'}).show();
     },
     afterUpdateInternal: function(effect) {
       effect.element.down().setStyle({bottom:
-        (effect.dims[0] - effect.element.clientHeight) + 'px' }); 
+        (effect.dims[0] - effect.element.clientHeight) + 'px' });
     },
     afterFinishInternal: function(effect) {
       effect.element.undoClipping().undoPositioned();
@@ -4936,8 +5037,8 @@ Effect.SlideUp = function(element) {
   var oldInnerBottom = element.down().getStyle('bottom');
   var elementDimensions = element.getDimensions();
   return new Effect.Scale(element, window.opera ? 0 : 1,
-   Object.extend({ scaleContent: false, 
-    scaleX: false, 
+   Object.extend({ scaleContent: false,
+    scaleX: false,
     scaleMode: 'box',
     scaleFrom: 100,
     scaleMode: {originalHeight: elementDimensions.height, originalWidth: elementDimensions.width},
@@ -4947,7 +5048,7 @@ Effect.SlideUp = function(element) {
       effect.element.down().makePositioned();
       if (window.opera) effect.element.setStyle({top: ''});
       effect.element.makeClipping().show();
-    },  
+    },
     afterUpdateInternal: function(effect) {
       effect.element.down().setStyle({bottom:
         (effect.dims[0] - effect.element.clientHeight) + 'px' });
@@ -4960,15 +5061,15 @@ Effect.SlideUp = function(element) {
   );
 };
 
-// Bug in opera makes the TD containing this element expand for a instance after finish 
+// Bug in opera makes the TD containing this element expand for a instance after finish
 Effect.Squish = function(element) {
-  return new Effect.Scale(element, window.opera ? 1 : 0, { 
+  return new Effect.Scale(element, window.opera ? 1 : 0, {
     restoreAfterFinish: true,
     beforeSetup: function(effect) {
-      effect.element.makeClipping(); 
-    },  
+      effect.element.makeClipping();
+    },
     afterFinishInternal: function(effect) {
-      effect.element.hide().undoClipping(); 
+      effect.element.hide().undoClipping();
     }
   });
 };
@@ -4988,13 +5089,13 @@ Effect.Grow = function(element) {
     width: element.style.width,
     opacity: element.getInlineOpacity() };
 
-  var dims = element.getDimensions();    
+  var dims = element.getDimensions();
   var initialMoveX, initialMoveY;
   var moveX, moveY;
-  
+
   switch (options.direction) {
     case 'top-left':
-      initialMoveX = initialMoveY = moveX = moveY = 0; 
+      initialMoveX = initialMoveY = moveX = moveY = 0;
       break;
     case 'top-right':
       initialMoveX = dims.width;
@@ -5019,11 +5120,11 @@ Effect.Grow = function(element) {
       moveY = -dims.height / 2;
       break;
   }
-  
+
   return new Effect.Move(element, {
     x: initialMoveX,
     y: initialMoveY,
-    duration: 0.01, 
+    duration: 0.01,
     beforeSetup: function(effect) {
       effect.element.hide().makeClipping().makePositioned();
     },
@@ -5032,17 +5133,17 @@ Effect.Grow = function(element) {
         [ new Effect.Opacity(effect.element, { sync: true, to: 1.0, from: 0.0, transition: options.opacityTransition }),
           new Effect.Move(effect.element, { x: moveX, y: moveY, sync: true, transition: options.moveTransition }),
           new Effect.Scale(effect.element, 100, {
-            scaleMode: { originalHeight: dims.height, originalWidth: dims.width }, 
+            scaleMode: { originalHeight: dims.height, originalWidth: dims.width },
             sync: true, scaleFrom: window.opera ? 1 : 0, transition: options.scaleTransition, restoreAfterFinish: true})
         ], Object.extend({
              beforeSetup: function(effect) {
-               effect.effects[0].element.setStyle({height: '0px'}).show(); 
+               effect.effects[0].element.setStyle({height: '0px'}).show();
              },
              afterFinishInternal: function(effect) {
-               effect.effects[0].element.undoClipping().undoPositioned().setStyle(oldStyle); 
+               effect.effects[0].element.undoClipping().undoPositioned().setStyle(oldStyle);
              }
            }, options)
-      )
+      );
     }
   });
 };
@@ -5064,7 +5165,7 @@ Effect.Shrink = function(element) {
 
   var dims = element.getDimensions();
   var moveX, moveY;
-  
+
   switch (options.direction) {
     case 'top-left':
       moveX = moveY = 0;
@@ -5081,19 +5182,19 @@ Effect.Shrink = function(element) {
       moveX = dims.width;
       moveY = dims.height;
       break;
-    case 'center':  
+    case 'center':
       moveX = dims.width / 2;
       moveY = dims.height / 2;
       break;
   }
-  
+
   return new Effect.Parallel(
     [ new Effect.Opacity(element, { sync: true, to: 0.0, from: 1.0, transition: options.opacityTransition }),
       new Effect.Scale(element, window.opera ? 1 : 0, { sync: true, transition: options.scaleTransition, restoreAfterFinish: true}),
       new Effect.Move(element, { x: moveX, y: moveY, sync: true, transition: options.moveTransition })
-    ], Object.extend({            
+    ], Object.extend({
          beforeStartInternal: function(effect) {
-           effect.effects[0].element.makePositioned().makeClipping(); 
+           effect.effects[0].element.makePositioned().makeClipping();
          },
          afterFinishInternal: function(effect) {
            effect.effects[0].element.hide().undoClipping().undoPositioned().setStyle(oldStyle); }
@@ -5103,12 +5204,14 @@ Effect.Shrink = function(element) {
 
 Effect.Pulsate = function(element) {
   element = $(element);
-  var options    = arguments[1] || { };
-  var oldOpacity = element.getInlineOpacity();
-  var transition = options.transition || Effect.Transitions.sinoidal;
-  var reverser   = function(pos){ return transition(1-Effect.Transitions.pulse(pos, options.pulses)) };
-  reverser.bind(transition);
-  return new Effect.Opacity(element, 
+  var options    = arguments[1] || { },
+    oldOpacity = element.getInlineOpacity(),
+    transition = options.transition || Effect.Transitions.linear,
+    reverser   = function(pos){
+      return 1 - transition((-Math.cos((pos*(options.pulses||5)*2)*Math.PI)/2) + .5);
+    };
+
+  return new Effect.Opacity(element,
     Object.extend(Object.extend({  duration: 2.0, from: 0,
       afterFinishInternal: function(effect) { effect.element.setStyle({opacity: oldOpacity}); }
     }, options), {transition: reverser}));
@@ -5122,12 +5225,12 @@ Effect.Fold = function(element) {
     width: element.style.width,
     height: element.style.height };
   element.makeClipping();
-  return new Effect.Scale(element, 5, Object.extend({   
+  return new Effect.Scale(element, 5, Object.extend({
     scaleContent: false,
     scaleX: false,
     afterFinishInternal: function(effect) {
-    new Effect.Scale(element, 1, { 
-      scaleContent: false, 
+    new Effect.Scale(element, 1, {
+      scaleContent: false,
       scaleY: false,
       afterFinishInternal: function(effect) {
         effect.element.hide().undoClipping().setStyle(oldStyle);
@@ -5142,7 +5245,7 @@ Effect.Morph = Class.create(Effect.Base, {
     var options = Object.extend({
       style: { }
     }, arguments[1] || { });
-    
+
     if (!Object.isString(options.style)) this.style = $H(options.style);
     else {
       if (options.style.include(':'))
@@ -5160,18 +5263,18 @@ Effect.Morph = Class.create(Effect.Base, {
           effect.transforms.each(function(transform) {
             effect.element.style[transform.style] = '';
           });
-        }
+        };
       }
     }
     this.start(options);
   },
-  
+
   setup: function(){
     function parseColor(color){
       if (!color || ['rgba(0, 0, 0, 0)','transparent'].include(color)) color = '#ffffff';
       color = color.parseColor();
       return $R(0,2).map(function(i){
-        return parseInt( color.slice(i*2+1,i*2+3), 16 ) 
+        return parseInt( color.slice(i*2+1,i*2+3), 16 );
       });
     }
     this.transforms = this.style.map(function(pair){
@@ -5191,9 +5294,9 @@ Effect.Morph = Class.create(Effect.Base, {
       }
 
       var originalValue = this.element.getStyle(property);
-      return { 
-        style: property.camelize(), 
-        originalValue: unit=='color' ? parseColor(originalValue) : parseFloat(originalValue || 0), 
+      return {
+        style: property.camelize(),
+        originalValue: unit=='color' ? parseColor(originalValue) : parseFloat(originalValue || 0),
         targetValue: unit=='color' ? parseColor(value) : value,
         unit: unit
       };
@@ -5204,13 +5307,13 @@ Effect.Morph = Class.create(Effect.Base, {
           transform.unit != 'color' &&
           (isNaN(transform.originalValue) || isNaN(transform.targetValue))
         )
-      )
+      );
     });
   },
   update: function(position) {
     var style = { }, transform, i = this.transforms.length;
     while(i--)
-      style[(transform = this.transforms[i]).style] = 
+      style[(transform = this.transforms[i]).style] =
         transform.unit=='color' ? '#'+
           (Math.round(transform.originalValue[0]+
             (transform.targetValue[0]-transform.originalValue[0])*position)).toColorPart() +
@@ -5219,7 +5322,7 @@ Effect.Morph = Class.create(Effect.Base, {
           (Math.round(transform.originalValue[2]+
             (transform.targetValue[2]-transform.originalValue[2])*position)).toColorPart() :
         (transform.originalValue +
-          (transform.targetValue - transform.originalValue) * position).toFixed(3) + 
+          (transform.targetValue - transform.originalValue) * position).toFixed(3) +
             (transform.unit === null ? '' : transform.unit);
     this.element.setStyle(style, true);
   }
@@ -5256,7 +5359,7 @@ Effect.Transform = Class.create({
 });
 
 Element.CSS_PROPERTIES = $w(
-  'backgroundColor backgroundPosition borderBottomColor borderBottomStyle ' + 
+  'backgroundColor backgroundPosition borderBottomColor borderBottomStyle ' +
   'borderBottomWidth borderLeftColor borderLeftStyle borderLeftWidth ' +
   'borderRightColor borderRightStyle borderRightWidth borderSpacing ' +
   'borderTopColor borderTopStyle borderTopWidth bottom clip color ' +
@@ -5265,7 +5368,7 @@ Element.CSS_PROPERTIES = $w(
   'maxWidth minHeight minWidth opacity outlineColor outlineOffset ' +
   'outlineWidth paddingBottom paddingLeft paddingRight paddingTop ' +
   'right textIndent top width wordSpacing zIndex');
-  
+
 Element.CSS_LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/;
 
 String.__parseStyleElement = document.createElement('div');
@@ -5277,11 +5380,11 @@ String.prototype.parseStyle = function(){
     String.__parseStyleElement.innerHTML = '<div style="' + this + '"></div>';
     style = String.__parseStyleElement.childNodes[0].style;
   }
-  
+
   Element.CSS_PROPERTIES.each(function(property){
-    if (style[property]) styleRules.set(property, style[property]); 
+    if (style[property]) styleRules.set(property, style[property]);
   });
-  
+
   if (Prototype.Browser.IE && this.include('opacity'))
     styleRules.set('opacity', this.match(/opacity:\s*((?:0|1)?(?:\.\d*)?)/)[1]);
 
@@ -5300,14 +5403,14 @@ if (document.defaultView && document.defaultView.getComputedStyle) {
   Element.getStyles = function(element) {
     element = $(element);
     var css = element.currentStyle, styles;
-    styles = Element.CSS_PROPERTIES.inject({ }, function(hash, property) {
-      hash.set(property, css[property]);
-      return hash;
+    styles = Element.CSS_PROPERTIES.inject({ }, function(results, property) {
+      results[property] = css[property];
+      return results;
     });
-    if (!styles.opacity) styles.set('opacity', element.getOpacity());
+    if (!styles.opacity) styles.opacity = element.getOpacity();
     return styles;
   };
-};
+}
 
 Effect.Methods = {
   morph: function(element, style) {
@@ -5316,7 +5419,7 @@ Effect.Methods = {
     return element;
   },
   visualEffect: function(element, effect, options) {
-    element = $(element)
+    element = $(element);
     var s = effect.dasherize().camelize(), klass = s.charAt(0).toUpperCase() + s.substring(1);
     new Effect[klass](element, options);
     return element;
@@ -5330,25 +5433,24 @@ Effect.Methods = {
 
 $w('fade appear grow shrink fold blindUp blindDown slideUp slideDown '+
   'pulsate shake puff squish switchOff dropOut').each(
-  function(effect) { 
+  function(effect) {
     Effect.Methods[effect] = function(element, options){
       element = $(element);
       Effect[effect.charAt(0).toUpperCase() + effect.substring(1)](element, options);
       return element;
-    }
+    };
   }
 );
 
-$w('getInlineOpacity forceRerendering setContentZoom collectTextNodes collectTextNodesIgnoreClass getStyles').each( 
+$w('getInlineOpacity forceRerendering setContentZoom collectTextNodes collectTextNodesIgnoreClass getStyles').each(
   function(f) { Effect.Methods[f] = Element[f]; }
 );
 
 Element.addMethods(Effect.Methods);
 
-
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2007 Sammi Williams (http://www.oriontransfer.co.nz, sammi@oriontransfer.co.nz)
-// 
+// Copyright (c) 2005-2008 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2008 Sammi Williams (http://www.oriontransfer.co.nz, sammi@oriontransfer.co.nz)
+//
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
 
@@ -5380,7 +5482,7 @@ var Droppables = {
         options._containers.push($(containment));
       }
     }
-    
+
     if(options.accept) options.accept = [options.accept].flatten();
 
     Element.makePositioned(element); // fix IE
@@ -5388,34 +5490,34 @@ var Droppables = {
 
     this.drops.push(options);
   },
-  
+
   findDeepestChild: function(drops) {
     deepest = drops[0];
-      
+
     for (i = 1; i < drops.length; ++i)
       if (Element.isParent(drops[i].element, deepest.element))
         deepest = drops[i];
-    
+
     return deepest;
   },
 
   isContained: function(element, drop) {
     var containmentNode;
     if(drop.tree) {
-      containmentNode = element.treeNode; 
+      containmentNode = element.treeNode;
     } else {
       containmentNode = element.parentNode;
     }
     return drop._containers.detect(function(c) { return containmentNode == c });
   },
-  
+
   isAffected: function(point, element, drop) {
     return (
       (drop.element!=element) &&
       ((!drop._containers) ||
         this.isContained(element, drop)) &&
       ((!drop.accept) ||
-        (Element.classNames(element).detect( 
+        (Element.classNames(element).detect(
           function(v) { return drop.accept.include(v) } ) )) &&
       Position.within(drop.element, point[0], point[1]) );
   },
@@ -5435,12 +5537,12 @@ var Droppables = {
   show: function(point, element) {
     if(!this.drops.length) return;
     var drop, affected = [];
-    
+
     this.drops.each( function(drop) {
       if(Droppables.isAffected(point, element, drop))
         affected.push(drop);
     });
-        
+
     if(affected.length>0)
       drop = Droppables.findDeepestChild(affected);
 
@@ -5449,7 +5551,7 @@ var Droppables = {
       Position.within(drop.element, point[0], point[1]);
       if(drop.onHover)
         drop.onHover(element, drop.element, Position.overlap(drop.overlap, drop.element));
-      
+
       if (drop != this.last_active) Droppables.activate(drop);
     }
   },
@@ -5460,8 +5562,8 @@ var Droppables = {
 
     if (this.isAffected([Event.pointerX(event), Event.pointerY(event)], element, this.last_active))
       if (this.last_active.onDrop) {
-        this.last_active.onDrop(element, this.last_active.element, event); 
-        return true; 
+        this.last_active.onDrop(element, this.last_active.element, event);
+        return true;
       }
   },
 
@@ -5469,25 +5571,25 @@ var Droppables = {
     if(this.last_active)
       this.deactivate(this.last_active);
   }
-}
+};
 
 var Draggables = {
   drags: [],
   observers: [],
-  
+
   register: function(draggable) {
     if(this.drags.length == 0) {
       this.eventMouseUp   = this.endDrag.bindAsEventListener(this);
       this.eventMouseMove = this.updateDrag.bindAsEventListener(this);
       this.eventKeypress  = this.keyPress.bindAsEventListener(this);
-      
+
       Event.observe(document, "mouseup", this.eventMouseUp);
       Event.observe(document, "mousemove", this.eventMouseMove);
       Event.observe(document, "keypress", this.eventKeypress);
     }
     this.drags.push(draggable);
   },
-  
+
   unregister: function(draggable) {
     this.drags = this.drags.reject(function(d) { return d==draggable });
     if(this.drags.length == 0) {
@@ -5496,24 +5598,24 @@ var Draggables = {
       Event.stopObserving(document, "keypress", this.eventKeypress);
     }
   },
-  
+
   activate: function(draggable) {
-    if(draggable.options.delay) { 
-      this._timeout = setTimeout(function() { 
-        Draggables._timeout = null; 
-        window.focus(); 
-        Draggables.activeDraggable = draggable; 
-      }.bind(this), draggable.options.delay); 
+    if(draggable.options.delay) {
+      this._timeout = setTimeout(function() {
+        Draggables._timeout = null;
+        window.focus();
+        Draggables.activeDraggable = draggable;
+      }.bind(this), draggable.options.delay);
     } else {
       window.focus(); // allows keypress events if window isn't currently focused, fails for Safari
       this.activeDraggable = draggable;
     }
   },
-  
+
   deactivate: function() {
     this.activeDraggable = null;
   },
-  
+
   updateDrag: function(event) {
     if(!this.activeDraggable) return;
     var pointer = [Event.pointerX(event), Event.pointerY(event)];
@@ -5521,36 +5623,36 @@ var Draggables = {
     // the same coordinates, prevent needless redrawing (moz bug?)
     if(this._lastPointer && (this._lastPointer.inspect() == pointer.inspect())) return;
     this._lastPointer = pointer;
-    
+
     this.activeDraggable.updateDrag(event, pointer);
   },
-  
+
   endDrag: function(event) {
-    if(this._timeout) { 
-      clearTimeout(this._timeout); 
-      this._timeout = null; 
+    if(this._timeout) {
+      clearTimeout(this._timeout);
+      this._timeout = null;
     }
     if(!this.activeDraggable) return;
     this._lastPointer = null;
     this.activeDraggable.endDrag(event);
     this.activeDraggable = null;
   },
-  
+
   keyPress: function(event) {
     if(this.activeDraggable)
       this.activeDraggable.keyPress(event);
   },
-  
+
   addObserver: function(observer) {
     this.observers.push(observer);
     this._cacheObserverCallbacks();
   },
-  
+
   removeObserver: function(element) {  // element instead of observer fixes mem leaks
     this.observers = this.observers.reject( function(o) { return o.element==element });
     this._cacheObserverCallbacks();
   },
-  
+
   notify: function(eventName, draggable, event) {  // 'onStart', 'onEnd', 'onDrag'
     if(this[eventName+'Count'] > 0)
       this.observers.each( function(o) {
@@ -5558,7 +5660,7 @@ var Draggables = {
       });
     if(draggable.options[eventName]) draggable.options[eventName](draggable, event);
   },
-  
+
   _cacheObserverCallbacks: function() {
     ['onStart','onEnd','onDrag'].each( function(eventName) {
       Draggables[eventName+'Count'] = Draggables.observers.select(
@@ -5566,7 +5668,7 @@ var Draggables = {
       ).length;
     });
   }
-}
+};
 
 /*--------------------------------------------------------------------------*/
 
@@ -5582,12 +5684,12 @@ var Draggable = Class.create({
       },
       endeffect: function(element) {
         var toOpacity = Object.isNumber(element._opacity) ? element._opacity : 1.0;
-        new Effect.Opacity(element, {duration:0.2, from:0.7, to:toOpacity, 
+        new Effect.Opacity(element, {duration:0.2, from:0.7, to:toOpacity,
           queue: {scope:'_draggable', position:'end'},
-          afterFinish: function(){ 
-            Draggable._dragging[element] = false 
+          afterFinish: function(){
+            Draggable._dragging[element] = false
           }
-        }); 
+        });
       },
       zindex: 1000,
       revert: false,
@@ -5598,57 +5700,57 @@ var Draggable = Class.create({
       snap: false,  // false, or xy or [x,y] or function(x,y){ return [x,y] }
       delay: 0
     };
-    
+
     if(!arguments[1] || Object.isUndefined(arguments[1].endeffect))
       Object.extend(defaults, {
         starteffect: function(element) {
           element._opacity = Element.getOpacity(element);
           Draggable._dragging[element] = true;
-          new Effect.Opacity(element, {duration:0.2, from:element._opacity, to:0.7}); 
+          new Effect.Opacity(element, {duration:0.2, from:element._opacity, to:0.7});
         }
       });
-    
+
     var options = Object.extend(defaults, arguments[1] || { });
 
     this.element = $(element);
-    
+
     if(options.handle && Object.isString(options.handle))
       this.handle = this.element.down('.'+options.handle, 0);
-    
+
     if(!this.handle) this.handle = $(options.handle);
     if(!this.handle) this.handle = this.element;
-    
+
     if(options.scroll && !options.scroll.scrollTo && !options.scroll.outerHTML) {
       options.scroll = $(options.scroll);
       this._isScrollChild = Element.childOf(this.element, options.scroll);
     }
 
-    Element.makePositioned(this.element); // fix IE    
+    Element.makePositioned(this.element); // fix IE
 
     this.options  = options;
-    this.dragging = false;   
+    this.dragging = false;
 
     this.eventMouseDown = this.initDrag.bindAsEventListener(this);
     Event.observe(this.handle, "mousedown", this.eventMouseDown);
-    
+
     Draggables.register(this);
   },
-  
+
   destroy: function() {
     Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
     Draggables.unregister(this);
   },
-  
+
   currentDelta: function() {
     return([
       parseInt(Element.getStyle(this.element,'left') || '0'),
       parseInt(Element.getStyle(this.element,'top') || '0')]);
   },
-  
+
   initDrag: function(event) {
     if(!Object.isUndefined(Draggable._dragging[this.element]) &&
       Draggable._dragging[this.element]) return;
-    if(Event.isLeftClick(event)) {    
+    if(Event.isLeftClick(event)) {
       // abort on form elements, fixes a Firefox issue
       var src = Event.element(event);
       if((tag_name = src.tagName.toUpperCase()) && (
@@ -5657,34 +5759,34 @@ var Draggable = Class.create({
         tag_name=='OPTION' ||
         tag_name=='BUTTON' ||
         tag_name=='TEXTAREA')) return;
-        
+
       var pointer = [Event.pointerX(event), Event.pointerY(event)];
       var pos     = Position.cumulativeOffset(this.element);
       this.offset = [0,1].map( function(i) { return (pointer[i] - pos[i]) });
-      
+
       Draggables.activate(this);
       Event.stop(event);
     }
   },
-  
+
   startDrag: function(event) {
     this.dragging = true;
     if(!this.delta)
       this.delta = this.currentDelta();
-    
+
     if(this.options.zindex) {
       this.originalZ = parseInt(Element.getStyle(this.element,'z-index') || 0);
       this.element.style.zIndex = this.options.zindex;
     }
-    
+
     if(this.options.ghosting) {
       this._clone = this.element.cloneNode(true);
-      this.element._originallyAbsolute = (this.element.getStyle('position') == 'absolute');
-      if (!this.element._originallyAbsolute)
+      this._originallyAbsolute = (this.element.getStyle('position') == 'absolute');
+      if (!this._originallyAbsolute)
         Position.absolutize(this.element);
       this.element.parentNode.insertBefore(this._clone, this.element);
     }
-    
+
     if(this.options.scroll) {
       if (this.options.scroll == window) {
         var where = this._getWindowScroll(this.options.scroll);
@@ -5695,28 +5797,28 @@ var Draggable = Class.create({
         this.originalScrollTop = this.options.scroll.scrollTop;
       }
     }
-    
+
     Draggables.notify('onStart', this, event);
-        
+
     if(this.options.starteffect) this.options.starteffect(this.element);
   },
-  
+
   updateDrag: function(event, pointer) {
     if(!this.dragging) this.startDrag(event);
-    
+
     if(!this.options.quiet){
       Position.prepare();
       Droppables.show(pointer, this.element);
     }
-    
+
     Draggables.notify('onDrag', this, event);
-    
+
     this.draw(pointer);
     if(this.options.change) this.options.change(this);
-    
+
     if(this.options.scroll) {
       this.stopScrolling();
-      
+
       var p;
       if (this.options.scroll == window) {
         with(this._getWindowScroll(this.options.scroll)) { p = [ left, top, left+width, top+height ]; }
@@ -5734,16 +5836,16 @@ var Draggable = Class.create({
       if(pointer[1] > (p[3]-this.options.scrollSensitivity)) speed[1] = pointer[1]-(p[3]-this.options.scrollSensitivity);
       this.startScrolling(speed);
     }
-    
+
     // fix AppleWebKit rendering
     if(Prototype.Browser.WebKit) window.scrollBy(0,0);
-    
+
     Event.stop(event);
   },
-  
+
   finishDrag: function(event, success) {
     this.dragging = false;
-    
+
     if(this.options.quiet){
       Position.prepare();
       var pointer = [Event.pointerX(event), Event.pointerY(event)];
@@ -5751,24 +5853,24 @@ var Draggable = Class.create({
     }
 
     if(this.options.ghosting) {
-      if (!this.element._originallyAbsolute)
+      if (!this._originallyAbsolute)
         Position.relativize(this.element);
-      delete this.element._originallyAbsolute;
+      delete this._originallyAbsolute;
       Element.remove(this._clone);
       this._clone = null;
     }
 
-    var dropped = false; 
-    if(success) { 
-      dropped = Droppables.fire(event, this.element); 
-      if (!dropped) dropped = false; 
+    var dropped = false;
+    if(success) {
+      dropped = Droppables.fire(event, this.element);
+      if (!dropped) dropped = false;
     }
     if(dropped && this.options.onDropped) this.options.onDropped(this.element);
     Draggables.notify('onEnd', this, event);
 
     var revert = this.options.revert;
     if(revert && Object.isFunction(revert)) revert = revert(this.element);
-    
+
     var d = this.currentDelta();
     if(revert && this.options.reverteffect) {
       if (dropped == 0 || revert != 'failure')
@@ -5781,67 +5883,67 @@ var Draggable = Class.create({
     if(this.options.zindex)
       this.element.style.zIndex = this.originalZ;
 
-    if(this.options.endeffect) 
+    if(this.options.endeffect)
       this.options.endeffect(this.element);
-      
+
     Draggables.deactivate(this);
     Droppables.reset();
   },
-  
+
   keyPress: function(event) {
     if(event.keyCode!=Event.KEY_ESC) return;
     this.finishDrag(event, false);
     Event.stop(event);
   },
-  
+
   endDrag: function(event) {
     if(!this.dragging) return;
     this.stopScrolling();
     this.finishDrag(event, true);
     Event.stop(event);
   },
-  
+
   draw: function(point) {
     var pos = Position.cumulativeOffset(this.element);
     if(this.options.ghosting) {
       var r   = Position.realOffset(this.element);
       pos[0] += r[0] - Position.deltaX; pos[1] += r[1] - Position.deltaY;
     }
-    
+
     var d = this.currentDelta();
     pos[0] -= d[0]; pos[1] -= d[1];
-    
+
     if(this.options.scroll && (this.options.scroll != window && this._isScrollChild)) {
       pos[0] -= this.options.scroll.scrollLeft-this.originalScrollLeft;
       pos[1] -= this.options.scroll.scrollTop-this.originalScrollTop;
     }
-    
-    var p = [0,1].map(function(i){ 
-      return (point[i]-pos[i]-this.offset[i]) 
+
+    var p = [0,1].map(function(i){
+      return (point[i]-pos[i]-this.offset[i])
     }.bind(this));
-    
+
     if(this.options.snap) {
       if(Object.isFunction(this.options.snap)) {
         p = this.options.snap(p[0],p[1],this);
       } else {
       if(Object.isArray(this.options.snap)) {
         p = p.map( function(v, i) {
-          return (v/this.options.snap[i]).round()*this.options.snap[i] }.bind(this))
+          return (v/this.options.snap[i]).round()*this.options.snap[i] }.bind(this));
       } else {
         p = p.map( function(v) {
-          return (v/this.options.snap).round()*this.options.snap }.bind(this))
+          return (v/this.options.snap).round()*this.options.snap }.bind(this));
       }
     }}
-    
+
     var style = this.element.style;
     if((!this.options.constraint) || (this.options.constraint=='horizontal'))
       style.left = p[0] + "px";
     if((!this.options.constraint) || (this.options.constraint=='vertical'))
       style.top  = p[1] + "px";
-    
+
     if(style.visibility=="hidden") style.visibility = ""; // fix gecko rendering
   },
-  
+
   stopScrolling: function() {
     if(this.scrollInterval) {
       clearInterval(this.scrollInterval);
@@ -5849,14 +5951,14 @@ var Draggable = Class.create({
       Draggables._lastScrollPointer = null;
     }
   },
-  
+
   startScrolling: function(speed) {
     if(!(speed[0] || speed[1])) return;
     this.scrollSpeed = [speed[0]*this.options.scrollSpeed,speed[1]*this.options.scrollSpeed];
     this.lastScrolled = new Date();
     this.scrollInterval = setInterval(this.scroll.bind(this), 10);
   },
-  
+
   scroll: function() {
     var current = new Date();
     var delta = current - this.lastScrolled;
@@ -5872,7 +5974,7 @@ var Draggable = Class.create({
       this.options.scroll.scrollLeft += this.scrollSpeed[0] * delta / 1000;
       this.options.scroll.scrollTop  += this.scrollSpeed[1] * delta / 1000;
     }
-    
+
     Position.prepare();
     Droppables.show(Draggables._lastPointer, this.element);
     Draggables.notify('onDrag', this);
@@ -5886,10 +5988,10 @@ var Draggable = Class.create({
         Draggables._lastScrollPointer[1] = 0;
       this.draw(Draggables._lastScrollPointer);
     }
-    
+
     if(this.options.change) this.options.change(this);
   },
-  
+
   _getWindowScroll: function(w) {
     var T, L, W, H;
     with (w.document) {
@@ -5908,7 +6010,7 @@ var Draggable = Class.create({
         H = documentElement.clientHeight;
       } else {
         W = body.offsetWidth;
-        H = body.offsetHeight
+        H = body.offsetHeight;
       }
     }
     return { top: T, left: L, width: W, height: H };
@@ -5925,11 +6027,11 @@ var SortableObserver = Class.create({
     this.observer  = observer;
     this.lastValue = Sortable.serialize(this.element);
   },
-  
+
   onStart: function() {
     this.lastValue = Sortable.serialize(this.element);
   },
-  
+
   onEnd: function() {
     Sortable.unmark();
     if(this.lastValue != Sortable.serialize(this.element))
@@ -5939,11 +6041,11 @@ var SortableObserver = Class.create({
 
 var Sortable = {
   SERIALIZE_RULE: /^[^_\-](?:[A-Za-z0-9\-\_]*)[_](.*)$/,
-  
+
   sortables: { },
-  
+
   _findRootElement: function(element) {
-    while (element.tagName.toUpperCase() != "BODY") {  
+    while (element.tagName.toUpperCase() != "BODY") {
       if(element.id && Sortable.sortables[element.id]) return element;
       element = element.parentNode;
     }
@@ -5954,22 +6056,23 @@ var Sortable = {
     if(!element) return;
     return Sortable.sortables[element.id];
   },
-  
+
   destroy: function(element){
-    var s = Sortable.options(element);
-    
+    element = $(element);
+    var s = Sortable.sortables[element.id];
+
     if(s) {
       Draggables.removeObserver(s.element);
       s.droppables.each(function(d){ Droppables.remove(d) });
       s.draggables.invoke('destroy');
-      
+
       delete Sortable.sortables[s.element.id];
     }
   },
 
   create: function(element) {
     element = $(element);
-    var options = Object.extend({ 
+    var options = Object.extend({
       element:     element,
       tag:         'li',       // assumes li children, override with tag: 'tagname'
       dropOnEmpty: false,
@@ -5983,17 +6086,17 @@ var Sortable = {
       delay:       0,
       hoverclass:  null,
       ghosting:    false,
-      quiet:       false, 
+      quiet:       false,
       scroll:      false,
       scrollSensitivity: 20,
       scrollSpeed: 15,
       format:      this.SERIALIZE_RULE,
-      
-      // these take arrays of elements or ids and can be 
+
+      // these take arrays of elements or ids and can be
       // used for better initialization performance
       elements:    false,
       handles:     false,
-      
+
       onChange:    Prototype.emptyFunction,
       onUpdate:    Prototype.emptyFunction
     }, arguments[1] || { });
@@ -6030,24 +6133,24 @@ var Sortable = {
     if(options.zindex)
       options_for_draggable.zindex = options.zindex;
 
-    // build options for the droppables  
+    // build options for the droppables
     var options_for_droppable = {
       overlap:     options.overlap,
       containment: options.containment,
       tree:        options.tree,
       hoverclass:  options.hoverclass,
       onHover:     Sortable.onHover
-    }
-    
+    };
+
     var options_for_tree = {
       onHover:      Sortable.onEmptyHover,
       overlap:      options.overlap,
       containment:  options.containment,
       hoverclass:   options.hoverclass
-    }
+    };
 
     // fix for gecko engine
-    Element.cleanWhitespace(element); 
+    Element.cleanWhitespace(element);
 
     options.draggables = [];
     options.droppables = [];
@@ -6060,14 +6163,14 @@ var Sortable = {
 
     (options.elements || this.findElements(element, options) || []).each( function(e,i) {
       var handle = options.handles ? $(options.handles[i]) :
-        (options.handle ? $(e).select('.' + options.handle)[0] : e); 
+        (options.handle ? $(e).select('.' + options.handle)[0] : e);
       options.draggables.push(
         new Draggable(e, Object.extend(options_for_draggable, { handle: handle })));
       Droppables.add(e, options_for_droppable);
       if(options.tree) e.treeNode = element;
-      options.droppables.push(e);      
+      options.droppables.push(e);
     });
-    
+
     if(options.tree) {
       (Sortable.findTreeElements(element, options) || []).each( function(e) {
         Droppables.add(e, options_for_tree);
@@ -6089,7 +6192,7 @@ var Sortable = {
     return Element.findChildren(
       element, options.only, options.tree ? true : false, options.tag);
   },
-  
+
   findTreeElements: function(element, options) {
     return Element.findChildren(
       element, options.only, options.tree ? true : false, options.treeTag);
@@ -6106,7 +6209,7 @@ var Sortable = {
         var oldParentNode = element.parentNode;
         element.style.visibility = "hidden"; // fix gecko rendering
         dropon.parentNode.insertBefore(element, dropon);
-        if(dropon.parentNode!=oldParentNode) 
+        if(dropon.parentNode!=oldParentNode)
           Sortable.options(oldParentNode).onChange(element);
         Sortable.options(dropon.parentNode).onChange(element);
       }
@@ -6117,26 +6220,26 @@ var Sortable = {
         var oldParentNode = element.parentNode;
         element.style.visibility = "hidden"; // fix gecko rendering
         dropon.parentNode.insertBefore(element, nextElement);
-        if(dropon.parentNode!=oldParentNode) 
+        if(dropon.parentNode!=oldParentNode)
           Sortable.options(oldParentNode).onChange(element);
         Sortable.options(dropon.parentNode).onChange(element);
       }
     }
   },
-  
+
   onEmptyHover: function(element, dropon, overlap) {
     var oldParentNode = element.parentNode;
     var droponOptions = Sortable.options(dropon);
-        
+
     if(!Element.isParent(dropon, element)) {
       var index;
-      
+
       var children = Sortable.findElements(dropon, {tag: droponOptions.tag, only: droponOptions.only});
       var child = null;
-            
+
       if(children) {
         var offset = Element.offsetSize(dropon, droponOptions.overlap) * (1.0 - overlap);
-        
+
         for (index = 0; index < children.length; index += 1) {
           if (offset - Element.offsetSize (children[index], droponOptions.overlap) >= 0) {
             offset -= Element.offsetSize (children[index], droponOptions.overlap);
@@ -6149,9 +6252,9 @@ var Sortable = {
           }
         }
       }
-      
+
       dropon.insertBefore(element, child);
-      
+
       Sortable.options(oldParentNode).onChange(element);
       droponOptions.onChange(element);
     }
@@ -6164,34 +6267,34 @@ var Sortable = {
   mark: function(dropon, position) {
     // mark on ghosting only
     var sortable = Sortable.options(dropon.parentNode);
-    if(sortable && !sortable.ghosting) return; 
+    if(sortable && !sortable.ghosting) return;
 
     if(!Sortable._marker) {
-      Sortable._marker = 
+      Sortable._marker =
         ($('dropmarker') || Element.extend(document.createElement('DIV'))).
           hide().addClassName('dropmarker').setStyle({position:'absolute'});
       document.getElementsByTagName("body").item(0).appendChild(Sortable._marker);
-    }    
+    }
     var offsets = Position.cumulativeOffset(dropon);
     Sortable._marker.setStyle({left: offsets[0]+'px', top: offsets[1] + 'px'});
-    
+
     if(position=='after')
-      if(sortable.overlap == 'horizontal') 
+      if(sortable.overlap == 'horizontal')
         Sortable._marker.setStyle({left: (offsets[0]+dropon.clientWidth) + 'px'});
       else
         Sortable._marker.setStyle({top: (offsets[1]+dropon.clientHeight) + 'px'});
-    
+
     Sortable._marker.show();
   },
-  
+
   _tree: function(element, options, parent) {
     var children = Sortable.findElements(element, options) || [];
-  
+
     for (var i = 0; i < children.length; ++i) {
       var match = children[i].id.match(options.format);
 
       if (!match) continue;
-      
+
       var child = {
         id: encodeURIComponent(match ? match[1] : null),
         element: element,
@@ -6199,16 +6302,16 @@ var Sortable = {
         children: [],
         position: parent.children.length,
         container: $(children[i]).down(options.treeTag)
-      }
-      
+      };
+
       /* Get the element containing the children and recurse over it */
       if (child.container)
-        this._tree(child.container, options, child)
-      
+        this._tree(child.container, options, child);
+
       parent.children.push (child);
     }
 
-    return parent; 
+    return parent;
   },
 
   tree: function(element) {
@@ -6221,15 +6324,15 @@ var Sortable = {
       name: element.id,
       format: sortableOptions.format
     }, arguments[1] || { });
-    
+
     var root = {
       id: null,
       parent: null,
       children: [],
       container: element,
       position: 0
-    }
-    
+    };
+
     return Sortable._tree(element, options, root);
   },
 
@@ -6245,7 +6348,7 @@ var Sortable = {
   sequence: function(element) {
     element = $(element);
     var options = Object.extend(this.options(element), arguments[1] || { });
-    
+
     return $(this.findElements(element, options) || []).map( function(item) {
       return item.id.match(options.format) ? item.id.match(options.format)[1] : '';
     });
@@ -6254,14 +6357,14 @@ var Sortable = {
   setSequence: function(element, new_sequence) {
     element = $(element);
     var options = Object.extend(this.options(element), arguments[2] || { });
-    
+
     var nodeMap = { };
     this.findElements(element, options).each( function(n) {
         if (n.id.match(options.format))
             nodeMap[n.id.match(options.format)[1]] = [n, n.parentNode];
         n.parentNode.removeChild(n);
     });
-   
+
     new_sequence.each(function(ident) {
       var n = nodeMap[ident];
       if (n) {
@@ -6270,16 +6373,16 @@ var Sortable = {
       }
     });
   },
-  
+
   serialize: function(element) {
     element = $(element);
     var options = Object.extend(Sortable.options(element), arguments[1] || { });
     var name = encodeURIComponent(
       (arguments[1] && arguments[1].name) ? arguments[1].name : element.id);
-    
+
     if (options.tree) {
       return Sortable.tree(element, arguments[1]).children.map( function (item) {
-        return [name + Sortable._constructIndex(item) + "[id]=" + 
+        return [name + Sortable._constructIndex(item) + "[id]=" +
                 encodeURIComponent(item.id)].concat(item.children.map(arguments.callee));
       }).flatten().join('&');
     } else {
@@ -6288,16 +6391,16 @@ var Sortable = {
       }).join('&');
     }
   }
-}
+};
 
 // Returns true if child is contained within element
 Element.isParent = function(child, element) {
   if (!child.parentNode || child == element) return false;
   if (child.parentNode == element) return true;
   return Element.isParent(child.parentNode, element);
-}
+};
 
-Element.findChildren = function(element, only, recursive, tagName) {   
+Element.findChildren = function(element, only, recursive, tagName) {
   if(!element.hasChildNodes()) return null;
   tagName = tagName.toUpperCase();
   if(only) only = [only].flatten();
@@ -6313,32 +6416,31 @@ Element.findChildren = function(element, only, recursive, tagName) {
   });
 
   return (elements.length>0 ? elements.flatten() : []);
-}
+};
 
 Element.offsetSize = function (element, type) {
   return element['offset' + ((type=='vertical' || type=='height') ? 'Height' : 'Width')];
-}
+};
 
-
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2007 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
-//           (c) 2005-2007 Jon Tirsen (http://www.tirsen.com)
+// Copyright (c) 2005-2008 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2008 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
+//           (c) 2005-2008 Jon Tirsen (http://www.tirsen.com)
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
 //  Rob Wills
-// 
+//
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
 
-// Autocompleter.Base handles all the autocompletion functionality 
+// Autocompleter.Base handles all the autocompletion functionality
 // that's independent of the data source for autocompletion. This
 // includes drawing the autocompletion menu, observing keyboard
 // and mouse events, and similar.
 //
-// Specific autocompleters need to provide, at the very least, 
+// Specific autocompleters need to provide, at the very least,
 // a getUpdatedChoices function that will be invoked every time
-// the text inside the monitored textbox changes. This method 
+// the text inside the monitored textbox changes. This method
 // should get the text for which to provide autocompletion by
 // invoking this.getToken(), NOT by directly accessing
 // this.element.value. This is to allow incremental tokenized
@@ -6352,23 +6454,23 @@ Element.offsetSize = function (element, type) {
 // will incrementally autocomplete with a comma as the token.
 // Additionally, ',' in the above example can be replaced with
 // a token array, e.g. { tokens: [',', '\n'] } which
-// enables autocompletion on multiple tokens. This is most 
-// useful when one of the tokens is \n (a newline), as it 
+// enables autocompletion on multiple tokens. This is most
+// useful when one of the tokens is \n (a newline), as it
 // allows smart autocompletion after linebreaks.
 
 if(typeof Effect == 'undefined')
   throw("controls.js requires including script.aculo.us' effects.js library");
 
-var Autocompleter = { }
+var Autocompleter = { };
 Autocompleter.Base = Class.create({
   baseInitialize: function(element, update, options) {
-    element          = $(element)
-    this.element     = element; 
-    this.update      = $(update);  
-    this.hasFocus    = false; 
-    this.changed     = false; 
-    this.active      = false; 
-    this.index       = 0;     
+    element          = $(element);
+    this.element     = element;
+    this.update      = $(update);
+    this.hasFocus    = false;
+    this.changed     = false;
+    this.active      = false;
+    this.index       = 0;
     this.entryCount  = 0;
     this.oldElementValue = this.element.value;
 
@@ -6381,28 +6483,28 @@ Autocompleter.Base = Class.create({
     this.options.tokens       = this.options.tokens || [];
     this.options.frequency    = this.options.frequency || 0.4;
     this.options.minChars     = this.options.minChars || 1;
-    this.options.onShow       = this.options.onShow || 
-      function(element, update){ 
+    this.options.onShow       = this.options.onShow ||
+      function(element, update){
         if(!update.style.position || update.style.position=='absolute') {
           update.style.position = 'absolute';
           Position.clone(element, update, {
-            setHeight: false, 
+            setHeight: false,
             offsetTop: element.offsetHeight
           });
         }
         Effect.Appear(update,{duration:0.15});
       };
-    this.options.onHide = this.options.onHide || 
+    this.options.onHide = this.options.onHide ||
       function(element, update){ new Effect.Fade(update,{duration:0.15}) };
 
-    if(typeof(this.options.tokens) == 'string') 
+    if(typeof(this.options.tokens) == 'string')
       this.options.tokens = new Array(this.options.tokens);
     // Force carriage returns as token delimiters anyway
     if (!this.options.tokens.include('\n'))
       this.options.tokens.push('\n');
 
     this.observer = null;
-    
+
     this.element.setAttribute('autocomplete','off');
 
     Element.hide(this.update);
@@ -6413,10 +6515,10 @@ Autocompleter.Base = Class.create({
 
   show: function() {
     if(Element.getStyle(this.update, 'display')=='none') this.options.onShow(this.element, this.update);
-    if(!this.iefix && 
+    if(!this.iefix &&
       (Prototype.Browser.IE) &&
       (Element.getStyle(this.update, 'position')=='absolute')) {
-      new Insertion.After(this.update, 
+      new Insertion.After(this.update,
        '<iframe id="' + this.update.id + '_iefix" '+
        'style="display:none;position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);" ' +
        'src="javascript:false;" frameborder="0" scrolling="no"></iframe>');
@@ -6424,7 +6526,7 @@ Autocompleter.Base = Class.create({
     }
     if(this.iefix) setTimeout(this.fixIEOverlapping.bind(this), 50);
   },
-  
+
   fixIEOverlapping: function() {
     Position.clone(this.update, this.iefix, {setTop:(!this.update.style.height)});
     this.iefix.style.zIndex = 1;
@@ -6472,15 +6574,15 @@ Autocompleter.Base = Class.create({
          Event.stop(event);
          return;
       }
-     else 
-       if(event.keyCode==Event.KEY_TAB || event.keyCode==Event.KEY_RETURN || 
+     else
+       if(event.keyCode==Event.KEY_TAB || event.keyCode==Event.KEY_RETURN ||
          (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) return;
 
     this.changed = true;
     this.hasFocus = true;
 
     if(this.observer) clearTimeout(this.observer);
-      this.observer = 
+      this.observer =
         setTimeout(this.onObserverEvent.bind(this), this.options.frequency*1000);
   },
 
@@ -6492,35 +6594,35 @@ Autocompleter.Base = Class.create({
 
   onHover: function(event) {
     var element = Event.findElement(event, 'LI');
-    if(this.index != element.autocompleteIndex) 
+    if(this.index != element.autocompleteIndex)
     {
         this.index = element.autocompleteIndex;
         this.render();
     }
     Event.stop(event);
   },
-  
+
   onClick: function(event) {
     var element = Event.findElement(event, 'LI');
     this.index = element.autocompleteIndex;
     this.selectEntry();
     this.hide();
   },
-  
+
   onBlur: function(event) {
     // needed to make click events working
     setTimeout(this.hide.bind(this), 250);
     this.hasFocus = false;
-    this.active = false;     
-  }, 
-  
+    this.active = false;
+  },
+
   render: function() {
     if(this.entryCount > 0) {
       for (var i = 0; i < this.entryCount; i++)
-        this.index==i ? 
-          Element.addClassName(this.getEntry(i),"selected") : 
+        this.index==i ?
+          Element.addClassName(this.getEntry(i),"selected") :
           Element.removeClassName(this.getEntry(i),"selected");
-      if(this.hasFocus) { 
+      if(this.hasFocus) {
         this.show();
         this.active = true;
       }
@@ -6529,27 +6631,27 @@ Autocompleter.Base = Class.create({
       this.hide();
     }
   },
-  
+
   markPrevious: function() {
-    if(this.index > 0) this.index--
+    if(this.index > 0) this.index--;
       else this.index = this.entryCount-1;
     this.getEntry(this.index).scrollIntoView(true);
   },
-  
+
   markNext: function() {
-    if(this.index < this.entryCount-1) this.index++
+    if(this.index < this.entryCount-1) this.index++;
       else this.index = 0;
     this.getEntry(this.index).scrollIntoView(false);
   },
-  
+
   getEntry: function(index) {
     return this.update.firstChild.childNodes[index];
   },
-  
+
   getCurrentEntry: function() {
     return this.getEntry(this.index);
   },
-  
+
   selectEntry: function() {
     this.active = false;
     this.updateElement(this.getCurrentEntry());
@@ -6566,7 +6668,7 @@ Autocompleter.Base = Class.create({
       if(nodes.length>0) value = Element.collectTextNodes(nodes[0], this.options.select);
     } else
       value = Element.collectTextNodesIgnoreClass(selectedElement, 'informal');
-    
+
     var bounds = this.getTokenBounds();
     if (bounds[0] != -1) {
       var newValue = this.element.value.substr(0, bounds[0]);
@@ -6579,7 +6681,7 @@ Autocompleter.Base = Class.create({
     }
     this.oldElementValue = this.element.value;
     this.element.focus();
-    
+
     if (this.options.afterUpdateElement)
       this.options.afterUpdateElement(this.element, selectedElement);
   },
@@ -6591,20 +6693,20 @@ Autocompleter.Base = Class.create({
       Element.cleanWhitespace(this.update.down());
 
       if(this.update.firstChild && this.update.down().childNodes) {
-        this.entryCount = 
+        this.entryCount =
           this.update.down().childNodes.length;
         for (var i = 0; i < this.entryCount; i++) {
           var entry = this.getEntry(i);
           entry.autocompleteIndex = i;
           this.addObservers(entry);
         }
-      } else { 
+      } else {
         this.entryCount = 0;
       }
 
       this.stopIndicator();
       this.index = 0;
-      
+
       if(this.entryCount==1 && this.options.autoSelect) {
         this.selectEntry();
         this.hide();
@@ -6620,7 +6722,7 @@ Autocompleter.Base = Class.create({
   },
 
   onObserverEvent: function() {
-    this.changed = false;   
+    this.changed = false;
     this.tokenBounds = null;
     if(this.getToken().length>=this.options.minChars) {
       this.getUpdatedChoices();
@@ -6673,16 +6775,16 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
 
   getUpdatedChoices: function() {
     this.startIndicator();
-    
-    var entry = encodeURIComponent(this.options.paramName) + '=' + 
+
+    var entry = encodeURIComponent(this.options.paramName) + '=' +
       encodeURIComponent(this.getToken());
 
     this.options.parameters = this.options.callback ?
       this.options.callback(this.element, entry) : entry;
 
-    if(this.options.defaultParams) 
+    if(this.options.defaultParams)
       this.options.parameters += '&' + this.options.defaultParams;
-    
+
     new Ajax.Request(this.url, this.options);
   },
 
@@ -6704,7 +6806,7 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
 // - choices - How many autocompletion choices to offer
 //
 // - partialSearch - If false, the autocompleter will match entered
-//                    text only at the beginning of strings in the 
+//                    text only at the beginning of strings in the
 //                    autocomplete array. Defaults to true, which will
 //                    match text at the beginning of any *word* in the
 //                    strings in the autocomplete array. If you want to
@@ -6721,7 +6823,7 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
 // - ignoreCase - Whether to ignore case when autocompleting.
 //                 Defaults to true.
 //
-// It's possible to pass in a custom function as the 'selector' 
+// It's possible to pass in a custom function as the 'selector'
 // option, if you prefer to write your own autocompletion logic.
 // In that case, the other options above will not apply unless
 // you support them.
@@ -6749,20 +6851,20 @@ Autocompleter.Local = Class.create(Autocompleter.Base, {
         var entry     = instance.getToken();
         var count     = 0;
 
-        for (var i = 0; i < instance.options.array.length &&  
-          ret.length < instance.options.choices ; i++) { 
+        for (var i = 0; i < instance.options.array.length &&
+          ret.length < instance.options.choices ; i++) {
 
           var elem = instance.options.array[i];
-          var foundPos = instance.options.ignoreCase ? 
-            elem.toLowerCase().indexOf(entry.toLowerCase()) : 
+          var foundPos = instance.options.ignoreCase ?
+            elem.toLowerCase().indexOf(entry.toLowerCase()) :
             elem.indexOf(entry);
 
           while (foundPos != -1) {
-            if (foundPos == 0 && elem.length != entry.length) { 
-              ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + 
+            if (foundPos == 0 && elem.length != entry.length) {
+              ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" +
                 elem.substr(entry.length) + "</li>");
               break;
-            } else if (entry.length >= instance.options.partialChars && 
+            } else if (entry.length >= instance.options.partialChars &&
               instance.options.partialSearch && foundPos != -1) {
               if (instance.options.fullSearch || /\s/.test(elem.substr(foundPos-1,1))) {
                 partial.push("<li>" + elem.substr(0, foundPos) + "<strong>" +
@@ -6772,14 +6874,14 @@ Autocompleter.Local = Class.create(Autocompleter.Base, {
               }
             }
 
-            foundPos = instance.options.ignoreCase ? 
-              elem.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) : 
+            foundPos = instance.options.ignoreCase ?
+              elem.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) :
               elem.indexOf(entry, foundPos + 1);
 
           }
         }
         if (partial.length)
-          ret = ret.concat(partial.slice(0, instance.options.choices - ret.length))
+          ret = ret.concat(partial.slice(0, instance.options.choices - ret.length));
         return "<ul>" + ret.join('') + "</ul>";
       }
     }, options || { });
@@ -6796,7 +6898,7 @@ Field.scrollFreeActivate = function(field) {
   setTimeout(function() {
     Field.activate(field);
   }, 1);
-}
+};
 
 Ajax.InPlaceEditor = Class.create({
   initialize: function(element, url, options) {
@@ -6926,7 +7028,7 @@ Ajax.InPlaceEditor = Class.create({
     this.triggerCallback('onEnterHover');
   },
   getText: function() {
-    return this.element.innerHTML;
+    return this.element.innerHTML.unescapeHTML();
   },
   handleAJAXFailure: function(transport) {
     this.triggerCallback('onFailure', transport);
@@ -7102,7 +7204,7 @@ Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
       onSuccess: function(transport) {
         var js = transport.responseText.strip();
         if (!/^\[.*\]$/.test(js)) // TODO: improve sanity check
-          throw 'Server returned an invalid collection representation.';
+          throw('Server returned an invalid collection representation.');
         this._collection = eval(js);
         this.checkForExternalText();
       }.bind(this),
@@ -7259,7 +7361,7 @@ Ajax.InPlaceCollectionEditor.DefaultOptions = {
   loadingCollectionText: 'Loading options...'
 };
 
-// Delayed observer, like Form.Element.Observer, 
+// Delayed observer, like Form.Element.Observer,
 // but waits for delay after last key input
 // Ideal for live-search fields
 
@@ -7269,7 +7371,7 @@ Form.Element.DelayedObserver = Class.create({
     this.element   = $(element);
     this.callback  = callback;
     this.timer     = null;
-    this.lastValue = $F(this.element); 
+    this.lastValue = $F(this.element);
     Event.observe(this.element,'keyup',this.delayedListener.bindAsEventListener(this));
   },
   delayedListener: function(event) {
@@ -7284,116 +7386,132 @@ Form.Element.DelayedObserver = Class.create({
   }
 });
 
-
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
 function mark_for_destroy(element) {
-  $(element).next('.should_destroy').value = 1;
-  $(element).up('.role_membership').hide();
+    $(element).next('.should_destroy').value = 1;
+    $(element).up('.role_membership').hide();
 }
 
 function toggle_investigator_forms(id_to_show) {
 
-  id_to_hide = $("active_form").value;
-  id_to_hide = "form_investigate_" + id_to_hide;
+    id_to_hide = $("active_form").value;
+    id_to_hide = "form_investigate_" + id_to_hide;
 
-  $("active_form").value = id_to_show;
-  id_to_show = "form_investigate_" + id_to_show;
+    $("active_form").value = id_to_show;
+    id_to_show = "form_investigate_" + id_to_show;
 
-  $(id_to_hide).hide();
-  $(id_to_show).show();
+    $(id_to_hide).hide();
+    $(id_to_show).show();
 
 }
 
 function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
-  if (typeof spinner_id == "undefined")
-    spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
-  new Ajax.Request(path + '?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
-    asynchronous: true,
-    evalScripts:  true,
-    onCreate:     function() { $(spinner_id).show(); },
-    onComplete:   function() { $(spinner_id).hide(); }
-  });
+    if (typeof spinner_id == "undefined")
+        spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
+    new Ajax.Request(path + '?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
+        asynchronous: true,
+        evalScripts:  true,
+        onCreate:     function() {
+            $(spinner_id).show();
+        },
+        onComplete:   function() {
+            $(spinner_id).hide();
+        }
+    });
 }
 
 function sendCoreConditionRequest(path, element, event_id, core_path, spinner_id) {
-  if (typeof spinner_id == "undefined")
-    spinner_id = core_path + '_spinner';
-  new Ajax.Request(path +'?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {
-    asynchronous: true,
-    evalScripts:  true,
-    onCreate:     function() { $(spinner_id).show(); },
-    onComplete:   function() { $(spinner_id).hide(); }
-  });
+    if (typeof spinner_id == "undefined")
+        spinner_id = core_path + '_spinner';
+    new Ajax.Request(path +'?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {
+        asynchronous: true,
+        evalScripts:  true,
+        onCreate:     function() {
+            $(spinner_id).show();
+        },
+        onComplete:   function() {
+            $(spinner_id).hide();
+        }
+    });
+}
+
+function updateStatusRequest(path, value) {
+    separator = (path.indexOf("?") > 0) ? "&" : "?";
+    new Ajax.Request(path + separator + 'task[status]=' + value, {
+        asynchronous:true,
+        evalScripts:true,
+        method:'put'
+    });
 }
 
 function setUpSearchFields() {
-  if (document.getElementById("name").value.length > 0) {
-    document.getElementById("sw_first_name").disabled = true;
-    document.getElementById("sw_last_name").disabled = true;
-  }
+    if (document.getElementById("name").value.length > 0) {
+        document.getElementById("sw_first_name").disabled = true;
+        document.getElementById("sw_last_name").disabled = true;
+    }
 
-  if (document.getElementById("sw_first_name").value.length > 0 || document.getElementById("sw_last_name").value.length > 0) {
-    document.getElementById("name").disabled = true;
-  }
+    if (document.getElementById("sw_first_name").value.length > 0 || document.getElementById("sw_last_name").value.length > 0) {
+        document.getElementById("name").disabled = true;
+    }
 }
 
 function checkNameSearchFields(field) {
-  if (field.id == "name") {
-    if (field.value.length > 0) {
-      document.getElementById("sw_first_name").disabled = true;
-      document.getElementById("sw_last_name").disabled = true;
+    if (field.id == "name") {
+        if (field.value.length > 0) {
+            document.getElementById("sw_first_name").disabled = true;
+            document.getElementById("sw_last_name").disabled = true;
+        }
+        else {
+            document.getElementById("sw_first_name").disabled = false;
+            document.getElementById("sw_last_name").disabled = false;
+        }
     }
-    else {
-      document.getElementById("sw_first_name").disabled = false;
-      document.getElementById("sw_last_name").disabled = false;
-    }
-  }
-  else if (field.id == "sw_first_name" || field.id == "sw_last_name") {
-    first = document.getElementById("sw_first_name");
-    last = document.getElementById("sw_last_name");
+    else if (field.id == "sw_first_name" || field.id == "sw_last_name") {
+        first = document.getElementById("sw_first_name");
+        last = document.getElementById("sw_last_name");
 
-    if (first.value.length > 0 || last.value.length > 0) {
-      document.getElementById("name").disabled = true;
+        if (first.value.length > 0 || last.value.length > 0) {
+            document.getElementById("name").disabled = true;
+        }
+        else {
+            document.getElementById("name").disabled = false;
+        }
     }
-    else {
-      document.getElementById("name").disabled = false;
-    }
-  }
 }
 
 function build_url_with_tab_index(url) {
-  if (!(window.myTabs === undefined)) {
-    url = url + "?tab_index=" + myTabs.get("activeIndex");
-  }
-  return url;
+    if (!(window.myTabs === undefined)) {
+        url = url + "?tab_index=" + myTabs.get("activeIndex");
+    }
+    return url;
 }
 
 function send_url_with_tab_index(url) {
-  url = build_url_with_tab_index(url);
-  location.href = url;
+    url = build_url_with_tab_index(url);
+    location.href = url;
 }
 
 function add_tab_index_to_action(form) {
-  form.action = build_url_with_tab_index(form.action);
+    form.action = build_url_with_tab_index(form.action);
 }
 
 function post_and_return(form_id) {
-  form = document.getElementById(form_id);
-  form.action = build_url_with_tab_index(form.action);
-  form.action = form.action + "&return=true";
-  form.submit();
+    form = document.getElementById(form_id);
+    form.action = build_url_with_tab_index(form.action);
+    form.action = form.action + "&return=true";
+    form.submit();
 }
 
 function post_and_exit(form_id) {
-  form = document.getElementById(form_id);
-  form.action = build_url_with_tab_index(form.action);
-  form.submit();
+    form = document.getElementById(form_id);
+    form.action = build_url_with_tab_index(form.action);
+    form.submit();
 }
 
 function toggle_strike_through(element_id) {
-  Element.toggleClassName(element_id, 'struck-through');
+    Element.toggleClassName(element_id, 'struck-through');
 }
 
 function safe_disable(target) {
@@ -7404,21 +7522,83 @@ function safe_disable(target) {
 }
 
 function toggle_save_buttons(state) {
-  btn1 = document.getElementById('save_and_exit_btn');
-  btn2 = document.getElementById('save_and_continue_btn');
+    btn1 = document.getElementById('save_and_exit_btn');
+    btn2 = document.getElementById('save_and_continue_btn');
 
-  var btns = new Array(btn1, btn2);
-  $A(btns).each(function(btn) {
-    if (btn) {
-      if (state == 'on') {
-        btn.disabled=false
-        } else {
-        btn.disabled=true;
-      }
-    }
-  })
+    var btns = new Array(btn1, btn2);
+    $A(btns).each(function(btn) {
+        if (btn) {
+            if (state == 'on') {
+                btn.disabled=false;
+            } else {
+                btn.disabled=true;
+            }
+        }
+    });
 }
 
+function contact_parent_address(id) {
+  new Ajax.Request('../../contact_events/copy_address/' + id, {
+    asynchronous: true,
+    evalScripts:  true,
+    onComplete: function(transport, json) {
+      $H(json).each(function(pair) {
+        $('contact_event_address_attributes_' + pair.key).value = pair.value;
+      });
+    }
+  });
+}
+
+function global_shortcuts_init() {
+  shortcut.add("Ctrl+Shift+N", function() {
+    window.location = "/cmrs/new";
+  });
+
+  shortcut.add("Ctrl+Shift+M", function() {
+    window.location = "/forms";
+  });
+
+  shortcut.add("Ctrl+Shift+.",function() {
+    window.location = "/search/people";
+  });
+
+  shortcut.add("Ctrl+Shift+Question",function(){
+    window.location = "/search/cmrs";
+  });
+
+  shortcut.add("Ctrl+Shift+,",function(){
+    window.location = "/cmrs";
+  });
+}
+
+function cmr_shortcuts_init() {
+  shortcut.add("Ctrl+Shift+X", function() {
+    myTabs.set('activeIndex', (
+        myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
+        0 : myTabs.get('activeIndex') + 1
+      ));
+
+    //Grab the first thing to focus in the tab
+    YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+  });
+
+  shortcut.add("Ctrl+Shift+Z", function() {
+    myTabs.set('activeIndex', (
+        myTabs.get('activeIndex') == 0 ?
+        myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
+      ));
+
+    YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+  });
+
+  shortcut.add("Ctrl+Shift+S", function() {
+    document.getElementById('save_and_exit_btn').focus();
+  });
+}
 
 
 /* 
@@ -7806,6 +7986,234 @@ if(EU.isIE){YAHOO.util.Event.onDOMReady(YAHOO.util.Event._tryPreloadAttach,YAHOO
 var D=this.__yui_events[A];if(D){D.subscribe(C,F,E);}else{this.__yui_subscribers=this.__yui_subscribers||{};var B=this.__yui_subscribers;if(!B[A]){B[A]=[];}B[A].push({fn:C,obj:F,override:E});}},unsubscribe:function(C,E,G){this.__yui_events=this.__yui_events||{};var A=this.__yui_events;if(C){var F=A[C];if(F){return F.unsubscribe(E,G);}}else{var B=true;for(var D in A){if(YAHOO.lang.hasOwnProperty(A,D)){B=B&&A[D].unsubscribe(E,G);}}return B;}return false;},unsubscribeAll:function(A){return this.unsubscribe(A);},createEvent:function(G,D){this.__yui_events=this.__yui_events||{};var A=D||{};var I=this.__yui_events;if(I[G]){}else{var H=A.scope||this;var E=(A.silent);var B=new YAHOO.util.CustomEvent(G,H,E,YAHOO.util.CustomEvent.FLAT);I[G]=B;if(A.onSubscribeCallback){B.subscribeEvent.subscribe(A.onSubscribeCallback);}this.__yui_subscribers=this.__yui_subscribers||{};var F=this.__yui_subscribers[G];if(F){for(var C=0;C<F.length;++C){B.subscribe(F[C].fn,F[C].obj,F[C].override);}}}return I[G];},fireEvent:function(E,D,A,C){this.__yui_events=this.__yui_events||{};var G=this.__yui_events[E];if(!G){return null;}var B=[];for(var F=1;F<arguments.length;++F){B.push(arguments[F]);}return G.fire.apply(G,B);},hasEvent:function(A){if(this.__yui_events){if(this.__yui_events[A]){return true;}}return false;}};YAHOO.util.KeyListener=function(A,F,B,C){if(!A){}else{if(!F){}else{if(!B){}}}if(!C){C=YAHOO.util.KeyListener.KEYDOWN;}var D=new YAHOO.util.CustomEvent("keyPressed");this.enabledEvent=new YAHOO.util.CustomEvent("enabled");this.disabledEvent=new YAHOO.util.CustomEvent("disabled");if(typeof A=="string"){A=document.getElementById(A);}if(typeof B=="function"){D.subscribe(B);}else{D.subscribe(B.fn,B.scope,B.correctScope);}function E(J,I){if(!F.shift){F.shift=false;}if(!F.alt){F.alt=false;}if(!F.ctrl){F.ctrl=false;}if(J.shiftKey==F.shift&&J.altKey==F.alt&&J.ctrlKey==F.ctrl){var G;if(F.keys instanceof Array){for(var H=0;H<F.keys.length;H++){G=F.keys[H];if(G==J.charCode){D.fire(J.charCode,J);break;}else{if(G==J.keyCode){D.fire(J.keyCode,J);break;}}}}else{G=F.keys;if(G==J.charCode){D.fire(J.charCode,J);}else{if(G==J.keyCode){D.fire(J.keyCode,J);}}}}}this.enable=function(){if(!this.enabled){YAHOO.util.Event.addListener(A,C,E);this.enabledEvent.fire(F);}this.enabled=true;};this.disable=function(){if(this.enabled){YAHOO.util.Event.removeListener(A,C,E);this.disabledEvent.fire(F);}this.enabled=false;};this.toString=function(){return"KeyListener ["+F.keys+"] "+A.tagName+(A.id?"["+A.id+"]":"");};};YAHOO.util.KeyListener.KEYDOWN="keydown";YAHOO.util.KeyListener.KEYUP="keyup";YAHOO.util.KeyListener.KEY={ALT:18,BACK_SPACE:8,CAPS_LOCK:20,CONTROL:17,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,META:224,NUM_LOCK:144,PAGE_DOWN:34,PAGE_UP:33,PAUSE:19,PRINTSCREEN:44,RIGHT:39,SCROLL_LOCK:145,SHIFT:16,SPACE:32,TAB:9,UP:38};YAHOO.register("event",YAHOO.util.Event,{version:"2.6.0",build:"1321"});YAHOO.register("yahoo-dom-event", YAHOO, {version: "2.6.0", build: "1321"});
 
 
+/**
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
+ *
+ * This is a modified version for TriSano.
+ */
+shortcut = {
+	'all_shortcuts':{},//All the shortcuts are stored in this array
+	'add': function(shortcut_combination,callback,opt) {
+		//Provide a set of default options
+		var default_options = {
+			'type':'keydown',
+			'propagate':false,
+			'disable_in_input':false,
+			'target':document,
+			'keycode':false
+		}
+		if(!opt) opt = default_options;
+		else {
+			for(var dfo in default_options) {
+				if(typeof opt[dfo] == 'undefined') opt[dfo] = default_options[dfo];
+			}
+		}
+
+		var ele = opt.target;
+		if(typeof opt.target == 'string') ele = document.getElementById(opt.target);
+		var ths = this;
+		shortcut_combination = shortcut_combination.toLowerCase();
+
+		//The function to be called at keypress
+		var func = function(e) {
+			e = e || window.event;
+			
+			if(opt['disable_in_input']) { //Don't enable shortcut keys in Input, Textarea fields
+				var element;
+				if(e.target) element=e.target;
+				else if(e.srcElement) element=e.srcElement;
+				if(element.nodeType==3) element=element.parentNode;
+
+				if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
+			}
+	
+			//Find Which key is pressed
+			if (e.keyCode) code = e.keyCode;
+			else if (e.which) code = e.which;
+			var character = String.fromCharCode(code);
+            character = character.toLowerCase();
+			
+			if(code == 188) character=","; //If the user presses , when the type is onkeydown
+			if(code == 190) character="."; //If the user presses , when the type is onkeydown
+
+			var keys = shortcut_combination.split("+");
+			//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+			var kp = 0;
+			
+			//Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
+			var shift_nums = {
+				"`":"~",
+				"1":"!",
+				"2":"@",
+				"3":"#",
+				"4":"$",
+				"5":"%",
+				"6":"^",
+				"7":"&",
+				"8":"*",
+				"9":"(",
+				"0":")",
+				"-":"_",
+				"=":"+",
+				";":":",
+				"'":"\"",
+				",":"<",
+				".":">",
+				"\\":"|"
+			}
+			//Special Keys - and their codes
+			var special_keys = {
+				'esc':27,
+				'escape':27,
+				'tab':9,
+				'space':32,
+				'return':13,
+				'enter':13,
+				'backspace':8,
+                'question':191,
+	
+				'scrolllock':145,
+				'scroll_lock':145,
+				'scroll':145,
+				'capslock':20,
+				'caps_lock':20,
+				'caps':20,
+				'numlock':144,
+				'num_lock':144,
+				'num':144,
+				
+				'pause':19,
+				'break':19,
+				
+				'insert':45,
+				'home':36,
+				'delete':46,
+				'end':35,
+				
+				'pageup':33,
+				'page_up':33,
+				'pu':33,
+	
+				'pagedown':34,
+				'page_down':34,
+				'pd':34,
+	
+				'left':37,
+				'up':38,
+				'right':39,
+				'down':40,
+	
+				'f1':112,
+				'f2':113,
+				'f3':114,
+				'f4':115,
+				'f5':116,
+				'f6':117,
+				'f7':118,
+				'f8':119,
+				'f9':120,
+				'f10':121,
+				'f11':122,
+				'f12':123
+			}
+	
+			var modifiers = { 
+				shift: { wanted:false, pressed:false},
+				ctrl : { wanted:false, pressed:false},
+				alt  : { wanted:false, pressed:false},
+				meta : { wanted:false, pressed:false}	//Meta is Mac specific
+			};
+                        
+			if(e.ctrlKey)	modifiers.ctrl.pressed = true;
+			if(e.shiftKey)	modifiers.shift.pressed = true;
+			if(e.altKey)	modifiers.alt.pressed = true;
+			if(e.metaKey)   modifiers.meta.pressed = true;
+                        
+			for(var i=0; k=keys[i],i<keys.length; i++) {
+				//Modifiers
+				if(k == 'ctrl' || k == 'control') {
+					kp++;
+					modifiers.ctrl.wanted = true;
+
+				} else if(k == 'shift') {
+					kp++;
+					modifiers.shift.wanted = true;
+
+				} else if(k == 'alt') {
+					kp++;
+					modifiers.alt.wanted = true;
+				} else if(k == 'meta') {
+					kp++;
+					modifiers.meta.wanted = true;
+				} else if(k.length > 1) { //If it is a special key
+					if(special_keys[k] == code) kp++;
+					
+				} else if(opt['keycode']) {
+					if(opt['keycode'] == code) kp++;
+
+				} else { //The special keys did not match
+					if(character == k) kp++;
+					else {
+						if(shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+							character = shift_nums[character]; 
+							if(character == k) kp++;
+						}
+					}
+				}
+			}
+			
+			if(kp == keys.length && 
+						modifiers.ctrl.pressed == modifiers.ctrl.wanted &&
+						modifiers.shift.pressed == modifiers.shift.wanted &&
+						modifiers.alt.pressed == modifiers.alt.wanted &&
+						modifiers.meta.pressed == modifiers.meta.wanted) {
+				callback(e);
+	
+				if(!opt['propagate']) { //Stop the event
+					//e.cancelBubble is supported by IE - this will kill the bubbling process.
+					e.cancelBubble = true;
+					e.returnValue = false;
+	
+					//e.stopPropagation works in Firefox.
+					if (e.stopPropagation) {
+						e.stopPropagation();
+						e.preventDefault();
+					}
+					return false;
+				}
+			}
+		}
+		this.all_shortcuts[shortcut_combination] = {
+			'callback':func, 
+			'target':ele, 
+			'event': opt['type']
+		};
+		//Attach the function with the event
+		if(ele.addEventListener) ele.addEventListener(opt['type'], func, false);
+		else if(ele.attachEvent) ele.attachEvent('on'+opt['type'], func);
+		else ele['on'+opt['type']] = func;
+	},
+
+	//Remove the shortcut - just specify the shortcut and I will remove the binding
+	'remove':function(shortcut_combination) {
+		shortcut_combination = shortcut_combination.toLowerCase();
+		var binding = this.all_shortcuts[shortcut_combination];
+		delete(this.all_shortcuts[shortcut_combination])
+		if(!binding) return;
+		var type = binding['event'];
+		var ele = binding['target'];
+		var callback = binding['callback'];
+
+		if(ele.detachEvent) ele.detachEvent('on'+type, callback);
+		else if(ele.removeEventListener) ele.removeEventListener(type, callback, false);
+		else ele['on'+type] = false;
+	}
+}
+
+
 /*
 Copyright (c) 2008, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
@@ -7823,3 +8231,22 @@ version: 2.5.2
 */
 (function(){YAHOO.widget.TabView=function(K,J){J=J||{};if(arguments.length==1&&!YAHOO.lang.isString(K)&&!K.nodeName){J=K;K=J.element||null;}if(!K&&!J.element){K=I.call(this,J);}YAHOO.widget.TabView.superclass.constructor.call(this,K,J);};YAHOO.extend(YAHOO.widget.TabView,YAHOO.util.Element);var F=YAHOO.widget.TabView.prototype;var E=YAHOO.util.Dom;var H=YAHOO.util.Event;var D=YAHOO.widget.Tab;F.CLASSNAME="yui-navset";F.TAB_PARENT_CLASSNAME="yui-nav";F.CONTENT_PARENT_CLASSNAME="yui-content";F._tabParent=null;F._contentParent=null;F.addTab=function(M,O){var P=this.get("tabs");if(!P){this._queue[this._queue.length]=["addTab",arguments];return false;}O=(O===undefined)?P.length:O;var R=this.getTab(O);var T=this;var L=this.get("element");var S=this._tabParent;var Q=this._contentParent;var J=M.get("element");var K=M.get("contentEl");if(R){S.insertBefore(J,R.get("element"));}else{S.appendChild(J);}if(K&&!E.isAncestor(Q,K)){Q.appendChild(K);}if(!M.get("active")){M.set("contentVisible",false,true);}else{this.set("activeTab",M,true);}var N=function(V){YAHOO.util.Event.preventDefault(V);var U=false;if(this==T.get("activeTab")){U=true;}T.set("activeTab",this,U);};M.addListener(M.get("activationEvent"),N);M.addListener("activationEventChange",function(U){if(U.prevValue!=U.newValue){M.removeListener(U.prevValue,N);M.addListener(U.newValue,N);}});P.splice(O,0,M);};F.DOMEventHandler=function(P){var K=this.get("element");var Q=YAHOO.util.Event.getTarget(P);var S=this._tabParent;if(E.isAncestor(S,Q)){var L;var M=null;var J;var R=this.get("tabs");for(var N=0,O=R.length;N<O;N++){L=R[N].get("element");J=R[N].get("contentEl");if(Q==L||E.isAncestor(L,Q)){M=R[N];break;}}if(M){M.fireEvent(P.type,P);}}};F.getTab=function(J){return this.get("tabs")[J];};F.getTabIndex=function(N){var K=null;var M=this.get("tabs");for(var L=0,J=M.length;L<J;++L){if(N==M[L]){K=L;break;}}return K;};F.removeTab=function(M){var L=this.get("tabs").length;var K=this.getTabIndex(M);var J=K+1;if(M==this.get("activeTab")){if(L>1){if(K+1==L){this.set("activeIndex",K-1);}else{this.set("activeIndex",K+1);}}}this._tabParent.removeChild(M.get("element"));this._contentParent.removeChild(M.get("contentEl"));this._configs.tabs.value.splice(K,1);};F.toString=function(){var J=this.get("id")||this.get("tagName");return"TabView "+J;};F.contentTransition=function(K,J){K.set("contentVisible",true);J.set("contentVisible",false);};F.initAttributes=function(J){YAHOO.widget.TabView.superclass.initAttributes.call(this,J);if(!J.orientation){J.orientation="top";}var L=this.get("element");if(!YAHOO.util.Dom.hasClass(L,this.CLASSNAME)){YAHOO.util.Dom.addClass(L,this.CLASSNAME);}this.setAttributeConfig("tabs",{value:[],readOnly:true});this._tabParent=this.getElementsByClassName(this.TAB_PARENT_CLASSNAME,"ul")[0]||G.call(this);this._contentParent=this.getElementsByClassName(this.CONTENT_PARENT_CLASSNAME,"div")[0]||C.call(this);this.setAttributeConfig("orientation",{value:J.orientation,method:function(M){var N=this.get("orientation");this.addClass("yui-navset-"+M);if(N!=M){this.removeClass("yui-navset-"+N);}switch(M){case"bottom":this.appendChild(this._tabParent);break;}}});this.setAttributeConfig("activeIndex",{value:J.activeIndex,method:function(M){this.set("activeTab",this.getTab(M));},validator:function(M){return !this.getTab(M).get("disabled");}});this.setAttributeConfig("activeTab",{value:J.activeTab,method:function(N){var M=this.get("activeTab");if(N){N.set("active",true);this._configs["activeIndex"].value=this.getTabIndex(N);}if(M&&M!=N){M.set("active",false);}if(M&&N!=M){this.contentTransition(N,M);}else{if(N){N.set("contentVisible",true);}}},validator:function(M){return !M.get("disabled");}});if(this._tabParent){B.call(this);}this.DOM_EVENTS.submit=false;this.DOM_EVENTS.focus=false;this.DOM_EVENTS.blur=false;for(var K in this.DOM_EVENTS){if(YAHOO.lang.hasOwnProperty(this.DOM_EVENTS,K)){this.addListener.call(this,K,this.DOMEventHandler);}}};var B=function(){var Q,L,P;var O=this.get("element");var N=A(this._tabParent);var K=A(this._contentParent);for(var M=0,J=N.length;M<J;++M){L={};if(K[M]){L.contentEl=K[M];}Q=new YAHOO.widget.Tab(N[M],L);this.addTab(Q);if(Q.hasClass(Q.ACTIVE_CLASSNAME)){this._configs.activeTab.value=Q;this._configs.activeIndex.value=this.getTabIndex(Q);}}};var I=function(J){var K=document.createElement("div");if(this.CLASSNAME){K.className=this.CLASSNAME;}return K;};var G=function(J){var K=document.createElement("ul");if(this.TAB_PARENT_CLASSNAME){K.className=this.TAB_PARENT_CLASSNAME;}this.get("element").appendChild(K);return K;};var C=function(J){var K=document.createElement("div");if(this.CONTENT_PARENT_CLASSNAME){K.className=this.CONTENT_PARENT_CLASSNAME;}this.get("element").appendChild(K);return K;};var A=function(M){var K=[];var N=M.childNodes;for(var L=0,J=N.length;L<J;++L){if(N[L].nodeType==1){K[K.length]=N[L];}}return K;};})();(function(){var E=YAHOO.util.Dom,J=YAHOO.util.Event;var B=function(L,K){K=K||{};if(arguments.length==1&&!YAHOO.lang.isString(L)&&!L.nodeName){K=L;L=K.element;}if(!L&&!K.element){L=H.call(this,K);}this.loadHandler={success:function(M){this.set("content",M.responseText);},failure:function(M){}};B.superclass.constructor.call(this,L,K);this.DOM_EVENTS={};};YAHOO.extend(B,YAHOO.util.Element);var F=B.prototype;F.LABEL_TAGNAME="em";F.ACTIVE_CLASSNAME="selected";F.ACTIVE_TITLE="active";F.DISABLED_CLASSNAME="disabled";F.LOADING_CLASSNAME="loading";F.dataConnection=null;F.loadHandler=null;F._loading=false;F.toString=function(){var K=this.get("element");var L=K.id||K.tagName;return"Tab "+L;};F.initAttributes=function(K){K=K||{};B.superclass.initAttributes.call(this,K);var M=this.get("element");this.setAttributeConfig("activationEvent",{value:K.activationEvent||"click"});this.setAttributeConfig("labelEl",{value:K.labelEl||G.call(this),method:function(N){var O=this.get("labelEl");if(O){if(O==N){return false;}this.replaceChild(N,O);}else{if(M.firstChild){this.insertBefore(N,M.firstChild);}else{this.appendChild(N);}}}});this.setAttributeConfig("label",{value:K.label||D.call(this),method:function(O){var N=this.get("labelEl");
 if(!N){this.set("labelEl",I.call(this));}C.call(this,O);}});this.setAttributeConfig("contentEl",{value:K.contentEl||document.createElement("div"),method:function(N){var O=this.get("contentEl");if(O){if(O==N){return false;}this.replaceChild(N,O);}}});this.setAttributeConfig("content",{value:K.content,method:function(N){this.get("contentEl").innerHTML=N;}});var L=false;this.setAttributeConfig("dataSrc",{value:K.dataSrc});this.setAttributeConfig("cacheData",{value:K.cacheData||false,validator:YAHOO.lang.isBoolean});this.setAttributeConfig("loadMethod",{value:K.loadMethod||"GET",validator:YAHOO.lang.isString});this.setAttributeConfig("dataLoaded",{value:false,validator:YAHOO.lang.isBoolean,writeOnce:true});this.setAttributeConfig("dataTimeout",{value:K.dataTimeout||null,validator:YAHOO.lang.isNumber});this.setAttributeConfig("active",{value:K.active||this.hasClass(this.ACTIVE_CLASSNAME),method:function(N){if(N===true){this.addClass(this.ACTIVE_CLASSNAME);this.set("title",this.ACTIVE_TITLE);}else{this.removeClass(this.ACTIVE_CLASSNAME);this.set("title","");}},validator:function(N){return YAHOO.lang.isBoolean(N)&&!this.get("disabled");}});this.setAttributeConfig("disabled",{value:K.disabled||this.hasClass(this.DISABLED_CLASSNAME),method:function(N){if(N===true){E.addClass(this.get("element"),this.DISABLED_CLASSNAME);}else{E.removeClass(this.get("element"),this.DISABLED_CLASSNAME);}},validator:YAHOO.lang.isBoolean});this.setAttributeConfig("href",{value:K.href||this.getElementsByTagName("a")[0].getAttribute("href",2)||"#",method:function(N){this.getElementsByTagName("a")[0].href=N;},validator:YAHOO.lang.isString});this.setAttributeConfig("contentVisible",{value:K.contentVisible,method:function(N){if(N){this.get("contentEl").style.display="block";if(this.get("dataSrc")){if(!this._loading&&!(this.get("dataLoaded")&&this.get("cacheData"))){A.call(this);}}}else{this.get("contentEl").style.display="none";}},validator:YAHOO.lang.isBoolean});};var H=function(K){var O=document.createElement("li");var L=document.createElement("a");L.href=K.href||"#";O.appendChild(L);var N=K.label||null;var M=K.labelEl||null;if(M){if(!N){N=D.call(this,M);}}else{M=I.call(this);}L.appendChild(M);return O;};var G=function(){return this.getElementsByTagName(this.LABEL_TAGNAME)[0];};var I=function(){var K=document.createElement(this.LABEL_TAGNAME);return K;};var C=function(K){var L=this.get("labelEl");L.innerHTML=K;};var D=function(){var K,L=this.get("labelEl");if(!L){return undefined;}return L.innerHTML;};var A=function(){if(!YAHOO.util.Connect){return false;}E.addClass(this.get("contentEl").parentNode,this.LOADING_CLASSNAME);this._loading=true;this.dataConnection=YAHOO.util.Connect.asyncRequest(this.get("loadMethod"),this.get("dataSrc"),{success:function(K){this.loadHandler.success.call(this,K);this.set("dataLoaded",true);this.dataConnection=null;E.removeClass(this.get("contentEl").parentNode,this.LOADING_CLASSNAME);this._loading=false;},failure:function(K){this.loadHandler.failure.call(this,K);this.dataConnection=null;E.removeClass(this.get("contentEl").parentNode,this.LOADING_CLASSNAME);this._loading=false;},scope:this,timeout:this.get("dataTimeout")});};YAHOO.widget.Tab=B;})();YAHOO.register("tabview",YAHOO.widget.TabView,{version:"2.5.2",build:"1076"});
+
+// Patch InPlaceEditor for script.aculo.us 1.8.1 to fix failure handling bugs
+// Author : Sebastien Grosjean - ZenCocoon (http://www.zencocoon.com)
+//
+// Please be aware that it's patching the actual version of InPlaceEditor (script.aculo.us 1.8.1)
+// and it can make more damages on previous or later versions.
+Object.extend(Ajax.InPlaceEditor.prototype, {
+  handleAJAXFailure: function(transport) {
+    this.triggerCallback('onFailure', transport);
+    this.element.innerHTML = this._oldInnerHTML;
+    this._oldInnerHTML = null;
+    this.leaveEditMode();
+  }
+});
+Object.extend(Ajax.InPlaceEditor.DefaultCallbacks, {
+  onFailure: function(ipe, transport) {
+    alert('Error communication with the server: ' + transport.responseText.stripTags());
+  }
+});
