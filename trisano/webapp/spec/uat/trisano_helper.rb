@@ -602,384 +602,394 @@ module TrisanoHelper
     date.strftime("%B %d, %Y")
   end
 
-  #
-  # Demographic Tab
-  #
-
-  def add_demographic_info(browser, attributes)
-    click_core_tab(browser, DEMOGRAPHICS)
-    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
-    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
-    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
-
-    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
-
-    browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
-
-    browser.select("//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", "label=#{attributes[:birth_gender]}") if attributes[:birth_gender]
-
-    
-    # Fill in the rest...
-
-  end
-
-  #
-  # Clinical Tab
-  #
-
-  def add_clinical_info(browser, attributes)
-    click_core_tab(browser, CLINICAL)
-    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]", "label=#{attributes[:disease]}") if attributes[:disease]
-    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_died_id')]", "label=#{attributes[:died]}") if attributes[:died]
-    browser.select("//div[@id='clinical_tab']//select[contains(@id, '_pregnant_id')]", "label=#{attributes[:pregnant]}") if attributes[:pregnant]
+  def change_cmr_view(browser, attributes)
+    @browser.click "link=Change View"
+    attributes[:diseases].each do |disease|
+         @browser.add_selection("//div[@id='change_view']//select[@id='diseases_']", "label=#{disease}")
+    end if attributes[:diseases]
+    @browser.click "change_view_btn"
+    @browser.wait_for_page_to_load($load_time)
 
     # Fill in the rest...
-
   end
+    #
+    # Demographic Tab
+    #
 
-  def add_diagnostic_facility(browser, attributes, index = 1)
-    click_core_tab(browser, CLINICAL)
-    browser.click "link=Add a Diagnostic Facility"
-    sleep(1)
-    browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
-    browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
-  end
-
-  def remove_diagnostic_facility(browser, index=1)
-    browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_delete')]")
-  end
-
-  def add_hospital(browser, attributes, index = 1)
-    click_core_tab(browser, CLINICAL)
-    browser.click "link=Add a Hospital" unless index == 1
-    sleep(1)
-    browser.select("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:name]}")
-    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_admission_date')]", attributes[:admission_date]) if attributes[:admission_date]
-    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_discharge_date')]", attributes[:discharge_date]) if attributes[:discharge_date]
-    browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
-  end
-
-  def remove_hospital(browser, index = 1)
-    browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_delete')]")
-  end
-
-  def add_treatment(browser, attributes, index = 1)
-    click_core_tab(browser, CLINICAL)
-    browser.click("link=Add a treatment") unless index == 1
-    sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    attributes[:treatment])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
-  end
-
-  def add_clinician(browser, attributes, index = 1)
-    click_core_tab(browser, CLINICAL)
-    browser.click("link=Add a Clinician") unless index == 1
-    sleep(1)
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_last_name')]", attributes[:last_name])
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
-    browser.select("//div[@id='clinicians']//div[@class='clinician'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:phone_type]}") if attributes[:phone_type]
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
-    browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
-  end
-
-  def remove_clinician(browser, index=1)
-    browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
-  end
-
-  #
-  # Lab Tab
-  #
-
-  def add_lab_result(browser, attributes, lab_index = 1, result_index = 1)
-    click_core_tab(browser, LABORATORY)
-    browser.click("link=Add a new lab result") unless lab_index == 1
-    sleep(1)
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:lab_name]) if attributes[:lab_name]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_test_type')]", attributes[:lab_test_type]) if attributes[:lab_test_type]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{attributes[:sent_to_uphl]}") if attributes[:sent_to_uphl]
-  end
-
-  #
-  # Encounters Tab
-  #
-
-  def add_encounter(browser, attributes, index = 1)
-    click_core_tab(browser, ENCOUNTERS)
-    sleep(1)
-    browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_user_id')]", "label=#{attributes[:user]}") if attributes[:user]
-    browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//input[contains(@id, '_encounter_date')]", attributes[:encounter_date]) if attributes[:encounter_date]
-    browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//textarea[contains(@id, '_description')]", attributes[:description]) if attributes[:description]
-    browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_location_type')]", "label=#{attributes[:location_type]}") if attributes[:location_type]
-  end
-  
-  #
-  # Reporting Tab
-  #
-
-  def add_reporting_info(browser, attributes)
-    click_core_tab(browser, REPORTING)
-    sleep(1)
-    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_name')]", attributes[:name]) if attributes[:name]
-    browser.click("//div[@id='reporting_agencies']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
-
-    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
-    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
-    browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
-
-    browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
-    browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:first_name]) if attributes[:first_name]
-    browser.type("//div[@id='reporter']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
-    browser.type("//div[@id='reporter']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
-    browser.type("//div[@id='reporter']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
-
-    browser.type("//div[@id='reported_dates']//input[contains(@id, '_clinician_date')]", attributes[:clinician_date]) if attributes[:clinician_date]
-    browser.type("//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", attributes[:PH_date]) if attributes[:PH_date]
-  end
-
-  #
-  # Admin Tab
-  #
-
-  def add_admin_info(browser, attributes)
-    click_core_tab(browser, ADMIN)
-    sleep(1)
-    browser.select("//div[@id='administrative_tab']//select[contains(@id, '_event_status')]", "label=#{attributes[:event_status]}") if attributes[:event_status]
-    browser.select("//div[@id='administrative_tab']//select[contains(@id, '_state_case_status_id')]", "label=#{attributes[:state_case_status]}") if attributes[:state_case_status]
-
-
-    # Fill in the rest...
-
-  end
-  
-  private
-  
-  def assert_contains(browser, container_element, element)
-    begin
-      result = browser.get_eval("window.document.getElementById(\"#{element}\").descendantOf(\"#{container_element}\")")
-    rescue
-      result = false
-    end
+    def add_demographic_info(browser, attributes)
+      click_core_tab(browser, DEMOGRAPHICS)
+      browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
+      browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
+      browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
     
-    return (result == "true") ? true : false
-  end
-  
-  def add_question_to_element(browser, element_name, element_id_prefix, question_attributes)
-    element_id = get_form_element_id(browser, element_name, element_id_prefix)
-    fill_in_question_attributes(browser, element_id, question_attributes)
-  end
-  
-  def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
-    element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
-    fill_in_question_attributes(browser, element_id, question_attributes)
-  end
-  
-  def fill_in_question_attributes(browser, element_id, question_attributes)
-    browser.click("add-question-#{element_id}")
-    wait_for_element_present("new-question-form", browser)
-    browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
-    browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}")
-    browser.select("question_element_export_column_id", "label=#{question_attributes[:export_column_id]}") if question_attributes.include? :export_column_id
-    browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
-    browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
-    browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
-    browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
-    browser.click "//input[contains(@id, 'create_question_submit')]"
-    wait_for_element_not_present("new-question-form", browser)
-    if browser.is_text_present(question_attributes[:question_text])
-      return true
-    else
-      return false      
+      browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
+
+      browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_approximate_age_no_birthday')]", attributes[:approximate_age_no_birthday]) if attributes[:approximate_age_no_birthday]
+
+      browser.select("//div[@id='demographic_tab']//div[@id='person_form']//select[contains(@id, '_birth_gender_id')]", "label=#{attributes[:birth_gender]}") if attributes[:birth_gender]
+
+
+      # Fill in the rest...
+
     end
-  end
-  
-  def add_follow_up_to_element(browser, element_name, element_id_prefix, condition, core_label=nil)
-    element_id = get_form_element_id(browser, element_name, element_id_prefix)
-    browser.click("add-follow-up-#{element_id}")
-    wait_for_element_present("new-follow-up-form", browser)
-    if core_label.nil?
-      browser.type "follow_up_element_condition", condition
-    else
-      browser.type "model_auto_completer_tf", condition
+
+    #
+    # Clinical Tab
+    #
+
+    def add_clinical_info(browser, attributes)
+      click_core_tab(browser, CLINICAL)
+      browser.select("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]", "label=#{attributes[:disease]}") if attributes[:disease]
+      browser.select("//div[@id='clinical_tab']//select[contains(@id, '_died_id')]", "label=#{attributes[:died]}") if attributes[:died]
+      browser.select("//div[@id='clinical_tab']//select[contains(@id, '_pregnant_id')]", "label=#{attributes[:pregnant]}") if attributes[:pregnant]
+
+      # Fill in the rest...
+
     end
+
+    def add_diagnostic_facility(browser, attributes, index = 1)
+      click_core_tab(browser, CLINICAL)
+      browser.click "link=Add a Diagnostic Facility"
+      sleep(1)
+      browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
+      browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+    end
+
+    def remove_diagnostic_facility(browser, index=1)
+      browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_delete')]")
+    end
+
+    def add_hospital(browser, attributes, index = 1)
+      click_core_tab(browser, CLINICAL)
+      browser.click "link=Add a Hospital" unless index == 1
+      sleep(1)
+      browser.select("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:name]}")
+      browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_admission_date')]", attributes[:admission_date]) if attributes[:admission_date]
+      browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_discharge_date')]", attributes[:discharge_date]) if attributes[:discharge_date]
+      browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
+    end
+
+    def remove_hospital(browser, index = 1)
+      browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_delete')]")
+    end
+
+    def add_treatment(browser, attributes, index = 1)
+      click_core_tab(browser, CLINICAL)
+      browser.click("link=Add a treatment") unless index == 1
+      sleep(1)
+      browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
+      browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    attributes[:treatment])
+      browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
+    end
+
+    def add_clinician(browser, attributes, index = 1)
+      click_core_tab(browser, CLINICAL)
+      browser.click("link=Add a Clinician") unless index == 1
+      sleep(1)
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_last_name')]", attributes[:last_name])
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
+      browser.select("//div[@id='clinicians']//div[@class='clinician'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:phone_type]}") if attributes[:phone_type]
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+      browser.type("//div[@id='clinicians']//div[@class='clinician'][#{index}]//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+    end
+
+    def remove_clinician(browser, index=1)
+      browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
+    end
+
+    #
+    # Lab Tab
+    #
+
+    def add_lab_result(browser, attributes, lab_index = 1, result_index = 1)
+      click_core_tab(browser, LABORATORY)
+      browser.click("link=Add a new lab result") unless lab_index == 1
+      sleep(1)
+      browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:lab_name]) if attributes[:lab_name]
+      browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_test_type')]", attributes[:lab_test_type]) if attributes[:lab_test_type]
+      browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
+      browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
+      browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
+      browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
+      browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
+      browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{attributes[:sent_to_uphl]}") if attributes[:sent_to_uphl]
+    end
+
+    #
+    # Encounters Tab
+    #
+
+    def add_encounter(browser, attributes, index = 1)
+      click_core_tab(browser, ENCOUNTERS)
+      sleep(1)
+      browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_user_id')]", "label=#{attributes[:user]}") if attributes[:user]
+      browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//input[contains(@id, '_encounter_date')]", attributes[:encounter_date]) if attributes[:encounter_date]
+      browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//textarea[contains(@id, '_description')]", attributes[:description]) if attributes[:description]
+      browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_location_type')]", "label=#{attributes[:location_type]}") if attributes[:location_type]
+    end
+  
+    #
+    # Reporting Tab
+    #
+
+    def add_reporting_info(browser, attributes)
+      click_core_tab(browser, REPORTING)
+      sleep(1)
+      browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_name')]", attributes[:name]) if attributes[:name]
+      browser.click("//div[@id='reporting_agencies']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+
+      browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+      browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+      browser.type("//div[@id='reporting_agencies']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+
+      browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
+      browser.type("//div[@id='reporter']//input[contains(@id, '_last_name')]", attributes[:first_name]) if attributes[:first_name]
+      browser.type("//div[@id='reporter']//input[contains(@id, '_area_code')]", attributes[:area_code]) if attributes[:area_code]
+      browser.type("//div[@id='reporter']//input[contains(@id, '_phone_number')]", attributes[:phone_number]) if attributes[:phone_number]
+      browser.type("//div[@id='reporter']//input[contains(@id, '_extension')]", attributes[:extension]) if attributes[:extension]
+
+      browser.type("//div[@id='reported_dates']//input[contains(@id, '_clinician_date')]", attributes[:clinician_date]) if attributes[:clinician_date]
+      browser.type("//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", attributes[:PH_date]) if attributes[:PH_date]
+    end
+
+    #
+    # Admin Tab
+    #
+
+    def add_admin_info(browser, attributes)
+      click_core_tab(browser, ADMIN)
+      sleep(1)
+      browser.select("//div[@id='administrative_tab']//select[contains(@id, '_event_status')]", "label=#{attributes[:event_status]}") if attributes[:event_status]
+      browser.select("//div[@id='administrative_tab']//select[contains(@id, '_state_case_status_id')]", "label=#{attributes[:state_case_status]}") if attributes[:state_case_status]
+
+
+      # Fill in the rest...
+
+    end
+  
+    private
+  
+    def assert_contains(browser, container_element, element)
+      begin
+        result = browser.get_eval("window.document.getElementById(\"#{element}\").descendantOf(\"#{container_element}\")")
+      rescue
+        result = false
+      end
     
-    browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
-    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
-    wait_for_element_not_present("new-follow-up-form", browser)
-  end
+      return (result == "true") ? true : false
+    end
+  
+    def add_question_to_element(browser, element_name, element_id_prefix, question_attributes)
+      element_id = get_form_element_id(browser, element_name, element_id_prefix)
+      fill_in_question_attributes(browser, element_id, question_attributes)
+    end
+  
+    def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
+      element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
+      fill_in_question_attributes(browser, element_id, question_attributes)
+    end
+  
+    def fill_in_question_attributes(browser, element_id, question_attributes)
+      browser.click("add-question-#{element_id}")
+      wait_for_element_present("new-question-form", browser)
+      browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
+      browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}")
+      browser.select("question_element_export_column_id", "label=#{question_attributes[:export_column_id]}") if question_attributes.include? :export_column_id
+      browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
+      browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
+      browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
+      browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
+      browser.click "//input[contains(@id, 'create_question_submit')]"
+      wait_for_element_not_present("new-question-form", browser)
+      if browser.is_text_present(question_attributes[:question_text])
+        return true
+      else
+        return false
+      end
+    end
+  
+    def add_follow_up_to_element(browser, element_name, element_id_prefix, condition, core_label=nil)
+      element_id = get_form_element_id(browser, element_name, element_id_prefix)
+      browser.click("add-follow-up-#{element_id}")
+      wait_for_element_present("new-follow-up-form", browser)
+      if core_label.nil?
+        browser.type "follow_up_element_condition", condition
+      else
+        browser.type "model_auto_completer_tf", condition
+      end
+    
+      browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
+      browser.click "//input[contains(@id, 'create_follow_up_submit')]"
+      wait_for_element_not_present("new-follow-up-form", browser)
+    end
       
-  def add_follow_up_to_core_field_config(browser, element_name, element_id_prefix, condition, core_label=nil)
-    element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
-    browser.click("add-follow-up-#{element_id}")
-    wait_for_element_present("new-follow-up-form", browser)
-    if core_label.nil?
-      browser.type "follow_up_element_condition", condition
-    else
-      browser.type "model_auto_completer_tf", condition
-    end
+    def add_follow_up_to_core_field_config(browser, element_name, element_id_prefix, condition, core_label=nil)
+      element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
+      browser.click("add-follow-up-#{element_id}")
+      wait_for_element_present("new-follow-up-form", browser)
+      if core_label.nil?
+        browser.type "follow_up_element_condition", condition
+      else
+        browser.type "model_auto_completer_tf", condition
+      end
     
-    browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
-    browser.click "//input[contains(@id, 'create_follow_up_submit')]"
-    wait_for_element_not_present("new-follow-up-form", browser)
-  end
+      browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
+      browser.click "//input[contains(@id, 'create_follow_up_submit')]"
+      wait_for_element_not_present("new-follow-up-form", browser)
+    end
 
-  # Goes in reverse from the name provided, looking for the magic string of
-  # element_prefix_<id>
-  # 
-  # The retry accounts for the fact that you may run into paths that just so
-  # happen to contain the element prefix string.
-  def get_form_element_id(browser, name, element_id_prefix)
-    retry_count = 0
-    element_prefix_length = element_id_prefix.size
-    html_source = browser.get_html_source
-    # Start from form_children to avoid finding something up in the top portion of the page
-    name_position = html_source.index(name, html_source.index("form_children")) 
+    # Goes in reverse from the name provided, looking for the magic string of
+    # element_prefix_<id>
+    #
+    # The retry accounts for the fact that you may run into paths that just so
+    # happen to contain the element prefix string.
+    def get_form_element_id(browser, name, element_id_prefix)
+      retry_count = 0
+      element_prefix_length = element_id_prefix.size
+      html_source = browser.get_html_source
+      # Start from form_children to avoid finding something up in the top portion of the page
+      name_position = html_source.index(name, html_source.index("form_children"))
     
-    begin
-      id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
-      raise if html_source[id_start_position..id_start_position+1].to_i == 0
-    rescue
-      retry_count += 1
-      name_position = id_start_position - (element_prefix_length+1)
-      retry if retry_count < 5
+      begin
+        id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+        raise if html_source[id_start_position..id_start_position+1].to_i == 0
+      rescue
+        retry_count += 1
+        name_position = id_start_position - (element_prefix_length+1)
+        retry if retry_count < 5
+      end
+    
+      id_end_position = html_source.index("\"", id_start_position)-1
+      html_source[id_start_position..id_end_position]
     end
-    
-    id_end_position = html_source.index("\"", id_start_position)-1
-    html_source[id_start_position..id_end_position]
-  end
   
-  def get_library_element_id(browser, name, element_id_prefix)
-    retry_count = 0
-    element_prefix_length = element_id_prefix.size
-    html_source = browser.get_html_source
-    # Start from form_children to avoid finding something up in the top portion of the page
-    name_position = html_source.index(name, html_source.index("Library Administration")) 
+    def get_library_element_id(browser, name, element_id_prefix)
+      retry_count = 0
+      element_prefix_length = element_id_prefix.size
+      html_source = browser.get_html_source
+      # Start from form_children to avoid finding something up in the top portion of the page
+      name_position = html_source.index(name, html_source.index("Library Administration"))
     
-    begin
-      id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
-      raise if html_source[id_start_position..id_start_position+1].to_i == 0
-    rescue
-      retry_count += 1
-      id_start_position.nil? ? name_position = 1 : name_position = id_start_position - (element_prefix_length+1) 
-      retry if retry_count < 5
+      begin
+        id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
+        raise if html_source[id_start_position..id_start_position+1].to_i == 0
+      rescue
+        retry_count += 1
+        id_start_position.nil? ? name_position = 1 : name_position = id_start_position - (element_prefix_length+1)
+        retry if retry_count < 5
+      end
+    
+      id_end_position = html_source.index("\"", id_start_position)-1
+      html_source[id_start_position..id_end_position]
     end
-    
-    id_end_position = html_source.index("\"", id_start_position)-1
-    html_source[id_start_position..id_end_position]
-  end
-  # Same as get_form_element_id except it doesn't do a reverse index looking for the start position.
-  # Core field configs are different in that the name of the main core field config preceeds the two
-  # containers for before and after configs.
-  def get_form_element_id_for_core_field(browser, name, element_id_prefix)
-    element_prefix_length = element_id_prefix.size
-    html_source = browser.get_html_source
-    name_position = html_source.index(name)
-    id_start_position = html_source.index("#{element_id_prefix}", name_position) + element_prefix_length
-    id_end_position = html_source.index("\"", id_start_position)-1
-    html_source[id_start_position..id_end_position]
-  end
+    # Same as get_form_element_id except it doesn't do a reverse index looking for the start position.
+    # Core field configs are different in that the name of the main core field config preceeds the two
+    # containers for before and after configs.
+    def get_form_element_id_for_core_field(browser, name, element_id_prefix)
+      element_prefix_length = element_id_prefix.size
+      html_source = browser.get_html_source
+      name_position = html_source.index(name)
+      id_start_position = html_source.index("#{element_id_prefix}", name_position) + element_prefix_length
+      id_end_position = html_source.index("\"", id_start_position)-1
+      html_source[id_start_position..id_end_position]
+    end
   
-  def get_investigator_answer_id(browser, question_text)
-    html_source = browser.get_html_source
-    question_position = html_source.index(question_text)
-    id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position) + 20
-    id_end_position = html_source.index("\"", id_start_position) -1
-    html_source[id_start_position..id_end_position]
-  end
+    def get_investigator_answer_id(browser, question_text)
+      html_source = browser.get_html_source
+      question_position = html_source.index(question_text)
+      id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position) + 20
+      id_end_position = html_source.index("\"", id_start_position) -1
+      html_source[id_start_position..id_end_position]
+    end
  
-  # This only works for investigator questions on contact events
-  def get_investigator_click_answer_id(browser, question_text)
-    html_source = browser.get_html_source
-    question_position = html_source.index(question_text)
-    id_start_position = html_source.index("investigator_answer_", question_position) + 20
-    id_end_position = html_source.index("_", id_start_position) -1
-    html_source[id_start_position..id_end_position]
-  end
-  
-  def get_random_word
-    wordlist = ["Lorem","ipsum","dolor","sit","amet","consectetuer","adipiscing","elit","Duis","sodales","dignissim","enim","Nunc","rhoncus","quam","ut","quam","Quisque","vitae","urna","Duis","nec","sapien","Proin","mollis","congue","mauris","Fusce","lobortis","tristique","elit","Phasellus","aliquam","dui","id","placerat","hendrerit","dolor","augue","posuere","tellus","at","ultricies","libero","leo","vel","leo","Nulla","purus","Ut","lacus","felis","tempus","at","egestas","nec","cursus","nec","magna","Ut","fringilla","aliquet","arcu","Vestibulum","ante","ipsum","primis","in","faucibus","orci","luctus","et","ultrices","posuere","cubilia","Curae","Etiam","vestibulum","urna","sit","amet","sem","Nunc","ac","ipsum","In","consectetuer","quam","nec","lectus","Maecenas","magna","Nulla","ut","mi","eu","elit","accumsan","gravida","Praesent","ornare","urna","a","lectus","dapibus","luctus","Integer","interdum","bibendum","neque","Nulla","id","dui","Aenean","tincidunt","dictum","tortor","Proin","sagittis","accumsan","nulla","Etiam","consectetuer","Etiam","eget","nibh","ut","sem","mollis","luctus","Etiam","mi","eros","blandit","in","suscipit","ut","vestibulum","et","velit","Fusce","laoreet","nulla","nec","neque","Nam","non","nulla","ut","justo","ullamcorper","egestas","In","porta","ipsum","nec","neque","Cras","non","metus","id","massa","ultrices","rhoncus","Donec","mattis","odio","sagittis","nunc","Vivamus","vehicula","justo","vitae","tincidunt","posuere","risus","pede","lacinia","dolor","quis","placerat","justo","arcu","ut","tortor","Aliquam","malesuada","lectus","id","condimentum","sollicitudin","arcu","mauris","adipiscing","turpis","a","sollicitudin","erat","metus","vel","magna","Proin","scelerisque","neque","id","urna","lobortis","vulputate","In","porta","pulvinar","urna","Cras","id","nulla","In","dapibus","vestibulum","pede","In","ut","velit","Aliquam","in","turpis","vitae","nunc","hendrerit","ullamcorper","Aliquam","rutrum","erat","sit","amet","velit","Nullam","pharetra","neque","id","pede","Phasellus","suscipit","ornare","mi","Ut","malesuada","consequat","ipsum","Suspendisse","suscipit","aliquam","nisl","Suspendisse","iaculis","magna","eu","ligula","Sed","porttitor","eros","id","euismod","auctor","dolor","lectus","convallis","justo","ut","elementum","magna","magna","congue","nulla","Pellentesque","eget","ipsum","Pellentesque","tempus","leo","id","magna","Cras","mi","dui","pellentesque","in","pellentesque","nec","blandit","nec","odio","Pellentesque","eget","risus","In","venenatis","metus","id","magna","Etiam","blandit","Integer","a","massa","vitae","lacus","dignissim","auctor","Mauris","libero","metus","aliquet","in","rhoncus","sed","volutpat","quis","libero","Nam","urna"]
-    begin
-      result = wordlist[rand(wordlist.size)]
-      raise if result.nil?
-    rescue Exception => ex
-      result = wordlist[rand(wordlist.size)]
+    # This only works for investigator questions on contact events
+    def get_investigator_click_answer_id(browser, question_text)
+      html_source = browser.get_html_source
+      question_position = html_source.index(question_text)
+      id_start_position = html_source.index("investigator_answer_", question_position) + 20
+      id_end_position = html_source.index("_", id_start_position) -1
+      html_source[id_start_position..id_end_position]
     end
-    result
-
-  end
   
-  def get_resource_id(browser, name)
-    html_source = browser.get_html_source
-    pos1 = html_source.index(name)
-    pos2 = html_source.index(/\d\/edit['"]/, pos1)
-    pos3 = html_source.rindex("/", pos2)+1
-    id = html_source[pos3..pos2]
-    return id.to_i
-  rescue => err
-    return -1
-  end
+    def get_random_word
+      wordlist = ["Lorem","ipsum","dolor","sit","amet","consectetuer","adipiscing","elit","Duis","sodales","dignissim","enim","Nunc","rhoncus","quam","ut","quam","Quisque","vitae","urna","Duis","nec","sapien","Proin","mollis","congue","mauris","Fusce","lobortis","tristique","elit","Phasellus","aliquam","dui","id","placerat","hendrerit","dolor","augue","posuere","tellus","at","ultricies","libero","leo","vel","leo","Nulla","purus","Ut","lacus","felis","tempus","at","egestas","nec","cursus","nec","magna","Ut","fringilla","aliquet","arcu","Vestibulum","ante","ipsum","primis","in","faucibus","orci","luctus","et","ultrices","posuere","cubilia","Curae","Etiam","vestibulum","urna","sit","amet","sem","Nunc","ac","ipsum","In","consectetuer","quam","nec","lectus","Maecenas","magna","Nulla","ut","mi","eu","elit","accumsan","gravida","Praesent","ornare","urna","a","lectus","dapibus","luctus","Integer","interdum","bibendum","neque","Nulla","id","dui","Aenean","tincidunt","dictum","tortor","Proin","sagittis","accumsan","nulla","Etiam","consectetuer","Etiam","eget","nibh","ut","sem","mollis","luctus","Etiam","mi","eros","blandit","in","suscipit","ut","vestibulum","et","velit","Fusce","laoreet","nulla","nec","neque","Nam","non","nulla","ut","justo","ullamcorper","egestas","In","porta","ipsum","nec","neque","Cras","non","metus","id","massa","ultrices","rhoncus","Donec","mattis","odio","sagittis","nunc","Vivamus","vehicula","justo","vitae","tincidunt","posuere","risus","pede","lacinia","dolor","quis","placerat","justo","arcu","ut","tortor","Aliquam","malesuada","lectus","id","condimentum","sollicitudin","arcu","mauris","adipiscing","turpis","a","sollicitudin","erat","metus","vel","magna","Proin","scelerisque","neque","id","urna","lobortis","vulputate","In","porta","pulvinar","urna","Cras","id","nulla","In","dapibus","vestibulum","pede","In","ut","velit","Aliquam","in","turpis","vitae","nunc","hendrerit","ullamcorper","Aliquam","rutrum","erat","sit","amet","velit","Nullam","pharetra","neque","id","pede","Phasellus","suscipit","ornare","mi","Ut","malesuada","consequat","ipsum","Suspendisse","suscipit","aliquam","nisl","Suspendisse","iaculis","magna","eu","ligula","Sed","porttitor","eros","id","euismod","auctor","dolor","lectus","convallis","justo","ut","elementum","magna","magna","congue","nulla","Pellentesque","eget","ipsum","Pellentesque","tempus","leo","id","magna","Cras","mi","dui","pellentesque","in","pellentesque","nec","blandit","nec","odio","Pellentesque","eget","risus","In","venenatis","metus","id","magna","Etiam","blandit","Integer","a","massa","vitae","lacus","dignissim","auctor","Mauris","libero","metus","aliquet","in","rhoncus","sed","volutpat","quis","libero","Nam","urna"]
+      begin
+        result = wordlist[rand(wordlist.size)]
+        raise if result.nil?
+      rescue Exception => ex
+        result = wordlist[rand(wordlist.size)]
+      end
+      result
 
-  # using the form name, get the form id from the forms index page
-  def get_form_id(browser, form_name)
-    html_source = browser.get_html_source
-    pos1 = html_source.index(form_name)
-    pos2 = html_source.index('forms/builder/', pos1) + 14
-    pos3 = html_source.index('"', pos2)
-    html_source[pos2...pos3]
-  end
-
-  def copy_form_and_open_in_form_builder(browser, form_name)
-    browser.click("copy_form_#{get_form_id(browser, form_name)}")
-    browser.wait_for_page_to_load($load_time)
-    browser.is_text_present('Form was successfully copied.').should be_true
-    browser.click('//input[@id="form_submit"]')
-    browser.wait_for_page_to_load($load_time)
-    browser.is_text_present('Form was successfully updated.').should be_true
-    browser.is_text_present('Not Published').should be_true
-    browser.click('link=Detail')
-    browser.wait_for_page_to_load($load_time)
-    true
-  end    
-
-  def assert_tooltip_exists(browser, tool_tip_text)
-    browser.is_element_present("//img[contains(@src, 'help.png')]").should be_true
-    browser.is_text_present(tool_tip_text).should be_true
-    browser.is_visible("//span[contains(@id,'_help_text')]").should be_false
-    browser.is_visible("//div[@id='WzTtDiV']").should be_false
-    browser.mouse_over("//a[contains(@id,'_help_text')]")
-    browser.mouse_move("//a[contains(@id,'_help_text')]")
-    sleep(2)
-    browser.is_visible("//div[@id='WzTtDiV']").should be_true
-    browser.mouse_out("//a[contains(@id, '_help_text')]")
-    sleep(2)
-    browser.is_visible("//div[@id='WzTtDiV']").should be_false
-    return true
-  end
+    end
   
-  def is_disease_active(browser, disease_name)
-    html_source = browser.get_html_source
-    start = html_source.index(disease_name) + disease_name.length
-    html_source[start..start+100].index("Active").nil? ? false : true
-  end
-  
-  def is_disease_inactive(browser, disease_name)
-    html_source = browser.get_html_source
-    start = html_source.index(disease_name) + disease_name.length
-    html_source[start..start+100].index("Inactive").nil? ? false : true
-  end
+    def get_resource_id(browser, name)
+      html_source = browser.get_html_source
+      pos1 = html_source.index(name)
+      pos2 = html_source.index(/\d\/edit['"]/, pos1)
+      pos3 = html_source.rindex("/", pos2)+1
+      id = html_source[pos3..pos2]
+      return id.to_i
+    rescue => err
+      return -1
+    end
 
-  def get_record_number(browser)
-    source = browser.get_html_source
-    label = '<label>Record number</label>'
-    index_start = source.index(label) + label.length
-    index_end = source.index('</span>', index_start)
-    source[index_start...index_end].strip
+    # using the form name, get the form id from the forms index page
+    def get_form_id(browser, form_name)
+      html_source = browser.get_html_source
+      pos1 = html_source.index(form_name)
+      pos2 = html_source.index('forms/builder/', pos1) + 14
+      pos3 = html_source.index('"', pos2)
+      html_source[pos2...pos3]
+    end
+
+    def copy_form_and_open_in_form_builder(browser, form_name)
+      browser.click("copy_form_#{get_form_id(browser, form_name)}")
+      browser.wait_for_page_to_load($load_time)
+      browser.is_text_present('Form was successfully copied.').should be_true
+      browser.click('//input[@id="form_submit"]')
+      browser.wait_for_page_to_load($load_time)
+      browser.is_text_present('Form was successfully updated.').should be_true
+      browser.is_text_present('Not Published').should be_true
+      browser.click('link=Detail')
+      browser.wait_for_page_to_load($load_time)
+      true
+    end
+
+    def assert_tooltip_exists(browser, tool_tip_text)
+      browser.is_element_present("//img[contains(@src, 'help.png')]").should be_true
+      browser.is_text_present(tool_tip_text).should be_true
+      browser.is_visible("//span[contains(@id,'_help_text')]").should be_false
+      browser.is_visible("//div[@id='WzTtDiV']").should be_false
+      browser.mouse_over("//a[contains(@id,'_help_text')]")
+      browser.mouse_move("//a[contains(@id,'_help_text')]")
+      sleep(2)
+      browser.is_visible("//div[@id='WzTtDiV']").should be_true
+      browser.mouse_out("//a[contains(@id, '_help_text')]")
+      sleep(2)
+      browser.is_visible("//div[@id='WzTtDiV']").should be_false
+      return true
+    end
+  
+    def is_disease_active(browser, disease_name)
+      html_source = browser.get_html_source
+      start = html_source.index(disease_name) + disease_name.length
+      html_source[start..start+100].index("Active").nil? ? false : true
+    end
+  
+    def is_disease_inactive(browser, disease_name)
+      html_source = browser.get_html_source
+      start = html_source.index(disease_name) + disease_name.length
+      html_source[start..start+100].index("Inactive").nil? ? false : true
+    end
+
+    def get_record_number(browser)
+      source = browser.get_html_source
+      label = '<label>Record number</label>'
+      index_start = source.index(label) + label.length
+      index_end = source.index('</span>', index_start)
+      source[index_start...index_end].strip
+    end
   end
-end

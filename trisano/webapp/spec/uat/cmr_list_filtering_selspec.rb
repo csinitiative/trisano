@@ -60,47 +60,38 @@ describe 'System functionality for routing and workflow' do
 
   it "should create three CMRs" do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @aids_person_1)
-    @browser.select "morbidity_event_disease_disease_id", "label=AIDS"
+    add_demographic_info(@browser, :last_name => @aids_person_1)
+    add_clinical_info(@browser, :disease => "AIDS")
+    
     save_cmr(@browser).should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @aids_person_2)
-    @browser.select "morbidity_event_disease_disease_id", "label=AIDS"
+    add_demographic_info(@browser, :last_name => @aids_person_2)
+    add_clinical_info(@browser, :disease => "AIDS")
     save_cmr(@browser).should be_true
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type('morbidity_event_active_patient__person_last_name', @anthrax_person_1)
-    @browser.select "morbidity_event_disease_disease_id", "label=Anthrax"
+    add_demographic_info(@browser, :last_name => @anthrax_person_1)
+    add_clinical_info(@browser, :disease => "Anthrax")
     save_cmr(@browser).should be_true
   end
 
   it "should filter the CMR list by disease" do
     click_nav_cmrs(@browser)
-    @browser.click "link=Change View"
-    @browser.add_selection("//div[@id='change_view']//select[@id='diseases[]']", "label=AIDS")
-    @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load($load_time)
+    change_cmr_view(@browser, {:diseases => ["AIDS"]})
     
     @browser.is_text_present(@aids_person_1).should be_true
     @browser.is_text_present(@aids_person_2).should be_true
     @browser.is_text_present(@anthrax_person_1).should be_false
-    
-    @browser.click "link=Change View"
-    @browser.add_selection("//div[@id='change_view']//select[@id='diseases[]']", "label=Anthrax")
-    @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load($load_time)
-    
+
+    change_cmr_view(@browser, {:diseases => ["Anthrax"]})
+
     @browser.is_text_present(@aids_person_1).should be_false
     @browser.is_text_present(@aids_person_2).should be_false
     @browser.is_text_present(@anthrax_person_1).should be_true
-    
-    @browser.click "link=Change View"
-    @browser.add_selection("//div[@id='change_view']//select[@id='diseases[]']", "label=AIDS")
-    @browser.add_selection("//div[@id='change_view']//select[@id='diseases[]']", "label=Anthrax")
-    @browser.click "change_view_btn"
-    @browser.wait_for_page_to_load($load_time)
-    
+
+    change_cmr_view(@browser, {:diseases => ["Anthrax","AIDS"]})
+
     @browser.is_text_present(@aids_person_1).should be_true
     @browser.is_text_present(@aids_person_2).should be_true
     @browser.is_text_present(@anthrax_person_1).should be_true

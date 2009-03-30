@@ -20,7 +20,7 @@ require 'date'
  
 describe 'form builder risk factor followups for contact events' do
   
-  $dont_kill_browser = true
+#  $dont_kill_browser = true
 
   fields = [{:name => 'Pregnant', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_pregnant_id', :entry_type => 'select', :code => 'Code: Yes (yesno)', :fu_value => 'Yes', :no_fu_value => 'No'},
     {:name => 'Food handler', :label => 'contact_event_interested_party_attributes_risk_factor_attributes_food_handler_id', :entry_type => 'select', :code => 'Code: Unknown (yesno)',  :fu_value => 'Unknown', :no_fu_value => 'Yes'},
