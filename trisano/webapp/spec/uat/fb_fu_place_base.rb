@@ -20,7 +20,7 @@ require 'date'
  
 describe 'form builder place core field configs for places', :shared => true do
   
-   $dont_kill_browser = true
+   #$dont_kill_browser = true
   #### NOTE: Currently, it is not possible to change a place name after it is created. As a result ####
   #### there are "unless" statements throughout this test on items that depend on changing the     ####
   #### value of a place field to prevent it from failing on 'Name'                                 ####
