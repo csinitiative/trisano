@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Answer < ActiveRecord::Base
-  include Export::Cdc::AnswerRules
+  include Export::Cdc::CdcWriter
 
   belongs_to :question
   belongs_to :export_conversion_value
@@ -25,7 +25,24 @@ class Answer < ActiveRecord::Base
   validates_presence_of :text_answer, :if => :required
   validates_format_of :text_answer, :with => /^\d{3}-\d{3}-\d{4}$/, :message => 'Phone number must include area code and seven digit number', :allow_blank => true, :if => :is_phone
   validates_date :date_answer, :if => :is_date, :allow_nil => true
-  
+
+  def self.export_answers(*args)
+    args = [:all] if args.empty?
+    with_scope(:find => {:conditions => ['export_conversion_value_id is not null']}) do
+      find(*args)
+    end
+  end
+
+  # modifies result string based on export conversion
+  # rules. Result is lengthened if needed. Returns the value that
+  # was inserted.
+  def write_export_conversion_to(result)
+    write(convert_value(self.text_answer, export_conversion_value), 
+          :starting => export_conversion_value.export_column.start_position - 1, 
+          :length => export_conversion_value.export_column.length_to_output,
+          :result => result)
+  end
+
   def date_answer
     ActiveRecord::ConnectionAdapters::Column.send("string_to_date", text_answer)
   end

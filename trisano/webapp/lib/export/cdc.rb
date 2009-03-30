@@ -180,28 +180,6 @@ module Export
 
     end
 
-    module AnswerRules
-      include Export::Cdc::CdcWriter
-
-      def Answer.export_answers(*args)
-        args = [:all] if args.empty?
-        with_scope(:find => {:conditions => ['export_conversion_value_id is not null']}) do
-          find(*args)
-        end
-      end
-
-      # modifies result string based on export conversion
-      # rules. Result is lengthened if needed. Returns the value that
-      # was inserted.
-      def write_export_conversion_to(result)
-        write(convert_value(self.text_answer, export_conversion_value), 
-              :starting => export_conversion_value.export_column.start_position - 1, 
-              :length => export_conversion_value.export_column.length_to_output,
-              :result => result)
-      end
-
-    end
-
     module FormElementExt
       def call_chain
         if core_path
