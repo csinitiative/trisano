@@ -20,12 +20,12 @@ require 'date'
  
 describe 'form builder place core field configs for places', :shared => true do
   
-  # $dont_kill_browser = true
+   $dont_kill_browser = true
   #### NOTE: Currently, it is not possible to change a place name after it is created. As a result ####
   #### there are "unless" statements throughout this test on items that depend on changing the     ####
   #### value of a place field to prevent it from failing on 'Name'                                 ####
                                 
-  data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
+  data_types = [#{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Multi-line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},
     {:name => 'Drop-down select list', :values => ["Always","Sometimes","Never"], :answer => "Never", :entry_type => "select"},
     {:name => 'Radio buttons', :values => ["Yes","No","Maybe"], :answer_code => "3", :answer => "Maybe", :entry_type => "radio"},
@@ -69,14 +69,14 @@ describe 'form builder place core field configs for places', :shared => true do
     it "should publish the form" do
       publish_form(@browser).should be_true
     end
-  
+
     it "should create a cmr with a place" do
       create_basic_investigatable_cmr(@browser, (get_unique_name(1))[0..18], disease_name_text, jurisdiction_text)
       edit_cmr(@browser).should be_true
       test[:name] == 'Name' ? add_place(@browser, {:name => test[:fu_value]}) : add_place(@browser, {:name => get_unique_name(1)})
       save_cmr(@browser).should be_true
     end
-    
+
     it "should add all the followup questions when #{test[:name]} is assigned the value #{test[:fu_value]}" do
       @browser.click("edit-place-event")
       @browser.wait_for_page_to_load($load_time)
@@ -87,7 +87,7 @@ describe 'form builder place core field configs for places', :shared => true do
           follow_up_question = inv_question_pre + data_type[:name]
           @browser.is_text_present(follow_up_question).should be_false
         end
-          
+
         case test[:entry_type]
         when 'type'
           @browser.type(test[:label], test[:fu_value])
@@ -97,17 +97,17 @@ describe 'form builder place core field configs for places', :shared => true do
           @browser.select(test[:label], test[:fu_value])
         end
       end
-      
+
       @browser.click("//ul[@id='tabs']/li[2]/a/em")
       @browser.is_text_present(form_name).should be_true
       sleep 2 #Giving the investigator form questions time to show up
-      
+
       data_types.each do |data_type|
         follow_up_question = inv_question_pre + data_type[:name]
         @browser.is_text_present(follow_up_question).should be_true
       end
     end
-    
+
     it "should remove all the investigator questions when the value is changed to #{test[:no_fu_value]}" do
       unless test[:name] == 'Name'
         case test[:entry_type]
@@ -118,18 +118,18 @@ describe 'form builder place core field configs for places', :shared => true do
         when 'select'
           @browser.select(test[:label], test[:no_fu_value])
         end
-      
+
         @browser.click("//ul[@id='tabs']/li[2]/a/em")
         @browser.is_text_present(form_name).should be_true
         sleep 2 #Giving the investigator form questions time to show up
-      
+
         data_types.each do |data_type|
           follow_up_question = inv_question_pre + data_type[:name]
           @browser.is_text_present(follow_up_question).should be_false
         end
       end
     end
-    
+
     it "should show the form and questions when the value is changed back to #{test[:fu_value]}" do
       unless test[:name] == 'Name'
         case test[:entry_type]
@@ -140,11 +140,11 @@ describe 'form builder place core field configs for places', :shared => true do
         when 'select'
           @browser.select(test[:label], test[:fu_value])
         end
-      
+
         @browser.click("//ul[@id='tabs']/li[2]/a/em")
         @browser.is_text_present(form_name).should be_true
         sleep 2 #Giving the investigator form questions time to show up
-      
+
         data_types.each do |data_type|
           follow_up_question = inv_question_pre + data_type[:name]
           @browser.is_text_present(follow_up_question).should be_true
@@ -153,7 +153,7 @@ describe 'form builder place core field configs for places', :shared => true do
       # This isn't strictly necessary since nothing has changed... but the next tests won't work other wise...
       save_place_event(@browser).should be_true
     end
-    
+
     data_types.each do |data_type|
       follow_up_question = inv_question_pre + data_type[:name]
       it "should save values for #{follow_up_question}" do

@@ -25,15 +25,10 @@ describe 'form builder place core field configs for places' do
   #### NOTE: Currently, it is not possible to change a place name after it is created. As a result ####
   #### there are "unless" statements throughout this test on items that depend on changing the     ####
   #### value of a place field to prevent it from failing on 'Name'                                 ####
-  $fields = [#{:name => 'Name', :label => 'morbidity_event_new_place_exposure_attributes__name', :entry_type => 'type', :fu_value => 'Shantytown', :no_fu_value => 'Shantyville'},
-#        {:name => 'Name', :label => 'place_event_active_place__place_name', :entry_type => 'type', :fu_value => 'Shantytown', :no_fu_value => 'Shantyville'},
-#        {:name => 'Street number', :label => 'place_event_active_place__address_street_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-#        {:name => 'Street name', :label => 'place_event_active_place__address_street_name', :entry_type => 'type', :fu_value => 'Chaff Drive', :no_fu_value => 'Chart Drive'},
-#        {:name => 'Unit number', :label => 'place_event_active_place__address_unit_number', :entry_type => 'type', :fu_value => '444', :no_fu_value => '222'},
-#        {:name => 'City', :label => 'place_event_active_place__address_city', :entry_type => 'type', :fu_value => 'Brigham City', :no_fu_value => 'Provo'},
-        {:name => 'State', :label => 'place_event_active_place__address_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
-        {:name => 'County', :label => 'place_event_active_place__address_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
-        {:name => 'Zip code', :label => 'place_event_active_place__address_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
+  $fields = [
+    {:name => 'State', :label => 'place_event_address_attributes_state_id', :entry_type => 'select', :code => 'Code: Utah (state)', :fu_value => 'Utah', :no_fu_value => 'Texas'},
+    {:name => 'County', :label => 'place_event_address_attributes_county_id', :entry_type => 'select', :code => 'Code: Utah (county)', :fu_value => 'Utah', :no_fu_value => 'Davis'},
+    {:name => 'Zip code', :label => 'place_event_address_attributes_postal_code', :entry_type => 'type', :fu_value => '89011', :no_fu_value => '80001'}
   ]                                    
   
   it_should_behave_like "form builder place core field configs for places"
