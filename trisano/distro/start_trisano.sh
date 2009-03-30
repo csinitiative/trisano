@@ -23,6 +23,7 @@
 export TRISANO_UID=utah
 
 cd ../webapp
+touch ./log/development.log
 jruby script/server
 
 
