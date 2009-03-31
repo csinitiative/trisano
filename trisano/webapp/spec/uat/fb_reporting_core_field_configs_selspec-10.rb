@@ -23,10 +23,7 @@ describe 'form builder reporting core-field questions for morbidity reports' do
    
   [{:name => 'Reporting agency', :tab_name => REPORTING},
    {:name => 'Reporter first name', :tab_name => REPORTING},
-   {:name => 'Reporter last name', :tab_name => REPORTING},
-   {:name => 'Reporter area code', :tab_name => REPORTING},
-   {:name => 'Reporter phone number', :tab_name => REPORTING},
-   {:name => 'Reporter extension', :tab_name => REPORTING}
+   {:name => 'Reporter last name', :tab_name => REPORTING}
   ].each do |test| 
   
     it "should support before and after on the '#{test[:name]}' field" do

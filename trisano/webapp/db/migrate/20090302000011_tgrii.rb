@@ -44,7 +44,7 @@ class Tgrii < ActiveRecord::Migration
             AND p.role_id = c.id
             AND c.code_name = 'participant'
             AND c.the_code = 'I'
-        ")
+          ")
 
         # Copy the event specific data (disposition etc.) to the main event
         contact_parts.each do |part|
@@ -62,7 +62,7 @@ class Tgrii < ActiveRecord::Migration
             AND p.role_id = c.id
             AND c.code_name = 'participant'
             AND c.the_code = 'PoI'
-        ")
+          ")
 
         # Copy the event specific data (date of exposure) to the main event
         place_parts.each do |part|
@@ -78,7 +78,7 @@ class Tgrii < ActiveRecord::Migration
             WHERE code_name = 'participant' 
               AND (the_code = 'CO' OR the_code = 'PE')
           )
-        ")
+          ")
 
       end
 
@@ -96,16 +96,16 @@ class Tgrii < ActiveRecord::Migration
         say "Updating participation types"
 
         type_map = {
-         "Interested Party" =>  "InterestedParty",
-         "Place of Interest" => "InterestedPlace",
-         "Hospitalized At" => "HospitalizationFacility",
-         "Reported By" => "Reporter",
-         "Reporting Agency" => "ReportingAgency",
-         "Jurisdiction" => "Jurisdiction",
-         "Treated By" => "Clinician",
-         "Tested By" => "Lab",
-         "Diagnosed At" => "DiagnosticFacility",
-         "Secondary Jurisdiction" => "AssociatedJurisdiction"
+          "Interested Party" =>  "InterestedParty",
+          "Place of Interest" => "InterestedPlace",
+          "Hospitalized At" => "HospitalizationFacility",
+          "Reported By" => "Reporter",
+          "Reporting Agency" => "ReportingAgency",
+          "Jurisdiction" => "Jurisdiction",
+          "Treated By" => "Clinician",
+          "Tested By" => "Lab",
+          "Diagnosed At" => "DiagnosticFacility",
+          "Secondary Jurisdiction" => "AssociatedJurisdiction"
         }
 
         type_map.each do | key, value |
@@ -117,7 +117,7 @@ class Tgrii < ActiveRecord::Migration
                FROM codes 
                WHERE code_name = 'participant' 
                  AND code_description = '#{key}')
-          ")
+            ")
         end
       end
 
@@ -140,7 +140,7 @@ class Tgrii < ActiveRecord::Migration
             UPDATE entities
             SET entity_type = '#{value}'
             WHERE entity_type = '#{key}'
-          ")
+            ")
         end
 
       end
@@ -177,13 +177,13 @@ class Tgrii < ActiveRecord::Migration
             UPDATE telephones
             SET entity_id = #{phone.entity_id}, entity_location_type_id = #{phone.type_id || "NULL"}
             WHERE id = #{phone.tel_id}
-          ")
+            ")
 
           unless phone.email.blank?
             execute("
               INSERT INTO email_addresses (entity_id, email_address)
               VALUES (#{phone.entity_id}, '#{phone.email}')
-            ")
+              ")
           end
         end
       end
@@ -215,7 +215,7 @@ class Tgrii < ActiveRecord::Migration
             UPDATE addresses
             SET entity_id = #{address.entity_id}, entity_location_type_id = #{address.type_id || "NULL"}
             WHERE id = #{address.address_id}
-          ")
+            ")
         end
       end
 
@@ -346,10 +346,10 @@ class Tgrii < ActiveRecord::Migration
 
           "morbidity_event[active_reporter][active_secondary_entity][person][first_name]" => "morbidity_event[reporter][person_entity][person][first_name]",
           "morbidity_event[active_reporter][active_secondary_entity][person][last_name]" => "morbidity_event[reporter][person_entity][person][last_name]",
-          "morbidity_event[active_reporter][active_secondary_entity][telephone][area_code]" => "morbidity_event[reporter][person_entity][telephones]",
-          "morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]" => "morbidity_event[reporter][person_entity][telephones]",
-          "morbidity_event[active_reporter][active_secondary_entity][telephone][extension]" => "morbidity_event[reporter][person_entity][telephones]",
-          "morbidity_event[active_reporter][active_secondary_entity][telephone][phone_number]" => "morbidity_event[reporter][person_entity][telephones]",
+          "morbidity_event[active_reporter][active_secondary_entity][telephone][area_code]" => "morbidity_event[reporter][person_entity][telephones][area_code]",
+          "morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]" => "morbidity_event[reporter][person_entity][telephones][entity_location_type_id]",
+          "morbidity_event[active_reporter][active_secondary_entity][telephone][extension]" => "morbidity_event[reporter][person_entity][telephones][extension]",
+          "morbidity_event[active_reporter][active_secondary_entity][telephone][phone_number]" => "morbidity_event[reporter][person_entity][telephones][phone_number]",
 
           "morbidity_event[active_reporting_agency][active_secondary_entity][place][name]" => "morbidity_event[reporting_agency][place_entity][place][name]",
 
@@ -406,13 +406,30 @@ class Tgrii < ActiveRecord::Migration
             UPDATE core_fields
             SET key = '#{value}'
             WHERE key = '#{key}'
-          ")
+            ")
 
           execute("
             UPDATE form_elements
             SET core_path = '#{value}'
             WHERE core_path = '#{key}'
-          ")
+            ")
+        end
+
+        say "Turning off form builder support for reporting phone fields"
+        
+        ["morbidity_event[reporter][person_entity][telephones][area_code]",
+          "morbidity_event[reporter][person_entity][telephones][entity_location_type_id]",
+          "morbidity_event[reporter][person_entity][telephones][extension]",
+          "morbidity_event[reporter][person_entity][telephones][phone_number]"].each do |key|
+          core_field = CoreField.find_by_key(key)
+          unless core_field.nil?
+            say "Updating #{key}"
+            core_field.fb_accessible = false
+            core_field.can_follow_up = false
+            core_field.save!
+          else
+            say "Did not find a core field for #{key}"
+          end
         end
       end
     end

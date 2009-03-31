@@ -23,7 +23,7 @@ describe 'form builder core event level core field configs for contacts' do
   #$dont_kill_browser = true
 
   fields = [
-    {:name => 'Reporter last name', :label => 'morbidity_event_active_reporting_agency_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
+    {:name => 'Reporter last name', :label => 'morbidity_event_reporter_attributes_person_entity_attributes_person_attributes_last_name', :entry_type => 'type',  :fu_value => get_unique_name(1), :no_fu_value => get_unique_name(1)}
   ]
   
   data_types = [{:name => 'Single line text', :values => nil, :answer => get_unique_name(5), :entry_type => "type"},

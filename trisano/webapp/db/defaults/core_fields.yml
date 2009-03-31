@@ -10,11 +10,11 @@ core_field_contact_lab_result_specimen_sent_to_uphl:
 core_field_00043: 
   name: Reporter phone type
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones]
+  key: morbidity_event[reporter][person_entity][telephones][entity_location_type_id]
 core_field_contact_lab_result_test_detail: 
   name: Lab results | Test detail
   help_text: 
@@ -66,11 +66,11 @@ core_field_00072:
 core_field_00044: 
   name: Reporter area code
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones]
+  key: morbidity_event[reporter][person_entity][telephones][area_code]
 core_field_00017: 
   name: Patient primary language
   help_text: 
@@ -90,11 +90,11 @@ core_field_00073:
 core_field_00045: 
   name: Reporter phone number
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones]
+  key: morbidity_event[reporter][person_entity][telephones][phone_number]
 core_field_00018: 
   name: Pregnant
   help_text: 
@@ -114,11 +114,11 @@ core_field_00074:
 core_field_00046: 
   name: Reporter extension
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones]
+  key: morbidity_event[reporter][person_entity][telephones][extension]
 core_field_00019: 
   name: Pregnancy due date
   help_text: 

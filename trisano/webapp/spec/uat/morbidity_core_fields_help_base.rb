@@ -26,7 +26,7 @@ describe "help text for morbidity core fields", :shared => true do
   $test_core_fields.each do |core_field|
 
     # Special exception for reporting agency, as a link needs to be clicked to bring this field into view.
-    next if core_field['name'].downcase.include?("reporting agency")
+    next if (core_field['name'].downcase.include?("reporting agency") || core_field['name'].downcase.include?("reporter phone type"))
 
     it "should edit #{core_field['event_type']} core field help text for #{core_field['name']}" do
       @browser.open("/trisano/core_fields")
