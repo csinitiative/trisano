@@ -177,8 +177,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       result += @template.content_tag(:label, sanitize(question.question_text, :tags => %w(br))) + " " + input_element
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       unless question_element.export_column.blank?
-        result += "\n" + @template.hidden_field_tag(field_name + "[#{field_index}]" + '[export_conversion_value_id]', export_conversion_value_id(event, question)) 
-        result += rb_export_js(cdc_attributes, field_name + "[#{field_index}]" + '[export_conversion_value_id]')
+        export_conv_field_name = field_name + "[#{field_index}]" + '[export_conversion_value_id]'
+        export_conv_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'export_conversion_value_id'
+        result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id) 
+        result += rb_export_js(cdc_attributes, export_conv_field_id)
       end
     else
       result += @template.content_tag(:label) do
@@ -188,8 +190,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       result += "\n" + hidden_field(:question_id, :index => index)
       unless question_element.export_column.blank?
         if question.data_type == :drop_down
-          result += "\n" + @template.hidden_field_tag(object_name + "[#{index}]" + '[export_conversion_value_id]', export_conversion_value_id(event, question)) 
-          result += dd_export_js(cdc_attributes, object_name + "[#{index}]" + '[export_conversion_value_id]', id)
+          export_conv_field_name = object_name + "[#{index}]" + '[export_conversion_value_id]'
+          export_conv_field_id = object_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{index}_" + 'export_conversion_value_id'
+          result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id) 
+          result += dd_export_js(cdc_attributes, export_conv_field_id, id)
         else
           result += "\n" + hidden_field(:export_conversion_value_id, :index => index, :value => question_element.export_column.export_conversion_values.first.id )
         end
