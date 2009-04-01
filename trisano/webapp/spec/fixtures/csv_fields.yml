@@ -1154,8 +1154,8 @@ csv_field_00127:
 csv_field_00128: 
   sort_order: 720
   export_group: event
-  long_name: patient_event_status
-  use_description: event_status
+  long_name: patient_workflow_state
+  use_description: workflow_state
   short_name: 
   use_code: 
   event_type: morbidity_event

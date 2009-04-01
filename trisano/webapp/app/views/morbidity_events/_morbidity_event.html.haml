@@ -42,7 +42,7 @@
         = morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
         %br
   %td
-    %b= morbidity_event.current_state.description
+    %b= morbidity_event.state_description
     - unless morbidity_event.event_queue_id.nil?
       %div{:id => 'queue_info'}
         %small

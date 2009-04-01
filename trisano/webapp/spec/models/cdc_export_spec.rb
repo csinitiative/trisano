@@ -75,7 +75,7 @@ describe CdcExport do
             "ethnicity_id" => external_codes(:ethnicity_non_hispanic).id,
             "birth_gender_id" => external_codes(:gender_female).id,
             "birth_date" => Date.parse('01/01/1975')
-          }          
+          }      
         }
       },
       "jurisdiction_attributes" => {
@@ -324,13 +324,12 @@ describe CdcExport do
       end
 
       it 'should update when patient\'s county of residence changes' do
-        pending "TGRII: Not working for reasons unknown"
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes("address_attributes" => {"county_id" => external_codes(:county_summit).id})
+          events[0].update_attributes!("address_attributes" => {"county_id" => external_codes(:county_summit).id})
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
@@ -339,13 +338,12 @@ describe CdcExport do
       end
 
       it 'should update when race changes' do
-        pending "TGRII: Not working for reasons unknown"
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({"interested_party_attributes" => {"person_entity_attributes" => {"race_ids" => [external_codes(:race_black).id]}}})
+          events[0].update_attributes!({"interested_party_attributes" => {"person_entity_attributes" => {"race_ids" => [external_codes(:race_black).id], 'person_attributes' => {'last_name' => 'Someone'}}}})
           events[0].save
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
@@ -355,13 +353,12 @@ describe CdcExport do
       end
 
       it 'should update when birth gender changes' do
-        pending "TGRII: Not working for reasons unknown"
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_gender_id' => external_codes(:gender_male).id}}}})
+          events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_gender_id' => external_codes(:gender_male).id, 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
@@ -370,13 +367,12 @@ describe CdcExport do
       end
 
       it 'should update when ethnicity changes' do
-        pending "TGRII: Not working for reasons unknown"
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'ethnicity_id' => external_codes(:ethnicity_hispanic).id}}}})
+          events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'ethnicity_id' => external_codes(:ethnicity_hispanic).id, 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
@@ -385,13 +381,12 @@ describe CdcExport do
       end
 
       it 'should update when birth date changes' do
-        pending "TGRII: Not working for reasons unknown"
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_date' => Date.parse('12/31/1975')}}}})
+          events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_date' => Date.parse('12/31/1975'), 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc

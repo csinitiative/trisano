@@ -36,7 +36,7 @@ shared_examples_for "search cmrs with parameters" do
       :gender => nil,
       :sw_last_name => nil, 
       :sw_first_name => nil,
-      :event_status => nil,
+      :workflow_state => nil,
       :birth_date => '',
       :entered_on_start => nil,
       :entered_on_end => nil,

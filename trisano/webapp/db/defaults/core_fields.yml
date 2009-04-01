@@ -630,7 +630,7 @@ core_field_00034:
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
-  key: morbidity_event[event_status]
+  key: morbidity_event[workflow_state]
 core_field_00006: 
   name: Patient unit number
   help_text: 

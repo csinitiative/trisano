@@ -23,7 +23,6 @@ class ContactEvent < HumanEvent
   
   before_create do |contact|
     contact.add_note("Contact event created.")
-    contact.event_status = "NEW"
   end
 
   class << self
@@ -46,7 +45,6 @@ class ContactEvent < HumanEvent
   def promote_to_morbidity_event
     raise "Cannot promote an unsaved contact to a morbidity event" if self.new_record?
     self['type'] = MorbidityEvent.to_s
-    self.event_status = "NEW"
     # Pull morb forms
     if self.disease_event && self.disease_event.disease
       jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil

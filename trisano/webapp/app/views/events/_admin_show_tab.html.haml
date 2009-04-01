@@ -64,9 +64,9 @@
       - core_element_show :secondary_entity_id, j, :horiz do
         = j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') 
         = h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
-      - core_element_show :event_status, event_form, :horiz do
-        = event_form.label :event_status, 'Event status'
-        =h(@event.current_state.description)
+      - core_element_show :workflow_state, event_form, :horiz do
+        = event_form.label :workflow_state, 'Event status'
+        =h(@event.state_description)
       - core_element_show :investigation_started_date, event_form, :horiz do
         = event_form.label :investigation_started_date, 'Date investigation started'
         = h(@event.investigation_started_date)

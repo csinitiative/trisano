@@ -173,33 +173,27 @@ module EventsHelper
   end
 
   def state_controls(event)
-    current_state = event.event_status
-    return "" if ["CLOSED", "NEW"].include? current_state
-
-    allowed_transitions = event.current_state.renderable_transitions do |transition_state|
-      j_id = event.primary_jurisdiction.entity_id
-      User.current_user.is_entitled_to_in?(transition_state.required_privilege, j_id)
-    end
+    return "" if event.new? or event.closed? or event.rejected_by_lhd?
 
     routing_controls = action_controls = ""
-    allowed_transitions.each do |transition|
-      case transition.state_code
-      when "ACPTD-LHD", "RJCTD-LHD", "UI", "RJCTD-INV", "APP-LHD", "RO-MGR", "CLOSED", "RO-STATE"
-        action_controls += radio_button_tag(transition.state_code,
-          transition.state_code,
+    event.allowed_transitions.each do |transition|      
+      case transition
+      when :accept, :reject, :approve, :reopen, :close
+        action_controls += radio_button_tag(transition.to_s,
+          transition.to_s,
           false,
-          :onclick => state_routing_js(:confirm => transition.state_code == 'RJCTD-LHD'))
-        action_controls += transition.action_phrase
-      when "ASGD-INV"
+          :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
+        action_controls += transition.to_s.titleize
+      when :assign_to_investigator
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        routing_controls += "<div>#{transition.action_phrase}:&nbsp;"
-        routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
+        routing_controls += "<div>Assign to queue:&nbsp;"
+        routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
 
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
-        routing_controls += "<div>Route to investigator:&nbsp;"
-        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.state_code), :style => "display: inline") + "</div>"
-      when "IC"
-        action_controls += submit_tag(transition.action_phrase, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.state_code))
+        routing_controls += "<div>#{transition.to_s.titleize}:&nbsp;"
+        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
+      when :complete
+        action_controls += submit_tag(transition.to_s.titleize, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.to_s))
       end
     end
 
@@ -208,7 +202,7 @@ module EventsHelper
     else
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
-        #{hidden_field_tag("morbidity_event[event_status]", '')}
+        #{hidden_field_tag("morbidity_event[workflow_action]", '')}
         Brief note: #{text_field_tag("morbidity_event[note]", '')}
         <br/>
         Action required: #{action_controls}
@@ -223,7 +217,6 @@ module EventsHelper
   def jurisdiction_routing_control(event)
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
-
       controls += link_to_function('Route to Local Health Depts.', nil) do |page|
         page["routing_controls_#{event.id}"].visual_effect :appear, :duration => 0.5
       end
@@ -261,7 +254,7 @@ module EventsHelper
     confirm = options[:confirm]
     js = []
     js << 'if(confirm("Are you sure?")) {' if confirm
-    js << "$(this.form).getInputs('hidden', 'morbidity_event[event_status]').reduce().setValue(#{value || '$F(this)'});"
+    js << "$(this.form).getInputs('hidden', 'morbidity_event[workflow_action]').reduce().setValue(#{value || '$F(this)'});"
     js << 'this.form.submit();'
     js << '}' if confirm
     js.join(' ')

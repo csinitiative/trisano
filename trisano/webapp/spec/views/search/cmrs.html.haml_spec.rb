@@ -30,7 +30,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:cities] = [mock_gender]
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
-    assigns[:event_statuses] = [mock_event_status]
+    assigns[:workflow_states] = [mock_event_status]
     assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     do_render
     response.should have_tag("form[action=?][method=get]", search_path + "/cmrs")
@@ -54,7 +54,7 @@ describe "/search/cmrs.html.haml" do
     de.stub!(:disease).and_return(d)
 
     me.stub!(:record_number).and_return("9999999")
-    me.stub!(:event_status).and_return("NEW")
+    me.stub!(:workflow_state).and_return("new")
     me.stub!(:deleted_at).and_return(nil)
     me.stub!(:safe_call_chain).and_return('whatever')
     me.stub!(:primary_jurisdiction).and_return(mock_jurisdiction)
@@ -74,7 +74,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
-    assigns[:event_statuses] = [mock_event_status]
+    assigns[:workflow_states] = [mock_event_status]
     assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
 
     do_render
@@ -96,7 +96,7 @@ describe "/search/cmrs.html.haml" do
     assigns[:counties] = [mock_county]
     assigns[:jurisdictions] = [mock_jurisdiction]
     assigns[:districts] = [mock_district]
-    assigns[:event_statuses] = [mock_event_status]
+    assigns[:workflow_states] = [mock_event_status]
     assigns[:event_types] = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     do_render
     response.should have_text(/Your search returned no results./)
@@ -151,6 +151,6 @@ describe "/search/cmrs.html.haml" do
   end
 
   def mock_event_status
-    OpenStruct.new( :state => "UI", :description => "Under Investigation")
+    OpenStruct.new( :state => "under_investigation", :description => "Under Investigation")
   end
 end

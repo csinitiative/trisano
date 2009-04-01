@@ -248,7 +248,8 @@ describe MorbidityEventsController do
     describe "with successful routing" do
       def do_route_event
         request.env['HTTP_REFERER'] = "/some_path"
-        @event.should_receive(:route_to_jurisdiction).and_return(true)
+        @event.should_receive(:assign_to_lhd)
+        @event.should_receive(:save!)
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
       end
       
@@ -265,7 +266,6 @@ describe MorbidityEventsController do
       describe "setting the status field" do
         describe "with a new route" do
           it "should change status to ASGD-LHD" do
-            @event.should_receive(:update_attribute).with("event_status", "ASGD-LHD")
             do_route_event
           end
         end
@@ -281,8 +281,8 @@ describe MorbidityEventsController do
 
       describe "with secondary_ids too" do
         it "should pass IDs into event#route_to_jurisdiction" do
-          @event.should_receive(:route_to_jurisdiction).with("2", ["3", "4"], "")
-
+          @event.should_receive(:assign_to_lhd)
+          @event.should_receive(:save!)
           request.env['HTTP_REFERER'] = "/some_path"
           post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"], :note => ""
         end
@@ -292,7 +292,7 @@ describe MorbidityEventsController do
     describe "with failed routing" do
       def do_route_event
         request.env['HTTP_REFERER'] = "/some_path"
-        @event.should_receive(:route_to_jurisdiction).and_raise()
+        @event.should_receive(:halted?).and_return false
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
       end
 
@@ -309,23 +309,13 @@ describe MorbidityEventsController do
       @user.stub!(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
 
-      states = mock(Hash)
-      state = mock(Routing::State)
-      state.should_receive(:required_privilege).and_return(:a_privilege)        
-      state.should_receive(:allows_transition_to?).with('a_status').and_return(true)
-      state.should_receive(:note_text).and_return('"a string that can be evaluated"')
-      Event.should_receive(:states).exactly(3).times.and_return(states)
-      states.should_receive(:[]).exactly(3).times.and_return(state)
-
       @jurisdiction = mock_model(Participation)
       @jurisdiction.stub!(:secondary_entity_id).and_return(1)
 
       @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:jurisdiction).and_return(@jurisdiction)
       @event.stub!(:update_attributes).and_return(true)
-      @event.stub!(:event_status=).and_return("NEW")
       @event.stub!(:attributes=).and_return(1)
-      @event.stub!(:current_state).and_return(state)
       @event.stub!(:investigator_id=).and_return(@user.id)
       @event.stub!(:investigation_started_date=)
       @event.stub!(:add_note)
@@ -340,8 +330,9 @@ describe MorbidityEventsController do
 
       def do_change_state
         request.env['HTTP_REFERER'] = "/some_path"
+        @event.should_receive(:a_status)
         @event.should_receive(:save).and_return(true)
-        post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
+        post :state, :id => "1", :morbidity_event => {:workflow_action=> 'a_status'}
       end
 
       it "should find the event requested" do
@@ -359,17 +350,12 @@ describe MorbidityEventsController do
       
       def do_change_state
         mock_user
-        state = mock(Routing::State)
-        state.should_receive(:required_privilege).and_return(nil)
-        states = mock(Hash)
-        Event.should_receive(:states).twice.and_return(states)
-        states.should_receive(:[]).twice.and_return(state)
-        
         event = mock_model(MorbidityEvent, :to_param => "1")        
+        event.should_receive(:halted?).and_return true
         MorbidityEvent.should_receive(:find).with("1").and_return(event)
 
         request.env['HTTP_REFERER'] = "/some_path"
-        post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
+        post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
       end
 
       it "should respond with a 403" do
@@ -382,17 +368,9 @@ describe MorbidityEventsController do
       def do_change_state
         mock_user
         event = mock_model(MorbidityEvent, :to_param => "1")
-        jurisdiction = mock('jurisdiction')
-        jurisdiction.should_receive(:secondary_entity_id).and_return(1)
-        event.should_receive(:jurisdiction).and_return(jurisdiction)
+        event.should_receive(:halted?).and_return true
         MorbidityEvent.should_receive(:find).and_return(event)
 
-        state = mock(Routing::State)
-        states = {'a_status' => state}
-        state.should_receive(:required_privilege).and_return(:a_privilege)
-        Event.should_receive(:states).twice.and_return(states)
-        states.should_receive(:[]).twice.with('a_status').and_return(state)        
-        @user.should_receive(:is_entitled_to_in?).with(:a_privilege, 1).and_return(false)
         post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
       end
 
@@ -406,27 +384,13 @@ describe MorbidityEventsController do
       def do_change_state
         mock_user
         @event = mock_event        
-        state = mock(Routing::State)
-        states = {'a_status' => state}
-        state.should_receive(:required_privilege).and_return(:a_privilege)        
-        state.should_receive(:note_text).and_return('"a string that can be evaluated"')
-        Event.should_receive(:states).exactly(3).times.and_return(states)
-        states.should_receive(:[]).exactly(3).times.with('a_status').and_return(state)        
-        
+                
         User.stub!(:current_user).and_return(@user)
-        @user.should_receive(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
-        @current_state = mock(Routing::State)
-        @current_state.should_receive(:allows_transition_to?).with('a_status').and_return(true)
-        @event.should_receive(:current_state).and_return(@current_state)
-        @event.should_receive(:event_status=).with('a_status')
+        @event.should_receive(:a_status)
         @event.should_receive(:save).and_return(false)
         @event.should_receive(:attributes=)
-        jurisdiction = mock('jurisdiction')
-        jurisdiction.should_receive(:secondary_entity_id).and_return(1)
-        @event.should_receive(:jurisdiction).and_return(jurisdiction)
-        @event.stub!(:add_note)
         MorbidityEvent.should_receive(:find).with("1").and_return(@event)
-        post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
+        post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
       end
 
       it "should redirect to the event index page" do

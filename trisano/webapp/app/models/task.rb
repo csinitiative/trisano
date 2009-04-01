@@ -20,7 +20,7 @@ class Task < ActiveRecord::Base
   belongs_to :user
   belongs_to :event
   belongs_to :category, :class_name => 'ExternalCode', :foreign_key => :category_id
-  has_many :repeating_tasks, :class_name => 'Task', :foreign_key => :repeating_task_id
+  has_many   :repeating_tasks, :class_name => 'Task',  :foreign_key => :repeating_task_id
   
   class << self
     def status_array

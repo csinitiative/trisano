@@ -122,41 +122,45 @@ module Export
 
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
-        if export_attributes_changed?(old_attributes)
+        if export_attributes_changed?
           self.cdc_updated_at = Date.today if self.sent_to_cdc
-          self.ibis_updated_at = Date.today if self.sent_to_ibis
+          self.ibis_updated_at = Date.today if self.sent_to_ibis          
         end
         # IBIS export is also interested in a few more
-        if ibis_attributes_changed?(old_attributes) && sent_to_ibis
+        if ibis_attributes_changed? && sent_to_ibis
           self.ibis_updated_at = Date.today
         end
       end
       
       private
       
-      def export_attributes_changed?(old_attributes)
+      def export_attributes_changed?
         return false if new_record?
-        return false unless old_attributes                
-        
+
         nested_attribute_paths.each do |k, call_path|
           return true if nested_attribute_changed?(k, call_path)
         end
                 
-        export_fields = %w(event_onset_date first_reported_PH_date state_case_status_id imported_from_id deleted_at)
-        old_attributes.select {|k, v| export_fields.include?(k)}.reject do |field, value|
-          self.attributes[field] == value
-        end.size > 0
+        %w(event_onset_date 
+           first_reported_PH_date 
+           state_case_status_id 
+           imported_from_id 
+           deleted_at).each do |field|
+          return true if send("#{field}_change")
+        end
       end
 
-      def ibis_attributes_changed?(old_attributes)
-        ibis_nested_attribute_paths.each do |k, call_path|
+      def ibis_attributes_changed?
+        ibis_nested_attribute_paths.each do |k, call_path|          
           return true if nested_attribute_changed?(k, call_path)
         end
         false
       end
 
       def nested_attribute_changed?(nested_key, call_path)
-        nested_attributes[nested_key] != safe_call_chain(*call_path) if nested_attributes
+        field = call_path.slice!(-1)
+        call_path << :changed
+        return true if safe_call_chain(*call_path).try(:include?, field.to_s)
       end
 
       def nested_attribute_paths

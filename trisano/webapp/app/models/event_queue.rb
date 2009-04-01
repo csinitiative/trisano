@@ -37,9 +37,10 @@ class EventQueue < ActiveRecord::Base
     Event.find(:all, :conditions => "event_queue_id = #{self.id}").each do |event|
       note = "Event queue '#{self.queue_name}' has been deleted. Event has been moved out of that queue."
 
-      if event.event_status == "ASGD-INV" && event.investigator.nil?     # If the event has been assigned to this queue, but not yet accepted
-        event.event_status = "ACPTD-LHD"                                 # then set the status back to 'accepted by LHD' and add a note
+      begin
+        event.reset
         note += " Event has not yet been accepted for investigation and should be reassigned."
+      rescue
       end
 
       event.add_note(note)

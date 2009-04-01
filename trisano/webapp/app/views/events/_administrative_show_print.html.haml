@@ -61,9 +61,9 @@
   - core_element_print :secondary_entity_id, j, :horiz do
     %span.print-label Jurisdiction responsible for investigation:
     %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
-  - core_element_print :event_status, event_form, :vert do
+  - core_element_print :workflow_state, event_form, :vert do
     %span.print-label Event status:
-    %span.print-value= h(@event.current_state.description) || '&nbsp;'
+    %span.print-value= h(@event.state_description) || '&nbsp;'
   - core_element_print :investigation_started_date, event_form, :horiz do
     %span.print-label Date investigation started:
     %span.print-value= h(@event.investigation_started_date) || '&nbsp;'

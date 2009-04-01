@@ -16,16 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 class MorbidityEventObserver < ActiveRecord::Observer
   
-  def after_create(event)
-    event.cache_old_attributes
-  end
-
   def before_save(event)
     event.check_export_updates
-  end
-
-  def after_save(event)    
-    event.cache_old_attributes
   end
 
 end

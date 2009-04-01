@@ -98,7 +98,7 @@ class MorbidityEventsController < EventsController
 
       # Allow for test scripts and developers to jump directly to the "under investigation" state
       if RAILS_ENV == 'production'
-        @event.primary_jurisdiction.name == "Unassigned" ? @event.event_status = "NEW" : @event.event_status = "ACPTD-LHD"
+        @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
       end
       @event.event_onset_date = Date.today
     end
@@ -112,7 +112,7 @@ class MorbidityEventsController < EventsController
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
-          @event.add_note(@event.instance_eval(MorbidityEvent.states["NEW"].note_text))
+          @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
@@ -171,24 +171,18 @@ class MorbidityEventsController < EventsController
 
   # Route an event from one jurisdiction to another
   def jurisdiction
- 
     @event = MorbidityEvent.find(params[:id])
-
-    # user cannot route events _from_ a jurisdiction for which they do not have the 'route_event_to_any_lhd' privilege
-    unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, @event.jurisdiction.secondary_entity_id)
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have sufficient privileges to route events from this jurisdiction", :event => @event }, :status => 403, :layout => true and return
-    end
-
     begin
-      Event.transaction do
-        # Only change the status if they've changed the investigating jurisdiction.  Not if they only changed secondaries
-        @event.update_attribute("event_status", "ASGD-LHD") unless params[:jurisdiction_id].to_i == @event.jurisdiction.secondary_entity_id
-        
-        # the following line must follow the previous line or state won't get changed.
-        @event.route_to_jurisdiction(params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note])
-      end
+      @event.assign_to_lhd params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note]
+      @event.save!
     rescue Exception => ex
-      flash[:error] = 'Unable to route CMR.' + ex.message
+      if @event.halted?
+        render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true and return
+      else
+        flash[:error] = 'Unable to route CMR. ' + ex.message
+        redirect_to request.env["HTTP_REFERER"]
+        return
+      end
     end
     if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id])
       flash[:notice] = 'Event successfully routed.'
@@ -201,56 +195,25 @@ class MorbidityEventsController < EventsController
 
   def state
     @event = MorbidityEvent.find(params[:id])
-    event_status = params[:morbidity_event].delete(:event_status)
-
-    # Determine what privileges are required to change to the passed in state
-    priv_required = Event.states[event_status].required_privilege if Event.states[event_status]
-
-    # If nothing came back, then the passed in state was malformed
-    if priv_required.nil?
-      render :text => "Bad state", :status => 403 and return
-    end
-
-    # Check if the user is allowed to change the event to the passed in state
-    unless User.current_user.is_entitled_to_in?(priv_required, @event.jurisdiction.secondary_entity_id)
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have sufficient privileges to make this change", :event => nil }, :layout => true, :status => 403 and return
-    end
-    
-    # Check if the state transition is legal. E.g: Legal -> "accepted by LHD" to "assigned to investigator".  Illegal -> "accepted by LHD" to "investigation complete"
-    unless @event.current_state.allows_transition_to?(event_status)
-      render :text => "Illegal State Transition", :status => 409 and return
-    end
-    
-    # event_status is protected from mass update, set individually
-    @event.event_status = event_status
+    workflow_action = params[:morbidity_event].delete(:workflow_action)
 
     # Squirrel any notes away
     note = params[:morbidity_event].delete(:note)
-
-    # A status change may be accompanied by other values such as an event queue, set them
-    @event.attributes = params[:morbidity_event]
-
-    # This must follow the attribute setting so that the model is set up for the instance_eval
-    @event.add_note(@event.instance_eval(Event.states[event_status].note_text) + "\n#{note}")
-
-    # Special handling for certain state changes
-    case event_status
-    when "RJCTD-LHD"
-      @event.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
-    when "RJCTD-INV"
-      @event.investigator_id = nil
-      @event.investigation_started_date = nil
-    when "UI"
-      @event.investigator_id = User.current_user.id
-      @event.investigation_started_date = Date.today
-    when "IC"
-      @event.investigation_completed_LHD_date = Date.today
-    when "RO-MGR"
-      @event.investigation_completed_LHD_date = nil
-    when "CLOSED"
-      @event.review_completed_by_state_date = Date.today
+    
+    begin      
+      # A status change may be accompanied by other values such as an
+      # event queue, set them
+      @event.attributes = params[:morbidity_event]
+      @event.send(workflow_action, note)
+    rescue Exception => e
+      # grr. workflow halt exception doesn't work as documented
+      if @event.halted?
+        render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => nil }, :layout => true, :status => 403 and return
+      else
+        render :text => "Illegal State Transition", :status => 409 and return
+      end
     end
-
+    
     if @event.save
       redirect_to request.env["HTTP_REFERER"]
     else

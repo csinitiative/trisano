@@ -104,7 +104,7 @@ describe ContactEvent do
     end
 
     it "should be in a NEW state" do
-      @c.event_status.should == "NEW"
+      @c.workflow_state == 'new'
     end
   end
 end

@@ -12,7 +12,7 @@ marks_cmr:
   results_reported_to_clinician_date: 
   event_name: Marks Chicken Pox
   MMWR_week: !str 10
-  event_status: "NEW"
+  workflow_state: new
   state_case_status_id: !str 1802
   lhd_case_status_id: !str 1802
   MMWR_year: !str 2006
@@ -23,17 +23,17 @@ marks_cmr:
 
 under_investigation_cmr:
   id: 2
-  event_status: "UI"
+  workflow_state: under_investigation
   type: MorbidityEvent
 
 no_disease_cmr:
   id: 3
-  event_status: "NEW"
+  workflow_state: new
   type: MorbidityEvent
 
 cdc_answers_cmr:
   id: 4
-  event_status: 'UI'
+  workflow_state: under_investigation
   record_number: "456789"
   type: MorbidityEvent
 
@@ -43,7 +43,7 @@ has_anthrax_cmr:
 
 has_event_queue:
   id: 6
-  event_status: "ASGD-INV"
+  workflow_state: assigned_to_investigator
   event_queue_id: 1
   event_onset_date: 2008-03-11
   type: MorbidityEvent

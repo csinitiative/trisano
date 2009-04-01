@@ -1,0 +1,289 @@
+= Workflow
+
+=== New Mailing List!
+
+Hi! We've now got a mailing list to talk about Workflow, and that's good! Come visit and post your problems or ideas or anything!!!
+
+  http://groups.google.com/group/ruby-workflow
+
+See you there!
+
+=== What is workflow?
+
+Workflow is a finite-state-machine-inspired API for modeling and interacting with what we tend to refer to as 'workflow'.
+
+A lot of business modeling tends to involve workflow-like concepts, and the aim of this library is to make the expression of these concepts as clear as possible, using similar terminology as found in state machine theory.
+
+So, a workflow has a state. It can only be in one state at a time. When a workflow changes state, we call that a transition. Transitions occur on an event, so events cause transitions to occur. Additionally, when an event fires, other random code can be executed, we call those actions. So any given state has a bunch of events, any event in a state causes a transition to another state and potentially causes code to be executed (an action). We can hook into states when they are entered, and exited from, and we can cause transitions to fail (guards), and we can hook in to every transition that occurs ever for whatever reason we can come up with.
+
+Now, all that's a mouthful, but we'll demonstrate the API bit by bit with a real-ish world example.
+
+Let's say we're modeling article submission from journalists. An article is written, then submitted. When it's submitted, it's awaiting review. Someone reviews the article, and then either accepts or rejects it. Explaining all that is a pain in the arse. Here is the expression of this workflow using the API:
+
+  Workflow.specify 'Article Workflow' do
+    state :new do
+      event :submit, :transitions_to => :awaiting_review
+    end
+    state :awaiting_review do
+      event :review, :transitions_to => :being_reviewed
+    end
+    state :being_reviewed do
+      event :accept, :transitions_to => :accepted
+      event :reject, :transitions_to => :rejected
+    end
+    state :accepted
+    state :rejected
+  end
+  
+Much better, isn't it!
+
+The initial state is <tt>:new</tt> – in this example that's somewhat meaningless. (?) However, the <tt>:submit</tt> event <tt>:transitions_to => :being_reviewed</tt>. So, lets instantiate an instance of this Workflow:
+
+  workflow = Workflow.new('Article Workflow')
+  workflow.state # => :new
+  
+Now we can call the submit event, which transitions to the <tt>:awaiting_review</tt> state:
+
+  workflow.submit
+  workflow.state # => :awaiting_review
+  
+Events are actually instance methods on a workflow, and depending on the state you're in, you'll have a different set of events used to transition to other states.
+
+Given this workflow is now <tt>:awaiting_approval</tt>, we have a <tt>:review</tt> event, that we call when someone begins to review the article, which puts the workflow into the <tt>:being_reviewed</tt> state.
+
+States can also be queried via predicates for convenience like so:
+
+  workflow = Workflow.new('Article Workflow')
+  workflow.new?             # => true
+  workflow.awaiting_review? # => false  
+  workflow.submit
+  workflow.new?             # => false
+  workflow.awaiting_review? # => true  
+
+Lets say that the business rule is that only one person can review an article at a time – having a state <tt>:being_reviewed</tt> allows for doing things like checking which articles are being reviewed, and being able to select from a pool of articles that are awaiting review, etc. (rewrite?)
+
+Now lets say another business rule is that we need to keep track of who is currently reviewing what, how do we do this? We'll now introduce the concept of an action by rewriting our <tt>:review</tt> event.
+
+  event :review, :transitions_to => :being_reviewed do |reviewer|
+    # store the reviewer somewhere for later
+  end
+
+By using Ruby blocks we've now introduced extra code to be fired when an event is called. The block parameters are treated as method arguments on the event, so, given we have a reference to the reviewer, the event call becomes:
+
+  # we gots a reviewer
+  workflow.reivew(reviewer)
+
+OK, so how do we store the reviewer? What is the scope inside that block? Ah, we'll get to that in a bit. An instance of a workflow isn't as useful as a workflow bound to an instance of another class. We'll introduce you to plain old Class integration and ActiveRecord integration later in this document.
+
+So we've covered events, states, transitions and actions (as Ruby blocks). Now we're going to go over some hooks you have access to in a workflow. These are on_exit, on_entry and on_transition.
+
+When states transition, they are entered into, and exited out of, we can hook into this and do fancy junk.
+
+  state :being_reviewed do
+    event :accept, :transitions_to => :accepted
+    event :reject, :transitions_to => :rejected
+    on_exit do |new_state, triggering_event, *event_args|
+      # do something related to coming out of :being_reviewed
+    end
+  end
+  
+  state :accepted do
+    on_entry do |prior_state, triggering_event, *event_args|
+      # do something relevant to coming in to :accepted
+    end
+  end
+
+Now why don't we just put this code into an action block? Well, you might not have only one event that transitions into a state, you may have multiple events that transition to a particular state, so by using the on_entry and on_exit hooks you're guaranteeing that a certain bit of code is executed, regardless what event fires the transition.
+
+Billy Bob the Manager comes to you and says "I need to know EVERYTHING THAT HAPPENS EVERYWHERE AT ANY TIME FOR EVERYTHING". For whatever reasons you have to record the history of the entire workflow. That's easy using on_transition.
+
+  on_transition do |from, to, triggering_event, *event_args|
+    # record everything, or something
+  end
+
+Workflow doesn't try to tell you how to store your log messages, (but we'd suggest using a *splat and storing that somewhere, and keep your log messages flexible).
+
+Finite state machines have the concept of a guard. The idea is that if a certain set of arbitrary conditions are not fulfilled, it will halt the transition from one state to another. We haven't really figured out how to do this, and we don't like the idea of going <tt>:guard => Proc.new {}</tt>, coz that's a bit lame, so instead we have <tt>halt!</tt>
+
+The <tt>halt!</tt> method is the implementation of the guard concept. Let's take a look.
+
+  state :being_reviewed do
+    event :accept, :transitions_to => :accepted do
+      halt if true # does not transition to :accepted
+    end
+  end
+
+Inline with how ActiveRecord does things, <tt>halt!</tt> also can be called via <tt>halt</tt>, which makes the event return false, so you can trap it with if workflow.event instead of using a rescue block. Using halt returns false.
+
+  # using halt
+  workflow.state   # => :being_reviewed
+  workflow.accept  # => false
+  workflow.halted? # => true
+  workflow.state   # => :being_reviewed
+  
+  # using halt!
+  workflow.state  # => :being_reviewed
+  begin
+    workflow.accept
+  rescue Workflow::Halted => e
+    # we gots an exception
+  end
+  workflow.halted? # => true
+  workflow.state   # => :being_reviewed
+
+Furthermore, <tt>halt!</tt> and <tt>halt</tt> accept an argument, which is the message why the workflow was halted.
+
+  state :being_reviewed do
+    event :accept, :transitions_to => :accepted do
+      halt 'coz I said so!' if true # does not transition to :accepted
+    end
+  end
+
+And the API for, like, getting this message, with both <tt>halt</tt> and <tt>halt!</tt>:
+
+  # using halt
+  workflow.state          # => :being_reviewed
+  workflow.accept         # => false
+  workflow.halted?        # => true
+  workflow.halted_because # => 'coz I said so!'
+  workflow.state          # => :being_reviewed
+
+  # using halt!
+  workflow.state  # => :being_reviewed
+  begin
+    workflow.accept
+  rescue Workflow::Halted => e
+    e.halted_because # => 'coz I said so!' 
+  end
+  workflow.halted? # => true
+  workflow.state   # => :being_reviewed
+
+We can reflect off the workflow to (attempt) to automate as much as we can. There are two types of reflection in Workflow - reflection and meta-reflection. We'll explain the former first.
+
+  workflow.states # => [:new, :awaiting_review, :being_reviewed, :accepted, :rejected]
+  workflow.states(:new).events # => [:submit]
+  workflow.states(:being_reviewed).events # => [:accept, :reject]
+  workflow.states(:being_reviewed).events(:accept).transitions_to # => :accepted
+
+Meta-reflection allows you to add further information to your states, events in order to allow you to build whatever interface/controller/etc you require for your application. If reflection were Batman then meta-reflection is Robin, always there to lend a helping hand when Batman just isn't enough.
+
+  state :new, :meta => :ui_widget => :radio_buttons do
+    event :submit, :meta => :label => 'Upload...'
+  end
+  
+And as per the last example, getting yo meta is very similar:
+
+  workflow.states(:new).meta # => {:ui_widget => :radio_buttons}
+  workflow.states(:new).meta[:ui_widget] # => :radio_buttons
+  workflow.states(:new).meta.ui_widget # => :radio_buttons
+
+  workflow.states(:new).events(:submit).meta # => {:label => 'Upload...'}
+  workflow.states(:new).events(:submit).meta[:label] # => 'Upload...'
+  workflow.states(:new).events(:submit).meta.label # => 'Upload...'
+  
+Thankfully, meta responds to each so you can iterate over your values if you're so inclined.
+
+  workflow.states(:new).meta.each { |key, value| puts key, value }
+
+The order of which things are fired when an event are as follows:
+
+  * action
+  * on_transition (if action didn't halt)
+  * on_exit
+  * WORKFLOW STATE CHANGES, i.e. transition
+  * on_entry
+  
+Note that any event arguments are passed by reference, so if you modify action arguments in the action, or any of the hooks, it may affect hooked fired later.
+
+We promised that we'd show you how to integrate workflow with your existing classes and instances, let look.
+
+  class Article  
+    include Workflow
+    workflow do
+      state :new do
+        event :submit, :transitions_to => :awaiting_review
+      end
+      state :awaiting_review do
+        event :approve, :transitions_to => :approved
+      end
+      state :approved
+      # ...
+    end
+  end
+
+  article = Article.new
+  article.state          # => :new
+  article.submit         
+  article.state          # => :awaiting_review
+  article.approve
+  article.state          # => :approved
+
+And as ActiveRecord is all the rage these days, all you need is a string field on the table called "workflow_state", which is used to store the current state. Workflow handles auto-setting of a state after a find, yet it doesn't save a record after a transition (though you could make it do this in on_transition).
+
+  class Article < ActiveRecord::Base
+    include Workflow
+    workflow do
+      # ...
+    end
+  end
+
+When integrating with other classes, behind the scenes, Workflow sets up a Proxy to method missing. A probable common error would be to call an event that doesn't exist, so we catch +NoMethodError+'s and helpfully let you know what available events exist:
+
+  class Article  
+    include Workflow
+    workflow do
+      state :new do
+        event :submit, :transitions_to => :awaiting_review
+      end
+      state :awaiting_review do
+        event :approve, :transitions_to => :approved
+      end
+      state :approved
+      # ...
+    end
+  end
+  
+  article = Article.new
+  article.aaaa
+  NoMethodError: undefined method `aaaa' for #<Article:0xe4e8>, conversely, if you were looking to call an event for its workflow, you're in the :new state, and the available events are [:submit]
+  
+So just incase you screw something up (like I did while testing this library), it'll give you a useful message.
+
+You can blatter existing workflows, by simply opening them up again (similar to how Ruby works!).
+
+  Workflow.specify 'Blatter' do
+    state :opened do
+      event :close, :transitions_to => :closed
+    end
+    state :closed
+  end
+  
+  workflow = Workflow.new('Blatter')
+  workflow.close
+  workflow.state # => :closed
+  workflow.open  # => raises a (nice) NoMethodError exception!
+  
+  Workflow.specify 'Blatter' do
+    state :closed do
+      event :open, :transitions_to => :opened
+    end
+  end
+  
+  workflow.open
+  workflow.state # => :opened
+
+  Workflow.specify 'Blatter' do
+    state :open do
+      event :close, :transitions_to => :jammed # the door is now faulty :)
+    end
+    state :jammed
+  end
+  
+  workflow.close
+  workflow.state # => :jammed
+
+Why can we do this? Well, we needed it for our production app, so there.
+  
+And that's about it. A update to the implementation may allow multiple workflows per instance of a class or ActiveRecord, but we haven't figured out if that's required or appropriate.
+
+Ryan Allen, March 2008.

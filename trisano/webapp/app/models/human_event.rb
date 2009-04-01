@@ -88,6 +88,16 @@ class HumanEvent < Event
       return false
     end
 
+    def new_event_from_patient(patient_entity)
+      event = MorbidityEvent.new
+      event.build_interested_party(:primary_entity_id => patient_entity.id)
+      event.build_jurisdiction
+      event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+      entity_address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC')
+      event.address = entity_address ? entity_address.clone : nil
+      event
+    end
+
     def search_by_name(name)
       soundex_codes = []
       fulltext_terms = []
@@ -119,11 +129,9 @@ class HumanEvent < Event
       conditions = ["jurisdictions.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
       conjunction = "AND"
 
-      states = get_allowed_states(options[:states])
-      if states.empty?
-        raise
-      else
-        conditions[0] += " #{conjunction} event_status IN (?)"
+      states = options[:states] || []
+      unless states.empty?
+        conditions[0] += " #{conjunction} workflow_state IN (?)"
         conditions << states
       end
     
@@ -154,14 +162,14 @@ class HumanEvent < Event
 
       order_by = case options[:order_by]
                  when 'patient'
-                   "people.last_name, people.first_name, diseases.disease_name, places.name, events.event_status"
+                   "people.last_name, people.first_name, diseases.disease_name, places.name, events.workflow_state"
                  when 'disease'
-                   "diseases.disease_name, people.last_name, people.first_name, places.name, events.event_status"
+                   "diseases.disease_name, people.last_name, people.first_name, places.name, events.workflow_state"
                  when 'jurisdiction'
-                   "places.name, people.last_name, people.first_name, diseases.disease_name, events.event_status"
+                   "places.name, people.last_name, people.first_name, diseases.disease_name, events.workflow_state"
                  when 'status'
                    # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
-                   "events.event_status, people.last_name, people.first_name, diseases.disease_name, places.name"
+                   "events.workflow_state, people.last_name, people.first_name, diseases.disease_name, places.name"
                  else
                    "events.updated_at DESC"
                  end

@@ -50,7 +50,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <td><%= patient.last_name -%><%= fml(", ", patient.first_name, "") unless patient.first_name.nil? -%></td>
       <td><%= event.disease.disease.disease_name unless event.disease.nil? || event.disease.disease.nil? %></td>
       <td><%= event.event_onset_date %></td>
-      <td><%= l event.event_status %></td>
+      <td><%= l event.workflow_state %></td>
       <td><%= jurisdiction.name %></td>
     </tr>
     <tr>

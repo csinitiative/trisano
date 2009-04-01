@@ -14,107 +14,341 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+require 'ostruct'
 
 class MorbidityEvent < HumanEvent
-  include Routing::Workflow
+  include Workflow
 
   supports :tasks
   supports :attachments
 
+  before_save :generate_mmwr
+  before_save :initialize_children
+
   workflow do
-    state 'NEW' do |s|
-      s.transitions = ["ASGD-LHD"]
-      s.required_privilege = :create_event
-      s.description = "New"
-      s.state_code = "NEW"
-      s.note_text = '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'
+    # on_entry evaluated at wrong time, so note is attached to meta for :new
+    state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+    end        
+    state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :accept, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Accepted by #{self.primary_jurisdiction.name}.\n" + note
+      end
+      event :reject, :transitions_to => :rejected_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Rejected by #{self.primary_jurisdiction.name}.\n" + note
+      end
     end
-    state 'ASGD-LHD' do |s|
-      s.transitions = ["ASGD-LHD", "ACPTD-LHD", "RJCTD-LHD"]
-      s.required_privilege = :route_event_to_any_lhd
-      s.description = "Assigned to Local Health Dept."
-      s.state_code = "ASGD-LHD"
-      s.note_text = '"Routed to jurisdiction #{self.primary_jurisdiction.name}."'
+    state :accepted_by_lhd, :meta => {:description => 'Accepted by Local Health Dept.'} do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
+      event :investigate, :transitions_to => :under_investigation, :meta => {:priv_required => :accept_event_for_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Accepted by Investigator\n" + note
+      end
+    end 
+    state :rejected_by_lhd, :meta => {:description => "Rejected by Local Health Dept."} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        self.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
+      end
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
     end
-    state 'ACPTD-LHD' do |s|
-      s.transitions = ["ASGD-LHD", "ASGD-INV"]
-      s.action_phrase = "Accept"
-      s.required_privilege = :accept_event_for_lhd
-      s.description = "Accepted by Local Health Dept."
-      s.state_code = "ACPTD-LHD"
-      s.note_text = '"Accepted by #{self.primary_jurisdiction.name}."'
+    state :assigned_to_investigator do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :accept, :transitions_to => :under_investigation, :meta => {:priv_required => :accept_event_for_investigation} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Accepted by Investigator.\n#{note}"
+      end
+      event :reject, :transitions_to => :rejected_by_investigator, :meta => {:priv_required => :accept_event_for_investigation} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Rejected for investigation.\n#{note}"
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
+      # need a way to reset state if an event queue goes away.
+      event :reset, :transitions_to => :accepted_by_lhd do
+        halt! "Investigator already assigned" unless investigator.nil?
+      end
     end
-    state 'RJCTD-LHD' do |s|
-      s.transitions = ["ASGD-LHD"]
-      s.action_phrase = "Reject"
-      s.required_privilege = :accept_event_for_lhd
-      s.description = "Rejected by Local Health Dept."
-      s.state_code = "RJCTD-LHD"
-      s.note_text = '"Rejected by #{self.primary_jurisdiction.name}."'
+    state :under_investigation do
+      on_entry do |prior_state, triggering_event, *event_args|
+        self.investigator_id = User.current_user.id
+        self.investigation_started_date = Date.today
+      end
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :complete, :transitions_to => :investigation_complete, :meta => {:priv_required => :investigate_event} do |note|
+        unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Completed investigation.\n#{note}"
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
     end
-    state 'ASGD-INV' do |s|
-      s.transitions = ["ASGD-LHD", "UI", "RJCTD-INV", "ASGD-INV"]
-      s.action_phrase = "Route to queue"
-      s.required_privilege = :route_event_to_investigator
-      s.description = "Assigned to Investigator"
-      s.state_code = "ASGD-INV"
-      s.note_text = 'if self.investigator then "Routed to investigator #{self.investigator.best_name}." else "Routed to queue #{self.event_queue.queue_name}." end'
+    state :rejected_by_investigator do
+      on_entry do |prior_state, triggering_event, *event_args| 
+        self.investigator_id = nil
+        self.investigation_started_date = nil
+      end
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
+      event :investigate, :transitions_to => :under_investigation, :meta => {:priv_required => :accept_event_for_investigation} do |note|
+        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Accepted by Investigator.\n#{note}"
+      end
     end
-    state 'UI' do |s|
-      s.transitions = ["ASGD-LHD", "IC", "ASGD-INV"]
-      s.action_phrase = "Accept"
-      s.required_privilege = :accept_event_for_investigation
-      s.description = "Under Investigation"
-      s.state_code = "UI"
-      s.note_text = '"Accepted for investigation."'
+    state :investigation_complete do
+      on_entry do |prior_state, triggering_event, *event_args|
+        self.investigation_completed_LHD_date = Date.today
+      end
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Assigned to Investigator.\n#{note}"
+      end
+      event :approve, :transitions_to => :approved_by_lhd, :meta => {:priv_required => :approve_event_at_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Approved at #{self.primary_jurisdiction.name}.\n#{note}"
+      end
+      event :reopen, :transitions_to => :reopened_by_manager, :meta => {:priv_required => :approve_event_at_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Reopened by #{self.primary_jurisdiction.name} manager.\n#{note}"
+      end
     end
-    state 'RJCTD-INV' do |s|
-      s.transitions = ["ASGD-LHD", "ASGD-INV"]
-      s.action_phrase = "Reject"
-      s.required_privilege = :accept_event_for_investigation
-      s.description = "Rejected by Investigator"
-      s.state_code = "RJCTD-INV"
-      s.note_text = '"Rejected for investigation."'
+    state :approved_by_lhd, :meta => {:description => 'Approved by Local Health Dept.'} do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :approve, :transitions_to => :closed, :meta => {:priv_required => :approve_event_at_state} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_state, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Approved by State.\n#{note}"
+        review_completed_by_state_date = Date.today
+      end
+      event :reopen, :transitions_to => :reopened_by_state, :meta => {:priv_required => :approve_event_at_state} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_state, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Reopened by State.\n#{note}"
+      end
     end
-    state 'IC' do |s|
-      s.transitions = ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"]
-      s.action_phrase = "Mark Investigation Complete"
-      s.required_privilege = :investigate_event 
-      s.description = "Investigation Complete"
-      s.state_code = "IC"
-      s.note_text = '"Completed investigation."'
+    state :reopened_by_manager do
+      on_entry do |prior_event, transition, *args|
+        self.investigation_completed_LHD_date = nil
+      end
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
+      event :complete, :transitions_to => :investigation_complete, :meta => {:priv_required => :investigate_event} do |note|
+        unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Completed investigation.\n#{note}"
+      end
     end
-    state 'APP-LHD' do |s|
-      s.transitions = ["ASGD-LHD", "CLOSED", "RO-STATE"]
-      s.action_phrase = "Approve"
-      s.required_privilege = :approve_event_at_lhd 
-      s.description = "Approved by LHD"
-      s.state_code = "APP-LHD"
-      s.note_text = '"Approved at #{self.primary_jurisdiction.name}."'
+    state :reopened_by_state do
+      event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        begin
+          route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+        rescue Exception => e
+          halt! e.message
+        end
+      end
+      event :assign_to_investigator, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        note = if self.investigator
+                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
+               else
+                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+               end
+        add_note note
+      end
+      event :reopen, :transitions_to => :reopened_by_manager, :meta => {:priv_required => :approve_event_at_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Reopened by #{self.primary_jurisdiction.name} manager.\n#{note}"
+      end
+      event :approve, :transitions_to => :approved_by_lhd, :meta => {:priv_required => :approve_event_at_lhd} do |note|
+        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Approved at #{self.primary_jurisdiction.name}.\n#{note}"
+      end
     end
-    state 'RO-MGR' do |s|
-      s.transitions = ["ASGD-LHD", "IC", "ASGD-INV"]
-      s.action_phrase = "Reopen"
-      s.required_privilege = :approve_event_at_lhd 
-      s.description = "Reopened by Manager"
-      s.state_code = "RO-MGR"
-      s.note_text = '"Reopened by #{self.primary_jurisdiction.name} manager."'
+    state :closed, :meta => {:description => 'Approved by State'}
+  end
+
+  def state_description(state=self.state)
+    current_state.meta[:description] || state.to_s.titleize
+  end
+
+  def self.get_states_and_descriptions
+    e = MorbidityEvent.new
+    e.states.collect do |state|
+      OpenStruct.new :state => state, :description => e.state_description(state)
     end
-    state 'CLOSED' do |s|
-      s.action_phrase = "Approve"
-      s.required_privilege = :approve_event_at_state 
-      s.description = "Approved by State"
-      s.state_code = "CLOSED"
-      s.note_text = '"Approved by State."'
-    end
-    state 'RO-STATE' do |s|
-      s.transitions = ["ASGD-LHD", "APP-LHD", "RO-MGR", "ASGD-INV"]
-      s.action_phrase = "Reopen"
-      s.required_privilege = :approve_event_at_state 
-      s.description = "Reopened by State"
-      s.state_code = "RO-STATE"
-      s.note_text = '"Reopened by State."'
-    end  
   end
 
   def self.core_views
@@ -153,8 +387,14 @@ class MorbidityEvent < HumanEvent
     (person_empty && phones_empty) ? true : false
   end
 
-  before_save :generate_mmwr
-  before_save :initialize_children
+  # transitions that are allowed to be rendered by this user
+  def allowed_transitions
+    current_state.events.select do |event|
+      priv_required = current_state.events(event).meta[:priv_required]
+      j_id = primary_jurisdiction.entity_id
+      User.current_user.is_entitled_to_in?(priv_required, j_id)
+    end
+  end
 
   def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
@@ -174,7 +414,7 @@ class MorbidityEvent < HumanEvent
           :investigation_started_date => nil,
           :investigation_completed_LHD_date => nil,
           :review_completed_by_state_date => nil)
-        self.add_note(self.instance_eval(MorbidityEvent.states[self.event_status].note_text) + "\n#{note}")
+        self.add_note note
       end
 
       # Handle secondary jurisdictions
@@ -200,7 +440,7 @@ class MorbidityEvent < HumanEvent
       
       reload # Any existing references to this object won't see these changes without this
     end
-  end
+  end  
   
   def copy_event(new_event, event_components)
     super(new_event, event_components)
@@ -230,14 +470,6 @@ class MorbidityEvent < HumanEvent
     
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
-  end
-
-  # Expects string of space separated event states e.g. new, acptd-lhd, etc.
-  def self.get_allowed_states(query_states=nil)
-    system_states = self.get_state_keys
-    return system_states if query_states.nil?
-    query_states.collect! { |state| state.upcase }
-    system_states.collect { |system_state| query_states.include?(system_state) ? system_state : nil }.compact
   end
 
   def self.get_allowed_queues(query_queues)

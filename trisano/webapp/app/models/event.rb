@@ -19,12 +19,12 @@ class Event < ActiveRecord::Base
   include Blankable
   include TaskFilter
   include Export::Cdc::EventRules
-  
+
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
 
   if RAILS_ENV == "production"
-    attr_protected :event_status
+    attr_protected :workflow_state
   end
 
   composed_of :age_info, :mapping => [%w(age_at_onset age_at_onset), %w(age_type_id age_type_id)]
@@ -234,10 +234,10 @@ class Event < ActiveRecord::Base
         end
       end
 
-      if !options[:event_status].blank?
+      if !options[:workflow_state].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "event_status = '" + sanitize_sql_for_conditions(["%s", options[:event_status]]) + "'"
+        where_clause += "workflow_state = '" + sanitize_sql_for_conditions(["%s", options[:workflow_state]]) + "'"
       end
 
       if !options[:city].blank?
@@ -334,8 +334,8 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def under_investigation?
-    ['UI', 'IC', 'RO-MGR'].include?(self.event_status)
+  def open_for_investigation?
+    self.under_investigation? or self.investigation_complete? or self.reopened_by_manager? 
   end
 
   # returns only the references for forms that should be rendered on
@@ -506,27 +506,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def cache_old_attributes
-    @old_attributes = self.attributes
-    @nested_attributes = {}
-    nested_attribute_paths.merge(ibis_nested_attribute_paths).each do |key, call_path|
-      @nested_attributes[key] = safe_call_chain(*call_path)
-    end
-  end
-
-  def old_attributes
-    @old_attributes
-  end
-
-  def nested_attributes
-    @nested_attributes
-  end
-   
-  # after find doesn't work unless its part of the actual class.
-  def after_find
-    self.cache_old_attributes
-  end
-
   # Indicates whether an event supports tasks. Generally used by the UI in shared partials
   # to determine whether task-specific layout should be included.
   #
@@ -558,7 +537,7 @@ class Event < ActiveRecord::Base
     new_event.event_name = "Copy of #{self.event_name}" if self.event_name
     new_event.build_jurisdiction
     new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
-    new_event.primary_jurisdiction.name == "Unassigned" ? new_event.event_status = "NEW" : new_event.event_status = "ACPTD-LHD"
+    new_event.workflow_state = 'accepted_by_lhd' unless new_event.primary_jurisdiction.name == "Unassigned"
     new_event.event_onset_date = Date.today
     new_event.acuity = self.acuity
 

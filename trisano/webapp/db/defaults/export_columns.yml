@@ -181,7 +181,7 @@
  - type_data: 'CORE'
    export_column_name: 'CASESTATUS'
    table_name: 'events'
-   column_name: 'event_status'
+   column_name: 'workflow_state'
    is_required: 'N'
    start_position: '53'
    length_to_output: '1'

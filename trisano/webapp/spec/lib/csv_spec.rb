@@ -246,7 +246,7 @@ def event_header(event_type)
       header_array << "patient_event_name"
       header_array << "patient_jurisdiction_of_investigation"
       header_array << "patient_jurisdiction_of_residence"
-      header_array << "patient_event_status"
+      header_array << "patient_workflow_state"
       header_array << "patient_investigation_started_date"
       header_array << "patient_investigation_completed_lhd_date"
       header_array << "patient_review_completed_by_state_date"
@@ -343,7 +343,7 @@ def event_output(event_type, m, options={})
     out << "#{m.event_name},"
     out << "#{m.primary_jurisdiction.name},"
     out << '"",'
-    out << "#{m.event_status},"
+    out << "#{m.workflow_state},"
     out << "#{m.investigation_started_date},"
     out << "#{m.investigation_completed_LHD_date},"
     out << "#{m.review_completed_by_state_date},"
@@ -454,7 +454,7 @@ def csv_mock_event(event_type)
 
   m.stub!(:disease_event).and_return(@disease)
   m.stub!(:event_name).and_return("an event")
-  m.stub!(:event_status).and_return("NEW")
+  m.stub!(:workflow_state).and_return("new")
   m.stub!(:investigation_started_date).and_return("2008-01-06")
   m.stub!(:investigation_completed_lhd_date).and_return("2008-01-07")
   m.stub!(:review_completed_by_state_date).and_return("2008-01-08")

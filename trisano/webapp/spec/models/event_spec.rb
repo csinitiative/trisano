@@ -327,29 +327,27 @@ describe MorbidityEvent do
 
   describe "Under investigation" do
 
-    it "should not be under investigation in the default state" do
-      event = MorbidityEvent.new
-      event.should_not be_under_investigation
-    end
-
     it "should not be under investigation if it is new" do
-      event = MorbidityEvent.new(:event_status => "NEW")
-      event.should_not be_under_investigation
+      event = MorbidityEvent.create
+      event.should_not be_open_for_investigation
     end
 
     it "should be under investigation if set to under investigation" do
-      event = MorbidityEvent.new :event_status => "UI"
-      event.should be_under_investigation
+      event = MorbidityEvent.create :workflow_state => 'under_investigation'
+      event = Event.find(event.id)
+      event.should be_open_for_investigation
     end
 
     it "should be under investigation if reopened by manager" do
-      event = MorbidityEvent.new :event_status => "RO-MGR"
-      event.should be_under_investigation
+      event = MorbidityEvent.create :workflow_state => 'reopened_by_manager'
+      event = Event.find(event.id)
+      event.should be_open_for_investigation
     end
 
     it "should be under investigation if investigation is complete" do
-      event = MorbidityEvent.new :event_status => "IC"
-      event.should be_under_investigation
+      event = MorbidityEvent.create :workflow_state => 'investigation_complete'
+      event = Event.find(event.id)
+      event.should be_open_for_investigation
     end
   end
 
@@ -361,63 +359,51 @@ describe MorbidityEvent do
     end
   end
 
-
-  describe "The get_required_priv() class method" do
-    it "should return :accept_event_for_lhd when the state is ACPTD-LHD or RJCT-LHD" do
-      MorbidityEvent.states['ACPTD-LHD'].required_privilege.should == :accept_event_for_lhd
-      MorbidityEvent.states['RJCTD-LHD'].required_privilege.should == :accept_event_for_lhd
-    end
-  end
-
-  describe "The state#transitions method" do
-    it "should return ['ASGD-LHD', 'IC'] when the state is RO-MGR" do                   
-      MorbidityEvent.states["RO-MGR"].transitions.should == ["ASGD-LHD", "IC", "ASGD-INV"]
-    end
-  end
-
-  describe "The action_phrases_for() class method" do
-    it "should return an array of structs containing the right phrases and states" do
-      s = MorbidityEvent.action_phrases_for('RO-STATE', 'APP-LHD')
-      s.first.phrase.should == "Reopen"
-      s.first.state.should == "RO-STATE"
-      s.last.phrase.should == "Approve"
-      s.last.state.should == "APP-LHD"
+  describe "event transitions (events)" do
+    it "should return assigned to lhd, investigation complete, and assigned to investigator when the state is re-opened by manager" do                   
+      @event = MorbidityEvent.create(:workflow_state => 'reopened_by_manager')
+      @event = Event.find @event.id
+      @event.states(@event.state).events.should == [:assign_to_lhd, :assign_to_investigator, :complete]
     end
   end
 
   describe "state description" do
-    before(:each) { @event = MorbidityEvent.new(:event_status => "ACPTD-LHD") }
+    before(:each) do
+      @event = MorbidityEvent.create(:workflow_state => 'accepted_by_lhd')
+      @event = Event.find(@event.id)
+    end
 
-    it "should come from the state#description method" do
-      @event.current_state.description.should == "Accepted by Local Health Dept."
+    it "should come from the #state_description method" do
+      @event.state_description.should == "Accepted by Local Health Dept."
     end
 
   end
 
-  describe "The state#allow_transitions_to? method" do
+  describe "The state transistions" do
+
+    def updated_event(attribs={})
+      @event.update_attributes attribs
+      Event.find(@event.id)
+    end
 
     before(:each) do
-      @event = MorbidityEvent.new
+      @event = MorbidityEvent.create
     end
 
-    it "should return true when transitioning from ACPTD-LHD to ASGD-INV" do
-      @event.event_status = "ACPTD-LHD"
-      @event.current_state.allows_transition_to?("ASGD-INV").should be_true
+    it "should be able to assign to an investigator, when accepted by lhd" do
+      updated_event(:workflow_state => 'accepted_by_lhd').respond_to?(:assign_to_investigator).should be_true
     end
 
-    it "should return true when transitioning from ACPTD-LHD to UI" do
-      @event.event_status = "ACPTD-LHD"
-      @event.current_state.allows_transition_to?("UI").should be_false
+    it "should be able to investigate when accepted by lhd" do
+      updated_event(:workflow_state => 'accepted_by_lhd').respond_to?(:investigate).should be_true
     end
 
-    it "should return false when transitioning from RJCTD-LHD to UI" do
-      @event.event_status = 'RJCTD-LHD'
-      @event.current_state.allows_transition_to?("UI").should be_false
+    it "should not be able to investigate when rejected by lhd" do
+      updated_event(:workflow_state => 'rejected_by_lhd').respond_to?(:investigate).should be_false
     end
 
-    it 'should return true when transitioning form RJCTD-INV to UI' do
-      @event.event_status = 'RJCTD-INV'
-      @event.current_state.allows_transition_to?("UI").should be_false
+    it 'should be able to investigate when rejected by investigator' do
+      updated_event(:workflow_state => 'rejected_by_investigator').respond_to?(:investigate).should be_true
     end
 
   end
@@ -756,8 +742,7 @@ describe MorbidityEvent do
         },
         "jurisdiction_attributes" => {
           "secondary_entity_id" => jurisdiction_id
-        },
-        "event_status" => 'NEW'
+        }
       }
     end
 
@@ -772,7 +757,7 @@ describe MorbidityEvent do
       @event_hash['event_queue_id'] = 1
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       MorbidityEvent.create(@event_hash)
 
       @event_hash['investigator_id'] = 1
@@ -780,14 +765,14 @@ describe MorbidityEvent do
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['NEW']}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['CLOSED'], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['new']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed'], :investigators => [1]}).size.should == 1
     end
     
     it 'should filter by state and the other attributes' do
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       MorbidityEvent.create(@event_hash)
       
       @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
@@ -800,17 +785,17 @@ describe MorbidityEvent do
       MorbidityEvent.create(@event_hash)
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
-      MorbidityEvent.find_all_for_filtered_view({:states => ['CLOSED']}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['CLOSED'], :queues => [1], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:states => ['closed']}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed'], :queues => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed'], :queues => [1], :investigators => [1]}).size.should == 1
     end
     
     it 'should filter by queue and the other attributes' do
       @event_hash['event_queue_id'] = 1
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       MorbidityEvent.create(@event_hash)
       
       @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
@@ -821,16 +806,16 @@ describe MorbidityEvent do
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:queues => [1]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['CLOSED'], :diseases => [1], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed'], :diseases => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed'], :diseases => [1], :investigators => [1]}).size.should == 1
     end
 
     it "should filter by investigator and the other attributes" do
       @event_hash['investigator_id'] = 1
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       MorbidityEvent.create(@event_hash)
       
       @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
@@ -841,16 +826,16 @@ describe MorbidityEvent do
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:investigators => [1]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['CLOSED'], :diseases => [1], :queues => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed'], :diseases => [1]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed'], :diseases => [1], :queues => [1]}).size.should == 1
     end
 
     it "should not show deleted records if told so" do
       @event_hash['investigator_id'] = 1
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       MorbidityEvent.create(@event_hash)
       
       @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
@@ -862,9 +847,9 @@ describe MorbidityEvent do
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1]}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED'], :diseases => [1]}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['CLOSED'], :diseases => [1], :queues => [1]}).size.should == 0
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed'], :diseases => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed'], :diseases => [1], :queues => [1]}).size.should == 0
     end
 
     it "should sort appropriately" do
@@ -872,17 +857,17 @@ describe MorbidityEvent do
           places(:Davis_County).entity_id,
           places(:Summit_County).entity_id])
 
-      @event_hash['event_status'] = 'NEW'
+      @event_hash['workflow_state'] = 'new'
       @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:chicken_pox).id }
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'CLOSED'
+      @event_hash['workflow_state'] = 'closed'
       @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:anthrax).id }
       @event_hash.merge!("interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Zulu" } } } )
       @event_hash.merge!("jurisdiction_attributes" => {"secondary_entity_id" => places(:Davis_County).entity_id})
       MorbidityEvent.create(@event_hash)
       
-      @event_hash['event_status'] = 'UI'
+      @event_hash['workflow_state'] = 'under_investigation'
       @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
       @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:tuberculosis).id }
       @event_hash.merge!("interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Lima" } } } )
@@ -902,7 +887,7 @@ describe MorbidityEvent do
       jurisdictions.should == jurisdictions.sort
 
       events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'status')
-      states = events.collect { |event| event.event_status }
+      states = events.collect { |event| event.workflow_state }
       states.should == states.sort
     end
 
@@ -985,6 +970,65 @@ describe MorbidityEvent do
         event.address.entity_id.should_not be_nil
       end
     end
+  end
+
+  describe 'new event from patient' do
+    fixtures :users, :participations, :entities, :places, :places_types, :people
+    
+    before :each do
+      @event_hash = {
+        "address_attributes" => { "street_name" => "Example Lane" },
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        }
+      }
+      User.stub!(:current_user).and_return(users(:default_user))
+    end
+    
+    def with_new_event_from_patient(patient)
+      event = MorbidityEvent.new_event_from_patient(patient)
+      yield event if block_given?
+    end
+
+    it 'should use the existing patient in the event tree' do
+      patient = nil
+      original_event = nil
+      with_event do |event| 
+        patient = event.interested_party.person_entity 
+        original_event = event
+      end
+      with_new_event_from_patient(patient) do |event|
+        event.interested_party.primary_entity_id.should_not be_nil        
+        lambda {event.save!}.should_not change(Entity, :count)        
+        event.interested_party.person_entity.person.last_name.should == 'Biel'
+        event.interested_party.primary_entity_id = original_event.interested_party.primary_entity_id
+        event.all_jurisdictions.size.should == 1
+        event.jurisdiction.place_entity.place.name.should == 'Unassigned'
+        event.primary_jurisdiction.should_not be_nil
+        event.primary_jurisdiction.entity_id.should_not be_nil
+        event.primary_jurisdiction.name.should == 'Unassigned'
+        event.should be_new
+      end         
+    end 
+
+    it 'should copy most recent address record for the new record' do
+      patient = nil
+      original_event = nil
+      with_event do |event| 
+        patient = event.interested_party.person_entity 
+        original_event = event
+      end
+      with_new_event_from_patient(patient) do |event|
+        lambda {event.save!}.should change(Address, :count)
+        original_event.address.id.should_not == event.address.id
+        event.address.street_name.should == 'Example Lane'
+      end
+    end
+
   end
 
   describe "adding forms to an event" do
@@ -1216,7 +1260,7 @@ describe Event, 'cloning an event' do
     it "should copy over demographic information only" do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
       @new_event.primary_jurisdiction.name.should == "Unassigned"
-      @new_event.event_status.should == "NEW"
+      @new_event.should be_new
 
       # Only interested party and jurisdiction, nothing else
       lambda {@new_event.save!}.should change(Participation, :count).by(2)
@@ -1238,7 +1282,7 @@ describe Event, 'cloning an event' do
 
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
       @new_event.primary_jurisdiction.name.should == "Unassigned"
-      @new_event.event_status.should == "NEW"
+      @new_event.should be_new
     end
 
     it "should copy over disease information, but not the actual disease" do
@@ -1468,7 +1512,7 @@ describe Event, 'cloning an event' do
       form.save_and_initialize_form_elements
       question_element = QuestionElement.new(
         {
-          :parent_element_id => form.investigator_view_elements_container.id,
+          :parent_element_id => form.form_base_element.id,
           :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text" } 
         }
       )

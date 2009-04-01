@@ -70,7 +70,7 @@ describe EventQueue do
       end
     
       it "should reset event status if event is still in queue" do
-        events(:has_event_queue).event_status.should == "ACPTD-LHD"
+        events(:has_event_queue).should be_accepted_by_lhd
       end
     end
   end

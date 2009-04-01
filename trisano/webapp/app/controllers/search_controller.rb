@@ -82,7 +82,7 @@ class SearchController < ApplicationController
 
     @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
 
-    @event_statuses = MorbidityEvent.get_states_and_descriptions
+    @workflow_states = MorbidityEvent.get_states_and_descriptions
 
     @counties = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'", :order => "id")
 
@@ -124,7 +124,7 @@ class SearchController < ApplicationController
                                        :gender => params[:gender],
                                        :sw_last_name => params[:sw_last_name],
                                        :sw_first_name => params[:sw_first_name],
-                                       :event_status => params[:event_status],
+                                       :workflow_state => params[:workflow_state],
                                        :birth_date => @birth_date,
                                        :entered_on_start => entered_on_start,
                                        :entered_on_end => entered_on_end,

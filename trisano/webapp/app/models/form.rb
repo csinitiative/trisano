@@ -71,6 +71,7 @@ class Form < ActiveRecord::Base
           return true
         end
       rescue Exception => ex
+        # TODO better logging
         return nil
       end
     end
@@ -459,6 +460,7 @@ class Form < ActiveRecord::Base
   end
 
   def self.next_tree_id
+    # this is what breaks in my MRI. undefined method `first' in PGResult.
     ActiveRecord::Base.connection.execute("SELECT nextval('tree_id_generator')").first["nextval"].to_i
   end
   
