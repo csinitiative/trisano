@@ -29,7 +29,8 @@
             = p.label(:first_name)
             = p.object.first_name
 
-        - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
+        - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
+        - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
           - core_element_show :area_code, phone_fields, :horiz do
             = phone_fields.label(:area_code)
             = phone_fields.object.area_code

@@ -39,7 +39,8 @@
         %span.print-label Last name:
         %span.print-value= p.object.last_name
 
-    - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
+    - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
+    - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
       - core_element_print :area_code, phone_fields, :horiz do
         %span.print-label Area code:
         %span.print-value= phone_fields.object.area_code
