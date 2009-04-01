@@ -35,28 +35,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th class='forminformation'>Contact Name</th>
       <th>Disease</th>
       <th>Jurisdiction</th>
-      <th>Original Patient</th>
+      <th>Status</th>
     </tr>
-    <tr>
-      <td class='forminformation'>
-        <% contact_name(@event) do %>
-          <%= patient.last_comma_first %>
-        <% end %>
-        <small>Date: <%= @event.event_onset_date %></small>
-        <div class='tools'>
-          <%= basic_contact_event_controls(@event, false) %>
-        </div>
-      </td>
-      <td>
-        <%= @event.safe_call_chain(:disease_event, :disease, :disease_name) %>
-      </td>
-      <td>
-        <b><%= @event.primary_jurisdiction.short_name %></b>
-      </td>
-      <td>
-        <%= original_patient_controls(@event) %>
-      </td>
-    </tr>
+    <%= render :partial => @event, :locals => {:with_show => false} %>
   </table>
 <% end %>
 

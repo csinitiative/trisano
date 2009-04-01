@@ -19,7 +19,11 @@
     - patient_name(contact_event) do |patient|
       = patient.last_comma_first
       %div{ :style => 'font-style: italic; font-size: small;'}
-        = contact_event.class.name.titleize
+        - with_show = (with_show.nil? ? true : false)
+        - if with_show 
+          = contact_event.class.name.titleize          
+        - else
+          = original_patient_controls(@event)  
     %small
       Date:
       = contact_event.event_onset_date
