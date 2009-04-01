@@ -116,7 +116,8 @@ class HumanEvent < Event
     end
 
     def find_all_for_filtered_view(options = {})
-      conditions = ["TRUE"] # This looks stupid, but it's easier than checking if conditions is nil for each option      
+      # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
+      conditions = ["jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"]
       conjunction = "AND"
 
       states = options[:states] || []
@@ -176,11 +177,7 @@ class HumanEvent < Event
         "LEFT JOIN places ON places.entity_id = place_entities.id " +
         "WHERE jurisdictions.secondary_entity_id IN (#{User.current_user.jurisdiction_ids_for_privilege(:view_event).join(',')}) " +
         ") as events "
-
-
-      # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
-      conditions[0] += " AND jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"
-    
+        
       # Similar to above comment, we now need to explicitly spell out the joins.  By the way, we're doing this join just so we can sort by different fields
       joins = "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id
                LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id
