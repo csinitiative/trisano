@@ -115,7 +115,10 @@
     = link_to_function('Export All to CSV', nil) do |page|
       - page[:export_options].visual_effect :appear
 
-  = render :partial => "morbidity_events/export_options", :locals => { :path => cmrs_format_path(params.merge(:format => 'csv')) }
+  - if @cmrs.size < 500
+    = render :partial => "morbidity_events/export_options", :locals => { :path => cmrs_format_path(params.merge(:format => 'csv')) }
+  - else
+    = render :partial => "refine_search"
 
   %table{:class => 'tabular'}
     %tr
