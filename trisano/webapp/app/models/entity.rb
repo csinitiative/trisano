@@ -18,8 +18,8 @@
 class Entity < ActiveRecord::Base
   set_inheritance_column :entity_type
 
-  has_many :telephones
-  has_many :email_addresses
+  has_many :telephones, :order => :updated_at
+  has_many :email_addresses, :order => :updated_at
   has_many :addresses
 
   has_one :place
