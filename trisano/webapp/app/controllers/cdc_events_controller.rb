@@ -35,7 +35,7 @@ class CdcEventsController < AdminController
           DEFAULT_LOGGER.error("CDC Export Failed")
           DEFAULT_LOGGER.error($!)
           if RAILS_ENV == "production"
-            error_msg = "CDC export failed. The error has been written to the log file. Please inform support that this error occurred at #{DateTime.now.to_s}"
+            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
           else
             error_msg = $!
           end
@@ -71,8 +71,20 @@ class CdcEventsController < AdminController
     CdcExport.reset_sent_status(@events)
     respond_to do |format|
       format.dat {
-        headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_weeks_#{start_mmwr.mmwr_week}-#{end_mmwr.mmwr_week}.dat\""
-        render :template => "cdc_events/format", :layout => false
+        begin
+          render :template => "cdc_events/format", :layout => false
+        rescue
+          DEFAULT_LOGGER.error("CDC Export Failed")
+          DEFAULT_LOGGER.error($!)
+          if RAILS_ENV == "production"
+            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
+          else
+            error_msg = $!
+          end
+          render :text => error_msg
+        else
+          headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_weeks_#{start_mmwr.mmwr_week}-#{end_mmwr.mmwr_week}.dat\""
+        end
       }
     end
   end
@@ -86,8 +98,20 @@ class CdcEventsController < AdminController
     CdcExport.reset_sent_status(@events)
     respond_to do |format|
       format.dat {
-        headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_year#{mmwr_year}.dat\""
-        render :template => "cdc_events/format", :layout => false
+        begin
+          render :template => "cdc_events/format", :layout => false
+        rescue
+          DEFAULT_LOGGER.error("CDC Export Failed")
+          DEFAULT_LOGGER.error($!)
+          if RAILS_ENV == "production"
+            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
+          else
+            error_msg = $!
+          end
+          render :text => error_msg
+        else
+          headers['Content-Disposition'] = "Attachment; filename=\"cdc_export_mmwr_year#{mmwr_year}.dat\""
+        end
       }
     end
   end

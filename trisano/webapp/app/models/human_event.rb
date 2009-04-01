@@ -105,8 +105,8 @@ class HumanEvent < Event
       order_by_clause = " ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
 
       options = { :include => [ { :interested_party => { :person_entity => :person } }, :disease_event ],
-                  :conditions => where_clause,
-                  :order => order_by_clause }
+        :conditions => where_clause,
+        :order => order_by_clause }
 
       # This may or may not be a Rails bug, but in order for HumanEvent to know that MorbidityEvent and ContactEvent are
       # its descendents, and thus generate the proper where clause, Rails needs to have 'seen' these classes at least
@@ -116,7 +116,7 @@ class HumanEvent < Event
     end
 
     def find_all_for_filtered_view(options = {})
-      conditions = ["jurisdictions.secondary_entity_id IN (?)", User.current_user.jurisdiction_ids_for_privilege(:view_event)]
+      conditions = ["TRUE"] # This looks stupid, but it's easier than checking if conditions is nil for each option      
       conjunction = "AND"
 
       states = options[:states] || []
@@ -151,18 +151,32 @@ class HumanEvent < Event
       end
 
       order_by = case options[:order_by]
-                 when 'patient'
-                   "people.last_name, people.first_name, diseases.disease_name, places.name, events.workflow_state"
-                 when 'disease'
-                   "diseases.disease_name, people.last_name, people.first_name, places.name, events.workflow_state"
-                 when 'jurisdiction'
-                   "places.name, people.last_name, people.first_name, diseases.disease_name, events.workflow_state"
-                 when 'status'
-                   # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
-                   "events.workflow_state, people.last_name, people.first_name, diseases.disease_name, places.name"
-                 else
-                   "events.updated_at DESC"
-                 end
+      when 'patient'
+        "people.last_name, people.first_name, diseases.disease_name, places.name, events.workflow_state"
+      when 'disease'
+        "diseases.disease_name, people.last_name, people.first_name, places.name, events.workflow_state"
+      when 'jurisdiction'
+        "places.name, people.last_name, people.first_name, diseases.disease_name, events.workflow_state"
+      when 'status'
+        # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
+        "events.workflow_state, people.last_name, people.first_name, diseases.disease_name, places.name"
+      else
+        "events.updated_at DESC"
+      end
+
+      if options[:order_by].blank?
+        select = "distinct events.*"
+        
+      else
+        select = "distinct events.*, #{order_by}"
+      end
+      from = "(	SELECT events.* from events " +
+        "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id " +
+        "LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id " +
+        "LEFT JOIN places ON places.entity_id = place_entities.id " +
+        "WHERE jurisdictions.secondary_entity_id IN (#{User.current_user.jurisdiction_ids_for_privilege(:view_event).join(',')}) " +
+        ") as events "
+
 
       # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
       conditions[0] += " AND jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"
@@ -190,6 +204,8 @@ class HumanEvent < Event
         :joins => joins,
         :conditions => conditions,
         :order => order_by,
+        :from => from,
+        :select => select,
         :page => options[:page]
       }
       find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0

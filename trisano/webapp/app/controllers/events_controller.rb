@@ -171,7 +171,8 @@ class EventsController < ApplicationController
         return
       end
     end
-    if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id])
+     if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id]) or
+ 	         User.current_user.is_entitled_to_in?(:view_event, params[:secondary_jurisdiction_ids])
       flash[:notice] = 'Event successfully routed.'
       redirect_to request.env["HTTP_REFERER"]
     else
