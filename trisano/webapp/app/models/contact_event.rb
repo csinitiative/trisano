@@ -167,7 +167,7 @@ class ContactEvent < HumanEvent
         end
         add_note "Completed investigation.\n#{note}"
       end
-      event :complete_and_close, :transitions_to => :closes, :meta => {:priv_required => :investigate_event} do |note|
+      event :complete_and_close, :transitions_to => :closed, :meta => {:priv_required => :investigate_event} do |note|
         unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
           halt! "You do not have sufficient privileges to make this change"
         end
@@ -282,7 +282,7 @@ class ContactEvent < HumanEvent
         end
         add_note "Completed investigation.\n#{note}"
       end
-      event :complete_and_close, :transitions_to => :closes, :meta => {:priv_required => :investigate_event} do |note|
+      event :complete_and_close, :transitions_to => :closed, :meta => {:priv_required => :investigate_event} do |note|
         unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
           halt! "You do not have sufficient privileges to make this change"
         end

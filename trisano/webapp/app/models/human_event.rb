@@ -88,16 +88,6 @@ class HumanEvent < Event
       return false
     end
 
-    def new_event_from_patient(patient_entity)
-      event = MorbidityEvent.new
-      event.build_interested_party(:primary_entity_id => patient_entity.id)
-      event.build_jurisdiction
-      event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
-      entity_address = patient_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC')
-      event.address = entity_address ? entity_address.clone : nil
-      event
-    end
-
     def search_by_name(name)
       soundex_codes = []
       fulltext_terms = []

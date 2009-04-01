@@ -972,65 +972,6 @@ describe MorbidityEvent do
     end
   end
 
-  describe 'new event from patient' do
-    fixtures :users, :participations, :entities, :places, :places_types, :people
-    
-    before :each do
-      @event_hash = {
-        "address_attributes" => { "street_name" => "Example Lane" },
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Biel",
-            }
-          }
-        }
-      }
-      User.stub!(:current_user).and_return(users(:default_user))
-    end
-    
-    def with_new_event_from_patient(patient)
-      event = MorbidityEvent.new_event_from_patient(patient)
-      yield event if block_given?
-    end
-
-    it 'should use the existing patient in the event tree' do
-      patient = nil
-      original_event = nil
-      with_event do |event| 
-        patient = event.interested_party.person_entity 
-        original_event = event
-      end
-      with_new_event_from_patient(patient) do |event|
-        event.interested_party.primary_entity_id.should_not be_nil        
-        lambda {event.save!}.should_not change(Entity, :count)        
-        event.interested_party.person_entity.person.last_name.should == 'Biel'
-        event.interested_party.primary_entity_id = original_event.interested_party.primary_entity_id
-        event.all_jurisdictions.size.should == 1
-        event.jurisdiction.place_entity.place.name.should == 'Unassigned'
-        event.primary_jurisdiction.should_not be_nil
-        event.primary_jurisdiction.entity_id.should_not be_nil
-        event.primary_jurisdiction.name.should == 'Unassigned'
-        event.should be_new
-      end         
-    end 
-
-    it 'should copy most recent address record for the new record' do
-      patient = nil
-      original_event = nil
-      with_event do |event| 
-        patient = event.interested_party.person_entity 
-        original_event = event
-      end
-      with_new_event_from_patient(patient) do |event|
-        lambda {event.save!}.should change(Address, :count)
-        original_event.address.id.should_not == event.address.id
-        event.address.street_name.should == 'Example Lane'
-      end
-    end
-
-  end
-
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
