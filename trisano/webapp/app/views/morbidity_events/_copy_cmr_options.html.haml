@@ -23,7 +23,7 @@
         to the current event. 
         %br
         %b Copies demographic information only.
-      = button_to("Create & Edit Shallow Copy", cmrs_path(:from_event => @event.id))
+      = button_to("Create & Edit Shallow Copy", cmrs_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
     %fieldset.form
       %legend Deep Copy
       %p
@@ -32,7 +32,7 @@
         to the current event. 
 
       %b Along with demographic information also copy:
-      - form_tag(cmrs_path) do
+      - form_tag(cmrs_path(:return => true)) do
         = hidden_field_tag(:from_event, @event.id)
         %label.horiz
           = check_box_tag("event_components[]", "clinical")
@@ -40,7 +40,7 @@
         %label.horiz
           = check_box_tag("event_components[]", "lab")
           Labs and lab results
-        %label
+        %label.horiz
           = check_box_tag("event_components[]", "reporting")
           Reporting information
         %label.horiz
@@ -50,11 +50,11 @@
         -# %label.horiz
         -#   = check_box_tag("event_components[]", "contacts")
         -#   Contacts
-        %label
+        %label.horiz
           = check_box_tag("event_components[]", "notes")
           Notes
 
-        %br
-        = submit_tag("Create and Edit Deep Copy")
+        %br.vert
+        = submit_tag("Create and Edit Deep Copy", :id => "deep_copy_btn")
         
     = link_to_function "Close", "Effect.Fade('copy_cmr_options', { duration: 0.3 })"

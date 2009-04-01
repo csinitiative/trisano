@@ -45,30 +45,35 @@ describe 'Creating a new cmr from an existing patient' do
 
   it 'should create a new cmr based w/ the same patient' do
     @browser.click('link=Create a new event from this one')
+    sleep(3)
+    @browser.click('shallow_copy_btn')
     @browser.wait_for_page_to_load
     @browser.is_text_present('CMR was successfully created.')
   end
 
   it 'should be the same patient name' do
-    @browser.get_value("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]").should == @last_name
+    @browser.get_value('id=morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name').should == @last_name
   end
 
   it 'should be the same street address' do
-    @browser.get_value("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]").should == '22'
-    @browser.get_value("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_name')]").should == 'Happy St.'
+    @browser.get_value('id=morbidity_event_address_attributes_street_number').should == '22'
+    @browser.get_value('id=morbidity_event_address_attributes_street_name').should == 'Happy St.'
   end
 
   it 'should not have a disease in the new cmr' do
-    @browser.get_value("//div[@id='clinical_tab']//select[contains(@id, '_disease_id')]").should == ''
+    @browser.get_value('id=morbidity_event_disease_event_attributes_disease_id').should == ''
   end
 
   it 'should be able to change patient information' do
-    @browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_birthdate')]", @birth_date)
+    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date', @birth_date)
     save_cmr(@browser).should be_true
   end
 
   it 'should show patient information changes in original cmr' do
-    navigate_to_cmr_search(@browser)
+    @browser.click('link=SEARCH')
+    @browser.wait_for_page_to_load
+    @browser.click('link=Event Search')
+    @browser.wait_for_page_to_load
     @browser.type('name', @last_name)
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load
@@ -77,8 +82,6 @@ describe 'Creating a new cmr from an existing patient' do
     @browser.click('link=Edit')
     @browser.wait_for_page_to_load
     bd = Date.parse(@birth_date).strftime('%B %d, %Y')
-    @browser.get_value("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_birthdate')]").should == bd
+    @browser.get_value('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date').should == bd
   end
-    
-
 end
