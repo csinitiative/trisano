@@ -182,7 +182,7 @@ class Tgrii < ActiveRecord::Migration
           unless phone.email.blank?
             execute("
               INSERT INTO email_addresses (entity_id, email_address)
-              VALUES (#{phone.entity_id}, '#{phone.email}')
+              VALUES (#{phone.entity_id}, '#{phone.email.gsub(/\\|'/) { |c| "\\#{c}" }}')
               ")
           end
         end
