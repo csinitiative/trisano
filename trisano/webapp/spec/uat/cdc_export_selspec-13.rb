@@ -83,7 +83,7 @@ describe 'Admin CDC Export' do
   it "should update imported from" do
     @browser.go_back
     @browser.wait_for_page_to_load($load_time)
-    @browser.click("link=CMRS")
+    @browser.click("link=EVENTS")
     @browser.wait_for_page_to_load($load_time)
     edit_cmr(@browser).should be_true
     @browser.select("morbidity_event_imported_from_id", "Outside U.S.")
@@ -102,7 +102,7 @@ describe 'Admin CDC Export' do
   it "should change case status" do
     @browser.go_back
     @browser.wait_for_page_to_load($load_time)
-    @browser.click("link=CMRS")
+    @browser.click("link=EVENTS")
     @browser.wait_for_page_to_load($load_time)
     edit_cmr(@browser).should be_true
     @browser.select("morbidity_event_state_case_status_id", "label=Unknown")

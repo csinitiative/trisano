@@ -309,6 +309,65 @@ class HumanEvent < Event
     end
   end
 
+  def state_description
+    current_state.meta[:description] || state.to_s.titleize
+  end
+
+  def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
+    jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
+    jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
+    jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
+
+    transaction do
+      # Handle the primary jurisdiction
+      #
+      # Do nothing if the passed-in jurisdiction is the current jurisdiction
+      unless jurisdiction_id == self.jurisdiction.secondary_entity_id
+        proposed_jurisdiction = PlaceEntity.find(jurisdiction_id) # Will raise an exception if record not found
+        raise "New jurisdiction is not a jurisdiction" unless Place.jurisdictions.include?(proposed_jurisdiction.place)
+        self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
+        self.update_attributes(:event_queue_id => nil,
+          :investigator_id => nil,
+          :investigation_started_date => nil,
+          :investigation_completed_LHD_date => nil,
+          :review_completed_by_state_date => nil)
+        self.add_note note
+      end
+
+      # Handle secondary jurisdictions
+      existing_secondary_jurisdiction_ids = associated_jurisdictions.collect { |participation| participation.secondary_entity_id }
+
+      # if an existing secondary jurisdiction ID is not in the passed-in ids, delete
+      (existing_secondary_jurisdiction_ids - secondary_jurisdiction_ids).each do |id_to_delete|
+        associated_jurisdictions.delete(associated_jurisdictions.find_by_secondary_entity_id(id_to_delete))
+      end
+
+      # if an passed-in ID is not in the existing secondary jurisdiction IDs, add
+      (secondary_jurisdiction_ids - existing_secondary_jurisdiction_ids).each do |id_to_add|
+        associated_jurisdictions.create(:secondary_entity_id => id_to_add)
+      end
+
+      # Add any new forms to this event  I guess we'll keep any old ones for now.
+      if self.disease
+        forms_in_use = self.form_references.map { |ref| ref.form_id }
+        Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
+          self.form_references.create(:form_id => form.id) unless forms_in_use.include?(form.id)
+        end
+      end
+      
+      reload # Any existing references to this object won't see these changes without this
+    end
+  end  
+  
+  # transitions that are allowed to be rendered by this user
+  def allowed_transitions
+    current_state.events.select do |event|
+      priv_required = current_state.events(event).meta[:priv_required]
+      j_id = primary_jurisdiction.entity_id
+      User.current_user.is_entitled_to_in?(priv_required, j_id)
+    end
+  end
+
   private
 
   def set_age_at_onset

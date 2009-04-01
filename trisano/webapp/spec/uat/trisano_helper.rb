@@ -174,11 +174,11 @@ module TrisanoHelper
   end
   
   def click_nav_cmrs(browser)
-    browser.click 'link=CMRS'
+    browser.click 'link=EVENTS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
         browser.is_text_present("Existing Reports") and
-        browser.is_element_present("link=CMRS"))
+        browser.is_element_present("link=EVENTS"))
   end
   
   def click_nav_search(browser)

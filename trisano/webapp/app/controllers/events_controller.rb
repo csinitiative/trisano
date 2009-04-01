@@ -155,7 +155,60 @@ class EventsController < ApplicationController
   def lab_result_form
     render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix]}
   end
-  
+
+    # Route an event from one jurisdiction to another
+  def jurisdiction
+    @event = Event.find(params[:id])
+    begin
+      @event.assign_to_lhd params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note]
+      @event.save!
+    rescue Exception => e
+      if @event.halted?
+        render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true and return
+      else
+        flash[:error] = 'Unable to route CMR. ' + e.message
+        redirect_to request.env["HTTP_REFERER"]
+        return
+      end
+    end
+    if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id])
+      flash[:notice] = 'Event successfully routed.'
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:notice] = "Event successfully routed, but you have insufficent privileges to view it in it's new jurisdiction"
+      redirect_to cmrs_url
+    end
+  end
+
+  def state
+    @event = Event.find(params[:id])
+    workflow_action = params[:morbidity_event].delete(:workflow_action)
+
+    # Squirrel any notes away
+    note = params[:morbidity_event].delete(:note)
+    
+    begin      
+      # A status change may be accompanied by other values such as an
+      # event queue, set them
+      @event.attributes = params[:morbidity_event]
+      @event.send(workflow_action, note)
+    rescue Exception => e
+      # grr. workflow halt exception doesn't work as documented
+      if @event.halted?
+        render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => nil }, :layout => true, :status => 403 and return
+      else
+        render :text => "Illegal State Transition", :status => 409 and return
+      end
+    end
+    
+    if @event.save
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:error] = 'Unable to change state of CMR.'
+      redirect_to cmrs_path
+    end
+  end
+
   private
   
   def can_update?

@@ -345,7 +345,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@uname).should be_true
     @browser.get_xpath_count("//table[@class='list']//tr").should == "2"
 
-    @browser.click "link=CMRS"
+    @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present(@person_1).should_not be_true

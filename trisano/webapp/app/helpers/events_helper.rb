@@ -192,7 +192,7 @@ module EventsHelper
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
         routing_controls += "<div>#{transition.to_s.titleize}:&nbsp;"
         routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
-      when :complete
+      when :complete, :complete_and_close
         action_controls += submit_tag(transition.to_s.titleize, :id => "investigation_complete_btn", :onclick => state_routing_js(:value => transition.to_s))
       end
     end

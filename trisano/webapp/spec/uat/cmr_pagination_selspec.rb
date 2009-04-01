@@ -72,7 +72,7 @@ describe 'CMR pagination' do
   end
 
   it 'should change view to special queue' do
-    @browser.click "link=CMRS"
+    @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
     @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
@@ -90,7 +90,7 @@ describe 'CMR pagination' do
   end
 
   it 'should display pagination' do
-    @browser.click "link=CMRS"
+    @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
     @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
@@ -100,7 +100,7 @@ describe 'CMR pagination' do
   end
 
   it 'should re-paginate to 50 per page' do
-    @browser.click "link=CMRS"
+    @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
     @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"

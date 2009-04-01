@@ -247,6 +247,7 @@ describe MorbidityEventsController do
 
     describe "with successful routing" do
       def do_route_event
+        Event.should_receive(:find).and_return(@event)
         request.env['HTTP_REFERER'] = "/some_path"
         @event.should_receive(:assign_to_lhd)
         @event.should_receive(:save!)
@@ -254,7 +255,6 @@ describe MorbidityEventsController do
       end
       
       it "should find the event requested" do
-        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
         do_route_event
       end
       
@@ -281,6 +281,7 @@ describe MorbidityEventsController do
 
       describe "with secondary_ids too" do
         it "should pass IDs into event#route_to_jurisdiction" do
+          Event.should_receive(:find).and_return(@event)
           @event.should_receive(:assign_to_lhd)
           @event.should_receive(:save!)
           request.env['HTTP_REFERER'] = "/some_path"
@@ -291,6 +292,7 @@ describe MorbidityEventsController do
 
     describe "with failed routing" do
       def do_route_event
+        Event.should_receive(:find).and_return(@event)
         request.env['HTTP_REFERER'] = "/some_path"
         @event.should_receive(:halted?).and_return false
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
@@ -329,6 +331,7 @@ describe MorbidityEventsController do
       end
 
       def do_change_state
+        Event.should_receive(:find).with("1").and_return(@event)
         request.env['HTTP_REFERER'] = "/some_path"
         @event.should_receive(:a_status)
         @event.should_receive(:save).and_return(true)
@@ -336,7 +339,6 @@ describe MorbidityEventsController do
       end
 
       it "should find the event requested" do
-        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
         do_change_state
       end
       
@@ -352,7 +354,7 @@ describe MorbidityEventsController do
         mock_user
         event = mock_model(MorbidityEvent, :to_param => "1")        
         event.should_receive(:halted?).and_return true
-        MorbidityEvent.should_receive(:find).with("1").and_return(event)
+        Event.should_receive(:find).with("1").and_return(event)
 
         request.env['HTTP_REFERER'] = "/some_path"
         post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
@@ -369,7 +371,7 @@ describe MorbidityEventsController do
         mock_user
         event = mock_model(MorbidityEvent, :to_param => "1")
         event.should_receive(:halted?).and_return true
-        MorbidityEvent.should_receive(:find).and_return(event)
+        Event.should_receive(:find).and_return(event)
 
         post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
       end
@@ -389,7 +391,7 @@ describe MorbidityEventsController do
         @event.should_receive(:a_status)
         @event.should_receive(:save).and_return(false)
         @event.should_receive(:attributes=)
-        MorbidityEvent.should_receive(:find).with("1").and_return(@event)
+        Event.should_receive(:find).with("1").and_return(@event)
         post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
       end
 

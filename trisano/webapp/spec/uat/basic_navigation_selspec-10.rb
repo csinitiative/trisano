@@ -25,7 +25,7 @@ require File.dirname(__FILE__) + '/spec_helper'
     end
     
     it 'should have links to all the sub-pages' do
-      @browser.is_text_present('CMRS').should be_true
+      @browser.is_text_present('EVENTS').should be_true
       @browser.is_text_present('NEW CMR').should be_true
       @browser.is_text_present('SEARCH').should be_true
       @browser.is_text_present('ADMIN').should be_true

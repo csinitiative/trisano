@@ -31,12 +31,16 @@
   %td
     %b
       = contact_event.primary_jurisdiction.short_name
+    %br
+    - unless params[:per_page].to_i > 25
+      .tools
+        = jurisdiction_routing_control(contact_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         = contact_event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
         %br
   %td
-    %b= contact_event.current_state.try(:description)
+    %b= contact_event.state_description
     - unless contact_event.event_queue_id.nil?
       %div{:id => 'queue_info'}
         %small
