@@ -146,7 +146,7 @@ class ContactEvent < HumanEvent
         halt! "Investigator already assigned" unless investigator.nil?
       end
     end
-    state :under_investigation do
+    state :under_investigation, :meta => {:description => 'Assigned to Investigator'} do
       on_entry do |prior_state, triggering_event, *event_args|
         self.investigator_id = User.current_user.id
         self.investigation_started_date = Date.today

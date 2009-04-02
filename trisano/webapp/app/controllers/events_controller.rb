@@ -203,6 +203,7 @@ class EventsController < ApplicationController
     end
     
     if @event.save
+      flash[:notice] = 'Event successfully routed'
       redirect_to request.env["HTTP_REFERER"]
     else
       flash[:error] = 'Unable to change state of CMR.'

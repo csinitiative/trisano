@@ -107,7 +107,7 @@ class MorbidityEvent < HumanEvent
         end
       end
     end
-    state :assigned_to_investigator do
+    state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
       event :assign_to_lhd, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
         unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
           halt! "You do not have sufficient privileges to route events from this jurisdiction"
