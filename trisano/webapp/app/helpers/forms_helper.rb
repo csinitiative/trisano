@@ -415,7 +415,7 @@ module FormsHelper
     
       result << "</li>"
       return result
-    rescue
+    rescue Exception => e
       return "<li>Could not render value set element (#{element.id})</li>"
     end
   end
