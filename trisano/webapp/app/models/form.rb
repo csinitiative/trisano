@@ -460,8 +460,7 @@ class Form < ActiveRecord::Base
   end
 
   def self.next_tree_id
-    # this is what breaks in my MRI. undefined method `first' in PGResult.
-    ActiveRecord::Base.connection.execute("SELECT nextval('tree_id_generator')").first["nextval"].to_i
+    ActiveRecord::Base.connection.select_value("SELECT nextval('tree_id_generator')").to_i
   end
   
   def self.copy_form_elements(from_form, to_form, include_inactive = true)
