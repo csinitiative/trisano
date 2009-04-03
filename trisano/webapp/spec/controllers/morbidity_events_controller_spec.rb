@@ -1,3 +1,4 @@
+
 # Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -26,7 +27,7 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      HumanEvent.stub!(:find).and_return([@event])
+      Event.stub!(:find).and_return([@event])
       @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
       @event.stub!(:read_attribute).and_return('MorbidityEvent') 
     end

@@ -720,7 +720,7 @@ describe MorbidityEvent do
 
   describe 'when executing a view-filtering search' do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases, :disease_events, :places, :places_types
+    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :diseases, :disease_events, :places, :places_types, :participations, :event_queues, :people
 
     before :each do
       
@@ -761,7 +761,10 @@ describe MorbidityEvent do
       MorbidityEvent.create(@event_hash)
 
       @event_hash['investigator_id'] = 1
-      MorbidityEvent.create(@event_hash)
+      m = MorbidityEvent.create(@event_hash)
+
+      # make sure EncounterEvent doesn't show up. 
+      EncounterEvent.create(:parent_id => m.id)
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 5
@@ -895,9 +898,9 @@ describe MorbidityEvent do
       @event_hash['event_queue_id'] = 1
       MorbidityEvent.create(@event_hash)
             
-      MorbidityEvent.find_all_for_filtered_view.size.should == 3
+      HumanEvent.find_all_for_filtered_view.size.should == 3
       @user.should_receive(:update_attribute)
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :set_as_default_view => "1"})
+      HumanEvent.find_all_for_filtered_view({:queues => ["Enterics-BearRiver"], :set_as_default_view => "1"})
     end
 
   end

@@ -427,11 +427,4 @@ class MorbidityEvent < HumanEvent
     self.MMWR_year = mmwr.mmwr_year
   end
 
-  def self.get_allowed_queues(query_queues)
-    system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-    queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
-    queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
-    return queue_ids, queue_names
-  end
-
 end

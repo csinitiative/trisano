@@ -115,6 +115,14 @@ class HumanEvent < Event
       self.all(options)
     end
 
+    def get_allowed_queues(query_queues)
+      system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
+      queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
+      queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
+      return queue_ids, queue_names
+    end
+
+
     def find_all_for_filtered_view(options = {})
       # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
       conditions = ["jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"]
@@ -140,7 +148,7 @@ class HumanEvent < Event
         queue_ids, queue_names = get_allowed_queues(options[:queues])
 
         if queue_ids.empty?
-          raise
+          raise 'No queue ids returned'
         else
           conditions[0] += " #{conjunction} event_queue_id IN (?)"
           conditions << queue_ids
@@ -150,6 +158,8 @@ class HumanEvent < Event
       if options[:do_not_show_deleted]
         conditions[0] += " AND deleted_at IS NULL"
       end
+
+      conditions[0] += " AND (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
 
       order_by = case options[:order_by]
       when 'patient'
@@ -207,9 +217,7 @@ class HumanEvent < Event
       }
       find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
 
-      # Need to make sure to load models so STI sql building works correctly.
-      ContactEvent; MorbidityEvent
-      HumanEvent.paginate(:all, find_options)
+      Event.paginate(:all, find_options)
     rescue Exception => ex
       logger.error ex
       raise ex
