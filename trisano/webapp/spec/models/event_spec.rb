@@ -900,7 +900,7 @@ describe MorbidityEvent do
             
       HumanEvent.find_all_for_filtered_view.size.should == 3
       @user.should_receive(:update_attribute)
-      HumanEvent.find_all_for_filtered_view({:queues => ["Enterics-BearRiver"], :set_as_default_view => "1"})
+      HumanEvent.find_all_for_filtered_view({:queues => ["Enterics-BearRiver"], :set_as_default_view => "1"}).size.should == 1
     end
 
   end
