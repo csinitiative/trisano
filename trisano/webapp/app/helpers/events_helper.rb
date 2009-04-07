@@ -177,7 +177,7 @@ module EventsHelper
     return "" if event.new? or event.closed? or event.rejected_by_lhd?
 
     routing_controls = action_controls = ""
-    event.allowed_transitions.each do |transition|      
+    event.allowed_transitions.each do |transition|
       case transition
       when :accept, :reject, :approve, :reopen, :close
         action_controls += radio_button_tag(transition.to_s,
