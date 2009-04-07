@@ -86,6 +86,7 @@ Rails::Initializer.run do |config|
     require 'core_ext/string'
     require 'core_ext/array'
     require 'task_filter'
+    require 'routing/workflow_helper'
   end
 
 end
