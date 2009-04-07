@@ -24,6 +24,8 @@ class Form < ActiveRecord::Base
   
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]
+  has_many :published_versions, :class_name => "Form", :foreign_key => "template_id", :order => "created_at DESC"
+  has_many :form_references
   
   validates_presence_of :name, :event_type
   
@@ -433,7 +435,27 @@ class Form < ActiveRecord::Base
 
     structural_errors
   end
-  
+
+  def question_count
+    FormElement.find(:all, :conditions => ["form_id = ? and type = 'QuestionElement'", self.id]).size
+  end
+
+  def element_count
+    FormElement.find(:all, :conditions => ["form_id = ?", self.id]).size
+  end
+
+  def cdc_question_count
+    FormElement.find(:all, :conditions => ["form_id = ? and export_column_id is not null and type = 'QuestionElement'", self.id]).size
+  end
+
+  def core_element_count
+    FormElement.find(:all, :conditions => ["form_id = ? and core_path is not null", self.id]).size
+  end
+
+  def elements_last_updated
+    element = FormElement.find(:first, :conditions => ["form_id = ?", self.id], :order => "updated_at DESC")
+    element.updated_at
+  end
   
   private
   

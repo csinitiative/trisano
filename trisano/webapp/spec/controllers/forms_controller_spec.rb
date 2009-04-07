@@ -86,6 +86,8 @@ describe FormsController do
     before(:each) do
       mock_user
       @form = mock_model(Form)
+      @form.stub!(:structure_valid?).and_return(true)
+      @form.stub!(:is_template).and_return(true)
       Form.stub!(:find).and_return(@form)
     end
   
@@ -111,36 +113,6 @@ describe FormsController do
     it "should assign the found form for the view" do
       do_get
       assigns[:form].should equal(@form)
-    end
-  end
-
-  describe "handling GET /forms/1.xml" do
-
-    before(:each) do
-      mock_user
-      @form = mock_model(Form, :to_xml => "XML")
-      Form.stub!(:find).and_return(@form)
-    end
-  
-    def do_get
-      @request.env["HTTP_ACCEPT"] = "application/xml"
-      get :show, :id => "1"
-    end
-
-    it "should be successful" do
-      do_get
-      response.should be_success
-    end
-  
-    it "should find the form requested" do
-      Form.should_receive(:find).with("1").and_return(@form)
-      do_get
-    end
-  
-    it "should render the found form as xml" do
-      @form.should_receive(:to_xml).and_return("XML")
-      do_get
-      response.body.should == "XML"
     end
   end
 

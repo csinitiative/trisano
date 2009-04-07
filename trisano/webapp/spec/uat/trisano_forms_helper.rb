@@ -82,7 +82,7 @@ module TrisanoFormsHelper
       return(false)
     end
     sleep 3
-    browser.click "link=Detail"
+    browser.click "link=Builder"
     browser.wait_for_page_to_load($load_time)
     return browser.is_text_present("Publish")
   end
@@ -105,7 +105,7 @@ module TrisanoFormsHelper
     if browser.is_text_present("Form was successfully updated.") != true
       return(false)
     end
-    browser.click "link=Detail"
+    browser.click "link=Builder"
 
     browser.wait_for_page_to_load($load_time)
     return browser.is_element_present("publish_btn")

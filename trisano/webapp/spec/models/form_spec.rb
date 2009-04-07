@@ -1153,6 +1153,33 @@ describe Form do
     
   end
 
+  describe 'when using form metadata helpers' do
+
+    fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
+
+    describe 'on test form' do
+      before(:each) do
+        @form = Form.find(forms(:test_form).id)
+      end
+
+      it 'question_count should return the number of questions' do
+        @form.question_count.should == 13
+      end
+      
+      it 'element_count should return the number of elements' do
+        @form.element_count.should == 27
+      end
+      
+      it 'cdc_question_count should return the number of CDC questions' do
+        @form.cdc_question_count.should == 1
+      end
+      
+      it 'core_element_count should return the number of core element ties' do
+        @form.core_element_count.should == 2
+      end
+    end
+  end
+
   describe 'Form#next_tree_id' do
 
     it 'should return tree_ids in sequence, even when called multiple times in a transaction' do

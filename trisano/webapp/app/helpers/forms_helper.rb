@@ -441,6 +441,61 @@ module FormsHelper
       return "<li>Could not render value element (#{element.id})</li>"
     end
   end
+
+  def admin_master_info(form)
+    date_format = '%B %d, %Y %I:%M %p'
+    result = ""
+    result << "<h2>Master Copy</h2>"
+    result << "#{pluralize(form.element_count, 'element')}<br/>"
+    result << "#{pluralize(form.question_count, 'question')}<br/>"
+    result << "#{pluralize(form.core_element_count, 'element')} with ties to core fields<br/>"
+    result << "#{pluralize(form.cdc_question_count, 'CDC export question')}<br/>"
+    result << "Form created: #{form.created_at.strftime(date_format)}<br/>"
+    result << "Form last updated: #{form.updated_at.strftime(date_format)}<br/>"
+    result << "Elements last updated: #{form.elements_last_updated.strftime(date_format)}"
+    result
+  end
+
+  def admin_version_info(form)
+    date_format = '%B %d, %Y %I:%M %p'
+    result = ""
+    published_versions = form.published_versions
+    result << "<h2>Published Versions</h2>"
+
+    if published_versions.size == 0
+      result << "No published versions."
+      return result
+    end
+    
+    result << "<table class='list'>"
+    result << "<tr><th>Version</th><th>Published</th><th>Diseases</th><th>Form Metadata</th></tr>"
+
+    form.published_versions.each do |published_form|
+      result << "<tr>"
+      result << "<td>#{published_form.version}</td>"
+      result << "<td>#{published_form.created_at.strftime(date_format)}</td>"
+      result << "<td>"
+
+      form.diseases.each do |disease|
+        result << "#{disease.disease_name}<br/>"
+      end
+
+      result << "</td>"
+      result << "<td>"
+      result << "Form ID: #{published_form.id}<br/>"
+      result << "#{pluralize(published_form.element_count, 'element')}<br/>"
+      result << "#{pluralize(published_form.question_count, 'question')}<br/>"
+      result << "#{pluralize(published_form.core_element_count, 'element')} with ties to core fields<br/>"
+      result << "#{pluralize(published_form.cdc_question_count, 'CDC export question')}<br/>"
+      result << "Applies to #{pluralize(published_form.form_references.size, 'events')}<br/>"
+
+      result << "</td>"
+      result << "</tr>"
+    end
+
+    result << "</table>"
+    result
+  end
   
   private
 
@@ -506,9 +561,9 @@ module FormsHelper
   end
   
   def add_to_library_link(element)
-    "<small>" << link_to_remote("Copy to library", 
+    "<small>" << link_to_remote("Copy to library",
       :url => {
-        :controller => "group_elements", :action => "new", :form_element_id => element.id}, 
+        :controller => "group_elements", :action => "new", :form_element_id => element.id},
       :html => {
         :class => "fb-add-to-library",
         :id => "add-element-to-library-#{element.id}"
@@ -560,7 +615,7 @@ module FormsHelper
       options_tags = "<option value=\"\"></option>"
       options_tags +=  export_columns.collect do |column|
         result =  "<option value=\"#{column.id}\" "
-        result << "select=\"select\" " if element.export_column_id == column.id 
+        result << "select=\"select\" " if element.export_column_id == column.id
         result << ">#{column.name}</option>"
       end.join(' ')
       result = select_tag("core-export-columns-#{element.id}", options_tags, :onchange => set_export_column_on(element))

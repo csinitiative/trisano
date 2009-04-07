@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
@@ -19,8 +19,10 @@
 
 - content_for :tools do
   = link_to 'Forms', forms_path
+  |
+  Detail View
   %p
-  
+
 - content_for :tools_two do
   = button_to("Create new form", {:action => "new"}, { :method => :get })
 
@@ -37,22 +39,15 @@
         .formname
           = h @form.name
           %br
-        .description  
+        .description
           = h @form.description
         .tools
-          = link_to 'Detail', builder_path(@form)
+          = link_to 'Builder', builder_path(@form)
+          |
+          = link_to 'Details', form_path(@form)
           |
           -if @form.is_template
             = link_to 'Edit', edit_form_path(@form)
-          |
-          = link_to 'Copy', copy_form_path(@form), :method => :post
-          |
-          = link_to 'Export', export_form_path(@form), :method => :post
-          - if(@form.status == "Published")
-            |
-            = link_to 'Push', push_form_path(@form), :method => :post
-            |
-            = link_to 'Deactivate', deactivate_form_path(@form), :method => :post
       %td
         %ul
           - @form.diseases.each do |disease|
@@ -63,3 +58,8 @@
         = h @form.event_type.humanize
         .status
           = h @form.status
+
+#rot
+  %p
+    = admin_master_info(@form)
+    = admin_version_info(@form)

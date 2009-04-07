@@ -28,10 +28,9 @@ class FormsController < AdminController
 
   def show
     @form = Form.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @form }
+    @form.structure_valid?
+    if not @form.is_template
+      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
     end
   end
 

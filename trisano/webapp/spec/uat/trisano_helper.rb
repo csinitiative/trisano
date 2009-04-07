@@ -963,7 +963,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     browser.is_text_present('Form was successfully updated.').should be_true
     browser.is_text_present('Not Published').should be_true
-    browser.click('link=Detail')
+    browser.click('link=Builder')
     browser.wait_for_page_to_load($load_time)
     true
   end
