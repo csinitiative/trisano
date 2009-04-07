@@ -280,7 +280,7 @@ class Form < ActiveRecord::Base
   def export
     begin
       base_path = "/tmp/"
-      form_name = self.name.downcase.sub(" ", "_")
+      form_name = self.name.downcase.strip.gsub(/ /, '_')
       zip_file_path = "#{base_path}#{form_name}.zip"
     
       form_file_name = "form"

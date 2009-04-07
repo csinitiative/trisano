@@ -689,7 +689,7 @@ describe Form do
 
   end
 
-    describe "when copying a form that contains values with codes" do
+  describe "when copying a form that contains values with codes" do
 
     fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
 
@@ -776,7 +776,23 @@ describe Form do
         ["elements", "form"].include?(file.name).should be_true
       end
     end
-    
+
+    it 'should substitute underscores for spaces' do
+      @form = Form.find(forms(:hep_a_form).id)
+      @form.name = "i am a form"
+      @form.save!
+      export_file_path = @form.export
+      export_file_path.should == "/tmp/i_am_a_form.zip"
+    end
+
+    it 'should strip extra spaces from the form name' do
+      @form = Form.find(forms(:hep_a_form).id)
+      @form.name = "  i am a form   "
+      @form.save!
+      export_file_path = @form.export
+      export_file_path.should == "/tmp/i_am_a_form.zip"
+    end
+
     it 'should fail if a code behind a condition cannot be found' do
       @form = Form.find(forms(:hep_a_form).id)
       ExternalCode.destroy(external_codes(:yesno_maybe).id)
