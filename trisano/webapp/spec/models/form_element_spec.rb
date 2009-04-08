@@ -63,7 +63,7 @@ describe "Quesiton FormElement" do
     @form.save_and_initialize_form_elements
     @question_element = QuestionElement.new({
         :parent_element_id => @form.investigator_view_elements_container.id,
-        :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+        :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
       })
     
     @question_element.save_and_add_to_form.should_not be_nil
@@ -116,7 +116,7 @@ describe "Quesiton FormElement when added to library" do
     
   it "should copy the question's follow up questions" do
     follow_up_container = FollowUpElement.create({:tree_id => 1, :form_id => 1,:name => "Follow up", :condition => "Yes"})
-    follow_up_question = Question.create({:question_text => "Did you do it?", :data_type => "single_line_text"})
+    follow_up_question = Question.create({:question_text => "Did you do it?", :data_type => "single_line_text", :short_name => "did"})
     follow_up_question_element = QuestionElement.create(:tree_id => 1, :form_id => 1, :question => follow_up_question)
     follow_up_container.add_child(follow_up_question_element)
     @form_element.add_child(follow_up_container)
@@ -162,7 +162,8 @@ describe "FormElement working with the library" do
       
     @question_with_value_set = Question.create(
       :question_text => "How's it going?", 
-      :data_type => "drop_down")
+      :data_type => "drop_down",
+      :short_name => "how")
     @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_with_value_set)
     @group_element.add_child(@question_element_with_value_set)
     
@@ -175,8 +176,9 @@ describe "FormElement working with the library" do
     @dependent_value_set.add_child(@dependent_value_2)
       
     @question_without_value_set = Question.create(
-      :question_text => "Explain.", 
-      :data_type => "single_line_text")
+      :question_text => "Explain.",
+      :data_type => "single_line_text",
+       :short_name => "splain")
     @question_element_without_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_without_value_set)
     @group_element.add_child(@question_element_without_value_set)
 

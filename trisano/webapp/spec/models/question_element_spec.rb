@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe QuestionElement do
   before(:each) do
-    @question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    @question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     @question_element = QuestionElement.new(:question => @question)
   end
 
@@ -30,7 +30,7 @@ describe QuestionElement do
   it "should determine if it is multi-valued and empty" do
     
     question_element = QuestionElement.new({:tree_id => 1})
-    question = Question.new({:data_type => "drop_down", :question_text => "Was it fishy"})
+    question = Question.new({:data_type => "drop_down", :question_text => "Was it fishy", :short_name => "fishy"})
     question_element.question = question
     question_element.save
 
@@ -64,7 +64,7 @@ describe QuestionElement do
     it "should bootstrap the question" do
       question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         })
         
       question_element.save_and_add_to_form.should_not be_nil
@@ -94,7 +94,7 @@ describe QuestionElement do
     it "should be receive a tree id" do
       question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         })
       
       question_element.save_and_add_to_form.should_not be_nil
@@ -104,7 +104,7 @@ describe QuestionElement do
     it "should fail if form validation fails" do
       question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         }) 
       
       invalidate_form(@form)
@@ -124,7 +124,7 @@ describe QuestionElement do
       @section_element.save_and_add_to_form.should_not be_nil
       @question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         })
       @question_element.parent_element_id = @section_element.id
     end
@@ -169,7 +169,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => export_columns(:hep_jaundiced).id,
           :question_attributes => {
-            :question_text => "Jaundiced?"
+            :question_text => "Jaundiced?",
+            :short_name => "j"
           }
         })
 
@@ -191,7 +192,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "2",
           :question_attributes => {
-            :question_text => "Jaundiced?"
+            :question_text => "Jaundiced?",
+            :short_name => "j"
           }
         })
         
@@ -219,7 +221,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "5",
           :question_attributes => {
-            :question_text => "Drop down?"
+            :question_text => "Drop down?",
+            :short_name => "dd"
           }
         })
         
@@ -248,7 +251,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "6",
           :question_attributes => {
-            :question_text => "Check box?"
+            :question_text => "Check box?",
+            :short_name => "cb"
           }
         })
         
@@ -276,7 +280,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "3",
           :question_attributes => {
-            :question_text => "Date diagnosed"
+            :question_text => "Date diagnosed",
+            :short_name => "dd"
           }
         })
         
@@ -297,7 +302,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "4",
           :question_attributes => {
-            :question_text => "Vaccine year"
+            :question_text => "Vaccine year",
+            :short_name => "vc"
           }
         })
         
@@ -317,7 +323,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "4",
           :question_attributes => {
-            :question_text => "Vaccine year"
+            :question_text => "Vaccine year",
+            :short_name => "vc"
           }
         })
 
@@ -334,7 +341,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "8",
           :question_attributes => {
-            :question_text => "Multi-line?"
+            :question_text => "Multi-line?",
+            :short_name => "ml"
           }
         })
         
@@ -354,7 +362,8 @@ describe QuestionElement do
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => "7",
           :question_attributes => {
-            :question_text => "Phone?"
+            :question_text => "Phone?",
+            :short_name => "ph"
           }
         })
         
@@ -374,7 +383,7 @@ describe QuestionElement do
       @event_id = 1
       
       @question_element = QuestionElement.new({:tree_id => 1})
-      @question = Question.new({:data_type => "drop_down", :question_text => "Was it fishy"})
+      @question = Question.new({:data_type => "drop_down", :question_text => "Was it fishy", :short_name => "fishy"})
       @question_element.question = @question
       @question_element.save
       
@@ -387,7 +396,7 @@ describe QuestionElement do
       @question_element.add_child(@no_follow_up_element)
       
       @no_follow_up_question_element = QuestionElement.new({:tree_id => 1})
-      @no_follow_up_question = Question.new({:data_type => "drop_down", :question_text => "Are you sure?"})
+      @no_follow_up_question = Question.new({:data_type => "drop_down", :question_text => "Are you sure?", :short_name => "sure"})
       @no_follow_up_question_element.question = @no_follow_up_question
       @no_follow_up_question_element.save
       @no_follow_up_element.add_child(@no_follow_up_question_element)

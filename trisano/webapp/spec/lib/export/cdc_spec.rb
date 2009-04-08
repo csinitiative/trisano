@@ -27,7 +27,7 @@ describe 'export/cdc' do
     # Hack alert: adding this through the fixtures breaks other specs
     # for reasons I can't fathom.
     DiseaseEvent.create(:disease_id => 5, :event_id => 4)
-    question_id = Question.create(:question_text => 'hello?', :data_type => :single_line_text).id
+    question_id = Question.create(:question_text => 'hello?', :data_type => :single_line_text, :short_name => "hi").id
     Answer.create(:question_id => question_id, :event_id => 4, :text_answer => '2006')
     Answer.create(:question_id => question_id, :event_id => 4, :export_conversion_value_id => 11, :text_answer => '2008')
     Answer.create(:question_id => question_id, :event_id => 4, :export_conversion_value_id => 11, :text_answer => '2007')

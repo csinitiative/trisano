@@ -15,17 +15,20 @@
 
 = f.hidden_field :parent_element_id
 
-- f.fields_for("question_attributes", @question_element.question)  do |q|
-
+- f.fields_for(:question)  do |q|
+  = error_messages_for :object => q.object
   = q.hidden_field :core_data
 
   %p
-    %label Question text
+    = q.label(:question_text)
     = q.text_field :question_text
 
   %p
-    %label Short name
-    = q.text_field :short_name
+    = q.label(:short_name)
+    - if (!q.object.new_record? && q.object.question_element.form.status == "Published")
+      = h q.object.short_name
+    - else
+      = q.text_field :short_name
 
   = f.label(:is_active, "Is active?")
   = f.radio_button :is_active, "true"
@@ -34,9 +37,9 @@
   No
 
   %p
-    %label Style
+    = q.label(:style)
     = q.select(:style, [["Horizontal", "horiz"], ["Vertical", "vert"]], {:include_blank => true}) 
 
   %p
-    %label Help text
+    = q.label(:help_text)
     =q.text_area :help_text, :rows => 10

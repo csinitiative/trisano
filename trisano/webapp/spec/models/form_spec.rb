@@ -195,7 +195,7 @@ describe Form do
 
     it "should return the exportable questions" do
       form = Form.find(1)
-      form.exportable_questions.size.should eql(12)
+      form.exportable_questions.size.should eql(13)
     end
 
   end
@@ -1016,7 +1016,7 @@ describe Form do
       @form.save_and_initialize_form_elements
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         })
     
       @question_element.save_and_add_to_form.should_not be_nil

@@ -21,9 +21,10 @@ class QuestionElement < FormElement
   belongs_to :export_column
   
   attr_accessor :parent_element_id
-  
-  validates_associated :question
+
   validates_presence_of :question
+
+  accepts_nested_attributes_for :question
   
   def save_and_add_to_form
     unless export_column.nil?
@@ -58,14 +59,6 @@ class QuestionElement < FormElement
 
   def question_instance
     @question_instance || question
-  end
-  
-  def question_attributes=(question_attributes)
-    if new_record?
-      @question_instance = Question.new(question_attributes)
-    else
-      question_instance.update_attributes(question_attributes)
-    end
   end
 
   def is_multi_valued?

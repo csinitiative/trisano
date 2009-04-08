@@ -45,11 +45,11 @@ describe FormElementCache do
     @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @fu_question)
     @follow_up.add_child(@follow_up_q1)
     
-    @question_2 = Question.create(:question_text => "Really?", :data_type => "single_line_text")
+    @question_2 = Question.create(:question_text => "Really?", :data_type => "single_line_text", :short_name => "really")
     @question_element_2 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_2)
     @section_element.add_child(@question_element_2)
     
-    @question_3 = Question.create(:question_text => "?", :data_type => "single_line_text")
+    @question_3 = Question.create(:question_text => "?", :data_type => "single_line_text", :short_name => "q")
     @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_3)
     @section_element.add_child(@question_element_3)
     
@@ -137,7 +137,7 @@ describe FormElementCache do
 
   it "should return questions with shortnames as exportable" do
     @form_element_cache = FormElementCache.new(@form_base_element)
-    @form_element_cache.exportable_questions.size.should eql(2)
+    @form_element_cache.exportable_questions.size.should eql(4)
   end
   
 end

@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ApplicationHelper do
   
   it "should determine replacement elements for a library admin action" do
-    question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :question => question)
     
     replace_element, replace_partial = helper.replacement_elements(question_element)
@@ -32,7 +32,7 @@ describe ApplicationHelper do
   it "should determine replacement elements for a investigator view child" do
     form_base_element = FormBaseElement.create(:tree_id => "1")
     investigator_view_element_container = InvestigatorViewElementContainer.create(:tree_id => "1")
-    question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :form_id => 1, :question => question)
     
     form_base_element.add_child(investigator_view_element_container)
@@ -47,7 +47,7 @@ describe ApplicationHelper do
   it "should determine replacement elements for a core view child" do
     form_base_element = FormBaseElement.create(:tree_id => "1")
     core_view_element_container = CoreViewElementContainer.create(:tree_id => "1")
-    question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+    question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :form_id => 1, :question => question)
     
     form_base_element.add_child(core_view_element_container)
@@ -62,7 +62,7 @@ describe ApplicationHelper do
   it "should determine replacement elements for a core field child" do
     form_base_element = FormBaseElement.create(:tree_id => "1")
     core_field_element_container = CoreFieldElementContainer.create(:tree_id => "1")
-     question = Question.create({:question_text => "?", :data_type => "single_line_text"})
+     question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :form_id => 1, :question => question)
     
     form_base_element.add_child(core_field_element_container)

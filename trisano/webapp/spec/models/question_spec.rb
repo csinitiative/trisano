@@ -21,6 +21,7 @@ describe Question do
   before(:each) do
     @question = Question.new
     @question.question_text = "Did you eat the fish?"
+    @question.short_name = "fishy"
     @question.data_type = "single_line_text"
     @question.help_text = 's' * 1000
   end
@@ -48,6 +49,13 @@ describe Question do
     @question.should_not be_valid
     @question.errors.size.should == 1
     @question.errors.on(:data_type).should_not be_nil
+  end
+
+  it 'should produce an error if the shortname is not present' do
+    @question.short_name = ""
+    @question.should_not be_valid
+    @question.errors.size.should == 1
+    @question.errors.on(:short_name).should_not be_nil
   end
 
   it 'should be valid with any of the valid data types' do
@@ -78,6 +86,41 @@ describe Question do
 
     @question.data_type = "phone"
     @question.is_multi_valued?.should be_false
+  end
+
+  it 'should strip extra whitespace from short names' do
+    @question.short_name = "   shorty    "
+    @question.save!
+    @question.short_name.should == "shorty"
+  end
+
+  it 'should convert spaces in short names to underscores' do
+    @question.short_name = "i am a short name"
+    @question.save!
+    @question.short_name.should == "i_am_a_short_name"
+  end
+
+  describe 'when on a published form' do
+    
+    it 'should not allow edits to the short name' do
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @question_element = QuestionElement.new({
+          :parent_element_id => @form.investigator_view_elements_container.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+        })
+      @question_element.save_and_add_to_form.should_not be_nil
+
+      @question_to_edit = @question_element.question
+      @question_to_edit.short_name = "first_short_name"
+      @question_to_edit.save!
+      @question_to_edit.short_name.should eql("first_short_name")
+      @form.publish
+      @question_to_edit.reload
+      @question_to_edit.short_name = "second_short_name"
+      @question_to_edit.save!
+      @question_to_edit.short_name.should eql("first_short_name")
+    end
   end
   
 end

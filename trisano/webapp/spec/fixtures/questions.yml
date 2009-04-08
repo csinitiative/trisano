@@ -116,7 +116,7 @@ second_tab_core_string_follow_up_q:
   help_text:
   data_type: "single_line_text"
   size:
-  short_name:
+  short_name: "2nd_core_tab_string_fu_q"
 
 hep_core_follow_up_q:
   id: "13"
@@ -125,6 +125,7 @@ hep_core_follow_up_q:
   help_text:
   data_type: "single_line_text"
   size:
+  short_name: "hep_core_follow_up_q"
 
 hep_cdc_q:
   id: "14"
@@ -133,6 +134,7 @@ hep_cdc_q:
   help_text:
   data_type: "radio_button"
   size:
+  short_name: "hep_cdc_q"
 
 hep_b_core_follow_up_q:
   id: "16"
@@ -141,6 +143,7 @@ hep_b_core_follow_up_q:
   help_text:
   data_type: "single_line_text"
   size:
+  short_name: "hep_b_core_follow_up_q"
 
 hep_non_cdc_q:
   id: "17"
@@ -149,3 +152,4 @@ hep_non_cdc_q:
   help_text:
   data_type: "radio_button"
   size:
+  short_name: "hep_non_cdc_q"

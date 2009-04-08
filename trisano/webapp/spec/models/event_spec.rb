@@ -956,7 +956,7 @@ describe MorbidityEvent do
     fixtures :diseases, :export_conversion_values, :export_columns
 
     before(:each) do
-      @question = Question.create(:data_type => 'radio_button', :question_text => 'Contact?' )
+      @question = Question.create(:data_type => 'radio_button', :question_text => 'Contact?', :short_name => "contact" )
       @question_element = QuestionElement.create(:question => @question)
       @event = MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } }, 
           "disease_event_attributes"        => { "disease_id" => diseases(:hep_a).id },
@@ -1504,7 +1504,7 @@ describe Event, 'cloning an event' do
       question_element = QuestionElement.new(
         {
           :parent_element_id => form.form_base_element.id,
-          :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text" } 
+          :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text", :short_name => "gives" }
         }
       )
       question_element.save_and_add_to_form

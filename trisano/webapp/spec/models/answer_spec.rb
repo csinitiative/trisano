@@ -91,7 +91,7 @@ describe Answer do
   describe 'when saving an answer to a multi-valued question' do
 
     before(:each) do
-      @question = Question.new({ :question_text => "Did you eat the fish?", :data_type => "radio_button" })
+      @question = Question.new({ :question_text => "Did you eat the fish?", :data_type => "radio_button", :short_name => "fishy"})
       @question_element = QuestionElement.create({ :question => @question })
       @value_set_element = ValueSetElement.create({ :name => "Coded Yes/No" })
       @yes_value_element = ValueSetElement.create({ :name => "Yes", :code => "1" })

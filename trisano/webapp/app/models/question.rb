@@ -37,11 +37,14 @@ class Question < ActiveRecord::Base
     end
   end
 
-  validates_presence_of :question_text
+  validates_presence_of :question_text, :short_name
   validates_presence_of :data_type, :unless => :core_data
   validates_presence_of :core_data_attr, :if => :core_data
   validates_length_of :question_text, :maximum => 1000, :allow_blank => true
   validates_length_of :help_text, :maximum => 1000, :allow_blank => true
+
+  before_validation :sanitize_short_name
+  before_update :short_name_filter
 
   def data_type
     read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
@@ -55,6 +58,20 @@ class Question < ActiveRecord::Base
     # Bypassing validates_inclusion_of in order to work around the data_type to_sym method
     unless Question.valid_data_types.include? data_type.to_s
       errors.add(:data_type, "is not vaild") if core_data.blank?
+    end
+  end
+
+  private
+
+  def sanitize_short_name
+    self.short_name = self.short_name.strip.gsub(/ /, '_') unless self.short_name.blank?
+  end
+  
+  def short_name_filter
+    if self.short_name_changed?
+      unless (question_element.nil? || question_element.form.nil?)
+        self.short_name = self.short_name_was if question_element.form.status == "Published"
+      end
     end
   end
 
