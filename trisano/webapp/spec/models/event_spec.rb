@@ -363,7 +363,7 @@ describe MorbidityEvent do
     it "should return assigned to lhd, investigation complete, and assigned to investigator when the state is re-opened by manager" do                   
       @event = MorbidityEvent.create(:workflow_state => 'reopened_by_manager')
       @event = Event.find @event.id
-      @event.states(@event.state).events.should == [:assign_to_lhd, :assign_to_investigator, :complete]
+      @event.states(@event.state).events.should == [:assign_to_lhd, :reset_to_new, :assign_to_investigator, :complete]
     end
   end
 
@@ -388,6 +388,9 @@ describe MorbidityEvent do
 
     before(:each) do
       @event = MorbidityEvent.create
+      @permissive_jurisdiction = mock_model(Jurisdiction)
+      @permissive_jurisdiction.stub!(:allows_current_user_to?).and_return(true)
+      User.stub!(:current_user).and_return(nil) #just in case some old stubbin' is around
     end
 
     it "should be able to assign to an investigator, when accepted by lhd" do
@@ -406,6 +409,50 @@ describe MorbidityEvent do
       updated_event(:workflow_state => 'rejected_by_investigator').respond_to?(:investigate).should be_true
     end
 
+    it 'should use \'new\' as the first state' do
+      @event.workflow_state.should == 'new'
+      @event.current_state.should == @event.states(:new)
+      @event.current_state.events.should == [:assign_to_lhd, :reset_to_new]
+    end
+
+    it 'should be able to transition from :new to :assigned_to_lhd' do
+      @event.should_receive(:jurisdiction).and_return @permissive_jurisdiction
+      @event.should_receive(:route_to_jurisdiction)
+      @event.assign_to_lhd
+      @event.workflow_state.should == 'assigned_to_lhd'
+      @event.current_state.name.should == :assigned_to_lhd
+      @event.current_state.events.should == [:assign_to_lhd, :reset_to_new, :accept, :reject]
+    end
+
+    it 'should be to move between states, as allowed by transitions' do
+      @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
+      @event.stub!(:route_to_jurisdiction)
+      @event.stub!(:primary_jurisdiction).and_return nil
+      @event.assign_to_lhd
+      @event.current_state.name.should == :assigned_to_lhd
+      @event.reset_to_new
+      @event.current_state.name.should == :new
+      @event.assign_to_lhd
+      @event.current_state.name.should == :assigned_to_lhd
+      @event.reject
+      @event.current_state.name.should == :rejected_by_lhd
+      @event.assign_to_lhd
+      @event.current_state.name.should == :assigned_to_lhd
+      @event.accept
+      @event.current_state.name.should == :accepted_by_lhd
+      @event.assign_to_investigator
+      @event.current_state.name.should == :assigned_to_investigator
+      @event.reject
+      @event.current_state.name.should == :rejected_by_investigator
+      @event.assign_to_investigator
+      @event.current_state.name.should == :assigned_to_investigator
+      @event.accept
+      @event.current_state.name.should == :under_investigation
+      @event.complete
+      @event.current_state.name.should == :investigation_complete
+      @event.approve
+      @event.current_state.name.should == :approved_by_lhd
+    end
   end
 
   describe "Support for investigation view elements" do

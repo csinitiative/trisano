@@ -152,8 +152,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
 
     # Status should be unchanged too
-    # TODO fix workflow to support this.
-    # @browser.is_text_present("New").should be_true
+    @browser.is_text_present("New").should be_true
 
     # Should see new jurisdictions
     @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true

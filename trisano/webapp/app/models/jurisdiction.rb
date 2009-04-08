@@ -18,5 +18,11 @@
 class Jurisdiction < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   accepts_nested_attributes_for :place_entity, :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
+
+  # wrapped User#is_entitled_to_in?, frankly, because it's easier to
+  # stub workflow this way.
+  def allows_current_user_to?(privilege)
+    User.current_user.is_entitled_to_in?(privilege, secondary_entity_id)
+  end
 end
 

@@ -240,9 +240,13 @@ describe MorbidityEventsController do
       @jurisdiction = mock_model(Participation)
       @jurisdiction.stub!(:secondary_entity_id).and_return(1)
 
+      @primary_jurisdiction = mock_model(Place)
+      @primary_jurisdiction.stub!(:name).and_return('Not Unassigned')
+
       @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:jurisdiction).and_return(@jurisdiction)
       @event.stub!(:update_attribute).and_return(true)
+      @event.stub!(:primary_jurisdiction).and_return(@primary_jurisdiction)
       MorbidityEvent.stub!(:find).and_return(@event)
     end
 

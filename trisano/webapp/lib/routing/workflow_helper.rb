@@ -20,7 +20,7 @@ module Routing
   module WorkflowHelper
     def assign_to_lhd(action=:assign_to_lhd)
       event action, :transitions_to => :assigned_to_lhd, :meta => {:priv_required => :route_event_to_any_lhd} do |jurisdiction, secondary_jurisdictions, note|
-        unless User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :route_event_to_any_lhd
           halt! "You do not have sufficient privileges to route events from this jurisdiction"
         end
         begin
@@ -29,38 +29,39 @@ module Routing
           halt! e.message
         end
       end
+      event :reset_to_new, :transitions_to => :new
     end
 
     def accept_by_lhd(action=:accept)
-      event :accept, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
-        unless User.current_user.is_entitled_to_in?(:accept_event_for_lhd, self.jurisdiction.secondary_entity_id)
+      event action, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
+        unless self.jurisdiction.allows_current_user_to? :accept_event_for_lhd
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Accepted by #{self.primary_jurisdiction.name}.\n" + note
+        add_note "Accepted by #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
     end
     
     def reject_by_lhd(action=:reject)
       event action, :transitions_to => :rejected_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
-        unless User.current_user.is_entitled_to_in?(:accept_event_for_lhd, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :accept_event_for_lhd
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Rejected by #{self.primary_jurisdiction.name}.\n" + note
+        add_note "Rejected by #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
     end
 
     def approve_by_lhd(action=:approve)
       event action, :transitions_to => :approved_by_lhd, :meta => {:priv_required => :approve_event_at_lhd} do |note|
-        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :approve_event_at_lhd
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Approved at #{self.primary_jurisdiction.name}.\n#{note}"
+        add_note "Approved at #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
     end
 
     def assign_to_investigator(action=:assign_to_investigator)
       event action, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
-        unless User.current_user.is_entitled_to_in?(:route_event_to_investigator, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :route_event_to_investigator
           halt! "You do not have sufficient privileges to route events from this jurisdiction"
         end
         note = if self.investigator
@@ -74,16 +75,16 @@ module Routing
 
     def investigate(action=:investigate)
       event action, :transitions_to => :under_investigation, :meta => {:priv_required => :accept_event_for_investigation} do |note|
-        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :accept_event_for_investigation
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Accepted by Investigator\n" + note
+        add_note "Accepted by Investigator\n#{note}"
       end
     end  
 
     def reject_by_investigator(action=:reject)
       event action, :transitions_to => :rejected_by_investigator, :meta => {:priv_required => :accept_event_for_investigation} do |note|
-        unless User.current_user.is_entitled_to_in?(:accept_event_for_investigation, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :accept_event_for_investigation
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Rejected for investigation.\n#{note}"
@@ -92,7 +93,7 @@ module Routing
 
     def complete_investigation(action=:complete)
       event action, :transitions_to => :investigation_complete, :meta => {:priv_required => :investigate_event} do |note|
-        unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :investigate_event
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Completed investigation.\n#{note}"
@@ -101,7 +102,7 @@ module Routing
 
     def complete_and_close_investigation(action=:complete_and_close)
       event action, :transitions_to => :closed, :meta => {:priv_required => :investigate_event} do |note|
-        unless User.current_user.is_entitled_to_in?(:investigate_event, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :investigate_event
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Investigator closed investigation.\n#{note}"
@@ -110,16 +111,16 @@ module Routing
 
     def reopen_by_manager(action=:reopen)
       event action, :transitions_to => :reopened_by_manager, :meta => {:priv_required => :approve_event_at_lhd} do |note|
-        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :approve_event_at_lhd
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Reopened by #{self.primary_jurisdiction.name} manager.\n#{note}"
+        add_note "Reopened by #{self.primary_jurisdiction.try(:name)} manager.\n#{note}"
       end
     end
 
     def reopen_by_state(action=:reopen)
       event action, :transitions_to => :reopened_by_state, :meta => {:priv_required => :approve_event_at_state} do |note|
-        unless User.current_user.is_entitled_to_in?(:approve_event_at_state, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :approve_event_at_state
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Reopened by State.\n#{note}"
@@ -128,7 +129,7 @@ module Routing
 
     def close(action=:approve)
       event action, :transitions_to => :closed, :meta => {:priv_required => :approve_event_at_state} do |note|
-        unless User.current_user.is_entitled_to_in?(:approve_event_at_state, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :approve_event_at_state
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Approved by State.\n#{note}"
@@ -138,10 +139,10 @@ module Routing
 
     def close_contact(action=:approve)
       event action, :transitions_to => :closed, :meta => {:priv_required => :approve_event_at_lhd} do |note|
-        unless User.current_user.is_entitled_to_in?(:approve_event_at_lhd, self.jurisdiction.secondary_entity_id)
+        unless self.jurisdiction.allows_current_user_to? :approve_event_at_lhd
           halt! "You do not have sufficient privileges to make this change"
         end
-        add_note "Approved at #{self.primary_jurisdiction.name}.\n#{note}"
+        add_note "Approved at #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
     end      
 

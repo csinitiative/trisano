@@ -58,7 +58,7 @@ class MorbidityEvent < HumanEvent
     end
     state :under_investigation do
       on_entry do |prior_state, triggering_event, *event_args|
-        self.investigator_id = User.current_user.id
+        self.investigator = User.current_user 
         self.investigation_started_date = Date.today
       end
       assign_to_lhd

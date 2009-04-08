@@ -156,11 +156,12 @@ class EventsController < ApplicationController
     render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix]}
   end
 
-    # Route an event from one jurisdiction to another
+  # Route an event from one jurisdiction to another
   def jurisdiction
     @event = Event.find(params[:id])
     begin
       @event.assign_to_lhd params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note]
+      @event.reset_to_new if @event.primary_jurisdiction.name == 'Unassigned'
       @event.save!
     rescue Exception => e
       if @event.halted?
