@@ -58,4 +58,4 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  ci-reporter          MIT               copyright (c) 2006-2007 Nick Sieger <nicksieger@gmail.com>
  activerecord-jdbc    BSD               Nick Sieger <nick@nicksieger.com> and Ola Bini<olabini@gmail.com> with lots of help from the JRuby community.
  shortcut             BSD               Binny V A http://www.openjs.com/scripts/events/keyboard_shortcuts/
- keypress             BSD               Jonathan Tang http://jonathan.tang.name/code/js_keycode
+ keypress             BSD               Copyright (c) 2008 Jonathan Tang http://jonathan.tang.name/code/js_keycode
