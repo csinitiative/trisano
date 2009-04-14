@@ -99,7 +99,7 @@ namespace :trisano do
     desc "start Tomcat"
     task :starttomcat do
       puts "attempting to start Tomcat"
-      sh TOMCAT_BIN + "/startup.sh &"
+      sh TOMCAT_BIN + "/startup.sh"
     end
 
     desc "smoke test that ensures trisano was deployed"
