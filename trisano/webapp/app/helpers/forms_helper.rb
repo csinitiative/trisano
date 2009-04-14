@@ -624,6 +624,12 @@ module FormsHelper
     result
   end
 
+  def publish_form_tag(&block)
+    form_remote_tag(:url => {:action => 'publish', :id => @form.id}, 
+                    :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();",
+                    :complete => "$('publish_btn').value = 'Publish'; $('spinner').hide();", &block)
+  end
+
   def set_export_column_on(element)
     <<-UPDATE_EXPORT_COLUMN.gsub(/\s+/, ' ')
       new Ajax.Request('../../form_elements/update_export_column/#{element.id.to_s}', {asynchronous:true, evalScripts:true,

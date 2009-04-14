@@ -38,7 +38,7 @@ class Form < ActiveRecord::Base
       conditions << record.id
     end
     if value && self.find(:first, :conditions => conditions)
-      record.errors.add attr, "must be unique across active forms."
+      record.errors.add attr, "is already being used by another active form."
     end
   end
 
@@ -97,6 +97,8 @@ class Form < ActiveRecord::Base
     raise("Cannot publish an already published version") unless self.is_template
     
     published_form = nil;
+
+    return if not valid?
     
     begin
       transaction do

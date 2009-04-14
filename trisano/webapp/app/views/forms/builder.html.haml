@@ -70,7 +70,7 @@
             = h @form.status
             &nbsp;
             - if @form.errors.empty?
-              - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
+              - publish_form_tag do
                 = submit_tag('Publish', :id => 'publish_btn', :class => 'form_button')
                 = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
         %td

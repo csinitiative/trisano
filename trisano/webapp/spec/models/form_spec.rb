@@ -49,9 +49,11 @@ describe Form do
     end
 
     it 'should replace spaces w/ underscores' do
-      @form.short_name = 'some name'
-      @form.save_and_initialize_form_elements.should be_true
-      @form.short_name.should eql('some_name')
+      Form.transaction do
+        @form.short_name = 'some name'
+        @form.save_and_initialize_form_elements.should_not be_nil
+        @form.short_name.should eql('some_name')
+      end
     end
       
   end
@@ -1212,7 +1214,6 @@ describe Form do
   end
 
   describe 'Form#next_tree_id' do
-
     it 'should return tree_ids in sequence, even when called multiple times in a transaction' do
       Form.transaction do
         first_tree_id = Form.next_tree_id
@@ -1221,5 +1222,27 @@ describe Form do
       end
     end
   end
-  
+
+  describe 'publishing a deactivated' do
+    it 'should fail if short name already in use' do      
+      Form.transaction do
+        # publish a form and deactivate it
+        f1 = Form.new :name => 'First form', :short_name => 'first_form', :event_type => 'morbidity_event'
+        f1.save_and_initialize_form_elements.should_not be_nil
+        f1.publish.should_not be_nil
+        f1.deactivate.should_not be_nil
+        
+        # publish another form w/ the same short name
+        f2 = Form.new :name => 'Second form', :short_name => 'first_form', :event_type => 'morbidity_event'
+        f2.save_and_initialize_form_elements.should_not be_nil
+        f2.publish.should_not be_nil
+        
+        # publishing the forst form should fail
+        f1.publish.should be_nil
+        f1.errors.on(:short_name).should_not be_nil
+      end
+    end
+  end
+
+
 end
