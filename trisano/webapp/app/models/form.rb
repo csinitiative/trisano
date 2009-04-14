@@ -28,6 +28,7 @@ class Form < ActiveRecord::Base
   has_many :form_references
   
   validates_presence_of :name, :event_type
+  validates_presence_of :short_name, :if => :is_template
   
   def form_element_cache
     @form_element_cache ||=  FormElementCache.new(form_base_element)

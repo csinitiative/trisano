@@ -24,14 +24,19 @@ describe Form do
     @form = Form.new
     @form.name = "Test Form"
     @form.event_type = 'morbidity_event'
+    @form.short_name = 'test_form'
   end
 
   it "should be valid" do
     @form.should be_valid
   end
 
-  it 'should have a short_name' do
-    @form.respond_to?(:short_name).should be_true
+  describe 'short_name' do
+    it 'should exist' do
+      @form.short_name = nil
+      @form.save_and_initialize_form_elements.should_not be_true
+      @form.errors.on(:short_name).should be_true
+    end
   end
   
   describe "when created with save_and_initialize_form_elements" do
@@ -71,7 +76,7 @@ describe Form do
       fixtures :diseases
 
       it "should allow a form to be associated with one disease" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form", :event_type => 'morbidity_event')
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 1
@@ -79,7 +84,7 @@ describe Form do
       end
 
       it "should allow a form to be associated with multiple diseases" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form", :event_type => 'morbidity_event')
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 2
@@ -110,6 +115,7 @@ describe Form do
       form = Form.new
       form.name = "Test Form"
       form.event_type = 'morbidity_event'
+      form.short_name = 'test_form'
       def form.structural_errors
         return ["Bad error"]
       end
@@ -1016,7 +1022,7 @@ describe Form do
       @user = users(:default_user)
       User.stub!(:current_user).and_return(@user)
 
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
       @form.save_and_initialize_form_elements
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
@@ -1121,7 +1127,7 @@ describe Form do
   describe "when deactivating a form" do
 
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
       @form.save_and_initialize_form_elements.should be_true
     end
 

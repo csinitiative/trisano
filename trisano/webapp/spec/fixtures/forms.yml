@@ -9,6 +9,7 @@ test_form:
   jurisdiction_id: 
   status: "Live"
   event_type: "morbidity_event"
+  short_name: "m_test_form"
 
 anthrax_form_all_jurisdictions_1:
   id: 2
@@ -58,6 +59,7 @@ checken_pox_TB_form_for_LHD_2:
   is_template: true
   status: "Live"
   event_type: "morbidity_event"
+  short_name: "m_chicken_pox"
   
 hep_a_form:
   id: 8
@@ -67,6 +69,7 @@ hep_a_form:
   is_template: true
   status: "Live"
   event_type: "morbidity_event"
+  short_name: "m_hep_a"
 
 anthrax_form_for_contact_event:
   id: 9
@@ -84,3 +87,4 @@ hep_b_form:
   is_template: true
   status: "Live"
   event_type: "morbidity_event"
+  short_name: "m_hep_b"
