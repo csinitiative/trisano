@@ -91,7 +91,7 @@ describe Answer do
   describe 'when saving an answer to a multi-valued question' do
 
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'answer_1')
       @form.save_and_initialize_form_elements
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
