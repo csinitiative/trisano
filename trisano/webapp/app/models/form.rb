@@ -184,6 +184,7 @@ class Form < ActiveRecord::Base
         copied_form = self.clone
         copied_form.name << " (Copy)"
         copied_form.short_name << "_copy"
+        copied_form.ensure_short_name_unique
         copied_form.created_at = nil
         copied_form.updated_at = nil
         copied_form.status = 'Not Published'
@@ -201,6 +202,12 @@ class Form < ActiveRecord::Base
       logger.error ex
       return nil
     end    
+  end
+
+  def ensure_short_name_unique
+    return if self.short_name.nil?    
+    count = Form.count(:conditions => ['short_name LIKE ?', "#{short_name}%"]).to_i
+    self.short_name = self.short_name + count.to_s if count > 0
   end
   
   # Operates on a template for which there is at least one published

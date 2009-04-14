@@ -46,12 +46,13 @@ describe 'copying forms' do
   it 'should build the form' do
     name = "Patient first name"
     add_core_field_config(@browser, name)
-    add_question_to_before_core_field_config(@browser, name, {:question_text => 'b4 quest', :data_type => "Single line text", :help_text => 'b4 text'})
-    add_question_to_after_core_field_config(@browser, name, {:question_text => 'aft quest', :data_type => "Single line text", :help_text => 'aft text'})
+    add_question_to_before_core_field_config(@browser, name, {:question_text => 'b4 quest', :data_type => "Single line text", :help_text => 'b4 text', :short_name => 'b4_text'})
+    add_question_to_after_core_field_config(@browser, name, {:question_text => 'aft quest', :data_type => "Single line text", :help_text => 'aft text', :short_name => 'aft_text'})
     add_section_to_view(@browser, 'Default View', {:section_name => 'Section 1'})
     add_question_to_section(@browser, 'Section 1', 
       :question_text => 'drop down question',
-      :data_type => "Drop-down select list")
+      :data_type => "Drop-down select list",
+      :short_name => 'drop_down_question')
     add_value_set_to_question(@browser,
       'drop down question',
       'Yes/No/Maybe',
