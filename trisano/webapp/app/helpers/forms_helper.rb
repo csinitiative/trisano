@@ -624,10 +624,14 @@ module FormsHelper
     result
   end
 
-  def publish_form_tag(&block)
-    form_remote_tag(:url => {:action => 'publish', :id => @form.id}, 
+  def publish_form_button
+    result =  form_remote_tag(:url => {:action => 'publish', :id => @form.id}, 
                     :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();",
-                    :complete => "$('publish_btn').value = 'Publish'; $('spinner').hide();", &block)
+                    :complete => "$('publish_btn').value = 'Publish'; $('spinner').hide();")
+    result << submit_tag('Publish', :id => 'publish_btn', :class => 'form_button')
+    result << image_tag('redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;")
+    result << "</form>"
+    result
   end
 
   def set_export_column_on(element)

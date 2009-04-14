@@ -70,9 +70,7 @@
             = h @form.status
             &nbsp;
             - if @form.errors.empty?
-              - publish_form_tag do
-                = submit_tag('Publish', :id => 'publish_btn', :class => 'form_button')
-                = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
+              = publish_form_button
         %td
           = h @form.short_name
 #rot
