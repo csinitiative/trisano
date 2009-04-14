@@ -40,6 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.admin 'admin', :controller => 'admin'
+  map.analysis 'analysis', :controller => 'analysis'
   map.open_library 'forms/import', :controller => 'forms', :action => 'import'
   map.open_library 'forms/library_admin/:type', :controller => 'forms', :action => 'library_admin'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
