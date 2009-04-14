@@ -27,6 +27,10 @@ Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
   @question_element.save_and_add_to_form
 end
 
+Given(/^the library contains a question with the same short name$/) do
+  @library_element = @question_element.add_to_library
+end
+
 When(/^I try to add a question to the default section without providing a short name$/) do
   add_question_to_view(@browser, "Default View", {
       :question_text => "Question without short name?",
@@ -60,6 +64,10 @@ When(/^I try to edit the question$/) do
   wait_for_element_present("edit-question-form", @browser)
 end
 
+When(/^I try to add the question from the library$/) do
+  add_question_from_library(@browser, @library_element.question.question_text)
+end
+
 Then(/^the new question short name should be displayed on the screen$/) do
   @browser.is_text_present(@short_name).should be_true
 end
@@ -69,7 +77,4 @@ Then(/^the short name should be read-only$/) do
   @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_question_text')]").should be_true
   @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_short_name')]").should be_false
 end
-
-
-
 

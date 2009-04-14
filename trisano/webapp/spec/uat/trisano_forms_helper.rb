@@ -377,6 +377,15 @@ module TrisanoFormsHelper
     # Debt: Find something to do an assertion off of
   end
 
+  def add_question_from_library(browser, question_text)
+    browser.click "link=Add question to tab"
+    wait_for_element_present("new-question-form")
+    browser.click("link=Show all groups")
+    sleep(2) # Debt: If this UI sticks, add something to key off of instead of using this sleep
+    browser.click "link=#{question_text}"
+    sleep(2) # Debt: If this UI sticks, add something to key off of instead of using this sleep
+  end
+
   # The delete helpers that follow could be dried up a bit, passing through to a single
   # delete_element method, but that would probably involve synching up the ids used
   # on the action links so they use underscores instead of dashes as separators:
