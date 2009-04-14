@@ -26,6 +26,34 @@ describe QuestionElement do
   it "should be valid" do
     @question_element.should be_valid
   end
+
+  describe 'as a new record with no parent_element_id or form_id' do
+    it 'should be valid as a new question for the library' do
+      @question_element.question_element_state.should == :copying_question_to_library
+    end
+  end
+
+  describe 'as a new record with a parent_element_id' do
+    it 'should be valid as a new question on a form' do
+      @question_element.parent_element_id = 1
+      @question_element.question_element_state.should == :new_question_on_form
+    end
+  end
+
+  describe 'as a new record with a form_id and no parent_element_id' do
+    it 'should be valid as a new question on a form, copied from the library' do
+      @question_element.form_id = 1
+      @question_element.question_element_state.should == :copying_question_from_library
+    end
+  end
+
+  describe 'as an existing record with a parent_element_id' do
+    it 'should be valid as an edit on an existing form' do
+      @question_element.save!
+      @question_element.form_id = 1
+      @question_element.question_element_state.should == :edit_question_on_form
+    end
+  end
   
   it "should determine if it is multi-valued and empty" do
     
@@ -111,7 +139,25 @@ describe QuestionElement do
       question_element.save_and_add_to_form.should be_nil
       question_element.errors.should_not be_empty
     end
-    
+
+
+    it 'should ensure that the short name is unique across the form' do
+      question_element = QuestionElement.new({
+          :parent_element_id => @section_element.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+        })
+
+      question_element.save_and_add_to_form.should_not be_nil
+
+      second_question_element = QuestionElement.new({
+          :parent_element_id => @section_element.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+        })
+
+      second_question_element.save_and_add_to_form.should be_nil
+      second_question_element.errors.should_not be_empty
+    end
+
   end
   
   describe "when updated or deleted" do
@@ -126,34 +172,59 @@ describe QuestionElement do
           :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
         })
-      @question_element.parent_element_id = @section_element.id
+
+      @second_question_element = QuestionElement.new({
+          :parent_element_id => @section_element.id,
+          :question_attributes => {:question_text => "Are you sure?", :data_type => "single_line_text", :short_name => "sure"}
+        })
+
+      @question_element.save_and_add_to_form.should_not be_nil
+      @second_question_element.save_and_add_to_form.should_not be_nil
     end
     
     it "should succeed if form validation passes on update" do
-      @question_element.save_and_add_to_form.should_not be_nil
       @question_element.update_and_validate(:name => "Updated Name").should_not be_nil
       @question_element.name.should eql("Updated Name")
       @question_element.errors.should be_empty
     end
 
     it "should fail if form validation fails on update" do
-      @question_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @question_element.update_and_validate(:name => "Updated Name").should be_nil
       @question_element.errors.should_not be_empty
     end
     
     it "should succeed if form validation passes on delete" do
-      @question_element.save_and_add_to_form.should_not be_nil
       @question_element.destroy_and_validate.should_not be_nil
       @question_element.errors.should be_empty
     end
 
     it "should fail if form validation fails on delete" do
-      @question_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
       @question_element.destroy_and_validate.should be_nil
       @question_element.errors.should_not be_empty
+    end
+
+    it 'should succeed if the short name is still unique after the edit' do
+      @question_element.update_and_validate(:question_attributes => {
+          :question_text => "Did you eat the fish?",
+          :data_type => "single_line_text",
+          :short_name => "fishy_still_unique"}
+      ).should_not be_nil
+      
+      @question_element.question.short_name.should eql("fishy_still_unique")
+      @question_element.errors.should be_empty
+    end
+
+    it 'should fail if the new short name is not unique to the form' do
+      @question_element.update_and_validate(:question_attributes => {
+          :question_text => "Did you eat the fish?",
+          :data_type => "single_line_text",
+          :short_name => "sure"}
+      ).should be_nil
+
+      @question_element.errors.should_not be_empty
+      @question_element.errors[:base].include?("The short name entered is already in use on this form.").should be_true
     end
   end
   

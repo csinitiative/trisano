@@ -140,7 +140,7 @@ describe FollowUpElement do
       @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "type_ahead_update"}
         })
       @question_element.save_and_add_to_form.should_not be_nil
       @follow_up_element = FollowUpElement.new
@@ -226,7 +226,7 @@ describe FollowUpElement do
       @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "more_type_ahead"}
         })
       @question_element.save_and_add_to_form.should_not be_nil
       @external_code = ExternalCode.create(:code_name => "gender", :code_description => "Not sure", :the_code => "EH")

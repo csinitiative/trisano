@@ -178,7 +178,7 @@ describe "FormElement working with the library" do
     @question_without_value_set = Question.create(
       :question_text => "Explain.",
       :data_type => "single_line_text",
-       :short_name => "splain")
+      :short_name => "splain")
     @question_element_without_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_without_value_set)
     @group_element.add_child(@question_element_without_value_set)
 
@@ -247,6 +247,19 @@ describe "FormElement working with the library" do
       copied_question = copied_question_element.question
       copied_question.should_not be_nil
       copied_question.question_text.should eql("How's it going?")
+    end
+
+    it 'should not copy a question to a form if the question short name is already in use' do
+      to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
+      to_element.save_and_add_to_form.should_not be_nil
+      existing_question = QuestionElement.new( :parent_element_id => to_element.id, :question_attributes => {
+          :question_text => "How's it going?",
+          :data_type => "drop_down",
+          :short_name => "how" })
+      existing_question.save_and_add_to_form.should_not be_nil
+      to_element.children.size.should eql(1)
+      to_element.copy_from_library(@question_element_with_value_set).should be_nil
+      to_element.children.size.should eql(1)
     end
     
     it "shouldn't copy anything if the form is invalid" do

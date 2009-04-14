@@ -101,8 +101,51 @@ class QuestionElement < FormElement
     end
   end
 
+  def validate
+    if question_element_state.nil?
+       self.errors.add_to_base("The question element is not in a valid state for saving.")
+    else
+      validate_question_short_name_uniqueness unless self.question_element_state == :copying_question_to_library
+    end
+  end
+
+  # Debt. There's gotta be a better way to do all of this.
+  def question_element_state
+    if (self.new_record? && !self.parent_element_id.blank?)
+      return :new_question_on_form
+    elsif (self.new_record? && self.form_id.blank? && self.parent_element_id.blank?)
+      return :copying_question_to_library
+    elsif (self.new_record? && !self.form_id.blank? && self.parent_element_id.blank?)
+      return :copying_question_from_library
+    elsif (!self.new_record? && !self.form_id.nil?)
+      return :edit_question_on_form
+    end
+  end
+  
   private
 
+  def validate_question_short_name_uniqueness
+    conditions = []
+    conditions[0] = "form_id = ? and type = 'QuestionElement'"
+
+    if (self.question_element_state == :new_question_on_form)
+      parent_element = FormElement.find(parent_element_id)
+      conditions << parent_element.form_id
+    elsif (self.question_element_state == :edit_question_on_form)
+      conditions << self.form_id
+      conditions[0] << " and id != ?"
+      conditions << self.id
+    elsif (self.question_element_state == :copying_question_from_library)
+      conditions << self.form_id
+    end
+
+    existing_question_elements = FormElement.find(:all, :conditions => conditions)
+    
+    if (existing_question_elements.detect { |element| element.question.short_name == self.question.short_name })
+      self.errors.add_to_base("The short name entered is already in use on this form. Please choose another.")
+    end
+  end
+  
   # Follow ups can come out of the form element cache, if one has already
   # been initialized, otherwise, go to the database.
   def retrieve_follow_ups(form_elements_cache)

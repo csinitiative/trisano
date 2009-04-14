@@ -39,7 +39,7 @@ class FormElement < ActiveRecord::Base
           parent_element = FormElement.find(parent_element_id)
           self.tree_id = parent_element.tree_id
           self.form_id = parent_element.form_id
-          self.save
+          self.save(false)
           yield if block_given?
           parent_element.add_child(self)
           validate_form_structure
@@ -54,9 +54,12 @@ class FormElement < ActiveRecord::Base
   def update_and_validate(attributes)
     begin
       transaction do
-        self.update_attributes(attributes)
-        self.validate_form_structure
-        return true
+        if self.update_attributes(attributes)
+          self.validate_form_structure
+          return true
+        else
+          return nil
+        end
       end
     rescue
       return nil

@@ -91,11 +91,18 @@ describe Answer do
   describe 'when saving an answer to a multi-valued question' do
 
     before(:each) do
-      @question = Question.new({ :question_text => "Did you eat the fish?", :data_type => "radio_button", :short_name => "fishy"})
-      @question_element = QuestionElement.create({ :question => @question })
-      @value_set_element = ValueSetElement.create({ :name => "Coded Yes/No" })
-      @yes_value_element = ValueSetElement.create({ :name => "Yes", :code => "1" })
-      @no_value_element = ValueSetElement.create({ :name => "No", :code => "2" })
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.save_and_initialize_form_elements
+      @question_element = QuestionElement.new({
+          :parent_element_id => @form.investigator_view_elements_container.id,
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+        })
+
+      @question_element.save_and_add_to_form.should_not be_nil
+      @question = @question_element.question
+      @value_set_element = ValueSetElement.create({ :tree_id => @question_element.tree_id, :form_id => @question_element.form_id, :name => "Coded Yes/No" })
+      @yes_value_element = ValueSetElement.create({  :tree_id => @question_element.tree_id, :form_id => @question_element.form_id,:name => "Yes", :code => "1" })
+      @no_value_element = ValueSetElement.create({  :tree_id => @question_element.tree_id, :form_id => @question_element.form_id, :name => "No", :code => "2" })
 
       @question_element.add_child(@value_set_element)
       @value_set_element.add_child(@yes_value_element)

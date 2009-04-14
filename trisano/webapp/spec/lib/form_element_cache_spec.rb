@@ -41,7 +41,7 @@ describe FormElementCache do
     @follow_up = FollowUpElement.create(:tree_id => tree_id, :form_id => 1, :condition => "Yes", :core_path => "event[something]")
     @question_element_1.add_child(@follow_up)
     
-    @fu_question = Question.create(:question_text => "Eh?", :data_type => "single_line_text", :short_name => "eh")
+    @fu_question = Question.create(:question_text => "fu Eh?", :data_type => "single_line_text", :short_name => "fu_eh")
     @follow_up_q1 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @fu_question)
     @follow_up.add_child(@follow_up_q1)
     
