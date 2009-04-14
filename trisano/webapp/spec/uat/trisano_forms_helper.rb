@@ -62,13 +62,14 @@ module TrisanoFormsHelper
     end
   end
 
-  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity event')
+  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity event', short_name=nil)
     browser.open "/trisano/cmrs"
     browser.click "link=FORMS"
     browser.wait_for_page_to_load($load_time)
     browser.click "//input[@value='Create new form']"
     browser.wait_for_page_to_load($load_time)
     browser.type "form_name", form_name
+    browser.type "form_short_name", short_name || form_name
     browser.select "form_event_type", "label=#{type}"
     if disease_label.respond_to?(:each)
       disease_label.each { |label| browser.click(label.tr(" ", "_")) }
@@ -89,6 +90,7 @@ module TrisanoFormsHelper
 
   def edit_form_and_go_to_builder(browser, form_attributes ={})
     browser.type "form_name", form_attributes[:form_name] unless form_attributes[:form_name].nil?
+    browser.type "form_short_name", form_attributes[:short_name] unless form_attributes[:short_name].nil?
     browser.select "form_event_type", "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
     #puts "label=#{form_attributes[:event_type]}" unless form_attributes[:event_type].nil?
     unless form_attributes[:disease].nil?

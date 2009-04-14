@@ -34,6 +34,7 @@
       %th Diseases
       %th Jurisdiction
       %th Event Type
+      %th Short Name
     %tr
       %td.forminformation
         .formname
@@ -58,6 +59,9 @@
         = h @form.event_type.humanize
         .status
           = h @form.status
+      %td
+        = h @form.short_name        
+        
 
 #rot
   %p

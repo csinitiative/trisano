@@ -36,6 +36,7 @@
       %th Diseases
       %th Jurisdiction
       %th Event Type
+      %th Short Name
     - for form in @forms
       %tr.roll
         %td.forminformation
@@ -70,3 +71,5 @@
           = h form.event_type.humanize
           .status
             = h form.status
+        %td
+          = h form.short_name

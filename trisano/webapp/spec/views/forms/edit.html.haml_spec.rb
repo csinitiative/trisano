@@ -24,6 +24,7 @@ describe "/forms/edit.html.haml" do
   before do
     @form = mock_model(Form)
     @form.stub!(:name).and_return("MyString")
+    @form.stub!(:short_name).and_return('short_name')
     @form.stub!(:description).and_return("MyString")
     @form.stub!(:disease_id).and_return(1)
     @form.stub!(:jurisdiction_id).and_return(2)

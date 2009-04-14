@@ -49,7 +49,7 @@ describe CoreViewElement do
     end
     
     it "should return only available core view names when some are in use" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'cvespec')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'cvespec_2')
       form.save_and_initialize_form_elements
       demographic_core_config = CoreViewElement.new(:parent_element_id => form.core_view_elements_container.id, :name => "Demographics")
       clinical_core_config = CoreViewElement.new(:parent_element_id => form.core_view_elements_container.id, :name => "Clinical")

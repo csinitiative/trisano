@@ -661,6 +661,10 @@ describe Form do
     it "should append ' (Copy)' to the new form name" do
       @copied_form.name.should eql(@original_form.name + " (Copy)")
     end
+
+    it "should append '_copy' to the short name" do
+      @copied_form.short_name.should eql(@original_form.short_name + '_copy')
+    end
     
     it 'should match the original description' do
       @copied_form.description.should eql(@original_form.description)

@@ -34,6 +34,7 @@
       %th Diseases
       %th Jurisdiction
       %th Event Type
+      %th Short Name
       %tr
         %td.forminformation
           .formname
@@ -72,7 +73,8 @@
               - form_remote_tag :url => {:action => 'publish', :id => @form.id}, :loading => "$('publish_btn').disabled = 'disabled';$('publish_btn').value = 'Publishing...';$('spinner').show();" do
                 = submit_tag('Publish', :id => 'publish_btn', :class => 'form_button')
                 = image_tag 'redbox_spinner.gif', :id => 'spinner', :style => "height: 16px; width: 16px; display: none;"
-
+        %td
+          = h @form.short_name
 #rot
   - if @form.errors.empty?
     %ul.horizontal

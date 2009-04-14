@@ -32,7 +32,12 @@ class Form < ActiveRecord::Base
   validates_presence_of :name, :event_type
   validates_presence_of :short_name, :if => :is_template
   validates_each :short_name, :if => :is_template do |record, attr, value|
-    if self.find(:first, :conditions => ['id != ? AND short_name = ? AND is_template = ? AND status != ?', record.id, value, true, 'Inactive'])
+    conditions = ['short_name = ? AND is_template = ? AND status != ?', value, true, 'Inactive']
+    if not record.new_record?
+      conditions[0] += ' AND id != ?'
+      conditions << record.id
+    end
+    if value && self.find(:first, :conditions => conditions)
       record.errors.add attr, "must be unique across active forms."
     end
   end
@@ -176,6 +181,7 @@ class Form < ActiveRecord::Base
       transaction do
         copied_form = self.clone
         copied_form.name << " (Copy)"
+        copied_form.short_name << "_copy"
         copied_form.created_at = nil
         copied_form.updated_at = nil
         copied_form.status = 'Not Published'
