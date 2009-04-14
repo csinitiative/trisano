@@ -25,3 +25,21 @@ Feature: All questions on a form must have a unique short name
     When I go to the Builder interface for the form
     And I try to add a question to the default section providing a short name that is already in use
     Then I should be presented with the error message "The short name entered is already in use on this form. Please choose another."
+
+  Scenario: Editing a question to change its short name
+    Given I am logged in as a super user
+    And a form exists with the name African Tick Bite Form (yet_another_atbf_form) for a Morbidity event with the disease African Tick Bite Fever
+    And that form has a question with the short name "i_am_a_short_name"
+    When I go to the Builder interface for the form
+    And I edit that question to change its short name to "i_am_a_new_short_name"
+    Then I should not be presented with an error message
+    And the new question short name should be displayed on the screen
+
+  Scenario: Trying to edit a question short name after publishing a form
+    Given I am logged in as a super user
+    And a published form exists with the name African Tick Bite Form (yet_another_atbf_form) for a Morbidity event with the disease African Tick Bite Fever
+    And that form has a question with the short name "i_am_a_short_name"
+    When I go to the Builder interface for the form
+    And I try to edit the question
+    Then the short name should be read-only
+

@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
-  question_element = QuestionElement.new({
+  @question_element = QuestionElement.new({
       :parent_element_id => @form.investigator_view_elements_container.children[0].id,
       :question_attributes => {
         :question_text => "I have a short name?",
@@ -24,7 +24,7 @@ Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
         :short_name => short_name
       }
     })
-  question_element.save_and_add_to_form
+  @question_element.save_and_add_to_form
 end
 
 When(/^I try to add a question to the default section without providing a short name$/) do
@@ -49,3 +49,27 @@ When(/^I try to add a question to the default section providing a short name tha
       :data_type => "Single line text"
     }, true)
 end
+
+When(/^I edit that question to change its short name to "(.+)"$/) do |short_name|
+  @short_name = short_name
+  edit_question_by_id(@browser, @question_element.id, { :short_name => short_name })
+end
+
+When(/^I try to edit the question$/) do
+  @browser.click("edit-question-#{@question_element.id}")
+  wait_for_element_present("edit-question-form", @browser)
+end
+
+Then(/^the new question short name should be displayed on the screen$/) do
+  @browser.is_text_present(@short_name).should be_true
+end
+
+Then(/^the short name should be read-only$/) do
+  @browser.is_text_present(@short_name).should be_true
+  @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_question_text')]").should be_true
+  @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_short_name')]").should be_false
+end
+
+
+
+

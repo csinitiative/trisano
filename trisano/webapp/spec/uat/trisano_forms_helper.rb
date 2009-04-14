@@ -201,6 +201,25 @@ module TrisanoFormsHelper
     end
   end
 
+  def edit_question_by_id(browser, question_element_id, question_attributes={}, expect_error=false)
+    browser.click("edit-question-#{question_element_id}")
+    wait_for_element_present("edit-question-form", browser)
+    fill_in_question_attributes(browser, question_attributes, { :mode => :edit })
+    browser.click "//input[contains(@id, 'edit_question_submit')]"
+
+    unless expect_error
+      wait_for_element_not_present("edit-question-form", browser)
+    else
+      sleep 1
+    end
+
+    if browser.is_text_present(question_attributes[:question_text])
+      return true
+    else
+      return false
+    end
+  end
+
   # Takes the question text of the question to which the follow-up should be added and the follow-up's attributes
   def add_follow_up_to_question(browser, question_text, condition)
     return add_follow_up_to_element(browser, question_text, QUESTION_ID_PREFIX, condition)

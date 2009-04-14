@@ -805,24 +805,18 @@ module TrisanoHelper
   
   def add_question_to_element(browser, element_name, element_id_prefix, question_attributes, expect_error=false)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
-    fill_in_question_attributes(browser, element_id, question_attributes, expect_error)
+    add_question_attributes(browser, element_id, question_attributes, expect_error)
   end
   
   def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
     element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
-    fill_in_question_attributes(browser, element_id, question_attributes)
+    add_question_attributes(browser, element_id, question_attributes)
   end
-  
-  def fill_in_question_attributes(browser, element_id, question_attributes, expect_error=false)
+
+  def add_question_attributes(browser, element_id, question_attributes, expect_error=false)
     browser.click("add-question-#{element_id}")
     wait_for_element_present("new-question-form", browser)
-    browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
-    browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}")
-    browser.select("question_element_export_column_id", "label=#{question_attributes[:export_column_id]}") if question_attributes.include? :export_column_id
-    browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
-    browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
-    browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
-    browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
+    fill_in_question_attributes(browser, question_attributes)
     browser.click "//input[contains(@id, 'create_question_submit')]"
 
     unless expect_error
@@ -830,12 +824,22 @@ module TrisanoHelper
     else
       sleep 1
     end
-    
+
     if browser.is_text_present(question_attributes[:question_text])
       return true
     else
       return false
     end
+  end
+
+  def fill_in_question_attributes(browser, question_attributes, options={ :mode => :add })
+    browser.type("question_element_question_attributes_question_text", question_attributes[:question_text]) if question_attributes.include? :question_text
+    browser.select("question_element_question_attributes_data_type", "label=#{question_attributes[:data_type]}") unless options[:mode] == :edit
+    browser.select("question_element_export_column_id", "label=#{question_attributes[:export_column_id]}") if question_attributes.include? :export_column_id
+    browser.select("question_element_question_attributes_style", "label=#{question_attributes[:style]}") if question_attributes.include? :style
+    browser.click("question_element_is_active_#{question_attributes[:is_active].to_s}") if question_attributes.include? :is_active
+    browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
+    browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
   end
   
   def add_follow_up_to_element(browser, element_name, element_id_prefix, condition, core_label=nil)
