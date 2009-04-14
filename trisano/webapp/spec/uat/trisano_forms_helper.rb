@@ -429,10 +429,22 @@ module TrisanoFormsHelper
   end
 
   def publish_form(browser)
-    browser.click '//input[@value="Publish"]'
-    return false if browser.is_editable('//input[@value="Publishing..."]')
+    click_publish_button(browser)
     browser.wait_for_page_to_load($publish_time)
     return(browser.is_text_present("Form was successfully published "))
   end
+
+  def publish_form_failure(browser=@browser)
+    click_publish_button(browser).should be_true
+    wait_for_element_present("//div[@id='builder-mods']//p[contains(text(), 'Unable to publish the form')]", browser).should be_true
+    return browser.is_text_present("Short name is already being used by another active form.")
+  end
+
+  def click_publish_button(browser)
+    browser.click '//input[@value="Publish"]'
+    return false if browser.is_editable('//input[@value="Publishing..."]')
+    true
+  end
+
   
 end
