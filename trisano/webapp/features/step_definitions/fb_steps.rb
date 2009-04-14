@@ -1,3 +1,10 @@
+#
+# Basic setup
+#
+
+Given(/^a form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
+  @form = create_form(event_type, form_name, form_short_name, disease)
+end
 
 #
 # Basic navigation
@@ -14,7 +21,7 @@ When /^I navigate to the form builder interface$/ do
 end
 
 #
-# Generic helpers
+# Form-creation helpers
 #
 
 When /^I create a new form named (.+) \((.+)\) for a (.+) with the disease (.+)$/ do |form_name, form_short_name, event_type, disease|
@@ -40,6 +47,16 @@ end
 When /^I create the new form$/ do
   submit_form "form_submit"
 end
+
+#
+# Question-creation helpers
+#
+
+When /^I enter the question text \"(.+)\"$/ do |question_text|
+  fill_in "question_element_question_attributes_question_text", :with => question_text
+end
+
+
 
 Then /^I should be able to create the new form and see the form name (.+)$/ do |form_name|
   save_new_form(form_name)

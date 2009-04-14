@@ -6,8 +6,7 @@ Feature: All questions on a form must have a unique short name
 
   Scenario: Creating a new question
     Given I am logged in as a super user
+    And a form exists with the name African Tick Bite Form (atbf_form) for a Morbidity event with the disease African Tick Bite Fever
 
-    When I create a new form named African Tick Bite Form (atbf_form) for a Morbidity event with the disease African Tick Bite Fever
-    And I navigate to the form builder interface
-
+    When I navigate to the form builder interface
 
