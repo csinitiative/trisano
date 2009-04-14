@@ -29,6 +29,10 @@ describe Form do
   it "should be valid" do
     @form.should be_valid
   end
+
+  it 'should have a short_name' do
+    @form.respond_to?(:short_name).should be_true
+  end
   
   describe "when created with save_and_initialize_form_elements" do
     
