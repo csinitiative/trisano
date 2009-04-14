@@ -1499,6 +1499,7 @@ describe Event, 'cloning an event' do
       form = Form.new
       form.event_type = "morbidity_event"
       form.name = "AIDS Form"
+      form.short_name = 'event_spec_aids'
       form.disease_ids = [diseases(:chicken_pox).id]
       form.save_and_initialize_form_elements
       question_element = QuestionElement.new(

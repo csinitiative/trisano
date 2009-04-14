@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CoreFieldElement do
  
   before(:each) do
-    @form = Form.new(:name => 'Test form', :event_type => 'morbidity_event')
+    @form = Form.new(:name => 'Test form', :event_type => 'morbidity_event', :short_name => 'cfespec')
     @form.save_and_initialize_form_elements
     @core_field_element = CoreFieldElement.new
     MorbidityEvent.stub!(:exposed_attributes).and_return({ 'key_1' => {:name => 'field_1', :fb_accessible => true}, 

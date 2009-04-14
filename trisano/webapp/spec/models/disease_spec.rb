@@ -54,7 +54,8 @@ describe Disease do
     form = Form.new({
         :name => "Test Form",
         :event_type => "morbidity_event",
-        :disease_ids => [@disease.id]
+        :disease_ids => [@disease.id],
+        :short_name => 'disease_spec_short'
       }
     )
     

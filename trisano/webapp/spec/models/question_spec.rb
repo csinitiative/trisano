@@ -103,7 +103,7 @@ describe Question do
   describe 'when on a published form' do
     
     it 'should not allow edits to the short name' do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'question_spec_short')
       @form.save_and_initialize_form_elements
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,

@@ -19,6 +19,8 @@ require 'zip/zip'
 require 'zip/zipfilesystem'
 
 class Form < ActiveRecord::Base
+  before_validation :replace_spaces_in_short_name
+
   has_and_belongs_to_many :diseases, :order => "disease_id"
   belongs_to :jurisdiction, :class_name => "PlaceEntity", :foreign_key => "jurisdiction_id"
   
@@ -29,7 +31,12 @@ class Form < ActiveRecord::Base
   
   validates_presence_of :name, :event_type
   validates_presence_of :short_name, :if => :is_template
-  
+  validates_each :short_name, :if => :is_template do |record, attr, value|
+    if self.find(:first, :conditions => ['id != ? AND short_name = ? AND is_template = ? AND status != ?', record.id, value, true, 'Inactive'])
+      record.errors.add attr, "must be unique across active forms."
+    end
+  end
+
   def form_element_cache
     @form_element_cache ||=  FormElementCache.new(form_base_element)
   end
@@ -456,6 +463,10 @@ class Form < ActiveRecord::Base
   def elements_last_updated
     element = FormElement.find(:first, :conditions => ["form_id = ?", self.id], :order => "updated_at DESC")
     element.updated_at
+  end
+
+  def replace_spaces_in_short_name
+    self.short_name = self.short_name.gsub(/ /, '_') if self.short_name
   end
   
   private

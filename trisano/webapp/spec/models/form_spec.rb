@@ -37,6 +37,23 @@ describe Form do
       @form.save_and_initialize_form_elements.should_not be_true
       @form.errors.on(:short_name).should be_true
     end
+
+    it 'should be unique across active templates' do
+      @form.save_and_initialize_form_elements
+
+      form2 = Form.new
+      form2.name = "Test Form"
+      form2.event_type = 'morbidity_event'
+      form2.save_and_initialize_form_elements.should be_nil
+      form2.errors.on(:short_name).should be_true
+    end
+
+    it 'should replace spaces w/ underscores' do
+      @form.short_name = 'some name'
+      @form.save_and_initialize_form_elements.should be_true
+      @form.short_name.should eql('some_name')
+    end
+      
   end
   
   describe "when created with save_and_initialize_form_elements" do
@@ -76,7 +93,7 @@ describe Form do
       fixtures :diseases
 
       it "should allow a form to be associated with one disease" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => Digest::MD5::hexdigest(DateTime.now.to_s))
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 1
@@ -84,7 +101,7 @@ describe Form do
       end
 
       it "should allow a form to be associated with multiple diseases" do
-        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
+        form = Form.new( :disease_ids => [ diseases(:chicken_pox).id, diseases(:tuberculosis).id ], :name => "Test Form", :event_type => 'morbidity_event', :short_name => Digest::MD5::hexdigest(DateTime.now.to_s))
         lambda { form.save_and_initialize_form_elements }.should_not raise_error()
         form = Form.find(form.id)
         form.diseases.length.should == 2
@@ -115,7 +132,7 @@ describe Form do
       form = Form.new
       form.name = "Test Form"
       form.event_type = 'morbidity_event'
-      form.short_name = 'test_form'
+      form.short_name = Digest::MD5::hexdigest(DateTime.now.to_s)
       def form.structural_errors
         return ["Bad error"]
       end
@@ -1022,7 +1039,7 @@ describe Form do
       @user = users(:default_user)
       User.stub!(:current_user).and_return(@user)
 
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => Digest::MD5::hexdigest(DateTime.now.to_s))
       @form.save_and_initialize_form_elements
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
@@ -1127,7 +1144,7 @@ describe Form do
   describe "when deactivating a form" do
 
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'test_form')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => Digest::MD5::hexdigest(DateTime.now.to_s))
       @form.save_and_initialize_form_elements.should be_true
     end
 

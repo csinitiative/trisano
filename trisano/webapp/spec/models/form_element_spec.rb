@@ -59,7 +59,7 @@ end
 
 describe "Quesiton FormElement" do
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'form_element_short')
     @form.save_and_initialize_form_elements
     @question_element = QuestionElement.new({
         :parent_element_id => @form.investigator_view_elements_container.id,
@@ -146,7 +146,7 @@ end
 describe "FormElement working with the library" do
   
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'form_element_short_2')
     @form.save_and_initialize_form_elements
 
     @group_tree_id = 9999
@@ -416,7 +416,7 @@ end
 
 describe "when executing an operation that requires form element structure validation" do
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'form_element_short_3')
     @form.save_and_initialize_form_elements
     @element = SectionElement.new(:name => "Test")
     @element.parent_element_id = @form.investigator_view_elements_container.children[0]

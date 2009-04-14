@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ViewElement do
   before(:each) do
-    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'view_ele')
     @form.save_and_initialize_form_elements
     @view_element = ViewElement.new
     @view_element.name = "Test Tab"

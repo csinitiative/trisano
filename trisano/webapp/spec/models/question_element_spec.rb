@@ -82,7 +82,7 @@ describe QuestionElement do
   describe "when created with 'save and add to form'" do
 
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_element_short')
       @form.save_and_initialize_form_elements
       @section_element = SectionElement.new(:name => "Test")
       @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
@@ -163,7 +163,7 @@ describe QuestionElement do
   describe "when updated or deleted" do
       
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_element_short_2')
       @form.save_and_initialize_form_elements
       @section_element = SectionElement.new(:name => "Test")
       @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
@@ -233,7 +233,7 @@ describe QuestionElement do
     fixtures :export_names, :export_columns, :export_conversion_values
 
     it "should bootstrap the question with the CDC data type" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_3')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -256,7 +256,7 @@ describe QuestionElement do
     end
     
     it "should bootstrap the value set for a radio button data type" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_4')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -285,7 +285,7 @@ describe QuestionElement do
     end
 
     it "should bootstrap the value set with a blank lead-in value for a drop_down data type" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_5')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -315,7 +315,7 @@ describe QuestionElement do
     end
     
     it "should bootstrap the value set for a check_box data type" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_6')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -344,7 +344,7 @@ describe QuestionElement do
     end
 
     it "should not bootstrap a value set for date data types" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_7')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -366,7 +366,7 @@ describe QuestionElement do
     end
 
     it "should not bootstrap a value set for single_line_text types" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_8')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -387,7 +387,7 @@ describe QuestionElement do
     end
 
     it "should set the size on questions for single_line_text types" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'que_ele_9')
       form.save_and_initialize_form_elements
 
       question_element = QuestionElement.new({
@@ -405,7 +405,7 @@ describe QuestionElement do
     end
     
     it "should not bootstrap a value set for multi_line_text types" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_10')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
@@ -426,7 +426,7 @@ describe QuestionElement do
     end
     
     it "should not bootstrap a value set for phone types" do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'que_ele_11')
       form.save_and_initialize_form_elements
       
       question_element = QuestionElement.new({
