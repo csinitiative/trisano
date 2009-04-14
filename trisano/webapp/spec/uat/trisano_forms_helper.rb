@@ -28,6 +28,11 @@ module TrisanoFormsHelper
     end
   end
 
+  def click_build_form_by_id(browser, id)
+    browser.click "//a[contains(@href, '/trisano/forms/builder/" + id.to_s + "')]"
+    browser.wait_for_page_to_load "30000"
+  end
+
   def click_form_export(browser, name)
     id = get_resource_id(browser, name)
     if id > 0
@@ -149,21 +154,21 @@ module TrisanoFormsHelper
   end
 
   # Takes the name of the tab to which the question should be added and the question's attributes.
-  def add_question_to_view(browser, element_name, question_attributes = {})
-    return add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes)
+  def add_question_to_view(browser, element_name, question_attributes = {}, expect_error=false)
+    return add_question_to_element(browser, element_name, VIEW_ID_PREFIX, question_attributes, expect_error)
   end
 
   # Takes the name of the section to which the question should be added and the question's attributes.
-  def add_question_to_section(browser, element_name, question_attributes = {})
-    return add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes)
+  def add_question_to_section(browser, element_name, question_attributes = {}, expect_error=false)
+    return add_question_to_element(browser, element_name, SECTION_ID_PREFIX, question_attributes, expect_error)
   end
 
   # Takes the name of the follow-up container to which the question should be added and the question's attributes.
-  def add_question_to_follow_up(browser, element_name, question_attributes = {})
+  def add_question_to_follow_up(browser, element_name, question_attributes = {}, expect_error=false)
     #    puts 'element_name: ' + element_name
     #    puts 'FOLLOW_UP_ID_PREFIX: ' + FOLLOW_UP_ID_PREFIX
     #    puts question_attributes.to_s
-    return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes)
+    return add_question_to_element(browser, element_name, FOLLOW_UP_ID_PREFIX, question_attributes, expect_error)
   end
 
   # Takes the name of the before core field confg to which the question should be added and the question's attributes.

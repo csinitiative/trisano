@@ -66,16 +66,6 @@ Spec::Runner.configure do |config|
     @browser.stop unless $dont_kill_browser #in your test, if you don't want the browser to get killed
                                             #set this variable to true
   end
-  
-  def wait_for_element_present(name, browser=nil)
-    browser = @browser.nil? ? browser : @browser
-    !60.times{ break if (browser.is_element_present(name) rescue false); sleep 1 }    
-  end
-  
-  def wait_for_element_not_present(name, browser=nil)
-    browser = @browser.nil? ? browser : @browser
-    !60.times{ break unless (browser.is_element_present(name) rescue true); sleep 1 }
-  end
 
 end
   

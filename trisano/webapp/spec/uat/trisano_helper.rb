@@ -64,6 +64,16 @@ module TrisanoHelper
     PLACE => "place_tab"
   }
 
+  def wait_for_element_present(name, browser=nil)
+    browser = @browser.nil? ? browser : @browser
+    !60.times{ break if (browser.is_element_present(name) rescue false); sleep 1 }
+  end
+
+  def wait_for_element_not_present(name, browser=nil)
+    browser = @browser.nil? ? browser : @browser
+    !60.times{ break unless (browser.is_element_present(name) rescue true); sleep 1 }
+  end
+
   #  Use set_fields after you navigate to any location by passing in a hash of 
   #  fields and values and this method will set them all. It will work for 
   #  updating existing items or creating new ones. cmr_helper_example shows how 
@@ -392,9 +402,12 @@ module TrisanoHelper
   end
     
   def switch_user(browser, user_id)
-    browser.select("user_id", "label=#{user_id}")
-    browser.wait_for_page_to_load "30000"
-    return browser.is_text_present("#{user_id}:")
+    current_user = @browser.get_selected_label("user_id")
+    if current_user != user_id
+      browser.select("user_id", "label=#{user_id}")
+      browser.wait_for_page_to_load
+      return browser.is_text_present("#{user_id}:")
+    end
   end
   
   #TODO
@@ -790,9 +803,9 @@ module TrisanoHelper
     return (result == "true") ? true : false
   end
   
-  def add_question_to_element(browser, element_name, element_id_prefix, question_attributes)
+  def add_question_to_element(browser, element_name, element_id_prefix, question_attributes, expect_error=false)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
-    fill_in_question_attributes(browser, element_id, question_attributes)
+    fill_in_question_attributes(browser, element_id, question_attributes, expect_error)
   end
   
   def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
@@ -800,7 +813,7 @@ module TrisanoHelper
     fill_in_question_attributes(browser, element_id, question_attributes)
   end
   
-  def fill_in_question_attributes(browser, element_id, question_attributes)
+  def fill_in_question_attributes(browser, element_id, question_attributes, expect_error=false)
     browser.click("add-question-#{element_id}")
     wait_for_element_present("new-question-form", browser)
     browser.type("question_element_question_attributes_question_text", question_attributes[:question_text])
@@ -811,7 +824,13 @@ module TrisanoHelper
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
     browser.click "//input[contains(@id, 'create_question_submit')]"
-    wait_for_element_not_present("new-question-form", browser)
+
+    unless expect_error
+      wait_for_element_not_present("new-question-form", browser)
+    else
+      sleep 1
+    end
+    
     if browser.is_text_present(question_attributes[:question_text])
       return true
     else
