@@ -43,3 +43,12 @@ Feature: All questions on a form must have a unique short name
     And I try to edit the question
     Then the short name should be read-only
 
+  Scenario: Trying to copy a question from the library that has a short name that is already in use
+    Given I am logged in as a super user
+    And a published form exists with the name African Tick Bite Form (library_atbf_form) for a Morbidity event with the disease African Tick Bite Fever
+    And that form has a question with the short name "i_am_a_short_name"
+    And the library contains a question with the same short name
+    When I go to the Builder interface for the form
+    And I try to add the question from the library
+    Then I should be presented with the error message "Unable to copy element to form."
+
