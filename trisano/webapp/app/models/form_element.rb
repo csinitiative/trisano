@@ -169,7 +169,7 @@ class FormElement < ActiveRecord::Base
       FormElement.roots(:conditions => ["form_id IS NULL"])
     else
       if options[:direction].to_sym == :to_library
-        FormElement.find_by_sql(["SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE ?", "%#{options[:filter_by]}%"])
+        FormElement.find_by_sql(["SELECT * FROM form_elements WHERE form_id IS NULL AND type = 'GroupElement' and name ILIKE ? ", "%#{options[:filter_by]}%"])
       else
         raise Exception.new("No type specified for a from library filter") if options[:type].blank?
         if (options[:type] == :question_element)
@@ -191,7 +191,7 @@ class FormElement < ActiveRecord::Base
       structural_errors.each do |error|
         errors.add_to_base(error)
       end
-      raise
+      raise errors.full_messages.join("\n")
     end
   end
   

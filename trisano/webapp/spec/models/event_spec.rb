@@ -418,7 +418,7 @@ describe MorbidityEvent do
     it 'should be able to transition from :new to :assigned_to_lhd' do
       @event.should_receive(:jurisdiction).and_return @permissive_jurisdiction
       @event.should_receive(:route_to_jurisdiction)
-      @event.assign_to_lhd
+      @event.assign_to_lhd(nil, nil, nil)
       @event.workflow_state.should == 'assigned_to_lhd'
       @event.current_state.name.should == :assigned_to_lhd
       @event.current_state.events.should == [:assign_to_lhd, :reset_to_new, :accept, :reject]
@@ -428,29 +428,29 @@ describe MorbidityEvent do
       @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
       @event.stub!(:route_to_jurisdiction)
       @event.stub!(:primary_jurisdiction).and_return nil
-      @event.assign_to_lhd
+      @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd
       @event.reset_to_new
       @event.current_state.name.should == :new
-      @event.assign_to_lhd
+      @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd
-      @event.reject
+      @event.reject(nil)
       @event.current_state.name.should == :rejected_by_lhd
-      @event.assign_to_lhd
+      @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd
-      @event.accept
+      @event.accept(nil)
       @event.current_state.name.should == :accepted_by_lhd
-      @event.assign_to_investigator
+      @event.assign_to_investigator(nil)
       @event.current_state.name.should == :assigned_to_investigator
-      @event.reject
+      @event.reject(nil)
       @event.current_state.name.should == :rejected_by_investigator
-      @event.assign_to_investigator
+      @event.assign_to_investigator(nil)
       @event.current_state.name.should == :assigned_to_investigator
-      @event.accept
+      @event.accept(nil)
       @event.current_state.name.should == :under_investigation
-      @event.complete
+      @event.complete(nil)
       @event.current_state.name.should == :investigation_complete
-      @event.approve
+      @event.approve(nil)
       @event.current_state.name.should == :approved_by_lhd
     end
   end
@@ -1499,16 +1499,17 @@ describe Event, 'cloning an event' do
       form = Form.new
       form.event_type = "morbidity_event"
       form.name = "AIDS Form"
-      form.short_name = 'event_spec_aids'
+      form.short_name = 'event_spec_aids'      
       form.disease_ids = [diseases(:chicken_pox).id]
-      form.save_and_initialize_form_elements
+      form.save_and_initialize_form_elements.should_not be_nil
+      form.form_base_element.children_count.should == 3
       question_element = QuestionElement.new(
         {
-          :parent_element_id => form.form_base_element.id,
+          :parent_element_id => form.form_base_element.children[0].id,
           :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text", :short_name => "gives" }
         }
       )
-      question_element.save_and_add_to_form
+      question_element.save_and_add_to_form.should_not be_nil
       form.publish
 
       @org_event = MorbidityEvent.new(@event_hash)
