@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
 
   serialize :event_view_settings, Hash
   serialize :task_view_settings, Hash
+  serialize :shortcut_settings, Hash
 
   after_validation :clear_base_error
   
@@ -145,6 +146,11 @@ class User < ActiveRecord::Base
   def task_view_settings
     settings = read_attribute(:task_view_settings) || {}
     settings.empty? ? {:look_ahead => 0, :look_back => 0} : settings
+  end
+ 
+  def shortcut_settings
+    settings = read_attribute(:shortcut_settings) || {}
+    settings.empty? ? {:configure => "Alt+f1"} : settings
   end
 
   def store_as_task_view_settings(params)    
