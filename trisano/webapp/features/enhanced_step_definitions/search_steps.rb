@@ -1,3 +1,5 @@
+# Example from the Cucumber source
+
 Given 'I am on the Google search page' do
   @browser.open('http://www.google.com/')
 end
