@@ -161,53 +161,65 @@ function contact_parent_address(id) {
   });
 }
 
-function global_shortcuts_init() {
-  shortcut.add("Meta+N", function() {
-    window.location = "/cmrs/new";
-  });
+function shortcuts_init(shortcuts) {
+  //For easy iteration, (maybe a better way? if so, uproot)
+  var map =
+  {
+    'configure': function() {
+      alert("I'm the supervisor, hit me with a taxi number");
+    },
 
-  shortcut.add("Meta+M", function() {
-    window.location = "/forms";
-  });
+    'new': function() {
+      window.location = "/cmrs/new";
+    },
 
-  shortcut.add("Meta+.",function() {
-    window.location = "/search/people";
-  });
+    'forms': function() {
+      window.location = "/forms";
+    },
 
-  shortcut.add("Meta+Question",function(){
-    window.location = "/search/cmrs";
-  });
+    'people': function() {
+      window.location = "/search/people";
+    },
 
-  shortcut.add("Meta+,",function(){
-    window.location = "/cmrs";
-  });
-}
+    'cmr_search': function() {
+      window.location = "/search/cmrs";
+    },
 
-function cmr_shortcuts_init() {
-  shortcut.add("Meta+X", function() {
-    myTabs.set('activeIndex', (
-        myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
-        0 : myTabs.get('activeIndex') + 1
-      ));
+    'cmrs': function() {
+      window.location = "/cmrs";
+    },
 
-    //Grab the first thing to focus in the tab
-    YAHOO.util.Dom.getElementsBy(function(el) {
-        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-  });
+    'navigate_right': function() {
+      myTabs.set('activeIndex', (
+          myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
+          0 : myTabs.get('activeIndex') + 1
+        ));
 
-  shortcut.add("Meta+Z", function() {
-    myTabs.set('activeIndex', (
-        myTabs.get('activeIndex') == 0 ?
-        myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
-      ));
+      //Grab the first thing to focus in the tab
+      YAHOO.util.Dom.getElementsBy(function(el) {
+          return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+        }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+    },
 
-    YAHOO.util.Dom.getElementsBy(function(el) {
-        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-  });
+    'navigate_left': function() {
+      myTabs.set('activeIndex', (
+          myTabs.get('activeIndex') == 0 ?
+          myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
+        ));
 
-  shortcut.add("Meta+S", function() {
-    document.getElementById('save_and_exit_btn').focus();
+      YAHOO.util.Dom.getElementsBy(function(el) {
+          return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
+        }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+    },
+
+    'save': function() {
+      $('save_and_exit_btn').focus();
+    }
+  };
+
+  //Currently implemented by passing in the shortcuts, but we might want to switch to passing
+  //in some JSON with an Ajax.Request if we want to switch shortcuts dynamically.
+  $H(shortcuts).each(function(pair) {
+    shortcut.add(pair.value, map[pair.key]);
   });
 }
