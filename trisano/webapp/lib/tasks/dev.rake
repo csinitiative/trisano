@@ -81,8 +81,18 @@ namespace :trisano do
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
     task :feature_prep do
-     ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
-     ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
+    end
+
+    desc "Run standard features"
+    task :standard_features do
+      sh "cucumber features/standard -n -p standard"
+    end
+
+    desc "Run enhanced features"
+    task :enhanced_features do
+      sh "cucumber features/enhanced -n -p enhanced"
     end
 
   end
