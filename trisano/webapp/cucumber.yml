@@ -1,2 +1,2 @@
-standard: -r features/support/env.rb -r features/support/standard.rb -r features/support/trisano -r features/support/trisano_form_builder -r features/step_definitions 
-enhanced: -r features/support/env.rb -r features/support/enhanced.rb -r features/support/trisano -r features/support/trisano_form_builder -r features/enhanced_step_definitions
+standard: -r features/support/env.rb -r features/support/standard.rb -r features/support/trisano -r features/support/trisano_form_builder -r features/shared_step_definitions -r features/standard_step_definitions
+enhanced: -r features/support/env.rb -r features/support/enhanced.rb -r features/support/trisano -r features/support/trisano_form_builder -r features/shared_step_definitions -r features/enhanced_step_definitions
