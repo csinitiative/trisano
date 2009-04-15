@@ -15,8 +15,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When(/^I go to the Builder interface for the form$/) do
-  @browser.click "link=FORMS"
-  @browser.wait_for_page_to_load 30000
-  click_build_form_by_id(@browser, @form.id)
+When(/^I navigate to the form detail view$/) do
+  visit form_path(@form)
+  response.should contain("Detail View")
+end
+
+Then(/^I should be able to see how many elements there are on the master copy$/) do
+  visit form_path(@form)
+  response.should contain("6 elements")
+end
+
+Then(/^I should be able to see how many questions there are on the master copy$/) do
+  visit form_path(@form)
+  response.should contain("1 question")
+end
+
+Then(/^I should be able to see how many elements there are on the published version$/) do
+  visit form_path(@form)
+  response.should contain("5 elements")
+end
+
+Then(/^I should be able to see how many questions there are on the published version$/) do
+  visit form_path(@form)
+  response.should contain("0 question")
 end
