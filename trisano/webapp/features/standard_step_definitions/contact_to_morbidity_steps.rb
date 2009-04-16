@@ -24,7 +24,7 @@ Given /^a (.+) event for last name (.+) with disease (.+) in jurisdiction (.+)$/
 end
 
 Given /^a published disease form called (.+) for (.+) events with (.+)$/ do |form_name, event_type, disease|
-  create_published_form(event_type, form_name, disease)
+  create_published_form(event_type, form_name, form_name, disease)
 end
 
 Given /^there is a contact named (.+)$/ do |last_name|

@@ -24,8 +24,8 @@ Given /^I am logged in as a user without view or update privileges in Davis Coun
 end
 
 Given /^there are ([0-9]+) morbidity events for a single person with the last name (.+)$/ do | count, last_name |
-  e = PersonEntity.create(:person_attributes => {:last_name => last_name})
-  count.to_i.times { HumanEvent.new_event_from_patient(e).save }
+  e = create_basic_event('morbidity', last_name)
+  count.to_i.times { e.clone_event.save }
 end
 
 When /^I click the "(.+)" link$/ do |link|
