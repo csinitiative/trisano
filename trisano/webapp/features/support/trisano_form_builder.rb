@@ -26,8 +26,8 @@ def create_form(event_type, form_name, form_short_name, disease)
   form
 end
 
-def create_published_form(event_type, form_name, disease)
-  form = create_form(event_type, form_name, disease)
+def create_published_form(event_type, form_name, form_short_name, disease)
+  form = create_form(event_type, form_name, form_short_name, disease)
   form.publish
 end
 

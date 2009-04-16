@@ -1,4 +1,33 @@
+-- Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+--
+-- This file is part of TriSano.
+--
+-- TriSano is free software: you can redistribute it and/or modify it under the
+-- terms of the GNU Affero General Public License as published by the
+-- Free Software Foundation, either version 3 of the License,
+-- or (at your option) any later version.
+--
+-- TriSano is distributed in the hope that it will be useful, but
+-- WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+-- GNU Affero General Public License for more details.
+--
+-- You should have received a copy of the GNU Affero General Public License
+-- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+-- This script creates new denormalized tables from a freshly dumped OLTP
+-- database, using a schema called "staging".
+
 BEGIN;
+    DROP SCHEMA IF EXISTS staging;
+    ALTER SCHEMA public RENAME TO staging;
+    CREATE SCHEMA public;
+COMMIT;
+
+BEGIN;
+
+SET search_path = staging, public;
 
 CREATE OR REPLACE FUNCTION drop_my_object(a text, b text) RETURNS text AS $$
 BEGIN
@@ -7,36 +36,57 @@ BEGIN
 END;
 $$
 LANGUAGE PLPGSQL VOLATILE;
+COMMIT;
 
-SELECT drop_my_object(tablename, 'TABLE') FROM pg_tables WHERE schemaname = 'public' AND tablename IN (
-	'dw_morbidity_events',
-	'dw_contact_events',
-    'dw_secondary_jurisdictions',
-	'dw_place_events',
-	'dw_patients',
-	'dw_events_hospitals',
-	'dw_addresses',				-- Consider altering the table instead of creating a new one
-	'dw_email_addresses',			-- Consider altering the table instead of creating a new one
-	'dw_hospitals_participations',
-	'dw_lab_results',
-	'dw_participations_treatments',
-	'dw_events_treatments',
-	'dw_patients_races',
-    'dw_events_clinicians',
-    'dw_events_diagnostic_facilities',
-    'dw_events_reporting_agencies',
-    'dw_events_reporters',
-    'dw_people_races',
-    'dw_place_events',
-    'dw_encounters',
-    'dw_encounters_labs',
-    'dw_encounters_treatments'
-);
+BEGIN;
+SELECT
+    drop_my_object(tablename, 'TABLE')
+FROM
+    pg_tables t
+WHERE
+    schemaname = 'staging' AND
+    tablename IN (
+        'dw_morbidity_events',
+        'dw_contact_events',
+        'dw_secondary_jurisdictions',
+        'dw_place_events',
+        'dw_patients',
+        'dw_events_hospitals',
+        'dw_addresses',				-- Consider altering the table instead of creating a new one
+        'dw_email_addresses',			-- Consider altering the table instead of creating a new one
+        'dw_hospitals_participations',
+        'dw_lab_results',
+        'dw_participations_treatments',
+        'dw_events_treatments',
+        'dw_patients_races',
+        'dw_events_clinicians',
+        'dw_events_diagnostic_facilities',
+        'dw_events_reporting_agencies',
+        'dw_events_reporters',
+        'dw_people_races',
+        'dw_place_events',
+        'dw_encounters',
+        'dw_encounters_labs',
+        'dw_encounters_treatments'
+    );
+COMMIT;
 
-SELECT drop_my_object(relname, 'SEQUENCE') FROM pg_class WHERE relkind = 'S' AND relname IN (
-    'dw_patients_races_seq'
-);
+BEGIN;
+SELECT
+    drop_my_object(relname, 'SEQUENCE')
+FROM
+    pg_class c
+    INNER JOIN pg_namespace n
+        ON (n.oid = c.relnamespace)
+WHERE
+    relkind = 'S' AND
+    relname IN (
+        'dw_patients_races_seq'
+    ) AND
+    n.nspname = 'public' ;
+COMMIT;
 
+BEGIN;
 CREATE TABLE dw_patients AS			-- "patient" may well be the wrong name for it
 SELECT
 	people.id,
@@ -119,7 +169,7 @@ SELECT
 	oaci.code_description AS outbreak_associated_code,	-- code_description?
 	events.outbreak_name,
 
-	events.event_status,					-- Change this from a code to a text value?
+	-- events.event_status,					-- Change this from a code to a text value?
 	inv.first_name || ' ' || inv.last_name AS investigator,
 	events.event_queue_id,
 	events.acuity,
@@ -251,7 +301,7 @@ SELECT
 	events.other_data_2,
 	disevhosp.code_description AS disease_event_hospitalized,	-- code description?
 
-	events.event_status,					-- Change this from a code to a text value?
+	-- events.event_status,					-- Change this from a code to a text value?
 	inv.first_name || ' ' || inv.last_name AS investigator,
 	events.event_queue_id,					-- do something w/ event queues?
 

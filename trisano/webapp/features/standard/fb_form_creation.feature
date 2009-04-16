@@ -14,5 +14,3 @@ Feature: Forms can be created
     And I check the disease African Tick Bite Fever
 
     Then I should be able to create the new form and see the form name ATBF
-
-
