@@ -24,19 +24,21 @@ SAFE_MODE=0
 
 ## README
 
-# This script uses pg_dump to dump the OLTP databsae (SOURCE_DB_* variables)
-# into a warehouse database (DEST_DB_*). It will run one SQL script before it
+# This script uses pg_dump to dump the OLTP database (SOURCE_DB_* variables)
+# into a warehouse database (DEST_DB_*). It will run one SQL function before it
 # begins processing, and another after the dump completes, for doing the actual
-# data manipulation required. It is expected that the whole process will
-# involve the following steps:
+# data manipulation required. The process involves the following steps
+#
 # 1: dump the data to the public schema,
-# 2: rename the public schema to "staging" or some such
+# 2: rename the public schema to "staging"
 # 3: create a new public schema
 # 4: process the data in the staging schema
-# 5: rename the staging schema once again, to something like warehouse_a or
-#    warehouse_b
+# 5: rename the staging schema once again, to warehouse_a or warehouse_b,
+#    intelligently avoiding overwriting whichever of those two is currently in use
+#    by production
 # 6: alter a set of views used by the actual reporting software to use the
 #    newly-renamed schema instead of whatever they used before
+#
 # In other words, the reporting software only uses views to access the data.
 # These views point at one schema (say, warehouse_a) while warehouse_b is being
 # used for the refresh process. Once warehouse_b is built, the ETL process
@@ -47,19 +49,10 @@ SAFE_MODE=0
 
 ## END OF README
 
-# TODO: Integrate this?
 ETL_SCRIPT=dw.sql
 
 echo "Preparing for ETL process"
-$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME <<PRE_ETL
-    BEGIN;
-    DROP SCHEMA staging CASCADE;
-    COMMIT;
-
-    BEGIN;
-    CREATE SCHEMA staging;
-    COMMIT;
-PRE_ETL
+$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.prepare_etl()"
 
 if [ $? != 0 ] ; then
     echo "Problem preparing for ETL"
@@ -83,43 +76,5 @@ if [ $? != 0 ] ; then
     exit 1
 fi
 
-echo "Swapping schemata"
-CURRENT_SCHEMA=$($PGSQL_PATH/psql -A -t -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -c "SELECT * FROM trisano.current_schema_name" $DEST_DB_NAME)
-
-if [ $? != 0 ]; then
-    if [ $SAFE_MODE = 1 ]; then
-        echo "Exiting to avoid bad assumption"
-        exit 1
-    fi
-    echo "Warehouse tracking table probably doesn't exist. Assuming warehouse_a is currently public"
-    CURRENT_SCHEMA='warehouse_a'
-fi
-if [ $CURRENT_SCHEMA = "warehouse_a" ]; then
-    CURRENT_SCHEMA="warehouse_b"
-else
-    CURRENT_SCHEMA="warehouse_a"
-fi
-
-echo "Destination schema: $CURRENT_SCHEMA"
-$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME <<SWAP_SCHEMAS
-    BEGIN;
-        DROP SCHEMA $CURRENT_SCHEMA CASCADE;
-    COMMIT;
-    BEGIN;
-        DROP TABLE trisano.current_schema_name;
-    COMMIT;
-    BEGIN;
-        CREATE TABLE trisano.current_schema_name (schemaname TEXT);
-        ALTER SCHEMA staging RENAME TO $CURRENT_SCHEMA;
-        INSERT INTO  trisano.current_schema_name VALUES ('$CURRENT_SCHEMA');
-    COMMIT;
-SWAP_SCHEMAS
-
-if [ $? != 0 ]; then
-    echo "Failed to swap schemata"
-    exit 1
-fi
-
-# TODO: Create views
-
-echo "Successfully finished ETL process using schema $CURRENT_SCHEMA"
+echo "Swapping schemas"
+$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()"

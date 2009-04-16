@@ -2,10 +2,7 @@
 -- database, using a schema called "staging".
 
 BEGIN;
-    DROP SCHEMA staging;
-COMMIT;
-
-BEGIN;
+    DROP SCHEMA IF EXISTS staging;
     ALTER SCHEMA public RENAME TO staging;
     CREATE SCHEMA public;
 COMMIT;
