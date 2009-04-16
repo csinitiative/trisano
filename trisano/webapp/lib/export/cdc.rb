@@ -98,9 +98,9 @@ module Export
 
       def write_conversion_for(config, options)
         write(value_converted_using(config),
-              :starting => config.export_column.start_position - 1,
-              :length   => config.export_column.length_to_output,
-              :result   => options[:to] || '')
+          :starting => config.export_column.start_position - 1,
+          :length   => config.export_column.length_to_output,
+          :result   => options[:to] || '')
       end
 
       def value_converted_using(config)
@@ -242,12 +242,18 @@ module Export
            exp_outbreak
            future
            disease_specific_records
-          )
+        )
       end
       
       def to_cdc
         DEFAULT_LOGGER.debug("to_cdc on #{self.inspect}")
-        cdc_export_fields.map { |field| send field }.join
+        cdc_export_fields.map {|field|
+          begin
+            send field
+          rescue 
+            raise "Failed to export event #{self.id} on field named #{field}."
+          end
+        }.join
       end
 
       def future
@@ -265,8 +271,8 @@ module Export
         case_status_export_column = ExportColumn.find_by_export_column_name("CASESTATUS")
         
         cdc_code = ExportConversionValue.find(:first, :conditions => 
-                     ["export_column_id=? and value_from=?", 
-                      case_status_export_column.id, external_code.the_code])
+            ["export_column_id=? and value_from=?",
+            case_status_export_column.id, external_code.the_code])
         cdc_code.value_to
       end
 

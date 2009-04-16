@@ -35,7 +35,10 @@ class CdcEventsController < AdminController
           DEFAULT_LOGGER.error("CDC Export Failed")
           DEFAULT_LOGGER.error($!)
           if RAILS_ENV == "production"
-            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
+            error_msg = "CDC export failed. This frequently occurs because an \n" +
+              "out-of-state event was inadvertently included in the cdc export\n" +
+              "or the value being exported does not have an export value.\n" +
+              "Please examine the specified event and try again. \n#{$!.message}"
           else
             error_msg = $!
           end
@@ -77,7 +80,10 @@ class CdcEventsController < AdminController
           DEFAULT_LOGGER.error("CDC Export Failed")
           DEFAULT_LOGGER.error($!)
           if RAILS_ENV == "production"
-            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
+            error_msg = "CDC export failed. This frequently occurs because an \n" +
+              "out-of-state event was inadvertently included in the cdc export\n" +
+              "or the value being exported does not have an export value.\n" +
+              "Please examine the specified event and try again. \n#{$!.message}"
           else
             error_msg = $!
           end
@@ -104,7 +110,10 @@ class CdcEventsController < AdminController
           DEFAULT_LOGGER.error("CDC Export Failed")
           DEFAULT_LOGGER.error($!)
           if RAILS_ENV == "production"
-            error_msg = "CDC export failed. Please contact support and provide them the following error details: \n#{$!}"
+            error_msg = "CDC export failed. This frequently occurs because an \n" +
+              "out-of-state event was inadvertently included in the cdc export\n" +
+              "or the value being exported does not have an export value.\n" +
+              "Please examine the specified event and try again. \n#{$!.message}"
           else
             error_msg = $!
           end
