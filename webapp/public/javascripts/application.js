@@ -161,12 +161,12 @@ function contact_parent_address(id) {
   });
 }
 
-function shortcuts_init(shortcuts) {
+function shortcuts_init(uid) {
   //For easy iteration, (maybe a better way? if so, uproot)
   var map =
   {
     'configure': function() {
-      alert("I'm the supervisor, hit me with a taxi number");
+      window.location = "users/shortcuts";
     },
 
     'new': function() {
@@ -217,9 +217,13 @@ function shortcuts_init(shortcuts) {
     }
   };
 
-  //Currently implemented by passing in the shortcuts, but we might want to switch to passing
-  //in some JSON with an Ajax.Request if we want to switch shortcuts dynamically.
-  $H(shortcuts).each(function(pair) {
-    shortcut.add(pair.value, map[pair.key]);
+  new Ajax.Request('/users/shortcuts/' + uid, {
+    asynchronous: true,
+    evalScripts:  true,
+    onComplete: function(transport, json) {
+      $H(json).each(function(pair) {
+        shortcut.add(pair.value, map[pair.key]);
+      });
+    },
   });
 }

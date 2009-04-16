@@ -72,6 +72,19 @@ class UsersController < AdminController
     end
   end
 
+  def shortcuts
+    if params[:id]
+      @user = User.find(params[:id])
+      response.headers['X-JSON'] = @user.shortcut_settings.to_json
+      head :ok
+    else
+      @user = User.current_user
+      respond_to do |format|
+        format.html
+      end
+    end
+  end
+
   # PUT /users/1
   # PUT /users/1.xml
   def update
