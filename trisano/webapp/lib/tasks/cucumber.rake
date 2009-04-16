@@ -6,7 +6,7 @@ begin
     t.cucumber_opts = "--format pretty -p standard"
     t.step_list = ["features/shared_step_definitions", "features/standard_step_definitions"]
     t.step_pattern = "*.rb"
-    t.feature_list = ["features/standard"]
+    t.feature_list = ENV["FEATURE"] ? [ENV["FEATURE"]] : ["features/standard"]
     t.feature_pattern = "*.rb"
   end
   

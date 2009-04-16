@@ -16,6 +16,16 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 #
+# Givens
+# 
+
+Given /^I have already created a form with the short name "([^\"]*)"$/ do |short_name|
+  form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  @last_used_short_name = form.short_name
+end
+
+
+#
 # Basic navigation
 #
 
@@ -52,6 +62,16 @@ end
 When /^I create the new form$/ do
   submit_form "form_submit"
 end
+
+When /^I re\-enter the duplicate short name$/ do
+  fill_in "form_short_name", :with => @last_used_short_name 
+end
+
+Then /^I should see error "(.+)"$/ do |msg|
+  response.should have_xpath("//div[@id='errorExplanation']")
+  response.body.should =~ /#{msg}/m
+end
+
 
 #
 # Question-creation helpers
