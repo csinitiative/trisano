@@ -24,6 +24,12 @@ Given /^I have already created a form with the short name "([^\"]*)"$/ do |short
   @last_used_short_name = form.short_name
 end
 
+Given /^I already have a deactivated form with the short name "([^\"]*)"$/ do |short_name|
+  form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  form.publish
+  form.deactivate
+  @last_used_short_name = form.short_name
+end
 
 #
 # Basic navigation

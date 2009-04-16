@@ -37,3 +37,15 @@ Feature: Active forms must have unique short names
     And I press "Create"
 
     Then I should see error "Short name is already being used by another active form."
+
+  Scenario: Creating a form w/ the same short name as a deactivated form
+    Given I am logged in as a super user
+    And I already have a deactivated form with the short name "duplicate_short_name"
+
+    When I navigate to the new form view
+    And I enter a form name of Lipsom
+    And I re-enter the duplicate short name
+    And I select a form event type of Morbidity event
+    And I check the disease African Tick Bite Fever
+
+    Then I should be able to create the new form and see the form name Lipsom
