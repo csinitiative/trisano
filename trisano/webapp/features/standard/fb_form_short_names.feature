@@ -27,7 +27,7 @@ Feature: Active forms must have unique short names
 
   Scenario: Creating a form with a duplicate short name
     Given I am logged in as a super user
-    And I have already created a form with the short name "duplicate_short_name"
+    And I already have a form with the short name "duplicate_short_name"
 
     When I navigate to the new form view
     And I enter a form name of Lipsom
@@ -49,3 +49,19 @@ Feature: Active forms must have unique short names
     And I check the disease African Tick Bite Fever
 
     Then I should be able to create the new form and see the form name Lipsom
+
+  Scenario: Editing a form's short name, before it's been published
+    Given I am logged in as a super user
+    And I already have a form with the short name "edit_me"
+
+    When I navigate to the form edit view
+
+    Then I should be able to fill in the short name field
+
+  Scenario: Editing a form's short name, after it's been published
+    Given I am logged in as a super user
+    And I already have a published form
+
+    When I navigate to the form edit view
+    
+    Then I should not be able to fill in the short name field

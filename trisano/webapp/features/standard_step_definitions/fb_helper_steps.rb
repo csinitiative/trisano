@@ -19,16 +19,21 @@
 # Givens
 # 
 
-Given /^I have already created a form with the short name "([^\"]*)"$/ do |short_name|
-  form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
-  @last_used_short_name = form.short_name
+Given /^I already have a form with the short name "([^\"]*)"$/ do |short_name|
+  @form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  @last_used_short_name = @form.short_name
 end
 
 Given /^I already have a deactivated form with the short name "([^\"]*)"$/ do |short_name|
-  form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
-  form.publish
-  form.deactivate
-  @last_used_short_name = form.short_name
+  @form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  @form.publish
+  @form.deactivate
+  @last_used_short_name = @form.short_name
+end
+
+Given /^I already have a published form$/ do
+  @form = create_form('Morbidity event', 'Already created', 'something_published', 'African Tick Bite Fever')
+  @form.publish
 end
 
 #
@@ -43,6 +48,11 @@ end
 When /^I navigate to the form builder interface$/ do
   visit builder_path(@form)
   response.should contain("Form Builder")
+end
+
+When /^I navigate to the form edit view$/ do
+  visit edit_form_path(@form)
+  response.should contain("Edit Form")
 end
 
 #
@@ -78,6 +88,13 @@ Then /^I should see error "(.+)"$/ do |msg|
   response.body.should =~ /#{msg}/m
 end
 
+Then /^I should be able to fill in the short name field$/ do
+  response.should have_xpath("//input[@id='form_short_name']")
+end
+
+Then /^I should not be able to fill in the short name field$/ do
+  response.should_not have_xpath("//input[@id='form_short_name']")
+end
 
 #
 # Question-creation helpers

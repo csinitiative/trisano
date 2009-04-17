@@ -31,6 +31,7 @@ describe Form do
     @form.should be_valid
   end
 
+
   describe 'short_name' do
     it 'should exist' do
       @form.short_name = nil
@@ -55,7 +56,21 @@ describe Form do
         @form.short_name.should eql('some_name')
       end
     end
-      
+
+    it 'should be editable' do
+      @form.should be_short_name_editable
+      @form.save_and_initialize_form_elements.should_not be_nil
+      @form.should be_short_name_editable
+    end
+
+    it 'should not be editable once a form is published' do
+      @form.save_and_initialize_form_elements.should_not be_nil
+      @form.publish.should_not be_nil
+      @form.should_not be_short_name_editable
+      @form.short_name = 'changed'
+      @form.save_and_initialize_form_elements
+      @form.errors.on(:short_name).should_not be_nil
+    end
   end
   
   describe "when created with save_and_initialize_form_elements" do
@@ -88,6 +103,10 @@ describe Form do
       @form.template_id.should be_nil
       @form.version.should be_nil
       @form.status.should eql("Not Published")
+    end
+
+    it 'should not be published' do
+      @form.save_and_initialize_form_elements
     end
 
     describe "and associating a form with one or more diseases" do
@@ -309,6 +328,10 @@ describe Form do
 
     it "should give itself published status" do
       @form_to_publish.status.should eql("Published")
+    end
+
+    it 'should not be short name editable' do
+      @form_to_publish.should_not be_short_name_editable
     end
     
     it "should give the base form element a tree id" do
@@ -1164,6 +1187,7 @@ describe Form do
       @form.errors.empty?.should be_false
     end
 
+
     it "should not deactivate a form that is already inactive" do
       @published_form = @form.publish
       @published_form.should_not be_nil
@@ -1187,6 +1211,12 @@ describe Form do
       @form.deactivate.should be_true
       @form.errors.empty?.should be_true
       @form.most_recent_version.status.should eql("Archived")
+    end
+
+    it 'should not be short name editable' do
+      @form.publish.should_not be_nil
+      @form.deactivate.should be_true
+      @form.should_not be_short_name_editable
     end
     
   end

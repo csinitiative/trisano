@@ -35,10 +35,14 @@ class Form < ActiveRecord::Base
     conditions = ['short_name = ? AND is_template = ? AND status != ?', value, true, 'Inactive']
     if not record.new_record?
       conditions[0] += ' AND id != ?'
-      conditions << record.id
+      conditions << record.id      
     end
     if value && self.find(:first, :conditions => conditions)
       record.errors.add attr, "is already being used by another active form."
+    end
+
+    if record.short_name_changed?
+      record.errors.add attr, "can't be changed once the form has been published" if not record.short_name_editable?
     end
   end
 
@@ -60,6 +64,11 @@ class Form < ActiveRecord::Base
 
   def exportable_questions
     form_element_cache.exportable_questions
+  end
+
+  def short_name_editable?
+    return true if self.status == 'Not Published' || self.new_record?
+    false
   end
   
   # Returns true if there's something interesting for the investigation tab to

@@ -19,10 +19,10 @@
       Edit Form
   %tr
     %td
-      %label Name
+      = f.label :name
       = f.text_field :name
-      %label Short name
-      = f.text_field :short_name
+      = f.label :short_name
+      = f.object.short_name_editable? ? f.text_field(:short_name) : f.object.short_name
       %p
       = f.label(:event_type, "Show when event type is")
       = f.select(:event_type, [["Morbidity event", "morbidity_event"], ["Contact event", "contact_event"], ["Place event", "place_event"], ["Encounter event", "encounter_event"]], {:include_blank => true}) 
