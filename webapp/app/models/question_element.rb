@@ -103,7 +103,7 @@ class QuestionElement < FormElement
 
   def validate
     if question_element_state.nil?
-       self.errors.add_to_base("The question element is not in a valid state for saving.")
+      self.errors.add_to_base("The question element is not in a valid state for saving.")
     else
       validate_question_short_name_uniqueness unless self.question_element_state == :copying_question_to_library
     end
@@ -120,6 +120,14 @@ class QuestionElement < FormElement
     elsif (!self.new_record? && !self.form_id.nil?)
       return :edit_question_on_form
     end
+  end
+
+  def short_name_editable?
+    return true if form.nil?
+    most_recent_version = form.most_recent_version
+    return true if most_recent_version.nil?
+    return false if (most_recent_version.created_at > self.created_at)
+    return true
   end
   
   private

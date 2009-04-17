@@ -25,7 +25,7 @@
 
   %p
     = q.label(:short_name)
-    - if (!q.object.new_record? && q.object.question_element.form.status == "Published")
+    - if (!q.object.new_record? && !q.object.question_element.short_name_editable?)
       = h q.object.short_name
     - else
       = q.text_field :short_name
