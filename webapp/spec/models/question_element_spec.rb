@@ -546,7 +546,8 @@ describe QuestionElement do
   describe "when checking question short-name state on a question element on a form" do
 
     before(:each) do
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'qe_pub_state')
+      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+      @form.short_name = "short_name_editable_#{rand(20000)}"
       @form.save_and_initialize_form_elements
       @section_element = SectionElement.new(:name => "Test")
       @section_element.parent_element_id = @form.investigator_view_elements_container.children[0]
