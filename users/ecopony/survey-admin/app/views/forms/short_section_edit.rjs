@@ -1,1 +1,0 @@
-page.replace_html 'section-mods', :partial => 'sections/short_form', :locals => {:section => @section}

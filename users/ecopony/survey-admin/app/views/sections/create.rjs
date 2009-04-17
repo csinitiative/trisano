@@ -1,9 +1,0 @@
-page.replace_html 'section-list', :partial => 'section', :collection => @form.sections
-page.replace_html 'section-mods', ""
-page.visual_effect(:highlight, 'section-list')
-page.sortable('section-list', 
-  :update => 'section-info', 
-  :complete => visual_effect(:highlight, 'section-list'),
-  :url => { :controller => 'forms', 
-  :action => "section_sort", 
-  :id => @form})
