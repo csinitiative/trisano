@@ -19,6 +19,15 @@
 # Form-builder steps that can be utilized by standard or enhanced UATs
 #
 
+Given(/^a (.+) form exists$/) do |event_type|
+  unique_form_name = get_unique_name(3)
+  @form = create_form(event_type, unique_form_name, unique_form_name, get_random_disease)
+end
+
+Given(/^that form is published$/) do
+  @form.publish
+end
+
 Given(/^a form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
   @form = create_form(event_type, form_name, form_short_name, disease)
 end
@@ -42,6 +51,18 @@ Given(/^that form has one question on the default view$/) do
         :question_text =>  get_unique_name(3),
         :data_type => "single_line_text",
         :short_name => get_unique_name(2)
+      }
+    })
+  @question_element.save_and_add_to_form
+end
+
+Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
+  @question_element = QuestionElement.new({
+      :parent_element_id => @form.investigator_view_elements_container.children[0].id,
+      :question_attributes => {
+        :question_text => "I have a short name?",
+        :data_type => "single_line_text",
+        :short_name => short_name
       }
     })
   @question_element.save_and_add_to_form

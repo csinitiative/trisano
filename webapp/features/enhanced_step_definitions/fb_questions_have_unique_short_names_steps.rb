@@ -15,18 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
-  @question_element = QuestionElement.new({
-      :parent_element_id => @form.investigator_view_elements_container.children[0].id,
-      :question_attributes => {
-        :question_text => "I have a short name?",
-        :data_type => "single_line_text",
-        :short_name => short_name
-      }
-    })
-  @question_element.save_and_add_to_form
-end
-
 Given(/^the library contains a question with the same short name$/) do
   @library_element = @question_element.add_to_library
 end

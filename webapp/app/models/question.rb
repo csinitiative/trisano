@@ -70,7 +70,7 @@ class Question < ActiveRecord::Base
   def short_name_filter
     if self.short_name_changed?
       unless (question_element.nil? || question_element.form.nil?)
-        self.short_name = self.short_name_was if question_element.form.status == "Published"
+        self.short_name = self.short_name_was unless question_element.short_name_editable?
       end
     end
   end
