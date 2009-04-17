@@ -255,8 +255,7 @@ class Event < ActiveRecord::Base
       if !options[:jurisdiction_id].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "(jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
-        where_clause += " OR associated_jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]]) + ")"
+        where_clause += "jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
       else
         where_clause += " AND " unless where_clause.empty?
         allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}

@@ -259,6 +259,11 @@
   sort_order: 20
 
 - code_name: "state"
+  the_code:  "AR"
+  code_description: "Arkansas"
+  sort_order: 23
+
+- code_name: "state"
   the_code:  "CA"
   code_description: "California"
   sort_order: 25
