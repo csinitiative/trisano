@@ -184,7 +184,7 @@ describe "/dashboard/index.html.haml" do
         disease = mock_model(Disease)
         disease.should_receive(:id).twice.and_return('id')
         disease.should_receive(:disease_name).twice.and_return('Sample Disease')
-        Disease.should_receive(:find).with(:all).and_return([disease])
+        Disease.should_receive(:find).with(:all, :order => 'disease_name').and_return([disease])
         render 'dashboard/index.html.haml'
         response.should have_tag("label input[type=checkbox]")
         response.should have_tag("label", :text => /Sample Disease/)
