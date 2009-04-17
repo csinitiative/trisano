@@ -27,8 +27,9 @@ INSTRUCTIONS FOR CREATING A NEW DATA WAREHOUSE DATABASE:
     # psql trisano_warehouse
     > ALTER SCHEMA public OWNER TO nedss
 
-3) Edit the warehouse_init.sql script to use the right owner name (i.e. replace
-   "nedss" with whatever user you need)
+3) Edit the warehouse_init.sql script to use the right owner name and data
+   warehouse user name (i.e. replace "nedss" and "nedss_dw" with whatever
+   user you need)
 
 4) Run the warehouse_init.sql to populate the database
     # psql -X -h host -U nedss -d trisano_warehouse -f warehouse_init.sql 

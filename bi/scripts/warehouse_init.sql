@@ -20,6 +20,7 @@ ALTER SCHEMA trisano OWNER TO nedss;
 CREATE LANGUAGE plpgsql;
 -- NOTE: Adjust this user to the DEST_DB_USER 
 ALTER SCHEMA public OWNER TO nedss;
+GRANT USAGE ON SCHEMA trisano TO nedss_dw;
 
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
@@ -72,6 +73,8 @@ BEGIN
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r'
       LOOP
         tmp := 'CREATE VIEW trisano.' || viewname || ' AS SELECT * FROM ' || new_schema || '.' || viewname;
+        EXECUTE tmp;
+        tmp := 'GRANT SELECT ON trisano.' || viewname || ' TO nedss_dw';
         EXECUTE tmp;
     END LOOP;
 
