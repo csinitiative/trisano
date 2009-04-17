@@ -47,3 +47,15 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.1.
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.1.12.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.2.gem
+
+
+
+
+
+
