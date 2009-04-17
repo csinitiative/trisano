@@ -72,9 +72,9 @@ BEGIN
       FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r'
       LOOP
-        tmp := 'CREATE VIEW trisano.' || viewname || ' AS SELECT * FROM ' || new_schema || '.' || viewname;
+        tmp := 'CREATE VIEW trisano.' || viewname || '_view AS SELECT * FROM ' || new_schema || '.' || viewname;
         EXECUTE tmp;
-        tmp := 'GRANT SELECT ON trisano.' || viewname || ' TO nedss_dw';
+        tmp := 'GRANT SELECT ON trisano.' || viewname || '_view TO nedss_dw';
         EXECUTE tmp;
     END LOOP;
 
