@@ -37,6 +37,7 @@ Warbler::Config.new do |config|
   # config.gems = ["activerecord-jdbc-adapter", "jruby-openssl"]
   # config.gems << "tzinfo"
   config.gems = ["hoe", "hpricot", "rest-open-uri", "logging", "json_pure", "rubyzip", "mislav-will_paginate", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter', 'haml', 'rack']
+  config.gems << 'rails'
 
   # Include gem dependencies not mentioned specifically
   config.gem_dependencies = true
