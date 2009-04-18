@@ -115,6 +115,7 @@ describe Question do
       @question_to_edit.short_name = "first_short_name"
       @question_to_edit.save!
       @question_to_edit.short_name.should eql("first_short_name")
+      sleep 1 # Sleep to get the publish time far enough from the question creation time to allow for time comparison precision to work
       @form.publish
       @question_to_edit.reload
       @question_to_edit.short_name = "second_short_name"

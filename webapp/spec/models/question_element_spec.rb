@@ -18,6 +18,21 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe QuestionElement do
+
+  def with_question_element
+    form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
+    form.short_name = "short_name_editable_#{rand(20000)}"
+    form.save_and_initialize_form_elements
+    section_element = SectionElement.new(:name => "Test")
+    section_element.parent_element_id = form.investigator_view_elements_container.children[0]
+    section_element.save_and_add_to_form.should_not be_nil
+    question_element = QuestionElement.new({
+        :parent_element_id => section_element.id,
+        :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+      })
+    yield question_element if block_given?
+  end
+
   before(:each) do
     @question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     @question_element = QuestionElement.new(:question => @question)
@@ -544,62 +559,37 @@ describe QuestionElement do
   end
 
   describe "when checking question short-name state on a question element on a form" do
-
-    # Debt: Introducing duplication while flying blind, trying to pinpoint build server issue.
     
     it 'should indicate editable if the form with the question has not been published' do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.short_name = "short_name_editable_#{rand(20000)}"
-      form.save_and_initialize_form_elements
-      section_element = SectionElement.new(:name => "Test")
-      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
-      section_element.save_and_add_to_form.should_not be_nil
-      question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
-        })
-      question_element.save_and_add_to_form.should_not be_nil
-      question_element.short_name_editable?.should be_true
+      with_question_element do |question_element|
+        question_element.save_and_add_to_form.should_not be_nil
+        question_element.short_name_editable?.should be_true
+      end
     end
 
     it 'should indicate not editable if the form with the question has been published' do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.short_name = "short_name_editable_#{rand(20000)}"
-      form.save_and_initialize_form_elements
-      section_element = SectionElement.new(:name => "Test")
-      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
-      section_element.save_and_add_to_form.should_not be_nil
-      question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
-        })
-      question_element.save_and_add_to_form.should_not be_nil
-      form.publish
-      question_element.short_name_editable?.should be_false
+      with_question_element do |question_element|
+        question_element.save_and_add_to_form.should_not be_nil
+        sleep 1 # Sleep to get the publish time far enough from the question creation time to allow for time comparison precision to work
+        question_element.form.publish
+        question_element.form.reload
+        question_element.short_name_editable?.should be_false
+      end
     end
 
     it 'should indicate editable for a question added to a form after the form was published' do
-      form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      form.short_name = "short_name_editable_#{rand(20000)}"
-      form.save_and_initialize_form_elements
-      section_element = SectionElement.new(:name => "Test")
-      section_element.parent_element_id = form.investigator_view_elements_container.children[0]
-      section_element.save_and_add_to_form.should_not be_nil
-      question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
-        })
-      question_element.save_and_add_to_form.should_not be_nil
-      form.publish
-      second_question_element = QuestionElement.new({
-          :parent_element_id => section_element.id,
-          :question_attributes => {:question_text => "You sure about that?", :data_type => "single_line_text", :short_name => "sure"}
-        })
-      second_question_element.save_and_add_to_form
-      second_question_element.short_name_editable?.should be_true
-      form.publish
-      second_question_element.reload
-      # second_question_element.short_name_editable?.should be_false
+      with_question_element do |question_element|
+        question_element.save_and_add_to_form.should_not be_nil
+        question_element.form.publish
+        sleep 1 # Sleep to get the publish time far enough from the question creation time to allow for time comparison precision to work
+        second_question_element = QuestionElement.new({
+            :parent_element_id => question_element.parent.id,
+            :question_attributes => {:question_text => "You sure about that?", :data_type => "single_line_text", :short_name => "sure"}
+          })
+        second_question_element.save_and_add_to_form
+        question_element.form.reload
+        second_question_element.short_name_editable?.should be_true
+      end
     end
 
   end
