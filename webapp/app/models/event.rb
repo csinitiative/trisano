@@ -420,13 +420,32 @@ class Event < ActiveRecord::Base
     end
     Event.transaction do
       unless (forms_to_add.all? do |form_id|
-                # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
-                Form.find(form_id)
-                self.form_references.create(:form_id => form_id)
-              end)
+            # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
+            Form.find(form_id)
+            self.form_references.create(:form_id => form_id)
+          end)
         raise "Unable to process new forms"
       end
     end
+  end
+
+  # Removes the reference to the form with the provided form ID.
+  #
+  # Returns true on success, nil on failure
+  def remove_form(form_id)
+    form_reference = FormReference.find_by_event_id_and_form_id(self.id, form_id)
+    unless form_reference.nil?
+      transaction do
+        question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
+        question_ids = question_elements.collect { |element| element.question.id}
+        Answer.delete_all(["event_id = ? and question_id in (?)", self.id, question_ids])
+        form_reference.destroy
+        return true
+      end
+    end
+  rescue Exception => ex
+    logger.warn "Could not remove a form from an event: #{ex.message}"
+    return nil
   end
 
   def soft_delete
@@ -482,7 +501,7 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-                                   :include => [ { :interested_party => { :person_entity => :person } },
+          :include => [ { :interested_party => { :person_entity => :person } },
             :address,
             :disease_event,
             :jurisdiction,
@@ -543,9 +562,9 @@ class Event < ActiveRecord::Base
     if event_components.include?("clinical")
       if self.disease_event
         new_event.build_disease_event(:hospitalized_id =>  self.disease_event.hospitalized_id, 
-                                      :died_id => self.disease_event.hospitalized_id,
-                                      :disease_onset_date => self.disease_event.disease_onset_date,
-                                      :date_diagnosed => self.disease_event.date_diagnosed)
+          :died_id => self.disease_event.hospitalized_id,
+          :disease_onset_date => self.disease_event.disease_onset_date,
+          :date_diagnosed => self.disease_event.date_diagnosed)
       end
     end
 
@@ -556,8 +575,8 @@ class Event < ActiveRecord::Base
 
       self.answers.each do |answer|
         new_event.answers.build(:question_id => answer.question_id,
-                               :text_answer => answer.text_answer,
-                               :export_conversion_value_id => answer.export_conversion_value_id)
+          :text_answer => answer.text_answer,
+          :export_conversion_value_id => answer.export_conversion_value_id)
       end
     end
 

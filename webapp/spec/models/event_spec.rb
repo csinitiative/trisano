@@ -1088,6 +1088,42 @@ describe MorbidityEvent do
     end
 
   end
+
+  describe "removing forms from an event" do
+    fixtures :events, :forms, :form_references, :form_elements, :questions
+
+    before(:each) do
+      @event = events(:marks_cmr)
+    end
+
+    it "should remove the form reference" do
+      @event.form_references.size.should == 1
+      @event.remove_form(form_references(:marks_form_reference_1).form_id)
+      @event.form_references.size.should == 0
+    end
+
+    it "should return nil if the form provided is not on the event" do
+      @event.form_references.size.should == 1
+      @event.remove_form(99).should be_nil
+      @event.form_references.size.should == 1
+    end
+
+    it "should remove answers to the form questions" do
+      @event.add_forms(forms(:test_form).id)
+      @event.form_references.size.should == 2
+      @event.answers = {
+        "1" => { :question_id => form_elements(:demo_group_q1).question.id, :text_answer => "Nothin'" },
+        "2" => { :question_id => form_elements(:demo_group_q2).question.id, :text_answer => "And stoof'"}
+      }
+      @event.save
+      @event.answers.size.should == 2
+      @event.remove_form(forms(:test_form).id).should be_true
+      @event.reload
+      @event.form_references.size.should == 1
+      @event.answers.size.should == 0
+    end
+
+  end
   
   describe "when soft deleting" do
     fixtures :users
@@ -1278,11 +1314,11 @@ describe Event, 'cloning an event' do
 
     it "should copy over disease information, but not the actual disease" do
       @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id, 
-                                                 :hospitalized_id => external_codes(:yesno_yes), 
-                                                 :died_id => external_codes(:yesno_no),
-                                                 :disease_onset_date => Date.today - 1, 
-                                                 :date_diagnosed => Date.today
-                                                }
+        :hospitalized_id => external_codes(:yesno_yes),
+        :died_id => external_codes(:yesno_no),
+        :disease_onset_date => Date.today - 1,
+        :date_diagnosed => Date.today
+      }
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
@@ -1335,16 +1371,16 @@ describe Event, 'cloning an event' do
     it "should copy over treatment data" do
       @event_hash["interested_party_attributes"]["treatments_attributes"] =
         [
-          {
-            :treatment_given_yn_id => external_codes(:yesno_no).id,
-            :treatment_date => Date.today,
-            :treatment => "Leeches"
-          },
-          {
-            :treatment_given_yn_id => external_codes(:yesno_yes).id,
-            :treatment_date => Date.today - 1,
-            :treatment => "Maggots"
-          }
+        {
+          :treatment_given_yn_id => external_codes(:yesno_no).id,
+          :treatment_date => Date.today,
+          :treatment => "Leeches"
+        },
+        {
+          :treatment_given_yn_id => external_codes(:yesno_yes).id,
+          :treatment_date => Date.today - 1,
+          :treatment => "Maggots"
+        }
       ] 
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
@@ -1366,17 +1402,17 @@ describe Event, 'cloning an event' do
 
     it "should copy over risk factor data" do 
       @event_hash["interested_party_attributes"]["risk_factor_attributes"] =
-          {
-            :food_handler_id => external_codes(:yesno_no).id,
-            :healthcare_worker_id => external_codes(:yesno_yes).id,
-            :group_living_id => external_codes(:yesno_no).id,
-            :day_care_association_id => external_codes(:yesno_yes).id,
-            :pregnant_id => external_codes(:yesno_no).id,
-            :pregnancy_due_date => Date.today ,
-            :risk_factors => "Smokes",
-            :risk_factors_notes => "A lot",
-            :occupation => "Smoker"
-          }
+        {
+        :food_handler_id => external_codes(:yesno_no).id,
+        :healthcare_worker_id => external_codes(:yesno_yes).id,
+        :group_living_id => external_codes(:yesno_no).id,
+        :day_care_association_id => external_codes(:yesno_yes).id,
+        :pregnant_id => external_codes(:yesno_no).id,
+        :pregnancy_due_date => Date.today ,
+        :risk_factors => "Smokes",
+        :risk_factors_notes => "A lot",
+        :occupation => "Smoker"
+      }
 
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
@@ -1392,7 +1428,7 @@ describe Event, 'cloning an event' do
       org_rf.risk_factors.should == new_rf.risk_factors
       org_rf.risk_factors_notes.should == new_rf.risk_factors_notes
       org_rf.occupation.should == new_rf.occupation
-   end
+    end
 
     it "should copy over clinician data" do
       @event_hash["clinicians_attributes"] = [
@@ -1411,7 +1447,7 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over diagnostic data" do
-       @event_hash["diagnostic_facilities_attributes"] = [
+      @event_hash["diagnostic_facilities_attributes"] = [
         "place_entity_attributes" => {
           "place_attributes" => {
             "name"=>"DiagOne",
@@ -1465,25 +1501,25 @@ describe Event, 'cloning an event' do
       org_result.test_detail.should == new_result.test_detail 
       org_result.interpretation_id.should == new_result.interpretation_id 
       org_result.reference_range.should == new_result.reference_range 
-   end
+    end
     
     it "should copy over reporting data" do
       @event_hash["reporting_agency_attributes"] =
         { 
-          "place_entity_attributes" => {
-            "place_attributes" => {
-              "name"=>"AgencyOne",
-            }
+        "place_entity_attributes" => {
+          "place_attributes" => {
+            "name"=>"AgencyOne",
           }
         }
+      }
       @event_hash["reporter_attributes"] =
         { 
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Starr",
-            }
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name"=>"Starr",
           }
         }
+      }
 
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['reporting'])
