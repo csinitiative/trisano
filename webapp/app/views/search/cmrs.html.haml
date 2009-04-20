@@ -104,9 +104,13 @@
         &nbsp;-&nbsp;
         = text_field_tag :entered_on_end, params[:entered_on_end], :size => "10"
         %small (mm/dd/yyyy)
-    %br{ :clear => "all" }
+      %br{ :clear => "all" }
+      %br
+      %div{ :class => 'horiz' }
+        %label{ :for => 'record_number' } Record number
+        = text_field_tag :record_number, params[:record_number], :size => "15"
     %br
-    %input{ :type => "submit" }
+    %input{ :type => "submit", :id => 'submit_query' }
 
 %br
 

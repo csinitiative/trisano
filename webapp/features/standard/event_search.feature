@@ -9,8 +9,9 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
 
-    When I fill in the record number search field with 300000000000001
-    And I press "Submit Query"
+    When I navigate to the event search form
+    And I enter 300000000000001 into the record number search field
+    And I submit search
 
     Then I should receive 1 matching record
 
