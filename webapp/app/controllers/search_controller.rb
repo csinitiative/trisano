@@ -38,8 +38,8 @@ class SearchController < ApplicationController
         unless people.empty?
           @people = people.collect do |person|
             event = Event.find(:first, 
-                               :include => :participations,
-                               :conditions => ["participations.primary_entity_id = ? AND participations.type = ?", person.entity_id, 'InterestedParty'])
+              :include => :participations,
+              :conditions => ["participations.primary_entity_id = ? AND participations.type = ?", person.entity_id, 'InterestedParty'])
             if event.nil?
               type = "No associated event"
               id = nil
@@ -87,7 +87,7 @@ class SearchController < ApplicationController
     @counties = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'", :order => "id")
 
     begin
-     if not params.values_blank?
+      if not params.values_blank?
 
         if !params[:birth_date].blank?
           begin
@@ -120,28 +120,28 @@ class SearchController < ApplicationController
         raise if (!error_details.empty?)
 
         @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name],
-                                       :diseases => params[:diseases],
-                                       :gender => params[:gender],
-                                       :sw_last_name => params[:sw_last_name],
-                                       :sw_first_name => params[:sw_first_name],
-                                       :workflow_state => params[:workflow_state],
-                                       :birth_date => @birth_date,
-                                       :entered_on_start => entered_on_start,
-                                       :entered_on_end => entered_on_end,
-                                       :city => params[:city],
-                                       :county => params[:county],
-                                       :jurisdiction_id => params[:jurisdiction_id],
-                                       :event_type => params[:event_type]
-                                      )
+          :diseases => params[:diseases],
+          :gender => params[:gender],
+          :sw_last_name => params[:sw_last_name],
+          :sw_first_name => params[:sw_first_name],
+          :workflow_state => params[:workflow_state],
+          :birth_date => @birth_date,
+          :entered_on_start => entered_on_start,
+          :entered_on_end => entered_on_end,
+          :city => params[:city],
+          :county => params[:county],
+          :jurisdiction_id => params[:jurisdiction_id],
+          :event_type => params[:event_type]
+        )
 
-       if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
-         @first_name = params[:sw_first_name]
-         @last_name = params[:sw_last_name]
-       elsif !params[:name].blank?
-         parse_names_from_fulltext_search
-       end
+        if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
+          @first_name = params[:sw_first_name]
+          @last_name = params[:sw_last_name]
+        elsif !params[:name].blank?
+          parse_names_from_fulltext_search
+        end
 
-     end
+      end
     rescue Exception => ex
       flash[:error] = "There was a problem with your search criteria"
 
@@ -157,10 +157,13 @@ class SearchController < ApplicationController
 
     # For some reason can't communicate with template via :locals on the render line.  @show_answers and @export_options are used for csv export to cause
     # formbuilder answers to be output and limit the repeating elements, respectively.
-    @show_answers = !params[:disease].blank?
+    if !params[:diseases].blank? and params[:diseases].size == 1
+      @show_answers = true
+      @disease = Disease.find(params[:diseases][0]) 
+    end
+    
     @export_options = params[:export_options] || []
-    @disease = Disease.find(params[:disease]) unless params[:disease].blank?
-
+    
     respond_to do |format|
       format.html
       format.csv { render :layout => false }
@@ -171,12 +174,12 @@ class SearchController < ApplicationController
   def auto_complete_model_for_city
     entered_city = params[:city]
     @addresses = Address.find(:all,
-                        :select => "distinct city",
-                        :conditions => [ "city ILIKE ?",
-                          entered_city + '%'],
-                        :order => "city ASC",
-                        :limit => 10
-                       )
+      :select => "distinct city",
+      :conditions => [ "city ILIKE ?",
+        entered_city + '%'],
+      :order => "city ASC",
+      :limit => 10
+    )
     render :inline => '<ul><% for address in @addresses %><li id="city_<%= address.city %>"><%= h address.city  %></li><% end %></ul>'
   end
 
@@ -187,15 +190,15 @@ class SearchController < ApplicationController
     if name_list.size == 1
       @last_name = name_list[0]
     elsif name_list.size == 2
-       @first_name, @last_name = name_list
+      @first_name, @last_name = name_list
     else
       @first_name, @middle_name, @last_name = name_list
     end
   end
 
   def parse_american_date(date, offset = 0)
-     american_date = '%m/%d/%Y'
-     (Date.strptime(date, american_date) + offset).to_s
+    american_date = '%m/%d/%Y'
+    (Date.strptime(date, american_date) + offset).to_s
   end
 
 end
