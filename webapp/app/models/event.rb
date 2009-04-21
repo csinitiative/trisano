@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Event < ActiveRecord::Base
@@ -71,7 +71,7 @@ class Event < ActiveRecord::Base
       @active_contacts ||= ContactEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
-  
+
   has_many :encounter_child_events, :class_name => 'EncounterEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
       @active_encounters = nil if reload
@@ -85,7 +85,7 @@ class Event < ActiveRecord::Base
       @active_events ||= Event.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
-  
+
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
@@ -98,9 +98,9 @@ class Event < ActiveRecord::Base
 
   belongs_to :parent_event, :class_name => 'Event', :foreign_key => 'parent_id'
 
-  accepts_nested_attributes_for :jurisdiction, 
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? } 
-  accepts_nested_attributes_for :disease_event, 
+  accepts_nested_attributes_for :jurisdiction,
+    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? }
+  accepts_nested_attributes_for :disease_event,
     :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :contact_child_events,
     :allow_destroy => true,
@@ -113,7 +113,7 @@ class Event < ActiveRecord::Base
     :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
   accepts_nested_attributes_for :notes,
     :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
-  accepts_nested_attributes_for :address, 
+  accepts_nested_attributes_for :address,
     :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def self.check_contact_attrs(attrs)
@@ -143,7 +143,7 @@ class Event < ActiveRecord::Base
         v.blank?
       end
     end
-   
+
     encounter_empty ? true : false
   end
 
@@ -166,8 +166,8 @@ class Event < ActiveRecord::Base
     # A hash that provides a basic field index for the event forms. It maps the event form
     # attribute keys to some metadata that is used to drive core field and core follow-up
     # configurations in form builder.
-    # 
-    # Names do not have to match the field name on the form views. Names are used to 
+    #
+    # Names do not have to match the field name on the form views. Names are used to
     # drive the drop downs for core field and core follow up configurations. So more context
     # can be given to these names than might appear on the actual event forms, because in
     # drop down in form builder, 'Last name' isn't going to be enough information for the user.
@@ -180,20 +180,20 @@ class Event < ActiveRecord::Base
       Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                           WHERE e.deleted_at IS NULL
                           AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL 
+                          AND d.disease_id IS NOT NULL
                           AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
-                          AND c.the_code IN ('C', 'P', 'S') 
+                          AND c.the_code IN ('C', 'P', 'S')
                           AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
         ")
     end
-      
+
     def deleted_ibis_records(start_date, end_date)
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect OR record has been soft-deleted
       Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
                           WHERE e.sent_to_ibis = TRUE
                           AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL 
+                          AND d.disease_id IS NOT NULL
                           AND e.state_case_status_id = c.id
                           AND c.code_name = 'case'
                           AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
@@ -263,7 +263,7 @@ class Event < ActiveRecord::Base
         allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
         where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
         where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ") )"
-      end      
+      end
 
       # Debt: The UI shows the user a format to use. Something a bit more robust
       # could be in place.
@@ -297,6 +297,11 @@ class Event < ActiveRecord::Base
       if not options[:record_number].blank?
         issue_query = true
         where_clause += " AND events.record_number = '#{sanitize_sql_for_conditions(["%s", options[:record_number]])}'"
+      end
+
+      if not options[:state_status].blank?
+        issue_query = true
+        where_clause += " AND events.state_case_status_id = '#{sanitize_sql_for_conditions(["%s", options[:state_status]])}'"
       end
 
       if not options[:pregnancy_status].blank?
@@ -344,7 +349,7 @@ class Event < ActiveRecord::Base
   end
 
   def open_for_investigation?
-    self.under_investigation? or self.investigation_complete? or self.reopened_by_manager? 
+    self.under_investigation? or self.investigation_complete? or self.reopened_by_manager?
   end
 
   # returns only the references for forms that should be rendered on
@@ -375,9 +380,9 @@ class Event < ActiveRecord::Base
 
   def add_note(message, note_type="administrative")
     self.notes << Note.new(:note => message, :note_type => note_type)
-  end  
+  end
 
-  # Walks through all unsaved children of this event and assigns them the parent's disease and 
+  # Walks through all unsaved children of this event and assigns them the parent's disease and
   # jurisdiction.  Expected to be called after parent and children have been initially created
   # but not saved, i.e., from the morbidity_event controller, but should be called as needed.
   # Can't do this after the save, because we don't want to overwrite any user made changes to
@@ -402,14 +407,14 @@ class Event < ActiveRecord::Base
       child.build_jurisdiction(parent_jurisdiction.attributes) unless parent_jurisdiction.nil?
     end
   end
-  
+
   # This method is used to add user selected forms and, if the timing is just right,
   # auto-assigned forms to an event.
   def add_forms(forms_to_add)
     forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
 
     # Accepts either form_ids or forms.  If forms, convert to form_ids
-    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end } 
+    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end }
 
     # Remember if this event has forms persisted with it already
     event_has_saved_forms = self.form_references.size > 0
@@ -487,28 +492,28 @@ class Event < ActiveRecord::Base
     else
       answers.each { |answer| answer.attributes = attributes[answer.id.to_s] }
     end
-  end  
+  end
 
   def new_answers=(attributes)
     answers.build(attributes)
   end
-  
+
   def new_checkboxes=(attributes)
     attributes.each { |key, value| answers.build(:question_id => key, :check_box_answer => value[:check_box_answer]) }
   end
-  
+
   def new_radio_buttons=(attributes)
     attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer], :export_conversion_value_id => value[:export_conversion_value_id]) }
-  end  
+  end
 
   def get_or_initialize_answer(question_id)
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  def self.find_by_criteria(*args)    
+  def self.find_by_criteria(*args)
     options = args.extract_options!
 
-    return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 
+    return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type])
 
     where_clause, order_by_clause, issue_query = Event.generate_event_search_where_clause(options)
 
@@ -564,7 +569,7 @@ class Event < ActiveRecord::Base
     event_components = [] if event_components.nil?
     _event = self.class.new
     self.copy_event(_event, event_components)
-    _event 
+    _event
   end
 
   def copy_event(new_event, event_components)
@@ -577,7 +582,7 @@ class Event < ActiveRecord::Base
 
     if event_components.include?("clinical")
       if self.disease_event
-        new_event.build_disease_event(:hospitalized_id =>  self.disease_event.hospitalized_id, 
+        new_event.build_disease_event(:hospitalized_id =>  self.disease_event.hospitalized_id,
           :died_id => self.disease_event.hospitalized_id,
           :disease_onset_date => self.disease_event.disease_onset_date,
           :date_diagnosed => self.disease_event.date_diagnosed)
@@ -619,7 +624,7 @@ class Event < ActiveRecord::Base
     end
   end
 
-  
+
   private
 
   def set_record_number
@@ -627,7 +632,7 @@ class Event < ActiveRecord::Base
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
     self.record_number = record_number
   end
-  
+
   def set_event_onset_date
     self.event_onset_date = Date.today
   end

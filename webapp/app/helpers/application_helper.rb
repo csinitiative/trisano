@@ -2,27 +2,27 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def l(lookup_field)
-    lookup_field.nil? ? nil : lookup_field.code_description 
+    lookup_field.nil? ? nil : lookup_field.code_description
   end
 
   def fml(pre, value_field, post)
-    value_field.blank? ? nil : pre+value_field+post 
+    value_field.blank? ? nil : pre+value_field+post
   end
 
   def phone_number(number)
@@ -36,7 +36,7 @@ module ApplicationHelper
       "! "+number
     end
   end
-  
+
   def calculate_age(date)
     (Date.today - date).to_i / 365
   end
@@ -50,18 +50,18 @@ module ApplicationHelper
     edops = jsonify editOptions
     ajops = jsonify ajaxOptions
 
-    tg = content_tag  elemtype, 
+    tg = content_tag  elemtype,
       obj.send(prop),
       options = options
 
     if editable then
       tg += "
            <script type='text/javascript'>\n
-               new Ajax.InPlaceEditor('#{options[:id]}', '#{options[:url]}', { 
+               new Ajax.InPlaceEditor('#{options[:id]}', '#{options[:url]}', {
                         ajaxOptions: { #{ajops} },
-                        callback: function(form, value) 
+                        callback: function(form, value)
                           { return 'authenticity_token=#{form_authenticity_token}&#{objname}[#{prop}]=' + escape(value) },
-                        onComplete: function(transport, element) 
+                        onComplete: function(transport, element)
                           { element.innerHTML=transport.responseText.evalJSON().#{prop};}"
       tg += ",#{edops}" unless edops.empty?
       tg += "});\n"
@@ -72,7 +72,7 @@ module ApplicationHelper
 
   #Converts a hash into a JSON options list
   # (without the encompasing {}'s or any type of recursion
-  #Is there a rails API function that does this? 
+  #Is there a rails API function that does this?
   def jsonify hsh
     str = ''
     first = true
@@ -87,7 +87,7 @@ module ApplicationHelper
     str
   end
 
-  # Determines which element to replace on the form builder interface, and which 
+  # Determines which element to replace on the form builder interface, and which
   # partial to replace it with, based on the state of the element being updated.
   def replacement_elements(element)
     if (element.form_id.blank?)
@@ -105,7 +105,7 @@ module ApplicationHelper
     end
     return replace_element, replace_partial
   end
-  
+
   def current_user_name
     if (User.current_user.last_name.blank? || User.current_user.first_name.blank?)
       User.current_user.user_name
@@ -113,7 +113,7 @@ module ApplicationHelper
       "#{User.current_user.first_name} #{User.current_user.last_name}"
     end
   end
-  
+
   # http://www.pathf.com/blogs/2008/07/pretty-blocks-in-rails-views/
   def tabbed_content(tabs, focus_tab, &block)
     raise ArgumentError, "Missing block" unless block_given?
@@ -148,7 +148,7 @@ module ApplicationHelper
 
   def cmrs_path_with_defaults
     cmrs_path(User.current_user.event_view_settings || {})
-  end 
+  end
 
   def save_buttons(event)
     event_type = event.class.to_s.underscore
@@ -201,8 +201,16 @@ module ApplicationHelper
   end
 
   def yesno_select(name, selected=nil, empty_option=true)
-    options = ExternalCode.yesno.collect{|c| [c.code_description, c.id]}
+    code_select :yesno, name, selected, empty_option
+  end
+
+  def case_status_select(name, selected=nil, empty_option=true)
+    code_select :case, name, selected, empty_option
+  end
+
+  def code_select(code_name, field_name, selected=nil, empty_option=true)
+    options = ExternalCode.send(code_name).collect{|c| [c.code_description, c.id]}
     options = options.unshift([nil, nil]) if empty_option
-    select_tag name.to_s, options_for_select(options, :selected => selected)
+    select_tag field_name.to_s, options_for_select(options, :selected => selected)
   end
 end

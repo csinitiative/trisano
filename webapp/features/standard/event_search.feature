@@ -20,18 +20,19 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
 
-    When I navigate to the event search form    
+    When I navigate to the event search form
     And I select "Yes" from "pregnancy_status"
     And I submit the search
-    
+
     Then I should receive 1 matching record
 
   Scenario: Searching for an event by state case status
     Given a morbidity event with a state status "Confirmed"
-    And a morbidity event with the state staus "Probable"
+    And another morbidity event
     And I am logged in as a super user
 
-    When I "Confirmed" from "state_status"
+    When I navigate to the event search form
+    And I select "Confirmed" from "state_status"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -52,7 +53,7 @@ Feature: Searching for Events using core fields for criteria.
 
     When I select "Yes" from "sent_to_cdc"
     And I submit the search
-    
+
     Then I should receive 1 matching record
 
   Scenario: Searching for events by date first reported to public health
@@ -62,9 +63,9 @@ Feature: Searching for Events using core fields for criteria.
 
     When I enter January 1st, 2008 into the date first reported to public health field
     And I submit the search
-    
+
     Then I should receive 1 matching record
-    
+
   Scenario: Searching for events by investigator
     Given an investigator named Davis
     And a morbidity event investited by Davis
@@ -80,17 +81,17 @@ Feature: Searching for Events using core fields for criteria.
     Given a morbidity event with 'blah' in other data 1
     And another morbidity event
     And I am logged in as a super user
-    
+
     When I enter "blah" into "other_data_1"
     And I submit the search
 
     Then I should receive 1 matching record
 
-  Scenario: Searching for events by 'other data 2' field  
+  Scenario: Searching for events by 'other data 2' field
     Given a morbidity event with 'blah' in other data 1
     And another morbidity event
     And I am logged in as a super user
-    
+
     When I enter "blah" into "other_data_1"
     And I submit the search
 

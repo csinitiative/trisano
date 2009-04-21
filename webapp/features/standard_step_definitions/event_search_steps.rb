@@ -16,18 +16,24 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^another morbidity event$/ do
-  @other_event = create_basic_event('morbidity', 'Patient')  
+  @other_event = create_basic_event('morbidity', 'Patient')
 end
 
 Given /^a morbidity event with the record number (\d{15})$/ do |record_number|
   @event_to_match = create_basic_event('morbidity', 'Record Number')
   @event_to_match.record_number = record_number
-  @event_to_match.save!  
+  @event_to_match.save!
 end
 
 Given /^a morbidity event with a pregnant patient$/ do
   @event_to_match = create_basic_event('morbidity', 'Pregnant')
   @event_to_match.interested_party.build_risk_factor(:pregnant_id => ExternalCode.yes_id)
+  @event_to_match.save!
+end
+
+Given /^a morbidity event with a state status "([^\"]*)"$/ do |arg1|
+  @event_to_match = create_basic_event('morbidity', 'Confirmed by state')
+  @event_to_match.state_case_status = ExternalCode.confirmed
   @event_to_match.save!
 end
 

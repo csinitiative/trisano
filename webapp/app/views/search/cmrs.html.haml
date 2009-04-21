@@ -3,17 +3,17 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- content_for :title do 
+- content_for :title do
   Event Search
 
 - form_tag(search_path + "/cmrs", :method => :get) do
@@ -24,7 +24,7 @@
 
     %fieldset{ :class => "horiz", :style => 'width: 100%;' }
       %legend By name
-         
+
       %div{ :class => "horiz" }
         %label Full-text name
         = text_field_tag :name, params[:name], :size => "30", :class => "search"
@@ -65,6 +65,9 @@
           - for status in @workflow_states
             %option{ :value => status.state, :selected => status.state == (params[:workflow_state]) ? "selected" : nil}
               = "#{status.description}"
+      %div{:class => 'horiz'}
+        %label{:for => 'state_status'} State Status
+        = case_status_select(:state_status, params['state_status'].to_i)
       %br{ :clear => "all" }
       %br
       %div{ :class => "horiz" }
@@ -91,7 +94,7 @@
           - for event_type in @event_types
             %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
               = "#{event_type[:name]}"
-          
+
       %br{ :clear => "all" }
       %br
       %div{ :class => "horiz" }

@@ -37,7 +37,7 @@ class SearchController < ApplicationController
 
         unless people.empty?
           @people = people.collect do |person|
-            event = Event.find(:first, 
+            event = Event.find(:first,
               :include => :participations,
               :conditions => ["participations.primary_entity_id = ? AND participations.type = ?", person.entity_id, 'InterestedParty'])
             if event.nil?
@@ -132,7 +132,8 @@ class SearchController < ApplicationController
                                        :jurisdiction_id => params[:jurisdiction_id],
                                        :event_type => params[:event_type],
                                        :record_number => params[:record_number],
-                                       :pregnancy_status => params[:pregnancy_status]
+                                       :pregnancy_status => params[:pregnancy_status],
+                                       :state_status => params[:state_status]
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
@@ -160,11 +161,11 @@ class SearchController < ApplicationController
     # formbuilder answers to be output and limit the repeating elements, respectively.
     if !params[:diseases].blank? and params[:diseases].size == 1
       @show_answers = true
-      @disease = Disease.find(params[:diseases][0]) 
+      @disease = Disease.find(params[:diseases][0])
     end
-    
+
     @export_options = params[:export_options] || []
-    
+
     respond_to do |format|
       format.html
       format.csv { render :layout => false }
