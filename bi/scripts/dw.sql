@@ -43,15 +43,17 @@ CREATE TABLE dw_date_dimension (
 
 -- Takes a date and returns its ID in the dw_date_dimension table, inserting it
 -- if it doesn't exist
-CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS bigint AS $$ 
+CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS bigint AS $$
 DECLARE
     date_id BIGINT;
 BEGIN
     BEGIN
-        INSERT INTO dw_date_dimension (fulldate, day_of_week, day_of_month, day_of_year, month, quarter, week_of_year, year)
-            VALUES (d, EXTRACT(DOW FROM d), EXTRACT(DAY FROM d), EXTRACT(DOY FROM d),
-            EXTRACT(MONTH FROM d), EXTRACT(QUARTER FROM d), EXTRACT(WEEK FROM d),
-            EXTRACT(YEAR FROM d)) RETURNING id INTO date_id;
+        INSERT INTO dw_date_dimension (fulldate, day_of_week, day_of_month, day_of_year,
+                month, quarter, week_of_year, year)
+            VALUES
+                (d, EXTRACT(DOW FROM d), EXTRACT(DAY FROM d), EXTRACT(DOY FROM d),
+                EXTRACT(MONTH FROM d), EXTRACT(QUARTER FROM d), EXTRACT(WEEK FROM d),
+                EXTRACT(YEAR FROM d)) RETURNING id INTO date_id;
     EXCEPTION WHEN unique_violation THEN
         SELECT id INTO date_id FROM dw_date_dimension WHERE fulldate = d;
     END;
