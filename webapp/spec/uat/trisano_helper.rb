@@ -164,6 +164,11 @@ module TrisanoHelper
     wordlist[rand(wordlist.size)]
   end
 
+  def get_random_jurisdiction_by_short_name()
+    wordlist = ["Unassigned", "Bear River", "Central Utah",  "Davis County", "Salt Lake Valley",  "Southeastern Utah", "Southwest Utah",  "Summit County", "Tooele County",  "TriCounty", "Utah County",  "Utah State", "Wasatch County", "Weber-Morgan", "Out of State"]
+    wordlist[rand(wordlist.size)]
+  end
+
   #
   # General navigation and controls
   #

@@ -19,18 +19,32 @@
 # Form-builder steps that can be utilized by standard or enhanced UATs
 #
 
-Given(/^a (.+) form exists$/) do |event_type|
+# Generic form-creation steps that vary in what you can provide if randomly
+# generated names and diseases will do.
+
+Given(/^a (.+) event form exists$/) do |event_type|
   unique_form_name = get_unique_name(3)
   @form = create_form(event_type, unique_form_name, unique_form_name, get_random_disease)
+end
+
+Given(/^a (.+) event form exists for the disease (.+)$/) do |event_type, disease|
+  unique_form_name = get_unique_name(3)
+  @form = create_form(event_type, unique_form_name, unique_form_name, disease)
+end
+
+Given(/^a (.+) event form exists for the disease (.+) with the name (.+) \((.+)\)$/) do |event_type, disease, form_name, form_short_name|
+  @form = create_form(event_type, form_name, form_short_name, disease)
 end
 
 Given(/^that form is published$/) do
   @form.publish
 end
 
-Given(/^a form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
-  @form = create_form(event_type, form_name, form_short_name, disease)
-end
+#
+# Published form helpers.
+#
+# Note: Any questions added after will not be published unless another step publishes the form again
+#
 
 Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
   @form = create_form(event_type, form_name, form_short_name, disease)
@@ -42,6 +56,24 @@ Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with any 
   @form = create_form(event_type, form_name, form_short_name, get_random_disease)
   @form.publish
   @form
+end
+
+#
+# Question helpers
+#
+
+Given(/^that form has (.+) questions$/) do |number_of_questions|
+  number_of_questions.to_i.times do |question|
+    question_element = QuestionElement.new({
+        :parent_element_id => @form.investigator_view_elements_container.children[0].id,
+        :question_attributes => {
+          :question_text =>  "#{get_unique_name(3)} #{question}",
+          :data_type => "single_line_text",
+          :short_name => get_unique_name(2)
+        }
+      })
+    question_element.save_and_add_to_form
+  end
 end
 
 Given(/^that form has one question on the default view$/) do
@@ -67,6 +99,5 @@ Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
     })
   @question_element.save_and_add_to_form
 end
-
 
 

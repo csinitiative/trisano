@@ -1098,13 +1098,13 @@ describe MorbidityEvent do
 
     it "should remove the form reference" do
       @event.form_references.size.should == 1
-      @event.remove_form(form_references(:marks_form_reference_1).form_id)
+      @event.remove_forms(form_references(:marks_form_reference_1).form_id)
       @event.form_references.size.should == 0
     end
 
     it "should return nil if the form provided is not on the event" do
       @event.form_references.size.should == 1
-      @event.remove_form(99).should be_nil
+      @event.remove_forms(99).should be_nil
       @event.form_references.size.should == 1
     end
 
@@ -1117,7 +1117,7 @@ describe MorbidityEvent do
       }
       @event.save
       @event.answers.size.should == 2
-      @event.remove_form(forms(:test_form).id).should be_true
+      @event.remove_forms(forms(:test_form).id).should be_true
       @event.reload
       @event.form_references.size.should == 1
       @event.answers.size.should == 0

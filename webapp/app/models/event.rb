@@ -432,19 +432,24 @@ class Event < ActiveRecord::Base
   # Removes the reference to the form with the provided form ID.
   #
   # Returns true on success, nil on failure
-  def remove_form(form_id)
-    form_reference = FormReference.find_by_event_id_and_form_id(self.id, form_id)
-    unless form_reference.nil?
-      transaction do
-        question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
-        question_ids = question_elements.collect { |element| element.question.id}
-        Answer.delete_all(["event_id = ? and question_id in (?)", self.id, question_ids])
-        form_reference.destroy
-        return true
+  def remove_forms(form_ids)
+    form_ids = [form_ids] unless form_ids.respond_to?('each')
+    transaction do
+      form_ids.each do |form_id|
+        form_reference = FormReference.find_by_event_id_and_form_id(self.id, form_id)
+        if form_reference.nil?
+          raise "Missing form reference."
+        else
+          question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
+          question_ids = question_elements.collect { |element| element.question.id}
+          Answer.delete_all(["event_id = ? and question_id in (?)", self.id, question_ids])
+          form_reference.destroy
+        end
       end
+      return true
     end
   rescue Exception => ex
-    logger.warn "Could not remove a form from an event: #{ex.message}"
+    logger.warn "Could not remove a form from an event: #{ex.message}."
     return nil
   end
 

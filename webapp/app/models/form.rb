@@ -522,7 +522,7 @@ class Form < ActiveRecord::Base
   end
   
   def self.copy_form_elements(from_form, to_form, include_inactive = true)
-    elements = from_form.form_element_cache.full_set
+    elements = FormElementCache.new(from_form.form_base_element).full_set
     parent_id_map = {}
     tree_id = Form.next_tree_id
     inactive_element_ids = []

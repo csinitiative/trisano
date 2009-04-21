@@ -28,11 +28,6 @@ Given /^there are ([0-9]+) morbidity events for a single person with the last na
   count.to_i.times { e.clone_event.save }
 end
 
-When /^I click the "(.+)" link$/ do |link|
-  # visit cmrs_path
-  click_link link
-end
-
 When /^I search for "(.+)"$/ do |search_string|
   visit event_search_cmrs_path
   fill_in "Name", :with => search_string 

@@ -51,6 +51,20 @@ class EventFormsController < AdminController
     redirect_to event_forms_path(@event)
   end
 
+  def destroy
+    forms_to_remove = params[:forms_to_remove] || []
+    if forms_to_remove.empty?
+      flash[:error] = 'No forms were selected for removal from this event.'
+    else
+      if @event.remove_forms(forms_to_remove)
+        flash[:notice] = 'The list of forms in use was successfully updated.'
+      else
+        flash[:notice] = 'Unable to remove forms from this event'
+      end
+    end
+    redirect_to event_forms_path(@event)
+  end
+
   private
 
   def find_event

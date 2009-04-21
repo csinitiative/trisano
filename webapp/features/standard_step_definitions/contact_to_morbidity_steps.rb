@@ -15,10 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I am logged in as a super user$/ do
-  log_in_as("default_user")
-end
-
 Given /^a (.+) event for last name (.+) with disease (.+) in jurisdiction (.+)$/ do |event_type, last_name, disease, jurisdiction|
   @m = create_basic_event(event_type, last_name, disease, jurisdiction)
 end

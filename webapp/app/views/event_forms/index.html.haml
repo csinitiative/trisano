@@ -22,30 +22,40 @@
 #forms_in_use
   #rot
     %h2="Forms in use"
-    %table.list
-      %tr
-        %th.forminformation
-          Form Information
-        %th Diseases
-        %th Jurisdiction
-        %th Event Type
-      - for form in @forms_in_use
-        %tr.roll
-          %td.forminformation
-            .formname
-              = form.name
-              %br
-            .description
-              = h form.description
-          %td
-            %ul
-              - form.diseases.each do |disease|
-                %li.diseaselist
-                  = h disease.disease_name
-          %td
-            = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
-          %td
-            = h form.event_type.humanize
+    - if @event.form_references.size > 0
+      - form_for(:event_form, :url => { :action => "destroy", :event_id => "3" }) do |f|
+        %table.list
+          %tr
+            %th.forminformation
+              Form Information
+            %th Diseases
+            %th Jurisdiction
+            %th Event Type
+            %th Remove from event
+          - for form in @forms_in_use
+            %tr.roll
+              %td.forminformation
+                .formname
+                  = form.name
+                  %br
+                .description
+                  = h form.description
+              %td
+                %ul
+                  - form.diseases.each do |disease|
+                    %li.diseaselist
+                      = h disease.disease_name
+              %td
+                = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
+              %td
+                = h form.event_type.humanize
+              %td
+                = check_box_tag("forms_to_remove[]", form.id)
+        %br
+        = submit_tag("Remove Forms")
+    -else
+      %em
+        None in use.
 
 #forms_available
   #rot
