@@ -263,7 +263,7 @@ class Event < ActiveRecord::Base
         allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
         where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
         where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ") )"
-      end
+      end      
 
       # Debt: The UI shows the user a format to use. Something a bit more robust
       # could be in place.
@@ -288,10 +288,20 @@ class Event < ActiveRecord::Base
           where_clause += "events.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) +
             "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
         elsif !options[:entered_on_start].blank?
-          where_clause += "events.created_at > '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
+          where_clause += "events.created_at > '" +  sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
         else
           where_clause += "events.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
         end
+      end
+
+      if not options[:record_number].blank?
+        issue_query = true
+        where_clause += " AND events.record_number = '#{sanitize_sql_for_conditions(["%s", options[:record_number]])}'"
+      end
+
+      if not options[:pregnancy_status].blank?
+        issue_query = true
+        where_clause += " AND participations_risk_factors.pregnant_id = '#{sanitize_sql_for_conditions(["%s", options[:pregnancy_status]])}'"
       end
 
       # Debt: The sql_term building is duplicated in Person. Where do you
@@ -495,7 +505,7 @@ class Event < ActiveRecord::Base
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  def self.find_by_criteria(*args)
+  def self.find_by_criteria(*args)    
     options = args.extract_options!
 
     return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 
@@ -506,14 +516,15 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-          :include => [ { :interested_party => { :person_entity => :person } },
-            :address,
-            :disease_event,
-            :jurisdiction,
-            :associated_jurisdictions
-          ],
-          :conditions => where_clause,
-          :order => order_by_clause)
+                                   :include => [{:interested_party => { :person_entity => :person } },
+                                                {:interested_party => :risk_factor},
+                                                 :address,
+                                                 :disease_event,
+                                                 :jurisdiction,
+                                                 :associated_jurisdictions
+                                               ],
+                                   :conditions => where_clause,
+                                   :order => order_by_clause)
         results
       end
     end

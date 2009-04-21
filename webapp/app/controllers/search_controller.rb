@@ -63,7 +63,6 @@ class SearchController < ApplicationController
   end
 
   def cmrs
-
     flash[:error] = ""
     error_details = []
 
@@ -120,19 +119,21 @@ class SearchController < ApplicationController
         raise if (!error_details.empty?)
 
         @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name],
-          :diseases => params[:diseases],
-          :gender => params[:gender],
-          :sw_last_name => params[:sw_last_name],
-          :sw_first_name => params[:sw_first_name],
-          :workflow_state => params[:workflow_state],
-          :birth_date => @birth_date,
-          :entered_on_start => entered_on_start,
-          :entered_on_end => entered_on_end,
-          :city => params[:city],
-          :county => params[:county],
-          :jurisdiction_id => params[:jurisdiction_id],
-          :event_type => params[:event_type]
-        )
+                                       :diseases => params[:diseases],
+                                       :gender => params[:gender],
+                                       :sw_last_name => params[:sw_last_name],
+                                       :sw_first_name => params[:sw_first_name],
+                                       :workflow_state => params[:workflow_state],
+                                       :birth_date => @birth_date,
+                                       :entered_on_start => entered_on_start,
+                                       :entered_on_end => entered_on_end,
+                                       :city => params[:city],
+                                       :county => params[:county],
+                                       :jurisdiction_id => params[:jurisdiction_id],
+                                       :event_type => params[:event_type],
+                                       :record_number => params[:record_number],
+                                       :pregnancy_status => params[:pregnancy_status]
+                                       )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]

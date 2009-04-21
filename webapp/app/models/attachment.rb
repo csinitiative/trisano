@@ -42,11 +42,12 @@ class Attachment < ActiveRecord::Base
     'image/jpeg',
     'image/gif',
     'image/png',
-    'image/tiff'
+    'image/tiff',
+    'image/bmp',
+    'text/plain'
   ]
 
-  validates_attachment :content_type => "The file you uploaded was not a supported file type.",
-    :size         => "The file you uploaded was larger than the maximum size of 10MB"
+  validates_attachment :size         => "The file you uploaded was larger than the maximum size of 10MB"
   validates_inclusion_of :category, :in => self.valid_categories, :message => "is not valid", :allow_blank => true
   
   attr_accessible :event_id, :category
