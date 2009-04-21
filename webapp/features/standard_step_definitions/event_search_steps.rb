@@ -31,11 +31,18 @@ Given /^a morbidity event with a pregnant patient$/ do
   @event_to_match.save!
 end
 
-Given /^a morbidity event with a state status "([^\"]*)"$/ do |arg1|
-  @event_to_match = create_basic_event('morbidity', 'Confirmed by state')
-  @event_to_match.state_case_status = ExternalCode.confirmed
+Given /^a morbidity event with a state status "([^\"]*)"$/ do |status|
+  @event_to_match = create_basic_event('morbidity', 'state status')
+  @event_to_match.state_case_status = ExternalCode.send(status.downcase.underscore)
   @event_to_match.save!
 end
+
+Given /^a morbidity event with a LHD status "([^\"]*)"$/ do |status|
+  @event_to_match = create_basic_event('morbidity', 'lhd status')
+  @event_to_match.lhd_case_status = ExternalCode.send(status.downcase.underscore)
+  @event_to_match.save!
+end
+
 
 When /^I navigate to the event search form$/ do
   visit search_cmrs_path

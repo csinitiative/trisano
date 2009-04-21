@@ -38,11 +38,12 @@ Feature: Searching for Events using core fields for criteria.
     Then I should receive 1 matching record
 
   Scenario: Searching for an event by local health department status
-    Given a morbidity event with a LHD status "Confirmed"
-    And a morbidity event with the LHD staus "Probable"
-    And I am logged in as a suoer user
+    Given a morbidity event with a LHD status "Probable"
+    And another morbidity event
+    And I am logged in as a super user
 
-    When I select "Confirmed" from "lhd_status"
+    When I navigate to the event search form
+    And I select "Probable" from "lhd_status"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -51,7 +52,8 @@ Feature: Searching for Events using core fields for criteria.
     Given a morbidity event that has been sent to the CDC
     And another morbidity event
 
-    When I select "Yes" from "sent_to_cdc"
+    When I navigate to the event search form
+    And I select "Yes" from "sent_to_cdc"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -61,7 +63,8 @@ Feature: Searching for Events using core fields for criteria.
     And a morbidity event firts reported on January 1st, 2008
     And I am logged in as a super user
 
-    When I enter January 1st, 2008 into the date first reported to public health field
+    When I navigate to the event search form
+    And I enter January 1st, 2008 into the date first reported to public health field
     And I submit the search
 
     Then I should receive 1 matching record
@@ -72,7 +75,8 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity even
     And I am logged in as super user
 
-    When I select "Davis" from "investigator_field"
+    When I navigate to the event search form
+    And I select "Davis" from "investigator_field"
     And I submit the search
 
     Then I should receive 1 matching record.
@@ -82,7 +86,8 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
 
-    When I enter "blah" into "other_data_1"
+    When I navigate to the event search form
+    And I enter "blah" into "other_data_1"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -92,8 +97,10 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
 
-    When I enter "blah" into "other_data_1"
+    When I navigate to the event search form
+    And I enter "blah" into "other_data_1"
     And I submit the search
 
     Then I should receive 1 matching record
+
 

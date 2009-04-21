@@ -304,6 +304,11 @@ class Event < ActiveRecord::Base
         where_clause += " AND events.state_case_status_id = '#{sanitize_sql_for_conditions(["%s", options[:state_status]])}'"
       end
 
+      if not options[:lhd_status].blank?
+        issue_query = true
+        where_clause += " AND events.lhd_case_status_id = '#{sanitize_sql_for_conditions(["%s", options[:lhd_status]])}'"
+      end
+
       if not options[:pregnancy_status].blank?
         issue_query = true
         where_clause += " AND participations_risk_factors.pregnant_id = '#{sanitize_sql_for_conditions(["%s", options[:pregnancy_status]])}'"

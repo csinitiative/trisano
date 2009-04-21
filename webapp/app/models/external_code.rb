@@ -66,6 +66,30 @@ class ExternalCode < ActiveRecord::Base
     find :first, :conditions => "code_name = 'case' AND the_code = 'C'"
   end
 
+  def self.probable
+    find :first, :conditions => "code_name = 'case' AND the_code = 'P'"
+  end
+
+  def self.suspect
+    find :first, :conditions => "code_name = 'case' AND the_code = 'S'"
+  end
+
+  def self.not_a_case
+    find :first, :conditions => "code_name = 'case' AND the_code = 'NC'"
+  end
+
+  def self.chronic_carrier
+    find :first, :conditions => "code_name = 'case' AND the_code = 'CC'"
+  end
+
+  def self.discarded
+    find :first, :conditions => "code_name = 'case' AND the_code = 'D'"
+  end
+
+  def self.unknown
+    find :first, :conditions => "code_name = 'case' AND the_code = 'UNK'"
+  end
+
   # Debt: This query bypasses AR because of an issue in acts_as_audible where
   # using an array in a condition was failing
   def self.find_codes_for_autocomplete(condition, limit=10)

@@ -66,8 +66,11 @@
             %option{ :value => status.state, :selected => status.state == (params[:workflow_state]) ? "selected" : nil}
               = "#{status.description}"
       %div{:class => 'horiz'}
-        %label{:for => 'state_status'} State Status
+        %label{:for => 'state_status'} State Case Status
         = case_status_select(:state_status, params['state_status'].to_i)
+      %div{:class => 'horiz'}
+        %label{:for => 'lhd_status'} LHD Case Status
+        = case_status_select(:lhd_status, params['lhd_status'].to_i)
       %br{ :clear => "all" }
       %br
       %div{ :class => "horiz" }

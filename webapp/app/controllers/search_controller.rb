@@ -133,7 +133,8 @@ class SearchController < ApplicationController
                                        :event_type => params[:event_type],
                                        :record_number => params[:record_number],
                                        :pregnancy_status => params[:pregnancy_status],
-                                       :state_status => params[:state_status]
+                                       :state_status => params[:state_status],
+                                       :lhd_status => params[:lhd_status]
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
