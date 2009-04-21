@@ -87,6 +87,7 @@ if [ $? != 0 ] ; then
 fi
 
 echo "Performing ETL data manipulation"
+# TODO: make this error out of dw.sql has problems
 $PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -f $ETL_SCRIPT $DEST_DB_NAME
 
 if [ $? != 0 ] ; then

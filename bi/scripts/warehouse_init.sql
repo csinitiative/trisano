@@ -25,13 +25,24 @@ GRANT USAGE ON SCHEMA trisano TO nedss_dw;
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
 );
+TRUNCATE TABLE trisano.current_schema_name;
 INSERT INTO trisano.current_schema_name VALUES ('warehouse_a');
+
+CREATE TABLE trisano.etl_success (
+    success BOOLEAN,
+    entrydate TIMESTAMPTZ DEFAULT NOW()
+);
+INSERT INTO trisano.etl_success (success) VALUES (FALSE);
 
 CREATE OR REPLACE FUNCTION trisano.prepare_etl() RETURNS BOOLEAN AS $$
 BEGIN
     RAISE NOTICE 'Preparing for ETL process by creating staging schema';
     EXECUTE 'DROP SCHEMA IF EXISTS staging CASCADE';
     CREATE SCHEMA staging;
+    EXECUTE 'DROP SCHEMA IF EXISTS public CASCADE';
+    CREATE SCHEMA public;
+    TRUNCATE TABLE trisano.etl_success;
+    INSERT INTO trisano.etl_success (success) VALUES (FALSE);
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
@@ -42,7 +53,12 @@ DECLARE
     new_schema TEXT;
     tmp TEXT;
     viewname TEXT;
+    validetl BOOLEAN;
 BEGIN
+    SELECT success INTO validetl FROM trisano.etl_success ORDER BY entrydate LIMIT 1;
+    IF NOT validetl THEN
+        RAISE EXCEPTION 'Last ETL process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
+    END IF;
     SELECT schemaname FROM trisano.current_schema_name LIMIT 1 INTO cur_schema;
     IF cur_schema = 'warehouse_a' THEN
         new_schema = 'warehouse_b';

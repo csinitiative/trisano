@@ -29,6 +29,54 @@ BEGIN;
 
 SET search_path = staging, public;
 
+CREATE TABLE dw_date_dimension (
+    id              BIGSERIAL PRIMARY KEY,
+    fulldate        DATE UNIQUE NOT NULL,
+    day_of_week     INTEGER,
+    day_of_month    INTEGER,
+    day_of_year     INTEGER,
+    month           INTEGER,
+    quarter         INTEGER,
+    week_of_year    INTEGER,
+    year            INTEGER
+);
+
+-- Takes a date and returns its ID in the dw_date_dimension table, inserting it
+-- if it doesn't exist
+CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS bigint AS $$ 
+DECLARE
+    date_id BIGINT;
+BEGIN
+    BEGIN
+        INSERT INTO dw_date_dimension (fulldate, day_of_week, day_of_month, day_of_year, month, quarter, week_of_year, year)
+            VALUES (d, EXTRACT(DOW FROM d), EXTRACT(DAY FROM d), EXTRACT(DOY FROM d),
+            EXTRACT(MONTH FROM d), EXTRACT(QUARTER FROM d), EXTRACT(WEEK FROM d),
+            EXTRACT(YEAR FROM d)) RETURNING id INTO date_id;
+    EXCEPTION WHEN unique_violation THEN
+        SELECT id INTO date_id FROM dw_date_dimension WHERE fulldate = d;
+    END;
+    RETURN date_id;
+END;
+$$ LANGUAGE plpgsql VOLATILE STRICT;
+
+CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMP) RETURNS BIGINT AS $$
+DECLARE
+    date_id BIGINT;
+BEGIN
+    SELECT INTO date_id upsert_date(t::DATE);
+    RETURN date_id;
+END;
+$$ LANGUAGE plpgsql VOLATILE STRICT;
+
+CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMPTZ) RETURNS BIGINT AS $$
+DECLARE
+    date_id BIGINT;
+BEGIN
+    SELECT INTO date_id upsert_date(t::DATE);
+    RETURN date_id;
+END;
+$$ LANGUAGE plpgsql VOLATILE STRICT;
+
 CREATE OR REPLACE FUNCTION drop_my_object(a text, b text) RETURNS text AS $$
 BEGIN
 	EXECUTE 'DROP ' || b || ' ' || a || ';';
@@ -99,8 +147,8 @@ SELECT
 	people.first_name,
 	people.middle_name,
 	people.last_name,
-	people.birth_date,
-	people.date_of_death,
+	upsert_date(people.birth_date) AS birth_date,
+	upsert_date(people.date_of_death) AS date_of_death,
 --	food_handler_ec.code_description AS food_handler,			-- code_description?
 --	healthcare_worker_ec.code_description AS healthcare_worker,		-- code_description?
 --	group_living_ec.code_description AS group_living,			-- code_description?
@@ -158,7 +206,7 @@ SELECT
     glec.code_description AS group_living,
     dcaec.code_description AS day_care_association,
     pregec.code_description AS pregnant,
-    prf.pregnancy_due_date,
+    upsert_date(prf.pregnancy_due_date) AS pregnancy_due_date,
     prf.risk_factors AS additional_risk_factors,
     prf.risk_factors_notes AS risk_factor_details,
     prf.occupation,
@@ -182,15 +230,15 @@ SELECT
     stateec.code_description AS state,
     pataddr.postal_code,
 
-	disev.disease_onset_date AS date_disease_onset,
-	disev.date_diagnosed AS date_disease_diagnosed,
-	events.results_reported_to_clinician_date,
-	events."first_reported_PH_date" AS date_reported_to_public_health,
+	upsert_date(disev.disease_onset_date) AS date_disease_onset,
+	upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
+	upsert_date(events.results_reported_to_clinician_date) AS results_reported_to_clinician_date,
+	upsert_date(events."first_reported_PH_date") AS date_reported_to_public_health,
 
-	events.event_onset_date AS date_entered_into_system,
-	events.investigation_started_date AS date_investigation_started,
-	events."investigation_completed_LHD_date" AS date_investigation_completed,
-	events.review_completed_by_state_date,
+	upsert_date(events.event_onset_date) AS date_entered_into_system,
+	upsert_date(events.investigation_started_date) AS date_investigation_started,
+	upsert_date(events."investigation_completed_LHD_date") AS date_investigation_completed,
+	upsert_date(events.review_completed_by_state_date) AS review_completed_by_state_date,
 
 	events.created_at AS date_created,
 	events.updated_at AS date_updated,
@@ -313,13 +361,13 @@ SELECT
     stateec.code_description AS state,
     pataddr.postal_code,
 
-	disev.disease_onset_date AS date_disease_onset,
-	disev.date_diagnosed AS date_disease_diagnosed,
+	upsert_date(disev.disease_onset_date) AS date_disease_onset,
+	upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
 
-	events.event_onset_date AS date_entered_into_system,
-	events.investigation_started_date AS date_investigation_started,
-	events."investigation_completed_LHD_date" AS date_investigation_completed,
-	events.review_completed_by_state_date,
+	upsert_date(events.event_onset_date) AS date_entered_into_system,
+	upsert_date(events.investigation_started_date) AS date_investigation_started,
+	upsert_date(events."investigation_completed_LHD_date") AS date_investigation_completed,
+	upsert_date(events.review_completed_by_state_date) AS review_completed_by_state_date,
 
 	events.created_at AS date_created,
 	events.updated_at AS date_updated,
@@ -439,8 +487,8 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
     pl.name AS hospital_name,
-    hpart.admission_date,
-    hpart.discharge_date,
+    upsert_date(hpart.admission_date) AS admission_date,
+    upsert_date(hpart.discharge_date) AS discharge_date,
     hpart.medical_record_number,
     hpart.hospital_record_number
 FROM
@@ -473,8 +521,8 @@ SELECT
     lr.reference_range,
     intec.code_description AS interpretation,
     ssec.code_description AS specimen_source,
-    lr.collection_date,
-    lr.lab_test_date,
+    upsert_date(lr.collection_date) AS collection_date,
+    upsert_date(lr.lab_test_date) AS lab_test_date,
     uphlec.code_description AS specimen_sent_to_uphl
 FROM
 	lab_results lr
@@ -510,8 +558,8 @@ SELECT
     lr.reference_range,
     intec.code_description AS interpretation,
     ssec.code_description AS specimen_source,
-    lr.collection_date,
-    lr.lab_test_date,
+    upsert_date(lr.collection_date) AS collection_date,
+    upsert_date(lr.lab_test_date) AS lab_test_date,
     uphlec.code_description AS specimen_sent_to_uphl
 FROM
 	lab_results lr
@@ -562,7 +610,7 @@ SELECT
     END AS dw_contact_events_id,
     pt.treatment_id,
     tgec.code_description AS treatment_given,
-    pt.treatment_date AS date_of_treatment,
+    upsert_date(pt.treatment_date) AS date_of_treatment,
     pt.treatment AS treatment_notes
 FROM
 	participations_treatments pt
@@ -588,7 +636,7 @@ SELECT
     NULL,
     pt.treatment_id,
     tgec.code_description AS treatment_given,
-    pt.treatment_date AS date_of_treatment,
+    upsert_date(pt.treatment_date) AS date_of_treatment,
     pt.treatment AS treatment_notes
 FROM
     participations_treatments pt
@@ -726,7 +774,7 @@ SELECT
     pe.id,
     events.parent_id AS dw_morbidity_events_id,
     pe.user_id AS investigator_id,
-    pe.encounter_date,
+    upsert_date(pe.encounter_date) AS encounter_date,
     pe.encounter_location_type AS location,
     pe.description
 FROM
@@ -764,5 +812,8 @@ FROM
 WHERE
     events.type = 'EncounterEvent'
 ;
+
+TRUNCATE trisano.etl_success;
+INSERT INTO trisano.etl_success (success) VALUES (TRUE);
 
 COMMIT;
