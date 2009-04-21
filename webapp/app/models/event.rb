@@ -299,6 +299,11 @@ class Event < ActiveRecord::Base
         where_clause += " AND events.record_number = '#{sanitize_sql_for_conditions(["%s", options[:record_number]])}'"
       end
 
+      if not options[:pregnancy_status].blank?
+        issue_query = true
+        where_clause += " AND participations_risk_factors.pregnant_id = '#{sanitize_sql_for_conditions(["%s", options[:pregnancy_status]])}'"
+      end
+
       # Debt: The sql_term building is duplicated in Person. Where do you
       # factor out code common to models? Also, it may be that we don't
       # need two different search avenues (CMR and People).
@@ -495,7 +500,7 @@ class Event < ActiveRecord::Base
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  def self.find_by_criteria(*args)
+  def self.find_by_criteria(*args)    
     options = args.extract_options!
 
     return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type]) 
@@ -507,6 +512,7 @@ class Event < ActiveRecord::Base
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
                                    :include => [{:interested_party => { :person_entity => :person } },
+                                                {:interested_party => :risk_factor},
                                                  :address,
                                                  :disease_event,
                                                  :jurisdiction,

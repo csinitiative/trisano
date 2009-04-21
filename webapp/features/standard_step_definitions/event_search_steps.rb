@@ -25,6 +25,12 @@ Given /^a morbidity event with the record number (\d{15})$/ do |record_number|
   @event_to_match.save!  
 end
 
+Given /^a morbidity event with a pregnant patient$/ do
+  @event_to_match = create_basic_event('morbidity', 'Pregnant')
+  @event_to_match.interested_party.build_risk_factor(:pregnant_id => ExternalCode.yes_id)
+  @event_to_match.save!
+end
+
 When /^I navigate to the event search form$/ do
   visit search_cmrs_path
   response.should contain("Event Search")
@@ -34,7 +40,7 @@ When /^I enter (\d{15}) into the record number search field$/ do |record_number|
   fill_in "record_number", :with => record_number
 end
 
-When /^I submit search$/ do
+When /^I submit the search$/ do
   click_button 'submit_query'
 end
 

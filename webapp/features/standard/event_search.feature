@@ -11,7 +11,7 @@ Feature: Searching for Events using core fields for criteria.
 
     When I navigate to the event search form
     And I enter 300000000000001 into the record number search field
-    And I submit search
+    And I submit the search
 
     Then I should receive 1 matching record
 
@@ -20,8 +20,9 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
 
-    When I select Yes from pregnancy status
-    And I press "Submit Query"
+    When I navigate to the event search form    
+    And I select "Yes" from "pregnancy_status"
+    And I submit the search
     
     Then I should receive 1 matching record
 
@@ -30,8 +31,8 @@ Feature: Searching for Events using core fields for criteria.
     And a morbidity event with the state staus "Probable"
     And I am logged in as a super user
 
-    When I select state status "Confirmed"
-    And I press "Submit Query"
+    When I "Confirmed" from "state_status"
+    And I submit the search
 
     Then I should receive 1 matching record
 
@@ -40,8 +41,8 @@ Feature: Searching for Events using core fields for criteria.
     And a morbidity event with the LHD staus "Probable"
     And I am logged in as a suoer user
 
-    When I select LHD status "Confirmed"
-    And I press "Submit Query"
+    When I select "Confirmed" from "lhd_status"
+    And I submit the search
 
     Then I should receive 1 matching record
 
@@ -49,8 +50,8 @@ Feature: Searching for Events using core fields for criteria.
     Given a morbidity event that has been sent to the CDC
     And another morbidity event
 
-    When I select "Yes" from the Sent to CDC field
-    And I press "Submit Query"
+    When I select "Yes" from "sent_to_cdc"
+    And I submit the search
     
     Then I should receive 1 matching record
 
@@ -59,8 +60,8 @@ Feature: Searching for Events using core fields for criteria.
     And a morbidity event firts reported on January 1st, 2008
     And I am logged in as a super user
 
-    When I type January 1st, 2008 into the date first reported to public health field
-    And I press "Submit Query"
+    When I enter January 1st, 2008 into the date first reported to public health field
+    And I submit the search
     
     Then I should receive 1 matching record
     
@@ -70,8 +71,8 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity even
     And I am logged in as super user
 
-    When I select Davis in investigator field
-    And I press "Submit Query"
+    When I select "Davis" from "investigator_field"
+    And I submit the search
 
     Then I should receive 1 matching record.
 
@@ -80,8 +81,8 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
     
-    When I fill in the 'other data 1' field with "blah"
-    And I press "Submit Query"
+    When I enter "blah" into "other_data_1"
+    And I submit the search
 
     Then I should receive 1 matching record
 
@@ -90,8 +91,8 @@ Feature: Searching for Events using core fields for criteria.
     And another morbidity event
     And I am logged in as a super user
     
-    When I fill in the 'other data 1' field with "blah"
-    And I press "Submit Query"
+    When I enter "blah" into "other_data_1"
+    And I submit the search
 
     Then I should receive 1 matching record
 

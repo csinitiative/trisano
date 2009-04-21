@@ -199,4 +199,10 @@ module ApplicationHelper
       </script>
     JS
   end
+
+  def yesno_select(name, selected=nil, empty_option=true)
+    options = ExternalCode.yesno.collect{|c| [c.code_description, c.id]}
+    options = options.unshift([nil, nil]) if empty_option
+    select_tag name.to_s, options_for_select(options, :selected => selected)
+  end
 end

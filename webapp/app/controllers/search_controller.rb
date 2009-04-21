@@ -131,8 +131,9 @@ class SearchController < ApplicationController
                                        :county => params[:county],
                                        :jurisdiction_id => params[:jurisdiction_id],
                                        :event_type => params[:event_type],
-                                       :record_number => params[:record_number]
-        )
+                                       :record_number => params[:record_number],
+                                       :pregnancy_status => params[:pregnancy_status]
+                                       )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]

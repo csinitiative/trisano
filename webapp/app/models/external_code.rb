@@ -37,6 +37,10 @@ class ExternalCode < ActiveRecord::Base
     no.id if no
   end
 
+  def self.yesno
+    find(:all, :conditions => "code_name = 'yesno'", :order => 'sort_order')
+  end
+
   def self.unspecified_location_id
     code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
     code.id unless code.nil?
