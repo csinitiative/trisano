@@ -314,6 +314,15 @@ class Event < ActiveRecord::Base
         where_clause += " AND participations_risk_factors.pregnant_id = '#{sanitize_sql_for_conditions(["%s", options[:pregnancy_status]])}'"
       end
 
+      if not options[:sent_to_cdc].blank?
+        issue_query = true
+        if true.to_s == options[:sent_to_cdc]
+          where_clause += " AND events.sent_to_cdc = true"
+        else
+          where_clause += " AND (events.sent_to_cdc = false OR events.sent_to_cdc is NULL)"
+        end
+      end
+
       # Debt: The sql_term building is duplicated in Person. Where do you
       # factor out code common to models? Also, it may be that we don't
       # need two different search avenues (CMR and People).

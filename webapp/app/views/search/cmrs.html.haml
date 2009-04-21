@@ -118,6 +118,9 @@
       %div{:class => 'horiz'}
         %label{ :for => 'pregnancy_status' } Pregnant
         = yesno_select(:pregnancy_status, params['pregnancy_status'].to_i)
+      %div{:class => 'horiz'}
+        %label{:for => 'sent_to_cdc'} Sent to CDC
+        = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
     %br
     %input{ :type => "submit", :id => 'submit_query' }
 

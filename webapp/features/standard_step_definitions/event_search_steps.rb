@@ -43,6 +43,11 @@ Given /^a morbidity event with a LHD status "([^\"]*)"$/ do |status|
   @event_to_match.save!
 end
 
+Given /^a morbidity event that has been sent to the CDC$/ do
+  @event_to_match = create_basic_event('morbidity', 'sent_to_cdc')
+  @event_to_match.sent_to_cdc = true
+  @event_to_match.save!
+end
 
 When /^I navigate to the event search form$/ do
   visit search_cmrs_path

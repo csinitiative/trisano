@@ -134,7 +134,8 @@ class SearchController < ApplicationController
                                        :record_number => params[:record_number],
                                        :pregnancy_status => params[:pregnancy_status],
                                        :state_status => params[:state_status],
-                                       :lhd_status => params[:lhd_status]
+                                       :lhd_status => params[:lhd_status],
+                                       :sent_to_cdc => params[:sent_to_cdc]
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
