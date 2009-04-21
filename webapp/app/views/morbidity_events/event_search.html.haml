@@ -35,7 +35,7 @@
         - jurisdictions = event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
         - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
         - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
-        %tr
+        %tr{:id => "event_#{event.id}"}
           %td 
             = event.party.last_comma_first if output_name
           %td

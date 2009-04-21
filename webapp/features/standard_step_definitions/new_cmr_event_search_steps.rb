@@ -34,6 +34,14 @@ When /^I search for "(.+)"$/ do |search_string|
   click_button "Search"
 end
 
+When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_name |
+  click_link_within "#event_#{@m.id}", "Create and edit CMR using this person"
+end
+
+When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
+  click_link_within "#event_#{@child.id}", "Create and edit CMR using this person"
+end
+
 Then /^I should see a search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
   field_labeled("Name").value.should be_nil
@@ -79,4 +87,11 @@ Then /^I should see two morbidity events under one name$/ do
     tr.should_not contain("Jones")
     tr.should contain("Morbidity event")
   end
+end
+
+Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
+  current_url.should =~ /(\d?)\/edit/
+  $1.should_not == @m.id
+  $1.should_not == @child.id if @child
+  field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end

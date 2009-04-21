@@ -86,15 +86,16 @@ class MorbidityEventsController < EventsController
   def create
     go_back = params.delete(:return)
     
+    @event = MorbidityEvent.new
     if params[:from_event]
-      org_event = HumanEvent.find(params[:from_event])
+      org_event = Event.find(params[:from_event])
       components = params[:event_components]
-      @event = org_event.clone_event(components)
+      org_event.copy_event(@event, components || []) # Copy instead of clone to make sure contacts become morbs
 
       # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
       @event.add_note("Event derived from " + ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) )) if components && !components.empty?
     else
-      @event = MorbidityEvent.new(params[:morbidity_event])
+      @event.attributes = params[:morbidity_event]
 
       # Allow for test scripts and developers to jump directly to the "under investigation" state
       if RAILS_ENV == 'production'

@@ -41,3 +41,20 @@ Feature: Searching for existing people or events before adding a CMR
     
     When I search for "Jones"
     Then I should see two morbidity events under one name
+
+  Scenario: Creating a new morb event from an existing morb event
+    Given a simple morbidity event for last name Jones
+    And I am logged in as a super user
+
+    When I search for "Jones"
+    And I create a new morbidity event from the morbidity named Jones
+    Then I should be in edit mode for a new copy of Jones
+    
+  Scenario: Creating a new morb event from an existing contact event
+    Given a simple morbidity event for last name Jones
+    And there is a contact named Smith
+    And I am logged in as a super user
+
+    When I search for "Smith"
+    And I create a new morbidity event from the contact named Smith
+    Then I should be in edit mode for a new copy of Smith
