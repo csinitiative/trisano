@@ -3,22 +3,22 @@ Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 
 This file is part of TriSano.
 
-TriSano is free software: you can redistribute it and/or modify it under the 
-terms of the GNU Affero General Public License as published by the 
-Free Software Foundation, either version 3 of the License, or 
+TriSano is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-TriSano is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+TriSano is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
 for more details.
 
-You should have received a copy of the GNU Affero General Public License along 
+You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 
 <fieldset>
-  <legend>Administrative Information 
+  <legend>Administrative Information
     <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
     <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
   </legend>
@@ -64,7 +64,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% unless RAILS_ENV == "production" %>
         <% core_element :workflow_state, f, :horiz do -%>
           <%= f.label(:workflow_state) %>
-          <%= f.core_dropdown_field(:workflow_state, MorbidityEvent.get_states_and_descriptions, :state, :description, {:include_blank => false}) %>
+          <% states_options = MorbidityEvent.get_states_and_descriptions.collect{|s| [s.description, s.workflow_state.to_s]} -%>
+          <% options =  options_for_select(states_options, :selected => f.object.workflow_state.to_s) %>
+          <%= select_tag('morbidity_event_workflow_state', options) %>
         <% end -%>
         <% core_element :investigation_started_date, f, :horiz do -%>
           <%= f.label(:investigation_started_date, "Date investigation started") %>

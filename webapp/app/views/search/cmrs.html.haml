@@ -62,9 +62,7 @@
         %label Event Status
         %select{ :name => "workflow_state"}
           %option
-          - for status in @workflow_states
-            %option{ :value => status.state, :selected => status.state == (params[:workflow_state]) ? "selected" : nil}
-              = "#{status.description}"
+          = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
       %div{:class => 'horiz'}
         %label{:for => 'state_case_status_id'} State Case Status
         = case_status_select(:state_case_status_id, params['state_case_status_id'].to_i)

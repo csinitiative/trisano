@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 require 'ostruct'
 
@@ -29,7 +29,7 @@ class MorbidityEvent < HumanEvent
     # on_entry evaluated at wrong time, so note is attached to meta for :new
     state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
       assign_to_lhd
-    end        
+    end
     state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
       assign_to_lhd
       accept_by_lhd :accept
@@ -39,7 +39,7 @@ class MorbidityEvent < HumanEvent
       assign_to_lhd
       assign_to_investigator
       investigate
-    end 
+    end
     state :rejected_by_lhd, :meta => {:description => "Rejected by Local Health Dept."} do
       on_entry do |prior_state, triggering_event, *event_args|
         self.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
@@ -48,7 +48,7 @@ class MorbidityEvent < HumanEvent
     end
     state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
       assign_to_lhd
-      investigate :accept      
+      investigate :accept
       reject_by_investigator :reject
       assign_to_investigator
       # need a way to reset state if an event queue goes away.
@@ -58,7 +58,7 @@ class MorbidityEvent < HumanEvent
     end
     state :under_investigation do
       on_entry do |prior_state, triggering_event, *event_args|
-        self.investigator = User.current_user 
+        self.investigator = User.current_user
         self.investigation_started_date = Date.today
       end
       assign_to_lhd
@@ -66,7 +66,7 @@ class MorbidityEvent < HumanEvent
       assign_to_investigator
     end
     state :rejected_by_investigator do
-      on_entry do |prior_state, triggering_event, *event_args| 
+      on_entry do |prior_state, triggering_event, *event_args|
         self.investigator_id = nil
         self.investigation_started_date = nil
       end
@@ -104,12 +104,12 @@ class MorbidityEvent < HumanEvent
     end
     state :closed, :meta => {:description => 'Approved by State'} do
       assign_to_lhd
-    end        
+    end
   end
 
   def self.get_states_and_descriptions
     new.states.collect do |state|
-      OpenStruct.new :state => state, :description => state_description(state)
+      OpenStruct.new :workflow_state => state, :description => state_description(state)
     end
   end
 
@@ -119,12 +119,12 @@ class MorbidityEvent < HumanEvent
 
   def self.core_views
     [
-      ["Demographics", "Demographics"], 
-      ["Clinical", "Clinical"], 
-      ["Laboratory", "Laboratory"], 
+      ["Demographics", "Demographics"],
+      ["Clinical", "Clinical"],
+      ["Laboratory", "Laboratory"],
       ["Contacts", "Contacts"],
-      ["Epidemiological", "Epidemiological"], 
-      ["Reporting", "Reporting"], 
+      ["Epidemiological", "Epidemiological"],
+      ["Reporting", "Reporting"],
       ["Administrative", "Administrative"]
     ]
   end
@@ -136,8 +136,8 @@ class MorbidityEvent < HumanEvent
     :allow_destroy => true,
     :reject_if => proc { |attrs| check_agency_attrs(attrs) }
 
-  accepts_nested_attributes_for :reporter, 
-    :allow_destroy => true, 
+  accepts_nested_attributes_for :reporter,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| check_reporter_attrs(attrs) }
 
   def self.check_agency_attrs(attrs)
@@ -171,14 +171,14 @@ class MorbidityEvent < HumanEvent
   end
 
   private
-  
+
   def generate_mmwr
-    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date, 
-      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed, 
+    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date,
+      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed,
       :labresultdate => definitive_lab_result.nil? ? nil : definitive_lab_result.lab_test_date,
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
-    
+
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
   end
