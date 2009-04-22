@@ -1,0 +1,64 @@
+<Schema name="TriSano">
+	<Cube name="MorbidityEvents" caption="Morbidity Events" cache="true" enabled="true">
+		<Table name="dw_morbidity_events_view" schema="trisano">
+		</Table>
+		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
+			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+				<Table name="dw_date_dimension_view" schema="trisano"></Table>
+				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+			</Hierarchy>
+		</Dimension>
+		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
+			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+				<Table name="dw_date_dimension_view" schema="trisano"></Table>
+				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+			</Hierarchy>
+		</Dimension>
+        <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease">
+            <Hierarchy name="Disease" hasAll="true" primaryKey="id">
+                <Table name="diseases_view" schema="trisano"></Table>
+                <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
+            </Hierarchy>
+        </Dimension>
+		<Measure name="Count" column="id" datatype="Integer" aggregator="count" visible="true"></Measure>
+		<Measure name="Pregnant" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN pregnant = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+		<Measure name="Group living" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN group_living = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+		<Measure name="Day care association" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN day_care_association = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+		<Measure name="Healthcare worker" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN healthcare_worker = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+		<Measure name="Food handler" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Time onset to diagnosis" aggregator="sum" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+		<Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+	</Cube>
+</Schema>

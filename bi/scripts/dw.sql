@@ -30,8 +30,7 @@ BEGIN;
 SET search_path = staging, public;
 
 CREATE TABLE dw_date_dimension (
-    id              BIGSERIAL PRIMARY KEY,
-    fulldate        DATE UNIQUE NOT NULL,
+    fulldate        DATE PRIMARY KEY,
     day_of_week     INTEGER,
     day_of_month    INTEGER,
     day_of_year     INTEGER,
@@ -43,9 +42,7 @@ CREATE TABLE dw_date_dimension (
 
 -- Takes a date and returns its ID in the dw_date_dimension table, inserting it
 -- if it doesn't exist
-CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS bigint AS $$
-DECLARE
-    date_id BIGINT;
+CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS DATE AS $$
 BEGIN
     BEGIN
         INSERT INTO dw_date_dimension (fulldate, day_of_week, day_of_month, day_of_year,
@@ -53,26 +50,26 @@ BEGIN
             VALUES
                 (d, EXTRACT(DOW FROM d), EXTRACT(DAY FROM d), EXTRACT(DOY FROM d),
                 EXTRACT(MONTH FROM d), EXTRACT(QUARTER FROM d), EXTRACT(WEEK FROM d),
-                EXTRACT(YEAR FROM d)) RETURNING id INTO date_id;
+                EXTRACT(YEAR FROM d));
     EXCEPTION WHEN unique_violation THEN
-        SELECT id INTO date_id FROM dw_date_dimension WHERE fulldate = d;
+        --
     END;
-    RETURN date_id;
+    RETURN d;
 END;
 $$ LANGUAGE plpgsql VOLATILE STRICT;
 
-CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMP) RETURNS BIGINT AS $$
+CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMP) RETURNS DATE AS $$
 DECLARE
-    date_id BIGINT;
+    date_id DATE;
 BEGIN
     SELECT INTO date_id upsert_date(t::DATE);
     RETURN date_id;
 END;
 $$ LANGUAGE plpgsql VOLATILE STRICT;
 
-CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMPTZ) RETURNS BIGINT AS $$
+CREATE OR REPLACE FUNCTION upsert_date(t TIMESTAMPTZ) RETURNS DATE AS $$
 DECLARE
-    date_id BIGINT;
+    date_id DATE;
 BEGIN
     SELECT INTO date_id upsert_date(t::DATE);
     RETURN date_id;

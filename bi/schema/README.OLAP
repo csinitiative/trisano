@@ -1,0 +1,17 @@
+TriSano.OLAP.xml contains a Mondrian OLAP schema definition. In order to make
+it work in Pentaho, you need to edit the
+pentaho-solutions/system/olap/datasources.xml file in Pentaho's biserver
+directory. You'll need to add something like this:
+
+<Catalog name="TriSano">
+    <DataSourceInfo>Provider=mondrian;DataSource=TriSano</DataSourceInfo>
+    <Definition>solution:TriSano/TriSano.OLAP.xml</Definition>
+</Catalog>
+
+The example shown requires you to have defined a data source called TriSano
+which connects to the TriSano data warehouse database. It also assumes you've
+copied the TriSano.OLAP.xml file into
+pentaho-solutions/TriSano/TriSano.OLAP.xml. Then you should be able to log into
+the biserver, and click Tools->Refresh->Repository Cache. Finally, click
+Tools->Refresh->Mondrian Schema Cache. Then you should be able to use the new
+schema by clicking on New Analysis View.
