@@ -64,8 +64,10 @@ Given /^a morbidity event investigated by "([^\"]*)"$/ do |arg1|
   @event_to_match.save!
 end
 
-Given /^a morbidity event with "([^\"]*)" in "([^\"]*)"$/ do |arg1, arg2|
-  pending
+Given /^a morbidity event with "([^\"]*)" set to "([^\"]*)"$/ do |field, value|
+  @event_to_match = create_basic_event('morbidity', 'some_guy')
+  @event_to_match.send("#{field}=", value)
+  @event_to_match.save!
 end
 
 #

@@ -132,13 +132,15 @@ class SearchController < ApplicationController
                                        :jurisdiction_id => params[:jurisdiction_id],
                                        :event_type => params[:event_type],
                                        :record_number => params[:record_number],
-                                       :pregnancy_status => params[:pregnancy_status],
-                                       :state_status => params[:state_status],
-                                       :lhd_status => params[:lhd_status],
+                                       :pregnant_id => params[:pregnant_id],
+                                       :state_case_status_id => params[:state_case_status_id],
+                                       :lhd_case_status_id => params[:lhd_case_status_id],
                                        :sent_to_cdc => params[:sent_to_cdc],
                                        :first_reported_PH_date_start => params[:first_reported_PH_date_start],
                                        :first_reported_PH_date_end => params[:first_reported_PH_date_end],
-                                       :investigated_by => params[:investigated_by]
+                                       :investigator_id => params[:investigator_id],
+                                       :other_data_1 => params[:other_data_1],
+                                       :other_data_2 => params[:other_data_2]
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?

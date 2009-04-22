@@ -309,29 +309,29 @@ class Event < ActiveRecord::Base
         end
       end
 
-      if not options[:record_number].blank?
-        issue_query = true
-        where_clause += " AND events.record_number = '#{sanitize_sql_for_conditions(["%s", options[:record_number]])}'"
+      [{:field => :record_number, :table => :events},
+       {:field => :state_case_status_id, :table => :events},
+       {:field => :lhd_case_status_id, :table => :events},
+       {:field => :pregnant_id, :table => :participations_risk_factors},
+       {:field => :investigator_id, :table => :events}].each do |attr|
+        field = attr[:field]
+        table = attr[:table].to_s
+
+        if not options[field].blank?
+          issue_query = true
+          where_clause += " AND #{table}.#{field.to_s} = '#{sanitize_sql_for_conditions(["%s", options[field]])}'"
+        end
       end
 
-      if not options[:state_status].blank?
-        issue_query = true
-        where_clause += " AND events.state_case_status_id = '#{sanitize_sql_for_conditions(["%s", options[:state_status]])}'"
-      end
+      [{:field => :other_data_1, :table => :events},
+       {:field => :other_data_2, :table => :events}].each do |attr|
+        field = attr[:field]
+        table = attr[:table].to_s
 
-      if not options[:lhd_status].blank?
-        issue_query = true
-        where_clause += " AND events.lhd_case_status_id = '#{sanitize_sql_for_conditions(["%s", options[:lhd_status]])}'"
-      end
-
-      if not options[:pregnancy_status].blank?
-        issue_query = true
-        where_clause += " AND participations_risk_factors.pregnant_id = '#{sanitize_sql_for_conditions(["%s", options[:pregnancy_status]])}'"
-      end
-
-      if not options[:investigated_by].blank?
-        issue_query = true
-        where_clause += " AND events.investigator_id = '#{sanitize_sql_for_conditions(["%s", options[:investigated_by]])}'"
+        if not options[field].blank?
+          issue_query = true
+          where_clause += " AND #{table}.#{field.to_s} ILIKE '#{sanitize_sql_for_conditions(["%s", options[field]])}%'"
+        end
       end
 
       if not options[:sent_to_cdc].blank?

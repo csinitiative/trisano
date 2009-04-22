@@ -21,7 +21,7 @@ Feature: Searching for Events using core fields for criteria.
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I select "Yes" from "pregnancy_status"
+    And I select "Yes" from "pregnant_id"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -32,7 +32,7 @@ Feature: Searching for Events using core fields for criteria.
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I select "Confirmed" from "state_status"
+    And I select "Confirmed" from "state_case_status_id"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -43,7 +43,7 @@ Feature: Searching for Events using core fields for criteria.
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I select "Probable" from "lhd_status"
+    And I select "Probable" from "lhd_case_status_id"
     And I submit the search
 
     Then I should receive 1 matching record
@@ -76,13 +76,13 @@ Feature: Searching for Events using core fields for criteria.
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I select "investigator" from "investigated_by"
+    And I select "investigator" from "investigator_id"
     And I submit the search
 
     Then I should receive 1 matching record
 
   Scenario: Searching for events by 'other data 1' field
-    Given a morbidity event with "blah" in "other_data_1"
+    Given a morbidity event with "other_data_1" set to "blah"
     And another morbidity event
     And I am logged in as a super user
 
@@ -93,7 +93,7 @@ Feature: Searching for Events using core fields for criteria.
     Then I should receive 1 matching record
 
   Scenario: Searching for events by 'other data 2' field
-    Given a morbidity event with "blah" in "other_data_2"
+    Given a morbidity event with "other_data_2" set to "blah"
     And another morbidity event
     And I am logged in as a super user
 
@@ -102,5 +102,3 @@ Feature: Searching for Events using core fields for criteria.
     And I submit the search
 
     Then I should receive 1 matching record
-
-
