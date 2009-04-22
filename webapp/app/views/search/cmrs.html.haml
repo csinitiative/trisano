@@ -127,6 +127,9 @@
       %div{:class => 'horiz'}
         %label{:for => 'sent_to_cdc'} Sent to CDC
         = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
+      %div{:class => 'horiz'}
+        %label{:for => 'investigated_by'} Investigated by
+        = investigators_select :investigated_by, params[:investigated_by].to_i
     %br
     %input{ :type => "submit", :id => 'submit_query' }
 

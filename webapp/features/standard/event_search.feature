@@ -71,35 +71,34 @@ Feature: Searching for Events using core fields for criteria.
     Then I should receive 1 matching record
 
   Scenario: Searching for events by investigator
-    Given an investigator named Davis
-    And a morbidity event investited by Davis
-    And another morbidity even
-    And I am logged in as super user
-
-    When I navigate to the event search form
-    And I select "Davis" from "investigator_field"
-    And I submit the search
-
-    Then I should receive 1 matching record.
-
-  Scenario: Searching for events by 'other data 1' field
-    Given a morbidity event with 'blah' in other data 1
+    Given a morbidity event investigated by "investigator"
     And another morbidity event
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I enter "blah" into "other_data_1"
+    And I select "investigator" from "investigated_by"
+    And I submit the search
+
+    Then I should receive 1 matching record
+
+  Scenario: Searching for events by 'other data 1' field
+    Given a morbidity event with "blah" in "other_data_1"
+    And another morbidity event
+    And I am logged in as a super user
+
+    When I navigate to the event search form
+    And I fill in "other_data_1" with "blah"
     And I submit the search
 
     Then I should receive 1 matching record
 
   Scenario: Searching for events by 'other data 2' field
-    Given a morbidity event with 'blah' in other data 1
+    Given a morbidity event with "blah" in "other_data_2"
     And another morbidity event
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I enter "blah" into "other_data_1"
+    And I fill in "other_data_2" with "blah"
     And I submit the search
 
     Then I should receive 1 matching record

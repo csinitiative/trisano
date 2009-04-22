@@ -137,7 +137,8 @@ class SearchController < ApplicationController
                                        :lhd_status => params[:lhd_status],
                                        :sent_to_cdc => params[:sent_to_cdc],
                                        :first_reported_PH_date_start => params[:first_reported_PH_date_start],
-                                       :first_reported_PH_date_end => params[:first_reported_PH_date_end]
+                                       :first_reported_PH_date_end => params[:first_reported_PH_date_end],
+                                       :investigated_by => params[:investigated_by]
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?

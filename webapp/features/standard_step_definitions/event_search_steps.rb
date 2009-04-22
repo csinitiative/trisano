@@ -58,6 +58,16 @@ Given /^a morbidity event first reported on "([^\"]*)"$/ do |date|
   @event_to_match.save!
 end
 
+Given /^a morbidity event investigated by "([^\"]*)"$/ do |arg1|
+  @event_to_match = create_basic_event('morbidity', 'investigated_by')
+  @event_to_match.investigator = User.find_by_user_name('investigator')
+  @event_to_match.save!
+end
+
+Given /^a morbidity event with "([^\"]*)" in "([^\"]*)"$/ do |arg1, arg2|
+  pending
+end
+
 #
 # Whens
 #
