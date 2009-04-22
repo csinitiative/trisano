@@ -59,12 +59,13 @@ Feature: Searching for Events using core fields for criteria.
     Then I should receive 1 matching record
 
   Scenario: Searching for events by date first reported to public health
-    Given a morbidity event first reported on December 12th, 2008
-    And a morbidity event firts reported on January 1st, 2008
+    Given a morbidity event first reported on "December 12th, 2008"
+    And a morbidity event first reported on "January 1st, 2009"
     And I am logged in as a super user
 
     When I navigate to the event search form
-    And I enter January 1st, 2008 into the date first reported to public health field
+    And I fill in "first_reported_PH_date_start" with "12/13/2008"
+    And I fill in "first_reported_PH_date_end" with "1/2/2009"
     And I submit the search
 
     Then I should receive 1 matching record

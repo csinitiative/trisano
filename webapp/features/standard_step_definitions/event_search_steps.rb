@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+#
+# Givens
+#
 Given /^another morbidity event$/ do
   @other_event = create_basic_event('morbidity', 'Patient')
 end
@@ -49,6 +52,15 @@ Given /^a morbidity event that has been sent to the CDC$/ do
   @event_to_match.save!
 end
 
+Given /^a morbidity event first reported on "([^\"]*)"$/ do |date|
+  @event_to_match = create_basic_event('morbidity', 'first_reported')
+  @event_to_match.first_reported_PH_date = Date.parse(date)
+  @event_to_match.save!
+end
+
+#
+# Whens
+#
 When /^I navigate to the event search form$/ do
   visit search_cmrs_path
   response.should contain("Event Search")
@@ -62,6 +74,9 @@ When /^I submit the search$/ do
   click_button 'submit_query'
 end
 
+#
+# Thens
+#
 Then /^I should receive 1 matching record$/ do
   response.should have_xpath("//a[@id='show-cmr-link-#{@event_to_match.id}']")
 end
