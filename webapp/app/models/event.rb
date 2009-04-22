@@ -23,9 +23,7 @@ class Event < ActiveRecord::Base
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
 
-  if RAILS_ENV == "production"
-    attr_protected :workflow_state
-  end
+  attr_protected :workflow_state
 
   composed_of :age_info, :mapping => [%w(age_at_onset age_at_onset), %w(age_type_id age_type_id)]
   belongs_to  :age_type, :class_name => 'ExternalCode', :foreign_key => :age_type_id
