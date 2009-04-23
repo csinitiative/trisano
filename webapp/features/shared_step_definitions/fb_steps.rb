@@ -37,7 +37,7 @@ Given(/^a (.+) event form exists for the disease (.+) with the name (.+) \((.+)\
 end
 
 Given(/^that form is published$/) do
-  @form.publish
+  @published_form = @form.publish
 end
 
 #
@@ -48,13 +48,13 @@ end
 
 Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
   @form = create_form(event_type, form_name, form_short_name, disease)
-  @form.publish
+  @published_form = @form.publish
   @form
 end
 
 Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with any disease$/) do |form_name, form_short_name, event_type|
   @form = create_form(event_type, form_name, form_short_name, get_random_disease)
-  @form.publish
+  @published_form = @form.publish
   @form
 end
 

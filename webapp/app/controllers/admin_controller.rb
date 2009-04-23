@@ -27,7 +27,7 @@ class AdminController < ApplicationController
   protected
     
   def check_role
-    if !User.current_user.is_admin?
+    unless User.current_user.is_admin?
       logger.info "Unauthorized access to the Admin Console by " + User.current_user.uid
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have administrative rights", :event => nil }, :layout => true, :status => 403 and return
     end

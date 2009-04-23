@@ -160,7 +160,6 @@ User.transaction do
   approve_event_at_lhd = Privilege.find_by_priv_name("approve_event_at_lhd").id
   approve_event_at_state = Privilege.find_by_priv_name("approve_event_at_state").id
   assign_task_to_user = Privilege.find_by_priv_name("assign_task_to_user").id
-  remove_form_from_event = Privilege.find_by_priv_name("remove_form_from_event").id
 
   data_entry_tech.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   data_entry_tech.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
@@ -179,7 +178,6 @@ User.transaction do
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => accept_event_for_lhd, :jurisdiction_id => bear_river)
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => route_event_to_investigator, :jurisdiction_id => bear_river)
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
-  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => remove_form_from_event, :jurisdiction_id => bear_river)
 
   investigator.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   investigator.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
@@ -195,14 +193,12 @@ User.transaction do
   lhd_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_lhd, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
-  lhd_manager.entitlements << Entitlement.new(:privilege_id => remove_form_from_event, :jurisdiction_id => bear_river)
 
   state_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_state, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
-  state_manager.entitlements << Entitlement.new(:privilege_id => remove_form_from_event, :jurisdiction_id => bear_river)
 
 end
 

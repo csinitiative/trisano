@@ -130,6 +130,7 @@ class Form < ActiveRecord::Base
       
         published_form = Form.create({:name => self.name, 
             :event_type => self.event_type, 
+            :short_name => self.short_name,
             :description => self.description, 
             :jurisdiction => self.jurisdiction, 
             :version => new_version_number, 

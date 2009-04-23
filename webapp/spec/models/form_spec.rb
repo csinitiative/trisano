@@ -86,6 +86,13 @@ describe Form do
       @form.save_and_initialize_form_elements
       @form.errors.on(:short_name).should_not be_nil
     end
+
+    it 'should be copied to the published versions of the form' do
+      @form.save_and_initialize_form_elements.should_not be_nil
+      published_form = @form.publish
+      published_form.short_name.should == @form.short_name
+    end
+
   end
   
   describe "when created with save_and_initialize_form_elements" do

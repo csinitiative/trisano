@@ -19,6 +19,25 @@ Given(/^I am logged in as a super user$/) do
   switch_user(@browser, 'default_user')
 end
 
+Given(/^I am logged in as a lhd manager$/) do
+  switch_user(@browser, 'lhd_manager')
+end
+
+When(/^I click the "(.+)" link$/) do |link|
+  @browser.click("link=#{link}")
+  @browser.wait_for_page_to_load($load_time)
+end
+
+When(/^I click the "(.+)" button$/) do |button|
+  @browser.click("//input[contains(@value, '#{button}')]")
+end
+
+When(/^I click and confirm the "(.+)" button$/) do |button|
+  @browser.click("//input[contains(@value, '#{button}')]")
+  @browser.get_confirmation()
+  @browser.wait_for_page_to_load($load_time)
+end
+
 Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
   @browser.is_text_present(message).should be_true
 end

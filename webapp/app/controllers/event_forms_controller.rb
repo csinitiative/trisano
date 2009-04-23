@@ -66,8 +66,8 @@ class EventFormsController < ApplicationController
 
   protected
 
-  def check_role  # Need to find out if this should include admins and maybe a new priv: :add_form_to_event
-    unless User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
+  def check_role
+    unless User.current_user.is_admin?
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add/remove forms", :event => nil }, :layout => true, :status => 403 and return
     end
   end

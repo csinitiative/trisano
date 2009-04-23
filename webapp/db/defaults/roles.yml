@@ -20,7 +20,6 @@ Surveillance Manager:
   - accept_event_for_lhd
   - route_event_to_investigator
   - assign_task_to_user
-  - remove_form_from_event
 LHD Manager:
   - create_event
   - view_event
@@ -28,7 +27,6 @@ LHD Manager:
   - route_event_to_any_lhd
   - approve_event_at_lhd
   - assign_task_to_user
-  - remove_form_from_event
 State Manager:
   - create_event
   - view_event
@@ -36,4 +34,3 @@ State Manager:
   - route_event_to_any_lhd
   - approve_event_at_state
   - assign_task_to_user
-  - remove_form_from_event

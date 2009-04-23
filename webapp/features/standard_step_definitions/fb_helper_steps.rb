@@ -33,7 +33,7 @@ end
 
 Given /^I already have a published form$/ do
   @form = create_form('Morbidity event', 'Already created', 'something_published', 'African Tick Bite Fever')
-  @form.publish
+  @published_form = @form.publish
 end
 
 #

@@ -28,11 +28,10 @@ Given(/^the forms for the event have been assigned$/) do
 end
 
 Given(/^the disease-specific questions for the event have been answered$/) do
-  @event.form_references.each do |form_reference|
-    question_elements = FormElement.find_all_by_form_id_and_type(form_reference.form_id, "QuestionElement", :include => [:question])
-    question_elements.each do |element|
-      Answer.create({ :event_id => @event.id, :question_id => element.question.id, :text_answer => "disease specific answer" })
-    end
+  @answer_text = "#{get_unique_name(2)} answer"
+  question_elements = FormElement.find_all_by_form_id_and_type(@published_form.id, "QuestionElement", :include => [:question])
+  question_elements.each do |element|
+    Answer.create({ :event_id => @event.id, :question_id => element.question.id, :text_answer => @answer_text })
   end
   
 end

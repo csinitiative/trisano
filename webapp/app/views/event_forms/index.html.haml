@@ -52,7 +52,7 @@
               %td
                 = check_box_tag("forms_to_remove[]", form.id)
         %br
-        = submit_tag("Remove Forms")
+        = submit_tag("Remove Forms", { :id => 'remove_forms', :confirm => "Are you sure? Removing a form will also remove all answers to questions on that form." })
     -else
       %em
         None in use.
