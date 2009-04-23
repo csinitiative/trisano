@@ -29,7 +29,6 @@ class IbisEventsController < AdminController
       redirect_to ibis_events_path
       return
     end
-
     event_ids_to_export = Event.exportable_ibis_records(start_date, end_date)
     @events_to_export = Event.find(event_ids_to_export.map { |event| event.event_id })
     Event.reset_ibis_status(event_ids_to_export)
