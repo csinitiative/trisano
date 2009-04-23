@@ -1116,6 +1116,7 @@ describe Form do
     end
     
     it "it should push to all events with the form's disease and jurisdiction" do
+      pending
       published_form = @form.publish
       published_form.should_not be_nil
       result = @form.push
@@ -1126,6 +1127,7 @@ describe Form do
     end
 
     it "should not push to events with the same disease but a different event type" do
+      pending
       # contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
       #   :disease => {:disease_id => diseases(:anthrax).id} }
       contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
@@ -1144,6 +1146,7 @@ describe Form do
     end
     
     it "should not push to events with the same disease and type, but a different jurisdiction" do
+      pending
       @event_hash[:jurisdiction_attributes] = {
         :secondary_entity_id => entities(:Summit_County).id
       }
@@ -1158,6 +1161,7 @@ describe Form do
     end
     
     it "should not push to events that already have a version of this form associated to it" do
+      pending
       @event.form_references.size.should eql(0)
       published_form = @form.publish
       published_form.should_not be_nil
