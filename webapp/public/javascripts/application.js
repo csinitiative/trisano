@@ -166,7 +166,7 @@ function shortcuts_init(uid) {
   var map =
   {
     'configure': function() {
-      window.location = "users/shortcuts";
+      window.location = "/users/shortcuts/edit";
     },
 
     'new': function() {
@@ -217,7 +217,8 @@ function shortcuts_init(uid) {
     }
   };
 
-  new Ajax.Request('/users/shortcuts/' + uid, {
+  new Ajax.Request('/users/shortcuts', {
+    method: 'get',
     asynchronous: true,
     evalScripts:  true,
     onComplete: function(transport, json) {

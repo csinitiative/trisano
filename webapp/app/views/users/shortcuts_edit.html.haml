@@ -15,4 +15,14 @@
 - content_for :title do
   Configure Shortcuts
 
-= button_to("Yeah Buddy!", {:action => "shortcuts", :id => 1}, { :method => :get })
+- form_for(@user, :url => {:action => "shortcuts"}, :method => "put") do |f|
+  = puts @user.shortcut_settings
+  - f.fields_for :shortcut_settings do |shortcut|
+    %span{ :class => "vert" }
+      = shortcut.label :configure, "Configure Shortcuts"
+      = shortcut.text_field :configure, :size => 25, :maxlength => 25
+    %span{ :class => "vert" }
+      = shortcut.label :new, "New CMR"
+      = shortcut.text_field :new, :size => 25, :maxlength => 25
+  %p
+  = f.submit "Update Shortcuts"

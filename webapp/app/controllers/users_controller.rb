@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class UsersController < AdminController
+  skip_before_filter :check_role, :only => :putcuts
   
   # GET /users
   # GET /users.xml
@@ -72,16 +73,32 @@ class UsersController < AdminController
     end
   end
 
+  # GET /users/shortcuts
   def shortcuts
-    if params[:id]
-      @user = User.find(params[:id])
-      response.headers['X-JSON'] = @user.shortcut_settings.to_json
-      head :ok
-    else
-      @user = User.current_user
-      respond_to do |format|
-        format.html
+    @user = User.current_user
+    response.headers['X-JSON'] = @user.shortcut_settings.to_json
+    head :ok
+  end
+  
+  # GET /users/shortcuts/edit
+  def shortcuts_edit
+    @user = User.current_user
+    respond_to do |format|
+    format.html
+    end
+  end
+  
+  # PUT /users/shortcuts
+  def shortcuts_update
+    @user = User.current_user
+
+    respond_to do |format|
+      if @user.update_attribute(:shortcut_settings, params[:user][:shortcut_settings])
+        flash[:notice] = 'Shortcuts successfully updated'
+      else
+        flash[:error] = 'Shortcuts update failed'
       end
+    format.html { render :action => "shortcuts_edit" }
     end
   end
 
@@ -102,6 +119,7 @@ class UsersController < AdminController
       end
     end
   end
+
 
   # DELETE /users/1
   # DELETE /users/1.xml
