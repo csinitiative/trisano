@@ -19,6 +19,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'yaml'
+require 'erb'
 
 namespace :trisano do
 
@@ -37,7 +38,7 @@ namespace :trisano do
       priv_password = config['priv_passwd'] unless validate_config_attribute(config, 'priv_passwd')
       ENV["PGPASSWORD"] = priv_password
 
-      db_config = YAML::load_file "./config/database.yml"
+      db_config = YAML::load(ERB.new(File.read('./config/database.yml')).result)
       if db_config['development'].nil?
         raise "Development environment is not defined."
       end
