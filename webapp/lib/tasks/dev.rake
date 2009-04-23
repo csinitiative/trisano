@@ -18,17 +18,38 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'yaml'
 
 namespace :trisano do
 
   namespace :dev do
-       
+
     # You can invoke a Rake task with Rake::Task["db:create:all"].invoke, but the fixture loading
     # step below fails. Dig into that at some point.
     desc "full rebuild of all databases"
     task :db_rebuild_full do
+      config = YAML::load_file "../distro/config.yml"
+      postgres_dir = config['postgres_dir'] unless validate_config_attribute(config, 'postgres_dir')
+      psql = postgres_dir + "/psql"
+      createdb = postgres_dir + "/createdb"
+      dropdb = postgres_dir + "/dropdb"
+      priv_uname = config['priv_uname'] unless validate_config_attribute(config, 'priv_uname')
+      priv_password = config['priv_passwd'] unless validate_config_attribute(config, 'priv_passwd')
+      ENV["PGPASSWORD"] = priv_password
+
+      db_config = YAML::load_file "./config/database.yml"
+      if db_config['development'].nil?
+        raise "Development environment is not defined."
+      end
+      host = db_config['development']['host']
+      port = db_config['development']['port']
+      database = db_config['development']['database']
       puts "doing full rebuild of all databases"
-      sh "dropdb trisano_development; createdb -E UTF8 trisano_development" # there is an issue with observer that necessitates this, but also we can explicitly set the encoding which is useful
+      sh "#{dropdb} -U #{priv_uname} -h #{host} -p #{port} #{database}; #{createdb} -U #{priv_uname} -h #{host} -p #{port} -E UTF8 #{database}" do |ok, res|
+        if ! ok
+          raise "Failed creating database: #{database} with error #{res.exitstatus}"
+        end
+      end
       ruby "-S rake db:drop:all"
       ruby "-S rake db:create:all"
       ruby "-S rake db:schema:load"
@@ -48,7 +69,7 @@ namespace :trisano do
     
     desc "update dev locale config"
     task :update_dev_locale_config do
-      update_locale_config("trisano_development")
+      update_locale_config
     end
     
     desc "update test locale config"
@@ -56,8 +77,13 @@ namespace :trisano do
       update_locale_config("trisano_test")
     end
     
-    def update_locale_config(env)
-      sh "psql #{env} -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\""
+    def update_locale_config()
+      sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"") do |ok, res|
+        if ! ok
+          puts "Failed updating locale config: #{@database} with error #{res.exitstatus}"
+        end
+      end
+
     end
 
     desc "Load codes and defauts into database"
