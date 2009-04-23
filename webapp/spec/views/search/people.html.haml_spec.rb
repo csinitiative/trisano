@@ -45,7 +45,6 @@ describe "/search/people.html.haml" do
     assigns[:people] = [{:person => person, :event_type => "No associated event", :event_id => nil}]
     do_render
     response.should have_tag("h3", "Results")
-    response.should have_tag("a", "Start a CMR with the criteria that you searched on.")
   end
   
   it "should show message and link to create new CMR when no results are present" do
@@ -54,7 +53,6 @@ describe "/search/people.html.haml" do
     params[:name] = "Notaperson"
     do_render
     response.should have_text(/Your search returned no results./)
-    response.should have_tag("a", "Start a CMR with the criteria that you searched on.")
   end
   
 end

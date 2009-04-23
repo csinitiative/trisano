@@ -262,11 +262,11 @@ module EventsHelper
   end
 
   def new_cmr_link(text)
-    link_to(text, new_cmr_path) if User.current_user.is_entitled_to?(:create_event)
+    link_to(text, event_search_cmrs_path) if User.current_user.is_entitled_to?(:create_event)
   end
 
   def new_cmr_button(text)
-    button_to_function(text, "location.href = '#{new_cmr_path}'") if User.current_user.is_entitled_to?(:create_event)
+    button_to_function(text, "location.href = '#{event_search_cmrs_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
 
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.

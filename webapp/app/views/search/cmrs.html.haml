@@ -207,9 +207,6 @@
           %td
             = cmr.safe_call_chain(:disease_event, :disease_onset_date) || '&nbsp;'
 
-  - if User.current_user.is_entitled_to?(:create_event)
-    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
-
 - if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:workflow_state].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_id].blank? ||!params[:event_type].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
 
   %span
@@ -217,8 +214,3 @@
 
   %br
   %br
-
-  / Move the query string building out to a helper, sniff out what isn't there so it's not so long
-  - if User.current_user.is_entitled_to?(:create_event)
-    = link_to("Start a CMR with the criteria that you searched on.", { :controller => "morbidity_events", :action => "new", :from_search => "", :first_name => @first_name, :middle_name => @middle_name, :last_name => @last_name, :disease => params[:disease], :gender => params[:gender], :city => params[:city], :county => params[:county], :jurisdiction_id => params[:jurisdiction_id], :birth_date => @birth_date }, {:id => "start_cmr"})
-
