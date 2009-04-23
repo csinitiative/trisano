@@ -22,3 +22,8 @@ hep_a:
   id: 5
   disease_name: "Hepatitis A, acute"
   cdc_code: "10110"
+
+form_assignment_disease:
+  id: 6
+  disease_name: "Form Assignment Disease"
+  cdc_code: "999999"

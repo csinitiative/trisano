@@ -89,7 +89,7 @@ module Export
       include Export::Cdc::CdcWriter
 
       def export_core_field_configs
-        forms = self.form_references.empty? ? self.get_investigation_forms : self.form_references.collect{|fr| fr.form}
+        forms = self.form_references.collect{|fr| fr.form}
         DEFAULT_LOGGER.info("CDC Export: No forms associated with this event: #{self.record_number}") if forms.empty?
         forms.collect do |form|          
           form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])

@@ -23,7 +23,7 @@
   #rot
     %h2="Forms in use"
     - if @event.form_references.size > 0
-      - form_for(:event_form, :url => { :action => "destroy", :event_id => "3" }) do |f|
+      - form_for(:event_form, :url => { :action => "destroy", :event_id => @event.id }) do |f|
         %table.list
           %tr
             %th.forminformation

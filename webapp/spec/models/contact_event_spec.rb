@@ -79,7 +79,7 @@ describe ContactEvent do
       @c = ContactEvent.new
       @c.build_disease_event(:disease => diseases(:anthrax))
       @c.build_jurisdiction(:secondary_entity_id => entities(:Davis_County).id)
-      @c.get_investigation_forms
+      @c.create_form_references
       @c.save
       @m = @c.promote_to_morbidity_event
     end

@@ -4,14 +4,14 @@ Feature: Removing forms from events
   As a manager
   I want to remove a form from an event
 
-  Scenario: Morbidity event form removal
+  Scenario: Morbidity event form removal as lhd manager
     Given a morbidity event form exists for the disease African Tick Bite Fever
     And that form has 2 questions
     And that form is published
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     And the forms for the event have been assigned
     And the disease-specific questions for the event have been answered
-    And I am logged in as a super user
+    And I am logged in as a lhd manager
 
     When I navigate to the event edit page
     And I see the form and answers on the event

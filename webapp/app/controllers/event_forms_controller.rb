@@ -15,12 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class EventFormsController < AdminController
+class EventFormsController < ApplicationController
 
-  before_filter :find_event
+  before_filter :find_event, :check_role
 
   def index
-    @event.get_investigation_forms
     event_type = @event.class.name.underscore
 
     @forms_in_use = @event.form_references.collect { |ref| ref.form }
@@ -59,13 +58,19 @@ class EventFormsController < AdminController
       if @event.remove_forms(forms_to_remove)
         flash[:notice] = 'The list of forms in use was successfully updated.'
       else
-        flash[:notice] = 'Unable to remove forms from this event'
+        flash[:error] = 'Unable to remove forms from this event'
       end
     end
     redirect_to event_forms_path(@event)
   end
 
-  private
+  protected
+
+  def check_role  # Need to find out if this should include admins and maybe a new priv: :add_form_to_event
+    unless User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add/remove forms", :event => nil }, :layout => true, :status => 403 and return
+    end
+  end
 
   def find_event
     begin

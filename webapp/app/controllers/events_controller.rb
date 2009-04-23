@@ -19,7 +19,6 @@ class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
   before_filter :can_view?, :only => [:show]
-  before_filter :get_investigation_forms, :only => [:edit, :show, :update]
   before_filter :set_tab_index
   
   def auto_complete_for_lab_name
@@ -240,11 +239,6 @@ class EventsController < ApplicationController
         format.all { render :nothing => true, :status => 404 and return }
       end
     end
-  end
-
-  def get_investigation_forms
-    @event ||= Event.find(params[:id])
-    @event.get_investigation_forms
   end
 
   def set_tab_index

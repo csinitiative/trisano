@@ -36,7 +36,7 @@
           %li
             = "#{form_reference.form.name} (core only)"
             %small= "&nbsp;v. #{form_reference.form.version}"
-    = link_to "Add forms to this event", event_forms_path(@event)
+    = link_to("Add/Remove forms for this event", event_forms_path(@event))
 
   %fieldset.form
     %legend Forms

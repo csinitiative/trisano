@@ -29,10 +29,24 @@ describe MorbidityEvent do
   #  }
 
   def with_event(event_hash=@event_hash)
-    event = MorbidityEvent.new event_hash
+    event = MorbidityEvent.new(event_hash)
     event.save!
     event.reload
     yield event if block_given?
+  end
+
+  def with_published_form(form_hash=@form_hash)
+    form = Form.new(form_hash)
+    form.save_and_initialize_form_elements.should_not be_nil
+    question_element = QuestionElement.new(
+      {
+        :parent_element_id => form.form_base_element.children[0].id,
+        :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text", :short_name => "gives" }
+      }
+    )
+    question_element.save_and_add_to_form.should_not be_nil
+    published_form = form.publish
+    yield published_form if block_given?
   end
 
   describe "associations" do
@@ -1060,6 +1074,150 @@ describe MorbidityEvent do
     end
   end
 
+  describe "forms assignment during event creation" do
+    fixtures :diseases, :entities
+
+    before(:each) do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        }
+      }
+
+      @form_hash = {
+        "name"=>"Form Assignment Form",
+        "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
+        "event_type"=>"morbidity_event", 
+        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "jurisdiction_id"=>""
+      }
+
+    end
+
+    it 'should assign available forms at creation time when the event has a jurisdiction and a disease' do
+      with_published_form(@form_hash) do |form|
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event = MorbidityEvent.new(@event_hash)
+        @event.form_references.size.should == 0
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 1
+        @event.undergone_form_assignment.should be_true
+      end
+    end
+
+    it 'should not assign forms at creation time when the event has no disease' do
+      with_published_form(@form_hash) do |form|
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event = MorbidityEvent.new(@event_hash)
+        @event.form_references.size.should == 0
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 0
+        @event.undergone_form_assignment.should be_false
+      end
+    end
+
+    it 'should not assign forms at creation time when the event has no jurisdiction' do
+      with_published_form(@form_hash) do |form|
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event = MorbidityEvent.new(@event_hash)
+        @event.form_references.size.should == 0
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 0
+        @event.undergone_form_assignment.should be_false
+      end
+    end
+
+    it 'should not assign forms at creation time when there are no forms for the disease' do
+      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+      @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+      @event = MorbidityEvent.new(@event_hash)
+      @event.form_references.size.should == 0
+      @event.save!
+      @event.reload
+      @event.form_references.size.should == 0
+    end
+
+    it 'should still mark the event as having gone through form assignment even when there are no forms for the disease' do
+      with_published_form(@form_hash) do |form|
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event = MorbidityEvent.new(@event_hash)
+        @event.save!
+        @event.undergone_form_assignment.should be_true
+      end
+    end
+    
+  end
+
+  describe "forms assignment during event updates" do
+    fixtures :diseases, :entities
+
+    before(:each) do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        },
+        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+      }
+
+      
+      
+
+      @form_hash = {
+        "name"=>"Form Assignment Form",
+        "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
+        "event_type"=>"morbidity_event",
+        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "jurisdiction_id"=>""
+      }
+
+    end
+
+    it 'should assign available forms at update time when the event has a jurisdiction and a disease and has not previously gone through form assignment' do
+      with_published_form(@form_hash) do |form|
+        @event = MorbidityEvent.new(@event_hash)
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 0
+        @event.undergone_form_assignment.should be_false
+        @event.update_attributes("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event.reload
+        @event.form_references.size.should == 1
+        @event.undergone_form_assignment.should be_true
+      end
+    end
+
+    it 'should not assign additional forms at update time when the event has a jurisdiction and a disease but has previously gone through form assignment' do
+      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+      @event = MorbidityEvent.new(@event_hash)
+      @event.save!
+      @event.reload
+      @event.form_references.size.should == 0
+      @event.undergone_form_assignment.should be_true
+
+      with_published_form(@form_hash) do |form|
+        @event.update_attributes("outbreak_name" => "Outbreak")
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 0
+        @event.undergone_form_assignment.should be_true
+      end
+    end
+
+  end
+
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
@@ -1077,7 +1235,7 @@ describe MorbidityEvent do
       end
 
       it "should add 'viable' forms" do
-        @event.get_investigation_forms
+        @event.create_form_references
         viable_form_ids = @event.form_references.map { |ref| ref.form_id }
         @event = events(:has_anthrax_cmr)
 
@@ -1128,37 +1286,68 @@ describe MorbidityEvent do
   end
 
   describe "removing forms from an event" do
-    fixtures :events, :forms, :form_references, :form_elements, :questions
+    fixtures :diseases, :entities
 
     before(:each) do
-      @event = events(:marks_cmr)
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        },
+        "disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id },
+        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+      }
+
+      @event = MorbidityEvent.new(@event_hash)
+
+      @form_hash = {
+        "name"=>"Form Assignment Form",
+        "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
+        "event_type"=>"morbidity_event",
+        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "jurisdiction_id"=>""
+      }
     end
 
     it "should remove the form reference" do
-      @event.form_references.size.should == 1
-      @event.remove_forms(form_references(:marks_form_reference_1).form_id)
-      @event.form_references.size.should == 0
+      with_published_form(@form_hash) do |form|
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 1
+        @event.remove_forms(form.id).should be_true
+        @event.reload
+        @event.form_references.size.should == 0
+      end
     end
 
     it "should return nil if the form provided is not on the event" do
-      @event.form_references.size.should == 1
-      @event.remove_forms(99).should be_nil
-      @event.form_references.size.should == 1
+      with_published_form(@form_hash) do |form|
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 1
+        @event.remove_forms(9999).should be_nil
+        @event.reload
+        @event.form_references.size.should == 1
+      end
     end
 
     it "should remove answers to the form questions" do
-      @event.add_forms(forms(:test_form).id)
-      @event.form_references.size.should == 2
-      @event.answers = {
-        "1" => { :question_id => form_elements(:demo_group_q1).question.id, :text_answer => "Nothin'" },
-        "2" => { :question_id => form_elements(:demo_group_q2).question.id, :text_answer => "And stoof'"}
-      }
-      @event.save
-      @event.answers.size.should == 2
-      @event.remove_forms(forms(:test_form).id).should be_true
-      @event.reload
-      @event.form_references.size.should == 1
-      @event.answers.size.should == 0
+      with_published_form(@form_hash) do |form|
+        @event.save!
+        @event.reload
+        @event.form_references.size.should == 1
+        @event.answers = {
+          "1" => { :question_id => form.form_base_element.children[0].children[1].question.id, :text_answer => "Nothin'" },
+        }
+        @event.answers.size.should == 1
+        @event.remove_forms(form.id).should be_true
+        @event.reload
+        @event.form_references.size.should == 0
+        @event.answers.size.should == 0
+      end
     end
 
   end
@@ -1587,7 +1776,7 @@ describe Event, 'cloning an event' do
       form.publish
 
       @org_event = MorbidityEvent.new(@event_hash)
-      @org_event.get_investigation_forms
+      @org_event.create_form_references
       @org_event.answers = { "1" => { :question_id => question_element.question.id, :text_answer => "Nothin'"} }
       @org_event.save
 

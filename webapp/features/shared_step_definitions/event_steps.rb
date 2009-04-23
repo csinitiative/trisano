@@ -24,7 +24,7 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
 end
 
 Given(/^the forms for the event have been assigned$/) do
-  @event.get_investigation_forms
+  @event.create_form_references
 end
 
 Given(/^the disease-specific questions for the event have been answered$/) do

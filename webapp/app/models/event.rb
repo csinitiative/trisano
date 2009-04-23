@@ -22,6 +22,8 @@ class Event < ActiveRecord::Base
 
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
+  before_update :attempt_form_assignment_on_update
+  after_create :attempt_form_assignment_on_create
 
   if RAILS_ENV == "production"
     attr_protected :workflow_state 
@@ -442,8 +444,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # This method is used to add user selected forms and, if the timing is just right,
-  # auto-assigned forms to an event.
   def add_forms(forms_to_add)
     forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
 
@@ -452,9 +452,6 @@ class Event < ActiveRecord::Base
 
     # Remember if this event has forms persisted with it already
     event_has_saved_forms = self.form_references.size > 0
-
-    # This will assign potentially viable forms to form_references, but not if there are some already there
-    self.get_investigation_forms
 
     # Get the form ids that are associated with this event (either from the database or via get_investigation_forms)
     existing_or_viable_form_ids = self.form_references.map { |ref| ref.form_id }
@@ -555,26 +552,16 @@ class Event < ActiveRecord::Base
       event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
       event_types.inject([]) do | results, event_type|
         results += event_type.find(:all,
-                                   :include => [{:interested_party => { :person_entity => :person } },
-                                                {:interested_party => :risk_factor},
-                                                 :address,
-                                                 :disease_event,
-                                                 :jurisdiction,
-                                                 :associated_jurisdictions
-                                               ],
-                                   :conditions => where_clause,
-                                   :order => order_by_clause)
+          :include => [{:interested_party => { :person_entity => :person } },
+            {:interested_party => :risk_factor},
+            :address,
+            :disease_event,
+            :jurisdiction,
+            :associated_jurisdictions
+          ],
+          :conditions => where_clause,
+          :order => order_by_clause)
         results
-      end
-    end
-  end
-
-  def get_investigation_forms
-    if self.form_references.empty?
-      return [] if self.disease_event.nil? || self.disease_event.disease_id.blank?
-      i = -1
-      Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-        self.form_references[i += 1] = FormReference.new(:form_id => form.id)
       end
     end
   end
@@ -644,6 +631,41 @@ class Event < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def attempt_form_assignment_on_create
+    return unless can_receive_auto_assigned_forms?
+    create_form_references
+    if (self.form_references.size > 0)
+      self.form_references.each do |ref|
+        ref.event_id = self.id
+        ref.save
+      end
+    end
+    self.update_attribute(:undergone_form_assignment, true)
+  end
+
+  def attempt_form_assignment_on_update
+    return unless can_receive_auto_assigned_forms?
+    create_form_references
+    self.update_attribute(:undergone_form_assignment, true)
+  end
+
+  def can_receive_auto_assigned_forms?
+    if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil? || self.undergone_form_assignment
+      return false
+    else
+      return true
+    end
+  end
+
+  def create_form_references
+    return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
+    i = -1
+    Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
+      self.form_references[i += 1] = FormReference.new(:form_id => form.id)
+    end
+    return true
   end
 
   class << self
