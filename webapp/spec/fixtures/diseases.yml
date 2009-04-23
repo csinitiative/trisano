@@ -27,3 +27,9 @@ form_assignment_disease:
   id: 6
   disease_name: "Form Assignment Disease"
   cdc_code: "999999"
+
+form_push_disease:
+  id: 7
+  disease_name: "Form Push Disease"
+  cdc_code: "199999"
+

@@ -20,6 +20,21 @@ require 'ostruct'
 include ActionController::TestProcess
 
 describe Form do
+  
+  def with_form(form_hash=@form_hash)
+    form = Form.new(form_hash)
+    form.save_and_initialize_form_elements.should_not be_nil
+    question_element = QuestionElement.new(
+      {
+        :parent_element_id => form.form_base_element.children[0].id,
+        :question_attributes => { :question_text => "What gives?",:data_type => "single_line_text", :short_name => "gives" }
+      }
+    )
+    question_element.save_and_add_to_form.should_not be_nil
+    yield form if block_given?
+  end
+
+  
   before(:each) do
     @form = Form.new
     @form.name = "Test Form"
@@ -1073,17 +1088,6 @@ describe Form do
       @user = users(:default_user)
       User.stub!(:current_user).and_return(@user)
 
-      @form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => Digest::MD5::hexdigest(DateTime.now.to_s))
-      @form.save_and_initialize_form_elements
-      @question_element = QuestionElement.new({
-          :parent_element_id => @form.investigator_view_elements_container.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
-        })
-    
-      @question_element.save_and_add_to_form.should_not be_nil
-      @anthrax = diseases(:anthrax)
-      @form.diseases << @anthrax
-      
       @event_hash = {
         "interested_party_attributes" => {
           "person_entity_attributes" => {
@@ -1092,89 +1096,139 @@ describe Form do
             }
           }
         },
-        :jurisdiction_attributes => {
-          :secondary_entity_id => entities(:Unassigned_Jurisdiction).id
+        "jurisdiction_attributes" => {
+          "secondary_entity_id" => entities(:Unassigned_Jurisdiction).id
         },
-        "disease_event_attributes" => { "disease_id" => @anthrax.id }
+        "disease_event_attributes" => { "disease_id" => diseases(:form_push_disease).id }
       }
 
-      @event = MorbidityEvent.new(@event_hash)
-      @event.save!
+      @form_hash = {
+        "name"=>"Form Push Form",
+        "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
+        "event_type"=>"morbidity_event",
+        "disease_ids"=>[diseases(:form_push_disease).id],
+        "jurisdiction_id"=>""
+      }
     end
     
     it "should not push if the form has not been published" do
-      result = @form.push
-      result.should be_nil
+      event = MorbidityEvent.new(@event_hash)
+      event.save!
+      event.reload
+      event.form_references.size.should == 0
+      
+      with_form(@form_hash) do |form|
+        result = form.push
+        result.should be_nil
+        event.reload
+        event.form_references.size.should == 0
+      end
     end
     
     it "should not push and have errors if the form has no diseases associated with it" do
-      @form.diseases.clear
-      published_form = @form.publish
-      result = @form.push
-      result.should be_nil
-      @form.errors.should_not be_empty
+      event = MorbidityEvent.new(@event_hash)
+      event.save!
+      event.reload
+      event.form_references.size.should == 0
+
+      with_form(@form_hash) do |form|
+        form.diseases.clear
+        form.publish
+        result = form.push
+        result.should be_nil
+        form.errors.should_not be_empty
+        event.reload
+        event.form_references.size.should == 0
+      end
     end
     
     it "it should push to all events with the form's disease and jurisdiction" do
-      pending
-      published_form = @form.publish
-      published_form.should_not be_nil
-      result = @form.push
-      result.should eql(1)
-      @event.reload
-      @event.form_references.empty?.should be_false
-      @event.form_references[0].form.id.should eql(published_form.id)      
+      event = MorbidityEvent.new(@event_hash)
+      event.save!
+      event.reload
+      event.form_references.size.should == 0
+      
+      with_form(@form_hash) do |form|
+        published_form = form.publish
+        result = form.push
+        result.should eql(1)
+        form.errors.should be_empty
+        event.reload
+        event.form_references.size.should == 1
+        event.form_references[0].form.id.should eql(published_form.id)
+      end
     end
 
     it "should not push to events with the same disease but a different event type" do
-      pending
-      # contact_hash = { :new_contact_attributes => [ {:last_name => "White"} ],
-      #   :disease => {:disease_id => diseases(:anthrax).id} }
-      contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
-                "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+      contact_hash = {
+        "contact_child_events_attributes" => [ {
+            "interested_party_attributes" => {
+              "person_entity_attributes" => {
+                "person_attributes" => { "last_name" => "White" },
+                "telephones_attributes" => { 
+                  "99" => { "phone_number" => "" }
+                }
+              }
+            },
             "participations_contact_attributes" => {},
-            "disease_event_attributes" => { "disease_id" => diseases(:anthrax).id} } ] }
-
+            "disease_event_attributes" => { "disease_id" =>diseases(:form_push_disease).id} } ] }
+    
       event = MorbidityEvent.new(@event_hash.merge(contact_hash))
-      # contact_events = ContactEvent.initialize_from_morbidity_event(event)
       contact_event = event.contact_child_events[0]
       contact_event.save!
-      published_form = @form.publish
-      result = @form.push
       contact_event.reload
-      contact_event.form_references.empty?.should be_true
+      contact_event.form_references.size.should == 0
+
+      with_form(@form_hash) do |form|
+        published_form = form.publish
+        result = form.push
+        result.should eql(0)
+        form.errors.should be_empty
+        contact_event.reload
+        contact_event.form_references.size.should == 0
+      end
     end
     
     it "should not push to events with the same disease and type, but a different jurisdiction" do
-      pending
       @event_hash[:jurisdiction_attributes] = {
         :secondary_entity_id => entities(:Summit_County).id
       }
       event = MorbidityEvent.new(@event_hash)
       event.save!
-      @form.jurisdiction = entities(:Unassigned_Jurisdiction)
-      @form.save
-      published_form = @form.publish
-      result = @form.push
       event.reload
-      event.form_references.empty?.should be_true
+      event.form_references.size.should == 0
+
+      @form_hash = @form_hash.merge("jurisdiction_id"=> entities(:Unassigned_Jurisdiction).id)
+
+      with_form(@form_hash) do |form|
+        published_form = form.publish
+        result = form.push
+        result.should eql(0)
+        form.errors.should be_empty
+        event.reload
+        event.form_references.size.should == 0
+      end
     end
-    
+
+
     it "should not push to events that already have a version of this form associated to it" do
-      pending
-      @event.form_references.size.should eql(0)
-      published_form = @form.publish
-      published_form.should_not be_nil
-      form_ref = FormReference.new(:form_id => published_form.id, :event_id => @event.id)
-      @event.form_references << form_ref
-      @event.reload
-      @event.form_references.size.should eql(1)
-      
-      second_version = @form.publish
-      result = @form.push
-      @event.reload
-      @event.form_references.size.should eql(1)
-      @event.form_references[0].form.id.should eql(published_form.id)
+      with_form(@form_hash) do |form|
+        published_form = form.publish
+        event = MorbidityEvent.new(@event_hash)
+        event.save!
+        event.reload
+        event.form_references.size.should == 1
+
+        result = form.push
+        result.should == 0
+        form.publish
+        result = form.push
+        result.should == 0
+
+        event.reload
+        event.form_references.size.should == 1
+        event.form_references[0].form.id.should  == published_form.id
+      end
     end
     
   end
