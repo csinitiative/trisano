@@ -14,3 +14,5 @@ distro/database/trisano_schema.sql
 dump
 rails
 *.swp
+distro/config.yml
+webapp/config/database.yml
