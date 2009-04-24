@@ -118,6 +118,8 @@ def mock_ibis_event
   @lab_result.stub!(:lab_test_date).and_return(Date.new(2008,1,2))
   m.stub!(:lab_results).and_return([@lab_result])
 
+  m.stub!(:deleted_from_ibis?).and_return(false)
+
   m
 end
 
@@ -126,6 +128,7 @@ def mock_deleted_ibis_event
   @state_code_2.stub!(:the_code).and_return("NC")
 
   m = mock_model(MorbidityEvent)
+  m.stub!(:deleted_from_ibis?).and_return(true)
   m.stub!(:type).and_return('MorbidityEvent')
   m.stub!(:record_number).and_return("20080002")
   m.stub!(:state_case_status).and_return(@state_code_2)

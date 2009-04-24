@@ -51,7 +51,7 @@ module ExportHelper
   end
 
   def get_ibis_status(status)
-    case status.the_code
+    case status.try(:the_code)
     when "C" then 1 
     when "P" then 2 
     when "S" then 3 

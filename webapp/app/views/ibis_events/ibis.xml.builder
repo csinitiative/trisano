@@ -3,11 +3,7 @@ xml.Table {
     xml.ComdisRecord {
       xml.RecordID(event.record_number)
 
-      if event.deleted_at || ! %w( C P S ).include?(event.state_case_status.the_code)
-        update_flag = 1
-      else
-        update_flag = 0
-      end
+      update_flag = event.deleted_from_ibis? ? 1 : 0
 
       xml.UpdateFlag(update_flag)
       if update_flag == 0
@@ -31,8 +27,11 @@ xml.Table {
 
         address = event.address
 
-        zip_code = address ? address.postal_code : ""
+        zip_code = address.try(:postal_code) || ""
         xml.ZipCode(zip_code[0..4])
+
+        county_code = address.try(:county).try(:the_code) || ""
+        xml.CountyCode(county_code)
         
         xml.Age(event.age_info.in_years)
 
@@ -50,7 +49,7 @@ xml.Table {
         xml.Ethnic(get_ibis_ethnicity(event.interested_party.person_entity.person.ethnicity))
         xml.Race(get_ibis_race(event.interested_party.person_entity.races))
         xml.Sex(get_ibis_sex(event.interested_party.person_entity.person.birth_gender))
-        xml.Status(get_ibis_status(event.state_case_status))
+        xml.Status(get_ibis_status(event.state_case_status) || get_ibis_status(event.lhd_case_status))
 
         xml.Year(event.record_number[0..3])
       end

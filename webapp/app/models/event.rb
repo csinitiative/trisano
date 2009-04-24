@@ -179,28 +179,31 @@ class Event < ActiveRecord::Base
 
     def active_ibis_records(start_date, end_date)
       # New: Record has not been sent to IBIS, record has a disease, record is confirmed, probable, or suspect, record has not been soft-deleted
-      Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                          WHERE e.deleted_at IS NULL
-                          AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL
-                          AND e.state_case_status_id = c.id
-                          AND c.code_name = 'case'
-                          AND c.the_code IN ('C', 'P', 'S')
-                          AND ((e.created_at BETWEEN '#{start_date}' AND '#{end_date}') OR (e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'))
-        ")
+      where_clause = <<-WHERE
+        events.deleted_at IS NULL 
+        AND disease_events.disease_id IS NOT NULL 
+        AND ((external_codes.code_name = 'case' AND external_codes.the_code IN (?))
+          OR (lhd_case_statuses_events.code_name = 'case' AND lhd_case_statuses_events.the_code IN (?)))
+        AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
+      WHERE
+      Event.find(:all, 
+                 :include => [:disease_event, :state_case_status, :lhd_case_status],
+                 :conditions => [where_clause, valid_ibis_states, valid_ibis_states, start_date, end_date, start_date, end_date])
     end
 
     def deleted_ibis_records(start_date, end_date)
       # New: Record has been sent to IBIS, record has been updated, record has a disease, record is not confirmed, probable, or suspect OR record has been soft-deleted
-      Event.find_by_sql(" SELECT e.id AS event_id FROM events e, disease_events d, external_codes c
-                          WHERE e.sent_to_ibis = TRUE
-                          AND d.event_id = e.id
-                          AND d.disease_id IS NOT NULL
-                          AND e.state_case_status_id = c.id
-                          AND c.code_name = 'case'
-                          AND (c.the_code NOT IN ('C', 'P', 'S') OR (e.deleted_at BETWEEN '#{start_date}' AND '#{end_date}'))
-                          AND e.ibis_updated_at BETWEEN '#{start_date}' AND '#{end_date}'
-        ")
+      where_clause = <<-WHERE
+        events.sent_to_ibis = ?
+        AND disease_events.disease_id IS NOT NULL
+        AND events.ibis_updated_at BETWEEN ? AND ?
+        AND (((external_codes.code_name = 'case' AND external_codes.the_code NOT IN (?)) OR external_codes.the_code IS NULL)
+          AND ((lhd_case_statuses_events.code_name = 'case' AND lhd_case_statuses_events.the_code NOT IN (?)) OR lhd_case_statuses_events.the_code IS NULL)
+          OR events.deleted_at BETWEEN ? AND ?)
+      WHERE
+      Event.find(:all,
+                 :include => [:disease_event, :state_case_status, :lhd_case_status],
+                 :conditions => [where_clause, true, start_date, end_date, valid_ibis_states, valid_ibis_states, start_date, end_date])
     end
 
     def exportable_ibis_records(start_date, end_date)
@@ -212,6 +215,11 @@ class Event < ActiveRecord::Base
       Event.update_all('sent_to_ibis=true', ['id IN (?)', event_ids])
     end
 
+
+    def valid_ibis_states
+      %w( C P S )
+    end
+      
     def generate_event_search_where_clause(options)
       fulltext_terms = []
       where_clause = " participations.type != 'PlaceEvent'"
@@ -382,6 +390,19 @@ class Event < ActiveRecord::Base
       end
       [where_clause, order_by_clause, issue_query]
     end
+  end
+
+  def deleted_from_ibis?
+    deleted? || !valid_ibis_state? 
+  end
+
+  def deleted?
+    not deleted_at.nil?
+  end
+
+  def valid_ibis_state?
+    Event.valid_ibis_states.include?(state_case_status.try(:the_code)) ||
+      Event.valid_ibis_states.include?(lhd_case_status.try(:the_code))
   end
 
   def open_for_investigation?

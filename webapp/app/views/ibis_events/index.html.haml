@@ -17,7 +17,7 @@
   IBIS Export
 
 %p Generate an IBIS export file for events created, updated, or deleted between the entered dates, inclusive (yyyy-mm-dd):
-- form_tag(formatted_by_range_ibis_events_path("xml"), :method => :get) do
+- form_tag(by_range_ibis_events_path(:format => :xml), :method => :get) do
   .horiz
     %label Start Date 
     = text_field_tag("start_date")
