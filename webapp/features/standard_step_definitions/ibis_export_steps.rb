@@ -46,7 +46,7 @@ end
 
 Given /^a morbidity event already sent to ibis, with an "([^\"]*)" LHD status$/ do |status_description|
   disease = Disease.find_by_disease_name('African Tick Bite Fever')
-  status = ExternalCode.find_by_code_name_and_code_description(status_description)
+  status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.state_case_status = status
   @event_to_match.build_disease_event(:disease_id => disease.id)
@@ -75,4 +75,8 @@ end
 
 Then /^I should receive the deleted morbidity event as xml$/ do
   response.should have_xpath "//recordid[text()='#{@event_to_match.record_number}']/../updateflag[text()='1']"
+end
+
+Then /^I should see "([^\"]*)" in the Status node$/ do |status_code|
+  response.should have_xpath "//recordid[text()='#{@event_to_match.record_number}']/../status[text()='#{status_code}']"
 end

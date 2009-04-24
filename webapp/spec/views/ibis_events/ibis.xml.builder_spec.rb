@@ -43,6 +43,7 @@ describe "/export/ibis.xml.builder" do
         with_tag("Race", :text => ".")
         with_tag("Sex", :text => "1")
         with_tag("Status", :text => "1")
+        with_tag("CreatedAt", :text => "01/15/2008")
         with_tag("Year", :text => "2008")
       end
       with_tag("ComdisRecord") do
@@ -63,6 +64,9 @@ def mock_ibis_event
 
   @state_code = mock_model(Code)
   @state_code.stub!(:the_code).and_return("C")
+
+  @lhd_code = mock_model(Code)
+  @lhd_code.stub!(:the_code).and_return("P")
 
   @person = mock_model(Person)
   @person.stub!(:last_name).and_return("Lastname")
@@ -98,12 +102,14 @@ def mock_ibis_event
   m.stub!(:age_info).and_return(OpenStruct.new({:in_years => 30}))
 
   m.stub!(:state_case_status).and_return(@state_code)
+  m.stub!(:lhd_case_status).and_return(@lhd_code)
 
   m.stub!(:disease).and_return(@disease_event)
   m.stub!(:first_reported_PH_date).and_return(Date.new(2008,1,10))
 
   m.stub!(:sent_to_cdc).and_return(true)
   m.stub!(:deleted_at).and_return(nil)
+  m.stub!(:created_at).and_return(Date.new(2008,1,15))
 
   @jurisdiction = mock_model(Place)
   @jurisdiction.stub!(:short_name).and_return("Bear River")

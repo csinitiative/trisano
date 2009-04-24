@@ -187,7 +187,7 @@ class Event < ActiveRecord::Base
         AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
       WHERE
       Event.find(:all, 
-                 :include => [:disease_event, :state_case_status, :lhd_case_status],
+                 :include => [:disease_event, :state_case_status, :lhd_case_status, :address],
                  :conditions => [where_clause, valid_ibis_states, valid_ibis_states, start_date, end_date, start_date, end_date])
     end
 
@@ -217,7 +217,7 @@ class Event < ActiveRecord::Base
 
 
     def valid_ibis_states
-      %w( C P S )
+      %w( C P S UNK U NC )
     end
       
     def generate_event_search_where_clause(options)

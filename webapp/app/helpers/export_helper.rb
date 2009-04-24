@@ -52,9 +52,12 @@ module ExportHelper
 
   def get_ibis_status(status)
     case status.try(:the_code)
-    when "C" then 1 
-    when "P" then 2 
-    when "S" then 3 
+    when "C"  then 1 
+    when "P"  then 2 
+    when "S"  then 3
+    # these codes will need to be updated when we know what they are supposed to be.
+    when "NC" then "NC" 
+    when "UNK", "U" then "UNK"
     end
   end
 
