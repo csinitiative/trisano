@@ -36,6 +36,6 @@ end
 
 
 Then /^I should receive the morbidity event as xml$/ do
-  response.should have_xpath "//recordid[text() = '#{@event_to_match.record_number}']"
+  response.should have_xpath("//recordid[text() = '#{@event_to_match.record_number}']")
 end
 

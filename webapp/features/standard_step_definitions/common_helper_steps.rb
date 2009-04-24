@@ -23,9 +23,17 @@ Given(/^I am logged in as a super user$/) do
   log_in_as("default_user")
 end
 
-Given(/^I am logged in as a lhd manager$/) do
+Given(/^I am logged in as a manager$/) do
   log_in_as("lhd_manager")
 end
+
+Given(/^I am logged in as an investigator$/) do
+  log_in_as("investigator")
+end
+
+#
+# Basic moving around helpers
+#
 
 When(/^I click the "(.+)" link$/) do |link|
   click_link link
@@ -34,3 +42,12 @@ end
 When(/^I click the "(.+)" button$/) do |button|
   click_button button
 end
+
+#
+# Error message helpers
+#
+
+Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
+  response.should contain(message)
+end
+

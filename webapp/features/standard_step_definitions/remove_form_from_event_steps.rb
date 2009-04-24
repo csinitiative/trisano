@@ -18,33 +18,6 @@
 
 When(/^I see the form and answers on the event$/) do
   response.should contain(@form.name)
-  response.should have_xpath("//div[@id='investigation_form']//input[contains(@value, 'disease specific answer')]")
+  response.should have_xpath("//div[@id='investigation_form']//input[contains(@value, '#{@answer_text}')]")
 end
-
-When(/^I check the form for removal$/) do
-  check("forms_to_remove_")
-end
-
-Then(/^I should no longer see the form on the event$/) do
-  click_link "Edit"
-  response.should_not contain(@form.name)
-  response.should_not have_xpath("//div[@id='investigation_form']//input[contains(@value, 'disease specific answer')]")
-end
-
-Then(/^I should no longer see the answers on the event$/) do
-  response.should_not contain("disease specific answer")
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
