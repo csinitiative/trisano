@@ -20,7 +20,7 @@
   - f.fields_for :shortcut_settings do |shortcut|
     %span{ :class => "vert" }
       = shortcut.label :configure, "Configure Shortcuts"
-      = shortcut.text_field :configure, :size => 25, :maxlength => 25
+      = shortcut.text_field :configure, :value => @user.shortcut_settings[:configure], :size => 25, :maxlength => 25, :readonly => true
     %span{ :class => "vert" }
       = shortcut.label :new, "New CMR"
       = shortcut.text_field :new, :size => 25, :maxlength => 25

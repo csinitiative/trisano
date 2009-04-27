@@ -84,7 +84,7 @@ class UsersController < AdminController
   def shortcuts_edit
     @user = User.current_user
     respond_to do |format|
-    format.html
+      format.html
     end
   end
   
