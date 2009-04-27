@@ -15,10 +15,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When(/^I navigate to the event edit page$/) do
-  @browser.open "/trisano/cmrs/#{@event.id}/edit"
+Given /^that the event has been sent to the state$/ do
+  @event.workflow_state = 'closed'
+  @event.save.should be_true
 end
 
-When(/^I navigate to the event show page$/) do
-  @browser.open "/trisano/cmrs/#{@event.id}/show"
+When /^I click "([^\"]*)"$/ do |arg1|
+  pending
+end
+
+Then /^the Morbidity event is returned to the "([^\"]*)" state$/ do |arg1|
+  pending
+end
+
+Given /^a morbidity event from my jurisdiction has already been approved by the state$/ do
+  pending
 end

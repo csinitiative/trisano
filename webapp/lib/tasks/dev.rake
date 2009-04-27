@@ -119,7 +119,7 @@ namespace :trisano do
 
     desc "Run enhanced features"
     task :enhanced_features do
-      sh "cucumber features/enhanced -n -p enhanced"
+      sh "cucumber #{ENV['FEATURE'] || 'features/enhanced'} -n -p enhanced"
     end
 
   end
