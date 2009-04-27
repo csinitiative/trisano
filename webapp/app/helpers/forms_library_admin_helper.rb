@@ -18,14 +18,10 @@
 module FormsLibraryAdminHelper
   
   def render_library_admin(type)
-    
-    type_humanized = type.to_s.humanize.downcase.pluralize
-    type= type.to_s.camelize
-    
+
     result = ""
-    
-#    result += "<ul>"
-    
+    type= type.to_s.camelize
+
     for ungrouped_form_element in @library_elements
       next if ungrouped_form_element.is_a? GroupElement
       
@@ -36,12 +32,9 @@ module FormsLibraryAdminHelper
       end
     end
     
-#    result += "</ul>"
-    
     for grouped_form_element in @library_elements
       next unless grouped_form_element.is_a? GroupElement
       
-#      result += "<ul><li>"
       result += "<p><b><id='lib_group_admin_item_#{grouped_form_element.id}'>Group: #{grouped_form_element.name}</b>"
       
       for child in grouped_form_element.children
@@ -51,8 +44,6 @@ module FormsLibraryAdminHelper
           result += render_library_admin_value_set(child, type)
         end
       end
-       
-#      result += "</li></ul>"
       
     end
     
@@ -62,7 +53,7 @@ module FormsLibraryAdminHelper
   private
   
   def render_library_admin_question(element, type)
-    result = "<li id='question_#{element.id}' class='library-admin-item'>#{element.question.question_text}"
+    result = "<li id='question_#{element.id}' class='library-admin-item'>#{element.question.question_text} #{element.question.short_name}"
     result += "&nbsp;&nbsp;#{element.question.data_type_before_type_cast.humanize}"
     
     element.children do |child|
@@ -77,17 +68,17 @@ module FormsLibraryAdminHelper
   
   def render_library_admin_value_set(element, type)
     result = "<li id='value_set_#{element.id}' class='library-admin-item'><b>#{element.name}</b><br>"
-#    result += "<ul>"
+    #    result += "<ul>"
     
     element.children.each do |child|
-       if child.name.blank?
-         result += "(Blank)"
+      if child.name.blank?
+        result += "(Blank)"
       else
         result += fml("", child.name, "") 
       end
     end
     
-#    result += "</ul>"
+    #    result += "</ul>"
     result += "</li>"
   end
   
