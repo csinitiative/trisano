@@ -15,19 +15,39 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^that the event has been sent to the state$/ do
+Given /^I am logged in as a "([^\"]*)" in "([^\"]*)"$/ do |role_name, jurisdiction_name|
+  name = get_unique_name(2)
+  jurisdiction = Place.jurisdiction_by_name(jurisdiction_name)
+  role = Role.find_by_role_name(role_name)
+  @user = User.create(:uid => name, :user_name => name)
+  @user.update_attributes({:role_membership_attributes => [{
+                              :jurisdiction_id => jurisdiction.entity.id,
+                              :role_id => role.id }] })
+  @browser.refresh
+  @browser.wait_for_page_to_load($load_time)
+  switch_user(@browser, @user.best_name)
+end
+
+Given /^that event has been sent to the state$/ do
+  @event.workflow_state = 'approved_by_lhd'
+  @event.save!
+end
+
+Given /^the event has been approved by the state$/ do
   @event.workflow_state = 'closed'
-  @event.save.should be_true
+  @event.save!
 end
 
-When /^I click "([^\"]*)"$/ do |arg1|
-  pending
+When /^I open routing dialog$/ do
+  @browser.click 'link=Route to Local Health Depts.'
+  sleep(2)
 end
 
-Then /^the Morbidity event is returned to the "([^\"]*)" state$/ do |arg1|
-  pending
+When /^the event status is "([^\"]*)"$/ do |state_description|
+  @browser.get_html_source.should =~ /#{state_description}/
 end
 
-Given /^a morbidity event from my jurisdiction has already been approved by the state$/ do
-  pending
+Then /^the event state is "([^\"]*)"$/ do |state_description|
+  @browser.get_html_source.should =~ /#{state_description}/
 end
+

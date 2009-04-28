@@ -38,6 +38,10 @@ When(/^I click and confirm the "(.+)" button$/) do |button|
   @browser.wait_for_page_to_load($load_time)
 end
 
+When /^I wait for the page to load$/ do
+  @browser.wait_for_page_to_load
+end
+
 Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
   @browser.is_text_present(message).should be_true
 end
@@ -45,5 +49,3 @@ end
 Then(/^I should not be presented with an error message$/) do
   @browser.is_text_present("error prohibited").should be_false
 end
-
-
