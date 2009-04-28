@@ -20,29 +20,65 @@
 # Step 1: Copy XML config files
 # Step 2: Copy custom jar files
 # Step 3: Configure BI for Postgres
-# Step 4: Pre-publish OLAP schema
-# Step 5: Customize admin console
+# Step 4: Customize admin console
+# Step 5: Pre-publish OLAP schema
 # Step 6: Tar it all up
 
 if [ $# != 2 ] ; then
-    echo "Usage: $0 path_to_bi_server path_to_trisano_source_code"
+    echo ""
+    echo "USAGE: $0 path_to_all_bi_products path_to_trisano_source_code"
+    echo ""
+    echo "Create a single directory into which you have downloaded all the relevant Pentaho"
+    echo "Community bits: BI Server, Report Designer, Pentaho Metadata.  Provide that directory"
+    echo "name as the first argument.  The second argument is the path to your local TriSano"
+    echo "working copy."
+    echo ""
     exit
 fi
 
-BI_SERVER_HOME=$1
-TRISANO_SOURCE_HOME=$2
+BI_BITS_HOME=${1%/}
+TRISANO_SOURCE_HOME=${2%/}
 
-if [ ! -d $BI_SERVER_HOME/pentaho-solutions ]; then
-    echo "$BI_SERVER_HOME is not the root directory of the BI Server"
+if [ ! -d $BI_BITS_HOME ]; then
+    echo "$BI_BITS_HOME is not a directory"
     exit
 fi
 
 if [ ! -d $TRISANO_SOURCE_HOME/bi ]; then
-    echo "$BI_SERVER_HOME is not the root directory of the TriSano source tree"
+    echo "$TRISANO_SOURCE_HOME is not the root directory of the TriSano source tree"
     exit
 fi
 
-# Step 1: Copy XML config files
+# VERIFY THESE NAMES BEFORE RUNNING SCRIPT
+BI_SERVER_ZIP=biserver-ce-CITRUS-M2.tar.gz
+REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
+METADATA_ZIP=pme-ce-3.0.0.RC2.zip
+
+BI_SERVER_HOME=$BI_BITS_HOME/biserver-ce
+ADMIN_CONSOLE_HOME=$BI_BITS_HOME/administration-console
+
+cd $BI_BITS_HOME
+
+if [ ! -e $BI_SERVER_ZIP ]; then
+    echo "Could not locate BI Server archiver $BI_BITS_HOME/$BI_SERVER_ZIP"
+    exit
+fi
+
+if [ ! -e $REPORT_DESIGNER_ZIP ]; then
+    echo "Could not locate Report Designer archive: $BI_BITS_HOME/$REPORT_DESIGNER_ZIP"
+    exit
+fi
+
+if [ ! -e $METADATA_ZIP ]; then
+    echo "Could not locate Pentaho Metadata archive: $BI_BITS_HOME/$METADATA_ZIP"
+    exit
+fi
+
+# Step 0: Explode the BI server
+echo "Exploding the BI Server archive"
+tar zxf $BI_SERVER_ZIP
+
+# Step 1: Copy SiteMinder XML config files
 echo "Configuring BI Server to use SiteMinder"
 
 # Backup originals
@@ -76,8 +112,17 @@ cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/quartz.properties $BI_SER
 cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
 cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
 
-# Step 5: Customize admin console
+# Step 4: Customize admin console
 # Add Postgres JDBC driver to admin-console
+echo "Configuring Admin Console to use PostgreSQL"
 cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
 
+# Step 6: Create a TriSano tarball
+echo "Creating distribution package"
+tar cfz trisano-bi.tar.gz $BI_SERVER_HOME $ADMIN_CONSOLE_HOME $REPORT_DESIGNER_ZIP $METADATA_ZIP
 
+# Clean up
+rm -fr $BI_SERVER_HOME $ADMIN_CONSOLE_HOME
+
+echo
+echo "$BI_BITS_HOME/trisano-bi.tar.gz is ready for shipping."
