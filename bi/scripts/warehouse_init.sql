@@ -78,8 +78,13 @@ BEGIN
       FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
       WHERE pg_namespace.nspname = 'trisano' AND pg_class.relkind = 'v'
       LOOP
-        tmp := 'DROP VIEW trisano.' || viewname;
-        EXECUTE tmp;
+        IF EXISTS
+          (SELECT 1 FROM pg_class JOIN pg_namespace
+          ON pg_namespace.oid = pg_class.relnamespace
+          WHERE pg_class.relname = viewname AND pg_class.relkind = 'v') THEN
+            tmp := 'DROP VIEW trisano.' || viewname || ' CASCADE';   -- CASCADE just in case there are dependencies
+            EXECUTE tmp;
+        END IF;
     END LOOP;
 
     -- Create a new view for each table in the current schema
@@ -90,7 +95,153 @@ BEGIN
       LOOP
         tmp := 'CREATE VIEW trisano.' || viewname || '_view AS SELECT * FROM ' || new_schema || '.' || viewname;
         EXECUTE tmp;
-        tmp := 'GRANT SELECT ON trisano.' || viewname || '_view TO nedss_dw';
+    END LOOP;
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_patients_view AS
+            SELECT * FROM ' || new_schema || '.dw_patients
+            WHERE EXISTS
+                (SELECT 1 FROM ' || new_schema || '.dw_morbidity_events
+                WHERE dw_patients_id = dw_patients.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_patients_view AS
+            SELECT * FROM ' || new_schema || '.dw_patients
+            WHERE EXISTS
+                (SELECT 1 FROM ' || new_schema || '.dw_contact_events
+                WHERE dw_patients_id = dw_patients.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_patients_races_view AS
+            SELECT * FROM ' || new_schema || '.dw_patients_races
+            WHERE EXISTS
+                (SELECT 1 FROM trisano.dw_morbidity_patients_view
+                WHERE id = dw_patients_races.person_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_patients_races_view AS
+            SELECT * FROM ' || new_schema || '.dw_patients_races
+            WHERE EXISTS
+                (SELECT 1 FROM trisano.dw_contact_patients_view
+                WHERE id = dw_patients_races.person_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_reporting_agencies_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_reporting_agencies
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_reporting_agencies_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_reporting_agencies
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_clinicians_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_clinicians
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_clinicians_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_clinicians
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_diagnostic_facilities_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_diagnostic_facilities_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_reporters_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_reporters
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_reporters_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_reporters
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_treatments_events_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_treatments
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_treatments_events_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_treatments
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_treatments_view AS
+            SELECT * FROM ' || new_schema || '.treatments
+            WHERE EXISTS
+                (SELECT 1 FROM trisano.dw_events_treatments_view
+                WHERE id = treatments.id
+                AND dw_morbidity_events_id IS NOT NULL)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_treatments_view AS
+            SELECT * FROM ' || new_schema || '.treatments
+            WHERE EXISTS
+                (SELECT 1 FROM trisano.dw_events_treatments_view
+                WHERE id = treatments.id
+                AND dw_contact_events_id IS NOT NULL)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_lab_results_view AS
+            SELECT * FROM ' || new_schema || '.dw_lab_results
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_lab_results_view AS
+            SELECT * FROM ' || new_schema || '.dw_lab_results
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_hospitals_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_hospitals
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_hospitals_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_hospitals
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_secondary_jurisdictions_view AS
+            SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_secondary_jurisdictions_view AS
+            SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_diseases_view AS
+            SELECT * FROM ' || new_schema || '.diseases
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_morbidity_events_view dw
+                WHERE dw.disease_id = diseases.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_diseases_view AS
+            SELECT * FROM ' || new_schema || '.diseases
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_contact_events_view dw
+                WHERE dw.disease_id = diseases.id)';
+
+    FOR viewname IN 
+      SELECT relname
+      FROM pg_class JOIN pg_namespace
+      ON (pg_class.relnamespace = pg_namespace.oid)
+      WHERE nspname = 'trisano' AND relkind = 'v'
+      LOOP
+        tmp := 'GRANT SELECT ON trisano.' || viewname || ' TO nedss_dw';
         EXECUTE tmp;
     END LOOP;
 
