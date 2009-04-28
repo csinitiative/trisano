@@ -55,9 +55,9 @@ module ExportHelper
     when "C"  then 1 
     when "P"  then 2 
     when "S"  then 3
-    # these codes will need to be updated when we know what they are supposed to be.
-    when "NC" then "NC" 
-    when "UNK", "U" then "UNK"
+    when "NC" then 4 
+    # 'U' should never be in production, but it's leaked into tests
+    when "UNK", "U" then 9
     end
   end
 
