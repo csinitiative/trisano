@@ -186,8 +186,8 @@ namespace :trisano do
       
       sh "cp -R #{TRISANO_SVN_ROOT} #{dist_dirname}"
 
-      p "removing .svn directories"
-      sh "find #{dist_dirname} -name .svn -print0 | xargs -0 rm -rf"
+      p "removing .git directory"
+      sh "rm -rf #{dist_dirname}/.git"
       
       # tried to get tar --exclude to work, but had no luck - bailing to a simpler approach
       p "removing tmp directories from #{dist_dirname}"

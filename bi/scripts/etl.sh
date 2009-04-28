@@ -24,14 +24,14 @@
 SOURCE_DB_HOST=localhost
 SOURCE_DB_PORT=5432
 SOURCE_DB_NAME=trisano_development
-SOURCE_DB_USER=nedss
+SOURCE_DB_USER=trisano_su
 # NB!: Passwords must be handled automatically, i.e. with a .pgpass file
 # cf. http://www.postgresql.org/docs/current/static/libpq-pgpass.html
 
 DEST_DB_HOST=localhost
 DEST_DB_PORT=5432
 DEST_DB_NAME=trisano_warehouse
-DEST_DB_USER=nedss
+DEST_DB_USER=trisano_su
 
 PGSQL_PATH=/usr/bin
 

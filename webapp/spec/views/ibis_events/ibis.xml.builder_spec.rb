@@ -43,8 +43,8 @@ describe "/export/ibis.xml.builder" do
         with_tag("Race", :text => ".")
         with_tag("Sex", :text => "1")
         with_tag("Status", :text => "1")
-        with_tag("CreatedAt", :text => "01/15/2008")
         with_tag("Year", :text => "2008")
+        with_tag("EventCreatedDate", :text => "01/15/2008")
       end
       with_tag("ComdisRecord") do
         with_tag("RecordId", :text => "20080002")

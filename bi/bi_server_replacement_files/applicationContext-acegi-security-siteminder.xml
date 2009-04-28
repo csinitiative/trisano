@@ -34,9 +34,9 @@
 	<!--  This is only for Hypersonic. Please update this section for any other database you are using -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="driverClassName" value="org.postgresql.Driver" />
 		<property name="url"
-			value="jdbc:hsqldb:hsql://localhost:9001/hibernate" />
+			value="jdbc:postgresql://localhost:5432/hibernate" />
 		<property name="username" value="hibuser" />
 		<property name="password" value="password" />
 	</bean>

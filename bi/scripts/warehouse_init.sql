@@ -16,11 +16,11 @@
 -- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 CREATE SCHEMA trisano;
-ALTER SCHEMA trisano OWNER TO nedss;
+ALTER SCHEMA trisano OWNER TO trisano_su;
 CREATE LANGUAGE plpgsql;
 -- NOTE: Adjust this user to the DEST_DB_USER 
-ALTER SCHEMA public OWNER TO nedss;
-GRANT USAGE ON SCHEMA trisano TO nedss_dw;
+ALTER SCHEMA public OWNER TO trisano_su;
+GRANT USAGE ON SCHEMA trisano TO trisano_ro;
 
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
@@ -241,7 +241,7 @@ BEGIN
       ON (pg_class.relnamespace = pg_namespace.oid)
       WHERE nspname = 'trisano' AND relkind = 'v'
       LOOP
-        tmp := 'GRANT SELECT ON trisano.' || viewname || ' TO nedss_dw';
+        tmp := 'GRANT SELECT ON trisano.' || viewname || '_view TO trisano_ro';
         EXECUTE tmp;
     END LOOP;
 

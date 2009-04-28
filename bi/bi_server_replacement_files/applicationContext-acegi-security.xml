@@ -197,8 +197,8 @@
     <property name="rememberMeServices">
       <ref local="rememberMeServices" />
     </property>
-    <property name="siteminderUsernameHeaderKey" value="SM_USER" />
-    <property name="siteminderPasswordHeaderKey" value="SM_USER" />
+    <property name="siteminderUsernameHeaderKey" value="UID" />
+    <property name="siteminderPasswordHeaderKey" value="UID" />
   </bean>
 
   <bean id="authenticationProcessingFilterEntryPoint"

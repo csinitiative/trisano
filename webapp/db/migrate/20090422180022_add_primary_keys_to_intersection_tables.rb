@@ -4,7 +4,6 @@ class AddPrimaryKeysToIntersectionTables < ActiveRecord::Migration
     ActiveRecord::Base.transaction do
 
       say "Adding primary keys to intersection tables"
-      execute("ALTER TABLE places_types ADD PRIMARY KEY (place_id, type_id)")
       execute("ALTER TABLE diseases_forms ADD PRIMARY KEY (form_id, disease_id)")
       execute("ALTER TABLE diseases_external_codes ADD PRIMARY KEY (disease_id, external_code_id)")
       execute("ALTER TABLE diseases_export_columns ADD PRIMARY KEY (disease_id, export_column_id)")

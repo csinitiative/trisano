@@ -18,12 +18,15 @@
 class FixUpPlaceTypes < ActiveRecord::Migration
   def self.up
     ActiveRecord::Base.transaction do
-      create_table :places_types, :id => false, :primary_key => [:place_id, :type_id]  do |t|
+      create_table :places_types, :id => false, :primary_key => [:place_id, :type_id]  do |t| #setting the pk this way doesn't work in rails 2.3
         t.integer :place_id
         t.integer :type_id
       end
-    
+      
+      execute("ALTER TABLE places_types ADD PRIMARY KEY (place_id, type_id)")
+
       if RAILS_ENV == 'production'
+      begin
         ReportingAgencyType.all.each do |rat|
           execute("INSERT INTO places_types (place_id, type_id) VALUES (#{rat.place_id}, #{rat.code_id})")
         end
@@ -31,7 +34,10 @@ class FixUpPlaceTypes < ActiveRecord::Migration
         Place.all.each do |place|
           execute("INSERT INTO places_types (place_id, type_id) VALUES (#{place.id}, #{place.place_type_id})") if place.place_type_id
         end
-
+      rescue
+        puts $!
+      end
+      
         execute("
           UPDATE core_fields
           SET key = 'place_event[active_place][active_primary_entity][place][place_type_ids]'

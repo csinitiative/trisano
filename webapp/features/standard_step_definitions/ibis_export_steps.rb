@@ -66,7 +66,7 @@ end
 
 Then /^it should have the code for "([^\"]*)" county$/ do |county_name|
   county = ExternalCode.find_by_code_name_and_code_description('county', county_name)
-  response.should have_xpath "//countycode[text() = '#{@event_to_match.address.try(:county).try(:the_code)}']"
+  response.should have_xpath "//county[text() = '#{@event_to_match.address.try(:county).try(:the_code)}']"
 end
 
 Then /^I should receive the morbidity event as xml$/ do

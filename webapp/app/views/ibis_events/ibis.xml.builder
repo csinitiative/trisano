@@ -30,7 +30,7 @@ xml.Table {
         zip_code = address.try(:postal_code) || ""
         xml.ZipCode(zip_code[0..4])
 
-        xml.CountyCode address.try(:county).try(:the_code) || ""
+        xml.County address.try(:county).try(:the_code) || ""
         
         xml.Age(event.age_info.in_years)
 
@@ -49,10 +49,10 @@ xml.Table {
         xml.Race(get_ibis_race(event.interested_party.person_entity.races))
         xml.Sex(get_ibis_sex(event.interested_party.person_entity.person.birth_gender))
         xml.Status(get_ibis_status(event.state_case_status))
-        xml.LHDStatus get_ibis_status(event.lhd_case_status)
+        xml.LocalStatus get_ibis_status(event.lhd_case_status)
 
-        xml.CreatedAt event.created_at ? event.created_at.strftime("%m/%d/%Y") : nil
         xml.Year(event.record_number[0..3])
+        xml.EventCreatedDate event.created_at ? event.created_at.strftime("%m/%d/%Y") : nil
       end
     }
   end

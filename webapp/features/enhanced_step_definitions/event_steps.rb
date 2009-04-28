@@ -18,3 +18,8 @@
 When(/^I navigate to the event edit page$/) do
   @browser.open "/trisano/cmrs/#{@event.id}/edit"
 end
+
+When(/^I navigate to the event show page$/) do
+  @browser.open "/trisano/cmrs/#{@event.id}"
+  @browser.wait_for_page_to_load
+end
