@@ -19,20 +19,25 @@ INSTRUCTIONS FOR CREATING A NEW DATA WAREHOUSE DATABASE:
 
 1) Create an empty database with the owner set to the user who will run the ETL
    process
-    # createdb -O nedss trisano_warehouse
+    # createdb -O trisano_su trisano_warehouse
 
 2) Make sure there's a public schema in this database, owned by the user that
    owns the database. By default the new database will copy the template1
-   database kto know what schemas to have and who should own them.
+   database to know what schemas to have and who should own them.
     # psql trisano_warehouse
-    > ALTER SCHEMA public OWNER TO nedss
+    > ALTER SCHEMA public OWNER TO trisano_su;
 
-3) Edit the warehouse_init.sql script to use the right owner name and data
-   warehouse user name (i.e. replace "nedss" and "nedss_dw" with whatever
-   user you need)
+3) Create a user that will have only read access to the data warehouse.
+    # createuser -S -D -R -P trisano_ro
+     
+4) If your user names are other than trisano_su and trisano_ro, then edit the 
+   warehouse_init.sql script to use the right owner name and data
+   warehouse user name (i.e. replace "trisano_su" and "trisano_ro" with whatever
+   users you need)
 
-4) Run the warehouse_init.sql to populate the database
-    # psql -X -h host -U nedss -d trisano_warehouse -f warehouse_init.sql 
+5) Run the warehouse_init.sql to populate the database. Change 'host' below
+   as needed.
+    # psql -X -h host -U trisano_su -d trisano_warehouse -f warehouse_init.sql 
 
 5) Modify the configuration settings at the top of the etl.sh script to set
    variables properly. 

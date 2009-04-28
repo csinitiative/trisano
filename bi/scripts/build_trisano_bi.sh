@@ -52,10 +52,11 @@ fi
 # VERIFY THESE NAMES BEFORE RUNNING SCRIPT
 BI_SERVER_ZIP=biserver-ce-CITRUS-M2.tar.gz
 REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
-METADATA_ZIP=pme-ce-3.0.0.RC2.zip
 
-BI_SERVER_HOME=$BI_BITS_HOME/biserver-ce
-ADMIN_CONSOLE_HOME=$BI_BITS_HOME/administration-console
+BI_SERVER_NAME=biserver-ce
+ADMIN_CONSOLE_NAME=administration-console
+BI_SERVER_HOME=$BI_BITS_HOME/$BI_SERVER_NAME
+ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
 
 cd $BI_BITS_HOME
 
@@ -66,11 +67,6 @@ fi
 
 if [ ! -e $REPORT_DESIGNER_ZIP ]; then
     echo "Could not locate Report Designer archive: $BI_BITS_HOME/$REPORT_DESIGNER_ZIP"
-    exit
-fi
-
-if [ ! -e $METADATA_ZIP ]; then
-    echo "Could not locate Pentaho Metadata archive: $BI_BITS_HOME/$METADATA_ZIP"
     exit
 fi
 
@@ -117,12 +113,22 @@ cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/context.xml $BI_SERVER_HO
 echo "Configuring Admin Console to use PostgreSQL"
 cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
 
+# Step 5: Pre-publish OLAP schema
+echo "Publishing OLAP schema"
+cp $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml.org
+cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap
+mkdir $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
+
+# TBD: Pre-publish the reporting metadata overlay
+
 # Step 6: Create a TriSano tarball
 echo "Creating distribution package"
-tar cfz trisano-bi.tar.gz $BI_SERVER_HOME $ADMIN_CONSOLE_HOME $REPORT_DESIGNER_ZIP $METADATA_ZIP
+tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP
 
 # Clean up
-rm -fr $BI_SERVER_HOME $ADMIN_CONSOLE_HOME
+rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME
 
 echo
 echo "$BI_BITS_HOME/trisano-bi.tar.gz is ready for shipping."
+echo
