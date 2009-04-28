@@ -585,7 +585,7 @@ CREATE SEQUENCE dw_patients_races_seq;
 
 CREATE TABLE dw_patients_races AS
 SELECT
-    NEXTVAL('dw_patients_races_seq'),
+    NEXTVAL('dw_patients_races_seq') AS id,
 	ex.code_description AS race,
 	p.id AS person_id
 FROM
