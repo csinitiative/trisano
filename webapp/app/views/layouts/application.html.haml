@@ -22,12 +22,12 @@
       = yield :title
 
     = stylesheet_link_tag 'grid', 'structure', 'typography', 'action', 'tabview', :cache => 'styles'
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'shortcut', 'element-beta-min', 'tabview-min', 'patch_inplaceeditor_1-8-1', :cache => 'base'
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls', 'application', 'autotab', 'sniffer', 'yahoo-dom-event', 'shortcut', 'element-beta-min', 'tabview-min', 'patch_inplaceeditor_1-8-1', 'keycode', :cache => 'base'
     
     / Calendar
     = calendar_date_select_includes
 
-  %body.yui-skin-sam{:onload=>"shortcuts_init(" + User.current_user.id.to_s + ");"}
+  %body.yui-skin-sam{:onload=>"shortcuts_init();"}
     = javascript_include_tag 'wz_tooltip'
     #head
       .container

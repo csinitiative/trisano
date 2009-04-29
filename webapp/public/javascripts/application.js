@@ -161,7 +161,7 @@ function contact_parent_address(id) {
   });
 }
 
-function shortcuts_init(uid) {
+function shortcuts_init() {
   //For easy iteration, (maybe a better way? if so, uproot)
   var map =
   {

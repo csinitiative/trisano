@@ -22,5 +22,20 @@ module UsersHelper
       page.insert_html :top, :role_memberships, :partial => 'role', :object => RoleMembership.new
     end
   end
-  
+
+  #keeps the disgusting list out of the view
+  def each_shortcut
+      { :configure => "Configure Shortcuts", 
+        :new => "New CMR",
+        :forms => "View/Edit Forms",
+        :people => "People Search",
+        :cmr_search => "CMR Search",
+        :cmrs => "View/Edit CMRs",
+        :navigate_right => "Move One Tab Right",
+        :navigate_left => "Move One Tab Left",
+        :save => "Hilight 'Save & Exit'"
+      }.each do |label|
+          yield label
+      end
+  end 
 end
