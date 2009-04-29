@@ -209,7 +209,7 @@ class FormsController < AdminController
   end
   
   def import
-    if params[:form][:import].respond_to?(:empty?)
+    if params[:form].nil? || params[:form][:import].respond_to?(:empty?)
       flash[:error] = 'Please navigate to a file to import.'
       redirect_to forms_path
       return
