@@ -40,6 +40,41 @@ module ExportHelper
     end
   end
 
+  def get_ibis_county_code(county)
+    case county.try(:the_code)
+    when "BE" then 2
+    when "BV" then 1
+    when "CA" then 3
+    when "CR" then 4
+    when "DG" then 5
+    when "DU" then 7
+    when "DV" then 6
+    when "EM" then 8
+    when "GA" then 9
+    when "GR" then 10
+    when "IR" then 11
+    when "JU" then 12
+    when "KA" then 13
+    when "MI" then 14
+    when "MO" then 15
+    when "OS" then 99
+    when "RI" then 17
+    when "SJ" then 19
+    when "SL" then 18
+    when "SM" then 22
+    when "SP" then 20
+    when "SV" then 21
+    when "TL" then 23
+    when "UI" then 24
+    when "UT" then 25
+    when "WA" then 27
+    when "WB" then 29
+    when "WN" then 28
+    when "WS" then 26
+    when nil then '.'
+    end
+  end
+
   def get_ibis_ethnicity(ethnicity)
     return "." unless ethnicity
     case ethnicity.the_code

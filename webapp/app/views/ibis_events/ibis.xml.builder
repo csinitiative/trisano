@@ -30,7 +30,7 @@ xml.Table {
         zip_code = address.try(:postal_code) || ""
         xml.ZipCode(zip_code[0..4])
 
-        xml.County address.try(:county).try(:the_code) || ""
+        xml.County get_ibis_county_code(address.try(:county))
         
         xml.Age(event.age_info.in_years)
 

@@ -47,7 +47,7 @@ Feature: Export events for ibis
     And I click the "submit" button
     
     Then I should receive the morbidity event as xml
-    And I should see "4" in the Status node
+    And I should see "4" in the "Status" node
 
   Scenario: Export events Unknown by the State
     Given a morbidity event with disease "African Tick Bite Fever" and "Unknown" by the state
@@ -59,7 +59,7 @@ Feature: Export events for ibis
     And I click the "submit" button
     
     Then I should receive the morbidity event as xml
-    And I should see "9" in the Status node
+    And I should see "9" in the "Status" node
 
   Scenario: Export events with a county code
     Given a morbidity event in "Morgan" county, with disease "African Tick Bite Fever" and "Confirmed" by the state
@@ -71,7 +71,7 @@ Feature: Export events for ibis
     And I click the "submit" button
 
     Then I should receive the morbidity event as xml
-    And it should have the code for "Morgan" county
+    And I should see "15" in the "County" node
 
   Scenario: Export events Confirmed by the LHD
     Given a morbidity event with disease "African Tick Bite Fever" and "Confirmed" by the LHD
