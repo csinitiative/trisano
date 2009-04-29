@@ -15,25 +15,6 @@
 - content_for :title do
   Configure Shortcuts
 
--#Eventually it might be nice to move it out into application.js
--#I need to throw in ruby variables into this code. (just need it to work for push)
-:javascript
-    document.onkeydown = function(e) {
-        e = e || window.event;
-        var k = KeyCode;
-        alert(#{ each_shortcut { }}); 
-        KeyCode.key_down(e);
-        if(e.preventDefault) {
-            e.preventDefault();
-        }
-        return false;
-    };
-    document.onkeypress = function(e) {
-        e.preventDefault();
-        return false;
-    };
-    document.onkeyup = KeyCode.key_up;
-
 - form_for(@user, :url => {:action => "shortcuts"}, :method => "put") do |f|
   = puts @user.shortcut_settings
   - f.fields_for :shortcut_settings do |shortcut|
@@ -41,5 +22,6 @@
       %span{ :class => "vert" }
         = shortcut.label label, val
         = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 25, :maxlength => 25, :readonly => true
+        = button_to_function "Change Shortcut", "change_shortcut('#{label}')", :id => "user_shortcut_settings_" + label.to_s + "_button"
   %p
   = f.submit "Update Shortcuts"

@@ -228,3 +228,21 @@ function shortcuts_init() {
     },
   });
 }
+
+function change_shortcut(shortcut) {
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        var k = KeyCode;
+        $('user_shortcut_settings_' + shortcut).value = k.hot_key(k.translate_event(e));
+        KeyCode.key_down(e);
+        if(e.preventDefault) {
+            e.preventDefault();
+        }
+        return false;
+    };
+    document.onkeypress = function(e) {
+        e.preventDefault();
+        return false;
+    };
+    document.onkeyup = KeyCode.key_up;
+}
