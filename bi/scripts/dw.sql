@@ -772,6 +772,7 @@ CREATE TABLE dw_encounters AS
 SELECT
     pe.id,
     events.parent_id AS dw_morbidity_events_id,
+    events.id AS encounter_event_id,
     pe.user_id AS investigator_id,
     upsert_date(pe.encounter_date) AS encounter_date,
     pe.encounter_location_type AS location,

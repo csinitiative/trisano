@@ -1,0 +1,25 @@
+metadata.xmi is the reporting metadata for TriSano. To use it, first edit
+metadata.xmi to contain the correct username, password, and database URL
+parameters. The keys listed here will help you find the right information to
+edit. Default values are in parentheses:
+
+    DATABASE_SERVER     Hostname of the database server (localhost)
+    DATABASE_DATABASE   Name of the database to use (trisano_warehouse)
+    DATABASE_PORT       Database server port (5432)
+    DATABASE_USERNAME   Username for database account (trisano_ro)
+    DATABASE_PASSWORD   Password for the account (password)
+    DATABASE_ATTRIBUTE_PREFIX_PORT_NUMBER
+                        Same as DATABASE_PORT (5432)
+    DATABASE_JDBC_URL   URL for JDBC connection to this database
+                        (jdbc:postgresql://localhost:5432/trisano_warehouse)
+
+Having ensured the file contains the right parameters, from within the Pentaho
+console, create a folder called, for instance, TriSano. This will create a
+physical directory in Pentaho's pentaho-solutions directory.  Place
+metadata.xmi in that directory, and again from the Pentaho console, click
+Tools->Refresh->Repository Cache. It's difficult to tell when that refresh has
+completed; you can check activity in the repository database, or just give it a
+minute or two -- it shouldn't take long. Next, click Tools->Refresh->Reporting
+Metadata. This will take quite a bit longer, but should pop up a message box
+when it has completed. Close that message box, and click "New Report", and you
+should be able to use the new schema.
