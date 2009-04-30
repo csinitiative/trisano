@@ -229,20 +229,41 @@ function shortcuts_init() {
   });
 }
 
-function change_shortcut(shortcut) {
+function shortcut_set(target) {
+    $('user_shortcut_settings_' + target).style.background = "#FFF";
+
+    for (var box in $$('input[type=="text"]'))
+        if (box.background == "#FFE0C6")
+            return;
+
+    document.onkeydown = null;
+    document.onkeypress = null; 
+    document.onkeyup = null;
+}
+
+function change_shortcut(target) {
+    shortcut.kill_shortcuts();
+    var ele = $('user_shortcut_settings_' + target);
+    ele.style.background = "#FFE0C6";
+
     document.onkeydown = function(e) {
         e = e || window.event;
-        var k = KeyCode;
-        $('user_shortcut_settings_' + shortcut).value = k.hot_key(k.translate_event(e));
-        KeyCode.key_down(e);
-        if(e.preventDefault) {
+
+        if(e.preventDefault)
             e.preventDefault();
-        }
+
+        var k = KeyCode;
+        ele.value = k.hot_key(k.translate_event(e));
+        KeyCode.key_down(e);
+
         return false;
     };
+
     document.onkeypress = function(e) {
+        //This event isn't sent in IE so we don't need to check preventDefault
         e.preventDefault();
         return false;
     };
+
     document.onkeyup = KeyCode.key_up;
 }
