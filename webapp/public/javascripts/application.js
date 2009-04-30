@@ -163,59 +163,7 @@ function contact_parent_address(id) {
 
 function shortcuts_init() {
   //For easy iteration, (maybe a better way? if so, uproot)
-  var map =
-  {
-    'configure': function() {
-      window.location = "/users/shortcuts/edit";
-    },
-
-    'new': function() {
-      window.location = "/cmrs/new";
-    },
-
-    'forms': function() {
-      window.location = "/forms";
-    },
-
-    'people': function() {
-      window.location = "/search/people";
-    },
-
-    'cmr_search': function() {
-      window.location = "/search/cmrs";
-    },
-
-    'cmrs': function() {
-      window.location = "/cmrs";
-    },
-
-    'navigate_right': function() {
-      myTabs.set('activeIndex', (
-          myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
-          0 : myTabs.get('activeIndex') + 1
-        ));
-
-      //Grab the first thing to focus in the tab
-      YAHOO.util.Dom.getElementsBy(function(el) {
-          return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-        }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-    },
-
-    'navigate_left': function() {
-      myTabs.set('activeIndex', (
-          myTabs.get('activeIndex') == 0 ?
-          myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
-        ));
-
-      YAHOO.util.Dom.getElementsBy(function(el) {
-          return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-        }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
-    },
-
-    'save': function() {
-      $('save_and_exit_btn').focus();
-    }
-  };
+  var map = keymap;
 
   new Ajax.Request('/users/shortcuts', {
     method: 'get',
