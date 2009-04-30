@@ -15,18 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue$/ do |type, jurisdiction, queue_name|
-  @event = create_basic_event(type, get_random_word, "African Tick Bite Fever", jurisdiction)
-  @event.event_queue = EventQueue.find_by_queue_name(queue_name)
-  # TODO: investigator and disease can be removed once webrat multi select is fixed.
-  @event.investigator_id = User.current_user
-  @event.save!
+Given /^a queue named "([^\"]*)" in jurisdiction "([^\"]*)"$/ do |queue_name, jurisdiction_name|
+  @event_queue = EventQueue.find_or_create_by_queue_name_and_jurisdiction_id queue_name, jurisdiction_id_by_name(jurisdiction_name) 
+  @event_queue.should be_valid
 end
 
-When /^I visit the events index page$/ do
-  visit cmrs_path({})
+Then /^I should see the assigned event\.$/ do
+  # keying off the printing link because it seems the easiest way to match the event id
+  response.should have_xpath("//a[contains(@href,'#{@event.id}.print')]")
 end
 
-When(/^I navigate to the event edit page$/) do
-  visit edit_cmr_path(@event)
-end

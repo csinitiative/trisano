@@ -40,3 +40,7 @@ def add_child_to_event(event, child_last_name)
     child.save
   end
 end
+
+def jurisdiction_id_by_name(name)
+  Place.all_by_name_and_types(name || "Unassigned", 'J', true).first.entity_id
+end

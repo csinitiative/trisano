@@ -125,6 +125,7 @@ class HumanEvent < Event
 
     def find_all_for_filtered_view(options = {})
       # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
+      # TODO is the above still true since we've gone all STI
       conditions = ["jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"]
       conjunction = "AND"
 

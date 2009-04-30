@@ -40,7 +40,7 @@
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
       %label Events
-      = select_tag("states[]", options_from_collection_for_select(MorbidityEvent.get_states_and_descriptions, :state, :description), :size => 5, :multiple => true)
+      = select_tag("states[]", options_from_collection_for_select(MorbidityEvent.get_states_and_descriptions, :workflow_state, :description), :size => 5, :multiple => true)
     %span.horiz
       %label Queues
       - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
