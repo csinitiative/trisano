@@ -17,13 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-# Step 1: Copy XML config files
-# Step 2: Copy custom jar files
-# Step 3: Configure BI for Postgres
-# Step 4: Customize admin console
-# Step 5: Pre-publish OLAP schema
-# Step 6: Tar it all up
-
 if [ $# != 2 ] ; then
     echo ""
     echo "USAGE: $0 path_to_all_bi_products path_to_trisano_source_code"
@@ -71,11 +64,12 @@ if [ ! -e $REPORT_DESIGNER_ZIP ]; then
 fi
 
 # Step 0: Explode the BI server
-echo "Exploding the BI Server archive"
+echo
+echo " * Exploding the BI Server archive"
 tar zxf $BI_SERVER_ZIP
 
 # Step 1: Copy SiteMinder XML config files
-echo "Configuring BI Server to use SiteMinder"
+echo " * Configuring BI Server to use SiteMinder"
 
 # Backup originals
 cp $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-acegi-security.xml.org
@@ -89,11 +83,11 @@ cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/pentaho-spring-beans.xml 
 cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
 
 # Step 2: Copy custom jar files
-echo "Copying Trisano custom java extensions to BI Server"
+echo " * Copying Trisano custom java extensions to BI Server"
 cp $TRISANO_SOURCE_HOME/bi/extensions/trisano/dist/* $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
 
 # Step 3: Configure BI for Postgres
-echo "Configuring BI Server to use PostgreSQL"
+echo " * Configuring BI Server to use PostgreSQL"
 # Backup originals
 cp $BI_SERVER_HOME/start-pentaho.sh $BI_SERVER_HOME/start-pentaho.sh.org
 cp $BI_SERVER_HOME/stop-pentaho.sh $BI_SERVER_HOME/stop-pentaho.sh.org
@@ -110,24 +104,37 @@ cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/context.xml $BI_SERVER_HO
 
 # Step 4: Customize admin console
 # Add Postgres JDBC driver to admin-console
-echo "Configuring Admin Console to use PostgreSQL"
+echo " * Configuring Admin Console to use PostgreSQL"
 cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
 
-# Step 5: Pre-publish OLAP schema
-echo "Publishing OLAP schema"
+# Step 5: Configure repositories
+echo " * Building TriSano solution repository"
+mkdir $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml.org
 cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap
-mkdir $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/bi/schema/metadata.xmi $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/bi/schema/index.properties $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
 
-# TBD: Pre-publish the reporting metadata overlay
+# Removing sample repositories
+rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
+rm -fr $BI_SERVER_HOME/pentaho-solutions/bi-developers
 
-# Step 6: Create a TriSano tarball
-echo "Creating distribution package"
-tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP
+# Step 6: Bundle warehouse create scripts
+WAREHOUSE_DIR=warehouse
+mkdir $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/bi/scripts/etl.sh $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/bi/scripts/dw.sql $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/bi/scripts/dw.png $WAREHOUSE_DIR
+
+# Step 7: Create a TriSano tarball
+echo " * Creating distribution package"
+tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR
 
 # Clean up
-rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME
+rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR
 
 echo
 echo "$BI_BITS_HOME/trisano-bi.tar.gz is ready for shipping."
