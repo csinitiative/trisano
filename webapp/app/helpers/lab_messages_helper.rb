@@ -1,0 +1,2 @@
+module LabMessagesHelper
+end

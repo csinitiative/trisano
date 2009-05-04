@@ -1,0 +1,55 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%fieldset.vert
+  %span.horiz
+    %label Sending Facility
+    =h lab_message.sending_facility
+  %span.horiz
+    %label Patient
+    =h lab_message.patient_name
+  %span.horiz
+    %label Lab
+    =h lab_message.lab
+
+  %span.horiz
+    %label Result
+    =h lab_message.lab_result
+      
+  %span.horiz
+    %label HL7 Version
+    =h lab_message.hl7_version
+    
+  %span.horiz
+    %label &nbsp;
+    = link_to 'Edit', edit_lab_message_path(lab_message)
+    |
+    = link_to 'Show', lab_message 
+
+
+%fieldset.vert
+  %div{:id => "show_link_#{lab_message.id}"}      
+    = link_to_function 'Show raw message', nil do |page|
+      - page["original_message_#{lab_message.id}"].show
+      - page["show_link_#{lab_message.id}"].hide
+  %div{:id => "original_message_#{lab_message.id}", :style => 'display: none'}
+    =link_to_function 'Hide raw message', nil do |page|
+      - page["original_message_#{lab_message.id}"].hide
+      - page["show_link_#{lab_message.id}"].show
+    %blockquote
+      =h lab_message.hl7_message
+  
+%br
+%br
