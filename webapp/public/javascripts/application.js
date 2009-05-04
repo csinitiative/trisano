@@ -162,56 +162,61 @@ function contact_parent_address(id) {
 }
 
 function shortcuts_init() {
-  //For easy iteration, (maybe a better way? if so, uproot)
-  var map = keymap;
-
   new Ajax.Request('/users/shortcuts', {
     method: 'get',
     asynchronous: true,
     evalScripts:  true,
     onComplete: function(transport, json) {
       $H(json).each(function(pair) {
-        shortcut.add(pair.value, map[pair.key]);
+        shortcut.add(pair.value, keymap[pair.key]);
       });
     },
   });
 }
 
 function shortcut_set(target) {
-    $('user_shortcut_settings_' + target).style.background = "#FFF";
+  $('user_shortcut_settings_' + target).style.background = "#FFF";
 
-    for (var box in $$('input[type=="text"]'))
-        if (box.background == "#FFE0C6")
-            return;
+  //If for some raisin a browser fires onfocus first, uncomment this to fix it
+  //$$('input[type=text]').each(function(box) { if (box.background == "#FFE0C6") return; });
 
-    document.onkeydown = null;
-    document.onkeypress = null; 
-    document.onkeyup = null;
+  document.onkeydown = null;
+  document.onkeypress = null; 
+  document.onkeyup = null;
 }
 
 function change_shortcut(target) {
-    shortcut.kill_shortcuts();
-    var ele = $('user_shortcut_settings_' + target);
-    ele.style.background = "#FFE0C6";
+  shortcut.kill_shortcuts();
+  var ele = $('user_shortcut_settings_' + target);
+  var button = $('user_submit');
+  var conflict = false;
+  ele.style.background = "#FFE0C6";
 
-    document.onkeydown = function(e) {
-        e = e || window.event;
+  document.onkeydown = function(e) {
+    e = e || window.event;
+    if(e.preventDefault)
+      e.preventDefault();
 
-        if(e.preventDefault)
-            e.preventDefault();
+    var k = KeyCode;
+    ele.value = k.hot_key(k.translate_event(e));
 
-        var k = KeyCode;
-        ele.value = k.hot_key(k.translate_event(e));
-        KeyCode.key_down(e);
+    $$('input[type=text]').each(function(box) {    
+      if ((box != ele) && (box.value == ele.value)) {
+        box.style.color = "#FF0000";
+        ele.style.color = "#FF0000";
+        button.disable();
+      }
+    });
 
-        return false;
-    };
+    KeyCode.key_down(e);
+    return false;
+  };
 
-    document.onkeypress = function(e) {
-        //This event isn't sent in IE so we don't need to check preventDefault
-        e.preventDefault();
-        return false;
-    };
+  document.onkeypress = function(e) {
+    //This event isn't sent in IE so we don't need to check preventDefault
+    e.preventDefault();
+    return false;
+  };
 
-    document.onkeyup = KeyCode.key_up;
+  document.onkeyup = KeyCode.key_up;
 }
