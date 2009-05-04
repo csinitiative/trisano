@@ -10,6 +10,7 @@ patches*
 .stgit*
 webapp/db/*.sql
 distro/database/trisano_schema.sql
+distro/upgrade_db_output.txt
 *.dump_obfu
 dump
 rails

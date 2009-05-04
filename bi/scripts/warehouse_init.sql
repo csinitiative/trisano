@@ -21,6 +21,7 @@ CREATE LANGUAGE plpgsql;
 -- NOTE: Adjust this user to the DEST_DB_USER 
 ALTER SCHEMA public OWNER TO trisano_su;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
+ALTER USER trisano_ro SET search_path = trisano;
 
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
