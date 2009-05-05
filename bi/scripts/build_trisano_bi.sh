@@ -65,7 +65,7 @@ fi
 
 # Step 0: Explode the BI server
 echo
-echo " * Exploding the BI Server archive"
+echo " * Exploding the BI Server archive (please wait...)"
 tar zxf $BI_SERVER_ZIP
 
 # Step 1: Copy SiteMinder XML config files
@@ -122,6 +122,7 @@ rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
 rm -fr $BI_SERVER_HOME/pentaho-solutions/bi-developers
 
 # Step 6: Bundle warehouse create scripts
+echo " * Bundling warehouse initialization and ETL scripts."
 WAREHOUSE_DIR=warehouse
 mkdir $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/bi/scripts/etl.sh $WAREHOUSE_DIR
@@ -129,12 +130,19 @@ cp $TRISANO_SOURCE_HOME/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/bi/scripts/dw.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/bi/scripts/dw.png $WAREHOUSE_DIR
 
-# Step 7: Create a TriSano tarball
-echo " * Creating distribution package"
-tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR
+# Step 7: Bundle sample reports
+echo " * Bundling sample reports"
+REPORT_DIR=sample_reports
+mkdir $REPORT_DIR
+cp $TRISANO_SOURCE_HOME/bi/reports/CasesByDiseaseAndJurisdiction.report $REPORT_DIR
+cp $TRISANO_SOURCE_HOME/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
+
+# Step 8: Create a TriSano tarball
+echo " * Creating distribution package (please wait...)"
+tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR $REPORT_DIR
 
 # Clean up
-rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR
+rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR $REPORT_DIR
 
 echo
 echo "$BI_BITS_HOME/trisano-bi.tar.gz is ready for shipping."
