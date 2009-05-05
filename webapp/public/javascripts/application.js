@@ -188,8 +188,6 @@ function shortcut_set(target) {
 function change_shortcut(target) {
   shortcut.kill_shortcuts();
   var ele = $('user_shortcut_settings_' + target);
-  var button = $('user_submit');
-  var conflict = false;
   ele.style.background = "#FFE0C6";
 
   document.onkeydown = function(e) {
@@ -197,16 +195,19 @@ function change_shortcut(target) {
     if(e.preventDefault)
       e.preventDefault();
 
-    var k = KeyCode;
-    ele.value = k.hot_key(k.translate_event(e));
-
-    $$('input[type=text]').each(function(box) {    
-      if ((box != ele) && (box.value == ele.value)) {
-        box.style.color = "#FF0000";
-        ele.style.color = "#FF0000";
-        button.disable();
+    var key = KeyCode.translate_event(e);
+   
+    if (!(key.shift || key.alt || key.ctrl)) {
+      var ary = $$('input[type=text]');
+      if (key.code == 13) {
+        if (!$('user_submit').disabled) 
+            alert('Submit the form');
+      } else if (key.code == 38 || key.code == 40) {
+        ary[ary.indexOf(ele) - (39 - key.code)].focus();
       }
-    });
+    } else if ((key.code < 16 || key.code > 18) && key.code != 224) {
+      set_shortcut_element(ele, KeyCode.hot_key(key));
+    }
 
     KeyCode.key_down(e);
     return false;
@@ -219,4 +220,21 @@ function change_shortcut(target) {
   };
 
   document.onkeyup = KeyCode.key_up;
+}
+
+function set_shortcut_element(ele, key) {
+  var button = $('user_submit');
+  var fields = $$('input[type=text]');
+
+  $('fhqwgahds').innerHTML = fields.collect(function(foo) { return foo.value == key; });
+
+  fields.each(function(box) {
+    if ((box.value != '') && (box != ele) && (box.value == key)) {
+      box.style.color = "#F00";
+      ele.style.color = "#F00";
+      button.disable();
+    }
+  });
+
+  ele.value = key;
 }
