@@ -35,9 +35,6 @@ DEST_DB_USER=trisano_su
 
 PGSQL_PATH=/usr/bin
 
-# Set to 1 to avoid problems from bad assumptions
-SAFE_MODE=0
-
 ## END OF CONFIG
 
 ## README
@@ -63,14 +60,18 @@ SAFE_MODE=0
 # switches all the views to use warehouse_b, and warehouse_a gets used for the
 # next refresh.
 #
-# See the individual ETL SQL scripts for further details
+# See the dw.sql script for further details
 
 ## END OF README
 
 ETL_SCRIPT=dw.sql
 
+CMM=$($PGSQL_PATH/psql -t -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "show client_min_messages")
+echo "Temporarily quieting PostgreSQL"
+$PGSQL_PATH/psql -X -t -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = WARNING;"
+
 echo "Preparing for ETL process"
-$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.prepare_etl()"
+$PGSQL_PATH/psql -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.prepare_etl()"
 
 if [ $? != 0 ] ; then
     echo "Problem preparing for ETL"
@@ -78,8 +79,21 @@ if [ $? != 0 ] ; then
 fi
 
 echo "Dumping database $SOURCE_DB_HOST:$SOURCE_DB_PORT/$SOURCE_DB_NAME to $DEST_DB_HOST:$DEST_DB_PORT/$DEST_DB_NAME"
-$PGSQL_PATH/pg_dump -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER -n public $SOURCE_DB_NAME | \
-    $PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER $DEST_DB_NAME 
+echo "   Dropping bucardo schema in warehouse, if exists"
+$PGSQL_PATH/psql -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;"
+
+# TODO: Only do this if bucardo schema exists in source databse
+echo "   Checking for bucardo schema in source"
+BUC=$($PGSQL_PATH/psql -A -t -X -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER -d $SOURCE_DB_NAME -c "SELECT nspname FROM pg_namespace WHERE nspname = 'bucardo';")
+if [ "x$BUC" = "xbucardo" ]; then
+    echo "   Copying bucardo schema"
+    $PGSQL_PATH/pg_dump -O -x -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER -n bucardo $SOURCE_DB_NAME | \
+        $PGSQL_PATH/psql -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME 
+fi
+
+echo "   Doing main dump"
+$PGSQL_PATH/pg_dump -O -x -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER -n public $SOURCE_DB_NAME | \
+    $PGSQL_PATH/psql -x -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME 
 
 if [ $? != 0 ] ; then
     echo "Problem dumping database into warehouse staging area"
@@ -87,8 +101,7 @@ if [ $? != 0 ] ; then
 fi
 
 echo "Performing ETL data manipulation"
-# TODO: make this error out of dw.sql has problems
-$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -f $ETL_SCRIPT $DEST_DB_NAME
+$PGSQL_PATH/psql -t -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -f $ETL_SCRIPT $DEST_DB_NAME
 
 if [ $? != 0 ] ; then
     echo "Problem performing post-dump ETL"
@@ -96,4 +109,7 @@ if [ $? != 0 ] ; then
 fi
 
 echo "Swapping schemas"
-$PGSQL_PATH/psql -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()"
+$PGSQL_PATH/psql -q -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()"
+
+echo "Fixing PostgreSQL verbosity"
+$PGSQL_PATH/psql -X -t -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = $CMM;"
