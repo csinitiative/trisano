@@ -185,7 +185,9 @@ SELECT
 
 	ds.id AS disease_id,
 	ijpl.name AS investigating_jurisdiction,
+    ijpl.id AS investigating_jurisdiction_id,
     jorpl.name AS jurisdiction_of_residence,
+    jorpl.id AS jurisdiction_of_residence_id,
 	scsi.code_description AS state_case_status_code, 	-- code_description?
 	lcsi.code_description AS lhd_case_status_code,		-- code_description?
 	events."MMWR_week",
@@ -328,7 +330,9 @@ SELECT
 
 	ds.id AS disease_id,
 	ijpl.name AS investigating_jurisdiction,
+    ijpl.id AS investigating_jurisdiction_id,
     jorpl.name AS jurisdiction_of_residence,
+    jorpl.id AS jurisdiction_of_residence_id,
 
     events.age_at_onset AS actual_age_at_onset,
 	agetypeec.code_description AS actual_age_type,
@@ -459,6 +463,7 @@ SELECT
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
+    pl.id AS jurisdiction_id,
     pl.short_name AS jurisdiction_short_name
 FROM
     events

@@ -236,6 +236,40 @@ BEGIN
             SELECT tr.* FROM ' || new_schema || '.treatments tr
             JOIN trisano.dw_encounters_treatments_view det
                 ON (det.dw_events_treatments_id = tr.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_jurisdictions_view AS
+            SELECT p.*
+            FROM ' || new_schema || '.places p
+            INNER JOIN (
+                SELECT DISTINCT j.id
+                FROM ' || new_schema || '.places j
+                LEFT JOIN trisano.dw_morbidity_events_view dme
+                    ON (dme.investigating_jurisdiction_id = j.id
+                        OR dme.jurisdiction_of_residence_id = j.id)
+                LEFT JOIN trisano.dw_secondary_jurisdictions_view dsj
+                    ON (dsj.jurisdiction_id = j.id AND dsj.dw_morbidity_events_id IS NOT NULL)
+                WHERE dme.investigating_jurisdiction_id IS NOT NULL
+                    OR dsj.dw_morbidity_events_id IS NOT NULL
+            ) f
+                ON (p.id = f.id)';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_jurisdictions_view AS
+            SELECT p.*
+            FROM ' || new_schema || '.places p
+            INNER JOIN (
+                SELECT DISTINCT j.id
+                FROM ' || new_schema || '.places j
+                LEFT JOIN trisano.dw_contact_events_view dme
+                    ON (dme.investigating_jurisdiction_id = j.id
+                        OR dme.jurisdiction_of_residence_id = j.id)
+                LEFT JOIN trisano.dw_secondary_jurisdictions_view dsj
+                    ON (dsj.jurisdiction_id = j.id AND dsj.dw_contact_events_id IS NOT NULL)
+                WHERE dme.investigating_jurisdiction_id IS NOT NULL
+                    OR dsj.dw_morbidity_events_id IS NOT NULL
+            ) f
+                ON (p.id = f.id)';
             
     FOR viewname IN 
       SELECT relname
