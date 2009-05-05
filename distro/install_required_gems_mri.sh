@@ -50,4 +50,4 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.2.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.2.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.2.gem
-
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
