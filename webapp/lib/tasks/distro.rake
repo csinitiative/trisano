@@ -315,21 +315,21 @@ namespace :trisano do
       end
 
       raise "failed to set search path" unless system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@dw_database} -c 'ALTER USER #{@dw_user} SET search_path = trisano;'")
-      raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@priv_uname}/' -e 's/trisano_ro/#{@dw_user}/' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
+      raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@priv_uname}/g' -e 's/trisano_ro/#{@dw_user}/g' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
       raise "failed to run warehouse init script" unless system("#{@psql} -X -U #{@priv_uname} -h #{@host} -p #{@port} #{@dw_database} -f ../bi/scripts/warehouse_init_to_run.sql")
       raise "failed to remove warehouse init script" unless system("rm ../bi/scripts/warehouse_init_to_run.sql")
 
       init_substitution = "sed "
-      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/' "
-      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/' "
-      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/' "
-      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/' "
-      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/' "
-      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/' "
-      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/' "
-      init_substitution << "-e 's/\$DEST_DB_USER/#{@priv_uname}/' "
-      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:' "
-      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:'"
+      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/g' "
+      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/g' "
+      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/g' "
+      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/g' "
+      init_substitution << "-e 's/\$DEST_DB_USER/#{@priv_uname}/g' "
+      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:g' "
+      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:g'"
 
       raise "failed to substitute etl configuration" unless system("#{init_substitution} <../bi/scripts/etl.sh >../bi/scripts/etl_to_run.sh")
       raise "failed to chmod etl script" unless system("chmod 755 ../bi/scripts/etl_to_run.sh")
