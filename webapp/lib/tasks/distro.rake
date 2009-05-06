@@ -25,7 +25,7 @@ namespace :trisano do
     WEB_APP_CONFIG_DIR = '../webapp/config/'
 
     def initialize_config
-      config = YAML::load_file "./config.yml"
+      config = YAML::load_file "../distro/config.yml"
       @host = config['host'] unless validate_config_attribute(config, 'host')
       @port = config['port'] unless validate_config_attribute(config, 'port')
       @database = config['database'] unless validate_config_attribute(config, 'database')
@@ -157,6 +157,25 @@ namespace :trisano do
         return success
       end
       return success
+    end
+
+    def run_etl_script
+      puts "Running the DW ETL script"
+      init_substitution = "sed "
+      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/g' "
+      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/g' "
+      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/g' "
+      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/g' "
+      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/g' "
+      init_substitution << "-e 's/\$DEST_DB_USER/#{@dw_priv_uname}/g' "
+      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:g' "
+      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:g'"
+      raise "failed to substitute etl configuration" unless system("#{init_substitution} <../bi/scripts/etl.sh >../bi/scripts/etl_to_run.sh")
+      raise "failed to chmod etl script" unless system("chmod 755 ../bi/scripts/etl_to_run.sh")
+      raise "failed to run etl script" unless system("../bi/scripts/etl_to_run.sh")
+      raise "failed to remove etl script" unless system("rm ../bi/scripts/etl_to_run.sh")
     end
 
     desc "Sets the database.yml to use the privileged user info"
@@ -310,26 +329,18 @@ namespace :trisano do
       raise "failed to run warehouse init script" unless system("#{@psql} -X -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -f ../bi/scripts/warehouse_init_to_run.sql")
       raise "failed to remove warehouse init script" unless system("rm ../bi/scripts/warehouse_init_to_run.sql")
 
-      init_substitution = "sed "
-      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/g' "
-      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/g' "
-      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/g' "
-      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/g' "
-      init_substitution << "-e 's/\$DEST_DB_USER/#{@dw_priv_uname}/g' "
-      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:g' "
-      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:g'"
-
-      raise "failed to substitute etl configuration" unless system("#{init_substitution} <../bi/scripts/etl.sh >../bi/scripts/etl_to_run.sh")
-      raise "failed to chmod etl script" unless system("chmod 755 ../bi/scripts/etl_to_run.sh")
-      raise "failed to run etl script" unless system("../bi/scripts/etl_to_run.sh")
-      raise "failed to remove etl script" unless system("rm ../bi/scripts/etl_to_run.sh")
+      run_etl_script
 
       raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
       raise "failed to create Quartz database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
 
     end
+
+    desc "Run the data warehouse etl script"
+    task :run_data_warehouse_etl do
+      initialize_config
+      run_etl_script
+    end
+
   end
 end
