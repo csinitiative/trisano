@@ -111,8 +111,9 @@ namespace :trisano do
 
         Hpricot.buffer_size = 32768
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
-        agent = WWW::Mechanize.new 
+        agent = WWW::Mechanize.new
         agent.basic_auth('utah', 'arches')
+        agent.read_timeout = 300
         #agent.set_proxy("localhost", "8118")
 
         puts "POST CMR to #{TRISANO_URL}/trisano/cmrs/new"
