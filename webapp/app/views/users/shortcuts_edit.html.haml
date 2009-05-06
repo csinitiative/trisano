@@ -18,12 +18,12 @@
 -# DELETE THIS BEFORE PUSH
 %div{:id=>"fhqwgahds"}
 
-- form_for(@user, :url => {:action => "shortcuts"}, :method => "put") do |f|
+- form_for(@user, :url => {:action => "shortcuts"}, :method => "put", :html => {:id => "shortcut_form"} ) do |f|
   - f.fields_for :shortcut_settings do |shortcut|
     - each_shortcut do |label,val|  
       %span{ :class => "vert" }
         = shortcut.label label, val
         -# 'Ctrl+Alt+Shift+Space' is the longest string.
-        = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 20, :maxlength => 20, :onfocus => "change_shortcut('#{label}')", :onblur => "shortcut_set('#{label}')", :style => "background: #FFF"
+        = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 20, :maxlength => 20, :onfocus => "change_shortcut('#{label}')", :onblur => "shortcut_set('#{label}')", :style => "background: #FFF", :autocomplete => "off"
   %p
   = f.submit "Update Shortcuts"

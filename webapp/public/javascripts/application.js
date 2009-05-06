@@ -201,12 +201,15 @@ function change_shortcut(target) {
       var ary = $$('input[type=text]');
       if (key.code == 13) {
         if (!$('user_submit').disabled) 
-            alert('Submit the form');
+          $('shortcut_form').submit();
+        else
+          alert('Please resolve all conflicts before saving.');
       } else if (key.code == 38 || key.code == 40) {
         ary[ary.indexOf(ele) - (39 - key.code)].focus();
       }
     } else if ((key.code < 16 || key.code > 18) && key.code != 224) {
-      set_shortcut_element(ele, KeyCode.hot_key(key));
+      ele.value = KeyCode.hot_key(key);
+      check_conflicts();
     }
 
     KeyCode.key_down(e);
@@ -222,19 +225,25 @@ function change_shortcut(target) {
   document.onkeyup = KeyCode.key_up;
 }
 
-function set_shortcut_element(ele, key) {
+function check_conflicts() {
   var button = $('user_submit');
   var fields = $$('input[type=text]');
 
-  $('fhqwgahds').innerHTML = fields.collect(function(foo) { return foo.value == key; });
+  button.enable();
 
-  fields.each(function(box) {
-    if ((box.value != '') && (box != ele) && (box.value == key)) {
-      box.style.color = "#F00";
-      ele.style.color = "#F00";
-      button.disable();
-    }
+  fields.each(function(ele) {
+    var conflict = false;
+
+    fields.each(function(box) {
+      if ((box.value != '') && (box != ele) && (box.value == ele.value)) {
+        box.style.color = "#F00";
+        ele.style.color = "#F00";
+        button.disable();
+        conflict = true;
+      }
+    });
+
+    if (!conflict)
+      ele.style.color = "#000";
   });
-
-  ele.value = key;
 }
