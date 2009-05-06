@@ -3,7 +3,7 @@ xml.Table {
     xml.ComdisRecord {
       xml.RecordID(event.record_number)
 
-      update_flag = event.deleted_from_ibis? ? 1 : 0
+      update_flag = event.deleted? ? 1 : 0
 
       xml.UpdateFlag(update_flag)
       if update_flag == 0

@@ -93,6 +93,7 @@ module ExportHelper
     when "NC" then 4 
     # 'U' should never be in production, but it's leaked into tests
     when "UNK", "U" then 9
+    when nil then '.'
     end
   end
 

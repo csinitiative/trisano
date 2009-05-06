@@ -722,72 +722,56 @@ describe MorbidityEvent do
       fixtures :events, :diseases, :disease_events
 
       before :each do
-        confirmed = external_codes(:case_status_confirmed)
-        discarded = external_codes(:case_status_discarded)
         anthrax = diseases(:anthrax)
 
-        # NON_IBIS: Not sent to IBIS, no disease, not confirmed
+        # NON_IBIS: Not sent to IBIS, no disease
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
             "event_name" => "Ibis1" } )
-        # NON_IBIS: Not sent to IBIS, has disease, not confirmed
+        # NEW: Not sent to IBIS, has disease
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "event_name" => "Ibis2" } )
-        # NEW: Not sent to IBIS, has disease, confirmed
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis3" } } },
+        # UPDATED: Sent to IBIS, has disease
+        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "state_case_status_id" => confirmed.id,
+            "sent_to_ibis" => true,
+            "ibis_updated_at" => Date.today,
             "event_name" => "Ibis3" } )
-        # UPDATED: Sent to IBIS, has disease, confirmed
+        # DELETED: Sent to IBIS, has disease, deleted
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "state_case_status_id" => confirmed.id,
+            "deleted_at" => Date.today,
             "sent_to_ibis" => true,
-            "ibis_updated_at" => Date.today,
             "event_name" => "Ibis4" } )
-        # DELETED: Sent to IBIS, has disease, not confirmed
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
-            "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "state_case_status_id" => discarded.id,
-            "sent_to_ibis" => true,
-            "ibis_updated_at" => Date.today,
-            "event_name" => "Ibis5" } )
-        # DELETED: Sent to IBIS, has disease, confirmed but deleted
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
-            "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "state_case_status_id" => confirmed.id,
-            "sent_to_ibis" => true,
-            "ibis_updated_at" => Date.today,
-            "event_name" => "Ibis5",
-            "deleted_at" => Time.now } )
       end
 
       it "should find active (new and updated) records" do
         events = Event.active_ibis_records(Date.today - 1, Date.today + 1)
-        events.size.should == 3   # 2 above and 1 in the fixtures
+        p events
+        events.size.should == 4   # 2 above and 2 in the fixtures
         events.collect! { |event| Event.find(event.id) }
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
+        event_names.include?("Ibis2").should be_true
         event_names.include?("Ibis3").should be_true
-        event_names.include?("Ibis4").should be_true
       end
 
       it "should find deleted records" do
         events = Event.deleted_ibis_records(Date.today - 1, Date.today + 1)
         events.collect! { |event| Event.find(event.id) }
-        events.size.should == 2
-        events.first.event_name.should ==  "Ibis5"
+        events.size.should == 1
+        events.first.event_name.should ==  "Ibis4"
       end
 
       it "should find all IBIS exportable records" do
         events = Event.exportable_ibis_records(Date.today - 1, Date.today + 1)
         events.collect! { |event| Event.find(event.id) }
-        events.size.should == 5   # 4 above and 1 in the fixtures
+        events.size.should == 5   # 3 above and 2 in the fixtures
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
+        event_names.include?("Ibis2").should be_true
         event_names.include?("Ibis3").should be_true
         event_names.include?("Ibis4").should be_true
-        event_names.include?("Ibis5").should be_true
       end
     end
   end
