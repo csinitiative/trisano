@@ -1,6 +1,11 @@
 class LabMessage < ActiveRecord::Base
   validates_presence_of :hl7_message
   validates_length_of :hl7_message, :maximum => 10485760
+
+  def validate
+    super
+    errors.add :hl7_message, "is missing the header" if hl7[:MSH].nil?
+  end
   
   def sending_facility
     hl7[:MSH].sending_facility.split('^').join(' - ')

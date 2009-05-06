@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe LabMessage do
   before(:each) do
     @valid_attributes = {
-      :hl7_message => "value for hl7_message"
+      :hl7_message => ARUP1_MSG
     }
   end
 
@@ -35,6 +35,16 @@ describe LabMessage do
 
     it 'should return the lab result' do
       @lab_message.lab_result.should == 'Positive'
+    end
+
+  end
+
+  describe 'reading HL7' do
+
+    it 'should contain a message header' do
+      @lab_message = LabMessage.new(:hl7_message => 'junk')
+      @lab_message.should_not be_valid
+      @lab_message.errors.on(:hl7_message).should be_true
     end
 
   end
