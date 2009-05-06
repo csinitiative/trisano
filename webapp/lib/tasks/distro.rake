@@ -42,7 +42,20 @@ namespace :trisano do
       @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
       @runtime_timeout = config['runtime_timeout'] unless validate_config_attribute(config, 'runtime_timeout')
       @dump_file = config['dump_file_name'] 
-      @support_url = config['support_url'] 
+      @support_url = config['support_url']
+
+      # Data warehouse config options
+      @dw_database = config['dw_database'] unless validate_config_attribute(config, 'dw_database')
+      @dw_user = config['dw_uname'] unless validate_config_attribute(config, 'dw_uname')
+      @dw_user_pwd = config['dw_user_passwd'] unless validate_config_attribute(config, 'dw_user_passwd')
+      @source_db_host = config['source_db_host'] unless validate_config_attribute(config, 'source_db_host')
+      @source_db_port = config['source_db_port'] unless validate_config_attribute(config, 'source_db_port')
+      @source_db_name = config['source_db_name'] unless validate_config_attribute(config, 'source_db_name')
+      @source_db_user = config['source_db_user'] unless validate_config_attribute(config, 'source_db_user')
+      @dest_db_host = config['dest_db_host'] unless validate_config_attribute(config, 'dest_db_host')
+      @dest_db_port = config['dest_db_port'] unless validate_config_attribute(config, 'dest_db_port')
+      @dw_tool_install_path = config['dw_tool_install_path'] unless validate_config_attribute(config, 'dw_tool_install_path')
+
       ENV["PGPASSWORD"] = @priv_password 
     end
 
@@ -76,14 +89,14 @@ namespace :trisano do
       File.open(file, 'w+'){|f| f << text.gsub(regex_to_find, text_to_put_in_place)}
     end
 
-    def create_db_user 
-      puts "Creating TriSano user: #{@trisano_user}."
-      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
+    def create_db_user(database=@database, user=@trisano_user, password=@trisano_user_pwd)
+      puts "Creating TriSano user: #{user}."
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{database} -c \"CREATE USER #{user} ENCRYPTED PASSWORD '#{password}'\"")
       unless success
-        puts "Failed creating TriSano user: #{@trisano_user}" 
+        puts "Failed creating TriSano user: #{user}"
         return success
       end
-      puts "Success creating TriSano user: #{@trisano_user}" 
+      puts "Success creating TriSano user: #{user}"
       return success
     end
 
@@ -123,6 +136,11 @@ namespace :trisano do
       end 
       puts "Success creating database structure for TriSano."
       return success
+    end
+
+    def create_dw_db
+      puts "Creating TriSano data warehouse database ..."
+      system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c \"CREATE DATABASE #{@dw_database} ENCODING='UTF8'\"")
     end
 
     def dump_db_to_file(dump_file_name)
@@ -223,7 +241,7 @@ namespace :trisano do
         end
       end
       if ! create_db_user
-       puts "assuming already exists and continuing ..."
+        puts "assuming already exists and continuing ..."
       end
       if ! create_db_permissions
         raise "failed to set db permissions"
@@ -276,11 +294,51 @@ namespace :trisano do
         end
       end
       puts "creating people index function and trigger"
-         success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/create_people_fts_trigger.sql")
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/create_people_fts_trigger.sql")
       unless success
         puts "Failed to create people fts function and trigger"
         return success
       end
+    end
+
+    desc "Install the data warehouse"
+    task :install_data_warehouse do
+      initialize_config
+      puts "Installing the data warehouse"
+
+      if ! create_dw_db
+        raise "failed to create data warehouse database"
+      end
+
+      if ! create_db_user(@dw_database, @dw_user, @dw_user_pwd)
+        raise "failed to create data warehouse user"
+      end
+
+      raise "failed to set search path" unless system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@dw_database} -c 'ALTER USER #{@dw_user} SET search_path = trisano;'")
+      raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@priv_uname}/' -e 's/trisano_ro/#{@dw_user}/' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
+      raise "failed to run warehouse init script" unless system("#{@psql} -X -U #{@priv_uname} -h #{@host} -p #{@port} #{@dw_database} -f ../bi/scripts/warehouse_init_to_run.sql")
+      raise "failed to remove warehouse init script" unless system("rm ../bi/scripts/warehouse_init_to_run.sql")
+
+      init_substitution = "sed "
+      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/' "
+      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/' "
+      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/' "
+      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/' "
+      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/' "
+      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/' "
+      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/' "
+      init_substitution << "-e 's/\$DEST_DB_USER/#{@priv_uname}/' "
+      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:' "
+      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:'"
+
+      raise "failed to substitute etl configuration" unless system("#{init_substitution} <../bi/scripts/etl.sh >../bi/scripts/etl_to_run.sh")
+      raise "failed to chmod etl script" unless system("chmod 755 ../bi/scripts/etl_to_run.sh")
+      raise "failed to run etl script" unless system("../bi/scripts/etl_to_run.sh")
+      raise "failed to remove etl script" unless system("rm ../bi/scripts/etl_to_run.sh")
+
+      raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
+      raise "failed to create Quartz database" unless system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
+
     end
   end
 end
