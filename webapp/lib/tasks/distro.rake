@@ -322,7 +322,8 @@ namespace :trisano do
       initialize_config
       puts "Installing the data warehouse"
 
-      raise "failed to create data warehouse database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c \"CREATE DATABASE #{@dw_database} ENCODING='UTF8'\"")
+      raise "failed to create data warehouse database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c \"CREATE DATABASE #{@dw_database} ENCODING='UTF8'\"")      
+      raise "failed to set public schema ownership" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER SCHEMA public OWNER TO #{@dw_priv_uname};'")
       raise "failed to create data warehouse user" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c \"CREATE USER #{@dw_user} ENCRYPTED PASSWORD '#{@dw_user_pwd}'\"")
       raise "failed to set search path" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER USER #{@dw_user} SET search_path = trisano;'")
       raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@dw_priv_uname}/g' -e 's/trisano_ro/#{@dw_user}/g' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
@@ -333,7 +334,6 @@ namespace :trisano do
 
       raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
       raise "failed to create Quartz database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
-
     end
 
     desc "Run the data warehouse etl script"
