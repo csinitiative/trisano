@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class UsersController < AdminController
-  skip_before_filter :check_role, :only => :putcuts
+  skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update]
   
   # GET /users
   # GET /users.xml

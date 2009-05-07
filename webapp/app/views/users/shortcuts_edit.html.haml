@@ -15,9 +15,6 @@
 - content_for :title do
   Configure Shortcuts
 
--# DELETE THIS BEFORE PUSH
-%div{:id=>"fhqwgahds"}
-
 - form_for(@user, :url => {:action => "shortcuts"}, :method => "put", :html => {:id => "shortcut_form"} ) do |f|
   - f.fields_for :shortcut_settings do |shortcut|
     - each_shortcut do |label,val|  

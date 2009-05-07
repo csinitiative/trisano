@@ -161,9 +161,10 @@ function contact_parent_address(id) {
   });
 }
 
-function shortcuts_init() {
-  new Ajax.Request('/users/shortcuts', {
-    method: 'get',
+function shortcuts_init(path) {
+  this.root = path;
+  new Ajax.Request(path + 'users/shortcuts', {
+    method:      'get',
     asynchronous: true,
     evalScripts:  true,
     onComplete: function(transport, json) {

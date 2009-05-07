@@ -21,10 +21,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% patient = patient_entity.person %>
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
-<script type="text/javascript">
-  cmr_shortcuts_init();
-</script>
-
 <% content_for :title do %>
   View Contact Event: <%= patient.full_name %>
 <% end %>

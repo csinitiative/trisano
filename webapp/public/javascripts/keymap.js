@@ -17,27 +17,27 @@
 
 keymap = {
   'configure': function() {
-    window.location = "/users/shortcuts/edit";
+    window.location = this.root + "users/shortcuts/edit";
   },
 
   'new': function() {
-    window.location = "/cmrs/new";
+    window.location = this.root + "cmrs/new";
   },
 
   'forms': function() {
-    window.location = "/forms";
+    window.location = this.root + "forms";
   },
 
   'people': function() {
-    window.location = "/search/people";
+    window.location = this.root + "search/people";
   },
 
   'cmr_search': function() {
-    window.location = "/search/cmrs";
+    window.location = this.root + "search/cmrs";
   },
 
   'cmrs': function() {
-    window.location = "/cmrs";
+    window.location = this.root + "cmrs";
   },
 
   'navigate_right': function() {
