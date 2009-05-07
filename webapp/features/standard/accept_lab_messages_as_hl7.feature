@@ -24,4 +24,11 @@ Feature: Accept Lab Messages as HL7
     And I should see the lab result
     And I should see the HL7 version
 
-  Scenario: Accepting an ARUP HL7 orders directly as an HL7 message
+  Scenario: Posting a valid HL7 lab message
+    Given I am logged in as a super user
+    When I post an "ARUP" message directly to "lab_messages"
+    Then I should receive a 200 response
+
+
+
+    

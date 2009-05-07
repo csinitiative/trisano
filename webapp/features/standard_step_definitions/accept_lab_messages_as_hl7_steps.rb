@@ -32,7 +32,6 @@ Given /^I have a lab message from "([^\"]*)"$/ do |msg_key|
 end
 
 
-
 When /^I visit the lab message new page$/ do
   visit new_lab_message_path
 end
@@ -44,6 +43,12 @@ end
 
 When /^I visit the lab message show page$/ do
   visit lab_message_path(@lab_message)
+end
+
+When /^I post an "([^\"]*)" message directly to "([^\"]*)"$/ do |msg, path|
+  msg = messages[msg.downcase.to_sym] || msg
+  http_accept("application/edi-hl7")
+  visit path, :post, msg
 end
 
 
@@ -74,4 +79,8 @@ end
 Then /^I should see the HL7 version$/ do
   response.should have_xpath("//label[text()='HL7 Version']")
   response.should contain(@lab_message.hl7_version)
+end
+
+Then /^I should receive a 200 response$/ do
+  response.should be_success
 end

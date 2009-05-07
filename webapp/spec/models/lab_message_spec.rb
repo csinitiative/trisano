@@ -39,7 +39,7 @@ describe LabMessage do
 
   end
 
-  describe 'reading HL7' do
+  describe 'with valid HL7' do
 
     it 'should contain a message header' do
       @lab_message = LabMessage.new(:hl7_message => 'junk')
@@ -48,6 +48,7 @@ describe LabMessage do
     end
 
   end
+  
 end
 
 ARUP1_MSG = <<ARUP1

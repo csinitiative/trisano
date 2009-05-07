@@ -41,15 +41,18 @@ class LabMessagesController < ApplicationController
   # POST /lab_messages.xml
   def create
     @lab_message = LabMessage.new(params[:lab_message])
+    @lab_message.hl7_message ||= request.body.read if request.format == :hl7
 
     respond_to do |format|
       if @lab_message.save
         flash[:notice] = 'Lab message was successfully created.'
         format.html { redirect_to(@lab_message) }
         format.xml  { render :xml => @lab_message, :status => :created, :location => @lab_message }
+        format.hl7  { head :created, :location => @lab_message }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @lab_message.errors, :status => :unprocessable_entity }
+        format.hl7  { head :unprocessable_entity }
       end
     end
   end
@@ -82,4 +85,5 @@ class LabMessagesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

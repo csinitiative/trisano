@@ -110,4 +110,4 @@ Mime::Type.register("application/vnd.oasis.opendocument.text", :odt)
 Mime::Type.register("application/vnd.ms-excel",  :xls, ['application/x-msexcel', 'application/ms-excel'])
 Mime::Type.register("application/vnd.oasis.opendocument.spreadsheet",  :ods)
 Mime::Type.register("image/bmp",  :bmp)
-
+Mime::Type.register("application/edi-hl7", :hl7)
