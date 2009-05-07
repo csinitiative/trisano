@@ -99,27 +99,25 @@ BEGIN
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_patients_view AS
-            SELECT p.* FROM ' || new_schema || '.dw_patients p
-            JOIN ' || new_schema || '.dw_morbidity_events dce
-                ON (dce.dw_patients_id = p.id)';
+            SELECT * FROM ' || new_schema || '.dw_patients
+            WHERE is_morbidity_patient';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_patients_view AS
-            SELECT p.* FROM ' || new_schema || '.dw_patients p
-            JOIN ' || new_schema || '.dw_contact_events dce
-                ON (dce.dw_patients_id = p.id)';
+            SELECT * FROM ' || new_schema || '.dw_patients
+            WHERE is_contact_patient';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN trisano.dw_morbidity_patients_view dcp
-                ON (dcp.id = pr.person_id)';
+            JOIN ' || new_schema || '.dw_patients p
+                ON (p.id = pr.person_id AND p.is_morbidity_patient)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN trisano.dw_contact_patients_view dcp
-                ON (dcp.id = pr.person_id)';
+            JOIN trisano.dw_contact_patients_view p
+                ON (p.id = pr.person_id AND p.is_contact_patient)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_reporting_agencies_view AS
@@ -270,6 +268,54 @@ BEGIN
                     OR dsj.dw_morbidity_events_id IS NOT NULL
             ) f
                 ON (p.id = f.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_questions_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_questions
+            WHERE is_morbidity';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_answers_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_answers
+            WHERE is_morbidity';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_questions_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_questions
+            WHERE is_contact';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_answers_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_answers
+            WHERE is_contact';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_place_questions_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_questions
+            WHERE is_place';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_place_answers_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_answers
+            WHERE is_place';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_encounter_questions_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_questions
+            WHERE is_encounter';
+            
+    EXECUTE
+        'CREATE VIEW trisano.dw_encounter_answers_view AS
+            SELECT *
+            FROM ' || new_schema || '.dw_answers
+            WHERE is_encounter';
             
     FOR viewname IN 
       SELECT relname

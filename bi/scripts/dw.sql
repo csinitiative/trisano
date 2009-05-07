@@ -156,6 +156,8 @@ SELECT
 --	people.risk_factors,
 --	people.risk_factors_notes,
 --	people.approximate_age_no_birthday,
+    FALSE::BOOLEAN AS is_morbidity_patient,
+    FALSE::BOOLEAN AS is_contact_patient,
 	people.first_name_soundex,
 	people.last_name_soundex
 FROM
@@ -450,6 +452,16 @@ WHERE
 	pplpart.secondary_entity_id IS NULL AND
 	pplpart.type = 'InterestedParty'
 ;
+
+UPDATE dw_patients p
+SET is_morbidity_patient = TRUE
+FROM dw_morbidity_events dm
+WHERE dm.dw_patients_id = p.id;
+
+UPDATE dw_patients p
+SET is_contact_patient = TRUE
+FROM dw_contact_events dm
+WHERE dm.dw_patients_id = p.id;
 
 CREATE TABLE dw_secondary_jurisdictions AS
 SELECT
@@ -817,6 +829,116 @@ FROM
 WHERE
     events.type = 'EncounterEvent'
 ;
+
+CREATE TABLE dw_questions AS
+SELECT 
+    *,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM
+                questions
+                INNER JOIN events
+                    ON (events.id = questions.id)
+                WHERE
+                    events.type = 'MorbidityEvent' AND
+                    questions.id = q.id
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_morbidity,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM
+                questions
+                INNER JOIN events
+                    ON (events.id = questions.id)
+                WHERE
+                    events.type = 'ContactEvent' AND
+                    questions.id = q.id
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_contact,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM
+                questions
+                INNER JOIN events
+                    ON (events.id = questions.id)
+                WHERE
+                    events.type = 'PlaceEvent' AND
+                    questions.id = q.id
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_place,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM
+                questions
+                INNER JOIN events
+                    ON (events.id = questions.id)
+                WHERE
+                    events.type = 'EncounterEvent' AND
+                    questions.id = q.id
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_encounter
+FROM questions q;
+
+CREATE TABLE dw_answers AS
+SELECT
+    *,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM events
+            WHERE
+                events.id = a.event_id AND
+                events.type = 'MorbidityEvent'
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_morbidity,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM events
+            WHERE
+                events.id = a.event_id AND
+                events.type = 'ContactEvent'
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_contact,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM events
+            WHERE
+                events.id = a.event_id AND
+                events.type = 'PlaceEvent'
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_place,
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM events
+            WHERE
+                events.id = a.event_id AND
+                events.type = 'EncounterEvent'
+        )
+        THEN TRUE::BOOLEAN
+        ELSE FALSE::BOOLEAN
+    END AS is_encounter
+FROM answers a;
 
 TRUNCATE trisano.etl_success;
 INSERT INTO trisano.etl_success (success) VALUES (TRUE);
