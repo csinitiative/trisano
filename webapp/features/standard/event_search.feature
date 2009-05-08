@@ -26,6 +26,7 @@ Feature: Searching for Events using core fields for criteria.
 
     Then I should receive 1 matching record
 
+  @pending
   Scenario: Searching for an event by state case status
     Given a morbidity event with a state status "Confirmed"
     And another morbidity event
@@ -37,6 +38,7 @@ Feature: Searching for Events using core fields for criteria.
 
     Then I should receive 1 matching record
 
+  @pending
   Scenario: Searching for an event by local health department status
     Given a morbidity event with a LHD status "Probable"
     And another morbidity event
@@ -70,6 +72,7 @@ Feature: Searching for Events using core fields for criteria.
 
     Then I should receive 1 matching record
 
+  @pending
   Scenario: Searching for events by investigator
     Given a morbidity event investigated by "investigator"
     And another morbidity event

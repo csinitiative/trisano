@@ -3,7 +3,7 @@ begin
   require 'cucumber/rake/task'
 
   Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "--format pretty -p standard"
+    t.cucumber_opts = "--format pretty -p standard --tags ~@pending"
     t.step_list = ["features/shared_step_definitions", "features/standard_step_definitions"]
     t.step_pattern = "*.rb"
     t.feature_list = ENV["FEATURE"] ? [ENV["FEATURE"]] : ["features/standard"]
