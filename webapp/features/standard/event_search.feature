@@ -1,3 +1,4 @@
+@pending
 Feature: Searching for Events using core fields for criteria.
 
   To make finding and analyzing events easier
