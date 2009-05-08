@@ -108,6 +108,7 @@ namespace :trisano do
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
     task :feature_prep do
+      ruby "-S rake db:test:prepare"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
     end
