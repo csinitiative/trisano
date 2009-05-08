@@ -322,18 +322,28 @@ namespace :trisano do
       initialize_config
       puts "Installing the data warehouse"
 
+      puts "Creating data warehouse database: #{@dw_database}"
       raise "failed to create data warehouse database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c \"CREATE DATABASE #{@dw_database} ENCODING='UTF8'\"")      
+      puts "Changing owner of public schema to #{@dw_priv_uname}"
       raise "failed to set public schema ownership" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER SCHEMA public OWNER TO #{@dw_priv_uname};'")
+      puts "Creating data warehouse user: #{@dw_user}"
       raise "failed to create data warehouse user" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c \"CREATE USER #{@dw_user} ENCRYPTED PASSWORD '#{@dw_user_pwd}'\"")
+      puts "Adding trisano schema to search path of user #{@dw_user}"
       raise "failed to set search path" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER USER #{@dw_user} SET search_path = trisano;'")
+      puts "Modifying warehouse initialization script to use custom settings"
       raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@dw_priv_uname}/g' -e 's/trisano_ro/#{@dw_user}/g' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
+      puts "Initializing the data warehouse"
       raise "failed to run warehouse init script" unless system("#{@psql} -X -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -f ../bi/scripts/warehouse_init_to_run.sql")
+      puts "Cleaning up"
       raise "failed to remove warehouse init script" unless system("rm ../bi/scripts/warehouse_init_to_run.sql")
 
+      puts "Copying transactional data to the warehouse"
       run_etl_script
 
-      raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
-      raise "failed to create Quartz database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
+      puts "Creating the Pentaho repository"
+      raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
+      puts "Creating the Quartz database for Pentaho"
+      raise "failed to create Quartz database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
     end
 
     desc "Run the data warehouse etl script"
