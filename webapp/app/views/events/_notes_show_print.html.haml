@@ -1,5 +1,6 @@
 %span.section-header
   Notes
+  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 - if @event.notes.empty?
   %h3 No notes have been recorded for this event

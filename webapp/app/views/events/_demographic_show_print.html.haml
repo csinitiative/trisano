@@ -15,5 +15,6 @@
 
 %span.section-header
   Demographic Information
+  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 = render :partial => "events/people/print.html.haml", :locals => { :entity_data => entity_data, :event_form => event_form }

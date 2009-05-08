@@ -15,6 +15,7 @@
 
 %span.section-header
   Clinical Information
+  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
   - core_element_print :disease_id, d, :horiz do

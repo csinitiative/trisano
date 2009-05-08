@@ -14,7 +14,9 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
-%span.section-header Contacts
+%span.section-header
+  Contacts
+  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => f }
 
 = h @event.safe_call_chain(:disease_event, :disease, :contact_lead_in)
 

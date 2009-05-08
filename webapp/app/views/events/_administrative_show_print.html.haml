@@ -15,6 +15,7 @@
 
 %span.section-header
   Administrative Information
+  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 %span{:class => "horiz"}
   %span.print-label Record number
