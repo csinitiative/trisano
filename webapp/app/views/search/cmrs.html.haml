@@ -91,18 +91,15 @@
             %option
             = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
         %div{ :class => "horiz" }
-          %label{:for => 'state_case_status_id'} State Case Status
-          = case_status_select(:state_case_status_id, params['state_case_status_id'].to_i)
-        %div{ :class => "horiz" }
-          %label{:for => 'lhd_case_status_id'} LHD Case Status
-          = case_status_select(:lhd_case_status_id, params['lhd_case_status_id'].to_i)
-        %div{ :class => "horiz" }
           %label Event Type
           %select{ :name => "event_type"}
             %option
             - for event_type in @event_types
               %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
                 = "#{event_type[:name]}"
+        %div{ :class => "horiz" }
+          %label{:for => 'sent_to_cdc'} Sent to CDC
+          = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
         %p{:style => "clear: both"}
         %div{ :class => "horiz" }
           %label Entered-on date range (mm/dd/yyyy)
@@ -115,17 +112,16 @@
         %p{:style => "clear: both"}
         %div{ :class => "horiz" }
           %label Jurisdiction of Investigation
-          %select{ :name => "jurisdiction_id"}
-            %option
-            - for jurisdiction in @jurisdictions
-              %option{ :value => jurisdiction.entity_id, :selected => jurisdiction.entity_id == (params[:jurisdiction_id].to_i) ? "selected" : nil}
-                = "#{jurisdiction.name}"
+          = select_tag 'jurisdiction_ids', options_from_collection_for_select(@jurisdictions, 'entity_id', 'short_name', array_of_strs_to_ints(params[:jurisdiction_ids]) ), {:multiple => true, :size => 7}
         %div{ :class => "horiz" }
-          %label{:for => 'investigator_id'} Investigated by
-          = investigators_select :investigator_id, params[:investigator_id].to_i
+          %label{:for => 'state_case_status_ids'} State Case Status
+          = case_status_select(:state_case_status_ids, array_of_strs_to_ints(params[:state_case_status_ids]), false, true)
         %div{ :class => "horiz" }
-          %label{:for => 'sent_to_cdc'} Sent to CDC
-          = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
+          %label{:for => 'lhd_case_status_ids'} LHD Case Status
+          = case_status_select(:lhd_case_status_ids, array_of_strs_to_ints(params[:lhd_case_status_ids]), false, true)
+        %div{ :class => "horiz" }
+          %label{:for => 'investigator_ids'} Investigated by
+          = investigators_select :investigator_ids, array_of_strs_to_ints(params[:investigator_ids])
 
     %div.search_group.clearfix
       = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind')"
@@ -215,7 +211,7 @@
           %td
             = cmr.safe_call_chain(:disease_event, :disease_onset_date) || '&nbsp;'
 
-- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:workflow_state].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_id].blank? ||!params[:event_type].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
+- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:workflow_state].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_ids].blank? ||!params[:event_type].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
 
   %span
     Your search returned no results.

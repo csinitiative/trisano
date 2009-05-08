@@ -251,10 +251,10 @@ class Event < ActiveRecord::Base
         where_clause += "county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
       end
 
-      if !options[:jurisdiction_id].blank?
+      if !options[:jurisdiction_ids].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "jurisdictions_events.secondary_entity_id = " + sanitize_sql_for_conditions(["%s", options[:jurisdiction_id]])
+        where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
       else
         where_clause += " AND " unless where_clause.empty?
         allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
@@ -309,16 +309,26 @@ class Event < ActiveRecord::Base
       end
 
       [{:field => :record_number, :table => :events},
-       {:field => :state_case_status_id, :table => :events},
-       {:field => :lhd_case_status_id, :table => :events},
-       {:field => :pregnant_id, :table => :participations_risk_factors},
-       {:field => :investigator_id, :table => :events}].each do |attr|
+       {:field => :pregnant_id, :table => :participations_risk_factors}].each do |attr|
         field = attr[:field]
         table = attr[:table].to_s
 
         if not options[field].blank?
           issue_query = true
           where_clause += " AND #{table}.#{field.to_s} = '#{sanitize_sql_for_conditions(["%s", options[field]])}'"
+        end
+      end
+
+      [{:field => :state_case_status_ids, :table => :events},
+       {:field => :lhd_case_status_ids, :table => :events},
+       {:field => :investigator_ids, :table => :events}].each do |attr|
+        field = attr[:field]
+        table = attr[:table].to_s
+
+        if not options[field].blank?
+          issue_query = true
+          where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")" 
+        # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
         end
       end
 

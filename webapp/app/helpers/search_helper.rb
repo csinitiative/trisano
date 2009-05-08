@@ -27,4 +27,9 @@ module SearchHelper
     Event.find(record.event_id)
   end
 
+  # Not very Ruby, but...
+  def array_of_strs_to_ints(str_array)
+    str_array.collect { |str| str.to_i } unless str_array.nil?
+  end
+
 end

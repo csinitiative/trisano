@@ -204,22 +204,22 @@ module ApplicationHelper
     code_select :yesno, name, selected, empty_option
   end
 
-  def case_status_select(name, selected=nil, empty_option=true)
-    code_select :case, name, selected, empty_option
+  def case_status_select(name, selected=nil, empty_option=true, multi=false)
+    code_select :case, name, selected, empty_option, multi
   end
 
-  def investigators_select(name, selected=nil, empty_option=true)
+  def investigators_select(name, selected=nil, empty_option=false)
     investigate_event = Privilege.investigate_event
     options = investigate_event.users.find(:all, :select => 'DISTINCT ON (users.id) users.*').collect do |u|
       [u.best_name, u.id]
     end
     options = options.unshift([nil, nil]) if empty_option
-    select_tag name.to_s, options_for_select(options, :selected => selected)
+    select_tag name.to_s, options_for_select(options, :selected => selected), {:multiple => true, :size => [7, options.size].min}
   end
 
-  def code_select(code_name, field_name, selected=nil, empty_option=true)
+  def code_select(code_name, field_name, selected=nil, empty_option=true, multi=false)
     options = ExternalCode.send(code_name).collect{|c| [c.code_description, c.id]}
     options = options.unshift([nil, nil]) if empty_option
-    select_tag field_name.to_s, options_for_select(options, :selected => selected)
+    select_tag field_name.to_s, options_for_select(options, :selected => selected), :multiple => multi
   end
 end

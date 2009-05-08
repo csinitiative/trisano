@@ -1407,7 +1407,7 @@ describe MorbidityEvent do
     end
 
     it 'should include soundex codes for fulltext search' do
-      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
+      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_ids => ['1'])
       where_clause.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
     end
 
@@ -1420,15 +1420,15 @@ describe MorbidityEvent do
       end
 
       it 'should be done with a single disease' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_id => '1').size.should == 1
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_ids => ['1']).size.should == 1
       end
 
       it 'should be done with multiple diseases' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_id => '1').size.should == 2
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_ids => ['1']).size.should == 2
       end
 
       it 'should ignore empty disease arrays' do
-        Event.find_by_criteria(:diseases => [], :jurisdiction_id => '1').size.should == 3
+        Event.find_by_criteria(:diseases => [], :jurisdiction_ids => ['1']).size.should == 3
       end
     end
 
