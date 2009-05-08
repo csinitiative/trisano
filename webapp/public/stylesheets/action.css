@@ -609,3 +609,10 @@ form.inplaceeditor-form input[type="submit"] {
 
 form.inplaceeditor-form a {
   margin-left: 1em; }
+
+.search_group {
+  border: 1px solid #C1DAD7;
+  background-color: #eee;
+  -moz-border-radius: 1em;
+  margin: 1em;
+  padding: 1em; }
