@@ -16,21 +16,26 @@
 %fieldset.vert
   %span.horiz
     %label Sending Facility
-    =h lab_message.sending_facility
+    %span{:class => :value}
+      =h lab_message.sending_facility
   %span.horiz
     %label Patient
-    =h lab_message.patient_name
+    %span{:class => :value}
+      =h lab_message.patient_name
   %span.horiz
     %label Lab
-    =h lab_message.lab
+    %span{:class => :value}
+      =h lab_message.lab
 
   %span.horiz
     %label Result
-    =h lab_message.lab_result
+    %span{:class => :value}
+      =h lab_message.lab_result
       
   %span.horiz
     %label HL7 Version
-    =h lab_message.hl7_version
+    %span{:class => :value}
+      =h lab_message.hl7_version
     
   %span.horiz
     %label &nbsp;
@@ -48,8 +53,7 @@
     =link_to_function 'Hide raw message', nil do |page|
       - page["original_message_#{lab_message.id}"].hide
       - page["show_link_#{lab_message.id}"].show
-    %blockquote
-      =h lab_message.hl7_message
+    %pre= h(lab_message.hl7_message)
   
 %br
 %br
