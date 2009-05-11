@@ -352,5 +352,15 @@ namespace :trisano do
       run_etl_script
     end
 
+    desc "Uninstall the data warehouse"
+    task :uninstall_data_warehouse do
+      initialize_config
+      puts "Uninstalling the data warehouse"
+      puts "Deleting data warehouse database: #{@dw_database}"
+      raise "failed to delete data warehouse" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c 'drop database #{@dw_database}'") 
+      puts "Deleting data warehouse user: #{@dw_user}"
+      raise "failed to delete data warehouse user" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c 'drop user #{@dw_user}'")
+    end
+
   end
 end
