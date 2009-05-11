@@ -27,7 +27,7 @@
     / Calendar
     = calendar_date_select_includes
 
-  %body.yui-skin-sam{:onload=>"shortcuts_init(#{home_path});"}
+  %body.yui-skin-sam{:onload=>"shortcuts_init('#{home_path}');"}
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
