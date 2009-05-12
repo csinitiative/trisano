@@ -153,7 +153,7 @@
     = render :partial => "refine_search"
 
   %br
-  %table
+  %table{:style => "table-layout: fixed"}
     %tr{:style => "text-align: left"}
       %th
         Record Number
@@ -174,42 +174,42 @@
       %th
         Onset Date
       - for cmr in @cmrs
-        - if cmr.class == MorbidityEvent
-          - path = cmr_path(cmr)
+        - if cmr.event_type == "MorbidityEvent"
+          - path = cmr_path(cmr.id)
           - html_id = "show-cmr-link-#{cmr.id}"
+          - type = "CMR"
         - else
-          - path = contact_event_path(cmr)
+          - path = contact_event_path(cmr.id)
           - html_id = "show-contact-link-#{cmr.id}"
+          - type = "Contact"
 
-        - if (cmr.deleted_at.nil?)
-          - result_class = 'search-active tabular'
+        - if (cmr['deleted_at'].nil?)
+          - result_class = 'search-active'
         - else
-          - result_class = 'search-inactive tabular'
+          - result_class = 'search-inactive'
         %tr{:class => result_class}
           %td
             = link_to("#{cmr.record_number}", path, :id => html_id)
-            &nbsp;&nbsp;
-            %small="(#{cmr.class.to_s.underscore.humanize})"
-          - entity  = cmr.interested_party.person_entity
-          - person  = entity.person
-          - address = cmr.address
+            %small=type
           %td
-            = "#{person.full_name}"
+            - first_mid = ", " + cmr['first_name'] + " " + cmr['middle_name'].to_s if cmr['first_name']
+            - full_name = cmr['last_name'] + first_mid
+            = "#{full_name}"
           %td
-            - if  !person.birth_date.blank?
-              = "#{calculate_age person.birth_date.to_date} / #{person.birth_date}"
+            - if  !cmr['birth_date'].blank?
+              = "#{calculate_age cmr['birth_date'].to_date} / #{cmr['birth_date']}"
           %td
-            = l(person.birth_gender)
+            = cmr['birth_gender']
           %td
-            = cmr.safe_call_chain(:disease_event, :disease, :disease_name)
+            = cmr['disease_name']
           %td
-            = address.city if address
+            = cmr['city']
           %td
-            = l(address.county) if address
+            = cmr['county']
           %td
-            = cmr.primary_jurisdiction.name
+            = cmr['jurisdiction']
           %td
-            = cmr.safe_call_chain(:disease_event, :disease_onset_date) || '&nbsp;'
+            = cmr['onset_date'] || '&nbsp;'
 
 - if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:workflow_state].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_ids].blank? ||!params[:event_type].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
 

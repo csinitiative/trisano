@@ -211,9 +211,15 @@ class Event < ActiveRecord::Base
 
     def generate_event_search_where_clause(options)
       fulltext_terms = []
-      where_clause = " participations.type != 'PlaceEvent'"
-      order_by_clause = "participations.type DESC, last_name, first_name ASC"
+      order_by_clause = "last_name, first_name ASC"
       issue_query = false
+
+      if options[:event_type].blank?
+        where_clause = " (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
+      else
+        issue_query = true
+        where_clause = " events.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) +"'"
+      end
 
       if !options[:diseases].blank?
         issue_query = true
@@ -560,20 +566,33 @@ class Event < ActiveRecord::Base
     where_clause, order_by_clause, issue_query = Event.generate_event_search_where_clause(options)
 
     if issue_query || !options[:event_type].blank?
-      event_types = options[:event_type].blank? ? [MorbidityEvent, ContactEvent] : [ Kernel.const_get(options[:event_type]) ]
-      event_types.inject([]) do | results, event_type|
-        results += event_type.find(:all,
-          :include => [{:interested_party => { :person_entity => :person } },
-            {:interested_party => :risk_factor},
-            :address,
-            :disease_event,
-            :jurisdiction,
-            :associated_jurisdictions
-          ],
-          :conditions => where_clause,
-          :order => order_by_clause)
-        results
-      end
+      search_sql = <<SEARCH
+        SELECT events.id AS id, events.type AS event_type, events.deleted_at AS deleted_at,
+               events.record_number AS record_number, events.workflow_state AS workflow_state,
+               people.last_name AS last_name, people.first_name AS first_name,
+               people.middle_name AS middle_name, people.birth_date AS birth_date,
+               people_gender.code_description as birth_gender, diseases.disease_name AS disease_name,
+               addresses.city AS city, counties_addresses.code_description AS county,
+               places.short_name AS jurisdiction, disease_events.disease_onset_date AS onset_date
+        FROM events
+        INNER JOIN participations interested_party ON interested_party.event_id = events.id AND (interested_party.type = 'InterestedParty' )
+        INNER JOIN entities ON entities.id = interested_party.primary_entity_id AND (entities.entity_type = 'PersonEntity' )
+        INNER JOIN people ON people.entity_id = entities.id
+        LEFT OUTER JOIN external_codes people_gender ON people_gender.id = people.birth_gender_id
+        LEFT OUTER JOIN participations_risk_factors ON participations_risk_factors.participation_id = interested_party.id
+        LEFT OUTER JOIN addresses ON addresses.event_id = events.id
+        LEFT OUTER JOIN external_codes counties_addresses ON counties_addresses.id = addresses.county_id
+        LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+        LEFT OUTER JOIN diseases ON diseases.id = disease_events.disease_id
+        INNER JOIN participations jurisdictions_events ON jurisdictions_events.event_id = events.id AND (jurisdictions_events.type = 'Jurisdiction' )
+        INNER JOIN entities place_entities_participations ON place_entities_participations.id = jurisdictions_events.secondary_entity_id
+          AND (place_entities_participations.entity_type = 'PlaceEntity' )
+        INNER JOIN places ON places.entity_id = place_entities_participations.id
+        LEFT OUTER JOIN participations associated_jurisdictions_events ON associated_jurisdictions_events.event_id = events.id
+          AND (associated_jurisdictions_events.type = 'AssociatedJurisdiction' )
+SEARCH
+      search_sql += " WHERE #{where_clause} ORDER BY #{order_by_clause}"
+      Event.find_by_sql(search_sql)
     end
   end
 
