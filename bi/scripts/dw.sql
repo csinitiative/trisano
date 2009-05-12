@@ -270,8 +270,8 @@ SELECT
     jorpl.id AS jurisdiction_of_residence_id,
     scsi.code_description AS state_case_status_code,     -- code_description?
     lcsi.code_description AS lhd_case_status_code,        -- code_description?
-    events."MMWR_week",
-    events."MMWR_year",
+    events."MMWR_week" AS mmwr_week,
+    events."MMWR_year" AS mmwr_year,
 
     events.event_name,
     events.record_number,
