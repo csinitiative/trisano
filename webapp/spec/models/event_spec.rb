@@ -747,7 +747,6 @@ describe MorbidityEvent do
 
       it "should find active (new and updated) records" do
         events = Event.active_ibis_records(Date.today - 1, Date.today + 1)
-        p events
         events.size.should == 4   # 2 above and 2 in the fixtures
         events.collect! { |event| Event.find(event.id) }
         event_names = events.collect { |event| event.event_name }
@@ -1384,7 +1383,9 @@ describe MorbidityEvent do
   end
 
   describe 'find by criteria' do
-    before(:all) do
+    fixtures :entities, :places
+
+    before(:each) do
       # a little hack because PG adapters don't consistently escape single quotes
       begin
         PostgresPR
@@ -1401,13 +1402,13 @@ describe MorbidityEvent do
           }
         },
         "jurisdiction_attributes" => {
-          "secondary_entity_id" => 1
+          "secondary_entity_id" => entities(:Davis_County).id
         }
       }
     end
 
     it 'should include soundex codes for fulltext search' do
-      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_ids => ['1'])
+      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_ids => [entities(:Davis_County).id])
       where_clause.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
     end
 
@@ -1420,15 +1421,15 @@ describe MorbidityEvent do
       end
 
       it 'should be done with a single disease' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_ids => ['1']).size.should == 1
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 1
       end
 
       it 'should be done with multiple diseases' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_ids => ['1']).size.should == 2
+        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 2
       end
 
       it 'should ignore empty disease arrays' do
-        Event.find_by_criteria(:diseases => [], :jurisdiction_ids => ['1']).size.should == 3
+        Event.find_by_criteria(:diseases => [], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 3
       end
     end
 
