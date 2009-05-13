@@ -59,3 +59,4 @@ http://www.gnu.org/philosophy/license-list.html#GPLCompatibleLicenses
  activerecord-jdbc    BSD               Nick Sieger <nick@nicksieger.com> and Ola Bini<olabini@gmail.com> with lots of help from the JRuby community.
  shortcut             BSD               Binny V A http://www.openjs.com/scripts/events/keyboard_shortcuts/
  keypress             BSD               Copyright (c) 2008 Jonathan Tang http://jonathan.tang.name/code/js_keycode
+ ruby-hl7             BSD               Copyright (c) 2006-2008 Mark Guzman http://github.com/segfault/ruby-hl7/tree/master
