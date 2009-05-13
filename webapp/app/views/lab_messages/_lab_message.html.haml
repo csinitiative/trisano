@@ -13,37 +13,27 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.vert
-  %span.horiz
-    %label Sending Facility
-    %span{:class => :value}
-      =h lab_message.sending_facility
-  %span.horiz
-    %label Patient
-    %span{:class => :value}
-      =h lab_message.patient_name
-  %span.horiz
-    %label Lab
-    %span{:class => :value}
-      =h lab_message.lab
+%table.list
+  %tr
+    %th Sending Facility
+    %th Patient
+    %th HL7 Version
+    %th &nbsp;
+  %tr
+    %td
+      .value=h lab_message.sending_facility
+    %td
+      .value=h lab_message.patient_name
+    %td
+      .value=h lab_message.hl7_version
+    %td
+      .value
+        = link_to 'Edit', edit_lab_message_path(lab_message)
+        |
+        = link_to 'Show', lab_message 
 
-  %span.horiz
-    %label Result
-    %span{:class => :value}
-      =h lab_message.lab_result
-      
-  %span.horiz
-    %label HL7 Version
-    %span{:class => :value}
-      =h lab_message.hl7_version
-    
-  %span.horiz
-    %label &nbsp;
-    = link_to 'Edit', edit_lab_message_path(lab_message)
-    |
-    = link_to 'Show', lab_message 
-
-
+  =render lab_message.orders
+  
 %fieldset.vert
   %div{:id => "show_link_#{lab_message.id}"}      
     = link_to_function 'Show raw message', nil do |page|

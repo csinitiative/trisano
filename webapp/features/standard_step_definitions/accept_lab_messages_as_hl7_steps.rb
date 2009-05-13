@@ -47,7 +47,7 @@ end
 
 
 Then /^I should see value "([^\"]*)" under label "([^\"]*)"$/ do |value, label|
-  response.should have_xpath("//label[text()='#{label}']/../span[contains(text(), '#{value}')]")
+  response.should have_xpath("//th[text()='#{label}']/../../tr/td/div[contains(text(), '#{value}')]")
 end
 
 Then /^I should receive a 200 response$/ do

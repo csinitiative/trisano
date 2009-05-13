@@ -1,9 +1,27 @@
+# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+#
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the 
+# terms of the GNU Affero General Public License as published by the 
+# Free Software Foundation, either version 3 of the License, 
+# or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License 
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
 describe LabMessage do
   before(:each) do
     @valid_attributes = {
-      :hl7_message => ARUP1_MSG
+      :hl7_message => hl7_messages[:arup_1]
     }
   end
 
@@ -15,31 +33,31 @@ describe LabMessage do
     LabMessage.new.should_not be_valid
   end
 
-  describe 'received from ARUP' do
+  it 'should respond to hl7' do
+    LabMessage.create!(@valid_attributes).respond_to?(:hl7).should be_true
+  end
+
+  describe 'received HL7 2.3 +' do
     
     before :each do
-      @lab_message = LabMessage.create(:hl7_message => ARUP1_MSG)
+      @lab_message = LabMessage.create(:hl7_message => hl7_messages[:arup_1])
     end
 
     it 'should return HL7 version' do
       @lab_message.patient_name.should == 'LIN GENYAO     L'
     end
 
-    it 'should return the lab' do
-      @lab_message.lab.should == '13954-3 Hepatitis Be Antigen LN'
-    end
-
     it 'should return the hl7 version' do
       @lab_message.hl7_version.should == '2.3.1'
     end
 
-    it 'should return the lab result' do
-      @lab_message.lab_result.should == 'Positive'
-    end
-
   end
 
-  describe 'with valid HL7' do
+  describe 'HL7 2.5 not already handled by HL7 2.3' do
+    # nothing here at the moment
+  end
+
+  describe 'with invalid HL7' do
 
     it 'should contain a message header' do
       @lab_message = LabMessage.new(:hl7_message => 'junk')
@@ -50,12 +68,4 @@ describe LabMessage do
   end
   
 end
-
-ARUP1_MSG = <<ARUP1
-MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\r
-PID|1||17744418^^^^MR||LIN^GENYAO^^^^^L||19840810|M||U^Unknown^HL70005|215 UNIVERSITY VLG^^SALT LAKE CITY^UT^84108^^M||^^PH^^^801^5854967|||||||||U^Unknown^HL70189\r
-ORC||||||||||||^ROSENKOETTER^YUKI^K|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\r
-OBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|X|^ROSENKOETTER^YUKI^K|||||||||F||||||9^Unknown\r
-OBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive||Negative||||F|||200903210007\r
-ARUP1
 

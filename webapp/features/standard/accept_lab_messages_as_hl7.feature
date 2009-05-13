@@ -21,8 +21,13 @@ Feature: Accept Lab Messages as HL7
     Then I should see value "LIN GENYAO" under label "Patient"
     And  I should see value "ARUP" under label "Sending Facility"
     And  I should see value "Hepatitis Be Antigen" under label "Lab"
-    And  I should see value "Positive" under label "Result"
+    And  I should see value "13954-3^Hepatitis Be Antigen^LN" under label "Test type"
     And  I should see value "2.3.1" under label "HL7 Version"
+    And  I should see value "Positive" under label "Test result"
+    And  I should see value "Negative" under label "Reference range"
+    And  I should see value "X" under label "Specimen source"
+    And  I should see value "200903191011" under label "Collection date"
+    And  I should see value "200903191011" under label "Lab test date"
 
   Scenario: Viewing an HL7 2.5.x message
     Given I am logged in as a super user
@@ -32,9 +37,17 @@ Feature: Accept Lab Messages as HL7
     
     Then I should see value "COVELL DAREN" under label "Patient"
     And  I should see value "IHC-LD" under label "Sending Facility"
-    And  I should see value "" under label "Lab"
-    And  I should see value "" under label "Result"
     And  I should see value "2.5" under label "HL7 Version"
+
+ Scenario: Viewing HL7 w/ multiple tests
+   Given I am logged in as a super user
+   And I have the lab message "ARUP_2"
+   
+   When I visit the lab message show page
+
+   Then I should see value "5221-7^HIV-1 Antibody Confirm, Western Blot^LN" under label "Test type"
+   And I should see value "^Bordatella Per^LN" under label "Test type"
+   
 
   Scenario: Posting a valid HL7 lab message
     Given I am logged in as a super user
