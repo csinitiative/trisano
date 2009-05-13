@@ -37,7 +37,7 @@ if [ ! -d $BI_BITS_HOME ]; then
     exit
 fi
 
-if [ ! -d $TRISANO_SOURCE_HOME/bi ]; then
+if [ ! -d $TRISANO_SOURCE_HOME/avr/bi ]; then
     echo "$TRISANO_SOURCE_HOME is not the root directory of the TriSano source tree"
     exit
 fi
@@ -77,14 +77,14 @@ cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml $BI_SERVER_
 cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml.org
 
 # Copy in new ones
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/applicationContext-acegi-security-siteminder.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security-siteminder.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
 
 # Step 2: Copy custom jar files
 echo " * Copying Trisano custom java extensions to BI Server"
-cp $TRISANO_SOURCE_HOME/bi/extensions/trisano/dist/* $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
+cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/* $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
 
 # Step 3: Configure BI for Postgres
 echo " * Configuring BI Server to use PostgreSQL"
@@ -96,11 +96,11 @@ cp $BI_SERVER_HOME/pentaho-solutions/system/hibernate/hibernate-settings.xml $BI
 cp $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF/context.xml.org
 
 # Copy in new ones
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/start-pentaho.sh $BI_SERVER_HOME
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/stop-pentaho.sh $BI_SERVER_HOME
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/quartz.properties $BI_SERVER_HOME/pentaho-solutions/system/quartz/
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/start-pentaho.sh $BI_SERVER_HOME
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/stop-pentaho.sh $BI_SERVER_HOME
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/quartz.properties $BI_SERVER_HOME/pentaho-solutions/system/quartz/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
 
 # Step 4: Customize admin console
 # Add Postgres JDBC driver to admin-console
@@ -111,11 +111,11 @@ cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE
 echo " * Building TriSano solution repository"
 mkdir $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml.org
-cp $TRISANO_SOURCE_HOME/bi/bi_server_replacement_files/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap
-cp $TRISANO_SOURCE_HOME/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
-cp $TRISANO_SOURCE_HOME/bi/schema/metadata.xmi $BI_SERVER_HOME/pentaho-solutions/TriSano
-cp $TRISANO_SOURCE_HOME/bi/schema/index.properties $BI_SERVER_HOME/pentaho-solutions/TriSano
-cp $TRISANO_SOURCE_HOME/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap
+cp $TRISANO_SOURCE_HOME/avr/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/avr/bi/schema/metadata.xmi $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.properties $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
 
 # Removing sample repositories
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
@@ -125,17 +125,17 @@ rm -fr $BI_SERVER_HOME/pentaho-solutions/bi-developers
 echo " * Bundling warehouse initialization and ETL scripts."
 WAREHOUSE_DIR=warehouse
 mkdir $WAREHOUSE_DIR
-cp $TRISANO_SOURCE_HOME/bi/scripts/etl.sh $WAREHOUSE_DIR
-cp $TRISANO_SOURCE_HOME/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
-cp $TRISANO_SOURCE_HOME/bi/scripts/dw.sql $WAREHOUSE_DIR
-cp $TRISANO_SOURCE_HOME/bi/scripts/dw.png $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/etl.sh $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.sql $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.png $WAREHOUSE_DIR
 
 # Step 7: Bundle sample reports
 echo " * Bundling sample reports"
 REPORT_DIR=sample_reports
 mkdir $REPORT_DIR
-cp $TRISANO_SOURCE_HOME/bi/reports/CasesByDiseaseAndJurisdiction.report $REPORT_DIR
-cp $TRISANO_SOURCE_HOME/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/reports/CasesByDiseaseAndJurisdiction.report $REPORT_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
 
 # Step 8: Create a TriSano tarball
 echo " * Creating distribution package (please wait...)"
