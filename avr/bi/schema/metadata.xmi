@@ -9706,9 +9706,9 @@
         <CWM:TaggedValue xmi.id = 'a3225' tag = 'DATABASE_SERVER' value = 'localhost'/>
         <CWM:TaggedValue xmi.id = 'a3226' tag = 'DATABASE_TYPE' value = 'POSTGRESQL'/>
         <CWM:TaggedValue xmi.id = 'a3227' tag = 'DATABASE_ACCESS' value = 'Native'/>
-        <CWM:TaggedValue xmi.id = 'a3228' tag = 'DATABASE_DATABASE' value = 'trisano_warehouse'/>
+        <CWM:TaggedValue xmi.id = 'a3228' tag = 'DATABASE_DATABASE' value = 'trisano_dw'/>
         <CWM:TaggedValue xmi.id = 'a3229' tag = 'DATABASE_PORT' value = '5432'/>
-        <CWM:TaggedValue xmi.id = 'a3230' tag = 'DATABASE_USERNAME' value = 'trisano_ro'/>
+        <CWM:TaggedValue xmi.id = 'a3230' tag = 'DATABASE_USERNAME' value = 'trisano_dw'/>
         <CWM:TaggedValue xmi.id = 'a3231' tag = 'DATABASE_PASSWORD' value = 'password'/>
         <CWM:TaggedValue xmi.id = 'a3232' tag = 'DATABASE_SERVERNAME'/>
         <CWM:TaggedValue xmi.id = 'a3233' tag = 'DATABASE_DATA_TABLESPACE'/>
@@ -9727,7 +9727,7 @@
           value = 'N'/>
         <CWM:TaggedValue xmi.id = 'a3241' tag = 'DATABASE_ATTRIBUTE_PREFIX_PORT_NUMBER'
           value = '5432'/>
-        <CWM:TaggedValue xmi.id = 'a3242' tag = 'DATABASE_JDBC_URL' value = 'jdbc:postgresql://localhost:5432/trisano_warehouse'/>
+        <CWM:TaggedValue xmi.id = 'a3242' tag = 'DATABASE_JDBC_URL' value = 'jdbc:postgresql://localhost:5432/trisano_dw'/>
       </CWM:ModelElement.taggedValue>
     </CWMRDB:Catalog>
     <CWM:Description xmi.id = 'a3243' name = 'foreground_color' body = '0,0,0'

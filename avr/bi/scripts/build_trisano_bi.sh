@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-if [ $# != 2 ] ; then
+if [ $# -ne 3 ] ; then
     echo ""
-    echo "USAGE: $0 path_to_all_bi_products path_to_trisano_source_code"
+    echo "USAGE: $0 ce|ee path_to_all_bi_products path_to_trisano_source_code"
     echo ""
     echo "Create a single directory into which you have downloaded all the relevant Pentaho"
     echo "Community bits: BI Server, Report Designer, Pentaho Metadata.  Provide that directory"
@@ -29,8 +29,19 @@ if [ $# != 2 ] ; then
     exit
 fi
 
-BI_BITS_HOME=${1%/}
-TRISANO_SOURCE_HOME=${2%/}
+# getopts someday.  For now, 1st param of "ce" builds community.  Anythin else builds enterprise.
+ENTERPRISE=false
+COMMUNITY=false
+if [ $1 = "ce" ]; then
+    COMMUNITY=true
+    echo "Building community edition BI package"
+else
+    ENTERPRISE=true
+    echo "Building enterprise edition BI package"
+fi
+
+BI_BITS_HOME=${2%/}
+TRISANO_SOURCE_HOME=${3%/}
 
 if [ ! -d $BI_BITS_HOME ]; then
     echo "$BI_BITS_HOME is not a directory"
@@ -43,18 +54,27 @@ if [ ! -d $TRISANO_SOURCE_HOME/avr/bi ]; then
 fi
 
 # VERIFY THESE NAMES BEFORE RUNNING SCRIPT
-BI_SERVER_ZIP=biserver-ce-CITRUS-M2.tar.gz
-REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
 
-BI_SERVER_NAME=biserver-ce
-ADMIN_CONSOLE_NAME=administration-console
+if $COMMUNITY; then
+    BI_SERVER_ZIP=biserver-ce-CITRUS-M2.tar.gz
+    REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
+    BI_SERVER_NAME=biserver-ce
+    ADMIN_CONSOLE_NAME=administration-console
+    TARBALL=trisano-ce-bi.tar.gz
+else
+    BI_SERVER_ZIP=biserver-ee-3.0.0-GA.tar.gz
+    REPORT_DESIGNER_ZIP=prd-ee-3.0.0-GA.zip
+    BI_SERVER_NAME=biserver-ee
+    ADMIN_CONSOLE_NAME=enterprise-console
+    TARBALL=trisano-ee-bi.tar.gz
+fi
 BI_SERVER_HOME=$BI_BITS_HOME/$BI_SERVER_NAME
 ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
 
 cd $BI_BITS_HOME
 
 if [ ! -e $BI_SERVER_ZIP ]; then
-    echo "Could not locate BI Server archiver $BI_BITS_HOME/$BI_SERVER_ZIP"
+    echo "Could not locate BI Server archive: $BI_BITS_HOME/$BI_SERVER_ZIP"
     exit
 fi
 
@@ -80,32 +100,48 @@ cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml $BI_SERVER_HOME/pentaho-
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security-siteminder.xml $BI_SERVER_HOME/pentaho-solutions/system/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+if $COMMUNITY; then
+    cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/community/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+else
+    cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/enterprise/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+fi
 
 # Step 2: Copy custom jar files
 echo " * Copying Trisano custom java extensions to BI Server"
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/* $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
+cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/* $ADMIN_CONSOLE_HOME/lib
 
 # Step 3: Configure BI for Postgres
 echo " * Configuring BI Server to use PostgreSQL"
 # Backup originals
-cp $BI_SERVER_HOME/start-pentaho.sh $BI_SERVER_HOME/start-pentaho.sh.org
-cp $BI_SERVER_HOME/stop-pentaho.sh $BI_SERVER_HOME/stop-pentaho.sh.org
+
+if $COMMUNITY; then
+    cp $BI_SERVER_HOME/start-pentaho.sh $BI_SERVER_HOME/start-pentaho.sh.org
+    cp $BI_SERVER_HOME/stop-pentaho.sh $BI_SERVER_HOME/stop-pentaho.sh.org
+fi
 cp $BI_SERVER_HOME/pentaho-solutions/system/quartz/quartz.properties  $BI_SERVER_HOME/pentaho-solutions/system/quartz/quartz.properties.org 
 cp $BI_SERVER_HOME/pentaho-solutions/system/hibernate/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate/hibernate-settings.xml.org
 cp $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF/context.xml.org
 
 # Copy in new ones
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/start-pentaho.sh $BI_SERVER_HOME
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/stop-pentaho.sh $BI_SERVER_HOME
+if $COMMUNITY; then
+    cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/start-pentaho.sh $BI_SERVER_HOME
+    cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/stop-pentaho.sh $BI_SERVER_HOME
+fi
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/quartz.properties $BI_SERVER_HOME/pentaho-solutions/system/quartz/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
 
+if $ENTERPRISE; then
+    cp $BI_SERVER_HOME/pentaho-solutions/admin/audit/dialects/postgresql/* $BI_SERVER_HOME/pentaho-solutions/admin/audit
+fi
+
 # Step 4: Customize admin console
 # Add Postgres JDBC driver to admin-console
-echo " * Configuring Admin Console to use PostgreSQL"
-cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
+if $COMMUNITY; then
+    echo " * Configuring Admin Console to use PostgreSQL"
+    cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
+fi
 
 # Step 5: Configure repositories
 echo " * Building TriSano solution repository"
@@ -139,11 +175,11 @@ cp $TRISANO_SOURCE_HOME/avr/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
 
 # Step 8: Create a TriSano tarball
 echo " * Creating distribution package (please wait...)"
-tar cfz trisano-bi.tar.gz $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR $REPORT_DIR
+tar cfz $TARBALL $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR $REPORT_DIR
 
 # Clean up
 rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR $REPORT_DIR
 
 echo
-echo "$BI_BITS_HOME/trisano-bi.tar.gz is ready for shipping."
+echo "$BI_BITS_HOME/$TARBALL is ready for shipping."
 echo
