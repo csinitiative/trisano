@@ -9,9 +9,9 @@
 shortcut = {
 	'all_shortcuts':{},//All the shortcuts are stored in this array
 	'add': function(shortcut_combination,callback,opt) {
-		//Provide a set of default options
+		//Provide a set of default options (keypress is buggy in !Firefox)
 		var default_options = {
-			'type':'keypress',
+			'type':(navigator.userAgent.match(/Firefox/)?'keypress':'keydown'),
 			'propagate':false,
 			'disable_in_input':false,
 			'target':document,

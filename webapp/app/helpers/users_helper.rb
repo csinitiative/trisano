@@ -23,19 +23,30 @@ module UsersHelper
     end
   end
 
-  #keeps the disgusting list out of the view
   def each_shortcut
-      { :configure => "Configure Shortcuts", 
+      list = { 
+        :configure => "Configure Shortcuts", 
         :new => "New CMR",
-        :forms => "View/Edit Forms",
         :people => "People Search",
         :cmr_search => "CMR Search",
         :cmrs => "View/Edit CMRs",
         :navigate_right => "Move One Tab Right",
         :navigate_left => "Move One Tab Left",
         :save => "Hilight 'Save & Exit'"
-      }.each do |label|
+      }
+
+      admin = {
+        :forms => "View/Edit Forms",
+      }
+
+      list.each do |label|
           yield label
+      end
+
+      if User.current_user.is_admin?
+          admin.each do |l2|
+              yield l2
+          end
       end
   end 
 end

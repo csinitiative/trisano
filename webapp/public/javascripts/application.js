@@ -198,7 +198,7 @@ function change_shortcut(target) {
 
     var key = KeyCode.translate_event(e);
    
-    if (!(key.shift || key.alt || key.ctrl)) {
+    if (!(key.shift || key.alt || key.ctrl || key.meta)) {
       var ary = $$('input[type=text]');
       if (key.code == 13) {
         if (!$('user_submit').disabled) 
