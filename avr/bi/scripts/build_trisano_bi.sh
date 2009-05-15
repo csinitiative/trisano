@@ -60,16 +60,17 @@ if $COMMUNITY; then
     REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
     BI_SERVER_NAME=biserver-ce
     ADMIN_CONSOLE_NAME=administration-console
-    TARBALL=trisano-ce-bi.tar.gz
+    BI_TARBALL=trisano-ce-bi.tar.gz
 else
     BI_SERVER_ZIP=biserver-ee-3.0.0-GA.tar.gz
     REPORT_DESIGNER_ZIP=prd-ee-3.0.0-GA.zip
     BI_SERVER_NAME=biserver-ee
     ADMIN_CONSOLE_NAME=enterprise-console
-    TARBALL=trisano-ee-bi.tar.gz
+    BI_TARBALL=trisano-ee-bi.tar.gz
 fi
 BI_SERVER_HOME=$BI_BITS_HOME/$BI_SERVER_NAME
 ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
+DW_TARBALL=trisano-dw.tar.gz
 
 cd $BI_BITS_HOME
 
@@ -175,11 +176,13 @@ cp $TRISANO_SOURCE_HOME/avr/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
 
 # Step 8: Create a TriSano tarball
 echo " * Creating distribution package (please wait...)"
-tar cfz $TARBALL $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $WAREHOUSE_DIR $REPORT_DIR
+tar cfz $BI_TARBALL $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $REPORT_DIR
+tar cfz $DW_TARBALL $WAREHOUSE_DIR
 
 # Clean up
 rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR $REPORT_DIR
 
 echo
-echo "$BI_BITS_HOME/$TARBALL is ready for shipping."
+echo "$BI_TARBALL and $DW_TARBALL are ready for shipping in $BI_BITS_HOME"
+echo
 echo
