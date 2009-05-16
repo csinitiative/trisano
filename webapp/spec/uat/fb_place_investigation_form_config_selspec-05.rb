@@ -41,7 +41,7 @@ describe 'form builder investigation form for places' do
   
   it 'should create a new form' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Diphtheria", "All Jurisdictions", "Place event").should be_true
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
   end
     
   it "should publish the form and create an investigatable CMR with a place" do

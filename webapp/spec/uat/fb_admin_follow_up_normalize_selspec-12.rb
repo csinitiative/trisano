@@ -56,11 +56,11 @@ describe 'Form Builder Admin Follow-Up Functionality' do
 
     add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text"})
     add_follow_up_to_question(@browser, @question_for_follow_up, @follow_up_condition)
-    add_question_to_follow_up(@browser, "Follow up, Condition: <b>#{@follow_up_condition}</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Follow up, Condition: <b>#{@follow_up_condition}</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
 
     add_core_field_config(@browser, "Outbreak")
     add_core_follow_up_to_after_core_field(@browser, "Outbreak", "  #{@core_follow_up_condition}  ", "Outbreak")
-    add_question_to_follow_up(@browser, "Core follow up, <b>#{@core_follow_up_condition}</b>", {:question_text => @core_follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Core follow up, <b>#{@core_follow_up_condition}</b>", {:question_text => @core_follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
 
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease, "Bear River Health Department")

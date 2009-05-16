@@ -31,8 +31,8 @@ describe 'form builder associating a form with multiple diseases' do
 
   it "should create a new form associated with #{@disease_1} and #{@disease_2}" do
     create_new_form_and_go_to_builder(@browser, @form_name, [@disease_1, @disease_2], "All Jurisdictions").should be_true
-    add_question_to_view(@browser, "Default View", {:question_text => @question_1, :data_type => "Single line text"})
-    add_question_to_view(@browser, "Default View", {:question_text => @question_2, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_1, :data_type => "Single line text", :short_name => get_random_word})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_2, :data_type => "Single line text", :short_name => get_random_word})
 
     publish_form(@browser)
     @browser.is_text_present("Form was successfully published").should be_true

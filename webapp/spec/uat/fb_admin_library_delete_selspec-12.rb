@@ -39,9 +39,9 @@ describe 'Form Builder Admin Delete Library' do
   
   it 'should create a new form and add questions to the library' do
     create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @no_group_question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @no_group_question_text, :data_type => "Single line text", :short_name => get_random_word})
     add_question_to_library(@browser, @no_group_question_text)
-    add_question_to_view(@browser, "Default View", {:question_text => @group_question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @group_question_text, :data_type => "Single line text", :short_name => get_random_word})
     add_question_to_library(@browser, @group_question_text, @group_name)
   end
   

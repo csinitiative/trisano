@@ -56,16 +56,16 @@ describe 'Form Builder Admin Delete Element Functionality' do
     create_new_form_and_go_to_builder(@browser, @form_name, @patient_disease, "All Jurisdictions")    
     add_view(@browser, @tab_name)
     add_section_to_view(@browser, "Default View", {:section_name => @section_name})
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
-    add_question_to_view(@browser, "Default View", {:question_text => @value_set_question_text, :data_type => "Drop-down select list"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
+    add_question_to_view(@browser, "Default View", {:question_text => @value_set_question_text, :data_type => "Drop-down select list", :short_name => get_random_word})
     add_value_set_to_question(@browser,
       @value_set_question_text,
       @value_set_name,
       [{ :name => @value_set_value_one }, { :name => @value_set_value_two }, { :name => @value_set_value_three }]
     ).should be_true
     add_core_field_config(@browser, "Patient last name").should be_true
-    add_question_to_before_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_before_question_text, :data_type => "Single line text"}).should be_true
-    add_question_to_after_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_after_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_before_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_before_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
+    add_question_to_after_core_field_config(@browser, "Patient last name", {:question_text =>@patient_last_name_after_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
    
     publish_form(@browser).should be_true
   end

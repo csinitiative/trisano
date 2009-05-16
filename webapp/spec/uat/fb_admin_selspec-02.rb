@@ -86,20 +86,20 @@ def add_a_section
 end
 
 def add_questions
-  add_question_to_section(@browser, "Section 1", {:question_text => "Did you go into the tall grass?", :data_type => "Drop-down select list"})
+  add_question_to_section(@browser, "Section 1", {:question_text => "Did you go into the tall grass?", :data_type => "Drop-down select list", :short_name => get_random_word})
   @browser.is_text_present("Did you go into the tall grass?").should be_true
   
-  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_inactivate_text, :data_type => "Drop-down select list"})
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_inactivate_text, :data_type => "Drop-down select list", :short_name => get_random_word})
   @browser.is_text_present(@question_to_inactivate_text).should be_true
     
   @question_to_inactivate_id = @browser.get_value("id=modified-element")
   
-  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_delete_text, :data_type => "Multi-line text"})
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_delete_text, :data_type => "Multi-line text", :short_name => get_random_word})
   @browser.is_text_present(@question_to_delete_text).should be_true
     
   @question_to_delete_id = @browser.get_value("id=modified-element")
   
-  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_edit_text, :data_type => "Drop-down select list"})
+  add_question_to_section(@browser, "Section 1", {:question_text => @question_to_edit_text, :data_type => "Drop-down select list", :short_name => get_random_word})
   @browser.is_text_present(@question_to_edit_text).should be_true
     
   @question_to_edit_id = @browser.get_value("id=modified-element")
@@ -165,7 +165,7 @@ def add_and_populate_tab
 
   @tab_section_element_id = @browser.get_value("id=modified-element")
 
-  add_question_to_section(@browser, @user_defined_tab_section_text, {:question_text => @user_defined_tab_question_text, :data_type => "Single line text"})
+  add_question_to_section(@browser, @user_defined_tab_section_text, {:question_text => @user_defined_tab_question_text, :data_type => "Single line text", :short_name => get_random_word})
   @browser.is_text_present(@user_defined_tab_question_text).should be_true
 end
 
@@ -196,7 +196,7 @@ end
 def to_and_from_library_new_group
   
   # Debt: This could be refactored to use the #add_question_to_library helper method
-  add_question_to_view(@browser, "Default View", {:question_text => @question_to_add_to_library_text, :data_type => "Single line text"})
+  add_question_to_view(@browser, "Default View", {:question_text => @question_to_add_to_library_text, :data_type => "Single line text", :short_name => get_random_word})
   num_times_text_appears(@browser, @question_to_add_to_library_text).should == 1
   group_name = get_unique_name(3)
   @browser.click "link=Copy to library"

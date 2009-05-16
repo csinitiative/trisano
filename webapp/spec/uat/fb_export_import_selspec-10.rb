@@ -42,10 +42,10 @@ describe 'Form Builder Admin Export/Import Functionality' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
     
     add_section_to_view(@browser, "Default View", {:section_name => @section_name})
-    add_question_to_section(@browser, @section_name, {:question_text => @section_question_text, :data_type => "Single line text"})
+    add_question_to_section(@browser, @section_name, {:question_text => @section_question_text, :data_type => "Single line text", :short_name => get_random_word})
     
     add_view(@browser, @tab_name)
-    add_question_to_view(@browser, @tab_name, {:question_text => @tab_question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, @tab_name, {:question_text => @tab_question_text, :data_type => "Single line text", :short_name => get_random_word})
 
     click_nav_forms(@browser)
 

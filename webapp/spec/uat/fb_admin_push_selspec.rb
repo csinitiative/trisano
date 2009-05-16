@@ -41,7 +41,7 @@ describe 'Form Builder Admin Push Functionality' do
 
   it 'should create and publish a form' do
     create_new_form_and_go_to_builder(@browser, @first_form_name, @disease, @jurisdiction).should be_true
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
     publish_form(@browser)
   end
   
@@ -54,7 +54,7 @@ describe 'Form Builder Admin Push Functionality' do
   
   it 'should create and publish a second form' do
     create_new_form_and_go_to_builder(@browser, @second_form_name, @disease, @jurisdiction).should be_true
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
     publish_form(@browser)
   end
   

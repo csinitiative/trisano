@@ -40,8 +40,8 @@ describe 'form builder disease core-field questions for morbidity reports' do
 
       create_new_form_and_go_to_builder(@browser, form_name, disease_name, jurisdiction).should be_true
       add_core_field_config(@browser, test[:name])
-      add_question_to_before_core_field_config(@browser, test[:name], {:question_text => before_question, :data_type => "Single line text"})
-      add_question_to_after_core_field_config(@browser, test[:name], {:question_text => after_question, :data_type => "Single line text"})
+      add_question_to_before_core_field_config(@browser, test[:name], {:question_text => before_question, :data_type => "Single line text", :short_name => get_random_word})
+      add_question_to_after_core_field_config(@browser, test[:name], {:question_text => after_question, :data_type => "Single line text", :short_name => get_random_word})
       publish_form(@browser).should be_true
       
       create_basic_investigatable_cmr(@browser, cmr_last_name, disease_name, jurisdiction)

@@ -41,11 +41,11 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hepatitis C, acute", "All Jurisdictions").should be_true
     
     add_core_follow_up_to_view(@browser, "Default View", "Code: Female (gender)", "Patient birth gender")
-    add_question_to_follow_up(@browser, "Core follow up, Code condition: Female (gender)", {:question_text => @core_follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Core follow up, Code condition: Female (gender)", {:question_text => @core_follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
     
-    add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text", :short_name => get_random_word})
     add_follow_up_to_question(@browser, @question_for_follow_up, "Yes")
-    add_question_to_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
     edit_core_follow_up(@browser, "Core follow up, Code condition: Female (gender)", "Code: Yes (yesno)", "Died")
     edit_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", "No")
     

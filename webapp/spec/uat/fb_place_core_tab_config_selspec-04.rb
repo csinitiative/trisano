@@ -42,7 +42,7 @@ describe 'form builder core-tab questions for places' do
   it 'should create a new form with user-defined, core-tab questions' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hansen disease (Leprosy)", "All Jurisdictions", "Place event").should be_true
     add_core_tab_configuration(@browser, PLACE).should be_true
-    add_question_to_view(@browser, PLACE, {:question_text =>@place_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_view(@browser, PLACE, {:question_text =>@place_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
   end
     
   it "should publish the form and create an investigatable CMR with a place" do

@@ -69,7 +69,8 @@ describe 'Form Builder Admin' do
     
     add_question_to_view(@browser, "Default View", {
         :question_text => @question_one_with_value_set, 
-        :data_type => "Drop-down select list"
+        :data_type => "Drop-down select list",
+        :short_name => get_random_word
       }
     ).should be_true
 
@@ -81,7 +82,7 @@ describe 'Form Builder Admin' do
     
     add_question_to_view(@browser, "Default View", {
         :question_text => @question_two_with_value_set, 
-        :data_type => "Drop-down select list"
+        :data_type => "Drop-down select list", :short_name => get_random_word
       }
     ).should be_true
 
@@ -96,7 +97,7 @@ describe 'Form Builder Admin' do
   it 'should add a question that needs a value set' do
     add_question_to_view(@browser, "Default View", {
         :question_text => @question_needing_value_set, 
-        :data_type => "Drop-down select list"
+        :data_type => "Drop-down select list", :short_name => get_random_word
       }
     ).should be_true
   end

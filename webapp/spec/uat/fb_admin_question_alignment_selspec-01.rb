@@ -40,7 +40,7 @@ describe 'Form Builder Admin Question Alignment Functionality' do
     @question_id = add_question_to_view(@browser, "Default View", {
         :question_text => @question_text, 
         :data_type => "Single line text", 
-        :style => "Horizontal"
+        :style => "Horizontal", :short_name => get_random_word
       }
     )
     

@@ -62,16 +62,16 @@ describe 'form builder core-tab questions for contacts' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Cryptosporidiosis", "All Jurisdictions", "Contact event").should be_true
       
     add_core_tab_configuration(@browser, DEMOGRAPHICS).should be_true
-    add_question_to_view(@browser, DEMOGRAPHICS, {:question_text =>@demo_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_view(@browser, DEMOGRAPHICS, {:question_text =>@demo_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
       
     add_core_tab_configuration(@browser, CLINICAL).should be_true
-    add_question_to_view(@browser, CLINICAL, {:question_text =>@clinical_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_view(@browser, CLINICAL, {:question_text =>@clinical_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
       
     add_core_tab_configuration(@browser, LABORATORY).should be_true
-    add_question_to_view(@browser, LABORATORY, {:question_text =>@laboratory_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_view(@browser, LABORATORY, {:question_text =>@laboratory_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
       
     add_core_tab_configuration(@browser, EPI).should be_true
-    add_question_to_view(@browser, EPI, {:question_text =>@epi_question_text, :data_type => "Single line text"}).should be_true
+    add_question_to_view(@browser, EPI, {:question_text =>@epi_question_text, :data_type => "Single line text", :short_name => get_random_word}).should be_true
     
   end
     

@@ -54,7 +54,7 @@ describe 'form builder place core field configs for places', :shared => true do
     data_types.each do |data_type|
       follow_up_question = inv_question_pre + data_type[:name]
       it "should create a follow up question: " + follow_up_question do       
-        add_question_to_follow_up(@browser, test[:name], {:question_text => follow_up_question, :data_type => data_type[:name]}).should be_true
+        add_question_to_follow_up(@browser, test[:name], {:question_text => follow_up_question, :data_type => data_type[:name], :short_name => get_random_word}).should be_true
         if data_type[:values] != nil 
           add_value_set_to_question(@browser,
             follow_up_question,

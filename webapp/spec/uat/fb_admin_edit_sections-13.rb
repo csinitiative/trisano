@@ -40,7 +40,7 @@ describe 'Form Builder Admin Edit Section Functionality' do
   it 'should create a form with sections' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hepatitis C, acute", "All Jurisdictions").should be_true
     add_section_to_view(@browser, "Default View", {:section_name => @section_name})
-    add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text"})
+    add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
     edit_section(@browser, @section_name, @edited_section_name)
     
     publish_form(@browser)

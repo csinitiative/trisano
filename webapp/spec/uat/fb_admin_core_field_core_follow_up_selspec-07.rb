@@ -39,7 +39,7 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions").should be_true
     add_core_field_config(@browser, "Patient birth gender")
     add_core_follow_up_to_after_core_field(@browser, "Patient birth gender", "Code: Female (gender)", "Patient birth gender")
-    add_question_to_follow_up(@browser, "Core follow up, Code condition: Female (gender)", {:question_text => @follow_up_question_text, :data_type => "Single line text"})
+    add_question_to_follow_up(@browser, "Core follow up, Code condition: Female (gender)", {:question_text => @follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     edit_cmr(@browser)

@@ -48,7 +48,7 @@ describe 'Adding help text to form builder questions' do
     
       it "should create a #{test_case[:data_type]} question w/ help text" do
         create_new_form_and_go_to_builder(@browser, @form_name, test_case[:disease], 'All Jurisdictions', 'Morbidity event').should be_true
-        add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => test_case[:data_type], :help_text => @help_text})
+        add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => test_case[:data_type], :help_text => @help_text, :short_name => get_random_word})
         publish_form(@browser).should be_true
 
         # go looking for the help

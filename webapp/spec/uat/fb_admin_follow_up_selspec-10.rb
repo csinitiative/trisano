@@ -41,9 +41,9 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
   
   it 'should handle standard follow-ups.' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @original_question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @original_question_text, :data_type => "Single line text", :short_name => get_random_word})
     add_follow_up_to_question(@browser, @original_question_text, "Yes")
-    add_question_to_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :help_text => @follow_up_help_text})
+    add_question_to_follow_up(@browser, "Follow up, Condition: <b>Yes</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :help_text => @follow_up_help_text, :short_name => get_random_word})
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     

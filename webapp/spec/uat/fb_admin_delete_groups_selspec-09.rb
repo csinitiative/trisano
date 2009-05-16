@@ -37,7 +37,7 @@ describe 'Form Builder Admin Delete Group Functionality' do
   
   it 'should add a group to a new  form' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
     add_question_to_library(@browser, @question_text, @group_name)
     delete_question(@browser, @question_text).should be_true    
     add_all_questions_from_group_to_view(@browser, "Default View", @group_name)

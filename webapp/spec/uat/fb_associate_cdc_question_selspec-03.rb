@@ -33,7 +33,7 @@ describe 'Form Builder CDC mapping functionality' do
   
   it 'should handle CDC question mapping' do
     create_new_form_and_go_to_builder(@browser, @form_name, "Hepatitis A, acute", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text + ' radios', :export_column_id => "Where"}).should be_true
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text + ' radios', :export_column_id => "Where", :short_name => get_random_word}).should be_true
     @browser.is_text_present("Radio button, CDC value")
   end
   
@@ -45,12 +45,12 @@ describe 'Form Builder CDC mapping functionality' do
   end
   
   it 'should create a date type when applicable' do
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Date Dx"}).should be_true
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Date Dx", :short_name => get_random_word}).should be_true
     @browser.is_text_present("Date, CDC value")
   end
   
   it 'should create a string type when applicable' do
-    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Vaccine Year"}).should be_true
+    add_question_to_view(@browser, "Default View", {:question_text => @question_text, :export_column_id => "Vaccine Year", :short_name => get_random_word}).should be_true
     @browser.is_text_present("Single line text, CDC value")
   end
 
