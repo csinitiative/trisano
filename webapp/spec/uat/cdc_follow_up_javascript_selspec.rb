@@ -32,11 +32,12 @@ describe 'CDC export follow ups' do
     @browser.click("//input[@value='Create new form']")
     @browser.wait_for_page_to_load
     @browser.type("//input[@id='form_name']", "mumpy #{get_unique_name(1)}")
+    @browser.type("//input[@id='form_short_name']", "mumpy #{get_unique_name(1)}")
     @browser.select("//select[@id='form_event_type']", "Morbidity event")
     @browser.check("//input[@id='Mumps']")
     @browser.click("//input[@value='Create']")
     @browser.wait_for_page_to_load
-    @browser.click("//a[text()='Detail']")
+    @browser.click("//a[text()='Builder']")
     @browser.wait_for_page_to_load
     @browser.click("//a[@id='add-core-field']")
     wait_for_element_present("//b[text()='Add Core Field']")
@@ -51,10 +52,9 @@ describe 'CDC export follow ups' do
     wait_for_element_present("//a[text()='Add question to follow up container']")
     @browser.click("//a[text()='Add question to follow up container']")
     wait_for_element_present("//label[text()='Question text']")
-    @browser.type("//input[@id='question_element_question_attributes_question_text']",
-                  @field_name)
-    @browser.select("//select[@id='question_element_export_column_id']",
-                    "Number of weeks gestation (or trimester) at onset")
+    @browser.type("//input[@id='question_element_question_attributes_question_text']", @field_name)
+    @browser.type("//input[@id='question_element_question_attributes_short_name']", @field_name)
+    @browser.select("//select[@id='question_element_export_column_id']", "Number of weeks gestation (or trimester) at onset")
     @browser.click("//input[@value='Create']")
     wait_for_element_present("//i[text()='Blank']")
     @browser.click("//input[@value='Publish']")
@@ -77,7 +77,7 @@ describe 'CDC export follow ups' do
     @browser.wait_for_page_to_load($load_time)
     source = @browser.get_html_source.gsub(/<\/?[^>]*>/, "")
     records = source.split("\n")
-    records.last[264,3].should == '2nd'
+    records[1][264,3].should == '2nd'
   end
 
 end
