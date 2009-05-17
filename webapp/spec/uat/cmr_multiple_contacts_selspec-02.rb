@@ -25,8 +25,8 @@ describe 'Adding multiple contacts to a CMR' do
   it "should allow adding new contacts to a new CMR" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__person_last_name", "Headroom"
-    @browser.type "morbidity_event_active_patient__person_first_name", "Max"
+    @browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", "Headroom"
+    @browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name", "Max"
 
     click_core_tab(@browser, "Contacts")
     @browser.click "link=Add a contact"
@@ -66,7 +66,7 @@ describe 'Adding multiple contacts to a CMR' do
   it "should allow removing a contact" do
     edit_cmr(@browser)
     click_core_tab(@browser, "Contacts")
-    @browser.click "remove_contact_link"
+    @browser.check "//div[@id='contacts_tab']//input[contains(@id, '__delete')]"
     save_cmr(@browser).should be_true
     @browser.is_element_present("css=TD.struck-through").should be_true
   end
@@ -99,15 +99,16 @@ describe 'Adding multiple contacts to a CMR' do
     @browser.is_text_present('Laurel').should be_true
     @browser.click "//div[@id='contacts_tab']//table/tbody/tr[3]//a"
     @browser.wait_for_page_to_load($load_time)
-    @browser.type "contact_event_active_patient__person_first_name", "Oliver"
-    @browser.type "contact_event_active_patient__address_street_number", "333"
-    @browser.type "contact_event_active_patient__address_street_name", "33rd Street"
-    @browser.select "contact_event_active_patient__participations_contact_disposition_id", "label=Infected, brought to treatment"
-    @browser.select "contact_event_active_patient__participations_contact_contact_type_id", "label=First Responder"
-    @browser.type "contact_event_active_patient__person_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
+    @browser.type "contact_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name", "Oliver"
+    @browser.type "contact_event_address_attributes_street_number", "333"
+    @browser.type "contact_event_address_attributes_street_name", "33rd Street"
+    @browser.select "contact_event_participations_contact_attributes_disposition_id", "label=Infected, brought to treatment"
+    @browser.select "contact_event_participations_contact_attributes_contact_type_id", "label=First Responder"
+    @browser.type "contact_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date", Date.today.months_ago(8).strftime("%m/%d/%Y")
     click_core_tab(@browser, "Laboratory")
     @browser.click "link=Add a new lab"
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", "Abbott Labs"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'test_type')]", "Some test"
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
     save_contact_event(@browser).should be_true
     @browser.is_text_present('Oliver').should be_true
