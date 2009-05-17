@@ -71,8 +71,8 @@ describe 'Managing event queues' do
   end
 
   it "should not be accessible to non-admins" do
-    switch_user(@browser, "lhd_manager").should be_false
-    @browser.is_text_present('Permission denied: You do not have administrative rights').should be_true
+    switch_user(@browser, "lhd_manager").should be_true
+    @browser.is_text_present('You do not have administrative rights').should be_true
   end
     
 end
