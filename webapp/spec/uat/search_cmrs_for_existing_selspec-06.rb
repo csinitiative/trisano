@@ -41,10 +41,9 @@ describe 'User functionality for searching for existing users' do
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Laurel"
       @browser.type "//div[@class='contact'][1]//input[contains(@id, 'first_name')]", "Charles"
       
-      # uncomment when the reporting tab is restored.
-      # click_core_tab(@browser, "Reporting")
-      # @browser.type "morbidity_event_active_reporting_agency_last_name", "Hardy"
-      # @browser.type "morbidity_event_active_reporting_agency_first_name", "Charles"
+      click_core_tab(@browser, "Reporting")
+      @browser.type "morbidity_event_reporter_attributes_person_entity_attributes_person_attributes_last_name", "Hardy"
+      @browser.type "morbidity_event_reporter_attributes_person_entity_attributes_person_attributes_first_name", "Charles"
       save_cmr(@browser).should be_true
     end
   end
@@ -64,8 +63,7 @@ describe 'User functionality for searching for existing users' do
     @browser.wait_for_page_to_load($load_time) 
     @browser.is_text_present('Charles Chuckles (Morbidity event)').should be_true
     @browser.is_text_present('Charles Laurel (Contact event)').should be_true
-    # uncomment when reporting tab is resptored
-    # @browser.is_text_present('Charles Hardy (No associated event)').should be_true
+    @browser.is_text_present('Charles Hardy (No associated event)').should be_true
   end
 
   it 'should find a person named Charles Chuckles when searching by Charlie Chuckles' do
@@ -73,14 +71,14 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Charlie Chuckles') 
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
   
   it 'should find a person named Charles Chuckles when searching by Charles' do
     @browser.type('name', 'Charles')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
   
   it 'should not find anyone when searching by Charlie Chuckface' do
@@ -101,7 +99,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Chuckles')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
   
   it 'should not find anyone when searching by first name chu' do
@@ -117,7 +115,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('sw_last_name', 'chu')
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
   
   it 'Charles Chuckles should be assigned to Unassigned jurisdiction' do
@@ -126,10 +124,10 @@ describe 'User functionality for searching for existing users' do
   end
 
   it 'should find Charles Chuckles when searching by Unassigned jurisdiction' do
-    @browser.select("//select[@name='jurisdiction_id']", 'label=Unassigned')
+    @browser.add_selection "jurisdiction_ids", "label=Unassigned"
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
     @browser.is_text_present('Unassigned').should be_true
   end
 
@@ -138,7 +136,7 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Charles')
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
     @browser.is_text_present('Export All to CSV').should be_true
   end
 
@@ -147,7 +145,7 @@ describe 'User functionality for searching for existing users' do
     @browser.select "event_type", "label=Morbidity Event (CMR)"
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
   end
 
   it "should find charles laurel when searchin for contact events" do
@@ -155,7 +153,7 @@ describe 'User functionality for searching for existing users' do
     @browser.select "event_type", "label=Contact Event"
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Laurel').should be_true
+    @browser.is_text_present('Laurel, Charles').should be_true
   end
 
   it "should find charles laurel and charles chuckles when searchin not specifying an event type" do
@@ -163,8 +161,8 @@ describe 'User functionality for searching for existing users' do
     @browser.type('name', 'Charles')
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Charles Chuckles').should be_true
-    @browser.is_text_present('Charles Laurel').should be_true
+    @browser.is_text_present('Chuckles, Charles').should be_true
+    @browser.is_text_present('Laurel, Charles').should be_true
   end
 
   it "should create a cmr and route it to Davis County HD with Utah County HD as a secondary jurisdiction" do
@@ -184,18 +182,18 @@ end
     @browser.check "Pertussis"
     @browser.click "//input[@type='submit']"
     @browser.wait_for_page_to_load "30000"
-    @browser.get_text("//div[@id='main-content']/div[1]/table/tbody/tr[2]/td[8]").should == "Davis County Health Department"
+    @browser.get_text("//div[@id='main-content']/div[1]/table/tbody/tr[2]/td[8]").should == "Davis County"
   end
 
   it "should find the cmr searching on the primary jurisdiction" do
-    @browser.select "//select[@name='jurisdiction_id']", "label=Davis County Health Department"
+    @browser.add_selection "jurisdiction_ids", "label=Davis County"
     @browser.click "//input[@type='submit']"
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present(@name).should be_true
   end
 
   it "should find the cmr searching on the secondary jurisdiction" do
-    @browser.select "//select[@name='jurisdiction_id']", "label=Utah County Health Department"
+    @browser.add_selection "jurisdiction_ids", "label=Utah County"
     @browser.click "//input[@type='submit']"
     @browser.wait_for_page_to_load "30000"
     @browser.is_text_present(@name).should be_true
