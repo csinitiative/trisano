@@ -91,7 +91,7 @@ describe 'User functionality for searching for CMRs by city and county' do
     @browser.click('//input[@type=\'submit\']')
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('chuckles').should be_true
-    @browser.is_text_present('Papa Smurf').should be_true
+    @browser.is_text_present('Smurf, Papa').should be_true
   end
    
   it 'should find Joker and Gidget and not chuckles or Papa Smurf when it searches in city = Orem' do
@@ -115,7 +115,7 @@ describe 'User functionality for searching for CMRs by city and county' do
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present('chuckles').should be_true
     @browser.is_text_present('Joker').should be_true
-    @browser.is_text_present('Papa Smurf').should be_true
+    @browser.is_text_present('Smurf, Papa').should be_true
     @browser.is_text_present('Gidget').should be_true
   end
     
