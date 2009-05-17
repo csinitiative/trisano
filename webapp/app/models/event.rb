@@ -299,11 +299,12 @@ class Event < ActiveRecord::Base
         end
       end
 
-      if !(ph_start = options[:first_reported_PH_date_start]).blank? || !(ph_end = options[:first_reported_PH_date_end]).blank?
+      ph_start = options[:first_reported_PH_date_start]
+      ph_end = options[:first_reported_PH_date_end]
+      if !ph_start.blank? || !ph_end.blank?
         issue_query = true
         ph_start = sanitize_sql_for_conditions(["%s", ph_start]) unless ph_start.blank?
         ph_end   = sanitize_sql_for_conditions(["%s", ph_end])   unless ph_end.blank?
-
         where_clause += " AND "
         if !ph_start.blank? && !ph_end.blank?
           where_clause += "\"events\".\"first_reported_PH_date\" BETWEEN '#{ph_start}' AND '#{ph_end}'"
