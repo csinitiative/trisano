@@ -476,5 +476,18 @@ module TrisanoFormsHelper
     true
   end
 
-  
+  def add_form_to_event(browser, form_name)
+    browser.click("link=Add/Remove forms for this event")
+    browser.wait_for_page_to_load($load_time)
+    html_source = browser.get_html_source
+    name_position = html_source.index(form_name)
+    id_start_position = html_source.index("forms_to_add_", name_position) + "forms_to_add_".size
+    id_end_position = html_source.index("\"", id_start_position)-1
+    id = html_source[id_start_position..id_end_position]
+    browser.click("forms_to_add_#{id}")
+    browser.click("add_forms")
+    browser.wait_for_page_to_load($load_time)
+    return browser.is_text_present("The list of forms in use was successfully updated.")
+  end
+
 end

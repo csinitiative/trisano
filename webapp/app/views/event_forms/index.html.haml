@@ -50,7 +50,7 @@
               %td
                 = h form.event_type.humanize
               %td
-                = check_box_tag("forms_to_remove[]", form.id)
+                = check_box_tag("forms_to_remove[]", form.id, false, :id => "forms_to_remove_#{form.id}")
         %br
         = submit_tag("Remove Forms", { :id => 'remove_forms', :confirm => "Are you sure? Removing a form will also remove all answers to questions on that form." })
     -else
@@ -90,9 +90,9 @@
                 %td
                   = h form.event_type.humanize
                 %td
-                  = check_box_tag("forms_to_add[]", form.id)
+                  = check_box_tag("forms_to_add[]", form.id, false, :id => "forms_to_add_#{form.id}")
 
         %br
-        = submit_tag("Add Forms")
+        = submit_tag("Add Forms", :id => "add_forms")
     - else
       %em All forms in use
