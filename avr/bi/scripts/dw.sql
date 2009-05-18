@@ -573,7 +573,7 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
     pl.id AS jurisdiction_id,
-    pl.short_name AS jurisdiction_short_name
+    pl.name
 FROM
     events
     LEFT JOIN participations pr
