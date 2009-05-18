@@ -57,7 +57,8 @@ describe 'Form Builder Markup Support' do
       {
         :question_text => @question_text + "<br><b>question</b><i>text</i>",
         :data_type => "Single line text",
-        :help_text => @help_text + "<br><b>help</b><i>text</i>"
+        :help_text => @help_text + "<br><b>help</b><i>text</i>",
+        :short_name => get_random_word
       }
     )
     publish_form(@browser)
