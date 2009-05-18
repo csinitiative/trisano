@@ -20,7 +20,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'User functionality for creating and saving CMRs' do
   
-#$dont_kill_browser = true
+$dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1)
@@ -77,6 +77,7 @@ describe 'User functionality for creating and saving CMRs' do
       @browser.type_keys("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", 'Lab')
     end
     @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
+    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'test_type')]", "Culture"
     @browser.select "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//select[contains(@name, 'specimen_source')]", "label=Animal head"
 
     save_cmr(@browser).should be_true
