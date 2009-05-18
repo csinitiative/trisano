@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
- $dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Form Builder Admin' do
   
@@ -69,7 +69,6 @@ describe 'Form Builder Admin' do
     delete_edit_and_inactivate_questions
     publish_form(@browser).should be_true
     @browser.is_text_present("Form was successfully published").should be_true
-    revalidate_investigator_rendering
 
   end
 end
@@ -244,13 +243,4 @@ def delete_edit_and_inactivate_questions
   @browser.click "question_element_is_active_false"
   @browser.click "//input[contains(@id, 'edit_question_submit')]"
   wait_for_element_not_present("edit-question-form")
-end
-
-def revalidate_investigator_rendering
-  click_nav_cmrs(@browser)
-  click_resource_edit(@browser, "cmrs", @cmr_last_name)
-  @browser.is_text_present(@question_to_delete_text).should be_false
-  @browser.is_text_present(@question_to_edit_text).should be_false
-  @browser.is_text_present(@question_to_inactivate_text).should be_false
-  @browser.is_text_present(@question_to_edit_modified_text).should be_true
 end
