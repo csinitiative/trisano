@@ -79,7 +79,7 @@ describe 'Pulling forms into an event' do
 
   it "should validate that event_forms shows no existing forms" do
     click_core_tab(@browser, "Investigation")
-    @browser.click("link=Add forms to this event")
+    @browser.click("link=Add/Remove forms for this event")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_element_present("//div[@id='forms_in_use']//tr[2]").should_not be_true
   end
