@@ -39,10 +39,10 @@ describe 'Adding multiple place exposures to a CMR' do
 
   it "should allow a single place exposure to be saved w/a new CMR" do
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "multi_place_exposure"
-    @browser.type "morbidity_event_new_place_exposure_attributes__name", @orginal_place_name
-    @browser.type "morbidity_event_new_place_exposure_attributes__date_of_exposure", @date_of_exposure
-    @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Pool"
+    @browser.type "//div[@id='demographic_tab']//input[contains(@id,'last_name')]", "multi_place_exposure"
+    @browser.type "//div[@id='new_place_exposure']//input[contains(@id, '_name')]", @orginal_place_name
+    @browser.type "//div[@class='place_exposure']//input[contains(@id, '_date_of_exposure')]", @date_of_exposure
+    @browser.check "//div[@class='place_exposure']//input[contains(@id, '_place_type_P')]"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@orginal_place_name).should be_true
     @browser.is_text_present('Pool').should be_true
@@ -53,7 +53,7 @@ describe 'Adding multiple place exposures to a CMR' do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.type "//div[@class='place_exposure'][1]//input[contains(@id, '_date_of_exposure')]", @new_date_of_exposure
+    @browser.type "//div[@id='epi_info_form']//input[contains(@id, '_date_of_exposure')]", @new_date_of_exposure
     save_cmr(@browser).should be_true
     click_core_tab(@browser, "Epidemiological")
     @browser.is_text_present(@new_date_of_exposure).should be_true
@@ -64,9 +64,9 @@ describe 'Adding multiple place exposures to a CMR' do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.click 'link=New Place Exposure'
-    @browser.type "morbidity_event_new_place_exposure_attributes__name", 'The Stuffed Mushroom'
-    @browser.select "morbidity_event_new_place_exposure_attributes__place_type_id", "label=Food Establishment"
+    @browser.click 'link=Add a Place Exposure'
+    @browser.type "//div[@id='new_place_exposure']//input[contains(@id, '_name')]", 'The Stuffed Mushroom'
+    @browser.check "//div[@class='place_exposure']//input[contains(@id, '_place_type_FE')]"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Food Establishment').should be_true
@@ -77,7 +77,7 @@ describe 'Adding multiple place exposures to a CMR' do
     edit_cmr(@browser).should be_true
     sleep(3)
     click_core_tab(@browser, "Epidemiological")
-    @browser.click "//div[@id='epi_tab']//div[@id='existing_places']/div[1]/span[4]/a[2]/img"
+    @browser.check "//input[contains(@id, '__delete')]"
     save_cmr(@browser).should be_true
     @browser.is_text_present(@new_place_name).should be_true
     @browser.is_text_present('Pool').should be_true
@@ -89,19 +89,19 @@ describe 'Adding multiple place exposures to a CMR' do
     @browser.click "link=Edit place details"
     @browser.wait_for_page_to_load
     # Address
-    @browser.type "place_event_active_place__address_street_number", "555"
-    @browser.type "place_event_active_place__address_street_name", "Main St."
-    @browser.type "place_event_active_place__address_unit_number", "D"
-    @browser.type "place_event_active_place__address_city", "Springfield"
-    @browser.select "place_event_active_place__address_state_id", "label=Utah"
-    @browser.select "place_event_active_place__address_county_id", "label=Summit"
-    @browser.type "place_event_active_place__address_postal_code", "11111"
+    @browser.type "//input[contains(@id, '_street_number')]", "555"
+    @browser.type "//input[contains(@id, '_street_name')]", "Main St."
+    @browser.type "//input[contains(@id, '_unit_number')]", "D"
+    @browser.type "//input[contains(@id, '_city')]", "Springfield"
+    @browser.select "//select[contains(@id, '_state_id')]", "label=Utah"
+    @browser.select "//select[contains(@id, '_county_id')]", "label=Summit"
+    @browser.type "//input[contains(@id, '_postal_code')]", "11111"
     # Phone
-    @browser.select "place_event_active_place__new_telephone_attributes__entity_location_type_id", "label=Work"
-    @browser.type "place_event_active_place__new_telephone_attributes__area_code", "330"
-    @browser.type "place_event_active_place__new_telephone_attributes__phone_number", "5555555"
-    @browser.type "place_event_active_place__new_telephone_attributes__extension", "231"
-    @browser.type "place_event_active_place__new_telephone_attributes__email_address", "test@home.com"
+    @browser.select "//select[contains(@id, '_location_type_id')]", "label=Work"
+    @browser.type "//input[contains(@id, '_area_code')]", "330"
+    @browser.type "//input[contains(@id, '_phone_number')]", "5555555"
+    @browser.type "//input[contains(@id, '_extension')]", "231"
+    @browser.type "//input[contains(@id, '_email_address')]", "test@home.com"
     save_place_event(@browser).should be_true
     
     @browser.is_text_present("555").should be_true
