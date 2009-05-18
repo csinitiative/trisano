@@ -33,7 +33,7 @@ describe 'Form Builder Admin Delete Group Functionality' do
     @cmr_last_name = nil
     @group_name = nil
     @question_text = nil
-    end
+  end
   
   it 'should add a group to a new  form' do
     create_new_form_and_go_to_builder(@browser, @form_name, "African Tick Bite Fever", "All Jurisdictions")
@@ -52,8 +52,8 @@ describe 'Form Builder Admin Delete Group Functionality' do
     click_build_form(@browser, @form_name)
     delete_group(@browser, @group_name).should be_true
     publish_form(@browser)
-    click_nav_cmrs(@browser)
-    click_resource_edit(@browser, "cmrs", @cmr_last_name)
+    create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
+    edit_cmr(@browser)
     @browser.is_text_present(@question_text).should be_false
   end
     

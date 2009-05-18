@@ -374,6 +374,8 @@ module TrisanoFormsHelper
 
     sleep(2)
     browser.click "link=Close"
+    sleep(1)
+    "OK"
     # Debt: Find something to do an assertion off of
   end
 
