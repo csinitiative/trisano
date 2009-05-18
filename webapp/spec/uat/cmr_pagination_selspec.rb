@@ -30,7 +30,7 @@ describe 'CMR pagination' do
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
-    @browser.click("ACPTD-LHD")
+    @browser.click("accept_accept")
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("Accepted by Local Health Dept.").should be_true
     @browser.is_text_present('Route to').should be_true
