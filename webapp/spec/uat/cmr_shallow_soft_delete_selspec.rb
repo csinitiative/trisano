@@ -37,11 +37,11 @@ describe 'Soft deleting individual events' do
   it "should create a CMR with a contact and a place" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_active_patient__person_last_name", @cmr_last_name
+    @browser.type "//input[contains(@id, '_last_name')]", @cmr_last_name
 
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", @contact_last_name
-    @browser.type "morbidity_event_new_place_exposure_attributes__name", @place_name
+    @browser.type "//div[@id = 'new_place_exposure']//input[contains(@id, '_place_attributes_name')]", @place_name
     save_cmr(@browser).should be_true
 
     @browser.is_text_present('CMR was successfully created.').should be_true
@@ -59,7 +59,7 @@ describe 'Soft deleting individual events' do
     @browser.get_confirmation()
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
-    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.contactname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
+    @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.patientname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
     @browser.is_element_present("soft-delete").should be_false
   end
   
