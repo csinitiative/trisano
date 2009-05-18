@@ -44,7 +44,7 @@ describe 'Adding help text to form builder questions' do
       disease = get_random_disease
       create_new_form_and_go_to_builder(@browser, @form_name, disease, 'All Jurisdictions', 'Morbidity event').should be_true
       add_section_to_view(@browser, "Default View", {:section_name => @section_name, :description => @instruction_text, :help_text => @help_text})
-      add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text"})
+      add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
       publish_form(@browser).should be_true
       create_basic_investigatable_cmr(@browser, @cmr_last_name, disease, 'Summit County Public Health Department').should be_true
       edit_cmr(@browser).should be_true
