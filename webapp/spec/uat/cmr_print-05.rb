@@ -15,12 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'active_support'
+
 require File.dirname(__FILE__) + '/spec_helper'
 
 # $dont_kill_browser = true
 $sleep_time = 5
 
 describe 'Print CMR page' do
+  before :all do
+    @birth_date = Date.today.years_ago(43)
+  end
+
   it 'should create a CMR with demographic info' do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser).should be_true
@@ -36,7 +42,7 @@ describe 'Print CMR page' do
     @browser.select('morbidity_event_address_attributes_state_id', 'label=California')
     @browser.select('morbidity_event_address_attributes_county_id', 'label=Out-of-state')
     @browser.type('morbidity_event_address_attributes_postal_code', '12345')
-    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date', '4/20/1965')
+    @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date', @birth_date.strftime("%m/%d/%Y"))
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_approximate_age_no_birthday', '43')
     @browser.select('morbidity_event_interested_party_attributes_person_entity_attributes_telephones_attributes_0_entity_location_type_id', 'label=Work')
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_telephones_attributes_0_area_code', '555')
@@ -153,7 +159,6 @@ describe 'Print CMR page' do
     @browser.select "morbidity_event_outbreak_associated_id", "label=Yes"
     @browser.type "morbidity_event_outbreak_name", "POCKET MONSTERS"
     @browser.select "morbidity_event_jurisdiction_attributes_secondary_entity_id", "label=Central Utah Public Health Department"
-    @browser.select "morbidity_event_event_status", "label=Accepted by Local Health Dept."
     @browser.type "morbidity_event_investigation_started_date", "12/3/2003"
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
@@ -176,7 +181,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('California').should be_true
     @browser.is_text_present('Out-of-state').should be_true
     @browser.is_text_present('12345').should be_true
-    @browser.is_text_present('1965-04-20').should be_true
+    @browser.is_text_present(@birth_date.strftime("%Y-%m-%d")).should be_true
     @browser.is_text_present('43').should be_true
     @browser.is_text_present('(555) 555-1345').should be_true
     @browser.is_text_present('Male').should be_true
@@ -226,7 +231,7 @@ describe 'Print CMR page' do
     @browser.is_text_present('2005').should be_true
     @browser.is_text_present('POCKET MONSTERS').should be_true
     @browser.is_text_present('Y HELO THAR').should be_true
-    @browser.is_text_present('Accepted by Local Health Dept.').should be_true
+    @browser.is_text_present('New').should be_true
     @browser.is_text_present('2003-12-03').should be_true
     @browser.is_text_present('1963-12-05').should be_true
     @browser.is_text_present('2007-12-07').should be_true
