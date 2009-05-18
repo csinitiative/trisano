@@ -39,7 +39,7 @@ describe 'Form Builder Admin Short Name' do
         :short_name => @short_name_text
       }).should be_true
 
-    @browser.is_text_present(@short_name_text).should be_true
+    @browser.is_text_present(@short_name_text.gsub(' ', '_')).should be_true
     
   end
     
