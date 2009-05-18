@@ -699,7 +699,7 @@ module TrisanoHelper
 
   def add_treatment(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
-    browser.click("link=Add a treatment") unless index == 1
+    browser.click("link=Add a Treatment") unless index == 1
     sleep(1)
     browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
     browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    attributes[:treatment])

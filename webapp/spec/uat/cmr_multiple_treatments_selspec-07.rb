@@ -31,11 +31,11 @@ describe 'Adding multiple treatments to a CMR' do
     display_date = 10.days.ago.strftime('%B %d, %Y')
 
     click_nav_new_cmr(@browser).should be_true
-    @browser.type "morbidity_event_active_patient__person_last_name", "multi-treatments"
-    @browser.type "morbidity_event_active_patient__person_first_name", "test"
+    @browser.type "//input[contains(@id, 'last_name')]", "multi-treatments"
+    @browser.type "//input[contains(@id, 'first_name')]", "test"
 
     click_core_tab(@browser, "Clinical")
-    @browser.click "link=Add a treatment"
+    @browser.click "link=Add a Treatment"
     sleep(1)
 
     add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes", :treatment_date => display_date})
@@ -53,14 +53,14 @@ describe 'Adding multiple treatments to a CMR' do
   it "should allow removing a treatement" do
     edit_cmr(@browser)
     click_core_tab(@browser, "Clinical")
-    @browser.click "remove_treatment_link"
+    @browser.check "//div[@id='treatments']//input[contains(@id, '_delete')]"
     save_cmr(@browser).should be_true
     @browser.is_text_present("Leeches").should_not be_true
   end
 
   it "should allow editing a treatemt" do
     edit_cmr(@browser)
-    @browser.type "//div[@class='treatment'][1]//input[contains(@id, 'treatment_type')]", "Eye of newt"
+    @browser.type "//input[@value='Whiskey']", "Eye of newt"
     click_core_tab(@browser, "Clinical")
     save_cmr(@browser).should be_true
     @browser.is_text_present('Eye of newt').should be_true
