@@ -15,6 +15,20 @@
 - content_for :title do
   Configure Shortcuts
 
+%table.list
+  %tbody
+    %tr
+      %th.forminformation
+        Keyboard Shortcuts
+      - each_shortcut do |label,val|
+        %tr.roll
+          %td.forminformation
+            .formname
+              %b
+                = val
+            .tools
+              = @user.shortcut_settings[label]
+
 - form_for(@user, :url => {:action => "shortcuts"}, :method => "put", :html => {:id => "shortcut_form"} ) do |f|
   - f.fields_for :shortcut_settings do |shortcut|
     - each_shortcut do |label,val|  
