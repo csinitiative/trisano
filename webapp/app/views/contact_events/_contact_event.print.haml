@@ -13,12 +13,10 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= stylesheet_link_tag 'print', :media => 'all'
-
 .header
   .left
     %h1 Utah Public Health
-    %h2= @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
+    %h2= contact_event.jurisdiction.secondary_entity.place.name unless contact_event.jurisdiction.nil?
     %h3 Address of Local Health Department
     %h3
       %i Phone: (801) xxx-xxxx 
@@ -28,17 +26,17 @@
       %i= Date.today.strftime("%B %d, %Y")
   .right
     = image_tag("logo.png")
-    
+
 .sub-header
   .left
-    = (@event.disease.nil? || @event.disease.disease.nil?) ? "Disease not specified" : @event.disease.disease.disease_name
+    = (contact_event.disease.nil? || contact_event.disease.disease.nil?) ? "Disease not specified" : contact_event.disease.disease.disease_name
   .right
-    Confidential Case Report
+    Confidential Case Report (Contact)
 
-- fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form|
+- fields_for(setup_human_event_tree(contact_event), :url => cmr_path(contact_event), :builder => ExtendedFormBuilder) do |event_form|
 
   #demographics
-    - patient_entity = @event.interested_party.person_entity
+    - patient_entity = contact_event.interested_party.person_entity
     = render :partial => 'events/demographic_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Demographics" }
 
@@ -50,21 +48,9 @@
     = render :partial => 'events/laboratory_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Laboratory" }
 
-  .brak#contacts
-    = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
-    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
-
-  .brak#encounters
-    = render :partial => 'events/encounters_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
-    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Encounters" }
-
   .brak#epidemiological
     = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }
-
-  #reporting
-    = render :partial => 'events/reporting_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
-    = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Reporting" }
 
   #administrative
     = render :partial => 'events/administrative_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
@@ -76,8 +62,4 @@
   -unless params[:note].nil?
     .brak#notes
       = render :partial => 'events/notes_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
-  
-  #contact-reports
-    - for event in @event.contact_child_events.active
-      .brak
-        =render event
+
