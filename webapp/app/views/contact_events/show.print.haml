@@ -13,7 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%span.section-header
-  Laboratory Information
-  = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
-= render :partial => 'events/labs_list_print.html.haml', :locals => { :event => event_form.object }
+=stylesheet_link_tag 'print', :media => 'all'
+
+=render @event
