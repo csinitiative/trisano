@@ -32,3 +32,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_helpe
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_forms_helper')
 include TrisanoHelper
 include TrisanoFormsHelper
+
+# Load up factories
+Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'spec', 'factories', '*.rb')) {|f| require f}

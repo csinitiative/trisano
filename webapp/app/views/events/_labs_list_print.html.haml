@@ -14,6 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - ran = nil
+- p event.labs
 - unless association_recorded?(event.labs)
   %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{event.class.name.underscore.humanize.downcase}"
 - else
