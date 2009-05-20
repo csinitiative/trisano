@@ -176,10 +176,10 @@ function shortcuts_init(path) {
 }
 
 function shortcut_set(target) {
-  $('user_shortcut_settings_' + target).style.background = "#FFF";
+  $('user_shortcut_settings_' + target).style.display = "none";
 
   //If for some raisin a browser fires onfocus first, uncomment this to fix it
-  //$$('input[type=text]').each(function(box) { if (box.background == "#FFE0C6") return; });
+  //$$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
   document.onkeydown = null;
   document.onkeypress = null; 
@@ -189,7 +189,7 @@ function shortcut_set(target) {
 function change_shortcut(target) {
   shortcut.kill_shortcuts();
   var ele = $('user_shortcut_settings_' + target);
-  ele.style.background = "#FFE0C6";
+  ele.style.display = "inline";
 
   document.onkeydown = function(e) {
     e = e || window.event;
