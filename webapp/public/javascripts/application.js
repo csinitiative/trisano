@@ -171,7 +171,7 @@ function shortcuts_init(path) {
       $H(json).each(function(pair) {
         shortcut.add(pair.value, keymap[pair.key]);
       });
-    },
+    }
   });
 }
 
