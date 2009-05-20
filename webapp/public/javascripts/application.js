@@ -185,9 +185,25 @@ function shortcut_set(target) {
   //If for some raisin a browser fires onfocus first, uncomment this to fix it
   //$$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
-  document.onkeydown = null;
+  document.onkeydown = function (e) {
+    e = e || window.event;
+    if(e.preventDefault)
+      e.preventDefault();
+
+    submit_shortcuts(KeyCode.translate_event(e));
+  };
+
   document.onkeypress = null; 
   document.onkeyup = null;
+}
+
+function submit_shortcuts(key)
+{
+  if (key.code == 13)
+    if (!$('user_submit').disabled) 
+      $('shortcut_form').submit();
+    else
+      alert('Please resolve all conflicts before saving.');
 }
 
 function change_shortcut(ele) {
@@ -205,13 +221,9 @@ function change_shortcut(ele) {
    
     if (!(key.shift || key.alt || key.ctrl || key.meta)) {
       var ary = $$('input[type=text]');
-      if (key.code == 13) {
-        if (!$('user_submit').disabled) 
-          $('shortcut_form').submit();
-        else
-          alert('Please resolve all conflicts before saving.');
-      } else if (key.code == 38 || key.code == 40) {
-        change_shortcut(ary[ary.indexOf(ele) - (39 - key.code)]);//.focus();
+      submit_shortcuts(key);
+      if (key.code == 38 || key.code == 40) {
+        change_shortcut(ary[ary.indexOf(ele) - (39 - key.code)]);
       }
     } else if ((key.code < 16 || key.code > 18) && key.code != 224) {
       ele.value = KeyCode.hot_key(key);
