@@ -15,21 +15,22 @@
 - content_for :title do
   Configure Shortcuts
 
-%table.list
-  %tbody
-    %tr
-      %th.forminformation
-        Keyboard Shortcuts
-      - form_for(@user, :url => {:action => "shortcuts"}, :method => "put", :html => {:id => "shortcut_form"} ) do |f|
+- form_for(@user, :url => {:action => "shortcuts"}, :method => "put", :html => {:id => "shortcut_form"} ) do |f|
+  %table.list
+    %tbody
+      %tr
+        %th.forminformation
+          Keyboard Shortcuts
         - f.fields_for :shortcut_settings do |shortcut|
           - each_shortcut do |label,val|
             %tr.roll
               %td.forminformation
                 .formname
                   %b
-                    = link_to_function val, "change_shortcut('#{label}')"
+                    = link_to_function val, "change_shortcut($('user_shortcut_settings_#{label}'))"
                 .tools
-                  = @user.shortcut_settings[label]
-                  = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 20, :maxlength => 20, :onfocus => "change_shortcut('#{label}')", :onblur => "shortcut_set('#{label}')", :style => "display: #FFF", :autocomplete => "off"
-
-        = f.submit "Update Shortcuts", :type => "hidden"
+                  .key
+                    = @user.shortcut_settings[label] == '' ? 'Undefined' : @user.shortcut_settings[label]
+                  = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 20, :maxlength => 20, :onblur => "shortcut_set('#{label}')", :style => "display: none", :autocomplete => "off"
+  %p
+  = f.submit "Update Shortcuts"

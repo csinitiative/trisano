@@ -176,8 +176,12 @@ function shortcuts_init(path) {
 }
 
 function shortcut_set(target) {
-  $('user_shortcut_settings_' + target).style.display = "none";
-
+  var ele = $('user_shortcut_settings_' + target);
+  var prev = ele.previous()
+  ele.style.display = "none";
+  prev.innerHTML = ele.value || "Undefined";
+  prev.style.display = "inline";
+  
   //If for some raisin a browser fires onfocus first, uncomment this to fix it
   //$$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
@@ -186,10 +190,11 @@ function shortcut_set(target) {
   document.onkeyup = null;
 }
 
-function change_shortcut(target) {
+function change_shortcut(ele) {
   shortcut.kill_shortcuts();
-  var ele = $('user_shortcut_settings_' + target);
   ele.style.display = "inline";
+  ele.previous().style.display = "none";
+  ele.focus();
 
   document.onkeydown = function(e) {
     e = e || window.event;
@@ -206,10 +211,11 @@ function change_shortcut(target) {
         else
           alert('Please resolve all conflicts before saving.');
       } else if (key.code == 38 || key.code == 40) {
-        ary[ary.indexOf(ele) - (39 - key.code)].focus();
+        change_shortcut(ary[ary.indexOf(ele) - (39 - key.code)]);//.focus();
       }
     } else if ((key.code < 16 || key.code > 18) && key.code != 224) {
       ele.value = KeyCode.hot_key(key);
+      ele.dirty = "1";
       check_conflicts();
     }
 
@@ -238,13 +244,17 @@ function check_conflicts() {
     fields.each(function(box) {
       if ((box.value != '') && (box != ele) && (box.value == ele.value)) {
         box.style.color = "#F00";
+        box.previous().style.color = "#F00";
         ele.style.color = "#F00";
+        ele.previous().style.color = "#F00";
         button.disable();
         conflict = true;
       }
     });
 
-    if (!conflict)
-      ele.style.color = "#000";
+    if (!conflict) {
+      ele.style.color = "";
+      ele.previous().style.color = (ele.dirty ? "#4b4" : "");
+    }
   });
 }
