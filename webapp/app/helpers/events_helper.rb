@@ -139,13 +139,13 @@ module EventsHelper
   def basic_contact_event_controls(event, with_show=true)
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") if with_show
-
+    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") << " | " if with_show
+    controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')") << " | " if can_update
+    controls << link_to('Print', contact_event_path(event, :format => "print") , :target => "_blank") << " ("
+    controls << link_to('With Notes', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") << ") | "
+ 
     if can_update
-      controls <<  " | "  if with_show
-      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
       if event.deleted_at.nil?
-        controls <<  " | "
         controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
       end
       controls << (" | " << link_to('Add Task', new_event_task_path(event)) ) if can_update

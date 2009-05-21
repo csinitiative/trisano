@@ -14,17 +14,32 @@
 #
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-require 'factory_girl'
 
-Given /^an existing contact event$/ do
+Given /^I have an existing contact event$/ do
   @event = Factory.create(:contact_event)
-  @event.labs.first.save!
-  @event.labs.reload
-  p @event.labs
+
+  # we build (rather then create) some form bits because they have special save mechanisms.
+  @form =  Factory.build(:form)
+  @form.save_and_initialize_form_elements
+  @form.investigator_view_elements_container.add_child Factory.create(:view_element, :tree_id => @form.form_base_element.tree_id)
+  @form.save!
+
+  # TODO this is a hack around a persistence bug in factory_girl's has_many stoof.
+  @event.form_references << Factory.create(:form_reference, :form => @form)
+  @event.labs << Factory.create(:lab)
+  @event.save!
 end
 
 When /^I print the contact event$/ do
   visit contact_event_path(@event, :format => :print)
+end
+
+When /^I visit the cmrs index page$/ do
+  visit cmrs_path
+end
+
+When /^I visit the contacts show page$/ do
+  visit contact_event_path(@event)
 end
 
 Then /^I should see the demographics data$/ do
@@ -33,7 +48,6 @@ Then /^I should see the demographics data$/ do
   response.should contain(@event.address.street_name)
   response.should contain(@event.interested_party.person_entity.email_addresses.first.email_address)
 end
-
 Then /^I should see clinical data$/ do
   response.should be_success
   response.should contain(@event.disease_event.disease.disease_name)
@@ -47,13 +61,22 @@ Then /^I should see lab data$/ do
 end
 
 Then /^I should see epi data$/ do
-  pending
+  response.should be_success
+  response.should contain(@event.interested_party.risk_factor.occupation)
 end
 
 Then /^I should see admin data$/ do
-  pending
+  response.should be_success
+  @event.record_number.should_not be_nil
+  response.should contain(@event.record_number)
 end
 
 Then /^I should see answer data$/ do
-  pending
+  response.should be_success
+  response.should contain(@event.investigation_form_references.first.form.name)
 end
+
+Then /^I should see a link to print the event$/ do
+  response.should have_xpath("//a[@href='#{contact_event_path(@event, :format => :print)}']")
+end
+
