@@ -16,4 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module AdminHelper
+
+  def render_admin_entity_management_section
+    # PLUGIN_HOOK - render_admin_entity_management_section()
+  end
+  
 end
