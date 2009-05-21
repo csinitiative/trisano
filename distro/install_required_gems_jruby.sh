@@ -54,5 +54,7 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activereco
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/thoughtbot-factory_girl-1.2.1.gem
 
 
