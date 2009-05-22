@@ -44,3 +44,44 @@ end
 def jurisdiction_id_by_name(name)
   Place.all_by_name_and_types(name || "Unassigned", 'J', true).first.entity_id
 end
+
+def create_place(place_name, place_type)
+  type = Code.find_by_code_name_and_the_code("placetype", place_type)
+  place_entity = PlaceEntity.new
+  place_entity.build_place(:name => place_name)
+  place_entity.place.place_types << type
+  place_entity.save
+end
+
+def place_child_events_attributes(values)
+  { "5"=>{
+      "interested_place_attributes"=>{
+        "place_entity_attributes"=>{
+          "place_attributes"=>{
+            "name"=>"#{values[:name]}"
+          }
+        }
+      },
+      "participations_place_attributes"=>{
+        "date_of_exposure"=>""
+      }
+    }
+  }
+end
+
+def lab_attributes(values)
+  { "3"=>{
+      "place_entity_attributes"=>{
+        "place_attributes"=>{
+          "name"=>"#{values[:name] if values[:name]}"
+        }
+      },
+      "lab_results_attributes"=>{
+        "0"=>{
+          "test_type"=>"#{values[:test_type] if values[:test_type]}", "test_detail"=>"#{values[:test_detail] if values[:test_detail]}", "lab_result_text"=>"#{values[:lab_result_text] if values[:lab_result_text]}", "reference_range"=>"", "interpretation_id"=>"",
+          "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
+        }
+      }
+    }
+  }
+end
