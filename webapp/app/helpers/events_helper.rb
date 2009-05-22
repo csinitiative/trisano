@@ -1088,7 +1088,7 @@ module EventsHelper
     Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
   end
 
-  def render_geocode_section
+  def render_geocode_section(address)
     # PLUGIN_HOOK - render_geocode_section()
   end
 
