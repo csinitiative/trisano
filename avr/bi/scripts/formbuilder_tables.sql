@@ -1,3 +1,7 @@
+--
+-- PostgreSQL database dump
+--
+
 CREATE FUNCTION build_form_tables() RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -16,8 +20,9 @@ DECLARE
     tmp                   TEXT;
     table_name            TEXT;
 BEGIN
-    FOR form_name IN SELECT DISTINCT short_name FROM forms WHERE short_name IS NOT NULL AND short_name != '' AND status = 'Published' LOOP
+    FOR form_name IN SELECT DISTINCT short_name FROM forms WHERE short_name IS NOT NULL AND short_name != '' ORDER BY short_name LOOP
         -- For each form, find all the question short names that appear on it
+        RAISE DEBUG 'Processing form name %', form_name;
         i := 0;
         colnames_clause := '';
         cols_plus_vals_clause := '';
@@ -29,6 +34,7 @@ BEGIN
                     AND q.short_name IS NOT NULL
                     AND q.short_name != ''
                     LOOP
+            RAISE DEBUG ' ** Processing question % in current form', question_name;
             -- Get some number of question short names
             IF colnames_clause != '' THEN
                 colnames_clause := colnames_clause || ', ';
@@ -52,7 +58,6 @@ BEGIN
 END;
 $$;
 
-
 CREATE FUNCTION create_single_form_table(form_name text, table_count integer, colnames_clause text, cols_plus_vals_clause text) RETURNS void
     LANGUAGE plpgsql
     AS $$
@@ -69,25 +74,27 @@ BEGIN
     values_clause := '';
     last_event := NULL;
     EXECUTE 'DROP TABLE IF EXISTS ' || table_name;
-    RAISE NOTICE 'Creating table %', table_name;
+    RAISE DEBUG 'Creating table %', table_name;
     EXECUTE 'CREATE TABLE ' || table_name || ' (event_id INTEGER, ' || cols_plus_vals_clause || ')';
-    tmp := 'SELECT a.event_id, q.short_name, a.text_answer
+    -- Note that there's no ordering with this DISTINCT ON. There's nothing in
+    -- the tables now to prevent multiple questions with the same short name
+    -- being answered for the same event, so we've got to prevent it here
+    tmp := 'SELECT DISTINCT ON (a.event_id, q.short_name) a.event_id, q.short_name, a.text_answer
             FROM answers a JOIN questions q ON (q.id = a.question_id)
             JOIN form_elements fe ON (fe.id = q.form_element_id)
             JOIN forms f ON (fe.form_id = f.id)
             WHERE f.short_name = ' || quote_literal(form_name) || '
             AND q.short_name IN (' || colnames_clause || ')
             ORDER BY event_id';
-    RAISE NOTICE 'To insert stuff, running %', tmp;
     FOR answer_rec IN EXECUTE tmp LOOP
         IF last_event IS NOT NULL AND last_event != answer_rec.event_id THEN
             tmp := 'INSERT INTO ' || table_name || ' (' || insert_col_clause || ') VALUES (' || values_clause || ')';
-            RAISE NOTICE 'Running %', tmp;
+            RAISE DEBUG 'Running %', tmp;
             EXECUTE tmp;
-            last_event := answer_rec.event_id;
             insert_col_clause := '';
             values_clause := '';
         END IF;
+        last_event := answer_rec.event_id;
 
         IF insert_col_clause != '' THEN
             insert_col_clause := insert_col_clause || ', ';
@@ -98,7 +105,7 @@ BEGIN
     END LOOP;
     IF last_event IS NOT NULL THEN
         tmp := 'INSERT INTO ' || table_name || ' (' || insert_col_clause || ') VALUES (' || values_clause || ')';
-        RAISE NOTICE 'Running %', tmp;
+        RAISE DEBUG 'Running %', tmp;
         EXECUTE tmp;
     END IF;
 END;
