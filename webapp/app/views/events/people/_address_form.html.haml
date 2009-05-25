@@ -44,7 +44,7 @@
         = a.label(:postal_code, "Zip code")
         = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
 
-    = render_geocode_section a
+    = render_geocode_form_section
 
     -if event.is_a?(ContactEvent)
       %fieldset.vert
