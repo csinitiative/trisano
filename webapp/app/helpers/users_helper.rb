@@ -32,7 +32,7 @@ module UsersHelper
         :cmrs => "View/Edit CMRs",
         :navigate_right => "Move One Tab Right",
         :navigate_left => "Move One Tab Left",
-        :save => "Hilight 'Save & Exit'"
+        :save => "Highlight 'Save & Exit'"
       }
 
       admin = {
