@@ -41,11 +41,13 @@
     = javascript_include_tag 'element-beta-min'
     = javascript_include_tag 'tabview-min'
     = javascript_include_tag 'patch_inplaceeditor_1-8-1'
+
+    = render_geocode_js_includes
     
     / Calendar
     = calendar_date_select_includes
 
-  %body.yui-skin-sam{:onload=>""}
+  %body.yui-skin-sam{:onload=>render_onload_event}
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
@@ -68,6 +70,7 @@
             - if User.current_user.is_admin?
               |
               = link_to 'ADMIN', admin_path
+            = render_help_link
           .user
             - if RAILS_ENV == "production"
               = current_user_name
@@ -102,18 +105,6 @@
         = yield
       .container
         #foot
-          .footlogo
-            = image_tag("foot.png", :border => 0)
-          .foottext
-            .top
-              Copyright © 2009 Collaborative Software Foundation
-            .bottom
-              %a{:href => 'http://www.trisano.org/collaborate/'} Support
-              |
-              %a{:href => 'https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano'} Feedback
-              |
-              %a{:href => 'http://www.trisano.org'} About TriSano
-              |
-              %a{:href => 'http://www.trisano.org/collaborate/licenses/'} License
-              = yield :enable_save_buttons
+          = render_footer
+          = yield :enable_save_buttons
                    
