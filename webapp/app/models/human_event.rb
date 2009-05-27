@@ -338,11 +338,6 @@ class HumanEvent < Event
         proposed_jurisdiction = PlaceEntity.find(jurisdiction_id) # Will raise an exception if record not found
         raise "New jurisdiction is not a jurisdiction" unless Place.jurisdictions.include?(proposed_jurisdiction.place)
         self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
-        self.update_attributes(:event_queue_id => nil,
-          :investigator_id => nil,
-          :investigation_started_date => nil,
-          :investigation_completed_LHD_date => nil,
-          :review_completed_by_state_date => nil)
         self.add_note note
       end
 
@@ -378,6 +373,25 @@ class HumanEvent < Event
       j_id = primary_jurisdiction.entity_id
       User.current_user.is_entitled_to_in?(priv_required, j_id)
     end
+  end
+
+  def undo_workflow_side_effects
+    attrs = {
+      :investigation_started_date => nil,
+      :investigation_completed_LHD_date => nil,
+      :review_completed_by_state_date => nil
+    }
+    case self.state
+    when :assigned_to_lhd
+      attrs[:investigator_id] = nil
+      attrs[:event_queue_id]  = nil
+    when :assigned_to_queue
+      attrs[:investigator_id] = nil
+    when :assigned_to_investigator
+      attrs[:event_queue_id] = nil
+    end
+
+    self.update_attributes(attrs)
   end
 
   private

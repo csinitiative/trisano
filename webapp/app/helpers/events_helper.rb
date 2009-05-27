@@ -185,11 +185,11 @@ module EventsHelper
           false,
           :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
         action_controls += transition.to_s.titleize
-      when :assign_to_investigator
+      when :assign_to_queue
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
         routing_controls += "<div>Assign to queue:&nbsp;"
         routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event.event_queue_id), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
-
+      when :assign_to_investigator
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
         routing_controls += "<div>Assign to investigator:&nbsp;"
         routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event.investigator_id), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
@@ -205,12 +205,10 @@ module EventsHelper
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
         Brief note: #{text_field_tag("morbidity_event[note]", '')}
-        <br/>
-        Action required: #{action_controls}
-        <br/>
-        #{routing_controls}
-        </form>
       ]
+      controls += "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
+      controls += routing_controls
+      controls += "</form>"
     end
     controls
   end

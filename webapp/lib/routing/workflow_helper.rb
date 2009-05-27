@@ -59,16 +59,22 @@ module Routing
       end
     end
 
+    def assign_to_queue(action=:assign_to_queue)
+      event action, :transitions_to => :assigned_to_queue, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless self.jurisdiction.allows_current_user_to? :route_event_to_investigator
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        note = "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+        add_note note
+      end
+    end
+
     def assign_to_investigator(action=:assign_to_investigator)
       event action, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
         unless self.jurisdiction.allows_current_user_to? :route_event_to_investigator
           halt! "You do not have sufficient privileges to route events from this jurisdiction"
         end
-        note = if self.investigator
-                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
-               else
-                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
-               end
+        note = "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
         add_note note
       end
     end

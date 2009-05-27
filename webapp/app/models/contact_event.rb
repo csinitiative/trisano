@@ -31,12 +31,17 @@ class ContactEvent < HumanEvent
       assign_to_lhd
     end        
     state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be routed to a new jurisdiction at any time; clear out settings from earlier pass throught the flow, if any.
+        undo_workflow_side_effects
+      end
       assign_to_lhd
       accept_by_lhd :accept
       reject_by_lhd :reject
     end
     state :accepted_by_lhd, :meta => {:description => 'Accepted by Local Health Dept.'} do
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       investigate
     end 
@@ -46,17 +51,33 @@ class ContactEvent < HumanEvent
       end
       assign_to_lhd
     end
-    state :assigned_to_investigator do
+    state :assigned_to_queue, :meta => {:description => 'Assigned to Queue'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be assigned to a queue at any time; clear out settings from earlier pass throught the flow, if any.
+        undo_workflow_side_effects
+      end
       assign_to_lhd
       investigate :accept
       reject_by_investigator :reject
+      assign_to_queue
+      assign_to_investigator
+    end
+    state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be assigned to an investigator at any time; clear out settings from earlier an earlier pass through the flow, if any.
+        undo_workflow_side_effects
+      end
+      assign_to_lhd
+      investigate :accept
+      reject_by_investigator :reject
+      assign_to_queue
       assign_to_investigator
       # need a way to reset state if an event queue goes away.
       event :reset, :transitions_to => :accepted_by_lhd do
         halt! "Investigator already assigned" unless investigator.nil?
       end
     end
-    state :under_investigation, :meta => {:description => 'Assigned to Investigator'} do
+    state :under_investigation do
       on_entry do |prior_state, triggering_event, *event_args|
         self.investigator_id = User.current_user.id
         self.investigation_started_date = Date.today
@@ -64,6 +85,7 @@ class ContactEvent < HumanEvent
       assign_to_lhd
       complete_investigation :complete
       complete_and_close_investigation :complete_and_close
+      assign_to_queue
       assign_to_investigator
     end
     state :rejected_by_investigator do
@@ -72,6 +94,7 @@ class ContactEvent < HumanEvent
         self.investigation_started_date = nil
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       investigate
     end
@@ -80,6 +103,7 @@ class ContactEvent < HumanEvent
         self.investigation_completed_LHD_date = Date.today
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       close_contact :approve
       reopen_by_manager :reopen
@@ -89,6 +113,7 @@ class ContactEvent < HumanEvent
         self.investigation_completed_LHD_date = nil
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       complete_investigation :close
       complete_and_close_investigation :complete_and_close

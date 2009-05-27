@@ -31,6 +31,10 @@ class MorbidityEvent < HumanEvent
       assign_to_lhd
     end
     state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be routed to a new jurisdiction at any time; clear out settings from earlier pass throught the flow, if any.
+        undo_workflow_side_effects
+      end
       assign_to_lhd
       accept_by_lhd :accept
       reject_by_lhd :reject
@@ -38,6 +42,7 @@ class MorbidityEvent < HumanEvent
     state :accepted_by_lhd, :meta => {:description => 'Accepted by Local Health Dept.'} do
       assign_to_lhd
       assign_to_investigator
+      assign_to_queue
       investigate
     end
     state :rejected_by_lhd, :meta => {:description => "Rejected by Local Health Dept."} do
@@ -46,10 +51,26 @@ class MorbidityEvent < HumanEvent
       end
       assign_to_lhd
     end
-    state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
+    state :assigned_to_queue, :meta => {:description => 'Assigned to Queue'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be assigned to a queue at any time; clear out settings from earlier pass throught the flow, if any.
+        undo_workflow_side_effects
+      end
       assign_to_lhd
       investigate :accept
       reject_by_investigator :reject
+      assign_to_queue
+      assign_to_investigator
+    end
+    state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
+      on_entry do |prior_state, triggering_event, *event_args|
+        # An event can be assigned to an investigator at any time; clear out settings from earlier an earlier pass through the flow, if any.
+        undo_workflow_side_effects
+      end
+      assign_to_lhd
+      investigate :accept
+      reject_by_investigator :reject
+      assign_to_queue
       assign_to_investigator
       # need a way to reset state if an event queue goes away.
       event :reset, :transitions_to => :accepted_by_lhd do
@@ -63,6 +84,7 @@ class MorbidityEvent < HumanEvent
       end
       assign_to_lhd
       complete_investigation :complete
+      assign_to_queue
       assign_to_investigator
     end
     state :rejected_by_investigator do
@@ -71,6 +93,7 @@ class MorbidityEvent < HumanEvent
         self.investigation_started_date = nil
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       investigate
     end
@@ -79,6 +102,7 @@ class MorbidityEvent < HumanEvent
         self.investigation_completed_LHD_date = Date.today
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       approve_by_lhd :approve
       reopen_by_manager :reopen
@@ -93,11 +117,13 @@ class MorbidityEvent < HumanEvent
         self.investigation_completed_LHD_date = nil
       end
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       complete_investigation :complete
     end
     state :reopened_by_state do
       assign_to_lhd
+      assign_to_queue
       assign_to_investigator
       reopen_by_manager :reopen
       approve_by_lhd :approve
