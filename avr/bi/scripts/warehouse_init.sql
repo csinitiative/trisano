@@ -47,6 +47,126 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    form_name             TEXT;
+    question_name         TEXT;
+    questions_per_table   INTEGER := 200;
+    i                     INTEGER;
+    table_count           INTEGER;
+    cols_plus_vals_clause TEXT := '';
+    colnames_clause       TEXT := '';
+    insert_col_clause     TEXT := '';
+    answer_rec            RECORD;
+    last_event            INTEGER;
+    values_clause         TEXT;
+    tmp                   TEXT;
+    table_name            TEXT;
+BEGIN
+    FOR form_name IN
+                SELECT DISTINCT short_name
+                FROM forms 
+                WHERE short_name IS NOT NULL AND short_name != ''
+                ORDER BY short_name LOOP
+        -- For each form, find all the question short names that appear on it
+        RAISE NOTICE 'Processing form name %', form_name;
+        i := 0;
+        colnames_clause := '';
+        cols_plus_vals_clause := '';
+        table_count := 1;
+        FOR question_name IN SELECT DISTINCT lower(q.short_name)
+                    FROM questions q JOIN form_elements fe ON fe.id = q.form_element_id
+                    JOIN forms f ON f.id = fe.form_id JOIN answers a ON a.question_id = q.id
+                    WHERE f.short_name = form_name
+                    AND q.short_name IS NOT NULL
+                    AND q.short_name != ''
+                    AND a.text_answer IS NOT NULL
+                    ORDER BY 1
+                    LOOP
+            RAISE NOTICE ' ** Processing question % in current form', question_name;
+            -- Get some number of question short names
+            IF colnames_clause != '' THEN
+                colnames_clause := colnames_clause || ', ';
+                cols_plus_vals_clause := cols_plus_vals_clause || ', ';
+            END IF;
+            colnames_clause := colnames_clause || quote_literal(question_name);
+            cols_plus_vals_clause := cols_plus_vals_clause || quote_ident(question_name) || ' TEXT';
+            i := i + 1;
+
+            IF i > questions_per_table THEN
+                PERFORM trisano.create_single_form_table(form_name, table_count, colnames_clause, cols_plus_vals_clause);
+                table_count := table_count + 1;
+                colnames_clause := '';
+                cols_plus_vals_clause := '';
+                i := 0;
+            END IF;
+        END LOOP;
+        IF colnames_clause != '' THEN
+            PERFORM trisano.create_single_form_table(form_name, table_count, colnames_clause, cols_plus_vals_clause);
+        END IF;
+    END LOOP;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.create_single_form_table(form_name text, table_count integer, colnames_clause text, cols_plus_vals_clause text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    insert_col_clause TEXT;
+    values_clause     TEXT;
+    last_event        INTEGER;
+    last_type         TEXT;
+    tmp               TEXT;
+    answer_rec        RECORD;
+    table_name        TEXT;
+BEGIN
+    table_name := quote_ident('formtable_' || lower(form_name) || '_' || table_count);
+    insert_col_clause := '';
+    values_clause := '';
+    last_event := NULL;
+    EXECUTE 'DROP TABLE IF EXISTS ' || table_name;
+    RAISE NOTICE 'Creating table %', table_name;
+    EXECUTE 'CREATE TABLE ' || table_name || ' (event_id INTEGER, type TEXT, ' || cols_plus_vals_clause || ')';
+    -- Note that there's no ordering with this DISTINCT ON. There's nothing in
+    -- the tables now to prevent multiple questions with the same short name
+    -- being answered for the same event, so we've got to prevent it here
+    tmp := 'SELECT DISTINCT ON (a.event_id, e.type, q.short_name) a.event_id, e.type, q.short_name, a.text_answer
+            FROM answers a JOIN questions q ON (q.id = a.question_id)
+            JOIN form_elements fe ON (fe.id = q.form_element_id)
+            JOIN forms f ON (fe.form_id = f.id)
+            JOIN events e ON (a.event_id = e.id)
+            WHERE f.short_name = ' || quote_literal(form_name) || '
+            AND lower(q.short_name) IN (' || colnames_clause || ')
+            AND text_answer IS NOT NULL
+            ORDER BY event_id';
+    FOR answer_rec IN EXECUTE tmp LOOP
+        IF last_event IS NOT NULL AND last_event != answer_rec.event_id THEN
+            tmp := 'INSERT INTO ' || table_name || ' (event_id, type, ' || lower(insert_col_clause) || ') VALUES (' || last_event || ', ''' || last_type || ''', ' || values_clause || ')';
+            RAISE NOTICE 'Running %', tmp;
+            EXECUTE tmp;
+            insert_col_clause := '';
+            values_clause := '';
+        END IF;
+        last_event := answer_rec.event_id;
+        last_type  := answer_rec.type;
+
+        IF insert_col_clause != '' THEN
+            insert_col_clause := insert_col_clause || ', ';
+            values_clause := values_clause || ', ';
+        END IF;
+        insert_col_clause := insert_col_clause || quote_ident(answer_rec.short_name);
+        values_clause := values_clause || quote_literal(answer_rec.text_answer);
+    END LOOP;
+    IF last_event IS NOT NULL THEN
+        tmp := 'INSERT INTO ' || table_name || ' (event_id, type, ' || lower(insert_col_clause) || ') VALUES (' || last_event || ', ''' || last_type || ''', ' || values_clause || ')';
+        RAISE NOTICE 'Running %', tmp;
+        EXECUTE tmp;
+    END IF;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION trisano.swap_schemas() RETURNS BOOLEAN AS $$
 DECLARE
     cur_schema TEXT;
@@ -54,11 +174,13 @@ DECLARE
     tmp TEXT;
     viewname TEXT;
     validetl BOOLEAN;
+    orig_search_path TEXT;
 BEGIN
     SELECT success INTO validetl FROM trisano.etl_success ORDER BY entrydate LIMIT 1;
     IF NOT validetl THEN
         RAISE EXCEPTION 'Last ETL process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
     END IF;
+
     SELECT schemaname FROM trisano.current_schema_name LIMIT 1 INTO cur_schema;
     IF cur_schema = 'warehouse_a' THEN
         new_schema = 'warehouse_b';
@@ -72,6 +194,12 @@ BEGIN
     tmp := 'ALTER SCHEMA staging RENAME TO ' || new_schema;
     EXECUTE tmp;
 
+    -- Create form builder tables
+    SELECT INTO orig_search_path setting FROM pg_settings WHERE name = 'search_path';
+    EXECUTE 'SET search_path = ' || new_schema;
+    PERFORM trisano.build_form_tables();
+    EXECUTE 'SET search_path = ' || orig_search_path;
+
     -- Drop views in trisano schema
     FOR viewname IN
       SELECT pg_class.relname
@@ -82,7 +210,8 @@ BEGIN
           (SELECT 1 FROM pg_class JOIN pg_namespace
           ON pg_namespace.oid = pg_class.relnamespace
           WHERE pg_class.relname = viewname AND pg_class.relkind = 'v') THEN
-            tmp := 'DROP VIEW trisano.' || viewname || ' CASCADE';   -- CASCADE just in case there are dependencies
+            -- CASCADE just in case there are dependencies
+            tmp := 'DROP VIEW trisano.' || viewname || ' CASCADE';   
             EXECUTE tmp;
         END IF;
     END LOOP;
@@ -91,22 +220,30 @@ BEGIN
     FOR viewname IN 
       SELECT pg_class.relname
       FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
-      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r'
+      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'formtable_%'
       LOOP
         tmp := 'CREATE VIEW trisano.' || viewname || '_view AS SELECT * FROM ' || new_schema || '.' || viewname;
         EXECUTE tmp;
     END LOOP;
 
---    EXECUTE
---        'CREATE VIEW trisano.dw_morbidity_patients_view AS
---            SELECT * FROM ' || new_schema || '.dw_patients
---            WHERE is_morbidity_patient';
---
---    EXECUTE
---        'CREATE VIEW trisano.dw_contact_patients_view AS
---            SELECT * FROM ' || new_schema || '.dw_patients
---            WHERE is_contact_patient';
+    -- Create event-type-specific views for each formtable* table
+    FOR viewname IN
+      SELECT pg_class.relname
+      FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
+      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname LIKE 'formtable_%'
+      LOOP
+        tmp := 'CREATE VIEW trisano.' || viewname || '_morbidity_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''MorbidityEvent''';
+        EXECUTE tmp;
+        tmp := 'CREATE VIEW trisano.' || viewname || '_place_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''PlaceEvent''';
+        EXECUTE tmp;
+        tmp := 'CREATE VIEW trisano.' || viewname || '_contact_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''ContactEvent''';
+        EXECUTE tmp;
+        tmp := 'CREATE VIEW trisano.' || viewname || '_encounter_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''EncounterEvent''';
+        EXECUTE tmp;
+    END LOOP;
 
+    -- Create a whole bunch of event-type-specific views. This helps Pentaho
+    -- not have cycles in its graph of the schema
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
@@ -128,16 +265,6 @@ BEGIN
         'CREATE VIEW trisano.dw_contact_reporting_agencies_view AS
             SELECT * FROM ' || new_schema || '.dw_events_reporting_agencies
             WHERE dw_contact_events_id IS NOT NULL';
-
---    EXECUTE
---        'CREATE VIEW trisano.dw_morbidity_clinicians_view AS
---            SELECT * FROM ' || new_schema || '.dw_events_clinicians
---            WHERE dw_morbidity_events_id IS NOT NULL';
---
---    EXECUTE
---        'CREATE VIEW trisano.dw_contact_clinicians_view AS
---            SELECT * FROM ' || new_schema || '.dw_events_clinicians
---            WHERE dw_contact_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_diagnostic_facilities_view AS
@@ -217,18 +344,6 @@ BEGIN
             SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
             WHERE dw_contact_events_id IS NOT NULL';
 
---    EXECUTE
---        'CREATE VIEW trisano.dw_morbidity_diseases_view AS
---            SELECT d.* FROM ' || new_schema || '.diseases d
---            JOIN trisano.dw_morbidity_events_view dw
---                ON (dw.disease_id = d.id)';
---
---    EXECUTE
---        'CREATE VIEW trisano.dw_contact_diseases_view AS
---            SELECT d.* FROM ' || new_schema || '.diseases d
---            JOIN trisano.dw_contact_events_view dw
---                ON (dw.disease_id = d.id)';
-
     EXECUTE
         'CREATE VIEW trisano.dw_enc_treatments_view AS
             SELECT tr.* FROM ' || new_schema || '.treatments tr
@@ -269,54 +384,6 @@ BEGIN
             ) f
                 ON (p.id = f.id)';
 
---    EXECUTE
---        'CREATE VIEW trisano.dw_morbidity_questions_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_questions
---            WHERE is_morbidity';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_morbidity_answers_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_answers
---            WHERE is_morbidity';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_contact_questions_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_questions
---            WHERE is_contact';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_contact_answers_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_answers
---            WHERE is_contact';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_place_questions_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_questions
---            WHERE is_place';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_place_answers_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_answers
---            WHERE is_place';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_encounter_questions_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_questions
---            WHERE is_encounter';
---            
---    EXECUTE
---        'CREATE VIEW trisano.dw_encounter_answers_view AS
---            SELECT *
---            FROM ' || new_schema || '.dw_answers
---            WHERE is_encounter';
-            
     FOR viewname IN 
       SELECT relname
       FROM pg_class JOIN pg_namespace
