@@ -37,7 +37,6 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'search' do |search|
     search.search_cmrs   'search/cmrs',         :action => 'cmrs'
     search.cmrs_format   'search/cmrs.:format', :action => 'cmrs'
-    search.search_people 'search/people',       :action => 'people'
     search.search        'search'
   end
 
