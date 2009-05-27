@@ -111,7 +111,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       html_options[:onchange] = text_answer_event if follow_ups
       text_area(:text_answer, html_options)
     when :drop_down
-      html_options[:onchange] = select_answer_event if follow_ups
+      html_options[:onclick] = select_answer_event if follow_ups
       # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
       select_values = []
       get_values(form_elements_cache, question_element).each do |value_hash|
@@ -154,7 +154,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value_hash|
         
         html_options[:id] =  "#{id}_#{i += 1}"
-        html_options[:onchange] = select_answer_event if follow_ups
+        html_options[:onclick] = select_answer_event if follow_ups
         
         unless question_element.export_column.blank?
           cdc_attributes << {:id => html_options[:id], :export_conversion_value_id => value_hash[:export_conversion_value_id]}
