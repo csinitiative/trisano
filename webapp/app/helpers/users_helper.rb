@@ -25,7 +25,6 @@ module UsersHelper
 
   def each_shortcut
       list = {
-        :configure => "Configure Shortcuts",
         :new => "New CMR",
         :people => "People Search",
         :cmr_search => "CMR Search",

@@ -41,6 +41,7 @@ ActionController::Routing::Routes.draw do |map|
     search.search        'search'
   end
 
+  map.settings 'users/settings', :controller => 'users', :action => 'settings'
   map.shortcuts 'users/shortcuts', :controller => 'users', :action => 'shortcuts', :conditions => { :method => :get } #always your own user
   map.shortcuts 'users/shortcuts', :controller => 'users', :action => 'shortcuts_update', :conditions => { :method => :put }
   map.shortcuts_edit 'users/shortcuts/edit', :controller => 'users', :action => 'shortcuts_edit'

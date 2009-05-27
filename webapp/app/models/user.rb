@@ -150,7 +150,8 @@ class User < ActiveRecord::Base
  
   def shortcut_settings
     settings = read_attribute(:shortcut_settings) || {}
-    settings.empty? ? {:configure => "Alt+F1"} : settings
+    #You can stick default values in here (or in the db)
+    settings.empty? ? {} : settings
   end
 
   def store_as_task_view_settings(params)    

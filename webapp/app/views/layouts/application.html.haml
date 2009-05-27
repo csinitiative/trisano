@@ -70,6 +70,8 @@
             - if User.current_user.is_admin?
               |
               = link_to 'ADMIN', admin_path
+            |
+            = link_to 'SETTINGS', settings_path
             = render_help_link
           .user
             - if RAILS_ENV == "production"
