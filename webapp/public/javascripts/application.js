@@ -183,7 +183,7 @@ function shortcut_set(target) {
   prev.style.display = "inline";
   
   //If for some raisin a browser fires onfocus first, uncomment this to fix it
-  //$$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
+  $$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
   document.onkeydown = function (e) {
     e = e || window.event;
