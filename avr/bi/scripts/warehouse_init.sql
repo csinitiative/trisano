@@ -71,20 +71,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION 
+CREATE OR REPLACE FUNCTION
     trisano.text_join(accum TEXT, newvalue TEXT, separator TEXT)
     RETURNS text AS
 $$
-DECLARE                                                                 
-    result TEXT DEFAULT '';                                             
-BEGIN                                                                   
-    IF accum IS NOT NULL AND accum != '' THEN                           
-       result := accum || separator || newvalue;                        
-    ELSE                                                                
-       result := accum || newvalue;                                     
-    END IF;                                                             
-    RETURN result;                                                      
-END;                            
+DECLARE
+    result TEXT DEFAULT '';
+BEGIN
+    IF accum IS NOT NULL AND accum != '' THEN
+       result := accum || separator || newvalue;
+    ELSE
+       result := accum || newvalue;
+    END IF;
+    RETURN result;
+END;
 $$ LANGUAGE plpgsql IMMUTABLE STRICT;
 
 CREATE AGGREGATE trisano.text_join_agg (text, text) (
