@@ -1086,11 +1086,11 @@ module EventsHelper
     Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
   end
 
-  def render_geocode_section(street_number, street_name, unit_number, city, state, postal_code)
+  def render_geocode_section(address_form, event, street_number, street_name, unit_number, city, state, postal_code)
     # PLUGIN_HOOK - render_geocode_section()
   end
 
-  def render_geocode_form_section()
+  def render_geocode_form_section(address_form, event)
     # PLUGIN_HOOK - render_geocode_form_section()
   end
 
