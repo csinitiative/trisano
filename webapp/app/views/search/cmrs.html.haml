@@ -211,7 +211,9 @@
           %td
             = cmr['onset_date'] || '&nbsp;'
 
-- if @cmrs.blank? && flash[:error].blank? && (!params[:name].blank? || !params[:sw_first_name].blank? || !params[:sw_last_name].blank?  || !params[:disease].blank? || !params[:gender].blank? || !params[:workflow_state].blank? || !params[:city].blank? || !params[:county].blank? || !params[:jurisdiction_ids].blank? ||!params[:event_type].blank? || !params[:birth_date].blank? || !params[:entered_on_start].blank? || !params[:entered_on_end].blank?)
+- params.delete('action')
+- params.delete('controller')
+- if @cmrs.blank? && flash[:error].blank? && !params.values_blank?
 
   %span
     Your search returned no results.
