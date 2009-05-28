@@ -573,7 +573,8 @@ class Event < ActiveRecord::Base
                events.record_number AS record_number, events.workflow_state AS workflow_state,
                people.last_name AS last_name, people.first_name AS first_name,
                people.middle_name AS middle_name, people.birth_date AS birth_date,
-               people_gender.code_description as birth_gender, diseases.disease_name AS disease_name,
+               people_gender.code_description AS birth_gender, people.vector AS vector,
+               diseases.disease_name AS disease_name,
                addresses.city AS city, counties_addresses.code_description AS county,
                places.short_name AS jurisdiction, disease_events.disease_onset_date AS onset_date
         FROM events
@@ -593,8 +594,8 @@ class Event < ActiveRecord::Base
         LEFT OUTER JOIN participations associated_jurisdictions_events ON associated_jurisdictions_events.event_id = events.id
           AND (associated_jurisdictions_events.type = 'AssociatedJurisdiction' )
 SEARCH
-      search_sql += " WHERE #{where_clause} ORDER BY #{order_by_clause}"
-      Event.find_by_sql(search_sql)
+      search_sql += " WHERE #{where_clause}"
+      Event.find_by_sql("SELECT * FROM (#{search_sql}) AS whatever ORDER BY #{order_by_clause}")
     end
   end
 
