@@ -41,4 +41,4 @@
       =address_form.label(:district)
       =l(address_form.object.district)
 
-    = render_geocode_section(address_form.object.street_number, address_form.object.street_name, address_form.object.unit_number, address_form.object.city, address_form.object.state, address_form.object.postal_code)
+    = render_geocode_section(address_form, nil, address_form.object.street_number, address_form.object.street_name, address_form.object.unit_number, address_form.object.city, address_form.object.state.try(:code_description), address_form.object.postal_code)
