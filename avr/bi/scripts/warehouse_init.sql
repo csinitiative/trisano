@@ -59,7 +59,7 @@ CREATE INDEX formbuilder_column_orig_name
     ON trisano.formbuilder_columns (orig_column_name);
 
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
-    SELECT 
+    SELECT
         CASE
             WHEN char_length($1) < 64 THEN $1
             ELSE substring($1 FROM 1 FOR 1) || regexp_replace(substring($1 from 2), '[AEIOUaeiou]', '', 'g')
