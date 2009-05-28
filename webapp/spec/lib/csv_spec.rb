@@ -59,7 +59,7 @@ describe Export::Csv do
       second_person = "White"
       deleted_person = 'Gone'
       eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
-      dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => Date.parse('2008-1-1')}
+      dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
 
       e1 = MorbidityEvent.create(@event_hash)
       e2 = MorbidityEvent.create( eh )
