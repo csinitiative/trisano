@@ -64,12 +64,14 @@
             - if User.current_user.is_admin?
               = link_to 'FORMS', forms_path
               |
-            = link_to 'SEARCH', search_path
+            = link_to 'SEARCH', search_cmrs_path
             |
             = link_to 'ANALYSIS', analysis_path  
             - if User.current_user.is_admin?
               |
               = link_to 'ADMIN', admin_path
+            |
+            = link_to 'SETTINGS', settings_path
             = render_help_link
           .user
             - if RAILS_ENV == "production"

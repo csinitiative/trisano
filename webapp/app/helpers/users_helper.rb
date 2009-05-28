@@ -25,14 +25,13 @@ module UsersHelper
 
   def each_shortcut
       list = {
-        :configure => "Configure Shortcuts",
         :new => "New CMR",
         :people => "People Search",
         :cmr_search => "CMR Search",
         :cmrs => "View/Edit CMRs",
         :navigate_right => "Move One Tab Right",
         :navigate_left => "Move One Tab Left",
-        :save => "Hilight 'Save & Exit'"
+        :save => "Highlight 'Save & Exit'"
       }
 
       admin = {

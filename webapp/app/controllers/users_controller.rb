@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class UsersController < AdminController
-  skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update]
+  skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
   
   # GET /users
   # GET /users.xml
@@ -99,6 +99,12 @@ class UsersController < AdminController
         flash[:error] = 'Shortcuts update failed'
       end
     format.html { render :action => "shortcuts_edit" }
+    end
+  end
+
+  def settings
+    respond_to do |format|
+      format.html
     end
   end
 

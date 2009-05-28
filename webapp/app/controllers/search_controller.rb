@@ -21,47 +21,6 @@ class SearchController < ApplicationController
   def index
   end
 
-  def people
-
-    @people = []
-    @first_name = ""
-    @middle_name = ""
-    @last_name = ""
-
-    # Is there some more elegant way to do this when you don't want the message hanging around?
-    flash[:error] = ""
-
-    begin
-      if !params[:name].blank? || !params[:birth_date].blank?
-        people = Person.find_by_ts(:fulltext_terms => params[:name], :birth_date => params[:birth_date])
-
-        unless people.empty?
-          @people = people.collect do |person|
-            event = Event.find(:first,
-              :include => :participations,
-              :conditions => ["participations.primary_entity_id = ? AND participations.type = ?", person.entity_id, 'InterestedParty'])
-            if event.nil?
-              type = "No associated event"
-              id = nil
-              deleted_at = nil
-            else
-              type = event[:type]
-              id = event.id
-              deleted_at = event.deleted_at
-            end
-            { :person => person, :event_type => type, :event_id => id, :deleted_at => deleted_at }
-          end
-        end
-
-        parse_names_from_fulltext_search
-
-      end
-    rescue
-      flash[:error] = "There was a problem with your search criteria. Please try again. #{$!}"
-    end
-
-  end
-
   def cmrs
     flash[:error] = ""
     error_details = []

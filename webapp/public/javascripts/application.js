@@ -183,7 +183,7 @@ function shortcut_set(target) {
   prev.style.display = "inline";
   
   //If for some raisin a browser fires onfocus first, uncomment this to fix it
-  //$$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
+  $$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
   document.onkeydown = function (e) {
     e = e || window.event;
@@ -199,7 +199,6 @@ function shortcut_set(target) {
 
 function submit_shortcuts(key)
 {
-  if (key.code == 13)
     if (!$('user_submit').disabled) 
       $('shortcut_form').submit();
     else
@@ -221,10 +220,16 @@ function change_shortcut(ele) {
    
     if (!(key.shift || key.alt || key.ctrl || key.meta)) {
       var ary = $$('input[type=text]');
-      submit_shortcuts(key);
+
+      if (key.code == 13)
+        submit_shortcuts(key);
+
       if (key.code == 38 || key.code == 40) {
-        change_shortcut(ary[ary.indexOf(ele) - (39 - key.code)]);
+        var i = ary.indexOf(ele) - (39 - key.code);
+        if (i >= 0 && i < ary.length)
+            change_shortcut(ary[i]);
       }
+
     } else if ((key.code < 16 || key.code > 18) && key.code != 224) {
       ele.value = KeyCode.hot_key(key);
       ele.dirty = "1";

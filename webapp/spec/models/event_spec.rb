@@ -380,12 +380,12 @@ describe MorbidityEvent do
   end
 
   describe "event transitions (events)" do
-    it "should return assigned to lhd, investigation complete, and assigned to investigator when the state is re-opened by manager" do
+    it "should show the proper states that can be transitioned to when the current state is re-opened by manager" do
       @event = MorbidityEvent.create
       @event.workflow_state = 'reopened_by_manager'
       @event.save!
       @event = Event.find @event.id
-      @event.states(@event.state).events.should == [:assign_to_lhd, :reset_to_new, :assign_to_investigator, :complete]
+      @event.states(@event.state).events.should == [:assign_to_lhd, :reset_to_new, :assign_to_queue, :assign_to_investigator, :complete]
     end
   end
 
@@ -415,13 +415,17 @@ describe MorbidityEvent do
 
     before(:each) do
       @event = MorbidityEvent.create
-      @permissive_jurisdiction = mock_model(Jurisdiction)
+      @permissive_jurisdiction = stub_model(Jurisdiction)
       @permissive_jurisdiction.stub!(:allows_current_user_to?).and_return(true)
       User.stub!(:current_user).and_return(nil) #just in case some old stubbin' is around
     end
 
     it "should be able to assign to an investigator, when accepted by lhd" do
       updated_event(:workflow_state => 'accepted_by_lhd').respond_to?(:assign_to_investigator).should be_true
+    end
+
+    it "should be able to assign to a queue, when accepted by lhd" do
+      updated_event(:workflow_state => 'accepted_by_lhd').respond_to?(:assign_to_queue).should be_true
     end
 
     it "should be able to investigate when accepted by lhd" do
@@ -443,7 +447,7 @@ describe MorbidityEvent do
     end
 
     it 'should be able to transition from :new to :assigned_to_lhd' do
-      @event.should_receive(:jurisdiction).and_return @permissive_jurisdiction
+      @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
       @event.should_receive(:route_to_jurisdiction)
       @event.assign_to_lhd(nil, nil, nil)
       @event.workflow_state.should == 'assigned_to_lhd'
@@ -451,7 +455,7 @@ describe MorbidityEvent do
       @event.current_state.events.should == [:assign_to_lhd, :reset_to_new, :accept, :reject]
     end
 
-    it 'should be to move between states, as allowed by transitions' do
+    it 'should be able to move between states, as allowed by transitions' do
       @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
       @event.stub!(:route_to_jurisdiction)
       @event.stub!(:primary_jurisdiction).and_return nil
@@ -473,6 +477,8 @@ describe MorbidityEvent do
       @event.current_state.name.should == :rejected_by_investigator
       @event.assign_to_investigator(nil)
       @event.current_state.name.should == :assigned_to_investigator
+      @event.assign_to_queue(nil)
+      @event.current_state.name.should == :assigned_to_queue
       @event.accept(nil)
       @event.current_state.name.should == :under_investigation
       @event.complete(nil)

@@ -25,6 +25,16 @@ module Routing
         end
         begin
           route_to_jurisdiction jurisdiction, secondary_jurisdictions, note
+          # We don't really want to do this here.  We'd rather use the on_entry hook of the workflow handler,
+          # but this bug in jruby 1.2 won't let us: https://fisheye.codehaus.org/browse/JRUBY-3490
+          # When bug is fixed, remove this and re-enable the on_entry handler in morbidity_event.rb and contact_event.rb, q.v.
+          self.update_attributes(
+            :investigation_started_date => nil,
+            :investigation_completed_LHD_date => nil,
+            :review_completed_by_state_date => nil,
+            :investigator_id => nil,
+            :event_queue_id => nil
+          )
         rescue Exception => e
           halt! e.message
         end
@@ -59,16 +69,22 @@ module Routing
       end
     end
 
+    def assign_to_queue(action=:assign_to_queue)
+      event action, :transitions_to => :assigned_to_queue, :meta => {:priv_required => :route_event_to_investigator} do |note|
+        unless self.jurisdiction.allows_current_user_to? :route_event_to_investigator
+          halt! "You do not have sufficient privileges to route events from this jurisdiction"
+        end
+        note = "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
+        add_note note
+      end
+    end
+
     def assign_to_investigator(action=:assign_to_investigator)
       event action, :transitions_to => :assigned_to_investigator, :meta => {:priv_required => :route_event_to_investigator} do |note|
         unless self.jurisdiction.allows_current_user_to? :route_event_to_investigator
           halt! "You do not have sufficient privileges to route events from this jurisdiction"
         end
-        note = if self.investigator
-                 "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
-               else
-                 "Routed to queue #{self.event_queue.try(:queue_name)}\n#{note}"
-               end
+        note = "Routed to investigator #{self.investigator.try(:best_name)}\n#{note}"
         add_note note
       end
     end
