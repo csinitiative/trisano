@@ -18,7 +18,7 @@
   = error_messages_for :object => f.object
   %span{:class => "horiz"}
     = f.label(:secondary_entity_id, "Health facility")
-    = f.collection_select(:secondary_entity_id, Place.hospitals, :entity_id, :name, {:include_blank => true}, :class => 'required_if_others')
+    = f.collection_select(:secondary_entity_id, Place.hospitals(true), :entity_id, :name, {:include_blank => true}, :class => 'required_if_others')
 
   - f.fields_for(:hospitals_participation, :builder => ExtendedFormBuilder) do |hp|
     = error_messages_for :object => hp.object

@@ -31,11 +31,11 @@ class Place < ActiveRecord::Base
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.
     def hospitals(unique=false)
       if unique
-        select = "DISTINCT ON (name) *)"
+        select = "DISTINCT ON (name) places.*"
+        self.all_by_place_code('H', select)
       else
-        select = "*"
+        self.all_by_place_code('H')
       end
-      self.all_by_place_code('H', select)
     end
 
     def jurisdictions
@@ -124,7 +124,11 @@ class Place < ActiveRecord::Base
     end
 
     def all_by_place_code(code, select=nil)
-      self.all(:select => select || "*", :include => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name')
+      if select
+        self.all(:select => select, :joins => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name')
+      else
+        self.all(:include => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name')
+      end
     end
   end
 

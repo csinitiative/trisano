@@ -13,6 +13,12 @@ BRVH:
   short_name: "BRVH"
   entity_id: 7
 
+BRVH2:
+  id: 6
+  name: "Bear River Valley Hospital"
+  short_name: "BRVH2"
+  entity_id: 8
+
 ###############
 # Jurisidictions
 #

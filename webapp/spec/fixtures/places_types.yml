@@ -6,6 +6,10 @@ BRVH_hospital:
   place_id: 5
   type_id: 2201
 
+BRVH2_hospital:
+  place_id: 6
+  type_id: 2201
+
 Southeastern_District_jurisdiction:
   place_id: 73
   type_id: 2202
