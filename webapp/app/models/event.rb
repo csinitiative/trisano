@@ -568,7 +568,8 @@ class Event < ActiveRecord::Base
 
     if issue_query || !options[:event_type].blank?
       search_sql = <<SEARCH
-        SELECT events.id AS id, events.type AS event_type, events.deleted_at AS deleted_at,
+        SELECT DISTINCT
+               events.id AS id, events.type AS event_type, events.deleted_at AS deleted_at,
                events.record_number AS record_number, events.workflow_state AS workflow_state,
                people.last_name AS last_name, people.first_name AS first_name,
                people.middle_name AS middle_name, people.birth_date AS birth_date,
