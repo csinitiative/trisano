@@ -13,18 +13,3 @@ max_runtimes: 5 # maximum number of trisano runtimes
 runtime_timeout: 5 # number of seconds that web app thread should wait before generating HTTP 503 and informing user to try again
 dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
 support_url: # the URL of the TriSano Support system. Defaults to http://www.trisano.org/collaborate/
-
-# Data warehouse settings
-
-dw_database: trisano_dw # Data warehouse database name
-dw_priv_uname: trisano_admin # Database privileged username (used for data warehouse install and etl scripts)
-dw_priv_passwd: password # Privileged user's password (used for data warehouse install and etl scripts)
-dw_uname: trisano_dw # Data warehouse user (created by install script, used by Pentaho app to connect to the database)
-dw_user_passwd: password # Data warehouse user password (created by install script, used by Pentaho app to connect to the database)
-source_db_host: localhost # Host server that dw etl scripts should use for data extraction
-source_db_port: 5432 # PostgreSQL TCP listen port for server that dw etl scripts should use for data extraction
-source_db_name: trisano_development # Name of the database that should be used for data extraction
-source_db_user: trisano # Source database user name (used for data warehouse etl scripts)
-dest_db_host: localhost # Host server for data warehouse
-dest_db_port: 5432 # PostgreSQL TCP listen port for server that hosts data warehouse
-dw_tool_install_path: /opt/trisano-bi # Location where the TriSano BI artifact has been extracted
