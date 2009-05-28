@@ -35,20 +35,20 @@ describe Export::Csv do
   end
 
   it "should expose an export method that takes an event or a list of events and an optional proc" do
-    lambda { Export::Csv.export(   MorbidityEvent.new(@event_hash)   )    }.should_not raise_error()
-    lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] )    }.should_not raise_error()
-    lambda { Export::Csv.export( [ MorbidityEvent.new(@event_hash) ] ) { MorbidityEvent.new(@event_hash) } }.should_not raise_error()
+    lambda { Export::Csv.export(   MorbidityEvent.create(@event_hash)   )    }.should_not raise_error()
+    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] )    }.should_not raise_error()
+    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] ) { MorbidityEvent.create(@event_hash) } }.should_not raise_error()
 
     lambda { Export::Csv.export( Object.new) }.should raise_error(ArgumentError)
   end
 
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-      to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
+      to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
 
     it "should output content for a simple event" do
-      a = to_arry( Export::Csv.export( MorbidityEvent.new(@event_hash) ) )
+      a = to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash) ) )
       a.size.should == 2
       a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
     end
@@ -61,9 +61,9 @@ describe Export::Csv do
       eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
       dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => Date.parse('2008-1-1')}
 
-      e1 = MorbidityEvent.new(@event_hash)
-      e2 = MorbidityEvent.new( eh )
-      e3 = MorbidityEvent.new( dh )
+      e1 = MorbidityEvent.create(@event_hash)
+      e2 = MorbidityEvent.create( eh )
+      e3 = MorbidityEvent.create( dh )
 
       a = to_arry( Export::Csv.export( [e1, e3, e2] ) )
       a.size.should == 3
@@ -495,6 +495,7 @@ def csv_mock_event(event_type)
   @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(simple_reference)
   m.stub!(:lab_results).and_return([@lab_result])
 
+  m.stub!(:reload).and_return(m)
   m
 end
 

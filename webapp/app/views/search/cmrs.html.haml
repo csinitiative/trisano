@@ -174,12 +174,12 @@
       %th
         Onset Date
       - for cmr in @cmrs
-        - if cmr.event_type == "MorbidityEvent"
-          - path = cmr_path(cmr.id)
+        - if cmr.is_a?(MorbidityEvent)
+          - path = cmr_path(cmr)
           - html_id = "show-cmr-link-#{cmr.id}"
           - type = "CMR"
         - else
-          - path = contact_event_path(cmr.id)
+          - path = contact_event_path(cmr)
           - html_id = "show-contact-link-#{cmr.id}"
           - type = "Contact"
 

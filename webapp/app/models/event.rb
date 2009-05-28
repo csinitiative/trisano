@@ -211,7 +211,7 @@ class Event < ActiveRecord::Base
 
     def generate_event_search_where_clause(options)
       fulltext_terms = []
-      order_by_clause = "last_name, first_name ASC"
+      order_by_clause = "type DESC, last_name, first_name ASC"
       issue_query = false
 
       if options[:event_type].blank?
@@ -569,7 +569,7 @@ class Event < ActiveRecord::Base
     if issue_query || !options[:event_type].blank?
       search_sql = <<SEARCH
         SELECT DISTINCT
-               events.id AS id, events.type AS event_type, events.deleted_at AS deleted_at,
+               events.id AS id, events.type AS type, events.deleted_at AS deleted_at,
                events.record_number AS record_number, events.workflow_state AS workflow_state,
                people.last_name AS last_name, people.first_name AS first_name,
                people.middle_name AS middle_name, people.birth_date AS birth_date,
