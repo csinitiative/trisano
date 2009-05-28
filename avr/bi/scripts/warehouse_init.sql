@@ -58,6 +58,14 @@ CREATE UNIQUE INDEX formbuilder_columns_ix
 CREATE INDEX formbuilder_column_orig_name
     ON trisano.formbuilder_columns (orig_column_name);
 
+CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
+    SELECT 
+        CASE
+            WHEN char_length($1) < 64 THEN $1
+            ELSE substring($1 FROM 1 FOR 1) || regexp_replace(substring($1 from 2), '[AEIOUaeiou]', '', 'g')
+        END;
+$$ LANGUAGE sql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION trisano.prepare_etl() RETURNS BOOLEAN AS $$
 BEGIN
     RAISE NOTICE 'Preparing for ETL process by creating staging schema';
@@ -202,7 +210,7 @@ BEGIN
                     '_' || cur_table_count;
                 RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
                 INSERT INTO trisano.formbuilder_tables (short_name,
-                    table_name) VALUES (form_name, cur_table_name);
+                    table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
                 question_count := 0;
                 tmpbool := FALSE;
             END IF;
@@ -215,7 +223,7 @@ BEGIN
                 BEGIN
                     INSERT INTO trisano.formbuilder_columns (formbuilder_table_name,
                         column_name, orig_column_name)
-                        VALUES (cur_table_name, question_name, tmprec.short_name);
+                        VALUES (cur_table_name, trisano.shorten_identifier(question_name), tmprec.short_name);
 
                     -- Make sure table is marked as modified, as necessary
                     IF NOT tmpbool THEN
@@ -291,8 +299,8 @@ BEGIN
 
         -- Create indexes while we're here
         RAISE NOTICE 'Creating indexes for table %', cur_table_name;
-        EXECUTE 'CREATE UNIQUE INDEX ' || cur_table_name || '_event_id_ix ON ' || cur_table_name || ' (event_id)';
-        EXECUTE 'CREATE INDEX ' || cur_table_name || '_event_type_ix ON ' || cur_table_name || ' (type)';
+        EXECUTE 'CREATE UNIQUE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_id_ix') || ' ON ' || cur_table_name || ' (event_id)';
+        EXECUTE 'CREATE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_type_ix') || ' ON ' || cur_table_name || ' (type)';
     END LOOP;
 END;
 $$;
