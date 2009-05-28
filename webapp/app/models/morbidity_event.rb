@@ -31,10 +31,13 @@ class MorbidityEvent < HumanEvent
       assign_to_lhd
     end
     state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
-      on_entry do |prior_state, triggering_event, *event_args|
-        # An event can be routed to a new jurisdiction at any time; clear out settings from earlier pass throught the flow, if any.
-        undo_workflow_side_effects
-      end
+      # Won't work in jruby 1.2 because of this: https://fisheye.codehaus.org/browse/JRUBY-3490
+      # Reimplement when fixed. Also see contact_event.rb and lib/workflow_helper.rb
+      #
+      # on_entry do |prior_state, triggering_event, *event_args|
+      #  # An event can be routed to a new jurisdiction at any time; clear out settings from earlier pass throught the flow, if any.
+      #  undo_workflow_side_effects
+      #end
       assign_to_lhd
       accept_by_lhd :accept
       reject_by_lhd :reject
