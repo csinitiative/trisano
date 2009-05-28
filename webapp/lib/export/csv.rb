@@ -89,6 +89,7 @@ module Export
         @output = ""
         event_type = nil
         events.each do |event|
+          event.reload
           unless event.deleted_at
             # Check to see if we're moving from one event type to another so as to spit out new headers
             event_break = (event_type == event.class.name) ? false : true
