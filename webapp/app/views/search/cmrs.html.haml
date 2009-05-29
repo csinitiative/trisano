@@ -23,7 +23,7 @@
   - unless @jurisdictions.nil?
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Name Criteria", "Effect.toggle('name_criteria', 'blind')"
+      = link_to_function "Show | Hide Name Criteria", "Effect.toggle('name_criteria', 'blind', { duration: 0 })"
 
       %div#name_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
@@ -43,7 +43,7 @@
           = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Demographic Criteria", "Effect.toggle('demographic_criteria', 'blind')"
+      = link_to_function "Show | Hide Demographic Criteria", "Effect.toggle('demographic_criteria', 'blind', { duration: 0 })"
 
       %div#demographic_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
@@ -68,7 +68,7 @@
           = text_field_tag :birth_date, params[:birth_date], :size => "10"
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Clinical Criteria", "Effect.toggle('clinical_criteria', 'blind')"
+      = link_to_function "Show | Hide Clinical Criteria", "Effect.toggle('clinical_criteria', 'blind', { duration: 0 })"
 
       %div#clinical_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
@@ -82,7 +82,7 @@
           = yesno_select(:pregnant_id, params['pregnant_id'].to_i)
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Event Criteria", "Effect.toggle('event_criteria', 'blind')"
+      = link_to_function "Show | Hide Event Criteria", "Effect.toggle('event_criteria', 'blind', { duration: 0 })"
 
       %div#event_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
@@ -124,7 +124,7 @@
           = investigators_select :investigator_ids, array_of_strs_to_ints(params[:investigator_ids])
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind')"
+      = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"
 
       %div#epi_reporting_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
