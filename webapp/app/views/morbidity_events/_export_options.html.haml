@@ -2,7 +2,7 @@
   %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
     %b Include these repeating aspects in the export:
     %br
-    - form_tag(path, :method => :get) do
+    - form_tag(path, :method => :post) do
       -# When the export_options "window" is open we may be looking at a restricted view (in fact, that's all there is in the search screen)
       -# based on an earlier GET.  We need to capture the previous GETs paramaters (which are also in the current GET) and hide them in this
       -# form
