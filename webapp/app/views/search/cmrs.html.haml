@@ -140,6 +140,7 @@
           = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
 
     %input{ :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 1em; width:130px;" }
+    = submit_tag "Start over", :name => 'reset', :type => 'reset', :id => 'search_reset', :confirm => "Clear all search criteria?"
     %br
 
 - if !@cmrs.blank?
