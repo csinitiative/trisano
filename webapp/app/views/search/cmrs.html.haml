@@ -45,7 +45,7 @@
     %div.search_group.clearfix
       = link_to_function "Show | Hide Demographic Criteria", "Effect.toggle('demographic_criteria', 'blind')"
 
-      %div#demographic_criteria{:style => "display: none; margin-top: 5px"}
+      %div#demographic_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
           %label City
           = model_auto_completer("city", params[:city], "", "", { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
@@ -70,7 +70,7 @@
     %div.search_group.clearfix
       = link_to_function "Show | Hide Clinical Criteria", "Effect.toggle('clinical_criteria', 'blind')"
 
-      %div#clinical_criteria{:style => "display: none; margin-top: 5px"}
+      %div#clinical_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
           %label Diseases
           %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
@@ -84,7 +84,7 @@
     %div.search_group.clearfix
       = link_to_function "Show | Hide Event Criteria", "Effect.toggle('event_criteria', 'blind')"
 
-      %div#event_criteria{:style => "display: none; margin-top: 5px"}
+      %div#event_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
           %label Event Status
           %select{ :name => "workflow_state"}
@@ -126,7 +126,7 @@
     %div.search_group.clearfix
       = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind')"
 
-      %div#epi_reporting_criteria{:style => "display: none; margin-top: 5px"}
+      %div#epi_reporting_criteria{:style => "margin-top: 5px"}
         %div{ :class => "horiz" }
           %label{ :for => 'other_data_1' } Other data 1
           = text_field_tag :other_data_1, params[:other_data_1], :size => "15"
