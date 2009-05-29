@@ -21,28 +21,8 @@ class MorbidityEventsController < EventsController
   before_filter :capture_old_attributes, :only => [:update]
 
   def index
-    if params[:per_page].to_i > 100
-      render :text => 'TriSano cannot process more then 100 cmrs per page', :layout => 'application', :status => 400 and return
-    end
+    return unless index_processing
 
-    begin
-      @export_options = params[:export_options]
-
-      @events = MorbidityEvent.find_all_for_filtered_view(
-        :states => params[:states],
-        :queues => params[:queues],
-        :investigators => params[:investigators],
-        :diseases => params[:diseases],
-        :order_by => params[:sort_order],
-        :do_not_show_deleted => params[:do_not_show_deleted],
-        :set_as_default_view => params[:set_as_default_view],
-        :page => params[:page],
-        :per_page => params[:per_page]
-      )
-    rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
-    end
-    
     respond_to do |format|
       format.html # { render :template => "events/index" }
       format.xml  { render :xml => @events }
@@ -176,6 +156,12 @@ class MorbidityEventsController < EventsController
     end
   end
 
+  # IE can't handle URLs > 2K so we've added a special method that it can POST to.
+  def export
+    return unless index_processing
+    render :action => "index"
+  end
+
   private
   
   def prepopulate
@@ -194,4 +180,31 @@ class MorbidityEventsController < EventsController
   def capture_old_attributes
     @old_attributes = @event.attributes
   end
-end
+
+  def index_processing
+    if params[:per_page].to_i > 100
+      render :text => 'TriSano cannot process more then 100 cmrs per page', :layout => 'application', :status => 400
+      return false
+    end
+
+    begin
+      @export_options = params[:export_options]
+
+      @events = MorbidityEvent.find_all_for_filtered_view(
+        :states => params[:states],
+        :queues => params[:queues],
+        :investigators => params[:investigators],
+        :diseases => params[:diseases],
+        :order_by => params[:sort_order],
+        :do_not_show_deleted => params[:do_not_show_deleted],
+        :set_as_default_view => params[:set_as_default_view],
+        :page => params[:page],
+        :per_page => params[:per_page]
+      )
+    rescue
+      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 
+      return false
+    end
+    return true
+  end
+ end
