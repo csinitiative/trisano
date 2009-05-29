@@ -206,8 +206,10 @@ BEGIN
             -- Create a new table if the current one is full
             IF question_count >= questions_per_table THEN
                 cur_table_count := cur_table_count + 1;
-                cur_table_name := 'formbuilder_' || lower(form_name) ||
+                cur_table_name := 'formbuilder_' ||
+                    regexp_replace(lower(form_name), '[^[:alnum:]_]', '_', 'g') ||
                     '_' || cur_table_count;
+                    --regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
                 RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
                 INSERT INTO trisano.formbuilder_tables (short_name,
                     table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
