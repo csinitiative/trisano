@@ -44,20 +44,6 @@ namespace :trisano do
       @dump_file = config['dump_file_name'] 
       @support_url = config['support_url']
 
-      # Data warehouse config options
-      @dw_database = config['dw_database'] unless validate_config_attribute(config, 'dw_database')
-      @dw_priv_uname = config['dw_priv_uname'] unless validate_config_attribute(config, 'dw_priv_uname')
-      @dw_priv_passwd = config['dw_priv_passwd'] unless validate_config_attribute(config, 'dw_priv_passwd')
-      @dw_user = config['dw_uname'] unless validate_config_attribute(config, 'dw_uname')
-      @dw_user_pwd = config['dw_user_passwd'] unless validate_config_attribute(config, 'dw_user_passwd')
-      @source_db_host = config['source_db_host'] unless validate_config_attribute(config, 'source_db_host')
-      @source_db_port = config['source_db_port'] unless validate_config_attribute(config, 'source_db_port')
-      @source_db_name = config['source_db_name'] unless validate_config_attribute(config, 'source_db_name')
-      @source_db_user = config['source_db_user'] unless validate_config_attribute(config, 'source_db_user')
-      @dest_db_host = config['dest_db_host'] unless validate_config_attribute(config, 'dest_db_host')
-      @dest_db_port = config['dest_db_port'] unless validate_config_attribute(config, 'dest_db_port')
-      @dw_tool_install_path = config['dw_tool_install_path'] unless validate_config_attribute(config, 'dw_tool_install_path')
-
       ENV["PGPASSWORD"] = @priv_password 
     end
 
@@ -157,25 +143,6 @@ namespace :trisano do
         return success
       end
       return success
-    end
-
-    def run_etl_script
-      puts "Running the DW ETL script"
-      init_substitution = "sed "
-      init_substitution << "-e 's/\$SOURCE_DB_HOST/#{@source_db_host}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_PORT/#{@source_db_port}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_NAME/#{@source_db_name}/g' "
-      init_substitution << "-e 's/\$SOURCE_DB_USER/#{@source_db_user}/g' "
-      init_substitution << "-e 's/\$DEST_DB_HOST/#{@dest_db_host}/g' "
-      init_substitution << "-e 's/\$DEST_DB_PORT/#{@dest_db_port}/g' "
-      init_substitution << "-e 's/\$DEST_DB_NAME/#{@dw_database}/g' "
-      init_substitution << "-e 's/\$DEST_DB_USER/#{@dw_priv_uname}/g' "
-      init_substitution << "-e 's:\$PGSQL_PATH:#{@psql[0...@psql.size-5]}:g' "
-      init_substitution << "-e 's:\$ETL_SCRIPT:../bi/scripts/dw.sql:g'"
-      raise "failed to substitute etl configuration" unless system("#{init_substitution} <../bi/scripts/etl.sh >../bi/scripts/etl_to_run.sh")
-      raise "failed to chmod etl script" unless system("chmod 755 ../bi/scripts/etl_to_run.sh")
-      raise "failed to run etl script" unless system("../bi/scripts/etl_to_run.sh")
-      raise "failed to remove etl script" unless system("rm ../bi/scripts/etl_to_run.sh")
     end
 
     desc "Sets the database.yml to use the privileged user info"
@@ -316,51 +283,5 @@ namespace :trisano do
         return success
       end
     end
-
-    desc "Install the data warehouse"
-    task :install_data_warehouse do
-      initialize_config
-      puts "Installing the data warehouse"
-
-      puts "Creating data warehouse database: #{@dw_database}"
-      raise "failed to create data warehouse database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c \"CREATE DATABASE #{@dw_database} ENCODING='UTF8'\"")      
-      puts "Changing owner of public schema to #{@dw_priv_uname}"
-      raise "failed to set public schema ownership" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER SCHEMA public OWNER TO #{@dw_priv_uname};'")
-      puts "Creating data warehouse user: #{@dw_user}"
-      raise "failed to create data warehouse user" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c \"CREATE USER #{@dw_user} ENCRYPTED PASSWORD '#{@dw_user_pwd}'\"")
-      puts "Adding trisano schema to search path of user #{@dw_user}"
-      raise "failed to set search path" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -c 'ALTER USER #{@dw_user} SET search_path = trisano;'")
-      puts "Modifying warehouse initialization script to use custom settings"
-      raise "failed to substitute warehouse init configuration" unless system("sed -e 's/trisano_su/#{@dw_priv_uname}/g' -e 's/trisano_ro/#{@dw_user}/g' <../bi/scripts/warehouse_init.sql >../bi/scripts/warehouse_init_to_run.sql")
-      puts "Initializing the data warehouse"
-      raise "failed to run warehouse init script" unless system("#{@psql} -X -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} #{@dw_database} -f ../bi/scripts/warehouse_init_to_run.sql")
-      puts "Cleaning up"
-      raise "failed to remove warehouse init script" unless system("rm ../bi/scripts/warehouse_init_to_run.sql")
-
-      puts "Copying transactional data to the warehouse"
-      run_etl_script
-
-      puts "Creating the Pentaho repository"
-      raise "failed to create Pentaho repository" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_repository_postgresql.sql")
-      puts "Creating the Quartz database for Pentaho"
-      raise "failed to create Quartz database" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -f #{@dw_tool_install_path}/biserver-ce/data/postgresql/create_quartz_postgresql.sql")
-    end
-
-    desc "Run the data warehouse etl script"
-    task :run_data_warehouse_etl do
-      initialize_config
-      run_etl_script
-    end
-
-    desc "Uninstall the data warehouse"
-    task :uninstall_data_warehouse do
-      initialize_config
-      puts "Uninstalling the data warehouse"
-      puts "Deleting data warehouse database: #{@dw_database}"
-      raise "failed to delete data warehouse" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c 'drop database #{@dw_database}'") 
-      puts "Deleting data warehouse user: #{@dw_user}"
-      raise "failed to delete data warehouse user" unless system("#{@psql} -U #{@dw_priv_uname} -h #{@dest_db_host} -p #{@dest_db_port} postgres -e -c 'drop user #{@dw_user}'")
-    end
-
   end
 end
