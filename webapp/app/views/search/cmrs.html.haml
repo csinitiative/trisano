@@ -140,9 +140,9 @@
           = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
 
     %input{ :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 1em; width:130px;" }
-    = submit_tag "Start over", :name => 'reset', :type => 'reset', :id => 'search_reset', :confirm => "Clear all search criteria?"
     %br
 
+= button_to("Start over", search_cmrs_path, :confirm => "Clear all search criteria and results?", :style => "position: relative; bottom: 1.5em; left: 1em;")
 - if !@cmrs.blank?
   %div{ :class => 'tools' }
     = link_to_function('Export All to CSV', nil) do |page|
