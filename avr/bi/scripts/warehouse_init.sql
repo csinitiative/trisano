@@ -113,7 +113,7 @@ AS $function$
         WHEN $2 = 'weeks' THEN $1::NUMERIC / 52.0                                                     
         WHEN $2 = 'days' THEN $1::NUMERIC / 365.0                                                     
     END                                                                                               
-$function$ 
+$function$ ;
 
 CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
     LANGUAGE plpgsql
