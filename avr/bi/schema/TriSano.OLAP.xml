@@ -24,7 +24,25 @@
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
             </Hierarchy>
         </Dimension>
-		<Measure name="Count" column="id" datatype="Integer" aggregator="count" visible="true"></Measure>
+        <Dimension type="StandardDimension" name="Is age known?">
+            <Hierarchy hasAll="true">
+                <Level type="Boolean" name="Is age known?">
+                    <KeyExpression><SQL dialect="postgres">trisano.get_age_in_years(actual_age_at_onset, actual_age_type) IS NOT NULL</SQL></KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id">
+            <Hierarchy hasAll="true" primaryKey="id" primaryKeyTable="dw_morbidity_patients_view">
+                <Join leftKey="id" rightAlias="dw_morbidity_patients_races_view" rightKey="person_id">
+                    <Table name="dw_morbidity_patients_view" schema="trisano" />
+                    <Table name="dw_morbidity_patients_races_view" schema="trisano" />
+                </Join>
+                <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_morbidity_patients_races_view" />
+            </Hierarchy>
+        </Dimension>
+		<Measure name="Count" datatype="Integer" aggregator="count" visible="true">
+            <MeasureExpression><SQL dialect="postgres">1</SQL></MeasureExpression>
+        </Measure>
 		<Measure name="Pregnant" datatype="Integer" aggregator="sum" visible="true">
             <MeasureExpression>
                 <SQL dialect="postgres">CASE WHEN pregnant = 'Yes' THEN 1 ELSE 0 END</SQL>
@@ -50,9 +68,94 @@
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Time onset to diagnosis" aggregator="sum" visible="true" datatype="Integer">
+        <Measure name="Min. Days From Onset to Diagnosis" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Max. Days From Onset to Diagnosis" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Avg. Days From Onset to Diagnosis" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Min. Days From Onset to Report" aggregator="min" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Max. Days From Onset to Report" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Avg. Days From Onset to Report" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Min. Days From Onset to Investigation Start" aggregator="min" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Max. Days From Onset to Investigation Start" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Avg. Days From Onset to Investigation Start" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Min. Days From Onset to Investigation End" aggregator="min" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Max. Days From Onset to Investigation End" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Avg. Days From Onset to Investigation End" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Min. Length (days) of Investigation" name="MinInvLength" aggregator="min" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Max. Length (days) of Investigation" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Avg. Length (days) of Investigation" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Min. Age at Onset (years)" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Max. Age at Onset (years)" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Avg. Age at Onset (years)" name="AvgAgeAtOnset" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
 		<Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false">
@@ -60,5 +163,9 @@
                 <SQL dialect="postgres">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
+        <!--
+        <CalculatedMember name="NullAges" caption="Null Ages" formula="Count(Filter({[Measures].[AgeAtOnset]}, NOT ([Measures].[AgeAtOnset] IS NULL)))" dimension="Measures" visible="true" />
+        <CalculatedMember name="Age at Onset (years), Std. Dev." formula="Stdev({[Measures].[AgeAtOnset]})" dimension="Measures" formatString="###.00" visible="false" />
+        -->
 	</Cube>
 </Schema>
