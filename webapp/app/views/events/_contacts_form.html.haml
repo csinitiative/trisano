@@ -37,6 +37,7 @@
         = render :partial => "events/contact", :locals => { :f => c }
 
       %p= add_record_link f, :contact_child_events, "Add a contact", :object => blank_contact, :partial => "events/contact"
+    = render_geocode_cmr_contacts(@event)
 
     - unless @event.morbidity_child_events.empty?
       #morbidity_child_events  

@@ -1094,4 +1094,8 @@ module EventsHelper
     # PLUGIN_HOOK - render_geocode_form_section()
   end
 
+  def render_geocode_cmr_contacts(event)
+    # PLUGIN_HOOK - render_geocode_cmr_contacts()
+  end
+
 end
