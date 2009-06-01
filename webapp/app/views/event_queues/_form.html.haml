@@ -19,7 +19,6 @@
       Event Queue
   %tr
     %td
-      %h3 Note!  Event queues can now be edited and deleted.  You no longer need to be mindful.
       - @event_queue.queue_name = @event_queue.queue_name.gsub(/-.+/, "") if @event_queue.queue_name
       %label
         Queue Name:
