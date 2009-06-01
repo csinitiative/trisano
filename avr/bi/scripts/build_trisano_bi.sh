@@ -18,19 +18,26 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 if [ $# -ne 2 ] ; then
-    echo ""
+    echo
     echo "USAGE: $0 path_to_all_bi_products path_to_trisano_source_code"
-    echo ""
+    echo
     echo "Create a single directory into which you have downloaded all the relevant Pentaho"
-    echo "Community bits: BI Server, Report Designer, Pentaho Metadata.  Provide that directory"
-    echo "name as the first argument.  The second argument is the path to your local TriSano"
-    echo "working copy."
-    echo ""
+    echo "Community bits: BI Server and Report Designer.  Provide that directory name as the"
+    echo " first argument.  The second argument is the path to your local TriSano working copy."
+    echo
     exit
 fi
 
 BI_BITS_HOME=${1%/}
 TRISANO_SOURCE_HOME=${2%/}
+
+# Is there a better way to deal with relative paths
+CURRENT=$PWD
+cd $TRISANO_SOURCE_HOME
+TRISANO_SOURCE_HOME=$PWD
+cd $CURRENT
+cd $BI_BITS_HOME
+BI_BITS_HOME=$PWD
 
 if [ ! -d $BI_BITS_HOME ]; then
     echo "$BI_BITS_HOME is not a directory"
@@ -43,17 +50,17 @@ if [ ! -d $TRISANO_SOURCE_HOME/avr/bi ]; then
 fi
 
 # VERIFY THESE NAMES BEFORE RUNNING SCRIPT
-BI_SERVER_ZIP=biserver-ce-CITRUS-M2.tar.gz
-REPORT_DESIGNER_ZIP=prd-ce-CITRUS-M4.zip
+BI_SERVER_ZIP=biserver-ce-3.0.0-STABLE.tar.gz
+REPORT_DESIGNER_ZIP=prd-ce-3.0.0.37222.RC2.zip
 
 BI_SERVER_NAME=biserver-ce
 ADMIN_CONSOLE_NAME=administration-console
+REPORT_DESIGNER_NAME=report-designer
+BI_SERVER_HOME=$BI_BITS_HOME/$BI_SERVER_NAME
+REPORT_DESIGNER_HOME=$BI_BITS_HOME/$REPORT_DESIGNER_NAME
+ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
 BI_TARBALL=trisano-ce-bi.tar.gz
 DW_TARBALL=trisano-dw.tar.gz
-BI_SERVER_HOME=$BI_BITS_HOME/$BI_SERVER_NAME
-ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
-
-cd $BI_BITS_HOME
 
 if [ ! -e $BI_SERVER_ZIP ]; then
     echo "Could not locate BI Server archive: $BI_BITS_HOME/$BI_SERVER_ZIP"
@@ -65,12 +72,14 @@ if [ ! -e $REPORT_DESIGNER_ZIP ]; then
     exit
 fi
 
-# Step 0: Explode the BI server
+# Explode the BI server
 echo
 echo " * Exploding the BI Server archive (please wait...)"
 tar zxf $BI_SERVER_ZIP
+echo " * Exploding the Report Designer archive (please wait...)"
+unzip -qq $REPORT_DESIGNER_ZIP
 
-# Step 1: Copy SiteMinder XML config files
+# Copy SiteMinder XML config files
 echo " * Configuring BI Server to use SiteMinder"
 
 # Backup originals
@@ -89,10 +98,9 @@ echo " * Copying Trisano custom java extensions to BI Server"
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/* $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/* $ADMIN_CONSOLE_HOME/lib
 
-# Step 3: Configure BI for Postgres
+# Configure BI for Postgres
 echo " * Configuring BI Server to use PostgreSQL"
 # Backup originals
-
 cp $BI_SERVER_HOME/start-pentaho.sh $BI_SERVER_HOME/start-pentaho.sh.org
 cp $BI_SERVER_HOME/stop-pentaho.sh $BI_SERVER_HOME/stop-pentaho.sh.org
 cp $BI_SERVER_HOME/pentaho-solutions/system/quartz/quartz.properties  $BI_SERVER_HOME/pentaho-solutions/system/quartz/quartz.properties.org 
@@ -105,13 +113,14 @@ cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/stop-pentaho.sh $BI_S
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/quartz.properties $BI_SERVER_HOME/pentaho-solutions/system/quartz/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
+cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $REPORT_DESIGNER_HOME/lib/jdbc
 
-# Step 4: Customize admin console
+# Customize admin console
 # Add Postgres JDBC driver to admin-console
 echo " * Configuring Admin Console to use PostgreSQL"
 cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE_HOME/jdbc/
 
-# Step 5: Configure repositories
+# Configure repositories
 echo " * Building TriSano solution repository"
 mkdir $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml.org
@@ -125,7 +134,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solution
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
 rm -fr $BI_SERVER_HOME/pentaho-solutions/bi-developers
 
-# Step 6: Bundle warehouse create scripts
+# Bundle warehouse create scripts
 echo " * Bundling warehouse initialization and ETL scripts."
 WAREHOUSE_DIR=warehouse
 mkdir $WAREHOUSE_DIR
@@ -134,20 +143,21 @@ cp $TRISANO_SOURCE_HOME/avr/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.png $WAREHOUSE_DIR
 
-# Step 7: Bundle sample reports
+# Bundle sample reports
 echo " * Bundling sample reports"
 REPORT_DIR=sample_reports
 mkdir $REPORT_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/reports/CasesByDiseaseAndJurisdiction.report $REPORT_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
 
-# Step 8: Create a TriSano tarball
-echo " * Creating distribution package (please wait...)"
+# Create TriSano tarballs
+echo " * Creating distribution packages (please wait...)"
+zip -qq -u $REPORT_DESIGNER_ZIP $REPORT_DESIGNER_NAME/lib/jdbc/postgresql-8.2-504.jdbc3.jar
 tar cfz $BI_TARBALL $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $REPORT_DESIGNER_ZIP $REPORT_DIR
 tar cfz $DW_TARBALL $WAREHOUSE_DIR
 
 # Clean up
-rm -fr $BI_SERVER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR $REPORT_DIR
+rm -fr $BI_SERVER_NAME $REPORT_DESIGNER_NAME $ADMIN_CONSOLE_NAME $WAREHOUSE_DIR $REPORT_DIR
 
 echo
 echo "$BI_TARBALL and $DW_TARBALL are ready for shipping in $BI_BITS_HOME"
