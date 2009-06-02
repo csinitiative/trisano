@@ -8,6 +8,9 @@
   = text_field_tag :name, params[:name]
   = submit_tag "Search"
 
+:javascript
+  $('name').focus();
+
 %br
 - if defined? @events
   -if @events.empty?
