@@ -26,8 +26,7 @@ module UsersHelper
   def each_shortcut
       list = {
         :new => "New CMR",
-        :people => "People Search",
-        :cmr_search => "CMR Search",
+        :cmr_search => "Search",
         :cmrs => "View/Edit CMRs",
         :navigate_right => "Move One Tab Right",
         :navigate_left => "Move One Tab Left",

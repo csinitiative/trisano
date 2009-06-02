@@ -28,10 +28,6 @@ keymap = {
     window.location = this.root + "forms";
   },
 
-  'people': function() {
-    window.location = this.root + "search/people";
-  },
-
   'cmr_search': function() {
     window.location = this.root + "search/cmrs";
   },
