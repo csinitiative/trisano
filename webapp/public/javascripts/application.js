@@ -1,6 +1,25 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+var FormWatch = Class.create();
+FormWatch.prototype = {
+   initialize : function(form, options) {
+      this.submitted = false;
+      this.form = $(form);
+      // Let's serialize this.form and store it...
+      this.formcontents = $(form).serialize();
+      // Observe beforeunload event...
+      Event.observe(this.form, 'submit', function() {this.submitted = true; }.bind(this));
+      Event.observe(window, 'beforeunload', this.confirmExit.bind(this));
+   },
+   confirmExit : function(ev) {
+      this.newcontents = this.form.serialize();
+      if ((this.formcontents != this.newcontents) && !(this.submitted)) {
+         ev.returnValue = "The contents of the form have changed but have not been saved.";
+      }
+   }
+}
+
 function mark_for_destroy(element) {
     $(element).next('.should_destroy').value = 1;
     $(element).up('.role_membership').hide();
@@ -113,12 +132,14 @@ function post_and_return(form_id) {
     form = document.getElementById(form_id);
     form.action = build_url_with_tab_index(form.action);
     form.action = form.action + "&return=true";
+    formWatcher.submitted = true;
     form.submit();
 }
 
 function post_and_exit(form_id) {
     form = document.getElementById(form_id);
     form.action = build_url_with_tab_index(form.action);
+    formWatcher.submitted = true;
     form.submit();
 }
 

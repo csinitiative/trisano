@@ -151,14 +151,9 @@ module ApplicationHelper
   end
 
   def save_buttons(event)
-    event_type = event.class.to_s.underscore
-    if event.new_record?
-      form_id = "new_#{event_type}"
-    else
-      form_id = "edit_#{event_type}_#{event.id}"
-    end
+    form_id = get_form_id(event)
 
-    content_for :enable_save_buttons do
+   content_for :enable_save_buttons do
       content = "&nbsp;&nbsp;" + link_to_function("Enable Save Buttons", "toggle_save_buttons('on')", :onmouseout => "UnTip()", :onmouseover => "TagToTip('save_button_help', FADEOUT, 500, FADEIN, 500)")
       content += "<div id='save_button_help' style='display: none;'>Click here to enable the save buttons if they are grayed out when they shouldn't be.</div>"
     end
@@ -184,6 +179,14 @@ module ApplicationHelper
     HTML
   end
 
+  def get_form_id(event)
+    event_type = event.class.to_s.underscore
+    if event.new_record?
+      form_id = "new_#{event_type}"
+    else
+      form_id = "edit_#{event_type}_#{event.id}"
+    end
+   end
 
   # If this is an html request, then the script will be run when the
   # dom finishes loading. If it's an Ajax request, then the script
