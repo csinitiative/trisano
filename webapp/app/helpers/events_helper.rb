@@ -1098,4 +1098,8 @@ module EventsHelper
     # PLUGIN_HOOK - render_geocode_cmr_contacts()
   end
 
+  def render_geocode_search(cmrs)
+    # PLUGIN_HOOK - render_geocode_search()
+  end
+
 end

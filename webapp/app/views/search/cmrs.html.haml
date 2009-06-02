@@ -212,6 +212,8 @@
           %td
             = cmr['onset_date'] || '&nbsp;'
 
+  = render_geocode_search(@cmrs)
+
 - params.delete('action')
 - params.delete('controller')
 - if @cmrs.blank? && flash[:error].blank? && !params.values_blank?
