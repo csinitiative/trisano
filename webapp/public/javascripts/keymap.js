@@ -21,7 +21,7 @@ keymap = {
   },
 
   'new': function() {
-    window.location = this.root + "cmrs/new";
+    window.location = this.root + "cmrs/event_search";
   },
 
   'forms': function() {
