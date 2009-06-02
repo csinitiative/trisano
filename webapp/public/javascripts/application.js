@@ -182,7 +182,6 @@ function shortcut_set(target) {
   prev.innerHTML = ele.value || "Undefined";
   prev.style.display = "inline";
   
-  //If for some raisin a browser fires onfocus first, uncomment this to fix it
   $$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
   document.onkeydown = function (e) {
@@ -197,12 +196,22 @@ function shortcut_set(target) {
   document.onkeyup = null;
 }
 
-function submit_shortcuts(key)
+function submit_shortcuts()
 {
-    if (!$('user_submit').disabled) 
+    var dirty, inline = false;
+
+    if (!$('user_submit').disabled) {
       $('shortcut_form').submit();
-    else
-      alert('Please resolve all conflicts before saving.');
+    } else {
+      $$('input[type=text]').each(function(box) {
+        if (box.dirty)
+          dirty = true;
+        if (box.style.display == "inline")
+          inline = true;
+      });
+      if (dirty && inline)
+          alert('Please resolve all conflicts before saving.');
+    }
 }
 
 function change_shortcut(ele) {
@@ -221,8 +230,10 @@ function change_shortcut(ele) {
     if (!(key.shift || key.alt || key.ctrl || key.meta)) {
       var ary = $$('input[type=text]');
 
-      if (key.code == 13)
-        submit_shortcuts(key);
+      if (key.code == 13) {
+        window.onkeydown = null;
+        submit_shortcuts();
+      }
 
       if (key.code == 38 || key.code == 40) {
         var i = ary.indexOf(ele) - (39 - key.code);
