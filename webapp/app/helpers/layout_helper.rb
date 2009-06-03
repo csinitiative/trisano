@@ -25,7 +25,8 @@ module LayoutHelper
   def render_onload_event
     # PLUGIN_HOOK - render_onload_event()
     
-    return "shortcuts_init('#{home_path}');"
+    return %{ shortcuts_init('#{home_path}');
+              focus_init(); }
   end
 
   def render_help_link
