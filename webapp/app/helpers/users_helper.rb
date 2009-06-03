@@ -30,11 +30,14 @@ module UsersHelper
         :cmrs => "View/Edit CMRs",
         :navigate_right => "Move One Tab Right",
         :navigate_left => "Move One Tab Left",
-        :save => "Highlight 'Save & Exit'"
+        :save => "Highlight 'Save & Exit'",
+        :settings => "Edit User Settings",
+        :analysis => "Analysis"
       }
 
       admin = {
         :forms => "View/Edit Forms",
+        :admin => "Admin Dashboard"
       }
 
       list.each do |label|

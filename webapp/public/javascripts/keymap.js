@@ -35,6 +35,18 @@ keymap = {
   'cmrs': function() {
     window.location = this.root + "cmrs";
   },
+  
+  'admin': function() {
+    window.location = this.root + "admin";
+  },
+
+  'analysis': function() {
+    window.location = this.root + "analysis";
+  },
+
+  'settings': function() {
+    window.location = this.root + "users/settings";
+  },
 
   'navigate_right': function() {
     myTabs.set('activeIndex', (
