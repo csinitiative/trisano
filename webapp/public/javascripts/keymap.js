@@ -41,11 +41,6 @@ keymap = {
         myTabs.get('activeIndex') == myTabs.get('tabs').length-1 ?
         0 : myTabs.get('activeIndex') + 1
       ));
-
-    //Grab the first thing to focus in the tab
-    YAHOO.util.Dom.getElementsBy(function(el) {
-        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
   },
 
   'navigate_left': function() {
@@ -53,10 +48,6 @@ keymap = {
         myTabs.get('activeIndex') == 0 ?
         myTabs.get('tabs').length-1 : myTabs.get('activeIndex')-1
       ));
-
-    YAHOO.util.Dom.getElementsBy(function(el) {
-        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A');
-      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
   },
 
   'save': function() {

@@ -307,3 +307,10 @@ function check_conflicts() {
     }
   });
 }
+
+function focus_first() {
+    //Grab the first thing to focus in the tab
+    YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A') && (el.type != "hidden");
+      }, '', myTabs.get('activeTab').get('contentEl'))[0].focus();
+}
