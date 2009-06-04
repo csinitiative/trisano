@@ -18,7 +18,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
-describe LabMessage do
+describe StagedMessage do
   before(:each) do
     @valid_attributes = {
       :hl7_message => hl7_messages[:arup_1]
@@ -26,29 +26,29 @@ describe LabMessage do
   end
 
   it "should create a new instance given valid attributes" do
-    LabMessage.create!(@valid_attributes)
+    StagedMessage.create!(@valid_attributes)
   end
 
   it "should not be valid if there's no HL7 message" do
-    LabMessage.new.should_not be_valid
+    StagedMessage.new.should_not be_valid
   end
 
   it 'should respond to hl7' do
-    LabMessage.create!(@valid_attributes).respond_to?(:hl7).should be_true
+    StagedMessage.create!(@valid_attributes).respond_to?(:hl7).should be_true
   end
 
   describe 'received HL7 2.3 +' do
     
     before :each do
-      @lab_message = LabMessage.create(:hl7_message => hl7_messages[:arup_1])
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
     end
 
     it 'should return HL7 version' do
-      @lab_message.patient_name.should == 'LIN GENYAO     L'
+      @staged_message.patient_name.should == 'LIN GENYAO     L'
     end
 
     it 'should return the hl7 version' do
-      @lab_message.hl7_version.should == '2.3.1'
+      @staged_message.hl7_version.should == '2.3.1'
     end
 
   end
@@ -60,9 +60,9 @@ describe LabMessage do
   describe 'with invalid HL7' do
 
     it 'should contain a message header' do
-      @lab_message = LabMessage.new(:hl7_message => 'junk')
-      @lab_message.should_not be_valid
-      @lab_message.errors.on(:hl7_message).should be_true
+      @staged_message = StagedMessage.new(:hl7_message => 'junk')
+      @staged_message.should_not be_valid
+      @staged_message.errors.on(:hl7_message).should be_true
     end
 
   end

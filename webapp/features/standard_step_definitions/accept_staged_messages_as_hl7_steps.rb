@@ -20,13 +20,13 @@
 require File.join(File.dirname(__FILE__), '..', 'support', 'hl7_messages')
 
 
-Given /^I have the lab message "([^\"]*)"$/ do |msg_key|
-  @lab_message = LabMessage.create(:hl7_message => hl7_messages[msg_key.downcase.to_sym])
+Given /^I have the staged message "([^\"]*)"$/ do |msg_key|
+  @staged_message = StagedMessage.create(:hl7_message => hl7_messages[msg_key.downcase.to_sym])
 end
 
 
-When /^I visit the lab message new page$/ do
-  visit new_lab_message_path
+When /^I visit the staged message new page$/ do
+  visit new_staged_message_path
 end
 
 When /^I type the "([^\"]*)" message into "([^\"]*)"$/ do |msg, field|
@@ -34,8 +34,8 @@ When /^I type the "([^\"]*)" message into "([^\"]*)"$/ do |msg, field|
   fill_in field, :with => hl7_messages[msg.downcase.to_sym] || raise("no message #{msg}")
 end
 
-When /^I visit the lab message show page$/ do
-  visit lab_message_path(@lab_message)
+When /^I visit the staged message show page$/ do
+  visit staged_message_path(@staged_message)
 end
 
 When /^I post the "([^\"]*)" message directly to "([^\"]*)"$/ do |msg, path|

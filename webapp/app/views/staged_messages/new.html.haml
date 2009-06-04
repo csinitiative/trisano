@@ -14,14 +14,15 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Lab Messages
+  New Staged Message
 
-= link_to 'Create a lab message', new_lab_message_path
+= link_to h('<< Back'), staged_messages_path 
 
-#rot
-  %table.list
-    %tr
-      %td 
-        = render @lab_messages
+- form_for(@staged_message) do |f|
+  = f.error_messages
 
+  = render :partial => 'form', :locals => {:f => f}
+
+  %p
+    = f.submit 'Create'
 

@@ -21,29 +21,29 @@
     %th &nbsp;
   %tr
     %td
-      .value=h lab_message.sending_facility
+      .value=h staged_message.sending_facility
     %td
-      .value=h lab_message.patient_name
+      .value=h staged_message.patient_name
     %td
-      .value=h lab_message.hl7_version
+      .value=h staged_message.hl7_version
     %td
       .value
-        = link_to 'Edit', edit_lab_message_path(lab_message)
+        = link_to 'Edit', edit_staged_message_path(staged_message)
         |
-        = link_to 'Show', lab_message 
+        = link_to 'Show', staged_message 
 
-  =render lab_message.orders
+  =render staged_message.orders
   
 %fieldset.vert
-  %div{:id => "show_link_#{lab_message.id}"}      
+  %div{:id => "show_link_#{staged_message.id}"}      
     = link_to_function 'Show raw message', nil do |page|
-      - page["original_message_#{lab_message.id}"].show
-      - page["show_link_#{lab_message.id}"].hide
-  %div{:id => "original_message_#{lab_message.id}", :style => 'display: none'}
+      - page["original_message_#{staged_message.id}"].show
+      - page["show_link_#{staged_message.id}"].hide
+  %div{:id => "original_message_#{staged_message.id}", :style => 'display: none'}
     =link_to_function 'Hide raw message', nil do |page|
-      - page["original_message_#{lab_message.id}"].hide
-      - page["show_link_#{lab_message.id}"].show
-    %pre= h(lab_message.hl7_message)
+      - page["original_message_#{staged_message.id}"].hide
+      - page["show_link_#{staged_message.id}"].show
+    %pre= h(staged_message.hl7_message)
   
 %br
 %br

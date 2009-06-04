@@ -21,13 +21,13 @@ module HL7
   class Message
 
     def orders
-      select{|s| s.to_s =~ /^OBR/}.collect{ |s| LabMessages::ObrWrapper.new(s, :full_message => self) }
+      select{|s| s.to_s =~ /^OBR/}.collect{ |s| StagedMessages::ObrWrapper.new(s, :full_message => self) }
     end
 
   end
 end
 
-module LabMessages
+module StagedMessages
   class ObrWrapper
     attr_reader :obr_segment
     attr_accessor :full_message
@@ -38,23 +38,39 @@ module LabMessages
     end
     
     def lab
-      obr_segment.e4.split('^').join(' ')
+      begin
+        obr_segment.e4.split('^').join(' ')
+      rescue
+        "Could not be determined"
+      end
     end
     
     def lab_test_date
-      obr_segment.e22
+      begin
+        obr_segment.e22
+      rescue
+        "Could not be determined"
+      end
     end
 
     def specimen_source
-      obr_segment.e15
+      begin
+        obr_segment.e15
+      rescue
+        "Could not be determined"
+      end
     end
   
     def collection_date
-      obr_segment.e7
+      begin
+        obr_segment.e7
+      rescue
+        "Could not be determined"
+      end
     end
 
     def tests
-      full_message.select { |s| s.to_s =~ /^OBX/}.collect{|s| LabMessages::ObxWrapper.new(s)}
+      full_message.select { |s| s.to_s =~ /^OBX/}.collect{|s| StagedMessages::ObxWrapper.new(s)}
     end
   end
 
@@ -66,15 +82,27 @@ module LabMessages
     end
     
     def result
-      obx_segment.e5 + (obx_segment.e6.blank? ? '' : " #{obx_segment.e6}")
+      begin
+        obx_segment.e5 + (obx_segment.e6.blank? ? '' : " #{obx_segment.e6}")
+      rescue
+        "Could not be determined"
+      end
     end
   
     def reference_range
-      obx_segment.e7
+      begin
+        obx_segment.e7
+      rescue
+        "Could not be determined"
+      end
     end
 
     def test_type
-      obx_segment.e3
+      begin
+        obx_segment.e3
+      rescue
+        "Could not be determined"
+      end
     end
   end
 end

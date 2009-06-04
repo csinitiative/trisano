@@ -15,25 +15,43 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class LabMessage < ActiveRecord::Base
+class StagedMessage < ActiveRecord::Base
+  before_create :set_state
+
   validates_presence_of :hl7_message
   validates_length_of :hl7_message, :maximum => 10485760
 
   def validate
-    super
+    begin
+      hl7
+    rescue
+      errors.add :hl7_message, "could not be parsed"
+    end
     errors.add :hl7_message, "is missing the header" if hl7[:MSH].nil?
   end
   
   def sending_facility
-    hl7[:MSH].sending_facility.split('^').join(' - ')
+    begin
+      hl7[:MSH].sending_facility.split('^').join(' - ')
+    rescue
+      "Could not be determined"
+    end
   end
 
   def patient_name
-    hl7.select{|s| s.to_s =~ /^PID/}.first.e5.split('^').join(' ')
+    begin
+      hl7.select{|s| s.to_s =~ /^PID/}.first.e5.split('^').join(' ')
+    rescue
+      "Could not be determined"
+    end
   end
 
   def hl7_version
-    hl7[:MSH].version_id
+    begin
+      hl7[:MSH].version_id
+    rescue
+      "Could not be determined"
+    end
   end
   
   def orders
@@ -43,4 +61,11 @@ class LabMessage < ActiveRecord::Base
   def hl7
     @hl7 ||= HL7::Message.new(self.hl7_message)
   end
+
+  private
+
+  def set_state
+    self.state = "PENDING"
+  end
+
 end

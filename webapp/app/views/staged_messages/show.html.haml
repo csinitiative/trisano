@@ -13,12 +13,12 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  HL7 Lab Message
+  Staged Message
 
-= link_to h('<< Back'), lab_messages_path 
+= link_to h('<< Back'), staged_messages_path 
 
 %fieldset.form
   %legend Message Details
-  = render @lab_message
+  = render @staged_message
   
 
