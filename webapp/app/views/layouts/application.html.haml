@@ -59,6 +59,8 @@
             - if User.current_user.is_entitled_to?(:create_event)
               = link_to 'NEW CMR', event_search_cmrs_path # new_cmr_path
               |
+            = link_to 'STAGING AREA', staged_messages_path
+            |
             = link_to 'EVENTS', cmrs_path_with_defaults
             |
             - if User.current_user.is_admin?

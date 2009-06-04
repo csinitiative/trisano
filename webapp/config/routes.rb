@@ -150,6 +150,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :csv_fields
 
+  map.resources :staged_messages
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
