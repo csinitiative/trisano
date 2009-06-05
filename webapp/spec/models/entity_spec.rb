@@ -23,5 +23,9 @@ describe Entity, "associations" do
   it { should have_many(:telephones) }
   it { should have_many(:email_addresses) }
   it { should have_many(:addresses) }
+  it { should have_one(:canonical_address) }
 end
 
+describe Entity, "nested attributes are assigned" do
+  it { should accept_nested_attributes_for(:canonical_address ) }
+end

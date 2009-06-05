@@ -22,9 +22,11 @@ class Entity < ActiveRecord::Base
   has_many :email_addresses, :order => "updated_at"
   has_many :addresses
 
+  has_one :canonical_address, :foreign_key => "entity_id", :class_name => "Address", :conditions => "event_id IS NULL"
   has_one :place
   has_one :person
 
+  accepts_nested_attributes_for :canonical_address, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :telephones, :email_addresses, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
 
   attr_protected :entity_type
