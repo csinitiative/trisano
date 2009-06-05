@@ -66,9 +66,6 @@
               |
             = link_to 'EVENTS', cmrs_path_with_defaults
             |
-            - if User.current_user.is_admin?
-              = link_to 'FORMS', forms_path
-              |
             = link_to 'SEARCH', search_cmrs_path
             |
             = link_to 'ANALYSIS', analysis_path  
