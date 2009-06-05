@@ -30,11 +30,16 @@ describe StagedMessage do
   end
 
   it "should not be valid if there's no HL7 message" do
-    StagedMessage.new.should_not be_valid
+    m = StagedMessage.new
+    m.should_not be_valid
   end
 
   it 'should respond to hl7' do
     StagedMessage.create!(@valid_attributes).respond_to?(:hl7).should be_true
+  end
+
+  it 'should set message state to PENDING for new messages' do
+    StagedMessage.create!(@valid_attributes).state.should == 'PENDING'
   end
 
   describe 'received HL7 2.3 +' do
@@ -66,6 +71,12 @@ describe StagedMessage do
     end
 
   end
-  
+
+  describe "class level functionality" do
+
+    it 'should provide a hash of valid states' do
+      StagedMessage.states.should == {:pending => 'PENDING'}
+    end 
+  end
 end
 

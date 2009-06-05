@@ -16,7 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 When(/^I go to the Builder interface for the form$/) do
-  @browser.click "link=FORMS"
+  @browser.click "link=ADMIN"
+  @browser.wait_for_page_to_load 30000
+  @browser.click "link=Manage Forms"
   @browser.wait_for_page_to_load 30000
   click_build_form_by_id(@browser, @form.id)
 end

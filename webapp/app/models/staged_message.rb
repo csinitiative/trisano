@@ -16,10 +16,19 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class StagedMessage < ActiveRecord::Base
-  before_create :set_state
+  class << self
+    def states
+      { :pending => 'PENDING' }
+    end
+  end
+
+  before_validation_on_create :set_state
 
   validates_presence_of :hl7_message
   validates_length_of :hl7_message, :maximum => 10485760
+  validates_inclusion_of :state, :in => self.states.values
+
+  attr_protected :state
 
   def validate
     begin
@@ -65,7 +74,7 @@ class StagedMessage < ActiveRecord::Base
   private
 
   def set_state
-    self.state = "PENDING"
+    self.state = self.class.states[:pending]
   end
 
 end
