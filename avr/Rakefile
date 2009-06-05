@@ -1,0 +1,19 @@
+require 'rubygems'
+require 'cucumber'
+require 'cucumber/rake/task'
+require 'rake'
+require 'spec/rake/spectask'
+
+task :default => [:specs, :features]
+
+desc "Run bi features (make sure the bi server is running)"
+Cucumber::Rake::Task.new(:features) do |t|  
+  t.cucumber_opts = "features --format pretty" 
+end
+
+
+desc "Run the specs"
+Spec::Rake::SpecTask.new('specs') do |t|
+  t.spec_files = FileList['spec/**/*.rb']
+  t.libs << 'bi/scripts'
+end

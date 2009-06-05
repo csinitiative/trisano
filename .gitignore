@@ -18,3 +18,4 @@ rails
 distro/config.yml
 webapp/config/database.yml
 webapp/config/site_config.yml
+avr/mdr.*
