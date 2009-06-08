@@ -46,5 +46,24 @@ describe Note do
     it "should have a user" do
       @note.user_id.should == users(:default_user).id
     end
+
+    it "adding a second note should not change previous note ownership on an event" do
+      event = @note.event
+
+      # To start, all notes should be owned by the default user
+      event.notes.each do |note|
+        note.user.id.should == users(:default_user).id
+      end
+
+      User.current_user = users(:admin_user)
+      event.add_note("Second note")
+      event.save
+
+      # The first two notes should be owned by the default user, the last by the admin user
+      event.notes[0].user.id.should == users(:default_user).id
+      event.notes[1].user.id.should == users(:default_user).id
+      event.notes[2].user.id.should == users(:admin_user).id
+    end
+
   end
 end
