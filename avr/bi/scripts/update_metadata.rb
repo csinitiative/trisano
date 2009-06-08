@@ -16,6 +16,9 @@ CwmSchemaFactory = Java::OrgPentahoPmsFactory::CwmSchemaFactory
 Relationship = Java::OrgPentahoPmsSchema::RelationshipMeta
 BusinessModel = Java::OrgPentahoPmsSchema::BusinessModel
 BusinessTable = Java::OrgPentahoPmsSchema::BusinessTable
+BusinessCategory = Java::OrgPentahoPmsSchema::BusinessCategory
+PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
+PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
 
 def load_metadata_xmi(file_path)
   Metadata.new(file_path)
@@ -39,16 +42,22 @@ class Metadata
   end
 
   def update_from_database
-    writable_database.modified_tables.each do |table_name|
+    writable_database.modified_tables.each do |short_name, table_name|
       update_physical_table table_name
       update_business_table table_name do |table|
         secure_table(table)
+        event_table = table_name =~ /contact/ ? contact_events_table : morbidity_events_table
         create_relationship({ 
           :from => table, 
-          :to   => (table_name =~ /contact/ ? contact_events_table : morbidity_events_table),
+          :to   => event_table,
           :type => "N:1"})
+        update_category category_name(short_name), table, event_table
       end
     end
+  end
+
+  def category_name(name)
+    name.split('_').collect{|word| word.capitalize}.join(' ')
   end
 
   def find_physical_table(table_name)
@@ -86,7 +95,7 @@ class Metadata
   def update_physical_table(table_name)
     pt = find_physical_table view_for(table_name)
     if pt.nil?
-      pt = Java::OrgPentahoPmsSchema::PhysicalTable.new view_for(table_name)
+      pt = PhysicalTable.new view_for(table_name)
       pt.set_database_meta(ro_database.meta)
       pt.set_target_schema('trisano')
       pt.set_target_table view_for(table_name)
@@ -94,7 +103,7 @@ class Metadata
     end
     writable_database.column_names_for(table_name).each do |column_name|
       unless pt.find_physical_column(column_name)
-        pt.add_physical_column Java::OrgPentahoPmsSchema::PhysicalColumn.new(column_name)
+        pt.add_physical_column PhysicalColumn.new(column_name) unless pt.has_column?(column_name)
       end
     end
   end
@@ -107,13 +116,26 @@ class Metadata
         table = Java::OrgPentahoPmsSchema::BusinessTable.new view_for(table_name), pt
         trisano_business_model.add_business_table table
       end
-      pt.physical_columns.each do |pc|
+      pt.physical_columns.each do |pc|        
         bc = Java::OrgPentahoPmsSchema::BusinessColumn.new
         bc.set_id pc.get_id
         bc.physical_column = pc
-        table.add_business_column bc
+        table.add_business_column bc unless table.has_column?(pc)
       end
       yield table
+    end
+  end
+
+  def update_category(category_name, *tables)
+    category = find_business_category(category_name)
+    if category.nil?
+      category = BusinessCategory.new(category_name)
+      trisano_business_model.add_category(category)
+    end
+    tables.each do |table|
+      table.business_columns.each do |column|
+        category.add_business_column(column) unless category.has_column?(column.get_id)
+      end
     end
   end
 
@@ -186,10 +208,10 @@ class Metadata
     end
 
     def modified_tables
-      rs = query("SELECT table_name FROM trisano.formbuilder_tables WHERE modified=true;")
+      rs = query("SELECT short_name, table_name FROM trisano.formbuilder_tables WHERE modified=true;")
       results = []
-      while rs.next
-        results << rs.getString(1)
+      while rs.next        
+        results << [rs.getString(1), rs.getString(2)]
       end
       results
     end
@@ -209,10 +231,30 @@ BusinessModel.class_eval do
   def find_relationships_from(table)    
     relationships.select {|r| r.table_from.get_id == table.get_id}
   end
+
+  def add_category(category)
+    root_category.add_business_category(category)
+  end
 end
 
 BusinessTable.class_eval do
   def id_column
     @id_column ||= business_columns.each { |c| return c if c.get_id =~ /VIEW_ID$/ }
+  end
+  
+  def has_column?(physical_column)
+    !find_business_column(physical_column.get_id).nil?
+  end
+end
+
+BusinessCategory.class_eval do
+  def has_column?(column_name)
+    !find_business_column(column_name)
+  end
+end
+
+PhysicalTable.class_eval do
+  def has_column?(column_name)
+    !find_physical_column(column_name).nil?
   end
 end

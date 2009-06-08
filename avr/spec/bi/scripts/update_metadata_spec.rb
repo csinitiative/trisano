@@ -9,6 +9,10 @@ describe 'updating metadata' do
     @metadata = load_metadata_xmi(@metadata_file)
   end
 
+  it 'should be able to create a category name' do
+    @metadata.category_name('bacterial_meningitis_other').should == 'Bacterial Meningitis Other'
+  end
+
   describe 'TriSano Business model' do
 
     it 'should find morbidity event table' do

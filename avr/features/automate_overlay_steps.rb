@@ -50,8 +50,6 @@ Then /^I should have a new Relationship$/ do
 end
 
 Then /^I should have a new Category$/ do
-  pending
-  category = @metadata.find_business_category('Test Table Morbidity Events')
+  category = @metadata.find_business_category('Test Table')
   category.should_not be_nil
 end
-
