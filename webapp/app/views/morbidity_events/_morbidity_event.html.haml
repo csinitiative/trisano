@@ -34,7 +34,7 @@
     %b
       = morbidity_event.primary_jurisdiction.short_name
     %br
-    - unless params[:per_page].to_i > 25
+    - if show_tools
       .tools
         = jurisdiction_routing_control(morbidity_event)
     %div{:id => 'secondary_jurisdictions'}
@@ -53,7 +53,7 @@
         %small
           Investigator:&nbsp;
           %b= morbidity_event.investigator.best_name
-    - unless params[:per_page].to_i > 25
+    - if show_tools
       .tools
         = state_controls(morbidity_event)
 

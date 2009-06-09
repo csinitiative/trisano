@@ -29,14 +29,15 @@
       = contact_event.event_onset_date
     .tools
       - with_show = with_show.nil? ? true : with_show
-      = basic_contact_event_controls(contact_event, with_show)
+      - with_full_options = with_full_options.nil? ? false : with_full_options
+      = basic_contact_event_controls(contact_event, with_show, with_full_options)
   %td
     %b= contact_event.try(:disease).try(:disease).try(:disease_name)
   %td
     %b
       = contact_event.primary_jurisdiction.short_name
     %br
-    - unless params[:per_page].to_i > 25
+    - if show_tools
       .tools
         = jurisdiction_routing_control(contact_event)
     %div{:id => 'secondary_jurisdictions'}
@@ -55,6 +56,6 @@
         %small
           Investigator:&nbsp;
           %b= contact_event.investigator.best_name
-    - unless params[:per_page].to_i > 25
+    - if show_tools
       .tools
         = state_controls(contact_event)

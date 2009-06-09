@@ -176,16 +176,8 @@ class HumanEvent < Event
         "events.updated_at DESC"
       end
 
-      if options[:order_by].blank?
-        select = "distinct events.*"
-        
-      else
-        select = "distinct events.*, #{order_by}"
-      end
-      from = "(	SELECT events.* from events " +
+      from = "(	SELECT DISTINCT events.* from events " +
         "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id " +
-        "LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id " +
-        "LEFT JOIN places ON places.entity_id = place_entities.id " +
         "WHERE jurisdictions.secondary_entity_id IN (#{User.current_user.jurisdiction_ids_for_privilege(:view_event).join(',')}) " +
         ") as events "
         
@@ -213,7 +205,7 @@ class HumanEvent < Event
         :conditions => conditions,
         :order => order_by,
         :from => from,
-        :select => select,
+        # :select => select,
         :page => options[:page]
       }
       find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0

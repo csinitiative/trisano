@@ -76,7 +76,10 @@
       %th
         = link_to("Status", cmrs_path(query_params.merge(:sort_order => 'status')))
 
-      = render @events
-
+      - @events.each do |event|
+        - if event.is_a? ContactEvent
+          = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :show_tools => false }
+        - else
+          = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :show_tools => false }
   %br
   = will_paginate @events

@@ -136,21 +136,23 @@ module EventsHelper
     content_tag(:p, "You have accessed an out-of-jurisdiction event. Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')} if access was unintentional.  Access has been logged.", :class => 'banner-warning')
   end
 
-  def basic_contact_event_controls(event, with_show=true)
-    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+  def basic_contact_event_controls(event, with_show=true, with_full_options=false)
+    # Originally the Edit, Delete, Add Task, Add Attachment, and Promote to CMR links were rendered only if the 
+    # user had the right privileges.  But that check was too expensive, so now they're always rendered.  In the 
+    # (anticipated to be # rare) circumstances where someone has view but not update privs, clicking on the 
+    # links will render a nice, pretty 'go away' message.
     controls = ""
     controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") << " | " if with_show
-    controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')") << " | " if can_update
-    controls << link_to('Print', contact_event_path(event, :format => "print") , :target => "_blank") << " ("
-    controls << link_to('With Notes', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") << ") | "
- 
-    if can_update
-      if event.deleted_at.nil?
-        controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
-      end
-      controls << (" | " << link_to('Add Task', new_event_task_path(event)) ) if can_update
-      controls << (" | " << link_to('Add Attachment', new_event_attachment_path(event)) ) if can_update
-      controls << (" | " << link_to('Promote to CMR', event_type_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'event-type')) if can_update
+    controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+    controls << " | " << link_to('Print', contact_event_path(event, :format => "print") , :target => "_blank")
+    controls << link_to(' (with notes)', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") if with_full_options
+    if event.deleted_at.nil?
+      controls << " | " << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+    end
+    if with_full_options
+      controls << " | " << link_to('Add Task', new_event_task_path(event))
+      controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
+      controls << " | " << link_to('Promote to CMR', event_type_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'event-type')
     end
 
     controls
