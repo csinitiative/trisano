@@ -19,6 +19,7 @@ BusinessTable = Java::OrgPentahoPmsSchema::BusinessTable
 BusinessCategory = Java::OrgPentahoPmsSchema::BusinessCategory
 PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
 PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
+PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
 
 def load_metadata_xmi(file_path)
   Metadata.new(file_path)
@@ -27,10 +28,10 @@ end
 class Metadata
   def initialize(file_path)
     FileUtils.rm Dir.glob('mdr.*')
-    schema_factory = CwmSchemaFactory.new
-    cwm = CWM.get_instance('TriSano')
-    cwm.importFromXMI File.join(server_dir, 'biserver-ee/pentaho-solutions/TriSano/metadata.xmi')
-    @meta = schema_factory.getSchemaMeta(cwm)
+    @schema_factory = CwmSchemaFactory.new
+    @cwm = CWM.get_instance('TriSano')
+    @cwm.importFromXMI File.join(server_dir, 'biserver-ee/pentaho-solutions/TriSano/metadata.xmi')
+    @meta = @schema_factory.getSchemaMeta(@cwm)
   end
 
   def writable_database
@@ -53,7 +54,10 @@ class Metadata
           :type => "N:1"})
         update_category category_name(short_name), table, event_table
       end
-    end
+    end    
+    @schema_factory.store_schema_meta(@cwm, @meta, nil)
+    publish({ :success => lambda{ puts "Sucess!" },
+              :failures => lambda{ |result| "Failed because #{result}" }})
   end
 
   def category_name(name)
@@ -120,6 +124,7 @@ class Metadata
         bc = Java::OrgPentahoPmsSchema::BusinessColumn.new
         bc.set_id pc.get_id
         bc.physical_column = pc
+        bc.business_table = table
         table.add_business_column bc unless table.has_column?(pc)
       end
       yield table
@@ -137,6 +142,17 @@ class Metadata
         category.add_business_column(column) unless category.has_column?(column.get_id)
       end
     end
+  end
+
+  def publish(result_hooks={})
+    File.open('metadata.xmi', 'w') do |io|
+      io << @cwm.getXMI
+    end
+    files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
+    result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
+    puts "Hows come my hooks aren't getting called?: #{result}"
+    result_hooks[:success].call(result) if result_hooks[:success] && result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
+    result_hooks[:failure].call(result) if result_hooks[:failure] && result != Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
   end
 
   def morbidity_events_table
@@ -168,6 +184,22 @@ class Metadata
 
   def role_type
     Java::OrgPentahoPmsSchemaSecurity::SecurityOwner::OWNER_TYPE_ROLE
+  end
+
+  def server_url    
+    ENV['BI_SERVER_URL'] || 'http://localhost:8080/pentaho/RepositoryFilePublisher'
+  end
+
+  def publisher_password
+    ENV['PUBLISHER_PASSWORD'] || 'password'
+  end
+
+  def fs_user
+    ENV['FS_USER'] || 'joe'
+  end
+
+  def fs_user_password
+    ENV['FS_USER_PASSWORD'] || 'password'
   end
 
   class Database
@@ -249,7 +281,7 @@ end
 
 BusinessCategory.class_eval do
   def has_column?(column_name)
-    !find_business_column(column_name)
+    !find_business_column(column_name).nil?
   end
 end
 

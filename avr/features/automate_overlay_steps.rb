@@ -52,4 +52,6 @@ end
 Then /^I should have a new Category$/ do
   category = @metadata.find_business_category('Test Table')
   category.should_not be_nil
+  category.business_columns.should_not be_empty
+  category.business_columns.size.should == 62
 end
