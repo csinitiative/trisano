@@ -162,6 +162,11 @@ class MorbidityEventsController < EventsController
     render :action => "index"
   end
 
+  # IE can't handle URLs > 2K so we've added a special method that it can POST to.
+  def export_single
+    render :action => "show"
+  end
+
   private
   
   def prepopulate
@@ -207,4 +212,4 @@ class MorbidityEventsController < EventsController
     end
     return true
   end
- end
+end

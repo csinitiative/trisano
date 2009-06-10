@@ -18,7 +18,7 @@
 class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
-  before_filter :can_view?, :only => [:show]
+  before_filter :can_view?, :only => [:show, :export_single]
   before_filter :set_tab_index
   
   def auto_complete_for_lab_name
