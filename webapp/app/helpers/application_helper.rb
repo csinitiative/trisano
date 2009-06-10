@@ -225,4 +225,8 @@ module ApplicationHelper
     options = options.unshift([nil, nil]) if empty_option
     select_tag field_name.to_s, options_for_select(options, :selected => selected), :multiple => multi
   end
+
+  def pg_array(stringy_array)
+    stringy_array[1...-1].split(',').select { |value| value != 'NULL' }
+  end
 end

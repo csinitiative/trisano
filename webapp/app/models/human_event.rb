@@ -102,17 +102,54 @@ class HumanEvent < Event
       sql_terms = fulltext_terms.join(" | ")
 
       where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
-      order_by_clause = " ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
+      order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
 
-      options = { :include => [ { :interested_party => { :person_entity => :person } }, :disease_event ],
-        :conditions => where_clause,
-        :order => order_by_clause }
+      select = <<SQL
+SELECT events.id AS id,
+       events.event_onset_date AS event_onset_date,
+       events."type" AS event_type,
+       events.deleted_at AS deleted_at,
+       entities.id AS entity_id,
+       people.first_name AS first_name,
+       people.last_name AS last_name,
+       people.birth_date AS birth_date,
+       external_codes.code_description AS birth_gender,
+       diseases.disease_name AS disease_name,
+       jurisdiction_entities.id AS jurisdiction_entity_id,
+       jurisdiction_places.short_name AS jurisdiction_short_name,
+       sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
+FROM events
+     INNER JOIN participations ON participations.event_id = events.id
+          AND (participations."type" = 'InterestedParty' )
+     LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
+          AND (entities.entity_type = 'PersonEntity' )
+     LEFT OUTER JOIN people ON people.entity_id = entities.id
+     LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
+          AND (external_codes.code_name = 'gender')
+     LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+     LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+     INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
+          AND (jurisdictions.type = 'Jurisdiction')
+     INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
+          AND (jurisdiction_entities.entity_type = 'PlaceEntity')
+     INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
+     LEFT JOIN (
+        SELECT
+            events.id AS event_id,
+            ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
+        FROM
+            events
+            LEFT JOIN participations p
+                ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+        GROUP BY events.id
+    ) sec_juris
+        ON (sec_juris.event_id = events.id)
+WHERE (#{where_clause})
+      AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
+ORDER BY #{order_by_clause}
+SQL
 
-      # This may or may not be a Rails bug, but in order for HumanEvent to know that MorbidityEvent and ContactEvent are
-      # its descendents, and thus generate the proper where clause, Rails needs to have 'seen' these classes at least
-      # once, so do something innocuous in order to ensure this.
-      MorbidityEvent.object_id; ContactEvent.object_id
-      self.all(options)
+      self.find_by_sql select
     end
 
     def get_allowed_queues(query_queues)
@@ -176,8 +213,16 @@ class HumanEvent < Event
         "events.updated_at DESC"
       end
 
-      from = "(	SELECT DISTINCT events.* from events " +
+      if options[:order_by].blank?
+        select = "distinct events.*"
+        
+      else
+        select = "distinct events.*, #{order_by}"
+      end
+      from = "(	SELECT events.* from events " +
         "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id " +
+        "LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id " +
+        "LEFT JOIN places ON places.entity_id = place_entities.id " +
         "WHERE jurisdictions.secondary_entity_id IN (#{User.current_user.jurisdiction_ids_for_privilege(:view_event).join(',')}) " +
         ") as events "
         
@@ -205,7 +250,7 @@ class HumanEvent < Event
         :conditions => conditions,
         :order => order_by,
         :from => from,
-        # :select => select,
+        :select => select,
         :page => options[:page]
       }
       find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
