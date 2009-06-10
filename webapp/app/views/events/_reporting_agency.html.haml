@@ -22,7 +22,11 @@
   - fields_for("morbidity_event[reporting_agency_attributes]", reporting_agency) do |ra|
     - agency_form = ra
 
-- reporting_agency = agency_form.object.place_entity.place
+-# Hack! Rendering the "Add a reporting agency" link
+- if reporting_agency == 'force new'
+  - reporting_agency = Place.new
+-else
+  - reporting_agency = agency_form.object.place_entity.place
 
 - if reporting_agency.new_record?
   - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|

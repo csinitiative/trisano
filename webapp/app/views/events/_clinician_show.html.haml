@@ -43,7 +43,7 @@
     %label Telephone
     = h(person.safe_call_chain(:primary_phone, :simple_format)) || "&nbsp;"
 
-  - if defined? f
+  - if !person_form.object.new_record?
     %span.horiz
       = person_form.label :_delete, "Remove:"
       = person_form.check_box :_delete
