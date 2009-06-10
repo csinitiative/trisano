@@ -51,15 +51,15 @@ describe Place do
       h = Place.hospitals
       h.length.should == 3
       h[0].should == places(:AVH)
-      h[1].should == places(:BRVH2)
-      h[2].should == places(:BRVH)
+      h[1].should == places(:BRVH)
+      h[2].should == places(:BRVH2)
     end
 
     it "hospitals should return a list of hospitals with no duplicate names" do
       h = Place.hospitals(true)
       h.length.should == 2
       h[0].should == places(:AVH)
-      h[1].should == places(:BRVH2)
+      h[1].should == places(:BRVH)
     end
 
     it "jurisdictions should return a list of jurisdictions" do

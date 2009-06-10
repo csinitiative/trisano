@@ -125,9 +125,9 @@ class Place < ActiveRecord::Base
 
     def all_by_place_code(code, select=nil)
       if select
-        self.all(:select => select, :joins => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name')
+        self.all(:select => select, :joins => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name, places.id')
       else
-        self.all(:include => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name')
+        self.all(:include => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name, places.id')
       end
     end
   end
