@@ -23,7 +23,7 @@
     %fieldset.form
       %legend Reporting Agency
       - f.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |ra|
-        - if ra.object.place_entity.place.new_record?
+        - if ra.object.new_record?
           = live_search('Search for a Reporting Agency', :search_field => 'reporting_agency_search', :select => 'place_name', :insertion_point => "None")
           &nbsp; OR &nbsp;
           = add_reporting_agency_link('Add a new reporting agency', ra)

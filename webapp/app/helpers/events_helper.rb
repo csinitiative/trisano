@@ -118,7 +118,8 @@ module EventsHelper
   def add_reporting_agency_link(name, form, options={})
     options = {:id => 'add_reporting_agency_link'}.merge(options)
     link_to_function name, nil, options do |page|
-      page.update_reporting_agency(nil, form)
+      # 'force new' is a hack to get the Add a Reporting Agency link to always render a form regardless of new mode, edit mode, validation failure, pre-
+      page.update_reporting_agency('force new', form)
       page << "$('morbidity_event_reporting_agency_attributes_place_entity_attributes_place_attributes_name').value=$F('reporting_agency_search')"
     end
   end
