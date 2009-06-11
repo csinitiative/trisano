@@ -62,7 +62,7 @@
             - can_create = User.current_user.is_entitled_to_in?(:create_event, Place.jurisdiction_by_name("Unassigned").entity_id)
             - can_update = User.current_user.is_entitled_to_in?(:update_event, Place.jurisdiction_by_name("Unassigned").entity_id)
             - if can_create && can_update
-              = link_to 'STAGING AREA', staged_messages_path
+              -#= link_to 'STAGING AREA', staged_messages_path
               |
             = link_to 'EVENTS', cmrs_path_with_defaults
             |
