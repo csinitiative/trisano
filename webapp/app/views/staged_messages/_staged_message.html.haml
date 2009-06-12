@@ -13,37 +13,32 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%table.list
-  %tr
-    %th Sending Facility
-    %th Patient
-    %th HL7 Version
-    %th &nbsp;
-  %tr
-    %td
-      .value=h staged_message.sending_facility
-    %td
-      .value=h staged_message.patient_name
-    %td
-      .value=h staged_message.hl7_version
-    %td
-      .value
-        = link_to 'Edit', edit_staged_message_path(staged_message)
-        |
-        = link_to 'Show', staged_message 
+%tr
+  %td
+    .staged-message
+      .header
+        %p=h staged_message.patient.patient_name
+        %p="Specimen: #{h staged_message.observation_request.specimen_source}"
+        %p="Collected: #{h staged_message.observation_request.collection_date}"
+        %p
+          %small=h staged_message.message_header.sending_facility
+        %p.tools
+          Search | Assign | New | Discard |
+          %span{:id => "show_link_#{staged_message.id}"}      
+            = link_to_function 'Raw', nil do |page|
+              - page["original_message_#{staged_message.id}"].show
+              - page["show_link_#{staged_message.id}"].hide
+          %span{:id => "original_message_#{staged_message.id}", :style => 'display: none'}
+            =link_to_function 'Hide', nil do |page|
+              - page["original_message_#{staged_message.id}"].hide
+              - page["show_link_#{staged_message.id}"].show
+            %pre= h(staged_message.hl7_message)
+      .results
+        %table
+          %tr
+            %th Test Date
+            %th Test Type
+            %th Result
+            %th Reference Range
+          =render staged_message.observation_request.tests
 
-  =render staged_message.orders
-  
-%fieldset.vert
-  %div{:id => "show_link_#{staged_message.id}"}      
-    = link_to_function 'Show raw message', nil do |page|
-      - page["original_message_#{staged_message.id}"].show
-      - page["show_link_#{staged_message.id}"].hide
-  %div{:id => "original_message_#{staged_message.id}", :style => 'display: none'}
-    =link_to_function 'Hide raw message', nil do |page|
-      - page["original_message_#{staged_message.id}"].hide
-      - page["show_link_#{staged_message.id}"].show
-    %pre= h(staged_message.hl7_message)
-  
-%br
-%br

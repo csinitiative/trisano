@@ -25,62 +25,86 @@ describe Message do
     @hl7 = HL7::Message.parse(hl7_messages[:arup_1])
   end
 
-  it 'should respond to :orders' do
-    @hl7.respond_to?(:orders).should be_true
+  it 'should respond to :message_header' do
+    @hl7.respond_to?(:message_header).should be_true
   end
 
-  it 'should return a list of orders' do
-    @hl7.orders.respond_to?(:each).should be_true    
+  it 'should respond to :patient_id' do
+    @hl7.respond_to?(:patient_id).should be_true
   end
 
-  it 'should return orders from the message' do
-    @hl7.orders[0].should_not be_nil
+  it 'should respond to :observation_request' do
+    @hl7.respond_to?(:observation_request).should be_true
   end
 
-  describe 'orders' do
-    it 'should respond_to :lab' do
-      @hl7.orders[0].respond_to?(:lab).should be_true
+  it 'should return a message_header' do
+    @hl7.message_header.class == StagedMessages::MshWrapper
+  end
+
+  it 'should return a patient ID' do
+    @hl7.patient_id.class == StagedMessages::PidWrapper
+  end
+
+  it 'should return an observation request' do
+    @hl7.observation_request.class == StagedMessages::ObrWrapper
+  end
+
+  describe 'message header' do
+    it 'should respond_to :sending_facility' do
+      @hl7.message_header.respond_to?(:sending_facility).should be_true
     end
 
-    it 'should return the lab' do
-      @hl7.orders[0].lab.should == '13954-3 Hepatitis Be Antigen LN'
+    it 'should return the sending facility (without noise)' do
+      @hl7.message_header.sending_facility.should == 'ARUP LABORATORIES'
+    end
+  end
+
+  describe 'patient identifier' do
+    it 'should respond_to :patient_name' do
+      @hl7.patient_id.respond_to?(:patient_name).should be_true
     end
 
-    it 'should respond_to :lab_test_date' do
-      @hl7.orders[0].respond_to?(:lab_test_date).should be_true
+    it 'should return the patient name (formatted)' do
+      @hl7.patient_id.patient_name.should == 'LIN, GENYAO'
+    end
+ end
+
+  describe 'observation request' do
+    it 'should respond_to :test_performed' do
+      @hl7.observation_request.respond_to?(:test_performed).should be_true
     end
 
-    it 'should return the lab_test_date' do
-      @hl7.orders[0].lab_test_date.should == '200903191011'
+    it 'should return the test performed (without noise)' do
+      @hl7.observation_request.test_performed.should == 'Hepatitis Be Antigen'
+    end
+
+    it 'should respond_to :colection_date' do
+      @hl7.observation_request.respond_to?(:collection_date).should be_true
+    end
+
+    it 'should return the colection date' do
+      @hl7.observation_request.collection_date.should == '2009-03-19'
     end
 
     it 'should respond_to :specimen_source' do
-      @hl7.orders[0].respond_to?(:specimen_source).should be_true
+      @hl7.observation_request.respond_to?(:specimen_source).should be_true
     end
 
     it 'should return the specimen source' do
-      @hl7.orders[0].specimen_source.should == 'X'
-    end
-
-    it 'should respond to :collection_date' do
-      @hl7.orders[0].respond_to?(:collection_date).should == true
-    end
-
-    it 'should return the collection date' do
-      @hl7.orders[0].collection_date.should == '200903191011'
+      @hl7.observation_request.specimen_source.should == 'X'
     end
 
     it 'should respond_to :tests' do
-      @hl7.orders[0].respond_to?(:tests).should be_true
+      @hl7.observation_request.respond_to?(:tests).should be_true
     end
 
     it 'should return a list of test_results' do
-      @hl7.orders[0].tests.should_not be_nil
+      @hl7.observation_request.tests.should_not be_nil
     end
 
     describe 'tests' do
       before :each do
-        @tests = @hl7.orders[0].tests
+        @tests = @hl7.observation_request.tests
       end
 
       it 'should be a list' do
@@ -90,6 +114,15 @@ describe Message do
       it 'should not be an empty list' do
         @tests.should_not be_empty
       end
+
+      it 'should respond to :observation_date' do
+        @tests[0].respond_to?(:observation_date).should be_true
+      end
+
+      it 'should return observation_date' do
+        @tests[0].observation_date.should == '2009-03-21'
+      end
+
 
       it 'should respond to :result' do
         @tests[0].respond_to?(:result).should be_true
@@ -107,16 +140,13 @@ describe Message do
         @tests[0].reference_range.should == 'Negative'
       end
 
-      it 'should respond to :test_result' do
+      it 'should respond to :test_type' do
         @tests[0].respond_to?(:test_type).should be_true
       end
 
-      it 'should return the test type' do
-        @tests[0].test_type.should == '13954-3^Hepatitis Be Antigen^LN'
+      it 'should return the test type (without the noise)' do
+        @tests[0].test_type.should == 'Hepatitis Be Antigen'
       end
-
     end
   end
 end
-
-  

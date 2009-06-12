@@ -22,6 +22,7 @@ class StagedMessage < ActiveRecord::Base
     end
   end
 
+  before_validation :strip_line_feeds
   before_validation_on_create :set_state
 
   validates_presence_of :hl7_message
@@ -35,40 +36,32 @@ class StagedMessage < ActiveRecord::Base
       hl7
     rescue
       errors.add :hl7_message, "could not be parsed"
+      return
     end
-    errors.add :hl7_message, "is missing the header" if hl7[:MSH].nil?
-  end
-  
-  def sending_facility
-    begin
-      hl7[:MSH].sending_facility.split('^').join(' - ')
-    rescue
-      "Could not be determined"
-    end
-  end
 
-  def patient_name
-    begin
-      hl7.select{|s| s.to_s =~ /^PID/}.first.e5.split('^').join(' ')
-    rescue
-      "Could not be determined"
-    end
-  end
+    errors.add :hl7_message, "is missing the header" if self.message_header.nil?
 
-  def hl7_version
-    begin
-      hl7[:MSH].version_id
-    rescue
-      "Could not be determined"
+    # If any of these are missing, the parser sets them all to nil :(
+    if self.observation_request.nil? || self.observation_request.tests.empty? || self.patient.nil?
+      errors.add :hl7_message, "is missing one or more of the following segments: PID, OBR, or OBX"
     end
   end
   
-  def orders
-    hl7.orders
-  end
-
   def hl7
     @hl7 ||= HL7::Message.new(self.hl7_message)
+  end
+
+  def message_header
+    hl7.message_header
+  end
+
+  # For now, we support only one OBR record per HL7 message
+  def observation_request
+    hl7.observation_request
+  end
+
+  def patient
+    hl7.patient_id
   end
 
   private
@@ -77,4 +70,12 @@ class StagedMessage < ActiveRecord::Base
     self.state = self.class.states[:pending]
   end
 
+  def strip_line_feeds
+    # Line feeds are used as End Of Message characters in HL7.  All other uses should be squelched.
+    # Maybe a little dangerous, but it should be okay.
+    # Especially useful for POSTing messages in directly
+    return if hl7_message.nil?
+    self.hl7_message.gsub!(/\n/, '')
+    self.hl7_message << "\n"
+  end
 end

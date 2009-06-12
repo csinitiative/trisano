@@ -26,7 +26,8 @@ describe StagedMessage do
   end
 
   it "should create a new instance given valid attributes" do
-    StagedMessage.create!(@valid_attributes)
+    m = StagedMessage.new(@valid_attributes)
+    m.should be_valid
   end
 
   it "should not be valid if there's no HL7 message" do
@@ -34,8 +35,28 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
+  it "should not be valid if there's no MSH segment" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_msh])
+    m.should_not be_valid
+  end
+
+  it "should not be valid if there's no PID segment" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_pid])
+    m.should_not be_valid
+  end
+
+  it "should not be valid if there's no OBR segment" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_obr])
+    m.should_not be_valid
+  end
+
+  it "should not be valid if there's no OBX segment" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_obx])
+    m.should_not be_valid
+  end
+
   it 'should respond to hl7' do
-    StagedMessage.create!(@valid_attributes).respond_to?(:hl7).should be_true
+    StagedMessage.new(@valid_attributes).respond_to?(:hl7).should be_true
   end
 
   it 'should set message state to PENDING for new messages' do
@@ -45,15 +66,11 @@ describe StagedMessage do
   describe 'received HL7 2.3 +' do
     
     before :each do
-      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
+      @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
     end
 
-    it 'should return HL7 version' do
-      @staged_message.patient_name.should == 'LIN GENYAO     L'
-    end
-
-    it 'should return the hl7 version' do
-      @staged_message.hl7_version.should == '2.3.1'
+    it 'should return the MSH segement' do
+      @staged_message.message_header.class.should == StagedMessages::MshWrapper
     end
 
   end

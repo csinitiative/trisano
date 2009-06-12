@@ -18,10 +18,10 @@
 
 = link_to 'Create a staged message', new_staged_message_path
 %em For developer convenience only.  To be removed.
+%p
 
-#rot
-  %table.list
-    %tr
-      %td 
-        = render @staged_messages
+- if @staged_messages
+  #rot
+    %table.list
+      = render @staged_messages
 

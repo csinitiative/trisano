@@ -20,14 +20,60 @@ require 'ruby-hl7'
 module HL7
   class Message
 
-    def orders
-      select{|s| s.to_s =~ /^OBR/}.collect{ |s| StagedMessages::ObrWrapper.new(s, :full_message => self) }
+    def message_header
+      self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
+    end
+
+    def patient_id
+      self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
+    end
+
+    def observation_request
+      self[:OBR] ? StagedMessages::ObrWrapper.new(self[:OBR]) : nil
     end
 
   end
 end
 
 module StagedMessages
+  class MshWrapper
+    attr_reader :msh_segment
+
+    def initialize(msh_segment)
+      @msh_segment = msh_segment
+    end
+
+    def sending_facility
+      begin
+        msh_segment.sending_facility.split(msh_segment.item_delim).first
+      rescue
+        "Could not be determined"
+      end
+    end
+  end
+
+  class PidWrapper
+    attr_reader :pid_segment
+
+    def initialize(pid_segment)
+      @pid_segment = pid_segment
+    end
+
+    # Ultimately we should make a patient class that has all the components as attributes
+    def patient_name
+      begin
+        name_components = pid_segment.patient_name.split(pid_segment.item_delim)
+        name = name_components[0] || "No Last Name"
+        name += ", #{name_components[1]}" unless name_components[1].blank?  # first name
+        name += " #{name_components[2]}" unless name_components[2].blank?   # midlle name or initial
+        name += ", #{name_components[3]}" unless name_components[3].blank?  # suffix, e.g. Jr. or III
+        name
+      rescue
+        "Could not be determined"
+      end
+    end
+  end
+
   class ObrWrapper
     attr_reader :obr_segment
     attr_accessor :full_message
@@ -37,40 +83,24 @@ module StagedMessages
       @full_message = options[:full_message]
     end
     
-    def lab
-      begin
-        obr_segment.e4.split('^').join(' ')
-      rescue
-        "Could not be determined"
-      end
-    end
-    
-    def lab_test_date
-      begin
-        obr_segment.e22
-      rescue
-        "Could not be determined"
-      end
+    def test_performed
+      obr_segment.universal_service_id.split(obr_segment.item_delim)[1]
     end
 
     def specimen_source
-      begin
-        obr_segment.e15
-      rescue
-        "Could not be determined"
-      end
+      obr_segment.specimen_source.split('^').join(', ')
     end
   
     def collection_date
       begin
-        obr_segment.e7
+        Date.parse(obr_segment.observation_date).to_s
       rescue
         "Could not be determined"
       end
     end
 
     def tests
-      full_message.select { |s| s.to_s =~ /^OBX/}.collect{|s| StagedMessages::ObxWrapper.new(s)}
+      obr_segment.children.collect { |s| StagedMessages::ObxWrapper.new(s) }
     end
   end
 
@@ -80,10 +110,18 @@ module StagedMessages
     def initialize(obx_segment)
       @obx_segment = obx_segment
     end
-    
+
+    def observation_date
+      begin
+        Date.parse(obx_segment.observation_date).to_s
+      rescue
+        "Could not be determined"
+      end
+    end
+
     def result
       begin
-        obx_segment.e5 + (obx_segment.e6.blank? ? '' : " #{obx_segment.e6}")
+        obx_segment.observation_value + (obx_segment.units.blank? ? '' : " #{obx_segment.units}")
       rescue
         "Could not be determined"
       end
@@ -91,7 +129,7 @@ module StagedMessages
   
     def reference_range
       begin
-        obx_segment.e7
+        obx_segment.references_range
       rescue
         "Could not be determined"
       end
@@ -99,7 +137,7 @@ module StagedMessages
 
     def test_type
       begin
-        obx_segment.e3
+        obx_segment.observation_id.split(obx_segment.item_delim)[1]
       rescue
         "Could not be determined"
       end

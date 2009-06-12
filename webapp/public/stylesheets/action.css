@@ -616,3 +616,22 @@ form.inplaceeditor-form a {
   -moz-border-radius: 1em;
   margin: 1em;
   padding: 1em; }
+
+.staged-message .header {
+  float: left;
+  margin-right: 1em;
+  padding-left: 2px;
+  padding-right: 2px;
+  background: #EEEEEE;
+  width: 17%; }
+  .staged-message .header p {
+    margin-top: 1px;
+    margin-bottom: 1px; }
+  .staged-message .header p + p {
+    text-indent: 1em; }
+.staged-message .results {
+  width: 82%; }
+  .staged-message .results table {
+    table-layout: fixed; }
+    .staged-message .results table th {
+      text-align: left; }
