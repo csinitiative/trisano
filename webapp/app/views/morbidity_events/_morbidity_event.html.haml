@@ -13,47 +13,59 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+-# In an effort to speed up event listings we used native SQL (see HumanEvent.find_by_filtered_view)
+-# However, when showing a single event we still use oridnary AR.  But this view is rendered by both.
+-# So, rather than duplicate the visual aspects, we are making all the data conditional on who is
+-# rendering this file.
+
+- from_index = false if !defined?(from_index)
+
 %tr.roll
-  - extra_tools = "" if extra_tools.nil?
-  - patient = morbidity_event.interested_party.person_entity.person
   %td.forminformation
-    - patient_name(morbidity_event) do
-      = patient.last_comma_first
-      %div{ :style => 'font-style: italic; font-size: small;'}
-        = morbidity_event.class.name.titleize
-    %small
-      Date:
-      = morbidity_event.event_onset_date
+    - event_div_class(morbidity_event) do
+      - if from_index
+        = (morbidity_event['last_name'] << (morbidity_event['first_name'].blank? ? "" : ", #{morbidity_event['first_name']}"))
+      - else
+        = morbidity_event.interested_party.person_entity.person.last_comma_first
+      %br
+      %span{ :style => 'font-style: italic; font-size: small;'}
+        Morbidity Event |
+        = morbidity_event.event_onset_date
     .tools
-      - with_show = with_show.nil? ? true : with_show
-      - with_full_options = with_full_options.nil? ? false : with_full_options
-      = basic_morbidity_event_controls(morbidity_event, with_show, with_full_options) + extra_tools
+      = basic_morbidity_event_controls(morbidity_event, from_index) 
+      = extra_tools if !from_index
   %td
-    %b= morbidity_event.try(:disease).try(:disease).try(:disease_name)
+    %b= from_index ? morbidity_event['disease_name'] : morbidity_event.try(:disease).try(:disease).try(:disease_name)
   %td
-    %b
-      = morbidity_event.primary_jurisdiction.short_name
+    %b= from_index ? morbidity_event['jurisdiction_short_name'] : morbidity_event.primary_jurisdiction.short_name
     %br
-    - if show_tools
+    - if !from_index
       .tools
         = jurisdiction_routing_control(morbidity_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
-        = morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
-        %br
+        - if from_index
+          = pg_array(morbidity_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', ')
+        - else
+          = morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
   %td
     %b= morbidity_event.state_description
-    - unless morbidity_event.event_queue_id.nil?
+
+    - queue_name = from_index ? morbidity_event['queue_name'] : morbidity_event.try(:event_queue).try(:queue_name)
+    - unless queue_name.blank?
       %div{:id => 'queue_info'}
         %small
           Queue:&nbsp;
-          %b= morbidity_event.event_queue.queue_name
-    - unless morbidity_event.investigator_id.nil?
+          %b= queue_name
+
+    - inv_name = from_index ? morbidity_event['investigator_name'] : morbidity_event.try(:investigator).try(:best_name)
+    - unless inv_name.blank?
       %div{:id => 'investigator_info'}
         %small
           Investigator:&nbsp;
-          %b= morbidity_event.investigator.best_name
-    - if show_tools
+          %b= inv_name
+
+    - if !from_index
       .tools
         = state_controls(morbidity_event)
 

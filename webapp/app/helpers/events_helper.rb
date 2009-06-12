@@ -137,20 +137,20 @@ module EventsHelper
     content_tag(:p, "You have accessed an out-of-jurisdiction event. Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')} if access was unintentional.  Access has been logged.", :class => 'banner-warning')
   end
 
-  def basic_contact_event_controls(event, with_show=true, with_full_options=false)
+  def basic_contact_event_controls(event, from_index=false)
     # Originally the Edit, Delete, Add Task, Add Attachment, and Promote to CMR links were rendered only if the 
     # user had the right privileges.  But that check was too expensive, so now they're always rendered.  In the 
     # (anticipated to be # rare) circumstances where someone has view but not update privs, clicking on the 
     # links will render a nice, pretty 'go away' message.
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") << " | " if with_show
+    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") << " | " if from_index
     controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
     controls << " | " << link_to('Print', contact_event_path(event, :format => "print") , :target => "_blank")
-    controls << link_to(' (with notes)', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") if with_full_options
+    controls << link_to(' (with notes)', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") if !from_index
     if event.deleted_at.nil?
       controls << " | " << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
     end
-    if with_full_options
+    if !from_index
       controls << " | " << link_to('Add Task', new_event_task_path(event))
       controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
       controls << " | " << link_to('Promote to CMR', event_type_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'event-type')
@@ -271,7 +271,7 @@ module EventsHelper
   end
 
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
-  def patient_name(event, &block)
+  def event_div_class(event, &block)
     return if event.nil?
 
     if event.deleted_at.nil?
@@ -280,7 +280,7 @@ module EventsHelper
       concat("<div class='patientname-inactive'>")
     end
 
-    yield event.interested_party.person_entity.person
+    yield
     concat("</div>")
   end
 
@@ -427,8 +427,9 @@ module EventsHelper
     original_patient = event.parent_event
     name = "#{original_patient.interested_party.person_entity.person.first_name} #{original_patient.interested_party.person_entity.person.last_name}"
     %Q{
-        <span>Original Patient: #{link_to(name, cmr_path(original_patient))}</span>
-        <p style='font-size: 12px; font-weight: light;'>#{original_patient.safe_call_chain(:disease_event, :disease, :disease_name)}</p>
+        <div>Original Patient: #{link_to(name, cmr_path(original_patient))}
+        |
+        <span style='font-size: 12px; font-weight: light;'>#{original_patient.safe_call_chain(:disease_event, :disease, :disease_name)}</span></div>
     }
   end
 

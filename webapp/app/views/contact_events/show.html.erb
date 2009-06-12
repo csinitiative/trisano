@@ -33,7 +33,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th>Jurisdiction</th>
       <th>Status</th>
     </tr>
-    <%= render :partial => @event, :locals => {:show_tools => true, :with_show => false, :with_full_options => true} %>
+    <%= render :partial => @event, :locals => {:from_index => false} %>
   </table>
   <%- if @display_view_warning %>
     <%= warning_banner %>

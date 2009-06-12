@@ -19,7 +19,6 @@
 - content_for :name do
   Existing Reports
 
-
 - content_for :tools do
   = new_cmr_link 'New Morbidity Report'
   |
@@ -78,8 +77,8 @@
 
       - @events.each do |event|
         - if event.is_a? ContactEvent
-          = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :show_tools => false }
+          = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :from_index => true }
         - else
-          = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :show_tools => false }
+          = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :from_index => true }
   %br
   = will_paginate @events

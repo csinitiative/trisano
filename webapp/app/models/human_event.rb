@@ -104,50 +104,50 @@ class HumanEvent < Event
       where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
       order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
 
-      select = <<SQL
-SELECT events.id AS id,
-       events.event_onset_date AS event_onset_date,
-       events."type" AS event_type,
-       events.deleted_at AS deleted_at,
-       entities.id AS entity_id,
-       people.first_name AS first_name,
-       people.last_name AS last_name,
-       people.birth_date AS birth_date,
-       external_codes.code_description AS birth_gender,
-       diseases.disease_name AS disease_name,
-       jurisdiction_entities.id AS jurisdiction_entity_id,
-       jurisdiction_places.short_name AS jurisdiction_short_name,
-       sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
-FROM events
-     INNER JOIN participations ON participations.event_id = events.id
-          AND (participations."type" = 'InterestedParty' )
-     LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
-          AND (entities.entity_type = 'PersonEntity' )
-     LEFT OUTER JOIN people ON people.entity_id = entities.id
-     LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
-          AND (external_codes.code_name = 'gender')
-     LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
-     LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
-     INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
-          AND (jurisdictions.type = 'Jurisdiction')
-     INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
-          AND (jurisdiction_entities.entity_type = 'PlaceEntity')
-     INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
-     LEFT JOIN (
-        SELECT
-            events.id AS event_id,
-            ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
-        FROM
-            events
-            LEFT JOIN participations p
-                ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-        GROUP BY events.id
-    ) sec_juris
-        ON (sec_juris.event_id = events.id)
-WHERE (#{where_clause})
-      AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
-ORDER BY #{order_by_clause}
-SQL
+      select = <<-SQL
+        SELECT events.id AS id,
+               events.event_onset_date AS event_onset_date,
+               events."type" AS event_type,
+               events.deleted_at AS deleted_at,
+               entities.id AS entity_id,
+               people.first_name AS first_name,
+               people.last_name AS last_name,
+               people.birth_date AS birth_date,
+               external_codes.code_description AS birth_gender,
+               diseases.disease_name AS disease_name,
+               jurisdiction_entities.id AS jurisdiction_entity_id,
+               jurisdiction_places.short_name AS jurisdiction_short_name,
+               sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
+        FROM events
+             INNER JOIN participations ON participations.event_id = events.id
+                  AND (participations."type" = 'InterestedParty' )
+             LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
+                  AND (entities.entity_type = 'PersonEntity' )
+             LEFT OUTER JOIN people ON people.entity_id = entities.id
+             LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
+                  AND (external_codes.code_name = 'gender')
+             LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+             LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+             INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
+                  AND (jurisdictions.type = 'Jurisdiction')
+             INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
+                  AND (jurisdiction_entities.entity_type = 'PlaceEntity')
+             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
+             LEFT JOIN (
+                SELECT
+                    events.id AS event_id,
+                    ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
+                FROM
+                    events
+                    LEFT JOIN participations p
+                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+                GROUP BY events.id
+            ) sec_juris
+                ON (sec_juris.event_id = events.id)
+        WHERE (#{where_clause})
+              AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
+        ORDER BY #{order_by_clause}
+      SQL
 
       self.find_by_sql select
     end
@@ -159,27 +159,20 @@ SQL
       return queue_ids, queue_names
     end
 
-
     def find_all_for_filtered_view(options = {})
-      # We can't :include the associations 'all_jurisdictions' _and_ 'patient', cause the :conditions on them make AR generate ambiguous SQL, so echoing here.
-      # TODO is the above still true since we've gone all STI
-      conditions = ["jurisdictions.type = 'Jurisdiction' AND patients.type = 'InterestedParty'"]
-      conjunction = "AND"
+      where_clause = "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
 
       states = options[:states] || []
       unless states.empty?
-        conditions[0] += " #{conjunction} workflow_state IN (?)"
-        conditions << states
+        where_clause << " AND workflow_state IN (#{ states.map { |s| "'#{s}'" }.join(',') })"
       end
     
       if options[:diseases]
-        conditions[0] += " #{conjunction} disease_id IN (?)"
-        conditions << options[:diseases]
+        where_clause << " AND disease_id IN (#{options[:diseases].join(',')})"
       end
 
       if options[:investigators]
-        conditions[0] += " #{conjunction} investigator_id IN (?)"
-        conditions << options[:investigators]
+        where_clause << " AND investigator_id IN (#{options[:investigators].join(',')})"
       end
 
       if options[:queues]
@@ -188,66 +181,123 @@ SQL
         if queue_ids.empty?
           raise 'No queue ids returned'
         else
-          conditions[0] += " #{conjunction} event_queue_id IN (?)"
-          conditions << queue_ids
+          where_clause << " AND event_queue_id IN (#{queue_ids.join(',')})"
         end
       end
 
       if options[:do_not_show_deleted]
-        conditions[0] += " AND deleted_at IS NULL"
+        where_clause << " AND deleted_at IS NULL"
       end
 
-      conditions[0] += " AND (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
-
-      order_by = case options[:order_by]
+      order_by_clause = case options[:order_by]
       when 'patient'
-        "people.last_name, people.first_name, diseases.disease_name, places.name, events.workflow_state"
+        "last_name, first_name, disease_name, jurisdiction_short_name, workflow_state"
       when 'disease'
-        "diseases.disease_name, people.last_name, people.first_name, places.name, events.workflow_state"
+        "disease_name, last_name, first_name, jurisdiction_short_name, workflow_state"
       when 'jurisdiction'
-        "places.name, people.last_name, people.first_name, diseases.disease_name, events.workflow_state"
+        "jurisdiction_short_name, last_name, first_name, disease_name, workflow_state"
       when 'status'
         # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
-        "events.workflow_state, people.last_name, people.first_name, diseases.disease_name, places.name"
+        "workflow_state, last_name, first_name, disease_name, jurisdiction_short_name"
       else
         "events.updated_at DESC"
       end
 
-      from = "(	SELECT DISTINCT events.* from events " +
-        "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id " +
-        "WHERE jurisdictions.secondary_entity_id IN (#{User.current_user.jurisdiction_ids_for_privilege(:view_event).join(',')}) " +
-        ") as events "
-        
-      # Similar to above comment, we now need to explicitly spell out the joins.  By the way, we're doing this join just so we can sort by different fields
-      joins = "LEFT JOIN participations jurisdictions ON jurisdictions.event_id = events.id
-               LEFT JOIN entities place_entities ON place_entities.id = jurisdictions.secondary_entity_id
-               LEFT JOIN places ON places.entity_id = place_entities.id
-
-               LEFT JOIN participations patients ON patients.event_id = events.id
-               LEFT JOIN entities person_entities ON person_entities.id = patients.primary_entity_id
-               LEFT JOIN people ON people.entity_id = person_entities.id"
-
-      if options[:diseases]
-        joins << " LEFT JOIN disease_events ON disease_events.event_id = events.id"
-      else
-        joins << " LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id"
-      end
-      joins << " LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
+      users_view_jurisdictions = User.current_user.jurisdiction_ids_for_privilege(:view_event)
 
       query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
       User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"
 
-      find_options = {
-        :joins => joins,
-        :conditions => conditions,
-        :order => order_by,
-        :from => from,
-        # :select => select,
-        :page => options[:page]
+      # Hard coding the query to wring out some speed.
+      real_select = <<-SQL
+        SELECT events.id AS id,
+            events.event_onset_date AS event_onset_date,
+            events.type AS type,
+            events.deleted_at AS deleted_at,
+            events.workflow_state as workflow_state,
+            entities.id AS entity_id,
+            people.first_name AS first_name,
+            people.last_name AS last_name,
+            diseases.disease_name AS disease_name,
+            jurisdiction_entities.id AS jurisdiction_entity_id,
+            jurisdiction_places.short_name AS jurisdiction_short_name,
+            sec_juris.secondary_jurisdiction_names AS secondary_jurisdictions,
+            CASE
+               WHEN users.given_name IS NOT NULL AND users.given_name != '' THEN users.given_name
+               WHEN users.last_name IS NOT NULL AND users.last_name != '' THEN trim(BOTH ' ' FROM users.first_name || ' ' || users.last_name)
+               WHEN users.user_name IS NOT NULL AND users.user_name != '' THEN users.user_name
+               ELSE users.uid
+            END AS investigator_name,
+            event_queues.queue_name as queue_name
+        FROM events
+            INNER JOIN participations ON participations.event_id = events.id
+                AND (participations.type = 'InterestedParty' )
+            INNER JOIN entities ON entities.id = participations.primary_entity_id
+                AND (entities.entity_type = 'PersonEntity' )
+            INNER JOIN people ON people.entity_id = entities.id
+
+            LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+            LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+
+            INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
+                AND (jurisdictions.type = 'Jurisdiction')
+                AND (jurisdictions.secondary_entity_id IN (#{users_view_jurisdictions.join(',')}))
+            INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
+                AND (jurisdiction_entities.entity_type = 'PlaceEntity')
+            INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
+
+            LEFT JOIN (
+                SELECT
+                    events.id AS event_id,
+                    ARRAY_ACCUM(places.short_name) AS secondary_jurisdiction_names
+                FROM
+                    events
+                    LEFT JOIN participations p
+                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+                    LEFT JOIN entities pe 
+                        ON pe.id = p.secondary_entity_id
+                    LEFT JOIN places 
+                        ON places.entity_id = pe.id
+                GROUP BY events.id
+            ) sec_juris ON (sec_juris.event_id = events.id)
+
+            LEFT JOIN users ON users.id = events.investigator_id
+            LEFT JOIN event_queues ON event_queues.id = events.event_queue_id
+
+      SQL
+
+      # The paginate plugin needs a total row count.  Normally it would simply re-execute the main query wrapped in a count(*).
+      # But in an effort to shave off some more time, we will provide a row count with this simplified version of the main
+      # query.
+      count_select = <<-SQL
+        SELECT COUNT(*)
+        FROM events
+            INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
+                AND (jurisdictions.type = 'Jurisdiction')
+                AND (jurisdictions.secondary_entity_id IN (#{users_view_jurisdictions.join(',')}))
+
+            LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+            LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+
+            LEFT JOIN users ON users.id = events.investigator_id
+            LEFT JOIN event_queues ON event_queues.id = events.event_queue_id
+
+      SQL
+
+      count_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
+      row_count = Event.count_by_sql(count_select)
+
+      real_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
+      real_select << "ORDER BY #{order_by_clause}"
+
+      find_options = { 
+        :page          => options[:page],
+        :total_entries => row_count
       }
       find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
 
-      Event.paginate(:all, find_options)
+      Event.paginate_by_sql(real_select, find_options)
+
     rescue Exception => ex
       logger.error ex
       raise ex

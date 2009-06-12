@@ -37,7 +37,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th>Jurisdictions</th>
       <th>Status</th>
     </tr>
-    <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :show_tools => true, :with_show => false, :with_full_options => true, :extra_tools => " | " + link_to('Events', cmrs_path_with_defaults) } %>
+    <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :from_index => false, :extra_tools => " | " + link_to('Events', cmrs_path_with_defaults) } %>
   </table>
   <%- if @display_view_warning %>
     <%= warning_banner %>
