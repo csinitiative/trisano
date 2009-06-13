@@ -18,9 +18,8 @@ Feature: Accept Staged Messages as HL7
     
     When I visit the staged message show page
     
-    Then I should see value "COVELL DAREN" under label "Patient"
-    And  I should see value "IHC-LD" under label "Sending Facility"
-    And  I should see value "2.5" under label "HL7 Version"
+    Then I should see value "COVELL, DAREN L" in the message header
+    And  I should see value "IHC-LD" in the message header
 
  Scenario: Viewing HL7 w/ multiple tests
    Given I am logged in as a super user
@@ -28,10 +27,9 @@ Feature: Accept Staged Messages as HL7
    
    When I visit the staged message show page
 
-   Then I should see value "5221-7^HIV-1 Antibody Confirm, Western Blot^LN" under label "Test type"
-   And I should see value "^Bordatella Per^LN" under label "Test type"
+   Then I should see value "HIV-1 Antibody Confirm, Western Blot" under label "Test Type"
+   And I should see value "Bordatella Per" under label "Reference Range"
    
-
   Scenario: Posting a valid HL7 staged message
     Given I am logged in as a super user
     When I post the "ARUP_1" message directly to "staged_messages"

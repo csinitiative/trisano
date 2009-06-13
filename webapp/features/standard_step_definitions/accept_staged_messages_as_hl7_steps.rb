@@ -44,10 +44,12 @@ When /^I post the "([^\"]*)" message directly to "([^\"]*)"$/ do |msg, path|
   visit path, :post, msg
 end
 
-
+Then /^I should see value "([^\"]*)" in the message header$/ do |value|
+  response.should have_xpath("//div[@class='staged-message']/div[@class='header']//*[contains(text(), '#{value}')]")
+end
 
 Then /^I should see value "([^\"]*)" under label "([^\"]*)"$/ do |value, label|
-  response.should have_xpath("//th[text()='#{label}']/../../tr/td/div[contains(text(), '#{value}')]")
+  response.should have_xpath("//th[text()='#{label}']/../../tr/td[contains(text(), '#{value}')]")
 end
 
 Then /^I should receive a 200 response$/ do

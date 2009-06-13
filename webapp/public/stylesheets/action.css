@@ -635,3 +635,11 @@ form.inplaceeditor-form a {
     table-layout: fixed; }
     .staged-message .results table th {
       text-align: left; }
+.staged-message .raw-message {
+  clear: both;
+  position: relative;
+  border: solid 1px;
+  padding: 3px;
+  margin: 3px;
+  left: 10%;
+  width: 80%; }

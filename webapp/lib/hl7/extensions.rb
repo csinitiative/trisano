@@ -29,7 +29,7 @@ module HL7
     end
 
     def observation_request
-      self[:OBR] ? StagedMessages::ObrWrapper.new(self[:OBR]) : nil
+      self[:OBR] ? StagedMessages::ObrWrapper.new(self[:OBR].is_a?(Array) ? self[:OBR][0] : self[:OBR]) : nil
     end
 
   end
