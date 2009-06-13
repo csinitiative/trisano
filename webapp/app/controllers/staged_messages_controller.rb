@@ -22,7 +22,7 @@ class StagedMessagesController < ApplicationController
   # GET /lab_messages
   # GET /lab_messages.xml
   def index
-    @staged_messages = StagedMessage.all
+    @staged_messages = StagedMessage.paginate(:all, :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
   # GET /staged_messages/1

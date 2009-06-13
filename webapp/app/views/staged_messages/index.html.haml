@@ -25,3 +25,6 @@
     %table.list
       = render @staged_messages
 
+  %p{:style => 'clear: both'}
+  %br
+  = will_paginate @staged_messages
