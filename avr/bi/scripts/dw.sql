@@ -278,6 +278,7 @@ SELECT
 
     events.age_at_onset AS actual_age_at_onset,
     agetypeec.code_description AS actual_age_type,
+    trisano.get_age_in_years(events.age_at_onset, agetypeec.code_description) AS age_in_years,
     ppl.approximate_age_no_birthday AS estimated_age_at_onset,
     est_ec.code_description AS estimated_age_type,
     events.parent_guardian,
@@ -425,6 +426,7 @@ SELECT
 
     events.age_at_onset AS actual_age_at_onset,
     agetypeec.code_description AS actual_age_type,
+    trisano.get_age_in_years(events.age_at_onset, agetypeec.code_description) AS age_in_years,
     ppl.approximate_age_no_birthday AS estimated_age_at_onset,
     est_ec.code_description AS estimated_age_type,
 

@@ -159,20 +159,31 @@
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
+        <Measure caption="Avg Age at Onset (years)" name="AvgAgeAtOnset" column="age_in_years" aggregator="avg" datatype="Integer" visible="True">
+        </Measure>
+        <!--
         <Measure caption="Avg Age at Onset (years)" name="AvgAgeAtOnset" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
+        -->
 		<Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false">
             <MeasureExpression>
                 <SQL dialect="postgres">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
+        <Measure name="SqAgeAtOnset" visible="false" aggregator="avg">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.get_age_in_years(actual_age_at_onset, actual_age_type)^2</SQL>
+            </MeasureExpression>
+        </Measure>
+        <CalculatedMember name="Age at Onset (years), Std Dev" formula="Sqr([Measures].[SqAgeAtOnset] - Power([Measures].[AvgAgeAtOnset], 2))" dimension="Measures" formatString="###.00" visible="true" />
         <!--
         <CalculatedMember name="NullAges" caption="Null Ages" formula="Count(Filter({[Measures].[AgeAtOnset]}, NOT ([Measures].[AgeAtOnset] IS NULL)))" dimension="Measures" visible="true" />
-        <CalculatedMember name="Age at Onset (years), Std Dev" formula="Stdev(Filter({[Measures].[AvgAgeAtOnset]}, NOT ([Measures].[AvgAgeAtOnset] IS NULL)))" dimension="Measures" formatString="###.00" visible="true" />
+        <CalculatedMember name="Age at Onset (years), Std Dev" formula="Stdev({[Measures].[AvgAgeAtOnset]})" dimension="Measures" formatString="###.00" visible="true" />
         -->
+
 	</Cube>
 	<Cube name="ContactEvents" caption="Contact Events" cache="true" enabled="true">
 		<Table name="dw_contact_events_view" schema="trisano">
@@ -339,5 +350,11 @@
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
+        <Measure name="SqAgeAtOnset" visible="false" aggregator="avg">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.get_age_in_years(actual_age_at_onset, actual_age_type)^2</SQL>
+            </MeasureExpression>
+        </Measure>
+        <CalculatedMember name="Age at Onset (years), Std Dev" formula="Sqr([Measures].[SqAgeAtOnset] - Power([Measures].[AvgAgeAtOnset], 2))" dimension="Measures" formatString="###.00" visible="true" />
 	</Cube>
 </Schema>
