@@ -4,7 +4,7 @@ require 'cucumber/rake/task'
 require 'rake'
 require 'spec/rake/spectask'
 
-task :default => [:specs, :features]
+task :default => [:spec, :features]
 
 desc "Run bi features (make sure the bi server is running)"
 Cucumber::Rake::Task.new(:features) do |t|  
@@ -13,7 +13,7 @@ end
 
 
 desc "Run the specs"
-Spec::Rake::SpecTask.new('specs') do |t|
+Spec::Rake::SpecTask.new('spec') do |t|
   t.spec_files = FileList['spec/**/*.rb']
   t.libs << 'bi/scripts'
 end

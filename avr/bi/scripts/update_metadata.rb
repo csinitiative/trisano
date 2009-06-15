@@ -26,11 +26,11 @@ def load_metadata_xmi(file_path)
 end
 
 class Metadata
-  def initialize(file_path)
+  def initialize(metafile)
     FileUtils.rm Dir.glob('mdr.*')
     @schema_factory = CwmSchemaFactory.new
     @cwm = CWM.get_instance('TriSano')
-    @cwm.importFromXMI File.join(server_dir, 'biserver-ee/pentaho-solutions/TriSano/metadata.xmi')
+    @cwm.importFromXMI metafile
     @meta = @schema_factory.getSchemaMeta(@cwm)
   end
 
@@ -52,7 +52,7 @@ class Metadata
           :from => table, 
           :to   => event_table,
           :type => "N:1"})
-        update_category category_name(short_name), table, event_table
+        update_category category_name(short_name), table
       end
     end    
     @schema_factory.store_schema_meta(@cwm, @meta, nil)
@@ -106,8 +106,16 @@ class Metadata
       @meta.add_table(pt)
     end
     writable_database.column_names_for(table_name).each do |column_name|
-      unless pt.find_physical_column(column_name)
-        pt.add_physical_column PhysicalColumn.new(column_name) unless pt.has_column?(column_name)
+      unless pt.has_column?(column_name)
+        pc = PhysicalColumn.new(column_name)
+        pc.concept.parent_interface = base_concept
+        pc.concept.name = column_name
+        pc.locale_name 'en_US', column_name.gsub('_', ' ')
+        pc.data_type = column_name.suggest_data_type
+        pc.field_type = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
+        pc.formula = column_name.suggest_formula
+        pc.table = pt
+        pt.add_physical_column pc
       end
     end
   end
@@ -153,6 +161,14 @@ class Metadata
     puts "Hows come my hooks aren't getting called?: #{result}"
     result_hooks[:success].call(result) if result_hooks[:success] && result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
     result_hooks[:failure].call(result) if result_hooks[:failure] && result != Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
+  end
+
+  def concept_names
+    @meta.concept_names
+  end
+
+  def base_concept
+    @meta.find_concept('Base')
   end
 
   def morbidity_events_table
@@ -288,5 +304,28 @@ end
 PhysicalTable.class_eval do
   def has_column?(column_name)
     !find_physical_column(column_name).nil?
+  end
+end
+
+PhysicalColumn.class_eval do
+  def locale_name(locale, name)
+    concept.get_property('name').value.locale_string_map[locale] = name
+  end
+end
+
+String.class_eval do
+  def suggest_data_type
+    if self == 'event_id'
+      return Java::OrgPentahoPmsSchemaConceptTypesDatatype::DataTypeSettings::NUMERIC
+    end
+    Java::OrgPentahoPmsSchemaConceptTypesDatatype::DataTypeSettings::STRING
+  end
+
+  def suggest_formula
+    case self
+    when 'event_id', 'type': self
+    else
+      "col_#{self}"
+    end
   end
 end
