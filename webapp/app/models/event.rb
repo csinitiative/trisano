@@ -185,8 +185,8 @@ class Event < ActiveRecord::Base
         AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
       WHERE
       Event.find(:all, 
-                 :include => [:disease_event, :address],
-                 :conditions => [where_clause, start_date, end_date, start_date, end_date])
+        :include => [:disease_event, :address],
+        :conditions => [where_clause, start_date, end_date, start_date, end_date])
     end
 
     def deleted_ibis_records(start_date, end_date)
@@ -196,8 +196,8 @@ class Event < ActiveRecord::Base
         AND events.deleted_at BETWEEN ? AND ?
       WHERE
       Event.find(:all,
-                 :include => [:disease_event, :state_case_status, :lhd_case_status],
-                 :conditions => [where_clause, true, start_date, end_date])
+        :include => [:disease_event, :state_case_status, :lhd_case_status],
+        :conditions => [where_clause, true, start_date, end_date])
     end
 
     def exportable_ibis_records(start_date, end_date)
@@ -316,7 +316,7 @@ class Event < ActiveRecord::Base
       end
 
       [{:field => :record_number, :table => :events},
-       {:field => :pregnant_id, :table => :participations_risk_factors}].each do |attr|
+        {:field => :pregnant_id, :table => :participations_risk_factors}].each do |attr|
         field = attr[:field]
         table = attr[:table].to_s
 
@@ -327,20 +327,20 @@ class Event < ActiveRecord::Base
       end
 
       [{:field => :state_case_status_ids, :table => :events},
-       {:field => :lhd_case_status_ids, :table => :events},
-       {:field => :investigator_ids, :table => :events}].each do |attr|
+        {:field => :lhd_case_status_ids, :table => :events},
+        {:field => :investigator_ids, :table => :events}].each do |attr|
         field = attr[:field]
         table = attr[:table].to_s
 
         if not options[field].blank?
           issue_query = true
           where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")" 
-        # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
+          # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
         end
       end
 
       [{:field => :other_data_1, :table => :events},
-       {:field => :other_data_2, :table => :events}].each do |attr|
+        {:field => :other_data_2, :table => :events}].each do |attr|
         field = attr[:field]
         table = attr[:table].to_s
 
@@ -464,29 +464,24 @@ class Event < ActiveRecord::Base
 
   def add_forms(forms_to_add)
     forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
+    return if forms_to_add.empty?
 
     # Accepts either form_ids or forms.  If forms, convert to form_ids
     forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end }
 
-    # Remember if this event has forms persisted with it already
-    event_has_saved_forms = self.form_references.size > 0
+    existing_template_ids = self.form_references.map { |ref| ref.template_id }
 
-    # Get the form ids that are associated with this event (either from the database or via get_investigation_forms)
-    existing_or_viable_form_ids = self.form_references.map { |ref| ref.form_id }
-
-    if event_has_saved_forms
-      # Lets be sure that there are no dups between the desired forms and the existing forms
-      forms_to_add -= existing_or_viable_form_ids
-    else
-      # Persist all passed in forms plus all viable forms while clearing form_references of any new records added above
-      self.form_references.clear
-      forms_to_add += existing_or_viable_form_ids
-    end
     Event.transaction do
       unless (forms_to_add.all? do |form_id|
-            # Legitimate form?  If not, will throw RecordNotFound that caller should catch.
-            Form.find(form_id)
-            self.form_references.create(:form_id => form_id)
+            form = Form.find(form_id)
+            
+            if existing_template_ids.detect {|template_id| template_id == form.template_id }
+              # A version of this form already exists as a reference, just return true to make the forms_to_add.all? above happy
+              true
+            else
+              self.form_references.create(:form_id => form_id, :template_id => form.template_id)
+            end
+            
           end)
         raise "Unable to process new forms"
       end
@@ -696,7 +691,7 @@ SEARCH
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
     i = -1
     Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-      self.form_references[i += 1] = FormReference.new(:form_id => form.id)
+      self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
     end
     return true
   end

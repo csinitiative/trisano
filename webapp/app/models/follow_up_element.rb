@@ -70,20 +70,10 @@ class FollowUpElement < FormElement
   # question elements. For question-element processing, see QuestionElement#process_condition
   def self.process_core_condition(params)
     result = []
-    investigation_forms = []
-    
     event = Event.find(params[:event_id])
 
-    if event.form_references.blank?
-      investigation_forms = event.get_investigation_forms
-    else
-      event.form_references.each do |form_reference|
-        investigation_forms << form_reference.form
-      end
-    end
-
-    investigation_forms.each do |form|
-      form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
+    event.form_references.each do |form_reference|
+      form_reference.form.form_element_cache.all_follow_ups_by_core_path(params[:core_path]).each do |follow_up|
         if (follow_up.condition_match?(params[:response]))
           # Debt: The magic container for core follow ups needs to go probably
           result << ["show", follow_up]

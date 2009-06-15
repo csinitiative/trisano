@@ -18,10 +18,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FollowUpElement do
-  fixtures :external_codes, :codes, :participations, :entities, :people, :places, :diseases, :disease_events, :forms, :diseases_forms, :form_elements, :questions, :places_types
   
   before(:each) do
-    @form = forms(:test_form)
+    @form =  Factory.build(:form, :event_type => "morbidity_event")
+    @form.save_and_initialize_form_elements
     @question_element = QuestionElement.new({
         :parent_element_id => @form.investigator_view_elements_container.id,
         :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
@@ -31,10 +31,6 @@ describe FollowUpElement do
     @follow_up_element.form_id = 1
     @follow_up_element.condition = "Yes"
     @follow_up_element.parent_element_id = @question_element.id
-  end
-
-  after(:each) do
-    Form.delete(@form)
   end
 
   it "should be valid" do
@@ -137,7 +133,6 @@ describe FollowUpElement do
   describe "when updating a core follow-up with type-ahead support in the UI" do
     
     before(:each) do
-      @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "type_ahead_update"}
@@ -223,7 +218,6 @@ describe FollowUpElement do
   describe "when created with 'save and add to form' with type-ahead support in the UI" do
     
     before(:each) do
-      @form = forms(:test_form)
       @question_element = QuestionElement.new({
           :parent_element_id => @form.investigator_view_elements_container.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "more_type_ahead"}
@@ -283,21 +277,53 @@ describe FollowUpElement do
   
   describe "when processing conditional logic for core follow ups'" do
     
-    before(:each) do
-      @event = MorbidityEvent.new
-      @event.interested_party = participations(:marks_interested_party)
-      @event.disease_event = disease_events(:marks_chicken_pox)
-      @event.jurisdiction = participations(:marks_jurisdiction)
-      @event.save(false)
-      @no_follow_up_answer = Answer.create(:event_id => @event.id, :question_id => questions(:second_tab_core_follow_up_q).id, :text_answer => "YES!")
+    before(:all) do
+      @core_follow_up_form =  Factory.build(:form, :event_type => "morbidity_event")
+      @core_follow_up_form.save_and_initialize_form_elements
+      @core_follow_up_form.form_base_element
+
+      @core_fu_condition = "donner"
+      @core_fu_core_path = "morbidity_event[some_path]"
+
+      @core_follow_up_element = FollowUpElement.new({
+          :parent_element_id => @core_follow_up_form.investigator_view_elements_container.id,
+          :core_path => @core_fu_core_path,
+          :condition => @core_fu_condition
+        })
+      @core_follow_up_element.save_and_add_to_form.should_not be_nil
+
+      @question_element = QuestionElement.new({
+          :parent_element_id => @core_follow_up_element.id,
+          :question_attributes => {
+            :question_text => "Did you eat the fish?",
+            :data_type => "single_line_text",
+            :short_name => Digest::MD5::hexdigest(DateTime.now.to_s)
+          }
+        })
+      @question_element.save_and_add_to_form.should_not be_nil
+      
+      @published_form = @core_follow_up_form.publish
+      @published_form.form_base_element
+
+      # Create an event and add the form to it
+      @event = Factory.create(:morbidity_event)
+      @event.add_forms(@published_form.id)
+      @event.save!
+      
+      @no_follow_up_answer = Answer.create({
+          :event_id => @event.id,
+          :question_id => @published_form.form_element_cache.all_follow_ups_by_core_path(@core_fu_core_path)[0].children[0].question.id,
+          :text_answer => "YES!"
+        }
+      )
     end
     
     it "should return follow-up element with a 'show' attribute for matching core path with matching condition" do
       params = {}
       
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
-      params[:response] = form_elements(:second_tab_core_follow_up).condition
+      params[:core_path] = @core_fu_core_path
+      params[:response] = @core_fu_condition
       
       follow_ups = FollowUpElement.process_core_condition(params)
       
@@ -310,7 +336,7 @@ describe FollowUpElement do
       params = {}
 
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_string_follow_up).core_path
+      params[:core_path] = @core_fu_core_path
       params[:response] = "DOnNer"
 
       follow_ups = FollowUpElement.process_core_condition(params)
@@ -324,7 +350,7 @@ describe FollowUpElement do
       params = {}
 
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_string_follow_up).core_path
+      params[:core_path] = @core_fu_core_path
       params[:response] = "     Donner    "
 
       follow_ups = FollowUpElement.process_core_condition(params)
@@ -338,7 +364,7 @@ describe FollowUpElement do
       params = {}
       
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:core_path] = @core_fu_core_path
       params[:response] = "no match"
       
       follow_ups = FollowUpElement.process_core_condition(params)
@@ -362,11 +388,9 @@ describe FollowUpElement do
     
     it "should delete answers to questions that no longer apply" do
       params = {}
-      
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
+      params[:core_path] = @core_fu_core_path
       params[:response] = "no match"
-      
       follow_ups = FollowUpElement.process_core_condition(params)
       
       begin
@@ -381,16 +405,13 @@ describe FollowUpElement do
     
     it "should not delete answers if conditions apply" do
       params = {}
-      
       params[:event_id] = @event.id
-      params[:core_path] = form_elements(:second_tab_core_follow_up).core_path
-      params[:response] = form_elements(:second_tab_core_follow_up).condition
-      
+      params[:core_path] = @core_fu_core_path
+      params[:response] = @core_fu_condition
       follow_ups = FollowUpElement.process_core_condition(params)
-      
       Answer.find(@no_follow_up_answer.id).should_not be_nil
     end
-    
+
   end
 
   describe "when comparing conditions" do

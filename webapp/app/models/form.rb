@@ -298,7 +298,7 @@ class Form < ActiveRecord::Base
       events.each do |event|
         form_template_ids = event.form_references.collect { |ref| ref.form.template_id }
         unless (form_template_ids.include?(self.id))
-          event.form_references << FormReference.create(:event_id => event.id, :form_id => most_recent_form.id)
+          event.form_references << FormReference.create(:event_id => event.id, :form_id => most_recent_form.id, :template_id => most_recent_form.template_id)
           push_count += 1
         end
       end

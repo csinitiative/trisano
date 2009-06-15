@@ -6,6 +6,9 @@ require 'spec'
 require 'spec/rails'
 require 'spec/custom_matchers'
 
+# Load up factories
+Dir.glob(File.expand_path(File.dirname(__FILE__) + "/../spec/factories/*.rb")) {|f| require f}
+
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
   # lines, delete config/database.yml and disable :active_record

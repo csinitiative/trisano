@@ -187,52 +187,70 @@ describe Form do
 
   describe "when retrieving published forms" do
 
-    fixtures :forms, :diseases_forms
+    before(:all) do
+      @disease = Factory.create(:disease)
+      @jurisdiction = Factory.create(:place_entity)
+
+      @non_matching_disease = Factory.create(:disease)
+      @non_matching_jurisdiction = Factory.create(:place_entity)
+
+      @second_disease_for_form = Factory.create(:disease)
+
+      @morb_form_matching_jurisdiction = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_matching_jurisdiction.diseases << @disease
+      @morb_form_matching_jurisdiction.diseases << @second_disease_for_form
+      @morb_form_matching_jurisdiction.jurisdiction = @jurisdiction
+      @morb_form_matching_jurisdiction.save_and_initialize_form_elements
+      @published_morb_form_matching_jurisdiction = @morb_form_matching_jurisdiction.publish
+
+      @morb_form_non_matching_disease = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_non_matching_disease.diseases << @non_matching_disease
+      @morb_form_non_matching_disease.jurisdiction = @jurisdiction
+      @morb_form_non_matching_disease.save_and_initialize_form_elements
+      @published_morb_form_non_matching_disease = @morb_form_non_matching_disease.publish
+
+      @morb_form_non_matching_jurisdiction = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_non_matching_jurisdiction.diseases << @disease
+      @morb_form_non_matching_jurisdiction.jurisdiction = @non_matching_jurisdiction
+      @morb_form_non_matching_jurisdiction.save_and_initialize_form_elements
+      @published_morb_form_non_matching_jurisdiction = @morb_form_non_matching_jurisdiction.publish
+
+      @morb_form_all_jurisdictions = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_all_jurisdictions.diseases << @disease
+      @morb_form_all_jurisdictions.save_and_initialize_form_elements
+      @published_morb_form_all_jurisdictions = @morb_form_all_jurisdictions.publish
+    end
 
     it "should return only forms for the specified disease and jurisdiction" do
-      form = Form.get_published_investigation_forms(3, 1, :morbidity_event)
-      form.length.should == 4
-      form.each do |d| 
-        d.disease_ids.should == [3]
-        d.jurisdiction_id.should == 1 unless d.jurisdiction_id.nil?
-      end
-
-      form = Form.get_published_investigation_forms(4, 2, :morbidity_event)
-      form.length.should == 1
-      form.each do |d|  
-        d.disease_ids.should == [4]
-        d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+      forms = Form.get_published_investigation_forms(@disease.id, @jurisdiction.id, :morbidity_event)
+      forms.length.should == 2
+      forms.each do |form|
+        form.disease_ids.should == [@disease.id]
+        form.jurisdiction_id.should == @jurisdiction.id unless form.jurisdiction_id.nil?
       end
     end
 
     it "should return forms applicable to all jurisdictions even if given jurisdiction is not found" do
-      form = Form.get_published_investigation_forms(3, 99, :morbidity_event)
-      form.length.should == 3
+      form = Form.get_published_investigation_forms(@disease.id, 99999, :morbidity_event)
+      form.length.should == 1
       form.each { |d| d.jurisdiction_id.should == nil }
     end
 
     it "should return no form if the disease is not found" do
-      Form.get_published_investigation_forms(99, 1, :morbidity_event).length.should == 0
+      Form.get_published_investigation_forms(99999, @jurisdiction.id, :morbidity_event).length.should == 0
     end
     
     it "should return no form if the event type has no forms" do
-      form = Form.get_published_investigation_forms(1, 2, :contact_event).length.should == 0
+      form = Form.get_published_investigation_forms(@disease.id, @jurisdiction.id, :contact_event).length.should == 0
     end
 
     describe "and a form is associated with multiple disease" do
       it "should return only forms for the specified disease and jurisdiction" do
-        form = Form.get_published_investigation_forms(1, 2, :morbidity_event)
-        form.length.should == 2
-        form.each do |d| 
-          d.disease_ids.should == [1]
-          d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
-        end
-
-        form = Form.get_published_investigation_forms(2, 2, :morbidity_event)
+        form = Form.get_published_investigation_forms(@second_disease_for_form.id, @jurisdiction.id, :morbidity_event)
         form.length.should == 1
         form.each do |d| 
-          d.disease_ids.should == [2]
-          d.jurisdiction_id.should == 2 unless d.jurisdiction_id.nil?
+          d.disease_ids.should == [@second_disease_for_form.id]
+          d.jurisdiction_id.should == @jurisdiction.id unless d.jurisdiction_id.nil?
         end
       end
     end
@@ -734,12 +752,6 @@ describe Form do
       @copied_form.updated_at.should_not eql(@original_form.created_at)
     end
 
-    it 'should be a template' do
-      @copied_form.is_template.should be_true
-      @copied_form.template_id.should be_nil
-      @copied_form.version.should be_nil
-    end
-
     it 'should not be published' do
       @copied_form.status.should eql("Not Published")
     end
@@ -768,6 +780,22 @@ describe Form do
       demo_group = demo_section.children[0]
       demo_q1 = demo_group.children[0]
       demo_q1.export_column_id.should eql(form_elements(:demo_group_q1).export_column_id)
+    end
+
+  end
+
+  describe 'a copied form' do
+
+    before(:each) do
+      @form =  Factory.build(:form, :event_type => "morbidity_event")
+      @form.save_and_initialize_form_elements
+      @copied_form = @form.copy
+    end
+
+    it 'should be a template' do
+      @copied_form.is_template.should be_true
+      @copied_form.template_id.should be_nil
+      @copied_form.version.should be_nil
     end
 
   end

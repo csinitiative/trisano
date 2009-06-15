@@ -1210,46 +1210,66 @@ describe MorbidityEvent do
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
-      fixtures :events, :forms
-
+    
       before(:each) do
-        @event = events(:has_anthrax_cmr)
-        @form_ids = [forms(:anthrax_form_all_jurisdictions_1), forms(:anthrax_form_all_jurisdictions_2)].map { |form| form.id }
-      end
+        # Create an event
+        @event = Factory.create(:morbidity_event)
+        @event.save!
 
+        # Create two forms
+        @form =  Factory.build(:form, :event_type => "morbidity_event")
+        @form.save_and_initialize_form_elements
+        @published_form = @form.publish
+        @second_form =  Factory.build(:form, :event_type => "morbidity_event")
+        @second_form.save_and_initialize_form_elements
+        @second_published_form = @second_form.publish
+      end
+    
       it "should add new forms" do
-        @event.add_forms(@form_ids)
+        @event.add_forms([@published_form.id, @second_published_form.id])
         event_form_ids = @event.form_references.map { |ref| ref.form_id }
-        (event_form_ids & @form_ids).sort.should == @form_ids.sort
+        event_form_ids.sort.should == [@published_form.id, @second_published_form.id].sort
       end
-
-      it "should add 'viable' forms" do
-        @event.create_form_references
-        viable_form_ids = @event.form_references.map { |ref| ref.form_id }
-        @event = events(:has_anthrax_cmr)
-
-        @event.add_forms(@form_ids)
-        event_form_ids = @event.form_references.map { |ref| ref.form_id }
-        (event_form_ids & viable_form_ids).sort.should == viable_form_ids.sort
-      end
-
+    
     end
 
-    describe "an event with existing forms" do
-      fixtures :events, :forms, :form_references
-
+    describe "an event with existing forms" do    # No fixture specs
+      
       before(:each) do
-        @event = events(:marks_cmr)
-        @form_ids = [forms(:anthrax_form_all_jurisdictions_1), forms(:anthrax_form_all_jurisdictions_2)].map { |form| form.id }
-        @form_ids << form_references(:marks_form_reference_1).form_id
+        # Create a form and assign it to an event
+        @event = Factory.create(:morbidity_event)
+        @form =  Factory.build(:form, :event_type => "morbidity_event")
+        @form.save_and_initialize_form_elements
+        @published_form = @form.publish
+        @event.add_forms(@published_form.id)
+        @event.save!
+
+        # Create a second form and just publish it
+        @second_form =  Factory.build(:form, :event_type => "morbidity_event")
+        @second_form.save_and_initialize_form_elements
+        @second_published_form = @second_form.publish
       end
 
       it "should add new forms with no dups" do
-        @event.add_forms(@form_ids)
+        # Try adding the first form again, in addition to a form the event doesn't have yet
+        @event.add_forms([@published_form.id, @second_published_form.id])
+        
         event_form_ids = @event.form_references.map { |ref| ref.form_id }
-        (event_form_ids & @form_ids).sort.should == @form_ids.sort
+        event_form_ids.sort.should == [@published_form.id, @second_published_form.id]
       end
 
+      it "should add new forms with no dups, including older versions" do
+        # Rev the form already on the event by publishing it again
+        @second_version_of_first_form = @form.publish
+
+        # Try to add a second form and another version of a form already on the event
+        @event.add_forms([@second_version_of_first_form.id, @second_published_form.id])
+
+        # The new version of a form already on the event should not be added
+        @event.form_references.size.should == 2
+        @event.form_references.detect { |ref| ref.form_id == @second_version_of_first_form }.should be_nil
+      end
+      
     end
 
     describe "argument handling" do

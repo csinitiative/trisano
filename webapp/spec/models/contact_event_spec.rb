@@ -51,9 +51,9 @@ describe ContactEvent do
         mock_user
 
         contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
-                                                                                                                                   "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-                                                                 "participations_contact_attributes" => {} } ],
-                         :disease_event_attributes => {:disease_id => diseases(:chicken_pox).id} }
+                  "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+              "participations_contact_attributes" => {} } ],
+          :disease_event_attributes => {:disease_id => diseases(:chicken_pox).id} }
 
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
         event.save
@@ -71,16 +71,33 @@ describe ContactEvent do
   end
 
   describe "Promoting a contact to a cmr" do
-    fixtures :diseases, :entities, :forms, :diseases_forms
+    fixtures :entities
 
     before(:each) do
       mock_user
-      
+      @disease = Factory.build(:disease)
+
       @c = ContactEvent.new
-      @c.build_disease_event(:disease => diseases(:anthrax))
+      @c.build_disease_event(:disease => @disease)
       @c.build_jurisdiction(:secondary_entity_id => entities(:Davis_County).id)
-      @c.create_form_references
-      @c.save
+      @c.save!
+
+      @form =  Factory.build(:form, :event_type => "contact_event")
+      @form.save_and_initialize_form_elements
+      @published_form = @form.publish
+      @c.add_forms(@published_form.id)
+      @c.save!
+
+      @morb_form_1 = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_1.diseases << @disease
+      @morb_form_1.save_and_initialize_form_elements
+      @published_morb_form_1 = @morb_form_1.publish
+
+      @morb_form_2 = Factory.build(:form, :event_type => "morbidity_event")
+      @morb_form_2.diseases << @disease
+      @morb_form_2.save_and_initialize_form_elements
+      @published_morb_form_2 = @morb_form_2.publish
+
       @m = @c.promote_to_morbidity_event
     end
 
@@ -94,13 +111,13 @@ describe ContactEvent do
 
     it "should leave contact forms intact" do
       form_ids = @c.form_references.collect { |f| f.form_id }
-      form_ids.include?(forms(:anthrax_form_for_contact_event).id).should be_true
+      form_ids.include?(@published_form.id).should be_true
     end
 
     it "should add morbidity forms" do
       form_ids = @c.form_references.collect { |f| f.form_id }
-      form_ids.include?(forms(:anthrax_form_all_jurisdictions_1).id).should be_true
-      form_ids.include?(forms(:anthrax_form_all_jurisdictions_2).id).should be_true
+      form_ids.include?(@published_morb_form_1.id).should be_true
+      form_ids.include?(@published_morb_form_2.id).should be_true
     end
 
     it "should be in a NEW state" do
