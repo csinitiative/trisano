@@ -121,7 +121,7 @@ module StagedMessages
 
     def result
       begin
-        obx_segment.observation_value + (obx_segment.units.blank? ? '' : " #{obx_segment.units}")
+        obx_segment.observation_value.split(obx_segment.item_delim).join(' ') + (obx_segment.units.blank? ? '' : " #{obx_segment.units}")
       rescue
         "Could not be determined"
       end
