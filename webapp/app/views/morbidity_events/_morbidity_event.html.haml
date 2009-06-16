@@ -39,9 +39,8 @@
   %td
     %b= from_index ? morbidity_event['jurisdiction_short_name'] : morbidity_event.primary_jurisdiction.short_name
     %br
-    - if !from_index
-      .tools
-        = jurisdiction_routing_control(morbidity_event)
+    .tools
+      = jurisdiction_routing_control(morbidity_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         - if from_index
@@ -65,7 +64,6 @@
           Investigator:&nbsp;
           %b= inv_name
 
-    - if !from_index
-      .tools
-        = state_controls(morbidity_event)
+    .tools
+      = state_controls(morbidity_event)
 

@@ -45,9 +45,8 @@
   %td
     %b= from_index ? contact_event['jurisdiction_short_name'] : contact_event.primary_jurisdiction.short_name
     %br
-    - if !from_index
-      .tools
-        = jurisdiction_routing_control(contact_event)
+    .tools
+      = jurisdiction_routing_control(contact_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         - if from_index
@@ -71,6 +70,5 @@
           Investigator:&nbsp;
           %b= inv_name
 
-    - if !from_index
-      .tools
-        = state_controls(contact_event)
+    .tools
+      = state_controls(contact_event)
