@@ -82,6 +82,14 @@ class StagedMessagesController < ApplicationController
     redirect_to(staged_messages_url)
   end
 
+  def event_search
+    @staged_message = StagedMessage.find(params[:id])
+    if params[:name]
+      dob = begin Date.parse(params[:birth_date]) || nil rescue nil end
+      @events = HumanEvent.search_by_name_and_birth_date(params[:name], dob)
+    end
+  end
+
   private
 
   def authorize

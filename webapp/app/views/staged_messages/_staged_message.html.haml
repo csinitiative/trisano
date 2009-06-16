@@ -15,7 +15,7 @@
 
 %tr
   %td
-    .staged-message
+    %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
         %p=h staged_message.patient.patient_name
         %p="Specimen: #{h staged_message.observation_request.specimen_source}"
@@ -23,7 +23,8 @@
         %p
           %small=h staged_message.message_header.sending_facility
         %p.tools
-          Search | Assign | New | Discard |
+          = link_to 'Search', event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
+          | Assign | New | Discard |
           %span{:id => "show_link_#{staged_message.id}"}      
             = link_to_function 'Raw', nil do |page|
               - page["original_message_#{staged_message.id}"].show

@@ -88,7 +88,15 @@ class HumanEvent < Event
       return false
     end
 
+    def search_by_name_and_birth_date(name, bdate)
+      find_by_name_bdate(name, bdate)
+    end
+
     def search_by_name(name)
+      find_by_name_bdate(name)
+    end
+
+    def find_by_name_bdate(name, bdate=nil)
       soundex_codes = []
       fulltext_terms = []
       raw_terms = name.split(" ")
@@ -102,7 +110,8 @@ class HumanEvent < Event
       sql_terms = fulltext_terms.join(" | ")
 
       where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
-      order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC;"
+      where_clause << " AND (people.birth_date = '#{sanitize_sql(["%s", bdate])}' OR people.birth_date IS NULL)" if bdate
+      order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC"
 
       select = <<-SQL
         SELECT events.id AS id,

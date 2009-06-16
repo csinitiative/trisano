@@ -1,0 +1,65 @@
+= content_for :title do
+  = "Event Search using staged message #{@staged_message.id} / #{@staged_message.patient.patient_name}"
+
+= link_to h('<< Back'), staged_messages_path 
+
+%fieldset.form
+  %legend Message Details
+  %table.list
+    %tr
+      %td
+        = render @staged_message
+
+%br
+- if defined? @events
+  -if @events.empty?
+    %b No results
+  -else
+    %table#search_results.list
+      %tr
+        %th Name
+        %th Birth Date
+        %th Gender
+        %th Event Type
+        %th Jurisdiction
+        %th Created Date
+        %th Disease
+        %th Actions
+      - previous_entity_id = nil
+      - for event in @events do
+        - if (event['deleted_at'].nil?)
+          - result_class = 'search-active tabular'
+        - else
+          - result_class = 'search-inactive tabular'
+        - current_entity_id = event['entity_id']
+        - if previous_entity_id != current_entity_id
+          - output_name = true
+          - previous_entity_id = current_entity_id
+        - else
+          - output_name = false
+        
+        - jurisdictions = pg_array(event['secondary_jurisdictions']) << event['jurisdiction_entity_id']
+        - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
+        - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
+        %tr{:class => result_class, :id => "event_#{event['id']}"}
+          %td 
+            = "#{event['last_name']}, #{event['first_name']}" if output_name
+          %td
+            = event['birth_date'] if output_name
+          %td
+            = event['birth_gender'] if output_name
+          %td= event['event_type'].underscore.humanize 
+          %td= event['jurisdiction_short_name']
+          %td= event['event_onset_date']
+          - if can_update || can_view
+            %td= event['disease_name']
+          - else
+            %td Private
+          - edit_path = event['event_type'] == 'MorbidityEvent' ? edit_cmr_path(event) : edit_contact_event_path(event)
+          - view_path = event['event_type'] == 'MorbidityEvent' ? cmr_path(event) : contact_event_path(event)
+          %td 
+            = link_to "Show", view_path
+            | Assign lab result
+            =# link_to('Assign lab result', cmrs_path(:from_event => event, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
+            | New CMR with this person and lab result
+            =# link_to('New CMR with this person and lab result', cmrs_path(:from_event => event, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)

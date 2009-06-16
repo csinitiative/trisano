@@ -30,3 +30,33 @@ Feature: Staging Electronic Messages
     And  I should see value "Positive" under label "Result"
     And  I should see value "Negative" under label "Test Type"
     And  I should see value "2009-03-21" under label "Test Date"
+
+  Scenario: Searching for matching events when none exist
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there are no matching entries
+
+    When I visit the staged message show page
+    And I click search for the staged message
+    Then I should be sent to the search results page
+    And I should see the staged message
+    And I should not see any matching results
+
+  Scenario: Searching for matching events when name only match is found
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there is an event with a matching name but no birth date
+
+    When I visit the staged message show page
+    And I click search for the staged message
+    Then I should see matching results
+
+  Scenario: Searching for matching events when name and birth date found
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there is an event with a matching name and birth date
+
+    When I visit the staged message show page
+    And I click search for the staged message
+    Then I should see matching results
+

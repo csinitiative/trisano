@@ -72,6 +72,14 @@ module StagedMessages
         "Could not be determined"
       end
     end
+
+    def birth_date
+      begin
+        Date.parse(pid_segment.patient_dob)
+      rescue
+        "Could not be determined"
+      end
+    end
   end
 
   class ObrWrapper
