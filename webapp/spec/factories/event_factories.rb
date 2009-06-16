@@ -121,6 +121,11 @@ Factory.define :question_single_line_text, :parent => :question do |q|
   q.data_type 'single_line_text'
 end
 
+Factory.define :user do |u|
+  u.uid { Factory.next(:uid) }
+  u.user_name { Factory.next(:user_name) }
+end
+
 #
 # Sequences
 #
@@ -171,4 +176,12 @@ end
 
 Factory.sequence :long_name do |n|
   "#{Faker::Lorem.words(3)} #{n}"
+end
+
+Factory.sequence :user_name do |n|
+  "#{n}_#{Faker::Lorem.words(1)}"
+end
+
+Factory.sequence :uid do |n|
+  "#{n}"
 end
