@@ -277,7 +277,7 @@ describe FollowUpElement do
   
   describe "when processing conditional logic for core follow ups'" do
     
-    before(:all) do
+    before(:each) do
       @core_follow_up_form =  Factory.build(:form, :event_type => "morbidity_event")
       @core_follow_up_form.save_and_initialize_form_elements
       @core_follow_up_form.form_base_element
