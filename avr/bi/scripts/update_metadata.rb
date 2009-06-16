@@ -46,7 +46,7 @@ class Metadata
     writable_database.modified_tables.each do |short_name, table_name|
       update_physical_table table_name
       update_business_table table_name do |table|
-        secure_table(table)
+        secure table
         event_table = table_name =~ /contact/ ? contact_events_table : morbidity_events_table
         create_relationship({ 
           :from => table, 
@@ -57,7 +57,7 @@ class Metadata
     end    
     @schema_factory.store_schema_meta(@cwm, @meta, nil)
     publish({ :success => lambda{ puts "Sucess!" },
-              :failures => lambda{ |result| "Failed because #{result}" }})
+              :failure => lambda{ |result| "Failed because #{result}" }})
   end
 
   def category_name(name)
@@ -89,7 +89,7 @@ class Metadata
   def create_relationship(options)
     relationship = Relationship.new
     relationship.table_from = options[:from]
-    relationship.field_from = options[:from].find_business_column('event_id')
+    relationship.field_from = options[:from].find_business_column("#{options[:from].get_id}_event_id")
     relationship.table_to   = options[:to]
     relationship.field_to   = options[:to].id_column
     relationship.type       = options[:type]
@@ -100,6 +100,7 @@ class Metadata
     pt = find_physical_table view_for(table_name)
     if pt.nil?
       pt = PhysicalTable.new view_for(table_name)
+      pt.locale_name 'en_US', table_name.gsub('_', ' ')
       pt.set_database_meta(ro_database.meta)
       pt.set_target_schema('trisano')
       pt.set_target_table view_for(table_name)
@@ -130,7 +131,7 @@ class Metadata
       end
       pt.physical_columns.each do |pc|        
         bc = Java::OrgPentahoPmsSchema::BusinessColumn.new
-        bc.set_id pc.get_id
+        bc.set_id "#{view_for(table_name)}_#{pc.get_id}"
         bc.physical_column = pc
         bc.business_table = table
         table.add_business_column bc unless table.has_column?(pc)
@@ -143,6 +144,8 @@ class Metadata
     category = find_business_category(category_name)
     if category.nil?
       category = BusinessCategory.new(category_name)
+      secure category
+      category.locale_name 'en_US', category_name.gsub('_', ' ')
       trisano_business_model.add_category(category)
     end
     tables.each do |table|
@@ -158,7 +161,6 @@ class Metadata
     end
     files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
     result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
-    puts "Hows come my hooks aren't getting called?: #{result}"
     result_hooks[:success].call(result) if result_hooks[:success] && result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
     result_hooks[:failure].call(result) if result_hooks[:failure] && result != Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
   end
@@ -179,8 +181,8 @@ class Metadata
     find_business_table 'ContactEvents'
   end
 
-  def secure_table(table)
-    table.concept.add_property security_property
+  def secure(obj)
+    obj.concept.add_property security_property
   end
 
   def rights_mask
@@ -275,6 +277,12 @@ class Metadata
   end
 end
 
+module ConceptExtension
+  def locale_name(locale, name)
+    concept.get_property('name').value.locale_string_map[locale] = name
+  end
+end
+
 BusinessModel.class_eval do  
   def find_relationships_from(table)    
     relationships.select {|r| r.table_from.get_id == table.get_id}
@@ -296,21 +304,23 @@ BusinessTable.class_eval do
 end
 
 BusinessCategory.class_eval do
+  include ConceptExtension
+
   def has_column?(column_name)
     !find_business_column(column_name).nil?
   end
 end
 
 PhysicalTable.class_eval do
+  include ConceptExtension
+
   def has_column?(column_name)
     !find_physical_column(column_name).nil?
   end
 end
 
 PhysicalColumn.class_eval do
-  def locale_name(locale, name)
-    concept.get_property('name').value.locale_string_map[locale] = name
-  end
+  include ConceptExtension
 end
 
 String.class_eval do
@@ -328,4 +338,9 @@ String.class_eval do
       "col_#{self}"
     end
   end
+end
+
+if __FILE__ == $0
+  meta = load_metadata_xmi(File.expand_path(File.dirname(__FILE__), '..', 'schema', 'metadata.xmi'))
+  meta.update_from_database
 end

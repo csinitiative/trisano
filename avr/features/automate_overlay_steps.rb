@@ -46,7 +46,7 @@ Then /^I should have a new Relationship$/ do
   relationships = @metadata.trisano_business_model.find_relationships_from(@metadata.trisano_business_model.find_business_table('formbuilder_test_table_1_view'))
   relationships.size.should == 1
   relationships[0].field_to.get_id.should == 'BC_DW_MORBIDITY_EVENTS_VIEW_ID'
-  relationships[0].field_from.get_id.should == 'event_id'
+  relationships[0].field_from.get_id.should == 'formbuilder_test_table_1_view_event_id'
 end
 
 Then /^I should have a new Category$/ do
