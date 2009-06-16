@@ -17,11 +17,13 @@
 
 class AddFormReferenceIndexes < ActiveRecord::Migration
   def self.up
+    execute("ALTER TABLE form_references ALTER COLUMN template_id SET NOT NULL;")
     execute("CREATE INDEX f_template_id_index ON forms USING btree (template_id)")
     execute("CREATE UNIQUE INDEX index_form_references_on_event_id_and_template_id ON form_references USING btree (event_id, template_id)")
   end
 
   def self.down
+    execute("ALTER TABLE form_references ALTER COLUMN template_id DROP NOT NULL;")
     execute("DROP INDEX f_template_id_index")
     execute("DROP INDEX index_form_references_on_event_id_and_template_id")
   end
