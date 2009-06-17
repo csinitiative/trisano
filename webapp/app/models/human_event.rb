@@ -224,6 +224,8 @@ class HumanEvent < Event
             events.type AS type,
             events.deleted_at AS deleted_at,
             events.workflow_state as workflow_state,
+            events.investigator_id as investigator_id,
+            events.event_queue_id as event_queue_id,
             entities.id AS entity_id,
             people.first_name AS first_name,
             people.last_name AS last_name,
