@@ -9,7 +9,6 @@ Feature: Removing forms from events
     And that form has 2 questions
     And that form is published
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
-    And the forms for the event have been assigned
     And the disease-specific questions for the event have been answered
     And I am logged in as a super user
 

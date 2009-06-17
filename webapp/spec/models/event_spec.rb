@@ -1787,7 +1787,7 @@ describe Event, 'cloning an event' do
       form.publish
 
       @org_event = MorbidityEvent.new(@event_hash)
-      @org_event.create_form_references
+      @org_event.save
       @org_event.answers = { "1" => { :question_id => question_element.question.id, :text_answer => "Nothin'"} }
       @org_event.save
 

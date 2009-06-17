@@ -23,9 +23,9 @@ Given /^I have an existing contact event$/ do
   @form.save_and_initialize_form_elements
   @form.investigator_view_elements_container.add_child Factory.create(:view_element, :tree_id => @form.form_base_element.tree_id)
   @form.save!
+  @published_form = @form.publish
 
-  # TODO this is a hack around a persistence bug in factory_girl's has_many stoof.
-  @event.form_references << Factory.create(:form_reference, :form => @form)
+  @event.add_forms(@published_form.id)
   @event.labs << Factory.create(:lab)
   @event.save!
 end

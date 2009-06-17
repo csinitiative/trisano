@@ -27,10 +27,6 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
   @event = create_basic_event(event_type, get_unique_name(1), disease, jurisdiction)
 end
 
-Given(/^the forms for the event have been assigned$/) do
-  @event.create_form_references
-end
-
 Given(/^the disease-specific questions for the event have been answered$/) do
   @answer_text = "#{get_unique_name(2)} answer"
   question_elements = FormElement.find_all_by_form_id_and_type(@published_form.id, "QuestionElement", :include => [:question])

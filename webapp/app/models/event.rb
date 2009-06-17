@@ -687,15 +687,6 @@ SEARCH
     end
   end
 
-  def create_form_references
-    return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
-    i = -1
-    Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-      self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
-    end
-    return true
-  end
-
   class << self
     def supports(functionality)
       return unless [:tasks, :attachments].include?(functionality)
@@ -710,6 +701,15 @@ SEARCH
 
 
   private
+
+  def create_form_references
+    return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
+    i = -1
+    Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
+      self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
+    end
+    return true
+  end
 
   def set_record_number
     customer_number_sequence = 'events_record_number_seq'
