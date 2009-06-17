@@ -183,6 +183,17 @@ FROM
         ON (f.primary_entity_id = people.entity_id)
 ;
 
+ALTER TABLE dw_morbidity_patients
+    ADD CONSTRAINT dw_morbidity_patients_pkey PRIMARY KEY (id);
+CREATE INDEX dw_morbidity_patients_entity_ix ON dw_morbidity_patients (entity_id);
+CREATE INDEX dw_morbidity_patients_birth_gender_ix
+    ON dw_morbidity_patients (birth_gender);
+CREATE INDEX dw_morbidity_patients_ethnicity_ix ON dw_morbidity_patients (ethnicity);
+CREATE INDEX dw_morbidity_patients_birth_date_ix
+    ON dw_morbidity_patients (birth_date);
+CREATE INDEX dw_morbidity_patients_date_of_death_ix
+    ON dw_morbidity_patients (date_of_death);
+
 CREATE TABLE dw_contact_patients AS
 SELECT
     people.id,
@@ -220,6 +231,17 @@ FROM
         ON (f.primary_entity_id = people.entity_id)
 ;
 
+ALTER TABLE dw_contact_patients
+    ADD CONSTRAINT dw_contact_patients_pkey PRIMARY KEY (id);
+CREATE INDEX dw_contact_patients_entity_ix ON dw_contact_patients (entity_id);
+CREATE INDEX dw_contact_patients_birth_gender_ix
+    ON dw_contact_patients (birth_gender);
+CREATE INDEX dw_contact_patients_ethnicity_ix ON dw_contact_patients (ethnicity);
+CREATE INDEX dw_contact_patients_birth_date_ix
+    ON dw_contact_patients (birth_date);
+CREATE INDEX dw_contact_patients_date_of_death_ix
+    ON dw_contact_patients (date_of_death);
+
 CREATE TABLE dw_encounter_patients AS
 SELECT
     people.id,
@@ -256,6 +278,17 @@ FROM
     ) f
         ON (f.primary_entity_id = people.entity_id)
 ;
+
+ALTER TABLE dw_encounter_patients
+    ADD CONSTRAINT dw_encounter_patients_pkey PRIMARY KEY (id);
+CREATE INDEX dw_encounter_patients_entity_ix ON dw_encounter_patients (entity_id);
+CREATE INDEX dw_encounter_patients_birth_gender_ix
+    ON dw_encounter_patients (birth_gender);
+CREATE INDEX dw_encounter_patients_ethnicity_ix ON dw_encounter_patients (ethnicity);
+CREATE INDEX dw_encounter_patients_birth_date_ix
+    ON dw_encounter_patients (birth_date);
+CREATE INDEX dw_encounter_patients_date_of_death_ix
+    ON dw_encounter_patients (date_of_death);
 
 CREATE TABLE dw_morbidity_events AS
 SELECT
@@ -411,6 +444,38 @@ CREATE INDEX dw_morbidity_events_investigating_jurisdiction
     ON dw_morbidity_events (investigating_jurisdiction);
 CREATE INDEX dw_morbidity_events_jurisdiction_of_residence
     ON dw_morbidity_events (jurisdiction_of_residence);
+CREATE INDEX dw_morbidity_events_disease_id_ix
+    ON dw_morbidity_events (disease_id);
+CREATE INDEX dw_morbidity_events_food_handler_ix
+    ON dw_morbidity_events (food_handler);
+CREATE INDEX dw_morbidity_events_healthcare_worker_ix
+    ON dw_morbidity_events (healthcare_worker);
+CREATE INDEX dw_morbidity_events_group_living_ix
+    ON dw_morbidity_events (group_living);
+CREATE INDEX dw_morbidity_events_day_care_ix
+    ON dw_morbidity_events (day_care_association);
+CREATE INDEX dw_morbidity_events_pregnant_ix
+    ON dw_morbidity_events (pregnant);
+CREATE INDEX dw_morbidity_events_date_disease_onset_ix
+    ON dw_morbidity_events (date_disease_onset);
+CREATE INDEX dw_morbidity_events_date_disease_diagnosed_ix
+    ON dw_morbidity_events (date_disease_diagnosed);
+CREATE INDEX dw_morbidity_events_results_reported_to_clinician_date_ix
+    ON dw_morbidity_events (results_reported_to_clinician_date);
+CREATE INDEX dw_morbidity_events_date_reported_to_public_health_ix
+    ON dw_morbidity_events (date_reported_to_public_health);
+CREATE INDEX dw_morbidity_events_date_entered_into_system_ix
+    ON dw_morbidity_events (date_entered_into_system);
+CREATE INDEX dw_morbidity_events_date_investigation_started_ix
+    ON dw_morbidity_events (date_investigation_started);
+CREATE INDEX dw_morbidity_events_date_investigation_completed_ix
+    ON dw_morbidity_events (date_investigation_completed);
+CREATE INDEX dw_morbidity_events_review_completed_by_state_date_ix
+    ON dw_morbidity_events (review_completed_by_state_date);
+CREATE INDEX dw_morbidity_events_date_created_ix
+    ON dw_morbidity_events (date_created);
+CREATE INDEX dw_morbidity_events_parent_id_ix
+    ON dw_morbidity_events (parent_id);
 
 CREATE TABLE dw_contact_events AS
 SELECT
@@ -544,27 +609,39 @@ WHERE
 
 ALTER TABLE dw_contact_events
     ADD CONSTRAINT pk_dw_contact_events PRIMARY KEY (id);
-
 CREATE INDEX dw_contact_events_patient_id ON dw_contact_events (dw_patients_id);
-
 CREATE INDEX dw_contact_events_parent_id ON dw_contact_events (parent_id);
-
--- UPDATE dw_patients p
--- SET is_morbidity_patient = TRUE
--- FROM dw_morbidity_events dm
--- WHERE dm.dw_patients_id = p.id;
-
--- UPDATE dw_patients p
--- SET is_contact_patient = TRUE
--- FROM dw_contact_events dm
--- WHERE dm.dw_patients_id = p.id;
-
--- ALTER TABLE dw_patients
---     ADD CONSTRAINT pk_dw_patients PRIMARY KEY (id);
+CREATE INDEX dw_contact_events_disease_id_ix
+    ON dw_contact_events (disease_id);
+CREATE INDEX dw_contact_events_food_handler_ix
+    ON dw_contact_events (food_handler);
+CREATE INDEX dw_contact_events_healthcare_worker_ix
+    ON dw_contact_events (healthcare_worker);
+CREATE INDEX dw_contact_events_group_living_ix
+    ON dw_contact_events (group_living);
+CREATE INDEX dw_contact_events_day_care_ix
+    ON dw_contact_events (day_care_association);
+CREATE INDEX dw_contact_events_pregnant_ix
+    ON dw_contact_events (pregnant);
+CREATE INDEX dw_contact_events_date_disease_onset_ix
+    ON dw_contact_events (date_disease_onset);
+CREATE INDEX dw_contact_events_date_disease_diagnosed_ix
+    ON dw_contact_events (date_disease_diagnosed);
+CREATE INDEX dw_contact_events_date_entered_into_system_ix
+    ON dw_contact_events (date_entered_into_system);
+CREATE INDEX dw_contact_events_date_investigation_started_ix
+    ON dw_contact_events (date_investigation_started);
+CREATE INDEX dw_contact_events_date_investigation_completed_ix
+    ON dw_contact_events (date_investigation_completed);
+CREATE INDEX dw_contact_events_review_completed_by_state_date_ix
+    ON dw_contact_events (review_completed_by_state_date);
+CREATE INDEX dw_contact_events_date_created_ix
+    ON dw_contact_events (date_created);
+CREATE INDEX dw_contact_events_parent_id_ix
+    ON dw_contact_events (parent_id);
 
 CREATE TABLE dw_secondary_jurisdictions AS
 SELECT
-    -- TODO: Test this with contact events with secondary jurisdictions
     events.id,
     CASE
         WHEN events.type = 'MorbidityEvent' THEN events.id
@@ -590,11 +667,14 @@ WHERE
     )
 ;
 
-CREATE INDEX dw_secondary_jurisdictions_morbidity_id
+ALTER TABLE dw_secondary_jurisdictions
+    ADD CONSTRAINT dw_secondary_jurisdictions_pkey PRIMARY KEY (id, jurisdiction_id);
+CREATE INDEX dw_secondary_jurisdictions_morbidity_id_ix
     ON dw_secondary_jurisdictions (dw_morbidity_events_id);
-
-CREATE INDEX dw_secondary_jurisdictions_contact_id
+CREATE INDEX dw_secondary_jurisdictions_contact_id_ix
     ON dw_secondary_jurisdictions (dw_contact_events_id);
+CREATE INDEX dw_secondary_jurisdictions_jurisdiction_id_ix
+    ON dw_secondary_jurisdictions (jurisdiction_id);
 
 CREATE TABLE dw_events_hospitals AS
 SELECT
@@ -626,6 +706,14 @@ WHERE
 
 ALTER TABLE dw_events_hospitals
     ADD CONSTRAINT pk_dw_events_hospitals PRIMARY KEY (id);
+CREATE INDEX dw_events_hospitals_morbidity_event_id_ix
+    ON dw_events_hospitals (dw_morbidity_events_id);
+CREATE INDEX dw_events_hospitals_contact_event_id_ix
+    ON dw_events_hospitals (dw_contact_events_id);
+CREATE INDEX dw_events_hospitals_admission_date_ix
+    ON dw_events_hospitals (admission_date);
+CREATE INDEX dw_events_hospitals_discharge_date_ix
+    ON dw_events_hospitals (discharge_date);
 
 CREATE TABLE dw_lab_results AS
 SELECT
@@ -708,6 +796,10 @@ WHERE
 
 ALTER TABLE dw_lab_results
     ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id);
+CREATE INDEX dw_lab_results_morbidity_id_ix
+    ON dw_lab_results (dw_morbidity_events_id);
+CREATE INDEX dw_lab_results_contact_id_ix
+    ON dw_lab_results (dw_contact_events_id);
 
 CREATE SEQUENCE dw_patients_races_seq;
 
@@ -726,8 +818,8 @@ FROM
 
 ALTER TABLE dw_patients_races
     ADD CONSTRAINT pk_dw_patients_races PRIMARY KEY (id);
-
 CREATE INDEX dw_patients_races_patient_id ON dw_patients_races (person_id);
+CREATE INDEX dw_patients_races_race_ix ON dw_patients_races (race);
 
 CREATE TABLE dw_events_treatments AS
 SELECT
@@ -786,6 +878,12 @@ WHERE
 
 ALTER TABLE dw_events_treatments
     ADD CONSTRAINT pk_dw_events_treatments PRIMARY KEY (id);
+CREATE INDEX dw_events_treatments_morbidity_id_ix
+    ON dw_events_treatments (dw_morbidity_events_id);
+CREATE INDEX dw_events_treatments_contact_id_ix
+    ON dw_events_treatments (dw_contact_events_id);
+CREATE INDEX dw_events_treatments_date_of_treatment_ix
+    ON dw_events_treatments (date_of_treatment);
 
 CREATE TABLE dw_morbidity_clinicians AS
 SELECT
@@ -804,6 +902,11 @@ WHERE
     p.type = 'Clinician'
 ;
 
+ALTER TABLE dw_morbidity_clinicians
+    ADD CONSTRAINT dw_morbidity_clinicians_pkey PRIMARY KEY (id);
+CREATE INDEX dw_morbidity_clinicians_event_id_ix
+    ON dw_morbidity_clinicians (dw_morbidity_events_id);
+
 CREATE TABLE dw_contact_clinicians AS
 SELECT
     p.id AS id,
@@ -820,6 +923,11 @@ FROM
 WHERE
     p.type = 'Clinician'
 ;
+
+ALTER TABLE dw_contact_clinicians
+    ADD CONSTRAINT dw_contact_clinicians_pkey PRIMARY KEY (id);
+CREATE INDEX dw_contact_clinicians_event_id_ix
+    ON dw_contact_clinicians (dw_contact_events_id);
 
 CREATE TABLE dw_events_diagnostic_facilities AS
 SELECT
@@ -846,6 +954,12 @@ WHERE
 
 ALTER TABLE dw_events_diagnostic_facilities
     ADD CONSTRAINT pk_dw_events_diagnostic_facilities PRIMARY KEY (id);
+CREATE INDEX dw_events_diag_fac_morbidity_event_ix
+    ON dw_events_diagnostic_facilities (dw_morbidity_events_id);
+CREATE INDEX dw_events_diag_fac_contact_event_ix
+    ON dw_events_diagnostic_facilities (dw_contact_events_id);
+CREATE INDEX dw_events_diag_fac_place_id_ix
+    ON dw_events_diagnostic_facilities (place_id);
 
 CREATE TABLE dw_events_reporting_agencies AS
 SELECT
@@ -872,6 +986,12 @@ WHERE
 
 ALTER TABLE dw_events_reporting_agencies
     ADD CONSTRAINT pk_dw_events_reporting_agencies PRIMARY KEY (id);
+CREATE INDEX dw_events_rep_agen_morbidity_event_ix
+    ON dw_events_reporting_agencies (dw_morbidity_events_id);
+CREATE INDEX dw_events_rep_agen_contact_event_ix
+    ON dw_events_reporting_agencies (dw_contact_events_id);
+CREATE INDEX dw_events_reporting_agencies_place_ix
+    ON dw_events_reporting_agencies (place_id);
 
 CREATE TABLE dw_events_reporters AS
 SELECT
@@ -899,6 +1019,10 @@ WHERE
 
 ALTER TABLE dw_events_reporters
     ADD CONSTRAINT pk_dw_events_reporters PRIMARY KEY (id);
+CREATE INDEX dw_events_reporters_morbidity_event_ix
+    ON dw_events_reporters (dw_morbidity_events_id);
+CREATE INDEX dw_events_reporters_contact_event_ix
+    ON dw_events_reporters (dw_contact_events_id);
 
 CREATE TABLE dw_place_events AS
 SELECT
@@ -925,7 +1049,6 @@ WHERE
 
 ALTER TABLE dw_place_events
     ADD CONSTRAINT pk_dw_place_events PRIMARY KEY (id);
-
 CREATE INDEX dw_place_events_parent ON dw_place_events (dw_morbidity_events_id);
 
 CREATE TABLE dw_encounters AS
@@ -945,12 +1068,16 @@ FROM
 
 ALTER TABLE dw_encounters
     ADD CONSTRAINT pk_dw_encounters PRIMARY KEY (id);
-
 CREATE INDEX dw_encounters_parent ON dw_encounters (dw_morbidity_events_id);
+CREATE INDEX dw_encounters_event_id_ix ON dw_encounters (encounter_event_id);
+CREATE INDEX dw_encounters_investigator_id_ix ON dw_encounters (investigator_id);
+CREATE INDEX dw_encounters_encounter_date_ix ON dw_encounters (encounter_date);
+CREATE INDEX dw_encounters_location_ix ON dw_encounters (location);
 
+-- TODO: is this table useful?
 CREATE TABLE dw_encounters_labs AS
 SELECT
-    events.id,
+    p.id,
     events.id AS dw_encounters_id,
     lr.id AS dw_lab_results_id
 FROM
@@ -965,7 +1092,12 @@ WHERE
 
 ALTER TABLE dw_encounters_labs
     ADD CONSTRAINT pk_dw_encounters_labs PRIMARY KEY (id);
+CREATE INDEX dw_encounters_labs_encounter_id_ix
+    ON dw_encounters_labs (dw_encounters_id);
+CREATE INDEX dw_encounters_labs_results_ix
+    ON dw_encounters_labs (dw_lab_results_id);
 
+-- TODO: is this table useful?
 CREATE TABLE dw_encounters_treatments AS
 SELECT
     pt.id,
@@ -983,6 +1115,10 @@ WHERE
 
 ALTER TABLE dw_encounters_treatments
     ADD CONSTRAINT pk_dw_encounters_treatments PRIMARY KEY (id);
+CREATE INDEX dw_encounters_treatments_encounter_ix
+    ON dw_encounters_treatments (dw_encounters_id);
+CREATE INDEX dw_enc_treat_events_treatments_id_ix
+    ON dw_encounters_treatments (dw_events_treatments_id);
 
 CREATE TABLE dw_morbidity_questions AS
 SELECT
@@ -1002,6 +1138,11 @@ FROM
         ON (f.id = q.id)
 ;
 
+ALTER TABLE dw_morbidity_questions
+    ADD CONSTRAINT dw_morbidity_questions_pkey PRIMARY KEY (id);
+CREATE INDEX dw_morbidity_questions_form_element_ix
+    ON dw_morbidity_questions (form_element_id);
+
 CREATE TABLE dw_contact_questions AS
 SELECT
     q.*
@@ -1019,6 +1160,11 @@ FROM
     ) f
         ON (f.id = q.id)
 ;
+
+ALTER TABLE dw_contact_questions
+    ADD CONSTRAINT dw_contact_questions_pkey PRIMARY KEY (id);
+CREATE INDEX dw_contact_questions_form_element_ix
+    ON dw_contact_questions (form_element_id);
 
 CREATE TABLE dw_encounter_questions AS
 SELECT
@@ -1038,6 +1184,11 @@ FROM
         ON (f.id = q.id)
 ;
 
+ALTER TABLE dw_encounter_questions
+    ADD CONSTRAINT dw_encounter_questions_pkey PRIMARY KEY (id);
+CREATE INDEX dw_encounter_questions_form_element_ix
+    ON dw_encounter_questions (form_element_id);
+
 CREATE TABLE dw_place_questions AS
 SELECT
     q.*
@@ -1056,66 +1207,10 @@ FROM
         ON (f.id = q.id)
 ;
 
--- CREATE TABLE dw_questions AS
--- SELECT
---     *,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM
---                 questions
---                 INNER JOIN events
---                     ON (events.id = questions.id)
---                 WHERE
---                     events.type = 'MorbidityEvent' AND
---                     questions.id = q.id
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_morbidity,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM
---                 questions
---                 INNER JOIN events
---                     ON (events.id = questions.id)
---                 WHERE
---                     events.type = 'ContactEvent' AND
---                     questions.id = q.id
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_contact,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM
---                 questions
---                 INNER JOIN events
---                     ON (events.id = questions.id)
---                 WHERE
---                     events.type = 'PlaceEvent' AND
---                     questions.id = q.id
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_place,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM
---                 questions
---                 INNER JOIN events
---                     ON (events.id = questions.id)
---                 WHERE
---                     events.type = 'EncounterEvent' AND
---                     questions.id = q.id
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_encounter
--- FROM questions q;
+ALTER TABLE dw_place_questions
+    ADD CONSTRAINT dw_place_questions_pkey PRIMARY KEY (id);
+CREATE INDEX dw_place_questions_form_element_ix
+    ON dw_place_questions (form_element_id);
 
 CREATE TABLE dw_morbidity_answers AS
 SELECT
@@ -1128,6 +1223,13 @@ WHERE
     e.type = 'MorbidityEvent'
 ;
 
+ALTER TABLE dw_morbidity_answers
+    ADD CONSTRAINT dw_morbidity_answers_pkey PRIMARY KEY (id);
+CREATE INDEX dw_morbidity_answers_event_id
+    ON dw_morbidity_answers (event_id);
+CREATE INDEX dw_morbidity_answers_question_id
+    ON dw_morbidity_answers (question_id);
+
 CREATE TABLE dw_contact_answers AS
 SELECT
     a.*
@@ -1138,6 +1240,13 @@ FROM
 WHERE
     e.type = 'ContactEvent'
 ;
+
+ALTER TABLE dw_contact_answers
+    ADD CONSTRAINT dw_contact_answers_pkey PRIMARY KEY (id);
+CREATE INDEX dw_contact_answers_event_id
+    ON dw_contact_answers (event_id);
+CREATE INDEX dw_contact_answers_question_id
+    ON dw_contact_answers (question_id);
 
 CREATE TABLE dw_encounter_answers AS
 SELECT
@@ -1150,6 +1259,13 @@ WHERE
     e.type = 'EncounterEvent'
 ;
 
+ALTER TABLE dw_encounter_answers
+    ADD CONSTRAINT dw_encounter_answers_pkey PRIMARY KEY (id);
+CREATE INDEX dw_encounter_answers_event_id
+    ON dw_encounter_answers (event_id);
+CREATE INDEX dw_encounter_answers_question_id
+    ON dw_encounter_answers (question_id);
+
 CREATE TABLE dw_place_answers AS
 SELECT
     a.*
@@ -1161,54 +1277,12 @@ WHERE
     e.type = 'PlaceEvent'
 ;
 
--- CREATE TABLE dw_answers AS
--- SELECT
---     *,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM events
---             WHERE
---                 events.id = a.event_id AND
---                 events.type = 'MorbidityEvent'
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_morbidity,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM events
---             WHERE
---                 events.id = a.event_id AND
---                 events.type = 'ContactEvent'
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_contact,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM events
---             WHERE
---                 events.id = a.event_id AND
---                 events.type = 'PlaceEvent'
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_place,
---     CASE
---         WHEN EXISTS (
---             SELECT 1
---             FROM events
---             WHERE
---                 events.id = a.event_id AND
---                 events.type = 'EncounterEvent'
---         )
---         THEN TRUE::BOOLEAN
---         ELSE FALSE::BOOLEAN
---     END AS is_encounter
--- FROM answers a;
+ALTER TABLE dw_place_answers
+    ADD CONSTRAINT dw_place_answers_pkey PRIMARY KEY (id);
+CREATE INDEX dw_place_answers_event_id
+    ON dw_place_answers (event_id);
+CREATE INDEX dw_place_answers_question_id
+    ON dw_place_answers (question_id);
 
 CREATE TABLE dw_morbidity_diseases AS
 SELECT
@@ -1226,6 +1300,9 @@ FROM
         ON (f.id = d.id)
 ;
 
+ALTER TABLE dw_morbidity_diseases
+    ADD CONSTRAINT dw_morbidity_diseases_pkey PRIMARY KEY (id);
+
 CREATE TABLE dw_contact_diseases AS
 SELECT
     d.*
@@ -1241,6 +1318,9 @@ FROM
     ) f
         ON (f.id = d.id)
 ;
+
+ALTER TABLE dw_contact_diseases
+    ADD CONSTRAINT dw_contact_diseases_pkey PRIMARY KEY (id);
 
 ANALYZE;
 
