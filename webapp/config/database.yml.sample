@@ -16,7 +16,7 @@ development:
   <% end %>
   encoding: unicode
   database: trisano_development
-  username: nedss
+  username: trisano_user
   password: password
   host: localhost
   port: 5432
