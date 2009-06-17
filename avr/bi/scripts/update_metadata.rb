@@ -6,9 +6,12 @@ def server_dir
   ENV['BI_SERVER'] || '/usr/local/pentaho/server'
 end
 
-Dir.glob(File.join(server_dir, 'metadata-editor', 'libext', '**', '*.jar')) do |f|
-  require f
+def require_jars(jars)
+  jars.each {|jar| require jar}
 end
+
+require_jars Dir.glob(File.join(server_dir, 'biserver-ee/tomcat/webapps/pentaho/WEB-INF/lib', '*.jar'))
+require_jars Dir.glob(File.join(server_dir, 'biserver-ee/tomcat/common/lib', 'postgres*.jar'))
 
 
 CWM = Java::OrgPentahoPmsCore::CWM
@@ -28,10 +31,12 @@ end
 class Metadata
   def initialize(metafile)
     FileUtils.rm Dir.glob('mdr.*')
-    @schema_factory = CwmSchemaFactory.new
-    @cwm = CWM.get_instance('TriSano')
+    @schema_factory = CwmSchemaFactory.new    
+    @cwm = CWM.get_instance('__tmp_domain__')
     @cwm.importFromXMI metafile
     @meta = @schema_factory.getSchemaMeta(@cwm)
+    @cwm.remove_domain
+    @cwm = CWM.get_instance('TriSano')
   end
 
   def writable_database
@@ -54,9 +59,9 @@ class Metadata
           :type => "N:1"})
         update_category category_name(short_name), table
       end
-    end    
-    @schema_factory.store_schema_meta(@cwm, @meta, nil)
-    publish({ :success => lambda{ puts "Sucess!" },
+    end        
+    CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
+    publish({ :success => lambda{ writable_database.clear_modified_tables; puts 'Success!' },
               :failure => lambda{ |result| "Failed because #{result}" }})
   end
 
@@ -93,7 +98,9 @@ class Metadata
     relationship.table_to   = options[:to]
     relationship.field_to   = options[:to].id_column
     relationship.type       = options[:type]
-    trisano_business_model.add_relationship relationship
+    if trisano_business_model.index_of_relationship(relationship) == -1
+      trisano_business_model.add_relationship relationship
+    end
   end
 
   def update_physical_table(table_name)
@@ -134,7 +141,7 @@ class Metadata
         bc.set_id "#{view_for(table_name)}_#{pc.get_id}"
         bc.physical_column = pc
         bc.business_table = table
-        table.add_business_column bc unless table.has_column?(pc)
+        table.add_business_column bc unless table.has_column?("#{view_for(table_name)}_#{pc.get_id}")
       end
       yield table
     end
@@ -156,9 +163,10 @@ class Metadata
   end
 
   def publish(result_hooks={})
-    File.open('metadata.xmi', 'w') do |io|
+    File.open('metadata.out', 'w') do |io|
       io << @cwm.getXMI
     end
+    FileUtils.cp('metadata.out', 'metadata.xmi')
     files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
     result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
     result_hooks[:success].call(result) if result_hooks[:success] && result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
@@ -258,7 +266,7 @@ class Metadata
     end
 
     def modified_tables
-      rs = query("SELECT short_name, table_name FROM trisano.formbuilder_tables WHERE modified=true;")
+      rs = query("SELECT short_name, table_name FROM trisano.formbuilder_tables WHERE modified=true ORDER BY short_name;")
       results = []
       while rs.next        
         results << [rs.getString(1), rs.getString(2)]
@@ -266,8 +274,12 @@ class Metadata
       results
     end
 
+    def clear_modified_tables
+      execute("UPDATE trisano.formbuilder_tables SET modified=false")
+    end
+
     def column_names_for(table_name)
-      rs = query("SELECT column_name FROM trisano.formbuilder_columns WHERE formbuilder_table_name='#{table_name}'")
+      rs = query("SELECT column_name FROM trisano.formbuilder_columns WHERE formbuilder_table_name='#{table_name}' ORDER BY column_name;")
       results = []
       while rs.next
         results << rs.getString(1)
@@ -298,8 +310,8 @@ BusinessTable.class_eval do
     @id_column ||= business_columns.each { |c| return c if c.get_id =~ /VIEW_ID$/ }
   end
   
-  def has_column?(physical_column)
-    !find_business_column(physical_column.get_id).nil?
+  def has_column?(column_name)
+    !find_business_column(column_name).nil?
   end
 end
 
@@ -341,6 +353,6 @@ String.class_eval do
 end
 
 if __FILE__ == $0
-  meta = load_metadata_xmi(File.expand_path(File.dirname(__FILE__), '..', 'schema', 'metadata.xmi'))
+  meta = load_metadata_xmi(File.expand_path(File.join(File.dirname(__FILE__), 'metadata.xmi')))
   meta.update_from_database
 end

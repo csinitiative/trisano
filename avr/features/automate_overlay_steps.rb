@@ -2,15 +2,26 @@ require 'spec/expectations'
 require 'spec/matchers'
 require File.expand_path File.join(File.dirname(__FILE__), '..', 'bi', 'scripts', 'update_metadata')
 
+def remove_file_cruft
+  begin
+    FileUtils.rm 'metadata.out'
+    FileUtils.rm 'metadata.xmi'
+    FileUtils.rm 'mdr.btd'
+    FileUtils.rm 'mdr.btx'
+  rescue 
+    puts "Failed to clean up test artifacts"
+  end 
+end  
+
 Before do
   puts "Running"
 end
-
 
 After do
   @metadata.writable_database.execute("DELETE FROM trisano.formbuilder_columns WHERE formbuilder_table_name = 'formbuilder_test_table_1';")
   @metadata.writable_database.execute("DELETE FROM trisano.formbuilder_tables WHERE table_name = 'formbuilder_test_table_1';")
   @metadata.writable_database.execute("DROP TABLE trisano.formbuilder_test_table_1_view;")
+  remove_file_cruft
 end
 
 
