@@ -49,21 +49,10 @@ class Metadata
   end
 
   def update_from_database
-    writable_database.modified_tables.each do |short_name, table_name|
-      update_physical_table table_name
-      update_business_table table_name do |table|
-        secure table
-        event_table = table_name =~ /contact/ ? contact_events_table : morbidity_events_table
-        create_relationship({ 
-          :from => table, 
-          :to   => event_table,
-          :type => "N:1"})
-        update_category category_name(short_name), table
-      end
-    end        
-    CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
-    publish({ :success => lambda{ writable_database.clear_modified_tables; puts 'Success!' },
-              :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" }})
+    publish writable_database.modified_tables, {
+      :success => lambda{ writable_database.clear_modified_tables; puts 'Success!' },
+      :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" },
+      :none    => lambda{ puts "No modified tables. Nothing to do" }}
   end
 
   def hash_fail
@@ -172,15 +161,35 @@ class Metadata
     end
   end
 
-  def publish(result_hooks={})
-    File.open('metadata.out', 'w') do |io|
-      io << @cwm.getXMI
+  def publish(tables, result_hooks={})
+    if tables.empty?
+      result_hooks[:none].call if result_hooks[:none]
+    else
+      tables.each do |short_name, table_name|
+        update_physical_table table_name
+        update_business_table table_name do |table|
+          secure table
+          event_table = table_name =~ /contact/ ? contact_events_table : morbidity_events_table
+          create_relationship({ :from => table, 
+                                :to   => event_table,
+                                :type => "N:1"})
+          update_category category_name(short_name), table
+        end
+      end        
+      CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
+
+      File.open('metadata.out', 'w') do |io|
+        io << @cwm.getXMI
+      end
+      FileUtils.cp('metadata.out', 'metadata.xmi')
+      files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
+      result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
+      if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
+        result_hooks[:success].call(result) if result_hooks[:success]
+      else 
+        result_hooks[:failure].call(result) if result_hooks[:failure]
+      end
     end
-    FileUtils.cp('metadata.out', 'metadata.xmi')
-    files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
-    result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
-    result_hooks[:success].call(result) if result_hooks[:success] && result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
-    result_hooks[:failure].call(result) if result_hooks[:failure] && result != Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
   end
 
   def concept_names

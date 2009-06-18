@@ -20,6 +20,12 @@ describe 'updating metadata' do
     @metadata.base_concept.should_not be_nil
   end
 
+  it 'should do nothing if no tables have been modified' do
+    mock_block = mock('None block')
+    mock_block.should_receive(:call)
+    @metadata.publish [], {:none => mock_block}
+  end
+
   describe 'TriSano Business model' do
 
     it 'should find morbidity event table' do
