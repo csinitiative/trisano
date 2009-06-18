@@ -18,9 +18,13 @@
 class StagedMessage < ActiveRecord::Base
   class << self
     def states
-      { :pending => 'PENDING' }
+      { :pending  => 'PENDING',
+        :assigned => 'ASSIGNED'
+      }
     end
   end
+
+  belongs_to :event
 
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
@@ -62,6 +66,20 @@ class StagedMessage < ActiveRecord::Base
 
   def patient
     hl7.patient_id
+  end
+
+  def assigned_event=(event)
+    raise(ArgumentError, "Cannot associated labs with #{event.class}") unless event.respond_to?('labs')
+    raise("Staged message is already assigned to an event.") if self.state == self.class.states[:assigned]
+
+    self.event = event
+    event.add_labs_from_staged_message(self)
+    self.state = self.class.states[:assigned]
+    self.save!
+  end
+
+  def assigned_event
+    self.event
   end
 
   private

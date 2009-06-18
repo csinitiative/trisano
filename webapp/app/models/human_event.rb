@@ -484,6 +484,32 @@ class HumanEvent < Event
     self.update_attributes(attrs)
   end
 
+  def add_labs_from_staged_message(staged_message)
+    raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
+
+    labs_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
+                        "lab_results_attributes" => {}
+    }
+
+    obr = staged_message.observation_request
+    i = 0
+    obr.tests.each do | obx |
+      specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
+      specimen_source_id = specimen_source ? specimen_source['id'] : nil
+      result_hash = {
+        "test_type"          => obx.test_type,
+        "collection_date"    => obr.collection_date,
+        "lab_test_date"      => obx.observation_date,
+        "reference_range"    => obx.reference_range,
+        "lab_result_text"    => obx.result,
+        "specimen_source_id" => specimen_source_id
+      }
+      labs_attributes["lab_results_attributes"][i.to_s] = result_hash
+      i += 1
+    end
+    self.labs.create!(labs_attributes)
+  end
+
   private
 
   def set_age_at_onset

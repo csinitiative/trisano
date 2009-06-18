@@ -63,3 +63,32 @@ Then /^there is an event with a matching name and birth date$/ do
   @event.save
 end
 
+When /^I click the '(.+)' link of the found event$/ do |link|
+  # JavaScript!!!
+  # click_link_within "#event_#{@event.id}",  link
+  
+  submit_form "assign_#{@event.id}"
+end
+
+Then /^I should see a success message$/ do
+  response.should contain('success') # As in 'Lab result has been successfully assigned
+end
+
+Then /^I should not see the staged message anymore$/ do
+  response.should_not have_selector("#message_#{@staged_message.id}")
+end
+
+When /^I visit the assigned-to event$/ do
+  visit cmr_path(@event)
+end
+  
+Then /^I should see the new lab result$/ do
+  response.should contain(@staged_message.message_header.sending_facility)
+  response.should contain(@staged_message.observation_request.test_performed)
+  response.should contain(@staged_message.observation_request.tests.first.result)
+  response.should contain(@staged_message.observation_request.collection_date)
+  response.should contain(/#{@staged_message.observation_request.specimen_source}/i) 
+  response.should contain(@staged_message.observation_request.tests.first.result)
+  response.should contain(@staged_message.observation_request.tests.first.observation_date)
+end
+

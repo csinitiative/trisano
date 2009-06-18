@@ -22,7 +22,7 @@ class StagedMessagesController < ApplicationController
   # GET /lab_messages
   # GET /lab_messages.xml
   def index
-    @staged_messages = StagedMessage.paginate(:all, :order => "created_at DESC", :page => params[:page], :per_page => 10)
+    @staged_messages = StagedMessage.paginate_by_state(StagedMessage.states[:pending], :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
   # GET /staged_messages/1
@@ -87,6 +87,19 @@ class StagedMessagesController < ApplicationController
     if params[:name]
       dob = begin Date.parse(params[:birth_date]) || nil rescue nil end
       @events = HumanEvent.search_by_name_and_birth_date(params[:name], dob)
+    end
+  end
+
+  def event
+    staged_message = StagedMessage.find(params[:id])
+    begin
+      staged_message.assigned_event = Event.find(params[:event_id])
+    rescue
+      flash[:error] = "Could not assign message to event.  #{$!}"
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:notice] = 'Staged message was successfully assigned.'
+      redirect_to(staged_messages_path)
     end
   end
 
