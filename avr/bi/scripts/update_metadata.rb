@@ -3,15 +3,16 @@ require 'benchmark'
 require 'fileutils'
 
 def server_dir
-  ENV['BI_SERVER'] || '/usr/local/pentaho/server'
+  ENV['BI_SERVER'] || '/usr/local/pentaho/server/biserver-ce'
 end
 
 def require_jars(jars)
   jars.each {|jar| require jar}
 end
 
-require_jars Dir.glob(File.join(server_dir, 'biserver-ee/tomcat/webapps/pentaho/WEB-INF/lib', '*.jar'))
-require_jars Dir.glob(File.join(server_dir, 'biserver-ee/tomcat/common/lib', 'postgres*.jar'))
+
+require_jars Dir.glob(File.join(server_dir, 'tomcat/webapps/pentaho/WEB-INF/lib', '*.jar'))
+require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'postgres*.jar'))
 
 
 CWM = Java::OrgPentahoPmsCore::CWM
@@ -62,7 +63,16 @@ class Metadata
     end        
     CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
     publish({ :success => lambda{ writable_database.clear_modified_tables; puts 'Success!' },
-              :failure => lambda{ |result| "Failed because #{result}" }})
+              :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" }})
+  end
+
+  def hash_fail
+    @hash_fail ||= { 
+      1 => "file exists", 
+      2 => "file add failed",
+      3 => "file add successfule",
+      4 => "invalid publish password",
+      5 => "invalid user credentials"}
   end
 
   def category_name(name)

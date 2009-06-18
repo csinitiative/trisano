@@ -123,6 +123,7 @@ cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $ADMIN_CONSOLE
 # Configure repositories
 echo " * Building TriSano solution repository"
 mkdir -p $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
+mkdir $BI_SERVER_HOME/lib
 cp $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap/datasources.xml.org
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/datasources.xml $BI_SERVER_HOME/pentaho-solutions/system/olap
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
@@ -131,6 +132,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.properties $BI_SERVER_HOME/pentaho-s
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/update_metadata.rb $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
+cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/lib
 
 # Removing sample repositories
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
