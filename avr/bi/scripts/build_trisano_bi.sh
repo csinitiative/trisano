@@ -131,6 +131,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/schema/metadata.xmi $BI_SERVER_HOME/pentaho-solut
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.properties $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/update_metadata.rb $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp --preserve=mode $TRISANO_SOURCE_HOME/avr/bi/scripts/update_metadata.sh $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
 cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/lib
 

@@ -3,7 +3,7 @@ require 'benchmark'
 require 'fileutils'
 
 def server_dir
-  ENV['BI_SERVER'] || '/usr/local/pentaho/server/biserver-ce'
+  ENV['BI_SERVER_PATH'] || '/usr/local/pentaho/server/biserver-ce'
 end
 
 def require_jars(jars)
@@ -223,19 +223,19 @@ class Metadata
   end
 
   def server_url    
-    ENV['BI_SERVER_URL'] || 'http://localhost:8080/pentaho/RepositoryFilePublisher'
+    ENV['BI_PUBLISH_URL'] || 'http://localhost:8080/pentaho/RepositoryFilePublisher'
   end
 
   def publisher_password
-    ENV['PUBLISHER_PASSWORD'] || 'password'
+    ENV['BI_PUBLISH_PASSWORD'] || 'password'
   end
 
   def fs_user
-    ENV['FS_USER'] || 'joe'
+    ENV['BI_USER_NAME'] || 'joe'
   end
 
   def fs_user_password
-    ENV['FS_USER_PASSWORD'] || 'password'
+    ENV['BI_USER_PASSWORD'] || 'password'
   end
 
   class Database
