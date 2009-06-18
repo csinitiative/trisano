@@ -76,13 +76,13 @@
             = link_to 'SETTINGS', settings_path
             = render_help_link
           .user
-            - if RAILS_ENV == "production"
-              = current_user_name
-            - else 
+            - if config_option(:auth_allow_user_switch) == true
               - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
               - form_tag(url_for(:controller => "events", :action => "change_user"), :id => "switch_user") do
                 %span{:id => "user_name"}= current_user_name + ":"
                 = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.submit()", :style => "display: inline")
+            - else
+              = current_user_name
     #bar
       .container
         .left.areas_title

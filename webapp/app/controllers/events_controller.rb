@@ -123,13 +123,15 @@ class EventsController < ApplicationController
     
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
-    if RAILS_ENV == "production"
-      render :text => "Action not available", :status => 403
-    else
+    auth_allow_user_switch = config_option(:auth_allow_user_switch)
+
+    if auth_allow_user_switch == true
       session[:user_id] = params[:user_id]
       User.current_user = User.find_by_uid(params[:user_id])
       
       redirect_to request.env["HTTP_REFERER"]
+    else
+      render :text => "Action not available", :status => 403
     end
   end
 

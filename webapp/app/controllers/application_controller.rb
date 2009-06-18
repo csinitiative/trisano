@@ -65,31 +65,26 @@ class ApplicationController < ActionController::Base
   # 
   
   def load_user
-    if TRISANO_UID.blank?
-      logger.info "Attempting to locate user information on the request"
-      if RAILS_ENV == "production"
-        logger.info "Using HTTP_UID header"
-        load_user_by_uid(request.headers["HTTP_UID"])
-      else
-        if session[:user_id].nil?
-          logger.info "Using REMOTE_USER"
-          load_user_by_uid(request.env["REMOTE_USER"])
-        else
-          logger.info "Using session information"
-          load_user_by_uid(session[:user_id])
-        end
-      end
+    auth_src_env = config_option(:auth_src_env)
+    auth_src_header = config_option(:auth_src_header)
+
+    if !session[:user_id].nil?
+      logger.info "Using user set in session"
+      load_user_by_uid(session[:user_id])
+    elsif !auth_src_env.blank?
+      logger.info "Using TriSano user found in #{auth_src_env} environment variable"
+      load_user_by_uid(ENV[auth_src_env])
+    elsif !auth_src_header.blank?
+      logger.info "Using TriSano user found in #{auth_src_header} http header"
+      load_user_by_uid(request.headers[auth_src_header])
     else
-      if session[:user_id].nil?
-        logger.info "Using TriSano user found in local environment variable"
-        load_user_by_uid(TRISANO_UID)
-      else
-        logger.info "Using user set in session"
-        load_user_by_uid(session[:user_id])
-      end
+      logger.info "No UID is present"
+      log_request_info
+      render :text => "Internal application error: No UID is present. Please contact your administrator.", :status => 500
+      return
     end
   end
-  
+ 
   def load_user_by_uid(uid)
     
     if uid.blank?

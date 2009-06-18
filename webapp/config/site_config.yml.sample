@@ -1,9 +1,19 @@
 base:
   bi_heartbeat_url: http://localhost:18080/pentaho/Login
   bi_server_url: http://localhost:18080/pentaho/Home
+  auth_allow_user_switch: false
 
 development:
   inherit: base
+  auth_src_env: TRISANO_UID
+  auth_allow_user_switch: true
+
+test:
+  inherit: base
+  auth_src_env: TRISANO_UID
+  auth_allow_user_switch: true
   
 production:
-  inherit: development
+  inherit: base
+  #auth_src_header: HTTP_UID # CA SiteMinder
+  #auth_src_env: REMOTE_USER # Apache basic auth
