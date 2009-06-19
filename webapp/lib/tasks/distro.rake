@@ -258,7 +258,7 @@ namespace :trisano do
       initialize_config   
       replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
       cd '../webapp/'
-      ruby "-S rake db:migrate RAILS_ENV=production"
+      ruby "-S rake db:migrate RAILS_ENV=#{@environment}"
       puts "resetting db permissions"
       cd '../distro/'
       if ! create_db_permissions
