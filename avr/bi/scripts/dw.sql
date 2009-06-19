@@ -894,9 +894,9 @@ SELECT
     pl.middle_name
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id AND events.type = 'MorbidityEvent')
-    LEFT JOIN people pl
+    JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
     p.type = 'Clinician'
@@ -916,9 +916,9 @@ SELECT
     pl.middle_name
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id AND events.type = 'ContactEvent')
-    LEFT JOIN people pl
+    JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
     p.type = 'Clinician'
@@ -944,9 +944,9 @@ SELECT
     pl.id AS place_id
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id)
-    LEFT JOIN places pl
+    JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
     p.type = 'DiagnosticFacility'
@@ -976,9 +976,9 @@ SELECT
     pl.id AS place_id
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id)
-    LEFT JOIN places pl
+    JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
     p.type = 'ReportingAgency'
@@ -1009,9 +1009,9 @@ SELECT
     pl.middle_name
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id)
-    LEFT JOIN people pl
+    JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
     p.type = 'Reporter'
@@ -1062,7 +1062,7 @@ SELECT
     pe.description
 FROM
     participations_encounters pe
-    LEFT JOIN events
+    JOIN events
         ON (events.participations_encounter_id = pe.id)
 ;
 
@@ -1082,9 +1082,9 @@ SELECT
     lr.id AS dw_lab_results_id
 FROM
     lab_results lr
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.id = lr.participation_id)
-    LEFT JOIN events
+    JOIN events
         ON (events.id = p.event_id)
 WHERE
     events.type = 'EncounterEvent'
