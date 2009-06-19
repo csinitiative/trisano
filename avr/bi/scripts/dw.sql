@@ -694,11 +694,11 @@ SELECT
     hpart.hospital_record_number
 FROM
     events
-    LEFT JOIN participations p
+    JOIN participations p
         ON (p.event_id = events.id)
-    LEFT JOIN places pl
+    JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
-    LEFT JOIN hospitals_participations hpart
+    JOIN hospitals_participations hpart
         ON (hpart.participation_id = p.id)
 WHERE
     p.type = 'HospitalizationFacility'
