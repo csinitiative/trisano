@@ -92,7 +92,7 @@ describe StagedMessage do
   describe "class level functionality" do
 
     it 'should provide a hash of valid states' do
-      StagedMessage.states.should == {:pending => 'PENDING'}
+      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED'}
     end 
   end
 end

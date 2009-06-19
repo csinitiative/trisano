@@ -91,7 +91,7 @@ describe Message do
     end
 
     it 'should return the specimen source' do
-      @hl7.observation_request.specimen_source.should == 'X'
+      @hl7.observation_request.specimen_source.should == 'BLOOD'
     end
 
     it 'should respond_to :tests' do
