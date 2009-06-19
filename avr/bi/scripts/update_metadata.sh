@@ -1,19 +1,19 @@
 #!/bin/sh
 
 # Path on the file system where the BI server was installed
-BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
+export BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
 
 # URL that the BI server can is running on (needed to publish updates)
-BI_PUBLISH_URL=http://localhost:8080/pentaho/RepositoryFilePublisher
+export BI_PUBLISH_URL=http://localhost:8080/pentaho/RepositoryFilePublisher
 
 # Publishing password. This is not tied to a user, but is configured
 # in $BI_SERVER_PATH/pentaho-solutions/system/publisher_config.xml
-BI_PUBLISH_PASSWORD=password
+export BI_PUBLISH_PASSWORD=password
 
 # User credentials for an admin on the BI server. (also needed for
 # publishing)
-BI_USER_NAME=joe
-BI_USER_PASSWORD=password
+export BI_USER_NAME=joe
+export BI_USER_PASSWORD=password
 
 # move to the script's dir because we can't change where pentaho looks
 # for some things.
