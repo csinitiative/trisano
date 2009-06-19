@@ -47,7 +47,7 @@ test:
   <% end %>
   encoding: unicode
   database: trisano_test
-  username: nedss
+  username: trisano_user
   password: password
   host: localhost
   port: 5432
@@ -60,7 +60,7 @@ production:
   <% end %>
   encoding: unicode
   database: trisano_production
-  username: nedss
+  username: trisano_user
   password: password
   host: localhost
   port: 5432
