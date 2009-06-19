@@ -88,7 +88,7 @@ Then /^I should see the new lab result$/ do
   response.should contain(@staged_message.observation_request.tests.first.result)
   response.should contain(@staged_message.observation_request.collection_date)
   response.should contain(/#{@staged_message.observation_request.specimen_source}/i) 
-  response.should contain(@staged_message.observation_request.tests.first.result)
+  response.should contain(@staged_message.observation_request.tests.first.reference_range)
   response.should contain(@staged_message.observation_request.tests.first.observation_date)
 end
 

@@ -22,7 +22,7 @@ Feature: Staging Electronic Messages
     When I visit the staged message show page
     
     Then I should see value "LIN, GENYAO" in the message header
-    And  I should see value "Specimen: X" in the message header
+    And  I should see value "Specimen: BLOOD" in the message header
     And  I should see value "Collected: 2009-03-19" in the message header
     And  I should see value "ARUP LABORATORIES" in the message header
 

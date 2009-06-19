@@ -491,7 +491,7 @@ class HumanEvent < Event
   def add_labs_from_staged_message(staged_message)
     raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
 
-    labs_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
+    lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
                         "lab_results_attributes" => {}
     }
 
@@ -508,10 +508,10 @@ class HumanEvent < Event
         "lab_result_text"    => obx.result,
         "specimen_source_id" => specimen_source_id
       }
-      labs_attributes["lab_results_attributes"][i.to_s] = result_hash
+      lab_attributes["lab_results_attributes"][i.to_s] = result_hash
       i += 1
     end
-    self.labs.create!(labs_attributes)
+    self.labs_attributes = [ lab_attributes ]
   end
 
   private

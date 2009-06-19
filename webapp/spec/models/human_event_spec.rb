@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
 def with_human_event(event_hash=@event_hash, &block)    
   event = HumanEvent.new(event_hash)
@@ -198,3 +199,38 @@ describe HumanEvent, 'parent/guardian field' do
 
 end
 
+describe HumanEvent, 'adding staged messages' do
+
+  it 'should raise an exception when not passed a staged message' do
+    with_human_event do |event|
+      lambda{event.add_labs_from_staged_message("noise")}.should raise_error(ArgumentError)
+    end
+  end
+
+  it 'should create a new lab and a single lab result when using the ARUP1 staged message' do
+    with_human_event do |event|
+      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+      event.add_labs_from_staged_message(staged_message)
+      event.labs.size.should == 1
+      event.labs.first.place_entity.place.name.should == staged_message.message_header.sending_facility
+      event.labs.first.lab_results.size.should == 1
+      event.labs.first.lab_results.first.test_type.should == staged_message.observation_request.tests.first.test_type
+      event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
+      event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
+      event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
+      event.labs.first.lab_results.first.lab_result_text.should == staged_message.observation_request.tests.first.result
+      event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
+    end
+  end
+
+  it 'should create a new lab and two lab results when using the ARUP2 staged message' do
+    with_human_event do |event|
+      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_2])
+      event.add_labs_from_staged_message(staged_message)
+      event.labs.size.should == 1
+      event.labs.first.lab_results.size.should == 2
+      event.labs.first.lab_results[0].test_type.should == staged_message.observation_request.tests[0].test_type
+      event.labs.first.lab_results[1].test_type.should == staged_message.observation_request.tests[1].test_type
+    end
+  end
+end

@@ -24,7 +24,7 @@ class StagedMessage < ActiveRecord::Base
     end
   end
 
-  belongs_to :event
+  belongs_to :event, :autosave => true
 
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
@@ -72,8 +72,8 @@ class StagedMessage < ActiveRecord::Base
     raise(ArgumentError, "Cannot associated labs with #{event.class}") unless event.respond_to?('labs')
     raise("Staged message is already assigned to an event.") if self.state == self.class.states[:assigned]
 
-    self.event = event
     event.add_labs_from_staged_message(self)
+    self.event = event
     self.state = self.class.states[:assigned]
     self.save!
   end
@@ -85,7 +85,7 @@ class StagedMessage < ActiveRecord::Base
   private
 
   def set_state
-    self.state = self.class.states[:pending]
+    self.state = self.class.states[:pending] if self.state.nil?
   end
 
   def strip_line_feeds

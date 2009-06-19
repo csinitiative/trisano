@@ -95,5 +95,29 @@ describe StagedMessage do
       StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED'}
     end 
   end
+
+  describe "assigning to an event" do
+
+    before :each do
+      @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+    end
+
+    it "should raise an error if not given an event" do
+      lambda{@staged_message.assigned_event="noise"}.should raise_error(ArgumentError)
+    end
+
+    it "should raise an error if message has already been assigned" do
+      @staged_message.state = StagedMessage.states[:assigned]
+      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(RuntimeError)
+    end
+
+    it "should link the message to the event" do
+      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      @staged_message.assigned_event = m
+      m.labs.size.should == 1
+      @staged_message.assigned_event.should eql(m)
+      @staged_message.state.should == StagedMessage.states[:assigned]
+    end
+  end
 end
 
