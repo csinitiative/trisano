@@ -7,13 +7,16 @@ development:
   inherit: base
   auth_src_env: TRISANO_UID
   auth_allow_user_switch: true
+  show_staging_area: true
 
 test:
   inherit: base
   auth_src_env: TRISANO_UID
   auth_allow_user_switch: true
+  show_staging_area: true
   
 production:
   inherit: base
   #auth_src_header: HTTP_UID # CA SiteMinder
   #auth_src_env: REMOTE_USER # Apache basic auth
+  show_staging_area: false
