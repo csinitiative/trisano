@@ -475,10 +475,14 @@ class HumanEvent < Event
     when :assigned_to_lhd
       attrs[:investigator_id] = nil
       attrs[:event_queue_id]  = nil
-    when :assigned_to_queue
-      attrs[:investigator_id] = nil
-    when :assigned_to_investigator
-      attrs[:event_queue_id] = nil
+    # Commented out becuase UT is using queues not as a place for investigators to pull work from, but to route a case
+    # to a 'program' (department, e.g. STDs).  And then a program manager routes to an individual.  I'm  not deleting
+    # this code, 'cause I'd like to ressurect it some day.
+    #
+    # when :assigned_to_queue
+    #   attrs[:investigator_id] = nil
+    # when :assigned_to_investigator
+    #   attrs[:event_queue_id] = nil
     end
 
     self.update_attributes(attrs)

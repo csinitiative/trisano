@@ -55,10 +55,14 @@ class ContactEvent < HumanEvent
       assign_to_lhd
     end
     state :assigned_to_queue, :meta => {:description => 'Assigned to Queue'} do
-      on_entry do |prior_state, triggering_event, *event_args|
-        # An event can be assigned to a queue at any time; clear out settings from earlier pass throught the flow, if any.
-        undo_workflow_side_effects
-      end
+      # Commented out becuase UT is using queues not as a place for investigators to pull work from, but to route a case
+      # to a 'program' (department, e.g. STDs).  And then a program manager routes to an individual.  I'm  not deleting
+      # this code, 'cause I'd like to ressurect it some day.
+      #
+      # on_entry do |prior_state, triggering_event, *event_args|
+      #   # An event can be assigned to a queue at any time; clear out settings from earlier pass throught the flow, if any.
+      #   undo_workflow_side_effects
+      # end
       assign_to_lhd
       investigate :accept
       reject_by_investigator :reject
