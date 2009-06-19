@@ -95,12 +95,11 @@ class StagedMessagesController < ApplicationController
     begin
       staged_message.assigned_event = Event.find(params[:event_id])
     rescue
-      flash[:error] = "Could not assign message to event.  #{$!}"
-      redirect_to request.env["HTTP_REFERER"]
+      flash[:error] = "Could not assign message to event. #{$!}"
     else
       flash[:notice] = 'Staged message was successfully assigned.'
-      redirect_to(staged_messages_path)
     end
+    redirect_to(staged_message_path(staged_message))
   end
 
   private

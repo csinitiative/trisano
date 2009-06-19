@@ -3,7 +3,6 @@ Given /^I am logged in as a user with create and update privs in the Unassigned 
 end
 
 Then /^I should see the staging area page$/ do
-  path = staged_messages_path
   current_url.should =~ /#{staged_messages_path}/
 end
 
@@ -30,7 +29,7 @@ Given /^there are no matching entries$/ do
   # Do nothing
 end
 
-When /^I click (.+) for the staged message$/ do | link |
+When /^I click '(.+)' for the staged message$/ do | link |
   click_link_within "#message_#{@staged_message.id}",  link
 end
 
@@ -74,8 +73,9 @@ Then /^I should see a success message$/ do
   response.should contain('success') # As in 'Lab result has been successfully assigned
 end
 
-Then /^I should not see the staged message anymore$/ do
-  response.should_not have_selector("#message_#{@staged_message.id}")
+Then /^I should remain on the staged message show page$/ do
+  path = staged_message_path(@staged_message)
+  current_url.should =~ /#{path}/
 end
 
 When /^I visit the assigned-to event$/ do

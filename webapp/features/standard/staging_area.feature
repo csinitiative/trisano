@@ -37,7 +37,7 @@ Feature: Staging Electronic Messages
     And there are no matching entries
 
     When I visit the staged message show page
-    And I click search for the staged message
+    And I click 'Similar Events' for the staged message
     Then I should be sent to the search results page
     And I should see the staged message
     And I should not see any matching results
@@ -48,7 +48,7 @@ Feature: Staging Electronic Messages
     And there is an event with a matching name but no birth date
 
     When I visit the staged message show page
-    And I click search for the staged message
+    And I click 'Similar Events' for the staged message
     Then I should see matching results
 
   Scenario: Searching for matching events when name and birth date found
@@ -57,7 +57,7 @@ Feature: Staging Electronic Messages
     And there is an event with a matching name and birth date
 
     When I visit the staged message show page
-    And I click search for the staged message
+    And I click 'Similar Events' for the staged message
     Then I should see matching results
 
   Scenario: Assigning lab result to found event
@@ -66,11 +66,10 @@ Feature: Staging Electronic Messages
     And there is an event with a matching name and birth date
 
     When I visit the staged message show page
-    And I click search for the staged message
+    And I click 'Similar Events' for the staged message
     And I click the 'Assign lab result' link of the found event
-    Then I should see the staging area page
+    Then I should remain on the staged message show page
     And I should see a success message
-    And I should not see the staged message anymore
 
     When I visit the assigned-to event
     Then I should see the new lab result

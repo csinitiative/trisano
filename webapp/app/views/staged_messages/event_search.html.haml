@@ -65,3 +65,7 @@
               =# submit_tag("Assign")
               = link_to_function("Assign lab result", "this.parentNode.submit()")
             | New CMR with this person and lab result
+
+  %br
+  = "Start a new CMR with the contents of this message &nbsp;&nbsp; <--- This will be a link soon, just like on pre-cmr"
+  =# link_to("No match, start a new CMR with the contents of this message", new_cmr_path)

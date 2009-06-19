@@ -17,14 +17,15 @@
   %td
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
-        %p=h staged_message.patient.patient_name
-        %p="Specimen: #{h staged_message.observation_request.specimen_source}"
-        %p="Collected: #{h staged_message.observation_request.collection_date}"
+        %p= h staged_message.patient.patient_name
+        %p= "Specimen: #{h staged_message.observation_request.specimen_source}"
+        %p= "Collected: #{h staged_message.observation_request.collection_date}"
         %p
-          %small=h staged_message.message_header.sending_facility
+          %small= h staged_message.message_header.sending_facility
         %p.tools
-          = link_to 'Search', event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
-          | Assign | New | Discard |
+          -if staged_message.state == StagedMessage.states[:pending]
+            = link_to 'Similar Events', event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
+            | Discard |
           %span{:id => "show_link_#{staged_message.id}"}      
             = link_to_function 'Raw', nil do |page|
               - page["original_message_#{staged_message.id}"].show
@@ -35,6 +36,13 @@
               - page["original_message_#{staged_message.id}"].hide
               - page["show_link_#{staged_message.id}"].show
               - page["hide_link_#{staged_message.id}"].hide
+          %p
+            State:&nbsp;
+            - if staged_message.state == StagedMessage.states[:assigned]
+              = link_to(staged_message.state.humanize, cmr_path(staged_message.event))
+            - else
+              = staged_message.state.humanize
+
       .results
         %table
           %tr
