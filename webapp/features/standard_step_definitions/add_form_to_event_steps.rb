@@ -15,19 +15,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
-When(/^I see the form and answers on the event$/) do
-  response.should contain(@form.name)
-  response.should have_xpath("//div[@id='investigation_form']//input[contains(@value, '#{@answer_text}')]")
+When(/^I check the add form checkbox$/) do
+  check("forms_to_add_#{@published_form.id}")
 end
 
-Then(/^I should not see a checkbox to remove the form$/) do
-  response.should_not contain("Remove from event")
-  response.should_not have_xpath("//div[@id='forms_in_use']//input[contains(@type, 'checkbox')]")
+Then(/^I should see a checkbox to add the form$/) do
+  response.should contain("Add to Event")
+  response.should have_xpath("//div[@id='forms_available']//input[contains(@type, 'checkbox')]")
 end
 
-Then(/^I should not see the \"Remove Forms\" button$/) do
-  response.should_not have_xpath("//div[@id='forms_in_use']//input[contains(@type, 'submit')]")
+Then(/^I should see the \"Add Forms\" button$/) do
+  response.should have_xpath("//div[@id='forms_available']//input[contains(@type, 'submit')]")
 end
 
+Then(/^I should see the name of the added form$/) do
+  response.should contain(@published_form.name)
+end
+
+Then(/^I should not see the name of the added form$/) do
+  response.should_not contain(@published_form.name)
+end
 

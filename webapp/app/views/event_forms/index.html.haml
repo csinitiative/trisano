@@ -19,6 +19,9 @@
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
 
+- can_remove = User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
+- can_add = User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
+
 #forms_in_use
   #rot
     %h2="Forms in use"
@@ -31,7 +34,8 @@
             %th Diseases
             %th Jurisdiction
             %th Event Type
-            %th Remove from event
+            - if can_remove
+              %th Remove from event
           - for form in @forms_in_use
             %tr.roll
               %td.forminformation
@@ -49,13 +53,15 @@
                 = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
               %td
                 = h form.event_type.humanize
-              %td
-                = check_box_tag("forms_to_remove[]", form.id, false, :id => "forms_to_remove_#{form.id}")
-        %br
-        = submit_tag("Remove Forms", { :id => 'remove_forms', :confirm => "Are you sure? Removing a form will also remove all answers to questions on that form." })
+              - if can_remove
+                %td
+                  = check_box_tag("forms_to_remove[]", form.id, false, :id => "forms_to_remove_#{form.id}")
+        - if can_remove
+          %br
+          = submit_tag("Remove Forms", { :id => 'remove_forms', :confirm => "Are you sure? Removing a form will also remove all answers to questions on that form." })
     -else
       %em
-        None in use.
+
 
 #forms_available
   #rot
@@ -71,7 +77,8 @@
             %th Diseases
             %th Jurisdiction
             %th Event Type
-            %th Add to Event
+            - if can_add
+              %th Add to Event
             - for form in @forms_available
               %tr.roll
                 %td.forminformation
@@ -89,10 +96,12 @@
                   = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
                 %td
                   = h form.event_type.humanize
-                %td
-                  = check_box_tag("forms_to_add[]", form.id, false, :id => "forms_to_add_#{form.id}")
+                - if can_add
+                  %td
+                    = check_box_tag("forms_to_add[]", form.id, false, :id => "forms_to_add_#{form.id}")
 
-        %br
-        = submit_tag("Add Forms", :id => "add_forms")
+        - if can_add
+          %br
+          = submit_tag("Add Forms", :id => "add_forms")
     - else
       %em All forms in use

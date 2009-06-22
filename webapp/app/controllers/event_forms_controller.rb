@@ -17,9 +17,17 @@
 
 class EventFormsController < ApplicationController
 
-  before_filter :find_event, :check_role
+  before_filter :find_event
 
   def index
+
+    unless (
+        User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }) ||
+          User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
+      )
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add/remove forms", :event => nil }, :layout => true, :status => 403 and return
+    end
+
     event_type = @event.class.name.underscore
 
     @forms_in_use = @event.form_references.collect { |ref| ref.form }
@@ -33,6 +41,11 @@ class EventFormsController < ApplicationController
   end
 
   def create
+
+    unless (User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }))
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add forms", :event => nil }, :layout => true, :status => 403 and return
+    end
+
     forms_to_add = params[:forms_to_add] || []
     if forms_to_add.empty? 
       flash[:error] = 'No forms were selected for addition to this event.'
@@ -51,6 +64,11 @@ class EventFormsController < ApplicationController
   end
 
   def destroy
+
+    unless (User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }))
+      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to remove forms", :event => nil }, :layout => true, :status => 403 and return
+    end
+
     forms_to_remove = params[:forms_to_remove] || []
     if forms_to_remove.empty?
       flash[:error] = 'No forms were selected for removal from this event.'
@@ -65,12 +83,6 @@ class EventFormsController < ApplicationController
   end
 
   protected
-
-  def check_role
-    unless User.current_user.is_admin?
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add/remove forms", :event => nil }, :layout => true, :status => 403 and return
-    end
-  end
 
   def find_event
     begin

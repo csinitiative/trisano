@@ -1,7 +1,7 @@
 Feature: Removing forms from events
 
   So that I can change an event disease and not have irrelevant forms
-  As a manager
+  As a admin
   I want to remove a form from an event
 
   Scenario: Morbidity event form removal as admin
