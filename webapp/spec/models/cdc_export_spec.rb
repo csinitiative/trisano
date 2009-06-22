@@ -576,4 +576,54 @@ describe CdcExport do
     end
   end
 
+  describe 'displaying verification records' do
+    fixtures :diseases, :external_codes
+
+    it 'should show no results' do
+      CdcExport.verification_records(Mmwr.new.mmwr_year).should be_empty
+    end
+
+    describe 'with one event' do
+      before :each do
+        @morbidity_event = Factory.build :morbidity_event
+        @morbidity_event.state_case_status_id = external_codes(:case_status_probable).id
+        @morbidity_event.save!
+      end
+
+      it 'should show one verification record' do
+        CdcExport.verification_records(Mmwr.new.mmwr_year).size.should == 1
+      end
+
+      it 'should count one event' do
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00001'
+      end
+    end
+
+    describe 'with two events, each w/ a different state status' do
+      before :each do
+        @probable_event = Factory.build :morbidity_event
+        @probable_event.state_case_status_id = external_codes(:case_status_probable).id
+        @probable_event.save!
+
+        @confirmed_event = Factory.build :morbidity_event
+        @confirmed_event.state_case_status_id = external_codes(:case_status_confirmed).id
+        @confirmed_event.build_disease_event(:disease_id => @probable_event.disease_event.disease_id)
+        @confirmed_event.workflow_state = 'assigned_to_lhd'
+        @confirmed_event.save!
+
+      end
+
+      it 'should show one verification record' do
+        CdcExport.verification_records(Mmwr.new.mmwr_year).size.should == 1
+      end
+
+      it 'should count one event' do
+        CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00002'
+      end
+    end
+
+    
+    
+  end
+
 end

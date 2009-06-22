@@ -96,6 +96,7 @@ end
 
 Factory.define :disease do |d|
   d.disease_name { Factory.next(:disease_name) }
+  d.cdc_code     { Factory.next(:cdc_code) }
 end
 
 Factory.define :lab do |l|
@@ -152,6 +153,10 @@ end
 
 Factory.sequence :disease_name do |n|
   "The dreaded lurgy #{n}"
+end
+
+Factory.sequence :cdc_code do |n|
+  "#{50000 + n}"
 end
 
 Factory.sequence :test_type do |n|
