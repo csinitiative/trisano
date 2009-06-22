@@ -160,6 +160,8 @@ User.transaction do
   approve_event_at_lhd = Privilege.find_by_priv_name("approve_event_at_lhd").id
   approve_event_at_state = Privilege.find_by_priv_name("approve_event_at_state").id
   assign_task_to_user = Privilege.find_by_priv_name("assign_task_to_user").id
+  add_form = Privilege.find_by_priv_name("add_form_to_event").id
+  remove_form = Privilege.find_by_priv_name("remove_form_from_event").id
 
   data_entry_tech.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   data_entry_tech.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
@@ -187,6 +189,7 @@ User.transaction do
   investigator.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => unassigned)
   investigator.entitlements << Entitlement.new(:privilege_id => accept_event_for_investigation, :jurisdiction_id => bear_river)
   investigator.entitlements << Entitlement.new(:privilege_id => investigate_event, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => add_form, :jurisdiction_id => bear_river)
 
   lhd_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)

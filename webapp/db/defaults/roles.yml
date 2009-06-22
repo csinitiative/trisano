@@ -1,5 +1,7 @@
 Administrator:
   - administer
+  - add_form_to_event
+  - remove_form_from_event
 Investigator:
   - create_event
   - view_event
@@ -7,6 +9,7 @@ Investigator:
   - route_event_to_any_lhd
   - accept_event_for_investigation
   - investigate_event
+  - add_form_to_event
 Data Entry Technician:
   - create_event
   - view_event
