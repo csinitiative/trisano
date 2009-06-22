@@ -583,7 +583,7 @@ describe CdcExport do
       CdcExport.verification_records(Mmwr.new.mmwr_year).should be_empty
     end
 
-    describe 'with one event' do
+    describe 'with one morb event' do
       before :each do
         @morbidity_event = Factory.build :morbidity_event
         @morbidity_event.state_case_status_id = external_codes(:case_status_probable).id
@@ -601,6 +601,24 @@ describe CdcExport do
 
       it 'should count one event' do
         CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00001'
+      end
+
+      describe 'and one contact event' do
+        before :each do
+          @contact_event = Factory.build :contact_event
+          @contact_event.build_disease_event(:disease_id => @morbidity_event.disease_event.disease_id)
+          @contact_event.MMWR_year = Mmwr.new.mmwr_year
+          @contact_event.state_case_status_id = external_codes(:case_status_probable).id          
+          @contact_event.save!
+        end
+
+        it 'should show one verification record' do
+          CdcExport.verification_records(Mmwr.new.mmwr_year).size.should == 1
+        end
+        
+        it 'should not count the Contact event' do
+          CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00001'
+        end
       end
     end
 
@@ -620,6 +638,7 @@ describe CdcExport do
         @confirmed_event.build_disease_event(:disease_id => @probable_event.disease_event.disease_id)
         @confirmed_event.workflow_state = 'assigned_to_lhd'
         @confirmed_event.save!
+
       end
 
       it 'should show one verification record' do
@@ -629,6 +648,7 @@ describe CdcExport do
       it 'should count one event' do
         CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00002'
       end
+
     end
 
     

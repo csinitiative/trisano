@@ -67,11 +67,11 @@ class CdcExport < ActiveRecord::Base
     end
 
     def verification_records(mmwr_year)
-      select = 'COUNT(*), events."MMWR_year", diseases.cdc_code, events.workflow_state' 
+      select = 'COUNT(*), events."MMWR_year", diseases.cdc_code'
       where = '"MMWR_year"=' + mmwr_year.to_s + ' AND deleted_at IS NULL'
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
-      group_by = 'disease_events.disease_id, events."MMWR_year", diseases.cdc_code, events.workflow_state'
+      group_by = 'events."MMWR_year", diseases.cdc_code'
       records = get_cdc_events(where, select, group_by)
       records.map!{|record| record.extend(Export::Cdc::VerificationRecord)}
       records
@@ -86,12 +86,12 @@ class CdcExport < ActiveRecord::Base
     def get_cdc_events(where_clause, select_list=nil, group_by_clause=nil)
       # Consider refining this to minimize the number of SQL calls made later by the fetch and conver calls
       options = { :joins => "INNER JOIN disease_events ON events.id = disease_events.event_id INNER JOIN diseases ON disease_events.disease_id = diseases.id",
-                  :conditions => where_clause # + " AND disease_events.disease_id IS NOT NULL"
+                  :conditions => where_clause + " AND events.type = 'MorbidityEvent'"
                 }
       options[:select] = select_list if select_list
       options[:group] = group_by_clause if group_by_clause
 
-      MorbidityEvent.find(:all, options)
+      Event.find(:all, options)
     end
   end
 end
