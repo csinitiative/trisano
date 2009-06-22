@@ -588,6 +588,11 @@ describe CdcExport do
         @morbidity_event = Factory.build :morbidity_event
         @morbidity_event.state_case_status_id = external_codes(:case_status_probable).id
         @morbidity_event.save!
+
+        disease = @morbidity_event.disease_event.disease
+        disease.external_codes << external_codes(:case_status_probable)
+        disease.external_codes << external_codes(:case_status_confirmed)
+        disease.save!
       end
 
       it 'should show one verification record' do
@@ -605,12 +610,16 @@ describe CdcExport do
         @probable_event.state_case_status_id = external_codes(:case_status_probable).id
         @probable_event.save!
 
+        disease = @probable_event.disease_event.disease
+        disease.external_codes << external_codes(:case_status_probable)
+        disease.external_codes << external_codes(:case_status_confirmed)
+        disease.save!
+
         @confirmed_event = Factory.build :morbidity_event
         @confirmed_event.state_case_status_id = external_codes(:case_status_confirmed).id
         @confirmed_event.build_disease_event(:disease_id => @probable_event.disease_event.disease_id)
         @confirmed_event.workflow_state = 'assigned_to_lhd'
         @confirmed_event.save!
-
       end
 
       it 'should show one verification record' do
