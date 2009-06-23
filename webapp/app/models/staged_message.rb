@@ -48,7 +48,10 @@ class StagedMessage < ActiveRecord::Base
     # If any of these are missing, the parser sets them all to nil :(
     if self.observation_request.nil? || self.observation_request.tests.empty? || self.patient.nil?
       errors.add :hl7_message, "is missing one or more of the following segments: PID, OBR, or OBX"
+      return
     end
+
+    errors.add :hl7_message, "No last name provided for patient." if self.patient.patient_last_name.blank?
   end
   
   def hl7
@@ -80,6 +83,41 @@ class StagedMessage < ActiveRecord::Base
 
   def assigned_event
     self.event
+  end
+
+  def new_event_from
+    return nil if self.patient.patient_last_name.blank?
+
+    event = MorbidityEvent.new(:workflow_state => 'new', :event_onset_date => Date.today)
+    event.build_interested_party 
+    event.interested_party.build_person_entity(:race_ids => [self.patient.trisano_race_id])
+    event.interested_party.person_entity.build_person( :last_name => self.patient.patient_last_name,
+                                                       :first_name => self.patient.patient_first_name,
+                                                       :middle_name => self.patient.patient_middle_name,
+                                                       :birth_date => self.patient.birth_date,
+                                                       :birth_gender_id => self.patient.trisano_sex_id)
+
+
+    unless self.patient.address_empty?
+      event.build_address(:street_number => self.patient.address_street_no,
+                          :unit_number => self.patient.address_unit_no,
+                          :street_name => self.patient.address_street,
+                          :city => self.patient.address_city,
+                          :state_id => self.patient.address_trisano_state_id,
+                          :postal_code => self.patient.address_zip)
+    end
+
+    unless self.patient.telephone_empty?
+      area_code, number, extension = self.patient.telephone_home
+      event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                            :phone_number => number,
+                                                            :extension => extension,
+                                                            :entity_location_type_id => ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id)
+    end
+
+    event.build_jurisdiction unless event.jurisdiction
+    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+    event
   end
 
   private

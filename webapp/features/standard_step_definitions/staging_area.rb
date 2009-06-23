@@ -65,8 +65,12 @@ end
 When /^I click the '(.+)' link of the found event$/ do |link|
   # JavaScript!!!
   # click_link_within "#event_#{@event.id}",  link
-  
   submit_form "assign_#{@event.id}"
+end
+
+When /^I click 'Create a CMR from this message'$/ do
+  # JavaScript!!!
+  submit_form "assign_to_new"
 end
 
 Then /^I should see a success message$/ do
@@ -78,8 +82,12 @@ Then /^I should remain on the staged message show page$/ do
   current_url.should =~ /#{path}/
 end
 
+Then /^I should not see the '(.+)' link$/ do |text|
+  response.should_not contain(text)
+end
+
 When /^I visit the assigned-to event$/ do
-  visit cmr_path(@event)
+  click_link 'Assigned'
 end
   
 Then /^I should see the new lab result$/ do
@@ -92,3 +100,20 @@ Then /^I should see the new lab result$/ do
   response.should contain(@staged_message.observation_request.tests.first.observation_date)
 end
 
+Then /^I should see the patient information$/ do
+  response.should have_selector("#demographic_tab") do |frag|
+    frag.should contain(@staged_message.patient.patient_last_name)
+    frag.should contain(@staged_message.patient.patient_first_name)
+    frag.should contain(@staged_message.patient.patient_middle_name)
+
+    frag.should contain(@staged_message.patient.address_street_no)
+    frag.should contain(@staged_message.patient.address_street)
+    frag.should contain(@staged_message.patient.address_unit_no)
+    frag.should contain(@staged_message.patient.address_city)
+    frag.should contain(ExternalCode.find(@staged_message.patient.address_trisano_state_id).code_description)
+    frag.should contain(@staged_message.patient.address_zip)
+
+    area, num, ext = @staged_message.patient.telephone_home
+    frag.should contain("Home: (#{area}) #{num[0..2]}-#{num[3..6]}")
+  end
+end

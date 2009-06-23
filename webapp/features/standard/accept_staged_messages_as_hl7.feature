@@ -18,7 +18,7 @@ Feature: Accept Staged Messages as HL7
     
     When I visit the staged message show page
     
-    Then I should see value "COVELL, DAREN L" in the message header
+    Then I should see value "Covell, Daren L" in the message header
     And  I should see value "IHC-LD" in the message header
 
  Scenario: Viewing HL7 w/ multiple tests

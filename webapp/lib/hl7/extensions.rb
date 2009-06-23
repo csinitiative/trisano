@@ -53,24 +53,47 @@ module StagedMessages
   end
 
   class PidWrapper
-    attr_reader :pid_segment
-
     def initialize(pid_segment)
       @pid_segment = pid_segment
+    end
+
+    attr_reader :pid_segment
+
+    def name_components
+      @name_componets ||= pid_segment.patient_name.split(pid_segment.item_delim)
+    end
+
+    def addr_components
+      @addr_components ||= pid_segment.address.split(pid_segment.item_delim)
     end
 
     # Ultimately we should make a patient class that has all the components as attributes
     def patient_name
       begin
-        name_components = pid_segment.patient_name.split(pid_segment.item_delim)
-        name = name_components[0] || "No Last Name"
-        name += ", #{name_components[1]}" unless name_components[1].blank?  # first name
-        name += " #{name_components[2]}" unless name_components[2].blank?   # midlle name or initial
-        name += ", #{name_components[3]}" unless name_components[3].blank?  # suffix, e.g. Jr. or III
+        name = patient_last_name || "No Last Name"
+        name += ", #{patient_first_name}" unless patient_first_name.blank?
+        name += " #{patient_middle_name}" unless patient_middle_name.blank?
+        name += ", #{patient_suffix}" unless patient_suffix.blank?
         name
       rescue
         "Could not be determined"
       end
+    end
+
+    def patient_last_name
+      name = name_components[0].try(:humanize)
+    end
+
+    def patient_first_name
+      name = name_components[1].try(:humanize)
+    end
+
+    def patient_middle_name
+      name = name_components[2].try(:humanize)
+    end
+
+    def patient_suffix
+      name = name_components[3]
     end
 
     def birth_date
@@ -79,6 +102,96 @@ module StagedMessages
       rescue
         "Could not be determined"
       end
+    end
+
+    def trisano_sex_id
+      sex_id = nil
+      if sex_md = /^[FMU]$/.match(pid_segment.admin_sex)
+        sex = sex_md[0]
+        sex = 'UNK' if sex == 'U'
+        sex_id = ExternalCode.find_by_code_name_and_the_code('gender', sex).id
+      end
+      sex_id
+    end
+
+    def trisano_race_id
+      race_id = nil
+      if race_md = /^[WBAIHKU]$/.match(pid_segment.race.split(pid_segment.item_delim)[0])
+        race = race_md[0]
+        race = case race
+               when 'I'
+                 'AA'
+               when 'K'
+                 'AK'
+               when 'U'
+                 'UNK'
+               end
+        race_id = ExternalCode.find_by_code_name_and_the_code('race', race).id
+      end
+      race_id
+    end
+
+    def address_empty?
+      components_empty?(addr_components)
+    end
+
+    def address_street_no
+      if unit_md = /^\w+ /.match(addr_components[0])
+        unit_md[0].strip
+      else
+        unit_md
+      end
+    end
+
+    def address_unit_no
+      addr_components[1].titleize
+    end
+
+    def address_street
+      if md = /^\w+ /.match(addr_components[0])
+        md.post_match.titleize
+      else
+        md
+      end
+    end
+
+    def address_city
+      addr_components[2].titleize
+    end
+
+    def address_trisano_state_id
+      unless addr_components[3].blank?
+        state_id = ExternalCode.find_by_code_name_and_the_code('state', addr_components[3]).id
+      else
+        nil
+      end
+    end
+
+    def address_zip
+      addr_components[4]
+    end
+
+    def telephone_empty?
+      components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
+    end
+
+    def telephone_home
+      phone_components = self.pid_segment.phone_home.split(pid_segment.item_delim)
+      area_code = number = extension = nil
+      unless phone_components[0].blank?
+        area_code, number, extension = Utilities.parse_phone(phone_components[0])
+      else
+        area_code = phone_components[5]
+        number = phone_components[6]
+        extension = phone_components[7]
+      end
+      return area_code, number, extension
+    end
+
+    private
+
+    def components_empty?(components)
+      components.all? { |comp| comp.empty? }
     end
   end
 

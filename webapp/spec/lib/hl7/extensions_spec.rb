@@ -60,12 +60,83 @@ describe Message do
   end
 
   describe 'patient identifier' do
+    # PID|1||17744418^^^^MR||LIN^GENYAO^^^^^L||19840810|M||U^Unknown^HL70005|215 UNIVERSITY VLG^^SALT LAKE CITY^UT^84108^^M||^^PH^^^801^5854967|||||||||U^Unknown^HL70189\rORC||||||||||||^ROSENKOETTER^YUKI^K|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B
+
     it 'should respond_to :patient_name' do
       @hl7.patient_id.respond_to?(:patient_name).should be_true
     end
 
     it 'should return the patient name (formatted)' do
-      @hl7.patient_id.patient_name.should == 'LIN, GENYAO'
+      @hl7.patient_id.patient_name.should == 'Lin, Genyao'
+    end
+
+    it 'should return the patient birth date' do
+      @hl7.patient_id.birth_date.should == Date.parse("19840810")
+    end
+
+    it 'should return the patient sex ID' do
+      @hl7.patient_id.trisano_sex_id.should == external_codes(:gender_male).id
+    end
+
+    it 'should return the patient race ID' do
+      @hl7.patient_id.trisano_race_id.should == external_codes(:race_unknown).id
+    end
+
+    it "should have a non-empty address" do
+      @hl7.patient_id.address_empty?.should == false
+    end
+
+    it "should have an empty address if there is one" do
+      hl7 = HL7::Message.parse(hl7_messages[:arup_simple_pid])
+      hl7.patient_id.address_empty?.should == true
+    end
+
+    it 'should return the street number' do
+      @hl7.patient_id.address_street_no.should == '215'
+    end
+
+    it 'should return the unit no' do
+      @hl7.patient_id.address_unit_no.should be_blank
+    end
+
+    it 'should return the street name' do
+      @hl7.patient_id.address_street.should == "University Vlg"
+    end
+
+    it 'should return the city' do
+      @hl7.patient_id.address_city.should == "Salt Lake City"
+    end
+
+    it 'should return the state ID' do
+      @hl7.patient_id.address_trisano_state_id.should == external_codes(:state_utah).id
+    end
+
+    it 'should return the zip code' do
+      @hl7.patient_id.address_zip.should == "84108"
+    end
+
+    it "should have a non-empty telephone" do
+      @hl7.patient_id.telephone_empty?.should == false
+    end
+
+    it "should have an empty telephone if there is one" do
+      hl7 = HL7::Message.parse(hl7_messages[:arup_simple_pid])
+      hl7.patient_id.telephone_empty?.should == false
+    end
+
+    it "should return the phone number components" do
+      a, n, e = @hl7.patient_id.telephone_home
+      a.should == "801"
+      n.should == "5854967"
+      e.should be_blank
+    end
+
+    it "should return the phone number components when encoded as a single string" do
+      hl7 = HL7::Message.parse(hl7_messages[:ihc_1])
+      a, n, e = hl7.patient_id.telephone_home
+      a.should == "801"
+      n.should == "7317292"
+      e.should be_blank
     end
  end
 

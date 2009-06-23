@@ -21,7 +21,7 @@ Feature: Staging Electronic Messages
     
     When I visit the staged message show page
     
-    Then I should see value "LIN, GENYAO" in the message header
+    Then I should see value "Lin, Genyao" in the message header
     And  I should see value "Specimen: BLOOD" in the message header
     And  I should see value "Collected: 2009-03-19" in the message header
     And  I should see value "ARUP LABORATORIES" in the message header
@@ -70,6 +70,25 @@ Feature: Staging Electronic Messages
     And I click the 'Assign lab result' link of the found event
     Then I should remain on the staged message show page
     And I should see a success message
+    And I should not see the 'Similar Events' link
+    And I should not see the 'Discard' link
 
     When I visit the assigned-to event
     Then I should see the new lab result
+
+  Scenario: Assigning lab result to new event
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there is an event with a matching name and birth date
+
+    When I visit the staged message show page
+    And I click 'Similar Events' for the staged message
+    And I click 'Create a CMR from this message'
+    Then I should remain on the staged message show page
+    And I should see a success message
+    And I should not see the 'Similar Events' link
+    And I should not see the 'Discard' link
+
+    When I visit the assigned-to event
+    Then I should see the patient information
+    And I should see the new lab result

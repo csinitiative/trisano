@@ -55,6 +55,11 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
+  it "should not be valid if there's no OBX segment" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
+    m.should_not be_valid
+  end
+
   it 'should respond to hl7' do
     StagedMessage.new(@valid_attributes).respond_to?(:hl7).should be_true
   end
@@ -117,6 +122,70 @@ describe StagedMessage do
       m.labs.size.should == 1
       @staged_message.assigned_event.should eql(m)
       @staged_message.state.should == StagedMessage.states[:assigned]
+    end
+  end
+
+  describe "instantiating an event based on message" do
+    fixtures :users
+    
+    describe "with a valid, complete record" do
+      before :each do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+
+        @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+        @event = @staged_message.new_event_from
+      end
+
+      it "should return a valid, unsaved morbidity event" do
+        @event.class.should == MorbidityEvent
+        @event.should be_valid
+        @event.should be_new_record
+      end
+
+      it "should populate the event" do
+        p = @event.interested_party.person_entity.person
+        p.last_name.should == @staged_message.patient.patient_last_name
+        p.first_name.should == @staged_message.patient.patient_first_name
+        p.middle_name.should == @staged_message.patient.patient_middle_name
+        p.birth_date.should == @staged_message.patient.birth_date
+        p.birth_gender_id.should == @staged_message.patient.trisano_sex_id
+
+        a = @event.address
+        a.street_number.should == @staged_message.patient.address_street_no
+        a.unit_number.should == @staged_message.patient.address_unit_no
+        a.street_name.should == @staged_message.patient.address_street
+        a.city.should == @staged_message.patient.address_city
+        a.state_id.should == @staged_message.patient.address_trisano_state_id
+        a.postal_code.should == @staged_message.patient.address_zip
+
+        t = @event.interested_party.person_entity.telephones.first
+        area_code, number, extension = @staged_message.patient.telephone_home
+        t.area_code.should == area_code
+        t.phone_number.should == number
+        t.extension.should == extension
+        t.entity_location_type_id.should == ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id
+
+        @event.primary_jurisdiction.name.should == "Unassigned"
+      end
+    end
+
+    describe "with a record missing address and phone" do
+      before :each do
+        @user = users(:default_user)
+        User.stub!(:current_user).and_return(@user)
+
+        @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
+        @event = @staged_message.new_event_from
+      end
+
+      it "should not instantiate an address" do
+        @event.address.should be_nil
+      end
+
+      it "should not instantiate a phone" do
+        @event.interested_party.person_entity.telephones.should be_empty
+      end
     end
   end
 end

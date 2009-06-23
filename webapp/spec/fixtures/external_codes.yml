@@ -122,6 +122,12 @@ race_hawaiian:
   the_code:  "H"
   code_description: "Native Hawaiian / Pacific Islander"
 
+race_unknown:
+  id: 207
+  code_name: "race"
+  the_code:  "UNK"
+  code_description: "Unknown"
+
 language_english:
   id: 301
   code_name: "language"
