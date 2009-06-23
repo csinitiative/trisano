@@ -21,6 +21,7 @@ CREATE LANGUAGE plpgsql;
 -- NOTE: Adjust this user to the DEST_DB_USER 
 ALTER SCHEMA public OWNER TO trisano_su;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
+ALTER USER trisano_ro SET search_path = trisano;
 
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
@@ -78,6 +79,108 @@ BEGIN
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
+-- The types and associated functions below deserve some explanation. Mondrian,
+-- Pentaho's OLAP engine, reports what in the OLAP world are called "measures" by
+-- aggregating numbers found in the database.  Available aggregates include count,
+-- sum, min, max, avg, and distinct-count, whose functions are fairly readily
+-- apparent. Unfortunately, this is the full set of supported aggregates.
+-- PostgreSQL supports a much wider array of aggregates (indeed, it allows users
+-- to write their own where a suitable one isn't provided), but these are
+-- unavailable to Mondrian without some sleight of hand, which is where these
+-- functions and data type come in.
+--
+-- A Mondrian measure is defined as a column name or SQL expression and its
+-- associated aggregate. For instance, a measure might show the average price for
+-- an item, and be defined with the column "price" and the "avg" aggregate. A more
+-- complex measure might involve the SQL expression "get_stock_on_hand(foo, bar)"
+-- and the "min" aggregate. Mondrian translates these into SQL statements in the
+-- obvious way: by wrapping the column name or SQL expression in the correct
+-- aggregate function, e.g. avg(price) or min(get_stock_on_hand(foo, bar)).
+--
+-- For TriSano, we'd like to report, for instance, the standard deviation of
+-- various measures. We could do this with the PostreSQL functions stddev_samp or
+-- stddev_pop, which are aggregates, but it doesn't make sense to wrap the value
+-- returned by stddev with any of the available Mondrian aggregates. PostgreSQL
+-- yells when presented with nested aggregates, and rightly so, so the trick is to
+-- get PostgreSQL to use some version of, say, the count() function, that differs
+-- from the aggregate version. The replacement function is below, and it's
+-- essentially a no-op, returning the argument it's passed. The only remaining
+-- wrinkle is that we *don't* want PostgreSQL to use our subverted count()
+-- function anytime *except* in these cases when we're trying to get Mondrian to
+-- use some unusual aggregate. To achieve that end, we've created a custom type,
+-- which will only be used by Mondrian, called dp_cust, derived from "custom
+-- double precision", since stddev() returns DOUBLE PRECISION. We've also
+-- defined int_cust and num_cust to handle integers and numerics in the same
+-- way. Other types may have to follow. Now the only way our count() functions
+-- will be called is if the argument happens to be of one of our custom types.
+-- Note that we don't define a cast from our custom types to their more common
+-- base types, but instead define functions to convert from one to the other. This
+-- prevents PostgreSQL from switching types on us automatically, when we don't
+-- want it.
+--
+-- Given this infrastructure, all PostgreSQL aggregates are now available to us
+-- as Mondrian aggregates. For instance, to get the standard deviation of patient
+-- ages, we create a measure defined with the expression
+-- make_dpcust(stddev(age_in_years)) with the count aggregate. In SQL, this
+-- becomes "SELECT count(make_dpcust(stddev(age_in_years)))" with stddev()
+-- being the PostgreSQL aggregate, and the count() and make_dpcust() functions
+-- simply transformations on the stddev() output. Note that database user
+-- Mondrian uses must have the trisano schema in the search path, as these types
+-- and functions are not being inserted into the pg_catalog schema.
+--
+-- Yes, it's a hack. But it prevents us from having to write patches for Mondrian.
+
+CREATE TYPE trisano.dp_cust AS (
+    dp DOUBLE PRECISION); 
+
+CREATE FUNCTION trisano.make_dpcust(a DOUBLE PRECISION) RETURNS trisano.dp_cust IMMUTABLE AS $$
+DECLARE
+    dpc trisano.dp_cust;
+BEGIN
+    dpc.dp := a;
+    RETURN dpc;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION trisano.count(trisano.dp_cust) RETURNS DOUBLE PRECISION IMMUTABLE AS $$
+    SELECT $1.dp
+$$ LANGUAGE sql;
+
+CREATE TYPE trisano.int_cust AS (
+    myint INTEGER);
+
+CREATE FUNCTION trisano.make_intcust(a INTEGER) RETURNS trisano.int_cust IMMUTABLE AS $$
+DECLARE
+    myi trisano.int_cust;
+BEGIN
+    myi.myint := a;
+    RETURN myi;
+END;
+
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION trisano.count(trisano.int_cust) RETURNS INTEGER IMMUTABLE AS $$
+    SELECT $1.myint
+$$ LANGUAGE sql;
+
+CREATE TYPE trisano.num_cust AS (
+    mynum NUMERIC);
+
+CREATE FUNCTION trisano.make_numcust(a NUMERIC) RETURNS trisano.num_cust IMMUTABLE AS $$
+DECLARE
+    myi trisano.num_cust;
+BEGIN
+    myi.mynum := a;
+    RETURN myi;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION trisano.count(trisano.num_cust) RETURNS NUMERIC IMMUTABLE AS $$
+    SELECT $1.mynum
+$$ LANGUAGE sql;
+
+-- End of Mondrian aggregate trickery
 
 CREATE OR REPLACE FUNCTION
     trisano.text_join(accum TEXT, newvalue TEXT, separator TEXT)
