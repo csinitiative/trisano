@@ -225,7 +225,7 @@ describe CdcExport do
       end
     end        
 
-    it "should displat an unknown ethinicity as '9'" do
+    it "should display an unknown ethinicity as '9'" do
       @event_hash['interested_party_attributes']['person_entity_attributes']['person_attributes']['ethnicity_id'] = nil
       with_cdc_records do |records|
         records[0].first.to_cdc[44...45].should == '9'
@@ -421,6 +421,31 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
         end
       end
+
+      it 'should update when state status changes' do
+        with_sent_events do |events|
+          events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
+          events[0].cdc_updated_at.should be_nil
+          events[0].ibis_updated_at.should be_nil
+          events[0].update_attributes({:state_case_status_id => external_codes(:case_status_confirmed).id})
+          events[0].cdc_updated_at.should == Date.today
+          events[0].ibis_updated_at.should == Date.today
+          events[0].should be_sent_to_cdc
+          events[0].should be_sent_to_ibis
+        end
+      end
+
+      it 'should set cdc update at date when state status changes, even if not sent' do
+        morb = Factory.build :morbidity_event
+        morb.save!
+        morb.should_not be_sent_to_cdc
+        morb.cdc_updated_at.should be_nil
+        morb.state_case_status_id = external_codes(:case_status_confirmed).id
+        morb.save!
+        morb.cdc_updated_at.should_not be_nil
+      end
+      
     end
   end
 

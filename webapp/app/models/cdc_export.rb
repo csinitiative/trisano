@@ -66,11 +66,12 @@ class CdcExport < ActiveRecord::Base
       events
     end
 
-    def verification_records(mmwr_year)
+    def verification_records(mmwr_year, mmwr_week=nil)
       select = 'COUNT(*), events."MMWR_year", diseases.cdc_code'
       where = '"MMWR_year"=' + mmwr_year.to_s + ' AND deleted_at IS NULL'
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
+      where << " AND events.\"MMWR_week\" <= #{mmwr_week}" unless mmwr_week.blank?
       group_by = 'events."MMWR_year", diseases.cdc_code'
       records = get_cdc_events(where, select, group_by)
       records.map!{|record| record.extend(Export::Cdc::VerificationRecord)}

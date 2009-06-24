@@ -163,4 +163,16 @@ describe Mmwr do
   it "should be year 2008, week 7 for Feb 16, 2008" do
     Mmwr.new(Date.new(2008, 2, 16)).mmwr_week.should == 7
   end
+
+  it 'should be able to subtract, like date math' do
+    (Mmwr.new(Date.new(2008, 2, 16)) - 1.week).mmwr_week.should == 6
+  end
+
+  it 'should be able to add like date math' do
+    (Mmwr.new(Date.new(2008, 2, 16)) + 1.week).mmwr_week.should == 8
+  end
+
+  it 'should return a valid mmwr object, given an integer representing an mmwr week' do
+    Mmwr.week(13, :for_year => 2009).mmwr_week_range.start_date.should == DateTime.new(2009, 3, 29)
+  end
 end

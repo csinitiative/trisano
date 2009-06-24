@@ -18,6 +18,12 @@
 # Morbidity and Mortality Weekly Report (MMWR) week and year calculations.
 class Mmwr
 
+  def self.week(week, opts={})
+    opts[:for_year] ||= DateTime.now.year
+    ranges = Mmwr.new(DateTime.new(opts[:for_year], 1, 1)).send(:date_ranges)
+    Mmwr.new(ranges[week].start_date)
+  end
+
   # Accepts no-arg (defaults to DateTime.now), 1 DateTime, or a Hash of 
   # epi date identification symbols and DateTimes.
   def initialize(*args)
@@ -71,6 +77,14 @@ class Mmwr
   
   def mmwr_year
     mmwr_week_range.mmwr_year.to_i
+  end
+
+  def -(duration)
+    Mmwr.new(@epi_date - duration)
+  end
+
+  def +(duration)
+    Mmwr.new(@epi_date + duration)
   end
   
   # Returns the MmwrDateRange that is in range.
