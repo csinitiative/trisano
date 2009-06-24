@@ -17,7 +17,7 @@
   %td
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
-        %p= h staged_message.patient.patient_name
+        %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;DOB #{h staged_message.patient.birth_date||'Unknown'}"
         %p= "Specimen: #{h staged_message.observation_request.specimen_source}"
         %p= "Collected: #{h staged_message.observation_request.collection_date}"
         %p

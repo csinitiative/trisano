@@ -98,6 +98,7 @@ module StagedMessages
 
     def birth_date
       begin
+        return nil if pid_segment.patient_dob.blank?
         Date.parse(pid_segment.patient_dob)
       rescue
         "Could not be determined"
@@ -106,7 +107,14 @@ module StagedMessages
 
     def trisano_sex_id
       sex_id = nil
-      if sex_md = /^[FMU]$/.match(pid_segment.admin_sex)
+
+      begin
+        elr_sex = pid_segment.admin_sex
+      rescue HL7::InvalidDataError
+        return sex_id
+      end
+
+      if sex_md = /^[FMU]$/.match(elr_sex)
         sex = sex_md[0]
         sex = 'UNK' if sex == 'U'
         sex_object = ExternalCode.find_by_code_name_and_the_code('gender', sex)
@@ -126,6 +134,8 @@ module StagedMessages
                  'AK'
                when 'U'
                  'UNK'
+               else
+                 race
                end
         race_object = ExternalCode.find_by_code_name_and_the_code('race', race)
         race_id = race_object.id if race_object
@@ -217,6 +227,7 @@ module StagedMessages
   
     def collection_date
       begin
+        return nil if obr_segment.observation_date.blank?
         Date.parse(obr_segment.observation_date).to_s
       rescue
         "Could not be determined"
@@ -237,6 +248,7 @@ module StagedMessages
 
     def observation_date
       begin
+        return nil if obx_segment.observation_date.blank?
         Date.parse(obx_segment.observation_date).to_s
       rescue
         "Could not be determined"
