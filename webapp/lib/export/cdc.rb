@@ -123,7 +123,7 @@ module Export
       def check_export_updates
         # IBIS export is interested in all of the same fields as CDC export
         if export_attributes_changed?
-          self.cdc_updated_at = Date.today if self.sent_to_cdc
+          self.cdc_updated_at = Date.today
           self.ibis_updated_at = Date.today if self.sent_to_ibis          
         end
         # IBIS export is also interested in a few more
@@ -146,7 +146,7 @@ module Export
            state_case_status_id 
            imported_from_id 
            deleted_at).each do |field|
-          return true if send("#{field}_change")
+          return true if send("#{field}_changed?")
         end
       end
 

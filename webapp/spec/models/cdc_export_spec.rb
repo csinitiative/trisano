@@ -299,7 +299,6 @@ describe CdcExport do
           events.should_not be_empty
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes 'imported_from_id' => external_codes(:imported_from_unknown).id
           events[0].cdc_updated_at.should == Date.today
@@ -313,7 +312,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'disease_event_attributes' => {'disease_id' => diseases(:anthrax).id}})
           events[0].cdc_updated_at.should == Date.today
@@ -327,7 +325,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!("address_attributes" => {"county_id" => external_codes(:county_summit).id})
           events[0].cdc_updated_at.should == Date.today
@@ -341,7 +338,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!({"interested_party_attributes" => {"person_entity_attributes" => {"race_ids" => [external_codes(:race_black).id], 'person_attributes' => {'last_name' => 'Someone'}}}})
           events[0].save
@@ -356,7 +352,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_gender_id' => external_codes(:gender_male).id, 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
@@ -370,7 +365,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'ethnicity_id' => external_codes(:ethnicity_hispanic).id, 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
@@ -384,7 +378,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!({'interested_party_attributes' => {'person_entity_attributes' => {'person_attributes' => {'birth_date' => Date.parse('12/31/1975'), 'last_name' => 'Someone'}}}})
           events[0].cdc_updated_at.should == Date.today
@@ -398,7 +391,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({'event_onset_date' => Date.today - 1})
           events[0].cdc_updated_at.should == Date.today
@@ -412,7 +404,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({:deleted_at => Date.today})
           events[0].cdc_updated_at.should == Date.today
@@ -426,7 +417,6 @@ describe CdcExport do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
-          events[0].cdc_updated_at.should be_nil
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes({:state_case_status_id => external_codes(:case_status_confirmed).id})
           events[0].cdc_updated_at.should == Date.today
@@ -437,13 +427,13 @@ describe CdcExport do
       end
 
       it 'should set cdc update at date when state status changes, even if not sent' do
-        morb = Factory.build :morbidity_event
-        morb.save!
+        morb = Factory.create :morbidity_event
         morb.should_not be_sent_to_cdc
-        morb.cdc_updated_at.should be_nil
-        morb.state_case_status_id = external_codes(:case_status_confirmed).id
-        morb.save!
-        morb.cdc_updated_at.should_not be_nil
+        
+        test_date = DateTime.new(2007, 8, 9)
+        morb.cdc_updated_at = test_date
+        morb.update_attribute(:state_case_status_id, external_codes(:case_status_confirmed).id)
+        morb.cdc_updated_at.should_not == test_date
       end
       
     end
@@ -675,9 +665,39 @@ describe CdcExport do
       end
 
     end
-
-    
     
   end
+
+  describe 'weekly cdc export' do
+    fixtures :diseases, :external_codes
+
+    before :each do
+      @morb = Factory.create :morbidity_event
+      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => 2008).mmwr_week_range.start_date
+      @morb.state_case_status_id = external_codes(:case_status_confirmed).id
+      @morb.save!
+
+      @disease = @morb.disease_event.disease
+      @disease.external_codes << external_codes(:case_status_confirmed)
+      @disease.save!
+    end
+
+    it 'should show a valid export event on its mmwr week' do
+      result = CdcExport.weekly_cdc_export(Mmwr.week(7, :for_year => 2008), Mmwr.week(8, :for_year => 2008))
+      result.size.should == 1
+      result[0].exp_event.should == @disease.cdc_code
+    end
+
+    it 'should show a valid export event on in a week it was cdc updated' do
+      result = CdcExport.weekly_cdc_export(Mmwr.new, (Mmwr.new + 1.week))
+      result.size.should == 1
+      result[0].exp_event.should == @disease.cdc_code
+    end
+
+    it 'should not show up in other weekly queries' do
+      result = CdcExport.weekly_cdc_export((Mmwr.new + 1.week), (Mmwr.new + 2.weeks))
+      result.should be_empty
+    end
+  end 
 
 end

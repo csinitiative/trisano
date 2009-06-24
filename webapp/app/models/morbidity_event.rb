@@ -24,6 +24,7 @@ class MorbidityEvent < HumanEvent
 
   before_save :generate_mmwr
   before_save :initialize_children
+  before_save :check_export_updates
 
   workflow do
     # on_entry evaluated at wrong time, so note is attached to meta for :new

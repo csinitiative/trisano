@@ -685,13 +685,11 @@ describe MorbidityEvent do
       end
     end
 
-    it 'should set cdc and ibis update when first_reported_PH_date value changes if already sent' do
+    it 'should set cdc and ibis update when first_reported_PH_date value changes' do
       with_event do |event|
         event.cdc_updated_at.should be_nil
         event.first_reported_PH_date = Date.today - 1
         event.save.should be_true
-        event.cdc_updated_at.should be_nil
-        event.ibis_updated_at.should be_nil
 
         event.sent_to_cdc = event.sent_to_ibis = true
         event.first_reported_PH_date = Date.today
