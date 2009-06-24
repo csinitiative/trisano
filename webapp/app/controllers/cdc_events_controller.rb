@@ -153,7 +153,7 @@ class CdcEventsController < AdminController
 
   def weekly_events(start_mmwr, end_mmwr)
     events = []
-    events << CdcExport.verification_records(end_mmwr.mmwr_year)
+    events << CdcExport.verification_records(end_mmwr.mmwr_year, end_mmwr.mmwr_week)
     events << CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
     events << CdcExport.cdc_deletes(start_mmwr, end_mmwr)
     events.flatten!

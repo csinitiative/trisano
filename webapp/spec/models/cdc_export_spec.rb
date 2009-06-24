@@ -673,7 +673,7 @@ describe CdcExport do
 
     before :each do
       @morb = Factory.create :morbidity_event
-      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => 2008).mmwr_week_range.start_date
+      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => Mmwr.new.mmwr_year - 1).mmwr_week_range.start_date
       @morb.state_case_status_id = external_codes(:case_status_confirmed).id
       @morb.save!
 
@@ -683,7 +683,8 @@ describe CdcExport do
     end
 
     it 'should show a valid export event on its mmwr week' do
-      result = CdcExport.weekly_cdc_export(Mmwr.week(7, :for_year => 2008), Mmwr.week(8, :for_year => 2008))
+      mmwr_year = Mmwr.new.mmwr_year - 1
+      result = CdcExport.weekly_cdc_export(Mmwr.week(7, :for_year => mmwr_year), Mmwr.week(8, :for_year => mmwr_year))
       result.size.should == 1
       result[0].exp_event.should == @disease.cdc_code
     end
@@ -692,6 +693,13 @@ describe CdcExport do
       result = CdcExport.weekly_cdc_export(Mmwr.new, (Mmwr.new + 1.week))
       result.size.should == 1
       result[0].exp_event.should == @disease.cdc_code
+    end
+
+    it 'should not show a valid export event updated this year, if the mmwr year is more then one year old' do
+      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => Mmwr.new.mmwr_year - 2).mmwr_week_range.start_date
+      @morb.save!
+      result = CdcExport.weekly_cdc_export(Mmwr.new, (Mmwr.new + 1.week))
+      result.should be_empty
     end
 
     it 'should not show up in other weekly queries' do

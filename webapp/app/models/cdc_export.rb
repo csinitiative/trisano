@@ -24,7 +24,7 @@ class CdcExport < ActiveRecord::Base
         (
           (("MMWR_week"=#{start_mmwr.mmwr_week} AND "MMWR_year"=#{start_mmwr.mmwr_year}) OR ("MMWR_week"=#{end_mmwr.mmwr_week} AND "MMWR_year"=#{end_mmwr.mmwr_year}))
           OR
-          (cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')
+          (cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}' AND ("MMWR_year"=#{end_mmwr.mmwr_year} OR "MMWR_year"=#{end_mmwr.mmwr_year - 1}))
         )
       END_WHERE_CLAUSE
       # The following issues 133 separate selects to generate the where clause component.  What's it doing?
