@@ -16,12 +16,28 @@ Feature: Removing forms from events
     When I navigate to the event edit page
     And I see the form and answers on the event
     And I click the "Add/Remove forms for this event" link
-    Then I should be presented with the error message "You do not have rights to add/remove forms"
+    And I check the remove form checkbox
+    And I click the "Remove Forms" button
+    Then I should see "The list of forms in use was successfully updated"
+
+    When I follow "Edit"
+    Then I should not see the name of the added form
 
   Scenario: Morbidity event form removal as investigator
     Given I am logged in as an investigator
     When I navigate to the event edit page
     And I see the form and answers on the event
     And I click the "Add/Remove forms for this event" link
-    Then I should not see a checkbox to remove the form
-    And I should not see the "Remove Forms" button
+    And I check the remove form checkbox
+    And I click the "Remove Forms" button
+    Then I should see "The list of forms in use was successfully updated"
+
+    When I follow "Edit"
+    Then I should not see the name of the added form
+
+  Scenario: Morbidity event form removal as data entry tech
+    Given I am logged in as a data entry tech
+    When I navigate to the event edit page
+    And I click the "Add/Remove forms for this event" link
+    Then I should see "You do not have rights to add/remove forms."
+

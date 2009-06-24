@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+When(/^I check the remove form checkbox$/) do
+  check("forms_to_remove_#{@published_form.id}")
+end
 
 When(/^I see the form and answers on the event$/) do
   response.should contain(@form.name)

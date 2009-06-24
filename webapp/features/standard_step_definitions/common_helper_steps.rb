@@ -31,6 +31,10 @@ Given(/^I am logged in as an investigator$/) do
   log_in_as("investigator")
 end
 
+Given(/^I am logged in as a data entry tech/) do
+  log_in_as("data_entry_tech")
+end
+
 #
 # Basic moving around helpers
 #

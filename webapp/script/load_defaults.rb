@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 puts "Loading defaults"
@@ -37,7 +37,7 @@ CoreField.transaction do
   core_fields.each do |k, v|
     CoreField.create(v)
   end
-end    
+end
 
 # Hospitals are represented as an array of strings
 
@@ -45,9 +45,9 @@ hospitals = YAML::load_file "#{RAILS_ROOT}/db/defaults/hospitals.yml"
 hospital_type = Code.find_by_code_name_and_the_code("placetype", "H")
 Entity.transaction do
   hospitals.each do |hospital|
-    h = PlaceEntity.find(:first, 
-      :include => { :place => :place_types }, 
-      :select => "places.name", 
+    h = PlaceEntity.find(:first,
+      :include => { :place => :place_types },
+      :select => "places.name",
       :conditions => ["codes.code_name = 'placetype' AND codes.the_code = 'H' AND places.name = ?", hospital])
     if h.nil?
       e = PlaceEntity.new
@@ -64,9 +64,9 @@ jurisdictions = YAML::load_file "#{RAILS_ROOT}/db/defaults/jurisdictions.yml"
 jurisdiction_type = Code.find_by_code_name_and_the_code("placetype", "J")
 Entity.transaction do
   jurisdictions.each do |jurisdiction|
-    j = PlaceEntity.find(:first, 
-      :include => { :place => :place_types }, 
-      :select => "places.name", 
+    j = PlaceEntity.find(:first,
+      :include => { :place => :place_types },
+      :select => "places.name",
       :conditions => ["codes.code_name = 'placetype' AND codes.the_code = 'J' AND places.name = ?", jurisdiction['name'] ])
     if j.nil?
       e = PlaceEntity.new
@@ -117,13 +117,13 @@ end
 
 # Create a default superusers
 Entitlement.transaction do
-  
+
   # Give these users all roles in all jurisdictions
   user = User.find_by_user_name('default_user')
-  jurisdictions = PlaceEntity.find(:all, 
+  jurisdictions = PlaceEntity.find(:all,
     :include => { :place => :place_types },
     :conditions => "codes.code_name = 'placetype' AND codes.the_code = 'J'")
-    
+
   roles = Role.find(:all)
   roles_for_default_users = []
 
@@ -180,6 +180,8 @@ User.transaction do
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => accept_event_for_lhd, :jurisdiction_id => bear_river)
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => route_event_to_investigator, :jurisdiction_id => bear_river)
   surveillance_mgr.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => add_form, :jurisdiction_id => bear_river)
+  surveillance_mgr.entitlements << Entitlement.new(:privilege_id => remove_form, :jurisdiction_id => bear_river)
 
   investigator.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   investigator.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
@@ -190,18 +192,23 @@ User.transaction do
   investigator.entitlements << Entitlement.new(:privilege_id => accept_event_for_investigation, :jurisdiction_id => bear_river)
   investigator.entitlements << Entitlement.new(:privilege_id => investigate_event, :jurisdiction_id => bear_river)
   investigator.entitlements << Entitlement.new(:privilege_id => add_form, :jurisdiction_id => bear_river)
+  investigator.entitlements << Entitlement.new(:privilege_id => remove_form, :jurisdiction_id => bear_river)
 
   lhd_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_lhd, :jurisdiction_id => bear_river)
   lhd_manager.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => add_form, :jurisdiction_id => bear_river)
+  lhd_manager.entitlements << Entitlement.new(:privilege_id => remove_form, :jurisdiction_id => bear_river)
 
   state_manager.entitlements << Entitlement.new(:privilege_id => create_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => view_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => update_event, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => approve_event_at_state, :jurisdiction_id => bear_river)
   state_manager.entitlements << Entitlement.new(:privilege_id => assign_task_to_user, :jurisdiction_id => bear_river)
+  state_manager.entitlements << Entitlement.new(:privilege_id => add_form, :jurisdiction_id => bear_river)
+  state_manager.entitlements << Entitlement.new(:privilege_id => remove_form, :jurisdiction_id => bear_river)
 
 end
 
