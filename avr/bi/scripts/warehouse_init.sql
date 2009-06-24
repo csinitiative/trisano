@@ -688,6 +688,6 @@ COMMIT;
 -- SET search_path = population;
 -- INSERT INTO population (jurisdiction, race, population)
 --     SELECT investigating_jurisdiction, race, floor(random() * 1000)
---     FROM 
+--     FROM
 --         (SELECT DISTINCT investigating_jurisdiction FROM trisano.dw_morbidity_events_view) a
 --         CROSS JOIN (SELECT DISTINCT race FROM trisano.dw_patient_races_view) b;
