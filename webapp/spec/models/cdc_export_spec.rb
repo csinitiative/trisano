@@ -680,11 +680,12 @@ describe CdcExport do
       @disease = @morb.disease_event.disease
       @disease.external_codes << external_codes(:case_status_confirmed)
       @disease.save!
+
+      @mmwr_year = Mmwr.new.mmwr_year - 1
     end
 
     it 'should show a valid export event on its mmwr week' do
-      mmwr_year = Mmwr.new.mmwr_year - 1
-      result = CdcExport.weekly_cdc_export(Mmwr.week(7, :for_year => mmwr_year), Mmwr.week(8, :for_year => mmwr_year))
+      result = CdcExport.weekly_cdc_export(Mmwr.week(7, :for_year => @mmwr_year), Mmwr.week(8, :for_year => @mmwr_year))
       result.size.should == 1
       result[0].exp_event.should == @disease.cdc_code
     end
@@ -705,6 +706,11 @@ describe CdcExport do
     it 'should not show up in other weekly queries' do
       result = CdcExport.weekly_cdc_export((Mmwr.new + 1.week), (Mmwr.new + 2.weeks))
       result.should be_empty
+    end
+
+    it 'should include all entries with mmwr week between end values (inclusive)' do
+      result = CdcExport.weekly_cdc_export Mmwr.week(7, :for_year => @mmwr_year), Mmwr.week(9, :for_year => @mmwr_year)
+      result.should_not be_empty
     end
   end 
 

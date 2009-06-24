@@ -17,14 +17,23 @@
 class CdcExport < ActiveRecord::Base
 
   class << self
+    # since cdc reports won't span years, we'll assume the end_mmwr year is correct
     def weekly_cdc_export(start_mmwr, end_mmwr)
       raise ArgumentError unless start_mmwr.is_a?(Mmwr) && end_mmwr.is_a?(Mmwr)
       where = []
       where << <<-END_WHERE_CLAUSE
         (
-          (("MMWR_week"=#{start_mmwr.mmwr_week} AND "MMWR_year"=#{start_mmwr.mmwr_year}) OR ("MMWR_week"=#{end_mmwr.mmwr_week} AND "MMWR_year"=#{end_mmwr.mmwr_year}))
+          (
+            "MMWR_week" BETWEEN #{start_mmwr.mmwr_week} AND #{end_mmwr.mmwr_week}
+            AND 
+            "MMWR_year"=#{end_mmwr.mmwr_year}
+          )
           OR
-          (cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}' AND ("MMWR_year"=#{end_mmwr.mmwr_year} OR "MMWR_year"=#{end_mmwr.mmwr_year - 1}))
+          (
+            cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}'
+            AND
+            ("MMWR_year"=#{end_mmwr.mmwr_year} OR "MMWR_year"=#{end_mmwr.mmwr_year - 1})
+          )
         )
       END_WHERE_CLAUSE
       # The following issues 133 separate selects to generate the where clause component.  What's it doing?
