@@ -15,12 +15,16 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+BEGIN;
 CREATE SCHEMA trisano;
 ALTER SCHEMA trisano OWNER TO trisano_su;
+CREATE SCHEMA population;
+ALTER SCHEMA population OWNER TO trisano_su;
 CREATE LANGUAGE plpgsql;
 -- NOTE: Adjust this user to the DEST_DB_USER 
 ALTER SCHEMA public OWNER TO trisano_su;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
+GRANT USAGE ON SCHEMA population TO trisano_ro;
 ALTER USER trisano_ro SET search_path = trisano;
 
 CREATE TABLE trisano.current_schema_name (
@@ -658,3 +662,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 -- END OF trisano.swap_schemas()
+
+SET search_path = population;
+
+CREATE TABLE population (
+    jurisdiction text,
+    race text,
+    population integer
+);
+
+CREATE TABLE population_dimensions (
+    dim_name text,
+    dim_cols text[],
+    mapping_func text
+);
+
+INSERT INTO population_dimensions VALUES
+    ('Investigating Jurisdiction', ARRAY['jurisdiction'], NULL),
+    ('Race',                       ARRAY['race'],         NULL);
+
+COMMIT;
+
+-- Sample script to create bogus population data, to be run after etl.sh runs
+--
+-- SET search_path = population;
+-- INSERT INTO population (jurisdiction, race, population)
+--     SELECT investigating_jurisdiction, race, floor(random() * 1000)
+--     FROM 
+--         (SELECT DISTINCT investigating_jurisdiction FROM trisano.dw_morbidity_events_view) a
+--         CROSS JOIN (SELECT DISTINCT race FROM trisano.dw_patient_races_view) b;
