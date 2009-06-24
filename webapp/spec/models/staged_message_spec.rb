@@ -97,7 +97,7 @@ describe StagedMessage do
   describe "class level functionality" do
 
     it 'should provide a hash of valid states' do
-      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED'}
+      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED'}
     end 
   end
 
@@ -186,6 +186,27 @@ describe StagedMessage do
       it "should not instantiate a phone" do
         @event.interested_party.person_entity.telephones.should be_empty
       end
+    end
+  end
+
+  describe "discarding a message" do
+#    raise "Message is already assigned to an event." if self.state == self.class.states[:assigned]
+#    self.state = self.class.states[:discarded]
+#    self.save!
+
+    before :each do
+      @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+    end
+
+    it "should raise an error if message has already been assigned" do
+      @staged_message.state = StagedMessage.states[:assigned]
+      lambda{@staged_message.discard}.should raise_error(RuntimeError)
+    end
+
+    it 'should set state to discarded and save message' do
+      @staged_message.discard
+      @staged_message.state.should == StagedMessage.states[:discarded]
+      @staged_message.should_not be_new_record
     end
   end
 end

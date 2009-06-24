@@ -627,7 +627,7 @@ form.inplaceeditor-form a {
   .staged-message .header p {
     margin-top: 1px;
     margin-bottom: 1px; }
-  .staged-message .header p + p {
+  .staged-message .header p + * {
     text-indent: 1em; }
 .staged-message .results {
   width: 82%; }

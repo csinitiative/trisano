@@ -73,8 +73,9 @@ When /^I click 'Create a CMR from this message'$/ do
   submit_form "assign_to_new"
 end
 
-Then /^I should see a success message$/ do
-  response.should contain('success') # As in 'Lab result has been successfully assigned
+Then /^I should see a '(.+)' message$/ do |msg|
+  # Flash message
+  response.should contain(msg)
 end
 
 Then /^I should remain on the staged message show page$/ do
@@ -117,3 +118,12 @@ Then /^I should see the patient information$/ do
     frag.should contain("Home: (#{area}) #{num[0..2]}-#{num[3..6]}")
   end
 end
+
+When /^I click the 'Discard' link for the staged message$/ do
+  submit_form "discard_#{@staged_message.id}"
+end
+
+Then /^I should not see the discarded message$/ do
+  response.should_not have_selector("#message_#{@staged_message.id}")
+end
+

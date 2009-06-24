@@ -22,7 +22,9 @@ class StagedMessagesController < ApplicationController
   # GET /lab_messages
   # GET /lab_messages.xml
   def index
-    @staged_messages = StagedMessage.paginate_by_state(StagedMessage.states[:pending], :order => "created_at DESC", :page => params[:page], :per_page => 10)
+    @selected = params[:message_state]
+    state = StagedMessage.states.value?(@selected) ? @selected : StagedMessage.states[:pending] 
+    @staged_messages = StagedMessage.paginate_by_state(state, :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
   # GET /staged_messages/1
@@ -81,6 +83,20 @@ class StagedMessagesController < ApplicationController
 
     redirect_to(staged_messages_url)
   end
+
+  def discard
+    @staged_message = StagedMessage.find(params[:id])
+    begin
+      @staged_message.discard
+    rescue
+      flash[:error] = "Could not discard message event. #{$!}"
+      redirect_to(staged_message_path(@staged_message))
+    else
+      flash[:notice] = "Staged message was discarded."
+      redirect_to(staged_messages_url)
+    end
+  end
+
 
   def event_search
     @staged_message = StagedMessage.find(params[:id])

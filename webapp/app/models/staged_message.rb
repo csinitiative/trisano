@@ -18,8 +18,9 @@
 class StagedMessage < ActiveRecord::Base
   class << self
     def states
-      { :pending  => 'PENDING',
-        :assigned => 'ASSIGNED'
+      { :pending   => 'PENDING',
+        :assigned  => 'ASSIGNED',
+        :discarded => 'DISCARDED'
       }
     end
   end
@@ -118,6 +119,12 @@ class StagedMessage < ActiveRecord::Base
     event.build_jurisdiction unless event.jurisdiction
     event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
     event
+  end
+
+  def discard
+    raise "Message is already assigned to an event." if self.state == self.class.states[:assigned]
+    self.state = self.class.states[:discarded]
+    self.save!
   end
 
   private

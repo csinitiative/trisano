@@ -69,7 +69,7 @@ Feature: Staging Electronic Messages
     And I click 'Similar Events' for the staged message
     And I click the 'Assign lab result' link of the found event
     Then I should remain on the staged message show page
-    And I should see a success message
+    And I should see a 'success; message
     And I should not see the 'Similar Events' link
     And I should not see the 'Discard' link
 
@@ -92,3 +92,14 @@ Feature: Staging Electronic Messages
     When I visit the assigned-to event
     Then I should see the patient information
     And I should see the new lab result
+
+  Scenario: Discarding a message
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there is an event with a matching name and birth date
+
+    When I visit the staged message show page
+    And I click the 'Discard' link for the staged message
+    Then I should see the staging area page
+    And I should see a 'Staged message was discarded' message
+    And I should not see the discarded message

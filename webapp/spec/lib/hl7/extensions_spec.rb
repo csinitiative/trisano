@@ -121,7 +121,7 @@ describe Message do
 
     it "should have an empty telephone if there is one" do
       hl7 = HL7::Message.parse(hl7_messages[:arup_simple_pid])
-      hl7.patient_id.telephone_empty?.should == false
+      hl7.patient_id.telephone_empty?.should == true
     end
 
     it "should return the phone number components" do
