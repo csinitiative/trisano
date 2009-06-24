@@ -109,7 +109,8 @@ module StagedMessages
       if sex_md = /^[FMU]$/.match(pid_segment.admin_sex)
         sex = sex_md[0]
         sex = 'UNK' if sex == 'U'
-        sex_id = ExternalCode.find_by_code_name_and_the_code('gender', sex).id
+        sex_object = ExternalCode.find_by_code_name_and_the_code('gender', sex)
+        sex_id = sex_object.id if sex_object
       end
       sex_id
     end
@@ -126,7 +127,8 @@ module StagedMessages
                when 'U'
                  'UNK'
                end
-        race_id = ExternalCode.find_by_code_name_and_the_code('race', race).id
+        race_object = ExternalCode.find_by_code_name_and_the_code('race', race)
+        race_id = race_object.id if race_object
       end
       race_id
     end
@@ -161,7 +163,8 @@ module StagedMessages
 
     def address_trisano_state_id
       unless addr_components[3].blank?
-        state_id = ExternalCode.find_by_code_name_and_the_code('state', addr_components[3]).id
+        state_object = ExternalCode.find_by_code_name_and_the_code('state', addr_components[3])
+        state_object.id if state_object
       else
         nil
       end

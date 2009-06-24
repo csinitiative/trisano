@@ -69,7 +69,7 @@ Feature: Staging Electronic Messages
     And I click 'Similar Events' for the staged message
     And I click the 'Assign lab result' link of the found event
     Then I should remain on the staged message show page
-    And I should see a 'success; message
+    And I should see a 'success' message
     And I should not see the 'Similar Events' link
     And I should not see the 'Discard' link
 
@@ -85,7 +85,7 @@ Feature: Staging Electronic Messages
     And I click 'Similar Events' for the staged message
     And I click 'Create a CMR from this message'
     Then I should remain on the staged message show page
-    And I should see a success message
+    And I should see a 'success' message
     And I should not see the 'Similar Events' link
     And I should not see the 'Discard' link
 

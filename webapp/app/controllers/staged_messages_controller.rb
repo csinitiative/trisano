@@ -107,17 +107,17 @@ class StagedMessagesController < ApplicationController
   end
 
   def event
-    staged_message = StagedMessage.find(params[:id])
-
-    if params[:event_id]
-      event = Event.find(params[:event_id])
-      msg_string = "existing"
-    else
-      event = staged_message.new_event_from
-      msg_string = "new"
-    end
-
     begin
+      staged_message = StagedMessage.find(params[:id])
+
+      if params[:event_id]
+        event = Event.find(params[:event_id])
+        msg_string = "existing"
+      else
+        event = staged_message.new_event_from
+        msg_string = "new"
+      end
+
       staged_message.assigned_event = event
     rescue
       flash[:error] = "Could not assign message to #{msg_string} event. #{$!}"
