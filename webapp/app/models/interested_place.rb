@@ -17,7 +17,7 @@
 
 class InterestedPlace < Participation
   belongs_to :place_entity,  :foreign_key => :primary_entity_id
-  after_create :associate_longitudinal_data
+  after_create :associate_longitudinal_data, :copy_canonical_address
 
   accepts_nested_attributes_for :place_entity
 

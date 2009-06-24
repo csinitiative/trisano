@@ -22,8 +22,8 @@ class PlaceEvent < Event
   accepts_nested_attributes_for :interested_place
   accepts_nested_attributes_for :participations_place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
-  before_create do |contact|
-    contact.add_note("Place event created.")
+  before_create do |place|
+    place.add_note("Place event created.")
   end
 
   after_save :set_primary_entity_on_secondary_participations
@@ -39,7 +39,7 @@ class PlaceEvent < Event
   # If you're wondering why calling #destroy on a place event isn't deleting the record, this is why.
   # Override destroy to soft-delete record instead.  This makes it easier to work with :autosave.
   def destroy
-   self.soft_delete
+    self.soft_delete
   end
 
   def copy_event(new_event, event_components)

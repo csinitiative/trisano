@@ -30,13 +30,5 @@ class InterestedParty < Participation
       errors.add_to_base("No information has been supplied for the interested party.")
     end
   end
-
-  private
-  
-  def associate_longitudinal_data
-    if event.try(:address)
-      event.address.update_attribute(:entity_id, primary_entity_id)
-    end
-  end
   
 end
