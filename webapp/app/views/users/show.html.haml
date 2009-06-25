@@ -49,6 +49,9 @@
             %br
             Initials:
             = @user.initials
+            - if @user.disable
+              %br
+              This account has been disabled
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_user_path(@user)

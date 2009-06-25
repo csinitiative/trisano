@@ -15,20 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-def path_to(page_name)
-  case page_name
-  
-  when /the homepage/i
-    root_path
-  
-  # Add more page name => path mappings here
-  when /the new CMR page/i
-    new_cmr_path
 
-  when /the investigator user edit page/i
-    "/users/4/edit"
-  
-  else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
-  end
+Given(/^I am logged in as a disabled user$/) do
+  log_in_as("investigator")
+  User.current_user.disable = true
+  User.current_user.save
+end
+
+When /^I see that the user is not yet disabled$/ do
+  field_with_id("user_disable").should_not be_checked
+end
+
+Then /^the disable checkbox should still be checked$/ do
+  field_with_id("user_disable").should be_checked
+end
+
+Then /^I am presented with a page saying that the account is not available$/ do
+  visit home_path
+  response.should contain("account is not currently available")
 end

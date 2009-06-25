@@ -103,6 +103,14 @@ class ApplicationController < ActionController::Base
       render :text => "Internal application error: User not found. Please contact your administrator.", :status => 500
       return
     end
+
+    if User.current_user.disable
+      logger.info "Login attempt with disabled UID " +  uid
+      log_request_info
+      render :text => "This account is not currently available. Please contact your administrator."
+      return
+    end
+
     logger.info "User loaded: " + User.current_user.uid
     User.current_user
   end

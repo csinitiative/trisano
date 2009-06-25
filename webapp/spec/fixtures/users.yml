@@ -53,4 +53,14 @@ update_davis_user:
   initials:
   event_view_settings:
 
-
+disabled_user:
+  id: 6
+  uid: disabled_user
+  user_name: disabled_user
+  last_name: Quarrells
+  given_name:
+  first_name:
+  generational_qualifer:
+  initials:
+  event_view_settings:
+  disable: true
