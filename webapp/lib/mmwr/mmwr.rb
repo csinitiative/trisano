@@ -21,7 +21,6 @@ class Mmwr
   def self.week(week, opts={})
     opts[:for_year] ||= DateTime.now.year
     ranges = Mmwr.new(DateTime.new(opts[:for_year], 1, 1)).send(:date_ranges)
-    p ranges[week] if $debug
     Mmwr.new(ranges[week].start_date)
   end
 
