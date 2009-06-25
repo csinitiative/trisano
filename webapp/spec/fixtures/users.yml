@@ -8,6 +8,7 @@ default_user:
   generational_qualifer: 
   initials: 
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
+  disable: false
 
 admin_user:
   id: 2
@@ -19,6 +20,7 @@ admin_user:
   generational_qualifer:
   initials:
   event_view_settings:
+  disable: false
 
 update_cmr_user:
   id: 3
@@ -30,6 +32,7 @@ update_cmr_user:
   generational_qualifer:
   initials:
   event_view_settings:
+  disable: false
 
 view_cmr_user:
   id: 4
@@ -41,6 +44,7 @@ view_cmr_user:
   generational_qualifer:
   initials:
   event_view_settings:
+  disable: false
 
 update_davis_user:
   id: 5
@@ -52,6 +56,7 @@ update_davis_user:
   generational_qualifer:
   initials:
   event_view_settings:
+  disable: false
 
 disabled_user:
   id: 6
