@@ -21,13 +21,12 @@ class CdcExport < ActiveRecord::Base
     def weekly_cdc_export(start_mmwr, end_mmwr)
       raise ArgumentError unless start_mmwr.is_a?(Mmwr) && end_mmwr.is_a?(Mmwr)
       where = []
-      where << <<-END_WHERE_CLAUSE
+      where << ERB.new(<<-END_WHERE_CLAUSE).result(binding)
         (
-          (
-            "MMWR_week" BETWEEN #{start_mmwr.mmwr_week} AND #{end_mmwr.mmwr_week}
-            AND 
-            "MMWR_year"=#{end_mmwr.mmwr_year}
-          )
+          <% (start_mmwr..end_mmwr).each_with_index do |mmwr, index| %>
+            <%= " OR " unless index == 0 %>
+            ("MMWR_week"=<%= mmwr.mmwr_week %> AND "MMWR_year"=<%= mmwr.mmwr_year %>)
+          <% end %>
           OR
           (
             cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}'
