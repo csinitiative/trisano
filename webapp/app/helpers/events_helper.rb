@@ -181,7 +181,7 @@ module EventsHelper
   end
 
   def state_controls(event)
-    return "" if event.new? or event.not_routed? or event.closed? or event.rejected_by_lhd?
+    return "" if event.new? or (event.is_a?(ContactEvent) && event.not_routed?) or event.closed? or event.rejected_by_lhd?
 
     routing_controls = action_controls = ""
     event.allowed_transitions.each do |transition|
