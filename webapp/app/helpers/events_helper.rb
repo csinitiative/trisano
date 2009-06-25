@@ -143,8 +143,12 @@ module EventsHelper
     # (anticipated to be # rare) circumstances where someone has view but not update privs, clicking on the 
     # links will render a nice, pretty 'go away' message.
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(event)}')") << " | " if from_index
-    controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+    controls << link_to('Show', contact_event_path(event)) << " | " if from_index
+    if from_index
+      controls <<  link_to('Edit', edit_contact_event_path(event))
+    else
+      controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+    end
     controls << " | " << link_to('Print', contact_event_path(event, :format => "print") , :target => "_blank")
     controls << link_to(' (with notes)', contact_event_path(event, :format => "print", :note => "1") , :target => "_blank") if !from_index
     if event.deleted_at.nil?
@@ -177,7 +181,7 @@ module EventsHelper
   end
 
   def state_controls(event)
-    return "" if event.new? or event.closed? or event.rejected_by_lhd?
+    return "" if event.new? or event.not_routed? or event.closed? or event.rejected_by_lhd?
 
     routing_controls = action_controls = ""
     event.allowed_transitions.each do |transition|

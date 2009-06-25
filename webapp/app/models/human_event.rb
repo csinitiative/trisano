@@ -168,11 +168,23 @@ class HumanEvent < Event
       return queue_ids, queue_names
     end
 
+    def get_states_and_descriptions
+      new.states.collect do |state|
+        OpenStruct.new :workflow_state => state, :description => state_description(state)
+      end
+    end
+
+    def state_description(state)
+      new.states(state).meta[:description] || state.to_s.titleize
+    end
+
     def find_all_for_filtered_view(options = {})
       where_clause = "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
 
       states = options[:states] || []
-      unless states.empty?
+      if states.empty?
+        where_clause << " AND workflow_state != 'not_routed'"
+      else
         where_clause << " AND workflow_state IN (#{ states.map { |s| "'#{s}'" }.join(',') })"
       end
     

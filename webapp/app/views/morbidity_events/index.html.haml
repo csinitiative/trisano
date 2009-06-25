@@ -28,7 +28,6 @@
     = "|"
   = link_to_function('Change View', nil) do |page|
     - page[:change_view].visual_effect :slide_down
-    
 
 - content_for :tools_two do
   = new_cmr_button "Create New Morbidity Report"
@@ -39,16 +38,27 @@
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
       %label Events
-      = select_tag("states[]", options_from_collection_for_select(MorbidityEvent.get_states_and_descriptions, :workflow_state, :description), :size => 5, :multiple => true)
+
+      -# Contacts and events have slightly different workflows.  Get the union of the two.
+      - events = MorbidityEvent.get_states_and_descriptions
+      - ContactEvent.get_states_and_descriptions.each do |ce|
+        - same = false
+        - MorbidityEvent.get_states_and_descriptions.each do |me|
+          -if ce.workflow_state == me.workflow_state
+            - same = true
+        - if !same
+          -  events << ce
+
+      = select_tag("states[]", options_from_collection_for_select(events, :workflow_state, :description), :size => 5, :multiple => true, :id => "states_selector")
     %span.horiz
       %label Queues
       - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-      = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true)
+      = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true, :id => "queues_selector")
     %label Investigators
     - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-    = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true)
+    = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true, :id => "investigators_selector")
     %label Diseases
-    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true)
+    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true, :id => "diseases_selector")
     %label Items per page
     - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
     = select_tag('per_page', page_options)

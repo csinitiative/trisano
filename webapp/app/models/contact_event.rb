@@ -26,10 +26,13 @@ class ContactEvent < HumanEvent
   end
 
   workflow do
-    # on_entry evaluated at wrong time, so note is attached to meta for :new
+    state :not_routed, :meta => {:description => 'Not Participating in Workflow', :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
+      event :promote, :transitions_to => :new
+      assign_to_lhd
+    end
     state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
       assign_to_lhd
-    end        
+    end
     state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
       # Won't work in jruby 1.2 because of this: https://fisheye.codehaus.org/browse/JRUBY-3490
       # Reimplement when fixed. Also see contact_event.rb and workaround in lib/workflow_helper.rb
@@ -149,6 +152,7 @@ class ContactEvent < HumanEvent
 
   def promote_to_morbidity_event
     raise "Cannot promote an unsaved contact to a morbidity event" if self.new_record?
+    self.promote if self.not_routed? # In case the contact is in a state that doesn't exist for a morb
     self['type'] = MorbidityEvent.to_s
     # Pull morb forms
     if self.disease_event && self.disease_event.disease

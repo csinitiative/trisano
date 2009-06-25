@@ -38,8 +38,12 @@ module MorbidityEventsHelper
     # rare) circumstances where someone has view but not update privs, clicking on the links will render a nice,
     # pretty 'go away' message.
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{cmr_path(event)}')") << " | " if from_index
-    controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
+    controls << link_to('Show', cmr_path(event)) << " | " if from_index
+    if from_index
+      controls << link_to('Edit', edit_cmr_path(event))
+    else
+      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
+    end
     controls << " | " << link_to('Print', cmr_path(event, :format => "print") , :target => "_blank") 
     controls << link_to(' (with notes)', cmr_path(event, :format => "print", :note => "1") , :target => "_blank") if !from_index
     controls << " | " << link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete') if event.deleted_at.nil?

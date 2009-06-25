@@ -23,10 +23,24 @@ Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue
   @event.save!
 end
 
+Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
+  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+end
+
+Given /^a routed (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
+  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+  @m.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")
+  @m.save!
+end
+
 When /^I visit the events index page$/ do
   visit cmrs_path({})
 end
 
 When(/^I navigate to the event edit page$/) do
   visit edit_cmr_path(@event)
+end
+
+When(/^I navigate to the new event page$/) do
+  visit new_cmr_path
 end

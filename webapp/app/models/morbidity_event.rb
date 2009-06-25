@@ -141,16 +141,6 @@ class MorbidityEvent < HumanEvent
     end
   end
 
-  def self.get_states_and_descriptions
-    new.states.collect do |state|
-      OpenStruct.new :workflow_state => state, :description => state_description(state)
-    end
-  end
-
-  def self.state_description(state)
-    new.states(state).meta[:description] || state.to_s.titleize
-  end
-
   def self.core_views
     [
       ["Demographics", "Demographics"],

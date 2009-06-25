@@ -20,8 +20,33 @@ Given /^a queue named "([^\"]*)" in jurisdiction "([^\"]*)"$/ do |queue_name, ju
   @event_queue.should be_valid
 end
 
-Then /^I should see the assigned event\.$/ do
+Then /^I should see the assigned event$/ do
   # keying off the printing link because it seems the easiest way to match the event id
   response.should have_xpath("//a[contains(@href,'#{@event.id}.print')]")
+end
+
+Then /^I should see all available event states$/ do
+  response.should have_selector("#states_selector") do |select|
+    select.should have_selector("option[value='accepted_by_lhd']")
+    select.should have_selector("option[value='rejected_by_lhd']")
+    select.should have_selector("option[value='assigned_to_queue']")
+    select.should have_selector("option[value='assigned_to_investigator']")
+    select.should have_selector("option[value='under_investigation']")
+    select.should have_selector("option[value='rejected_by_investigator']")
+    select.should have_selector("option[value='investigation_complete']")
+    select.should have_selector("option[value='approved_by_lhd']")
+    select.should have_selector("option[value='reopened_by_manager']")
+    select.should have_selector("option[value='reopened_by_state']")
+    select.should have_selector("option[value='closed']")
+    select.should have_selector("option[value='not_routed']")
+  end
+end
+
+Then /^I should see a listing for (.+)$/ do |name|
+  response.should have_xpath("//div[@class='patientname'][contains(text(), '#{name}')]")
+end
+
+Then /^I should not see a listing for (.+)$/ do |name|
+  response.should_not have_xpath("//div[@class='patientname'][contains(text(), '#{name}')]")
 end
 
