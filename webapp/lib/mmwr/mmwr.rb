@@ -21,6 +21,7 @@ class Mmwr
   def self.week(week, opts={})
     opts[:for_year] ||= DateTime.now.year
     ranges = Mmwr.new(DateTime.new(opts[:for_year], 1, 1)).send(:date_ranges)
+    p ranges[week] if $debug
     Mmwr.new(ranges[week].start_date)
   end
 
@@ -119,6 +120,25 @@ class Mmwr
       :unknown
     end       
   end
+
+  def <=>(other_mmwr)
+    result = mmwr_year <=> other_mmwr.mmwr_year
+    if result == 0
+      mmwr_week <=> other_mmwr.mmwr_week
+    else
+      result
+    end
+  end
+
+  def succ
+    return Mmwr.new(mmwr_week_range.end_date + 1)
+    week_candidate = mmwr_week + 1
+    if @ranges[week_candidate]
+      Mmwr.week week_candidate
+    else
+      Mmwr.week(1, :for_year => mmwr_year + 1)
+    end
+  end
   
   private
     
@@ -206,7 +226,7 @@ class Mmwr
     sunday = prev_year - prev_year.wday
     MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6)      
   end  
-  
+
 end
 
 # Contains details on MMWR Week.

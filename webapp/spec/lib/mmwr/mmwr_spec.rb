@@ -113,7 +113,7 @@ describe Mmwr do
     mmwr.mmwr_week.should == 53
     mmwr.mmwr_year.should == 2008
   end
-  
+
   it "should be year 2009 week 53 for Dec 26 2009" do     
     epi_dates = { :onsetdate => Date.new(2009, 12, 26) }
     mmwr = Mmwr.new(epi_dates)    
@@ -174,5 +174,40 @@ describe Mmwr do
 
   it 'should return a valid mmwr object, given an integer representing an mmwr week' do
     Mmwr.week(13, :for_year => 2009).mmwr_week_range.start_date.should == DateTime.new(2009, 3, 29)
+  end
+
+  describe 'comparison (<=>)' do
+    it 'should return 0 if both mmwr vweek and year are equal' do
+      (Mmwr.week(1) <=> Mmwr.week(1)).should == 0
+    end
+
+    it 'should return comparison value of years if mmwr years are differnt' do
+      (Mmwr.week(14, :for_year => 2008) <=> Mmwr.week(2, :for_year => 2009)).should == -1
+    end
+
+    it 'should return comparison value of weeks if years are equal' do
+      (Mmwr.week(14) <=> Mmwr.week(2)).should == 1
+    end
+  end
+
+  describe '#succ' do
+    it 'should increment return the next mmwr week' do
+      mmwr = Mmwr.week(14, :for_year => 2009).succ
+      mmwr.mmwr_week.should == 15
+      mmwr.mmwr_year.should == 2009
+    end
+
+    it 'should wrap to first week of next year' do
+      mmwr = Mmwr.week(52, :for_year => 2009).succ
+      mmwr.mmwr_week.should == 1
+      mmwr.mmwr_year.should == 2010
+    end
+
+    it 'should return next mmwr week, even in 2010' do
+      mmwr = Mmwr.week(1, :for_year => 2010).succ
+      mmwr.mmwr_week.should == 2
+      mmwr.mmwr_year.should == 2010
+    end
+
   end
 end
