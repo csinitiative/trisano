@@ -428,6 +428,8 @@ class HumanEvent < Event
   end
 
   def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
+    primary_changed = false
+
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
     jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
     jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
@@ -441,6 +443,7 @@ class HumanEvent < Event
         raise "New jurisdiction is not a jurisdiction" unless Place.jurisdictions.include?(proposed_jurisdiction.place)
         self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
         self.add_note note
+        primary_changed = true
       end
 
       # Handle secondary jurisdictions
@@ -466,6 +469,7 @@ class HumanEvent < Event
       
       reload # Any existing references to this object won't see these changes without this
     end
+    return primary_changed
   end  
   
   # transitions that are allowed to be rendered by this user

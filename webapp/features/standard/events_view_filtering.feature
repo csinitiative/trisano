@@ -7,7 +7,7 @@ Feature: Filtering the Events view based on a set of selected criteria
   Scenario: Limiting the events view to events in a specific state
     Given I am logged in as a super user
     Given a simple morbidity event in jurisdiction Bear River for last name Jones
-    Given a routed contact event in jurisdiction Bear River for last name Green
+    Given a routed contact event for last name Green
     Given a simple contact event in jurisdiction Bear River for last name Smith
     When I visit the events index page
 

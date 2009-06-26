@@ -276,10 +276,12 @@ describe MorbidityEvent do
         lambda { @event.route_to_jurisdiction(entities(:Davis_County)) }.should_not raise_error()
       end
 
-      it "should change the jurisdiction" do
+      it "should change the jurisdiction and event state" do
+        @event.jurisdiction.stub!(:allows_current_user_to?).and_return(true)
         @event.jurisdiction.place_entity.place.name.should == places(:Southeastern_District).name
-        @event.route_to_jurisdiction(entities(:Davis_County).id)
+        @event.assign_to_lhd(entities(:Davis_County), [], nil)
         @event.jurisdiction.place_entity.place.name.should == places(:Davis_County).name
+        @event.current_state.name.should == :assigned_to_lhd
       end
     end
 
@@ -297,11 +299,13 @@ describe MorbidityEvent do
 
       describe "adding jurisdictions" do
 
-        it "should add the jurisdictions as secondary jurisdictions" do
+        it "should add the jurisdictions as secondary jurisdictions and not change state" do
+          cur_state = @event.state
           @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Davis_County).id, entities(:Summit_County).id])
           @event.secondary_jurisdictions.length.should == 2
           @event.secondary_jurisdictions.include?(places(:Davis_County)).should be_true
           @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
+          @event.state.should == cur_state
         end
       end
 
@@ -400,7 +404,6 @@ describe MorbidityEvent do
     it "should come from the #state_description method" do
       @event.state_description.should == "Accepted by Local Health Dept."
     end
-
   end
 
   describe "The state transistions" do
@@ -448,7 +451,7 @@ describe MorbidityEvent do
 
     it 'should be able to transition from :new to :assigned_to_lhd' do
       @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
-      @event.should_receive(:route_to_jurisdiction)
+      @event.should_receive(:route_to_jurisdiction).and_return true
       @event.assign_to_lhd(nil, nil, nil)
       @event.workflow_state.should == 'assigned_to_lhd'
       @event.current_state.name.should == :assigned_to_lhd
@@ -457,7 +460,7 @@ describe MorbidityEvent do
 
     it 'should be able to move between states, as allowed by transitions' do
       @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
-      @event.stub!(:route_to_jurisdiction)
+      @event.stub!(:route_to_jurisdiction).and_return true
       @event.stub!(:primary_jurisdiction).and_return nil
       @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd

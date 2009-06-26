@@ -27,8 +27,8 @@ Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_
   @m = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
 
-Given /^a routed (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
-  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
+  @m = create_basic_event(event_type, last_name, nil, 'Unassigned')
   @m.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")
   @m.save!
 end
