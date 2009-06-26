@@ -53,6 +53,7 @@ class Event < ActiveRecord::Base
 
   belongs_to :event_queue
   has_many :form_references
+  has_many :forms, :through => :form_references
   has_many :answers, :autosave => true
   has_many :tasks, :order => 'due_date ASC'
   has_many :notes, :order => 'created_at ASC', :dependent => :destroy
@@ -640,7 +641,7 @@ SEARCH
 
     if event_components.include?("disease_specific")
       self.form_references.each do |form|
-        new_event.form_references.build(:form_id => form.form_id)
+        new_event.form_references.build(:form_id => form.form_id, :template_id => form.template_id) # Can't use add_forms here since the new event isn't saved
       end
 
       self.answers.each do |answer|

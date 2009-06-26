@@ -33,3 +33,6 @@ form_push_disease:
   disease_name: "Form Push Disease"
   cdc_code: "199999"
 
+no_forms_disease:
+  id: 8
+  disease_name: "No forms disease"

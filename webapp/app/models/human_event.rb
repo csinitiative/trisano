@@ -459,12 +459,9 @@ class HumanEvent < Event
         associated_jurisdictions.create(:secondary_entity_id => id_to_add)
       end
 
-      # Add any new forms to this event  I guess we'll keep any old ones for now.
       if self.disease
-        forms_in_use = self.form_references.map { |ref| ref.form_id }
-        Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-          self.form_references.create(:form_id => form.id) unless forms_in_use.include?(form.id)
-        end
+        applicable_forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+        self.add_forms(applicable_forms)
       end
       
       reload # Any existing references to this object won't see these changes without this

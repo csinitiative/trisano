@@ -1208,6 +1208,47 @@ describe MorbidityEvent do
 
   end
 
+  describe "forms assignment during routing" do
+    fixtures :diseases, :entities
+
+    before(:each) do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Biel",
+            }
+          }
+        },
+        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+      }
+
+      @form_hash = {
+        "name"=>"Form Assignment Form",
+        "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
+        "event_type"=>"morbidity_event",
+        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "jurisdiction_id"=>""
+      }
+    end
+
+    it 'should receive a applicable new form if the disease changed before routing' do
+      with_published_form(@form_hash) do |form|
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:no_forms_disease).id })
+        @event = MorbidityEvent.new(@event_hash)
+        @event.save!
+        @event.reload
+        @event.undergone_form_assignment.should be_true
+        @event.form_references.size.should == 0
+        @event.update_attributes("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event.reload
+        @event.form_references.size.should == 0 # Changing disease doesn't trigger forms assignment
+        @event.route_to_jurisdiction(entities(:Davis_County).id)
+        @event.form_references.size.should == 1 # Pick up the new form through routing
+      end
+    end
+  end
+
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
@@ -1793,8 +1834,10 @@ describe Event, 'cloning an event' do
       @org_event.save
 
       @new_event = @org_event.clone_event(['disease_specific'])
+      @new_event.save!
 
       @org_event.form_references.first.form_id.should == @new_event.form_references.first.form_id
+      @org_event.form_references.first.template_id.should == @new_event.form_references.first.template_id
       @org_event.answers.first.text_answer.should == @new_event.answers.first.text_answer
       @org_event.answers.first.question_id.should == @new_event.answers.first.question_id
     end
