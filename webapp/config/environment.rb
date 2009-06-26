@@ -81,7 +81,6 @@ Rails::Initializer.run do |config|
     require "extend_better_nested_set.rb"
     require 'export/cdc'
     require 'utilities'
-    require "routing/state"
     require 'will_paginate'
     require 'core_ext/string'
     require 'core_ext/array'
