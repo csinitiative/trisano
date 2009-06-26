@@ -50,7 +50,7 @@ class MorbidityEventsController < EventsController
 
     @event = MorbidityEvent.new
     
-    prepopulate if !params[:from_search].nil?
+    prepopulate unless params[:from_search].nil?
 
     respond_to do |format|
       format.html # new.html.erb
@@ -151,8 +151,15 @@ class MorbidityEventsController < EventsController
   end
 
   def event_search
-    if params[:name]
-      @events = HumanEvent.search_by_name(params[:name])
+    if params[:last_name] || params[:first_name] || params[:birth_date]
+
+      # For passing on to new_cmr
+      @last_name = params[:last_name]
+      @first_name = params[:first_name]
+      @birth_date = params[:birth_date]
+
+      birth_date = nil if @birth_date.blank?
+      @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date)
     end
   end
 

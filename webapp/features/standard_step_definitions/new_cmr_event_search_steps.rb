@@ -30,7 +30,7 @@ end
 
 When /^I search for "(.+)"$/ do |search_string|
   visit event_search_cmrs_path
-  fill_in "Name", :with => search_string 
+  fill_in "last_name", :with => search_string 
   click_button "Search"
 end
 
@@ -44,7 +44,7 @@ end
 
 Then /^I should see a search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
-  field_labeled("Name").value.should be_nil
+  field_labeled("Last name").value.should be_nil
 end
 
 Then /^I should not see a link to enter a new CMR$/ do
@@ -57,7 +57,7 @@ Then /^I should see results for Jones and Joans$/ do
 end
 
 Then /^the search field should contain Jones$/ do
-  field_labeled("Name").value.should == "Jones"
+  field_labeled("Last name").value.should == "Jones"
 end
 
 Then /^I should see results for both records$/ do

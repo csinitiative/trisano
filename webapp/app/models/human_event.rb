@@ -111,7 +111,9 @@ class HumanEvent < Event
 
       where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
       where_clause << " AND (people.birth_date = '#{sanitize_sql(["%s", bdate])}' OR people.birth_date IS NULL)" if bdate
-      order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, people.first_name, entities.id, events.event_onset_date ASC"
+      order_by_clause = "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, people.last_name, "
+      order_by_clause << "people.birth_date, " if bdate
+      order_by_clause << "people.first_name, entities.id, events.event_onset_date ASC"
 
       select = <<-SQL
         SELECT events.id AS id,

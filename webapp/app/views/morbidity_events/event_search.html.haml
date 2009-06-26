@@ -4,8 +4,15 @@
   %li The person in question is already in the system, in which case you can start a new CMR with that person's information.
 
 - form_tag event_search_cmrs_path, :method => :get do
-  = label_tag :name
-  = text_field_tag :name, params[:name]
+  %span.horiz
+    = label_tag :last_name
+    = text_field_tag :last_name, params[:last_name]
+  %span.horiz
+    = label_tag :first_name
+    = text_field_tag :first_name, params[:first_name]
+  = label_tag :birth_date
+  = text_field_tag :birth_date, params[:birth_date]
+ 
   = submit_tag "Search"
 
 %br
@@ -65,4 +72,7 @@
             
   %br
 
-  = link_to("No match, start a new CMR", new_cmr_path)
+  - if User.current_user.is_entitled_to?(:create_event)  
+    = link_to("Start a CMR with the criteria you searched on", new_cmr_path(:from_search => "1", :first_name => @first_name, :last_name => @last_name, :birth_date => @birth_date), {:id => "start_cmr"})
+
+-
