@@ -17,6 +17,8 @@
 
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  include PostgresFu
+
   def l(lookup_field)
     lookup_field.nil? ? nil : lookup_field.code_description
   end
@@ -230,7 +232,4 @@ module ApplicationHelper
     select_tag field_name.to_s, options_for_select(options, :selected => selected), :multiple => multi
   end
 
-  def pg_array(stringy_array)
-    stringy_array[1...-1].split(',').select { |value| value != 'NULL' }
-  end
 end

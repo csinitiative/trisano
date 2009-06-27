@@ -87,6 +87,7 @@ Rails::Initializer.run do |config|
     require 'task_filter'
     require 'routing/workflow_helper'
     require 'hl7/extensions.rb'
+    require 'postgres_fu'
   end
 
 end
