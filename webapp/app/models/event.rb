@@ -181,7 +181,8 @@ class Event < ActiveRecord::Base
     def active_ibis_records(start_date, end_date)
       # New: Record has not been sent to IBIS, record has a disease, record has not been soft-deleted
       where_clause = <<-WHERE
-        events.deleted_at IS NULL 
+        events.type = 'MorbidityEvent'
+        AND events.deleted_at IS NULL
         AND disease_events.disease_id IS NOT NULL 
         AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
       WHERE
@@ -193,7 +194,8 @@ class Event < ActiveRecord::Base
     def deleted_ibis_records(start_date, end_date)
       # Deleted: Record has been sent to IBIS, record has been soft-deleted
       where_clause = <<-WHERE
-        events.sent_to_ibis = ?
+        events.type = 'MorbidityEvent'
+        AND events.sent_to_ibis = ?
         AND events.deleted_at BETWEEN ? AND ?
       WHERE
       Event.find(:all,
