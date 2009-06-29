@@ -18,7 +18,7 @@ xml.Table {
         diagnosis_date = diagnosis_date ? diagnosis_date.strftime("%m/%d/%Y") : diagnosis_date
         xml.DiagnosisDate(diagnosis_date)
 
-        lab_result_date = event.lab_results.collect { |lab_result| lab_result.lab_test_date}.compact.uniq.sort.first
+        lab_result_date = event.lab_results.collect { |lab_result| lab_result.collection_date}.compact.uniq.sort.first
         lab_result_date = lab_result_date ? lab_result_date.strftime("%m/%d/%Y") : lab_result_date
         xml.LabTestDate(lab_result_date)
 

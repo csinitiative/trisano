@@ -121,7 +121,7 @@ def mock_ibis_event
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
   @lab_result.stub!(:lab_result_text).and_return("Positive")
-  @lab_result.stub!(:lab_test_date).and_return(Date.new(2008,1,2))
+  @lab_result.stub!(:collection_date).and_return(Date.new(2008,1,2))
   m.stub!(:lab_results).and_return([@lab_result])
 
   m.stub!(:deleted?).and_return(false)
