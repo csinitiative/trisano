@@ -1,5 +1,5 @@
 %h3 Before creating a new morbidity event, please search for the person in question.
-
+First name OR last name is required for this search. Searching by birth date only will not return any results.
 - form_tag event_search_cmrs_path, :method => :get do
   %span.horiz
     = label_tag :last_name
@@ -9,7 +9,7 @@
     = text_field_tag :first_name, params[:first_name]
   = label_tag :birth_date
   = text_field_tag :birth_date, params[:birth_date]
- 
+  
   = submit_tag "Search"
 
 %br
