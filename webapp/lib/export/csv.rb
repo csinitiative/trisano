@@ -220,7 +220,12 @@ module Export
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
           event_data(event).collect do |event_datum| 
             begin
-              event.instance_eval(event_datum.last) 
+              value = event.instance_eval(event_datum.last).to_s
+              if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
+                Time.parse(value).strftime('%Y-%m-%d %H:%M')
+              else
+                value
+              end
             rescue Exception => ex
               raise "#{ex.message}: #{event_datum.join('|')}"
             end

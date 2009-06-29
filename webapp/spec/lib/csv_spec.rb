@@ -77,7 +77,7 @@ describe Export::Csv do
     it "should output the right information" do
       e = csv_mock_event(:morbidity)
       a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )      
-      a[0].include?("disease_specific_morb_q").should be_true      
+      a[0].include?("disease_specific_morb_q").should be_true
       a[1].should =~ /#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}/
     end
   end
@@ -352,8 +352,8 @@ def event_output(event_type, m, options={})
     out << "#{m.acuity},"
     out << "#{m.other_data_1},"
     out << "#{m.other_data_2},"
-    out << "#{m.created_at},"
-    out << "#{m.updated_at},"
+    out << "#{Time.parse(m.created_at).strftime('%Y-%m-%d %H:%M')},"
+    out << "#{Time.parse(m.updated_at).strftime('%Y-%m-%d %H:%M')},"
 
     if options[:disease]
       out << "#{m.answers[0].text_answer}"
@@ -461,8 +461,9 @@ def csv_mock_event(event_type)
   m.stub!(:results_reported_to_clinician_date).and_return("2008-01-09")
   m.stub!(:first_reported_PH_date).and_return("2008-01-10")
   m.stub!(:investigation_completed_LHD_date).and_return("2008-01-11")
-  m.stub!(:created_at).and_return("2008-01-12")
-  m.stub!(:updated_at).and_return("2008-01-13")
+  #Mon Jun 29 13:29:58 -0400 2009 should be exported as 2009-06-29 13:29:58
+  m.stub!(:created_at).and_return("Mon Jun 29 13:29:58 -0400 2009")
+  m.stub!(:updated_at).and_return("Mon Jun 29 13:29:58 -0400 2009")
 
   m.stub!(:investigator).and_return(simple_reference)
   m.stub!(:sent_to_cdc).and_return(true)
