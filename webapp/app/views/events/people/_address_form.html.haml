@@ -43,7 +43,13 @@
       - core_element :postal_code, a, :horiz do
         = a.label(:postal_code, "Zip code")
         = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
-
+      %label
+        District
+      - if @event && @event.address
+        - address = @event.address
+        - if address.county && address.county.jurisdiction
+          = address.county.jurisdiction.name
+    
     = render_geocode_form_section(a, event)
 
     -if event.is_a?(ContactEvent)
