@@ -225,7 +225,7 @@ my @array = sort { $a <=> $b }   # Step 3: Sort result
             map { $_ * 1.0 }     # Step 2: Convert values from string to int
             split /,/, $arg;     # Step 1: Split stringified array into list
 return $array[int($#array / 2)];
-$_X$; 
+$_X$;
 
 CREATE FUNCTION trisano.array_median(i integer[]) RETURNS integer
     LANGUAGE plperl IMMUTABLE
