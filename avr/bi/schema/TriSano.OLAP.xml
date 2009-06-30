@@ -46,6 +46,8 @@
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_morbidity_patients_races_view" />
             </Hierarchy>
         </Dimension>
+        <!-- Measures -->
+        <!-- Count, Risk factors -->
 		<Measure name="Count" datatype="Integer" aggregator="count" visible="true" column="id"></Measure>
 		<Measure name="Pregnant" datatype="Integer" aggregator="sum" visible="true">
             <MeasureExpression>
@@ -72,110 +74,198 @@
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Diagnosis" aggregator="min" visible="true" datatype="Integer">
+        <!-- Days from Onset to Diagnosis -->
+        <Measure name="Onset to Diagnosis (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Diagnosis" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Diagnosis" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Report" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to Report -->
+        <Measure name="Onset to Report (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Report" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Report (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Report" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Report (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Investigation Start" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Report (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to Start of Investigation -->
+        <Measure name="Onset to Investigation Start (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Investigation Start" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation Start (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Investigation Start" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation Start (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Investigation End" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation Start (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to End of Investigation -->
+        <Measure name="Onset to Investigation End (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Investigation End" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Investigation End" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Min Length (days) of Investigation" name="MinInvLength" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Length of investigation -->
+        <Measure caption="Length (days) of Investigation, Min" name="MinInvLength" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Max Length (days) of Investigation" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Max" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Avg Length (days) of Investigation" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Avg" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Min Age at Onset (years)" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Median" name="MedianInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Mode" name="ModeInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Std dev" name="StdevInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_completed - date_investigation_started))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Age at onset stuff -->
+        <Measure caption="Age at Onset (years), Min" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Max Age at Onset (years)" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer">
+        <Measure caption="Age at Onset (years), Max" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Avg Age at Onset (years)" name="AvgAgeAtOnset" column="age_in_years" aggregator="avg" datatype="Integer" visible="True"> </Measure>
+        <Measure caption="Age at Onset (years), Avg" name="AvgAgeAtOnset" column="age_in_years" aggregator="avg" datatype="Integer" visible="True"> </Measure>
+        <Measure caption="Age at Onset (years), Median" name="MedianAgeAtOnset" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_numcust(trisano.median(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Age at Onset (years), Mode" name="ModeAgeAtOnset" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(floor(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))::integer)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="StdevAgeAtOnset" caption="Age at Onset (years), Std Dev" visible="true" aggregator="count" datatype="Numeric">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_numcust(stddev(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- etc. -->
 		<Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false">
             <MeasureExpression>
                 <SQL dialect="postgres">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="StdevAgeAtOnset" caption="Age at Onset (years), Std. Dev" visible="true" aggregator="count" datatype="Numeric">
-            <MeasureExpression>
-                <SQL dialect="postgres">trisano.make_numcust(stddev(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
-            </MeasureExpression>
-        </Measure>
         <CalculatedMember name="Population" formula="GetPopulation([Count])" dimension="Measures" visible="true" />
         <CalculatedMember name="Rate" formula="[Count] / GetPopulation([Count])" dimension="Measures" visible="true" />
-        <!--
-        <CalculatedMember name="NullAges" caption="Null Ages" formula="Count(Filter({[Measures].[AgeAtOnset]}, NOT ([Measures].[AgeAtOnset] IS NULL)))" dimension="Measures" visible="true" />
-        <CalculatedMember name="Age at Onset (years), Std Dev" formula="Stdev({[Measures].[AvgAgeAtOnset]})" dimension="Measures" formatString="###.00" visible="true" />
-        -->
-
 	</Cube>
+
 	<Cube name="ContactEvents" caption="Contact Events" cache="true" enabled="true">
 		<Table name="dw_contact_events_view" schema="trisano">
 		</Table>
@@ -223,9 +313,9 @@
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_contact_patients_races_view" />
             </Hierarchy>
         </Dimension>
-		<Measure name="Count" datatype="Integer" aggregator="count" visible="true">
-            <MeasureExpression><SQL dialect="postgres">1</SQL></MeasureExpression>
-        </Measure>
+        <!-- Measures -->
+        <!-- Count, Risk factors -->
+		<Measure name="Count" datatype="Integer" aggregator="count" visible="true" column="id"></Measure>
 		<Measure name="Pregnant" datatype="Integer" aggregator="sum" visible="true">
             <MeasureExpression>
                 <SQL dialect="postgres">CASE WHEN pregnant = 'Yes' THEN 1 ELSE 0 END</SQL>
@@ -251,108 +341,165 @@
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Diagnosis" aggregator="min" visible="true" datatype="Integer">
+        <!-- Days from Onset to Diagnosis -->
+        <Measure name="Onset to Diagnosis (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Diagnosis" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Diagnosis" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_disease_diagnosed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Report" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Median" aggregator="count" visible="true" datatype="Integer">
             <MeasureExpression>
-                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_disease_diagnosed - date_disease_onset))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Report" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Mode" aggregator="count" visible="true" datatype="Integer">
             <MeasureExpression>
-                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_disease_diagnosed - date_disease_onset))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Report" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Diagnosis (days), Std dev" aggregator="count" visible="true" datatype="Integer">
             <MeasureExpression>
-                <SQL dialect="postgres">(date_reported_to_public_health - date_disease_onset)</SQL>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_disease_diagnosed - date_disease_onset))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Investigation Start" aggregator="min" visible="true" datatype="Integer">
-            <MeasureExpression>
-                <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
-            </MeasureExpression>
-        </Measure>
-        <Measure name="Max Days From Onset to Investigation Start" aggregator="max" visible="true" datatype="Integer">
+        <!-- Days from Onset to Start of Investigation -->
+        <Measure name="Onset to Investigation Start (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Investigation Start" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation Start (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Min Days From Onset to Investigation End" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation Start (days), Avg" aggregator="avg" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to End of Investigation -->
+        <Measure name="Onset to Investigation End (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Max Days From Onset to Investigation End" aggregator="max" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Max" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Avg Days From Onset to Investigation End" aggregator="avg" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Avg" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_disease_onset)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Min Length (days) of Investigation" name="MinInvLength" aggregator="min" visible="true" datatype="Integer">
+        <Measure name="Onset to Investigation End (days), Median" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Mode" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Std dev" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Length of investigation -->
+        <Measure caption="Length (days) of Investigation, Min" name="MinInvLength" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Max Length (days) of Investigation" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Max" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Avg Length (days) of Investigation" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Avg" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(date_investigation_completed - date_investigation_started)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Min Age at Onset (years)" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer">
+        <Measure caption="Length (days) of Investigation, Median" name="MedianInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.median((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Mode" name="ModeInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Std dev" name="StdevInvLength" aggregator="count" visible="true" datatype="Integer">
+            <MeasureExpression>
+                <SQL dialect="postgres">trisano.make_dpcust(stddev(date_investigation_completed - date_investigation_started))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Age at onset stuff -->
+        <Measure caption="Age at Onset (years), Min" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Max Age at Onset (years)" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer">
+        <Measure caption="Age at Onset (years), Max" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer">
             <MeasureExpression>
                 <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure caption="Avg Age at Onset (years)" name="AvgAgeAtOnset" aggregator="avg" visible="true" datatype="Integer">
+        <Measure caption="Age at Onset (years), Avg" name="AvgAgeAtOnset" column="age_in_years" aggregator="avg" datatype="Integer" visible="True"> </Measure>
+        <Measure caption="Age at Onset (years), Median" name="MedianAgeAtOnset" aggregator="count" visible="true" datatype="Integer">
             <MeasureExpression>
-                <SQL dialect="postgres">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
+                <SQL dialect="postgres">trisano.make_numcust(trisano.median(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="SqAgeAtOnset" visible="false" aggregator="avg">
+        <Measure caption="Age at Onset (years), Mode" name="ModeAgeAtOnset" aggregator="count" visible="true" datatype="Integer">
             <MeasureExpression>
-                <SQL dialect="postgres">trisano.get_age_in_years(actual_age_at_onset, actual_age_type)^2</SQL>
+                <SQL dialect="postgres">trisano.make_intcust(trisano.mode(floor(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))::integer)</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="StdevAgeAtOnset" caption="Age at Onset (years), Std. Dev" visible="true" aggregator="count" datatype="Numeric">
+        <Measure name="StdevAgeAtOnset" caption="Age at Onset (years), Std Dev" visible="true" aggregator="count" datatype="Numeric">
             <MeasureExpression>
                 <SQL dialect="postgres">trisano.make_numcust(stddev(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
             </MeasureExpression>
         </Measure>
+        <!-- etc. -->
+		<Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false">
+            <MeasureExpression>
+                <SQL dialect="postgres">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <CalculatedMember name="Population" formula="GetPopulation([Count])" dimension="Measures" visible="true" />
+        <CalculatedMember name="Rate" formula="[Count] / GetPopulation([Count])" dimension="Measures" visible="true" />
 	</Cube>
     <UserDefinedFunction name="GetPopulation" className="org.trisano.mondrian.GetPopulation" />
-    <!--
-    -->
 </Schema>
