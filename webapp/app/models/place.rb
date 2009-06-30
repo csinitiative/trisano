@@ -68,16 +68,19 @@ class Place < ActiveRecord::Base
                 places.id, places.entity_id, places.name, places.short_name
         FROM
                 users,
-                entitlements,
+                role_memberships,
+                privileges_roles,
                 privileges,
                 entities, 
                 places
         WHERE
-                users.id = entitlements.user_id
+                users.id = role_memberships.user_id
         AND
-                privileges.id = entitlements.privilege_id
+                privileges.id = privileges_roles.privilege_id
         AND
-                entitlements.jurisdiction_id = entities.id
+                role_memberships.role_id = privileges_roles.role_id
+        AND
+                role_memberships.jurisdiction_id = entities.id
         AND
                 places.entity_id = entities.id
         AND
