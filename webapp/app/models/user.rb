@@ -22,9 +22,6 @@ class User < ActiveRecord::Base
   has_many :role_memberships, :include => [:role, :jurisdiction], :dependent => :delete_all
   has_many :roles, :through => :role_memberships, :uniq => true
   
-  has_many :entitlements, :include => [:privilege, :jurisdiction], :dependent => :delete_all
-  has_many :privileges, :through => :entitlements
-
   has_many :tasks, :order => 'due_date ASC'
   
   validates_associated :role_memberships
@@ -58,59 +55,35 @@ class User < ActiveRecord::Base
   
   def is_entitled_to_in?(privilege, jurisdiction_ids)
     j_ids = Array(jurisdiction_ids).map!{ |j_id| j_id.to_i }
-    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege && j_ids.include?(ent.jurisdiction_id) }.nil? ? false : true
+    priv_id = Privilege.find_by_priv_name(privilege.to_s).id
+    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id}
+    self.role_memberships.detect { |r| role_ids.include?(r.role_id) && j_ids.include?(r.jurisdiction_id) }.nil? ? false : true
   end
   
   def is_entitled_to?(privilege)
-    entitlements.detect { |ent| ent.privilege.priv_name.to_sym == privilege }.nil? ? false : true
+    self.roles.all.each do |r|
+      ret = r.privileges.detect { |p| p.priv_name.to_sym == privilege }.nil? ? false : true
+      return ret if ret == true
+    end
+    false
   end
 
   def jurisdictions_for_privilege(privilege)
-    Place.jurisdictions_for_privilege_by_user_id(id, privilege)
+    Place.jurisdictions_for_privilege_by_user_id(id, privilege.to_s)
   end
 
   def jurisdiction_ids_for_privilege(privilege)
-    entitlements.collect { |ent| ent.jurisdiction_id if ent.privilege.priv_name.to_sym == privilege }.compact
+    priv_id = Privilege.find_by_priv_name(privilege.to_s).id
+    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id).collect { |p| p.role_id }
+    self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact
   end
   
   def admin_jurisdiction_ids
-    @admin_jurisdiction_ids ||= entitlements.collect { |e| e.jurisdiction_id if e.privilege.priv_name.to_sym == :administer}.compact
+    priv_id = Privilege.find_by_priv_name("administer").id
+    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id }
+    @admin_jurisdiction_ids ||= self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact
   end
   
-  # A necessary simplifying assumption: treat all modifications to a user's role as if they were new.
-  def role_membership_attributes=(rm_attributes)
-
-    # Zap existing entitlements and role memberships
-    entitlements.clear
-    role_memberships.clear
-
-    # Temporary holding places for new entitlements and role memberships
-    _entitlements = {}
-    _role_memberships = []
-
-    # Build an array of uniqe entitlements for this role and jurisdiction
-    rm_attributes.each do |attributes|
-      role_id = attributes[:role_id]
-      jurisdiction_id = attributes[:jurisdiction_id]
-
-      # Skip duplicate roles in duplicate jurisdictions
-      attribute_identifier = "#{role_id}_#{jurisdiction_id}" 
-      next if _role_memberships.include?(attribute_identifier)
-      _role_memberships << attribute_identifier
-
-      Role.find(role_id).privileges.each do |priv|
-        # Crafting the key like this avoids duplicate entitlements
-        _entitlements["#{priv.id}_#{jurisdiction_id}"] = { :privilege_id => priv.id, :jurisdiction_id => jurisdiction_id }
-      end
-
-      # Save the role too
-      role_memberships.build(attributes)
-    end
-
-    # Build a real entitlement for each uniqe entitlement
-    _entitlements.each_pair { |key, value| entitlements.build(value) }
-  end
-
   def self.investigators_for_jurisdictions(jurisdictions)
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
     investigators = []
@@ -124,12 +97,21 @@ class User < ActiveRecord::Base
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
     assignees = []
     jurisdictions.each do |j|
-      assignees += Privilege.update_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
+      Privilege.update_event.roles.all.each do |r|
+         assignees += r.role_memberships.for_jurisdiction(j).collect { |e| e.user }
+      end
     end
     assignees.uniq.sort_by { |assignee| assignee.best_name }
   end
 
+  def drop_all_roles
+    roles.clear
+  end
+
   def self.default_task_assignees
+    puts "AAAAAAAAAAAAAAAAAAAAAAA"
+    require 'pp'
+    pp User.current_user.jurisdictions_for_privilege(:assign_task_to_user)
     User.task_assignees_for_jurisdictions(
       User.current_user.jurisdictions_for_privilege(:assign_task_to_user))
   end
@@ -164,6 +146,24 @@ class User < ActiveRecord::Base
 
   def self.task_view_params
     [:users, :look_ahead, :look_back, :disease_filter, :task_statuses, :tasks_ordered_by]
+  end
+
+  def role_membership_attributes=(rm_attributes)
+    role_memberships.clear
+
+    _role_memberships = []
+
+    rm_attributes.each do |attributes|
+      role_id = attributes[:role_id]
+      jurisdiction_id = attributes[:jurisdiction_id]
+
+      # Skip duplicate roles in duplicate jurisdictions
+      attribute_identifier = "#{role_id}_#{jurisdiction_id}" 
+      next if _role_memberships.include?(attribute_identifier)
+      _role_memberships << attribute_identifier
+
+      role_memberships.build(attributes)
+    end
   end
 
   protected

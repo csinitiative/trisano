@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Task do
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles
 
   before(:each) do
     mock_user

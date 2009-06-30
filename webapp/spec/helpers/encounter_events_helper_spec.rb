@@ -50,7 +50,7 @@ describe EncounterEventsHelper do
   
   describe "building a list of users for the investigator drop down" do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
+    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles
     
     it 'should add the current user to the list of users' do
 

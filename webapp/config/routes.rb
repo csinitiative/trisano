@@ -84,6 +84,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :follow_up_elements
 
   map.resources :users
+
+  map.resources :roles
   
   map.resources :cmrs, 
     :controller => :morbidity_events,
