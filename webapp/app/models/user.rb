@@ -88,7 +88,9 @@ class User < ActiveRecord::Base
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
     investigators = []
     jurisdictions.each do |j|
-      investigators += Privilege.investigate_event.entitlements.for_jurisdiction(j).collect { |e| e.user }
+      Privilege.investigate_event.roles.all.each do |r|
+        investigators += r.role_memberships.for_jurisdiction(j).collect { |e| e.user }
+      end
     end
     investigators.uniq.sort_by { |investigator| investigator.best_name }
   end
@@ -98,7 +100,7 @@ class User < ActiveRecord::Base
     assignees = []
     jurisdictions.each do |j|
       Privilege.update_event.roles.all.each do |r|
-         assignees += r.role_memberships.for_jurisdiction(j).collect { |e| e.user }
+        assignees += r.role_memberships.for_jurisdiction(j).collect { |e| e.user }
       end
     end
     assignees.uniq.sort_by { |assignee| assignee.best_name }
@@ -109,9 +111,6 @@ class User < ActiveRecord::Base
   end
 
   def self.default_task_assignees
-    puts "AAAAAAAAAAAAAAAAAAAAAAA"
-    require 'pp'
-    pp User.current_user.jurisdictions_for_privilege(:assign_task_to_user)
     User.task_assignees_for_jurisdictions(
       User.current_user.jurisdictions_for_privilege(:assign_task_to_user))
   end
