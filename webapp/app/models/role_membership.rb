@@ -21,7 +21,20 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :role
   
   belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
-  
+  has_many :privileges_roles, :uniq => true, :foreign_key => [:role_id]
+
+
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
     :message => "is already assigned this role for this jurisdiction"
+
+  class << self
+    def for_jurisdiction(jurisdiction)
+      jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
+      jurisdiction_id = jurisdiction.id if jurisdiction.is_a? Entity
+      jurisdiction_id = jurisdiction.entity_id if jurisdiction.is_a? Place
+
+      find_all_by_jurisdiction_id(jurisdiction_id)
+    end
+  end
+
 end

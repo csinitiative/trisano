@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe User, "loaded from fixtures" do
   
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles
   
   before(:each) do
     @user = users(:default_user) 
@@ -81,7 +81,7 @@ end
 
 describe User, "Setting role memberships and entitlements via User attributes" do
 
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entitlements, :entities, :places, :places_types
+  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entities, :places, :places_types
   
   describe "on a new user" do
     before(:each) do

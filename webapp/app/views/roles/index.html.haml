@@ -13,37 +13,32 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  Users
+  Roles
 
 /- content_for :name do
-/  Users
+/  Roles
 
 /- content_for :tools do
-/  = link_to 'New user', new_user_path
+/  = link_to 'New role', new_role_path
 
 - content_for :tools_two do
-  = button_to("Create new user", {:action => "new"}, { :method => :get })
+  = button_to("Create new role", {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Users
+        Roles
       %th
-    - for user in @users.sort_by {|u| u.uid}
+    - for role in @roles.sort_by {|r| r.role_name}
       %tr.roll
         %td.forminformation
-          .tools
-            = link_to("#{user.first_name} #{user.user_name}", user)
           .formname
-            UID:
-            = link_to user.uid, user
+            = link_to role.role_name, role
           .tools
-            = user.user_name
-            %br
-            -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
+            = link_to('Delete', role, :confirm => 'Are you sure?', :method => :delete)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_user_path(user)
+            = link_to 'Edit', edit_role_path(role)
             |
-            = link_to 'Show', user
+            = link_to 'Show', role
