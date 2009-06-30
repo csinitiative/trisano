@@ -27,7 +27,7 @@
       - if @event.contact_child_events.first.new_record?
         %h3 No contacts have been recorded for this event
       - else
-        = render :partial => 'events/contact_show', :locals => { :contacts => @event.contact_child_events }
+        = render :partial => 'events/contacts_show', :locals => { :contacts => @event.contact_child_events }
         = render_geocode_cmr_contacts(@event)
 
     - unless @event.morbidity_child_events.empty?
@@ -35,12 +35,12 @@
         %fieldset.form
           %legend CMR Contacts 
           %i Elevated to morbidity Events
-          = render :partial => 'events/contact_show', :locals => { :contacts => @event.morbidity_child_events }
+          = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
 
     - if @event.parent_event
       #morbidity_parent_event
         %fieldset.form
           %legend Parent CMR 
           %i This patient is a contact of
-          = render :partial => 'events/contact_show', :locals => { :contacts => [@event.parent_event] }
+          = render :partial => 'events/contacts_show', :locals => { :contacts => [@event.parent_event] }
    

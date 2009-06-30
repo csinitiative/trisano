@@ -1,0 +1,38 @@
+%table.list
+  %tr
+    %th Name
+    %th Disposition
+    %th Contact type
+    %th Phone
+    %th
+
+  - for contact in contacts
+    - contact_entity = contact.interested_party.person_entity
+    - person = contact_entity.person
+    - contact_phone = contact_entity.primary_phone
+    - contact_event_data = contact.participations_contact
+
+    - if contact.deleted_at
+      - style = {:class => 'struck-through'}
+    - else
+      - style = {}
+
+    %tr
+      %td{style}= person.last_comma_first
+      %td{style}= contact_event_data.disposition.code_description if contact_event_data and contact_event_data.disposition
+      %td{style}= contact_event_data.contact_type.code_description if contact_event_data and contact_event_data.contact_type
+
+      %td{style} 
+        -unless contact_phone.nil? 
+          = contact_phone.simple_format
+      %td
+        .tools
+          - if contact.is_a?(ContactEvent)
+            = link_to("Edit contact event", edit_contact_event_path(contact), {:id => "edit-contact-event"}) unless contact.new_record?
+            |
+            = link_to("Show contact event", contact_event_path(contact), {:id => "show-contact-event"}) unless contact.new_record?
+          - else
+            = link_to("Edit morbidity event", edit_cmr_path(contact), {:id => "edit-morbidity_event"}) unless contact.new_record?
+            |
+            = link_to("Show morbidity event", cmr_path(contact), {:id => "show-morbidity_event"}) unless contact.new_record?
+
