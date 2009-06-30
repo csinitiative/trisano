@@ -43,12 +43,12 @@ describe User, "loaded from fixtures" do
     @user.is_admin?.should be_true
   end
 
-  it "should have one jurisdiction id for view privilege" do
-    @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(1)
+  it "should have zero jurisdiction id for view privilege" do
+    @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(0)
   end
   
-  it "should have one jurisdiction id for update privilege" do
-    @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
+  it "should have zero jurisdiction id for update privilege" do
+    @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(0)
   end
   
   it "should have one admin jurisdiction id" do

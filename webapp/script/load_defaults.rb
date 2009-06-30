@@ -149,19 +149,24 @@ User.transaction do
   bear_river = Place.find_by_name("Bear River Health Department").entity_id
   unassigned = Place.find_by_name("Unassigned").entity_id
 
-  create_event = Privilege.find_by_priv_name("create_event").id
-  view_event = Privilege.find_by_priv_name("view_event").id
-  update_event = Privilege.find_by_priv_name("update_event").id
-  route_event_to_any_lhd = Privilege.find_by_priv_name("route_event_to_any_lhd").id
-  accept_event_for_lhd = Privilege.find_by_priv_name("accept_event_for_lhd").id
-  route_event_to_investigator = Privilege.find_by_priv_name("route_event_to_investigator").id
-  accept_event_for_investigation = Privilege.find_by_priv_name("accept_event_for_investigation").id
-  investigate_event = Privilege.find_by_priv_name("investigate_event").id
-  approve_event_at_lhd = Privilege.find_by_priv_name("approve_event_at_lhd").id
-  approve_event_at_state = Privilege.find_by_priv_name("approve_event_at_state").id
-  assign_task_to_user = Privilege.find_by_priv_name("assign_task_to_user").id
-  add_form = Privilege.find_by_priv_name("add_form_to_event").id
-  remove_form = Privilege.find_by_priv_name("remove_form_from_event").id
+  data_entry_tech_role = Role.find_by_role_name("Data Entry Technician").id
+  surveillance_mgr_role = Role.find_by_role_name("Surveillance Manager").id
+  investigator_role = Role.find_by_role_name("Investigator").id
+  lhd_manager_role = Role.find_by_role_name("LHD Manager").id
+  state_manager_role = Role.find_by_role_name("State Manager").id
+
+  data_entry_tech.update_attributes( { :role_membership_attributes => [{ :role_id => data_entry_tech_role, :jurisdiction_id => bear_river },
+                                     { :role_id => data_entry_tech_role, :jurisdiction_id => unassigned }] } )
+
+  surveillance_mgr.update_attributes( { :role_membership_attributes => [{ :role_id => surveillance_mgr_role, :jurisdiction_id => bear_river },
+                                      { :role_id => surveillance_mgr_role, :jurisdiction_id => unassigned }] } )
+
+  investigator.update_attributes( { :role_membership_attributes => [{ :role_id => investigator_role, :jurisdiction_id => bear_river },
+                                  { :role_id => investigator_role, :jurisdiction_id => unassigned }] } )
+
+  lhd_manager.update_attributes( { :role_membership_attributes => [{ :role_id => lhd_manager_role, :jurisdiction_id => bear_river }] } )
+
+  state_manager.update_attributes( { :role_membership_attributes => [{ :role_id => state_manager_role, :jurisdiction_id => bear_river }] } )
 
 end
 
