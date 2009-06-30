@@ -186,6 +186,197 @@ $$ LANGUAGE sql;
 
 -- End of Mondrian aggregate trickery
 
+-- Beginning of median and mode aggregate definitions
+
+CREATE FUNCTION trisano.addlang(lang TEXT) RETURNS BOOLEAN VOLATILE LANGUAGE plpgsql AS
+$addlang$
+BEGIN
+    PERFORM * FROM pg_language WHERE lanname = lang;
+    IF NOT FOUND THEN
+        EXECUTE 'CREATE LANGUAGE ' || lang;
+    END IF;
+    PERFORM * FROM pg_language WHERE lanname = lang;
+    RETURN FOUND;
+END;
+$addlang$;
+
+SELECT trisano.addlang('plperl');
+
+CREATE FUNCTION trisano.array_median(i double precision[]) RETURNS double precision
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+my @array = sort { $a <=> $b }   # Step 3: Sort result
+            map { $_ * 1.0 }     # Step 2: Convert values from string to int
+            split /,/, $arg;     # Step 1: Split stringified array into list
+return $array[int($#array / 2)];
+
+$_X$;
+
+CREATE FUNCTION trisano.array_median(i numeric[]) RETURNS numeric
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+my @array = sort { $a <=> $b }   # Step 3: Sort result
+            map { $_ * 1.0 }     # Step 2: Convert values from string to int
+            split /,/, $arg;     # Step 1: Split stringified array into list
+return $array[int($#array / 2)];
+$_X$; 
+
+CREATE FUNCTION trisano.array_median(i integer[]) RETURNS integer
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+my @array = sort { $a <=> $b }   # Step 3: Sort result
+            map { $_ * 1 }       # Step 2: Convert values from string to int
+            split /,/, $arg;     # Step 1: Split stringified array into list
+return $array[int($#array / 2)];
+
+$_X$;
+
+CREATE AGGREGATE trisano.median(double precision) (
+    SFUNC = array_append,
+    STYPE = double precision[],
+    FINALFUNC = trisano.array_median
+);
+
+CREATE AGGREGATE trisano.median(numeric) (
+    SFUNC = array_append,
+    STYPE = numeric[],
+    FINALFUNC = trisano.array_median
+);
+
+CREATE AGGREGATE trisano.median(integer) (
+    SFUNC = array_append,
+    STYPE = integer[],
+    FINALFUNC = trisano.array_median
+);
+
+CREATE FUNCTION trisano.array_mode(i double precision[]) RETURNS double precision
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+
+my ($mode, $modecount, $curcount, $curval);
+$curcount = 0;
+
+map {                # Step 4: Find the most common entry
+    my $i = $_;
+    $curval = $i if !defined $curval;
+    if ($i == $curval) {
+        $curcount++;
+    }
+    else {
+        if (!defined $mode || $curcount > $modecount) {
+            $mode = $curval;
+            $modecount = $curcount;
+        }
+        $curval = $i;
+        $curcount = 1;
+    }
+}
+sort { $a <=> $b }   # Step 3: Sort list
+map { $_ * 1.0 }     # Step 2: Turn it into a number
+split /,/, $arg;     # Step 1: Split stringified array into list
+
+return $mode;
+
+$_X$;
+
+CREATE FUNCTION trisano.array_mode(i numeric[]) RETURNS numeric
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+
+my ($mode, $modecount, $curcount, $curval);
+$curcount = 0;
+
+map {                # Step 4: Find the most common entry
+    my $i = $_;
+    $curval = $i if !defined $curval;
+    if ($i == $curval) {
+        $curcount++;
+    }
+    else {
+        if (!defined $mode || $curcount > $modecount) {
+            $mode = $curval;
+            $modecount = $curcount;
+        }
+        $curval = $i;
+        $curcount = 1;
+    }
+}
+sort { $a <=> $b }   # Step 3: Sort list
+map { $_ * 1.0 }     # Step 2: Turn it into a number
+split /,/, $arg;     # Step 1: Split stringified array into list
+
+return $mode;
+
+$_X$;
+
+CREATE FUNCTION trisano.array_mode(i integer[]) RETURNS integer
+    LANGUAGE plperl IMMUTABLE
+    AS $_X$
+
+my $arg = $_[0];
+$arg =~ s/[{}]//g;
+
+my ($mode, $modecount, $curcount, $curval);
+$curcount = 0;
+
+map {                # Step 4: Find the most common entry
+    my $i = $_;
+    $curval = $i if !defined $curval;
+    if ($i == $curval) {
+        $curcount++;
+    }
+    else {
+        if (!defined $mode || $curcount > $modecount) {
+            $mode = $curval;
+            $modecount = $curcount;
+        }
+        $curval = $i;
+        $curcount = 1;
+    }
+}
+sort { $a <=> $b }   # Step 3: Sort list
+map { $_ * 1.0 }     # Step 2: Turn it into a number
+split /,/, $arg;     # Step 1: Split stringified array into list
+
+return $mode;
+
+$_X$;
+
+CREATE AGGREGATE trisano.mode(double precision) (
+    SFUNC = array_append,
+    STYPE = double precision[],
+    FINALFUNC = trisano.array_mode
+);
+
+CREATE AGGREGATE trisano.mode(numeric) (
+    SFUNC = array_append,
+    STYPE = numeric[],
+    FINALFUNC = trisano.array_mode
+);
+
+CREATE AGGREGATE trisano.mode(integer) (
+    SFUNC = array_append,
+    STYPE = integer[],
+    FINALFUNC = trisano.array_mode
+);
+
+-- END of median and mode aggregate definitions
+
 CREATE OR REPLACE FUNCTION
     trisano.text_join(accum TEXT, newvalue TEXT, separator TEXT)
     RETURNS text AS
