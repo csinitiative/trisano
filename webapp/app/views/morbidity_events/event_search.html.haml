@@ -66,7 +66,8 @@ First name OR last name is required for this search. Searching by birth date onl
             = link_to "Show", view_path
             |
             = link_to('Create and edit CMR using this person', cmrs_path(:from_event => event, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
-            
+    = will_paginate @events
+  
   %br
 
   - if User.current_user.is_entitled_to?(:create_event)  

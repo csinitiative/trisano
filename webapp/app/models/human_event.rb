@@ -88,15 +88,15 @@ class HumanEvent < Event
       return false
     end
 
-    def search_by_name_and_birth_date(name, bdate)
-      find_by_name_bdate(name, bdate)
+    def search_by_name_and_birth_date(name, bdate, options={})
+      find_by_name_bdate(name, bdate, options)
     end
 
     def search_by_name(name)
       find_by_name_bdate(name)
     end
 
-    def find_by_name_bdate(name, bdate=nil)
+    def find_by_name_bdate(name, bdate=nil, options={})
       soundex_codes = []
       fulltext_terms = []
       raw_terms = name.split(" ")
@@ -159,8 +159,12 @@ class HumanEvent < Event
               AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
         ORDER BY #{order_by_clause}
       SQL
-
-      self.find_by_sql select
+      puts options.to_s
+      if options[:page_size] && options[:page]
+        self.paginate_by_sql [select], :page => options[:page], :per_page => options[:page_size]
+      else
+        self.find_by_sql select
+      end
     end
 
     def get_allowed_queues(query_queues)

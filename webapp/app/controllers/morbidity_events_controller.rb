@@ -159,7 +159,8 @@ class MorbidityEventsController < EventsController
       @birth_date = params[:birth_date]
 
       birth_date = nil if @birth_date.blank?
-      @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date)
+      params[:page].blank? ? page = 1 : page = params[:page]
+      @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
     end
   end
 
