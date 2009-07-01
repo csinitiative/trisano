@@ -55,7 +55,8 @@ class User < ActiveRecord::Base
   
   def is_entitled_to_in?(privilege, jurisdiction_ids)
     j_ids = Array(jurisdiction_ids).map!{ |j_id| j_id.to_i }
-    priv_id = Privilege.find_by_priv_name(privilege.to_s).id
+    priv_id = Privilege.find_by_priv_name(privilege.to_s).try(:id)
+    return false unless priv_id
     role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id}
     self.role_memberships.detect { |r| role_ids.include?(r.role_id) && j_ids.include?(r.jurisdiction_id) }.nil? ? false : true
   end
@@ -69,19 +70,19 @@ class User < ActiveRecord::Base
   end
 
   def jurisdictions_for_privilege(privilege)
-    Place.jurisdictions_for_privilege_by_user_id(id, privilege.to_s)
+    Place.jurisdictions_for_privilege_by_user_id(id, privilege.to_s).uniq
   end
 
   def jurisdiction_ids_for_privilege(privilege)
     priv_id = Privilege.find_by_priv_name(privilege.to_s).id
     role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id).collect { |p| p.role_id }
-    self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact
+    self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact.uniq
   end
   
   def admin_jurisdiction_ids
     priv_id = Privilege.find_by_priv_name("administer").id
     role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id }
-    @admin_jurisdiction_ids ||= self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact
+    @admin_jurisdiction_ids ||= self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact.uniq
   end
   
   def self.investigators_for_jurisdictions(jurisdictions)
