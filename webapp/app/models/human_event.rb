@@ -159,7 +159,7 @@ class HumanEvent < Event
               AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
         ORDER BY #{order_by_clause}
       SQL
-      puts options.to_s
+      
       if options[:page_size] && options[:page]
         self.paginate_by_sql [select], :page => options[:page], :per_page => options[:page_size]
       else
