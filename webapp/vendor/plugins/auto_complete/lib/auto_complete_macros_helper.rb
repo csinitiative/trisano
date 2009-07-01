@@ -117,6 +117,7 @@ module AutoCompleteMacrosHelper
         div.auto_complete {
           width: 350px;
           background: #fff;
+          z-index:1000;
         }
         div.auto_complete ul {
           border:1px solid #888;
