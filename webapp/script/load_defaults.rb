@@ -115,7 +115,7 @@ User.transaction do
   end
 end
 
-# Create a default superusers
+# Create a default superuser
 RoleMembership.transaction do
 
   # Give these users all roles in all jurisdictions

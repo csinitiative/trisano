@@ -6,3 +6,19 @@ default_user_admin_role_southeastern_district:
   id: 1
   created_at: <%= Time.now.to_s :db %>
   updated_at: <%= Time.now.to_s :db %>
+
+update_cmr_investigator_role_southeastern_district:
+  jurisdiction_id: 75
+  role_id: 2
+  user_id: 3
+  id: 2
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+update_cmr_state_manager_role_southeastern_district:
+  jurisdiction_id: 75
+  role_id: 3
+  user_id: 3
+  id: 3
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>

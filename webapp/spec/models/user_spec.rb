@@ -58,7 +58,7 @@ describe User, "loaded from fixtures" do
   describe "getting potential task assignees" do
     it "should find users with update event in the provided jurisdiction" do
       assignees = User.task_assignees_for_jurisdictions(entities(:Southeastern_District).id)
-      assignees.size.should == 2
+      assignees.size.should == 1
 
       assignees = User.task_assignees_for_jurisdictions(entities(:Summit_County).id)
       assignees.size.should == 0
@@ -66,12 +66,12 @@ describe User, "loaded from fixtures" do
 
     describe 'using default rules for task assignees' do 
       before(:each) do
-        @user = users :default_user
+        @user = users :update_cmr_user
         User.current_user = @user
       end
 
       it 'should return users in jurisdiction where current user has assign_task_to_user rights' do
-        User.default_task_assignees.size.should == 2
+        User.default_task_assignees.size.should == 1
       end
     end
   end
