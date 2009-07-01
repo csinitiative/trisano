@@ -40,7 +40,7 @@
             = phone_fields.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
           %span.horiz
             = phone_fields.label(:area_code)
-            = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'})
+            = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3})
           %span.horiz
             = phone_fields.label(:phone_number)
             = phone_fields.core_text_field(:phone_number, {:size => 8})

@@ -19,7 +19,7 @@
     = f.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
   - core_element :area_code, f, :horiz do
     = f.label(:area_code)
-    = f.core_text_field(:area_code, {:size => 3, :maxlength => 3, :class => 'autotab'})
+    = f.core_text_field(:area_code, {:size => 3, :maxlength => 3})
   - core_element :phone_number, f, :horiz do
     = f.label(:phone_number)
     = f.core_text_field(:phone_number, {:size => 8})
