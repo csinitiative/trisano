@@ -213,10 +213,14 @@ module ApplicationHelper
 
   def investigators_select(name, selected=nil, empty_option=false)
     investigate_event = Privilege.investigate_event
-    options = investigate_event.users.find(:all, :select => 'DISTINCT ON (users.id) users.*').collect do |u|
-      [u.best_name, u.id]
+    options = []
+    investigate_event.roles.all.each do |r|
+      options += r.users.find(:all, :select => 'DISTINCT ON (users.id) users.*').collect do |u|
+        [u.best_name, u.id]
+      end
     end
     options = options.unshift([nil, nil]) if empty_option
+    options = options.uniq
     select_tag name.to_s, options_for_select(options, :selected => selected), {:multiple => true, :size => [7, options.size].min}
   end
 
