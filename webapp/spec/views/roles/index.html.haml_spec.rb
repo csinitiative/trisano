@@ -15,31 +15,24 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class Role < ActiveRecord::Base
+require File.dirname(__FILE__) + '/../../spec_helper'
+
+describe "/roles/index.html.haml" do
+  include RolesHelper
   
-  has_many :role_memberships, :dependent => :delete_all
-  has_many :users, :through => :role_memberships
-  
-  has_many :privileges_roles
-  has_many :privileges, :through => :privileges_roles
+  before(:each) do
+    role_98 = mock_model(Role)
+    role_98.stub!(:find).and_return([@role])
+    role_98.stub!(:role_name).and_return("role name")
+    role_98.stub!(:description).and_return("role description")
+    role_98.stub!(:role_memberships).and_return([])
+    role_98.stub!(:privileges_roles).and_return([])
 
-  validates_presence_of :role_name
-  validates_length_of :role_name, :maximum => 20, :allow_blank => true
-
-  def privileges_role_attributes=(pr_attributes)
-    privileges_roles.clear
-
-    _privileges_roles = []
-
-    pr_attributes.each do |attributes|
-      privilege_id = attributes[:privilege_id]
-
-      # Skip duplicate roles in duplicate jurisdictions
-      next if _privileges_roles.include?(privilege_id)
-      _privileges_roles << privilege_id
-
-      privileges_roles.build(attributes)
-    end
+    assigns[:roles] = [role_98, role_98]
   end
 
+  it "should render list of roles" do
+    render "/roles/index.html.haml"
+  end
 end
+
