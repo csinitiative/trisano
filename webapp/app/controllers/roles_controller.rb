@@ -82,7 +82,7 @@ class RolesController < AdminController
   # PUT /roles/1
   # PUT /roles/1.xml
   def update
-    params[:role][:role_membership_attributes] ||= {}
+    params[:role][:privileges_role_attributes] ||= {}
     @role = Role.find(params[:id])
 
     respond_to do |format|
