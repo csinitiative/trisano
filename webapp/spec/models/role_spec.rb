@@ -17,12 +17,45 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Role do
+describe Role, "loaded from fixtures" do
+
+  fixtures :role_memberships, :roles, :privileges, :privileges_roles
+
   before(:each) do
-    @role = Role.new
+    @role = roles(:administrator)
   end
 
   it "should be valid" do
     @role.should be_valid
   end
+
+  it "should be invalid without a role name" do
+    @role.role_name = ""
+    @role.should_not be_valid
+  end
+
+  it "should have one privilege" do
+    @role.privileges.size.should == 1
+  end
+
+  it "should have two privileges after update" do
+    @role.update_attributes( { :privileges_role_attributes => [{ :privilege_id => privileges(:view) },
+                             { :privilege_id => privileges(:update) }] } )
+    @role.privileges.size.should == 2
+  end
+
+end
+
+describe "on a new role" do
+
+  fixtures :role_memberships, :roles, :privileges, :privileges_roles
+
+  before(:each) do
+    @role = Role.new( {:role_name => "New Role"} )
+  end
+
+  it "should have zero privileges" do
+    @role.privileges.size.should == 0
+  end
+
 end
