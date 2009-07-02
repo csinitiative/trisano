@@ -15,27 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class Role < ActiveRecord::Base
+module RolesHelper
   
-  has_many :role_memberships, :dependent => :delete_all
-  has_many :users, :through => :role_memberships
-  
-  has_many :privileges_roles
-  has_many :privileges, :through => :privileges_roles
-
-  def privileges_role_attributes=(pr_attributes)
-    privileges_roles.clear
-
-    _privileges_roles = []
-
-    pr_attributes.each do |attributes|
-      privilege_id = attributes[:privilege_id]
-
-      # Skip duplicate roles in duplicate jurisdictions
-      next if _privileges_roles.include?(privilege_id)
-      _privileges_roles << privilege_id
-
-      privileges_roles.build(attributes)
+  def add_privilege_link(name)
+    link_to_function name do |page|
+      page.insert_html :top, :privileges_roles, :partial => 'privilege', :object => PrivilegesRole.new
     end
   end
 
