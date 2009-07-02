@@ -20,7 +20,13 @@ CREATE SCHEMA trisano;
 ALTER SCHEMA trisano OWNER TO trisano_su;
 CREATE SCHEMA population;
 ALTER SCHEMA population OWNER TO trisano_su;
+END;
+
+BEGIN;
 CREATE LANGUAGE plpgsql;
+END;
+
+BEGIN;
 -- NOTE: Adjust this user to the DEST_DB_USER 
 ALTER SCHEMA public OWNER TO trisano_su;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
