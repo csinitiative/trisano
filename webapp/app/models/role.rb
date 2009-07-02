@@ -24,7 +24,7 @@ class Role < ActiveRecord::Base
   has_many :privileges, :through => :privileges_roles
 
   validates_presence_of :role_name
-  validates_length_of :role_name, :maximum => 20, :allow_blank => true
+  validates_length_of :role_name, :maximum => 100, :allow_blank => true
 
   def privileges_role_attributes=(pr_attributes)
     privileges_roles.clear
