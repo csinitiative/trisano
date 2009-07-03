@@ -33,7 +33,7 @@ describe "/export/ibis.xml.builder" do
         with_tag("Event", :text => "10000")
         with_tag("OnsetDate", :text => "01/03/2008")
         with_tag("DiagnosisDate", :text => "01/04/2008")
-        with_tag("LabTestDate", :text => "01/02/2008")
+        # with_tag("LabTestDate", :text => "01/02/2008")
         with_tag("ReportedDate", :text => "01/10/2008")
         with_tag("Zipcode", :text => "12345")
         with_tag("Age", :text => "30")
@@ -56,88 +56,54 @@ describe "/export/ibis.xml.builder" do
 end
 
 def mock_ibis_event
-  @gender_code = mock_model(Code)
-  @gender_code.stub!(:the_code).and_return("M")
 
-  @ethnic_code = mock_model(Code)
-  @ethnic_code.stub!(:the_code).and_return("H")
+  age_type = ExternalCode.find_by_code_name_and_the_code("age_type", "0")
 
-  @state_code = mock_model(Code)
-  @state_code.stub!(:the_code).and_return("C")
-
-  @lhd_code = mock_model(Code)
-  @lhd_code.stub!(:the_code).and_return("P")
-
-  @person = mock_model(Person)
-  @person.stub!(:last_name).and_return("Lastname")
-  @person.stub!(:birth_date).and_return(Date.new(2008,1,1))
-  @person.stub!(:birth_gender).and_return(@gender_code)
-  @person.stub!(:ethnicity).and_return(@ethnic_code)
-
-  @address = mock_model(Address)
-  @address.stub!(:postal_code).and_return("12345")
-  @address.stub!(:county).and_return(OpenStruct.new({:jusrisdiction => "whatever"}))
-
-  entity = mock_model(PersonEntity)
-  entity.stub!(:person).and_return(@person)
-  entity.stub!(:races).and_return([])
-
-  patient = mock_model(InterestedParty)
-  patient.stub!(:person_entity).and_return(entity)
-
-  @disease = mock_model(Disease)
-  @disease.stub!(:cdc_code).and_return("10000")
-
-  @disease_event = mock_model(DiseaseEvent)
-  @disease_event.stub!(:disease_onset_date).and_return(Date.new(2008,1,3))
-  @disease_event.stub!(:date_diagnosed).and_return(Date.new(2008,1,4))
-  @disease_event.stub!(:disease).and_return(@disease)
-
-  m = mock_model(MorbidityEvent)
-  m.stub!(:type).and_return('MorbidityEvent')
-
-  m.stub!(:id).and_return(1)
-  m.stub!(:record_number).and_return("20080001")
-  m.stub!(:event_onset_date).and_return(Date.new(2008,1,5))
-  m.stub!(:age_info).and_return(OpenStruct.new({:in_years => 30}))
-
-  m.stub!(:state_case_status).and_return(@state_code)
-  m.stub!(:lhd_case_status).and_return(@lhd_code)
-
-  m.stub!(:disease).and_return(@disease_event)
-  m.stub!(:first_reported_PH_date).and_return(Date.new(2008,1,10))
-
-  m.stub!(:sent_to_cdc).and_return(true)
-  m.stub!(:deleted_at).and_return(nil)
-  m.stub!(:created_at).and_return(Date.new(2008,1,15))
-
-  @jurisdiction = mock_model(Place)
-  @jurisdiction.stub!(:short_name).and_return("Bear River")
-
-  m.stub!(:primary_jurisdiction).and_return(@jurisdiction)
-  m.stub!(:interested_party).and_return(patient)
-  m.stub!(:address).and_return(@address)
-
-  @lab_result = mock_model(LabResult)
-  @lab_result.stub!(:lab_name).and_return("LabName")
-  @lab_result.stub!(:lab_result_text).and_return("Positive")
-  @lab_result.stub!(:collection_date).and_return(Date.new(2008,1,2))
-  m.stub!(:lab_results).and_return([@lab_result])
-
-  m.stub!(:deleted?).and_return(false)
-
-  m
+  {
+    'event_id' => 1,
+    'imported_from_id' => '',
+    'first_reported_ph_date' => '2008-01-10',
+    'age_at_onset' => '30',
+    'age_type_id' => age_type.id,
+    'event_created_at' => '2008-01-15 00:00:00',
+    'record_number' => '20080001',
+    'deleted_at' => '',
+    'event_case_status_code' => 'C',
+    'event_lhd_case_status' => 'P',
+    'disease_cdc_code' => '10000',
+    'disease_onset_date' => '2008-01-03',
+    'disease_event_date_diagnosed' => '2008-01-04',
+    'address_postal_code' => '12345',
+    'address_county_code' => '',
+    'residence_jurisdiction_short_name' => 'whatever',
+    'investigation_jurisdiction_short_name' => 'Bear River',
+    'interested_party_person_entity_id' => '',
+    'interested_party_ethnicity_code' => 'H',
+    'interested_party_sex_code' => 'M'
+  }
 end
 
 def mock_deleted_ibis_event
-  @state_code_2 = mock_model(Code)
-  @state_code_2.stub!(:the_code).and_return("NC")
-
-  m = mock_model(MorbidityEvent)
-  m.stub!(:deleted?).and_return(true)
-  m.stub!(:type).and_return('MorbidityEvent')
-  m.stub!(:record_number).and_return("20080002")
-  m.stub!(:state_case_status).and_return(@state_code_2)
-  m.stub!(:deleted_at).and_return(nil)
-  m
+    {
+    'event_id' => 2,
+    'imported_from_id' => '',
+    'first_reported_ph_date' => '',
+    'age_at_onset' => '',
+    'age_type_id' => '',
+    'event_created_at' => '',
+    'record_number' => '20080002',
+    'deleted_at' => '2008-01-03',
+    'event_case_status_code' => 'NC',
+    'event_lhd_case_status' => '',
+    'disease_cdc_code' => '',
+    'disease_onset_date' => '',
+    'disease_event_date_diagnosed' => '',
+    'address_postal_code' => '',
+    'address_county_code' => '',
+    'residence_jurisdiction_short_name' => '',
+    'investigation_jurisdiction_short_name' => '',
+    'interested_party_person_entity_id' => '',
+    'interested_party_ethnicity_code' => '',
+    'interested_party_sex_code' => ''
+  }
 end

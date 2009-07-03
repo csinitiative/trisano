@@ -19,8 +19,8 @@ module ExportHelper
 
   # Significant Debt: Hard coding all of this for now.  This has to change.
 
-  def get_ibis_health_district(jurisdiction)
-    case jurisdiction.short_name
+  def get_ibis_health_district(jurisdiction_short_name)
+    case jurisdiction_short_name
     when "Bear River" then 1
     when "Central Utah" then 2
     when "Davis County" then 3
@@ -41,7 +41,7 @@ module ExportHelper
   end
 
   def get_ibis_county_code(county)
-    case county.try(:the_code)
+    case county
     when "BE" then 2
     when "BV" then 1
     when "CA" then 3
@@ -75,9 +75,9 @@ module ExportHelper
     end
   end
 
-  def get_ibis_ethnicity(ethnicity)
-    return "." unless ethnicity
-    case ethnicity.the_code
+  def get_ibis_ethnicity(ethnicity_code)
+    return "." if ethnicity_code.blank?
+    case ethnicity_code
     when "H" then 1
     when "NH", "O" then 2
     when "UNK" then 9
@@ -85,21 +85,21 @@ module ExportHelper
     end
   end
 
-  def get_ibis_status(status)
-    case status.try(:the_code)
+  def get_ibis_status(status_code)
+    return "." if status_code.blank?
+    case status_code
     when "C"  then 1 
     when "P"  then 2 
     when "S"  then 3
     when "NC" then 4 
     # 'U' should never be in production, but it's leaked into tests
     when "UNK", "U" then 9
-    when nil then '.'
     end
   end
 
-  def get_ibis_sex(sex)
-    return "." unless sex
-    case sex.the_code
+  def get_ibis_sex(sex_code)
+    return "." if sex_code.blank?
+    case sex_code
     when "M" then 1
     when "F" then 2
     when "U" then 9
@@ -107,13 +107,13 @@ module ExportHelper
     end
   end
 
-  def get_ibis_race(races)
-    case races.size
+  def get_ibis_race(race_codes)
+    case race_codes.size
     when 0
       return "."
     when 1
-      race = races.first
-      case race.the_code
+      race = race_codes.first
+      case race
       when "W" then 1
       when "B" then 2
       when "AA", "AK" then 3
@@ -122,7 +122,6 @@ module ExportHelper
       when "UNK" then "."
       end
     when 2
-      race_codes = races.map { |race| race.the_code }
       if race_codes.include?("W") then return 7 end
       if race_codes.include?("B") then return 8 end
       if race_codes.include?("AA") || race_codes.include?("AK") then return 9 end
