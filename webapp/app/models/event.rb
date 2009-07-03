@@ -188,7 +188,7 @@ class Event < ActiveRecord::Base
       WHERE
       Event.find(:all, 
         :include => [:disease_event, :address],
-        :conditions => [where_clause, start_date, end_date, start_date, end_date])
+        :conditions => [where_clause, start_date, end_date, start_date, end_date]) 
     end
 
     def deleted_ibis_records(start_date, end_date)
@@ -496,8 +496,7 @@ class Event < ActiveRecord::Base
       SQL
 
       sql <<  yield
-
-      sql << ";"
+      sql << "order by events.id;"
     end
   end
 
