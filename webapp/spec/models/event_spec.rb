@@ -726,26 +726,30 @@ describe MorbidityEvent do
   describe "when exporting to IBIS" do
     describe " and finding records to be exported" do
 
-      fixtures :events, :diseases, :disease_events
+      fixtures :events, :diseases, :disease_events, :entities
 
       before :each do
         anthrax = diseases(:anthrax)
 
         # NON_IBIS: Not sent to IBIS, no disease
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
+            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "event_name" => "Ibis1" } )
         # NEW: Not sent to IBIS, has disease
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
+            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "event_name" => "Ibis2" } )
         # UPDATED: Sent to IBIS, has disease
         MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
+            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "sent_to_ibis" => true,
             "ibis_updated_at" => Date.today,
             "event_name" => "Ibis3" } )
         # DELETED: Sent to IBIS, has disease, deleted
-        @lala = MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
+        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
+            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "deleted_at" => Date.today,
             "sent_to_ibis" => true,
@@ -770,10 +774,9 @@ describe MorbidityEvent do
       end
 
       it "should find all IBIS exportable records" do
-        pending "Not passing post-refactor, but test exports are matching pre-refactor exports (??)"
         events = Event.exportable_ibis_records(Date.today - 1, Date.today + 1)
-        events.collect! { |event| Event.find(event.id) }
-        events.size.should == 5   # 3 above and 2 in the fixtures
+        events.collect! { |event| Event.find(event['event_id']) }
+        events.size.should == 4   # 3 above and 1 in the fixtures
         event_names = events.collect { |event| event.event_name }
         event_names.include?("Marks Chicken Pox").should be_true
         event_names.include?("Ibis2").should be_true
