@@ -213,7 +213,7 @@ class HumanEvent < Event
       end
 
       if options[:do_not_show_deleted]
-        where_clause << " AND deleted_at IS NULL"
+        where_clause << " AND events.deleted_at IS NULL"
       end
 
       order_by_clause = case options[:order_by]
