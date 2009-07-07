@@ -28,10 +28,18 @@ Given /^there are ([0-9]+) morbidity events for a single person with the last na
   count.to_i.times { e.clone_event.save }
 end
 
-When /^I search for "(.+)"$/ do |search_string|
-  visit event_search_cmrs_path
-  fill_in "last_name", :with => search_string 
-  click_button "Search"
+Given /^the following morbidity events:$/ do |morbs|
+  morbs.hashes.each do |morb|
+    hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => morb
+        }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
+    }
+    MorbidityEvent.create!(hash)
+  end
 end
 
 When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_name |
@@ -40,6 +48,26 @@ end
 
 When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
   click_link_within "#event_#{@child.id}", "Create and edit CMR using this person"
+end
+
+When /^I search for last_name = "([^\"]*)"$/ do |last_name|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name 
+  click_button "Search"
+end
+
+When /^I search for last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name 
+  fill_in "first_name", :with => first_name 
+  click_button "Search"
+end
+
+When /^I search for last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name 
+  fill_in "birth_date", :with => birth_date 
+  click_button "Search"
 end
 
 Then /^I should see a search form$/ do
@@ -95,3 +123,12 @@ Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
   $1.should_not == @child.id if @child
   field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end
+
+Then /^I should see the follwing results:$/ do |results|
+  results.rows.each_with_index do |result, i|
+    response.should have_selector("table > tr:nth-child(#{i+2}) > td:nth-child(1)") { |td|
+      td.inner_text.should =~ /#{result[0]}, #{result[1]}/
+    }
+  end
+end
+
