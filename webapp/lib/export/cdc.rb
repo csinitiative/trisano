@@ -326,7 +326,7 @@ module Export
         if birth_date.blank?
           '99999999'
         else
-          Date.parse(birth_date).strftime("%y%m%d")
+          Date.parse(birth_date).strftime("%Y%m%d")
         end
       end
 
@@ -357,9 +357,9 @@ module Export
           '999999'
         else
           if event_date.kind_of? Date
-            event_date.strftime('%Y%m%d')
+            event_date.strftime('%y%m%d')
           else
-            event_date.gsub('-', '')
+            Date.parse(event_date).strftime('%y%m%d')
           end
         end
       end
@@ -423,7 +423,6 @@ module Export
 #         answers.each {|answer| answer.write_export_conversion_to(result)}
 #       end
 
-      # getting kind of procedural here, but its all about speed
       def write_answers_to(result)
         return if text_answers.blank?
         answers      = pg_array(self.text_answers)
