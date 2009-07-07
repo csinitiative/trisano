@@ -43,6 +43,7 @@ namespace :trisano do
       @runtime_timeout = config['runtime_timeout'] unless validate_config_attribute(config, 'runtime_timeout')
       @dump_file = config['dump_file_name'] 
       @support_url = config['support_url']
+      @source_url = config['source_url']
 
       ENV["PGPASSWORD"] = @priv_password 
     end
@@ -233,17 +234,21 @@ namespace :trisano do
     end
 
     desc "Overwrites the TriSano Support URL with what is in the config.yml support_url attribute"
-    task :overwrite_support_url do
+    task :overwrite_footer_urls do
       puts "starting overwrite"
       initialize_config
       if ! @support_url.nil?
         puts "overwriting TriSano Support URL with #{@support_url}"
-        change_text_in_file('../webapp/app/views/layouts/application.html.haml', "http://www.trisano.org/collaborate/", @support_url) 
+        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://www.trisano.org/collaborate/", @support_url) 
+      end
+      if ! @source_url.nil?
+        puts "overwriting TriSano Source URL with #{@source_url}"
+        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://github.com/csinitiative/trisano/tree/master", @source_url) 
       end
     end
     
     desc "Package the application with the settings from config.yml"
-    task :package_app => [:overwrite_support_url] do
+    task :package_app => [:overwrite_footer_urls] do
       initialize_config
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"
