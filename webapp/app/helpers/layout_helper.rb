@@ -54,7 +54,7 @@ module LayoutHelper
     result << "&nbsp;|&nbsp;"
     result << "<a href='http://www.trisano.org/collaborate/licenses/'>License</a>"
     result << "&nbsp;|&nbsp;"
-    result << "<a href='http://www.fu.com'>Source</a>"
+    result << "<a href='http://github.com/csinitiative/trisano/tree/master'>Source</a>"
     result << "</div>"
     result << "</div>"
 
