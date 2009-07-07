@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'factory_girl'
@@ -23,7 +23,7 @@ Factory.define :morbidity_event do |e|
   e.association :jurisdiction
   e.association :address
   e.association :disease_event
-end  
+end
 
 Factory.define :contact_event do |e|
   e.association :interested_party
@@ -31,7 +31,14 @@ Factory.define :contact_event do |e|
   e.association :address
   e.association :disease_event
   e.association :parent_event, :factory => :morbidity_event
-end  
+end
+
+Factory.define :place_event do |e|
+  e.association :interested_place
+  e.association :jurisdiction
+  e.association :disease_event
+  e.association :parent_event, :factory => :morbidity_event
+end
 
 Factory.define :form do |f|
   f.short_name { Factory.next(:short_name) }
@@ -77,6 +84,10 @@ Factory.define :interested_party do |ip|
   ip.association :risk_factor, :factory => :participations_risk_factor
 end
 
+Factory.define :interested_place do |ip|
+  ip.association :place_entity
+end
+
 Factory.define :participations_risk_factor do |rf|
   rf.occupation { Factory.next(:occupation) }
 end
@@ -107,7 +118,7 @@ Factory.define :lab_result do |lr|
   lr.test_type { Factory.next(:test_type) }
   lr.lab_result_text 'positive'
 end
-  
+
 Factory.define :answer_single_line_text, :class => :answer do |a|
   a.question    { |q| q.association(:question_single_line_text) }
   a.text_answer { Factory.next(:answer_text) }
