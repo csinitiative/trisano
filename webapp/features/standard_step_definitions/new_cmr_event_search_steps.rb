@@ -70,6 +70,12 @@ When /^I search for last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |las
   click_button "Search"
 end
 
+When /^I search for birth date = "([^\"]*)"$/ do |birth_date|
+  visit event_search_cmrs_path
+  fill_in "birth_date", :with => birth_date 
+  click_button "Search"
+end
+
 Then /^I should see a search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
   field_labeled("Last name").value.should be_nil

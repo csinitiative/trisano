@@ -99,21 +99,33 @@ class HumanEvent < Event
     def find_by_name_bdate(name, bdate=nil, options={})
       soundex_codes = []
       fulltext_terms = []
-      raw_terms = name.split(" ")
 
-      raw_terms.each do |word|
-        soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+      sql_terms = nil
+      unless name.blank?
+        raw_terms = name.split(" ")
+
+        raw_terms.each do |word|
+          soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
+          fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+        end
+
+        fulltext_terms << soundex_codes unless soundex_codes.empty?
+        sql_terms = fulltext_terms.join(" | ")
       end
 
-      fulltext_terms << soundex_codes unless soundex_codes.empty?
-      sql_terms = fulltext_terms.join(" | ")
+      where_clause = ""
+      where_clause += "people.vector @@ to_tsquery('#{sql_terms}')" if sql_terms
+      if bdate
+        where_clause += " AND" if sql_terms
+        where_clause += " people.birth_date = '#{sanitize_sql(["%s", bdate])}'" if bdate
+        # If they typed in a name and birth date allow for empty birth dates too.
+        where_clause += " OR people.birth_date IS NULL" if sql_terms
+      end
 
-      where_clause = "people.vector @@ to_tsquery('#{sql_terms}')"
-      where_clause << " AND (people.birth_date = '#{sanitize_sql(["%s", bdate])}' OR people.birth_date IS NULL)" if bdate
       order_by_clause = ""
       order_by_clause << "people.birth_date, " if bdate
-      order_by_clause << "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC, events.id DESC"
+      order_by_clause << "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC," if sql_terms
+      order_by_clause << " events.id DESC"
 
       select = <<-SQL
         SELECT events.id AS id,

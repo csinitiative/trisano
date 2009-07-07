@@ -55,6 +55,11 @@ Feature: Searching for existing people or events before adding a CMR
       |last_name|first_name|
       |Jones    |Mick      |
       |Jones    |Steve     |
+
+    When I search for birth date = "1947-01-08"
+    Then I should see the follwing results:
+      |last_name|first_name|
+      |Jones    |David     |
     
   Scenario: Disease is hidden from people without the right privileges
     Given a morbidity event for last name Jones with disease Mumps in jurisdiction Davis County
