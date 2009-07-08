@@ -1,0 +1,17 @@
+TO CREATE UTAH POPULATION TABLES
+
+* Go to http://wonder.cdc.gov/population.html
+* Select "Data Request" for the latest available year
+* Group results by age, county, gender, and race
+* Select Utah
+* Select "Export Results", and uncheck "Show Totals"
+* Select "County level" at the bottom
+* Click "Send"
+* Save the file someplace
+* Edit import.sh to give it the appropriate database and input file names
+* Run import.sh to import the file into a table called "population"
+
+Note that import.sql contains some important tables to translate county names
+to health department names, and to make intelligent guesses at the proper split
+of multi-racial categories into single-race groups. You may need to edit these
+at some point.
