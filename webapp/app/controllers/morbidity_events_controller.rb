@@ -151,6 +151,7 @@ class MorbidityEventsController < EventsController
   end
 
   def event_search
+    # Tests to see if any params are supplied in query string.
     if params[:last_name] || params[:first_name] || params[:birth_date]
 
       # For passing on to new_cmr
@@ -158,12 +159,17 @@ class MorbidityEventsController < EventsController
       @first_name = params[:first_name]
       @birth_date = params[:birth_date]
 
-      @birth_date.blank? ? birth_date = nil : birth_date = @birth_date
-      params[:page].blank? ? page = 1 : page = params[:page]
-      begin
-        @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
-      rescue
-        flash[:error] = 'Unable to process search. Is birth date a valid date?'
+      # Tests to see if params are supplied but empty
+      if @last_name.blank? && @first_name.blank? && @birth_date.blank?
+        @events = []
+      else
+        @birth_date.blank? ? birth_date = nil : birth_date = @birth_date
+        params[:page].blank? ? page = 1 : page = params[:page]
+        begin
+          @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
+        rescue
+          flash[:error] = 'Unable to process search. Is birth date a valid date?'
+        end
       end
     end
   end
