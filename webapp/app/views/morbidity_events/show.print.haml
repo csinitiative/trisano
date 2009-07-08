@@ -39,6 +39,8 @@
 
   #demographics
     - patient_entity = @event.interested_party.person_entity
+    - if @event.deleted_at
+      .deleted-event Event Deleted
     = render :partial => 'events/demographic_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
     = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Demographics" }
 

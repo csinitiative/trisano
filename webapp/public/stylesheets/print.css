@@ -151,3 +151,13 @@
 {
     text-decoration: line-through
 }
+
+.deleted-event
+{
+  z-index: -1;
+  font-size: 120px;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  opacity: .2;
+}
