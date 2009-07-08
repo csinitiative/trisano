@@ -35,6 +35,7 @@
 
     #contact_child_events
       - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
+        - next if c.object.deleted_at
         - if c.object.new_record? && c.object.interested_party.primary_entity_id.nil?
           = render :partial => "events/contact", :locals => { :f => c }
         - else

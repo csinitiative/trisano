@@ -51,8 +51,6 @@
         = place_form.label :_delete, "Remove"
         = place_form.check_box :_delete
 
-      =# link_to_function image_tag('delete.png', :border => 0), "$(this).up('.existing_place').remove()", {:id => "remove_existing_place_link"}
-
     = place_form.label('&nbsp;')
     = link_to("Edit place details", edit_place_event_path(place_form.object), {:id => "edit-place-event"}) unless place_form.object.new_record?
   %hr
