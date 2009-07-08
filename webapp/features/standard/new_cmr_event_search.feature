@@ -61,6 +61,11 @@ Feature: Searching for existing people or events before adding a CMR
       |last_name|first_name|
       |Jones    |David     |
     
+  Scenario: Handles malformed dates properly
+    Given I am logged in as a super user
+    When I search for birth date = "1947-01-"
+    Then I should see "Unable to process search. Is birth date a valid date"
+ 
   Scenario: Disease is hidden from people without the right privileges
     Given a morbidity event for last name Jones with disease Mumps in jurisdiction Davis County
     And I am logged in as a user without view or update privileges in Davis County

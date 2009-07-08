@@ -97,6 +97,9 @@ class HumanEvent < Event
     end
 
     def find_by_name_bdate(name, bdate=nil, options={})
+      # Throw an exception early if birth date not parseable
+      Date.parse(bdate) if bdate
+
       soundex_codes = []
       fulltext_terms = []
 
