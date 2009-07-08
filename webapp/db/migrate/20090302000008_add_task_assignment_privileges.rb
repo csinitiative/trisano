@@ -39,21 +39,6 @@ class AddTaskAssignmentPrivileges < ActiveRecord::Migration
           PrivilegesRole.create({ :role => role, :privilege =>  assign_task_priv })
         end
 
-        say "Adding entitlement to assign tasks to users with managerial roles, in every jurisdiction in which they are a manager"
-        managerial_role_ids = managerial_roles.collect { |role| role.id }
-        
-        User.find(:all).each do |user|
-
-          jurisdictions_handled = []
-
-          user.role_memberships.each do |rm|
-            if ( (managerial_role_ids.include?(rm.role.id)) && (!jurisdictions_handled.include?(rm.jurisdiction_id)) )
-              Entitlement.create({ :user => user, :privilege => assign_task_priv, :jurisdiction_id => rm.jurisdiction_id })
-              jurisdictions_handled << rm.jurisdiction_id
-            end
-          end
-        end
-
       end
     end
   end
