@@ -51,6 +51,7 @@ class CdcExport < ActiveRecord::Base
          e.state_case_status_id, 
          de.disease_onset_date,
          de.date_diagnosed,
+         di.cdc_code,
          lab_results.lab_test_dates,
          e."first_reported_PH_date",
          e."MMWR_year",
@@ -60,13 +61,19 @@ class CdcExport < ActiveRecord::Base
          sex_conversions.value_to as sex,
          praces.races,
          ethnic_conversions.value_to as ethnicity,
+         case_status_conversions.value_to as state_case_status_value,
+         county_conversions.value_to as county_value,
+         imported_from_conversions.value_to as imported_from_value,
+         outbreak_conversions.value_to as outbreak_value,
          disease_answers.text_answers,
          disease_answers.value_tos,
          disease_answers.start_positions,
          disease_answers.lengths,
-         disease_answers.data_types
+         disease_answers.data_types,
+         form_references_counter.core_field_export_count
         FROM events e
         JOIN disease_events de ON e.id = event_id
+        INNER JOIN diseases di ON de.disease_id = di.id
         JOIN participations ip ON (ip.event_id = e.id AND ip.type='InterestedParty')
         JOIN people p ON p.entity_id = ip.primary_entity_id 
         JOIN 
@@ -85,6 +92,43 @@ class CdcExport < ActiveRecord::Base
             AND sex_columns.type_data='CORE'
             AND export_disease_group_id IS NULL
         ) sex_conversions ON sex_codes.the_code = sex_conversions.value_from
+        LEFT JOIN external_codes state_case_status ON e.state_case_status_id = state_case_status.id
+        LEFT JOIN
+        (
+          SELECT value_from, value_to FROM export_columns case_status_columns
+          JOIN export_conversion_values case_status_conv ON case_status_columns.id = case_status_conv.export_column_id
+          WHERE case_status_columns.export_column_name='CASESTATUS'
+            AND case_status_columns.type_data='CORE'
+            AND export_disease_group_id IS NULL
+        ) case_status_conversions ON state_case_status.the_code = case_status_conversions.value_from
+        LEFT JOIN addresses ON e.id = addresses.event_id
+        LEFT JOIN external_codes county_codes ON addresses.county_id = county_codes.id
+        LEFT JOIN 
+        (
+          SELECT value_from, value_to FROM export_columns county_columns
+          JOIN export_conversion_values county_conv ON county_columns.id = county_conv.export_column_id
+          WHERE county_columns.export_column_name='COUNTY'
+            AND county_columns.type_data='CORE'
+            AND export_disease_group_id IS NULL          
+        ) county_conversions ON county_codes.the_code = county_conversions.value_from
+        LEFT JOIN external_codes imported_from_codes ON e.imported_from_id = imported_from_codes.id
+        LEFT JOIN 
+        (
+          SELECT value_from, value_to FROM export_columns imported_columns
+          JOIN export_conversion_values imported_conv ON imported_columns.id = imported_conv.export_column_id
+          WHERE imported_columns.export_column_name='IMPORTED'
+            AND imported_columns.type_data='CORE'
+            AND export_disease_group_id IS NULL          
+        ) imported_from_conversions ON imported_from_codes.the_code = imported_from_conversions.value_from
+        LEFT JOIN external_codes outbreak_codes ON e.outbreak_associated_id = outbreak_codes.id
+        LEFT JOIN 
+        (
+          SELECT value_from, value_to FROM export_columns outbreak_columns
+          JOIN export_conversion_values outbreak_conv ON outbreak_columns.id = outbreak_conv.export_column_id
+          WHERE outbreak_columns.export_column_name='OUTBREAK'
+            AND outbreak_columns.type_data='CORE'
+            AND export_disease_group_id IS NULL          
+        ) outbreak_conversions ON outbreak_codes.the_code = outbreak_conversions.value_from
         JOIN 
         (
           SELECT pr.entity_id, ARRAY_ACCUM(race_conversions.value_to) AS races FROM people pr
@@ -116,6 +160,14 @@ class CdcExport < ActiveRecord::Base
         ) lab_results ON e.id = lab_results.event_id
         LEFT JOIN
         (
+          SELECT event_id, COUNT(form_elements.id) AS core_field_export_count FROM form_references
+          INNER JOIN form_elements ON form_references.form_id=form_elements.form_id
+          WHERE form_elements.type='CoreFieldElement'
+           AND form_elements.export_column_id IS NOT NULL
+          GROUP BY event_id
+        ) form_references_counter ON e.id = form_references_counter.event_id
+        LEFT JOIN
+        (
           SELECT
            ee.id as event_id,
            ARRAY_ACCUM(disease_answers.text_answer) as text_answers, 
@@ -145,7 +197,7 @@ class CdcExport < ActiveRecord::Base
           GROUP BY ee.id
         ) disease_answers ON (e.id = disease_answers.event_id)
         WHERE deleted_at is null
-         AND "MMWR_year"=2009
+         AND "MMWR_year"=#{mmwr_year}
          AND e.type='MorbidityEvent'
       SQL
       events.map!{ |event| event.extend(Export::Cdc::Record) }     

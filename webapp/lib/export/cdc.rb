@@ -267,14 +267,7 @@ module Export
       
       # This is a cheat. Sometime we should go back and fix the view.
       def state_case_status_id
-        return '9' unless status_code = self['state_case_status_id']
-        external_code = ExternalCode.find(status_code)
-        case_status_export_column = ExportColumn.find_by_export_column_name("CASESTATUS")
-        
-        cdc_code = ExportConversionValue.find(:first, :conditions => 
-            ["export_column_id=? and value_from=?",
-            case_status_export_column.id, external_code.the_code])
-        cdc_code.value_to
+        self.state_case_status_value || '9'
       end
 
       def exp_rectype
@@ -306,7 +299,7 @@ module Export
       end
            
       def exp_event
-        safe_call_chain(:disease_event, :disease, :cdc_code) || '99999'
+        self.cdc_code || '99999'
       end
 
       def exp_count
@@ -314,9 +307,8 @@ module Export
       end
 
       def exp_county
-        county = safe_call_chain(:address, :county, :the_code)
-        if county
-          county_export_columns.export_conversion_values.find_by_value_from(county).value_to
+        unless self.county_value.blank?
+          self.county_value.to_s.rjust(3, '0')
         else
           '999'
         end
@@ -373,21 +365,11 @@ module Export
       end
 
       def exp_imported
-        imported = self.imported_from
-        if imported
-          imported_export_columns.export_conversion_values.find_by_value_from(imported.the_code).value_to
-        else
-          '9'
-        end
+        self.imported_from_value || '9'
       end
 
       def exp_outbreak
-        outbreak = self.outbreak_associated
-        if outbreak_associated
-          outbreak_export_columns.export_conversion_values.find_by_value_from(outbreak_associated.the_code).value_to
-        else
-          '9'
-        end
+        self.outbreak_value || '9'
       end
 
       def disease_specific_records
@@ -398,17 +380,6 @@ module Export
         core_field_conversions(self, result)
         (result[60...result.length] || '').rstrip  
       end      
-
-      # Debt:  This is no longer needed.  It's also a vestige of the SQL view.  Keeping it in for now, in case I'm
-      # surprised by the real world and something like this will fix it
-      # def method_missing(method, *args)
-      #   if self.has_key? method.to_s
-      #     self.class.send(:define_method, method, lambda {self[method.to_s]})
-      #     send(method, args)
-      #   else
-      #     super
-      #   end
-      # end
 
       private
 
@@ -469,10 +440,13 @@ module Export
       end
 
       def core_field_conversions(event, result)
-        event.export_core_field_configs.each do |config|
-          event.write_conversion_for(config, :to => result)
+        if event.core_field_export_count.to_i > 0
+          event.export_core_field_configs.each do |config|
+            event.write_conversion_for(config, :to => result)
+          end
+        else
+          DEFAULT_LOGGER.info("CDC Export: No additinal Core fields export for event #{event.record_number}")
         end
-        DEFAULT_LOGGER.info("CDC Export: No additinal Core fields export for event #{event.record_number}") if event.export_core_field_configs.empty?
       end
 
     end
