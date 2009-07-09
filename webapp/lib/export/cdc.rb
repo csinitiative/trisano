@@ -87,9 +87,10 @@ module Export
 
     module EventRules
       include Export::Cdc::CdcWriter
+      include PostgresFu
 
       def export_core_field_configs
-        forms = self.form_references.collect{|fr| fr.form}
+        forms = pg_array(self.disease_form_ids).collect{|fi| Form.find(fi)}
         DEFAULT_LOGGER.info("CDC Export: No forms associated with this event: #{self.record_number}") if forms.empty?
         forms.collect do |form|          
           form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
@@ -193,30 +194,7 @@ module Export
     end
    
     module Record
-
-      def county_export_columns
-        @county_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'COUNTY' AND export_disease_group_id IS NULL")
-      end
-
-      def sex_export_columns
-        @sex_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'SEX' AND export_disease_group_id IS NULL")
-      end
-
-      def race_export_columns
-        @race_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'RACE' AND export_disease_group_id IS NULL")
-      end
-
-      def ethnicity_export_columns
-        @ethnicity_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'ETHNICITY' AND export_disease_group_id IS NULL")
-      end
-
-      def imported_export_columns
-        @imported_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'IMPORTED' AND export_disease_group_id IS NULL")
-      end
-
-      def outbreak_export_columns
-        @outbreak_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'OUTBREAK' AND export_disease_group_id IS NULL")
-      end
+      include PostgresFu
 
       def cdc_export_fields
         %w(exp_rectype
@@ -266,14 +244,7 @@ module Export
       
       # This is a cheat. Sometime we should go back and fix the view.
       def state_case_status_id
-        return '9' unless status_code = self['state_case_status_id']
-        external_code = ExternalCode.find(status_code)
-        case_status_export_column = ExportColumn.find_by_export_column_name("CASESTATUS")
-        
-        cdc_code = ExportConversionValue.find(:first, :conditions => 
-            ["export_column_id=? and value_from=?",
-            case_status_export_column.id, external_code.the_code])
-        cdc_code.value_to
+        self.state_case_status_value || '9'
       end
 
       def exp_rectype
@@ -305,7 +276,7 @@ module Export
       end
            
       def exp_event
-        safe_call_chain(:disease_event, :disease, :cdc_code) || '99999'
+        self.cdc_code || '99999'
       end
 
       def exp_count
@@ -313,139 +284,131 @@ module Export
       end
 
       def exp_county
-        county = safe_call_chain(:address, :county, :the_code)
-        if county
-          county_export_columns.export_conversion_values.find_by_value_from(county).value_to
+        unless self.county_value.blank?
+          self.county_value.to_s.rjust(3, '0')
         else
           '999'
         end
       end
 
       def exp_birthdate
-        exp_patient = self.interested_party.person_entity.person 
-        if exp_patient.birth_date
-          exp_patient.birth_date.strftime("%Y%m%d")
-        else
+        if birth_date.blank?
           '99999999'
+        else
+          Date.parse(birth_date).strftime("%Y%m%d")
         end
       end
 
       def exp_agetype
-        if self.age_type
-          self.age_type.the_code
-        else
-          '9'
-        end
+        self.age_at_onset_type || '9'
       end
 
       def exp_sex 
-        sex = self.interested_party.person_entity.person.birth_gender
-        if sex
-          sex_export_columns.export_conversion_values.find_by_value_from(sex.the_code).value_to
-        else
-          '9'
-        end
+        sex.blank? ? '9' : sex
       end
 
       def exp_race
-        race = nil
-        races = self.interested_party.person_entity.races
-        unless races.empty?
-          race = races.first.the_code
-        end
-
-        if race
-          race_export_columns.export_conversion_values.find_by_value_from(race).value_to
-        else
-          '9'
-        end
+        race_values = pg_array(races)
+        race_values.first || '9'
       end
 
       def exp_ethnicity
-        ethnicity = self.interested_party.person_entity.person.ethnicity
-        if ethnicity
-          ethnicity_export_columns.export_conversion_values.find_by_value_from(ethnicity.the_code).value_to
-        else
-          '9'
-        end
+        ethnicity.blank? ? '9' : ethnicity
       end
 
       def exp_eventdate
-        event_date = safe_call_chain(:disease_event, :disease_onset_date)
-        event_date = safe_call_chain(:disease_event, :date_diagnosed) unless event_date 
-        event_date = safe_call_chain(:definitive_lab_result, :lab_test_date) unless event_date 
-        event_date = self.first_reported_PH_date unless event_date 
-        if event_date
-          event_date.strftime("%y%m%d")
-        else
+        event_date = disease_onset_date || date_diagnosed || pg_array(lab_test_dates).sort.last || first_reported_PH_date
+        if event_date.blank?
           '999999'
+        else
+          if event_date.kind_of? Date
+            event_date.strftime('%y%m%d')
+          else
+            Date.parse(event_date).strftime('%y%m%d')
+          end
         end
       end
 
       def exp_datetype
-        date_type = '1' if safe_call_chain(:disease_event, :disease_onset_date)
-        date_type = '2' if safe_call_chain(:disease_event, :date_diagnosed) unless date_type 
-        date_type = '3' if safe_call_chain(:definitive_lab_result, :lab_test_date) unless date_type 
-        date_type = '5' if self.first_reported_PH_date unless date_type 
+        date_type = '1' if disease_onset_date
+        date_type = '2' if date_diagnosed unless date_type 
+        date_type = '3' if pg_array(lab_test_dates).sort.last unless date_type 
+        date_type = '5' if first_reported_PH_date unless date_type 
         date_type || '9'
       end
 
       def exp_imported
-        imported = self.imported_from
-        if imported
-          imported_export_columns.export_conversion_values.find_by_value_from(imported.the_code).value_to
-        else
-          '9'
-        end
+        self.imported_from_value || '9'
       end
 
       def exp_outbreak
-        outbreak = self.outbreak_associated
-        if outbreak_associated
-          outbreak_export_columns.export_conversion_values.find_by_value_from(outbreak_associated.the_code).value_to
-        else
-          '9'
-        end
+        self.outbreak_value || '9'
       end
 
       def disease_specific_records
         result = ''
         # Debt: Ultimately, passing in self here can go.  It's a legacy of the SQL view that was returning hashses
         # instead of Event objects. Leaving it in for now for simplicity's sake
-        event_answer_conversions(self, result)
+        write_answers_to(result)
         core_field_conversions(self, result)
         (result[60...result.length] || '').rstrip  
       end      
 
-      # Debt:  This is no longer needed.  It's also a vestige of the SQL view.  Keeping it in for now, in case I'm
-      # surprised by the real world and something like this will fix it
-      # def method_missing(method, *args)
-      #   if self.has_key? method.to_s
-      #     self.class.send(:define_method, method, lambda {self[method.to_s]})
-      #     send(method, args)
-      #   else
-      #     super
-      #   end
-      # end
-
       private
 
-      def event_answer_conversions(event, result)
-        if event.disease_event && event.disease_event.disease
-          conversion_value_ids = event.disease_event.disease.export_conversion_value_ids
-          disease_filter = {:conditions => ['text_answer is not null AND export_conversion_value_id in (?)', conversion_value_ids]}
+      def write_answers_to(result)
+        return if text_answers.blank?
+        answers      = pg_array(self.text_answers)
+        converions   = pg_array(self.value_tos)
+        start_pos    = pg_array(self.start_positions)
+        lengths      = pg_array(self.lengths)
+        data_types   = pg_array(self.data_types)
+        
+        answers.each_with_index do |answer, i|
+          converted_answer = convert_answer(answer, data_types[i], converions[i], lengths[i].to_i)
+          write(converted_answer, {
+                  :starting => start_pos[i].to_i - 1,
+                  :length   => lengths[i].to_i,
+                  :result   => result})
         end
-        options = (disease_filter || {}).merge(:order => 'id DESC')
-        answers = event.answers.export_answers(:all, options)
-        DEFAULT_LOGGER.info("CDC export: No exported answers for event #{event.record_number}") if answers.empty?
-        answers.each {|answer| answer.write_export_conversion_to(result)}
+      end
+
+      def convert_answer(answer, data_type, value_to, length)
+        case
+        when data_type == 'date'
+          convert_date answer, "%m/%d/%y", length
+        when data_type == 'single_line_text'
+          convert_single_line_text answer, length
+        else
+          value_to
+        end
+      end
+
+      def convert_date(answer, date_format, length)
+        date = Date.parse(answer.to_s)
+        date.strftime(date_format)
+      rescue Exception => ex
+        DEFAULT_LOGGER.debug "CDC Export: Failed to convert date value '#{answer}' because: #{ex.message}"
+        '9' * length
+      end
+
+      def convert_single_line_text(answer, length)
+        if answer.strip =~ /^[\d+]{4}$/ && length == 2 # really just trying to catch years
+          DEFAULT_LOGGER.debug("CDC Export: Treating a text field as a two digit year - Event #{record_number}")
+          answer.rjust(length, ' ')[-length, length]
+        else
+          answer.ljust(length)[0, length].strip
+        end
       end
 
       def core_field_conversions(event, result)
-        event.export_core_field_configs.each do |config|
-          event.write_conversion_for(config, :to => result)
+        if event.core_field_export_count.to_i > 0
+          event.export_core_field_configs.each do |config|
+            event.write_conversion_for(config, :to => result)
+          end
+        else
+          DEFAULT_LOGGER.info("CDC Export: No additinal Core fields export for event #{event.record_number}")
         end
-        DEFAULT_LOGGER.info("CDC Export: No additinal Core fields export for event #{event.record_number}") if event.export_core_field_configs.empty?
       end
 
     end
