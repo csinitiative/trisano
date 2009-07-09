@@ -51,7 +51,7 @@ class CdcExport < ActiveRecord::Base
          e.state_case_status_id, 
          de.disease_onset_date,
          de.date_diagnosed,
-         di.cdc_code,
+         diseases.cdc_code,
          lab_results.lab_test_dates,
          e."first_reported_PH_date",
          e."MMWR_year",
@@ -69,11 +69,11 @@ class CdcExport < ActiveRecord::Base
          disease_answers.value_tos,
          disease_answers.start_positions,
          disease_answers.lengths,
-         disease_answers.data_types,
-         form_references_counter.core_field_export_count
+         disease_answers.data_types,         
+         form_references_counter.core_field_export_count,
+         form_ids_accumulator.form_ids AS disease_form_ids         
         FROM events e
         JOIN disease_events de ON e.id = event_id
-        INNER JOIN diseases di ON de.disease_id = di.id
         JOIN participations ip ON (ip.event_id = e.id AND ip.type='InterestedParty')
         JOIN people p ON p.entity_id = ip.primary_entity_id 
         JOIN 
@@ -82,7 +82,7 @@ class CdcExport < ActiveRecord::Base
            JOIN diseases d on c.disease_id = d.id
           WHERE d.cdc_code is not null
            AND active=true
-        ) a ON (a.disease_id = de.disease_id AND e.state_case_status_id = a.external_code_id)
+        ) diseases ON (diseases.disease_id = de.disease_id AND e.state_case_status_id = diseases.external_code_id)
         LEFT JOIN external_codes sex_codes ON p.birth_gender_id = sex_codes.id        
         LEFT JOIN
         (
@@ -166,6 +166,11 @@ class CdcExport < ActiveRecord::Base
            AND form_elements.export_column_id IS NOT NULL
           GROUP BY event_id
         ) form_references_counter ON e.id = form_references_counter.event_id
+        LEFT JOIN
+        (
+          SELECT event_id, ARRAY_ACCUM(form_id) AS form_ids FROM form_references
+          GROUP BY event_id
+        ) form_ids_accumulator ON e.id = form_ids_accumulator.event_id
         LEFT JOIN
         (
           SELECT

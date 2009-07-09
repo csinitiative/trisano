@@ -87,9 +87,10 @@ module Export
 
     module EventRules
       include Export::Cdc::CdcWriter
+      include PostgresFu
 
       def export_core_field_configs
-        forms = self.form_references.collect{|fr| fr.form}
+        forms = pg_array(self.disease_form_ids).collect{|fi| Form.find(fi)}
         DEFAULT_LOGGER.info("CDC Export: No forms associated with this event: #{self.record_number}") if forms.empty?
         forms.collect do |form|          
           form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
