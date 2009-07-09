@@ -98,7 +98,7 @@ class HumanEvent < Event
 
     def find_by_name_bdate(name, bdate=nil, options={})
       # Throw an exception early if birth date not parseable
-      Date.parse(bdate) if bdate
+      Date.parse(bdate) if bdate.is_a? String
 
       soundex_codes = []
       fulltext_terms = []
