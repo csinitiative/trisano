@@ -22,7 +22,8 @@ Given /^the morbidity event has the following contacts:$/ do |contacts|
         "person_entity_attributes" => {
           "person_attributes" => contact
         }
-      }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
     }
     @event.contact_child_events << ContactEvent.create!(hash)
   end
@@ -36,7 +37,8 @@ Given /^the morbidity event has the following deleted contacts:$/ do |contacts|
         "person_entity_attributes" => {
           "person_attributes" => contact
         }
-      }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
     }    
     @event.contact_child_events << ContactEvent.create(hash)
     @event.contact_child_events.last.transactional_soft_delete    
