@@ -1598,8 +1598,8 @@ describe Event, 'cloning an event' do
 
     it "should copy over disease information, but not the actual disease" do
       @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id,
-        :hospitalized_id => external_codes(:yesno_yes),
-        :died_id => external_codes(:yesno_no),
+        :hospitalized_id => external_codes(:yesno_yes).id,
+        :died_id => external_codes(:yesno_no).id,
         :disease_onset_date => Date.today - 1,
         :date_diagnosed => Date.today
       }
@@ -1754,14 +1754,14 @@ describe Event, 'cloning an event' do
             }
           },
           "lab_results_attributes" => [
-            { "specimen_source_id" => external_codes(:specimen_blood),
+            { "specimen_source_id" => external_codes(:specimen_blood).id,
               "collection_date" => Date.today,
               "lab_test_date" => Date.today,
-              "specimen_sent_to_uphl_yn_id" => external_codes(:yesno_yes),
+              "specimen_sent_to_uphl_yn_id" => external_codes(:yesno_yes).id,
               "lab_result_text" => "Scary",
               "test_type" => "Painful",
               "test_detail" => "Blood drawn",
-              "interpretation_id" => external_codes(:state_alaska), # It's not really important what it is, just that it's there.  Tired of adding fixtures.
+              "interpretation_id" => external_codes(:state_alaska).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "reference_range" => "one"
             }
           ]

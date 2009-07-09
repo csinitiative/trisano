@@ -734,7 +734,7 @@ SEARCH
     if event_components.include?("clinical")
       if self.disease_event
         new_event.build_disease_event(:hospitalized_id =>  self.disease_event.hospitalized_id,
-          :died_id => self.disease_event.hospitalized_id,
+          :died_id => self.disease_event.died_id,
           :disease_onset_date => self.disease_event.disease_onset_date,
           :date_diagnosed => self.disease_event.date_diagnosed)
       end
