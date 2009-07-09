@@ -196,30 +196,6 @@ module Export
     module Record
       include PostgresFu
 
-      def county_export_columns
-        @county_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'COUNTY' AND export_disease_group_id IS NULL")
-      end
-
-      def sex_export_columns
-        @sex_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'SEX' AND export_disease_group_id IS NULL")
-      end
-
-      def race_export_columns
-        @race_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'RACE' AND export_disease_group_id IS NULL")
-      end
-
-      def ethnicity_export_columns
-        @ethnicity_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'ETHNICITY' AND export_disease_group_id IS NULL")
-      end
-
-      def imported_export_columns
-        @imported_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'IMPORTED' AND export_disease_group_id IS NULL")
-      end
-
-      def outbreak_export_columns
-        @outbreak_export_columns ||= ExportColumn.find(:first, :conditions => "type_data = 'CORE' AND export_column_name = 'OUTBREAK' AND export_disease_group_id IS NULL")
-      end
-
       def cdc_export_fields
         %w(exp_rectype
            exp_update
@@ -324,11 +300,7 @@ module Export
       end
 
       def exp_agetype
-        if self.age_type
-          self.age_type.the_code
-        else
-          '9'
-        end
+        self.age_at_onset_type || '9'
       end
 
       def exp_sex 
@@ -383,17 +355,6 @@ module Export
       end      
 
       private
-
-#       def event_answer_conversions(event, result)
-#         if event.disease_event && event.disease_event.disease
-#           conversion_value_ids = event.disease_event.disease.export_conversion_value_ids
-#           disease_filter = {:conditions => ['text_answer is not null AND export_conversion_value_id in (?)', conversion_value_ids]}
-#         end
-#         options = (disease_filter || {}).merge(:order => 'id DESC')
-#         answers = event.answers.export_answers(:all, options)
-#         DEFAULT_LOGGER.info("CDC export: No exported answers for event #{event.record_number}") if answers.empty?
-#         answers.each {|answer| answer.write_export_conversion_to(result)}
-#       end
 
       def write_answers_to(result)
         return if text_answers.blank?

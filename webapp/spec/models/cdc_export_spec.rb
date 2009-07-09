@@ -679,6 +679,7 @@ describe CdcExport do
 
       @disease = @morb.disease_event.disease
       @disease.external_codes << external_codes(:case_status_confirmed)
+      @disease.active = true
       @disease.save!
 
       @mmwr_year = Mmwr.new.mmwr_year - 1
