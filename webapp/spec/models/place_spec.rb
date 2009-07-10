@@ -19,14 +19,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Place do
 
-  fixtures :places, :places_types
+  fixtures :places, :places_types, :entities
 
   before(:each) do
     @place = Place.new
   end
 
   describe "when instantiatied" do
-    
+
     it "should be invalid without a name" do
       @place.should_not be_valid
     end
@@ -62,10 +62,35 @@ describe Place do
       h[1].should == places(:BRVH)
     end
 
+    it "hospitals should not return deleted hospitals" do
+      @hospital_to_delete = places(:AVH)
+      @hospital_to_delete.entity.deleted_at = Time.now
+      @hospital_to_delete.entity.save!
+      h = Place.hospitals
+      h.length.should == 2
+
+      # Setting back to un-deleted to avoid future fixture panic until this is factoried up
+      @hospital_to_delete.entity.deleted_at = nil
+      @hospital_to_delete.entity.save!
+    end
+
     it "jurisdictions should return a list of jurisdictions" do
       h = Place.jurisdictions
       h.length.should == 4
     end
+
+    it "jurisdictions should not return deleted jurisdictions" do
+      @jurisdiction_to_delete = places(:Southeastern_District)
+      @jurisdiction_to_delete.entity.deleted_at = Time.now
+      @jurisdiction_to_delete.entity.save!
+      h = Place.jurisdictions
+      h.length.should == 3
+
+      # Setting back to un-deleted to avoid future fixture panic until this is factoried up
+      @jurisdiction_to_delete.entity.deleted_at = nil
+      @jurisdiction_to_delete.entity.save!
+    end
+
   end
 
   describe 'multiple place types' do

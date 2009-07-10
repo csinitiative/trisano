@@ -23,8 +23,8 @@ class EventsController < ApplicationController
   
   def auto_complete_for_lab_name
     @items = Place.find(:all, :select => "DISTINCT ON (LOWER(TRIM(name))) name", 
-      :include => :place_types,
-      :conditions => [ "LOWER(name) LIKE ? and codes.code_name = 'placetype' AND codes.the_code = 'L'", params[:lab_name].downcase + '%'],
+      :include => [:place_types, :entity],
+      :conditions => [ "LOWER(name) LIKE ? and codes.code_name = 'placetype' AND codes.the_code = 'L' AND entities.deleted_at IS NULL", params[:lab_name].downcase + '%'],
       :order => "LOWER(TRIM(name)) ASC",
       :limit => 20
     )
@@ -249,8 +249,8 @@ class EventsController < ApplicationController
 
   def places_by_name_and_types(name, type_array)
     @places = Place.find(:all, :select => "DISTINCT ON (LOWER(TRIM(places.name)), codes.id) places.entity_id, places.name, codes.id",
-      :include => :place_types,
-      :conditions => [ "LOWER(places.name) LIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (#{type_array.to_list})", name.downcase + '%'],
+      :include => [:place_types, :entity],
+      :conditions => [ "LOWER(places.name) LIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (#{type_array.to_list}) AND entities.deleted_at IS NULL", name.downcase + '%'],
       :order => "LOWER(TRIM(name)) ASC",
       :limit => 20
     )

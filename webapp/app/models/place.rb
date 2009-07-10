@@ -58,8 +58,8 @@ class Place < ActiveRecord::Base
     def all_by_name_and_types(name, type_codes, short_name=false)
       type_codes = [ type_codes ] unless type_codes.is_a?(Array)
       self.all(:include => :place_types, 
-               :conditions => [ "LOWER(places.#{short_name ? 'short_name' : 'name'}) = ? AND codes.the_code IN (?) AND codes.code_name = 'placetype'", name.downcase, type_codes ],
-               :order => "LOWER(TRIM(name))")
+        :conditions => [ "LOWER(places.#{short_name ? 'short_name' : 'name'}) = ? AND codes.the_code IN (?) AND codes.code_name = 'placetype'", name.downcase, type_codes ],
+        :order => "LOWER(TRIM(name))")
     end
 
     def jurisdictions_for_privilege_by_user_id(user_id, privilege)
@@ -122,15 +122,24 @@ class Place < ActiveRecord::Base
     
     def place_types(type_codes)
       Code.find(:all, 
-                :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes],
-                :order => 'sort_order ASC')
+        :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes],
+        :order => 'sort_order ASC')
     end
 
     def all_by_place_code(code, select=nil)
       if select
-        self.all(:select => select, :joins => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name, places.id')
+        self.all(
+          :select => select,
+          :joins => [:place_types, :entity],
+          :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype' AND entities.deleted_at IS NULL",
+          :order => 'name, places.id'
+        )
       else
-        self.all(:include => :place_types, :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype'", :order => 'name, places.id')
+        self.all(
+          :include => [:place_types, :entity],
+          :conditions => "codes.the_code = '#{code}' AND codes.code_name = 'placetype' AND entities.deleted_at IS NULL",
+          :order => 'name, places.id'
+        )
       end
     end
   end
