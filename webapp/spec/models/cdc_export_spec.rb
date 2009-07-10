@@ -619,6 +619,7 @@ describe CdcExport do
       end
 
       describe 'and one contact event' do
+        fixtures :users
         before :each do
           @contact_event = Factory.build :contact_event
           @contact_event.build_disease_event(:disease_id => @morbidity_event.disease_event.disease_id)
