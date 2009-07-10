@@ -30,24 +30,26 @@
           %th &nbsp;
       %tbody
         - for attachment in attachments
-          %tr
+          %tr.attachment
             %td
-              %span{:class => :filename}
+              %span.filename
                 =h attachment.filename
             %td
-              %span{:class => :category}
+              %span.category
                 =h attachment.category.humanize
             %td
-              %span{:class => :content_type}
+              %span.content_type
                 =h attachment.content_type
             %td
-              %span{:class => :size}
+              %span.size
                 =h attachment.size
             %td
-              %span{:class => :updated_at}
+              %span.updated_at
                 =h attachment.updated_at
             %td
               = link_to("Open", event_attachment_path(attachment.event, attachment))
+              |
+              = link_to("Delete", event_attachment_path(attachment.event, attachment), :method => :delete, :confirm => 'Really delete attachment?')
               
 
   - else

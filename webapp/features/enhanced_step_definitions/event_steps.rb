@@ -14,12 +14,19 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
+  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+end
 
 When(/^I navigate to the event edit page$/) do
-  @browser.open "/trisano/cmrs/#{@event.id}/edit"
+  @browser.click "link=EVENTS"
+  @browser.wait_for_page_to_load $load_time
+  @browser.click "link=Edit"
+  @browser.wait_for_page_to_load $load_time
 end
 
 When(/^I navigate to the event show page$/) do
-  @browser.open "/trisano/cmrs/#{@event.id}"
+  @browser.open "/trisano/cmrs/#{(@m || @event).id}"
   @browser.wait_for_page_to_load
 end
+

@@ -12,3 +12,5 @@ Features: Attaching documents to an Event.
     And I press "Create"
 
     Then I should see "test-attachment" listed as an attachment
+
+

@@ -38,7 +38,7 @@ When /^I visit the events index page$/ do
 end
 
 When(/^I navigate to the event edit page$/) do
-  visit edit_cmr_path(@event)
+  visit edit_cmr_path(@event || @m)
 end
 
 When(/^I navigate to the event show page$/) do
@@ -49,7 +49,7 @@ When(/^I navigate to the new event page$/) do
   visit new_cmr_path
 end
 
-When /^I navigate to the show page$/ do
+When /^I navigate to the event show page$/ do
   visit cmr_path(@event || @m)
 end
 

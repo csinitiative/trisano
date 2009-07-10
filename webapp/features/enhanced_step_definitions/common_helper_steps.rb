@@ -38,6 +38,12 @@ When(/^I click and confirm the "(.+)" button$/) do |button|
   @browser.wait_for_page_to_load($load_time)
 end
 
+When(/^I click and confirm the "(.+)" link$/) do |text|
+  @browser.click("//a[contains(text(), '#{text}')]")
+  @browser.get_confirmation()
+  @browser.wait_for_page_to_load($load_time)
+end
+
 When /^I wait for the page to load$/ do
   @browser.wait_for_page_to_load
 end

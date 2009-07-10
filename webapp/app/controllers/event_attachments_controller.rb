@@ -57,4 +57,19 @@ class EventAttachmentsController < ApplicationController
     end
   end
 
+  def destroy
+    @attachment = Attachment.find(params[:id])
+    
+    respond_to do |format|
+      begin
+        @attachment.destroy
+        flash[:notice] = 'Attachment was successfully deleted.'
+        format.html {redirect_to request.env["HTTP_REFERER"]}
+      rescue
+        flash[:error] = 'Failed to delete attachment.'
+        format.html {redirect_to request.env["HTTP_REFERER"]}
+      end
+    end
+  end
+
 end

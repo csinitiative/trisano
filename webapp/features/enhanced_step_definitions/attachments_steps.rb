@@ -25,15 +25,25 @@ Given /^a file attachment named "([^\"]*)"$/ do |file_name|
   @attachment.save!
 end
 
-When /^I upload the "(.*)" file$/ do |file_name|
-  attach_file 'attachment_uploaded_data', File.join(RAILS_ROOT, 'spec', 'fixtures', 'files', file_name)
+When /^I navigate to the add attachments page$/ do
+  @browser.open "/trisano/events/#{(@m || @event).id}/attachments/new"
+  @browser.wait_for_page_to_load
+end
+
+When(/^I confirm that I'm leaving the page\.$/) do
+  @browser.get_confirmation()
+end
+
+When(/^I click and confirm the attachment "(.+)" link$/) do |text|
+  @browser.click("//div[@id='attachments']//a[contains(text(), '#{text}')]")
+  @browser.get_confirmation()
 end
 
 Then /^I should not see "([^\"]*)" listed as an attachment$/ do |file_name|
-  response.should be_success
-  response.should_not have_xpath("//span[@class=\"filename\" and contains(text(), \"#{file_name}\")]")
+  @browser.get_html_source.should =~ /Attachment was successfully deleted./
+  @browser.get_html_source.should_not =~ /#{file_name}/
 end
 
-Then /^I should see "(.*)" listed as an attachment$/ do |file_name|
-  response.should have_xpath("//span[@class=\"filename\" and contains(text(), \"#{file_name}\")]")
-end
+
+
+
