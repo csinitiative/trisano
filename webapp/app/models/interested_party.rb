@@ -26,6 +26,7 @@ class InterestedParty < Participation
   accepts_nested_attributes_for :risk_factor, :treatments, :allow_destroy => true, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def validate
+    super
     if self.person_entity.person.nil?
       errors.add_to_base("No information has been supplied for the interested party.")
     end

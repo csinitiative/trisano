@@ -24,6 +24,7 @@ class HospitalizationFacility < Participation
   accepts_nested_attributes_for :hospitals_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def validate
+    super
     if !hospitals_participation.nil? and place_entity.nil?
       errors.add_to_base("Hospital can not be blank if hospitalization dates or medical record number are given.")
     end

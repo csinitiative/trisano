@@ -1085,7 +1085,7 @@ describe MorbidityEvent do
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
-        "event_type"=>"morbidity_event", 
+        "event_type"=>"morbidity_event",
         "disease_ids"=>[diseases(:form_assignment_disease).id],
         "jurisdiction_id"=>""
       }
@@ -1148,7 +1148,7 @@ describe MorbidityEvent do
         @event.undergone_form_assignment.should be_true
       end
     end
-    
+
   end
 
   describe "forms assignment during event updates" do
@@ -1166,8 +1166,8 @@ describe MorbidityEvent do
         "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
       }
 
-      
-      
+
+
 
       @form_hash = {
         "name"=>"Form Assignment Form",
@@ -1256,7 +1256,7 @@ describe MorbidityEvent do
   describe "adding forms to an event" do
 
     describe "an event without forms already" do
-    
+
       before(:each) do
         # Create an event
         @event = Factory.create(:morbidity_event)
@@ -1270,17 +1270,17 @@ describe MorbidityEvent do
         @second_form.save_and_initialize_form_elements
         @second_published_form = @second_form.publish
       end
-    
+
       it "should add new forms" do
         @event.add_forms([@published_form.id, @second_published_form.id])
         event_form_ids = @event.form_references.map { |ref| ref.form_id }
         event_form_ids.sort.should == [@published_form.id, @second_published_form.id].sort
       end
-    
+
     end
 
     describe "an event with existing forms" do    # No fixture specs
-      
+
       before(:each) do
         # Create a form and assign it to an event
         @event = Factory.create(:morbidity_event)
@@ -1299,7 +1299,7 @@ describe MorbidityEvent do
       it "should add new forms with no dups" do
         # Try adding the first form again, in addition to a form the event doesn't have yet
         @event.add_forms([@published_form.id, @second_published_form.id])
-        
+
         event_form_ids = @event.form_references.map { |ref| ref.form_id }
         event_form_ids.sort.should == [@published_form.id, @second_published_form.id]
       end
@@ -1315,7 +1315,7 @@ describe MorbidityEvent do
         @event.form_references.size.should == 2
         @event.form_references.detect { |ref| ref.form_id == @second_version_of_first_form }.should be_nil
       end
-      
+
     end
 
     describe "argument handling" do
@@ -1857,4 +1857,18 @@ describe Event, 'cloning an event' do
     end
 
   end
+end
+
+describe Event, "when saving events with deleted entities" do
+
+  it "saving an event with a deleted entity should not pass validation" do
+    @jurisdiction = Factory.create(:jurisdiction)
+    @jurisdiction.place_entity.deleted_at = Time.now
+    @jurisdiction.place_entity.save!
+    @jurisdiction.reload
+    @morbidity_event = Factory.build(:morbidity_event, :jurisdiction => @jurisdiction)
+    @morbidity_event.save.should be_false
+    @morbidity_event.errors["jurisdiction_base"].empty?.should be_false
+  end
+  
 end

@@ -22,6 +22,7 @@ class InterestedPlace < Participation
   accepts_nested_attributes_for :place_entity
 
   def validate
+    super
     if self.place_entity.place.nil?
       errors.add_to_base("No name has been supplied for this place.")
     end

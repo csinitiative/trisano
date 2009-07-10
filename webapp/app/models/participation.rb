@@ -20,6 +20,16 @@ class Participation < ActiveRecord::Base
   belongs_to :primary_entity, :foreign_key => :primary_entity_id, :class_name => 'Entity'
   belongs_to :secondary_entity, :foreign_key => :secondary_entity_id, :class_name => 'Entity'
 
+  def validate
+    unless primary_entity.nil?
+      errors.add_to_base("has been merged into another entity. Please make another selection.") unless primary_entity.deleted_at.nil?
+    end
+
+    unless secondary_entity.nil?
+      errors.add_to_base("has been merged into another entity. Please make another selection.") unless secondary_entity.deleted_at.nil?
+    end
+  end
+  
   private
   
   def associate_longitudinal_data
