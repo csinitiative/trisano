@@ -16,17 +16,10 @@
 = stylesheet_link_tag 'print', :media => 'all'
 .header
   .left
-    %h1 Utah Public Health
     %h2= @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
-    %h3 Address of Local Health Department
-    %h3
-      %i Phone: (801) xxx-xxxx 
-    %h3
-      %i Confidential Fax: (801) xxx-xxxx
-    %h3
-      %i= Date.today.strftime("%B %d, %Y")
-  .right
-    = image_tag("logo.png")
+    %i
+      Printed
+      = Date.today.strftime("%B %d, %Y")
     
 .sub-header
   .left

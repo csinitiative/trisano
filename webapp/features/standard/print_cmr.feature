@@ -125,7 +125,7 @@ Feature: Printer friendly morbidity events
       |Davis    |Miles     |
       |Abbot    |Bud       |
 
-    When I print the morbidity event with "Contacts"
+    When I print the morbidity event with "All"
 
     Then I should see "Miles" under contact reports
     And I should see "Davis" under contact reports
@@ -142,7 +142,7 @@ Feature: Printer friendly morbidity events
       |last_name|first_name|
       |Abbot    |Bud       |
   
-    When I print the morbidity event with "Contacts"
+    When I print the morbidity event with "All"
 
     Then I should see "Miles" under contact reports
     And I should see "Davis" under contact reports
