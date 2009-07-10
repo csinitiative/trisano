@@ -50,16 +50,16 @@ describe Place do
     it "hospitals should return a list of hospitals" do
       h = Place.hospitals
       h.length.should == 3
-      h[0].should == places(:AVH)
-      h[1].should == places(:BRVH)
-      h[2].should == places(:BRVH2)
+      h[0].name.should == places(:AVH).name
+      h[1].name.should == places(:BRVH).name
+      h[2].name.should == places(:BRVH2).name
     end
 
     it "hospitals should return a list of hospitals with no duplicate names" do
       h = Place.hospitals(true)
       h.length.should == 2
-      h[0].should == places(:AVH)
-      h[1].should == places(:BRVH)
+      h[0].name.should == places(:AVH).name
+      h[1].name.should == places(:BRVH).name
     end
 
     it "hospitals should not return deleted hospitals" do

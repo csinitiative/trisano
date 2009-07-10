@@ -71,7 +71,7 @@ describe ContactEvent do
   end
 
   describe "Promoting a contact to a cmr" do
-    fixtures :entities
+    fixtures :entities, :places
 
     before(:each) do
       mock_user
@@ -120,8 +120,8 @@ describe ContactEvent do
       form_ids.include?(@published_morb_form_2.id).should be_true
     end
 
-    it "should be in a NEW state" do
-      @c.workflow_state == 'new'
+    it "should be in a accepted_by_lhd state" do
+      @c.workflow_state == 'accepted_by_lhd'
     end
   end
 end

@@ -29,6 +29,7 @@ class ContactEvent < HumanEvent
     state :not_routed, :meta => {:description => 'Not Participating in Workflow', :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
       event :promote, :transitions_to => :new
       assign_to_lhd
+      accept_by_lhd :accept
     end
     state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
       assign_to_lhd
@@ -152,7 +153,16 @@ class ContactEvent < HumanEvent
 
   def promote_to_morbidity_event
     raise "Cannot promote an unsaved contact to a morbidity event" if self.new_record?
-    self.promote if self.not_routed? # In case the contact is in a state that doesn't exist for a morb
+
+    # In case the contact is in a state that doesn't exist for a morb
+    if self.not_routed?
+      if self.primary_jurisdiction.name == 'Unassigned'
+        self.promote
+      else
+        self.accept("Accepted by system for LHD due to contact promotion")
+      end
+    end
+
     self['type'] = MorbidityEvent.to_s
     # Pull morb forms
     if self.disease_event && self.disease_event.disease
