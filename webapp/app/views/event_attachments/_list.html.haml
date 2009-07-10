@@ -32,15 +32,20 @@
         - for attachment in attachments
           %tr
             %td
-              =h attachment.filename
+              %span{:class => :filename}
+                =h attachment.filename
             %td
-              =h attachment.category.humanize
+              %span{:class => :category}
+                =h attachment.category.humanize
             %td
-              =h attachment.content_type
+              %span{:class => :content_type}
+                =h attachment.content_type
             %td
-              =h attachment.size
+              %span{:class => :size}
+                =h attachment.size
             %td
-              =h attachment.updated_at
+              %span{:class => :updated_at}
+                =h attachment.updated_at
             %td
               = link_to("Open", event_attachment_path(attachment.event, attachment))
               

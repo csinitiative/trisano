@@ -48,3 +48,11 @@ end
 When(/^I navigate to the new event page$/) do
   visit new_cmr_path
 end
+
+When /^I navigate to the show page$/ do
+  visit cmr_path(@event || @m)
+end
+
+When /^I navigate to the add attachments page$/ do
+  visit new_event_attachment_path(@event || @m)
+end
