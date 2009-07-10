@@ -47,8 +47,8 @@ Given /^the morbidity event has the following deleted contacts:$/ do |contacts|
   puts @event.contact_child_events.active.size
 end
 
-When /^I print the morbidity event$/ do
-  visit cmr_path(@event, :format => :print)
+When /^I print the morbidity event with "([^\"]*)"$/ do |option|
+  visit cmr_path(@event, :format => :print, :print_options => [option])
 end
 
 Then /^I should see "([^\"]*)" under contact reports$/ do |value|
@@ -59,3 +59,18 @@ Then /^I should not see "([^\"]*)" under contact reports$/ do |value|
   response.should_not have_xpath("//div[@id='contact-reports']//span[contains(text(),'#{value}')]")
 end
 
+When /^I choose to print "([^\"]*)" data$/ do |section|
+  check "print_#{section.downcase}" 
+end
+
+Then /^I should see the following sections:$/ do |sections|
+  sections.rows.each do |section|
+    response.should have_selector("##{section.first.downcase}")
+  end
+end
+
+Then /^I should not see the following sections$/ do |sections|
+  sections.rows.each do |section|
+    response.should_not have_selector("##{section.first.downcase}")
+  end
+end

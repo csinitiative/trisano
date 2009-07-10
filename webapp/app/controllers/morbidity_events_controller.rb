@@ -39,7 +39,7 @@ class MorbidityEventsController < EventsController
       format.html # show.html.erb
       format.xml  { render :xml => @event }
       format.csv
-      format.print
+      format.print { @print_options = params[:print_options] || [] }
     end
   end
 

@@ -44,8 +44,13 @@ module MorbidityEventsHelper
     else
       controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
     end
-    controls << " | " << link_to('Print', cmr_path(event, :format => "print") , :target => "_blank") 
-    controls << link_to(' (with notes)', cmr_path(event, :format => "print", :note => "1") , :target => "_blank") if !from_index
+    if from_index
+      controls << " | " << link_to('Print', cmr_path(event, :format => :print, :print_options => ['All']))
+    else
+      controls << " | " << link_to_function("Print", nil) do |page|
+        page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
+      end
+    end
     controls << " | " << link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete') if event.deleted_at.nil?
     if !from_index
       controls << " | " << link_to('Add Task', new_event_task_path(event))

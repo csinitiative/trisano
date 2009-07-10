@@ -33,5 +33,5 @@ Given(/^the disease-specific questions for the event have been answered$/) do
   question_elements.each do |element|
     Answer.create({ :event_id => @event.id, :question_id => element.question.id, :text_answer => @answer_text })
   end
-  
 end
+

@@ -1,5 +1,6 @@
 .header {
   line-height: 60%;
+  color: #006229;
 }
 
 .header .left {
@@ -49,6 +50,8 @@
   letter-spacing: 2px;
   text-align: center;
   font-size: 18px;
+  color: #FFFFFF;
+  background-color: #006229;
 }
 
 .subsection-header {
@@ -64,6 +67,8 @@
   letter-spacing: 1px;
   text-align: center;
   font-size: 14px;
+  color: #000000;
+  background-color: #E3F1DA;
 }
 
 .three-valued-row {

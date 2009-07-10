@@ -21,8 +21,7 @@ Given /^a queue named "([^\"]*)" in jurisdiction "([^\"]*)"$/ do |queue_name, ju
 end
 
 Then /^I should see the assigned event$/ do
-  # keying off the printing link because it seems the easiest way to match the event id
-  response.should have_xpath("//a[contains(@href,'#{@event.id}.print')]")
+  response.should have_xpath("//a[@href = '/cmrs/#{@event.id}']")
 end
 
 Then /^I should see all available event states$/ do

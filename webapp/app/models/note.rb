@@ -18,10 +18,13 @@ class Note < ActiveRecord::Base
   belongs_to :event
   belongs_to :user
 
+  named_scope :admin, :conditions => {:note_type => 'administrative'}
+  named_scope :clinical, :conditions => {:note_type => 'clinical'}
+
   validates_presence_of :note
 
   before_create do |note|
-    user = User.current_user || User.find_by_uid("utah") # For 'feature' setup only
+    user = User.current_user
     note.user = user
   end
 end

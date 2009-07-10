@@ -5,7 +5,14 @@
 - if @event.notes.empty?
   %h3 No notes have been recorded for this event
 - else
-  - for note in @event.notes
+  - if print_options.include?('All') || (print_options.include?('Clinical Notes') && print_options.include?('Administrative Notes'))
+    - notes = @event.notes
+  - elsif print_options.include?('Clinical Notes')
+    - notes = @event.notes.clinical
+  - elsif print_options.include?('Administrative Notes')
+    - notes = @event.notes.admin
+
+  - for note in notes
     .three-valued-row
       .left
         %span.print-label User:
