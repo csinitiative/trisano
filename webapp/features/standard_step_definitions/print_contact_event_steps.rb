@@ -31,7 +31,7 @@ Given /^I have an existing contact event$/ do
 end
 
 When /^I print the contact event$/ do
-  visit contact_event_path(@event, :format => :print)
+  visit contact_event_path(@event, :format => :print, :print_options => ['All'])
 end
 
 When /^I visit the cmrs index page$/ do

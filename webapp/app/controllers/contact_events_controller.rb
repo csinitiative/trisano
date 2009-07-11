@@ -27,7 +27,7 @@ class ContactEventsController < EventsController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @event }
-      format.print
+      format.print { @print_options = params[:print_options] || [] }
     end
   end
 
