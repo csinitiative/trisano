@@ -149,4 +149,27 @@ Feature: Printer friendly morbidity events
     And I should not see "Bud" under contact reports
     And I should not see "Abbot" under contact reports
 
-      
+  Scenario: Printing contact events directly      
+    Given I am logged in as a super user
+    And a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
+    And there is a contact named Jones
+    And I am logged in as a super user
+
+    When I visit contacts show page
+    And I choose to print "All" data
+    And I press "Print"
+
+    Then I should see the following sections:
+      |section        |
+      |Demographic    |
+      |Clinical       |
+      |Laboratory     |
+      |Epidemiological|
+      |Investigation  |
+      |Notes          |
+      |Administrative |
+
+    And I should not see the following sections
+      |Contacts       |
+      |Encounters     |
+      |Reporting      |

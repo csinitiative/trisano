@@ -53,10 +53,12 @@ end
 
 Then /^I should see "([^\"]*)" under contact reports$/ do |value|
   response.should have_xpath("//div[@id='contact-reports']//span[contains(text(),'#{value}')]")
+  response.should have_xpath("//div[@id='contacts']//span[contains(text(),'#{value}')]")
 end
 
 Then /^I should not see "([^\"]*)" under contact reports$/ do |value|
   response.should_not have_xpath("//div[@id='contact-reports']//span[contains(text(),'#{value}')]")
+  response.should_not have_xpath("//div[@id='contacts']//span[contains(text(),'#{value}')]")
 end
 
 When /^I choose to print "([^\"]*)" data$/ do |section|

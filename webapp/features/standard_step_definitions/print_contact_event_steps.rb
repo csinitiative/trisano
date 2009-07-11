@@ -75,8 +75,3 @@ Then /^I should see answer data$/ do
   response.should be_success
   response.should contain(@event.investigation_form_references.first.form.name)
 end
-
-Then /^I should see a link to print the event$/ do
-  response.should have_xpath("//a[@href='#{contact_event_path(@event, :format => :print)}']")
-end
-

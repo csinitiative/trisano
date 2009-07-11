@@ -8,7 +8,9 @@ Feature: Printer friendly contact events
     Given I am logged in as a super user
     And I have an existing contact event
     
-    When I print the contact event
+    When I navigate to the contact event show page
+    And I choose to print "All" data
+    And I press "Print"
     
     Then I should see the demographics data
     And I should see clinical data
@@ -16,11 +18,3 @@ Feature: Printer friendly contact events
     And I should see epi data
     And I should see admin data
     And I should see answer data
-
-  Scenario: Provide a way to preint contact from show mode
-    Given I am logged in as a super user
-    And I have an existing contact event
-
-    When I visit the contacts show page
-    
-    Then I should see a link to print the event

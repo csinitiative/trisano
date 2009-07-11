@@ -52,3 +52,7 @@ end
 When /^I navigate to the add attachments page$/ do
   visit new_event_attachment_path(@event || @m)
 end
+
+When(/^I navigate to the contact event show page$/) do
+  visit contact_event_path(@event)
+end
