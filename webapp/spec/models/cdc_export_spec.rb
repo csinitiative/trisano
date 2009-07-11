@@ -17,6 +17,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
+  before :all do 
+    # this is dumb, but I *think* it keeps a stray mock from blowing this test
+    User.current_user = nil
+  end
 
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)
@@ -619,7 +623,6 @@ describe CdcExport do
       end
 
       describe 'and one contact event' do
-        fixtures :users
         before :each do
           @contact_event = Factory.build :contact_event
           @contact_event.build_disease_event(:disease_id => @morbidity_event.disease_event.disease_id)
