@@ -32,3 +32,18 @@
       - else
         %div{:id => "note_#{note.id}"}= note_body
     %hr
+
+  -# For lack of a better place
+  - if print_options.include?('Clinical Notes')
+    %span.subsection-header
+      Event Attachments
+    - unless @event.attachments.empty?
+      - for attachment in @event.attachments
+        %span.print-label File Name:
+        %span.print-value=attachment.filename
+        %span.print-label Category:
+        %span.print-value=attachment.category.humanize
+        %span.print-label Location:
+        %span.print-value=event_attachment_url(@event, attachment)
+    - else
+      %span No attachments
