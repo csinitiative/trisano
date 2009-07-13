@@ -30,17 +30,16 @@ When /^I navigate to the add attachments page$/ do
   @browser.wait_for_page_to_load
 end
 
-When(/^I confirm that I'm leaving the page\.$/) do
-  @browser.get_confirmation()
+When(/^I click and confirm the attachment "(.+)" link$/) do |text|
+  @browser.click("//tr[@id='attachment_#{@attachment.id}']//a[contains(text(), 'Delete')]")
+  #@browser.get_confirmation()
 end
 
-When(/^I click and confirm the attachment "(.+)" link$/) do |text|
-  @browser.click("//div[@id='attachments']//a[contains(text(), '#{text}')]")
-  @browser.get_confirmation()
+When(/^I wait a few seconds$/) do
+  sleep(3)
 end
 
 Then /^I should not see "([^\"]*)" listed as an attachment$/ do |file_name|
-  @browser.get_html_source.should =~ /Attachment was successfully deleted./
   @browser.get_html_source.should_not =~ /#{file_name}/
 end
 

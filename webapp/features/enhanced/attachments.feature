@@ -11,8 +11,7 @@ Features: Attaching documents to an Event.
 
     When I navigate to the add attachments page
     And I wait for the page to load
-    And I click and confirm the "Delete" link
-    And I wait for the page to load
+    And I click and confirm the attachment "Delete" link
     
     Then I should not see "test-attachment" listed as an attachment
 
@@ -23,7 +22,7 @@ Features: Attaching documents to an Event.
 
     When I navigate to the event show page
     And I click and confirm the attachment "Delete" link
-    And I wait for the page to load
+    And I wait a few seconds
         
     Then I should not see "test-attachment" listed as an attachment
 

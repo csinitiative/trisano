@@ -1,0 +1,1 @@
+page["attachment_#{params[:id]}"].remove

@@ -58,16 +58,34 @@ class EventAttachmentsController < ApplicationController
   end
 
   def destroy
-    @attachment = Attachment.find(params[:id])
-    
-    respond_to do |format|
-      begin
-        @attachment.destroy
-        flash[:notice] = 'Attachment was successfully deleted.'
-        format.html {redirect_to request.env["HTTP_REFERER"]}
-      rescue
-        flash[:error] = 'Failed to delete attachment.'
-        format.html {redirect_to request.env["HTTP_REFERER"]}
+    begin
+      @attachment = Attachment.find(params[:id])
+      @attachment.destroy
+      respond_to do |format|
+        format.html do
+          flash[:notice] = 'Attachment was successfully deleted.'
+          redirect_to request.env["HTTP_REFERER"]
+        end
+        format.js
+      end
+    rescue
+      logger.error $!.message
+      respond_to do |format|
+        format.html do 
+          flash[:error] = 'Failed to delete attachment.'
+          redirect_to request.env["HTTP_REFERER"]
+        end
+        format.js do
+          render(:update) do |page| 
+            page << <<-JAVASCRIPT
+              var spinner = $('attachment_#{params[:id]}_spinner');
+              if (spinner != null) {
+                spinner.hide();
+              }
+              alert('Failed to delete attachment');
+            JAVASCRIPT
+          end
+        end
       end
     end
   end

@@ -16,4 +16,18 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module AttachmentsHelper
+
+  def delete_attachment(attachment)
+    link_to_remote("Delete", 
+                   :url => event_attachment_path(attachment.event, attachment), :method => :delete,  
+                   :confirm => 'Really delete attachment?',
+                   :before => "$('attachment_#{attachment.id}_spinner').show();")
+  end
+
+  def attachment_spinner(attachment)
+    image_tag('redbox_spinner.gif', 
+              :alt => 'Working...', 
+              :id => "attachment_#{attachment.id}_spinner", 
+              :style => 'display: none;')
+  end
 end

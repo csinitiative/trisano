@@ -30,7 +30,7 @@
           %th &nbsp;
       %tbody
         - for attachment in attachments
-          %tr.attachment
+          %tr.attachment{:id => "attachment_#{attachment.id}"}
             %td
               %span.filename
                 =h attachment.filename
@@ -49,8 +49,8 @@
             %td
               = link_to("Open", event_attachment_path(attachment.event, attachment))
               |
-              = link_to("Delete", event_attachment_path(attachment.event, attachment), :method => :delete, :confirm => 'Really delete attachment?')
-              
+              = delete_attachment(attachment)
+              = attachment_spinner(attachment)
 
   - else
     %span No attachments
