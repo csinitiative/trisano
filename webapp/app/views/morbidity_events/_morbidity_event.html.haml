@@ -33,6 +33,7 @@
         = morbidity_event.event_onset_date
     .tools
       = basic_morbidity_event_controls(morbidity_event, from_index) 
+      = render :partial => 'morbidity_events/print_options', :locals => { :event => morbidity_event }
       = extra_tools if !from_index
   %td
     %b= from_index ? morbidity_event['disease_name'] : morbidity_event.try(:disease).try(:disease).try(:disease_name)
@@ -66,4 +67,3 @@
 
     .tools
       = state_controls(morbidity_event)
-

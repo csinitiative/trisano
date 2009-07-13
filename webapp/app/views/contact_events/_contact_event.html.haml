@@ -40,6 +40,7 @@
           = original_patient_controls(@event)  
     .tools
       = basic_contact_event_controls(contact_event, from_index) 
+      = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }
   %td
     %b= from_index ? contact_event['disease_name'] : contact_event.try(:disease).try(:disease).try(:disease_name)
   %td
