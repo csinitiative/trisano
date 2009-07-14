@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH << './lib'
-require 'TriSanoWebApi.rb'
+require 'trisano-web-api.rb'
 
 trisano = TriSanoWebApi.new
 
