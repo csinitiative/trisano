@@ -172,7 +172,7 @@ class MorbidityEventsController < EventsController
             @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
           end
         rescue
-          logger.error $!
+          logger.error $!.message
           flash[:error] = 'Unable to process search. Is birth date a valid date?'
         end
       end
