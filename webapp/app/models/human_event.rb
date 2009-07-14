@@ -96,12 +96,28 @@ class HumanEvent < Event
       find_by_name_bdate(name)
     end
 
+    def search_by_name_and_birth_date_using_starts_with(last_name, first_name, bdate, options={})
+      validate_bdate(bdate)
+
+      where_clause = []
+      where_clause << "people.last_name ILIKE '#{sanitize_sql(["%s", last_name])}%%'" unless last_name.blank?
+      where_clause << "people.first_name ILIKE '#{sanitize_sql(["%s", first_name])}%%'" unless first_name.blank?
+      where_clause << bdate_where_clause(bdate, where_clause.size > 0) if bdate
+
+      order_by_clause = []
+      order_by_clause << "people.last_name" unless last_name.blank?
+      order_by_clause << "people.first_name" unless first_name.blank?
+      order_by_clause << "people.birth_date" if bdate
+      order_by_clause << "events.id DESC"
+
+      select = name_and_bdate_sql(where_clause.join(" AND "), order_by_clause.join(", "))
+      
+      find_or_paginate_by_sql(select, options)
+    end
+
     def find_by_name_bdate(name, bdate=nil, options={})
       # Throw an exception early if birth date not parseable
-      if bdate.is_a? String
-        parsed = ParseDate.parsedate(bdate)
-        raise 'Invalid birthdate' unless parsed[0] and parsed[1] and parsed[2]
-      end
+      validate_bdate(bdate)
 
       soundex_codes = []
       fulltext_terms = []
@@ -123,9 +139,7 @@ class HumanEvent < Event
       where_clause += "people.vector @@ to_tsquery('#{sql_terms}')" if sql_terms
       if bdate
         where_clause += " AND" if sql_terms
-        where_clause += " people.birth_date = '#{sanitize_sql(["%s", bdate])}'" if bdate
-        # If they typed in a name and birth date allow for empty birth dates too.
-        where_clause += " OR people.birth_date IS NULL" if sql_terms
+        where_clause += bdate_where_clause(bdate, sql_terms)
       end
 
       order_by_clause = ""
@@ -133,56 +147,9 @@ class HumanEvent < Event
       order_by_clause << "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC," if sql_terms
       order_by_clause << " events.id DESC"
 
-      select = <<-SQL
-        SELECT events.id AS id,
-               events.event_onset_date AS event_onset_date,
-               events."type" AS event_type,
-               events.deleted_at AS deleted_at,
-               entities.id AS entity_id,
-               people.first_name AS first_name,
-               people.last_name AS last_name,
-               people.birth_date AS birth_date,
-               external_codes.code_description AS birth_gender,
-               diseases.disease_name AS disease_name,
-               jurisdiction_entities.id AS jurisdiction_entity_id,
-               jurisdiction_places.short_name AS jurisdiction_short_name,
-               sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
-        FROM events
-             INNER JOIN participations ON participations.event_id = events.id
-                  AND (participations."type" = 'InterestedParty' )
-             LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
-                  AND (entities.entity_type = 'PersonEntity' )
-             LEFT OUTER JOIN people ON people.entity_id = entities.id
-             LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
-                  AND (external_codes.code_name = 'gender')
-             LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
-             LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
-             INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
-                  AND (jurisdictions.type = 'Jurisdiction')
-             INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
-                  AND (jurisdiction_entities.entity_type = 'PlaceEntity')
-             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
-             LEFT JOIN (
-                SELECT
-                    events.id AS event_id,
-                    ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
-                FROM
-                    events
-                    LEFT JOIN participations p
-                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-                GROUP BY events.id
-            ) sec_juris
-                ON (sec_juris.event_id = events.id)
-        WHERE (#{where_clause})
-              AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
-        ORDER BY #{order_by_clause}
-      SQL
-      
-      if options[:page_size] && options[:page]
-        self.paginate_by_sql [select], :page => options[:page], :per_page => options[:page_size]
-      else
-        self.find_by_sql select
-      end
+      select = name_and_bdate_sql(where_clause, order_by_clause)
+
+      find_or_paginate_by_sql(select, options)
     end
 
     def get_allowed_queues(query_queues)
@@ -348,6 +315,77 @@ class HumanEvent < Event
     rescue Exception => ex
       logger.error ex
       raise ex
+    end
+
+    private
+
+    def validate_bdate(bdate)
+      if bdate.is_a? String
+        parsed = ParseDate.parsedate(bdate)
+        raise 'Invalid birthdate' unless parsed[0] and parsed[1] and parsed[2]
+      end
+    end
+
+    def bdate_where_clause(bdate, allow_null_bdates=false)
+      where_clause = "("
+      where_clause += " people.birth_date = '#{sanitize_sql(["%s", bdate])}'"
+      where_clause += " OR people.birth_date IS NULL" if allow_null_bdates
+      where_clause += ")"
+    end
+
+    def name_and_bdate_sql(where_clause, order_by_clause)
+      select = <<-SQL
+        SELECT events.id AS id,
+               events.event_onset_date AS event_onset_date,
+               events."type" AS event_type,
+               events.deleted_at AS deleted_at,
+               entities.id AS entity_id,
+               people.first_name AS first_name,
+               people.last_name AS last_name,
+               people.birth_date AS birth_date,
+               external_codes.code_description AS birth_gender,
+               diseases.disease_name AS disease_name,
+               jurisdiction_entities.id AS jurisdiction_entity_id,
+               jurisdiction_places.short_name AS jurisdiction_short_name,
+               sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
+        FROM events
+             INNER JOIN participations ON participations.event_id = events.id
+                  AND (participations."type" = 'InterestedParty' )
+             LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
+                  AND (entities.entity_type = 'PersonEntity' )
+             LEFT OUTER JOIN people ON people.entity_id = entities.id
+             LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
+                  AND (external_codes.code_name = 'gender')
+             LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+             LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+             INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
+                  AND (jurisdictions.type = 'Jurisdiction')
+             INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
+                  AND (jurisdiction_entities.entity_type = 'PlaceEntity')
+             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
+             LEFT JOIN (
+                SELECT
+                    events.id AS event_id,
+                    ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
+                FROM
+                    events
+                    LEFT JOIN participations p
+                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+                GROUP BY events.id
+            ) sec_juris
+                ON (sec_juris.event_id = events.id)
+        WHERE (#{where_clause})
+              AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
+        ORDER BY #{order_by_clause}
+      SQL
+    end
+
+    def find_or_paginate_by_sql(select, options={})
+      if options[:page_size] && options[:page]
+        self.paginate_by_sql [select], :page => options[:page], :per_page => options[:page_size]
+      else
+        self.find_by_sql select
+      end
     end
 
   end

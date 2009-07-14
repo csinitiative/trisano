@@ -76,6 +76,28 @@ When /^I search for birth date = "([^\"]*)"$/ do |birth_date|
   click_button "Search"
 end
 
+When /^I search for last_name starting with "([^\"]*)"$/ do |last_name|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name 
+  check "use_starts_with_search"
+  click_button "Search"
+end
+
+When /^I search for first_name starting with "([^\"]*)"$/ do |first_name|
+  visit event_search_cmrs_path
+  fill_in "first_name", :with => first_name
+  check "use_starts_with_search"
+  click_button "Search"
+end
+
+When /^I search for last_name starting with "([^\"]*)" and first_name starting with "([^\"]*)"$/ do |last_name, first_name|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name
+  fill_in "first_name", :with => first_name
+  check "use_starts_with_search"
+  click_button "Search"
+end
+
 Then /^I should see a search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
   field_labeled("Last name").value.should be_nil
@@ -130,7 +152,7 @@ Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
   field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end
 
-Then /^I should see the follwing results:$/ do |results|
+Then /^I should see the following results:$/ do |results|
   results.rows.each_with_index do |result, i|
     response.should have_selector("table > tr:nth-child(#{i+2}) > td:nth-child(1)") { |td|
       td.inner_text.should =~ /#{result[0]}, #{result[1]}/

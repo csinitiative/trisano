@@ -37,34 +37,65 @@ Feature: Searching for existing people or events before adding a CMR
     And I am logged in as a super user
 
     When I search for last_name = "Jones"
-    Then I should see the follwing results:
+    Then I should see the following results:
       |last_name|first_name|
       |Jones    |Steve     |
       |Jones    |David     |
       |Jones    |Mick      |
 
     When I search for last_name "Jones" and first_name = "David"
-    Then I should see the follwing results:
+    Then I should see the following results:
       |last_name|first_name|
       |Jones    |David     |
       |Jones    |Steve     |
       |Jones    |Mick      |
 
     When I search for last name = "Jones" and birth date = "1955-06-26"
-    Then I should see the follwing results:
+    Then I should see the following results:
       |last_name|first_name|
       |Jones    |Mick      |
       |Jones    |Steve     |
 
     When I search for birth date = "1947-01-08"
-    Then I should see the follwing results:
+    Then I should see the following results:
       |last_name|first_name|
       |Jones    |David     |
-    
+
   Scenario: Handles malformed dates properly
     Given I am logged in as a super user
     When I search for birth date = "1947-01-"
     Then I should see "Unable to process search. Is birth date a valid date"
+
+  Scenario: Searching for names using starts with
+    Given the following morbidity events:
+      |last_name|first_name|birth_date|
+      |Jones    |Mick      |1955-06-26|
+      |Jones    |David     |1947-01-08|
+      |Joans    |Steve     |          |
+    And I am logged in as a super user
+
+    When I search for last_name starting with "Jo"
+    Then I should see the following results:
+      |last_name|first_name|
+      |Joans    |Steve     |
+      |Jones    |David     |
+      |Jones    |Mick      |
+
+    When I search for last_name starting with "Jon"
+    Then I should see the following results:
+      |last_name|first_name|
+      |Jones    |David     |
+      |Jones    |Mick      |
+
+    When I search for first_name starting with "Dav"
+    Then I should see the following results:
+      |last_name|first_name|
+      |Jones    |David     |
+                  
+    When I search for last_name starting with "Jo" and first_name starting with "M"
+    Then I should see the following results:
+      |last_name|first_name|
+      |Jones    |Mick      |
  
   Scenario: Disease is hidden from people without the right privileges
     Given a morbidity event for last name Jones with disease Mumps in jurisdiction Davis County

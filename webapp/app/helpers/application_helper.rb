@@ -232,4 +232,9 @@ module ApplicationHelper
     select_tag field_name.to_s, options_for_select(options, :selected => selected), :multiple => multi
   end
 
+  def labeled_check_box_tag(name, label_text=nil)
+    label_text ||= name
+    "<label for=\"#{name.to_s}\">#{check_box_tag(name, 1, params[name])}#{label_text.to_s.humanize}</label>"
+  end
+
 end
