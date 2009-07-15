@@ -44,6 +44,7 @@ namespace :trisano do
       @dump_file = config['dump_file_name'] 
       @support_url = config['support_url']
       @source_url = config['source_url']
+      @feedback_url = config['feedback_url']
 
       ENV["PGPASSWORD"] = @priv_password 
     end
@@ -233,13 +234,22 @@ namespace :trisano do
       puts "Success restoring TriSano db: #{@database} from #{dirname}/#{@dump_file}"     
     end
 
-    desc "Overwrites the TriSano Support URL with what is in the config.yml support_url attribute"
-    task :overwrite_footer_urls do
+    #desc "Old name for overwrite_urls (Overwrites the hardcoded TriSano URLs)"
+    task :overwrite_footer_urls => :overwrite_urls
+
+    desc "Overwrites hardcoded TriSano URLs with what is in the config.yml *_url attributes"
+    task :overwrite_urls do
       puts "starting overwrite"
       initialize_config
       if ! @support_url.nil?
         puts "overwriting TriSano Support URL with #{@support_url}"
         change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://www.trisano.org/collaborate/", @support_url) 
+      end
+      if ! @feedback_url.nil?
+        puts "overwriting TriSano Feedback URL with #{@feedback_url}"
+        change_text_in_file('../webapp/app/controllers/application_controller.rb', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
+        change_text_in_file('../webapp/public/500.html', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
+        change_text_in_file('../webapp/public/503.html', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
       end
       if ! @source_url.nil?
         puts "overwriting TriSano Source URL with #{@source_url}"
@@ -248,7 +258,7 @@ namespace :trisano do
     end
     
     desc "Package the application with the settings from config.yml"
-    task :package_app => [:overwrite_footer_urls] do
+    task :package_app => [:overwrite_urls] do
       initialize_config
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"
