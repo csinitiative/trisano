@@ -122,19 +122,76 @@ class Person < ActiveRecord::Base
     end  
   end
 
+  class << self
+    def find_all_for_filtered_view(options = {})
+      where_clause = "1=1 "
+
+      if options[:last_name]
+        where_clause << " AND last_name = '" + options[:last_name].gsub("'", "''") + "'"
+      end
+
+      if options[:first_name]
+        where_clause << " AND first_name = '" + options[:first_name].gsub("'", "''") + "'"
+      end
+
+      if options[:middle_name]
+        where_clause << " AND middle_name = '" + options[:middle_name].gsub("'", "''") + "'"
+      end
+
+      if options[:birth_date]
+        where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
+      end
+
+      if options[:do_not_show_deleted]
+        where_clause << " AND people.deleted_at IS NULL"
+      end
+
+      order_by_clause = case options[:order_by]
+      when 'last_name'
+        "last_name, first_name, middle_name, birth_date"
+      when 'birth_date'
+        "birth_date, last_name, first_name, middle_name"
+      else
+        "people.updated_at DESC"
+      end
+
+      select = <<-SQL
+        SELECT * FROM people
+      SQL
+
+      select << "WHERE (#{where_clause})\n" unless where_clause.blank?
+      select << "ORDER BY #{order_by_clause}"
+
+      row_count = Person.count_by_sql(select)
+
+      find_options = {
+        :page          => options[:page],
+        :total_entries => row_count
+      }
+      find_options[:per_page] = options[:per_page] if options[:per_page].to_i > 0
+
+      Person.paginate_by_sql(select, find_options)
+
+    rescue Exception => ex
+      logger.error ex
+      raise ex
+    end
+
+  end
+
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
       errors.add(:date_of_death, "The date of death precedes birth date") if date_of_death.to_date < birth_date.to_date
     end
   end
-  
+
   # Soundex codes are generated at save time.
   def generate_soundex_codes
     if !first_name.blank?
       self.first_name_soundex = first_name.to_soundex
     end
-    
+
     self.last_name_soundex = last_name.to_soundex
   end
   

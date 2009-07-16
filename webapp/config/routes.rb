@@ -33,8 +33,8 @@ ActionController::Routing::Routes.draw do |map|
   map.home '', :controller => 'dashboard'
   
   map.with_options :controller => 'search' do |search|
-    search.search_cmrs   'search/cmrs',         :action => 'cmrs'
-    search.cmrs_format   'search/cmrs.:format', :action => 'cmrs'
+    search.search_cmrs   'search/cmrs',           :action => 'cmrs'
+    search.cmrs_format   'search/cmrs.:format',   :action => 'cmrs'
     search.search        'search'
   end
 
@@ -86,6 +86,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
 
   map.resources :roles
+
+  map.resources :people
   
   map.resources :cmrs, 
     :controller => :morbidity_events,
