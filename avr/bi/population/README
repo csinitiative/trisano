@@ -8,8 +8,13 @@ TO CREATE UTAH POPULATION TABLES
 * Select "County level" at the bottom
 * Click "Send"
 * Save the file someplace
-* Edit import.sh to give it the appropriate database and input file names
 * Run import.sh to import the file into a table called "population"
+
+The import.sh script uses bash, and takes four parameters: a database name, a
+schema name, the input file name, and a four-digit year. The database and
+schema names will determine where the finished file shows up. The input file
+name is the name of the CDC download, and the year is the year of the data
+request you selected in the second step of this process.
 
 Note that import.sql contains some important tables to translate county names
 to health department names, and to make intelligent guesses at the proper split

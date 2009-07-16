@@ -1,3 +1,5 @@
+SET SEARCH_PATH = :TRISANO_POP_SCHEMA;
+
 CREATE TEMPORARY TABLE jurisdiction_county_map (
     jurisdiction text,
     county text
@@ -46,11 +48,12 @@ CREATE TABLE population AS
 SELECT
     age,
     CASE
-        WHEN age = 0 THEN '< 1 year'
-        WHEN age < 5 THEN '1-4 years'
-        WHEN age = 85 THEN '85+ years'
-        ELSE (5 * floor(age / 5))::TEXT || '-' || (5 * floor(age / 5) + 4)::TEXT || ' years'
+        WHEN age::INTEGER = 0 THEN '< 1 year'
+        WHEN age::INTEGER < 5 THEN '1-4 years'
+        WHEN age::INTEGER = 85 THEN '85+ years'
+        ELSE (5 * floor(age::INTEGER / 5))::TEXT || '-' || (5 * floor(age::INTEGER / 5) + 4)::TEXT || ' years'
     END AS age_group,
+    ethnicity,
     jurisdiction,
     gender_code AS gender,
     CASE
@@ -58,6 +61,7 @@ SELECT
         WHEN race = 'Asian or Pacific Islander' THEN 'Asian'
         ELSE race
     END AS race,
+    :TRISANO_POP_YEAR AS year,
     CASE
         WHEN race = 'American Indian or Alaska Native' THEN
             floor(population * (SELECT percentage FROM percentages WHERE race = 'American Indian') / 100)
@@ -69,9 +73,10 @@ FROM
     (
         SELECT
             CASE
-                WHEN age = '< 1 year' THEN 0
-                ELSE regexp_replace(age, $$\+? years?$$, '')::INTEGER
+                WHEN age = '< 1 year' THEN 0::TEXT
+                ELSE regexp_replace(age, $$\+? years?$$, '')
             END AS age,
+            ethnicity,
             county,
             gender_code,
             race,
@@ -87,11 +92,12 @@ UNION ALL
 SELECT
     age,
     CASE
-        WHEN age = 0 THEN '< 1 year'
-        WHEN age < 5 THEN '1-4 years'
-        WHEN age = 85 THEN '85+ years'
-        ELSE (5 * floor(age / 5))::TEXT || '-' || (5 * floor(age / 5) + 4)::TEXT || ' years'
+        WHEN age::INTEGER = 0 THEN '< 1 year'
+        WHEN age::INTEGER < 5 THEN '1-4 years'
+        WHEN age::INTEGER = 85 THEN '85+ years'
+        ELSE (5 * floor(age::INTEGER / 5))::TEXT || '-' || (5 * floor(age::INTEGER / 5) + 4)::TEXT || ' years'
     END AS age_group,
+    ethnicity,
     jurisdiction,
     gender_code AS gender,
     CASE
@@ -99,6 +105,7 @@ SELECT
         WHEN race = 'Asian or Pacific Islander' THEN 'Pacific Islander'
         ELSE race
     END AS race,
+    :TRISANO_POP_YEAR AS year,
     CASE
         WHEN race = 'American Indian or Alaska Native' THEN
             population - floor(population * (SELECT percentage FROM percentages WHERE race = 'American Indian') / 100)
@@ -110,9 +117,10 @@ FROM
     (
         SELECT
             CASE
-                WHEN age = '< 1 year' THEN 0
-                ELSE regexp_replace(age, $$\+? years?$$, '')::INTEGER
+                WHEN age = '< 1 year' THEN 0::TEXT
+                ELSE regexp_replace(age, $$\+? years?$$, '')
             END AS age,
+            ethnicity,
             county,
             gender_code,
             race,
@@ -125,3 +133,6 @@ FROM
     JOIN jurisdiction_county_map
         USING (county)
 ;
+
+DROP TABLE popinit;
+GRANT SELECT ON :TRISANO_POP_SCHEMA.population TO :TRISANO_POP_DWUSER;

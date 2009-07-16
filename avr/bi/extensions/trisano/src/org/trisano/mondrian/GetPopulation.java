@@ -44,6 +44,7 @@ public class GetPopulation implements UserDefinedFunction {
         ArrayList<String> vals = new ArrayList<String>();
         Object arg = arguments[0].evaluateScalar(evaluator);
         double population = 0;
+        java.sql.Connection conn = null;
 
         if (!(arg instanceof Number))
             return null;
@@ -54,16 +55,17 @@ public class GetPopulation implements UserDefinedFunction {
             String where = "", query;
             int i;
 
-            java.sql.Connection conn =
-                evaluator.getQuery().getConnection().getDataSource().getConnection();
-            st = conn.prepareStatement("SELECT dim_cols[?], mapping_func FROM population.population_dimensions WHERE dim_name = ?");
+            conn = evaluator.getQuery().getConnection().getDataSource().getConnection();
+            st = conn.prepareStatement("SELECT dim_cols[?], mapping_func[?] FROM population.population_dimensions WHERE dim_name = ?");
             for (Dimension d : evaluator.getCube().getDimensions()) {
                 String colname, colmapper;
                 Integer depth;
 
                 depth = evaluator.getContext(d).getLevel().getDepth();
                 if (depth != 0) {
-                    st.setInt(1, depth); st.setString(2, d.getName());
+                    st.setInt(1, depth);
+                    st.setInt(2, depth);
+                    st.setString(3, d.getName());
                     rs = st.executeQuery();
                     if (rs.next()) {
                         // rs.next() is true only if it returned something, or in
@@ -97,10 +99,16 @@ public class GetPopulation implements UserDefinedFunction {
             rs = st.executeQuery();
             if (rs.next())
                 population = rs.getDouble(1);
-            conn.close();
         }
         catch (SQLException s) {
             logger.warn("JDBC Error: " + s);
+        }
+        try {
+            if (conn != null)
+                conn.close();
+        }
+        catch (SQLException s) {
+            logger.warn("JDBC Error when disconnecting: " + s);
         }
 
         if (population == 0)

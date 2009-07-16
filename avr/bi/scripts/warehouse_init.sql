@@ -405,18 +405,25 @@ CREATE AGGREGATE trisano.text_join_agg (text, text) (
     initcond =''
 );
 
-CREATE OR REPLACE FUNCTION trisano.get_age_in_years(integer, text)                                    
-    RETURNS numeric                                                                                      
-    LANGUAGE sql                                                                                         
-    IMMUTABLE STRICT                                                                                     
-AS $function$                                                                                         
-    SELECT CASE                                                                                       
-        WHEN $2 IS NULL OR $1 IS NULL OR $2 = 'unknown' THEN NULL                                     
-        WHEN $2 = 'years' THEN $1                                                                     
-        WHEN $2 = 'months' THEN $1::NUMERIC / 12.0                                                    
-        WHEN $2 = 'weeks' THEN $1::NUMERIC / 52.0                                                     
-        WHEN $2 = 'days' THEN $1::NUMERIC / 365.0                                                     
-    END                                                                                               
+CREATE OR REPLACE FUNCTION trisano.get_age_in_years(integer, text)
+    RETURNS numeric
+    LANGUAGE sql
+    IMMUTABLE STRICT
+AS $function$
+    SELECT
+        CASE
+            WHEN floor(age) = age THEN floor(age)
+            ELSE age
+        END
+    FROM
+        (SELECT
+            CASE
+                WHEN $2 IS NULL OR $1 IS NULL OR $2 = 'unknown' THEN NULL
+                WHEN $2 = 'years'  THEN $1
+                WHEN $2 = 'months' THEN ROUND($1::NUMERIC / 12.0 , 1)
+                WHEN $2 = 'weeks'  THEN ROUND($1::NUMERIC / 52.0 , 2)
+                WHEN $2 = 'days'   THEN ROUND($1::NUMERIC / 365.0, 2)
+            END AS age) f
 $function$ ;
 
 CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void

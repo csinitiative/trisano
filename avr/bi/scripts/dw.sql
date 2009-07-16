@@ -163,11 +163,11 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.age_type_id)
+        ON (birth_gender_ec.id = people.birth_gender_id)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.age_type_id)
+        ON (ethnicity_ec.id = people.ethnicity_id)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.age_type_id)
+        ON (primary_language_ec.id = people.primary_language_id)
     INNER JOIN (
         SELECT
             part.primary_entity_id
@@ -211,11 +211,11 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.age_type_id)
+        ON (birth_gender_ec.id = people.birth_gender_id)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.age_type_id)
+        ON (ethnicity_ec.id = people.ethnicity_id)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.age_type_id)
+        ON (primary_language_ec.id = people.primary_language_id)
     INNER JOIN (
         SELECT
             part.primary_entity_id
@@ -259,11 +259,11 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.age_type_id)
+        ON (birth_gender_ec.id = people.birth_gender_id)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.age_type_id)
+        ON (ethnicity_ec.id = people.ethnicity_id)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.age_type_id)
+        ON (primary_language_ec.id = people.primary_language_id)
     INNER JOIN (
         SELECT
             part.primary_entity_id
