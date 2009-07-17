@@ -173,7 +173,7 @@ class MorbidityEventsController < EventsController
           end
         rescue
           logger.error $!.message
-          flash[:error] = 'Unable to process search. Is birth date a valid date?'
+          flash.now[:error] = 'Unable to process search. Is birth date a valid date?'
         end
       end
     end

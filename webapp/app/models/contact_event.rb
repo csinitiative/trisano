@@ -27,9 +27,8 @@ class ContactEvent < HumanEvent
 
   workflow do
     state :not_routed, :meta => {:description => 'Not Participating in Workflow', :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
-      event :promote, :transitions_to => :new
+      promote_to_cmr
       assign_to_lhd
-      accept_by_lhd :accept
     end
     state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
       assign_to_lhd
@@ -157,9 +156,9 @@ class ContactEvent < HumanEvent
     # In case the contact is in a state that doesn't exist for a morb
     if self.not_routed?
       if self.primary_jurisdiction.name == 'Unassigned'
-        self.promote
+        self.promote_as_new
       else
-        self.accept("Accepted by system for LHD due to contact promotion")
+        self.promote_as_accepted
       end
     end
 

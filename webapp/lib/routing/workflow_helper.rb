@@ -46,6 +46,21 @@ module Routing
       event :reset_to_new, :transitions_to => :new
     end
 
+    def promote_to_cmr
+      event :promote_as_new, :transitions_to => :new, :meta => {:priv_required => :create_event} do
+        unless self.jurisdiction.allows_current_user_to? :create_event
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Promoted from contact."
+      end
+       event :promote_as_accepted, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :create_event} do
+        unless self.jurisdiction.allows_current_user_to? :create_event
+          halt! "You do not have sufficient privileges to make this change"
+        end
+        add_note "Promoted from contact."
+      end
+   end
+ 
     def accept_by_lhd(action=:accept)
       event action, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
         unless self.jurisdiction.allows_current_user_to? :accept_event_for_lhd
