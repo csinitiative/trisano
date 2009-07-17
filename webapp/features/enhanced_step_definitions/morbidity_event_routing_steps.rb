@@ -33,14 +33,8 @@ Given /^that event has been sent to the state$/ do
   @event.save!
 end
 
-Given /^the event has been approved by the state$/ do
-  @event.workflow_state = 'closed'
-  @event.save!
-end
-
-When /^I open routing dialog$/ do
-  @browser.click 'link=Route to Local Health Depts.'
-  sleep(2)
+When /^I click the "Reopen" radio$/ do
+  @browser.click("//input[@id='reopen_reopen']")
 end
 
 When /^the event status is "([^\"]*)"$/ do |state_description|
