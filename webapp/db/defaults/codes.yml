@@ -883,6 +883,11 @@
   code_description: "Discarded"
   sort_order: 30
 
+- code_name: "case"
+  the_code: "OS"
+  code_description: "Out of state"
+  sort_order: 35
+
   ### IMPORTED FROM LOCATIONS ###
   
 - code_name: "imported"
