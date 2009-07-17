@@ -90,6 +90,10 @@ class ExternalCode < ActiveRecord::Base
     find :first, :conditions => "code_name = 'case' AND the_code = 'UNK'"
   end
 
+  def self.out_of_state
+    find :first, :conditions => "code_name = 'case' AND the_code = 'OS'"
+  end
+
   # Debt: This query bypasses AR because of an issue in acts_as_audible where
   # using an array in a condition was failing
   def self.find_codes_for_autocomplete(condition, limit=10)

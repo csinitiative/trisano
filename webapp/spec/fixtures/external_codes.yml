@@ -42,6 +42,12 @@ case_status_discarded:
   the_code: "D"
   code_description: "Discarded"
 
+case_status_oos:
+  id: 1808
+  code_name: "case"
+  the_code: "OS"
+  code_description: "Out of state"
+
 #################################
 
 gender_male:
@@ -183,6 +189,12 @@ county_summit:
   the_code:  "SU"
   code_description: "Summit"
   jurisdiction_id: 103
+
+county_oos:
+  id: 1103
+  code_name: "county"
+  the_code:  "OS"
+  code_description: "Out of state"
 
 district_alpine:
   id: 1201

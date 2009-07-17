@@ -97,9 +97,9 @@ describe ExternalCode do
 
     it 'should have a related jurisdiction' do
       codes = ExternalCode.find_all_by_code_name('county')
-      codes.size.should == 2
+      codes.size.should == 3
       codes.each do |county|
-        county.jurisdiction.should_not be_nil
+        county.jurisdiction.should_not be_nil if county.the_code != "OS"
       end
     end
   end
@@ -109,7 +109,7 @@ describe ExternalCode do
     
     it 'should return only cases w/ :all' do
       codes = ExternalCode.find_cases(:all)
-      codes.size.should == 7
+      codes.size.should == 8
       codes.each {|code| code.code_name.should == 'case'}
     end
   end

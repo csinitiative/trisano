@@ -234,3 +234,33 @@ describe HumanEvent, 'adding staged messages' do
     end
   end
 end
+
+describe HumanEvent, 'validating out of state patients' do
+
+  it 'should be valid to have an out of state patient with no case status' do
+    e = Factory.build(:morbidity_event)
+    e.address.county = external_codes(:county_oos)
+    e.should be_valid
+  end
+
+  it 'should be valid to have an out of state patient with a case status of out of state' do
+    e = Factory.build(:morbidity_event)
+    e.address.county = external_codes(:county_oos)
+    e.lhd_case_status = external_codes(:case_status_oos)
+    e.should be_valid
+    e.lhd_case_status = nil
+    e.state_case_status = external_codes(:case_status_oos)
+    e.should be_valid
+  end
+
+  it 'should not be valid to have an out of state patient with a case status of out of state' do
+    e = Factory.build(:morbidity_event)
+    e.address.county = external_codes(:county_oos)
+    e.lhd_case_status = external_codes(:case_status_confirmed)
+    e.should_not be_valid
+    e.lhd_case_status = nil
+    e.state_case_status = external_codes(:case_status_confirmed)
+    e.should_not be_valid
+  end
+
+end
