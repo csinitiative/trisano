@@ -72,5 +72,9 @@
           %span{ :class => "vert" }  
             %label Sort Order
             = code_form.text_field :sort_order
-
+          - if @external_code.code_name == 'county'
+            %span{ :class => "vert" }
+              %label Jurisdiction
+              = code_form.select :jurisdiction_id, Place.jurisdictions.map{ |j| [j.name, j.id] }, {:prompt => 'Choose One'} 
+          %br
           = code_form.submit "Update"

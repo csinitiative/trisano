@@ -44,6 +44,10 @@
           %br
           %b Sort Order:
           = @external_code.sort_order
+          - if @external_code.code_name == 'county' and not @external_code.jurisdiction_id.nil?
+            %br
+            %b Jurisdiction:
+            = @external_code.jurisdiction.name
       %td
         .tools{:style => "position: absolute; right: 15px;"}
           = link_to "Edit", edit_code_path(@external_code)

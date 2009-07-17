@@ -47,4 +47,9 @@
             = f.label(:sort_order, "Sort Order")
             = f.text_field :sort_order
 
+          %span{ :class => "vert" }
+          %label Jurisdiction (county only)
+          = f.select :jurisdiction_id, Place.jurisdictions.map{ |j| [j.name, j.id] }, {:prompt => 'Choose for County Codes Only'} 
+          %br
+
           = f.submit "Create"
