@@ -37,4 +37,8 @@ describe ParticipationsTreatment do
     @pt.should_not be_valid
   end
 
+  it "should validate the stop treatment date" do
+    @pt.stop_treatment_date = 'not a date'
+    @pt.should_not be_valid
+  end
 end

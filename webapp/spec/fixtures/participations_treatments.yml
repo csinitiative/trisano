@@ -2,6 +2,7 @@
 marks_current_treatment:
   treatment_given_yn_id: !str 1402
   treatment_date: 
+  stop_treatment_date:
   id: !str 1
   participation_id: !str 2
   treatment_id: 

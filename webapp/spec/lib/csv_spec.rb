@@ -136,7 +136,8 @@ def treatment_header
   %w(treatment_record_id
     treatment_given
     treatment
-    treatment_date).join(",")
+    treatment_date
+    stop_treatment_date).join(",")
 end
 
 def event_header(event_type)
@@ -381,7 +382,8 @@ def treatment_output
   out << "#{@treatment.id},"
   out << "#{@treatment.treatment_given_yn.code_description},"
   out << "#{@treatment.treatment},"
-  out << "#{@treatment.treatment_date}"
+  out << "#{@treatment.treatment_date},"
+  out << "#{@treatment.stop_treatment_date}"
 end
 
 def csv_mock_event(event_type)
@@ -407,6 +409,7 @@ def csv_mock_event(event_type)
   @treatment.stub!(:treatment_given_yn).and_return(simple_reference)
   @treatment.stub!(:treatment).and_return("Antibiotics")
   @treatment.stub!(:treatment_date).and_return("2008-02-01")
+  @treatment.stub!(:stop_treatment_date).and_return("2009-02-01")
 
   @contact = mock_model(ParticipationsContact)
   @contact.stub!(:contact_type).and_return(simple_reference)

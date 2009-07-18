@@ -20,13 +20,15 @@
       = f.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
       
     - core_element :treatment, f, :horiz do
-      -# Hack.  That NEW_RECORD you see below is a magic string.  It matches the string in the events_helper#add_record_link.
-      -# Debt: Change this.  Expedient for now.
       = trisano_auto_complete(f, :treatment, "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
 
     - core_element :treatment_date, f, :horiz do
       = f.label(:treatment_date, 'Date of Treatment')
       = f.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
+
+    - core_element :stop_treatment_date, f, :horiz do
+      = f.label(:stop_treatment_date, 'Date Treatment Stopped')
+      = f.core_calendar_date_select(:stop_treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
 
     %span.horiz
       - unless f.object.new_record?

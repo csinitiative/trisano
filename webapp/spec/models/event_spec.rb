@@ -1658,11 +1658,13 @@ describe Event, 'cloning an event' do
         {
           :treatment_given_yn_id => external_codes(:yesno_no).id,
           :treatment_date => Date.today,
+          :stop_treatment_date => Date.today + 1,
           :treatment => "Leeches"
         },
         {
           :treatment_given_yn_id => external_codes(:yesno_yes).id,
-          :treatment_date => Date.today - 1,
+          :treatment_date => Date.today - 2,
+          :stop_treatment_date => Date.today - 1,
           :treatment => "Maggots"
         }
       ]
@@ -1674,9 +1676,11 @@ describe Event, 'cloning an event' do
         if t.treatment == "Leeches"
           t.treatment_given_yn_id.should == external_codes(:yesno_no).id
           t.treatment_date.should == Date.today
+          t.stop_treatment_date.should == Date.today + 1
         elsif t.treatment == "Maggots"
           t.treatment_given_yn_id.should == external_codes(:yesno_yes).id
-          t.treatment_date.should == Date.today - 1
+          t.treatment_date.should == Date.today - 2
+          t.stop_treatment_date.should == Date.today - 1
         else
           # Forcing a stupid error, we should not get here.
           "treatments ".should == "Leecehs and Maggots"

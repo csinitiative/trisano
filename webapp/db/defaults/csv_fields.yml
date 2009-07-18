@@ -415,6 +415,14 @@ csv_field_00084:
   short_name: 
   use_code: 
   event_type: 
+csv_field_00300:
+  sort_order: 40
+  export_group: treatment
+  long_name: stop_treatment_date
+  use_description: stop_treatment_date
+  short_name:
+  use_code:
+  event_type:
 csv_field_00056: 
   sort_order: 410
   export_group: event

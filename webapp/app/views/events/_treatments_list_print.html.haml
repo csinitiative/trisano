@@ -17,21 +17,22 @@
   %b{ :style => 'font-size: 11px' }="No treatments have been recorded for this #{event.class.name.underscore.humanize.downcase}"
 - else
   .three-valued-row
-    %dif.left
+    .short
+      %span.print-label Treatment Given
+    .short
       %span.print-label Treatment
-    .left
+    .short
       %span.print-label Treatment Date
     .right
-      %span.print-label Treatment Given
+      %span.print-label Stop Treatment Date
     %br
     - for treatment in event.interested_party.treatments
       .three-valued-row
-        .left
-          %span.print-value
-            = treatment.treatment
-        .left
-          %span.print-value
-            = treatment.treatment_date
+        .short
+          %span.print-value= l treatment.treatment_given_yn
+        .short
+          %span.print-value= treatment.treatment
+        .short
+          %span.print-value= treatment.treatment_date
         .right
-          %span.print-value
-            = l treatment.treatment_given_yn
+          %span.print-value= treatment.stop_treatment_date
