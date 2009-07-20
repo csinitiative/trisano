@@ -620,7 +620,7 @@ class HumanEvent < Event
     if county_code == "OS" &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) || 
          ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
-          errors.add(:county, "cannot be '#{self.address.county.code_description}' if local or state case status is other than '#{ExternalCode.out_of_state.code_description}' or blank")
+      errors.add("", "Local or state case status must be '#{ExternalCode.out_of_state.code_description}' or blank for an event with a #{:county} of '#{self.address.county.code_description}'")
     end
   end
 end
