@@ -154,8 +154,17 @@ def get_obfu_config
         {:field_loc => 3, :type => 'date', :keep_year => true}, # collection_date
         {:field_loc => 4, :type => 'date', :keep_year => true} # lab_test_date
       ]
+    },
+    {#Include this table so we can skip its rows.
+      :table_name => 'attachments', :drop_me => true, :fields => [
+        {:field_loc => 2, :type => 'num', :digits => 10} #not really used, just need to have something in here
+      ]
+    },
+    {#Include this table so we can skip its rows.
+      :table_name => 'db_files', :drop_me => true, :fields => [
+        {:field_loc => 2, :type => 'num', :digits => 10} #not really used, just need to have something in here
+      ]
     }
-
   ]
 end
 
@@ -173,26 +182,27 @@ counter = 0
 
 while (line = file_in.gets)
   tables.each do |table|
-    if active_table == table[:table_name]
+    if active_table == table
       if line.index("\\.").nil?
-        #Change the values in this line
-        #puts line
         table[:fields].each do |field|
-          line = set_value(line, field)
+          if active_table[:drop_me]
+            line = nil
+          else
+            line = set_value(line, field)
+          end
           counter = counter + 1
-        end
-        #puts line
+        end        
       else
-        puts "Updated " + counter.to_s + " rows in table: " + table[:table_name] + "."
+        puts "#{table[:drop_me] ? "Removed" : "Updated"} #{counter.to_s} rows in table: #{table[:table_name]}."
         active_table = nil
         counter = 0
       end
     end
-    if line.index("COPY " + table[:table_name] + " ") != nil
-      active_table = table[:table_name]
+    if line != nil && line.index("COPY " + table[:table_name] + " ") != nil
+      active_table = table 
     end
   end
-  file_out.puts(line)
+  file_out.puts(line) unless line == nil
 
 end
 
