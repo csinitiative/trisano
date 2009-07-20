@@ -19,7 +19,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
 describe StagedMessage do
+  fixtures :users, :places, :places_types, :entities, :codes
+
   before(:each) do
+    @user = users(:default_user)
+    User.stub!(:current_user).and_return(@user)
+
     @valid_attributes = {
       :hl7_message => hl7_messages[:arup_1]
     }
@@ -126,13 +131,9 @@ describe StagedMessage do
   end
 
   describe "instantiating an event based on message" do
-    fixtures :users
     
     describe "with a valid, complete record" do
       before :each do
-        @user = users(:default_user)
-        User.stub!(:current_user).and_return(@user)
-
         @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
         @event = @staged_message.new_event_from
       end
@@ -172,9 +173,6 @@ describe StagedMessage do
 
     describe "with a record missing address and phone" do
       before :each do
-        @user = users(:default_user)
-        User.stub!(:current_user).and_return(@user)
-
         @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
         @event = @staged_message.new_event_from
       end

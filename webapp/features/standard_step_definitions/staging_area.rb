@@ -127,3 +127,6 @@ Then /^I should not see the discarded message$/ do
   response.should_not have_selector("#message_#{@staged_message.id}")
 end
 
+Then /^I should see a note for the assigned lab$/ do
+  response.should have_xpath("//div[@id='note-list']//p[text()='ELR with test type \"#{@staged_message.observation_request.tests[0].test_type}\" assigned to event.']")
+end

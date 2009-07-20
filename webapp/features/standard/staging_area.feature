@@ -75,6 +75,7 @@ Feature: Staging Electronic Messages
 
     When I visit the assigned-to event
     Then I should see the new lab result
+    And I should see a note for the assigned lab
 
   Scenario: Assigning lab result to new event
     Given I am logged in as a super user
@@ -92,6 +93,7 @@ Feature: Staging Electronic Messages
     When I visit the assigned-to event
     Then I should see the patient information
     And I should see the new lab result
+    And I should see a note for the assigned lab
 
   Scenario: Discarding a message
     Given I am logged in as a super user

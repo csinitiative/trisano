@@ -585,6 +585,7 @@ class HumanEvent < Event
       }
       lab_attributes["lab_results_attributes"][i.to_s] = result_hash
       i += 1
+      self.add_note("ELR with test type \"#{obx.test_type}\" assigned to event.")
     end
     self.labs_attributes = [ lab_attributes ]
   end
