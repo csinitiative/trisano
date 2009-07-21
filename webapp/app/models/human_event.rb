@@ -55,17 +55,17 @@ class HumanEvent < Event
   belongs_to :participations_encounter
 
   accepts_nested_attributes_for :interested_party
-  accepts_nested_attributes_for :hospitalization_facilities, 
-    :allow_destroy => true, 
+  accepts_nested_attributes_for :hospitalization_facilities,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && attrs["hospitals_participation_attributes"].all? { |k, v| v.blank? } } 
-  accepts_nested_attributes_for :clinicians, 
-    :allow_destroy => true, 
+  accepts_nested_attributes_for :clinicians,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.has_key?("person_entity_attributes") && attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| if v == 'clinician' then true else v.blank? end } }
-  accepts_nested_attributes_for :diagnostic_facilities, 
-    :allow_destroy => true, 
+  accepts_nested_attributes_for :diagnostic_facilities,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.has_key?("place_entity_attributes") && attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? } } 
-  accepts_nested_attributes_for :labs, 
-    :allow_destroy => true, 
+  accepts_nested_attributes_for :labs,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| rewrite_attrs(attrs) }
   accepts_nested_attributes_for :participations_contact, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :participations_encounter, :reject_if => proc { |attrs| attrs.all? { |k, v| ((k == "user_id") ||  (k == "encounter_location_type")) ? true : v.blank? } }
@@ -111,7 +111,7 @@ class HumanEvent < Event
       order_by_clause << "events.id DESC"
 
       select = name_and_bdate_sql(where_clause.join(" AND "), order_by_clause.join(", "))
-      
+
       find_or_paginate_by_sql(select, options)
     end
 
@@ -178,7 +178,7 @@ class HumanEvent < Event
       else
         where_clause << " AND workflow_state IN (#{ states.map { |s| "'#{s}'" }.join(',') })"
       end
-    
+
       if options[:diseases]
         where_clause << " AND disease_id IN (#{options[:diseases].join(',')})"
       end
@@ -581,7 +581,8 @@ class HumanEvent < Event
         "lab_test_date"      => obx.observation_date,
         "reference_range"    => obx.reference_range,
         "lab_result_text"    => obx.result,
-        "specimen_source_id" => specimen_source_id
+        "specimen_source_id" => specimen_source_id,
+        "staged_message_id"  => staged_message.id
       }
       lab_attributes["lab_results_attributes"][i.to_s] = result_hash
       i += 1

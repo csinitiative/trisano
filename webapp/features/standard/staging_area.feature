@@ -18,9 +18,9 @@ Feature: Staging Electronic Messages
   Scenario: Viewing staged messages
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    
+
     When I visit the staged message show page
-    
+
     Then I should see value "Lin, Genyao" in the message header
     And  I should see value "Specimen: BLOOD" in the message header
     And  I should see value "Collected: 2009-03-19" in the message header
@@ -75,7 +75,11 @@ Feature: Staging Electronic Messages
 
     When I visit the assigned-to event
     Then I should see the new lab result
-    And I should see a note for the assigned lab
+    And  I should see a note for the assigned lab
+    And  I should see a link back to the staged message
+
+    When I navigate to the event edit page
+    Then I should see a link back to the staged message
 
   Scenario: Assigning lab result to new event
     Given I am logged in as a super user
@@ -94,6 +98,7 @@ Feature: Staging Electronic Messages
     Then I should see the patient information
     And I should see the new lab result
     And I should see a note for the assigned lab
+    And I should see a link back to the staged message
 
   Scenario: Discarding a message
     Given I am logged in as a super user

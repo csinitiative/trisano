@@ -48,7 +48,7 @@ end
 When /^there is an event with a matching name but no birth date$/ do
   @event = Factory.build(:morbidity_event)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
-  @event.save
+  @event.save!
 end
 
 Then /^I should see matching results$/ do
@@ -59,7 +59,9 @@ Then /^there is an event with a matching name and birth date$/ do
   @event = Factory.build(:morbidity_event)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.interested_party.person_entity.person.birth_date = @staged_message.patient.birth_date
-  @event.save
+  @event.build_jurisdiction
+  @event.jurisdiction.secondary_entity = Place.jurisdiction_by_name("Unassigned").entity
+  @event.save!
 end
 
 When /^I click the '(.+)' link of the found event$/ do |link|
@@ -90,13 +92,13 @@ end
 When /^I visit the assigned-to event$/ do
   click_link 'Assigned'
 end
-  
+
 Then /^I should see the new lab result$/ do
   response.should contain(@staged_message.message_header.sending_facility)
   response.should contain(@staged_message.observation_request.test_performed)
   response.should contain(@staged_message.observation_request.tests.first.result)
   response.should contain(@staged_message.observation_request.collection_date)
-  response.should contain(/#{@staged_message.observation_request.specimen_source}/i) 
+  response.should contain(/#{@staged_message.observation_request.specimen_source}/i)
   response.should contain(@staged_message.observation_request.tests.first.reference_range)
   response.should contain(@staged_message.observation_request.tests.first.observation_date)
 end
@@ -129,4 +131,12 @@ end
 
 Then /^I should see a note for the assigned lab$/ do
   response.should have_xpath("//div[@id='note-list']//p[text()='ELR with test type \"#{@staged_message.observation_request.tests[0].test_type}\" assigned to event.']")
+end
+
+Then /^I should see a link back to the staged message$/ do
+  response.should have_xpath("//a[@href='#{staged_message_path(@staged_message)}']")
+end
+
+When /^I visit the editable event$/ do
+  click_link 'Edit'
 end

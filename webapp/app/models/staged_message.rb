@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class StagedMessage < ActiveRecord::Base
@@ -25,7 +25,7 @@ class StagedMessage < ActiveRecord::Base
     end
   end
 
-  belongs_to :event, :autosave => true
+  has_many :lab_results
 
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
@@ -54,7 +54,7 @@ class StagedMessage < ActiveRecord::Base
 
     errors.add :hl7_message, "No last name provided for patient." if self.patient.patient_last_name.blank?
   end
-  
+
   def hl7
     @hl7 ||= HL7::Message.new(self.hl7_message)
   end
@@ -77,20 +77,22 @@ class StagedMessage < ActiveRecord::Base
     raise("Staged message is already assigned to an event.") if self.state == self.class.states[:assigned]
 
     event.add_labs_from_staged_message(self)
-    self.event = event
     self.state = self.class.states[:assigned]
-    self.save!
+    transaction do
+      event.save!
+      self.save!
+    end
   end
 
   def assigned_event
-    self.event
+    self.lab_results.first.try(:participation).try(:event)
   end
 
   def new_event_from
     return nil if self.patient.patient_last_name.blank?
 
     event = MorbidityEvent.new(:workflow_state => 'new', :event_onset_date => Date.today)
-    event.build_interested_party 
+    event.build_interested_party
     event.interested_party.build_person_entity(:race_ids => [self.patient.trisano_race_id])
     event.interested_party.person_entity.build_person( :last_name => self.patient.patient_last_name,
                                                        :first_name => self.patient.patient_first_name,

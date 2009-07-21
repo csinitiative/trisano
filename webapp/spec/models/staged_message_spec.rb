@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
@@ -74,7 +74,7 @@ describe StagedMessage do
   end
 
   describe 'received HL7 2.3 +' do
-    
+
     before :each do
       @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
     end
@@ -103,13 +103,17 @@ describe StagedMessage do
 
     it 'should provide a hash of valid states' do
       StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED'}
-    end 
+    end
   end
 
   describe "assigning to an event" do
 
     before :each do
-      @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
+    end
+
+    it "should default to a state of 'PENDING'" do
+      @staged_message.state.should == StagedMessage.states[:pending]
     end
 
     it "should raise an error if not given an event" do
@@ -121,17 +125,31 @@ describe StagedMessage do
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(RuntimeError)
     end
 
-    it "should link the message to the event" do
+    it 'should create a lab result and link to it' do
+      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      @staged_message.assigned_event = m
+      m.labs[0].lab_results.size.should == 1
+      @staged_message.lab_results.size.should == 1
+      @staged_message.lab_results[0].should eql(m.labs[0].lab_results[0])
+    end
+
+    it "should mark the staged message 'ASSIGNED'" do
+      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      @staged_message.assigned_event = m
+      @staged_message.state.should == StagedMessage.states[:assigned]
+    end
+
+    it "should return the assigned event." do
       m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
       m.labs.size.should == 1
       @staged_message.assigned_event.should eql(m)
-      @staged_message.state.should == StagedMessage.states[:assigned]
     end
+
   end
 
   describe "instantiating an event based on message" do
-    
+
     describe "with a valid, complete record" do
       before :each do
         @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
