@@ -43,7 +43,7 @@ module Routing
           halt! e.message
         end
       end
-      event :reset_to_new, :transitions_to => :new
+      event :reset_to_new, :transitions_to => :new, :meta => {:priv_required => :route_event_to_any_lhd}
     end
 
     def promote_to_cmr

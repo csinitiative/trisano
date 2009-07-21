@@ -41,6 +41,28 @@ class User < ActiveRecord::Base
 
   after_validation :clear_base_error
   
+  # Lazy loads a cache of user's jurisdictions and privileges in the form: privs[jurisdiction ID] = [privilege name]
+  # E.g. privs['59'] = [:create_event, :update_event]
+  # Cache lasts as long as the user does, which is the length of one request.
+  def privs
+    @privs ||= get_privs
+  end
+
+  def get_privs
+    privs = Hash.new { |h, k| h[k] = [] }
+
+    # I feel the need for speed
+    js_and_ps = User.find_by_sql("SELECT DISTINCT rm.jurisdiction_id, p.priv_name
+                                  FROM users u, role_memberships rm, privileges_roles pr, privileges p
+                                  WHERE u.uid = '#{self.uid}'
+                                  AND u.id = rm.user_id
+                                  AND rm.role_id = pr.role_id
+                                  AND pr.privilege_id = p.id")
+
+    js_and_ps.each { |j_and_p| privs[j_and_p['jurisdiction_id'].to_i] << j_and_p['priv_name'].to_sym }
+    privs
+  end
+
   def best_name
     return given_name unless self.given_name.blank?
     return "#{first_name} #{last_name}".strip unless self.last_name.blank?
@@ -54,19 +76,13 @@ class User < ActiveRecord::Base
   end
   
   def is_entitled_to_in?(privilege, jurisdiction_ids)
+    # jurisdiction_ids may be an array or a single ID.  Convert them all to ints just to be sure.
     j_ids = Array(jurisdiction_ids).map!{ |j_id| j_id.to_i }
-    priv_id = Privilege.find_by_priv_name(privilege.to_s).try(:id)
-    return false unless priv_id
-    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id}
-    self.role_memberships.detect { |r| role_ids.include?(r.role_id) && j_ids.include?(r.jurisdiction_id) }.nil? ? false : true
+    j_ids.any? { |j_id| self.privs[j_id].include?(privilege.to_sym) }
   end
   
   def is_entitled_to?(privilege)
-    self.roles.all.each do |r|
-      ret = r.privileges.detect { |p| p.priv_name.to_sym == privilege }.nil? ? false : true
-      return ret if ret == true
-    end
-    false
+    self.privs.any? { |jurisdiction, privs| privs.include?(privilege.to_sym) }
   end
 
   def jurisdictions_for_privilege(privilege)
@@ -74,15 +90,11 @@ class User < ActiveRecord::Base
   end
 
   def jurisdiction_ids_for_privilege(privilege)
-    priv_id = Privilege.find_by_priv_name(privilege.to_s).id
-    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id).collect { |p| p.role_id }
-    self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact.uniq
+    self.privs.select { |k, v| v.include?(privilege.to_sym) }.collect { |privs| privs.first }
   end
   
   def admin_jurisdiction_ids
-    priv_id = Privilege.find_by_priv_name("administer").id
-    role_ids = PrivilegesRole.find_all_by_privilege_id(priv_id.to_i).collect { |p| p.role_id }
-    @admin_jurisdiction_ids ||= self.role_memberships.collect { |r| r.jurisdiction_id if role_ids.include?(r.role_id) }.compact.uniq
+    @admin_jurisdiction_ids ||= jurisdiction_ids_for_privilege(:administer)
   end
   
   def self.investigators_for_jurisdictions(jurisdictions)
@@ -119,6 +131,7 @@ class User < ActiveRecord::Base
   # Convenience methods to find/set the current user on the thread from anywhere in the app
   def self.current_user=(user)
     Thread.current[:user] = user
+
   end
 
   def self.current_user

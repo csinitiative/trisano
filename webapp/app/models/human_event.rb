@@ -535,6 +535,7 @@ class HumanEvent < Event
   def allowed_transitions
     current_state.events.select do |event|
       priv_required = current_state.events(event).meta[:priv_required]
+      next if priv_required.nil?
       j_id = primary_jurisdiction.entity_id
       User.current_user.is_entitled_to_in?(priv_required, j_id)
     end
