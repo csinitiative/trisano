@@ -3,7 +3,7 @@
 
 = content_tag(:p, reason + ". Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')
 
--if event
+-if defined?(event) && event
   %b
     Assigned Jurisdiction:
   %br

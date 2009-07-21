@@ -18,6 +18,7 @@
 class EventsController < ApplicationController
 
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
+  before_filter :can_new?, :only => [:new]
   before_filter :can_view?, :only => [:show, :export_single]
   before_filter :set_tab_index
   
@@ -221,6 +222,12 @@ class EventsController < ApplicationController
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have update privileges for this jurisdiction", :event => @event }, :status => 403 and return
     end
     reject_if_wrong_type(@event)
+  end
+
+  def can_new?
+    unless User.current_user.is_entitled_to?(:create_event)
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to create an event" }, :status => 403 and return
+    end
   end
   
   def can_view?

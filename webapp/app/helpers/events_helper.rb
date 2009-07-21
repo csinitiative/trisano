@@ -138,25 +138,32 @@ module EventsHelper
   end
 
   def basic_contact_event_controls(event, from_index=false)
-    # Originally the Edit, Delete, Add Task, Add Attachment, and Promote to CMR links were rendered only if the 
-    # user had the right privileges.  But that check was too expensive, so now they're always rendered.  In the 
-    # (anticipated to be # rare) circumstances where someone has view but not update privs, clicking on the 
-    # links will render a nice, pretty 'go away' message.
+    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    can_view =  User.current_user.is_entitled_to_in?(:view_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+
     controls = ""
-    controls << link_to('Show', contact_event_path(event)) << " | " if from_index
-    if from_index
-      controls <<  link_to('Edit', edit_contact_event_path(event))
-    else
-      controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+    controls << link_to('Show', contact_event_path(event)) if from_index && can_view
+    if can_update
+      controls << " | " unless controls.blank?
+      if from_index
+        controls <<  link_to('Edit', edit_contact_event_path(event))
+      else
+        controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+      end
     end
-    controls << " | " << link_to_function("Print", nil) do |page|
-      page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
+    if can_view
+      controls << " | " unless controls.blank?
+      controls << link_to_function("Print", nil) do |page|
+        page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
+      end
     end
-    if event.deleted_at.nil?
-      controls << " | " << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+    if event.deleted_at.nil? && can_update
+      controls << " | " unless controls.blank?
+      controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
     end
-    if !from_index
-      controls << " | " << link_to('Add Task', new_event_task_path(event))
+    if !from_index && can_update
+      controls << " | " unless controls.blank?
+      controls << link_to('Add Task', new_event_task_path(event))
       controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
       controls << " | " << link_to('Promote to CMR', event_type_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'event-type')
     end
@@ -164,17 +171,15 @@ module EventsHelper
     controls
   end
 
-  def basic_place_event_controls(event, with_show=true)
+  # places won't be shown in index view.  This code is only run from show mode, not edit.
+  def basic_place_event_controls(event)
     can_update = User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{place_event_path(event)}')") if with_show
 
     if can_update
-      controls <<  " | "  if with_show
       controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")
       if event.deleted_at.nil?
-        controls <<  " | "
-        controls << link_to('Delete', soft_delete_place_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+        controls <<  " | " << link_to('Delete', soft_delete_place_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
       end
     end
 

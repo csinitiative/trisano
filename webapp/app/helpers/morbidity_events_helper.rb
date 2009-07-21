@@ -33,30 +33,47 @@ module MorbidityEventsHelper
   end
 
   def basic_morbidity_event_controls(event, from_index=false)
-    # Originally the Edit, Delete, Add Task, and Add Attachment links were rendered only if the user had the right
-    # privileges.  But that check was too expensive, so now they're always rendered.  In the (anticipated to be
-    # rare) circumstances where someone has view but not update privs, clicking on the links will render a nice,
-    # pretty 'go away' message.
+    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    can_view =  User.current_user.is_entitled_to_in?(:view_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    can_create =  User.current_user.is_entitled_to_in?(:create_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+
     controls = ""
-    controls << link_to('Show', cmr_path(event)) << " | " if from_index
-    if from_index
-      controls << link_to('Edit', edit_cmr_path(event))
-    else
-      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
-    end
-    controls << " | " << link_to_function("Print", nil) do |page|
-      page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
-    end
-    controls << " | " << link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete') if event.deleted_at.nil?
-    if !from_index
-      controls << " | " << link_to('Add Task', new_event_task_path(event))
-      controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
-      controls << "<br />"
-      controls << link_to_function('Export to CSV', nil) do |page|
-        page[:export_options].visual_effect :appear
+    controls << link_to('Show', cmr_path(event)) if from_index && can_view
+    if can_update
+      controls << " | " unless controls.blank?
+      if from_index
+        controls << link_to('Edit', edit_cmr_path(event))
+      else
+        controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
       end
-      controls << ' | ' + link_to_function('Create a new event from this one') do |page|
-        page[:copy_cmr_options].visual_effect :appear
+    end
+    if can_view
+      controls << " | " unless controls.blank?
+      controls << link_to_function("Print", nil) do |page|
+        page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
+      end
+    end
+    if event.deleted_at.nil? && can_update
+      controls << " | " unless controls.blank?
+      controls << link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+    end
+    if !from_index
+      if can_update
+        controls << " | " unless controls.blank?
+        controls << link_to('Add Task', new_event_task_path(event))
+        controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
+      end
+      if can_view
+        controls << " | " unless controls.blank?
+        controls << link_to_function('Export to CSV', nil) do |page|
+          page[:export_options].visual_effect :appear
+        end
+      end
+      if can_create
+        controls << " | " unless controls.blank?
+        controls << link_to_function('Create a new event from this one') do |page|
+          page[:copy_cmr_options].visual_effect :appear
+        end
       end
     # else
       # controls << link_to('Export to CSV', cmr_path(event) + '.csv')

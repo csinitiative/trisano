@@ -46,4 +46,7 @@
             %td{style}=place.formatted_place_descriptions
             %td{style}=format_date(pe.participations_place.date_of_exposure)
             %td.tools
-              =link_to("Edit place details", edit_place_event_path(pe), {:id => "edit-place-event"}) unless pe.new_record?
+              - unless pe.new_record?
+                =link_to("Show ", edit_place_event_path(pe), {:id => "edit-place-event"}) if User.current_user.is_entitled_to_in?(:view_event, pe.primary_jurisdiction.id)
+                = " | "
+                =link_to("Edit ", place_event_path(pe), {:id => "view-place-event"}) if User.current_user.is_entitled_to_in?(:update_event, pe.primary_jurisdiction.id)

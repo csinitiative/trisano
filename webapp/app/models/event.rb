@@ -297,9 +297,10 @@ class Event < ActiveRecord::Base
         where_clause += " AND " unless where_clause.empty?
         allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
         allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
-        allowed_ids_str = allowed_jurisdiction_ids.uniq!.inject("") { |str, entity_id| str += "#{entity_id}," }
-        where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ")"
-        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str.chop + ") )"
+        allowed_ids_str = allowed_jurisdiction_ids.uniq.join(',')
+
+        where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ")"
+        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ") )"
       end
 
       # Debt: The UI shows the user a format to use. Something a bit more robust
