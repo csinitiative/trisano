@@ -17,7 +17,12 @@
 
 %fieldset.form
   %legend Address
-  - f.fields_for(:address, :builder => ExtendedFormBuilder) do |a|
+  -if event.nil?
+    - address_type = :canonical_address
+  -else
+    - address_type = :address
+
+  - f.fields_for(address_type, :builder => ExtendedFormBuilder) do |a|
 
     %fieldset.vert
       - core_element :street_number, a, :horiz do
@@ -45,8 +50,7 @@
         = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
       %label
         District
-      - if @event && @event.address
-        - address = @event.address
+        - address = event.nil? ? @person.canonical_address : event.address
         - if address.county && address.county.jurisdiction
           = address.county.jurisdiction.name
     

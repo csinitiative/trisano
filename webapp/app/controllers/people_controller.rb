@@ -21,7 +21,7 @@ class PeopleController < ApplicationController
     return unless index_processing
 
     unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to view People" }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to view People" }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
@@ -32,10 +32,10 @@ class PeopleController < ApplicationController
   end
 
   def show
-    @person = Person.find(params[:id])
+    @person = PersonEntity.find(params[:id])
 
     unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to view a Person", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to view a Person", :person => @person }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
@@ -47,23 +47,29 @@ class PeopleController < ApplicationController
   # GET /people/new
   # GET /people/new.xml
   def new
-    @person = Person.new
+    @person = PersonEntity.new
+    @person.person = Person.new
+    @person.canonical_address = Address.new
 
     unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @user }
+      format.xml  { render :xml => @person }
     end
   end
 
   def edit
-    @person = Person.find(params[:id])
+    @person = PersonEntity.find(params[:id])
+
+    if @person.canonical_address.nil?
+      @person.canonical_address = Address.new
+    end
 
     unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to edit a Person", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to edit a Person", :person => @person }, :layout => true, :status => 403 and return
     end
   end
 
@@ -72,10 +78,12 @@ class PeopleController < ApplicationController
   def create
     go_back = params.delete(:return)
     
-    @person = Person.new(params[:person])
+    @person = PersonEntity.new
+    @person.update_attributes(params[:person_entity])
+    @person.save
 
     unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
@@ -100,16 +108,16 @@ class PeopleController < ApplicationController
   # PUT /people/1
   # PUT /people/1.xml
   def update
-    @person = Person.find(params[:id])
+    @person = PersonEntity.find(params[:id])
 
     unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have priveleges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
-      if @person.update_attributes(params[:person])
+      if @person.update_attributes(params[:person_entity])
         flash[:notice] = 'Person was successfully updated.'
-        format.html { redirect_to(@person) }
+        format.html { redirect_to(person_path(@person)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -140,6 +148,7 @@ class PeopleController < ApplicationController
         :order_by => params[:sort_order],
         :do_not_show_deleted => params[:do_not_show_deleted],
         :page => params[:page],
+        :include => [:person_entity],
         :per_page => params[:per_page]
       )
     rescue

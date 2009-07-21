@@ -32,20 +32,15 @@
         Person
       %th
       %tr
-        %td.forminformation
-          .tools
-            = "#{@person.first_name} #{@person.last_name}"
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             Edit
             |
-            = link_to 'Show', @person
+            = link_to 'Show', person_path(@person)
 
 #rot
   = error_messages_for :object => [@person]
 
-  - form_for(@person) do |f|
-
-    = render :partial => 'form', :locals => { :f => f, :person_data => @person }
-
-    = f.submit "Update"
+  - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |pe|
+    = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
+    = pe.submit "Update"

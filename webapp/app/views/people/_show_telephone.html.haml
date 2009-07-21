@@ -13,19 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend Age
-  -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
-    -core_element_show :birth_date, person_form, :horiz do
-      =person_form.label(:birth_date)
-      =person.birth_date
-    -core_element_show :approximate_age_no_birthday, person_form, :horiz do
-      -if !person.birth_date.blank?
-        =person_form.label(:age)
-        =calculate_age(person.birth_date)
-      -elsif !person.approximate_age_no_birthday.blank?
-        =person_form.label(:approximage_age)
-        =person.approximate_age_no_birthday
-    -core_element_show :age_at_onset, person_form, :horiz do
-      =person_form.label :age_at_onset
-      =@event.age_info
+-unless show_telephone.new_record?
+  %p
+    =h(show_telephone.simple_format) 
+    %hr

@@ -35,17 +35,15 @@
       %th
       %tr
         %td.forminformation
-          %span.last_name
-            = @person.last_name + ', '
-          %span.first_name
-            = @person.first_name
-          %span.middle_name
-            = @person.middle_name
-          - if @person.birth_date
-            .tools
-              Birth date: 
-              %span.birth_date
-                = @person.birth_date
+          %fieldset
+            %legend Person Information
+            - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |pe|
+              - pe.fields_for(:person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |p|
+                = render :partial => 'people/name_show', :locals => {:person => @person.person, :f => pe, :event_form => nil}
+                = render :partial => 'people/address_show', :locals => {:address => @person.canonical_address, :f => pe}
+                = render :partial => 'people/age_show', :locals => {:person => @person.person, :f => pe}
+                = render :partial => 'people/phones_show', :locals => {:f => pe}
+                = render :partial => 'people/demographics_show', :locals => {:person => @person.person, :f => pe}
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_person_path(@person)

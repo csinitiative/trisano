@@ -33,19 +33,14 @@
     - @people.each do |person|
       %tr.roll
         %td.forminformation
-          %span.person
-            %span.last_name
-              = person.last_name
-            ,
-            %span.first_name
-              = person.first_name
-            %span.middle_name
-              = person.middle_name
-            -# = link_to('Delete', person, :confirm => 'Are you sure?', :method => :delete)
+          %fieldset
+            - fields_for(person, :builder => ExtendedFormBuilder) do |f|
+              = render :partial => 'people/name_show', :locals => {:person => person, :f => f, :event_form => nil}
+              = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_person_path(person)
+            = link_to 'Edit', edit_person_path(person.person_entity)
             |
-            = link_to 'Show', person
+            = link_to 'Show', person_path(person.person_entity)
   %br
   = will_paginate @people

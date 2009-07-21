@@ -14,18 +14,18 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Name
+  %legend Age
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
-    -core_element_show :last_name, person_form, :horiz do
-      =person_form.label(:last_name)
-      =person.last_name
-    -core_element_show :first_name, person_form, :horiz do
-      =person_form.label(:first_name)
-      =person.first_name
-    -core_element_show :middle_name, person_form, :horiz do
-      =person_form.label(:middle_name) 
-      =person.middle_name 
-
-    -core_element_show :parent_guardian, event_form, :horiz do
-      =event_form.label(:parent_guardian, "Parent/Guardian")
-      =event.parent_guardian
+    -core_element_show :birth_date, person_form, :horiz do
+      =person_form.label(:birth_date)
+      =person.birth_date
+    -core_element_show :approximate_age_no_birthday, person_form, :horiz do
+      -if !person.birth_date.blank?
+        =person_form.label(:age)
+        =calculate_age(person.birth_date)
+      -elsif !person.approximate_age_no_birthday.blank?
+        =person_form.label(:approximage_age)
+        =person.approximate_age_no_birthday
+    -#-core_element_show :age_at_onset, person_form, :horiz do
+    -#  =person_form.label :age_at_onset
+    -#  =@event.age_info

@@ -28,6 +28,7 @@
       =p.label(:middle_name)
       =p.core_text_field(:middle_name, {:size => 25, :maxlength => 25}, event)
 
-    -core_element :parent_guardian, event_form, :horiz do
-      =event_form.label :parent_guardian, 'Parent/Guardian'
-      =event_form.core_text_field(:parent_guardian, {:size => 35, :maxlength => 255}, event)
+    - if !event_form.nil?
+      -core_element :parent_guardian, event_form, :horiz do
+        =event_form.label :parent_guardian, 'Parent/Guardian'
+        =event_form.core_text_field(:parent_guardian, {:size => 35, :maxlength => 255}, event)

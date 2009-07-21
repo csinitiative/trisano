@@ -3,32 +3,20 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%table.list
-  %tr
-    %th.forminformation
-      Edit Person
-  %tr
-    %td
-      %span{ :class => "horiz" }
-        = f.label(:first_name)
-        = f.text_field(:first_name, :size => 25, :maxlength => 32)
-      %span{ :class => "horiz" }
-        = f.label(:middle_name)
-        = f.text_field(:middle_name, :size => 25, :maxlength => 64)
-      %span{ :class => "horiz" }
-        = f.label(:last_name)
-        = f.text_field(:last_name, :size => 25, :maxlength => 32)
-      %span.vert
-        = f.label(:birth_date)
-        = f.text_field(:birth_date, :size => 10, :maxlength => 32)
-      %p
+%fieldset
+  %div{:id => 'person_form' }
+    =render :partial => 'people/name_form', :locals => {:f => f, :event => nil, :event_form => nil}
+    =render :partial => 'people/address_form', :locals => {:f => f, :address => @person.canonical_address, :event => nil}
+    =render :partial => 'people/age_form', :locals => {:f => f, :event => nil}
+    =render :partial => 'people/phones_form', :locals => {:f => f}
+    =render :partial => 'people/demographics_form', :locals => {:f => f, :event => nil}
