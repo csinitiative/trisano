@@ -22,6 +22,6 @@
       %legend Person Information
       = render :partial => 'people/name_show', :locals => {:person => entity_data.person, :f => primary_form, :event => @event, :event_form => event_form} 
       = render :partial => 'people/address_show', :locals => {:address => @event.address, :f => event_form}
-      = render :partial => 'people/age_show', :locals => {:person => entity_data.person, :f => primary_form}
+      = render :partial => 'people/age_show', :locals => {:person => entity_data.person, :f => primary_form, :event => @event}
       = render :partial => 'people/phones_show', :locals => {:f => primary_form}
       = render :partial => 'people/demographics_show', :locals => {:person => entity_data.person, :f => primary_form}

@@ -41,7 +41,7 @@
               - pe.fields_for(:person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |p|
                 = render :partial => 'people/name_show', :locals => {:person => @person.person, :f => pe, :event_form => nil}
                 = render :partial => 'people/address_show', :locals => {:address => @person.canonical_address, :f => pe}
-                = render :partial => 'people/age_show', :locals => {:person => @person.person, :f => pe}
+                = render :partial => 'people/age_show', :locals => {:person => @person.person, :f => pe, :event => nil}
                 = render :partial => 'people/phones_show', :locals => {:f => pe}
                 = render :partial => 'people/demographics_show', :locals => {:person => @person.person, :f => pe}
         %td
