@@ -44,9 +44,5 @@
       = f.check_box :_delete
 
   = f.label('&nbsp;')
-  - unless f.object.new_record?
-    = link_to("Edit", edit_contact_event_path(f.object), {:id => "edit-contact-event"}) if User.current_user.is_entitled_to_in?(:update_event, f.object.primary_jurisdiction.id)
-    = " | "
-    = link_to("Show", contact_event_path(f.object), {:id => "edit-contact-event"}) if User.current_user.is_entitled_to_in?(:update_event, f.object.primary_jurisdiction.id)
-
+  = show_and_edit_event_links(f.object)
 %br

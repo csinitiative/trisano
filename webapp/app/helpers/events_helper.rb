@@ -280,6 +280,35 @@ module EventsHelper
     button_to_function(text, "location.href = '#{event_search_cmrs_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
 
+  def show_and_edit_event_links(event)
+    return if event.new_record?
+
+    can_show =  User.current_user.is_entitled_to_in?(:view_event, event.primary_jurisdiction.id)
+    can_edit =  User.current_user.is_entitled_to_in?(:update_event, event.primary_jurisdiction.id)
+    show_bar = can_show && can_edit
+
+    out = ""
+    case event.class.name
+    when "MorbidityEvent"
+      out << link_to("Show", cmr_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << " | " if show_bar
+      out << link_to("Edit", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+    when "ContactEvent"
+      out << link_to("Show", contact_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << " | " if show_bar
+      out << link_to("Edit", edit_contact_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+    when "PlaceEvent"
+      out << link_to("Show", place_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << " | " if show_bar
+      out << link_to("Edit", edit_place_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+    when "EncounterEvent"
+      out << link_to("Show", encounter_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << " | " if show_bar
+      out << link_to("Edit", edit_encounter_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+    end
+    out
+  end
+
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
   def event_div_class(event, &block)
     return if event.nil?
@@ -436,11 +465,12 @@ module EventsHelper
   def original_patient_controls(event)
     original_patient = event.parent_event
     name = "#{original_patient.interested_party.person_entity.person.first_name} #{original_patient.interested_party.person_entity.person.last_name}"
-    %Q{
-        <div>Original Patient: #{link_to(name, cmr_path(original_patient))}
-        |
-        <span style='font-size: 12px; font-weight: light;'>#{original_patient.safe_call_chain(:disease_event, :disease, :disease_name)}</span></div>
-    }
+    disease = original_patient.safe_call_chain(:disease_event, :disease, :disease_name)
+    out = "<div>Parent Patient: #{link_to(name, cmr_path(original_patient))}"
+    unless disease.blank?
+      out << " | <span style='font-size: 12px; font-weight: light;'>#{disease}</span></div>"
+    end
+    out
   end
 
   def association_recorded?(association_collection)

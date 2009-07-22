@@ -22,5 +22,4 @@
       %td{style}=h(encounter_event_data.encounter_location_type)
       %td
         .tools
-          = link_to("Edit encounter event", edit_encounter_event_path(encounter), {:id => "edit-encounter-event"}) unless encounter.new_record?
-
+          = show_and_edit_event_links(encounter)

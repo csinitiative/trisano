@@ -52,8 +52,5 @@
         = place_form.check_box :_delete
 
     = place_form.label('&nbsp;')
-    - unless place_form.object.new_record?
-      = link_to("Show ", place_event_path(place_form.object), {:id => "view-place-event"}) if User.current_user.is_entitled_to_in?(:view_event, place_form.object.primary_jurisdiction.id)
-      = " | "
-      = link_to("Edit", edit_place_event_path(place_form.object), {:id => "edit-place-event"}) if User.current_user.is_entitled_to_in?(:update_event, place_form.object.primary_jurisdiction.id)
+    = show_and_edit_event_links(place_form.object)
   %hr

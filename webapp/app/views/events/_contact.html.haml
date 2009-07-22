@@ -46,7 +46,7 @@
         %span.vert
           = error_messages_for :object => tel_form.object
           - core_element :entity_location_type_id, tel_form, :horiz do
-            = tel_form.label(:entity_location_type_id, "Phone type")
+            = tel_form.label(:entity_location_type_id, "Phone Type")
             = tel_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
           %span.horiz
             = tel_form.label(:area_code)
@@ -57,7 +57,4 @@
           %span.horiz
             = tel_form.label(:extension)
             = tel_form.core_text_field(:extension, {:size => 6, :maxlength => 6})
-
-            = (link_to("Edit contact event", edit_contact_event_path(f.object), {:id => "edit-contact-event"})) unless f.object.new_record?
-
       %hr
