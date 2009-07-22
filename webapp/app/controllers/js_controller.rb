@@ -1,0 +1,2 @@
+class JsController < ApplicationController
+end

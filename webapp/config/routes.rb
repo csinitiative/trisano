@@ -22,6 +22,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :diseases
 
+  map.js ':controller/:action.:format'
+
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
 
