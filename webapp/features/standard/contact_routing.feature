@@ -8,7 +8,7 @@ Feature: Routing contacts
     Given I am logged in as a super user
     When I navigate to the new event page
     And I create an event with a contact
-    And I click the "Show contact event" link
+    And I click the "Show contact" link
     Then I should see "Not Participating in Workflow"
 
   Scenario: Routing an inactive contact

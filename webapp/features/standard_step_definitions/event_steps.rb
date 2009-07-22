@@ -38,7 +38,6 @@ When /^I visit the events index page$/ do
 end
 
 When(/^I navigate to the event edit page$/) do
-  puts ((@event || @m).id)
   visit edit_cmr_path(@event || @m)
 end
 

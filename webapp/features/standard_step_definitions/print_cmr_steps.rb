@@ -44,7 +44,6 @@ Given /^the morbidity event has the following deleted contacts:$/ do |contacts|
     @event.contact_child_events.last.transactional_soft_delete    
   end
   @event.save!
-  puts @event.contact_child_events.active.size
 end
 
 When /^I print the morbidity event with "([^\"]*)"$/ do |option|

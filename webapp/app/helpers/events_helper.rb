@@ -290,21 +290,21 @@ module EventsHelper
     out = ""
     case event.class.name
     when "MorbidityEvent"
-      out << link_to("Show", cmr_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << link_to("Show CMR", cmr_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar
-      out << link_to("Edit", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+      out << link_to("Edi CMRt", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     when "ContactEvent"
-      out << link_to("Show", contact_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << link_to("Show Contact", contact_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar
-      out << link_to("Edit", edit_contact_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+      out << link_to("Edit Contact", edit_contact_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     when "PlaceEvent"
-      out << link_to("Show", place_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << link_to("Show Place", place_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar
-      out << link_to("Edit", edit_place_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+      out << link_to("Edit Place", edit_place_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     when "EncounterEvent"
-      out << link_to("Show", encounter_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
+      out << link_to("Show Encounter", encounter_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar
-      out << link_to("Edit", edit_encounter_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+      out << link_to("Edit Encounter", edit_encounter_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     end
     out
   end
