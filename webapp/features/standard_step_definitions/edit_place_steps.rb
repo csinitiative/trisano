@@ -1,0 +1,63 @@
+# Copyright (C) 2009, Collaborative Software Initiative
+#
+# This file is part of CSI TriSano Enterprise Edition.
+
+When(/^I change the place name to (.+)$/) do |new_name|
+  fill_in "name", :with => new_name
+end
+
+When(/^I enter a canonical address$/) do
+  # Need to XPath this up
+  @street_number = "11"
+  @street_name = "Happy St."
+  @unit_number = "12"
+  @city = "SLC"
+  @state = "Utah"
+  @county = "Cache"
+  @zip = "97232"
+
+  fill_in "place_canonical_address_attributes_street_number", :with => @street_number
+  fill_in "place_canonical_address_attributes_street_name", :with => @street_name
+  fill_in "place_canonical_address_attributes_unit_number", :with => @unit_number
+  fill_in "place_canonical_address_attributes_city", :with => @city
+  select @state, :from => "place_canonical_address_attributes_state_id"
+  select @county, :from => "place_canonical_address_attributes_county_id"
+  fill_in "place_canonical_address_attributes_postal_code", :with => @zip
+end
+
+When(/^I submit the place update form$/) do
+  click_button "Update"
+end
+
+When(/^I enter invalid place data$/) do
+  fill_in "name", :with => ""
+end
+
+Then(/^the place name change to (.+) should be reflected on the show page$/) do |new_name|
+  response.should contain(new_name)
+  response.should contain("Place Detail")
+end
+
+Then(/^the canonical address should be displayed on the show page$/) do
+  response.should contain(@street_number)
+  response.should contain(@street_name)
+  response.should contain(@unit_number)
+  response.should contain(@city)
+  response.should contain(@state)
+  response.should contain(@county)
+  response.should contain(@zip)
+
+  # Also ensure that this address is indeed canonical
+  @place_entity.canonical_address.should_not be_nil
+  @place_entity.canonical_address.street_number.should == @street_number
+  @place_entity.canonical_address.street_name.should == @street_name
+  @place_entity.canonical_address.unit_number.should == @unit_number
+  @place_entity.canonical_address.city.should == @city
+  @place_entity.canonical_address.state.code_description.should == @state
+  @place_entity.canonical_address.county.code_description.should == @county
+  @place_entity.canonical_address.postal_code.should == @zip
+end
+
+Then(/^the place edit form should be redisplayed with an error message$/) do
+  response.should have_xpath("//div[contains(@id, 'errorExplanation')]")
+end

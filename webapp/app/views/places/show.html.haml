@@ -1,0 +1,49 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  Place Detail
+
+- content_for :tools do
+  = link_to '< Back to Places', places_path
+  %p
+
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        Place
+      %th
+      %tr
+        %td.forminformation
+          .tools
+            = @place_entity.place.short_name
+          .formname
+            = @place_entity.place.name
+          .tools
+            - address = @place_entity.canonical_address
+            - unless address.nil?
+              =h address.street_number
+              =h address.street_name
+              =h address.unit_number
+              =h address.city
+              =h address.county.code_description unless address.county.nil?
+              =h address.state.code_description unless address.state.nil?
+              =h address.postal_code
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to 'Edit', edit_place_path(@place_entity)
+            |
+            Show

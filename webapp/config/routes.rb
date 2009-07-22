@@ -155,10 +155,12 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :staged_messages,
     :member => {
-      :event_search => :get,
-      :event => :post,
-      :discard => :post
-    }
+    :event_search => :get,
+    :event => :post,
+    :discard => :post
+  }
+
+  map.resources :places
 
   # The priority is based upon order of creation: first created -> highest priority.
 
