@@ -20,7 +20,7 @@ Feature: Removing forms from events
     And I click the "Remove Forms" button
     Then I should see "The list of forms in use was successfully updated"
 
-    When I follow "Edit"
+    When I follow "Edit CMR"
     Then I should not see the name of the added form
 
   Scenario: Morbidity event form removal as investigator
@@ -32,7 +32,7 @@ Feature: Removing forms from events
     And I click the "Remove Forms" button
     Then I should see "The list of forms in use was successfully updated"
 
-    When I follow "Edit"
+    When I follow "Edit CMR"
     Then I should not see the name of the added form
 
   Scenario: Morbidity event form removal as data entry tech

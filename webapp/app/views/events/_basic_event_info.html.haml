@@ -40,20 +40,4 @@
           = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
           %br
     %td.tools
-      -# Why, oh why, didn't we name the cmrs resource morbidity_events?  Coulda avoided this.
-      - if event.is_a? MorbidityEvent
-        - show_path = cmr_path(event)
-        - edit_path = edit_cmr_path(event)
-      - elsif event.is_a? ContactEvent
-        - show_path = contact_event_path(event)
-        - edit_path = edit_contact_event_path(event)
-      - elsif event.is_a? PlaceEvent
-        - show_path = place_event_path(event)
-        - edit_path = edit_place_event_path(event)
-      - else
-        - show_path = encounter_event_path(event)
-        - edit_path = edit_encounter_event_path(event)
-
-      =link_to "Show", show_path
-      |
-      =link_to "Edit", edit_path
+      = show_and_edit_event_links(event)

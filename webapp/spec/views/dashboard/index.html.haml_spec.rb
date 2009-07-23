@@ -25,8 +25,10 @@ describe "/dashboard/index.html.haml" do
     @assignees = []
     User.stub!(:default_task_assignees).and_return(@assignees)
     @user = mock_model(User)
+    @user.stub!(:is_entitled_to_in?).and_return(true)
     @jurisdictions = []
     @user.stub!(:jurisdictions_for_privilege).with(:approve_event_at_state).and_return(@jurisdictions)
+    User.stub!(:current_user).and_return(@user)
   end
 
   describe 'without user tasks' do
@@ -37,7 +39,6 @@ describe "/dashboard/index.html.haml" do
       # @user = mock('current user')
       @user.stub!(:filter_tasks).and_return([])
       @user.should_receive(:id).exactly(6).times.and_return(1)
-      User.stub!(:current_user).and_return(@user)
     end
     
     it 'should not render the table' do
@@ -62,6 +63,8 @@ describe "/dashboard/index.html.haml" do
     before(:each) do
       # @event = mock('event')
       @event = mock_model(Event)
+      @jurisdiction = mock_model(Jurisdiction, :secondary_entity_id => '1')
+      @event.stub!(:all_jurisdictions).and_return([@jurisdiction])
       
       @values = {
         :name          => 'First task',
@@ -87,7 +90,6 @@ describe "/dashboard/index.html.haml" do
       #@user = mock_model(User)
       @user.should_receive(:filter_tasks).and_return(@tasks)
       @user.should_receive(:id).exactly(6).times.and_return(1)
-      User.stub!(:current_user).and_return(@user)
       params[:look_back] = '0'
       params[:look_ahead] = '0'
       params['task'] = {'status' => 'complete'}
@@ -229,6 +231,8 @@ describe "/dashboard/index.html.haml" do
     before(:each) do
       # @event = mock('event')
       @event = mock_model(Event)
+      @jurisdiction = mock_model(Jurisdiction, :secondary_entity_id => '1')
+      @event.stub!(:all_jurisdictions).and_return([@jurisdiction])
       
       @values = {
         :name          => 'First task',
@@ -272,7 +276,6 @@ describe "/dashboard/index.html.haml" do
       #@user = mock_model(User)
       @user.should_receive(:filter_tasks).and_return(@tasks)      
       @user.should_receive(:id).exactly(6).times.and_return(1)
-      User.stub!(:current_user).and_return(@user)      
     end
 
     %w(name due_date notes category_name priority user_name).each do |meth|

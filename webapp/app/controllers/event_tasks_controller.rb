@@ -18,16 +18,14 @@
 class EventTasksController < ApplicationController
 
   before_filter :find_event
-  before_filter :can_update_event?, :only => [:create, :update]
-  before_filter :can_view_event?, :only => [:index, :new, :edit]
+
+  # Note show and destroy are blocked is config/routes
+  before_filter :can_update_event?, :only => [:new, :edit, :create, :update]
+  before_filter :can_view_event?, :only => [:index]
   
   def index
     respond_to do |format|
-      format.html do
-        @task = Task.new
-        @task.event_id = @event.id
-        render :action => 'new'
-      end
+      format.html
       format.js do
         #Hmmmmm. Why do I have to add the .html.haml onto the partial?
         render :partial => 'tasks/list.html.haml', :locals => { :task_owner => @event }

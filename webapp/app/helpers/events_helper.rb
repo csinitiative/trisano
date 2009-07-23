@@ -283,8 +283,9 @@ module EventsHelper
   def show_and_edit_event_links(event)
     return if event.new_record?
 
-    can_show =  User.current_user.is_entitled_to_in?(:view_event, event.primary_jurisdiction.id)
-    can_edit =  User.current_user.is_entitled_to_in?(:update_event, event.primary_jurisdiction.id)
+    jurisdiction_ids = @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
+    can_show =  User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids)
+    can_edit =  User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids)
     show_bar = can_show && can_edit
 
     out = ""
@@ -292,7 +293,7 @@ module EventsHelper
     when "MorbidityEvent"
       out << link_to("Show CMR", cmr_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar
-      out << link_to("Edi CMRt", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
+      out << link_to("Edit CMR", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     when "ContactEvent"
       out << link_to("Show Contact", contact_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
       out << " | " if show_bar

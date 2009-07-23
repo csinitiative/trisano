@@ -28,7 +28,7 @@ Feature: Adding forms to events
     And I click the "Add Forms" button
     Then I should see "The list of forms in use was successfully updated"
 
-    When I follow "Edit"
+    When I follow "Edit CMR"
     Then I should see the name of the added form
 
   Scenario: Morbidity event form add as investigator without checking a form to add
@@ -41,7 +41,7 @@ Feature: Adding forms to events
     When I click the "Add Forms" button
     Then I should see "No forms were selected for addition to this event."
 
-    When I follow "Edit"
+    When I follow "Edit CMR"
     Then I should not see the name of the added form
 
   Scenario: Morbidity event form add as data entry tech

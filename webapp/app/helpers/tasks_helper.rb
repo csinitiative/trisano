@@ -26,6 +26,9 @@ module TasksHelper
   end
   
   def task_action_links(task, options = {})
+    unless User.current_user.is_entitled_to_in?(:update_event, task.event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+      return task.status
+    end
     result = ""
     options = (params || {}).merge(options)
     options = options.merge(:action => 'update', :id => task.id)

@@ -35,7 +35,6 @@ describe EventTasksController do
     end
   
     def do_get
-      @task.should_receive(:event_id=).with(1)
       get :index, :event_id => "1"
     end
 
@@ -46,14 +45,9 @@ describe EventTasksController do
 
     it "should render new template" do
       do_get
-      response.should render_template('new')
+      response.should render_template('index')
     end
 
-    it "should assign the task with its event id set for the view" do
-      do_get
-      assigns[:task].should == @task
-    end
-    
   end
 
   describe "handling GET /events/1/tasks without view event entitlement" do
