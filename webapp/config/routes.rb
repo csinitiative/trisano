@@ -145,7 +145,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]
 
   # An event's attachments
-  map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments'
+  map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments', :except => [:edit]
 
   map.resources :codes, :controller => :external_codes
 

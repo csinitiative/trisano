@@ -47,10 +47,13 @@
               %span.updated_at
                 =h attachment.updated_at
             %td
-              = link_to("Open", event_attachment_path(attachment.event, attachment))
-              |
-              = delete_attachment(attachment)
-              = attachment_spinner(attachment)
+              - jurisdiction_ids = attachment.event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
+              - if User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids )
+                = link_to("Open", event_attachment_path(attachment.event, attachment))
+              - if User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids )
+                |
+                = delete_attachment(attachment)
+                = attachment_spinner(attachment)
 
   - else
     %span No attachments

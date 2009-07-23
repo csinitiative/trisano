@@ -21,21 +21,16 @@ describe EventAttachmentsController do
 
   before(:each) do
     mock_user
+    @user.stub!(:is_entitled_to_in?).and_return(true)
     @event = mock_event
     @event.stub!(:id).and_return(1)
     Event.stub!(:find).and_return(@event)
+    User.stub!(:current_user).and_return(@user)
   end
   
   describe "handling GET /events/1/attachments with view event entitlement" do
 
-    before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Attachment.stub!(:new).and_return(@attachment)
-    end
-
     def do_get
-      @attachment.should_receive(:event_id=).with(1)
       get :index, :event_id => "1"
     end
 
@@ -46,14 +41,8 @@ describe EventAttachmentsController do
 
     it "should render new template" do
       do_get
-      response.should render_template('new')
+      response.should render_template('index')
     end
-
-    it "should assign the attachment with its event id set for the view" do
-      do_get
-      assigns[:attachment].should == @attachment
-    end
-
   end
 
   describe "handling GET /events/1/attachments without view event entitlement" do
@@ -265,12 +254,17 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/1 with view event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
       @user.stub!(:is_entitled_to_in?).and_return(true)
-      Attachment.stub!(:find).and_return(@attachment)
+
+      @attachments = []
+      @event.stub!(:attachments).and_return(@attachments)
+
+      @attachment = mock_model(Attachment)
       @attachment.stub!(:current_data).and_return("some data")
       @attachment.stub!(:content_type).and_return("text/plain")
       @attachment.stub!(:filename).and_return("some_file.txt")
+
+      @attachments.stub!(:find).and_return(@attachment)
     end
 
     def do_get
@@ -279,6 +273,7 @@ describe EventAttachmentsController do
     
     it "should render a file" do
       @controller.should_receive(:send_data)
+      @controller.stub!(:render) # http://www.nabble.com/%27Missing-template%27-when-using-send_data-to-render-response-td22538207.html
       do_get
       response.should be_success
     end
@@ -311,9 +306,10 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/1 for a file that doesn't exist" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
+      @attachments = []
+      @event.stub!(:attachments).and_return(@attachments)
+      @attachments.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
       @user.stub!(:is_entitled_to_in?).and_return(true)
-      Attachment.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
     end
 
     def do_get

@@ -18,23 +18,19 @@
 class EventAttachmentsController < ApplicationController
 
   before_filter :find_event
-  before_filter :can_update_event?, :only => [:create]
+  before_filter :can_update_event?, :only => [:create, :new, :destroy]
   before_filter :can_view_event?, :only => [:index, :new, :show]
   
   def index
-    @attachment = Attachment.new
-    @attachment.event_id = @event.id
-    render :action => 'new'
   end
 
   def show
-    @attachment = Attachment.find(params[:id])
+    @attachment = @event.attachments.find(params[:id])
     
     send_data(@attachment.current_data,
       :type  => @attachment.content_type,
       :filename => @attachment.filename,
       :disposition => 'attachment')
-    
   rescue
     render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
   end
@@ -59,7 +55,7 @@ class EventAttachmentsController < ApplicationController
 
   def destroy
     begin
-      @attachment = Attachment.find(params[:id])
+      @attachment = @event.attachment.find(params[:id])
       @attachment.destroy
       respond_to do |format|
         format.html do
