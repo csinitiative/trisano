@@ -66,7 +66,7 @@
     %fieldset.form
       %legend Reported Dates
       #reported_dates
-        %span.vert
+        %span.vert-break
         - core_element :results_reported_to_clinician_date, f, :horiz do
           = f.label(:results_reported_to_clinician_date)
           = f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now)

@@ -23,18 +23,18 @@
 
     %span{:class => "horiz"}
       %label Date record created
-      = @event.event_onset_date 
+      = @event.event_onset_date
 
     %span{:class => "horiz"}
       %label MMWR year
-      = @event.MMWR_year 
+      = @event.MMWR_year
 
     %span{:class => "horiz"}
       %label MMWR week
-      = @event.MMWR_week 
+      = @event.MMWR_week
 
-  %span.vert
-      
+  %span.vert-break
+
   %fieldset{:class => "form"}
     %legend Case / Outbreak
     - core_element_show :lhd_case_status_id, event_form, :horiz do
@@ -48,7 +48,7 @@
       = l(@event.outbreak_associated) || '&nbsp;'
     - core_element_show :outbreak_name, event_form, :horiz do
       = event_form.label :outbreak_name
-      = h(@event.outbreak_name) || '&nbsp;' 
+      = h(@event.outbreak_name) || '&nbsp;'
 
   %fieldset{:class => "form"}
     %legend Investigation
@@ -58,11 +58,11 @@
         - address = @event.address
         - if address && address.county && address.county.jurisdiction
           - jurisdiction_name = address.county.jurisdiction.name
-      = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name 
+      = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
 
     - event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j|
       - core_element_show :secondary_entity_id, j, :horiz do
-        = j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation') 
+        = j.label(:secondary_entity_id, 'Jurisdiction responsible for investigation')
         = h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
       - core_element_show :workflow_state, event_form, :horiz do
         = event_form.label :workflow_state, 'Event status'
@@ -77,10 +77,10 @@
   %fieldset{:class => "form"}
     %legend Auditing
     - core_element_show :event_name, event_form, :horiz do
-      = event_form.label :event_name 
+      = event_form.label :event_name
       = h(@event.event_name)
     - core_element_show :review_completed_by_state_date, event_form, :horiz do
-      = event_form.label :review_completed_by_state_date, 'Date review completed by state' 
+      = event_form.label :review_completed_by_state_date, 'Date review completed by state'
       = h(@event.review_completed_by_state_date)
     - core_element_show :acuity, event_form, :horiz do
       = event_form.label :acuity

@@ -11,12 +11,12 @@
   %span.horiz
     = label_tag :birth_date
     = text_field_tag :birth_date, params[:birth_date]
-  
+
   %span.horiz
     = label_tag "&nbsp;"
     = submit_tag "Search"
-  
-  %span.vert
+
+  %span.vert-break
     = label_tag "&nbsp;"
     = labeled_check_box_tag :use_starts_with_search
 

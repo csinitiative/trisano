@@ -47,7 +47,7 @@
           = phone_fields.label(:extension)
           = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event)
 
-      - core_element :agency_type, p, :vert do
+      - core_element :agency_type, p, 'vert-break' do
         = agency_type_selector(p)
 - else  
   - core_element :name, agency_form, :horiz do

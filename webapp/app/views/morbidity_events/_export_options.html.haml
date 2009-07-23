@@ -24,12 +24,12 @@
       %label.horiz
         = check_box_tag("export_options[]", "labs", false, :onclick => "$('lab_code_field_options').toggle();")
         %span Lab Results
-      %label.vert
+      %label.vert-break
         = check_box_tag("export_options[]", "treatments", false, :onclick => "$('treatment_code_field_options').toggle();")
         %span Treatments
       %b Additional Options:
       %br
-      %label.vert
+      %label.vert-break
         = check_box_tag("export_options[]", "use_short_names")
         %span Use Short Column Names
       %b Codes and Descriptions:      
@@ -104,6 +104,6 @@
       -# This div is needed to keep IE from drawing a button as wide as the form.
       %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
         = submit_tag("Export", :id => "export_btn")
-    %p.vert
+    %p.vert-break
       %br
       = link_to_function "Close", "Effect.Fade('export_options', { duration: 0.3 })"

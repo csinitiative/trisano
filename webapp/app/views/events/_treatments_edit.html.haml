@@ -22,7 +22,7 @@
     %br
     %br
 
-  - core_element(:treatments, f, :vert) do
+  - core_element(:treatments, f, 'vert-break') do
 
     - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |person_form|
 

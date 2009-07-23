@@ -20,7 +20,7 @@
   - unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
     = h @event.disease_event.disease.treatment_lead_in
 
-  - core_element_show :treatments, f, :vert do
+  - core_element_show :treatments, f, 'vert-break' do
     = render :partial => "events/treatments_list", :locals => { :event => @event}
 
   - if @event.is_a?(MorbidityEvent)

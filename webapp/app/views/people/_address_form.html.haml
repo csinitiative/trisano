@@ -24,7 +24,7 @@
 
   - f.fields_for(address_type, :builder => ExtendedFormBuilder) do |a|
 
-    %fieldset.vert
+    %fieldset.vert-break
       - core_element :street_number, a, :horiz do
         = a.label(:street_number)
         = a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
@@ -35,7 +35,7 @@
         = a.label(:unit_number)
         = a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event)
 
-    %fieldset.vert
+    %fieldset.vert-break
       - core_element :city, a, :horiz do
         = a.label(:city, "City")
         = a.core_text_field(:city, {:size => 30, :maxlength=> 255}, event)
@@ -57,5 +57,5 @@
     = render_geocode_form_section(a, event)
 
     -if event.is_a?(ContactEvent)
-      %fieldset.vert
+      %fieldset.vert-break
         = button_to_function('Copy From Original Patient', "contact_parent_address(#{@event.id})")

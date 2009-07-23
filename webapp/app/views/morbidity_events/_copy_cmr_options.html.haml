@@ -54,7 +54,7 @@
           = check_box_tag("event_components[]", "notes")
           Notes
 
-        %br.vert
+        %br.vert-break
         = submit_tag("Create and Edit Deep Copy", :id => "deep_copy_btn")
-        
+
     = link_to_function "Close", "Effect.Fade('copy_cmr_options', { duration: 0.3 })"

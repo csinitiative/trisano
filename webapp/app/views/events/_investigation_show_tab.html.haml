@@ -50,7 +50,7 @@
               - form_count += 1
               - form = form_reference.form
               - display_style = (form_count == 1) ? "inline" : "none"
-              
+
               %div{:id => "form_investigate_#{form.id}", :style => "display: #{display_style}; vertical-align: top"}
                 %span{:class => 'investigator-form-title'}
                   = form_reference.form.name

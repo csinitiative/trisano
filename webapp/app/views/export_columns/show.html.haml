@@ -67,7 +67,7 @@
           %label Disease Group
           = @export_column.export_disease_group.nil? ? "All Diseases" : @export_column.export_disease_group.name
 
-        %br{ :class => "vert" }
+        %br.vert-break
         %br
 
         %span{ :class =>  "horiz" }
@@ -90,7 +90,7 @@
           %label Required
           = @export_column.is_required
 
-        %br{ :class => "vert" }
+        %br.vert-break
         %br
 
         %span{ :class => "horiz" }

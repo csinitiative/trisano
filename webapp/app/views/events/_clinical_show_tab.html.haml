@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
@@ -30,7 +30,7 @@
       - core_element_show :date_diagnosed, d, :horiz do
         = d.label(:date_diagnosed)
         = @event.safe_call_chain(:disease_event, :date_diagnosed)
-      %span.vert
+      %span.vert-break
       - core_element_show :died_id, d, :horiz do
         = d.label(:died_id)
         = l @event.safe_call_chain(:disease_event, :died)
@@ -57,7 +57,7 @@
     %legend
       Hospitalized health facilities
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |disease_form|
-      - core_element_show :hospitalized_id, disease_form, :vert do
+      - core_element_show :hospitalized_id, disease_form, 'vert-break' do
         = disease_form.label(:hospitalized)
         = @event.disease_event ? l(@event.disease_event.hospitalized) : '&nbsp;'
     - if @event.hospitalization_facilities.empty?

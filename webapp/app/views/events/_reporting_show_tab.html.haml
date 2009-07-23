@@ -21,7 +21,7 @@
       - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
         - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
 
-          %span.vert
+          %span.vert-break
           - core_element_show :last_name, p, :horiz do
             = p.label(:last_name)
             = p.object.last_name

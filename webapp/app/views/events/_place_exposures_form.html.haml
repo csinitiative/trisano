@@ -19,7 +19,7 @@
 = h @event.safe_call_chain(:disease_event, :disease, :place_lead_in)
 
 -# Handles pre- and post-questions and help for places as a whole
-- core_element :places, f, :vert do
+- core_element :places, f, 'vert-break' do
 
   %div{:id => 'place_child_events'}
     = live_search('Search for an existing place', :search_field => 'places_search', :results => 'live_search_places', :select => 'place_name', :event_type => f.object_name)

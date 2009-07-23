@@ -60,20 +60,20 @@
       %td
         - form_for(@external_code, code_path(@external_code), :builder => ExtendedFormBuilder) do |code_form|
 
-          %span{ :class => "vert" }
+          %span.vert-break
             %label Code
             = code_form.text_field :the_code
-          %span{ :class => "vert" }
+          %span.vert-break
             %label Description
             = code_form.text_field :code_description
-          %span{ :class => "vert" }
+          %span.vert-break
             %label Type
             = code_form.text_field :code_name
-          %span{ :class => "vert" }  
+          %span.vert-break
             %label Sort Order
             = code_form.text_field :sort_order
           - if @external_code.code_name == 'county'
-            %span{ :class => "vert" }
+            %span.vert-break
               %label Jurisdiction
               = code_form.select :jurisdiction_id, Place.jurisdictions.map{ |j| [j.name, j.id] }, {:prompt => 'Choose One'} 
           %br

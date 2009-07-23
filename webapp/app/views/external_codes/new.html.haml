@@ -31,23 +31,23 @@
       %td
         - form_for(@external_code, :builder => ExtendedFormBuilder) do |f|
 
-          %span{ :class => "vert" }
+          %span.vert-break
             = f.label(:the_code, "Code")
             = f.text_field :the_code
 
-          %span{ :class => "vert" }
+          %span.vert-break
             = f.label(:code_description, "Description")
             = f.text_field :code_description
 
-          %span{ :class => "vert" }
+          %span.vert-break
             = f.label(:code_name, "Code Type")
             = f.text_field :code_name
 
-          %span{ :class => "vert" }
+          %span.vert-break
             = f.label(:sort_order, "Sort Order")
             = f.text_field :sort_order
 
-          %span{ :class => "vert" }
+          %span.vert-break
           %label Jurisdiction (county only)
           = f.select :jurisdiction_id, Place.jurisdictions.map{ |j| [j.name, j.id] }, {:prompt => 'Choose for County Codes Only'} 
           %br

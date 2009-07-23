@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %table.list
@@ -19,12 +19,12 @@
       Edit Disease
   %tr
     %td
-      %span{ :class => "vert" }
+      %span.vert-break
         = f.label(:disease_name, "Disease name")
         = f.text_field(:disease_name)
         = "#{f.check_box(:active)} Active?"
 
-      %span{ :class =>  "vert" }
+      %span.vert-break
         = f.label(:cdc_code, "CDC/NETSS code")
         = f.text_field(:cdc_code)
 
@@ -36,14 +36,14 @@
             - ExternalCode.find_cases(:all).each do |code|
               = "<label>" + check_box_tag("disease[external_code_ids][]", code.id, @disease.external_code_ids.include?(code.id), :id => code.code_description.tr(" ", "_")) + code.code_description + "</label>"
 
-      %span{ :class => "vert" }
+      %span.vert-break
         = f.label(:contact_lead_in, "Contact lead-in question")
         = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})
 
-      %span{ :class => "vert" }
+      %span.vert-break
         = f.label(:place_lead_in, "Place lead-in question")
         = f.text_area(:place_lead_in, {:cols => 50, :rows => 5})
 
-      %span{ :class => "vert" }
+      %span.vert-break
         = f.label(:treatment_lead_in, "Treatment lead-in question")
         = f.text_area(:treatment_lead_in, {:cols => 50, :rows => 5})

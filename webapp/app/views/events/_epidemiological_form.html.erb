@@ -52,13 +52,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <fieldset class="form">
           <%= render :partial => 'events/place_exposures_form', :locals => {:f => f, :event => @event} %>
         </fieldset>
-    
+
         <fieldset class="form">
           <legend>Other</legend>
           <% core_element :imported_from_id, f, :horiz do -%>
             <%= f.label(:imported_from_id) %>
             <%= f.dropdown_code_field(:imported_from_id, 'imported', {}, {}, @event) %>
-          <% end -%>    
+          <% end -%>
           <% core_element :risk_factors, rf, :horiz do %>
             <%= rf.label(:risk_factors) %>
             <%= rf.core_text_field(:risk_factors,{:size => 25, :maxlength => 255}, @event) %>
@@ -71,7 +71,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= f.label(:other_data_1, 'Other data 1') %>
             <%= f.text_field(:other_data_1, :size => 30, :maxlength => 255) %>
           <% end -%>
-          <% core_element :other_data_2, f, :horiz do -%>
+          <% core_element :other_data_2, f, :vert do -%>
             <%= f.label(:other_data_2, "Other data 2") %>
             <%= f.text_field(:other_data_2, :size => 30, :maxlength => 255) %>
           <% end -%>

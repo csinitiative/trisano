@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
@@ -20,9 +20,9 @@
   = h @event.safe_call_chain(:disease_event, :disease, :contact_lead_in)
 
   #contact_child_events
-  - core_element_show :contacts, f, :vert do
+  - core_element_show :contacts, f, 'vert-break' do
     %fieldset.form
-      %legend Contacts  
+      %legend Contacts
       %i Not yet elevated to morbidity events
       - if @event.contact_child_events.first.new_record?
         %h3 No contacts have been recorded for this event

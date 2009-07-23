@@ -133,6 +133,10 @@ legend {
   display: block;
   float: left; }
 
+.vert-break {
+  clear: both;
+  display: block; }
+
 #foot {
   width: 500px;
   padding: 150px 0px 100px 0px; }

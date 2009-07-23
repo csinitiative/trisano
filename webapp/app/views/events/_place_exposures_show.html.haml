@@ -21,7 +21,7 @@
   = h @event.safe_call_chain(:disease, :disease, :place_lead_in)
 
 
-  - core_element_show :places, event_form, :vert do
+  - core_element_show :places, event_form, 'vert-break' do
 
     -if @event.place_child_events.empty?
       %h3 No place exposures have been recorded for this event
