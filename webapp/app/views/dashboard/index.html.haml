@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
@@ -22,15 +22,14 @@
   %script
     detect();
 
-.vert
-  %h2
-    Tasks
-  %span.vert= link_to_function('Change filter', "Effect.BlindDown('task_view_settings')")
-  #task_view_settings{:style => 'display: none;'}
-    = render :partial => 'filter_tasks_form'
-  #tasks
-    = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
-    
+%h2
+  Tasks
+%span{:style => "clear: both;"}= link_to_function('Change filter', "Effect.BlindDown('task_view_settings')")
+#task_view_settings{:style => 'display: none;'}
+  = render :partial => 'filter_tasks_form'
+#tasks{:style => "clear: both;"}
+  = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
+
 %br
 %br
 %br

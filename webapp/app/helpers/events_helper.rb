@@ -641,7 +641,7 @@ module EventsHelper
   def render_core_field_help_text(attribute, form_builder, block)
     if @event
       core_path = form_builder.core_path[attribute].to_s
-      core_field = @event.class.exposed_attributes[core_path]      
+      core_field = @event.class.exposed_attributes[core_path]
       help = render_help_text(core_field[:model]) if core_field
       concat(help) if help
     end
@@ -683,8 +683,6 @@ module EventsHelper
       end
 
       result << "</div>"
-
-      result << "<br clear='all'/>" if question_style == "vert"
 
       return result
     rescue
@@ -845,7 +843,6 @@ module EventsHelper
         result << "</div>"
       end
 
-      result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
       logger.warn($!.message)
@@ -997,7 +994,6 @@ module EventsHelper
         result << "</div>"
       end
 
-      result << "<br clear='all'/>" if question_style == "vert"
       return result
     rescue
       logger.warn($!.message)

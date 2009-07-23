@@ -50,12 +50,12 @@
     = lab_result_form.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
 
   - if lab_result.try(:staged_message)
-    %span.vert
+    %span.horiz
       %label Original report
       = link_to 'Electronic Lab Report', staged_message_path(lab_result.staged_message)
 
   - if defined?(f) && !f.object.new_record?
-    %span.horiz
+    %span.vert
       = lab_result_form.label :_delete, "Remove"
       = lab_result_form.check_box :_delete
 
