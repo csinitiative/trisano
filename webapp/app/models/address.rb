@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Address < ActiveRecord::Base
-  after_create :associate_longitudinal_data
+  after_create :associate_longitudinal_data, :establish_canonical_address
 
   belongs_to :event
   belongs_to :entity
@@ -63,6 +63,18 @@ class Address < ActiveRecord::Base
     if event.respond_to?(:interested_place)
       if event.try(:interested_place).try(:primary_entity_id)
         update_attribute(:entity_id, event.interested_place.primary_entity_id)
+      end
+    end
+  end
+
+  def establish_canonical_address
+    if event.respond_to?(:interested_place)
+      if event.try(:interested_place).try(:primary_entity)
+        if event.interested_place.primary_entity.canonical_address.nil?
+          canonical_address = self.clone
+          canonical_address.event_id = nil
+          canonical_address.save
+        end
       end
     end
   end

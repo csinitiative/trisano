@@ -110,9 +110,28 @@ describe PlaceEvent do
       event.update_attributes(@place_event_hash)
       event.place_child_events.reload
       new_place_address = event.place_child_events.first.interested_place.primary_entity.addresses.first
-
       new_place_address.should be_nil
     end
+  end
+
+  describe "adding an address to a place event's interested place" do
+
+    it "should establish a canonical address the first time an address is provided" do
+      place_event = Factory.create(:place_event)
+      place_entity = place_event.interested_place.primary_entity
+      place_entity.canonical_address.should be_nil
+      address = Factory.create(:address, :event_id => place_event.id, :entity_id => place_entity.id)
+      place_entity.reload
+      place_entity.canonical_address.should_not be_nil
+      place_entity.canonical_address.street_number.should == address.street_number
+      place_entity.canonical_address.street_name.should == address.street_name
+      place_entity.canonical_address.unit_number.should == address.unit_number
+      place_entity.canonical_address.city.should == address.city
+      place_entity.canonical_address.county_id.should == address.county_id
+      place_entity.canonical_address.state_id.should == address.state_id
+      place_entity.canonical_address.postal_code.should == address.postal_code
+    end
+
   end
   
 end

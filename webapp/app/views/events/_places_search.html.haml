@@ -20,7 +20,7 @@
       %span.place_name= place.name
       %br
       %span.place_type= "&nbsp;&nbsp;#{place.formatted_place_descriptions}"
-      - address = place.entity.addresses.last
+      - address = place.entity.canonical_address.nil? ? place.entity.addresses.last : place.entity.canonical_address
       - unless address.nil?
         %br
         %span.place_address
