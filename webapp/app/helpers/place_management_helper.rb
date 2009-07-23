@@ -57,17 +57,25 @@ module PlaceManagementHelper
 
   def render_place_address(place_entity)
     result = ""
+    first_line = ""
+    second_line = ""
     address = place_entity.canonical_address
         
     unless address.nil?
-      result << "#{h address.street_number}"
-      result << "#{h address.street_name}"
-      result << "#{h address.city}"
-      result << "#{h address.county.code_description}" unless address.county.nil?
-      result << "#{h address.state.code_description}" unless address.state.nil?
-      result << "#{h address.postal_code}"
+      first_line << "#{h address.street_number} " unless address.street_number.blank?
+      first_line << "#{h address.street_name} " unless address.street_name.blank?
+      first_line << "#{h address.unit_number}" unless address.unit_number.blank?
+
+      second_line << "#{h address.city} " unless address.city.blank?
+      second_line << "#{h address.county.code_description} " unless address.county.nil?
+      second_line << "#{h address.state.code_description} " unless address.state.nil?
+      second_line << "#{h address.postal_code}"
+
+      result << first_line unless first_line.empty?
+      result << "<br/>" if (!first_line.empty? && !second_line.empty?)
+      result << second_line unless second_line.empty?
     end
-    
+
     result
   end
 

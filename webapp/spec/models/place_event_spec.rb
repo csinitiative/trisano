@@ -116,6 +116,10 @@ describe PlaceEvent do
 
   describe "adding an address to a place event's interested place" do
 
+    before :all do
+      User.current_user = nil
+    end
+
     it "should establish a canonical address the first time an address is provided" do
       place_event = Factory.create(:place_event)
       place_entity = place_event.interested_place.primary_entity
