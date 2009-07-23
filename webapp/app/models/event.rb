@@ -299,8 +299,10 @@ class Event < ActiveRecord::Base
         allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
         allowed_ids_str = allowed_jurisdiction_ids.uniq.join(',')
 
-        where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ")"
-        where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ") )"
+        unless allowed_ids_str.blank?
+          where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ")"
+          where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ") )"
+        end
       end
 
       # Debt: The UI shows the user a format to use. Something a bit more robust

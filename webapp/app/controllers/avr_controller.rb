@@ -19,6 +19,9 @@
 class AvrController < ApplicationController
   
   def index
+    unless User.current_user.is_entitled_to?(:access_avr)
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to access the AVR components" }, :status => 403 and return
+    end
     # Nothing to do at the moment as the dashboard is static
   end
   

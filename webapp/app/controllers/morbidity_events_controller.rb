@@ -44,10 +44,6 @@ class MorbidityEventsController < EventsController
   end
 
   def new
-    unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have privileges to create a CMR", :event => nil }, :layout => true, :status => 403 and return
-    end
-
     @event = MorbidityEvent.new
     
     prepopulate unless params[:from_search].nil?
@@ -151,6 +147,10 @@ class MorbidityEventsController < EventsController
   end
 
   def event_search
+    unless User.current_user.is_entitled_to?(:view_event)
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
+    end
+
     # Tests to see if any params are supplied in query string.
     if params[:last_name] || params[:first_name] || params[:birth_date]
 

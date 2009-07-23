@@ -216,6 +216,7 @@ class HumanEvent < Event
       end
 
       users_view_jurisdictions = User.current_user.jurisdiction_ids_for_privilege(:view_event)
+      users_view_jurisdictions << "NULL" if users_view_jurisdictions.empty?
 
       query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
       User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"

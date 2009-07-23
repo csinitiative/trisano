@@ -16,13 +16,8 @@
 - content_for :title do
   List Morbidity Events
 
-- content_for :name do
-  Existing Reports
-
 - content_for :tools do
-  = new_cmr_link 'New Morbidity Report'
-  |
-  - unless @events.empty? 
+  - unless @events.empty?
     = link_to_function('Export All to CSV', nil) do |page|
       - page[:export_options].visual_effect :appear
     = "|"
@@ -69,7 +64,7 @@
     = "Set as default view&nbsp;&nbsp;"
     = submit_tag("Change View", :id => "change_view_btn")
   = link_to_function "Close", "Effect.BlindUp('change_view')"
-  %p
+%p
 
 #rot
   %table.list

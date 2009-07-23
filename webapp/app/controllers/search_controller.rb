@@ -22,6 +22,10 @@ class SearchController < ApplicationController
   end
 
   def cmrs
+    unless User.current_user.is_entitled_to?(:view_event)
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
+    end
+
     flash[:error] = ""
     error_details = []
 

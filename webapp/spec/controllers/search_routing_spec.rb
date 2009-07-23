@@ -26,7 +26,7 @@ describe SearchController do
 
   describe "route recognition" do
     it "should generate params { :controller => 'search', action => 'index' } from GET /search" do
-      params_from(:get, "/search").should == {:controller => "search", :action => "index"}
+      params_from(:get, "/search").should == {:controller => "search", :action => "cmrs"}
     end
   end
 end

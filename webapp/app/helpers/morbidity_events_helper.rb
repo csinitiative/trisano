@@ -75,8 +75,6 @@ module MorbidityEventsHelper
           page[:copy_cmr_options].visual_effect :appear
         end
       end
-    # else
-      # controls << link_to('Export to CSV', cmr_path(event) + '.csv')
     end
     controls
   end

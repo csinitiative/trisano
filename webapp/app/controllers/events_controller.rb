@@ -20,6 +20,7 @@ class EventsController < ApplicationController
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
   before_filter :can_new?, :only => [:new]
   before_filter :can_view?, :only => [:show, :export_single]
+  before_filter :can_index?, :only => [:index, :export]
   before_filter :set_tab_index
   
   def auto_complete_for_lab_name
@@ -227,6 +228,12 @@ class EventsController < ApplicationController
   def can_new?
     unless User.current_user.is_entitled_to?(:create_event)
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to create an event" }, :status => 403 and return
+    end
+  end
+
+  def can_index?
+    unless User.current_user.is_entitled_to?(:view_event)
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
     end
   end
   
