@@ -17,10 +17,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
-  before :all do 
-    # this is dumb, but I *think* it keeps a stray mock from blowing this test
-    User.current_user = nil
-  end
 
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)

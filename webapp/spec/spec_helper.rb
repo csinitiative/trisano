@@ -50,6 +50,10 @@ Spec::Runner.configure do |config|
   # == Notes
   # 
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
+
+  config.after(:each) {
+     User.current_user = nil
+  }
 end
 
 # Bypass nested set logic to invalidate the provided form.
