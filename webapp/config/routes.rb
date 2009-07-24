@@ -22,8 +22,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :diseases
 
-  map.js ':controller/:action.:format'
-
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
 
@@ -163,6 +161,8 @@ ActionController::Routing::Routes.draw do |map|
   }
 
   map.resources :places
+
+  map.js 'js/:action.js', :controller => 'js', :format => 'js'
 
   # The priority is based upon order of creation: first created -> highest priority.
 
