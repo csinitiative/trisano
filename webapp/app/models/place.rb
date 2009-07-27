@@ -57,8 +57,8 @@ class Place < ActiveRecord::Base
 
     def all_by_name_and_types(name, type_codes, short_name=false)
       type_codes = [ type_codes ] unless type_codes.is_a?(Array)
-      self.all(:include => :place_types, 
-        :conditions => [ "LOWER(places.#{short_name ? 'short_name' : 'name'}) = ? AND codes.the_code IN (?) AND codes.code_name = 'placetype'", name.downcase, type_codes ],
+      self.all(:include => [:place_types, :entity],
+        :conditions => [ "LOWER(places.#{short_name ? 'short_name' : 'name'}) = ? AND codes.the_code IN (?) AND codes.code_name = 'placetype' AND entities.deleted_at IS NULL", name.downcase, type_codes ],
         :order => "LOWER(TRIM(name))")
     end
 
