@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 .phone
-  %span.data_telephone
+  %div.data_telephone
     - core_element :entity_location_type_id, f, :horiz do
       =f.label(:entity_location_type_id, "Phone type")
       %span.data_telephone_location_type=f.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})

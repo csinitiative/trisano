@@ -19,7 +19,7 @@
   %legend Demographics
 
   -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |p|
-    %span.data_demographics
+    %div.data_demographics
       -core_element :birth_gender_id, p, :horiz do
         =p.label(:birth_gender)
         %span.data_birth_gender=p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event)

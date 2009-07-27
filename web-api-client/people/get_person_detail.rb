@@ -7,7 +7,7 @@ trisano = TriSanoWebApi.new
 
 id = $ARGV[0] || raise('Need person id as argument')
 
-person = trisano.get("/people/#{id}").search(".//span[starts-with(@class, 'data_')]")
+person = trisano.get("/people/#{id}").search(".//div[starts-with(@class, 'data_')]")
 
 elements = person.search(".//span[starts-with(@class, 'data_')][not(*)]")
 elements.each { |element|

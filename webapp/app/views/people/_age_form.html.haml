@@ -19,7 +19,7 @@
   %legend Age
 
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-    %span.data_age_info
+    %div.data_age_info
       -core_element :birth_date, p, :horiz do
         =p.label(:birth_data, "Date of Birth")
         %span.data_birth_date=p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event )

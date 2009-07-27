@@ -16,7 +16,7 @@
 %fieldset.form
   %legend Demographics
   -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |person_form|
-    %span.data_demographics
+    %div.data_demographics
       -core_element_show :birth_gender_id, person_form, :horiz do
         =person_form.label(:birth_gender_id)
         %span.data_birth_gender=person.birth_gender_description

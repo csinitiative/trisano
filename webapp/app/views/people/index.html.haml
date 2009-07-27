@@ -57,7 +57,7 @@
         %td.forminformation
           %fieldset
             - fields_for(person, :builder => ExtendedFormBuilder) do |f|
-              %span.data_person
+              %div.data_person
                 %span.data_person_id{:style => 'display: none'}=h(person.person_entity.id)
                 = render :partial => 'people/name_show', :locals => {:person => person, :f => f, :event_form => nil}
                 = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}

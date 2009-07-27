@@ -16,7 +16,7 @@
 %fieldset.form
   %legend Name
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
-    %span.data_name
+    %div.data_name
       -core_element_show :last_name, person_form, :horiz do
         =person_form.label(:last_name)
         %span.data_last_name=person.last_name

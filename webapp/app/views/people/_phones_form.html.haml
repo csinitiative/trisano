@@ -19,14 +19,14 @@
   %legend 
     Telephone / Email
   %div{:id => 'telephones'}
-    %span.data_telephones
+    %div.data_telephones
       - f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
         = render :partial => 'people/telephone', :locals => { :f => telephone_form }
     %p
       =add_record_link f, :telephones, "Add a Telephone", :partial => 'people/telephone'
 
   %div{:id => 'email_addresses'}
-    %span.data_email_addresses
+    %div.data_email_addresses
       - f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
         = render :partial => 'people/email', :locals => { :f => email_form }
     %p

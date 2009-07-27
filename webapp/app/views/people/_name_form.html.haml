@@ -17,7 +17,7 @@
   %legend Name
 
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-    %span.data_name
+    %div.data_name
       = error_messages_for :object => p.object
       -core_element :last_name, p, :horiz do
         =p.label(:last_name)

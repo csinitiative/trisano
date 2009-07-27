@@ -16,7 +16,7 @@
 %fieldset.form
   %legend Age
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
-    %span.data_age_info
+    %div.data_age_info
       -core_element_show :birth_date, person_form, :horiz do
         =person_form.label(:birth_date)
         %span.data_birth_date=person.birth_date

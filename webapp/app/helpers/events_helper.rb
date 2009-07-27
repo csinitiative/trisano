@@ -469,8 +469,9 @@ module EventsHelper
     disease = original_patient.safe_call_chain(:disease_event, :disease, :disease_name)
     out = "<div>Parent Patient: #{link_to(name, cmr_path(original_patient))}"
     unless disease.blank?
-      out << " | <span style='font-size: 12px; font-weight: light;'>#{disease}</span></div>"
+      out << " | <span style='font-size: 12px; font-weight: light;'>#{disease}</span>"
     end
+    out << "</div>"
     out
   end
 
