@@ -19,13 +19,15 @@
   %legend 
     Telephone / Email
   %div{:id => 'telephones'}
-    - f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
-      = render :partial => 'events/people/telephone', :locals => { :f => telephone_form }
+    %span.data_telephones
+      - f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
+        = render :partial => 'people/telephone', :locals => { :f => telephone_form }
     %p
-      =add_record_link f, :telephones, "Add a Telephone", :partial => 'events/people/telephone'
+      =add_record_link f, :telephones, "Add a Telephone", :partial => 'people/telephone'
 
   %div{:id => 'email_addresses'}
-    - f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
-      = render :partial => 'events/people/email', :locals => { :f => email_form }
+    %span.data_email_addresses
+      - f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
+        = render :partial => 'people/email', :locals => { :f => email_form }
     %p
-      =add_record_link f, :email_addresses, "Add an Email Address", :partial => 'events/people/email'
+      =add_record_link f, :email_addresses, "Add an Email Address", :partial => 'people/email'

@@ -146,6 +146,7 @@ class PeopleController < ApplicationController
         :last_name => params[:last_name],
         :birth_date => params[:birth_date],
         :order_by => params[:sort_order],
+        :use_starts_with_search => params[:use_starts_with_search],
         :do_not_show_deleted => params[:do_not_show_deleted],
         :page => params[:page],
         :include => [:person_entity],

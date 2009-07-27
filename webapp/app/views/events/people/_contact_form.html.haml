@@ -22,10 +22,10 @@
     -f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
       - ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
         =render :partial => 'people/name_form', :locals => {:f => pe, :event => event, :event_form => f}
-        =render :partial => 'people/address_form', :locals => {:f => f, :event => event} 
-        =render :partial => 'people/age_form', :locals => {:f => pe, :event => event} 
-        =render :partial => 'people/phones_form', :locals => {:f => pe} 
-        =render :partial => 'people/demographics_form', :locals => {:f => pe, :event => event} 
+        =render :partial => 'people/address_form', :locals => {:f => f, :event => event}
+        =render :partial => 'people/age_form', :locals => {:f => pe, :event => event}
+        =render :partial => 'people/phones_form', :locals => {:f => pe}
+        =render :partial => 'people/demographics_form', :locals => {:f => pe, :event => event}
 
     -f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |event_info|
       =render :partial => "events/people/disposition_form", :locals => { :f => event_info }

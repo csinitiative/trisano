@@ -19,17 +19,18 @@
   %legend Age
 
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-    -core_element :birth_date, p, :horiz do
-      =p.label(:birth_data, "Date of Birth")
-      =p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event )
-    -core_element :approximate_age_no_birthday, p, :horiz do
-      =p.label(:approximate_age_no_birthday, "Age")
-      =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event)
-    -if event
-      -core_element :age_at_onset, p, :horiz do
-        -if @event.errors.on(:age_at_onset)
-          .fieldWithErrors
+    %span.data_age_info
+      -core_element :birth_date, p, :horiz do
+        =p.label(:birth_data, "Date of Birth")
+        %span.data_birth_date=p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event )
+      -core_element :approximate_age_no_birthday, p, :horiz do
+        =p.label(:approximate_age_no_birthday, "Age")
+        %span.data_approximate_age_no_birthday=p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event)
+      -if event
+        -core_element :age_at_onset, p, :horiz do
+          -if @event.errors.on(:age_at_onset)
+            .fieldWithErrors
+              =p.label(:age_at_onset, 'Age at onset')
+          -else
             =p.label(:age_at_onset, 'Age at onset')
-        -else
-          =p.label(:age_at_onset, 'Age at onset')
-        =@event.age_info
+          %span.data_age_at_onset=@event.age_info

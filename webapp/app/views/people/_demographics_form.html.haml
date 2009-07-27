@@ -19,15 +19,16 @@
   %legend Demographics
 
   -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |p|
-    -core_element :birth_gender_id, p, :horiz do
-      =p.label(:birth_gender)
-      =p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event)
-    -core_element :ethnicity_id, p, :horiz do
-      =p.label(:ethnicity)
-      =p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event)
-    %span.horiz
-      =f.label(:race)
-      =f.multi_select_code_field(:race_ids, 'race', {}, {})
-    -core_element :primary_language_id, p, :horiz do 
-      =p.label(:primary_language) 
-      =p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event)
+    %span.data_demographics
+      -core_element :birth_gender_id, p, :horiz do
+        =p.label(:birth_gender)
+        %span.data_birth_gender=p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event)
+      -core_element :ethnicity_id, p, :horiz do
+        =p.label(:ethnicity)
+        %span.data_ethnicity=p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event)
+      %span.horiz
+        =f.label(:race)
+        %span.data_race=f.multi_select_code_field(:race_ids, 'race', {}, {})
+      -core_element :primary_language_id, p, :horiz do 
+        =p.label(:primary_language) 
+        %span.data_primary_language=p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event)

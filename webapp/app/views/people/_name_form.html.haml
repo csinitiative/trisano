@@ -17,18 +17,19 @@
   %legend Name
 
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-    = error_messages_for :object => p.object
-    -core_element :last_name, p, :horiz do
-      =p.label(:last_name)
-      =p.core_text_field(:last_name, {:size => 25, :class => "required", :maxlength => 25}, event)
-    -core_element :first_name, p, :horiz do
-      =p.label(:first_name)
-      =p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, event)
-    -core_element :middle_name, p, :horiz do
-      =p.label(:middle_name)
-      =p.core_text_field(:middle_name, {:size => 25, :maxlength => 25}, event)
+    %span.data_name
+      = error_messages_for :object => p.object
+      -core_element :last_name, p, :horiz do
+        =p.label(:last_name)
+        %span.data_last_name=p.core_text_field(:last_name, {:size => 25, :class => "required", :maxlength => 25}, event)
+      -core_element :first_name, p, :horiz do
+        =p.label(:first_name)
+        %span.data_first_name=p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, event)
+      -core_element :middle_name, p, :horiz do
+        =p.label(:middle_name)
+        %span.data_middle_name=p.core_text_field(:middle_name, {:size => 25, :maxlength => 25}, event)
 
-    - if !event_form.nil?
-      -core_element :parent_guardian, event_form, :horiz do
-        =event_form.label :parent_guardian, 'Parent/Guardian'
-        =event_form.core_text_field(:parent_guardian, {:size => 35, :maxlength => 255}, event)
+      - if !event_form.nil?
+        -core_element :parent_guardian, event_form, :horiz do
+          =event_form.label :parent_guardian, 'Parent/Guardian'
+          %span.data_parent_guardian=event_form.core_text_field(:parent_guardian, {:size => 35, :maxlength => 255}, event)

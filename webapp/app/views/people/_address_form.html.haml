@@ -23,39 +23,39 @@
     - address_type = :address
 
   - f.fields_for(address_type, :builder => ExtendedFormBuilder) do |a|
-
-    %fieldset.vert-break
-      - core_element :street_number, a, :horiz do
-        = a.label(:street_number)
-        = a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
-      - core_element :street_name, a, :horiz do
-        = a.label(:street_name)
-        = a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event)
-      - core_element :unit_number, a, :horiz do
-        = a.label(:unit_number)
-        = a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event)
-
-    %fieldset.vert-break
-      - core_element :city, a, :horiz do
-        = a.label(:city, "City")
-        = a.core_text_field(:city, {:size => 30, :maxlength=> 255}, event)
-      - core_element :state_id, a, :horiz do
-        = a.label(:state_id, "State")
-        = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {}, event)
-      - core_element :county_id, a, :horiz do
-        = a.label(:county_id, "County")
-        = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {}, event)
-      - core_element :postal_code, a, :horiz do
-        = a.label(:postal_code, "Zip code")
-        = a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
-      %label
-        District
-        - address = event.nil? ? @person.canonical_address : event.address
-        - if address.county && address.county.jurisdiction
-          = address.county.jurisdiction.name
-    
-    = render_geocode_form_section(a, event)
-
-    -if event.is_a?(ContactEvent)
+    %span.data_address
       %fieldset.vert-break
-        = button_to_function('Copy From Original Patient', "contact_parent_address(#{@event.id})")
+        - core_element :street_number, a, :horiz do
+          = a.label(:street_number)
+          %span.data_stree_number= a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
+        - core_element :street_name, a, :horiz do
+          = a.label(:street_name)
+          %span.data_street_name= a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event)
+        - core_element :unit_number, a, :horiz do
+          = a.label(:unit_number)
+          %span.data_unit_number= a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event)
+
+      %fieldset.vert-break
+        - core_element :city, a, :horiz do
+          = a.label(:city, "City")
+          %span.data_city= a.core_text_field(:city, {:size => 30, :maxlength=> 255}, event)
+        - core_element :state_id, a, :horiz do
+          = a.label(:state_id, "State")
+          %span.data_state= a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {}, event)
+        - core_element :county_id, a, :horiz do
+          = a.label(:county_id, "County")
+          %span.data_county= a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {}, event)
+        - core_element :postal_code, a, :horiz do
+          = a.label(:postal_code, "Zip code")
+          %span.data_postal_code= a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
+        %label
+          District
+          - address = event.nil? ? @person.canonical_address : event.address
+          - if address.county && address.county.jurisdiction
+            %span.data_jurisdiction_name= address.county.jurisdiction.name
+    
+      = render_geocode_form_section(a, event)
+
+      -if event.is_a?(ContactEvent)
+        %fieldset.vert-break
+          = button_to_function('Copy From Original Patient', "contact_parent_address(#{@event.id})")

@@ -24,6 +24,28 @@
 - content_for :tools_two do
   = button_to("Create new person", {:action => "new"}, { :method => :get })
 
+- form_tag people_path, :method => :get do
+  %span.horiz
+    = label_tag :last_name
+    = text_field_tag :last_name, params[:last_name]
+
+  %span.horiz
+    = label_tag :first_name
+    = text_field_tag :first_name, params[:first_name]
+
+  %span.horiz
+    = label_tag :birth_date
+    = text_field_tag :birth_date, params[:birth_date]
+
+  %span.horiz
+    = label_tag "&nbsp;"
+    = submit_tag "Search"
+
+  %span.vert-break
+    = label_tag "&nbsp;"
+    = labeled_check_box_tag :use_starts_with_search
+%br
+
 #rot
   %table.list
     %tr

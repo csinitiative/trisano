@@ -1,0 +1,10 @@
+.email
+  - core_element :email_address, f, :horiz do
+    =f.label(:email_address)
+    %span.data_email_address=f.core_text_field(:email_address, {:size => 25, :maxlength => 255})
+
+  %span.horiz
+    - unless f.object.new_record?
+      =f.label :_delete, "Remove:"
+      %span.data_email_address_delete=f.check_box :_delete
+%hr

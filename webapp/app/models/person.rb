@@ -126,19 +126,33 @@ class Person < ActiveRecord::Base
     def find_all_for_filtered_view(options = {})
       where_clause = "1=1 "
 
-      if options[:last_name]
-        where_clause << " AND last_name = '" + options[:last_name].gsub("'", "''") + "'"
+      if options[:use_starts_with_search]
+        if !options[:last_name].blank?
+         where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "%'"
+        end
+
+        if !options[:first_name].blank?
+          where_clause << " AND first_name ILIKE '" + options[:first_name].gsub("'", "''") + "%'"
+        end
+
+        if !options[:middle_name].blank?
+          where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "%'"
+        end
+      else
+        if !options[:last_name].blank?
+         where_clause << " AND last_name = '" + options[:last_name].gsub("'", "''") + "'"
+        end
+
+        if !options[:first_name].blank?
+          where_clause << " AND first_name = '" + options[:first_name].gsub("'", "''") + "'"
+        end
+
+        if !options[:middle_name].blank?
+          where_clause << " AND middle_name = '" + options[:middle_name].gsub("'", "''") + "'"
+        end
       end
 
-      if options[:first_name]
-        where_clause << " AND first_name = '" + options[:first_name].gsub("'", "''") + "'"
-      end
-
-      if options[:middle_name]
-        where_clause << " AND middle_name = '" + options[:middle_name].gsub("'", "''") + "'"
-      end
-
-      if options[:birth_date]
+      if !options[:birth_date].blank?
         where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
       end
 
