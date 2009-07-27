@@ -63,3 +63,4 @@ end  # parse()
   puts ""
 }
 
+exit 0

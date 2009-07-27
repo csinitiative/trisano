@@ -45,4 +45,8 @@ class TriSanoWebApi
     @agent.put(@base_url + uri)
   end
 
+  def submit(form, button)
+    @agent.submit(form, button)
+  end
+
 end

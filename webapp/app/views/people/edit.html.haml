@@ -19,7 +19,7 @@
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to People', people_path
+  = link_to '&lt; Back to People', people_path
   %p
 
 - content_for :tools_two do
@@ -27,20 +27,19 @@
   
 #rot
   %table.list
+    %th.forminformation
+      Person
+    %th
     %tr
-      %th.forminformation
-        Person
-      %th
-      %tr
-        %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            Edit
-            |
-            = link_to 'Show', person_path(@person)
+      %td
+        .tools{:style => "position: absolute; right: 15px;"}
+          Edit
+          |
+          = link_to 'Show', person_path(@person)
 
 #rot
   = error_messages_for :object => [@person]
 
-  - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |pe|
+  - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder, :html => {:name => 'edit_person_entity'}) do |pe|
     = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
     = pe.submit "Update"

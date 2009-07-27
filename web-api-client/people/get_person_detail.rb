@@ -15,3 +15,5 @@ elements.each { |element|
   value = element.text
   puts "#{name}: #{value}"
 }
+
+exit 0
