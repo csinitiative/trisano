@@ -140,7 +140,9 @@ FROM
 WHERE
     relkind = 'S' AND
     relname IN (
-        'dw_patients_races_seq'
+        'dw_patients_races_seq',
+        'dw_events_reporting_agencies_id_seq',
+        'dw_events_diagnostic_facilities_id_seq'
     ) AND
     n.nspname = 'public' ;
 COMMIT;
@@ -929,9 +931,11 @@ ALTER TABLE dw_contact_clinicians
 CREATE INDEX dw_contact_clinicians_event_id_ix
     ON dw_contact_clinicians (dw_contact_events_id);
 
+CREATE SEQUENCE dw_events_diagnostic_facilities_id_seq;
+
 CREATE TABLE dw_events_diagnostic_facilities AS
 SELECT
-    p.id AS id,
+    nextval('dw_events_diagnostic_facilities_id_seq') AS id,
     CASE
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
@@ -955,8 +959,6 @@ FROM
         ON (c.id = pt.type_id)
 WHERE
     p.type = 'DiagnosticFacility'
-GROUP BY
-    1, 2, 3, 4, 6;
 ;
 
 ALTER TABLE dw_events_diagnostic_facilities
@@ -968,9 +970,11 @@ CREATE INDEX dw_events_diag_fac_contact_event_ix
 CREATE INDEX dw_events_diag_fac_place_id_ix
     ON dw_events_diagnostic_facilities (place_id);
 
+CREATE SEQUENCE dw_events_reporting_agencies_id_seq;
+
 CREATE TABLE dw_events_reporting_agencies AS
 SELECT
-    p.id AS id,
+    nextval('dw_events_reporting_agencies_id_seq') AS id,
     CASE
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
