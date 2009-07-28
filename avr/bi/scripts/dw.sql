@@ -941,6 +941,7 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
     pl.name AS name,
+    c.code_description AS place_type,
     pl.id AS place_id
 FROM
     events
@@ -948,8 +949,14 @@ FROM
         ON (p.event_id = events.id)
     JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
+    JOIN places_types pt
+        ON (pt.place_id = pl.id)
+    JOIN codes c
+        ON (c.id = pt.type_id)
 WHERE
     p.type = 'DiagnosticFacility'
+GROUP BY
+    1, 2, 3, 4, 6;
 ;
 
 ALTER TABLE dw_events_diagnostic_facilities
@@ -973,6 +980,7 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
     pl.name AS name,
+    c.code_description AS place_type,
     pl.id AS place_id
 FROM
     events
@@ -980,6 +988,10 @@ FROM
         ON (p.event_id = events.id)
     JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
+    JOIN places_types pt
+        ON (pt.place_id = pl.id)
+    JOIN codes c
+        ON (c.id = pt.type_id)
 WHERE
     p.type = 'ReportingAgency'
 ;

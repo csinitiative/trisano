@@ -728,11 +728,6 @@ BEGIN
             WHERE dw_morbidity_events_id IS NOT NULL';
 
     EXECUTE
-        'CREATE VIEW trisano.dw_contact_reporting_agencies_view AS
-            SELECT * FROM ' || new_schema || '.dw_events_reporting_agencies
-            WHERE dw_contact_events_id IS NOT NULL';
-
-    EXECUTE
         'CREATE VIEW trisano.dw_morbidity_diagnostic_facilities_view AS
             SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
             WHERE dw_morbidity_events_id IS NOT NULL';
@@ -746,11 +741,6 @@ BEGIN
         'CREATE VIEW trisano.dw_morbidity_reporters_view AS
             SELECT * FROM ' || new_schema || '.dw_events_reporters
             WHERE dw_morbidity_events_id IS NOT NULL';
-
-    EXECUTE
-        'CREATE VIEW trisano.dw_contact_reporters_view AS
-            SELECT * FROM ' || new_schema || '.dw_events_reporters
-            WHERE dw_contact_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_treatments_events_view AS
