@@ -50,6 +50,8 @@ class PeopleController < ApplicationController
     @person = PersonEntity.new
     @person.person = Person.new
     @person.canonical_address = Address.new
+    @person.telephones << Telephone.new
+    @person.email_addresses << EmailAddress.new
 
     unless User.current_user.is_entitled_to?(:create_event)
       render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
@@ -87,6 +89,7 @@ class PeopleController < ApplicationController
     go_back = params.delete(:return)
     
     @person = PersonEntity.new
+    @person.person = Person.new
     @person.update_attributes(params[:person_entity])
     @person.save
 
@@ -107,6 +110,9 @@ class PeopleController < ApplicationController
         }
         format.xml  { render :xml => @person, :status => :created, :location => @person }
       else
+        @person.canonical_address = Address.new
+        @person.telephones << Telephone.new
+        @person.email_addresses << EmailAddress.new
         format.html { render :action => "new" }
         format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
       end

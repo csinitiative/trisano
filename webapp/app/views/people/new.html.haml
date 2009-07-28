@@ -24,7 +24,7 @@
 
 = error_messages_for :object => [@person]
 
-- form_for(@person, :url => people_path, :builder => ExtendedFormBuilder) do |pe|
+- form_for(@person, :url => people_path, :builder => ExtendedFormBuilder, :html => {:name => 'new_person_entity'}) do |pe|
 
   = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
 

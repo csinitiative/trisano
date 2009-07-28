@@ -5,13 +5,9 @@ require 'trisano-web-api-person.rb'
 
 trisano = TriSanoWebApiPerson.new
 options = trisano.parse_args(ARGV)
-if options.person_id.nil?
-  warn 'Required switch "--id" is missing'
-  exit 1
-end
 
-page = trisano.get("/people/#{options.person_id}/edit")
-form = page.form('edit_person_entity')
+page = trisano.get("/people/new")
+form = page.form('new_person_entity')
 form = trisano.populate_form(form)
 result = trisano.submit(form, form['commit']) 
 
