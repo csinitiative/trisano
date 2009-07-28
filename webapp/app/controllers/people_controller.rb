@@ -68,6 +68,14 @@ class PeopleController < ApplicationController
       @person.canonical_address = Address.new
     end
 
+    if @person.telephones.empty?
+      @person.telephones << Telephone.new
+    end
+
+    if @person.email_addresses.empty?
+      @person.email_addresses << EmailAddress.new
+    end
+
     unless User.current_user.is_entitled_to?(:create_event)
       render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to edit a Person", :person => @person }, :layout => true, :status => 403 and return
     end

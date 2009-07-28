@@ -47,7 +47,9 @@ class Telephone < ActiveRecord::Base
   end
 
   def strip_dash_from_phone
-    phone_number.gsub!(/-/, '')
+    if !phone_number.blank?
+      phone_number.gsub!(/-/, '')
+    end
   end
 
 end
