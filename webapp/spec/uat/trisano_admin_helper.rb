@@ -88,5 +88,15 @@ module TrisanoAdminHelper
     browser.select("//div[@id='role_memberships']//div[@class='formname'][1]//select[contains(@id, 'jurisdiction')]", "label=#{role_attributes[:jurisdiction]}")
   end
 
+  # Entity management helpers
+
+  def navigate_to_place_admin(browser)
+    browser.open "/trisano/cmrs"
+    click_nav_admin(browser)
+    browser.click("admin_places")
+    browser.wait_for_page_to_load($load_time)
+    return(browser.is_text_present("Place Management"))
+  end
+
   
 end
