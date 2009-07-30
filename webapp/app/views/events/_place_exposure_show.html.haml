@@ -46,10 +46,16 @@
       =pe_form.label(:date_of_exposure)
       =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
     %span.horiz
-    - unless place_form.object.new_record?
+    - if place_form.object.new_record?
+      -# This place was added via live search. Provide a mechanism for removing the place before saving.
+      &nbsp;
+      %br
+      = link_to_function("Remove", "this.up().remove()", :id => "remove_#{uniq_id}")
+    - else
       %span.horiz
         = place_form.label :_delete, "Remove"
         = place_form.check_box :_delete
+
 
     = place_form.label('&nbsp;')
     = show_and_edit_event_links(place_form.object)

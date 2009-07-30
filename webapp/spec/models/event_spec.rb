@@ -1872,7 +1872,7 @@ describe Event, "when saving events with deleted entities" do
     @jurisdiction.reload
     @morbidity_event = Factory.build(:morbidity_event, :jurisdiction => @jurisdiction)
     @morbidity_event.save.should be_false
-    @morbidity_event.errors["jurisdiction_base"].empty?.should be_false
+    @morbidity_event.errors.empty?.should be_false
   end
   
 end

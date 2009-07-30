@@ -37,7 +37,12 @@
     %label Types
     = h(place.formatted_place_descriptions)
 
-  - if !place_form.object.new_record?
+  - if place_form.object.new_record?
+    -# This place was added via live search. Provide a mechanism for removing the place before saving.
+    &nbsp;
+    %br
+    = link_to_function("Remove", "this.up().remove()", :id => "remove_#{uniq_id}")
+  - else
     %span.horiz
       = place_form.label :_delete, "Remove:"
       = place_form.check_box :_delete

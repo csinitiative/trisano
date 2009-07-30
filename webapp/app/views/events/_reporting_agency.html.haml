@@ -49,18 +49,24 @@
 
       - core_element :agency_type, p, 'vert-break' do
         = agency_type_selector(p)
-- else  
-  - core_element :name, agency_form, :horiz do
-    = agency_form.hidden_field(:secondary_entity_id)
-    = agency_form.label(:name, "Reporting Agency")
-    = reporting_agency.name || "&nbsp;"
-  - core_element :agency_type, agency_form, :horiz do
-    = agency_form.label(:agency_types)
-    = reporting_agency.formatted_place_descriptions
+- else
+  %div
+    - core_element :name, agency_form, :horiz do
+      = agency_form.hidden_field(:secondary_entity_id)
+      = agency_form.label(:name, "Reporting Agency")
+      = reporting_agency.name || "&nbsp;"
+    - core_element :agency_type, agency_form, :horiz do
+      = agency_form.label(:agency_types)
+      = reporting_agency.formatted_place_descriptions
 
-  - unless agency_form.object.new_record?
-    %span.horiz
-      = agency_form.hidden_field(:id)
-      = agency_form.label :_delete, "Remove"
-      = agency_form.check_box :_delete
+    - if agency_form.object.new_record?
+      -# This place was added via live search. Provide a mechanism for removing the place before saving.
+      &nbsp;
+      %br
+      = link_to_function("Remove", "this.up().remove()", :id => "remove_#{uniq_id}")
+    - else
+      %span.horiz
+        = agency_form.hidden_field(:id)
+        = agency_form.label :_delete, "Remove"
+        = agency_form.check_box :_delete
      
