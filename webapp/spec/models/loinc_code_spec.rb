@@ -52,6 +52,8 @@ describe LoincCode do
   describe 'associations' do
 
     it { should belong_to(:common_test_name) }
+    it { should have_many(:disease_common_test_names) }
+    it { should have_many(:diseases) }
 
   end
 end

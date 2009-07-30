@@ -19,6 +19,12 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CommonTestName do
 
+  describe 'associations' do
+    it { should have_many(:disease_common_test_names) }
+    it { should have_many(:diseases) }
+    it { should have_many(:loinc_codes) }
+  end
+
   describe 'common name' do
 
     it 'should be unique' do

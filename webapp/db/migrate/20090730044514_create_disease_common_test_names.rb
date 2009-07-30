@@ -15,11 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class CommonTestName < ActiveRecord::Base
-  validates_uniqueness_of :common_name
-  validates_length_of     :common_name, :in => 1..255
+class CreateDiseaseCommonTestNames < ActiveRecord::Migration
+  def self.up
+    create_table :disease_common_test_names do |t|
+      t.integer  :disease_id, :null => false
+      t.integer  :common_test_name_id, :null => false
 
-  has_many :loinc_codes
-  has_many :disease_common_test_names
-  has_many :diseases, :through => :disease_common_test_names
+      t.timestamps
+    end
+    add_index    :disease_common_test_names, :disease_id
+    add_index    :disease_common_test_names, :common_test_name_id
+  end
+
+  def self.down
+    remove_index :disease_common_test_names, :disease_id
+    remove_index :disease_common_test_names, :common_test_name_id
+    drop_table   :disease_common_test_names
+  end
 end

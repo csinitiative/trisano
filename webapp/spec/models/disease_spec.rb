@@ -58,7 +58,7 @@ describe Disease do
         :short_name => 'disease_spec_short'
       }
     )
-    
+
     form.save_and_initialize_form_elements
     @disease.live_forms.should be_empty
     published_form = form.publish
@@ -69,7 +69,12 @@ describe Disease do
     live_forms = @disease.live_forms("PlaceEvent")
     live_forms.should be_empty
   end
-  
+
+  describe "associations" do
+    it { should have_many(:disease_common_test_names) }
+    it { should have_many(:common_test_names) }
+  end
+
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
       @disease.external_codes.should be_empty
@@ -85,7 +90,7 @@ describe Disease do
         @disease.external_codes.length.should == 2
       end
     end
-        
+
   end
 
   describe 'diseases w/ no export status' do
@@ -111,12 +116,12 @@ describe Disease do
       export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from(export_column.id, @disease.disease_name)
       export_conversion_value.should_not be_nil
       export_conversion_value.value_to.should eql(@disease.cdc_code)
-      
+
       @disease.cdc_code = "654321"
       @disease.save.should be_true
       export_conversion_value.reload
       export_conversion_value.value_to.should eql(@disease.cdc_code)
-      
+
     end
   end
 
@@ -126,7 +131,7 @@ describe Disease do
     before :each do
       @disease = diseases(:hep_a)
     end
-           
+
     it 'should ids for export conversion values related to this disease' do
       @disease.export_columns.length.should == 1
       @disease.export_columns[0].export_conversion_values.length.should == 1

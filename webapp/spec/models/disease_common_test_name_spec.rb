@@ -15,11 +15,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class CommonTestName < ActiveRecord::Base
-  validates_uniqueness_of :common_name
-  validates_length_of     :common_name, :in => 1..255
+require File.dirname(__FILE__) + '/../spec_helper'
 
-  has_many :loinc_codes
-  has_many :disease_common_test_names
-  has_many :diseases, :through => :disease_common_test_names
+describe DiseaseCommonTestName do
+
+  describe "associations" do
+
+    it { should belong_to(:disease) }
+    it { should belong_to(:common_test_name) }
+
+  end
+
 end
