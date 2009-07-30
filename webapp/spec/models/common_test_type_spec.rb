@@ -17,10 +17,10 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe CommonTestName do
+describe CommonTestType do
 
   describe 'associations' do
-    it { should have_many(:disease_common_test_names) }
+    it { should have_many(:disease_common_test_types) }
     it { should have_many(:diseases) }
     it { should have_many(:loinc_codes) }
   end
@@ -28,20 +28,20 @@ describe CommonTestName do
   describe 'common name' do
 
     it 'should be unique' do
-      CommonTestName.create :common_name => 'Doit'
-      lambda {CommonTestName.create! :common_name => 'Doit'}.should raise_error
-      CommonTestName.new(:common_name => 'Doit').should_not be_valid
-      CommonTestName.new(:common_name => 'Do something else').should be_valid
+      CommonTestType.create :common_name => 'Doit'
+      lambda {CommonTestType.create! :common_name => 'Doit'}.should raise_error
+      CommonTestType.new(:common_name => 'Doit').should_not be_valid
+      CommonTestType.new(:common_name => 'Do something else').should be_valid
     end
 
     it 'should not be null' do
-      lambda {CommonTestName.create!}.should raise_error
-      CommonTestName.new.should_not be_valid
+      lambda {CommonTestType.create!}.should raise_error
+      CommonTestType.new.should_not be_valid
     end
 
     it 'should not be longer then 255 chars' do
-      CommonTestName.new(:common_name => ('c' * 256)).should_not be_valid
-      CommonTestName.new(:common_name => ('c' * 255)).should be_valid
+      CommonTestType.new(:common_name => ('c' * 256)).should_not be_valid
+      CommonTestType.new(:common_name => ('c' * 255)).should be_valid
     end
 
   end

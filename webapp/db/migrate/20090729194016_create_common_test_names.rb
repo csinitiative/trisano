@@ -17,16 +17,16 @@
 
 class CreateCommonTestNames < ActiveRecord::Migration
   def self.up
-    create_table :common_test_names do |t|
+    create_table :common_test_types do |t|
       t.string :common_name, :null => false
 
       t.timestamps
     end
-    add_index(:common_test_names, :common_name, :unique => true)
+    add_index(:common_test_types, :common_name, :unique => true)
   end
 
   def self.down
-    remove_index(:common_test_names, :common_name)
-    drop_table :common_test_names
+    remove_index(:common_test_types, :common_name)
+    drop_table :common_test_types
   end
 end

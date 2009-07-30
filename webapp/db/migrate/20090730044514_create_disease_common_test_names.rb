@@ -17,19 +17,19 @@
 
 class CreateDiseaseCommonTestNames < ActiveRecord::Migration
   def self.up
-    create_table :disease_common_test_names do |t|
+    create_table :disease_common_test_types do |t|
       t.integer  :disease_id, :null => false
-      t.integer  :common_test_name_id, :null => false
+      t.integer  :common_test_type_id, :null => false
 
       t.timestamps
     end
-    add_index    :disease_common_test_names, :disease_id
-    add_index    :disease_common_test_names, :common_test_name_id
+    add_index    :disease_common_test_types, :disease_id
+    add_index    :disease_common_test_types, :common_test_type_id
   end
 
   def self.down
-    remove_index :disease_common_test_names, :disease_id
-    remove_index :disease_common_test_names, :common_test_name_id
-    drop_table   :disease_common_test_names
+    remove_index :disease_common_test_types, :disease_id
+    remove_index :disease_common_test_types, :common_test_type_id
+    drop_table   :disease_common_test_types
   end
 end

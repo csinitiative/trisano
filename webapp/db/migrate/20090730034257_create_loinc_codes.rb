@@ -20,7 +20,7 @@ class CreateLoincCodes < ActiveRecord::Migration
     create_table :loinc_codes do |t|
       t.string   :loinc_code, :limit => 10, :null => false
       t.string   :test_name
-      t.integer  :common_test_name_id
+      t.integer  :common_test_type_id
 
       t.timestamps
     end

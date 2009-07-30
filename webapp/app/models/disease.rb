@@ -25,8 +25,8 @@ class Disease < ActiveRecord::Base
   has_and_belongs_to_many :external_codes
   has_and_belongs_to_many :export_columns
 
-  has_many :disease_common_test_names
-  has_many :common_test_names, :through => :disease_common_test_names
+  has_many :disease_common_test_types
+  has_many :common_test_types, :through => :disease_common_test_types
 
   class << self
 

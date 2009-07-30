@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class DiseaseCommonTestName < ActiveRecord::Base
+class DiseaseCommonTestType < ActiveRecord::Base
   belongs_to :disease
-  belongs_to :common_test_name
+  belongs_to :common_test_type
 end

@@ -71,8 +71,8 @@ describe Disease do
   end
 
   describe "associations" do
-    it { should have_many(:disease_common_test_names) }
-    it { should have_many(:common_test_names) }
+    it { should have_many(:disease_common_test_types) }
+    it { should have_many(:common_test_types) }
   end
 
   describe 'export statuses' do

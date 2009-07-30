@@ -20,7 +20,7 @@ class LoincCode < ActiveRecord::Base
   validates_length_of     :loinc_code, :in => 1..10
   validates_length_of     :test_name,  :in => 1..255, :allow_nil => true
 
-  belongs_to :common_test_name
-  has_many   :disease_common_test_names, :foreign_key => :common_test_name_id, :primary_key => :common_test_name_id
-  has_many   :diseases, :through => :disease_common_test_names
+  belongs_to :common_test_type
+  has_many   :disease_common_test_types, :foreign_key => :common_test_type_id, :primary_key => :common_test_type_id
+  has_many   :diseases, :through => :disease_common_test_types
 end
