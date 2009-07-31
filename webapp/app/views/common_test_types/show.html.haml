@@ -16,5 +16,17 @@
 - content_for :title do
   Show a Common Test Type
 
-%span.common_test_type
-  &= @common_test_type.common_name
+- content_for :tools do
+  = link_to h('< Back to Common Test Types'), common_test_types_path
+  %p
+
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        Common Test Type
+    %tr
+      %td.forminformation
+        .formname
+          %span.common_name
+            &= @common_test_type.common_name

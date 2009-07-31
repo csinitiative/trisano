@@ -24,6 +24,7 @@ Feature: Common tests types for lab results
     And I press "Create New Common Test Type"
 
     Then I should see "Create a Common Test Type"
+    And I should see a link to "< Back to Common Test Types"
 
     When I fill in "common_test_type_common_name" with "Culture"
     And I press "Create"
@@ -42,3 +43,12 @@ Feature: Common tests types for lab results
     When I fill in "common_test_type_common_name" with "Culture"
     And I press "Create"
     Then I should see "Common name has already been taken"
+
+  Scenario: Showing a common test type
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+
+    When I go to the common test type show page
+
+    Then I should see a link to "< Back to Common Test Types"
+    And I should see "Culture"

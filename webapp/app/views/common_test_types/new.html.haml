@@ -16,6 +16,10 @@
 - content_for :title do
   Create a Common Test Type
 
+- content_for :tools do
+  = link_to h('< Back to Common Test Types'), common_test_types_path
+  %p
+
 - form_for @common_test_type do |f|
   = f.error_messages
   %span.vert
