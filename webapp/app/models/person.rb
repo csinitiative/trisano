@@ -172,11 +172,15 @@ class Person < ActiveRecord::Base
       select = <<-SQL
         SELECT * FROM people
       SQL
-
       select << "WHERE (#{where_clause})\n" unless where_clause.blank?
       select << "ORDER BY #{order_by_clause}"
 
-      row_count = Person.count_by_sql(select)
+      count_select = <<-SQL
+        SELECT COUNT(*) FROM people
+      SQL
+      count_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
+
+      row_count = Person.count_by_sql(count_select)
 
       find_options = {
         :page          => options[:page],

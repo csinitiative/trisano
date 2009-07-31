@@ -38,12 +38,20 @@
     = text_field_tag :birth_date, params[:birth_date]
 
   %span.horiz
+    %label Items per page
+    - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
+    =select_tag('per_page', page_options)
+
+  %span.horiz
     = label_tag "&nbsp;"
     = submit_tag "Search"
 
-  %span.vert-break
+  %span.vert
     = label_tag "&nbsp;"
     = labeled_check_box_tag :use_starts_with_search
+
+  %span.vert-break
+%br
 %br
 
 #rot
