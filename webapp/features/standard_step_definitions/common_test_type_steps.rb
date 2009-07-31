@@ -15,29 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-def path_to(page_name)
-  case page_name
-
-  when /the homepage/i
-    root_path
-
-  # Add more page name => path mappings here
-  when /the new CMR page/i
-    new_cmr_path
-
-  when /the investigator user edit page/i
-    "/users/4/edit"
-
-  when /the common test type index page/
-    common_test_types_path
-
-  when /the new common test type page/
-    new_common_test_type_path
-
-  when /a common test type show page/
-    common_test_type_path(@common_test_type)
-
-  else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
-  end
+Given /^I have a common test type named (.*)$/ do |common_name|
+  @common_test_type = Factory.create(:common_test_type, :common_name => common_name)
 end
+

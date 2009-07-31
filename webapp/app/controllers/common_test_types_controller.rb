@@ -15,29 +15,31 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-def path_to(page_name)
-  case page_name
+class CommonTestTypesController < ApplicationController
 
-  when /the homepage/i
-    root_path
-
-  # Add more page name => path mappings here
-  when /the new CMR page/i
-    new_cmr_path
-
-  when /the investigator user edit page/i
-    "/users/4/edit"
-
-  when /the common test type index page/
-    common_test_types_path
-
-  when /the new common test type page/
-    new_common_test_type_path
-
-  when /a common test type show page/
-    common_test_type_path(@common_test_type)
-
-  else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
+  def index
+    @common_test_types = CommonTestType.find(:all, :order => 'common_name')
   end
+
+  def new
+    @common_test_type = CommonTestType.new
+  end
+
+  def create
+    @common_test_type = CommonTestType.new(params[:common_test_type])
+
+    respond_to do |format|
+      if @common_test_type.save
+        flash[:notice] = 'Common test type was successfully created.'
+        format.html { redirect_to(@common_test_type) }
+      else
+        format.html { render :action => "new" }
+      end
+    end
+  end
+
+  def show
+    @common_test_type = CommonTestType.find(params[:id])
+  end
+
 end

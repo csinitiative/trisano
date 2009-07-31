@@ -25,13 +25,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
 
+  map.resources :common_test_types
+
   # When we get to Rails 2.1 restrict here for GET only
   map.resources :cdc_events, :collection => { :current_week => :get, :current_ytd => :get, :by_range => :get }
-    
+
   map.resources :ibis_events, :collection => { :by_range => :get }
-  
+
   map.home '', :controller => 'dashboard'
-  
+
   map.with_options :controller => 'search' do |search|
     search.search_cmrs   'search/cmrs',           :action => 'cmrs'
     search.cmrs_format   'search/cmrs.:format',   :action => 'cmrs'
