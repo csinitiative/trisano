@@ -271,6 +271,14 @@ module StagedMessages
       end
     end
 
+    def loinc_code
+      begin
+        obx_segment.observation_id.split(obx_segment.item_delim)[0]
+      rescue
+        "Could not be determined"
+      end
+   end
+
     def test_type
       begin
         obx_segment.observation_id.split(obx_segment.item_delim)[1]

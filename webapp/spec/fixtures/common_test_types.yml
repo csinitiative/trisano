@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+blood_test:
+  id: 1
+  common_name: Blood Test
+
+hep_b_ag:
+  id: 2
+  common_name: Hep-B Ag
+
+western_blot:
+  id: 3
+  common_name: Western Blot

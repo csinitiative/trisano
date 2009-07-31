@@ -115,8 +115,12 @@ Factory.define :lab do |l|
 end
 
 Factory.define :lab_result do |lr|
-  lr.test_type { Factory.next(:test_type) }
+  lr.test_type { |ctt| ctt.association(:common_test_type) }
   lr.lab_result_text 'positive'
+end
+
+Factory.define :common_test_type do |ctt|
+  ctt.common_name 'Culture'
 end
 
 Factory.define :answer_single_line_text, :class => :answer do |a|
@@ -168,10 +172,6 @@ end
 
 Factory.sequence :cdc_code do |n|
   "#{50000 + n}"
-end
-
-Factory.sequence :test_type do |n|
-  "lab test ##{n}"
 end
 
 Factory.sequence :occupation do |n|

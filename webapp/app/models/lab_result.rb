@@ -21,18 +21,18 @@ class LabResult < ActiveRecord::Base
   belongs_to :interpretation, :class_name => 'ExternalCode'
   belongs_to :participation
   belongs_to :staged_message
+  belongs_to :test_type, :class_name => 'CommonTestType'
 
   before_destroy do |lab_result|
     lab_result.participation.event.add_note("Lab result deleted")
   end
 
-  validates_presence_of :test_type
+  validates_presence_of :test_type_id
 
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
 
   validates_length_of :lab_result_text, :maximum => 255, :allow_blank => true
-  validates_length_of :test_type, :maximum => 255, :allow_blank => true
   validates_length_of :test_detail, :maximum => 255, :allow_blank => true
 
   def lab_name

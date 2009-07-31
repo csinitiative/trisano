@@ -56,7 +56,7 @@ end
 Then /^I should see lab data$/ do
   response.should be_success
   @event.labs.first.should_not be_a_new_record
-  response.should contain(@event.labs.first.lab_results.first.test_type)
+  response.should contain(@event.labs.first.lab_results.first.test_type.common_name)
   response.should contain(@event.labs.first.lab_results.first.lab_result_text)
 end
 

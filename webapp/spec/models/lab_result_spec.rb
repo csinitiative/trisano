@@ -18,9 +18,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LabResult do
+  fixtures :common_test_types
+
   before(:each) do
     @lab_result = LabResult.new
-    @lab_result.test_type = "Culture"
+    @lab_result.test_type = common_test_types(:blood_test)
   end
 
   it "should not be valid when empty" do

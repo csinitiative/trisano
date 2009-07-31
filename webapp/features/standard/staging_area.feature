@@ -64,6 +64,11 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
     And there is an event with a matching name and birth date
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 100O0-1    | Blood Test  |
+      | 20000-2    | Urine Test  |
+      | 13954-3    | Hep-B Ag    |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -74,7 +79,7 @@ Feature: Staging Electronic Messages
     And I should not see the 'Discard' link
 
     When I visit the assigned-to event
-    Then I should see the new lab result
+    Then I should see the new lab result with 'Hep-B Ag'
     And  I should see a note for the assigned lab
     And  I should see a link back to the staged message
 
@@ -85,6 +90,11 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
     And there is an event with a matching name and birth date
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 100O0-1    | Blood Test  |
+      | 20000-2    | Urine Test  |
+      | 13954-3    | Hep-B Ag    |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -96,7 +106,7 @@ Feature: Staging Electronic Messages
 
     When I visit the assigned-to event
     Then I should see the patient information
-    And I should see the new lab result
+    And I should see the new lab result with 'Hep-B Ag'
     And I should see a note for the assigned lab
     And I should see a link back to the staged message
 

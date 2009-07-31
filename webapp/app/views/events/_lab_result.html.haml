@@ -17,9 +17,12 @@
 
   %i If any lab result information is provided it must include Test Type.  In addition one or both of 'Test result' and 'Interpretation' must be supplied.
 
-  -# Autocomplete for test type.
   - core_element("test_type", lab_result_form, :horiz) do
-    = trisano_auto_complete(lab_result_form, :test_type, "Test type", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :param_name => 'test_type' })
+    = lab_result_form.label(:test_type)
+    -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
+    -# @disease is set by the Ajax controller actions to the currently selected disease, if any
+    - disease = @disease || @event.try(:disease_event).try(:disease)
+    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:onchange => "get_test_type_options(this);"})
 
   - core_element("test_detail", lab_result_form, :horiz) do
     = lab_result_form.label(:test_detail, "Specify test detail")

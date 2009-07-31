@@ -34,7 +34,7 @@ Given(/^a lab named (.+) exists$/) do |place_name|
   @event = create_basic_event("morbidity", get_random_word)
   @event.labs_attributes =  lab_attributes(
     :name => place_name,
-    :test_type=> "Culture",
+    :test_type_id => 1,
     :test_detail => "Did it",
     :lab_result_text => "Done"
   )

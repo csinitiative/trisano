@@ -366,7 +366,7 @@ def lab_output
   out = ""
   out << "#{@lab_result.id},"
   out << "#{@lab_result.lab_name},"
-  out << "#{@lab_result.test_type},"
+  out << "#{@lab_result.test_type.common_name},"
   out << "#{@lab_result.test_detail},"
   out << "#{@lab_result.lab_result_text},"
   out << "#{@lab_result.reference_range},"
@@ -486,9 +486,12 @@ def csv_mock_event(event_type)
   m.stub!(:other_data_2).and_return('Second Other Data')
   m.stub!(:deleted_at).and_return(nil)
 
+  @common_test_type = mock_model(CommonTestType)
+  @common_test_type.stub!(:common_name).and_return("Biopsy")
+
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
-  @lab_result.stub!(:test_type).and_return("Biopsy")
+  @lab_result.stub!(:test_type).and_return(@common_test_type)
   @lab_result.stub!(:test_detail).and_return("Liver")
   @lab_result.stub!(:lab_result_text).and_return("Positive")
   @lab_result.stub!(:reference_range).and_return("Detected")

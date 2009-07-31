@@ -601,7 +601,7 @@ describe MorbidityEvent do
 
       it 'should use the lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "whatever", "collection_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -610,9 +610,9 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "pos", "collection_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "neg", "collection_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -621,7 +621,7 @@ describe MorbidityEvent do
 
       it 'should use the lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "whatever", "lab_test_date" => Date.today.years_ago(1) } ] } ]
         with_event do |event|
           event.labs.count.should == 1
           event.age_info.age_at_onset.should == 13
@@ -630,9 +630,9 @@ describe MorbidityEvent do
 
       it 'should use the earliet lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "pos", "lab_test_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "neg", "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
           event.age_info.age_at_onset.should == 12
@@ -641,10 +641,10 @@ describe MorbidityEvent do
 
       it 'should use the earliest lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "pos",
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "pos",
                 "collection_date" => Date.today.years_ago(1), "lab_test_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type" => "culture", "lab_result_text" => "neg",
+            "lab_results_attributes" => [ { "test_type_id" => 1, "lab_result_text" => "neg",
                 "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
         with_event do |event|
           event.labs.count.should == 2
@@ -1587,6 +1587,8 @@ describe Event, 'cloning an event' do
   end
 
   describe "deep clone" do
+    fixtures :common_test_types
+
     it "should first do a shallow clone" do
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event
@@ -1763,7 +1765,7 @@ describe Event, 'cloning an event' do
               "lab_test_date" => Date.today,
               "specimen_sent_to_uphl_yn_id" => external_codes(:yesno_yes).id,
               "lab_result_text" => "Scary",
-              "test_type" => "Painful",
+              "test_type" => common_test_types(:blood_test),
               "test_detail" => "Blood drawn",
               "interpretation_id" => external_codes(:state_alaska).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "reference_range" => "one"

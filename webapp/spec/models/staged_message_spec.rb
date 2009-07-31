@@ -60,8 +60,13 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
-  it "should not be valid if there's no OBX segment" do
+  it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
+    m.should_not be_valid
+  end
+
+  it "should not be valid if there's no no loinc code" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_loinc_code])
     m.should_not be_valid
   end
 
@@ -107,6 +112,7 @@ describe StagedMessage do
   end
 
   describe "assigning to an event" do
+    fixtures :loinc_codes, :common_test_types
 
     before :each do
       @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])

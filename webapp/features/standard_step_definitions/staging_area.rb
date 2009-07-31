@@ -86,9 +86,17 @@ When /^I visit the assigned-to event$/ do
   click_link 'Assigned'
 end
 
-Then /^I should see the new lab result$/ do
+Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
+  loinc_test_maps.rows.each do |loinc_test_map|
+    d = LoincCode.new(:loinc_code => loinc_test_map.first)
+    d.build_common_test_type(:common_name => loinc_test_map.last)
+    d.save
+  end
+end
+
+Then /^I should see the new lab result with '(.+)'$/ do |test_type|
   response.should contain(@staged_message.message_header.sending_facility)
-  response.should contain(@staged_message.observation_request.test_performed)
+  response.should contain(test_type)
   response.should contain(@staged_message.observation_request.tests.first.result)
   response.should contain(@staged_message.observation_request.collection_date)
   response.should contain(/#{@staged_message.observation_request.specimen_source}/i)

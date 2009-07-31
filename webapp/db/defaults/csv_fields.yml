@@ -955,7 +955,7 @@ csv_field_00067:
   sort_order: 20
   export_group: lab
   long_name: lab_test_type
-  use_description: test_type
+  use_description: test_type.try(:common_name)
   short_name: 
   use_code: 
   event_type: 

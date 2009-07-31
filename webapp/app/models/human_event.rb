@@ -578,7 +578,7 @@ class HumanEvent < Event
       specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
       result_hash = {
-        "test_type"          => obx.test_type,
+        "test_type_id"       => LoincCode.find_by_loinc_code(obx.loinc_code).common_test_type.id, # can currently fail for a number of reasons.  To be addressed shortly.
         "collection_date"    => obr.collection_date,
         "lab_test_date"      => obx.observation_date,
         "reference_range"    => obx.reference_range,

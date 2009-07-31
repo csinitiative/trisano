@@ -38,7 +38,7 @@
                   = lab.place_entity.place.name
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
-                %b= lab_result.test_type
+                %b= lab_result.test_type.common_name
                 %br
                 %small Detail:
                 %b= lab_result.test_detail

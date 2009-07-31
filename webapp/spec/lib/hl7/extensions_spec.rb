@@ -211,6 +211,10 @@ describe Message do
         @tests[0].reference_range.should == 'Negative'
       end
 
+      it 'should respond to :loinc_code' do
+        @tests[0].respond_to?(:loinc_code).should be_true
+      end
+
       it 'should respond to :test_type' do
         @tests[0].respond_to?(:test_type).should be_true
       end
