@@ -17,20 +17,20 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class AdminController < ApplicationController
-  
+
   before_filter :check_role
-    
+
   def index
     # Nothing to do at the moment as the dashboard is static
   end
-  
+
   protected
-    
+
   def check_role
     unless User.current_user.is_admin?
       logger.info "Unauthorized access to the Admin Console by " + User.current_user.uid
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have administrative rights", :event => nil }, :layout => true, :status => 403 and return
     end
   end
-    
+
 end

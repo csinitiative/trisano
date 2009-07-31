@@ -17,6 +17,8 @@
 
 class CommonTestTypesController < ApplicationController
 
+  before_filter :deny_access_unless_admin_user
+
   def index
     @common_test_types = CommonTestType.find(:all, :order => 'common_name')
   end

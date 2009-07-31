@@ -12,6 +12,11 @@ Feature: Common tests types for lab results
     Then I should see "Culture"
     And I should see "List Common Test Types"
 
+  Scenario: Non-administrators tryiing to modify common test types
+    Given I am logged in as an investigator
+    When I go to the new common test type page
+    Then I should get a 403 response
+
   Scenario: Creating a new common test type
     Given I am logged in as a super user
 

@@ -55,3 +55,14 @@ Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
   response.should contain(message)
 end
 
+#
+# HTTP helpers
+#
+
+Then /^I should get a 403 response$/ do
+  # Why can't I say: response.should be_forbidden
+  # Or repsonse.code.should == :forbidden
+  # Or, at the very least response.code.should == 403
+  response.code.should == "403"
+end
+

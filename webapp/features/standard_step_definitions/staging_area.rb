@@ -18,13 +18,6 @@ When /^I visit the staging area page directly$/ do
   visit staged_messages_path
 end
 
-Then /^I should get a 403 response$/ do
-  # Why can't I say: response.should be_forbidden
-  # Or repsonse.code.should == :forbidden
-  # Or, at the very least response.code.should == 403
-  response.code.should == "403"
-end
-
 Given /^there are no matching entries$/ do
   # Do nothing
 end
