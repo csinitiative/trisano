@@ -15,16 +15,26 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given(/^a (.+) event exists$/) do |event_type, disease|
-  @event = create_basic_event(event_type, get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+Given(/^a morbidity event exists$/) do
+  @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
-Given(/^a (.+) event exists with the disease (.+)$/) do |event_type, disease|
-  @event = create_basic_event(event_type, get_unique_name(1), disease, get_random_jurisdiction_by_short_name)
+Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
+  @event = create_basic_event("morbidity", get_unique_name(1), disease, get_random_jurisdiction_by_short_name)
 end
 
-Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jurisdiction, disease|
-  @event = create_basic_event(event_type, get_unique_name(1), disease, jurisdiction)
+Given(/^a morbidity event exists in (.+) with the disease (.+)$/) do |jurisdiction, disease|
+  @event = create_basic_event("morbidity", get_unique_name(1), disease, jurisdiction)
+end
+
+Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
+  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+end
+
+Given(/^a contact event exists$/) do
+  @event = Factory.build(:contact_event)
+  @event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)
+  @event.save!
 end
 
 Given(/^the disease-specific questions for the event have been answered$/) do
