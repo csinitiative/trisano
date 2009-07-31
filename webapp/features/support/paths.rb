@@ -37,6 +37,9 @@ def path_to(page_name)
   when /a common test type show page/
     common_test_type_path(@common_test_type)
 
+  when /the admin dashboard/
+    admin_path
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

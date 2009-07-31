@@ -66,3 +66,10 @@ Then /^I should get a 403 response$/ do
   response.code.should == "403"
 end
 
+#
+# Verification Helpers
+#
+
+Then /^I should see a link to "([^\"]*)"$/ do |link_text|
+  response.should have_xpath("//a[text()='#{link_text}']")
+end
