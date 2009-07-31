@@ -148,16 +148,4 @@ class ApplicationController < ActionController::Base
     obj
   end
 
-  def deny_access_unless_admin_user
-    unless User.current_user.is_admin?
-      logger.info "Unauthorized access to #{request.path} by #{User.current_user.id}"
-      render({ :partial => "events/permission_denied",
-               :layout  => true,
-               :status  => 403,
-               :locals  => {
-                 :reason => "You do not have administrative rights",
-                 :event  => nil }
-             }) and return
-    end
-  end
 end

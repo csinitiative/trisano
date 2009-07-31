@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class CommonTestTypesController < ApplicationController
+class CommonTestTypesController < AdminController
 
-  before_filter :deny_access_unless_admin_user
+  before_filter :check_role
 
   def index
     @common_test_types = CommonTestType.find(:all, :order => 'common_name')
