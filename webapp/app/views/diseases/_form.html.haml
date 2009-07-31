@@ -28,6 +28,26 @@
         = "#{f.check_box(:active)} Active?"
 
       %span.vert-break
+        = f.label(:contact_lead_in, "Contact lead-in question")
+        = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})
+
+      %span.vert-break
+        = f.label(:place_lead_in, "Place lead-in question")
+        = f.text_area(:place_lead_in, {:cols => 50, :rows => 5})
+
+      %span.vert-break
+        = f.label(:treatment_lead_in, "Treatment lead-in question")
+        = f.text_area(:treatment_lead_in, {:cols => 50, :rows => 5})
+  %tr
+    %th
+      %span.forminformation
+        CDC Export
+      %span{ :style => "position: absolute; right: 15px;" }
+        = show_hide_disease_section_link
+
+  %tr
+    %td
+      %span.vert-break
         = f.label(:cdc_code, "CDC/NETSS code")
         = f.text_field(:cdc_code)
 
@@ -39,14 +59,3 @@
             - ExternalCode.find_cases(:all).each do |code|
               = "<label>" + check_box_tag("disease[external_code_ids][]", code.id, @disease.external_code_ids.include?(code.id), :id => code.code_description.tr(" ", "_")) + code.code_description + "</label>"
 
-      %span.vert-break
-        = f.label(:contact_lead_in, "Contact lead-in question")
-        = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})
-
-      %span.vert-break
-        = f.label(:place_lead_in, "Place lead-in question")
-        = f.text_area(:place_lead_in, {:cols => 50, :rows => 5})
-
-      %span.vert-break
-        = f.label(:treatment_lead_in, "Treatment lead-in question")
-        = f.text_area(:treatment_lead_in, {:cols => 50, :rows => 5})
