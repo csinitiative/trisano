@@ -17,6 +17,7 @@
   Create a Common Test Type
 
 - form_for @common_test_type do |f|
+  = f.error_messages
   %span.vert
     = f.label      :common_name
     = f.text_field :common_name

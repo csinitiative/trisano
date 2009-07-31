@@ -31,3 +31,14 @@ Feature: Common tests types for lab results
     Then I should see "Show a Common Test Type"
     And I should see "Culture"
 
+  Scenario: Entering an invalid common name for common test type
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+
+    When I go to the new common test type page
+    And I press "Create"
+    Then I should see "Common name is too short"
+
+    When I fill in "common_test_type_common_name" with "Culture"
+    And I press "Create"
+    Then I should see "Common name has already been taken"
