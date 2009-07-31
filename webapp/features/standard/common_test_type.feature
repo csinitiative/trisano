@@ -16,7 +16,7 @@ Feature: Common tests types for lab results
     Given I am logged in as a super user
 
     When I go to the common test type index page
-    And I press "Create a New Common Test Type"
+    And I press "Create New Common Test Type"
 
     Then I should see "Create a Common Test Type"
 
