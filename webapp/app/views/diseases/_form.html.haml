@@ -15,8 +15,11 @@
 
 %table.list
   %tr
-    %th.forminformation
-      Edit Disease
+    %th
+      %span.forminformation
+        Edit Disease
+      %span{ :style => "position: absolute; right: 15px;" }
+        = show_hide_disease_section_link
   %tr
     %td
       %span.vert-break

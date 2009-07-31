@@ -16,4 +16,11 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module DiseasesHelper
+
+  def show_hide_disease_section_link
+    link_to_function '[&nbsp;Show&nbsp;|&nbsp;Hide&nbsp;Details&nbsp;]' do |page|
+      page << "$(this).up().up().up().next().toggle()"
+    end
+  end
+
 end
