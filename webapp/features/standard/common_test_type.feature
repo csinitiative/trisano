@@ -9,7 +9,7 @@ Feature: Common tests types for lab results
 
     When I go to the common test type index page
 
-    Then I should see "Culture"
+    Then I should see a link to "Culture"
     And I should see "List Common Test Types"
 
   Scenario: Non-administrators tryiing to modify common test types

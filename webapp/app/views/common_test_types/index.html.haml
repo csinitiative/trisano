@@ -20,6 +20,19 @@
   = button_to("Create New Common Test Type", new_common_test_type_path, { :method => :get })
 
 
-- @common_test_types.each do |common_test_type|
-  %span
-    &= common_test_type.common_name
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        Common Name
+      %th
+        &nbsp;
+      - @common_test_types.each do |common_test_type|
+        %tr.roll
+          %td.forminformation
+            .formname
+              %span.common_name
+                = link_to h(common_test_type.common_name), common_test_type
+          %td
+            .tools{:style => "position: absolute; right: 15px;"}
+              = link_to 'Show', common_test_type
