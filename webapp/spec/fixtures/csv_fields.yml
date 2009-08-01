@@ -159,14 +159,6 @@ csv_field_00021:
   short_name: 
   use_code: 
   event_type: morbidity_event
-csv_field_00135: 
-  sort_order: 30
-  export_group: lab
-  long_name: lab_test_detail
-  use_description: test_detail
-  short_name: 
-  use_code: 
-  event_type: 
 csv_field_00107: 
   sort_order: 550
   export_group: event

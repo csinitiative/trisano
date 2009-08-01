@@ -33,7 +33,6 @@ class LabResult < ActiveRecord::Base
   validates_date :lab_test_date, :allow_nil => true
 
   validates_length_of :lab_result_text, :maximum => 255, :allow_blank => true
-  validates_length_of :test_detail, :maximum => 255, :allow_blank => true
 
   def lab_name
     participation.secondary_entity.place.name unless participation.nil?

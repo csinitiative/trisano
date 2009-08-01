@@ -122,7 +122,6 @@ def lab_header
   %w(lab_record_id
   lab_name
   lab_test_type
-  lab_test_detail
   lab_result
   lab_reference_range
   lab_interpretation
@@ -367,7 +366,6 @@ def lab_output
   out << "#{@lab_result.id},"
   out << "#{@lab_result.lab_name},"
   out << "#{@lab_result.test_type.common_name},"
-  out << "#{@lab_result.test_detail},"
   out << "#{@lab_result.lab_result_text},"
   out << "#{@lab_result.reference_range},"
   out << "#{@lab_result.interpretation.code_description},"
@@ -492,7 +490,6 @@ def csv_mock_event(event_type)
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
   @lab_result.stub!(:test_type).and_return(@common_test_type)
-  @lab_result.stub!(:test_detail).and_return("Liver")
   @lab_result.stub!(:lab_result_text).and_return("Positive")
   @lab_result.stub!(:reference_range).and_return("Detected")
   @lab_result.stub!(:interpretation).and_return(simple_reference)

@@ -26,8 +26,6 @@
 %div{:class => 'lab', :style => "clear: both;"}
   = error_messages_for :object => lab_form.object
 
-  -# TGRII: Remember to handle core-field-configs for labs as a whole.  Review the trunk code.
-
   - lab_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
     - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
 

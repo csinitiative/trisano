@@ -86,7 +86,7 @@ def lab_attributes(values)
       },
       "lab_results_attributes"=>{
         "0"=>{
-          "test_type_id"=>"#{values[:test_type_id] if values[:test_type_id]}", "test_detail"=>"#{values[:test_detail] if values[:test_detail]}", "lab_result_text"=>"#{values[:lab_result_text] if values[:lab_result_text]}", "reference_range"=>"", "interpretation_id"=>"",
+          "test_type_id"=>"#{values[:test_type_id] if values[:test_type_id]}", "lab_result_text"=>"#{values[:lab_result_text] if values[:lab_result_text]}", "reference_range"=>"", "interpretation_id"=>"",
           "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
         }
       }

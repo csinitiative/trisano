@@ -35,7 +35,6 @@ Given(/^a lab named (.+) exists$/) do |place_name|
   @event.labs_attributes =  lab_attributes(
     :name => place_name,
     :test_type_id => 1,
-    :test_detail => "Did it",
     :lab_result_text => "Done"
   )
   @event.save!
