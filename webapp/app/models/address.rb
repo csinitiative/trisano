@@ -77,6 +77,15 @@ class Address < ActiveRecord::Base
         end
       end
     end
+    if event.respond_to?(:interested_party)
+      if event.try(:interested_party).try(:person_entity)
+        if event.interested_party.person_entity.canonical_address.nil?
+          canonical_address = self.clone
+          canonical_address.event_id = nil
+          canonical_address.save
+        end
+      end
+    end
   end
 
 end

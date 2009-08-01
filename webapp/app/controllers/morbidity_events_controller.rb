@@ -86,6 +86,8 @@ class MorbidityEventsController < EventsController
     
     respond_to do |format|
       if @event.save
+        @event.reload
+        @event.address.establish_canonical_address
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }

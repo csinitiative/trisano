@@ -264,3 +264,25 @@ describe HumanEvent, 'validating out of state patients' do
   end
 
 end
+
+describe "adding an address to a human event's interested party" do
+
+  it "should establish a canonical address the first time an address is provided" do
+    e = Factory.build(:morbidity_event)
+    person_entity = e.interested_party.person_entity
+    person_entity.canonical_address.should be_nil
+    address = Factory.create(:address, :event_id => e.id, :entity_id => person_entity.id)
+    person_entity.reload
+    person_entity.canonical_address.should_not be_nil
+    person_entity.canonical_address.street_number.should == address.street_number
+    person_entity.canonical_address.street_name.should == address.street_name
+    person_entity.canonical_address.unit_number.should == address.unit_number
+    person_entity.canonical_address.city.should == address.city
+    person_entity.canonical_address.county_id.should == address.county_id
+    person_entity.canonical_address.state_id.should == address.state_id
+    person_entity.canonical_address.postal_code.should == address.postal_code
+  end
+
+end
+
+
