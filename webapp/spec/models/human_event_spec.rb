@@ -285,4 +285,35 @@ describe "adding an address to a human event's interested party" do
 
 end
 
+describe "When added to an event using an existing person entity" do
 
+  before(:each) do
+    @user = Factory.create(:user)
+    User.stub!(:current_user).and_return(@user)
+    @person_entity = Factory.create(:person_entity)
+    @person_event_hash = { :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
+  end
+
+  it "should receive the person entity's canonical address if one exists" do
+    canonical_address = Factory.create(:address, :entity_id => @person_entity.id)
+    event = MorbidityEvent.new(@person_event_hash)
+    event.save
+    event.reload
+    new_person_address = event.address
+    new_person_address.should_not be_nil
+    new_person_address.street_number.should == canonical_address.street_number
+    new_person_address.street_name.should == canonical_address.street_name
+    new_person_address.unit_number.should == canonical_address.unit_number
+    new_person_address.city.should == canonical_address.city
+    new_person_address.state_id.should == canonical_address.state_id
+    new_person_address.county_id.should == canonical_address.county_id
+    new_person_address.postal_code.should == canonical_address.postal_code
+  end
+
+  it "should not have an address if the person entity does not have canonical address" do
+    event = MorbidityEvent.new(@person_event_hash)
+    new_person_address = event.address
+    new_person_address.should be_nil
+  end
+
+end

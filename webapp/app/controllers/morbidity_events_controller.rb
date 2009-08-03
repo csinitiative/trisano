@@ -86,13 +86,13 @@ class MorbidityEventsController < EventsController
     
     respond_to do |format|
       if @event.save
-        @event.reload
-        @event.try(:address).try(:establish_canonical_address)
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
           @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
+        @event.reload
+        @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
           query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
