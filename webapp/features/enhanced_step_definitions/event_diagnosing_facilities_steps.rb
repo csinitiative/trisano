@@ -30,7 +30,6 @@ When(/^I click remove for that diagnosing facility$/) do
 end
 
 Then(/^I should not see the diagnosing facility$/) do
-  # needs to check the section, too
   @browser.is_element_present("//div[@id='live_search_diagnostics']/div[@class='existing_diagnostic']").should be_false
 end
 

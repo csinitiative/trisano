@@ -43,7 +43,7 @@ Given(/^a lab named (.+) exists$/) do |place_name|
 end
 
 Given(/^a diagnosing facility named (.+) exists$/) do |place_name|
-  @diagnosing_facility = create_place(place_name, "H")
+  @diagnosing_facility = create_place_entity(place_name, "Hospital / ICP")
 end
 
 When(/^I search for Manzanita$/) do

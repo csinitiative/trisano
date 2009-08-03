@@ -44,5 +44,9 @@ module TrisanoPlacesHelper
     # Fill in the rest...
 
   end
+
+  def remove_place_exposure(browser, index=1)
+    browser.click("//div[@id='place_child_events']//div[@class='existing_place'][#{index}]//input[contains(@id, '_delete')]")
+  end
   
 end
