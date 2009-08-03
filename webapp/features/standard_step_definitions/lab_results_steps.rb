@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^the following common test types are in the system$/ do |test_types|
-  test_types.raw.each do |common_name|
-    CommonTestType.create(:common_name => common_name.first)
-  end
-end
 
 Given /^the following disease to common test types mapping exists$/ do |disease_test_maps|
   disease_test_maps.rows.each do |disease_test_map|

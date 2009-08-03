@@ -54,7 +54,7 @@ class Disease < ActiveRecord::Base
     def disease_status_where_clause
       diseases = collect_diseases(&:case_status_where_clause)
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
-    end      
+    end
 
     def with_no_export_status
       ids = ActiveRecord::Base.connection.select_all('select distinct disease_id from diseases_external_codes')
@@ -63,9 +63,9 @@ class Disease < ActiveRecord::Base
 
     def with_invalid_case_status_clause
       diseases = collect_diseases(&:invalid_case_status_where_clause)
-      "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?      
+      "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
-        
+
   end
 
   def live_forms(event_type = "MorbidityEvent")
@@ -96,7 +96,7 @@ class Disease < ActiveRecord::Base
         export_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from(export_column.id, disease_name)
         export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
       end
-    end  
+    end
   end
-  
+
 end

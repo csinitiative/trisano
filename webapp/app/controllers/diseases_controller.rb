@@ -46,6 +46,7 @@ class DiseasesController < AdminController
 
   def edit
     @disease = Disease.find(params[:id])
+    @common_test_types = CommonTestType.all(:order => 'common_name ASC')
   end
 
   def create
@@ -65,16 +66,26 @@ class DiseasesController < AdminController
 
   def update
     @disease = Disease.find(params[:id])
-    params[:disease][:external_code_ids] ||= [] unless params[:disease].nil?
+    unless params[:disease].nil?
+      params[:disease][:external_code_ids] ||= []
+      common_test_type_ids = params[:disease].delete(:common_test_type_ids).collect(&:to_i) || []
+    end
 
     respond_to do |format|
-      if @disease.update_attributes(params[:disease])
+      begin
+        Disease.transaction do
+          @disease.update_attributes!(params[:disease])
+          common_test_type_ids.each do |common_test_type_id|
+            unless @disease.common_test_type_ids.include?(common_test_type_id)
+              DiseaseCommonTestType.create!(:disease_id => @disease.id, :common_test_type_id => common_test_type_id)
+            end
+          end
+        end
         flash[:notice] = 'Disease was successfully updated.'
         format.html { redirect_to(@disease) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @disease.errors, :status => :unprocessable_entity }
+      rescue
+        @common_test_types = CommonTestType.all(:order => 'common_name ASC')
+        format.html { render :action => 'edit' }
       end
     end
   end

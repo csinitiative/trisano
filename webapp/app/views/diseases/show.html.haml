@@ -68,26 +68,42 @@
       %td{:style => "width: 5%"}
         Contact
       %td
-        = @disease.contact_lead_in        
+        = @disease.contact_lead_in
     %tr
       %td{:style => "width: 5%"}
         Place
       %td
-        = @disease.place_lead_in        
+        = @disease.place_lead_in
     %tr
       %td{:style => "width: 5%"}
         Treatment
       %td
-        = @disease.treatment_lead_in        
+        = @disease.treatment_lead_in
 
-  - unless @disease.export_columns.empty?
-    %table.list
-      %tr
-        %th.forminformation
-          CDC Export Columns
+  %table.list
+    %tr
+      %th.forminformation
+        CDC Export Columns
       %tr
         %td.forminformation
+          - if @disease.export_columns.empty?
+            %span No CDC export columns configured
+          - else
+            %ul
+              - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
+                %li
+                  = export_column.export_column_name
+
+  %table.list
+    %tr
+      %th.forminformation
+        Common Test Types
+    %tr
+      %td.forminformation
+        - if @disease.common_test_types.empty?
+          %span No associated common test types
+        - else
           %ul
-            - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
+            - @disease.common_test_types.each do |common_test_type|
               %li
-                = export_column.export_column_name
+                = common_test_type.common_name

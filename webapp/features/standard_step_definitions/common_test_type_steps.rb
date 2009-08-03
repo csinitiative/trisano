@@ -19,3 +19,8 @@ Given /^I have a common test type named (.*)$/ do |common_name|
   @common_test_type = Factory.create(:common_test_type, :common_name => common_name)
 end
 
+Given /^the following common test types are in the system$/ do |test_types|
+  test_types.raw.each do |common_name|
+    CommonTestType.create(:common_name => common_name.first)
+  end
+end

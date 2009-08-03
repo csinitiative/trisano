@@ -18,4 +18,6 @@
 class DiseaseCommonTestType < ActiveRecord::Base
   belongs_to :disease
   belongs_to :common_test_type
+
+  validates_uniqueness_of :common_test_type_id, :scope => :disease_id, :message => 'is already associated'
 end

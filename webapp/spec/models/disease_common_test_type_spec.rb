@@ -18,12 +18,19 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe DiseaseCommonTestType do
+  fixtures :diseases, :common_test_types
 
   describe "associations" do
 
     it { should belong_to(:disease) }
     it { should belong_to(:common_test_type) }
 
+  end
+
+  it 'should not allow a association more then once' do
+    d = DiseaseCommonTestType.create!(:disease_id => Disease.first.id, :common_test_type_id => CommonTestType.first.id)
+    c = d.clone
+    c.should_not be_valid
   end
 
 end

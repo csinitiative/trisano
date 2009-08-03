@@ -237,4 +237,10 @@ module ApplicationHelper
     "<label for=\"#{name.to_s}\">#{check_box_tag(name, 1, params[name])}#{label_text.to_s.humanize}</label>"
   end
 
+  def scroll_pane(&block)
+    haml_tag :div, {:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'} do
+      haml_tag :div, {:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}, &block
+    end
+  end
+
 end
