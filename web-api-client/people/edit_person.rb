@@ -4,7 +4,7 @@ $LOAD_PATH << File.dirname(__FILE__) + '/../lib'
 require 'trisano-web-api-person.rb'
 
 trisano = TriSanoWebApiPerson.new
-options = trisano.parse_args(ARGV)
+options = trisano.parse_args(ARGV, {:show_id => true})
 if options.person_id.nil?
   warn 'Required switch "--id" is missing'
   exit 1
