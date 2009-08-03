@@ -70,6 +70,9 @@ class MorbidityEventsController < EventsController
 
       # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
       @event.add_note("Event derived from " + ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) )) if components && !components.empty?
+    elsif params[:from_person]
+      person = PersonEntity.find(params[:from_person])
+      @event.copy_from_person(person)
     else
       @event.attributes = params[:morbidity_event]
 

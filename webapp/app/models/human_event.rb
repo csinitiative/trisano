@@ -421,6 +421,15 @@ class HumanEvent < Event
     @party ||= self.safe_call_chain(:interested_party, :person_entity, :person)
   end
 
+  def copy_from_person(person)
+    self.build_jurisdiction
+    self.build_interested_party
+    self.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+    self.interested_party.primary_entity_id = person.id
+    self.interested_party.person_entity = person
+    self.address = person.canonical_address
+  end
+
   # Perform a shallow (event_coponents = nil) or deep (event_components != nil) copy of an event.
   # Can't simply do a single clone or a series of clones because there are some attributes we need
   # to leave behind, certain relationships that need to be severed, and we need to make a copy of 
