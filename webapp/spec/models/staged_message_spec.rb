@@ -107,7 +107,7 @@ describe StagedMessage do
   describe "class level functionality" do
 
     it 'should provide a hash of valid states' do
-      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED'}
+      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED', :unprocessable => 'UNPROCESSABLE'}
     end
   end
 
@@ -129,6 +129,16 @@ describe StagedMessage do
     it "should raise an error if message has already been assigned" do
       @staged_message.state = StagedMessage.states[:assigned]
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(RuntimeError)
+    end
+
+    it "should raise an error if LOINC code does not exist" do
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unknown_loinc])
+      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
+    end
+
+    it "should raise an error if LOINC code exists but is not linked to a common name" do
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unlinked_loinc])
+      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnlinkedLoincCode)
     end
 
     it 'should create a lab result and link to it' do

@@ -22,7 +22,6 @@ Given /^I have the staged message "([^\"]*)"$/ do |msg_key|
   @staged_message = StagedMessage.create(:hl7_message => hl7_messages[msg_key.downcase.to_sym])
 end
 
-
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end

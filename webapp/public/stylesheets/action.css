@@ -643,3 +643,13 @@ form.inplaceeditor-form a {
   margin: 3px;
   left: 10%;
   width: 80%; }
+
+.hoverable b span {
+  display: none; }
+.hoverable b:hover span {
+  display: block;
+  position: fixed;
+  border: solid 1px;
+  margin: 1em;
+  padding: 1em;
+  background: white; }

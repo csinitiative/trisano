@@ -73,6 +73,10 @@ Then /^I should see a '(.+)' message$/ do |msg|
   response.should contain(msg)
 end
 
+Then /^I should see a state of '(.+)'$/ do |state|
+  response.should contain(/State:\s+#{state}/)
+end
+
 Then /^I should remain on the staged message show page$/ do
   path = staged_message_path(@staged_message)
   current_url.should =~ /#{path}/
@@ -89,7 +93,7 @@ end
 Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
   loinc_test_maps.rows.each do |loinc_test_map|
     d = LoincCode.new(:loinc_code => loinc_test_map.first)
-    d.build_common_test_type(:common_name => loinc_test_map.last)
+    d.build_common_test_type(:common_name => loinc_test_map.last) unless loinc_test_map.last.blank?
     d.save
   end
 end

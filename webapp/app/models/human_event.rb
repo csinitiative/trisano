@@ -575,18 +575,29 @@ class HumanEvent < Event
     obr = staged_message.observation_request
     i = 0
     obr.tests.each do | obx |
+      loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
+      raise StagedMessage::UnknownLoincCode, "LOINC code, #{obx.loinc_code}, is unknown to TriSano." if loinc_code.nil?
+
+      common_test_type = loinc_code.common_test_type
+      raise StagedMessage::UnlinkedLoincCode, "LOINC code, #{obx.loinc_code}, is known but not linked to a common test type." if common_test_type.nil?
+
       specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
-      result_hash = {
-        "test_type_id"       => LoincCode.find_by_loinc_code(obx.loinc_code).common_test_type.id, # can currently fail for a number of reasons.  To be addressed shortly.
-        "collection_date"    => obr.collection_date,
-        "lab_test_date"      => obx.observation_date,
-        "reference_range"    => obx.reference_range,
-        "lab_result_text"    => obx.result,
-        "specimen_source_id" => specimen_source_id,
-        "staged_message_id"  => staged_message.id
-      }
-      lab_attributes["lab_results_attributes"][i.to_s] = result_hash
+
+      begin
+        result_hash = {
+          "test_type_id"       => common_test_type.id,
+          "collection_date"    => obr.collection_date,
+          "lab_test_date"      => obx.observation_date,
+          "reference_range"    => obx.reference_range,
+          "lab_result_text"    => obx.result,
+          "specimen_source_id" => specimen_source_id,
+          "staged_message_id"  => staged_message.id
+        }
+        lab_attributes["lab_results_attributes"][i.to_s] = result_hash
+      rescue Exception => error
+        raise StagedMessage::BadMessageFormat, error.message
+      end
       i += 1
       self.add_note("ELR with test type \"#{obx.test_type}\" assigned to event.")
     end

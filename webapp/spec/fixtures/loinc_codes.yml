@@ -7,3 +7,7 @@
   id: 2
   loinc_code: 5221-7
   common_test_type_id: 3
+
+unlinked:
+  id: 3
+  loinc_code: 10000-1

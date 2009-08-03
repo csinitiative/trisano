@@ -66,7 +66,7 @@ Feature: Staging Electronic Messages
     And there is an event with a matching name and birth date
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
-      | 100O0-1    | Blood Test  |
+      | 10000-1    | Blood Test  |
       | 20000-2    | Urine Test  |
       | 13954-3    | Hep-B Ag    |
 
@@ -92,7 +92,7 @@ Feature: Staging Electronic Messages
     And there is an event with a matching name and birth date
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
-      | 100O0-1    | Blood Test  |
+      | 10000-1    | Blood Test  |
       | 20000-2    | Urine Test  |
       | 13954-3    | Hep-B Ag    |
 
@@ -109,6 +109,35 @@ Feature: Staging Electronic Messages
     And I should see the new lab result with 'Hep-B Ag'
     And I should see a note for the assigned lab
     And I should see a link back to the staged message
+
+  Scenario: Attempting to assign message with unknown LOINC code
+    Given I am logged in as a super user
+    And I have the staged message "UNKNOWN_LOINC"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 10000-1    | Blood Test  |
+
+    When I visit the staged message show page
+    And I click 'Similar Events' for the staged message
+    And I click 'Create a CMR from this message'
+
+    Then I should see a 'is unknown to TriSano' message
+    And I should see a state of 'Unprocessable'
+
+  Scenario: Attempting to assign message with unlinked LOINC code
+    Given I am logged in as a super user
+    And I have the staged message "UNLINKED_LOINC"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 10000-1    |             |
+
+    When I visit the staged message show page
+    And I click 'Similar Events' for the staged message
+    And I click 'Create a CMR from this message'
+
+    Then I should remain on the staged message show page
+    And I should see a 'is known but not linked' message
+    And I should see a state of 'Unprocessable'
 
   Scenario: Discarding a message
     Given I am logged in as a super user
