@@ -156,6 +156,7 @@ class EventsController < ApplicationController
   def test_type_options
     render :inline => <<-test_opts
       <% test_types = test_type_options(nil, nil, nil) %>
+      <option value=""/>
       <%= options_from_collection_for_select(test_types, 'id', 'common_name') %>
     test_opts
   end

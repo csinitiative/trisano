@@ -25,42 +25,42 @@
           %hr
         %span.print-label Lab name:
         %span.print-value
-          = lab.place_entity.place.name
+          &= lab.place_entity.place.name
         .three-valued-row
           .left
             %span.print-label Test type:
             %span.print-value
-              = lab_result.test_type.common_name
+              &= lab_result.test_type.common_name
           .right
             %span.print-label Test result:
             %span.print-value
-              = lab_result.lab_result_text
+              &= lab_result.lab_result_text
       #test
         .three-valued-row
           .left
             %span.print-label Reference range:
             %span.print-value
-              = lab_result.reference_range
+              &= lab_result.reference_range
           .left
             %span.print-label Interpretation:
             %span.print-value
-              = l lab_result.interpretation
+              &= l lab_result.interpretation
           .right
             %span.print-label Specimen source:
             %span.print-value
-              = l lab_result.specimen_source
+              &= l lab_result.specimen_source
       #collection
         .three-valued-row
           .left
             %span.print-label Collection date:
             %span.print-value
-              = lab_result.collection_date
+              &= lab_result.collection_date
           .left
             %span.print-label Lab test date:
             %span.print-value
-              = lab_result.lab_test_date
+              &= lab_result.lab_test_date
           .right
             %span.print-label Specimen sent to UPHL:
             %span.print-value
-              = l lab_result.specimen_sent_to_uphl_yn
+              &= l lab_result.specimen_sent_to_uphl_yn
     - ran = 1
