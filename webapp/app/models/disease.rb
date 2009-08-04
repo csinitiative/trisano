@@ -68,6 +68,23 @@ class Disease < ActiveRecord::Base
 
   end
 
+  # takes an updated list of the CommonTestTypes or their ids and
+  # creates or deletes relationships as necessary
+  def update_common_test_types(test_types_or_ids)
+    if test_types_or_ids.first.respond_to? :new_record?
+      new_and_existing_test_type_ids = test_types_or_ids.collect(&:id)
+    else
+      new_and_existing_test_type_ids = test_types_or_ids
+    end
+
+    deleted_test_type_ids = self.common_test_type_ids.reject do |id|
+      new_and_existing_test_type_ids.include?(id)
+    end
+
+    add_common_test_type_associations(new_and_existing_test_type_ids)
+    delete_common_test_type_associations(deleted_test_type_ids)
+  end
+
   def live_forms(event_type = "MorbidityEvent")
     Form.find(:all,
       :joins => "INNER JOIN diseases_forms df ON df.form_id = id",
@@ -95,6 +112,24 @@ class Disease < ActiveRecord::Base
       unless export_column.nil?
         export_value = ExportConversionValue.find_or_initialize_by_export_column_id_and_value_from(export_column.id, disease_name)
         export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
+      end
+    end
+  end
+
+  # creates common test type relationships if necessary based on contents of id array
+  def add_common_test_type_associations(test_type_ids)
+    test_type_ids.each do |common_test_type_id|
+      unless self.common_test_type_ids.include?(common_test_type_id)
+        DiseaseCommonTestType.create!(:disease_id => self.id, :common_test_type_id => common_test_type_id)
+      end
+    end
+  end
+
+  # deletes common test type relationships of any ids missing from the test_type_ids array
+  def delete_common_test_type_associations(deleted_test_type_ids)
+    self.disease_common_test_types.each do |disease_common_test_type|
+      if deleted_test_type_ids.include?(disease_common_test_type.common_test_type_id)
+        disease_common_test_type.destroy
       end
     end
   end

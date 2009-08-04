@@ -37,6 +37,14 @@ Feature: Manage disease details
     And I should see "Culture"
     And I should not see "Stool"
 
+    When I go to "edit the disease"
+    And I uncheck "Culture"
+    And I press "Update"
+
+    Then I should see "Disease was successfully updated"
+    And I should not see "Culture"
+    And I should see "No associated common test types"
+
   Scenario: Deleting the disease name
     Given I am logged in as a super user
     And I have an active disease named "Chicken Pox"

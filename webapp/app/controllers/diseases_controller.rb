@@ -68,23 +68,14 @@ class DiseasesController < AdminController
     @disease = Disease.find(params[:id], :include => [:disease_common_test_types])
     unless params[:disease].nil?
       params[:disease][:external_code_ids] ||= []
-      common_test_type_ids = params[:disease].delete(:common_test_type_ids).collect(&:to_i) || []
+      common_test_type_ids = params[:disease].delete(:common_test_type_ids){[]}.collect(&:to_i)
     end
 
     respond_to do |format|
       begin
         Disease.transaction do
           @disease.update_attributes!(params[:disease])
-          common_test_type_ids.each do |common_test_type_id|
-            unless @disease.common_test_type_ids.include?(common_test_type_id)
-              DiseaseCommonTestType.create!(:disease_id => @disease.id, :common_test_type_id => common_test_type_id)
-            end
-          end
-          @disease.disease_common_test_types.each do |disease_common_test_type|
-            unless common_test_type_ids.include?(disease_common_test_type.common_test_type_id)
-              disease_common_test_type.destroy
-            end
-          end
+          @disease.update_common_test_types(common_test_type_ids)
         end
         flash[:notice] = 'Disease was successfully updated.'
         format.html { redirect_to(@disease) }
