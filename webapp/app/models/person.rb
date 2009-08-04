@@ -143,7 +143,10 @@ class Person < ActiveRecord::Base
       else
         soundex_codes = []
         fulltext_terms = []
-        raw_terms = [options[:first_name].split(/\s+/), options[:last_name].split(/\s+/)].flatten
+        raw_terms = []
+        raw_terms << options[:first_name].split(/\s+/) unless options[:first_name].nil?
+        raw_terms << options[:last_name].split(/\s+/) unless options[:last_name].nil?
+        raw_terms = raw_terms.flatten
 
         raw_terms.each do |word|
           soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
