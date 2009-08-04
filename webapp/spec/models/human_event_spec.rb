@@ -265,3 +265,56 @@ describe HumanEvent, 'validating out of state patients' do
   end
 
 end
+
+describe "adding an address to a human event's interested party" do
+
+  it "should establish a canonical address the first time an address is provided" do
+    e = Factory.build(:morbidity_event)
+    person_entity = e.interested_party.person_entity
+    person_entity.canonical_address.should be_nil
+    address = Factory.create(:address, :event_id => e.id, :entity_id => person_entity.id)
+    person_entity.reload
+    person_entity.canonical_address.should_not be_nil
+    person_entity.canonical_address.street_number.should == address.street_number
+    person_entity.canonical_address.street_name.should == address.street_name
+    person_entity.canonical_address.unit_number.should == address.unit_number
+    person_entity.canonical_address.city.should == address.city
+    person_entity.canonical_address.county_id.should == address.county_id
+    person_entity.canonical_address.state_id.should == address.state_id
+    person_entity.canonical_address.postal_code.should == address.postal_code
+  end
+
+end
+
+describe "When added to an event using an existing person entity" do
+
+  before(:each) do
+    @user = Factory.create(:user)
+    User.stub!(:current_user).and_return(@user)
+    @person_entity = Factory.create(:person_entity)
+    @person_event_hash = { :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
+  end
+
+  it "should receive the person entity's canonical address if one exists" do
+    canonical_address = Factory.create(:address, :entity_id => @person_entity.id)
+    event = MorbidityEvent.new(@person_event_hash)
+    event.save
+    event.reload
+    new_person_address = event.address
+    new_person_address.should_not be_nil
+    new_person_address.street_number.should == canonical_address.street_number
+    new_person_address.street_name.should == canonical_address.street_name
+    new_person_address.unit_number.should == canonical_address.unit_number
+    new_person_address.city.should == canonical_address.city
+    new_person_address.state_id.should == canonical_address.state_id
+    new_person_address.county_id.should == canonical_address.county_id
+    new_person_address.postal_code.should == canonical_address.postal_code
+  end
+
+  it "should not have an address if the person entity does not have canonical address" do
+    event = MorbidityEvent.new(@person_event_hash)
+    new_person_address = event.address
+    new_person_address.should be_nil
+  end
+
+end

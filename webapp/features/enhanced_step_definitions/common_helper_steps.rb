@@ -17,10 +17,12 @@
 
 Given(/^I am logged in as a super user$/) do
   switch_user(@browser, 'default_user')
+  User.current_user = User.find_by_user_name('default_user')
 end
 
 Given(/^I am logged in as a lhd manager$/) do
   switch_user(@browser, 'lhd_manager')
+  User.current_user = User.find_by_user_name('lhd_manager')
 end
 
 When(/^I click the "(.+)" link$/) do |link|

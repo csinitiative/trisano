@@ -53,12 +53,12 @@ def jurisdiction_id_by_name(name)
   Place.all_by_name_and_types(name || "Unassigned", 'J', true).first.entity_id
 end
 
-def create_place(place_name, place_type)
-  type = Code.find_by_code_name_and_the_code("placetype", place_type)
-  place_entity = PlaceEntity.new
-  place_entity.build_place(:name => place_name)
-  place_entity.place.place_types << type
-  place_entity.save
+def create_place_entity(place_name, place_type)
+  type = Code.find_by_code_name_and_code_description("placetype", place_type)
+  place = Factory.build(:place, :name => place_name)
+  place.place_types << type
+  place.save!
+  @place_entity = Factory.create(:place_entity, :place => place)
 end
 
 def place_child_events_attributes(values)

@@ -14,8 +14,10 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
-  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+
+When(/^I navigate to the new event page and start a simple event$/) do
+  @browser.open "/trisano/cmrs/new"
+  add_demographic_info(@browser, { :last_name => get_unique_name })
 end
 
 When(/^I navigate to the event edit page$/) do
@@ -28,5 +30,24 @@ end
 When(/^I navigate to the event show page$/) do
   @browser.open "/trisano/cmrs/#{(@m || @event).id}"
   @browser.wait_for_page_to_load
+end
+
+When(/^I am on the contact event edit page$/) do
+  @browser.open "/trisano/contact_events/#{(@m || @event).id}/edit"
+  @browser.wait_for_page_to_load
+end
+
+When(/^I save the event$/) do
+  save_cmr(@browser).should be_true
+
+  # Try to establish a reference to the event if there isn't already one. This will enable
+  # steps like 'navigate to event show page' to work
+  if @event.nil? && @m.nil?
+    location = @browser.get_location
+    event_id_start = location.index("cmr") + 5
+    event_id_end = location.index("?")
+    event_id = location[event_id_start...event_id_end]
+    @event = Event.find event_id.to_i
+  end
 end
 

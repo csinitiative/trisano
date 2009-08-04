@@ -96,7 +96,6 @@ WHERE
         'dw_morbidity_events',
         'dw_contact_events',
         'dw_secondary_jurisdictions',
-        'dw_place_events',
         'dw_patients',
         'dw_events_hospitals',
         'dw_addresses',                -- Consider altering the table instead of creating a new one
@@ -728,7 +727,12 @@ SELECT
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
+    CASE
+        WHEN events.type = 'EncounterEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_encounter_events_id,
     places.name,
+    c.code_description AS lab_type,
     lr.test_type,
     lr.test_detail,
     lr.lab_result_text,
@@ -752,52 +756,14 @@ FROM
         ON (p.event_id = events.id)
     LEFT JOIN places
         ON (places.entity_id = p.secondary_entity_id)
-;
-
-INSERT INTO dw_lab_results
-(
-    id, dw_morbidity_events_id, dw_contact_events_id,
-    name, test_type, test_detail, lab_result_text,
-    reference_range, interpretation, specimen_source,
-    collection_date, lab_test_date, specimen_sent_to_uphl
-)
-SELECT
-    lr.id,
-    morbev.id,
-    NULL,
-    places.name,
-    lr.test_type,
-    lr.test_detail,
-    lr.lab_result_text,
-    lr.reference_range,
-    intec.code_description AS interpretation,
-    ssec.code_description AS specimen_source,
-    upsert_date(lr.collection_date) AS collection_date,
-    upsert_date(lr.lab_test_date) AS lab_test_date,
-    uphlec.code_description AS specimen_sent_to_uphl
-FROM
-    lab_results lr
-    LEFT JOIN external_codes intec
-        ON (intec.id = lr.interpretation_id)
-    LEFT JOIN external_codes ssec
-        ON (ssec.id = lr.specimen_source_id)
-    LEFT JOIN external_codes uphlec
-        ON (uphlec.id = lr.specimen_sent_to_uphl_yn_id)
-    LEFT JOIN participations p
-        ON (p.id = lr.participation_id)
-    LEFT JOIN events contev
-        ON (p.event_id = contev.id)
-    LEFT JOIN events morbev
-        ON (morbev.id = contev.parent_id)
-    LEFT JOIN places
-        ON (places.entity_id = p.secondary_entity_id)
-WHERE
-    contev.type = 'EncounterEvent' AND
-    morbev.type = 'MorbidityEvent'
+    LEFT JOIN places_types pt
+        ON (pt.place_id = places.id)
+    LEFT JOIN codes c
+        ON (c.id = pt.type_id)
 ;
 
 ALTER TABLE dw_lab_results
-    ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id);
+    ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id, lab_type);
 CREATE INDEX dw_lab_results_morbidity_id_ix
     ON dw_lab_results (dw_morbidity_events_id);
 CREATE INDEX dw_lab_results_contact_id_ix
@@ -834,6 +800,10 @@ SELECT
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
+    CASE
+        WHEN events.type = 'EncounterEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_encounter_events_id,
     pt.treatment_id,
     tgec.code_description AS treatment_given,
     upsert_date(pt.treatment_date) AS date_of_treatment,
@@ -846,36 +816,6 @@ FROM
         ON (events.id = p.event_id)
     LEFT JOIN external_codes tgec
         ON (tgec.id = pt.treatment_given_yn_id)
-WHERE
-    events.type IN ('ContactEvents', 'MorbidityEvents')
-;
-
-INSERT INTO dw_events_treatments
-(
-    id, dw_morbidity_events_id, dw_contact_events_id,
-    treatment_id, treatment_given, date_of_treatment,
-    treatment_notes
-)
-SELECT
-    pt.id,
-    morbev.id,
-    NULL,
-    pt.treatment_id,
-    tgec.code_description AS treatment_given,
-    upsert_date(pt.treatment_date) AS date_of_treatment,
-    pt.treatment AS treatment_notes
-FROM
-    participations_treatments pt
-    LEFT JOIN participations p
-        ON (p.id = pt.participation_id)
-    LEFT JOIN events contev
-        ON (contev.id = p.event_id)
-    LEFT JOIN events morbev
-        ON (morbev.id = contev.parent_id)
-    LEFT JOIN external_codes tgec
-        ON (tgec.id = pt.treatment_given_yn_id)
-WHERE
-    contev.type = 'EncounterEvent'
 ;
 
 ALTER TABLE dw_events_treatments
@@ -884,6 +824,8 @@ CREATE INDEX dw_events_treatments_morbidity_id_ix
     ON dw_events_treatments (dw_morbidity_events_id);
 CREATE INDEX dw_events_treatments_contact_id_ix
     ON dw_events_treatments (dw_contact_events_id);
+CREATE INDEX dw_events_treatments_encounter_id_ix
+    ON dw_events_treatments (dw_encounter_events_id);
 CREATE INDEX dw_events_treatments_date_of_treatment_ix
     ON dw_events_treatments (date_of_treatment);
 
@@ -1044,6 +986,8 @@ CREATE TABLE dw_place_events AS
 SELECT
     events.id,
     events.parent_id AS dw_morbidity_events_id,
+    p.name,
+    c.code_description AS place_type,
     ad.street_number,
     ad.street_name,
     ad.unit_number,
@@ -1059,6 +1003,14 @@ FROM
         ON (state_ec.id = ad.state_id)
     LEFT JOIN external_codes county_ec
         ON (county_ec.id = ad.county_id)
+    JOIN participations part
+        ON (part.event_id = events.id AND part.type = 'InterestedPlace')
+    JOIN places p
+        ON (p.entity_id = part.secondary_entity_id)
+    LEFT JOIN places_types pt
+        ON (pt.place_id = p.id)
+    LEFT JOIN codes c
+        ON (c.id = pt.type_id)
 WHERE
     events.type = 'PlaceEvent'
 ;
@@ -1069,10 +1021,10 @@ CREATE INDEX dw_place_events_parent ON dw_place_events (dw_morbidity_events_id);
 
 CREATE TABLE dw_encounters AS
 SELECT
-    pe.id,
+    events.id,
     events.parent_id AS dw_morbidity_events_id,
     events.id AS encounter_event_id,
-    pe.user_id AS investigator_id,
+    u.first_name || ' ' || u.last_name AS investigator_id,
     upsert_date(pe.encounter_date) AS encounter_date,
     pe.encounter_location_type AS location,
     pe.description
@@ -1080,6 +1032,8 @@ FROM
     participations_encounters pe
     JOIN events
         ON (events.participations_encounter_id = pe.id)
+    JOIN users u
+        ON (pe.user_id = u.id)
 ;
 
 ALTER TABLE dw_encounters
@@ -1090,28 +1044,27 @@ CREATE INDEX dw_encounters_investigator_id_ix ON dw_encounters (investigator_id)
 CREATE INDEX dw_encounters_encounter_date_ix ON dw_encounters (encounter_date);
 CREATE INDEX dw_encounters_location_ix ON dw_encounters (location);
 
--- TODO: is this table useful?
-CREATE TABLE dw_encounters_labs AS
-SELECT
-    p.id,
-    events.id AS dw_encounters_id,
-    lr.id AS dw_lab_results_id
-FROM
-    lab_results lr
-    JOIN participations p
-        ON (p.id = lr.participation_id)
-    JOIN events
-        ON (events.id = p.event_id)
-WHERE
-    events.type = 'EncounterEvent'
-;
-
-ALTER TABLE dw_encounters_labs
-    ADD CONSTRAINT pk_dw_encounters_labs PRIMARY KEY (id);
-CREATE INDEX dw_encounters_labs_encounter_id_ix
-    ON dw_encounters_labs (dw_encounters_id);
-CREATE INDEX dw_encounters_labs_results_ix
-    ON dw_encounters_labs (dw_lab_results_id);
+-- CREATE TABLE dw_encounters_labs AS
+-- SELECT
+--     p.id,
+--     events.id AS dw_encounters_id,
+--     lr.id AS dw_lab_results_id
+-- FROM
+--     lab_results lr
+--     JOIN participations p
+--         ON (p.id = lr.participation_id)
+--     JOIN events
+--         ON (events.id = p.event_id)
+-- WHERE
+--     events.type = 'EncounterEvent'
+-- ;
+-- 
+-- ALTER TABLE dw_encounters_labs
+--     ADD CONSTRAINT pk_dw_encounters_labs PRIMARY KEY (id);
+-- CREATE INDEX dw_encounters_labs_encounter_id_ix
+--     ON dw_encounters_labs (dw_encounters_id);
+-- CREATE INDEX dw_encounters_labs_results_ix
+--     ON dw_encounters_labs (dw_lab_results_id);
 
 -- TODO: is this table useful?
 CREATE TABLE dw_encounters_treatments AS

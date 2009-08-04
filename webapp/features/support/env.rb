@@ -31,9 +31,12 @@ require 'webrat/rspec-rails'
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_forms_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_admin_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_places_helper')
+
 include TrisanoHelper
 include TrisanoFormsHelper
 include TrisanoAdminHelper
+include TrisanoPlacesHelper
 
 # Load up factories
 Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'spec', 'factories', '*.rb')) {|f| require f}

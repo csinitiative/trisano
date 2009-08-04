@@ -753,6 +753,11 @@ BEGIN
             WHERE dw_contact_events_id IS NOT NULL';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_encounters_treatments_events_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_treatments
+            WHERE dw_encounter_events_id IS NOT NULL';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_morbidity_treatments_view AS
             SELECT t.* FROM ' || new_schema || '.treatments t
             JOIN trisano.dw_events_treatments_view det
@@ -776,9 +781,8 @@ BEGIN
 
     EXECUTE
         'CREATE VIEW trisano.dw_encounters_lab_results_view AS
-            SELECT l.* FROM ' || new_schema || '.lab_results l
-            JOIN trisano.dw_encounters_labs_view del
-                ON (del.dw_lab_results_id = l.id)';
+            SELECT * FROM ' || new_schema || '.dw_lab_results
+            WHERE dw_encounter_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_hospitals_view AS
@@ -799,12 +803,6 @@ BEGIN
         'CREATE VIEW trisano.dw_contact_secondary_jurisdictions_view AS
             SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
             WHERE dw_contact_events_id IS NOT NULL';
-
-    EXECUTE
-        'CREATE VIEW trisano.dw_enc_treatments_view AS
-            SELECT tr.* FROM ' || new_schema || '.treatments tr
-            JOIN trisano.dw_encounters_treatments_view det
-                ON (det.dw_events_treatments_id = tr.id)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_jurisdictions_view AS

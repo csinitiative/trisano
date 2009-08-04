@@ -23,10 +23,6 @@ Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue
   @event.save!
 end
 
-Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
-  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
-end
-
 Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
   @m = create_basic_event(event_type, last_name, nil, 'Unassigned')
   @m.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")

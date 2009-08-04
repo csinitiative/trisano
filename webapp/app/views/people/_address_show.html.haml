@@ -17,7 +17,7 @@
   %legend
     Address 
   -if not address.nil? and not address.new_record?
-    - f.fields_for(:address, :builder => ExtendedFormBuilder) do |address_form|
+    - f.fields_for(address, :builder => ExtendedFormBuilder) do |address_form|
       %div.data_address
         -core_element_show :street_number, address_form, :horiz do
           =address_form.label(:street_number)

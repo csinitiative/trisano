@@ -22,11 +22,11 @@ class Participation < ActiveRecord::Base
 
   def validate
     unless primary_entity.nil?
-      errors.add_to_base("has been merged into another entity. Please make another selection.") unless primary_entity.deleted_at.nil?
+      add_merge_error unless primary_entity.deleted_at.nil?
     end
 
     unless secondary_entity.nil?
-      errors.add_to_base("has been merged into another entity. Please make another selection.") unless secondary_entity.deleted_at.nil?
+      add_merge_error unless secondary_entity.deleted_at.nil?
     end
   end
   
@@ -53,4 +53,25 @@ class Participation < ActiveRecord::Base
         })
     end
   end
+
+  # Establishes a base error message for the merge race condition error. Sub-classes can override for a more
+  # specific error message.
+  def add_merge_error
+    base_message = "has been merged into another entity and is no longer available for use on events. Please make another selection or refresh your browser."
+
+    if self.respond_to?(:place_entity)
+      add_place_specific_merge_error(base_message)
+    else
+      errors.add_to_base(base_message)
+    end
+  end
+
+  def add_place_specific_merge_error(base_message)
+    if self.place_entity.place.nil?
+        errors.add_to_base(base_message)
+      else
+        errors.add("#{self.place_entity.place.name}", base_message)
+      end
+  end
+  
 end

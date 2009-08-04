@@ -70,6 +70,9 @@ class MorbidityEventsController < EventsController
 
       # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
       @event.add_note("Event derived from " + ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) )) if components && !components.empty?
+    elsif params[:from_person]
+      person = PersonEntity.find(params[:from_person])
+      @event.copy_from_person(person)
     else
       @event.attributes = params[:morbidity_event]
 
@@ -91,6 +94,8 @@ class MorbidityEventsController < EventsController
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
           @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
+        @event.reload
+        @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = 'CMR was successfully created.'
         format.html { 
           query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""

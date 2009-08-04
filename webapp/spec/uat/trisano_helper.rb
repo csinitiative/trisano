@@ -431,7 +431,7 @@ module TrisanoHelper
   end
   
   #Get a unique name with the input number of words in it
-  def get_unique_name(words)
+  def get_unique_name(words=1)
     if words > 1000
       words = 1000
     else 
@@ -671,12 +671,12 @@ module TrisanoHelper
 
   end
 
-  def add_diagnostic_facility(browser, attributes, index = 1)
+  def add_diagnostic_facility(browser, attributes)
     click_core_tab(browser, CLINICAL)
     browser.click "link=Add a Diagnostic Facility"
     sleep(1)
-    browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
-    browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+    browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic']//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
+    browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
   end
 
   def remove_diagnostic_facility(browser, index=1)

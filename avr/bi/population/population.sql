@@ -134,5 +134,5 @@ FROM
         USING (county)
 ;
 
-DROP TABLE popinit;
+--DROP TABLE popinit;
 GRANT SELECT ON :TRISANO_POP_SCHEMA.population TO :TRISANO_POP_DWUSER;

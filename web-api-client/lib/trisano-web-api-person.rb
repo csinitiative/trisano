@@ -3,7 +3,7 @@ require 'ostruct'
 require 'trisano-web-api.rb'
 
 class TriSanoWebApiPerson < TriSanoWebApi
-  def parse_args(args)
+  def parse_args(args, options = {})
     @options = OpenStruct.new
 
     script_name = caller.last.split(':').first
@@ -11,9 +11,11 @@ class TriSanoWebApiPerson < TriSanoWebApi
       opts.separator ""
       opts.separator "Edit options:"
 
-      opts.on("--id PERSON_ID",
-              "Person ID (required).") do |i|
-        @options.person_id = i
+      if options[:show_id]
+        opts.on("--id PERSON_ID",
+                "Person ID (required).") do |i|
+          @options.person_id = i
+        end
       end
 
       opts.on("--first_name NAME",
