@@ -138,18 +138,23 @@ class Person < ActiveRecord::Base
         if !options[:middle_name].blank?
           where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "%'"
         end
+
+        order_by_clause = " last_name, first_name ASC"
       else
-        if !options[:last_name].blank?
-         where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "'"
+        soundex_codes = []
+        fulltext_terms = []
+        raw_terms = [options[:first_name].split(/\s+/), options[:last_name].split(/\s+/)].flatten
+
+        raw_terms.each do |word|
+          soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
+          fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
         end
 
-        if !options[:first_name].blank?
-          where_clause << " AND first_name ILIKE '" + options[:first_name].gsub("'", "''") + "'"
-        end
+        fulltext_terms << soundex_codes unless soundex_codes.empty?
+        sql_terms = fulltext_terms.join(" | ")
 
-        if !options[:middle_name].blank?
-          where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "'"
-        end
+        where_clause << " AND vector @@ to_tsquery('#{sql_terms}')"
+        order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC"
       end
 
       if !options[:birth_date].blank?
@@ -158,15 +163,6 @@ class Person < ActiveRecord::Base
 
       if options[:do_not_show_deleted]
         where_clause << " AND people.deleted_at IS NULL"
-      end
-
-      order_by_clause = case options[:order_by]
-      when 'last_name'
-        "last_name, first_name, middle_name, birth_date"
-      when 'birth_date'
-        "birth_date, last_name, first_name, middle_name"
-      else
-        "people.updated_at DESC"
       end
 
       select = <<-SQL
