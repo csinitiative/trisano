@@ -73,4 +73,5 @@
         = scroll_pane do
           - @common_test_types.each do |common_test_type|
             = disease_common_test_type_check_box(common_test_type, @disease.common_test_type_ids)
+        = link_to 'Create a new common test type', new_common_test_type_path
 

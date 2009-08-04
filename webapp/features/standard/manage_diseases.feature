@@ -34,3 +34,12 @@ Feature: Manage disease details
 
     Then I should not see "Disease updated successfully"
     And I should see "Disease name can't be blank"
+
+  Scenario: Create a new test type from the edit disease page
+    Given I am logged in as a super user
+    And I have an active disease named "Chicken Pox"
+
+    When I go to edit the disease
+    And I follow "Create a new common test type"
+
+    Then I should be on "the new common test type page"
