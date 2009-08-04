@@ -51,4 +51,14 @@ Feature: Supporting LOINC codes for lab results
     And I should see a link to "< Back to LOINC Codes"
     And I should see "13954-3"
 
+  Scenario: Entering a duplicate LOINC code
+    Given I am logged in as a super user
+    And I have a loinc code 13954-3
+
+    When I go to the new loinc code page
+    And I fill in "loinc_code_loinc_code" with "13954-3"
+    And I press "Create"
+
+    Then I should see "Loinc code has already been taken"
+
 

@@ -21,6 +21,7 @@
   %p
 
 - form_for @loinc_code do |f|
+  = f.error_messages
   %span.vert
     = f.label      :loinc_code, 'LOINC code'
     = f.text_field :loinc_code
