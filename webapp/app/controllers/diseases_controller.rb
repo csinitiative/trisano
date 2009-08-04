@@ -65,7 +65,7 @@ class DiseasesController < AdminController
   end
 
   def update
-    @disease = Disease.find(params[:id])
+    @disease = Disease.find(params[:id], :include => [:disease_common_test_types])
     unless params[:disease].nil?
       params[:disease][:external_code_ids] ||= []
       common_test_type_ids = params[:disease].delete(:common_test_type_ids).collect(&:to_i) || []
@@ -78,6 +78,11 @@ class DiseasesController < AdminController
           common_test_type_ids.each do |common_test_type_id|
             unless @disease.common_test_type_ids.include?(common_test_type_id)
               DiseaseCommonTestType.create!(:disease_id => @disease.id, :common_test_type_id => common_test_type_id)
+            end
+          end
+          @disease.disease_common_test_types.each do |disease_common_test_type|
+            unless common_test_type_ids.include?(disease_common_test_type.common_test_type_id)
+              disease_common_test_type.destroy
             end
           end
         end
