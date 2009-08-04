@@ -1,0 +1,45 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        People
+      %th
+    - @people.each do |person|
+      - unless is_person_merge_entity(person)
+        %tr.roll
+          %td.forminformation
+            %fieldset
+              - fields_for(person, :builder => ExtendedFormBuilder) do |f|
+                %div.data_person
+                  %span.data_person_id{:style => 'display: none'}=h(person.person_entity.id)
+                  -f.fields_for(:person, :builder => ExtendedFormBuilder) do |name_form|
+                    %div.data_name
+                      %div.formname
+                        %b
+                          %span.data_first_name=person.first_name
+                          %span.data_middle_name=person.middle_name
+                          %span.data_last_name=person.last_name
+                  = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}
+                  = render :partial => 'people/age_show', :locals => {:person => person, :f => f, :event => nil}
+          %td
+            .tools{:style => "position: absolute; right: 25px;"}
+              = render_person_actions(person)
+  %br
+  = will_paginate @people
+
+
