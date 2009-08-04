@@ -175,7 +175,6 @@ def mock_event
     
   lab_result.stub!(:specimen_source_id).and_return(1501)
   lab_result.stub!(:specimen_source).and_return(specimen_source)
-  lab_result.stub!(:lab_result_text).and_return("Positive")
   lab_result.stub!(:collection_date).and_return("2008-02-14")
   lab_result.stub!(:lab_test_date).and_return("2008-02-15")
     

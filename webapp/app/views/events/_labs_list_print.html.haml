@@ -34,7 +34,7 @@
           .right
             %span.print-label Test result:
             %span.print-value
-              &= lab_result.lab_result_text
+              &= l lab_result.test_result
       #test
         .three-valued-row
           .left
@@ -42,9 +42,6 @@
             %span.print-value
               &= lab_result.reference_range
           .left
-            %span.print-label Interpretation:
-            %span.print-value
-              &= l lab_result.interpretation
           .right
             %span.print-label Specimen source:
             %span.print-value

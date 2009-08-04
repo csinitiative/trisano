@@ -127,14 +127,6 @@ csv_field_00079:
   short_name: 
   use_code: 
   event_type: morbidity_event
-csv_field_00134: 
-  sort_order: 40
-  export_group: lab
-  long_name: lab_result
-  use_description: lab_result_text
-  short_name: 
-  use_code: 
-  event_type: 
 csv_field_00106: 
   sort_order: 110
   export_group: event
@@ -184,12 +176,12 @@ csv_field_00022:
   use_code: 
   event_type: morbidity_event
 csv_field_00136: 
-  sort_order: 60
+  sort_order: 30
   export_group: lab
-  long_name: lab_interpretation
-  use_description: interpretation.try(:code_description)
+  long_name: lab_test_result
+  use_description: test_result.try(:code_description)
   short_name: 
-  use_code: interpretation.try(:the_code)
+  use_code: test_result.try(:the_code)
   event_type: 
 csv_field_00108: 
   sort_order: 630

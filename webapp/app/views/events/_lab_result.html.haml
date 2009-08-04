@@ -24,16 +24,13 @@
     - disease = @disease || @event.try(:disease_event).try(:disease)
     = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:onchange => "get_test_type_options(this);"})
 
-  -# Autocomplete for lab result
-  - core_element("lab_result_text", lab_result_form, :horiz) do
-    = trisano_auto_complete(lab_result_form, :lab_result_text, "Test result", {:size => 20, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
+  - core_element("test_result", lab_result_form, :horiz) do
+    = lab_result_form.label(:test_result)
+    = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
 
   - core_element("reference_range", lab_result_form, :horiz) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
-  - core_element("interpretation", lab_result_form, :horiz) do
-    = lab_result_form.label(:interpretation)
-    = lab_result_form.dropdown_code_field(:interpretation_id, "lab_interpretation", {})
   %span.vert
   - core_element("specimen_source", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_source_id, "Specimen source")

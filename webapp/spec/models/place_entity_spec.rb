@@ -71,7 +71,7 @@ describe PlaceEntity do
             },
             "lab_results_attributes"=>{
               "0"=>{
-                "test_type_id"=>1, "lab_result_text"=>"Done", "reference_range"=>"", "interpretation_id"=>"",
+                "test_type_id"=>1, "reference_range"=>"",
                 "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
               }
             }

@@ -27,8 +27,7 @@ Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |eve
   test_type_id = CommonTestType.find_by_common_name(test_type).id
   attrs = { "labs_attributes" =>
     [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-        "lab_results_attributes" =>
-           [ { "test_type_id" => test_type_id, "lab_result_text" => "whatever" } ]
+        "lab_results_attributes"  => [ { "test_type_id" => test_type_id } ]
     } ]
   }
   @event = create_event_with_attributes(event_type, get_unique_name(1), attrs, nil, get_random_jurisdiction_by_short_name)

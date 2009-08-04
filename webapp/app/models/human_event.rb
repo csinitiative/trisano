@@ -599,7 +599,7 @@ class HumanEvent < Event
           "collection_date"    => obr.collection_date,
           "lab_test_date"      => obx.observation_date,
           "reference_range"    => obx.reference_range,
-          "lab_result_text"    => obx.result,
+          # "lab_result_text"    => obx.result,        #### Fix when result "result units" and "result value" fields are in
           "specimen_source_id" => specimen_source_id,
           "staged_message_id"  => staged_message.id
         }
