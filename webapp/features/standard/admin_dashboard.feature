@@ -14,3 +14,4 @@ Feature: The administration dashboard
 
     Then I should see a link to "Manage Users"
     And I should see a link to "Manage Common Test Types"
+    And I should see a link to "Manage LOINC Codes"

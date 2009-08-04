@@ -27,6 +27,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :common_test_types
 
+  map.resources :loinc_codes
+
   # When we get to Rails 2.1 restrict here for GET only
   map.resources :cdc_events, :collection => { :current_week => :get, :current_ytd => :get, :by_range => :get }
 

@@ -26,8 +26,6 @@
 %br
 = link_to 'Manage Disease Information', diseases_path, :id => "admin_diseases"
 %br
-= link_to 'Manage Common Test Types', common_test_types_path, :id => "admin_common_test_types"
-%br
 = link_to 'Manage Event Routing Queues', event_queues_path, :id => "admin_queues"
 %br
 = link_to 'Add Help Text to Core Fields', core_fields_path, :id => "admin_help_text"
@@ -37,6 +35,12 @@
 = link_to 'Configure System for CDC Export', export_columns_path, :id => "admin_cdc_config"
 %br
 = link_to 'Configure System for CSV Export', csv_fields_path, :id => "admin_csv_config"
+
+%h2 Lab Management
+= link_to 'Manage Common Test Types', common_test_types_path, :id => "admin_common_test_types"
+%br
+= link_to 'Manage LOINC Codes', loinc_codes_path, :id => "admin_loinc_codes"
+%br
 
 %h2 Entity Management
 = link_to 'Manage People', people_path, :id => "admin_people"

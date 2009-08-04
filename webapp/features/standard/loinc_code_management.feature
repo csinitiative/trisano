@@ -15,41 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-def path_to(page_name)
-  case page_name
+Feature: Supporting LOINC codes for lab results
 
-  when /the homepage/i
-    root_path
+  To improve the clarity and consistency of electronically collected labs
+  Administrators need to be able to configure the system to accept LOINC codes.
 
-  # Add more page name => path mappings here
-  when /the new CMR page/i
-    new_cmr_path
+  Scenario: Listing LOINC codes
+    Given I am logged in as a super user
+    And I have a loinc code 13954-3
 
-  when /the investigator user edit page/i
-    "/users/4/edit"
+    When I go to the loinc code index page
 
-  when /the common test type index page/
-    common_test_types_path
+    Then I should see "List LOINC Codes"
+    And I should see a link to "13954-3"
 
-  when /the new common test type page/
-    new_common_test_type_path
+  Scenario: Non-administrators trying to modify LOINC codes
+    Given I am logged in as an investigator
+    When I go to the new loinc code page
+    Then I should get a 403 response
 
-  when /(a|the) common test type show page/
-    common_test_type_path(@common_test_type)
-
-  when /the admin dashboard/
-    admin_path
-
-  when /edit the disease/
-    edit_disease_path(@disease)
-
-  when /the loinc code index page/
-    loinc_codes_path
-
-  when /the new loinc code page/
-    new_loinc_code_path
-
-  else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
-  end
-end
