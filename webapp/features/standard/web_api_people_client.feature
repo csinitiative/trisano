@@ -10,7 +10,7 @@ Feature: Web API People Client
 
     Then I should find the value "Robert" in "data_first_name"
     And I should find the value "Michael" in "data_middle_name"
-    And I should find the value "Smith" in "data_last_name"
+    And I should find the value "Smith-Johnson" in "data_last_name"
     And I should find the value "1980-11-10" in "data_birth_date"
     And I should find the value "Male" in "data_birth_gender"
     And I should find the value "English" in "data_primary_language"
@@ -31,7 +31,7 @@ Feature: Web API People Client
 
     Then I should find the value "Robert" in "data_first_name"
     And I should find the value "Michael" in "data_middle_name"
-    And I should find the value "Smith" in "data_last_name"
+    And I should find the value "Smith-Johnson" in "data_last_name"
     And I should find the value "123" in "data_street_number"
     And I should find the value "George Mason Dr." in "data_street_name"
     And I should find the value "448" in "data_unit_number"
@@ -41,11 +41,11 @@ Feature: Web API People Client
   Scenario: Searching known people entities
     Given I have a known person entity
 
-    When I search people by "last_name" with "Smith"
+    When I search people by "last_name" with "Smith-Johnson"
 
     Then I should find the value "Robert" in "data_first_name"
     And I should find the value "Michael" in "data_middle_name"
-    And I should find the value "Smith" in "data_last_name"
+    And I should find the value "Smith-Johnson" in "data_last_name"
     And I should find the value "123" in "data_street_number"
     And I should find the value "George Mason Dr." in "data_street_name"
     And I should find the value "448" in "data_unit_number"
@@ -57,7 +57,7 @@ Feature: Web API People Client
 
     When I search people by "last_name" with "Richardson"
 
-    Then I should not find the value "Smith" in "data_last_name"
+    Then I should not find the value "Smith-Johnson" in "data_last_name"
 
   Scenario: Create person entity
     When I visit the people new page

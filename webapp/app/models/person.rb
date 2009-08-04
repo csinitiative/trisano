@@ -140,15 +140,15 @@ class Person < ActiveRecord::Base
         end
       else
         if !options[:last_name].blank?
-         where_clause << " AND last_name = '" + options[:last_name].gsub("'", "''") + "'"
+         where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "'"
         end
 
         if !options[:first_name].blank?
-          where_clause << " AND first_name = '" + options[:first_name].gsub("'", "''") + "'"
+          where_clause << " AND first_name ILIKE '" + options[:first_name].gsub("'", "''") + "'"
         end
 
         if !options[:middle_name].blank?
-          where_clause << " AND middle_name = '" + options[:middle_name].gsub("'", "''") + "'"
+          where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "'"
         end
       end
 

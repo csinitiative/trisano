@@ -56,6 +56,13 @@ When /^I search for last_name = "([^\"]*)"$/ do |last_name|
   click_button "Search"
 end
 
+When /^I search for last_name = "([^\"]*)" for people entities$/ do |last_name|
+  visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name
+  check "search_people_entities"
+  click_button "Search"
+end
+
 When /^I search for last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name 
@@ -159,4 +166,3 @@ Then /^I should see the following results:$/ do |results|
     }
   end
 end
-

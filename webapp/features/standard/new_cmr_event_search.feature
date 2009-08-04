@@ -127,3 +127,10 @@ Feature: Searching for existing people or events before adding a CMR
     When I search for last_name = "Smith"
     And I create a new morbidity event from the contact named Smith
     Then I should be in edit mode for a new copy of Smith
+
+  Scenario: Clicking search_people_entities searches people entities
+    Given I have a known person entity
+
+    And I search for last_name = "Smith-Johnson" for people entities
+
+    Then I should find the value "Smith-Johnson" in "data_last_name"

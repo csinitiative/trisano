@@ -19,7 +19,7 @@ Given /^I have a known person entity$/ do
   @person_entity = Factory.build(:person_entity)
   @person_entity.person.first_name = 'Robert'
   @person_entity.person.middle_name = 'Michael'
-  @person_entity.person.last_name = 'Smith'
+  @person_entity.person.last_name = 'Smith-Johnson'
   @person_entity.person.birth_date = '11-10-1980'
   @person_entity.person.birth_gender_id = ExternalCode.find_by_code_description('Male').id
   @person_entity.person.primary_language_id = ExternalCode.find_by_code_description('English').id
@@ -34,6 +34,7 @@ Given /^I have a known person entity$/ do
   @person_entity.canonical_address.county_id = ExternalCode.find_by_code_description('Beaver').id
   @person_entity.email_addresses << EmailAddress.new(:email_address => 'foo@bar.com')
   @person_entity.telephones << Telephone.new(:area_code => '555', :phone_number => '555-5555')
+  @person_entity.person.save!
   @person_entity.save!
 end
 

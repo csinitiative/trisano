@@ -77,7 +77,7 @@
                 = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}
                 = render :partial => 'people/age_show', :locals => {:person => person, :f => f, :event => nil}
         %td
-          .tools{:style => "position: absolute; right: 15px;"}
+          .tools{:style => "position: absolute; right: 25px;"}
             = link_to 'Edit', edit_person_path(person.person_entity)
             |
             = link_to 'Show', person_path(person.person_entity)
