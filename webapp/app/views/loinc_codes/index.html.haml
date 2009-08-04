@@ -25,6 +25,8 @@
       %th.forminformation
         LOINC Code
       %th
+        Test Name
+      %th
         &nbsp;
       - @loinc_codes.each do |loinc_code|
         %tr.roll
@@ -32,6 +34,9 @@
             .formname
               %span.common_name
                 = link_to h(loinc_code.loinc_code), loinc_code
+          %td
+            %span.test_name
+              &= loinc_code.test_name
           %td
             .tools{:style => "position: absolute; right: 15px;"}
               = link_to 'Show', loinc_code

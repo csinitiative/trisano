@@ -15,6 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I have a loinc code (.*)$/ do |loinc_code|
-  LoincCode.create!(:loinc_code => loinc_code)
+Given /^I have a loinc code "(.*)" with test name "(.*)"$/ do |loinc_code, test_name|
+  LoincCode.create!(:loinc_code => loinc_code, :test_name => test_name)
 end

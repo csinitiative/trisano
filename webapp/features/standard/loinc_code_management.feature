@@ -22,12 +22,13 @@ Feature: Supporting LOINC codes for lab results
 
   Scenario: Listing LOINC codes
     Given I am logged in as a super user
-    And I have a loinc code 13954-3
+    And I have a loinc code "13954-3" with test name "Fusce tincidunt urna ut enim ornare adipiscing."
 
     When I go to the loinc code index page
 
     Then I should see "List LOINC Codes"
     And I should see a link to "13954-3"
+    And I should see "Fusce tincidunt urna ut enim ornare adipiscing."
 
   Scenario: Non-administrators trying to modify LOINC codes
     Given I am logged in as an investigator
@@ -44,16 +45,18 @@ Feature: Supporting LOINC codes for lab results
     And I should see a link to "< Back to LOINC Codes"
 
     When I fill in "loinc_code_loinc_code" with "13954-3"
+    And I fill in "loinc_code_test_name" with "Fusce tincidunt urna ut enim ornare adipiscing."
     And I press "Create"
 
     Then I should see "LOINC code was successfully created."
     And I should see "Show a LOINC Code"
     And I should see a link to "< Back to LOINC Codes"
     And I should see "13954-3"
+    And I should see "Fusce tincidunt urna ut enim ornare adipiscing."
 
   Scenario: Entering a duplicate LOINC code
     Given I am logged in as a super user
-    And I have a loinc code 13954-3
+    And I have a loinc code "13954-3" with test name "Fusce tincidunt urna ut enim ornare adipiscing."
 
     When I go to the new loinc code page
     And I fill in "loinc_code_loinc_code" with "13954-3"
