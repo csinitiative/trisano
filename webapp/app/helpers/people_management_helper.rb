@@ -36,8 +36,12 @@ module PeopleManagementHelper
     result << link_to('Show', person_path(person.person_entity))
     result << "&nbsp;|&nbsp;"
     result << link_to('Edit', edit_person_path(person.person_entity))
-    result << "&nbsp;|&nbsp;"
-    result << link_to('Create and edit CMR using this person', cmrs_path(:from_person => person.person_entity, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
+    
+    if User.current_user.is_entitled_to?(:create_event)
+      result << "&nbsp;|&nbsp;"
+      result << link_to('Create and edit CMR using this person', cmrs_path(:from_person => person.person_entity, :return => true), :method => :post)
+    end
+
     result
   end
 
