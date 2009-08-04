@@ -138,8 +138,6 @@ class Person < ActiveRecord::Base
         if !options[:middle_name].blank?
           where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "%'"
         end
-
-        order_by_clause = " last_name, first_name ASC"
       else
         soundex_codes = []
         fulltext_terms = []
@@ -153,12 +151,16 @@ class Person < ActiveRecord::Base
           fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
         end
 
-        fulltext_terms << soundex_codes unless soundex_codes.empty?
-        sql_terms = fulltext_terms.join(" | ")
+        if !soundex_codes.empty?
+          fulltext_terms << soundex_codes unless soundex_codes.empty?
+          sql_terms = fulltext_terms.join(" | ")
 
-        where_clause << " AND vector @@ to_tsquery('#{sql_terms}')"
-        order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC"
+          where_clause << " AND vector @@ to_tsquery('#{sql_terms}')"
+          order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC"
+        end
       end
+
+      order_by_clause = " last_name, first_name ASC" if order_by_clause.blank?
 
       if !options[:birth_date].blank?
         where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
