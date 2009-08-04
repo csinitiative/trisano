@@ -21,4 +21,25 @@ class LoincCodesController < AdminController
   def index
     @loinc_codes = LoincCode.all(:order => 'loinc_code ASC')
   end
+
+  def new
+    @loinc_code  = LoincCode.new
+  end
+
+  def create
+    @loinc_code = LoincCode.new(params[:loinc_code])
+
+    respond_to do |format|
+      if @loinc_code.save
+        flash[:notice] = 'LOINC code was successfully created.'
+        format.html { redirect_to(@loinc_code) }
+      else
+        format.html { render :action => "new" }
+      end
+    end
+  end
+
+  def show
+    @loinc_code = LoincCode.find(params[:id])
+  end
 end

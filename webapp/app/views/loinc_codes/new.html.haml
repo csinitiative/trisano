@@ -14,24 +14,15 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  List LOINC Codes
+  Create a LOINC Code
 
-- content_for :tools_two do
-  = button_to("Create New LOINC Code", new_loinc_code_path, { :method => :get })
+- content_for :tools do
+  = link_to h('< Back to LOINC Codes'), loinc_codes_path
+  %p
 
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        LOINC Code
-      %th
-        &nbsp;
-      - @loinc_codes.each do |loinc_code|
-        %tr.roll
-          %td.forminformation
-            .formname
-              %span.common_name
-                = link_to h(loinc_code.loinc_code), loinc_code
-          %td
-            .tools{:style => "position: absolute; right: 15px;"}
-              = link_to 'Show', loinc_code
+- form_for @loinc_code do |f|
+  %span.vert
+    = f.label      :loinc_code, 'LOINC code'
+    = f.text_field :loinc_code
+  %span.vert
+    = submit_tag "Create"

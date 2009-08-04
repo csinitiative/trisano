@@ -34,3 +34,21 @@ Feature: Supporting LOINC codes for lab results
     When I go to the new loinc code page
     Then I should get a 403 response
 
+  Scenario: Creating a new LOINC code
+    Given I am logged in as a super user
+
+    When I go to the loinc code index page
+    And I press "Create New LOINC Code"
+
+    Then I should see "Create a LOINC Code"
+    And I should see a link to "< Back to LOINC Codes"
+
+    When I fill in "loinc_code_loinc_code" with "13954-3"
+    And I press "Create"
+
+    Then I should see "LOINC code was successfully created."
+    And I should see "Show a LOINC Code"
+    And I should see a link to "< Back to LOINC Codes"
+    And I should see "13954-3"
+
+
