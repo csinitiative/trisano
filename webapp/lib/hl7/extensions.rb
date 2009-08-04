@@ -246,6 +246,15 @@ module StagedMessages
       @obx_segment = obx_segment
     end
 
+    def set_id
+      begin
+        return nil if obx_segment.observation_date.blank?
+        obx_segment.set_id
+      rescue
+        "Could not be determined"
+      end
+   end
+
     def observation_date
       begin
         return nil if obx_segment.observation_date.blank?

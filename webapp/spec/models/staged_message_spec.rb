@@ -63,11 +63,13 @@ describe StagedMessage do
   it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
     m.should_not be_valid
+    m.errors.full_messages.first.should =~ /No last name provided for patient/
   end
 
   it "should not be valid if there's no no loinc code" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_loinc_code])
     m.should_not be_valid
+    m.errors.full_messages.first.should =~ /does not contain a LOINC code/
   end
 
   it 'should respond to hl7' do

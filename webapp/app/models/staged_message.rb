@@ -66,6 +66,10 @@ class StagedMessage < ActiveRecord::Base
     end
 
     errors.add :hl7_message, "No last name provided for patient." if self.patient.patient_last_name.blank?
+
+    self.observation_request.tests.each do |test|
+      errors.add :hl7_message, "OBX segment #{test.set_id} does not contain a LOINC code." if test.loinc_code.blank?
+    end
   end
 
   def hl7
