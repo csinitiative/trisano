@@ -60,7 +60,6 @@ Feature: Staging Electronic Messages
     And I click 'Similar Events' for the staged message
     Then I should see matching results
 
-  @pending
   Scenario: Assigning lab result to found event
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
@@ -87,7 +86,6 @@ Feature: Staging Electronic Messages
     When I navigate to the event edit page
     Then I should see a link back to the staged message
 
-  @pending
   Scenario: Assigning lab result to new event
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"

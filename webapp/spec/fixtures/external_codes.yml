@@ -396,3 +396,14 @@ age_type_unknown:
   the_code: 9
   code_description: "unknown"
   
+test_type_neg:
+  id: 2400
+  code_name: "test_result"
+  the_code: "neg"
+  code_description: "Negative"
+
+test_type_pos:
+  id: 2401
+  code_name: "test_result"
+  the_code: "pos"
+  code_description: "Confirmed, Positive"

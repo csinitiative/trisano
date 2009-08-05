@@ -253,7 +253,7 @@ module StagedMessages
       rescue
         "Could not be determined"
       end
-   end
+    end
 
     def observation_date
       begin
@@ -266,7 +266,15 @@ module StagedMessages
 
     def result
       begin
-        obx_segment.observation_value.split(obx_segment.item_delim).join(' ') + (obx_segment.units.blank? ? '' : " #{obx_segment.units}")
+        obx_segment.observation_value.split(obx_segment.item_delim).join(' ')
+      rescue
+        "Could not be determined"
+      end
+    end
+
+    def units
+      begin
+        obx_segment.units
       rescue
         "Could not be determined"
       end

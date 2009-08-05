@@ -577,6 +577,18 @@ class HumanEvent < Event
   def add_labs_from_staged_message(staged_message)
     raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
 
+    # If the obx.result value matches a component in the test_result, map it there.
+    # Otherwise, map it to result_value. So, first extract the test_results.
+    # A single test_result has multiple synonyms, like this: "Positive", " Confirmed", " Detected", " Definitive"
+    # Bust those out into hash keys whose value is the test_result ID.
+    test_results = ExternalCode.find_all_by_code_name("test_result")
+    result_map = {}
+    test_results.each do |result|
+      result.code_description.split(',').each do |component|
+        result_map[component.gsub(/\s/, '').downcase] = result.id
+      end
+    end
+
     lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
                         "lab_results_attributes" => {}
     }
@@ -593,17 +605,22 @@ class HumanEvent < Event
       specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
 
+      if map_id = result_map[obx.result.downcase]
+        result_hash = {"test_result_id" => map_id}
+      else
+        result_hash = {"result_value" => obx.result}
+      end
+
       begin
-        result_hash = {
+        lab_hash = {
           "test_type_id"       => common_test_type.id,
           "collection_date"    => obr.collection_date,
           "lab_test_date"      => obx.observation_date,
           "reference_range"    => obx.reference_range,
-          # "lab_result_text"    => obx.result,        #### Fix when result "result units" and "result value" fields are in
           "specimen_source_id" => specimen_source_id,
           "staged_message_id"  => staged_message.id
-        }
-        lab_attributes["lab_results_attributes"][i.to_s] = result_hash
+        }.merge!(result_hash)
+        lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
       rescue Exception => error
         raise StagedMessage::BadMessageFormat, error.message
       end
