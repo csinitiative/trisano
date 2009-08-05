@@ -15,19 +15,19 @@
 %div{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
   = error_messages_for :object => lab_result_form.object
 
-  %i If any lab result information is provided it must include Test Type.  In addition one or both of 'Test result' and 'Interpretation' must be supplied.
-
   - core_element("test_type", lab_result_form, :horiz) do
     = lab_result_form.label(:test_type)
     -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
     -# @disease is set by the Ajax controller actions to the currently selected disease, if any
     - disease = @disease || @event.try(:disease_event).try(:disease)
-    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:onchange => "get_test_type_options(this);"})
+    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "get_test_type_options(this);"})
 
   - core_element("test_result", lab_result_form, :horiz) do
     = lab_result_form.label(:test_result)
     = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
-
+  - core_element("result_value", lab_result_form, :horiz) do
+    = lab_result_form.label(:result_value)
+    = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
   - core_element("reference_range", lab_result_form, :horiz) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)

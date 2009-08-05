@@ -30,7 +30,7 @@
     - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
 
       - core_element(:name, p, :horiz) do
-        = trisano_auto_complete(p, :name, "Lab", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
+        = trisano_auto_complete(p, :name, "Lab", {:size => 50, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
 
       - if defined?(f) && !f.object.new_record?
         %span.horiz

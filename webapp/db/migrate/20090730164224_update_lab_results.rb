@@ -4,11 +4,10 @@ class UpdateLabResults < ActiveRecord::Migration
   def self.up
     remove_column :lab_results, :test_type
     add_column :lab_results, :test_type_id, :integer
-
     remove_column :lab_results, :test_detail
-
     remove_column :lab_results, :lab_result_text
     rename_column :lab_results, :interpretation_id, :test_result_id
+    add_column :lab_results, :result_value, :string
 
     # Put this back when we have bootstrapped the data
     # add_foreign_key :lab_results, :test_type_id, :common_test_types

@@ -31,17 +31,20 @@
             %span.print-label Test type:
             %span.print-value
               &= lab_result.test_type.common_name
-          .right
+          .left
             %span.print-label Test result:
             %span.print-value
               &= l lab_result.test_result
+          .right
+            %span.print-label Result value:
+            %span.print-value
+              &= lab_result.result_value
       #test
         .three-valued-row
           .left
             %span.print-label Reference range:
             %span.print-value
               &= lab_result.reference_range
-          .left
           .right
             %span.print-label Specimen source:
             %span.print-value
