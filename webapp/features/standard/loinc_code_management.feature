@@ -30,6 +30,18 @@ Feature: Supporting LOINC codes for lab results
     And I should see a link to "13954-3"
     And I should see "Fusce tincidunt urna ut enim ornare adipiscing."
 
+  Scenario: Paginating the LOINC codes index page
+    Given I am logged in as a super user
+    And I have 31 sequential loinc codes, starting at 20000-00
+
+    When I go to the loinc code index page
+    Then I should see "20000-00"
+    And I should not see "20000-30"
+
+    When I follow "2"
+    Then I should not see "20000-00"
+    And I should see "20000-30"
+
   Scenario: Non-administrators trying to modify LOINC codes
     Given I am logged in as an investigator
     When I go to the new loinc code page

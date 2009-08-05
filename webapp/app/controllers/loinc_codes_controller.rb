@@ -19,7 +19,7 @@ class LoincCodesController < AdminController
   before_filter :check_role
 
   def index
-    @loinc_codes = LoincCode.all(:order => 'loinc_code ASC')
+    @loinc_codes = LoincCode.paginate :page => params[:page], :order => 'loinc_code ASC'
   end
 
   def new

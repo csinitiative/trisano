@@ -18,3 +18,10 @@
 Given /^I have a loinc code "(.*)" with test name "(.*)"$/ do |loinc_code, test_name|
   LoincCode.create!(:loinc_code => loinc_code, :test_name => test_name)
 end
+
+Given /^I have (\d+) sequential loinc codes, starting at (.*)$/ do |count, start_with|
+  (1..count.to_i).inject(start_with) do |current_code, index|
+    LoincCode.create!(:loinc_code => current_code)
+    current_code.next
+  end
+end
