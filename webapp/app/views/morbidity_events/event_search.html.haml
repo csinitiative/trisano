@@ -16,12 +16,52 @@
     = label_tag "&nbsp;"
     = submit_tag "Search"
 
-  %span.vert-break
+  %span.vert
     = label_tag "&nbsp;"
     = labeled_check_box_tag :use_starts_with_search
 
+  %span.horiz
+    = label_tag "&nbsp;"
+    = labeled_check_box_tag :search_people_entities
+
+  %span.vert-break
+
 %br
-- if defined? @events
+- if defined? @people
+  -if @people.empty?
+    %b No results
+  -else
+    %table.list
+      %tr
+        %th.forminformation
+          People
+        %th
+      - @people.each do |person|
+        %tr.roll
+          %td.forminformation
+            %fieldset
+              - fields_for(person, :builder => ExtendedFormBuilder) do |f|
+                %div.data_person
+                  %span.data_person_id{:style => 'display: none'}=h(person.person_entity.id)
+                  -f.fields_for(:person, :builder => ExtendedFormBuilder) do |name_form|
+                    %div.data_name
+                      %div.formname
+                        %b
+                          %span.data_first_name=person.first_name
+                          %span.data_middle_name=person.middle_name
+                          %span.data_last_name=person.last_name
+                  = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}
+                  = render :partial => 'people/age_show', :locals => {:person => person, :f => f, :event => nil}
+          %td
+            .tools{:style => "position: absolute; right: 25px;"}
+              = link_to 'Edit', edit_person_path(person.person_entity)
+              |
+              = link_to 'Show', person_path(person.person_entity)
+              |
+              = link_to('Create and edit CMR using this person', cmrs_path(:from_person => person.person_entity, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
+    %br
+    = will_paginate @people
+- elsif defined? @events
   -if @events.empty?
     %b No results
   -else
@@ -76,8 +116,8 @@
             = link_to('Create and edit CMR using this person', cmrs_path(:from_event => event, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
     = will_paginate @events
   
+- if defined? @people or defined? @events
   %br
-
   - if User.current_user.is_entitled_to?(:create_event)  
     = link_to("Start a CMR with the criteria you searched on", new_cmr_path(:from_search => "1", :first_name => @first_name, :last_name => @last_name, :birth_date => @birth_date), {:id => "start_cmr"})
 

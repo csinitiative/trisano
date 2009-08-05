@@ -11,7 +11,7 @@ class TriSanoWebApi
 
     @base_url = ENV['TRISANO_BASE_URL'] || raise('Missing TRISANO_BASE_URL environment variable')
 
-    if !ENV['TRISANO_API_AUTH'].nil?
+    if !ENV['TRISANO_API_AUTH'].nil? and ENV['TRISANO_API_AUTH'].downcase != 'none'
       username = ENV['TRISANO_API_USER'] || raise('Missing TRISANO_API_USER environment variable')
       password = ENV['TRISANO_API_PASS'] || raise('Missing TRISANO_API_PASS environment variable')
     end
