@@ -22,11 +22,20 @@
 
 - form_for @loinc_code do |f|
   = f.error_messages
-  %span.vert
-    = f.label      :loinc_code, 'LOINC code'
-    = f.text_field :loinc_code, :size => 20
-  %span.vert
-    = f.label      :test_name
-    = f.text_field :test_name, :size => 60
+
+  %table.list
+    %tr
+      %th.forminformation
+        Edit LOINC Code
+
+    %tr
+      %td
+        %span.vert
+          = f.label      :loinc_code, 'LOINC code'
+          = f.text_field :loinc_code, :size => 20
+        %span.vert
+          = f.label      :test_name
+          = f.text_field :test_name, :size => 60
+
   %span.vert
     = submit_tag "Create"

@@ -18,7 +18,7 @@
 class LoincCode < ActiveRecord::Base
   validates_uniqueness_of :loinc_code
   validates_length_of     :loinc_code, :in => 1..10
-  validates_length_of     :test_name,  :in => 1..255, :allow_nil => true
+  validates_length_of     :test_name,  :in => 1..255, :allow_blank => true
 
   belongs_to :common_test_type
   has_many   :disease_common_test_types, :foreign_key => :common_test_type_id, :primary_key => :common_test_type_id

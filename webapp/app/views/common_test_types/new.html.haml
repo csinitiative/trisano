@@ -22,8 +22,17 @@
 
 - form_for @common_test_type do |f|
   = f.error_messages
-  %span.vert
-    = f.label      :common_name
-    = f.text_field :common_name
+
+  %table.list
+    %tr
+      %th.forminformation
+        Edit Common Test Type
+
+    %tr
+      %td
+        %span.vert
+          = f.label      :common_name
+          = f.text_field :common_name
+
   %span.vert
     = submit_tag "Create"
