@@ -51,6 +51,24 @@ Feature: Managing Lab Results
     And the following common test types should not be available for selection
       | X-Ray |
 
+  Scenario: Selecting a test type in an existing event with an unmapped disease
+    Given I am logged in as a super user
+    And the following disease to common test types mapping exists
+      | disease_name | common_name |
+      | AIDS         | Blood Test  |
+      | AIDS         | Urine Test  |
+      | Plague       | X-Ray       |
+    And a morbidity event exists with the disease Anthrax
+
+    When I navigate to the event edit page
+    Then the following common test types should be available for selection
+      | Blood Test |
+      | Urine Test |
+      | X-Ray      |
+
+    And the following common test types should not be available for selection
+      | More choices... |
+
   Scenario: Selecting a test type in an existing event with one lab result
     Given I am logged in as a super user
     And the following disease to common test types mapping exists

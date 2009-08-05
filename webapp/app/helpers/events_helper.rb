@@ -334,6 +334,10 @@ module EventsHelper
       else
         # Ajax, disease selected
         opts = disease.common_test_types
+        if opts.empty?
+          opts = CommonTestType.all(:order => "common_name ASC")
+          no_more = true
+        end
       end
     else
       if event.new_record?
@@ -349,6 +353,10 @@ module EventsHelper
           else
             # Page load, edit form, new lab, disease
             opts = disease.common_test_types
+            if opts.empty?
+              opts = CommonTestType.all(:order => "common_name ASC")
+              no_more = true
+            end
           end
         else
           # Page load, edit form, existing lab
