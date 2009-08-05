@@ -584,7 +584,7 @@ class HumanEvent < Event
     test_results = ExternalCode.find_all_by_code_name("test_result")
     result_map = {}
     test_results.each do |result|
-      result.code_description.split(',').each do |component|
+      result.code_description.split('/').each do |component|
         result_map[component.gsub(/\s/, '').downcase] = result.id
       end
     end

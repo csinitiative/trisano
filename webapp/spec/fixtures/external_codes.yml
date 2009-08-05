@@ -406,4 +406,4 @@ test_type_pos:
   id: 2401
   code_name: "test_result"
   the_code: "pos"
-  code_description: "Confirmed, Positive"
+  code_description: "Confirmed / Positive"
