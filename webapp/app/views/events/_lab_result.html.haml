@@ -28,6 +28,9 @@
   - core_element("result_value", lab_result_form, :horiz) do
     = lab_result_form.label(:result_value)
     = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
+  - core_element("units", lab_result_form, :horiz) do
+    = lab_result_form.label(:units)
+    = lab_result_form.text_field(:units, :size => 20, :maxlength => 50)
   - core_element("reference_range", lab_result_form, :horiz) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)

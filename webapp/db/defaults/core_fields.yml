@@ -399,6 +399,14 @@ core_field_contact_lab_result_result_value:
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][result_value]
+core_field_contact_lab_result_units:
+  name: Lab results | Units
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs][lab_results][units]
 core_field_00085: 
   name: Healthcare worker
   help_text: 
@@ -919,6 +927,14 @@ core_field_morb_lab_result_result_value:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][result_value]
+core_field_morb_lab_result_units:
+  name: Lab results | Units
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][units]
 core_field_00014: 
   name: Patient date of death
   help_text: 

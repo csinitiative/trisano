@@ -42,6 +42,10 @@
       #test
         .three-valued-row
           .left
+            %span.print-label Units:
+            %span.print-value
+              &= lab_result.units
+          .left
             %span.print-label Reference range:
             %span.print-value
               &= lab_result.reference_range

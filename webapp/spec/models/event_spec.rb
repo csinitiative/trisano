@@ -1767,7 +1767,8 @@ describe Event, 'cloning an event' do
               "test_type" => common_test_types(:blood_test),
               "test_result_id" => external_codes(:state_alaska).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "result_value" => "one",
-              "reference_range" => "two"
+              "units" => "two",
+              "reference_range" => "three"
             }
           ]
         }
@@ -1788,6 +1789,7 @@ describe Event, 'cloning an event' do
       org_result.test_type.should == new_result.test_type
       org_result.test_result_id.should == new_result.test_result_id
       org_result.result_value.should == new_result.result_value
+      org_result.units.should == new_result.units
       org_result.reference_range.should == new_result.reference_range
     end
 
