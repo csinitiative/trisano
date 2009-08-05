@@ -20,19 +20,4 @@
   = link_to h('< Back to Common Test Types'), common_test_types_path
   %p
 
-- form_for @common_test_type do |f|
-  = f.error_messages
-
-  %table.list
-    %tr
-      %th.forminformation
-        Edit Common Test Type
-
-    %tr
-      %td
-        %span.vert
-          = f.label      :common_name
-          = f.text_field :common_name
-
-  %span.vert
-    = submit_tag "Create"
+= render :partial => 'form', :locals => {:common_test_type => @common_test_type}

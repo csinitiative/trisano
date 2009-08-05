@@ -13,25 +13,20 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- content_for :title do
-  List Common Test Types
+.vert-break
+  - form_for common_test_type do |f|
 
-- content_for :tools_two do
-  = button_to("Create New Common Test Type", new_common_test_type_path, { :method => :get })
+    %table.list
+      %tr
+        %th.forminformation
+          Edit Common Test Type
 
+      %tr
+        %td
+          = f.error_messages
+          %span.vert
+            = f.label      :common_name
+            = f.text_field :common_name
 
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        Common Name
-      %th
-        &nbsp;
-      - @common_test_types.each do |common_test_type|
-        %tr.roll
-          %td.forminformation
-            .formname
-              %span.common_name
-                = link_to h(common_test_type.common_name), common_test_type
-          %td
-            = common_test_type_tools(common_test_type)
+    %span.vert
+      = create_or_update_button common_test_type

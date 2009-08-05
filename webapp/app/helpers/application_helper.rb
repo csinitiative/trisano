@@ -243,4 +243,9 @@ module ApplicationHelper
     end
   end
 
+  def create_or_update_button(ar_obj)
+    button_text = ar_obj.new_record? ? "Create" : "Update"
+    submit_tag button_text
+  end
+
 end

@@ -37,6 +37,9 @@ def path_to(page_name)
   when /(a|the) common test type show page/
     common_test_type_path(@common_test_type)
 
+  when /edit the common test type/
+    edit_common_test_type_path(@common_test_type)
+
   when /the admin dashboard/
     admin_path
 

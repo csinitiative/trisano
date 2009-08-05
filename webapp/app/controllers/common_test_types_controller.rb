@@ -27,6 +27,10 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.new
   end
 
+  def edit
+    @common_test_type = CommonTestType.find(params[:id])
+  end
+
   def create
     @common_test_type = CommonTestType.new(params[:common_test_type])
 
@@ -36,6 +40,19 @@ class CommonTestTypesController < AdminController
         format.html { redirect_to(@common_test_type) }
       else
         format.html { render :action => "new" }
+      end
+    end
+  end
+
+  def update
+    @common_test_type = CommonTestType.find(params[:id])
+
+    respond_to do |format|
+      if @common_test_type.update_attributes(params[:common_test_type])
+        flash[:notice] = 'Common test type was successfully updated.'
+        format.html { redirect_to(@common_test_type) }
+      else
+        format.html { render :action => "edit" }
       end
     end
   end

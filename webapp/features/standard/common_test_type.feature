@@ -69,3 +69,25 @@ Feature: Common tests types for lab results
 
     Then I should see a link to "< Back to Common Test Types"
     And I should see "Culture"
+
+  Scenario: Changing the common name of a common test type
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+
+    When I go to the common test type show page
+    And I follow "Edit"
+    And I fill in "common_test_type_common_name" with "Lipid Panel"
+    And I press "Update"
+
+    Then I should not see "Culture"
+    And I should see "Lipid Panel"
+    And I should see "Common test type was successfully updated."
+
+  Scenario: Changing common test type name to something invalid
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+
+    When I go to edit the common test type
+    And I fill in "common_test_type_common_name" with ""
+    And I press "Update"
+    Then I should see "Common name is too short"
