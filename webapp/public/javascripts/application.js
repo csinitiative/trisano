@@ -320,8 +320,8 @@ function focus_init() {
     myTabs.addListener("activeIndexChange", focus_first);
 }
 
-function get_test_type_options(select_list) {
+function get_test_type_options(select_list, url) {
   if (select_list.options[select_list.selectedIndex].text == "More choices...") {
-    new Ajax.Updater(select_list,  '/events/test_type_options', {asynchronous:true, evalScripts:true})
+    new Ajax.Updater(select_list,  url, {asynchronous:true, method: 'get'})
   }
 }

@@ -20,7 +20,7 @@
     -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
     -# @disease is set by the Ajax controller actions to the currently selected disease, if any
     - disease = @disease || @event.try(:disease_event).try(:disease)
-    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "get_test_type_options(this);"})
+    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "get_test_type_options(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
 
   - core_element("test_result", lab_result_form, :horiz) do
     = lab_result_form.label(:test_result)
