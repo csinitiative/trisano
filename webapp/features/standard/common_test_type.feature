@@ -91,3 +91,32 @@ Feature: Common tests types for lab results
     And I fill in "common_test_type_common_name" with ""
     And I press "Update"
     Then I should see "Common name is too short"
+
+  Scenario: Associating LOINC codes with a common test type by test name
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+    And I have the following LOINC codes in the the system:
+      | loinc_code | test_name                   |
+      | 11475-1    | Culture, Unspecified        |
+      | 636-1      | Culture, Sterile body fluid |
+      | 34166-9    | Microscopy.Electron         |
+
+    When I go to edit the common test type
+    And I follow "Add LOINC codes"
+    Then I should see "Add LOINC Codes to Culture"
+    And I should see a link to "< Edit Culture"
+    And I should not see "No records found"
+
+    When I fill in "loinc_code_search_test_name" with "junk"
+    And I press "Search"
+    Then I should see "No records found"
+
+    When I fill in "loinc_code_search_test_name" with "culture"
+    And I press "Search"
+    Then I should see "11475-1"
+
+    When I check "11475-1"
+    And I press "Update"
+    Then I should see "Common test type was successfully updated."
+    And I should see "Culture, Unspecified"
+

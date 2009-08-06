@@ -28,5 +28,18 @@
             = f.label      :common_name
             = f.text_field :common_name
 
+    - unless common_test_type.new_record?
+      %table.list
+        %tr
+          %th.forminformation
+            Associated LOINC Codes
+
+        %tr
+          %td
+            -common_test_type.loinc_codes.each do |loinc_code|
+              %span.vert-break
+                &="#{loinc_code.loinc_code}  #{loinc_code.test_name}"
+            = link_to 'Add LOINC codes', add_loincs_common_test_type_path(common_test_type)
+
     %span.vert
       = create_or_update_button common_test_type

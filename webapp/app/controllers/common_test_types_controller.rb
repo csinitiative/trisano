@@ -31,6 +31,15 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.find(params[:id])
   end
 
+  def add_loincs
+    @common_test_type = CommonTestType.find(params[:id])
+
+    if params[:do] == "Search"
+      conditions = ["test_name ILIKE ?", "%#{params[:loinc_code_search_test_name]}%"] if params[:loinc_code_search_test_name]
+      @loinc_codes = LoincCode.find(:all, :conditions => conditions, :order => 'loinc_code ASC')
+    end
+  end
+
   def create
     @common_test_type = CommonTestType.new(params[:common_test_type])
 
@@ -53,6 +62,23 @@ class CommonTestTypesController < AdminController
         format.html { redirect_to(@common_test_type) }
       else
         format.html { render :action => "edit" }
+      end
+    end
+  end
+
+  def update_loincs
+    @common_test_type = CommonTestType.find(params[:id])
+    new_loincs = params[:added_loinc_codes] || []
+
+    respond_to do |format|
+      begin
+        LoincCode.update_all("common_test_type_id = #{@common_test_type.id}", ["id IN (?)", new_loincs])
+        flash[:notice] = 'Common test type was successfully updated.'
+        format.html { redirect_to edit_common_test_type_path(@common_test_type) }
+      rescue
+        logger.error($!.message)
+        flash.now[:error] = "TriSano could not complete the last request. Contact your system administrator"
+        format.html { render :action => :add_loincs }
       end
     end
   end
