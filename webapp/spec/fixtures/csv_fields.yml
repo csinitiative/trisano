@@ -1002,10 +1002,10 @@ csv_field_00151:
 csv_field_00069: 
   sort_order: 100
   export_group: lab
-  long_name: lab_specimen_sent_to_uphl
-  use_description: specimen_sent_to_uphl_yn.try(:code_description)
+  long_name: lab_specimen_sent_to_state
+  use_description: specimen_sent_to_state.try(:code_description)
   short_name: 
-  use_code: specimen_sent_to_uphl_yn.try(:the_code)
+  use_code: specimen_sent_to_state.try(:the_code)
   event_type: 
 csv_field_00010: 
   sort_order: 180

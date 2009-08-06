@@ -44,9 +44,9 @@
   - core_element("lab_test_date", lab_result_form, :horiz) do
     = lab_result_form.label(:lab_test_date)
     = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
-  - core_element("specimen_sent_to_uphl", lab_result_form, :horiz) do
-    = lab_result_form.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
-    = lab_result_form.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
+  - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
+    = lab_result_form.label(:specimen_sent_to_state_id, "Specimen sent to state lab?")
+    = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})
 
   - if lab_result.try(:staged_message)
     %span.horiz

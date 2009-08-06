@@ -127,7 +127,7 @@ def lab_header
   lab_specimen_source
   lab_collection_date
   lab_test_date
-  lab_specimen_sent_to_uphl).join(",")
+  lab_specimen_sent_to_state).join(",")
 end
 
 def treatment_header
@@ -370,7 +370,7 @@ def lab_output
   out << "#{@lab_result.specimen_source.code_description},"
   out << "#{@lab_result.collection_date},"
   out << "#{@lab_result.lab_test_date},"
-  out << "#{@lab_result.specimen_sent_to_uphl_yn.code_description}"
+  out << "#{@lab_result.specimen_sent_to_state.code_description}"
 end
 
 def treatment_output
@@ -493,7 +493,7 @@ def csv_mock_event(event_type)
   @lab_result.stub!(:specimen_source).and_return(simple_reference)
   @lab_result.stub!(:collection_date).and_return("2008-02-01")
   @lab_result.stub!(:lab_test_date).and_return("2008-02-02")
-  @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(simple_reference)
+  @lab_result.stub!(:specimen_sent_to_state).and_return(simple_reference)
   m.stub!(:lab_results).and_return([@lab_result])
 
   m.stub!(:reload).and_return(m)

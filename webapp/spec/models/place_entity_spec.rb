@@ -72,7 +72,7 @@ describe PlaceEntity do
             "lab_results_attributes"=>{
               "0"=>{
                 "test_type_id"=>1, "reference_range"=>"",
-                "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
+                "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_state_id"=>""
               }
             }
           }

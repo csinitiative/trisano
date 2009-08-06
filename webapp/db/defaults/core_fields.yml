@@ -1,12 +1,12 @@
 --- 
-core_field_contact_lab_result_specimen_sent_to_uphl: 
-  name: Lab results | Specimen sent to UPHL
+core_field_contact_lab_result_specimen_sent_to_state: 
+  name: Lab results | Specimen sent to state lab
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
-  key: contact_event[labs][lab_results][specimen_sent_to_uphl]
+  key: contact_event[labs][lab_results][specimen_sent_to_state]
 core_field_00043: 
   name: Reporter phone type
   help_text: 
@@ -695,14 +695,14 @@ core_field_00092:
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][disease_onset_date]
-core_field_morb_lab_result_specimen_sent_to_uphl: 
-  name: Lab results | Specimen sent to UPHL
+core_field_morb_lab_result_specimen_sent_to_state: 
+  name: Lab results | Specimen sent to state lab
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
-  key: morbidity_event[labs][lab_results][specimen_sent_to_uphl]
+  key: morbidity_event[labs][lab_results][specimen_sent_to_state]
 core_field_00037: 
   name: Event name
   help_text: 

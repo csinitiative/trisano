@@ -98,7 +98,7 @@ describe 'Print CMR page' do
         :lab_specimen_source => "Blood",
         :lab_collection_date => "12/12/2002",
         :lab_test_date => "12/13/2005",
-        :sent_to_uphl => "Unknown"
+        :sent_to_state => "Unknown"
       })
 
   end

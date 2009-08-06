@@ -1763,7 +1763,7 @@ describe Event, 'cloning an event' do
             { "specimen_source_id" => external_codes(:specimen_blood).id,
               "collection_date" => Date.today,
               "lab_test_date" => Date.today,
-              "specimen_sent_to_uphl_yn_id" => external_codes(:yesno_yes).id,
+              "specimen_sent_to_state_id" => external_codes(:yesno_yes).id,
               "test_type" => common_test_types(:blood_test),
               "test_result_id" => external_codes(:state_alaska).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "result_value" => "one",
@@ -1785,7 +1785,7 @@ describe Event, 'cloning an event' do
       org_result.specimen_source_id.should == new_result.specimen_source_id
       org_result.collection_date.should == new_result.collection_date
       org_result.lab_test_date.should == new_result.lab_test_date
-      org_result.specimen_sent_to_uphl_yn_id.should == new_result.specimen_sent_to_uphl_yn_id
+      org_result.specimen_sent_to_state_id.should == new_result.specimen_sent_to_state_id
       org_result.test_type.should == new_result.test_type
       org_result.test_result_id.should == new_result.test_result_id
       org_result.result_value.should == new_result.result_value

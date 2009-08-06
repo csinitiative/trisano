@@ -519,7 +519,7 @@ module TrisanoHelper
       #lab result fields
       "event[new_lab_attributes][][name]" => NedssHelper.get_unique_name(2),
       "morbidity_event_new_lab_attributes__specimen_source_id" => "Blood",
-      "morbidity_event_new_lab_attributes__specimen_sent_to_uphl_yn_id" => "Yes",
+      "morbidity_event_new_lab_attributes__specimen_sent_to_state_id" => "Yes",
       "morbidity_event_new_lab_attributes__lab_result_text" => NedssHelper.get_unique_name(1),
       "morbidity_event_new_lab_attributes__collection_date" => "1/1/1974",
       "morbidity_event_new_lab_attributes__lab_test_date" => "1/1/1974",
@@ -738,7 +738,7 @@ module TrisanoHelper
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
     browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
     browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_uphl_yn_id')]", "label=#{attributes[:sent_to_uphl]}") if attributes[:sent_to_uphl]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_state_id')]", "label=#{attributes[:sent_to_state]}") if attributes[:sent_to_state]
   end
 
   #
