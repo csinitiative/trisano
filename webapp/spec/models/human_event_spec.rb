@@ -218,9 +218,10 @@ describe HumanEvent, 'adding staged messages' do
       event.labs.first.lab_results.first.test_type.common_name.should == common_test_types(:hep_b_ag).common_name
       event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
       event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
+      event.labs.first.lab_results.first.units.should == staged_message.observation_request.tests.first.units
       event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
       event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
-      event.labs.first.lab_results[0].result_value.should be_blank
+      event.labs.first.lab_results.first.result_value.should be_blank
       event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
     end
   end

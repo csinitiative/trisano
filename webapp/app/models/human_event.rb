@@ -589,10 +589,12 @@ class HumanEvent < Event
       end
     end
 
+    # Set the lab name
     lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
                         "lab_results_attributes" => {}
     }
 
+    # Create one lab result per OBX segment
     obr = staged_message.observation_request
     i = 0
     obr.tests.each do | obx |
@@ -618,7 +620,8 @@ class HumanEvent < Event
           "lab_test_date"      => obx.observation_date,
           "reference_range"    => obx.reference_range,
           "specimen_source_id" => specimen_source_id,
-          "staged_message_id"  => staged_message.id
+          "staged_message_id"  => staged_message.id,
+          "units"              => obx.units
         }.merge!(result_hash)
         lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
       rescue Exception => error
