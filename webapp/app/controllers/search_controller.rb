@@ -40,13 +40,13 @@ class SearchController < ApplicationController
     @birth_date = ""
     @event_types = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
     @diseases = Disease.find(:all, :order => "disease_name")
-    @genders = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'", :order => "id")
+    @genders = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'")
 
-    @genders << ExternalCode.new(:id => "U", :code_description => "Unspecified")
+    @genders << ExternalCode.new(:id => "U", :the_code => "U", :code_description => "Unspecified", :code_name => "gender")
 
     @workflow_states = MorbidityEvent.get_states_and_descriptions
 
-    @counties = ExternalCode.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'", :order => "id")
+    @counties = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'")
 
     begin
       if not params.values_blank?

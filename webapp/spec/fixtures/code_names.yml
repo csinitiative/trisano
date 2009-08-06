@@ -1,0 +1,89 @@
+investigation_status:
+  code_name: "investigation"
+  description: "Investigation Status"
+  external: false
+
+event_type:
+  code_name: "eventtype"
+  description: "Event Type"
+  external: false
+
+imported:
+  code_name: "imported"
+  description: "Imported From"
+  external: false
+
+placetype:
+  code_name: "placetype"
+  description: "Place Type"
+  external: false
+
+case:
+  code_name: "case"
+  description: "Case"
+  external: true
+
+gender:
+  code_name: "gender"
+  description: "Gender"
+  external: true
+
+ethnicity:
+  code_name: "ethnicity"
+  description: "Ethnicity"
+  external: true
+
+race:
+  code_name: "race"
+  description: "Race"
+  external: true
+
+language:
+  code_name: "language"
+  description: "Language"
+  external: true
+
+state:
+  code_name: "state"
+  description: "State"
+  external: true
+
+county:
+  code_name: "county"
+  description: "County"
+  external: true
+
+district:
+  code_name: "district"
+  description: "District"
+  external: true
+
+yesno:
+  code_name: "yesno"
+  description: "Yes/No"
+  external: true
+
+specimen:
+  code_name: "specimen"
+  description: "Specimen"
+  external: true
+
+telephonelocationtype:
+  code_name: "telephonelocationtype"
+  description: "Telephone Location Type"
+  external: true
+
+contactdispositiontype:
+  code_name: "contactdispositiontype"
+  description: "Contact Disposition Type"
+  external: true
+
+contact_type:
+  code_name: "contact_type"
+  description: "Contact Type"
+  external: true
+
+age_type:
+  code_name: "age_type"
+  description: "Age Type"
+  external: true

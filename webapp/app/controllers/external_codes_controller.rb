@@ -16,72 +16,101 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExternalCodesController < AdminController
+
   def index
-    @external_codes = ExternalCode.find(:all, :order => "sort_order")
-    @code_types = ExternalCode.find(:all,:select => "DISTINCT code_name", :order => "code_name")
-    respond_to do |format|
-      format.html
-	    format.xml
+    @code_names = CodeName.find(:all, :conditions => { :external => true }, :order => 'code_name')
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Names" unless @code_names
+  end
+
+  def index_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+    @external_codes = @code_name.external_codes.find(:all, :order => 'the_code')
+  end
+
+  def new_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+    @external_code = @code_name.external_codes.build
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+  end
+
+  def show_code
+    @external_code = ExternalCode.find_by_code_name_and_the_code(params[:code_name], params[:the_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+  end
+
+  def update_code
+    @external_code = ExternalCode.find_by_code_name_and_the_code(params[:code_name], params[:the_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+    
+    if @external_code.update_attributes(params[:external_code])
+      flash[:notice] = "Code was successfully modified."
+      redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
+    else
+      flash[:error] = "Code modification failed."
+      render :action => "edit_code"
     end
   end
 
-  def show
-    @external_code = ExternalCode.find(params[:id])
-    respond_to do |format|
-      format.html
-	    format.xml
-    end
-  end
+  # TODO: Test this as a way to shortcut code key in _path
+#  def extract_record
+#  end
 
-  def edit
-    @external_code = ExternalCode.find(params[:id])
-  end
+  def edit_code
+    @external_code = ExternalCode.find_by_code_name_and_the_code(params[:code_name], params[:the_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+  end 
 
-  def new
-    @external_code = ExternalCode.new(@default_values)
-
-    respond_to do |format|
-      format.html
-	    format.xml {render :xml => @external_code}
-    end
-  end
-
-  def create
+  def create_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
     @external_code = ExternalCode.new(params[:external_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't create Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
 
-    respond_to do |format|
-	    if @external_code.save
-        flash[:notice] = "Code was successfully created."
-        format.html { redirect_to(code_url(@external_code)) }
-        format.xml  { render :xml => @external-code, :status => :created, :location => @external_code }
-	    else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @external_code.errors, :status => :unprocessable_entity }
-      end
+    if @external_code.save
+      flash[:notice] = "Code was successfully created."
+      redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
+    else
+      flash[:error] = "Code creation failed." 
+      render :action => "new_code"
     end
   end
 
-  def update
-    @external_code = ExternalCode.find(params[:id])
-    respond_to do |format|
-	    if @external_code.update_attributes(params[:external_code])
-        flash[:notice] = "Code was successfully updated"
-        format.html {redirect_to code_path(@external_code)}
-        format.xml {head :ok}
-	    else
-        format.html {render :action => "edit"}
-        format.xml {render :xml => @external_code.errors, :status => :unprocessable_entity}
-	    end
+  def soft_delete_code
+    @external_code = ExternalCode.find_by_code_name_and_the_code(params[:code_name], params[:the_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't create Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
+
+    if @external_code.soft_delete
+      flash[:notice] = "Code was successfully deleted."
+      redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
+    else
+      flash[:error] = "Code deletion failed."
+      redirect_to(edit_code_url(@external_code.code_name, @external_code.the_code))
     end
   end
 
-  def destroy
-    @external_code = ExternalCode.find(params[:id])
-    @external_code.destroy
+  def soft_undelete_code
+    @external_code = ExternalCode.find_by_code_name_and_the_code(params[:code_name], params[:the_code])
+    raise ActiveRecord::RecordNotFound, "Couldn't create Code for '#{params[:code_name]}, #{params[:the_code]}'" unless @external_code
+    @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
+    raise ActiveRecord::RecordNotFound, "Couldn't find Code Name for '#{params[:code_name]}'" unless @code_name
 
-    respond_to do |format|
-      format.html { redirect_to(codes_url) }
-	    format.xml  { head :ok }
+    if @external_code.soft_undelete
+      flash[:notice] = "Code was successfully restored."
+      redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
+    else
+      flash[:error] = "Code restoration failed."
+      redirect_to(edit_code_url(@external_code.code_name, @external_code.the_code))
     end
   end
+
 end

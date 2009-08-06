@@ -30,7 +30,7 @@
 
 %span{ :class => "vert" }
   = f.label(:category)
-  = f.collection_select(:category_id, ExternalCode.find_all_by_code_name('task_category', :order => 'sort_order'), :id, :code_description, {:include_blank => true})
+  = f.collection_select(:category_id, ExternalCode.active.find_all_by_code_name('task_category'), :id, :code_description, {:include_blank => true})
 
 %span{ :class => "vert" }
   = f.label(:priority)

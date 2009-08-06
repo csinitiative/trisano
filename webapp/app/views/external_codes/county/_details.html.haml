@@ -1,0 +1,4 @@
+= render("external_codes/details")
+%br
+%b Jurisdiction:
+= @external_code.jurisdiction_id.nil? ? '<i>None Selected</i>' : @external_code.jurisdiction.name

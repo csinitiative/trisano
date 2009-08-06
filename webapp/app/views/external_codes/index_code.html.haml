@@ -1,0 +1,50 @@
+-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  = "#{@code_name.description} Codes"
+
+- content_for :tools do
+  .horiz#rot
+    = link_to '< Back to List of Codes', codes_path
+
+- content_for :tools_two do
+  = button_to "New #{@code_name.description} Code", new_code_path(@code_name.code_name)
+
+.vert#rot
+  %table.list
+    %tr
+      %th.forminformation{ :colspan => 2 }
+        = "#{@code_name.description} Codes"
+    - for code in @external_codes
+      %tr.roll
+        %td.forminformation
+          .formname
+            %div{ :class => code.deleted? ? 'deleted' : nil }
+              = link_to code.code_description, show_code_path(code.code_name, code.the_code)
+          .tools
+            The Code:
+            = code.the_code
+            %br
+            - if code.deleted?
+              = link_to "Undelete", soft_undelete_code_path(code.code_name, code.the_code), :confirm => "Really restore code?" 
+            - else
+              = link_to "Delete", soft_delete_code_path(code.code_name, code.the_code), :confirm => "Really delete code?"
+        %td
+          - unless code.deleted?
+            .tools{:style => "position: absolute; right: 15px;"}
+              = link_to "Show", show_code_path(code.code_name, code.the_code)
+              |
+              = link_to "Edit", edit_code_path(code.code_name, code.the_code)

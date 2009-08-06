@@ -20,59 +20,79 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ExternalCodesController do
   describe "route generation" do
 
-    it "should map { :controller => 'external_codes', :action => 'index' } to /external_codes" do
-      route_for(:controller => "external_codes", :action => "index").should == "/external_codes"
+    it "should map { :controller => 'external_codes', :action => 'index' } to /codes" do
+      route_for(:controller => "external_codes", :action => "index").should == "/codes"
     end
-  
-    it "should map { :controller => 'external_codes', :action => 'new' } to /external_codes/new" do
-      route_for(:controller => "external_codes", :action => "new").should == "/external_codes/new"
+
+    it "should map { :controller => 'external_codes', :action => 'index_code', :code_name => 'case' } to /codes/case" do
+      route_for(:controller => "external_codes", :action => "index_code", :code_name => 'case').should == "/codes/case"
     end
-  
-    it "should map { :controller => 'external_codes', :action => 'show', :id => 1 } to /external_codes/1" do
-      route_for(:controller => "external_codes", :action => "show", :id => 1).should == "/external_codes/1"
+
+    it "should map { :controller => 'external_codes', :action => 'create_code', :code_name => 'case' } to /codes/case" do
+      route_for(:controller => "external_codes", :action => "create_code", :code_name => 'case').should == "/codes/case"
     end
-  
-    it "should map { :controller => 'external_codes', :action => 'edit', :id => 1 } to /external_codes/1/edit" do
-      route_for(:controller => "external_codes", :action => "edit", :id => 1).should == "/external_codes/1/edit"
+
+    it "should map { :controller => 'external_codes', :action => 'new_code', :code_name => 'case' } to /codes/case/new" do
+      route_for(:controller => "external_codes", :action => "new_code", :code_name => 'case').should == "/codes/case/new"
     end
-  
-    it "should map { :controller => 'external_codes', :action => 'update', :id => 1} to /external_codes/1" do
-      route_for(:controller => "external_codes", :action => "update", :id => 1).should == "/external_codes/1"
+
+    it "should map { :controller => 'external_codes', :action => 'show_code', :code_name => 'case', :the_code => 'UNK' } to /codes/case/UNK" do
+      route_for(:controller => "external_codes", :action => "show_code", :code_name => 'case', :the_code => 'UNK').should == "/codes/case/UNK"
     end
-  
-    it "should map { :controller => 'external_codes', :action => 'destroy', :id => 1} to /external_codes/1" do
-      route_for(:controller => "external_codes", :action => "destroy", :id => 1).should == "/external_codes/1"
+
+    it "should map { :controller => 'external_codes', :action => 'update_code', :code_name => 'case', :the_code => 'UNK' } to /codes/case/UNK" do
+      route_for(:controller => "external_codes", :action => "update_code", :code_name => 'case', :the_code => 'UNK').should == "/codes/case/UNK"
+    end
+
+    it "should map { :controller => 'external_codes', :action => 'edit_code', :code_name => 'case', :the_code => 'UNK' } to /codes/case/UNK/edit" do
+      route_for(:controller => "external_codes", :action => "edit_code", :code_name => 'case', :the_code => 'UNK').should == "/codes/case/UNK/edit"
+    end
+
+    it "should map { :controller => 'external_codes', :action => 'soft_delete_code', :code_name => 'case', :the_code => 'UNK' } to /codes/case/UNK/soft_delete" do
+      route_for(:controller => "external_codes", :action => "soft_delete_code", :code_name => 'case', :the_code => 'UNK').should == "/codes/case/UNK/soft_delete"
+    end
+
+    it "should map { :controller => 'external_codes', :action => 'soft_undelete_code', :code_name => 'case', :the_code => 'UNK' } to /codes/case/UNK/soft_undelete" do
+      route_for(:controller => "external_codes", :action => "soft_undelete_code", :code_name => 'case', :the_code => 'UNK').should == "/codes/case/UNK/soft_undelete"
     end
   end
 
   describe "route recognition" do
 
-    it "should generate params { :controller => 'external_codes', action => 'index' } from GET /external_codes" do
-      params_from(:get, "/external_codes").should == {:controller => "external_codes", :action => "index"}
+    it "should generate params { :controller => 'external_codes', action => 'index' } from GET /codes" do
+      params_from(:get, "/codes").should == {:controller => "external_codes", :action => "index"}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'new' } from GET /external_codes/new" do
-      params_from(:get, "/external_codes/new").should == {:controller => "external_codes", :action => "new"}
+
+    it "should generate params { :controller => 'external_codes', action => 'index_code', :code_name => 'case' } from GET /codes/case" do
+      params_from(:get, "/codes/case").should == {:controller => "external_codes", :action => "index_code", :code_name => 'case'}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'create' } from POST /external_codes" do
-      params_from(:post, "/external_codes").should == {:controller => "external_codes", :action => "create"}
+
+    it "should generate params { :controller => 'external_codes', action => 'create_code', :code_name => 'case' } from GET /codes/case" do
+      params_from(:post, "/codes/case").should == {:controller => "external_codes", :action => "create_code", :code_name => 'case'}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'show', id => '1' } from GET /external_codes/1" do
-      params_from(:get, "/external_codes/1").should == {:controller => "external_codes", :action => "show", :id => "1"}
+
+    it "should generate params { :controller => 'external_codes', action => 'new_code', :code_name => 'case' } from GET /codes/case/new" do
+      params_from(:get, "/codes/case/new").should == {:controller => "external_codes", :action => "new_code", :code_name => 'case'}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'edit', id => '1' } from GET /external_codes/1;edit" do
-      params_from(:get, "/external_codes/1/edit").should == {:controller => "external_codes", :action => "edit", :id => "1"}
+
+    it "should generate params { :controller => 'external_codes', action => 'show_code', :code_name => 'case', :code_name => 'case', :the_code => 'UNK' } from GET /codes/case/UNK" do
+      params_from(:get, "/codes/case/UNK").should == {:controller => "external_codes", :action => "show_code", :code_name => 'case', :the_code => 'UNK'}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'update', id => '1' } from PUT /external_codes/1" do
-      params_from(:put, "/external_codes/1").should == {:controller => "external_codes", :action => "update", :id => "1"}
+
+    it "should generate params { :controller => 'external_codes', action => 'update_code', :code_name => 'case', :code_name => 'case', :the_code => 'UNK' } from GET /codes/case/UNK" do
+      params_from(:post, "/codes/case/UNK").should == {:controller => "external_codes", :action => "update_code", :code_name => 'case', :the_code => 'UNK'}
     end
-  
-    it "should generate params { :controller => 'external_codes', action => 'destroy', id => '1' } from DELETE /external_codes/1" do
-      params_from(:delete, "/external_codes/1").should == {:controller => "external_codes", :action => "destroy", :id => "1"}
+
+    it "should generate params { :controller => 'external_codes', action => 'edit_code', :code_name => 'case', :code_name => 'case', :the_code => 'UNK' } from GET /codes/case/UNK/edit" do
+      params_from(:get, "/codes/case/UNK/edit").should == {:controller => "external_codes", :action => "edit_code", :code_name => 'case', :the_code => 'UNK'}
+    end
+
+    it "should generate params { :controller => 'external_codes', action => 'soft_delete_code', :code_name => 'case', :code_name => 'case', :the_code => 'UNK' } from GET /codes/case/UNK/soft_delete" do
+      params_from(:get, "/codes/case/UNK/soft_delete").should == {:controller => "external_codes", :action => "soft_delete_code", :code_name => 'case', :the_code => 'UNK'}
+    end
+
+    it "should generate params { :controller => 'external_codes', action => 'soft_undelete_code', :code_name => 'case', :code_name => 'case', :the_code => 'UNK' } from GET /codes/case/UNK/soft_undelete" do
+      params_from(:get, "/codes/case/UNK/soft_undelete").should == {:controller => "external_codes", :action => "soft_undelete_code", :code_name => 'case', :the_code => 'UNK'}
     end
   end
 end

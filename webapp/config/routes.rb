@@ -61,7 +61,17 @@ ActionController::Routing::Routes.draw do |map|
     :deactivate => :post
   }
 
-  map.resources :external_codes
+  map.with_options :controller => 'external_codes' do |codes|
+    codes.codes            'codes',                                   :action => 'index'
+    codes.create_code      'codes/:code_name',                        :conditions => { :method => :post },  :action => 'create_code'
+    codes.index_code       'codes/:code_name',                        :action => 'index_code'
+    codes.new_code         'codes/:code_name/new',                    :action => 'new_code'
+    codes.update_code      'codes/:code_name/:the_code',              :conditions => { :method => :post },  :action => 'update_code'
+    codes.show_code        'codes/:code_name/:the_code',              :action => 'show_code'
+    codes.edit_code        'codes/:code_name/:the_code/edit',         :action => 'edit_code'
+    codes.soft_delete_code 'codes/:code_name/:the_code/soft_delete',  :action => 'soft_delete_code'
+    codes.soft_undelete_code 'codes/:code_name/:the_code/soft_undelete',  :action => 'soft_undelete_code'
+  end
 
   map.resources :question_elements
   
@@ -146,8 +156,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # An event's attachments
   map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments', :except => [:edit]
-
-  map.resources :codes, :controller => :external_codes
 
   map.resources :core_fields
   

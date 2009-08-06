@@ -48,7 +48,7 @@ class CdcExport < ActiveRecord::Base
     end
 
     def cdc_deletes(start_mmwr, end_mmwr)
-      where = [ "sent_to_cdc=true AND ((deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
+      where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
@@ -67,7 +67,7 @@ class CdcExport < ActiveRecord::Base
 
     def verification_records(mmwr_year, mmwr_week=nil)
       select = 'COUNT(*), events."MMWR_year", diseases.cdc_code'
-      where = '"MMWR_year"=' + mmwr_year.to_s + ' AND deleted_at IS NULL'
+      where = '"MMWR_year"=' + mmwr_year.to_s + ' AND events.deleted_at IS NULL'
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
       where << " AND events.\"MMWR_week\" <= #{mmwr_week}" unless mmwr_week.blank?
@@ -253,7 +253,7 @@ class CdcExport < ActiveRecord::Base
           ) disease_answers ON (ee.id = disease_answers.event_id AND disease_events.disease_id = disease_answers.disease_id)
           GROUP BY ee.id
         ) disease_answers ON (e.id = disease_answers.event_id)
-        WHERE deleted_at is null
+        WHERE e.deleted_at IS NULL
          AND e.type='MorbidityEvent'
       SQL
     end      

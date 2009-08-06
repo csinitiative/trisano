@@ -680,33 +680,6 @@
   code_description: "Out-of-state"
   sort_order: 150
 
-  ### LOCATIONS ###
-  
-- code_name: "location"
-  the_code:  "H"
-  code_description: "Home"
-  sort_order: 5
-
-- code_name: "location"
-  the_code:  "W"
-  code_description: "Work"
-  sort_order: 10
-
-- code_name: "location"
-  the_code:  "UNK"
-  code_description: "Unspecified"
-  sort_order: 1
-
-- code_name: "location"
-  the_code:  "M"
-  code_description: "Mobile"
-  sort_order: 15
-
-- code_name: "location"
-  the_code:  "PAGE"
-  code_description: "Pager"
-  sort_order: 20
-
   ### YES/NO VALUES ###
   
 - code_name: "yesno"

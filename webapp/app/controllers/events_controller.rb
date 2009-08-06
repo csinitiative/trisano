@@ -34,7 +34,7 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_test_type
-    @items = ExternalCode.find(:all,
+    @items = ExternalCode.active.find(:all,
       :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'lab_test_type'", '%' + params[:test_type].downcase + '%'],
       :order => "code_description",
       :limit => 20

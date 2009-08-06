@@ -18,38 +18,21 @@
 
 /- content_for :name do
 
-/- content_for :tools do
-/  = link_to 'New code', new_external_code_path
-
-- content_for :tools_two do
-  = button_to("Create new code", {:action => "new"}, { :method => :get })
-
-- for code_type in @code_types
-
-  #rot
-    %table.list
+#rot
+  %table.list
+    %tr
+      %th.forminformation{ :colspan => 2 }
+        = "List Codes"
+    - for code_name in @code_names
       %tr
-        %th.forminformation
-          = code_type.code_name.capitalize,'&#160; Codes'
-        %th
-          Type
-        %th
-      - for code in @external_codes.select {|c| c.code_name == code_type.code_name}
-        %tr.roll
-          %td
-            .formname
-              = link_to code.the_code, code_path(code)
-            .tools
-              = code.code_description
-          %td
-            .formname
-              &#160;
-            .tools
-            = code.code_name
-          %td
-            .tools{:style => "position: absolute; right: 15px;"}
-              = link_to("Edit", edit_code_path(code))
-              |
-              = link_to("Show", code_path(code))
-              |
-              = link_to("Delete", code_path(code), :method => :delete, :confirm => "Really delete code?")
+        %td.forminformation
+          .formname
+            = link_to code_name.description, index_code_path(code_name.code_name)
+          .tools
+            Code Name:
+            = code_name.code_name
+            -# %br
+            -# = button_to "New #{code_name.description} Code", new_code_path(code_name.code_name)
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to "List", index_code_path(code_name.code_name)

@@ -21,7 +21,15 @@ class ExternalCode < ActiveRecord::Base
 
   has_and_belongs_to_many :diseases
 
-  named_scope :case, :conditions => "code_name = 'case'", :order => 'sort_order'
+  named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order, the_code'
+  named_scope :case, :conditions => "code_name = 'case'"
+
+  validates_presence_of :code_name
+  validates_presence_of :the_code
+  validates_presence_of :code_description
+  validates_length_of :the_code, :maximum => 20
+  validates_length_of :code_name, :maximum => 50
+  validates_uniqueness_of :the_code, :scope => :code_name
 
   def self.yes
     find(:first, :conditions => "code_name = 'yesno' and the_code = 'Y'")
@@ -40,16 +48,11 @@ class ExternalCode < ActiveRecord::Base
   end
 
   def self.yesno
-    find(:all, :conditions => "code_name = 'yesno'", :order => 'sort_order')
-  end
-
-  def self.unspecified_location_id
-    code = find(:first, :conditions => "code_name = 'location' and the_code = 'UNK'")
-    code.id unless code.nil?
+    active.find(:all, :conditions => "code_name = 'yesno'")
   end
 
   def self.telephone_location_types
-    find_all_by_code_name('telephonelocationtype', :order => 'sort_order')
+    active.find_all_by_code_name('telephonelocationtype')
   end
 
   def self.telephone_location_type_ids
@@ -58,7 +61,7 @@ class ExternalCode < ActiveRecord::Base
 
   def self.age_type(age_description)
     with_scope(:find => {:conditions => "code_name='age_type'"}) do
-      find(:first, :conditions => "code_description='#{age_description.to_s}'")
+      active.find(:first, :conditions => "code_description='#{age_description.to_s}'")
     end
   end
 
@@ -100,13 +103,28 @@ class ExternalCode < ActiveRecord::Base
     return [] if condition.nil?
     condition = sanitize_sql(["%s", condition.downcase])
     limit = sanitize_sql(["%s", limit])
-    find_by_sql("select * FROM external_codes where LOWER(code_description) LIKE '#{condition}%' order by code_description limit #{limit};")
+    find_by_sql("SELECT * FROM external_codes WHERE deleted_at IS NULL AND LOWER(code_description) LIKE '#{condition}%' ORDER BY code_description LIMIT #{limit};")
   end
 
   def self.find_cases(*args)
-    with_scope(:find => {:conditions => "code_name = 'case'", :order => 'sort_order ASC'}) do
-      find(*args)
+    active.case.find(*args)
+  end
+
+  def deleted?
+    not deleted_at.nil?
+  end
+
+  def soft_delete
+    if self.deleted_at.nil?
+      self.deleted_at = Time.new
+      self.save(false)
     end
   end
 
+  def soft_undelete
+    if not self.deleted_at.nil?
+      self.deleted_at = nil
+      self.save(false)
+    end
+  end
 end
