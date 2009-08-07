@@ -1,3 +1,6 @@
+-- This file takes CSV files from Utah's IBIS system and creates OLAP-suitable
+-- population tables from them. See the TriSano EE Utah wiki for the files
+
 BEGIN;
 
 SET search_path = population;
