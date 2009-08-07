@@ -125,10 +125,11 @@ class Person < ActiveRecord::Base
   class << self
     def find_all_for_filtered_view(options = {})
       where_clause = "1=1 "
+      joins = ""
 
       if options[:use_starts_with_search]
         if !options[:last_name].blank?
-         where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "%'"
+          where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "%'"
         end
 
         if !options[:first_name].blank?
@@ -167,18 +168,21 @@ class Person < ActiveRecord::Base
       end
 
       if options[:do_not_show_deleted]
-        where_clause << " AND people.deleted_at IS NULL"
+        joins = "INNER JOIN entities on people.entity_id = entities.id"
+        where_clause << " AND entities.deleted_at IS NULL"
       end
 
       select = <<-SQL
         SELECT * FROM people
       SQL
+      select << "#{joins}\n" unless joins.empty?
       select << "WHERE (#{where_clause})\n" unless where_clause.blank?
       select << "ORDER BY #{order_by_clause}"
 
       count_select = <<-SQL
         SELECT COUNT(*) FROM people
       SQL
+      count_select << "#{joins}\n" unless joins.empty?
       count_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
 
       row_count = Person.count_by_sql(count_select)

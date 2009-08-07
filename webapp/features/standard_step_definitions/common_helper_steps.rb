@@ -39,6 +39,11 @@ end
 # Basic moving around helpers
 #
 
+When(/^I navigate to the person management tool$/) do
+  visit people_path
+  response.should contain("People")
+end
+
 When(/^I click the "(.+)" link$/) do |link|
   click_link link
 end
@@ -53,5 +58,25 @@ end
 
 Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
   response.should contain(message)
+end
+
+#
+# Other stuff
+#
+
+When(/^I search for the place entity "([^\"]*)"$/) do |name|
+  fill_in "name", :with => name
+  click_button "Search"
+end
+
+When(/^I search for the person entity "([^\"]*)"$/) do |name|
+  if name.split(" ").size == 2
+    fill_in "first_name", :with => name.split(" ")[0]
+    fill_in "last_name", :with => name.split(" ")[1]
+  else
+    fill_in "last_name", :with => name
+  end
+
+  click_button "Search"
 end
 

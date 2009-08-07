@@ -57,11 +57,6 @@ When(/^I search for Manzanita with a participation type of Lab$/) do
   click_button "Search"
 end
 
-When(/^I search for the entity "([^\"]*)"$/) do |name|
-  fill_in "name", :with => name
-  click_button "Search"
-end
-
 Then( /^I should receive 2 matching records$/) do
   response.should contain("Manzanita")
   response.should contain("Hospital / ICP")
