@@ -108,7 +108,8 @@ public class GetPopulation implements UserDefinedFunction {
                     table_rank = rs.getInt(2);
                 }
                 else {
-                    throw new RuntimeException("Couldn't find a table to use");
+                    logger.warn("Couldn't find population table for dimensions: " + column_names);
+                    return null;
                 }
             }
             else {
@@ -120,10 +121,13 @@ public class GetPopulation implements UserDefinedFunction {
                     table_rank = rs.getInt(2);
                 }
                 else {
-                    throw new RuntimeException("Couldn't find a default table to use");
+                    logger.warn("Couldn't find default population table");
+                    return 0;
                 }
-                if (table_name == null || table_name.equals("")) 
-                    throw new RuntimeException("Couldn't find a default table to use");
+                if (table_name == null || table_name.equals("")) {
+                    logger.warn("Couldn't find default population table");
+                    return 0;
+                }
             }
             logger.info("Pulling data from table " + table_name + " with rank " + table_rank.toString());
 
