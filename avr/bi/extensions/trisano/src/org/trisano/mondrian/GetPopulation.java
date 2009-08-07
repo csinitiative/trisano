@@ -122,11 +122,11 @@ public class GetPopulation implements UserDefinedFunction {
                 }
                 else {
                     logger.warn("Couldn't find default population table");
-                    return 0;
+                    return null;
                 }
                 if (table_name == null || table_name.equals("")) {
                     logger.warn("Couldn't find default population table");
-                    return 0;
+                    return null;
                 }
             }
             logger.info("Pulling data from table " + table_name + " with rank " + table_rank.toString());
@@ -173,10 +173,7 @@ public class GetPopulation implements UserDefinedFunction {
             logger.error("JDBC Error when disconnecting: ", s);
         }
 
-        if (population == 0)
-            return null;
-        else
-            return population;
+        return population;
     }
 
 /*    public Object execute(Evaluator evaluator, UserDefinedFunction.Argument[] arguments) {
