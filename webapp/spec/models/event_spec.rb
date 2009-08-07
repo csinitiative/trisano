@@ -1769,7 +1769,8 @@ describe Event, 'cloning an event' do
               "test_status_id" => external_codes(:state_alabama).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "result_value" => "one",
               "units" => "two",
-              "reference_range" => "three"
+              "reference_range" => "three",
+              "comment" => "four"
             }
           ]
         }
@@ -1793,6 +1794,7 @@ describe Event, 'cloning an event' do
       org_result.result_value.should == new_result.result_value
       org_result.units.should == new_result.units
       org_result.reference_range.should == new_result.reference_range
+      org_result.comment.should == new_result.comment
     end
 
     it "should copy over reporting data" do

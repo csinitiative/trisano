@@ -23,8 +23,9 @@
         - unless ran.nil?
           %br
           %hr
-        %span.print-label Lab name:
-        %span.print-value
+        .left
+          %span.print-label Lab name:
+          %span.print-value
           &= lab.place_entity.place.name
         .three-valued-row
           .left
@@ -39,7 +40,6 @@
             %span.print-label Result value:
             %span.print-value
               &= lab_result.result_value
-      #test
         .three-valued-row
           .left
             %span.print-label Units:
@@ -49,26 +49,30 @@
             %span.print-label Reference range:
             %span.print-value
               &= lab_result.reference_range
-          .left
+          .right
             %span.print-label Test status:
             %span.print-value
               &= l lab_result.test_status
-          .right
+        .three-valued-row
+          .left
             %span.print-label Specimen source:
             %span.print-value
               &= l lab_result.specimen_source
-      #collection
-        .three-valued-row
           .left
             %span.print-label Collection date:
             %span.print-value
               &= lab_result.collection_date
-          .left
+          .right
             %span.print-label Lab test date:
             %span.print-value
               &= lab_result.lab_test_date
-          .right
+        .three-valued-row
+          .left
             %span.print-label Specimen sent to state lab:
             %span.print-value
               &= l lab_result.specimen_sent_to_state
+          .left
+            %span.print-label Comment:
+            %span.print-value
+              &= lab_result.comment
     - ran = 1

@@ -39,12 +39,13 @@
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
                 %b&= lab_result.test_type.common_name
+                %br
+                %b&= lab_result.comment
               %td
                 %b&= l lab_result.test_result
                 %br
                 %small Result value:
                 %b&= lab_result.result_value
-                %br
                 %small Units:
                 %b&= lab_result.units
                 %br

@@ -35,8 +35,8 @@
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
   - core_element("test_status", lab_result_form, :horiz) do
-    = lab_result_form.label(:test_status)
-    = lab_result_form.dropdown_code_field(:test_status, "test_status", {})
+    = lab_result_form.label(:test_status_id)
+    = lab_result_form.dropdown_code_field(:test_status_id, "test_status", {})
   %span.vert
   - core_element("specimen_source", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_source_id, "Specimen source")
@@ -50,6 +50,10 @@
   - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_sent_to_state_id, "Specimen sent to state lab?")
     = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})
+  %span.vert
+  - core_element("comment", lab_result_form, :horiz) do
+    = lab_result_form.label(:comment)
+    = lab_result_form.text_area(:comment, :rows => 2, :cols => 100)
 
   - if lab_result.try(:staged_message)
     %span.horiz
