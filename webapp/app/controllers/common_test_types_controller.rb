@@ -35,8 +35,22 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.find(params[:id])
 
     if params[:do] == "Search"
-      conditions = ["test_name ILIKE ?", "%#{params[:loinc_code_search_test_name]}%"] if params[:loinc_code_search_test_name]
-      @loinc_codes = LoincCode.find(:all, :conditions => conditions, :order => 'loinc_code ASC')
+      sql = []
+      conditions = []
+      unless params[:loinc_code_search_test_name].blank?
+        sql << 'test_name ILIKE ?'
+        conditions << "%#{params[:loinc_code_search_test_name]}%"
+      end
+      unless params[:loinc_code_search_loinc_code].blank?
+        sql << 'loinc_code ILIKE ?'
+        conditions << params[:loinc_code_search_loinc_code] + "%"
+      end
+      if sql.empty?
+        @loinc_codes = []
+      else
+        conditions.unshift sql.join(' AND ')
+        @loinc_codes = LoincCode.find(:all, :conditions => conditions, :order => 'loinc_code ASC')
+      end
     end
   end
 

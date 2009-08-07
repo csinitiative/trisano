@@ -122,3 +122,18 @@ Feature: Common tests types for lab results
     Then I should see "Common test type was successfully updated."
     And I should see "Culture, Unspecified"
 
+  Scenario: Searching for LOINCs by code
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+    And I have the following LOINC codes in the the system:
+      | loinc_code | test_name                   |
+      | 11475-1    | Culture, Unspecified        |
+      | 636-1      | Culture, Sterile body fluid |
+      | 34166-9    | Microscopy.Electron         |
+
+    When I go to manage the common test type's loinc codes
+    And I fill in "loinc_code_search_loinc_code" with "114"
+    And I press "Search"
+
+    Then I should see a link to "11475-1"
+    And I should see "Culture, Unspecified"

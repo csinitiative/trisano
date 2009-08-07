@@ -49,7 +49,10 @@
 %h3 Search for available LOINC codes
 -form_tag loinc_codes_common_test_type_path(@common_test_type), :method => :get do
   %span.vert
-    =label_tag :loinc_code_search_test_name, 'Test Name'
+    =label_tag :loinc_code_search_loinc_code, 'Loinc code'
+    =text_field_tag :loinc_code_search_loinc_code, params[:loinc_code_search_loinc_code]
+  %span.horiz
+    =label_tag :loinc_code_search_test_name, 'Test name'
     =text_field_tag :loinc_code_search_test_name, params[:loinc_code_search_test_name], :size => 40
 
   %span.horiz

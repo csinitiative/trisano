@@ -40,6 +40,9 @@ def path_to(page_name)
   when /edit the common test type/
     edit_common_test_type_path(@common_test_type)
 
+  when /manage the common test type\'s loinc codes/
+    loinc_codes_common_test_type_path(@common_test_type)
+
   when /the admin dashboard/
     admin_path
 
