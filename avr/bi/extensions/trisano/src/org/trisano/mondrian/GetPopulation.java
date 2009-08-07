@@ -6,6 +6,7 @@ import mondrian.spi.UserDefinedFunction;
 import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.*;
+import java.lang.Exception;
 
 public class GetPopulation implements UserDefinedFunction {
     private static final Logger logger = Logger.getLogger(GetPopulation.class);
@@ -26,6 +27,16 @@ public class GetPopulation implements UserDefinedFunction {
 
     public Type[] getParameterTypes() {
         return new Type[] { new NumericType() };
+    }
+
+    class GetPopulationException extends Exception {
+        GetPopulationException() {
+            super();
+        }
+
+        GetPopulationException(String s) {
+            super(s);
+        }
     }
 
     public Object execute(Evaluator evaluator, UserDefinedFunction.Argument[] arguments) {
@@ -107,10 +118,8 @@ public class GetPopulation implements UserDefinedFunction {
                     table_name = rs.getString(1);
                     table_rank = rs.getInt(2);
                 }
-                else {
-                    logger.warn("Couldn't find population table for dimensions: " + column_names);
-                    return null;
-                }
+                else
+                    throw this.new GetPopulationException("Couldn't find population table for dimensions: " + column_names);
             }
             else {
                 logger.debug("No dimensions specified; using highest-ranking table");
@@ -120,14 +129,11 @@ public class GetPopulation implements UserDefinedFunction {
                     table_name = rs.getString(1);
                     table_rank = rs.getInt(2);
                 }
-                else {
-                    logger.warn("Couldn't find default population table");
-                    return null;
-                }
-                if (table_name == null || table_name.equals("")) {
-                    logger.warn("Couldn't find default population table");
-                    return null;
-                }
+                else
+                    throw this.new GetPopulationException("Couldn't find default population table");
+
+                if (table_name == null || table_name.equals(""))
+                    throw this.new GetPopulationException("Found a default population table, but it has no name");
             }
             logger.info("Pulling data from table " + table_name + " with rank " + table_rank.toString());
 
@@ -163,6 +169,9 @@ public class GetPopulation implements UserDefinedFunction {
         }
         catch (SQLException s) {
             logger.error("JDBC Error", s);
+        }
+        catch (GetPopulationException e) {
+            logger.info("Problem getting population", e);
         }
 
         try {
