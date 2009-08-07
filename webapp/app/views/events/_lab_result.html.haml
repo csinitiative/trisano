@@ -34,6 +34,9 @@
   - core_element("reference_range", lab_result_form, :horiz) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
+  - core_element("test_status", lab_result_form, :horiz) do
+    = lab_result_form.label(:test_status)
+    = lab_result_form.dropdown_code_field(:test_status, "test_status", {})
   %span.vert
   - core_element("specimen_source", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_source_id, "Specimen source")

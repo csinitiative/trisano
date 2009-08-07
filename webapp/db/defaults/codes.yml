@@ -1207,3 +1207,31 @@
   the_code:  "TM"
   code_description: "Treatment"
   sort_order: 15
+
+  ### LAB RESULT TEST STATUSES ###
+
+- code_name: "test_status"
+  the_code:  "R"
+  code_description: "Submitted"
+  sort_order: 10
+
+- code_name: "test_status"
+  the_code:  "I"
+  code_description: "Pending"
+  sort_order: 20
+
+- code_name: "test_status"
+  the_code:  "P"
+  code_description: "Preliminary result"
+  sort_order: 30
+
+- code_name: "test_status"
+  the_code:  "F"
+  code_description: "Final / Confirmed"
+  sort_order: 40
+
+- code_name: "test_status"
+  the_code:  "X"
+  code_description: "Retest required"
+  sort_order: 50
+

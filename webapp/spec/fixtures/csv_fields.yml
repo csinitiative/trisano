@@ -183,6 +183,14 @@ csv_field_00136:
   short_name: 
   use_code: test_result.try(:the_code)
   event_type: 
+csv_field_lab_test_status: 
+  sort_order: 60
+  export_group: lab
+  long_name: lab_test_status
+  use_description: test_status.try(:code_description)
+  short_name: 
+  use_code: test_status.try(:the_code)
+  event_type: 
 csv_field_00108: 
   sort_order: 630
   export_group: event
@@ -220,6 +228,22 @@ csv_field_00137:
   export_group: lab
   long_name: lab_reference_range
   use_description: reference_range
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_lab_result_value: 
+  sort_order: 40
+  export_group: lab
+  long_name: lab_result_value
+  use_description: result_value
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_lab_units: 
+  sort_order: 45
+  export_group: lab
+  long_name: lab_units
+  use_description: units
   short_name: 
   use_code: 
   event_type: 

@@ -22,6 +22,7 @@ class LabResult < ActiveRecord::Base
   belongs_to :participation
   belongs_to :staged_message
   belongs_to :test_type, :class_name => 'CommonTestType'
+  belongs_to :test_status, :class_name => 'ExternalCode'
 
   before_destroy do |lab_result|
     lab_result.participation.event.add_note("Lab result deleted")

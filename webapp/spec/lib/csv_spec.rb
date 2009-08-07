@@ -123,7 +123,10 @@ def lab_header
   lab_name
   lab_test_type
   lab_test_result
+  lab_result_value
+  lab_units
   lab_reference_range
+  lab_test_status
   lab_specimen_source
   lab_collection_date
   lab_test_date
@@ -366,8 +369,11 @@ def lab_output
   out << "#{@lab_result.lab_name},"
   out << "#{@lab_result.test_type.common_name},"
   out << "#{@lab_result.test_result.code_description},"
+  out << "#{@lab_result.result_value},"
+  out << "#{@lab_result.units},"
   out << "#{@lab_result.reference_range},"
   out << "#{@lab_result.specimen_source.code_description},"
+  out << "#{@lab_result.test_status.code_description},"
   out << "#{@lab_result.collection_date},"
   out << "#{@lab_result.lab_test_date},"
   out << "#{@lab_result.specimen_sent_to_state.code_description}"
@@ -489,8 +495,11 @@ def csv_mock_event(event_type)
   @lab_result.stub!(:lab_name).and_return("LabName")
   @lab_result.stub!(:test_type).and_return(@common_test_type)
   @lab_result.stub!(:test_result).and_return(simple_reference)
+  @lab_result.stub!(:result_value).and_return("100")
+  @lab_result.stub!(:units).and_return("Gallons")
   @lab_result.stub!(:reference_range).and_return("Detected")
   @lab_result.stub!(:specimen_source).and_return(simple_reference)
+  @lab_result.stub!(:test_status).and_return(simple_reference)
   @lab_result.stub!(:collection_date).and_return("2008-02-01")
   @lab_result.stub!(:lab_test_date).and_return("2008-02-02")
   @lab_result.stub!(:specimen_sent_to_state).and_return(simple_reference)
