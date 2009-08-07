@@ -137,6 +137,11 @@ legend {
   clear: both;
   display: block; }
 
+.green-rule {
+  color: #090;
+  background-color: #090;
+  height: 2px; }
+
 #foot {
   width: 500px;
   padding: 150px 0px 100px 0px; }

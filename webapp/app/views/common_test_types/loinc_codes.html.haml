@@ -14,14 +14,40 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  ="Add LOINC Codes to #{@common_test_type.common_name}"
+  ="Add LOINC Codes to Common Test Type"
 
 -content_for :tools do
-  =link_to h("< Edit #{@common_test_type.common_name}"), edit_common_test_type_path(@common_test_type)
+  =link_to h('< Back to Common Test Types'), common_test_types_path
   %p
 
+=render :partial => 'summary', :locals => {:common_test_type => @common_test_type}
+
+.vert-break#associated_loincs
+  %table.list
+    %tr
+      %th.forminformation
+        LOINC Code
+      %th
+        Test Name
+    -if @common_test_type.loinc_codes.empty?
+      %tr
+        %td{:colspan => '2'}
+          No associated LOINC Codes
+    -else
+      -@common_test_type.loinc_codes.each do |loinc_code|
+        %tr.roll
+          %td.forminformation
+            .formname
+              %span.loinc_code
+                &=loinc_code.loinc_code
+          %td
+            %span.test_name
+              &=loinc_code.test_name
+
+%hr.green-rule
+
 %h3 Search for available LOINC codes
--form_tag add_loincs_common_test_type_path(@common_test_type), :method => :get do
+-form_tag loinc_codes_common_test_type_path(@common_test_type), :method => :get do
   %span.vert
     =label_tag :loinc_code_search_test_name, 'Test Name'
     =text_field_tag :loinc_code_search_test_name, params[:loinc_code_search_test_name], :size => 40

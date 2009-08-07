@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
 
-  map.resources :common_test_types, :member => { :add_loincs => :get, :update_loincs => :post }
+  map.resources :common_test_types, :member => { :loinc_codes => :get, :update_loincs => :post }
 
   map.resources :loinc_codes
 

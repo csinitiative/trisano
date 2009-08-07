@@ -102,9 +102,11 @@ Feature: Common tests types for lab results
       | 34166-9    | Microscopy.Electron         |
 
     When I go to edit the common test type
-    And I follow "Add LOINC codes"
-    Then I should see "Add LOINC Codes to Culture"
-    And I should see a link to "< Edit Culture"
+    And I follow "LOINC codes"
+    Then I should see "Add LOINC Codes to Common Test Type"
+    And I should see a link to "Edit"
+    And I should see a link to "Show"
+    And I should see "Culture"
     And I should not see "No records found"
 
     When I fill in "loinc_code_search_test_name" with "junk"

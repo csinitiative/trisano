@@ -5,6 +5,8 @@ module CommonTestTypesHelper
       haml_concat link_to_unless_current('Show', common_test_type)
       haml_concat "|"
       haml_concat link_to_unless_current('Edit', edit_common_test_type_path(common_test_type))
+      haml_concat "|"
+      haml_concat link_to_unless_current('LOINC Codes', loinc_codes_common_test_type_path(common_test_type))
     end
   end
 
