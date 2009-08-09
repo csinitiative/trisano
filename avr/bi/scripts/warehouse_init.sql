@@ -33,17 +33,39 @@ GRANT USAGE ON SCHEMA trisano TO trisano_ro;
 GRANT USAGE ON SCHEMA population TO trisano_ro;
 ALTER USER trisano_ro SET search_path = trisano;
 
+DROP TABLE IF EXISTS trisano.current_schema_name;
+
 CREATE TABLE trisano.current_schema_name (
     schemaname TEXT NOT NULL
 );
 TRUNCATE TABLE trisano.current_schema_name;
 INSERT INTO trisano.current_schema_name VALUES ('warehouse_a');
 
+CREATE OR REPLACE FUNCTION trisano.get_age_group(INTEGER) RETURNS TEXT LANGUAGE SQL IMMUTABLE AS $$
+SELECT
+    CASE
+--      WHEN $1 < 1 THEN '< 1 year'
+--      WHEN ($1 >= 1 AND $1 < 5) THEN '1-4 years'
+        WHEN $1 >= 85 THEN '85+ years'
+        WHEN $1 IS NULL THEN 'Unknown'
+        ELSE ((floor($1 / 5) * 5)::integer)::text || '-' || ((floor($1 / 5) * 5)::integer + 4)::text || ' years'
+    END
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_age_group(NUMERIC) RETURNS TEXT LANGUAGE SQL IMMUTABLE AS $$
+    SELECT trisano.get_age_group($1::INTEGER);
+$$;
+
+DROP TABLE IF EXISTS trisano.etl_success;
+
 CREATE TABLE trisano.etl_success (
     success BOOLEAN,
     entrydate TIMESTAMPTZ DEFAULT NOW()
 );
 INSERT INTO trisano.etl_success (success) VALUES (FALSE);
+
+DROP TABLE IF EXISTS trisano.formbuilder_columns;
+DROP TABLE IF EXISTS trisano.formbuilder_tables;
 
 CREATE TABLE trisano.formbuilder_tables (
     id SERIAL PRIMARY KEY,
@@ -141,10 +163,12 @@ $$ LANGUAGE plpgsql;
 --
 -- Yes, it's a hack. But it prevents us from having to write patches for Mondrian.
 
+DROP TYPE IF EXISTS trisano.dp_cust CASCADE;
+
 CREATE TYPE trisano.dp_cust AS (
     dp DOUBLE PRECISION); 
 
-CREATE FUNCTION trisano.make_dpcust(a DOUBLE PRECISION) RETURNS trisano.dp_cust IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.make_dpcust(a DOUBLE PRECISION) RETURNS trisano.dp_cust IMMUTABLE AS $$
 DECLARE
     dpc trisano.dp_cust;
 BEGIN
@@ -153,14 +177,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION trisano.count(trisano.dp_cust) RETURNS DOUBLE PRECISION IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.count(trisano.dp_cust) RETURNS DOUBLE PRECISION IMMUTABLE AS $$
     SELECT $1.dp
 $$ LANGUAGE sql;
+
+DROP TYPE IF EXISTS trisano.int_cust CASCADE;
 
 CREATE TYPE trisano.int_cust AS (
     myint INTEGER);
 
-CREATE FUNCTION trisano.make_intcust(a INTEGER) RETURNS trisano.int_cust IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.make_intcust(a INTEGER) RETURNS trisano.int_cust IMMUTABLE AS $$
 DECLARE
     myi trisano.int_cust;
 BEGIN
@@ -170,14 +196,16 @@ END;
 
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION trisano.count(trisano.int_cust) RETURNS INTEGER IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.count(trisano.int_cust) RETURNS INTEGER IMMUTABLE AS $$
     SELECT $1.myint
 $$ LANGUAGE sql;
+
+DROP TYPE IF EXISTS trisano.num_cust CASCADE;
 
 CREATE TYPE trisano.num_cust AS (
     mynum NUMERIC);
 
-CREATE FUNCTION trisano.make_numcust(a NUMERIC) RETURNS trisano.num_cust IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.make_numcust(a NUMERIC) RETURNS trisano.num_cust IMMUTABLE AS $$
 DECLARE
     myi trisano.num_cust;
 BEGIN
@@ -186,7 +214,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION trisano.count(trisano.num_cust) RETURNS NUMERIC IMMUTABLE AS $$
+CREATE OR REPLACE FUNCTION trisano.count(trisano.num_cust) RETURNS NUMERIC IMMUTABLE AS $$
     SELECT $1.mynum
 $$ LANGUAGE sql;
 
@@ -194,7 +222,7 @@ $$ LANGUAGE sql;
 
 -- Beginning of median and mode aggregate definitions
 
-CREATE FUNCTION trisano.addlang(lang TEXT) RETURNS BOOLEAN VOLATILE LANGUAGE plpgsql AS
+CREATE OR REPLACE FUNCTION trisano.addlang(lang TEXT) RETURNS BOOLEAN VOLATILE LANGUAGE plpgsql AS
 $addlang$
 BEGIN
     PERFORM * FROM pg_language WHERE lanname = lang;
@@ -208,7 +236,7 @@ $addlang$;
 
 SELECT trisano.addlang('plperl');
 
-CREATE FUNCTION trisano.array_median(i double precision[]) RETURNS double precision
+CREATE OR REPLACE FUNCTION trisano.array_median(i double precision[]) RETURNS double precision
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -221,7 +249,7 @@ return $array[int($#array / 2)];
 
 $_X$;
 
-CREATE FUNCTION trisano.array_median(i numeric[]) RETURNS numeric
+CREATE OR REPLACE FUNCTION trisano.array_median(i numeric[]) RETURNS numeric
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -233,7 +261,7 @@ my @array = sort { $a <=> $b }   # Step 3: Sort result
 return $array[int($#array / 2)];
 $_X$;
 
-CREATE FUNCTION trisano.array_median(i integer[]) RETURNS integer
+CREATE OR REPLACE FUNCTION trisano.array_median(i integer[]) RETURNS integer
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -246,11 +274,15 @@ return $array[int($#array / 2)];
 
 $_X$;
 
+DROP AGGREGATE IF EXISTS trisano.median(double precision);
+
 CREATE AGGREGATE trisano.median(double precision) (
     SFUNC = array_append,
     STYPE = double precision[],
     FINALFUNC = trisano.array_median
 );
+
+DROP AGGREGATE IF EXISTS trisano.median(numeric);
 
 CREATE AGGREGATE trisano.median(numeric) (
     SFUNC = array_append,
@@ -258,13 +290,15 @@ CREATE AGGREGATE trisano.median(numeric) (
     FINALFUNC = trisano.array_median
 );
 
+DROP AGGREGATE IF EXISTS trisano.median(integer);
+
 CREATE AGGREGATE trisano.median(integer) (
     SFUNC = array_append,
     STYPE = integer[],
     FINALFUNC = trisano.array_median
 );
 
-CREATE FUNCTION trisano.array_mode(i double precision[]) RETURNS double precision
+CREATE OR REPLACE FUNCTION trisano.array_mode(i double precision[]) RETURNS double precision
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -297,7 +331,7 @@ return $mode;
 
 $_X$;
 
-CREATE FUNCTION trisano.array_mode(i numeric[]) RETURNS numeric
+CREATE OR REPLACE FUNCTION trisano.array_mode(i numeric[]) RETURNS numeric
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -330,7 +364,7 @@ return $mode;
 
 $_X$;
 
-CREATE FUNCTION trisano.array_mode(i integer[]) RETURNS integer
+CREATE OR REPLACE FUNCTION trisano.array_mode(i integer[]) RETURNS integer
     LANGUAGE plperl IMMUTABLE
     AS $_X$
 
@@ -362,6 +396,8 @@ split /,/, $arg;     # Step 1: Split stringified array into list
 return $mode;
 
 $_X$;
+
+DROP AGGREGATE IF EXISTS trisano.mode(double precision);
 
 CREATE AGGREGATE trisano.mode(double precision) (
     SFUNC = array_append,
@@ -369,11 +405,15 @@ CREATE AGGREGATE trisano.mode(double precision) (
     FINALFUNC = trisano.array_mode
 );
 
+DROP AGGREGATE IF EXISTS trisano.mode(numeric);
+
 CREATE AGGREGATE trisano.mode(numeric) (
     SFUNC = array_append,
     STYPE = numeric[],
     FINALFUNC = trisano.array_mode
 );
+
+DROP AGGREGATE IF EXISTS trisano.mode(integer);
 
 CREATE AGGREGATE trisano.mode(integer) (
     SFUNC = array_append,
@@ -398,6 +438,8 @@ BEGIN
     RETURN result;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE STRICT;
+
+DROP AGGREGATE IF EXISTS trisano.text_join_agg(text, text);
 
 CREATE AGGREGATE trisano.text_join_agg (text, text) (
     sfunc = trisano.text_join,
@@ -857,21 +899,46 @@ $$ LANGUAGE plpgsql;
 
 SET search_path = population;
 
-CREATE TABLE population (
-    jurisdiction text,
-    race text,
-    population integer
+DROP TABLE IF EXISTS population_tables;
+
+DROP TABLE IF EXISTS population_dimensions CASCADE;
+
+CREATE TABLE population_tables (
+    table_name text NOT NULL,
+    table_rank integer NOT NULL
 );
 
+GRANT SELECT ON population_tables TO trisano_ro;
+
 CREATE TABLE population_dimensions (
-    dim_name text,
+    dim_name text NOT NULL,
     dim_cols text[],
-    mapping_func text
+    mapping_func text[]
 );
+
+GRANT SELECT ON population_dimensions TO trisano_ro;
+
+ALTER TABLE ONLY population_dimensions
+    ADD CONSTRAINT dim_name_pkey PRIMARY KEY (dim_name);
+ALTER TABLE ONLY population_tables
+    ADD CONSTRAINT population_tables_pkey PRIMARY KEY (table_name);
+ALTER TABLE ONLY population_tables
+    ADD CONSTRAINT population_tables_table_rank_key UNIQUE (table_rank);
 
 INSERT INTO population_dimensions VALUES
     ('Investigating Jurisdiction', ARRAY['jurisdiction'], NULL),
     ('Race',                       ARRAY['race'],         NULL);
+
+DROP TABLE IF EXISTS population;
+
+CREATE TABLE population (
+    race TEXT,
+    jurisdiction TEXT,
+    year INTEGER,
+    population INTEGER
+);
+
+INSERT INTO population_tables VALUES ('population', 1);
 
 COMMIT;
 

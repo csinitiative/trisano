@@ -249,30 +249,31 @@ end
 
 describe HumanEvent, 'validating out of state patients' do
 
+  before(:each) do
+    @event = Factory.build(:morbidity_event, :address => Factory.build(:address))
+  end
+
   it 'should be valid to have an out of state patient with no case status' do
-    e = Factory.build(:morbidity_event)
-    e.address.county = external_codes(:county_oos)
-    e.should be_valid
+    @event.address.county = external_codes(:county_oos)
+    @event.should be_valid
   end
 
   it 'should be valid to have an out of state patient with a case status of out of state' do
-    e = Factory.build(:morbidity_event)
-    e.address.county = external_codes(:county_oos)
-    e.lhd_case_status = external_codes(:case_status_oos)
-    e.should be_valid
-    e.lhd_case_status = nil
-    e.state_case_status = external_codes(:case_status_oos)
-    e.should be_valid
+    @event.address.county = external_codes(:county_oos)
+    @event.lhd_case_status = external_codes(:case_status_oos)
+    @event.should be_valid
+    @event.lhd_case_status = nil
+    @event.state_case_status = external_codes(:case_status_oos)
+    @event.should be_valid
   end
 
   it 'should not be valid to have an out of state patient with a case status of out of state' do
-    e = Factory.build(:morbidity_event)
-    e.address.county = external_codes(:county_oos)
-    e.lhd_case_status = external_codes(:case_status_confirmed)
-    e.should_not be_valid
-    e.lhd_case_status = nil
-    e.state_case_status = external_codes(:case_status_confirmed)
-    e.should_not be_valid
+    @event.address.county = external_codes(:county_oos)
+    @event.lhd_case_status = external_codes(:case_status_confirmed)
+    @event.should_not be_valid
+    @event.lhd_case_status = nil
+    @event.state_case_status = external_codes(:case_status_confirmed)
+    @event.should_not be_valid
   end
 
 end

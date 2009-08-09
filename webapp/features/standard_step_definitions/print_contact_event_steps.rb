@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^I have an existing contact event$/ do
-  @event = Factory.create(:contact_event)
+  @event = Factory.create(:contact_event, :address => Factory.create(:address))
 
   # we build (rather then create) some form bits because they have special save mechanisms.
   @form =  Factory.build(:form)

@@ -21,14 +21,12 @@ require 'faker'
 Factory.define :morbidity_event do |e|
   e.association :interested_party
   e.association :jurisdiction
-  e.association :address
   e.association :disease_event
 end
 
 Factory.define :contact_event do |e|
   e.association :interested_party
   e.association :jurisdiction
-  e.association :address
   e.association :disease_event
   e.association :parent_event, :factory => :morbidity_event
 end

@@ -88,8 +88,8 @@ describe Person, "with associated codes" do
     @ethnicity = ExternalCode.find_by_code_name('ethnicity')
     @gender = ExternalCode.find_by_code_name('gender')
     @person = Person.create(:last_name => 'Lacey', 
-                            :ethnicity => @ethnicity, 
-                            :birth_gender => @gender)
+      :ethnicity => @ethnicity,
+      :birth_gender => @gender)
   end
 
   it "should retrieve with the same codes" do
@@ -219,6 +219,25 @@ describe Person, 'find by ts' do
     Person.find_by_ts(:fulltext_terms => "davis o'reilly", :jurisdiction_id => 1)
     Person.last_query.should_not be_nil
     Person.last_query.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
+  end
+
+end
+
+describe Person, 'find_all_for_filtered_view' do
+
+  describe "when excluding deleted people" do
+    it 'should not include deleted people if used with the corresponding option' do
+      last_name = "Deleted-Spec-Guy"
+
+      @person_entity_1 = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => last_name ))
+      @person_entity_2 = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => last_name ))
+      @deleted_person_entity = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => last_name ), :deleted_at => Time.now)
+      
+      Person.find_all_for_filtered_view(:last_name => last_name).size.should == 3
+      Person.find_all_for_filtered_view(:last_name => last_name).detect { |person| person.person_entity.id == @deleted_person_entity.id }.should_not be_nil
+      Person.find_all_for_filtered_view(:last_name => last_name, :do_not_show_deleted => true).size.should == 2
+      Person.find_all_for_filtered_view(:last_name => last_name, :do_not_show_deleted => true).detect { |person| person.person_entity.id == @deleted_person_entity.id }.should be_nil
+    end
   end
 
 end

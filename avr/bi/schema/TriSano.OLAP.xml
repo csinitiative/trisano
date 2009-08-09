@@ -54,13 +54,7 @@
             <Hierarchy hasAll="true">
                 <Level type="String" name="Age Group">
                     <KeyExpression><SQL dialect="postgres">
-                        CASE
-                            WHEN age_in_years &lt; 1 THEN '&lt; 1 year'
-                            WHEN (age_in_years &gt;= 1 AND age_in_years &lt; 5) THEN '1-4 years'
-                            WHEN age_in_years &gt;= 85 THEN '85+ years'
-                            WHEN age_in_years IS NULL THEN 'Unknown'
-                            ELSE ((floor(age_in_years / 5) * 5)::integer)::text || '-' || ((floor(age_in_years / 5) * 5)::integer + 4)::text || ' years'
-                        END
+                        COALESCE(trisano.get_age_group(age_in_years), 'Unknown')
                     </SQL></KeyExpression>
                 </Level>
                 <Level type="String" name="Age" ordinalColumn="age_in_years">
