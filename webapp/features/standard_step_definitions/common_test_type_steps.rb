@@ -24,3 +24,16 @@ Given /^the following common test types are in the system$/ do |test_types|
     CommonTestType.create(:common_name => common_name.first)
   end
 end
+
+Given /^loinc code "([^\"]*)" is associated with the common test type$/ do |loinc_code|
+  loinc_code = LoincCode.find_by_loinc_code(loinc_code)
+  @common_test_type.update_loinc_codes :add => [loinc_code]
+end
+
+Then /^the search results should not have "([^\"]*)"$/ do |text|
+  response.should_not have_xpath "//div[@class = 'search-results']//*[text()='#{text}']"
+end
+
+Then /^the search results should have "([^\"]*)"$/ do |text|
+  response.should have_xpath "//div[@class = 'search-results']//*[text()='#{text}']"
+end

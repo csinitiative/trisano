@@ -137,3 +137,20 @@ Feature: Common tests types for lab results
 
     Then I should see a link to "11475-1"
     And I should see "Culture, Unspecified"
+
+  Scenario: Searching should not find loincs already associated with this test type
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+    And I have the following LOINC codes in the the system:
+      | loinc_code | test_name                   |
+      | 11475-1    | Culture, Unspecified        |
+      | 636-1      | Culture, Sterile body fluid |
+      | 34166-9    | Microscopy.Electron         |
+    And loinc code "11475-1" is associated with the common test type
+
+    When I go to manage the common test type's loinc codes
+    And I fill in "loinc_code_search_test_name" with "culture"
+    And I press "Search"
+
+    Then I should see "Culture, Sterile body fluid"
+    And the search results should not have "Culture, Unspecified"

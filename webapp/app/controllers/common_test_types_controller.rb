@@ -35,22 +35,8 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.find(params[:id])
 
     if params[:do] == "Search"
-      sql = []
-      conditions = []
-      unless params[:loinc_code_search_test_name].blank?
-        sql << 'test_name ILIKE ?'
-        conditions << "%#{params[:loinc_code_search_test_name]}%"
-      end
-      unless params[:loinc_code_search_loinc_code].blank?
-        sql << 'loinc_code ILIKE ?'
-        conditions << params[:loinc_code_search_loinc_code] + "%"
-      end
-      if sql.empty?
-        @loinc_codes = []
-      else
-        conditions.unshift sql.join(' AND ')
-        @loinc_codes = LoincCode.find(:all, :conditions => conditions, :order => 'loinc_code ASC')
-      end
+      @loinc_codes = @common_test_type.find_unrelated_loincs(:test_name  => params[:loinc_code_search_test_name],
+                                                             :loinc_code => params[:loinc_code_search_loinc_code])
     end
   end
 
@@ -86,13 +72,13 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       begin
-        LoincCode.update_all("common_test_type_id = #{@common_test_type.id}", ["id IN (?)", new_loincs])
+        @common_test_type.update_loinc_codes :add => new_loincs
         flash[:notice] = 'Common test type was successfully updated.'
         format.html { redirect_to loinc_codes_common_test_type_path(@common_test_type) }
       rescue
         logger.error($!.message)
         flash.now[:error] = "TriSano could not complete the last request. Contact your system administrator"
-        format.html { render :action => :add_loincs, :status => 500 }
+        format.html { render :action => :loinc_codes, :status => 500 }
       end
     end
   end

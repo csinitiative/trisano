@@ -46,4 +46,43 @@ describe CommonTestType do
 
   end
 
+  describe '#update_loinc_codes' do
+
+    before do
+      @loinc_code = LoincCode.create! :loinc_code => '14375-1', :test_name => 'Nulla felis nibh, aliquet eget, Unspecified'
+      @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
+    end
+
+    it 'should associate a loinc_code with the test_type' do
+      @common_test_type.loinc_codes.should == []
+      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+    end
+
+    it 'should accept a list of ids' do
+      @common_test_type.loinc_codes.should == []
+      @common_test_type.update_loinc_codes :add => [@loinc_code.id.to_s]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      lambda{@common_test_type.update_loinc_codes :add => [@loinc_code.id.to_s] }.should_not raise_error
+    end
+
+  end
+
+  describe '#find_unrelated_loincs' do
+
+    before do
+      @loinc_code = LoincCode.create! :loinc_code => '14375-1', :test_name => 'Nulla felis nibh, aliquet eget, Unspecified'
+      @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
+    end
+
+    it 'should find all matches, if none are associated with this instance' do
+      @common_test_type.find_unrelated_loincs(:test_name => 'nulla').should == [@loinc_code]
+    end
+
+    it 'should return empty array if all matches are already assoc, with this instance' do
+      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.find_unrelated_loincs(:test_name => 'nulla').should == []
+    end
+
+  end
 end

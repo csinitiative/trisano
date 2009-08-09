@@ -63,29 +63,30 @@
   &nbsp;
 
 -if defined? @loinc_codes
-  -if @loinc_codes.empty?
-    %b No records found.
-  -else
-    -form_tag update_loincs_common_test_type_path(@common_test_type), :method => :post do
-      %table.list
-        %tr
-          %th
-            Add
-          %th.forminformation
-            LOINC Code
-          %th
-            Test Name
-        -@loinc_codes.each do |loinc_code|
-          %tr.roll
-            %td
-              =loinc_code_add_check_box_tag loinc_code
-            %td.forminformation
-              .formname
-                %span.loinc_code
-                  =link_to h(loinc_code.loinc_code), loinc_code
-            %td
-              %span.test_name
-                &=loinc_code.test_name
-      %span.vert
-        =submit_tag "Update"
+  .search-results
+    -if @loinc_codes.empty?
+      %b No records found.
+    -else
+      -form_tag update_loincs_common_test_type_path(@common_test_type), :method => :post do
+        %table.list
+          %tr
+            %th
+              Add
+            %th.forminformation
+              LOINC Code
+            %th
+              Test Name
+          -@loinc_codes.each do |loinc_code|
+            %tr.roll
+              %td
+                =loinc_code_add_check_box_tag loinc_code
+              %td.forminformation
+                .formname
+                  %span.loinc_code
+                    =link_to h(loinc_code.loinc_code), loinc_code
+              %td
+                %span.test_name
+                  &=loinc_code.test_name
+        %span.vert
+          =submit_tag "Update"
 
