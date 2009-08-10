@@ -1088,7 +1088,7 @@ module EventsHelper
     <<-JS.gsub(/\s+/, ' ')
       function(e, s) {
         var id = $(s).readAttribute('#{options[:attribute]}');
-        new Ajax.Updater('#{options[:update]}', '#{url_for(options[:url])}', {
+        new Ajax.Updater('#{h(options[:update])}', '#{url_for(options[:url])}', {
           asynchronous: true,
           evalScripts: true,
           parameters: {id: id},

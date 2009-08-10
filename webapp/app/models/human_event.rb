@@ -100,8 +100,8 @@ class HumanEvent < Event
       validate_bdate(bdate)
 
       where_clause = []
-      where_clause << "people.last_name ILIKE '#{sanitize_sql(["%s", last_name])}%%'" unless last_name.blank?
-      where_clause << "people.first_name ILIKE '#{sanitize_sql(["%s", first_name])}%%'" unless first_name.blank?
+      where_clause << "people.last_name ILIKE #{sanitize_sql_for_conditions(["'%s%%'", last_name])}".untaint unless last_name.blank?
+      where_clause << "people.first_name ILIKE #{sanitize_sql_for_conditions(["'%s%%'", first_name])}".untaint unless first_name.blank?
       where_clause << bdate_where_clause(bdate, where_clause.size > 0) if bdate
 
       order_by_clause = []
@@ -128,15 +128,16 @@ class HumanEvent < Event
 
         raw_terms.each do |word|
           soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+          fulltext_terms << word.downcase.sub(",", "")
         end
 
         fulltext_terms << soundex_codes unless soundex_codes.empty?
         sql_terms = fulltext_terms.join(" | ")
+        sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
       end
 
       where_clause = ""
-      where_clause += "people.vector @@ to_tsquery('#{sql_terms}')" if sql_terms
+      where_clause += "people.vector @@ to_tsquery(#{sql_terms})" if sql_terms
       if bdate
         where_clause += " AND" if sql_terms
         where_clause += bdate_where_clause(bdate, sql_terms)
@@ -144,7 +145,7 @@ class HumanEvent < Event
 
       order_by_clause = ""
       order_by_clause << "people.birth_date, " if bdate
-      order_by_clause << "ts_rank(people.vector, to_tsquery('#{sql_terms}')) DESC," if sql_terms
+      order_by_clause << "ts_rank(people.vector, to_tsquery(#{sql_terms})) DESC," if sql_terms
       order_by_clause << " events.id DESC"
 
       select = name_and_bdate_sql(where_clause, order_by_clause)
@@ -176,15 +177,15 @@ class HumanEvent < Event
       if states.empty?
         where_clause << " AND workflow_state != 'not_routed'"
       else
-        where_clause << " AND workflow_state IN (#{ states.map { |s| "'#{s}'" }.join(',') })"
+        where_clause << " AND workflow_state IN (#{ states.map { |s| sanitize_sql_for_conditions(["'%s'", s]).untaint }.join(',') })"
       end
 
       if options[:diseases]
-        where_clause << " AND disease_id IN (#{options[:diseases].join(',')})"
+        where_clause << " AND disease_id IN (#{ options[:diseases].map { |d| sanitize_sql_for_conditions(["'%s'", d]).untaint }.join(',') })"
       end
 
       if options[:investigators]
-        where_clause << " AND investigator_id IN (#{options[:investigators].join(',')})"
+        where_clause << " AND investigator_id IN (#{ options[:investigators].map { |i| sanitize_sql_for_conditions(["'%s'", i]).untaint }.join(',') })"
       end
 
       if options[:queues]
@@ -193,7 +194,7 @@ class HumanEvent < Event
         if queue_ids.empty?
           raise 'No queue ids returned'
         else
-          where_clause << " AND event_queue_id IN (#{queue_ids.join(',')})"
+          where_clause << " AND event_queue_id IN (#{ queue_ids.map { |q| sanitize_sql_for_conditions(["'%s'", q]).untaint }.join(',') })"
         end
       end
 
@@ -220,6 +221,11 @@ class HumanEvent < Event
 
       query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
       User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"
+
+      users_view_jurisdictions_sanitized = []
+      users_view_jurisdictions.each do |j|
+        users_view_jurisdictions_sanitized << sanitize_sql_for_conditions(["%d", j]).untaint
+      end
 
       # Hard coding the query to wring out some speed.
       real_select = <<-SQL
@@ -256,7 +262,7 @@ class HumanEvent < Event
 
             INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
                 AND (jurisdictions.type = 'Jurisdiction')
-                AND (jurisdictions.secondary_entity_id IN (#{users_view_jurisdictions.join(',')}))
+                AND (jurisdictions.secondary_entity_id IN (#{users_view_jurisdictions_sanitized.join(',')}))
             INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
                 AND (jurisdiction_entities.entity_type = 'PlaceEntity')
             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
@@ -329,7 +335,7 @@ class HumanEvent < Event
 
     def bdate_where_clause(bdate, allow_null_bdates=false)
       where_clause = "("
-      where_clause += " people.birth_date = '#{sanitize_sql(["%s", bdate])}'"
+      where_clause += " people.birth_date = #{sanitize_sql_for_conditions(["'%s'", bdate]).untaint}"
       where_clause += " OR people.birth_date IS NULL" if allow_null_bdates
       where_clause += ")"
     end
