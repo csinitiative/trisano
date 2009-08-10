@@ -72,7 +72,7 @@ class Person < ActiveRecord::Base
       
       raw_terms.each do |word|
         soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+        fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
       end
       
       fulltext_terms << soundex_codes unless soundex_codes.empty?
@@ -136,19 +136,18 @@ class Person < ActiveRecord::Base
     #   :show_deleted => true
     def find_all_for_filtered_view(options = {})
       where_clause = "1=1 "
-      joins = ""
 
       if options[:use_starts_with_search]
         if !options[:last_name].blank?
-          where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "%'"
+         where_clause << " AND last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:last_name]]).untaint
         end
 
         if !options[:first_name].blank?
-          where_clause << " AND first_name ILIKE '" + options[:first_name].gsub("'", "''") + "%'"
+          where_clause << " AND first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:first_name]]).untaint
         end
 
         if !options[:middle_name].blank?
-          where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "%'"
+          where_clause << " AND middle_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:middle_name]]).untaint
         end
       else
         soundex_codes = []
@@ -160,22 +159,23 @@ class Person < ActiveRecord::Base
 
         raw_terms.each do |word|
           soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+          fulltext_terms << word.sub(",", "").downcase
         end
 
         if !soundex_codes.empty?
           fulltext_terms << soundex_codes unless soundex_codes.empty?
           sql_terms = fulltext_terms.join(" | ")
+          sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
 
-          where_clause << " AND vector @@ to_tsquery('#{sql_terms}')"
-          order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC"
+          where_clause << " AND vector @@ to_tsquery(#{sql_terms})"
+          order_by_clause = " ts_rank(vector, #{sql_terms}) DESC, last_name, first_name ASC"
         end
       end
 
       order_by_clause = " last_name, first_name ASC" if order_by_clause.blank?
 
       if !options[:birth_date].blank?
-        where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
+        where_clause << " AND birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint
       end
 
       unless options[:show_deleted]
@@ -186,14 +186,12 @@ class Person < ActiveRecord::Base
       select = <<-SQL
         SELECT * FROM people
       SQL
-      select << "#{joins}\n" unless joins.empty?
       select << "WHERE (#{where_clause})\n" unless where_clause.blank?
       select << "ORDER BY #{order_by_clause}"
 
       count_select = <<-SQL
         SELECT COUNT(*) FROM people
       SQL
-      count_select << "#{joins}\n" unless joins.empty?
       count_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
 
       row_count = Person.count_by_sql(count_select)
