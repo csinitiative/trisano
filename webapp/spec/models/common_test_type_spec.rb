@@ -79,6 +79,19 @@ describe CommonTestType do
       @common_test_type.update_loinc_codes :remove => [@loinc_code.id]
       @common_test_type.loinc_codes.should == []
     end
+
+    it 'should add and remove in same operation' do
+      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      new_loinc = LoincCode.create :loinc_code => '636-9'
+      @common_test_type.update_loinc_codes :add => [new_loinc], :remove => [@loinc_code]
+      @common_test_type.loinc_codes.should == [new_loinc]
+    end
+
+    it 'will overwrite overwrite add operations with remove operations' do
+      @common_test_type.update_loinc_codes :add => [@loinc_code], :remove => [@loinc_code]
+      @common_test_type.loinc_codes.should == []
+    end
   end
 
   describe '#find_unrelated_loincs' do
