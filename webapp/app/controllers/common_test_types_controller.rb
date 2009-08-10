@@ -68,11 +68,12 @@ class CommonTestTypesController < AdminController
 
   def update_loincs
     @common_test_type = CommonTestType.find(params[:id])
-    new_loincs = params[:added_loinc_codes] || []
+    added_loincs   = params[:added_loinc_codes]   || []
+    removed_loincs = params[:removed_loinc_codes] || []
 
     respond_to do |format|
       begin
-        @common_test_type.update_loinc_codes :add => new_loincs
+        @common_test_type.update_loinc_codes :add => added_loincs, :remove => removed_loincs
         flash[:notice] = 'Common test type was successfully updated.'
         format.html { redirect_to loinc_codes_common_test_type_path(@common_test_type) }
       rescue

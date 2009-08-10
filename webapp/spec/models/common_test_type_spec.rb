@@ -66,6 +66,19 @@ describe CommonTestType do
       lambda{@common_test_type.update_loinc_codes :add => [@loinc_code.id.to_s] }.should_not raise_error
     end
 
+    it 'should delete associations for removed loincs' do
+      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      @common_test_type.update_loinc_codes :remove => [@loinc_code]
+      @common_test_type.loinc_codes.should == []
+    end
+
+    it 'should delete associations for removed loinc ids' do
+      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      @common_test_type.update_loinc_codes :remove => [@loinc_code.id]
+      @common_test_type.loinc_codes.should == []
+    end
   end
 
   describe '#find_unrelated_loincs' do

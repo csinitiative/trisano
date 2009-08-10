@@ -24,16 +24,14 @@ class CommonTestType < ActiveRecord::Base
   has_many :diseases, :through => :disease_common_test_types
 
   def update_loinc_codes(options={})
-    options = {:add => []}.merge(options)
-    added = options[:add]
-    if added.first.respond_to? :new_record?
-      added = added.collect(&:id)
-    else
-      added = added.collect(&:to_i)
+    options = {:add => [], :remove => []}.merge(options)
+    added   = extract_ids options[:add]
+    removed = extract_ids options[:remove]
+    LoincCode.transaction do
+      LoincCode.update_all ['common_test_type_id = ?', self.id], ['id IN (?)', added]   unless added.empty?
+      LoincCode.update_all  'common_test_type_id = NULL',        ['id IN (?)', removed] unless removed.empty?
     end
-    self.loinc_code_ids += added
-    self.loinc_code_ids.uniq!
-    self.save!
+    self.loinc_codes.reset
   end
 
   def find_unrelated_loincs(search_keys={})
@@ -54,6 +52,17 @@ class CommonTestType < ActiveRecord::Base
       conditions << self.id
       conditions.unshift sql.join(' AND ')
       LoincCode.find :all, :conditions => conditions, :order => 'loinc_code ASC', :include => [:common_test_type]
+    end
+  end
+
+  private
+
+  # grab all ids and ensure they are integers
+  def extract_ids(objs_or_ids)
+    if objs_or_ids.first.respond_to? :new_record?
+      objs_or_ids.collect(&:id)
+    else
+      objs_or_ids.collect(&:to_i)
     end
   end
 end

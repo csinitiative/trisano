@@ -22,29 +22,34 @@
 
 =render :partial => 'summary', :locals => {:common_test_type => @common_test_type}
 
-.vert-break#associated_loincs
-  %table.list
-    %tr
-      %th.forminformation
-        LOINC Code
-      %th
-        Test Name
-    -if @common_test_type.loinc_codes.empty?
+.vert-break#associated-loincs
+  -form_tag update_loincs_common_test_type_path(@common_test_type), :method => :post do
+    %table.list
       %tr
-        %td{:colspan => '2'}
-          No associated LOINC Codes
-    -else
-      -@common_test_type.loinc_codes.each do |loinc_code|
-        %tr.roll
-          %td.forminformation
-            .formname
-              %span.loinc_code
-                &=loinc_code.loinc_code
-          %td
-            %span.test_name
-              &=loinc_code.test_name
-
-%hr.green-rule
+        %th
+          Remove
+        %th.forminformation
+          LOINC Code
+        %th
+          Test Name
+      -if @common_test_type.loinc_codes.empty?
+        %tr
+          %td{:colspan => '3'}
+            No associated LOINC Codes
+      -else
+        -@common_test_type.loinc_codes.each do |loinc_code|
+          %tr.roll
+            %td
+              =check_box_tag_remove_loinc_code loinc_code
+            %td.forminformation
+              .formname
+                %span.loinc_code
+                  &=loinc_code.loinc_code
+            %td
+              %span.test_name
+                &=loinc_code.test_name
+    %span.vert-break
+      =submit_tag "Remove"
 
 %h3 Search for available LOINC codes
 -form_tag loinc_codes_common_test_type_path(@common_test_type), :method => :get do
@@ -81,7 +86,7 @@
           -@loinc_codes.each do |loinc_code|
             %tr.roll
               %td
-                =loinc_code_add_check_box_tag loinc_code
+                =check_box_tag_add_loinc_code loinc_code
               %td.forminformation
                 .formname
                   %span.loinc_code
@@ -92,7 +97,7 @@
               %td.forminformation
                 .formname
                   %span.associated-common-test
-                    =link_to_if loinc_code.common_test_type, loinc_code.common_test_type.try(:common_name), loinc_code.common_test_type
+                    =link_to_associated_common_test_type loinc_code
         %span.vert
-          =submit_tag "Update"
+          =submit_tag "Add"
 

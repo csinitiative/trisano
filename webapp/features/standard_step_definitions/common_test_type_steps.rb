@@ -42,3 +42,6 @@ Then /^the search results should show that "([^\"]*)" is already associated$/ do
   response.should have_xpath("//div[@class = 'search-results']//span[@class='associated-common-test']//a[contains(text(),'#{common_name}')]")
 end
 
+Then /^I should not see "([^\"]*)" associated with the test type$/ do |test_name|
+  response.should_not have_xpath("//div[@id='associated-loincs']//span[@class='test_name' and contains(text(),'#{test_name}')]")
+end

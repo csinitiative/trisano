@@ -10,8 +10,15 @@ module CommonTestTypesHelper
     end
   end
 
-  def loinc_code_add_check_box_tag(loinc_code)
+  def check_box_tag_add_loinc_code(loinc_code)
     check_box_tag("added_loinc_codes[]",
+                  loinc_code.id,
+                  false,
+                  :id => h(loinc_code.loinc_code))
+  end
+
+  def check_box_tag_remove_loinc_code(loinc_code)
+    check_box_tag("removed_loinc_codes[]",
                   loinc_code.id,
                   false,
                   :id => h(loinc_code.loinc_code))
