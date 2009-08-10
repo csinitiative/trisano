@@ -26,7 +26,7 @@ Given /^I have (\d+) sequential loinc codes, starting at (.*)$/ do |count, start
   end
 end
 
-Given /^I have the following LOINC codes in the the system:$/ do |table|
+Given /^I have the following LOINC codes in the system:$/ do |table|
   table.raw.each do |record|
     LoincCode.create!(:loinc_code => record.first, :test_name => record.last)
   end

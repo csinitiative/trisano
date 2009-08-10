@@ -77,7 +77,7 @@ Feature: Common tests types for lab results
     When I go to the common test type show page
     And I follow "Edit"
     And I fill in "common_test_type_common_name" with "Lipid Panel"
-    And I press "Update"
+    And I press "Add"
 
     Then I should not see "Culture"
     And I should see "Lipid Panel"
@@ -89,13 +89,13 @@ Feature: Common tests types for lab results
 
     When I go to edit the common test type
     And I fill in "common_test_type_common_name" with ""
-    And I press "Update"
+    And I press "Add"
     Then I should see "Common name is too short"
 
   Scenario: Associating LOINC codes with a common test type by test name
     Given I am logged in as a super user
     And I have a common test type named Culture
-    And I have the following LOINC codes in the the system:
+    And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
       | 11475-1    | Culture, Unspecified        |
       | 636-1      | Culture, Sterile body fluid |
@@ -118,14 +118,14 @@ Feature: Common tests types for lab results
     Then I should see "11475-1"
 
     When I check "11475-1"
-    And I press "Update"
+    And I press "Add"
     Then I should see "Common test type was successfully updated."
     And I should see "Culture, Unspecified"
 
   Scenario: Searching for LOINCs by code
     Given I am logged in as a super user
     And I have a common test type named Culture
-    And I have the following LOINC codes in the the system:
+    And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
       | 11475-1    | Culture, Unspecified        |
       | 636-1      | Culture, Sterile body fluid |
@@ -141,7 +141,7 @@ Feature: Common tests types for lab results
   Scenario: Searching for loincs will not return any already associated with this test type
     Given I am logged in as a super user
     And I have a common test type named Culture
-    And I have the following LOINC codes in the the system:
+    And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
       | 11475-1    | Culture, Unspecified        |
       | 636-1      | Culture, Sterile body fluid |
@@ -157,7 +157,7 @@ Feature: Common tests types for lab results
 
   Scenario: Searching for loincs will return that may be associated w/ other test types
     Given I am logged in as a super user
-    And I have the following LOINC codes in the the system:
+    And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
       | 11475-1    | Culture, Unspecified        |
       | 636-1      | Culture, Sterile body fluid |
@@ -172,3 +172,17 @@ Feature: Common tests types for lab results
 
     Then the search results should have "Culture, Unspecified"
     And the search results should show that "Culture" is already associated
+
+  Scenario: An admin can delete a loinc code association
+    Given I am logged in as a super user
+    And I have the following LOINC codes in the system:
+      |loinc_code | test_name                   |
+      |636-1      | Culture, Sterile body fluid |
+    And I have a common test type named Culture
+    And loinc code "636-1" is associated with the common test type
+
+    When I go to manage the common test type's loinc codes
+    And I check "636-1"
+    And I press "Remove"
+
+    Then I should not see "Culture, Sterile body fluid" associated with the test type
