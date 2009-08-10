@@ -30,7 +30,16 @@ class Person < ActiveRecord::Base
   validates_length_of :middle_name, :maximum => 25, :allow_blank => true
 
   before_save :generate_soundex_codes
-  
+
+  named_scope :clinicians,
+     :conditions => "person_type = 'clinician'",
+     :order => "last_name, first_name"
+
+  named_scope :active_clinicians, 
+     :joins => "INNER JOIN entities on people.entity_id = entities.id",
+     :conditions => "person_type = 'clinician' AND entities.deleted_at IS NULL",
+     :order => "last_name, first_name"
+
   # Debt? Just getting this done fast after dives on options took a long time.
   # Should method this be in entity.rb? Is there a better way to handle custom
   # SQL? What about this?
@@ -123,6 +132,8 @@ class Person < ActiveRecord::Base
   end
 
   class << self
+    # Defaults to not showing deleted people. Override by providing the option:
+    #   :show_deleted => true
     def find_all_for_filtered_view(options = {})
       where_clause = "1=1 "
       joins = ""
@@ -167,7 +178,7 @@ class Person < ActiveRecord::Base
         where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
       end
 
-      if options[:do_not_show_deleted]
+      unless options[:show_deleted]
         joins = "INNER JOIN entities on people.entity_id = entities.id"
         where_clause << " AND entities.deleted_at IS NULL"
       end

@@ -134,3 +134,11 @@ Feature: Searching for existing people or events before adding a CMR
     And I search for last_name = "Smith-Johnson" for people entities
 
     Then I should find the value "Smith-Johnson" in "data_last_name"
+
+Scenario: Clicking search_people_entities searches people entities does not include deleted people
+    Given I have a known person entity
+    And that known person entity has been deleted
+
+    And I search for last_name = "Smith-Johnson" for people entities
+
+    Then I should not find the value "Smith-Johnson" in "data_last_name"

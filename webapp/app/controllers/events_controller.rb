@@ -65,10 +65,9 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_clinicians_search
-    @clinicians = Person.find(:all, 
-                              :conditions => ["LOWER(last_name) LIKE ? AND person_type = 'clinician'", params[:last_name].downcase + '%'],
-                              :order => "last_name, first_name",
-                              :limit => 20)
+    @clinicians = Person.active_clinicians.find(:all,
+      :conditions => ["LOWER(last_name) LIKE ?", params[:last_name].downcase + '%'],
+      :limit => 20)
     render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
   end
 
@@ -175,8 +174,8 @@ class EventsController < ApplicationController
         return
       end
     end
-     if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id]) or
- 	         User.current_user.is_entitled_to_in?(:view_event, params[:secondary_jurisdiction_ids])
+    if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id]) or
+        User.current_user.is_entitled_to_in?(:view_event, params[:secondary_jurisdiction_ids])
       flash[:notice] = 'Event successfully routed.'
       redirect_to request.env["HTTP_REFERER"]
     else
