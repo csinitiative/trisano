@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I have a common test type named (.*)$/ do |common_name|
+Given /^I have (a|another) common test type named (.*)$/ do |a, common_name|
   @common_test_type = Factory.create(:common_test_type, :common_name => common_name)
 end
 
@@ -31,9 +31,14 @@ Given /^loinc code "([^\"]*)" is associated with the common test type$/ do |loin
 end
 
 Then /^the search results should not have "([^\"]*)"$/ do |text|
-  response.should_not have_xpath "//div[@class = 'search-results']//*[text()='#{text}']"
+  response.should_not have_xpath("//div[@class = 'search-results']//span[contains(text(), '#{text}')]")
 end
 
 Then /^the search results should have "([^\"]*)"$/ do |text|
-  response.should have_xpath "//div[@class = 'search-results']//*[text()='#{text}']"
+  response.should have_xpath("//div[@class = 'search-results']//span[contains(text(),'#{text}')]")
 end
+
+Then /^the search results should show that "([^\"]*)" is already associated$/ do |common_name|
+  response.should have_xpath("//div[@class = 'search-results']//span[@class='associated-common-test']//a[contains(text(),'#{common_name}')]")
+end
+

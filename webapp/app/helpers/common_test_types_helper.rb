@@ -16,4 +16,10 @@ module CommonTestTypesHelper
                   false,
                   :id => h(loinc_code.loinc_code))
   end
+
+  def link_to_associated_common_test_type(loinc_code)
+    link_to_if(loinc_code.common_test_type,
+               h(loinc_code.common_test_type.try(:common_name)),
+               loinc_code.common_test_type)
+  end
 end

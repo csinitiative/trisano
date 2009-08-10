@@ -53,7 +53,7 @@ class CommonTestType < ActiveRecord::Base
       sql << '(common_test_type_id IS NULL OR common_test_type_id != ?)'
       conditions << self.id
       conditions.unshift sql.join(' AND ')
-      LoincCode.find :all, :conditions => conditions, :order => 'loinc_code ASC'
+      LoincCode.find :all, :conditions => conditions, :order => 'loinc_code ASC', :include => [:common_test_type]
     end
   end
 end

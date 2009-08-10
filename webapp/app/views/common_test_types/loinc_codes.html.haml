@@ -76,6 +76,8 @@
               LOINC Code
             %th
               Test Name
+            %th
+              Associated With
           -@loinc_codes.each do |loinc_code|
             %tr.roll
               %td
@@ -87,6 +89,10 @@
               %td
                 %span.test_name
                   &=loinc_code.test_name
+              %td.forminformation
+                .formname
+                  %span.associated-common-test
+                    =link_to_if loinc_code.common_test_type, loinc_code.common_test_type.try(:common_name), loinc_code.common_test_type
         %span.vert
           =submit_tag "Update"
 
