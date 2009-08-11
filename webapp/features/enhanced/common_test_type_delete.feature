@@ -31,3 +31,13 @@ Feature: Deleting common test types
     Then I should see "Common test type was successfully deleted"
     And I should not see "Culture"
 
+  @clean_common_test_types @clean_lab_results
+  Scenario: Deleting a common test type referenced by a lab result
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+    And I have a lab result
+    And the lab result references the common test type
+
+    When I navigate to show common test type
+    Then I should not see a link to "Delete"
+

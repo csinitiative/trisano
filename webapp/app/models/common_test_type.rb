@@ -22,6 +22,7 @@ class CommonTestType < ActiveRecord::Base
   has_many :loinc_codes
   has_many :disease_common_test_types
   has_many :diseases, :through => :disease_common_test_types
+  has_many :lab_results, :foreign_key => :test_type_id
 
   def update_loinc_codes(options={})
     options = {:add => [], :remove => []}.merge(options)
