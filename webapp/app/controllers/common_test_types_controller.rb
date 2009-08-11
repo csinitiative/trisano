@@ -84,6 +84,16 @@ class CommonTestTypesController < AdminController
     end
   end
 
+  def destroy
+    @common_test_type = CommonTestType.find(params[:id])
+
+    respond_to do |format|
+      @common_test_type.destroy
+      flash[:notice] = 'Common test type was successfully deleted.'
+      format.html { redirect_to common_test_types_path }
+    end
+  end
+
   def show
     @common_test_type = CommonTestType.find(params[:id])
   end
