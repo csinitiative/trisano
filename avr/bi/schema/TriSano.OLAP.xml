@@ -38,16 +38,24 @@
 				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
 			</Hierarchy>
 		</Dimension>
-        <Dimension type="StandardDimension" name="Investigating Jurisdiction" foreignKey="investigating_jurisdiction_id">
+        <!--
+        <Dimension type="StandardDimension" name="Investigation" foreignKey="investigating_jurisdiction_id">
             <Hierarchy hasAll="true" primaryKey="id">
                 <Table name="dw_morbidity_jurisdictions_view" schema="trisano"></Table>
                 <Level name="Investigating Jurisdiction" column="name" type="String" uniqueMembers="true"></Level>
             </Hierarchy>
         </Dimension>
+        -->
         <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease">
             <Hierarchy name="Disease" hasAll="true" primaryKey="id">
                 <Table name="diseases_view" schema="trisano"></Table>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Investigation">
+            <Hierarchy hasAll="true">
+                <Level type="String" name="Jurisdiction" column="investigating_jurisdiction"></Level>
+                <Level type="String" name="Investigator" column="investigator"></Level>
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" name="Age" allMemberName="All Ages">

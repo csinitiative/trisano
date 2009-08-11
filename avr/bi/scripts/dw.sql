@@ -334,7 +334,7 @@ SELECT
     events.outbreak_name,
 
     -- events.event_status,                    -- Change this from a code to a text value?
-    inv.first_name || ' ' || inv.last_name AS investigator,
+    COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,
     events.acuity,
 
@@ -512,7 +512,7 @@ SELECT
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     -- events.event_status,                    -- Change this from a code to a text value?
-    inv.first_name || ' ' || inv.last_name AS investigator,
+    COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,                    -- do something w/ event queues?
 
     pataddr.street_number,
