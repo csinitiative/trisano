@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class CommonTestType < ActiveRecord::Base
+  before_destroy :check_for_lab_results, :clear_loincs
+
   validates_uniqueness_of :common_name
   validates_length_of     :common_name, :in => 1..255
 
@@ -66,4 +68,14 @@ class CommonTestType < ActiveRecord::Base
       objs_or_ids.collect(&:to_i)
     end
   end
+
+  def clear_loincs
+    self.loinc_codes.clear
+  end
+
+  def check_for_lab_results
+    raise DestroyNotAllowedError.new("#{self} already associated with lab results") unless self.lab_results.empty?
+  end
+
+  class DestroyNotAllowedError < Exception; end
 end

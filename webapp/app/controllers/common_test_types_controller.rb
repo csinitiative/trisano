@@ -88,9 +88,19 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.find(params[:id])
 
     respond_to do |format|
-      @common_test_type.destroy
-      flash[:notice] = 'Common test type was successfully deleted.'
-      format.html { redirect_to common_test_types_path }
+      begin
+        @common_test_type.destroy
+        flash[:notice] = 'Common test type was successfully deleted.'
+        format.html { redirect_to common_test_types_path }
+      rescue CommonTestType::DestroyNotAllowedError => e
+        logger.error(e.message)
+        flash.now[:error] = "Common test type could not be deleted. It may already be associated with a lab result"
+        format.html { render :action => 'show', :status => 500 }
+      rescue
+        logger.error($!.message)
+        flash.now[:error] = "TriSano could not complete the last request. Please contact your system administrator."
+        format.html { render :action => 'show', :status => 500 }
+      end
     end
   end
 

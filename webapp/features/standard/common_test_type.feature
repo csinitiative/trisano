@@ -187,3 +187,28 @@ Feature: Common tests types for lab results
 
     Then I should see "Common test type was successfully updated."
     And I should not see "Culture, Sterile body fluid" associated with the test type
+
+  Scenario: Trying to delete a common test type
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+
+    When I go to the common test type show page
+    And I follow "Delete"
+
+    Then I should see "Common test type was successfully deleted"
+    And I should not see "Culture"
+
+  Scenario: Trying to delete a common test type that's already associated w/ a lab result
+    Given I am logged in as a super user
+    And I have a common test type named Culture
+    And I have a lab result
+
+    When I go to the common test type show page
+    Then I should see a link to "Delete"
+
+    When the lab result is associated with the common test type
+    And I follow "Delete" expecting a failure
+
+    Then I should get a 500 response
+    And I should see "Common test type could not be deleted. It may already be associated with a lab result"
+    And I should not see a link to "Delete"

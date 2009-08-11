@@ -15,10 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I have (a|another) common test type named (.*)$/ do |a, common_name|
-  @common_test_type = Factory.create(:common_test_type, :common_name => common_name)
-end
-
 Given /^the following common test types are in the system$/ do |test_types|
   test_types.raw.each do |common_name|
     CommonTestType.create(:common_name => common_name.first)
@@ -28,6 +24,15 @@ end
 Given /^loinc code "([^\"]*)" is associated with the common test type$/ do |loinc_code|
   loinc_code = LoincCode.find_by_loinc_code(loinc_code)
   @common_test_type.update_loinc_codes :add => [loinc_code]
+end
+
+When /^I try to delete the common test type$/ do
+  delete common_test_type_path(@common_test_type)
+end
+
+When /^the lab result is associated with the common test type$/ do
+  @lab_result.test_type = @common_test_type
+  @lab_result.save!
 end
 
 Then /^the search results should not have "([^\"]*)"$/ do |text|

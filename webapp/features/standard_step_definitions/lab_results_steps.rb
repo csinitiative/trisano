@@ -23,6 +23,15 @@ Given /^the following disease to common test types mapping exists$/ do |disease_
   end
 end
 
+Given /^I have a lab result$/ do
+  @lab_result = Factory.create(:lab_result)
+end
+
+Given /^the lab result references the common test type$/ do
+  @lab_result.test_type = @common_test_type
+  @lab_result.save!
+end
+
 Then /^all common test types should be available for selection$/ do
   response.should have_xpath("//form[contains(@class, '_event')]//select[contains(@id, 'test_type_id')]") do |options|
     CommonTestType.all.each do |test_type|

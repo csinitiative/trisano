@@ -45,6 +45,56 @@ describe CommonTestType do
       CommonTestType.new(:common_name => ('c' * 255)).should be_valid
     end
 
+    it 'should be destroyed' do
+      common_test_type = CommonTestType.create!(:common_name => 'Culture')
+      lambda do
+        common_test_type.destroy
+      end.should change(CommonTestType, :count).by -1
+    end
+
+  end
+
+  describe 'that is associated with a lab result' do
+    before do
+      @common_test_type = CommonTestType.create!(:common_name => 'Culture')
+      @lab_result = Factory.create(:lab_result, :test_type_id => @common_test_type.id)
+    end
+
+    it 'should not be destroyed' do
+      lambda { @common_test_type.destroy }.should raise_error
+    end
+  end
+
+  describe 'with associated loinc codes' do
+    before do
+      @common_test_type = CommonTestType.create :common_name => 'Culture'
+      LoincCode.create!(:loinc_code => '14375-1',
+                        :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
+                        :common_test_type_id => @common_test_type.id)
+      LoincCode.create!(:loinc_code => '636-3',
+                        :test_name => 'Culture, Sterile body fluid',
+                        :common_test_type_id => @common_test_type.id)
+    end
+
+    it 'should remove association when destroyed' do
+      @common_test_type.destroy
+      LoincCode.find_all_by_common_test_type_id(@common_test_type.id).should == []
+    end
+
+  end
+
+  describe 'with associated loinc codes and assoicated lab results' do
+    before do
+      @common_test_type = CommonTestType.create!(:common_name => 'Culture')
+      @lab_result = Factory.create(:lab_result, :test_type_id => @common_test_type.id)
+      @loinc_code = LoincCode.create!(:loinc_code => '636-3', :common_test_type_id => @common_test_type.id)
+    end
+
+    it 'should not clear loincs on a failed destroy' do
+      lambda{ @common_test_type.destroy }.should raise_error
+      LoincCode.find_all_by_common_test_type_id(@common_test_type.id).should == [@loinc_code]
+    end
+
   end
 
   describe '#update_loinc_codes' do

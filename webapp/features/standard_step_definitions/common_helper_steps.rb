@@ -71,12 +71,24 @@ Then /^I should get a 403 response$/ do
   response.code.should == "403"
 end
 
+Then /^I should get a 500 response$/ do
+  response.code.should == "500"
+end
+
+Then /^I follow "(.*)" expecting a failure$/ do |link|
+  lambda{ click_link(link) }.should raise_error(Webrat::PageLoadError)
+end
+
 #
 # Verification Helpers
 #
 
 Then /^I should see a link to "([^\"]*)"$/ do |link_text|
   response.should have_xpath("//a[text()='#{link_text}']")
+end
+
+Then /^I should not see a link to "([^\"]*)"$/ do |link_text|
+  response.should_not have_xpath("//a[text()='#{link_text}']")
 end
 
 # Other stuff
