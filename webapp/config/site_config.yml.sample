@@ -2,6 +2,8 @@ base:
   bi_heartbeat_url: http://localhost:18080/pentaho/Login
   bi_server_url: http://localhost:18080/pentaho/Home
   auth_allow_user_switch: false
+  # Displays user switch below footer on mouseover
+  auth_allow_user_switch_hidden: false
 
 development:
   inherit: base
