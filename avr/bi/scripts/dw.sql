@@ -345,6 +345,8 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
+    pataddr.latitude,
+    pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
     upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
@@ -520,6 +522,8 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
+    pataddr.latitude,
+    pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
     upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
@@ -994,7 +998,9 @@ SELECT
     ad.city,
     state_ec.code_description AS state,
     county_ec.code_description AS county,
-    ad.postal_code
+    ad.postal_code,
+    ad.latitude,
+    ad.longitude
 FROM
     events
     LEFT JOIN addresses ad
