@@ -1,25 +1,31 @@
-- f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
-  = ip.hidden_field(:primary_entity_id)
 
+.contact_from_search
+  - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
+    = ip.hidden_field(:primary_entity_id)
 
-  - contact_entity = ip.object.person_entity
-  - person = contact_entity.person
-  - contact_phone = contact_entity.primary_phone
-  - contact_event_data = f.object.participations_contact
+    - contact_entity = ip.object.person_entity
+    - person = contact_entity.person
+    - contact_phone = contact_entity.primary_phone
+    - contact_event_data = f.object.participations_contact
 
-  %span.horiz{:style => "clear: both;"}
-    = label_tag "Name"
-    = person.last_comma_first
-  %span.horiz
-    = label_tag "Phone"
-    -unless contact_phone.nil? 
-      %span.horiz= contact_phone.simple_format
+    %span.horiz{:style => "clear: both;"}
+      = label_tag "Name"
+      = person.last_comma_first
+    %span.horiz
+      = label_tag "Phone"
+      -unless contact_phone.nil?
+        %span.horiz= contact_phone.simple_format
 
-- f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
-  %span.horiz
-    = pc_fields.label(:disposition_id)
-    = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
-  %span.horiz
-    = pc_fields.label(:contact_type_id)
-    = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
-
+    - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+      %span.horiz
+        = pc_fields.label(:disposition_id)
+        = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+      %span.horiz
+        = pc_fields.label(:contact_type_id)
+        = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+      - if f.object.new_record?
+        -# This place was added via live search. Provide a mechanism for removing the place before saving.
+        %span.horiz
+          &nbsp;
+          %br
+          = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
