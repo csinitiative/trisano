@@ -25,7 +25,7 @@
 
     - for treatment in event.interested_party.treatments
       %tr
-        %td= l treatment.treatment_given_yn
-        %td= treatment.treatment
-        %td= treatment.treatment_date
-        %td= treatment.stop_treatment_date
+        %td= h(l(treatment.treatment_given_yn))
+        %td= h(treatment.treatment)
+        %td= h(treatment.treatment_date)
+        %td= h(treatment.stop_treatment_date)

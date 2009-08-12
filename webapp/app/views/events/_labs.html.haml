@@ -35,29 +35,29 @@
             %tr
               %td.forminformation
                 .formname
-                  = lab.place_entity.place.name
+                  = h(lab.place_entity.place.name)
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
-                %b= lab_result.test_type
+                %b= h(lab_result.test_type)
                 %br
                 %small Detail:
-                %b= lab_result.test_detail
+                %b= h(lab_result.test_detail)
               %td
-                %b= lab_result.lab_result_text
+                %b= h(lab_result.lab_result_text)
                 %br
                 %small Reference range:
-                %b= lab_result.reference_range
+                %b= h(lab_result.reference_range)
                 %br
                 %small Interpretation:
-                %b= l lab_result.interpretation
+                %b= h(l(lab_result.interpretation))
               %td
                 %small Source:
-                %b= l lab_result.specimen_source
+                %b= h(l(lab_result.specimen_source))
                 %br
                 %small Collected on:
-                %b= lab_result.collection_date
+                %b= h(lab_result.collection_date)
                 %small &nbsp;Tested on:
-                %b= lab_result.lab_test_date
+                %b= h(lab_result.lab_test_date)
                 %br
                 %small Sent to UPHL:
-                %b= l lab_result.specimen_sent_to_uphl_yn
+                %b= h(l(lab_result.specimen_sent_to_uphl_yn))

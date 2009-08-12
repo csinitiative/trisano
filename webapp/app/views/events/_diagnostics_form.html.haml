@@ -21,7 +21,7 @@
     -# This will change soon, and when it does we can undo this.
 
     -# If this is a new record and we are not returning from a failed validation
-    - if diagnostic_fields.object.new_record? && diagnostic_fields.object.secondary_entity_id.nil?
+    - if diagnostic_fields.object.new_record? && h(diagnostic_fields.object.secondary_entity_id).nil?
       = render :partial => 'events/diagnostic', :locals => { :f => diagnostic_fields }
     - else
       = render :partial => 'events/diagnostic_show', :locals => { :f => diagnostic_fields }

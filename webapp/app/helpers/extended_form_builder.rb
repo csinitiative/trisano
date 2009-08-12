@@ -184,7 +184,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     else
       result += @template.content_tag(:label) do
-        sanitize(question.question_text, :tags => %w(br))
+        CGI::escapeHTML(sanitize(question.question_text, :tags => %w(br))).untaint
       end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)

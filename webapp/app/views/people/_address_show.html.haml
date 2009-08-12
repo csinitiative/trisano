@@ -21,29 +21,29 @@
       %div.data_address
         -core_element_show :street_number, address_form, :horiz do
           =address_form.label(:street_number)
-          %span.data_street_number=address.street_number
+          %span.data_street_number=h(address.street_number)
         -core_element_show :street_name, address_form, :horiz do
           =address_form.label(:street_name)
-          %span.data_street_name=address.street_name 
+          %span.data_street_name=h(address.street_name)
         -core_element_show :unit_number, address_form, :horiz do
           =address_form.label(:unit_number)
-          %span.data_unit_number=address.unit_number 
+          %span.data_unit_number=h(address.unit_number)
         -core_element_show :city, address_form, :horiz do
           =address_form.label(:city)
-          %span.data_city=address.city 
+          %span.data_city=h(address.city)
         -core_element_show :state_id, address_form, :horiz do
           =address_form.label(:state)
-          %span.data_state=l(address.state) 
+          %span.data_state=h(l(address.state)) 
         -core_element_show :postal_code, address_form, :horiz do
           =address_form.label(:postal_code, "Zip code")
-          %span.data_postal_code=address.postal_code 
+          %span.data_postal_code=h(address.postal_code)
         -core_element_show :county_id, address_form, :horiz do
           =address_form.label(:county)
-          %span.data_county=l(address.county) 
+          %span.data_county=h(l(address.county))
         -core_element_show :district, address_form, :horiz do
           =address_form.label(:district)
             -if address.county && address.county.jurisdiction
             -jurisdiction_name = address.county.jurisdiction.name
-          %span.data_jurisdiction_name=jurisdiction_name.blank? ? '' : jurisdiction_name
+          %span.data_jurisdiction_name=h(jurisdiction_name.blank? ? '' : jurisdiction_name)
 
       = render_geocode_section(address_form, nil, address.street_number, address.street_name, address.unit_number, address.city, address.state.try(:code_description), address.postal_code)
