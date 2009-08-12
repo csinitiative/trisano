@@ -66,3 +66,13 @@ Feature: Web API People Client
     And I search people by "last_name" with "Bourne-Thompson"
 
     Then I should find the value "Bourne-Thompson" in "data_last_name"
+
+  Scenario: Edit person entity
+    Given I have a known person entity
+
+    When I visit the people edit page
+    And I fill out the form field "person_entity[person_attributes][last_name]" with "Bourne-Thompson"
+    And I press "Update"
+    And I search people by "last_name" with "Bourne-Thompson"
+
+    Then I should find the value "Bourne-Thompson" in "data_last_name"

@@ -1,7 +1,7 @@
 Feature: Printer friendly contact events
 
   To better be able to review cases
-  An ivestigator
+  An investigator
   Needs to be able to print contact events in a readable format
 
   Scenario: Printing a contact event
