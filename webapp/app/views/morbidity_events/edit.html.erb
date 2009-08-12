@@ -24,7 +24,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
-  Edit Morbidity Event: <%= patient_name %>
+  Edit Morbidity Event: <%= h(patient_name) %>
 <% end %>
 
 <% content_for :tools_two do %>
@@ -32,7 +32,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
-  <%= patient_name %>
+  <%= h(patient_name) %>
 <% end %>
 
 <% content_for :tools do %>

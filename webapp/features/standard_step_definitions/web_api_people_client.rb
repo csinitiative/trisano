@@ -38,6 +38,11 @@ Given /^I have a known person entity$/ do
   @person_entity.save!
 end
 
+Given(/^that known person entity has been deleted$/) do
+  @person_entity.deleted_at = Time.now
+  @person_entity.save!
+end
+
 When /^I visit the person show page$/ do
   visit person_path @person_entity
 end

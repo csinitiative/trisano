@@ -49,6 +49,12 @@ public class GetPopulation implements UserDefinedFunction {
         ArrayList<String> params = new ArrayList<String>();
         Boolean doneOne = false;
 
+        if (! (arguments[0].evaluateScalar(evaluator) instanceof Number)) {
+            // In case there's no Count, also return null Population, so that the NON-EMPTY
+            // row thing can remove this row
+            logger.debug("GetPopulation called with null Count value");
+            return null;
+        }
         try {
             conn = evaluator.getQuery().getConnection().getDataSource().getConnection();
             PreparedStatement st =

@@ -250,13 +250,13 @@ class Event < ActiveRecord::Base
         where_clause = " (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
       else
         issue_query = true
-        where_clause = " events.type = '" + sanitize_sql_for_conditions(["%s", options[:event_type]]) +"'"
+        where_clause = " events.type = " + sanitize_sql_for_conditions(["'%s'", options[:event_type]]).untaint
       end
 
       if !options[:diseases].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += " disease_id IN (" + options[:diseases].collect{|id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
+        where_clause += " disease_id IN (" + options[:diseases].collect{|id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")"
       end
 
       if !options[:gender].blank?
@@ -267,37 +267,37 @@ class Event < ActiveRecord::Base
           # Debt:  The 'AND event_id IS NOT NULL' is kind of a hack.  Will do until this query is examined more closely.
           where_clause += "birth_gender_id IS NULL"
         else
-          where_clause += "birth_gender_id = " + sanitize_sql_for_conditions(["%s", options[:gender]])
+          where_clause += "birth_gender_id = " + sanitize_sql_for_conditions(["%d", options[:gender]]).untaint
         end
       end
 
       if !options[:workflow_state].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "workflow_state = '" + sanitize_sql_for_conditions(["%s", options[:workflow_state]]) + "'"
+        where_clause += "workflow_state = " + sanitize_sql_for_conditions(["'%s'", options[:workflow_state]]).untaint
       end
 
       if !options[:city].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "city ILIKE '" + sanitize_sql_for_conditions(["%s", options[:city]]) + "%'"
+        where_clause += "city ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:city]]).untaint 
       end
 
       if !options[:county].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "county_id = " + sanitize_sql_for_conditions(["%s", options[:county]])
+        where_clause += "county_id = " + sanitize_sql_for_conditions(["%d", options[:county]])
       end
 
       if !options[:jurisdiction_ids].blank?
         issue_query = true
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
+        where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")"
       else
         where_clause += " AND " unless where_clause.empty?
         allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
         allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
-        allowed_ids_str = allowed_jurisdiction_ids.uniq.join(',')
+        allowed_ids_str = allowed_jurisdiction_ids.uniq.collect {|j| sanitize_sql_for_conditions(["%d", j]).untaint}.join(',')
 
         unless allowed_ids_str.blank?
           where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ")"
@@ -311,11 +311,11 @@ class Event < ActiveRecord::Base
         if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
           issue_query = true
           where_clause += " AND " unless where_clause.empty?
-          where_clause += "EXTRACT(YEAR FROM birth_date) = '" + sanitize_sql_for_conditions(["%s",options[:birth_date]]) + "'"
+          where_clause += "EXTRACT(YEAR FROM birth_date) = " + sanitize_sql_for_conditions(["'%s'",options[:birth_date]]).untaint
         else
           issue_query = true
           where_clause += " AND " unless where_clause.empty?
-          where_clause += "birth_date = '" + sanitize_sql_for_conditions(["%s", options[:birth_date]]) + "'"
+          where_clause += "birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint
         end
       end
 
@@ -325,12 +325,12 @@ class Event < ActiveRecord::Base
         where_clause += " AND " unless where_clause.empty?
 
         if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-          where_clause += "events.created_at BETWEEN '" + sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) +
-            "' AND '" + sanitize_sql_for_conditions(options[:entered_on_end]) + "'"
+          where_clause += "events.created_at BETWEEN " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_start]]).untaint +
+            " AND " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_end]]).untaint
         elsif !options[:entered_on_start].blank?
-          where_clause += "events.created_at > '" +  sanitize_sql_for_conditions(["%s", options[:entered_on_start]]) + "'"
+          where_clause += "events.created_at > " +  sanitize_sql_for_conditions(["'%s'", options[:entered_on_start]]).untaint
         else
-          where_clause += "events.created_at < '" + sanitize_sql_for_conditions(["%s", options[:entered_on_end]]) + "'"
+          where_clause += "events.created_at < " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_end]]).untaint
         end
       end
 
@@ -338,15 +338,15 @@ class Event < ActiveRecord::Base
       ph_end = options[:first_reported_PH_date_end]
       if !ph_start.blank? || !ph_end.blank?
         issue_query = true
-        ph_start = sanitize_sql_for_conditions(["%s", ph_start]) unless ph_start.blank?
-        ph_end   = sanitize_sql_for_conditions(["%s", ph_end])   unless ph_end.blank?
+        ph_start = sanitize_sql_for_conditions(["'%s'", ph_start]).untaint unless ph_start.blank?
+        ph_end   = sanitize_sql_for_conditions(["'%s'", ph_end]).untaint unless ph_end.blank?
         where_clause += " AND "
         if !ph_start.blank? && !ph_end.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" BETWEEN '#{ph_start}' AND '#{ph_end}'"
+          where_clause += "\"events\".\"first_reported_PH_date\" BETWEEN #{ph_start} AND #{ph_end}"
         elsif !ph_end.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" <= '#{ph_end}'"
+          where_clause += "\"events\".\"first_reported_PH_date\" <= #{ph_end}"
         elsif !ph_start.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" >= '#{ph_start}'"
+          where_clause += "\"events\".\"first_reported_PH_date\" >= #{ph_start}"
         end
       end
 
@@ -357,7 +357,7 @@ class Event < ActiveRecord::Base
 
         if not options[field].blank?
           issue_query = true
-          where_clause += " AND #{table}.#{field.to_s} = '#{sanitize_sql_for_conditions(["%s", options[field]])}'"
+          where_clause += " AND #{table}.#{field.to_s} = #{sanitize_sql_for_conditions(["'%s'", options[field]]).untaint}"
         end
       end
 
@@ -369,7 +369,7 @@ class Event < ActiveRecord::Base
 
         if not options[field].blank?
           issue_query = true
-          where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")" 
+          where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")" 
           # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
         end
       end
@@ -381,7 +381,7 @@ class Event < ActiveRecord::Base
 
         if not options[field].blank?
           issue_query = true
-          where_clause += " AND #{table}.#{field.to_s} ILIKE '#{sanitize_sql_for_conditions(["%s", options[field]])}%'"
+          where_clause += " AND #{table}.#{field.to_s} ILIKE #{sanitize_sql_for_conditions(["'%s%%'", options[field]]).untaint}"
         end
       end
 
@@ -404,12 +404,12 @@ class Event < ActiveRecord::Base
         where_clause += " AND " unless where_clause.empty?
 
         if !options[:sw_last_name].blank?
-          where_clause += "last_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_last_name]]) + "%'"
+          where_clause += "last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:sw_last_name]]).untaint
         end
 
         if !options[:sw_first_name].blank?
           where_clause += " AND " unless options[:sw_last_name].blank?
-          where_clause += "first_name ILIKE '" + sanitize_sql_for_conditions(["%s", options[:sw_first_name]]) + "%'"
+          where_clause += "first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:sw_first_name]]).untaint
         end
 
       elsif !options[:fulltext_terms].blank?
@@ -419,15 +419,16 @@ class Event < ActiveRecord::Base
 
         raw_terms.each do |word|
           soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
+          fulltext_terms << word.sub(",", "").downcase
         end
 
         fulltext_terms << soundex_codes unless soundex_codes.empty?
         sql_terms = fulltext_terms.join(" | ")
+        sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
 
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "vector @@ to_tsquery('#{sql_terms}')"
-        order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC;"
+        where_clause += "vector @@ to_tsquery(#{sql_terms})"
+        order_by_clause = " ts_rank(vector, #{sql_terms}) DESC, last_name, first_name ASC;"
       end
       [where_clause, order_by_clause, issue_query]
     end

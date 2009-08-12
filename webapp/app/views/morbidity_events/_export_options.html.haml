@@ -12,9 +12,9 @@
       - params.each_pair do |key, value|
         - if value.is_a?(Array)
           - value.each do |value_element|
-            = hidden_field_tag("#{key}[]", value_element)
+            = hidden_field_tag("#{h(key)}[]", h(value_element))
         - else
-          = hidden_field_tag(key, value)
+          = hidden_field_tag(h(key), h(value))
       %label.horiz
         = check_box_tag("export_options[]", "contacts", false, :onclick => "$('contact_code_field_options').toggle();")
         %span Contacts

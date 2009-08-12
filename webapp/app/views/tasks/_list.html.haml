@@ -28,7 +28,7 @@
           %th= link_to_remote('Name',             :update => 'tasks', :method => :get, :url => urls_hash['name'])
           - unless task_owner.is_a? Event
             %th= link_to_remote('Disease',        :update => 'tasks', :method => :get, :url => urls_hash['disease_name'])
-          %th= link_to_remote('Description',            :update => 'tasks', :method => :get, :url => urls_hash['notes'])
+          %th= link_to_remote('Description',      :update => 'tasks', :method => :get, :url => urls_hash['notes'])
           %th= link_to_remote('Category',         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
           %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
           %th= link_to_remote('Assigned&nbsp;to', :update => 'tasks', :method => :get, :url => urls_hash['user_name'])

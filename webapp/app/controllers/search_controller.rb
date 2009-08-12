@@ -125,6 +125,7 @@ class SearchController < ApplicationController
         end
         flash[:error] += "</ul>"
       end
+      logger.error ex
     end
 
     # For some reason can't communicate with template via :locals on the render line.  @show_answers and @export_options are used for csv export to cause

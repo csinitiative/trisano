@@ -334,7 +334,7 @@ SELECT
     events.outbreak_name,
 
     -- events.event_status,                    -- Change this from a code to a text value?
-    inv.first_name || ' ' || inv.last_name AS investigator,
+    COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,
     events.acuity,
 
@@ -345,6 +345,8 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
+    pataddr.latitude,
+    pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
     upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
@@ -510,7 +512,7 @@ SELECT
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     -- events.event_status,                    -- Change this from a code to a text value?
-    inv.first_name || ' ' || inv.last_name AS investigator,
+    COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,                    -- do something w/ event queues?
 
     pataddr.street_number,
@@ -520,6 +522,8 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
+    pataddr.latitude,
+    pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
     upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
@@ -994,7 +998,9 @@ SELECT
     ad.city,
     state_ec.code_description AS state,
     county_ec.code_description AS county,
-    ad.postal_code
+    ad.postal_code,
+    ad.latitude,
+    ad.longitude
 FROM
     events
     LEFT JOIN addresses ad

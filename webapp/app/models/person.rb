@@ -30,7 +30,16 @@ class Person < ActiveRecord::Base
   validates_length_of :middle_name, :maximum => 25, :allow_blank => true
 
   before_save :generate_soundex_codes
-  
+
+  named_scope :clinicians,
+     :conditions => "person_type = 'clinician'",
+     :order => "last_name, first_name"
+
+  named_scope :active_clinicians, 
+     :joins => "INNER JOIN entities on people.entity_id = entities.id",
+     :conditions => "person_type = 'clinician' AND entities.deleted_at IS NULL",
+     :order => "last_name, first_name"
+
   # Debt? Just getting this done fast after dives on options took a long time.
   # Should method this be in entity.rb? Is there a better way to handle custom
   # SQL? What about this?
@@ -63,7 +72,7 @@ class Person < ActiveRecord::Base
       
       raw_terms.each do |word|
         soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-        fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+        fulltext_terms << sanitize_sql_for_conditions(["%s", word]).sub(",", "").downcase
       end
       
       fulltext_terms << soundex_codes unless soundex_codes.empty?
@@ -123,21 +132,23 @@ class Person < ActiveRecord::Base
   end
 
   class << self
+    # Defaults to not showing deleted people. Override by providing the option:
+    #   :show_deleted => true
     def find_all_for_filtered_view(options = {})
       where_clause = "1=1 "
       joins = ""
 
       if options[:use_starts_with_search]
         if !options[:last_name].blank?
-          where_clause << " AND last_name ILIKE '" + options[:last_name].gsub("'", "''") + "%'"
+          where_clause << " AND last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:last_name]]).untaint
         end
 
         if !options[:first_name].blank?
-          where_clause << " AND first_name ILIKE '" + options[:first_name].gsub("'", "''") + "%'"
+          where_clause << " AND first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:first_name]]).untaint
         end
 
         if !options[:middle_name].blank?
-          where_clause << " AND middle_name ILIKE '" + options[:middle_name].gsub("'", "''") + "%'"
+          where_clause << " AND middle_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:middle_name]]).untaint
         end
       else
         soundex_codes = []
@@ -149,25 +160,26 @@ class Person < ActiveRecord::Base
 
         raw_terms.each do |word|
           soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << sanitize_sql(["%s", word]).sub(",", "").downcase
+          fulltext_terms << word.sub(",", "").downcase
         end
 
         if !soundex_codes.empty?
           fulltext_terms << soundex_codes unless soundex_codes.empty?
           sql_terms = fulltext_terms.join(" | ")
+          sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
 
-          where_clause << " AND vector @@ to_tsquery('#{sql_terms}')"
-          order_by_clause = " ts_rank(vector, '#{sql_terms}') DESC, last_name, first_name ASC"
+          where_clause << " AND vector @@ to_tsquery(#{sql_terms})"
+          order_by_clause = " ts_rank(vector, #{sql_terms}) DESC, last_name, first_name ASC"
         end
       end
 
       order_by_clause = " last_name, first_name ASC" if order_by_clause.blank?
 
       if !options[:birth_date].blank?
-        where_clause << " AND birth_date = '" + options[:birth_date].gsub("'", "''") + "'"
+        where_clause << " AND birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint
       end
 
-      if options[:do_not_show_deleted]
+      unless options[:show_deleted]
         joins = "INNER JOIN entities on people.entity_id = entities.id"
         where_clause << " AND entities.deleted_at IS NULL"
       end

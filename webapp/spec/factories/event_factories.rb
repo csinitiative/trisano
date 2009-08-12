@@ -60,6 +60,10 @@ Factory.define :person do |p|
   p.last_name { Factory.next(:last_name) }
 end
 
+Factory.define :clinician, :parent => :person do |c|
+  c.person_type 'clinician'
+end
+
 Factory.define :place do |p|
   p.name { Factory.next(:place_name) }
 end

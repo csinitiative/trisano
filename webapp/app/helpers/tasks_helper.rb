@@ -56,6 +56,7 @@ module TasksHelper
         :action => :index,
         "#{prefix}_id".to_sym => task_owner.id,
         :tasks_ordered_by => field)
+      memo[field]['id'] = h(memo[field]['id']).untaint
       memo
     end
   end

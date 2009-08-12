@@ -57,7 +57,7 @@ class Participation < ActiveRecord::Base
   # Establishes a base error message for the merge race condition error. Sub-classes can override for a more
   # specific error message.
   def add_merge_error
-    base_message = "has been merged into another entity and is no longer available for use on events. Please make another selection or refresh your browser."
+    base_message = "has been merged into another entity and is no longer available for use on events. Actions you can take: Attempt to remove the entity or switch to show mode to view the replacement entity."
 
     if self.respond_to?(:place_entity)
       add_place_specific_merge_error(base_message)
