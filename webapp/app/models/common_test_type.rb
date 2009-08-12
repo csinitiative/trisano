@@ -26,10 +26,10 @@ class CommonTestType < ActiveRecord::Base
   has_many :diseases, :through => :disease_common_test_types
   has_many :lab_results, :foreign_key => :test_type_id
 
-  def update_loinc_codes(options={})
+  def update_loinc_code_ids(options={})
     options = {:add => [], :remove => []}.merge(options)
-    added   = extract_ids options[:add]
-    removed = extract_ids options[:remove]
+    added   = options[:add].collect(&:to_i)
+    removed = options[:remove].collect(&:to_i)
     LoincCode.transaction do
       LoincCode.update_all ['common_test_type_id = ?', self.id], ['id IN (?)', added]   unless added.empty?
       LoincCode.update_all  'common_test_type_id = NULL',        ['id IN (?)', removed] unless removed.empty?
@@ -59,15 +59,6 @@ class CommonTestType < ActiveRecord::Base
   end
 
   private
-
-  # grab all ids and ensure they are integers
-  def extract_ids(objs_or_ids)
-    if objs_or_ids.first.respond_to? :new_record?
-      objs_or_ids.collect(&:id)
-    else
-      objs_or_ids.collect(&:to_i)
-    end
-  end
 
   def clear_loincs
     self.loinc_codes.clear

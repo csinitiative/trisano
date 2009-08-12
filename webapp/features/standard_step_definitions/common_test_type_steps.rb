@@ -23,7 +23,7 @@ end
 
 Given /^loinc code "([^\"]*)" is associated with the common test type$/ do |loinc_code|
   loinc_code = LoincCode.find_by_loinc_code(loinc_code)
-  @common_test_type.update_loinc_codes :add => [loinc_code]
+  @common_test_type.update_loinc_code_ids :add => [loinc_code.id]
 end
 
 When /^I try to delete the common test type$/ do

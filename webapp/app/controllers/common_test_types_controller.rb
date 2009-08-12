@@ -73,7 +73,7 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       begin
-        @common_test_type.update_loinc_codes :add => added_loincs, :remove => removed_loincs
+        @common_test_type.update_loinc_code_ids :add => added_loincs, :remove => removed_loincs
         flash[:notice] = 'Common test type was successfully updated.'
         format.html { redirect_to loinc_codes_common_test_type_path(@common_test_type) }
       rescue

@@ -26,6 +26,37 @@ describe CommonTestType do
     it { should have_many(:lab_results) }
   end
 
+  before do
+    @common_test_type = CommonTestType.create!(:common_name => 'Culture')
+  end
+
+  describe 'updating loinc codes' do
+
+    before do
+      @loinc_code = LoincCode.create!(:loinc_code => '636-9')
+    end
+
+    it 'should be able to add loinc codes by id' do
+      @common_test_type.loinc_codes.should == []
+      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      lambda{@common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s] }.should_not raise_error
+    end
+
+    it 'should not raise an error if a loinc code is added more then once' do
+      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s]
+      @common_test_type.loinc_codes.should == [@loinc_code]
+      lambda{@common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s] }.should_not raise_error
+      @common_test_type.loinc_codes.should == [@loinc_code]
+    end
+
+    it 'will overwrite add operations with remove operations' do
+      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s], :remove => [@loinc_code.id.to_s]
+      @common_test_type.loinc_codes.should == []
+    end
+
+  end
+
   describe 'common name' do
 
     it 'should be unique' do
@@ -46,9 +77,8 @@ describe CommonTestType do
     end
 
     it 'should be destroyed' do
-      common_test_type = CommonTestType.create!(:common_name => 'Culture')
       lambda do
-        common_test_type.destroy
+        @common_test_type.destroy
       end.should change(CommonTestType, :count).by -1
     end
 
@@ -56,7 +86,6 @@ describe CommonTestType do
 
   describe 'that is associated with a lab result' do
     before do
-      @common_test_type = CommonTestType.create!(:common_name => 'Culture')
       @lab_result = Factory.create(:lab_result, :test_type_id => @common_test_type.id)
     end
 
@@ -67,25 +96,37 @@ describe CommonTestType do
 
   describe 'with associated loinc codes' do
     before do
-      @common_test_type = CommonTestType.create :common_name => 'Culture'
-      LoincCode.create!(:loinc_code => '14375-1',
-                        :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
-                        :common_test_type_id => @common_test_type.id)
-      LoincCode.create!(:loinc_code => '636-3',
-                        :test_name => 'Culture, Sterile body fluid',
-                        :common_test_type_id => @common_test_type.id)
+      @loinc_codes = []
+      @loinc_codes << LoincCode.create!(:loinc_code => '14375-1',
+                                        :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
+                                        :common_test_type_id => @common_test_type.id)
+      @loinc_codes << LoincCode.create!(:loinc_code => '636-3',
+                                        :test_name => 'Culture, Sterile body fluid',
+                                        :common_test_type_id => @common_test_type.id)
     end
 
-    it 'should remove association when destroyed' do
+    it 'should remove loinc associations when destroyed' do
       @common_test_type.destroy
       LoincCode.find_all_by_common_test_type_id(@common_test_type.id).should == []
+    end
+
+    it 'should be able to remove loinc codes by id' do
+      @common_test_type.loinc_codes.sort_by(&:id).should == @loinc_codes.sort_by(&:id)
+      @common_test_type.update_loinc_code_ids :remove => @loinc_codes.collect { |c| c.id.to_s }
+      @common_test_type.loinc_codes.should == []
+    end
+
+    it 'should be able to add and remove in same operation' do
+      new_loinc = LoincCode.create :loinc_code => '636-9'
+      @common_test_type.update_loinc_code_ids(:add => [new_loinc.id.to_s],
+                                              :remove => @loinc_codes.collect { |c| c.id.to_s })
+      @common_test_type.loinc_codes.should == [new_loinc]
     end
 
   end
 
   describe 'with associated loinc codes and assoicated lab results' do
     before do
-      @common_test_type = CommonTestType.create!(:common_name => 'Culture')
       @lab_result = Factory.create(:lab_result, :test_type_id => @common_test_type.id)
       @loinc_code = LoincCode.create!(:loinc_code => '636-3', :common_test_type_id => @common_test_type.id)
     end
@@ -95,54 +136,6 @@ describe CommonTestType do
       LoincCode.find_all_by_common_test_type_id(@common_test_type.id).should == [@loinc_code]
     end
 
-  end
-
-  describe '#update_loinc_codes' do
-
-    before do
-      @loinc_code = LoincCode.create! :loinc_code => '14375-1', :test_name => 'Nulla felis nibh, aliquet eget, Unspecified'
-      @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
-    end
-
-    it 'should associate a loinc_code with the test_type' do
-      @common_test_type.loinc_codes.should == []
-      @common_test_type.update_loinc_codes :add => [@loinc_code]
-      @common_test_type.loinc_codes.should == [@loinc_code]
-    end
-
-    it 'should accept a list of ids' do
-      @common_test_type.loinc_codes.should == []
-      @common_test_type.update_loinc_codes :add => [@loinc_code.id.to_s]
-      @common_test_type.loinc_codes.should == [@loinc_code]
-      lambda{@common_test_type.update_loinc_codes :add => [@loinc_code.id.to_s] }.should_not raise_error
-    end
-
-    it 'should delete associations for removed loincs' do
-      @common_test_type.update_loinc_codes :add => [@loinc_code]
-      @common_test_type.loinc_codes.should == [@loinc_code]
-      @common_test_type.update_loinc_codes :remove => [@loinc_code]
-      @common_test_type.loinc_codes.should == []
-    end
-
-    it 'should delete associations for removed loinc ids' do
-      @common_test_type.update_loinc_codes :add => [@loinc_code]
-      @common_test_type.loinc_codes.should == [@loinc_code]
-      @common_test_type.update_loinc_codes :remove => [@loinc_code.id]
-      @common_test_type.loinc_codes.should == []
-    end
-
-    it 'should add and remove in same operation' do
-      @common_test_type.update_loinc_codes :add => [@loinc_code]
-      @common_test_type.loinc_codes.should == [@loinc_code]
-      new_loinc = LoincCode.create :loinc_code => '636-9'
-      @common_test_type.update_loinc_codes :add => [new_loinc], :remove => [@loinc_code]
-      @common_test_type.loinc_codes.should == [new_loinc]
-    end
-
-    it 'will overwrite overwrite add operations with remove operations' do
-      @common_test_type.update_loinc_codes :add => [@loinc_code], :remove => [@loinc_code]
-      @common_test_type.loinc_codes.should == []
-    end
   end
 
   describe '#find_unrelated_loincs' do
@@ -157,7 +150,7 @@ describe CommonTestType do
     end
 
     it 'should return empty array if all matches are already assoc, with this instance' do
-      @common_test_type.update_loinc_codes :add => [@loinc_code]
+      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id]
       @common_test_type.find_unrelated_loincs(:test_name => 'nulla').should == []
     end
 
