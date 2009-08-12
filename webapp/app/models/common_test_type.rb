@@ -18,7 +18,7 @@
 class CommonTestType < ActiveRecord::Base
   before_destroy :check_for_lab_results, :clear_loincs
 
-  validates_uniqueness_of :common_name
+  validates_uniqueness_of :common_name, :case_sensitive => false
   validates_length_of     :common_name, :in => 1..255
 
   has_many :loinc_codes

@@ -63,7 +63,12 @@ describe CommonTestType do
       CommonTestType.create :common_name => 'Doit'
       lambda {CommonTestType.create! :common_name => 'Doit'}.should raise_error
       CommonTestType.new(:common_name => 'Doit').should_not be_valid
-      CommonTestType.new(:common_name => 'Do something else').should be_valid
+    end
+
+    it 'should be case fold unique' do
+      CommonTestType.create :common_name => 'DOIT'
+      lambda {CommonTestType.create! :common_name => 'doit'}.should raise_error
+      CommonTestType.new(:common_name => 'Doit').should_not be_valid
     end
 
     it 'should not be null' do

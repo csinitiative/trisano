@@ -22,7 +22,7 @@ class CreateCommonTestNames < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index(:common_test_types, :common_name, :unique => true)
+    execute "CREATE UNIQUE INDEX common_test_types_common_name ON common_test_types (LOWER(common_name));"
   end
 
   def self.down
