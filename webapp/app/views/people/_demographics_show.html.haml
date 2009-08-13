@@ -19,12 +19,12 @@
     %div.data_demographics
       -core_element_show :birth_gender_id, person_form, :horiz do
         =person_form.label(:birth_gender_id)
-        %span.data_birth_gender=h(person.birth_gender_description)
+        %span.data_birth_gender=person.birth_gender_description
       -core_element_show :primary_language_id, person_form, :horiz do
         =person_form.label(:primary_language_id)
-        %span.data_primary_language=h(person.primary_language_description)
+        %span.data_primary_language=person.primary_language_description
       -core_element_show :ethnicity_id, person_form, :horiz do
         =person_form.label(:ethnicity_id)
-        %span.data_ethnicity=h(person.ethnicity_description)
+        %span.data_ethnicity=person.ethnicity_description
       %label Race
-      %span.data_race=h(person.race_description)
+      %span.data_race=person.race_description

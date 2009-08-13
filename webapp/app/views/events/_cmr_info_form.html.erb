@@ -24,16 +24,16 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   </legend>
   <div id='cmr_info_form'>
     <% if not @event.record_number.blank? %>
-      <span class="label">Record number:</span> <%= h(@event.record_number) %>
+      <span class="label">Record number:</span> <%= @event.record_number %>
     <% end %>
 
     <% if not @event.MMWR_year.blank? %>
-      <span class="label">MMWR year:</span> <%= h(@event.MMWR_year) %>
-      <span class="label">MMWR week:</span> <%= h(@event.MMWR_week) %>
+      <span class="label">MMWR year:</span> <%= @event.MMWR_year %>
+      <span class="label">MMWR week:</span> <%= @event.MMWR_week %>
     <% end %>
     <br />
     <span class="label">Date record created:</span>
-    <%= h(@event.event_onset_date) %>
+    <%= @event.event_onset_date %>
     <p/>
     <fieldset class="form">
       <legend>Case / Outbreak</legend>

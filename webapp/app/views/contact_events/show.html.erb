@@ -22,7 +22,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
-  View Contact Event: <%= h(patient.full_name) %>
+  View Contact Event: <%= patient.full_name %>
 <% end %>
 
 <% content_for :name do %>

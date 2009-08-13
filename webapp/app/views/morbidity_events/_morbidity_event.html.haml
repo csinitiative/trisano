@@ -24,46 +24,46 @@
   %td.forminformation
     - event_div_class(morbidity_event) do
       - if from_index
-        = h(morbidity_event['last_name'] << (morbidity_event['first_name'].blank? ? "" : ", #{morbidity_event['first_name']}"))
+        = (morbidity_event['last_name'] << (morbidity_event['first_name'].blank? ? "" : ", #{morbidity_event['first_name']}"))
       - else
-        =h(morbidity_event.interested_party.person_entity.person.last_comma_first)
+        = morbidity_event.interested_party.person_entity.person.last_comma_first
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         Morbidity Event |
-        = h(morbidity_event.event_onset_date)
+        = morbidity_event.event_onset_date
     .tools
       = basic_morbidity_event_controls(morbidity_event, from_index) 
       = render :partial => 'morbidity_events/print_options', :locals => { :event => morbidity_event }
       = extra_tools if !from_index
   %td
-    %b= h(from_index ? morbidity_event['disease_name'] : morbidity_event.try(:disease).try(:disease).try(:disease_name))
+    %b= from_index ? morbidity_event['disease_name'] : morbidity_event.try(:disease).try(:disease).try(:disease_name)
   %td
-    %b= h(from_index ? morbidity_event['jurisdiction_short_name'] : morbidity_event.primary_jurisdiction.short_name)
+    %b= from_index ? morbidity_event['jurisdiction_short_name'] : morbidity_event.primary_jurisdiction.short_name
     %br
     .tools
       = jurisdiction_routing_control(morbidity_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         - if from_index
-          = h(pg_array(morbidity_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', '))
+          = pg_array(morbidity_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', ')
         - else
-          = h(morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", "))
+          = morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
   %td
-    %b= h(morbidity_event.state_description)
+    %b= morbidity_event.state_description
 
     - queue_name = from_index ? morbidity_event['queue_name'] : morbidity_event.try(:event_queue).try(:queue_name)
     - unless queue_name.blank?
       %div{:id => 'queue_info'}
         %small
           Queue:&nbsp;
-          %b= h(queue_name)
+          %b= queue_name
 
     - inv_name = from_index ? morbidity_event['investigator_name'] : morbidity_event.try(:investigator).try(:best_name)
     - unless inv_name.blank?
       %div{:id => 'investigator_info'}
         %small
           Investigator:&nbsp;
-          %b= h(inv_name)
+          %b= inv_name
 
     .tools
       = state_controls(morbidity_event)

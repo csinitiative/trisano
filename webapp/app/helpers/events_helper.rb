@@ -193,25 +193,23 @@ module EventsHelper
     event.allowed_transitions.each do |transition|
       case transition
       when :accept, :reject, :approve, :reopen, :close
-        action_controls += radio_button_tag(h(transition.to_s),
-          h(transition.to_s),
+        action_controls += radio_button_tag(transition.to_s,
+          transition.to_s,
           false,
           :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
-        action_controls += h(transition.to_s.titleize)
+        action_controls += transition.to_s.titleize
       when :assign_to_queue
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
         routing_controls += "<div>Assign to queue:&nbsp;"
         routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
       when :assign_to_investigator
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
-        investigators = investigators.collect { |i| i.id=h(i.id); i.given_name=h(i.given_name); i.first_name=h(i.first_name); i.last_name=h(i.last_name); i.uid=h(i.uid); i.user_name=h(i.user_name); i }
         routing_controls += "<div>Assign to investigator:&nbsp;"
-        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, h(event['investigator_id'])), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
+        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :id => 'morbidity_event__investigator_id',:onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
       when :complete, :complete_and_close
-        action_controls += submit_tag(h(transition.to_s.titleize), :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
+        action_controls += submit_tag(transition.to_s.titleize, :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
       end
     end
-    return routing_controls
 
     if action_controls.blank? && routing_controls.blank?
       controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
@@ -219,7 +217,7 @@ module EventsHelper
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
-        Brief note: #{text_field_tag("h(morbidity_event[note])", '')}
+        Brief note: #{text_field_tag("morbidity_event[note]", '')}
       ]
       controls += "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
       controls += routing_controls
@@ -232,21 +230,21 @@ module EventsHelper
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
       controls += link_to_function('Route to Local Health Depts.', nil) do |page|
-        page["routing_controls_#{h(event.id)}"].visual_effect :appear, :duration => 0.5
+        page["routing_controls_#{event.id}"].visual_effect :appear, :duration => 0.5
       end
-      controls += "<div id='routing_controls_#{h(event.id)}' style='display: none; position: relative'>"
+      controls += "<div id='routing_controls_#{event.id}' style='display: none; position: relative'>"
       controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
       controls += "<span>Investigating jurisdiction: &nbsp;</span>"
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, h(event.primary_jurisdiction.entity_id))).untaint
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id))
       controls += "<br />Also grant access to:"
 
       controls += "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
       controls += "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
 
       jurisdictions.each do | jurisdiction |
-        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
+        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", jurisdiction.entity_id, event.secondary_jurisdictions.include?(jurisdiction), :id => jurisdiction.short_name.tr(" ", "_")) + jurisdiction.short_name + "</label>"
       end
 
       controls += "</div></div>"
@@ -254,7 +252,7 @@ module EventsHelper
       controls += submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
 
       controls += "</form>"
-      controls += link_to_function "Close", "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })"
+      controls += link_to_function "Close", "Effect.Fade('routing_controls_#{event.id}', { duration: 0.2 })"
       controls += "</div>"
       controls += "</div>"
     else
@@ -264,7 +262,7 @@ module EventsHelper
   end
 
   def state_routing_js(options = {})
-    value = "'#{h(options[:value])}'" if options[:value]
+    value = "'#{options[:value]}'" if options[:value]
     confirm = options[:confirm]
     js = []
     js << 'if(confirm("Are you sure?")) {' if confirm
@@ -467,11 +465,11 @@ module EventsHelper
 
   def original_patient_controls(event)
     original_patient = event.parent_event
-    name = "#{h(original_patient.interested_party.person_entity.person.first_name)} #{h(original_patient.interested_party.person_entity.person.last_name)}"
+    name = "#{original_patient.interested_party.person_entity.person.first_name} #{original_patient.interested_party.person_entity.person.last_name}"
     disease = original_patient.safe_call_chain(:disease_event, :disease, :disease_name)
     out = "<div>Parent Patient: #{link_to(name, cmr_path(original_patient))}"
     unless disease.blank?
-      out << " | <span style='font-size: 12px; font-weight: light;'>#{h(disease)}</span>"
+      out << " | <span style='font-size: 12px; font-weight: light;'>#{disease}</span>"
     end
     out << "</div>"
     out
@@ -565,11 +563,11 @@ module EventsHelper
   def render_investigator_section(form_elements_cache, element, f)
     begin
       result = "<br/>"
-      section_id = "section_investigate_#{h(element.id)}";
+      section_id = "section_investigate_#{element.id}";
       hide_id = section_id + "_hide";
       show_id = section_id + "_show"
       result <<  "<fieldset class='form_section'>"
-      result << "<legend>#{h(strip_tags(element.name))} "
+      result << "<legend>#{strip_tags(element.name)} "
 
       unless element.help_text.blank?
         result << render_help_text(element)
@@ -580,7 +578,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{sanitize(h(element.description).gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
 
       section_children = form_elements_cache.children(element)
 
@@ -638,7 +636,7 @@ module EventsHelper
     result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)
     end
-    result << "<span id='#{h(identifier)}_help_text_#{h(element.id)}' style='display: none;'>#{h(simple_format(sanitize(help_text, :tags => %w(br))))}</span>"
+    result << "<span id='#{identifier}_help_text_#{element.id}' style='display: none;'>#{simple_format(sanitize(help_text, :tags => %w(br)))}</span>"
   end
 
   def render_core_field_help_text(attribute, form_builder, block)
@@ -654,7 +652,7 @@ module EventsHelper
     begin
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
-      result = "<div id='question_investigate_#{h(element.id)}' class='#{h(question_style)}'>"
+      result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
 
       @answer_object = @event.get_or_initialize_answer(question.id)
 
@@ -662,7 +660,7 @@ module EventsHelper
       if (f.nil?)
         fields_for(@event) do |f|
           f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{h(element.id)}"})
+            result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{element.id}"})
             result << render_help_text(element) unless question.help_text.blank?
           end
         end
@@ -670,7 +668,7 @@ module EventsHelper
         prefix = @answer_object.new_record? ? "new_answers" : "answers"
         index = @answer_object.new_record? ? "" : @form_index += 1
         f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+          result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{element.id}"})
           result << render_help_text(element) unless question.help_text.blank?
         end
       end
@@ -678,19 +676,19 @@ module EventsHelper
       follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
 
       unless follow_up_group.nil?
-        result << "<div id='follow_up_investigate_#{h(element.id)}'>"
+        result << "<div id='follow_up_investigate_#{element.id}'>"
         result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
         result << "</div>"
       else
-        result << "<div id='follow_up_investigate_#{h(element.id)}'></div>"
+        result << "<div id='follow_up_investigate_#{element.id}'></div>"
       end
 
       result << "</div>"
 
       return result
-      #rescue
-      #logger.warn("Formbuilder rendering: #{$!.message}")
-      #return "Could not render question element (#{element.id})"
+    rescue
+      logger.warn("Formbuilder rendering: #{$!.message}")
+      return "Could not render question element (#{element.id})"
     end
   end
 

@@ -19,15 +19,15 @@
     %div.data_age_info
       -core_element_show :birth_date, person_form, :horiz do
         =person_form.label(:birth_date)
-        %span.data_birth_date=h(person.birth_date)
+        %span.data_birth_date=person.birth_date
       -core_element_show :approximate_age_no_birthday, person_form, :horiz do
         -if !person.birth_date.blank?
           =person_form.label(:age)
-          %span.data_age=h(calculate_age(person.birth_date))
+          %span.data_age=calculate_age(person.birth_date)
         -elsif !person.approximate_age_no_birthday.blank?
           =person_form.label(:approximage_age)
-          %span.data_approximate_age_no_birthday=h(person.approximate_age_no_birthday)
+          %span.data_approximate_age_no_birthday=person.approximate_age_no_birthday
       -if !event.nil?
         -core_element_show :age_at_onset, person_form, :horiz do
           =person_form.label :age_at_onset
-          %span.data_age_at_onset=h(event.age_info)
+          %span.data_age_at_onset=event.age_info

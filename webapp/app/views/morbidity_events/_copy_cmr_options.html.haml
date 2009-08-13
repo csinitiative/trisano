@@ -18,7 +18,7 @@
     %fieldset.form
       %legend Shallow Copy
       %p
-        = "Create a new event for #{h(@event.party.full_name)} that is "
+        = "Create a new event for #{@event.party.full_name} that is "
         %em otherwise unrelated
         to the current event. 
         %br
@@ -27,7 +27,7 @@
     %fieldset.form
       %legend Deep Copy
       %p
-        = "Create a new event for #{h(@event.party.full_name)} that is"
+        = "Create a new event for #{@event.party.full_name} that is"
         %em closely related
         to the current event. 
 

@@ -19,19 +19,19 @@
     %legend Tracking Information
     %span{:class => "horiz"}
       %label Record number
-      = h(@event.record_number)
+      = @event.record_number
 
     %span{:class => "horiz"}
       %label Date record created
-      = h(@event.event_onset_date)
+      = @event.event_onset_date
 
     %span{:class => "horiz"}
       %label MMWR year
-      = h(@event.MMWR_year)
+      = @event.MMWR_year
 
     %span{:class => "horiz"}
       %label MMWR week
-      = h(@event.MMWR_week)
+      = @event.MMWR_week
 
   %span.vert-break
 
@@ -39,13 +39,13 @@
     %legend Case / Outbreak
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label(:lhd_case_status_id, 'LHD case status')
-      = h(l(@event.lhd_case_status)) || '&nbsp;'
+      = l(@event.lhd_case_status) || '&nbsp;'
     - core_element_show :state_case_status_id, event_form, :horiz do
       = event_form.label(:state_case_status_id, 'State case status')
-      = h(l(@event.state_case_status))
+      = l(@event.state_case_status)
     - core_element_show :outbreak_associated_id, event_form, :horiz do
       = event_form.label :outbreak_associated_id, 'Outbreak associated'
-      = h(l(@event.outbreak_associated)) || '&nbsp;'
+      = l(@event.outbreak_associated) || '&nbsp;'
     - core_element_show :outbreak_name, event_form, :horiz do
       = event_form.label :outbreak_name
       = h(@event.outbreak_name) || '&nbsp;'
