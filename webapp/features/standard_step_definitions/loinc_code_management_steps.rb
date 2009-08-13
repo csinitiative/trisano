@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^I have a loinc code "(.*)" with test name "(.*)"$/ do |loinc_code, test_name|
-  LoincCode.create!(:loinc_code => loinc_code, :test_name => test_name)
+  @loinc_code = LoincCode.create!(:loinc_code => loinc_code, :test_name => test_name)
 end
 
 Given /^I have (\d+) sequential loinc codes, starting at (.*)$/ do |count, start_with|

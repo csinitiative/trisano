@@ -75,3 +75,39 @@ Feature: Supporting LOINC codes for lab results
     And I press "Create"
 
     Then I should see "Loinc code has already been taken"
+
+  Scenario: Editing a LOINC code
+    Given I am logged in as a super user
+    And I have a loinc code "636-6" with test name "Microscopy"
+
+    When I go to edit the loinc code
+    And I fill in "Loinc code" with "636-9"
+    And I press "Update"
+
+    Then I should see "Loinc code was successfully updated"
+    And I should see "636-9"
+    And I should not see "636-6"
+
+    When I follow "Edit"
+    And I fill in "Test name" with "Microscopy, Electron"
+    And I press "Update"
+
+    Then I should see ", Electron"
+
+  Scenario: Entering invalid data when editing a LOINC code
+    Given I am logged in as a super user
+    And I have a loinc code "636-9" with test name "Microscopy"
+    And I have a loinc code "50000-0" with test name "Back ground check"
+
+    When I go to edit the loinc code
+    And I fill in "Loinc code" with "636-9"
+    And I press "Update"
+
+    Then I should not see "Loinc code was successfully updated"
+    And I should see "Loinc code has already been taken"
+
+    When I fill in "Loinc code" with "50000-1"
+    And I press "Update"
+
+    Then I should see "Loinc code was successfully updated"
+    And I should see "50000-1"

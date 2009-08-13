@@ -33,12 +33,12 @@
           %td.forminformation
             .formname
               %span.common_name
-                = link_to h(loinc_code.loinc_code), loinc_code
+                =link_to h(loinc_code.loinc_code), loinc_code
           %td
             %span.test_name
               &= loinc_code.test_name
           %td
-            .tools{:style => "position: absolute; right: 15px;"}
-              = link_to 'Show', loinc_code
+            =loinc_code_tools loinc_code
+
   %span.vert-break
-    = will_paginate @loinc_codes
+    =will_paginate @loinc_codes

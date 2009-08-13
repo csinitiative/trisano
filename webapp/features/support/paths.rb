@@ -55,6 +55,9 @@ def path_to(page_name)
   when /the new loinc code page/
     new_loinc_code_path
 
+  when /edit the loinc code/
+    edit_loinc_code_path @loinc_code
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

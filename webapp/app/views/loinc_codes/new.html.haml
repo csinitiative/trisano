@@ -13,29 +13,11 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- content_for :title do
+-content_for :title do
   Create a LOINC Code
 
-- content_for :tools do
-  = link_to h('< Back to LOINC Codes'), loinc_codes_path
+-content_for :tools do
+  =link_to h('< Back to LOINC Codes'), loinc_codes_path
   %p
 
-- form_for @loinc_code do |f|
-  = f.error_messages
-
-  %table.list
-    %tr
-      %th.forminformation
-        Edit LOINC Code
-
-    %tr
-      %td
-        %span.vert
-          = f.label      :loinc_code, 'LOINC code'
-          = f.text_field :loinc_code, :size => 20
-        %span.vert
-          = f.label      :test_name
-          = f.text_field :test_name, :size => 60
-
-  %span.vert
-    = submit_tag "Create"
+=render :partial => 'form', :locals => { :loinc_code => @loinc_code }
