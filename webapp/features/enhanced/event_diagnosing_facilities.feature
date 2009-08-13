@@ -21,7 +21,7 @@ Feature: Managing diagnosing facilities on events
     And I save the event
     Then I should not see the removed diagnostic facility
 
-  Scenario: Adding and removing diagnosing facilities in edit mode
+  Scenario: Adding diagnosing facilities in edit mode
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 

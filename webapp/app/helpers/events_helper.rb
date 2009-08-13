@@ -88,12 +88,15 @@ module EventsHelper
   end
 
   def add_record_link(form_builder, method, caption, options = {})
+    link_to_function_options = {}
     options[:object] ||= form_builder.object.class.reflect_on_association(method).klass.new
     options[:partial] ||= method.to_s.singularize
     options[:form_builder_local] ||= :f
     options[:insert] ||= method
 
-    link_to_function(caption) do |page|
+    link_to_function_options[:id] = options[:html_id] unless options[:html_id].nil?
+
+    link_to_function(caption, link_to_function_options) do |page|
       form_builder.fields_for(method, options[:object], :child_index => 'NEW_RECORD', :builder => ExtendedFormBuilder) do |f|
         html = render(:partial => options[:partial], :locals => { options[:form_builder_local] => f })
         page << %{
