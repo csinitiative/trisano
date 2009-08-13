@@ -25,6 +25,7 @@
   - core_element("test_result", lab_result_form, :horiz) do
     = lab_result_form.label(:test_result)
     = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
+    &nbsp;&nbsp;&nbsp;or
   - core_element("result_value", lab_result_form, :horiz) do
     = lab_result_form.label(:result_value)
     = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
