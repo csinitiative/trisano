@@ -5,6 +5,8 @@ module LoincCodesHelper
       haml_concat link_to_unless_current('Show', loinc_code)
       haml_concat "|"
       haml_concat link_to_unless_current('Edit', edit_loinc_code_path(loinc_code))
+      haml_concat "|"
+      haml_concat link_to('Delete', loinc_code, :method => :delete, :confirm => 'Are you sure?')
     end
   end
 

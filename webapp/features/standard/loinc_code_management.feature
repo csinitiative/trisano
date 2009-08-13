@@ -93,6 +93,7 @@ Feature: Supporting LOINC codes for lab results
     And I press "Update"
 
     Then I should see ", Electron"
+    And I should be on "the loinc code show page"
 
   Scenario: Entering invalid data when editing a LOINC code
     Given I am logged in as a super user
@@ -111,3 +112,14 @@ Feature: Supporting LOINC codes for lab results
 
     Then I should see "Loinc code was successfully updated"
     And I should see "50000-1"
+
+  Scenario: Deleting a LOINC code
+    Given I am logged in as a super user
+    And I have a loinc code "636-9" with test name "Microscopy, Electron"
+
+    When I go to edit the loinc code
+    And I follow "Delete"
+
+    Then I should see "Loinc code was successfully deleted"
+    And I should not see "636-9"
+    And I should be on "the loinc code index page"

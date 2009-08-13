@@ -11,7 +11,8 @@ module CommonTestTypesHelper
       haml_concat link_to_if(common_test_type.lab_results.empty?,
                              'Delete',
                              common_test_type_path(common_test_type),
-                             :method => :delete)
+                             :method => :delete,
+                             :confirm => 'Are you sure?')
     end
   end
 

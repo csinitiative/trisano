@@ -17,7 +17,7 @@
 
 class LoincCodesController < AdminController
   before_filter :check_role
-  before_filter :find_loinc, :only => [:edit, :update, :show]
+  before_filter :find_loinc, :only => [:edit, :update, :show, :destroy]
 
   def index
     @loinc_codes = LoincCode.paginate :page => params[:page], :order => 'loinc_code ASC'
@@ -48,6 +48,14 @@ class LoincCodesController < AdminController
       else
         format.html { render :action => :edit }
       end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      @loinc_code.destroy
+      flash[:notice] = 'Loinc code was successfully deleted.'
+      format.html { redirect_to loinc_codes_path }
     end
   end
 
