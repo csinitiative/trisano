@@ -30,9 +30,9 @@
       %td
     %tr
       %td
-        - note_body = simple_format(note.note)
+        - note_body = simple_format(h(note.note))
         - if note.struckthrough?
-          %div{:id => "note_#{note.id}", :class => 'struck-through'}= h(note_body)
+          %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
         - else
-          %div{:id => "note_#{note.id}"}= h(note_body)
+          %div{:id => "note_#{note.id}"}= note_body
       %td
