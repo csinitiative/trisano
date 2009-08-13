@@ -17,8 +17,8 @@
 
 = f.label(:places_types, 'Types')
 %div{ :style => 'border: 1px solid; height: 5em; width: 20em; overflow: auto; margin-bottom: 3px' }
-  - field_name = f.object_name + "[place_type_ids][]"
+  - field_name = h(f.object_name + "[place_type_ids][]")
   -# 'types' is passed in as a local.  It contains a method name dictating what types of types (argh) to display: e.g. epi_types or agency_types
   - Place.send(types).each do |type|
-    - field_id = (f.object_name. + "place_type_#{type.the_code}").gsub(/[\[\]]/, "_")
-    = "<label>" + check_box_tag(field_name, type.id, f.object.place_type_ids.include?(type.id), :id => field_id ) + type.code_description + "</label>"
+    - field_id = h((f.object_name. + "place_type_#{type.the_code}").gsub(/[\[\]]/, "_"))
+    = "<label>" + check_box_tag(field_name, type.id, f.object.place_type_ids.include?(type.id), :id => field_id ) + h(type.code_description) + "</label>"

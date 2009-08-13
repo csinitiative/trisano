@@ -29,15 +29,15 @@
         - no_saved_notes = false
         %tr
           %th.forminformation
-            = note.user.best_name
+            = h(note.user.best_name)
           %th
         %tr.roll
           %td.forminformation
             %small
               - unless note.note_type.blank?
                 %span{ :class => 'note-type' }
-                  = "#{note.note_type.humanize} "
-              = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
+                  = h("#{note.note_type.humanize} ")
+              = h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
           %td
             -# Not building on the builder object referenced with 'f' because this partial can be redrawn with Ajax
             - fields_for("#{@event.class.name.underscore}[notes_attributes][#{note.id}]", note, :builder => ExtendedFormBuilder) do |note_fields|
@@ -51,10 +51,10 @@
             - note_body = simple_format(note.note)
             - if note.struckthrough?
               %div{:id => "note_#{note.id}", :class => 'struck-through'}
-                = note_body
+                = h(note_body)
             - else
               %div{:id => "note_#{note.id}"}
-                = note_body
+                = h(note_body)
           %td
         - if no_saved_notes
           %b No notes have been recorded for this event

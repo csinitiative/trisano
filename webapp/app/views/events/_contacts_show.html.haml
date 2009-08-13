@@ -18,9 +18,9 @@
       - style = {}
 
     %tr
-      %td{style}= person.last_comma_first
-      %td{style}= contact_event_data.disposition.code_description if contact_event_data and contact_event_data.disposition
-      %td{style}= contact_event_data.contact_type.code_description if contact_event_data and contact_event_data.contact_type
+      %td{style}= h(person.last_comma_first)
+      %td{style}= h(contact_event_data.disposition.code_description) if contact_event_data and contact_event_data.disposition
+      %td{style}= h(contact_event_data.contact_type.code_description) if contact_event_data and contact_event_data.contact_type
 
       %td{style} 
         -unless contact_phone.nil? 
