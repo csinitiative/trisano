@@ -8,12 +8,12 @@
         - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
           - core_element_show :name, place_form, :horiz do
             = place_form.label(:name, 'Agency name')
-            = place_form.object.name
+            = h(place_form.object.name)
           %span.horiz
             = label_tag('Types')
-            = place_form.object.formatted_place_descriptions
+            = h(place_form.object.formatted_place_descriptions)
           = label_tag('Agency phone')
-          = entity_form.object.primary_phone.simple_format
+          = h(entity_form.object.primary_phone.simple_format)
 
   %fieldset.form
     %legend Reporter
@@ -33,13 +33,13 @@
         - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
           - core_element_show :area_code, phone_fields, :horiz do
             = phone_fields.label(:area_code)
-            = phone_fields.object.area_code
+            = h(phone_fields.object.area_code)
           - core_element_show :phone_number, phone_fields, :horiz do
             = phone_fields.label(:phone_number)
-            = phone_number(phone_fields.object.phone_number) if phone_fields.object.phone_number
+            = h(phone_number(phone_fields.object.phone_number)) if phone_fields.object.phone_number
           - core_element_show :extension, phone_fields, :horiz do
             = phone_fields.label(:extension)
-            = phone_fields.object.extension
+            = h(phone_fields.object.extension)
 
   %fieldset.form
     %legend Reported Dates
