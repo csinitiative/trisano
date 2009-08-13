@@ -11,7 +11,7 @@ BEGIN
     -- object comments.
 
     -- Get each table
-    result := '';
+    SELECT INTO result E'h1. TriSano Data Dictionary\nCreated ' || now() || ' in the ' || current_database() || E' database\n\n{toc}\n\n';
     FOR tables IN
         SELECT t.oid AS tableoid, n.nspname AS schemaname, t.relname AS tablename, d.description
         FROM pg_catalog.pg_namespace n
