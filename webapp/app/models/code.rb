@@ -17,9 +17,18 @@
 
 class Code < ActiveRecord::Base
 
+  validates_presence_of :code_name
+  validates_presence_of :the_code
+  validates_presence_of :code_description
+  validates_length_of :the_code, :maximum => 20
+  validates_length_of :code_name, :maximum => 50
+  validates_uniqueness_of :the_code, :scope => :code_name
+
+  named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order'
+
   def self.other_place_type_id
     safe_table_access do
-      @@other_place_type ||= find(:first, :conditions => "code_name = 'placetype' and the_code = 'O'")
+      @@telephone_location_type ||= find_by_code_name_and_the_code 'placetype', '0'
       @@other_place_type.id unless @@other_place_type.nil?
     end
   end
@@ -40,14 +49,14 @@ class Code < ActiveRecord::Base
 
   def self.jurisdiction_place_type_id
     safe_table_access do
-      @@jurisdiction_place_type ||= Code.find_by_code_name_and_code_description('placetype', 'Jurisdiction')
+      @@jurisdiction_place_type ||= find_by_code_name_and_the_code 'placetype', 'J'
       @@jurisdiction_place_type.id if @@jurisdiction_place_type
     end
   end
 
   def self.lab_place_type
     safe_table_access do
-      @@lab_place_type ||= Code.find_by_code_name_and_the_code('placetype', 'L')
+      @@lab_place_type ||= find_by_code_name_and_the_code 'placetype', 'L'
     end
   end
 
@@ -66,4 +75,23 @@ class Code < ActiveRecord::Base
       nil
     end
   end
+
+  def deleted?
+    not deleted_at.nil?
+  end
+
+  def soft_delete
+    if self.deleted_at.nil?
+      self.deleted_at = Time.new
+      self.save(false)
+    end
+  end
+
+  def soft_undelete
+    if not self.deleted_at.nil?
+      self.deleted_at = nil
+      self.save(false)
+    end
+  end
+
 end

@@ -806,14 +806,16 @@ SEARCH
   end
 
 
-      
-
   private
   
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
-    i = -1
+
+    # In the case of a deep copy it's possible for an event to have forms associated with it even if it hasn't undergone form assigment formally.
+    template_ids = self.form_references.collect { |fr| fr.template_id }
+    i = self.form_references.size - 1
     Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
+      next if template_ids.include?(form.template_id)
       self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
     end
     return true

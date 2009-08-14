@@ -27,7 +27,7 @@ When /^I visit the staged message new page$/ do
 end
 
 When /^I type the "([^\"]*)" message into "([^\"]*)"$/ do |msg, field|
-  response.should have_xpath "//textarea[@id='#{field}']"
+  response.should(have_xpath("//textarea[@id='#{field}']"))
   fill_in field, :with => hl7_messages[msg.downcase.to_sym] || raise("no message #{msg}")
 end
 

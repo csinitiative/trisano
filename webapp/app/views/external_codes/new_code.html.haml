@@ -14,42 +14,39 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create Code
+  = "#{@code_name.description} - New Code"
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Codes', codes_path
+  = link_to '< Back to Codes', index_code_path(@code_name.code_name)
   %p
-  
+
+= error_messages_for :external_code
+
 #rot
   %table.list
     %tr
       %th.forminformation
-        Create Code
+        Code Information
+      %th
     %tr
       %td
-        - form_for(@external_code, :builder => ExtendedFormBuilder) do |f|
+        .tools
+          %b Type:
+          = @external_code.code_name
 
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        Edit Code
+    %tr
+      %td
+        - form_for(:external_code, :url => create_code_path(@external_code.code_name), :builder => ExtendedFormBuilder) do |code_form|
+          = code_form.hidden_field :code_name
           %span.vert-break
-            = f.label(:the_code, "Code")
-            = f.text_field :the_code
-
-          %span.vert-break
-            = f.label(:code_description, "Description")
-            = f.text_field :code_description
-
-          %span.vert-break
-            = f.label(:code_name, "Code Type")
-            = f.text_field :code_name
-
-          %span.vert-break
-            = f.label(:sort_order, "Sort Order")
-            = f.text_field :sort_order
-
-          %span.vert-break
-          %label Jurisdiction (county only)
-          = f.select :jurisdiction_id, Place.jurisdictions.map{ |j| [j.name, j.id] }, {:prompt => 'Choose for County Codes Only'} 
-          %br
-
-          = f.submit "Create"
+            %label Code
+            = code_form.text_field :the_code, :size => 20, :maxlength => 20
+          = render("external_codes/#{@code_name.code_name}/form", :code_form => code_form) rescue render("external_codes/form", :code_form => code_form)
+          = code_form.submit "Create"

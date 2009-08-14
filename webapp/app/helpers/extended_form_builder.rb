@@ -53,10 +53,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def codes(code_name)
     if(is_external_code?(code_name))
-      @external_codes = ExternalCode.find(:all, :order => 'sort_order')
+      @external_codes = ExternalCode.active
       @ret = @external_codes.select {|code| code.code_name == code_name}
     else
-      @codes = Code.find(:all, :order => 'sort_order')
+      @codes = Code.active
 
       # DEBT:  Clean this up some day, but for now remove the 'jurisdiction' code type so that the user
       # doesn't accidentally create one.
@@ -227,9 +227,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   # DEBT:  Get rid of / dry this up someday
   def is_external_code?(code_name)
-    @external_codes = ["gender", "ethnicity", "state", "county","specimen", "imported", "yesno", "location", "language", "race", "case", "telephonelocationtype", "contactdispositiontype", "contact_type", "test_result", "test_status"]
-    @external_codes.each {|ec| return TRUE if ec == code_name}
-    return FALSE
+    cn = CodeName.find_by_code_name(code_name)
+    return cn.external
   end
 
   def core_follow_up_event(attribute, event)

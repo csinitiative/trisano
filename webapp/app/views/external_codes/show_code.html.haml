@@ -14,17 +14,18 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Code Detail
+  =  "#{@code_name.description} - #{@external_code.the_code} - Code Detail"
 
 /- content_for :name do
-/  = "Code details: #{@external_code.code_description}"
+/=  "Code details: #{@external_code.code_description}"
 
 - content_for :tools do
-  = link_to "< Back to Codes", codes_path
+  = link_to '< Back to Codes', index_code_path(@code_name.code_name)
+  .horiz
   %p
 
 - content_for :tools_two do
-  = button_to("Create new code", {:action => "new"}, { :method => :get })
+  = button_to "New #{@code_name.description} Code", new_code_path(@code_name.code_name)
 
 #rot
   %table.list
@@ -41,17 +42,17 @@
           %br
           %b Code Type:
           = @external_code.code_name
-          %br
-          %b Sort Order:
-          = @external_code.sort_order
-          - if @external_code.code_name == 'county' and not @external_code.jurisdiction_id.nil?
-            %br
-            %b Jurisdiction:
-            = @external_code.jurisdiction.name
+          %br 
+          %b Status:
+          = @external_code.deleted? ? 'Delete on ' + @external_code.deleted_at.to_s : 'Active'
+          = render("external_codes/#{@code_name.code_name}/details") rescue render("external_codes/details")
       %td
         .tools{:style => "position: absolute; right: 15px;"}
-          = link_to "Edit", edit_code_path(@external_code)
-          |
-          Show
-          |
-          = link_to("Delete", code_path(@external_code), :method => :delete, :confirm => "Really delete code?")
+          - if @external_code.deleted?
+            = link_to "Undelete", soft_undelete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really restore code?"
+          - else
+            = link_to "Edit", edit_code_path(@external_code.code_name, @external_code.the_code)
+            |
+            Show
+            |
+            = link_to "Delete", soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really delete code?"

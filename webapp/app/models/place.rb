@@ -121,9 +121,8 @@ class Place < ActiveRecord::Base
     end
     
     def place_types(type_codes)
-      Code.find(:all, 
-        :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes],
-        :order => 'sort_order ASC')
+      Code.active.find(:all, 
+        :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes])
     end
 
     def all_by_place_code(code, select=nil)

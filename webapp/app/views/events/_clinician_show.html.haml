@@ -33,7 +33,7 @@
   %span.horiz
     %label Last Name
     = h(person.last_name)
-  %span.horiz  
+  %span.horiz
     %label First Name
     = h(person.first_name) || "&nbsp;"
   %span.horiz
@@ -43,7 +43,13 @@
     %label Telephone
     = h(person.safe_call_chain(:primary_phone, :simple_format)) || "&nbsp;"
 
-  - if !person_form.object.new_record?
+  - if person_form.object.new_record?
+    -# This place was added via live search. Provide a mechanism for removing the place before saving.
+    %span.horiz
+      &nbsp;
+      %br
+      = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
+  - else
     %span.horiz
       = person_form.label :_delete, "Remove:"
       = person_form.check_box :_delete

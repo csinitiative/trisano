@@ -17,27 +17,33 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Code do
+describe CodeName do
   before(:each) do
-    @code = Code.new
+    @code_name = CodeName.new()
   end
 
-  it "should not be valid when empty" do
-    @code.should_not be_valid
+  it "blank code_name should not be valid" do
+    @code_name.should_not be_valid
   end
 
-  it "should be valid when populated" do
-    @code.code_name = 'test'
-    @code.the_code = 'TEST'
-    @code.code_description = 'Test Code'
-    @code.should be_valid
-    @code.save.should be_true
+  it "uniqe code_name should be valid" do
+    @code_name.code_name = 'test'
+    @code_name.description = 'Test Code Name'
+    @code_name.should be_valid
+    @code_name.save.should be_true
   end
 
-  describe 'Jurisdiction place type' do
-    fixtures :codes
-    it 'should exist' do
-      Code.jurisdiction_place_type_id.should_not be_nil
-    end
+  it "duplicate code_name should result in error" do
+    @code_name.code_name = 'test'
+    @code_name.description = 'Test Code Name'
+    @code_name.should be_valid
+    @code_name.save.should be_true
+
+    @code_name2 = CodeName.new()
+    @code_name2.code_name = 'test'
+    @code_name2.description = 'Test Code Name 2'
+    @code_name2.should_not be_valid
+    @code_name2.save.should_not be_true
   end
 end
+

@@ -22,8 +22,16 @@ describe ExternalCode do
     @external_code = ExternalCode.new
   end
 
-  it "should be valid" do
+  it "should be not valid when blank" do
+    @external_code.should_not be_valid
+  end
+
+  it "should be valid when populated" do
+    @external_code.code_name = 'test'
+    @external_code.the_code = 'TEST'
+    @external_code.code_description = 'Test Code'
     @external_code.should be_valid
+    @external_code.save.should be_true
   end
 
   describe 'telephone location type ids' do

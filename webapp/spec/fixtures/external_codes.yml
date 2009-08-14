@@ -208,30 +208,6 @@ district_beaver:
   the_code:  "BV"
   code_description: "Beaver"
 
-location_home:
-  id: 1301
-  code_name: "location"
-  the_code:  "H"
-  code_description: "Home"
-
-location_work:
-  id: 1302
-  code_name: "location"
-  the_code:  "W"
-  code_description: "Work"
-
-location_unspecified:
-  id: 1303
-  code_name: "location"
-  the_code:  "U"
-  code_description: "Unspecified"
-
-location_mobile:
-  id: 1304
-  code_name: "location"
-  the_code:  "M"
-  code_description: "Mobile"
-
 yesno_unknown:
   id: 1401
   code_name: "yesno"

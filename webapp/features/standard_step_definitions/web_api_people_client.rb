@@ -44,7 +44,7 @@ Given(/^that known person entity has been deleted$/) do
 end
 
 When /^I visit the person show page$/ do
-  visit person_path @person_entity
+  visit(person_path(@person_entity))
 end
 
 When /^I visit the people index page$/ do
@@ -53,6 +53,10 @@ end
 
 When /^I visit the people new page$/ do
   visit new_person_path
+end
+
+When /^I visit the people edit page$/ do
+  visit(edit_person_path(@person_entity))
 end
 
 When /^I search people by "(.+?)" with "(.+?)"$/ do |key, value|

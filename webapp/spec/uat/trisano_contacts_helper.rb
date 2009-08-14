@@ -58,5 +58,9 @@ module TrisanoContactsHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Edit Contact Event"))
   end
+
+  def remove_contact(browser, index=1)
+    browser.click("//div[@id='contact_child_events']//div[@class='contact'][#{index}]//input[contains(@id, '_delete')]")
+  end
   
 end

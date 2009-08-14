@@ -55,7 +55,7 @@ class EventAttachmentsController < ApplicationController
 
   def destroy
     begin
-      @attachment = @event.attachment.find(params[:id])
+      @attachment = @event.attachments.find(params[:id])
       @attachment.destroy
       respond_to do |format|
         format.html do
