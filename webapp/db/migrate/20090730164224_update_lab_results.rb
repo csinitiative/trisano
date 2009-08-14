@@ -2,6 +2,7 @@ class UpdateLabResults < ActiveRecord::Migration
  extend MigrationHelpers
 
   def self.up
+    add_column :lab_results, :loinc_code, :string, :limit => 10
     add_column :lab_results, :test_type_id, :integer
     add_column :lab_results, :test_result_id, :integer
     add_column :lab_results, :result_value, :string

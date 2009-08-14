@@ -303,5 +303,25 @@ module StagedMessages
         "Could not be determined"
       end
     end
+
+    def status
+      begin
+        obx_segment.observation_result_status
+      rescue
+        "Could not be determined"
+      end
+    end
+
+    def trisano_status_id
+      # I'm being ultra-lean (aka lazy) here and hard coding these until there's a story
+      # that says that admins should be able to dynamically map them.
+      hl7_status_codes = { 'C' => 'F', 'F' => 'F', 'I' => 'I', 'P' => 'P', 'R' => 'P', 'S' => 'P' } 
+
+      elr_result_status = self.status.upcase
+      return nil unless hl7_status_codes.has_key?(elr_result_status)
+      status = ExternalCode.find_by_code_name_and_the_code('test_status', hl7_status_codes[elr_result_status])
+      status ? status.id : status
+    end
+
   end
 end

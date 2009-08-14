@@ -223,6 +223,7 @@ describe HumanEvent, 'adding staged messages' do
       event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
       event.labs.first.lab_results.first.result_value.should be_blank
       event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
+      event.labs.first.lab_results.first.test_status.code_description.should == "Final"
     end
   end
 

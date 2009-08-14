@@ -627,7 +627,9 @@ class HumanEvent < Event
           "reference_range"    => obx.reference_range,
           "specimen_source_id" => specimen_source_id,
           "staged_message_id"  => staged_message.id,
-          "units"              => obx.units
+          "units"              => obx.units,
+          "test_status_id"     => obx.trisano_status_id,
+          "loinc_code"         => loinc_code
         }.merge!(result_hash)
         lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
       rescue Exception => error
