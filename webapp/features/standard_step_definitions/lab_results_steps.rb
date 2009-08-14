@@ -35,7 +35,7 @@ end
 Then /^all common test types should be available for selection$/ do
   response.should have_xpath("//form[contains(@class, '_event')]//select[contains(@id, 'test_type_id')]") do |options|
     CommonTestType.all.each do |test_type|
-      options.should contain test_type.common_name
+      options.should contain(test_type.common_name)
     end
   end
 end
@@ -43,7 +43,7 @@ end
 Then /^the following common test types should be available for selection$/ do |common_names|
   response.should have_xpath("//form[contains(@class, '_event')]//select[contains(@id, 'test_type_id')]") do |options|
     common_names.raw.each do |common_name|
-      options.should contain common_name.first
+      options.should contain(common_name.first)
     end
   end
 end
@@ -51,7 +51,7 @@ end
 Then /^the following common test types should not be available for selection$/ do |common_names|
   response.should have_xpath("//form[contains(@class, '_event')]//select[contains(@id, 'test_type_id')]") do |options|
     common_names.raw.each do |common_name|
-      options.should_not contain common_name.first
+      options.should_not contain(common_name.first)
     end
   end
 end
