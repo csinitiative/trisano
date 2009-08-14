@@ -98,3 +98,6 @@
   description: "Test Status"
   external: true
 
+- code_name: "loinc_scale"
+  description: "Scale"
+  external: true

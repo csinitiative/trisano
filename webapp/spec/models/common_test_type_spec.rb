@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CommonTestType do
+  fixtures :external_codes
 
   describe 'associations' do
     it { should have_many(:disease_common_test_types) }
@@ -33,14 +34,15 @@ describe CommonTestType do
   describe 'updating loinc codes' do
 
     before do
-      @loinc_code = LoincCode.create!(:loinc_code => '636-9')
+      @loinc_code = LoincCode.create!(:loinc_code => '636-9',
+                                      :scale_id => external_codes(:loinc_scale_ord).id)
     end
 
     it 'should be able to add loinc codes by id' do
       @common_test_type.loinc_codes.should == []
       @common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s]
       @common_test_type.loinc_codes.should == [@loinc_code]
-      lambda{@common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s] }.should_not raise_error
+      lambda{ @common_test_type.update_loinc_code_ids :add => [@loinc_code.id.to_s] }.should_not raise_error
     end
 
     it 'should not raise an error if a loinc code is added more then once' do
@@ -84,7 +86,7 @@ describe CommonTestType do
     it 'should be destroyed' do
       lambda do
         @common_test_type.destroy
-      end.should change(CommonTestType, :count).by -1
+      end.should change(CommonTestType, :count).by(-1)
     end
 
   end
@@ -104,10 +106,12 @@ describe CommonTestType do
       @loinc_codes = []
       @loinc_codes << LoincCode.create!(:loinc_code => '14375-1',
                                         :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
-                                        :common_test_type_id => @common_test_type.id)
+                                        :common_test_type_id => @common_test_type.id,
+                                        :scale_id => external_codes(:loinc_scale_ord).id)
       @loinc_codes << LoincCode.create!(:loinc_code => '636-3',
                                         :test_name => 'Culture, Sterile body fluid',
-                                        :common_test_type_id => @common_test_type.id)
+                                        :common_test_type_id => @common_test_type.id,
+                                        :scale_id => external_codes(:loinc_scale_ord).id)
     end
 
     it 'should remove loinc associations when destroyed' do
@@ -122,7 +126,7 @@ describe CommonTestType do
     end
 
     it 'should be able to add and remove in same operation' do
-      new_loinc = LoincCode.create :loinc_code => '636-9'
+      new_loinc = LoincCode.create :loinc_code => '636-9', :scale_id => external_codes(:loinc_scale_ord).id
       @common_test_type.update_loinc_code_ids(:add => [new_loinc.id.to_s],
                                               :remove => @loinc_codes.collect { |c| c.id.to_s })
       @common_test_type.loinc_codes.should == [new_loinc]
@@ -133,7 +137,9 @@ describe CommonTestType do
   describe 'with associated loinc codes and assoicated lab results' do
     before do
       @lab_result = Factory.create(:lab_result, :test_type_id => @common_test_type.id)
-      @loinc_code = LoincCode.create!(:loinc_code => '636-3', :common_test_type_id => @common_test_type.id)
+      @loinc_code = LoincCode.create!(:loinc_code => '636-3',
+                                      :common_test_type_id => @common_test_type.id,
+                                      :scale_id => external_codes(:loinc_scale_ord).id)
     end
 
     it 'should not clear loincs on a failed destroy' do
@@ -146,7 +152,9 @@ describe CommonTestType do
   describe '#find_unrelated_loincs' do
 
     before do
-      @loinc_code = LoincCode.create! :loinc_code => '14375-1', :test_name => 'Nulla felis nibh, aliquet eget, Unspecified'
+      @loinc_code = LoincCode.create!(:loinc_code => '14375-1', 
+                                      :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
+                                      :scale_id => external_codes(:loinc_scale_ord).id)
       @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
     end
 

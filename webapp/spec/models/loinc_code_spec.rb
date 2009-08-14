@@ -18,24 +18,28 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LoincCode do
+  fixtures :external_codes
+
+  before do
+    @scale = external_codes :loinc_scale_ord
+  end
+
+  it 'scale and loinc code values should not be nil' do
+    LoincCode.create.errors.on(:loinc_code).should be_true
+    LoincCode.create.errors.on(:scale_id).should be_true
+  end
 
   describe 'loinc code' do
 
     it 'should be unique' do
-      LoincCode.create :loinc_code => '999999-9'
-      lambda {LoincCode.create! :loinc_code => '999999-9'}.should raise_error
-      LoincCode.new(:loinc_code => '999999-9').should_not be_valid
-      LoincCode.new(:loinc_code => '888888-8').should be_valid
-    end
-
-    it 'should not be null' do
-      lambda {LoincCode.create!}.should raise_error
-      LoincCode.new.should_not be_valid
+      LoincCode.create :loinc_code => '999999-9', :scale_id => @scale.id
+      LoincCode.create(:loinc_code => '999999-9').errors.on(:loinc_code).should == "has already been taken"
+      LoincCode.create(:loinc_code => '888888-8').errors.on(:loinc_code).should be_nil
     end
 
     it 'should not be longer then 10 chars' do
-      LoincCode.new(:loinc_code => ('c' * 11)).should_not be_valid
-      LoincCode.new(:loinc_code => ('c' * 10)).should be_valid
+      LoincCode.create(:loinc_code => ('c' * 11)).errors.on(:loinc_code).should be_true
+      LoincCode.create(:loinc_code => ('c' * 10)).errors.on(:loinc_code).should be_nil
     end
 
   end
@@ -43,8 +47,8 @@ describe LoincCode do
   describe 'test name' do
 
     it 'should not be longer then 255 chars' do
-      LoincCode.new(:loinc_code => '999999-9', :test_name => ('c' * 256)).should_not be_valid
-      LoincCode.new(:loinc_code => '999999-9', :test_name => ('c' * 255)).should be_valid
+      LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 256)).errors.on(:test_name).should be_true
+      LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 255)).errors.on(:test_name).should be_nil
     end
 
   end

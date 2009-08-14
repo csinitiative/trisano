@@ -15,6 +15,9 @@
           %span.horiz
             =f.label      :test_name
             =f.text_field :test_name, :size => 60
+          %span.horiz
+            =f.label      :scale_id, "Scale"
+            =f.select     :scale_id, select_options_loinc_scales
 
     %span.vert
       =create_or_update_button loinc_code

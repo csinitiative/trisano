@@ -19,8 +19,16 @@ class LoincCode < ActiveRecord::Base
   validates_uniqueness_of :loinc_code
   validates_length_of     :loinc_code, :in => 1..10
   validates_length_of     :test_name,  :in => 1..255, :allow_blank => true
+  validates_presence_of   :scale_id
 
   belongs_to :common_test_type
+  belongs_to :scale, :class_name => 'ExternalCode'
   has_many   :disease_common_test_types, :foreign_key => :common_test_type_id, :primary_key => :common_test_type_id
   has_many   :diseases, :through => :disease_common_test_types
+
+  named_scope :unrelated_to, lambda { |common_test_type|
+    { :conditions => ['(common_test_type_id IS NULL OR common_test_type_id != ?)', common_test_type],
+      :include    => [:common_test_type]
+    }
+  }
 end

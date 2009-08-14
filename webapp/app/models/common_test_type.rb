@@ -35,6 +35,7 @@ class CommonTestType < ActiveRecord::Base
       LoincCode.update_all  'common_test_type_id = NULL',        ['id IN (?)', removed] unless removed.empty?
     end
     self.loinc_codes.reset
+    true
   end
 
   def find_unrelated_loincs(search_keys={})
@@ -51,10 +52,7 @@ class CommonTestType < ActiveRecord::Base
     if sql.empty?
       []
     else
-      sql << '(common_test_type_id IS NULL OR common_test_type_id != ?)'
-      conditions << self.id
-      conditions.unshift sql.join(' AND ')
-      LoincCode.find :all, :conditions => conditions, :order => 'loinc_code ASC', :include => [:common_test_type]
+      LoincCode.unrelated_to(self).find(:all, :conditions => conditions.unshift(sql.join(' AND ')), :order => 'loinc_code ASC')
     end
   end
 

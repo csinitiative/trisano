@@ -22,12 +22,14 @@ Feature: Supporting LOINC codes for lab results
 
   Scenario: Listing LOINC codes
     Given I am logged in as a super user
-    And I have a loinc code "13954-3" with test name "Fusce tincidunt urna ut enim ornare adipiscing."
+    And I have a loinc code "13954-3" with scale "Ordinal"
+    And the loinc code has test name "Fusce tincidunt urna ut enim ornare adipiscing."
 
     When I go to the loinc code index page
 
     Then I should see "List LOINC Codes"
     And I should see a link to "13954-3"
+    And I should see "Ordinal"
     And I should see "Fusce tincidunt urna ut enim ornare adipiscing."
 
   Scenario: Paginating the LOINC codes index page
@@ -56,8 +58,9 @@ Feature: Supporting LOINC codes for lab results
     Then I should see "Create a LOINC Code"
     And I should see a link to "< Back to LOINC Codes"
 
-    When I fill in "loinc_code_loinc_code" with "13954-3"
-    And I fill in "loinc_code_test_name" with "Fusce tincidunt urna ut enim ornare adipiscing."
+    When I fill in "Loinc code" with "13954-3"
+    And I fill in "Test name" with "Fusce tincidunt urna ut enim ornare adipiscing."
+    And I select "Quantitative" from "Scale"
     And I press "Create"
 
     Then I should see "LOINC code was successfully created."
@@ -65,10 +68,11 @@ Feature: Supporting LOINC codes for lab results
     And I should see a link to "< Back to LOINC Codes"
     And I should see "13954-3"
     And I should see "Fusce tincidunt urna ut enim ornare adipiscing."
+    And I should see "Quantitative"
 
   Scenario: Entering a duplicate LOINC code
     Given I am logged in as a super user
-    And I have a loinc code "13954-3" with test name ""
+    And I have a loinc code "13954-3" with scale "Nominal"
 
     When I go to the new loinc code page
     And I fill in "loinc_code_loinc_code" with "13954-3"
@@ -78,7 +82,8 @@ Feature: Supporting LOINC codes for lab results
 
   Scenario: Editing a LOINC code
     Given I am logged in as a super user
-    And I have a loinc code "636-6" with test name "Microscopy"
+    And I have a loinc code "636-6" with scale "Nominal"
+    And the loinc code has test name "Microscopy"
 
     When I go to edit the loinc code
     And I fill in "Loinc code" with "636-9"
@@ -95,10 +100,20 @@ Feature: Supporting LOINC codes for lab results
     Then I should see ", Electron"
     And I should be on "the loinc code show page"
 
+    When I follow "Edit"
+    Then the "Nominal" value from Scale should be selected
+
+    When I select "Ordinal" from "Scale"
+    And I press "Update"
+    Then I should see "Ordinal"
+    And I should not see "Nominal"
+
   Scenario: Entering invalid data when editing a LOINC code
     Given I am logged in as a super user
-    And I have a loinc code "636-9" with test name "Microscopy"
-    And I have a loinc code "50000-0" with test name "Back ground check"
+    And I have a loinc code "636-9" with scale "Ordinal"
+    And the loinc code has test name "Microscopy"
+    And I have a loinc code "50000-0" with scale "Quantitative"
+    And the loinc code has test name "Background check"
 
     When I go to edit the loinc code
     And I fill in "Loinc code" with "636-9"
@@ -115,7 +130,8 @@ Feature: Supporting LOINC codes for lab results
 
   Scenario: Deleting a LOINC code
     Given I am logged in as a super user
-    And I have a loinc code "636-9" with test name "Microscopy, Electron"
+    And I have a loinc code "636-9" with scale "Quantitative or Ordinal"
+    And the loinc code has test name "Microscopy, Electron"
 
     When I go to edit the loinc code
     And I follow "Delete"

@@ -27,6 +27,8 @@
       %th
         Test Name
       %th
+        Scale
+      %th
         &nbsp;
       - @loinc_codes.each do |loinc_code|
         %tr.roll
@@ -37,6 +39,9 @@
           %td
             %span.test_name
               &= loinc_code.test_name
+          %td
+            %span.scale
+              &= loinc_code.scale.code_description
           %td
             =loinc_code_tools loinc_code
 

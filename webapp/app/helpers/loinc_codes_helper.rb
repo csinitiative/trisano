@@ -10,4 +10,9 @@ module LoincCodesHelper
     end
   end
 
+  def select_options_loinc_scales
+    CodeName.loinc_scale.external_codes.sort_by(&:sort_order).collect do |code|
+      [code.code_description, code.id]
+    end
+  end
 end

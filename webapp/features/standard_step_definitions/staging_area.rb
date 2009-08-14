@@ -91,8 +91,9 @@ When /^I visit the assigned-to event$/ do
 end
 
 Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
+  @scale = CodeName.loinc_scale.external_codes.first
   loinc_test_maps.rows.each do |loinc_test_map|
-    d = LoincCode.new(:loinc_code => loinc_test_map.first)
+    d = LoincCode.new(:loinc_code => loinc_test_map.first, :scale_id => @scale.id)
     d.build_common_test_type(:common_name => loinc_test_map.last) unless loinc_test_map.last.blank?
     d.save
   end
