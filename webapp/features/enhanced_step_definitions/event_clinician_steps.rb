@@ -27,9 +27,8 @@ end
 
 When(/^I add an existing clinician$/) do
   click_core_tab(@browser, "Clinical")
-  @browser.type_keys("clinicians_search", @deleted_clinician.person.last_name)
+  @browser.type_keys("clinicians_search", @clinician.person.last_name)
 
-  @browser.is_element_present("//div[@id='clinicians_search_choices']/ul").should be_false
   wait_for_element_present("//div[@id='clinicians_search_choices']/ul")
   @browser.click "//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@clinician.person.last_name}']"
   wait_for_element_present("//div[@class='existing_clinician']")
@@ -40,6 +39,11 @@ When(/^I add a new clinician$/) do
   add_clinician(@browser, { :last_name => @new_clinician_name })
 end
 
+When(/^I click remove for that clinician$/) do
+  @browser.click("link=Remove")
+  wait_for_element_not_present("//div[@id='live_search_clinicians']/div[@class='existing_clinician']")
+end
+
 When(/^I search for the deleted clinician$/) do
   click_core_tab(@browser, "Clinical")
   @browser.type_keys("clinicians_search", @common_name)
@@ -48,6 +52,10 @@ end
 
 When(/^I check a clinician to remove$/) do
   remove_clinician(@browser)
+end
+
+Then(/^I should not see the clinician$/) do
+  @browser.is_element_present("//div[@id='live_search_clinicians']/div[@class='existing_clinician']").should be_false
 end
 
 Then(/^I should not see the removed clinician$/) do
@@ -63,4 +71,7 @@ Then(/^I should not see the deleted clinician$/) do
   @browser.is_element_present("//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@clinician.person.last_name}']").should be_true
   @browser.is_element_present("//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@deleted_clinician.person.last_name}']").should be_false
 end
+
+
+
 

@@ -9,6 +9,10 @@ Feature: Managing clinicians on events
 
     When I navigate to the new event page and start a simple event
     And I add an existing clinician
+    And I click remove for that clinician
+    Then I should not see the clinician
+
+    When I add an existing clinician
     And I add a new clinician
     And I save the event
     Then I should see all added clinicians
