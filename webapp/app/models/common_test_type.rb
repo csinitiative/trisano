@@ -28,23 +28,14 @@ class CommonTestType < ActiveRecord::Base
 
   def update_loinc_code_ids(options={})
     options = {:add => [], :remove => []}.merge(options)
-    added   = options[:add].collect(&:to_i)
-    removed = options[:remove].collect(&:to_i)
+    added   = options[:add]
+    removed = options[:remove]
     LoincCode.transaction do
       LoincCode.update_all ['common_test_type_id = ?', self.id], ['id IN (?)', added]   unless added.empty?
       LoincCode.update_all  'common_test_type_id = NULL',        ['id IN (?)', removed] unless removed.empty?
     end
     self.loinc_codes.reset
     true
-  end
-
-  def find_unrelated_loincs(search_keys={})
-    return [] unless search_keys.any?{ |k, v| not v.blank? }
-    LoincCode.with_test_name_containing search_keys[:test_name] do
-      LoincCode.with_loinc_code_starting search_keys[:loinc_code] do
-        LoincCode.unrelated_to(self).find(:all, :order => 'loinc_code ASC')
-      end
-    end
   end
 
   private

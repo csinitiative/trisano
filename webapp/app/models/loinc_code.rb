@@ -54,4 +54,13 @@ class LoincCode < ActiveRecord::Base
     end
   end
 
+  def self.search_unrelated_loincs(common_test_type, criteria={})
+    return [] unless criteria.any?{ |k, v| not v.blank? }
+    with_test_name_containing criteria[:test_name] do
+      with_loinc_code_starting criteria[:loinc_code] do
+        unrelated_to common_test_type
+      end
+    end
+  end
+
 end

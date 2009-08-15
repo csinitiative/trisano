@@ -149,23 +149,4 @@ describe CommonTestType do
 
   end
 
-  describe '#find_unrelated_loincs' do
-
-    before do
-      @loinc_code = LoincCode.create!(:loinc_code => '14375-1', 
-                                      :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
-                                      :scale_id => external_codes(:loinc_scale_ord).id)
-      @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
-    end
-
-    it 'should find all matches, if none are associated with this instance' do
-      @common_test_type.find_unrelated_loincs(:test_name => 'nulla').should == [@loinc_code]
-    end
-
-    it 'should return empty array if all matches are already assoc, with this instance' do
-      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id]
-      @common_test_type.find_unrelated_loincs(:test_name => 'nulla').should == []
-    end
-
-  end
 end

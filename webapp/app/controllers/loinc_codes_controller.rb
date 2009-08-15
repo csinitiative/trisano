@@ -20,7 +20,7 @@ class LoincCodesController < AdminController
   before_filter :find_loinc, :only => [:edit, :update, :show, :destroy]
 
   def index
-    @loinc_codes = LoincCode.paginate :page => params[:page], :order => 'loinc_code ASC'
+    @loinc_codes = LoincCode.paginate :page => params[:page]
   end
 
   def new

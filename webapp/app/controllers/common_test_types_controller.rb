@@ -35,8 +35,9 @@ class CommonTestTypesController < AdminController
     @common_test_type = CommonTestType.find(params[:id])
 
     if params[:do] == "Search"
-      @loinc_codes = @common_test_type.find_unrelated_loincs(:test_name  => params[:loinc_code_search_test_name],
-                                                             :loinc_code => params[:loinc_code_search_loinc_code])
+      @loinc_codes = LoincCode.search_unrelated_loincs(@common_test_type,
+                                                       :test_name  => params[:loinc_code_search_test_name],
+                                                       :loinc_code => params[:loinc_code_search_loinc_code])
     end
   end
 

@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LoincCode do
-  fixtures :external_codes
+  fixtures :external_codes, :loinc_codes
 
   before do
     @scale = external_codes :loinc_scale_ord
@@ -32,7 +32,7 @@ describe LoincCode do
   it 'by default, should return all lists in loinc code numerical order' do
     loinc = LoincCode.create! :loinc_code => '11234-1', :scale_id => @scale.id
     loinc.clone.update_attributes! :loinc_code => '114-9'
-    LoincCode.find(:all).collect(&:loinc_code).should == ['114-9', '11234-1']
+    LoincCode.find(:all).collect(&:loinc_code).should == ["114-9", "5221-7", "10000-1", "11234-1", "13954-3"]
   end
 
   describe 'loinc code' do
@@ -55,6 +55,30 @@ describe LoincCode do
     it 'should not be longer then 255 chars' do
       LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 256)).errors.on(:test_name).should be_true
       LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 255)).errors.on(:test_name).should be_nil
+    end
+
+  end
+
+  describe '#search_unrelated_loincs' do
+
+    before do
+      @loinc_code = LoincCode.create!(:loinc_code => '14375-1',
+                                      :test_name => 'Nulla felis nibh, aliquet eget, Unspecified',
+                                      :scale_id => external_codes(:loinc_scale_ord).id)
+      @common_test_type = CommonTestType.create! :common_name => 'Nulla felis nibh, aliquet eget.'
+    end
+
+    it 'should find all matches, if none are associated with this instance' do
+      LoincCode.search_unrelated_loincs(@common_test_type, :test_name => 'nulla').should == [@loinc_code]
+    end
+
+    it 'should return empty array if all matches are already assoc, with this instance' do
+      @common_test_type.update_loinc_code_ids :add => [@loinc_code.id]
+      LoincCode.search_unrelated_loincs(@common_test_type, :test_name => 'nulla').should == []
+    end
+
+    it 'should return empty array if no search criteria provided' do
+      LoincCode.search_unrelated_loincs(@common_test_type).should == []
     end
 
   end
