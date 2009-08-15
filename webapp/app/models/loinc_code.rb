@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class LoincCode < ActiveRecord::Base
+  default_scope :order => "lpad(loinc_code, 10, '0')"
+
   validates_uniqueness_of :loinc_code
   validates_length_of     :loinc_code, :in => 1..10
   validates_length_of     :test_name,  :in => 1..255, :allow_blank => true
@@ -31,4 +33,25 @@ class LoincCode < ActiveRecord::Base
       :include    => [:common_test_type]
     }
   }
+
+  def self.with_test_name_containing(value)
+    if value.blank?
+      yield
+    else
+      with_scope :find => {:conditions => ['test_name ILIKE ?', "%#{value}%"]} do
+        yield
+      end
+    end
+  end
+
+  def self.with_loinc_code_starting(value)
+    if value.blank?
+      yield
+    else
+      with_scope :find => {:conditions => ['loinc_code ILIKE ?', value + '%']} do
+        yield
+      end
+    end
+  end
+
 end

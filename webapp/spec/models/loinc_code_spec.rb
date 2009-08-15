@@ -29,6 +29,12 @@ describe LoincCode do
     LoincCode.create.errors.on(:scale_id).should be_true
   end
 
+  it 'by default, should return all lists in loinc code numerical order' do
+    loinc = LoincCode.create! :loinc_code => '11234-1', :scale_id => @scale.id
+    loinc.clone.update_attributes! :loinc_code => '114-9'
+    LoincCode.find(:all).collect(&:loinc_code).should == ['114-9', '11234-1']
+  end
+
   describe 'loinc code' do
 
     it 'should be unique' do

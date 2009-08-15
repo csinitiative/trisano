@@ -39,20 +39,11 @@ class CommonTestType < ActiveRecord::Base
   end
 
   def find_unrelated_loincs(search_keys={})
-    sql = []
-    conditions = []
-    unless search_keys[:test_name].blank?
-      sql << 'test_name ILIKE ?'
-      conditions << "%#{search_keys[:test_name]}%"
-    end
-    unless search_keys[:loinc_code].blank?
-      sql << 'loinc_code ILIKE ?'
-      conditions << search_keys[:loinc_code] + "%"
-    end
-    if sql.empty?
-      []
-    else
-      LoincCode.unrelated_to(self).find(:all, :conditions => conditions.unshift(sql.join(' AND ')), :order => 'loinc_code ASC')
+    return [] unless search_keys.any?{ |k, v| not v.blank? }
+    LoincCode.with_test_name_containing search_keys[:test_name] do
+      LoincCode.with_loinc_code_starting search_keys[:loinc_code] do
+        LoincCode.unrelated_to(self).find(:all, :order => 'loinc_code ASC')
+      end
     end
   end
 

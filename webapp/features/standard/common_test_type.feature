@@ -121,6 +121,7 @@ Feature: Common tests types for lab results
     And I press "Add"
     Then I should see "Common test type was successfully updated."
     And I should see "Culture, Unspecified"
+    And I should see a link to "11475-1"
 
   Scenario: Searching for LOINCs by code
     Given I am logged in as a super user
@@ -155,7 +156,7 @@ Feature: Common tests types for lab results
     Then I should see "Culture, Sterile body fluid"
     And the search results should not have "Culture, Unspecified"
 
-  Scenario: Searching for loincs will return that may be associated w/ other test types
+  Scenario: Searching for loincs *will* loincs associated w/ other test types
     Given I am logged in as a super user
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
