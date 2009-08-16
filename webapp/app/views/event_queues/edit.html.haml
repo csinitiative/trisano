@@ -18,7 +18,7 @@
 
 - content_for :name do
   Edit 
-  = @event_queue.queue_name
+  = h(@event_queue.queue_name)
 
 - content_for :tools do
   = link_to 'Show', @event_queue

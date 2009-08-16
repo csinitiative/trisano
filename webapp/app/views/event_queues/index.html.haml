@@ -33,9 +33,9 @@
       %tr.roll
         %td
           .formname
-            = link_to event_queue.queue_name, event_queue
+            = link_to h(event_queue.queue_name), event_queue
           .tools
-            = event_queue.jurisdiction.place.name
+            = h(event_queue.jurisdiction.place.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Show', event_queue

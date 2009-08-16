@@ -24,7 +24,7 @@
   %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
     %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
       - Disease.find(:all, :order => "disease_name").each do |disease|
-        = "<label>" + check_box_tag("disease_filter[]", disease.id, (params[:disease_filter] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + disease.disease_name + "</label>"
+        = "<label>" + check_box_tag("disease_filter[]", disease.id, (params[:disease_filter] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
   - assignees = User.default_task_assignees
   - unless assignees.empty?
     %span.vert
@@ -32,7 +32,7 @@
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - assignees.each do |assignee|
-          = "<label>" + check_box_tag("users[]", assignee.id, (params[:users] || []).include?(assignee.id.to_s), :id => assignee.best_name.tr(" ", "_")) + assignee.best_name + "</label>"
+          = "<label>" + check_box_tag("users[]", assignee.id, (params[:users] || []).include?(assignee.id.to_s), :id => assignee.best_name.tr(" ", "_")) + h(assignee.best_name) + "</label>"
 
   - jurisdictions = User.current_user.jurisdictions_for_privilege(:approve_event_at_state)
   - unless jurisdictions.empty?
@@ -41,7 +41,7 @@
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - jurisdictions.each do |jurisdiction|
-          = "<label>" + check_box_tag("jurisdictions[]", jurisdiction.id, (params[:jurisdictions] || []).include?(jurisdiction.id.to_s), :id => jurisdiction.name.tr(" ", "_")) + jurisdiction.name + "</label>"
+          = "<label>" + check_box_tag("jurisdictions[]", jurisdiction.id, (params[:jurisdictions] || []).include?(jurisdiction.id.to_s), :id => jurisdiction.name.tr(" ", "_")) + h(jurisdiction.name) + "</label>"
 
   - statuses = Task.status_array
   - unless statuses.empty?
@@ -50,7 +50,7 @@
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - statuses.each do |status|
-          = "<label>" + check_box_tag("task_statuses[]", status[1], (params[:task_statuses] || []).include?(status[1]), :id => status[0].tr(" ", "_")) + status[0] + "</label>"
+          = "<label>" + check_box_tag("task_statuses[]", status[1], (params[:task_statuses] || []).include?(status[1]), :id => status[0].tr(" ", "_")) + h(status[0]) + "</label>"
 
   %span.horiz= submit_tag 'Update', :id => 'update_tasks_filter'
   %span.horiz= link_to_function('Close', "Effect.BlindUp('task_view_settings')")

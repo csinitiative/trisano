@@ -36,7 +36,7 @@
       %tr.roll
         %td.forminformation
           .formname
-            = link_to disease.disease_name, disease
+            = link_to h(disease.disease_name), disease
             .tools
               = disease.active? ? 'Active' :  'Inactive'
         %td

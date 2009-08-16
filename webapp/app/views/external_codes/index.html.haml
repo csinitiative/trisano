@@ -30,7 +30,7 @@
     %table.list
       %tr
         %th.forminformation
-          = code_type.code_name.capitalize,'&#160; Codes'
+          = h(code_type.code_name.capitalize),'&#160; Codes'
         %th
           Type
         %th
@@ -38,14 +38,14 @@
         %tr.roll
           %td
             .formname
-              = link_to code.the_code, code_path(code)
+              = link_to h(code.the_code), code_path(code)
             .tools
-              = code.code_description
+              = h(code.code_description)
           %td
             .formname
               &#160;
             .tools
-            = code.code_name
+            = h(code.code_name)
           %td
             .tools{:style => "position: absolute; right: 15px;"}
               = link_to("Edit", edit_code_path(code))

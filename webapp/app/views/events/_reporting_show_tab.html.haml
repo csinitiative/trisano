@@ -24,10 +24,10 @@
           %span.vert-break
           - core_element_show :last_name, p, :horiz do
             = p.label(:last_name)
-            = p.object.last_name
+            = h(p.object.last_name)
           - core_element_show :first_name, p, :horiz do
             = p.label(:first_name)
-            = p.object.first_name
+            = h(p.object.first_name)
 
         - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
         - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|

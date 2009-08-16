@@ -34,7 +34,7 @@
       %tr
         %td.forminformation
           .formname
-            = @disease.disease_name
+            = h(@disease.disease_name)
 
           %span{ :class => "horiz" }
             %b
@@ -46,13 +46,13 @@
             %b
               CDC/NETSS code
             %br
-            = @disease.cdc_code
+            = h(@disease.cdc_code)
 
           %span{ :class => "horiz" }
             %b
               Sent to CDC when event status is:
             %br
-            = @disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', ')
+            = h(@disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', '))
 
         %td
           .tools{:style => "position: absolute; right: 15px;"}
@@ -68,17 +68,17 @@
       %td{:style => "width: 5%"}
         Contact
       %td
-        = @disease.contact_lead_in        
+        = h(@disease.contact_lead_in)
     %tr
       %td{:style => "width: 5%"}
         Place
       %td
-        = @disease.place_lead_in        
+        = h(@disease.place_lead_in)
     %tr
       %td{:style => "width: 5%"}
         Treatment
       %td
-        = @disease.treatment_lead_in        
+        = h(@disease.treatment_lead_in)
 
   - unless @disease.export_columns.empty?
     %table.list
@@ -90,4 +90,4 @@
           %ul
             - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
               %li
-                = export_column.export_column_name
+                = h(export_column.export_column_name)

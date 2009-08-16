@@ -17,7 +17,7 @@
   Edit Export Conversion Value
 
 - content_for :name do
-  = @export_column.name
+  = h(@export_column.name)
 
 - content_for :tools do
   = link_to "< Back to export column", export_column_path(@export_column)
@@ -32,7 +32,7 @@
       %tr
         %td.forminformation
           .formname
-            = "Convert #{@export_conversion_value.value_from} to #{@export_conversion_value.value_to}"
+            = "Convert #{h(@export_conversion_value.value_from)} to #{h(@export_conversion_value.value_to)}"
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             Edit

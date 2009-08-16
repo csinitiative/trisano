@@ -74,12 +74,14 @@ class Disease < ActiveRecord::Base
 
   def case_status_where_clause
     codes = external_codes.collect(&:id)
-    "(disease_id='#{self.id}' AND state_case_status_id IN (#{codes.join(',')}))" unless codes.empty?
+    # Why can't I use sanitize_sql_for_conditions here?  Should be safe though since id field.
+    "(disease_id=#{self.id.untaint} AND state_case_status_id IN (#{codes.collect{ |id| id.untaint }.join(',')}))" unless codes.empty?
   end
 
   def invalid_case_status_where_clause
     codes = external_codes.collect(&:id)
-    "(disease_id='#{self.id}' AND state_case_status_id NOT IN (#{codes.join(',')}))" unless codes.empty?
+    # Why can't I use sanitize_sql_for_conditions here?  Should be safe though since id field.
+    "(disease_id='#{self.id.untaint}' AND state_case_status_id NOT IN (#{codes.collect{ |id| id.untaint }.join(',')}))" unless codes.empty?
   end
 
   private

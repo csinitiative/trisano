@@ -34,7 +34,7 @@
       %tr.roll
         %td.forminformation
           .formname
-            = link_to role.role_name, role
+            = link_to h(role.role_name), role
           .tools
             = link_to('Delete', role, :confirm => 'Are you sure?', :method => :delete)
         %td

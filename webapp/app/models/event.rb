@@ -370,7 +370,7 @@ class Event < ActiveRecord::Base
         if not options[field].blank?
           issue_query = true
           where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")" 
-          # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%s", id])}.join(',') + ")"
+          # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%d", id])}.untaint.join(',') + ")"
         end
       end
 

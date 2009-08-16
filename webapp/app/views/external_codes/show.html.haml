@@ -35,19 +35,19 @@
     %tr
       %td
         .formname
-          = @external_code.the_code
+          = h(@external_code.the_code)
         .tools
-          = @external_code.code_description
+          = h(@external_code.code_description)
           %br
           %b Code Type:
-          = @external_code.code_name
+          = h(@external_code.code_name)
           %br
           %b Sort Order:
-          = @external_code.sort_order
+          = h(@external_code.sort_order)
           - if @external_code.code_name == 'county' and not @external_code.jurisdiction_id.nil?
             %br
             %b Jurisdiction:
-            = @external_code.jurisdiction.name
+            = h(@external_code.jurisdiction.name)
       %td
         .tools{:style => "position: absolute; right: 15px;"}
           = link_to "Edit", edit_code_path(@external_code)

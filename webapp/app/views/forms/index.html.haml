@@ -41,7 +41,7 @@
       %tr.roll
         %td.forminformation
           .formname
-            = link_to form.name, builder_path(form)
+            = link_to h(form.name), builder_path(form)
             %br
           .description
             = h form.description

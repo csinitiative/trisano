@@ -23,8 +23,8 @@
         %tr
           %td
             .formname
-              = rm.jurisdiction.place.name
+              = h(rm.jurisdiction.place.name)
             .tools
-              = rm.role.role_name.capitalize
+              = h(rm.role.role_name.capitalize)
   - else
     No roles.

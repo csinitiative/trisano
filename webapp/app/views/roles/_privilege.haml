@@ -20,7 +20,7 @@
       - fields_for "role[privileges_role_attributes][]", privilege do |pr_form|
         - unless privilege.new_record?
           .tools
-            = privilege.privilege.priv_name
+            = h(privilege.privilege.priv_name)
 
           -# Make existing records look new
           - privilege.id = nil

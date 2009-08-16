@@ -37,9 +37,9 @@
         %td.forminformation
           .formname
             Name:
-            = @role.role_name
+            = h(@role.role_name)
           .tools
-            = @role.description
+            = h(@role.description)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_role_path(@role)

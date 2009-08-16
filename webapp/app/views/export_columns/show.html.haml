@@ -34,7 +34,7 @@
       %tr
         %td.forminformation
           .formname
-            = @export_column.name
+            = h(@export_column.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to('Edit', edit_export_column_path(@export_column))
@@ -57,49 +57,49 @@
       %td
         %span{ :class => "horiz" }
           %label Descriptive Name
-          = @export_column.name
+          = h(@export_column.name)
 
         %span{ :class => "horiz" }
           %label CDC Column Name
-          = @export_column.export_column_name
+          = h(@export_column.export_column_name)
 
         %span{ :class =>  "horiz" }
           %label Disease Group
-          = @export_column.export_disease_group.nil? ? "All Diseases" : @export_column.export_disease_group.name
+          = @export_column.export_disease_group.nil? ? "All Diseases" : h(@export_column.export_disease_group.name)
 
         %br.vert-break
         %br
 
         %span{ :class =>  "horiz" }
           %label Data source
-          = @export_column.type_data
+          = h(@export_column.type_data)
 
         %span{ :class =>  "horiz" }
           %label Data type (if source is Formbuilder)
-          = @export_column.data_type
+          = h(@export_column.data_type)
 
         %span{ :class => "horiz" }
           %label Table name (if source is Core Data)
-          = @export_column.table_name
+          = h(@export_column.table_name)
 
         %span{ :class => "horiz" }
           %label Column name (if source is Core Data)
-          = @export_column.column_name
+          = h(@export_column.column_name)
 
         %span{ :class =>  "horiz" }
           %label Required
-          = @export_column.is_required
+          = h(@export_column.is_required)
 
         %br.vert-break
         %br
 
         %span{ :class => "horiz" }
           %label start_position
-          = @export_column.start_position
+          = h(@export_column.start_position)
 
         %span{ :class => "horiz" }
           %label length_to_output
-          = @export_column.length_to_output
+          = h(@export_column.length_to_output)
 
   %table.list
     %tr
@@ -113,9 +113,9 @@
       %tr.roll
         %td
           - value_from = conversion_value.value_from.blank? ? "Text Value" : conversion_value.value_from
-          = "Convert&nbsp;&nbsp; #{value_from}&nbsp;&nbsp;to&nbsp;&nbsp;#{conversion_value.value_to}"
+          = "Convert&nbsp;&nbsp; #{h(value_from)}&nbsp;&nbsp;to&nbsp;&nbsp;#{h(conversion_value.value_to)}"
         %td
-          = conversion_value.sort_order
+          = h(conversion_value.sort_order)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to('Edit', edit_export_column_export_conversion_value_path(@export_column, conversion_value))
