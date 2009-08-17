@@ -59,12 +59,11 @@
               = link_to 'NEW CMR', event_search_cmrs_path
               |
 
-            - can_create = User.current_user.is_entitled_to_in?(:create_event, Place.jurisdiction_by_name("Unassigned").entity_id)
-            - can_update = User.current_user.is_entitled_to_in?(:update_event, Place.jurisdiction_by_name("Unassigned").entity_id)
-            - if config_option(:show_staging_area)
-              - if can_create && can_update
-                = link_to 'STAGING AREA', staged_messages_path
-                |
+            - can_manage_staging_area = User.current_user.is_entitled_to?(:manage_staged_message)
+            - can_write_staged_message = User.current_user.is_entitled_to?(:write_staged_message)
+            - if can_manage_staging_area || can_write_staged_message
+              = link_to 'STAGING AREA', staged_messages_path
+              |
 
             - if User.current_user.is_entitled_to?(:view_event)
               = link_to 'EVENTS', cmrs_path_with_defaults

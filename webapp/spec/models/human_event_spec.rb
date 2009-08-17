@@ -227,6 +227,14 @@ describe HumanEvent, 'adding staged messages' do
     end
   end
 
+  it 'It should assign multi-word test_results properly' do
+    with_human_event do |event|
+      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
+      event.add_labs_from_staged_message(staged_message)
+      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+    end
+  end
+
   it 'should create a new lab and two lab results when using the ARUP2 staged message' do
     with_human_event do |event|
       staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_2])

@@ -384,6 +384,12 @@ test_type_pos:
   the_code: "pos"
   code_description: "Confirmed / Positive"
 
+test_type_rr:
+  id: 2402
+  code_name: "test_result"
+  the_code: "rr"
+  code_description: "Repeatedly reactive"
+
 test_status_final:
   id: 2501
   code_name: "test_status"

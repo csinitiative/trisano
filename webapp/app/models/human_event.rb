@@ -613,7 +613,8 @@ class HumanEvent < Event
       specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
 
-      if (loinc_code.scale.the_code == 'Ord') && (map_id = result_map[obx.result.downcase]) 
+      obx_result = obx.result.gsub(/\s/, '').downcase
+      if (loinc_code.scale.the_code == 'Ord') && (map_id = result_map[obx_result]) 
         result_hash = {"test_result_id" => map_id}
       else
         result_hash = {"result_value" => obx.result}
