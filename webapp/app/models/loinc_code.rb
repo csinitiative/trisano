@@ -34,24 +34,12 @@ class LoincCode < ActiveRecord::Base
     }
   }
 
-  def self.with_test_name_containing(value)
-    if value.blank?
-      yield
-    else
-      with_scope :find => {:conditions => ['test_name ILIKE ?', "%#{value}%"]} do
-        yield
-      end
-    end
+  def self.with_test_name_containing(value, &block)
+    with_scope_unless value.blank?, :find => {:conditions => ['test_name ILIKE ?', "%#{value}%"]}, &block
   end
 
-  def self.with_loinc_code_starting(value)
-    if value.blank?
-      yield
-    else
-      with_scope :find => {:conditions => ['loinc_code ILIKE ?', value + '%']} do
-        yield
-      end
-    end
+  def self.with_loinc_code_starting(value, &block)
+    with_scope_unless value.blank?, :find => {:conditions => ['loinc_code ILIKE ?', "#{value}%"]}, &block
   end
 
   def self.search_unrelated_loincs(common_test_type, criteria={})
