@@ -24,9 +24,16 @@ describe LoincCode do
     @scale = external_codes :loinc_scale_ord
   end
 
-  it 'scale and loinc code values should not be nil' do
-    LoincCode.create.errors.on(:loinc_code).should be_true
-    LoincCode.create.errors.on(:scale_id).should be_true
+  it "should produce an error is a loinc code not in expected format" do
+    LoincCode.create(:loinc_code => 'xxx-1').errors.on(:loinc_code).should == "is invalid (should be nnnnn-n)"
+  end
+
+  it 'loinc_code value should be present' do
+    LoincCode.create(:loinc_code => '').errors.on(:loinc_code).should == "can't be blank"
+  end
+
+  it 'scale_id should be present' do
+    LoincCode.create(:scale_id => '').errors.on(:scale_id).should == "can't be blank"
   end
 
   it 'by default, should return all lists in loinc code numerical order' do
@@ -44,8 +51,8 @@ describe LoincCode do
     end
 
     it 'should not be longer then 10 chars' do
-      LoincCode.create(:loinc_code => ('c' * 11)).errors.on(:loinc_code).should be_true
-      LoincCode.create(:loinc_code => ('c' * 10)).errors.on(:loinc_code).should be_nil
+      LoincCode.create(:loinc_code => '999999999-9').errors.on(:loinc_code).should == "is too long (maximum is 10 characters)"
+      LoincCode.create(:loinc_code => '99999999-9' ).errors.on(:loinc_code).should be_nil
     end
 
   end
@@ -53,7 +60,7 @@ describe LoincCode do
   describe 'test name' do
 
     it 'should not be longer then 255 chars' do
-      LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 256)).errors.on(:test_name).should be_true
+      LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 256)).errors.on(:test_name).should == "is too long (maximum is 255 characters)"
       LoincCode.create(:loinc_code => '999999-9', :test_name => ('c' * 255)).errors.on(:test_name).should be_nil
     end
 

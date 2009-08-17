@@ -34,7 +34,7 @@ end
 
 Given /^I have the following LOINC codes in the system:$/ do |table|
   @scale = CodeName.loinc_scale.external_codes.find_by_code_description('Ordinal')
-  table.raw.each do |record|
+  table.rows.each do |record|
     LoincCode.create!(:loinc_code => record.first, :test_name => record.last, :scale_id => @scale.id)
   end
 end

@@ -19,9 +19,12 @@ class LoincCode < ActiveRecord::Base
   default_scope :order => "lpad(loinc_code, 10, '0')"
 
   validates_uniqueness_of :loinc_code
-  validates_length_of     :loinc_code, :in => 1..10
-  validates_length_of     :test_name,  :in => 1..255, :allow_blank => true
+  validates_presence_of   :loinc_code
+  validates_format_of     :loinc_code, :with => /\d+-\d/, :allow_blank => true, :message => "is invalid (should be nnnnn-n)"
+  validates_length_of     :loinc_code, :maximum => 10,    :allow_blank => true
+
   validates_presence_of   :scale_id
+  validates_length_of     :test_name,  :maximum => 255,   :allow_blank => true
 
   belongs_to :common_test_type
   belongs_to :scale, :class_name => 'ExternalCode'
