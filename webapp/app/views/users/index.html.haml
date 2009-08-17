@@ -34,12 +34,12 @@
       %tr.roll
         %td.forminformation
           .tools
-            = link_to("#{user.first_name} #{user.user_name}", user)
+            = link_to(h("#{user.first_name} #{user.user_name}"), user)
           .formname
             UID:
-            = link_to user.uid, user
+            = link_to h(user.uid), user
           .tools
-            = user.user_name
+            = h(user.user_name)
             %br
             -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
         %td

@@ -25,13 +25,13 @@ class CdcExport < ActiveRecord::Base
         (
           <% (start_mmwr..end_mmwr).each_with_index do |mmwr, index| %>
             <%= " OR " unless index == 0 %>
-            ("MMWR_week"=<%= mmwr.mmwr_week %> AND "MMWR_year"=<%= mmwr.mmwr_year %>)
+            ("MMWR_week"=<%= sanitize_sql_for_conditions(["%d", mmwr.mmwr_week]).untaint %> AND "MMWR_year"=<%= sanitize_sql_for_conditions(["%d", mmwr.mmwr_year]).untaint %>)
           <% end %>
           OR
           (
-            cdc_updated_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}'
+            cdc_updated_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}
             AND
-            ("MMWR_year"=#{end_mmwr.mmwr_year} OR "MMWR_year"=#{end_mmwr.mmwr_year - 1})
+            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year - 1]).untaint})
           )
         )
       END_WHERE_CLAUSE
@@ -42,17 +42,18 @@ class CdcExport < ActiveRecord::Base
     end
 
     def annual_cdc_export(mmwr_year)
-      events = Event.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{mmwr_year}")
+      events = Event.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
       events.map!{ |event| event.extend(Export::Cdc::Record) }     
       events
     end
 
     def cdc_deletes(start_mmwr, end_mmwr)
-      where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN '#{start_mmwr.mmwr_week_range.start_date}' AND '#{end_mmwr.mmwr_week_range.end_date}')" ]
+<<<<<<< HEAD:webapp/app/models/cdc_export.rb
+      where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN '#{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint}' AND '#{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}')" ]
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
-          where << "OR (disease_id IN (#{diseases.collect(&:id).join(',')}))"
+          where << "OR (disease_id IN (#{diseases.collect(&:id).collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint }.join(',')}))"
         end
         invalid_case_status = Disease.with_invalid_case_status_clause
         unless invalid_case_status.blank?
@@ -67,10 +68,10 @@ class CdcExport < ActiveRecord::Base
 
     def verification_records(mmwr_year, mmwr_week=nil)
       select = 'COUNT(*), events."MMWR_year", diseases.cdc_code'
-      where = '"MMWR_year"=' + mmwr_year.to_s + ' AND events.deleted_at IS NULL'
+      where = '"MMWR_year"=' + sanitize_sql_for_conditions(["%d", mmwr_year.to_s]).untaint + ' AND events.deleted_at IS NULL'
       disease_status_clause = Disease.disease_status_where_clause
       where << " AND #{disease_status_clause}" unless disease_status_clause.blank?
-      where << " AND events.\"MMWR_week\" <= #{mmwr_week}" unless mmwr_week.blank?
+      where << " AND events.\"MMWR_week\" <= #{sanitize_sql_for_conditions(["%d", mmwr_week]).untaint}" unless mmwr_week.blank?
       group_by = 'events."MMWR_year", diseases.cdc_code'
       records = get_cdc_events(where, select, group_by)
       records.map!{|record| record.extend(Export::Cdc::VerificationRecord)}

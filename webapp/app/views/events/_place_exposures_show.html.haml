@@ -43,7 +43,7 @@
 
           %tr
             %td{style}=h(place.name)
-            %td{style}=place.formatted_place_descriptions
-            %td{style}=format_date(pe.participations_place.date_of_exposure)
+            %td{style}=h(place.formatted_place_descriptions)
+            %td{style}=h(format_date(pe.participations_place.date_of_exposure))
             %td.tools
               = show_and_edit_event_links(pe)

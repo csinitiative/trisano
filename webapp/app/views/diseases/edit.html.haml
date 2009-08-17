@@ -34,7 +34,7 @@
       %tr
         %td.forminformation
           .formname
-            = @disease.disease_name
+            = h(@disease.disease_name)
           .tools
             = @disease.active? ? 'Active' :  'Inactive'
         %td

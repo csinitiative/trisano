@@ -55,14 +55,14 @@
             %option
             - for county in @counties
               %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
-                = "#{county.code_description}"
+                = "#{h(county.code_description)}"
         %div{ :class => "horiz" }
           %label Gender
           %select{ :name => "gender" }
             %option
               - for gender in @genders
                 %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
-                  = "#{gender.code_description}"
+                  = "#{h(gender.code_description)}"
         %div{ :class => "horiz" }
           %label Date or year of birth (mm/dd/yyyy or yyyy)
           = text_field_tag :birth_date, params[:birth_date], :size => "10"
@@ -76,7 +76,7 @@
           %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
             %div{:style => 'background:#fff; overflow:auto;height: 10em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
               - @diseases.each do |disease|
-                = "<label>" + check_box_tag("diseases[]", disease.id, (params[:diseases] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + disease.disease_name + "</label>"
+                = "<label>" + check_box_tag("diseases[]", disease.id, (params[:diseases] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
         %div{ :class => "horiz" }
           %label{ :for => 'pregnant_id' } Pregnant
           = yesno_select(:pregnant_id, params['pregnant_id'].to_i)
@@ -96,7 +96,7 @@
             %option
             - for event_type in @event_types
               %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
-                = "#{event_type[:name]}"
+                = h("#{event_type[:name]}")
         %div{ :class => "horiz" }
           %label{:for => 'sent_to_cdc'} Sent to CDC
           = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
@@ -190,27 +190,27 @@
           - result_class = 'search-inactive'
         %tr{:class => result_class}
           %td
-            = link_to("#{cmr.record_number}", path, :id => html_id)
+            = link_to("#{h(cmr.record_number)}", path, :id => html_id)
             %small=type
           %td
             - first_mid = ", " + cmr['first_name'] + " " + cmr['middle_name'].to_s if cmr['first_name']
             - full_name = cmr['last_name'] + first_mid
-            = "#{full_name}"
+            = "#{h(full_name)}"
           %td
             - if  !cmr['birth_date'].blank?
-              = "#{calculate_age cmr['birth_date'].to_date} / #{cmr['birth_date']}"
+              = h("#{calculate_age cmr['birth_date'].to_date} / #{cmr['birth_date']}")
           %td
-            = cmr['birth_gender']
+            = h(cmr['birth_gender'])
           %td
-            = cmr['disease_name']
+            = h(cmr['disease_name'])
           %td
-            = cmr['city']
+            = h(cmr['city'])
           %td
-            = cmr['county']
+            = h(cmr['county'])
           %td
-            = cmr['jurisdiction']
+            = h(cmr['jurisdiction'])
           %td
-            = cmr['onset_date'] || '&nbsp;'
+            = h(cmr['onset_date']) || '&nbsp;'
 
   = render_geocode_search(@cmrs)
 

@@ -25,12 +25,12 @@
         %small
           - unless note.note_type.blank?
             %span{ :class => 'note-type' }
-              = "#{note.note_type.humanize} "
-          = note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
+              = h("#{note.note_type.humanize} ")
+          = h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
       %td
     %tr
       %td
-        - note_body = simple_format(note.note)
+        - note_body = simple_format(h(note.note))
         - if note.struckthrough?
           %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
         - else

@@ -23,8 +23,8 @@
         %tr
           %td
             .formname
-              = p.privilege.priv_name
+              = h(p.privilege.priv_name)
             .tools
-              = p.privilege.description
+              = h(p.privilege.description)
   - else
     No privileges

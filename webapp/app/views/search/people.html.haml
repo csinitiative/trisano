@@ -52,14 +52,14 @@
     - for person in @people
       %tr.person{:style => "text-align: left"}
         %td.last_name
-          = person['last_name']
+          = h(person['last_name'])
         %td.first_name
-          = person['first_name']
+          = h(person['first_name'])
         %td.middle_name
-          = person['middle_name']
+          = h(person['middle_name'])
         %td.birth_date
           - if !person['birth_date'].blank?
-            = person['birth_date'].to_date
+            = h(person['birth_date'].to_date)
 
 - params.delete('action')
 - params.delete('controller')

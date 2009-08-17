@@ -208,6 +208,8 @@ namespace :trisano do
       sh "rm -rf ./distro/dump"
       sh "rm -rf ./webapp/tmp"
       sh "rm -rf ./distro/*.txt"
+      sh "rm -rf ./webapp/vendor/plugins/safe_record"
+      sh "rm -rf ./webapp/vendor/plugins/safe_erb"
       
       cd TRISANO_DIST_DIR
       sh "tar czfh #{filename} ./#{tformated}"
