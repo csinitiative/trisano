@@ -20,7 +20,7 @@
 - core_element_print :encounters, f, :vert do
   - ran = nil
   - unless association_recorded?(@event.encounter_child_events)
-    %b{ :style => 'font-size: 11px' }="No encounters have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
+    %b{ :style => 'font-size: 11px' }="No encounters have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
   - else
     - for encounter in @event.encounter_child_events
       - encounter_event_data = encounter.participations_encounter

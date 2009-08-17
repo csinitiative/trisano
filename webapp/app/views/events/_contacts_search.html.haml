@@ -48,16 +48,16 @@
         - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
         %tr{:class => result_class, :id => "event_#{event['id']}"}
           %td 
-            = "#{event['last_name']}, #{event['first_name']}" if output_name
+            = "#{h(event['last_name'])}, #{h(event['first_name'])}" if output_name
           %td
-            = event['birth_date'] if output_name
+            = h(event['birth_date']) if output_name
           %td
-            = event['birth_gender'] if output_name
-          %td= event['event_type'].underscore.humanize 
-          %td= event['jurisdiction_short_name']
-          %td= event['event_onset_date']
+            = h(event['birth_gender']) if output_name
+          %td= h(event['event_type'].underscore.humanize)
+          %td= h(event['jurisdiction_short_name'])
+          %td= h(event['event_onset_date'])
           - if can_update || can_view
-            %td= event['disease_name']
+            %td= h(event['disease_name'])
           - else
             %td Private
           %td

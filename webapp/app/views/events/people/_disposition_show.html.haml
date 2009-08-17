@@ -16,8 +16,8 @@
 %fieldset.form
   %legend Event Information
   %span.horiz
-    =contact_form.label(:disposition_id)
-    =l(event.participations_contact.disposition)  
+    = contact_form.label(:disposition_id)
+    = h(l(event.participations_contact.disposition))
   %span.horiz
-    =contact_form.label(:contact_type_id)
-    =l(event.participations_contact.contact_type)  
+    = contact_form.label(:contact_type_id)
+    = h(l(event.participations_contact.contact_type))

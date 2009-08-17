@@ -73,7 +73,7 @@
         - for hospital in @event.hospitalization_facilities
           %tr
             - if hospital.place_entity
-              %td= hospital.place_entity.place.name
+              %td= h(hospital.place_entity.place.name)
               - if hospital.hospitals_participation.nil?
                 %td
                 %td

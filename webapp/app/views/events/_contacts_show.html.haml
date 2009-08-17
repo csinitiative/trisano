@@ -24,7 +24,7 @@
 
       %td{style} 
         -unless contact_phone.nil? 
-          = contact_phone.simple_format
+          = h(contact_phone.simple_format)
       %td
         .tools
           = show_and_edit_event_links(contact)

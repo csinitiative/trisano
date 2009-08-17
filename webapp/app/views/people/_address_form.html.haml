@@ -27,7 +27,7 @@
       %fieldset.vert-break
         - core_element :street_number, a, :horiz do
           = a.label(:street_number)
-          %span.data_stree_number= a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
+          %span.data_street_number= a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
         - core_element :street_name, a, :horiz do
           = a.label(:street_name)
           %span.data_street_name= a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event)
@@ -52,7 +52,7 @@
           District
           - address = event.nil? ? @person.canonical_address : event.address
           - if address.county && address.county.jurisdiction
-            %span.data_jurisdiction_name= address.county.jurisdiction.name
+            %span.data_jurisdiction_name= h(address.county.jurisdiction.name)
     
       = render_geocode_form_section(a, event)
 

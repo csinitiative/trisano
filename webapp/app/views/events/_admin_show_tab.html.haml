@@ -58,7 +58,7 @@
         - address = @event.address
         - if address && address.county && address.county.jurisdiction
           - jurisdiction_name = address.county.jurisdiction.name
-      = jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name
+      = jurisdiction_name.blank? ? 'Not Applicable' : h(jurisdiction_name)
 
     - event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j|
       - core_element_show :secondary_entity_id, j, :horiz do
@@ -66,7 +66,7 @@
         = h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
       - core_element_show :workflow_state, event_form, :horiz do
         = event_form.label :workflow_state, 'Event status'
-        =h(@event.state_description)
+        = h(@event.state_description)
       - core_element_show :investigation_started_date, event_form, :horiz do
         = event_form.label :investigation_started_date, 'Date investigation started'
         = h(@event.investigation_started_date)

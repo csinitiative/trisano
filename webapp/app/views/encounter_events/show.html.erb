@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 -->
 <% content_for :title do %>
-  View Encounter Event: <%= @event.participations_encounter.encounter_date %>
+  View Encounter Event: <%= h(@event.participations_encounter.encounter_date) %>
 <% end %>
 
 <% content_for :name do %>
@@ -36,10 +36,10 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         </div>
       </td>
       <td>
-        <%= @event.safe_call_chain(:disease_event, :disease, :disease_name) %>
+        <%= h(@event.safe_call_chain(:disease_event, :disease, :disease_name)) %>
       </td>
       <td>
-        <b><%= @event.primary_jurisdiction.short_name %></b>
+        <b><%= h(@event.primary_jurisdiction.short_name) %></b>
       </td>
       <td>
         <%= original_patient_controls(@event) %>

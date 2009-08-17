@@ -15,7 +15,7 @@
 
 - for form_reference in event.investigation_form_references
   %br
-  = form_reference.form.name
+  = h(form_reference.form.name)
   %br
 
   - for view in form_reference.form.investigator_view_elements_container.children_by_type("ViewElement")

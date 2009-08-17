@@ -18,10 +18,10 @@
 -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
   -core_element_print :last_name, person_form, :horiz do
     %span.print-label Last Name
-    %span.print-value=person.last_name
+    %span.print-value=h(person.last_name)
   -core_element_print :first_name, person_form, :horiz do
     %span.print-label First Name:
-    %span.print-value=person.first_name
+    %span.print-value=h(person.first_name)
   -core_element_print :middle_name, person_form, :vert do
     %span.print-label Middle Name:
-    %span.print-value=person.middle_name
+    %span.print-value=h(person.middle_name)

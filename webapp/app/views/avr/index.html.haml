@@ -23,7 +23,7 @@
       %iframe{:src => config_option(:bi_server_url), :style => "width: 100%; height: 500px"}
   - else
     %div{:style => "font-size: 18px; text-align: center; color: red"}
-      ="Reporting and analysis server is reporting failure: #{res.error}.  Please contact your system administrator"
+      ="Reporting and analysis server is reporting failure: #{h(res.error)}.  Please contact your system administrator"
 -rescue
   %div{:style => "font-size: 18px; text-align: center; color: red"}
-    = "Could not connect to reporting and analysis server: #{$!}.  Please contact your system administrator"
+    = "Could not connect to reporting and analysis server: #{h($!)}.  Please contact your system administrator"

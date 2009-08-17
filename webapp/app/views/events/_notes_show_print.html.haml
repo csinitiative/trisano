@@ -16,17 +16,17 @@
     .three-valued-row
       .left
         %span.print-label User:
-        %span.print-value= note.user.best_name
+        %span.print-value= h(note.user.best_name)
       .left
         %span.print-label Note type:
-        %span.print-value= note.note_type.humanize unless note.note_type.blank?
+        %span.print-value= h(note.note_type.humanize) unless note.note_type.blank?
       .left
         %span.print-label Date note created:
-        %span.print-value= note.created_at.strftime("%a, %b %d, %Y at %I:%M %p")
+        %span.print-value= h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
 
     %br
     %span.print-value
-      - note_body = simple_format(note.note)
+      - note_body = simple_format(h(note.note))
       - if note.struckthrough?
         %div{:id => "note_#{note.id}", :class => 'struck-through'}= note_body
       - else
@@ -40,10 +40,10 @@
     - unless @event.attachments.empty?
       - for attachment in @event.attachments
         %span.print-label File Name:
-        %span.print-value=attachment.filename
+        %span.print-value=h(attachment.filename)
         %span.print-label Category:
-        %span.print-value=attachment.category.humanize
+        %span.print-value=h(attachment.category.humanize)
         %span.print-label Location:
-        %span.print-value=event_attachment_url(@event, attachment)
+        %span.print-value=h(event_attachment_url(@event, attachment))
     - else
       %span No attachments

@@ -15,14 +15,14 @@
 
 .header
   .left
-    %h1= contact_event.jurisdiction.secondary_entity.place.name unless contact_event.jurisdiction.nil?
+    %h1= h(contact_event.jurisdiction.secondary_entity.place.name) unless contact_event.jurisdiction.nil?
     %i
       Printed
-      = Date.today.strftime("%B %d, %Y")
+      = h(Date.today.strftime("%B %d, %Y"))
 
 .sub-header
   .left
-    = (contact_event.disease.nil? || contact_event.disease.disease.nil?) ? "Disease not specified" : contact_event.disease.disease.disease_name
+    = (contact_event.disease.nil? || contact_event.disease.disease.nil?) ? "Disease not specified" : h(contact_event.disease.disease.disease_name)
   .right
     Confidential Case Report (Contact)
 

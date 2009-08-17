@@ -15,7 +15,7 @@
 
 - ran = nil
 - unless association_recorded?(event.labs)
-  %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{event.class.name.underscore.humanize.downcase}"
+  %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{h(event.class.name.underscore.humanize.downcase)}"
 - else
   - for lab in event.labs
     - for lab_result in lab.lab_results
@@ -25,46 +25,46 @@
           %hr
         %span.print-label Lab name:
         %span.print-value
-          = lab.place_entity.place.name
+          = h(lab.place_entity.place.name)
         .three-valued-row
           .left
             %span.print-label Test type:
             %span.print-value
-              = lab_result.test_type
+              = h(lab_result.test_type)
           .left
             %span.print-label Test detail:
             %span.print-value
-              = lab_result.test_detail
+              = h(lab_result.test_detail)
           .right
             %span.print-label Test result:
             %span.print-value
-              = lab_result.lab_result_text
+              = h(lab_result.lab_result_text)
       #test
         .three-valued-row
           .left
             %span.print-label Reference range:
             %span.print-value
-              = lab_result.reference_range
+              = h(lab_result.reference_range)
           .left
             %span.print-label Interpretation:
             %span.print-value
-              = l lab_result.interpretation
+              = h(l(lab_result.interpretation))
           .right
             %span.print-label Specimen source:
             %span.print-value
-              = l lab_result.specimen_source
+              = h(l(lab_result.specimen_source))
       #collection
         .three-valued-row
           .left
             %span.print-label Collection date:
             %span.print-value
-              = lab_result.collection_date
+              = h(lab_result.collection_date)
           .left
             %span.print-label Lab test date:
             %span.print-value
-              = lab_result.lab_test_date
+              = h(lab_result.lab_test_date)
           .right
             %span.print-label Specimen sent to UPHL:
             %span.print-value
-              = l lab_result.specimen_sent_to_uphl_yn
+              = h(l(lab_result.specimen_sent_to_uphl_yn))
     - ran = 1

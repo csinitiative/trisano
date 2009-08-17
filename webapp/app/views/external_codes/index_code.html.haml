@@ -14,29 +14,29 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  = "#{@code_name.description} Codes"
+  = "#{h(@code_name.description)} Codes"
 
 - content_for :tools do
   .horiz#rot
-    = link_to '< Back to List of Codes', codes_path
+    = link_to '&lt; Back to List of Codes', codes_path
 
 - content_for :tools_two do
-  = button_to "New #{@code_name.description} Code", new_code_path(@code_name.code_name)
+  = button_to "New #{h(@code_name.description)} Code", new_code_path(@code_name.code_name)
 
 .vert#rot
   %table.list
     %tr
       %th.forminformation{ :colspan => 2 }
-        = "#{@code_name.description} Codes"
+        = "#{h(@code_name.description)} Codes"
     - for code in @external_codes
       %tr.roll
         %td.forminformation
           .formname
             %div{ :class => code.deleted? ? 'deleted' : nil }
-              = link_to code.code_description, show_code_path(code.code_name, code.the_code)
+              = link_to h(code.code_description), show_code_path(code.code_name, code.the_code)
           .tools
             The Code:
-            = code.the_code
+            = h(code.the_code)
             %br
             - if code.deleted?
               = link_to "Undelete", soft_undelete_code_path(code.code_name, code.the_code), :confirm => "Really restore code?" 

@@ -17,10 +17,10 @@
 %ul
   - clinicians.each do |clinician|
     %li{:name => "#{clinician.entity_id}"}
-      %span.last_name= clinician.last_name
-      %span.first_name= ", #{clinician.first_name}" unless clinician.first_name.blank?
+      %span.last_name= h(clinician.last_name)
+      %span.first_name= ", #{h(clinician.first_name)}" unless clinician.first_name.blank?
       - if clinician.middle_name
-        %span.middle_name= clinician.middle_name
+        %span.middle_name= h(clinician.middle_name)
       - if clinician.primary_phone
         %br
         %span.telephone="&nbsp;#{h(clinician.primary_phone.simple_format)}"

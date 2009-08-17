@@ -55,8 +55,9 @@ module TasksHelper
       memo[field] = params.merge(:controller => "#{prefix}_tasks".to_sym,
         :action => :index,
         "#{prefix}_id".to_sym => task_owner.id,
-        :tasks_ordered_by => field)
-      memo[field]['id'] = h(memo[field]['id']).untaint
+        :tasks_ordered_by =>field)
+      memo[field]['id'] = h(memo[field]['id'])
+      memo[field]['tab_index'] = h(memo[field]['tab_index'])
       memo
     end
   end
