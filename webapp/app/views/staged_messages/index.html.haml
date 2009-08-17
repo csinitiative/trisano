@@ -16,12 +16,14 @@
 - content_for :title do
   Staged Messages
 
-= link_to 'Create a staged message', new_staged_message_path
-%em For developer convenience only.  To be removed.
-- if @staged_messages
-  - form_tag(staged_messages_url, :style => "display: inline", :method => :get) do
-    = select_tag("message_state", options_for_select(StagedMessage.states.values, @selected), :id => 'message_state', :onchange => "this.form.submit();", :style => "position: absolute; right: 0px")
-  %p
+= link_to 'Create a staged message', new_staged_message_path if User.current_user.is_entitled_to?(:write_staged_message)
+
+- form_tag(staged_messages_url, :style => "display: inline", :method => :get) do
+  = select_tag("message_state", options_for_select(StagedMessage.states.values, @selected), :id => 'message_state', :onchange => "this.form.submit();", :style => "position: absolute; right: 0px")
+
+%p &nbsp;
+
+- unless @staged_messages.empty?
   #rot
     %table.list
       = render @staged_messages
@@ -29,3 +31,5 @@
   %p{:style => 'clear: both'}
   %br
   = will_paginate @staged_messages
+- else
+  = "There are no messages in the #{@selected.downcase} state"

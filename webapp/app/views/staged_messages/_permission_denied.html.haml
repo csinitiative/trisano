@@ -1,4 +1,3 @@
 - content_for :title do
   PERMISSION DENIED
--reason = "In order to process staged messages you need both create and update priviliges in the Unassigned jurisdiction"
 = content_tag(:p, reason + ". Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')

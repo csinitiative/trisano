@@ -1,12 +1,16 @@
-Given /^I am logged in as a user with create and update privs in the Unassigned jurisdiction$/ do
-  log_in_as("data_entry_tech")
+Given /^I am logged in as a user with manage_staged_message privs$/ do
+  log_in_as("surveillance_mgr")
+end
+
+Given /^I am logged in as a user with write_staged_message privs$/ do
+  log_in_as("default_user")
 end
 
 Then /^I should see the staging area page$/ do
   current_url.should =~ /#{staged_messages_path}/
 end
 
-Given /^I am logged in as a user without create and update privs in the Unassigned jurisdiction$/ do
+Given /^I am logged in as a user without staging area privs in the Unassigned jurisdiction$/ do
   log_in_as("state_manager")
 end
 

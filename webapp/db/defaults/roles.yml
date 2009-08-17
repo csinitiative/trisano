@@ -2,6 +2,8 @@ Administrator:
   - administer
   - add_form_to_event
   - remove_form_from_event
+  - write_staged_message
+  - manage_staged_message
 Investigator:
   - create_event
   - view_event
@@ -26,6 +28,7 @@ Surveillance Manager:
   - assign_task_to_user
   - add_form_to_event
   - remove_form_from_event
+  - manage_staged_message
 LHD Manager:
   - create_event
   - view_event

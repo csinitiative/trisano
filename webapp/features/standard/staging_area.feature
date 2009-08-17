@@ -4,19 +4,25 @@ Feature: Staging Electronic Messages
   A user needs to be able to view messages and assign them to CMRs
 
   Scenario: Accessing the staging area with the right privileges
-    Given I am logged in as a user with create and update privs in the Unassigned jurisdiction
+    Given I am logged in as a user with manage_staged_message privs
     When I follow "STAGING AREA"
     Then I should see the staging area page
+    And I should not see "Create a staged message"
+
+    Given I am logged in as a user with write_staged_message privs
+    When I follow "STAGING AREA"
+    Then I should see the staging area page
+    And I should see "Create a staged message"
 
   Scenario: Accessing the staging area with the wrong privileges
-    Given I am logged in as a user without create and update privs in the Unassigned jurisdiction
+    Given I am logged in as a user without staging area privs in the Unassigned jurisdiction
     Then I should not see the staging area link
 
     When I visit the staging area page directly
     Then I should get a 403 response
 
   Scenario: Viewing staged messages
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
 
     When I visit the staged message show page
@@ -32,7 +38,7 @@ Feature: Staging Electronic Messages
     And  I should see value "2009-03-21" under label "Test Date"
 
   Scenario: Searching for matching events when none exist
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there are no matching entries
 
@@ -43,7 +49,7 @@ Feature: Staging Electronic Messages
     And I should not see any matching results
 
   Scenario: Searching for matching events when name only match is found
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name but no birth date
 
@@ -52,7 +58,7 @@ Feature: Staging Electronic Messages
     Then I should see matching results
 
   Scenario: Searching for matching events when name and birth date found
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
 
@@ -61,7 +67,7 @@ Feature: Staging Electronic Messages
     Then I should see matching results
 
   Scenario: Assigning lab result to found event
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
@@ -87,7 +93,7 @@ Feature: Staging Electronic Messages
     Then I should see a link back to the staged message
 
   Scenario: Assigning lab result to found contact event
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a contact event with a matching name and birth date
     And the following loinc code to common test types mapping exists
@@ -110,7 +116,7 @@ Feature: Staging Electronic Messages
     And  I should see a link back to the staged message
 
   Scenario: Assigning lab result to new event
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
@@ -134,7 +140,7 @@ Feature: Staging Electronic Messages
     And I should see a link back to the staged message
 
   Scenario: Attempting to assign message with unknown LOINC code
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNKNOWN_LOINC"
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
@@ -148,7 +154,7 @@ Feature: Staging Electronic Messages
     And I should see a state of 'Unprocessable'
 
   Scenario: Attempting to assign message with unlinked LOINC code
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNLINKED_LOINC"
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
@@ -163,7 +169,7 @@ Feature: Staging Electronic Messages
     And I should see a state of 'Unprocessable'
 
   Scenario: Discarding a message
-    Given I am logged in as a super user
+    Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
 
