@@ -86,3 +86,26 @@ Feature: Managing Lab Results
     And the following common test types should not be available for selection
       | X-Ray      |
       | Urine Test |
+
+  Scenario: Saving a complete lab result
+    Given I am logged in as a super user
+    And the following disease to common test types mapping exists
+      | disease_name | common_name |
+      | AIDS         | Blood Test  |
+      | AIDS         | Urine Test  |
+    And I navigate to the new event page
+    And I click on the lab tab
+    And I enter a last name of Jones
+    And I enter a lab name of 'Costello Labs'
+    And I select a test type of 'Blood Test'
+    And I select a test result of 'Positive / Reactive'
+    And I enter a result value of 100
+    And I enter a units of Gallons
+    And I enter a reference range of Negative
+    And I enter a test status of Pending
+    And I select a specimen source of 'Animal head'
+    And I select a sent to state lab value of 'Yes'
+    And I enter a comment of "Whew!"
+
+    When I save the new event form
+    Then I should see the values entered above
