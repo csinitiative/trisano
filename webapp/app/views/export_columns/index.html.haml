@@ -37,11 +37,11 @@
       %tr.roll
         %td.forminformation
           .formname
-            = link_to xp_column.name || ("not specified"), xp_column
+            = link_to h(xp_column.name) || ("not specified"), xp_column
         %td
-          = xp_column.export_column_name
+          = h(xp_column.export_column_name)
         %td
-          = xp_column.export_disease_group.name unless xp_column.export_disease_group.nil?
+          = h(xp_column.export_disease_group.name) unless xp_column.export_disease_group.nil?
         %td.tools
           = link_to('Edit', edit_export_column_path(xp_column))
           |

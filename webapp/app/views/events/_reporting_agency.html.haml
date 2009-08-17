@@ -54,7 +54,7 @@
     - core_element :name, agency_form, :horiz do
       = agency_form.hidden_field(:secondary_entity_id)
       = agency_form.label(:name, "Reporting Agency")
-      = reporting_agency.name || "&nbsp;"
+      = h(reporting_agency.name) || "&nbsp;"
     - core_element :agency_type, agency_form, :horiz do
       = agency_form.label(:agency_types)
       = reporting_agency.formatted_place_descriptions

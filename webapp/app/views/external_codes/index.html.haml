@@ -27,12 +27,12 @@
       %tr
         %td.forminformation
           .formname
-            = link_to code_name.description, index_code_path(code_name.code_name)
+            = link_to h(code_name.description), index_code_path(code_name.code_name)
           .tools
             Code Name:
-            = code_name.code_name
+            = h(code_name.code_name)
             -# %br
-            -# = button_to "New #{code_name.description} Code", new_code_path(code_name.code_name)
+            -# = button_to "New #{h(code_name.description)} Code", new_code_path(code_name.code_name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to "List", index_code_path(code_name.code_name)

@@ -34,19 +34,19 @@
       %tr
         %td.forminformation
           .tools
-            = "#{@user.first_name} #{@user.last_name}"
+            = h("#{@user.first_name} #{@user.last_name}")
           .formname
             UID:
-            = @user.uid
+            = h(@user.uid)
           .tools
             Username:
-            = @user.user_name
+            = h(@user.user_name)
             %br
             Given Name:
-            = @user.given_name
+            = h(@user.given_name)
             %br
             Initials:
-            = @user.initials
+            = h(@user.initials)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             Edit

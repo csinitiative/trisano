@@ -16,9 +16,9 @@
 %tr.roll
   %td.forminformation
     .formname
-      = link_to core_field.name, core_field
+      = link_to h(core_field.name), core_field
     .tools
-      = core_field.help_text
+      = h(core_field.help_text)
   %td
     .tools{:style => "position: absolute; right: 15px;"}
       = link_to('Edit', edit_core_field_path(core_field))

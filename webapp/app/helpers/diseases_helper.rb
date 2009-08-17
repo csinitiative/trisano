@@ -27,9 +27,9 @@ module DiseasesHelper
     check = check_box_tag("disease[common_test_type_ids][]",
                           common_test_type.id,
                           associated_test_type_ids.include?(common_test_type.id),
-                          :id => common_test_type.common_name.gsub(' ', '_'),
+                          :id => h(common_test_type.common_name.gsub(' ', '_')),
                           :class => 'common_test_type')
-    label_tag common_test_type.common_name, check + common_test_type.common_name
+    label_tag h(common_test_type.common_name), check + h(common_test_type.common_name)
   end
 
 end

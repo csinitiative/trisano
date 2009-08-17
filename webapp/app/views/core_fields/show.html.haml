@@ -29,9 +29,9 @@
       %tr
         %td.forminformation
           .formname
-            = @core_field.name
+            = h(@core_field.name)
           .tools
-            = simple_format(@core_field.help_text)
+            = simple_format(h(@core_field.help_text))
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_core_field_path(@core_field)

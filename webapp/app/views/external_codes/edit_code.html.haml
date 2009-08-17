@@ -34,13 +34,13 @@
     %tr
       %td
         .formname
-          = @external_code.the_code
+          = h(@external_code.the_code)
         .tools
           %b Type:
-          = @external_code.code_name
+          = h(@external_code.code_name)
           %br 
           %b Status:
-          = @external_code.deleted? ? 'Delete on ' + @external_code.deleted_at.to_s : 'Active'
+          = @external_code.deleted? ? 'Delete on ' + h(@external_code.deleted_at.to_s) : 'Active'
       %td
         .tools{:style => "position: absolute; right: 15px;"}
           - if @external_code.deleted?

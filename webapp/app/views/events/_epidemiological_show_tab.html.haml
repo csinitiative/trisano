@@ -25,23 +25,23 @@
       - active_patient_form.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
         - core_element_show :food_handler_id, risk_factor_form, :horiz do
           = risk_factor_form.label(:food_handler_id)
-          = l @event.interested_party.risk_factor.food_handler unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(l(@event.interested_party.risk_factor.food_handler)) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
         - core_element_show :healthcare_worker_id, risk_factor_form, :horiz do
           = risk_factor_form.label(:healthcare_worker_id)
-          = l @event.interested_party.risk_factor.healthcare_worker unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(l(@event.interested_party.risk_factor.healthcare_worker)) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
         - core_element_show :group_living_id, risk_factor_form, :horiz do
           = risk_factor_form.label(:group_living_id)
-          = l @event.interested_party.risk_factor.group_living unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(l(@event.interested_party.risk_factor.group_living)) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
         - core_element_show :day_care_association_id, risk_factor_form, :horiz do
           = risk_factor_form.label(:day_care_association_id)
-          = l @event.interested_party.risk_factor.day_care_association unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(l(@event.interested_party.risk_factor.day_care_association)) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
         - core_element_show :occupation, risk_factor_form, :horiz do
           = risk_factor_form.label(:occupation)
-          = @event.interested_party.risk_factor.occupation unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(@event.interested_party.risk_factor.occupation) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
     
   %br{:clear => 'all'}
   =render :partial => 'events/place_exposures_show', :locals => {:event_form => event_form}
@@ -53,15 +53,15 @@
       - active_patient_form.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
         - core_element_show :imported_from_id, event_form, :horiz do
           = event_form.label(:imported_from_id)
-          = l @event.imported_from
+          = h(l(@event.imported_from))
 
         - core_element_show :risk_factors, risk_factor_form, :horiz do
           = risk_factor_form.label(:risk_factors)
-          = @event.interested_party.risk_factor.risk_factors unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(@event.interested_party.risk_factor.risk_factors) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
 
         - core_element_show :risk_factors_notes, risk_factor_form, :horiz do
           = risk_factor_form.label(:risk_factors_notes)
-          = @event.interested_party.risk_factor.risk_factors_notes unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
+          = h(@event.interested_party.risk_factor.risk_factors_notes) unless @event.interested_party.nil? or @event.interested_party.risk_factor.nil?
           
         - core_element_show :other_data_1, event_form, :horiz do
           = event_form.label(:other_data_1, 'Other data')

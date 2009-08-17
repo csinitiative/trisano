@@ -25,11 +25,11 @@
 
     %span.horiz{:style => "clear: both;"}
       = label_tag "Name"
-      = person.last_comma_first
+      = h(person.last_comma_first)
     %span.horiz
       = label_tag "Phone"
       -unless contact_phone.nil?
-        %span.horiz= contact_phone.simple_format
+        %span.horiz= h(contact_phone.simple_format)
 
   - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
     %span.horiz

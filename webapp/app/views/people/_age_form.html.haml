@@ -33,4 +33,4 @@
               =p.label(:age_at_onset, 'Age at onset')
           -else
             =p.label(:age_at_onset, 'Age at onset')
-          %span.data_age_at_onset=@event.age_info
+          %span.data_age_at_onset=h(@event.age_info)

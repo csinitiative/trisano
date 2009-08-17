@@ -22,7 +22,7 @@
       %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
         %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
           - for disease in Disease.find(:all, :order => "disease_name asc")
-            = "<label>" + check_box_tag("export_column[disease_ids][]", disease.id, @export_column.diseases.include?(disease), :id => disease.disease_name.tr(" ", "_")) + disease.disease_name + "</label>"
+            = "<label>" + check_box_tag("export_column[disease_ids][]", disease.id, @export_column.diseases.include?(disease), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
 
   %tr
     %th.forminformation{:colspan => '2'}
@@ -36,7 +36,7 @@
       %span{ :class => "horiz" }
         = f.label(:export_column_name, "CDC Column Name")
         - if @export_column.type_data == "CORE"
-          = @export_column.export_column_name
+          = h(@export_column.export_column_name)
         - else
           = f.text_field(:export_column_name, :class => 'required') 
 
@@ -46,7 +46,7 @@
           = f.collection_select(:export_disease_group_id, ExportDiseaseGroup.find(:all), :id, :name, :include_blank => true)
         - else
           %label Disease Group
-          = @export_column.export_disease_group.nil? ? "All Diseases" : @export_column.export_disease_group.name
+          = @export_column.export_disease_group.nil? ? "All Diseases" : h(@export_column.export_disease_group.name)
 
       %br.vert-break
       %br
