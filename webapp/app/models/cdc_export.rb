@@ -48,7 +48,7 @@ class CdcExport < ActiveRecord::Base
     end
 
     def cdc_deletes(start_mmwr, end_mmwr)
-      where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN '#{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint}' AND '#{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}')" ]
+      where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint})" ]
       diseases = Disease.with_no_export_status
       unless  diseases.empty?
         unless  diseases.empty?
