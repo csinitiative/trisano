@@ -32,7 +32,7 @@
         %span.horiz= h(contact_phone.simple_format)
 
   - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
-    %span.horiz
+    %span.vert
       = pc_fields.label(:disposition_id)
       = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
     %span.horiz
@@ -49,6 +49,7 @@
         = f.label :_delete, "Remove"
         = f.check_box :_delete
 
+  %span{:style => "position: absolute; right: 1em"}
     = f.label('&nbsp;')
     = show_and_edit_event_links(f.object)
-  %br
+  %hr
