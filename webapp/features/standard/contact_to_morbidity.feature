@@ -18,7 +18,7 @@ Feature: Promoting Contact Events to Morbidity Events
     And I am logged in as a super user
 
     When I promote Jones to a morbidity event
-    Then I should be on the show morbidity event for Jones page
+    Then I should be viewing the show morbidity event for Jones page
 
   Scenario: Promoted morbidity event displays parent and disease forms
     Given a published disease form called MA1 for morbidity events with Mumps

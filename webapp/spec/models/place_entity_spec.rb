@@ -190,3 +190,49 @@ describe PlaceEntity do
 
 end
 
+describe PlaceEntity do
+
+  describe "using jurisdiction named scopes" do
+
+    before(:all) do
+      # Extreme measures to battle fixture pie
+      PlaceEntity.jurisdictions.each do |jurisdiction|
+        jurisdiction.destroy
+      end
+    end
+
+    before(:each) do
+      @jurisdiction_one = Factory.create(:place_entity)
+      @jurisdiction_one.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+
+      @jurisdiction_two = Factory.create(:place_entity)
+      @jurisdiction_two.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+
+      @jurisdiction_unassigned = Factory.create(:place_entity, :place => Factory.create(:place, :name => "Unassigned"))
+      @jurisdiction_unassigned.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+
+      @jurisdiction_deleted = Factory.create(:place_entity, :deleted_at => Time.now)
+      @jurisdiction_deleted.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+    end
+
+    it "should find all jurisdictions when using the 'jurisdictions' named scope" do
+      PlaceEntity.jurisdictions.size.should == 4
+    end
+
+    it "should find only active jurisdictions when using the 'active_jurisdictions' named scope" do
+      PlaceEntity.active_jurisdictions.size.should == 3
+      PlaceEntity.active_jurisdictions.detect {|j| !j.deleted_at.nil?}.should be_nil
+    end
+
+    it "should find leave out the Unassigned jurisdiction when chaining 'excluding_unassigned' onto one of the other jurisdiction named scopes" do
+      PlaceEntity.jurisdictions.excluding_unassigned.size.should == 3
+      PlaceEntity.jurisdictions.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
+
+      PlaceEntity.active_jurisdictions.excluding_unassigned.size.should == 2
+      PlaceEntity.active_jurisdictions.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
+    end
+    
+  end
+
+end
+

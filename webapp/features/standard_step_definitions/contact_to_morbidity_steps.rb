@@ -40,7 +40,7 @@ When /^I promote Jones to a morbidity event$/ do
   click_link "Promote to CMR"
 end
 
-Then /^I should be on the show morbidity event for Jones page$/ do
+Then /^I should be viewing the show morbidity event for Jones page$/ do
   path = cmr_path(@child)
   current_url.should =~ /#{path}/
 end

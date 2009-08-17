@@ -15,29 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-def path_to(page_name)
-  case page_name
-  
-  when /the homepage/i
-    root_path
-
-  when /the admin dashboard page/i
-    admin_path
-  
-  when /the jurisdictions page/i
-    jurisdictions_path
-
-  when /the show jurisdiction page/i
-    jurisdiction_path
-
-  # Add more page name => path mappings here
-  when /the new CMR page/i
-    new_cmr_path
-
-  when /the investigator user edit page/i
-    "/users/4/edit"
-  
-  else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
-  end
+Given(/^the jurisdiction "([^\"]*)" with the short name "([^\"]*)"$/) do |name, short_name|
+  @jurisdiction = Factory.create(:place_entity, :place => Factory.create(:place, :name => name, :short_name => short_name))
+  @jurisdiction.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
 end
+

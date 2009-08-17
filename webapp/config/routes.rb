@@ -170,6 +170,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :places
 
+  map.resources :jurisdictions
+
   map.js 'js/:action.js', :controller => 'js', :format => 'js'
 
   # The priority is based upon order of creation: first created -> highest priority.

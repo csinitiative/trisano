@@ -35,6 +35,22 @@ describe Place do
       @place.name = "whatever"
       @place.should be_valid
     end
+
+    describe "as a jurisdiction" do
+
+      it "should be invalid without a short name" do
+        @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+        @place.should_not be_valid
+      end
+
+      it "should be valid with a short name" do
+        @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+        @place.short_name = "whatever"
+        @place.should_not be_valid
+      end
+
+    end
+    
   end
 
   describe "finding exising places" do
