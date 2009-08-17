@@ -22,9 +22,8 @@ class StagedMessagesController < ApplicationController
   # GET /lab_messages
   # GET /lab_messages.xml
   def index
-    @selected = params[:message_state]
-    state = StagedMessage.states.value?(@selected) ? @selected : StagedMessage.states[:pending] 
-    @staged_messages = StagedMessage.paginate_by_state(state, :order => "created_at DESC", :page => params[:page], :per_page => 10)
+    @selected = StagedMessage.states.has_value?(params[:message_state]) ? @selected = params[:message_state] : @selected = StagedMessage.states[:pending]
+    @staged_messages = StagedMessage.paginate_by_state(@selected, :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
   # GET /staged_messages/1

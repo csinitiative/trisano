@@ -45,7 +45,7 @@ Feature: Staging Electronic Messages
   Scenario: Searching for matching events when name only match is found
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    And there is an event with a matching name but no birth date
+    And there is a morbidity event with a matching name but no birth date
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -54,7 +54,7 @@ Feature: Staging Electronic Messages
   Scenario: Searching for matching events when name and birth date found
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    And there is an event with a matching name and birth date
+    And there is a morbidity event with a matching name and birth date
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -63,7 +63,7 @@ Feature: Staging Electronic Messages
   Scenario: Assigning lab result to found event
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    And there is an event with a matching name and birth date
+    And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
       | 10000-1    | Blood Test  |
@@ -86,10 +86,33 @@ Feature: Staging Electronic Messages
     When I navigate to the event edit page
     Then I should see a link back to the staged message
 
+  Scenario: Assigning lab result to found contact event
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_1"
+    And there is a contact event with a matching name and birth date
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 10000-1    | Blood Test  |
+      | 20000-2    | Urine Test  |
+      | 13954-3    | Hep-B Ag    |
+
+    When I visit the staged message show page
+    And I click 'Similar Events' for the staged message
+    And I click the 'Assign lab result' link of the found event
+    Then I should remain on the staged message show page
+    And I should see a 'success' message
+    And I should not see the 'Similar Events' link
+    And I should not see the 'Discard' link
+
+    When I visit the assigned-to event
+    Then I should see the new lab result with 'Hep-B Ag'
+    And  I should see a note for the assigned lab
+    And  I should see a link back to the staged message
+
   Scenario: Assigning lab result to new event
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    And there is an event with a matching name and birth date
+    And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
       | loinc_code | common_name |
       | 10000-1    | Blood Test  |
@@ -142,7 +165,7 @@ Feature: Staging Electronic Messages
   Scenario: Discarding a message
     Given I am logged in as a super user
     And I have the staged message "ARUP_1"
-    And there is an event with a matching name and birth date
+    And there is a morbidity event with a matching name and birth date
 
     When I visit the staged message show page
     And I click the 'Discard' link for the staged message

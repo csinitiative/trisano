@@ -32,7 +32,9 @@
           %p
             State:
             - if staged_message.state == StagedMessage.states[:assigned]
-              = link_to(staged_message.state.humanize, cmr_path(staged_message.assigned_event))
+              - event = staged_message.assigned_event
+              - event_path = event.is_a?(MorbidityEvent) ? cmr_path(event) : contact_event_path(event)
+              = link_to(staged_message.state.humanize, event_path)
             - else
               = staged_message.state.humanize
             &nbsp;&nbsp;

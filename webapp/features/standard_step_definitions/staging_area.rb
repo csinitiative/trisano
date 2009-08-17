@@ -38,8 +38,8 @@ Then /^I should not see any matching results$/ do
   response.should_not have_selector("table#search_results")
 end
 
-When /^there is an event with a matching name but no birth date$/ do
-  @event = Factory.build(:morbidity_event)
+When /^there is a (.+) event with a matching name but no birth date$/ do |type|
+  @event = Factory.build("#{type}_event".to_sym)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.save!
 end
@@ -48,8 +48,8 @@ Then /^I should see matching results$/ do
   response.should have_selector("table#search_results")
 end
 
-Then /^there is an event with a matching name and birth date$/ do
-  @event = Factory.build(:morbidity_event)
+Then /^there is a (.+) event with a matching name and birth date$/ do |type|
+  @event = Factory.build("#{type}_event".to_sym)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.interested_party.person_entity.person.birth_date = @staged_message.patient.birth_date
   @event.build_jurisdiction
