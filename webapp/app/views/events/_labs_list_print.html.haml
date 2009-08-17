@@ -26,53 +26,53 @@
         .left
           %span.print-label Lab name:
           %span.print-value
-          &= lab.place_entity.place.name
+          = h(lab.place_entity.place.name)
         .three-valued-row
           .left
             %span.print-label Test type:
             %span.print-value
-              &= lab_result.test_type.common_name
+              = h(lab_result.test_type.common_name)
           .left
             %span.print-label Test result:
             %span.print-value
-              &= l lab_result.test_result
+              = h(l(lab_result.test_result))
           .right
             %span.print-label Result value:
             %span.print-value
-              &= lab_result.result_value
+              = h(lab_result.result_value)
         .three-valued-row
           .left
             %span.print-label Units:
             %span.print-value
-              &= lab_result.units
+              = h(lab_result.units)
           .left
             %span.print-label Reference range:
             %span.print-value
-              &= lab_result.reference_range
+              = h(lab_result.reference_range)
           .right
             %span.print-label Test status:
             %span.print-value
-              &= l lab_result.test_status
+              = h(l(lab_result.test_status))
         .three-valued-row
           .left
             %span.print-label Specimen source:
             %span.print-value
-              &= l lab_result.specimen_source
+              = h(l(lab_result.specimen_source))
           .left
             %span.print-label Collection date:
             %span.print-value
-              &= lab_result.collection_date
+              = h(lab_result.collection_date)
           .right
             %span.print-label Lab test date:
             %span.print-value
-              &= lab_result.lab_test_date
+              = h(lab_result.lab_test_date)
         .three-valued-row
           .left
             %span.print-label Specimen sent to state lab:
             %span.print-value
-              &= l lab_result.specimen_sent_to_state
+              = h(l(lab_result.specimen_sent_to_state))
           .left
             %span.print-label Comment:
             %span.print-value
-              &= lab_result.comment
+              = h(lab_result.comment)
     - ran = 1

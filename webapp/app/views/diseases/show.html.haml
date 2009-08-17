@@ -68,17 +68,17 @@
       %td{:style => "width: 5%"}
         Contact
       %td
-        &= @disease.contact_lead_in
+        = h(@disease.contact_lead_in)
     %tr
       %td{:style => "width: 5%"}
         Place
       %td
-        &= @disease.place_lead_in
+        = h(@disease.place_lead_in)
     %tr
       %td{:style => "width: 5%"}
         Treatment
       %td
-        &= @disease.treatment_lead_in
+        = h(@disease.treatment_lead_in)
 
   %table.list
     %tr
@@ -106,4 +106,4 @@
           %ul
             - @disease.common_test_types.each do |common_test_type|
               %li
-                &= common_test_type.common_name
+                = h(common_test_type.common_name)

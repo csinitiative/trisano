@@ -47,7 +47,7 @@
                   =link_to h(loinc_code.loinc_code), loinc_code
             %td
               %span.test_name
-                &=loinc_code.test_name
+                = h(loinc_code.test_name)
     %span.vert-break
       =submit_tag "Remove"
 
@@ -93,7 +93,7 @@
                     =link_to h(loinc_code.loinc_code), loinc_code
               %td
                 %span.test_name
-                  &=loinc_code.test_name
+                  = h(loinc_code.test_name)
               %td.forminformation
                 .formname
                   %span.associated-common-test

@@ -52,7 +52,7 @@
           District
           - address = event.nil? ? @person.canonical_address : event.address
           - if address.county && address.county.jurisdiction
-            %span.data_jurisdiction_name= address.county.jurisdiction.name
+            %span.data_jurisdiction_name= h(address.county.jurisdiction.name)
     
       = render_geocode_form_section(a, event)
 
