@@ -14,4 +14,5 @@ runtime_timeout: 5 # number of seconds that web app thread should wait before ge
 dump_file_name: # assumes dump file is in the ./dump directory - example trisano_production-09-25-2008-1123AM.dump
 source_url: # the URL of the TriSano source code. Derivative works must set this per AGPL.
 support_url: # the URL of the TriSano support page.
+feedback_email: # the email for TriSano feedback
 feedback_url: # the URL of the TriSano feedback page. 

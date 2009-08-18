@@ -45,6 +45,7 @@ namespace :trisano do
       @support_url = config['support_url']
       @source_url = config['source_url']
       @feedback_url = config['feedback_url']
+      @feedback_email = config['feedback_email']
 
       ENV["PGPASSWORD"] = @priv_password 
     end
@@ -243,13 +244,18 @@ namespace :trisano do
       initialize_config
       if ! @support_url.nil?
         puts "overwriting TriSano Support URL with #{@support_url}"
-        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://www.trisano.org/collaborate/", @support_url) 
+        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://www.trisano.org/collaborate/\'", "#{@support_url}\'")
       end
       if ! @feedback_url.nil?
         puts "overwriting TriSano Feedback URL with #{@feedback_url}"
-        change_text_in_file('../webapp/app/controllers/application_controller.rb', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
-        change_text_in_file('../webapp/public/500.html', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
-        change_text_in_file('../webapp/public/503.html', "https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano", @feedback_url) 
+        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://groups.google.com/group/trisano-user", @feedback_url)
+        change_text_in_file('../webapp/app/controllers/application_controller.rb', "http://groups.google.com/group/trisano-user", @feedback_url)
+        change_text_in_file('../webapp/public/500.html', "http://groups.google.com/group/trisano-user", @feedback_url)
+        change_text_in_file('../webapp/public/503.html', "http://groups.google.com/group/trisano-user", @feedback_url)
+      end
+      if ! @feedback_email.nil?
+        puts "overwriting TriSano Feedback email with #{@feedback_email}"
+        change_text_in_file('../webapp/app/helpers/layout_helper.rb', "trisano-user@googlegroups.com", @feedback_email)
       end
       if ! @source_url.nil?
         puts "overwriting TriSano Source URL with #{@source_url}"
