@@ -30,6 +30,13 @@ See CONTRIBUTORS file.
 
 See COPYING file.
 
+NOTE: In order to comply with the license, you must maintain the Source link in the footer of the
+application via the config.yml setting or another mechanism. If you maintain a derivative
+work of TriSano™, you must update the Source link to point to the derivative work.
+If the instance of TriSano™ running the derivative work is not publicly available, you must 
+maintain a web page that points to the current source code that is publicly available on the
+internet. Failure to comply may result in termination of your license per the terms of the license.
+
 === License and Copyright Information regarding Third-Party Software
 
 ==== Dependant
