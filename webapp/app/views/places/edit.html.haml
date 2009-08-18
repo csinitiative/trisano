@@ -29,9 +29,9 @@
       %tr
         %td.forminformation
           .tools
-            = @place_entity.place.short_name
+            = h(@place_entity.place.short_name)
           .formname
-            = @place_entity.place.name
+            = h(@place_entity.place.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             Edit

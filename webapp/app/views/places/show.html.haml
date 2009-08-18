@@ -29,9 +29,9 @@
       %tr
         %td.forminformation
           .tools
-            = @place_entity.place.short_name
+            = h(@place_entity.place.short_name)
           .formname
-            = @place_entity.place.name
+            = h(@place_entity.place.name)
           .tools
             - address = @place_entity.canonical_address
             - unless address.nil?

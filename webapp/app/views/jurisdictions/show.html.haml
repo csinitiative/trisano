@@ -29,9 +29,9 @@
       %tr
         %td.forminformation
           .formname
-            = @jurisdiction.place.name
+            = h(@jurisdiction.place.name)
           .tools
-            = @jurisdiction.place.short_name
+            = h(@jurisdiction.place.short_name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_jurisdiction_path(@jurisdiction)
