@@ -211,14 +211,12 @@ module EventsHelper
         routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
       when :assign_to_investigator
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
-        investigators = investigators.collect { |i| i.id=h(i.id); i.given_name=h(i.given_name); i.first_name=h(i.first_name); i.last_name=h(i.last_name); i.uid=h(i.uid); i.user_name=h(i.user_name); i }
         routing_controls += "<div>Assign to investigator:&nbsp;"
-        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, h(event['investigator_id'])), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
+        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
       when :complete, :complete_and_close
         action_controls += submit_tag(h(transition.to_s.titleize), :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
       end
     end
-    return routing_controls
 
     if action_controls.blank? && routing_controls.blank?
       controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
@@ -246,7 +244,7 @@ module EventsHelper
       jurisdictions = Place.jurisdictions
       controls += form_tag(jurisdiction_cmr_path(event))
       controls += "<span>Investigating jurisdiction: &nbsp;</span>"
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, h(event.primary_jurisdiction.entity_id))).untaint
+      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
       controls += "<br />Also grant access to:"
 
       controls += "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
