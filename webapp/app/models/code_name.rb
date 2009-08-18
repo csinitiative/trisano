@@ -24,5 +24,9 @@ class CodeName < ActiveRecord::Base
   validates_presence_of :description
   validates_length_of :code_name, :maximum => 50
   validates_uniqueness_of :code_name
-    
+
+  def self.loinc_scale
+    self.find_by_code_name('loinc_scale')
+  end
+
 end

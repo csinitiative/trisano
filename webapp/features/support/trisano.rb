@@ -34,6 +34,13 @@ def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
   end
 end
 
+def create_event_with_attributes(event_type, last_name, attrs, disease=nil, jurisdiction=nil)
+  e = create_basic_event(event_type, last_name, disease, jurisdiction)
+  e.attributes = attrs
+  e.save
+  e
+end
+
 def add_child_to_event(event, child_last_name)
   returning event.contact_child_events.build do |child|
     child.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => child_last_name } } } }
@@ -79,8 +86,8 @@ def lab_attributes(values)
       },
       "lab_results_attributes"=>{
         "0"=>{
-          "test_type"=>"#{values[:test_type] if values[:test_type]}", "test_detail"=>"#{values[:test_detail] if values[:test_detail]}", "lab_result_text"=>"#{values[:lab_result_text] if values[:lab_result_text]}", "reference_range"=>"", "interpretation_id"=>"",
-          "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
+          "test_type_id"=>"#{values[:test_type_id] if values[:test_type_id]}", "reference_range"=>"",
+          "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_state_id"=>""
         }
       }
     }

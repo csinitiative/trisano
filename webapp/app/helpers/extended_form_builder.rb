@@ -225,6 +225,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     field + spinner
   end
 
+  # DEBT:  Get rid of / dry this up someday
   def is_external_code?(code_name)
     cn = CodeName.find_by_code_name(code_name)
     return cn.external

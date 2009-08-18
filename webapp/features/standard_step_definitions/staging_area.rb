@@ -1,12 +1,16 @@
-Given /^I am logged in as a user with create and update privs in the Unassigned jurisdiction$/ do
-  log_in_as("data_entry_tech")
+Given /^I am logged in as a user with manage_staged_message privs$/ do
+  log_in_as("surveillance_mgr")
+end
+
+Given /^I am logged in as a user with write_staged_message privs$/ do
+  log_in_as("default_user")
 end
 
 Then /^I should see the staging area page$/ do
   current_url.should =~ /#{staged_messages_path}/
 end
 
-Given /^I am logged in as a user without create and update privs in the Unassigned jurisdiction$/ do
+Given /^I am logged in as a user without staging area privs in the Unassigned jurisdiction$/ do
   log_in_as("state_manager")
 end
 
@@ -16,13 +20,6 @@ end
 
 When /^I visit the staging area page directly$/ do
   visit staged_messages_path
-end
-
-Then /^I should get a 403 response$/ do
-  # Why can't I say: response.should be_forbidden
-  # Or repsonse.code.should == :forbidden
-  # Or, at the very least response.code.should == 403
-  response.code.should == "403"
 end
 
 Given /^there are no matching entries$/ do
@@ -45,8 +42,8 @@ Then /^I should not see any matching results$/ do
   response.should_not have_selector("table#search_results")
 end
 
-When /^there is an event with a matching name but no birth date$/ do
-  @event = Factory.build(:morbidity_event)
+When /^there is a (.+) event with a matching name but no birth date$/ do |type|
+  @event = Factory.build("#{type}_event".to_sym)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.save!
 end
@@ -55,8 +52,8 @@ Then /^I should see matching results$/ do
   response.should have_selector("table#search_results")
 end
 
-Then /^there is an event with a matching name and birth date$/ do
-  @event = Factory.build(:morbidity_event)
+Then /^there is a (.+) event with a matching name and birth date$/ do |type|
+  @event = Factory.build("#{type}_event".to_sym)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.interested_party.person_entity.person.birth_date = @staged_message.patient.birth_date
   @event.build_jurisdiction
@@ -80,6 +77,10 @@ Then /^I should see a '(.+)' message$/ do |msg|
   response.should contain(msg)
 end
 
+Then /^I should see a state of '(.+)'$/ do |state|
+  response.should contain(/State:\s+#{state}/)
+end
+
 Then /^I should remain on the staged message show page$/ do
   path = staged_message_path(@staged_message)
   current_url.should =~ /#{path}/
@@ -93,9 +94,18 @@ When /^I visit the assigned-to event$/ do
   click_link 'Assigned'
 end
 
-Then /^I should see the new lab result$/ do
+Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
+  @scale = CodeName.loinc_scale.external_codes.first
+  loinc_test_maps.rows.each do |loinc_test_map|
+    d = LoincCode.new(:loinc_code => loinc_test_map.first, :scale_id => @scale.id)
+    d.build_common_test_type(:common_name => loinc_test_map.last) unless loinc_test_map.last.blank?
+    d.save
+  end
+end
+
+Then /^I should see the new lab result with '(.+)'$/ do |test_type|
   response.should contain(@staged_message.message_header.sending_facility)
-  response.should contain(@staged_message.observation_request.test_performed)
+  response.should contain(test_type)
   response.should contain(@staged_message.observation_request.tests.first.result)
   response.should contain(@staged_message.observation_request.collection_date)
   response.should contain(/#{@staged_message.observation_request.specimen_source}/i)

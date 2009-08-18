@@ -15,26 +15,29 @@
 %div{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
   = error_messages_for :object => lab_result_form.object
 
-  %i If any lab result information is provided it must include Test Type.  In addition one or both of 'Test result' and 'Interpretation' must be supplied.
-
-  -# Autocomplete for test type.
   - core_element("test_type", lab_result_form, :horiz) do
-    = trisano_auto_complete(lab_result_form, :test_type, "Test type", {:size => 20, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_test_type"}, :param_name => 'test_type' })
+    = lab_result_form.label(:test_type)
+    -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
+    -# @disease is set by the Ajax controller actions to the currently selected disease, if any
+    - disease = @disease || @event.try(:disease_event).try(:disease)
+    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "get_test_type_options(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
 
-  - core_element("test_detail", lab_result_form, :horiz) do
-    = lab_result_form.label(:test_detail, "Specify test detail")
-    = lab_result_form.text_field(:test_detail, :size => 20, :maxlength => 255)
-
-  -# Autocomplete for lab result
-  - core_element("lab_result_text", lab_result_form, :horiz) do
-    = trisano_auto_complete(lab_result_form, :lab_result_text, "Test result", {:size => 20, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_lab_result"}, :param_name => 'lab_result' })
-
+  - core_element("test_result", lab_result_form, :horiz) do
+    = lab_result_form.label(:test_result)
+    = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
+    &nbsp;&nbsp;&nbsp;or
+  - core_element("result_value", lab_result_form, :horiz) do
+    = lab_result_form.label(:result_value)
+    = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
+  - core_element("units", lab_result_form, :horiz) do
+    = lab_result_form.label(:units)
+    = lab_result_form.text_field(:units, :size => 20, :maxlength => 50)
   - core_element("reference_range", lab_result_form, :horiz) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
-  - core_element("interpretation", lab_result_form, :horiz) do
-    = lab_result_form.label(:interpretation)
-    = lab_result_form.dropdown_code_field(:interpretation_id, "lab_interpretation", {})
+  - core_element("test_status", lab_result_form, :horiz) do
+    = lab_result_form.label(:test_status_id)
+    = lab_result_form.dropdown_code_field(:test_status_id, "test_status", {})
   %span.vert
   - core_element("specimen_source", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_source_id, "Specimen source")
@@ -45,9 +48,13 @@
   - core_element("lab_test_date", lab_result_form, :horiz) do
     = lab_result_form.label(:lab_test_date)
     = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
-  - core_element("specimen_sent_to_uphl", lab_result_form, :horiz) do
-    = lab_result_form.label(:specimen_sent_to_uphl_yn_id, "Specimen sent to UPHL?")
-    = lab_result_form.dropdown_code_field(:specimen_sent_to_uphl_yn_id, "yesno", {})
+  - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
+    = lab_result_form.label(:specimen_sent_to_state_id, "Specimen sent to state lab?")
+    = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})
+  %span.vert
+  - core_element("comment", lab_result_form, :horiz) do
+    = lab_result_form.label(:comment)
+    = lab_result_form.text_area(:comment, :rows => 2, :cols => 100)
 
   - if lab_result.try(:staged_message)
     %span.horiz

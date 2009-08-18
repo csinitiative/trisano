@@ -38,18 +38,22 @@
                   = h(lab.place_entity.place.name)
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
-                %b= h(lab_result.test_type)
+                %b= h(lab_result.test_type.common_name)
                 %br
-                %small Detail:
-                %b= h(lab_result.test_detail)
+                %b= h(lab_result.comment)
               %td
-                %b= h(lab_result.lab_result_text)
+                %b= h(l(lab_result.test_result))
+                %br
+                %small Result value:
+                %b= h(lab_result.result_value)
+                %small Units:
+                %b= h(lab_result.units)
                 %br
                 %small Reference range:
                 %b= h(lab_result.reference_range)
                 %br
-                %small Interpretation:
-                %b= h(l(lab_result.interpretation))
+                %small Test status:
+                %b= h(l(lab_result.test_status))
               %td
                 %small Source:
                 %b= h(l(lab_result.specimen_source))
@@ -59,5 +63,5 @@
                 %small &nbsp;Tested on:
                 %b= h(lab_result.lab_test_date)
                 %br
-                %small Sent to UPHL:
-                %b= h(l(lab_result.specimen_sent_to_uphl_yn))
+                %small Sent to state lab:
+                %b= h(l(lab_result.specimen_sent_to_state))

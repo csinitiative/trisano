@@ -71,8 +71,8 @@ describe PlaceEntity do
             },
             "lab_results_attributes"=>{
               "0"=>{
-                "test_type"=>"Culture", "test_detail"=>"Did it", "lab_result_text"=>"Done", "reference_range"=>"", "interpretation_id"=>"",
-                "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_uphl_yn_id"=>""
+                "test_type_id"=>1, "reference_range"=>"",
+                "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_state_id"=>""
               }
             }
           }

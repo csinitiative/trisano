@@ -60,9 +60,16 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
-  it "should not be valid if there's no OBX segment" do
+  it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
     m.should_not be_valid
+    m.errors.full_messages.first.should =~ /No last name provided for patient/
+  end
+
+  it "should not be valid if there's no no loinc code" do
+    m = StagedMessage.new(:hl7_message => hl7_messages[:no_loinc_code])
+    m.should_not be_valid
+    m.errors.full_messages.first.should =~ /does not contain a LOINC code/
   end
 
   it 'should respond to hl7' do
@@ -102,11 +109,12 @@ describe StagedMessage do
   describe "class level functionality" do
 
     it 'should provide a hash of valid states' do
-      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED'}
+      StagedMessage.states.should == {:pending => 'PENDING', :assigned => 'ASSIGNED', :discarded => 'DISCARDED', :unprocessable => 'UNPROCESSABLE'}
     end
   end
 
   describe "assigning to an event" do
+    fixtures :loinc_codes, :common_test_types
 
     before :each do
       @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
@@ -123,6 +131,16 @@ describe StagedMessage do
     it "should raise an error if message has already been assigned" do
       @staged_message.state = StagedMessage.states[:assigned]
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(RuntimeError)
+    end
+
+    it "should raise an error if LOINC code does not exist" do
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unknown_loinc])
+      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
+    end
+
+    it "should raise an error if LOINC code exists but is not linked to a common name" do
+      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unlinked_loinc])
+      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnlinkedLoincCode)
     end
 
     it 'should create a lab result and link to it' do

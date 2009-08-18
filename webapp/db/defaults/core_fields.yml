@@ -1,12 +1,12 @@
 --- 
-core_field_contact_lab_result_specimen_sent_to_uphl: 
-  name: Lab results | Specimen sent to UPHL
+core_field_contact_lab_result_specimen_sent_to_state: 
+  name: Lab results | Specimen sent to state lab
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
-  key: contact_event[labs][lab_results][specimen_sent_to_uphl]
+  key: contact_event[labs][lab_results][specimen_sent_to_state]
 core_field_00043: 
   name: Reporter phone type
   help_text: 
@@ -15,14 +15,6 @@ core_field_00043:
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][entity_location_type_id]
-core_field_contact_lab_result_test_detail: 
-  name: Lab results | Test detail
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: single_line_text
-  event_type: contact_event
-  key: contact_event[labs][lab_results][test_detail]
 core_field_00015: 
   name: Patient birth gender
   help_text: 
@@ -247,14 +239,6 @@ core_field_00022:
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][group_living_id]
-core_field_morb_lab_result_test_detail: 
-  name: Lab results | Test detail
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: single_line_text
-  event_type: morbidity_event
-  key: morbidity_event[labs][lab_results][test_detail]
 core_field_00050: 
   name: Hospitalized
   help_text: 
@@ -271,14 +255,6 @@ core_field_00051:
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][died_id]
-core_field_contact_lab_result_lab_result_text: 
-  name: Lab results | Test result
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: single_line_text
-  event_type: contact_event
-  key: contact_event[labs][lab_results][lab_result_text]
 core_field_00023: 
   name: Day care association
   help_text: 
@@ -407,14 +383,46 @@ core_field_00028:
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[first_reported_PH_date]
-core_field_contact_lab_result_interpretation: 
-  name: Lab results | Interpretation
+core_field_contact_lab_result_test_result:
+  name: Lab results | Test result
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
-  key: contact_event[labs][lab_results][interpretation]
+  key: contact_event[labs][lab_results][test_result]
+core_field_contact_lab_result_test_status:
+  name: Lab results | Test status
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: contact_event
+  key: contact_event[labs][lab_results][test_status]
+core_field_contact_lab_result_result_value:
+  name: Lab results | Result value
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs][lab_results][result_value]
+core_field_contact_lab_result_units:
+  name: Lab results | Units
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs][lab_results][units]
+core_field_contact_lab_result_comment:
+  name: Lab results | Comment
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs][lab_results][comment]
 core_field_00085: 
   name: Healthcare worker
   help_text: 
@@ -447,14 +455,6 @@ core_field_00029:
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[lhd_case_status_id]
-core_field_morb_lab_result_lab_result_text: 
-  name: Lab results | Test result
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: single_line_text
-  event_type: morbidity_event
-  key: morbidity_event[labs][lab_results][lab_result_text]
 core_field_00058: 
   name: Street name
   help_text: 
@@ -711,14 +711,14 @@ core_field_00092:
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][disease_onset_date]
-core_field_morb_lab_result_specimen_sent_to_uphl: 
-  name: Lab results | Specimen sent to UPHL
+core_field_morb_lab_result_specimen_sent_to_state: 
+  name: Lab results | Specimen sent to state lab
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
-  key: morbidity_event[labs][lab_results][specimen_sent_to_uphl]
+  key: morbidity_event[labs][lab_results][specimen_sent_to_state]
 core_field_00037: 
   name: Event name
   help_text: 
@@ -812,7 +812,7 @@ core_field_morb_lab_result_test_type:
   help_text: 
   fb_accessible: false
   can_follow_up: false
-  field_type: single_line_text
+  field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_type]
 core_field_00096: 
@@ -844,7 +844,7 @@ core_field_contact_lab_result_test_type:
   help_text: 
   fb_accessible: false
   can_follow_up: false
-  field_type: single_line_text
+  field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_type]
 core_field_00010: 
@@ -927,14 +927,46 @@ core_field_00042:
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][person][last_name]
-core_field_morb_lab_result_interpretation: 
-  name: Lab results | Interpretation
+core_field_morb_lab_result_test_result:
+  name: Lab results | Test result
   help_text: 
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
-  key: morbidity_event[labs][lab_results][interpretation]
+  key: morbidity_event[labs][lab_results][test_result]
+core_field_morb_lab_result_test_status:
+  name: Lab results | Test status
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][test_status]
+core_field_morb_lab_result_result_value:
+  name: Lab results | Result value
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][result_value]
+core_field_morb_lab_result_units:
+  name: Lab results | Units
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][units]
+core_field_morb_lab_result_comment:
+  name: Lab results | Comment
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][comment]
 core_field_00014: 
   name: Patient date of death
   help_text: 

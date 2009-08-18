@@ -127,14 +127,6 @@ csv_field_00079:
   short_name: 
   use_code: 
   event_type: morbidity_event
-csv_field_00134: 
-  sort_order: 40
-  export_group: lab
-  long_name: lab_result
-  use_description: lab_result_text
-  short_name: 
-  use_code: 
-  event_type: 
 csv_field_00106: 
   sort_order: 110
   export_group: event
@@ -159,14 +151,6 @@ csv_field_00021:
   short_name: 
   use_code: 
   event_type: morbidity_event
-csv_field_00135: 
-  sort_order: 30
-  export_group: lab
-  long_name: lab_test_detail
-  use_description: test_detail
-  short_name: 
-  use_code: 
-  event_type: 
 csv_field_00107: 
   sort_order: 550
   export_group: event
@@ -192,12 +176,20 @@ csv_field_00022:
   use_code: 
   event_type: morbidity_event
 csv_field_00136: 
+  sort_order: 30
+  export_group: lab
+  long_name: lab_test_result
+  use_description: test_result.try(:code_description)
+  short_name: 
+  use_code: test_result.try(:the_code)
+  event_type: 
+csv_field_lab_test_status: 
   sort_order: 60
   export_group: lab
-  long_name: lab_interpretation
-  use_description: interpretation.try(:code_description)
+  long_name: lab_test_status
+  use_description: test_status.try(:code_description)
   short_name: 
-  use_code: interpretation.try(:the_code)
+  use_code: test_status.try(:the_code)
   event_type: 
 csv_field_00108: 
   sort_order: 630
@@ -236,6 +228,22 @@ csv_field_00137:
   export_group: lab
   long_name: lab_reference_range
   use_description: reference_range
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_lab_result_value: 
+  sort_order: 40
+  export_group: lab
+  long_name: lab_result_value
+  use_description: result_value
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_lab_units: 
+  sort_order: 45
+  export_group: lab
+  long_name: lab_units
+  use_description: units
   short_name: 
   use_code: 
   event_type: 
@@ -955,7 +963,7 @@ csv_field_00067:
   sort_order: 20
   export_group: lab
   long_name: lab_test_type
-  use_description: test_type
+  use_description: test_type.try(:common_name)
   short_name: 
   use_code: 
   event_type: 
@@ -1018,10 +1026,10 @@ csv_field_00151:
 csv_field_00069: 
   sort_order: 100
   export_group: lab
-  long_name: lab_specimen_sent_to_uphl
-  use_description: specimen_sent_to_uphl_yn.try(:code_description)
+  long_name: lab_specimen_sent_to_state
+  use_description: specimen_sent_to_state.try(:code_description)
   short_name: 
-  use_code: specimen_sent_to_uphl_yn.try(:the_code)
+  use_code: specimen_sent_to_state.try(:the_code)
   event_type: 
 csv_field_00010: 
   sort_order: 180

@@ -58,7 +58,7 @@ describe Disease do
         :short_name => 'disease_spec_short'
       }
     )
-    
+
     form.save_and_initialize_form_elements
     @disease.live_forms.should be_empty
     published_form = form.publish
@@ -69,7 +69,12 @@ describe Disease do
     live_forms = @disease.live_forms("PlaceEvent")
     live_forms.should be_empty
   end
-  
+
+  describe "associations" do
+    it { should have_many(:disease_common_test_types) }
+    it { should have_many(:common_test_types) }
+  end
+
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
       @disease.external_codes.should be_empty
@@ -85,7 +90,7 @@ describe Disease do
         @disease.external_codes.length.should == 2
       end
     end
-        
+
   end
 
   describe 'diseases w/ no export status' do
@@ -98,7 +103,7 @@ describe Disease do
     end
 
   end
-  
+
   describe 'diseases w/a CDC export code' do
 
     fixtures :export_columns
@@ -111,12 +116,12 @@ describe Disease do
       export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from(export_column.id, @disease.disease_name)
       export_conversion_value.should_not be_nil
       export_conversion_value.value_to.should eql(@disease.cdc_code)
-      
+
       @disease.cdc_code = "654321"
       @disease.save.should be_true
       export_conversion_value.reload
       export_conversion_value.value_to.should eql(@disease.cdc_code)
-      
+
     end
   end
 
@@ -126,12 +131,48 @@ describe Disease do
     before :each do
       @disease = diseases(:hep_a)
     end
-           
+
     it 'should ids for export conversion values related to this disease' do
       @disease.export_columns.length.should == 1
       @disease.export_columns[0].export_conversion_values.length.should == 1
       @disease.export_conversion_value_ids.length.should == 1
       @disease.export_conversion_value_ids[0].should == 11
+    end
+
+  end
+
+  describe '#update_common_test_types' do
+    fixtures :diseases, :common_test_types
+
+    before :each do
+      @disease = diseases(:chicken_pox)
+      @starting_tests = [common_test_types(:blood_test), common_test_types(:hep_b_ag)]
+      @starting_tests.each do |test|
+        DiseaseCommonTestType.create!(:disease_id => @disease.id, :common_test_type_id => test.id)
+      end
+      @changed_tests = [common_test_types(:blood_test), common_test_types(:western_blot)]
+    end
+
+    it 'method should exist' do
+      Disease.new.respond_to?(:update_common_test_types).should be_true
+    end
+
+    it 'should update common test types from ID list' do
+      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
+      @disease.update_common_test_types(@changed_tests.collect(&:id))
+      @disease.common_test_type_ids.sort.should == @changed_tests.collect(&:id).sort
+    end
+
+    it 'should update common test types from CommonTestType list' do
+      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
+      @disease.update_common_test_types(@changed_tests)
+      @disease.common_test_type_ids.sort.should == @changed_tests.collect(&:id).sort
+    end
+
+    it 'should delete all common test types if handed an empty array' do
+      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
+      @disease.update_common_test_types([])
+      @disease.common_test_type_ids.should be_empty
     end
 
   end

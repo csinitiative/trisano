@@ -13,3 +13,5 @@
 - "add_form_to_event"
 - "remove_form_from_event"
 - "access_avr"
+- "manage_staged_message"
+- "write_staged_message"

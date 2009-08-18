@@ -73,7 +73,7 @@ end
 codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/test_types.yml"
 load_codes(ExternalCode, codes)
 
-codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/lab_interpretations.yml"
+codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/test_results.yml"
 load_codes(ExternalCode, codes)
 
 codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/contact_types.yml"

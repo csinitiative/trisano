@@ -38,10 +38,10 @@ When(/^I navigate to the code management tool$/) do
 end
 
 When /^I navigate to the code list for code name "(.+)"$/ do |name|
-  visit index_code_path name
+  visit index_code_path(name)
 end
 
 When /^I navigate to the code edit for code name "(.+)" and the code "(.+)"$/ do |name, the_code|
-  visit edit_code_path name, the_code
+  visit edit_code_path(name, the_code)
 end
 

@@ -1180,3 +1180,42 @@
   the_code:  "TM"
   code_description: "Treatment"
   sort_order: 15
+
+  ### LAB RESULT TEST STATUSES ###
+
+- code_name: "test_status"
+  the_code:  "I"
+  code_description: "Pending"
+  sort_order: 20
+
+- code_name: "test_status"
+  the_code:  "P"
+  code_description: "Preliminary result"
+  sort_order: 30
+
+- code_name: "test_status"
+  the_code:  "F"
+  code_description: "Final"
+  sort_order: 40
+
+   ### LOINC Code Scales ###
+
+- code_name:        "loinc_scale"
+  the_code:         "Ord"
+  code_description: "Ordinal"
+  sort_order:       "10"
+
+- code_name:        "loinc_scale"
+  the_code:         "Qn"
+  code_description: "Quantitative"
+  sort_order:       "20"
+
+- code_name:        "loinc_scale"
+  the_code:         "Nom"
+  code_description: "Nominal"
+  sort_order:       "30"
+
+- code_name:        "loinc_scale"
+  the_code:         "OrdQn"
+  code_description: "Quantitative or Ordinal"
+  sort_order:       "40"

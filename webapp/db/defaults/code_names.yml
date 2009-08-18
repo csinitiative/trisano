@@ -89,3 +89,15 @@
 - code_name: "locationtype"
   description: "Location Type"
   external: false
+
+- code_name: "test_result"
+  description: "Test Result"
+  external: true
+
+- code_name: "test_status"
+  description: "Test Status"
+  external: true
+
+- code_name: "loinc_scale"
+  description: "Scale"
+  external: true

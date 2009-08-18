@@ -16,9 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class PlacesController < AdminController
-    
+
   before_filter :check_role
-    
+
   def index
     unless params[:name].nil?
       @place_entities = PlaceEntity.find_for_entity_managment(params)
@@ -32,7 +32,7 @@ class PlacesController < AdminController
 
   def update
     @place_entity = PlaceEntity.find(params[:id])
-    
+
     if @place_entity.update_attributes(params[:place])
       flash[:notice] = 'Place was successfully updated.'
       redirect_to(place_url(@place_entity))

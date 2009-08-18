@@ -1,0 +1,23 @@
+.vert-break
+  -form_for loinc_code do |f|
+    =f.error_messages
+
+    %table.list
+      %tr
+        %th.forminformation
+          Edit LOINC Code
+
+      %tr
+        %td
+          %span.vert
+            =f.label      :loinc_code, 'LOINC code'
+            =f.text_field :loinc_code, :size => 20
+          %span.horiz
+            =f.label      :test_name
+            =f.text_field :test_name, :size => 60
+          %span.horiz
+            =f.label      :scale_id, "Scale"
+            =f.select     :scale_id, select_options_loinc_scales
+
+    %span.vert
+      =create_or_update_button loinc_code

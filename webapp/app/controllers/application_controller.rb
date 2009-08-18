@@ -28,9 +28,9 @@ class ApplicationController < ActionController::Base
   # There are other # ways to resolve this, but going big guns for now.
   #
   # protect_from_forgery # :secret => '2d3bed8e7cbfb7957951219c8ef78101'
-  
+
   before_filter :load_user
-  
+
   protected
 
   # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
@@ -58,12 +58,12 @@ class ApplicationController < ActionController::Base
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
     end
   end
-  
-  
+
+
   #
   # Logging a bit chatty just for initial deployments. We can turn it down later.
-  # 
-  
+  #
+
   def load_user
     auth_src_env = config_option(:auth_src_env)
     auth_src_header = config_option(:auth_src_header)
@@ -84,19 +84,19 @@ class ApplicationController < ActionController::Base
       return
     end
   end
- 
+
   def load_user_by_uid(uid)
-    
+
     if uid.blank?
       logger.info "No UID is present"
       log_request_info
       render :text => "Internal application error: No UID is present. Please contact your administrator.", :status => 500
       return
     end
-    
+
     logger.info "Attempting to load user with a UID of " + uid
     User.current_user = User.find_by_uid(uid)
-    
+
     if User.current_user.nil?
       logger.info "User not found by uid: " + uid
       log_request_info
@@ -114,15 +114,15 @@ class ApplicationController < ActionController::Base
     logger.info "User loaded: " + User.current_user.uid
     User.current_user
   end
-  
+
   def log_request_info
     thread_id = Thread.current.object_id
     request.env.each do |key, value|
-      
+
       logger.info "#{thread_id} -- #{key}: #{value}"
-    end      
+    end
   end
-  
+
   def rescue_action_in_public(exception)
     # The following can be made to render the 500.html view once we upgrade Rails.
     # Issue with rendering error pages w/Tomcat WAR deployments in pre-Rails 2.1:
@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
 <b style='font-size: 12px'><a href='https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano' style='font-size: 12px'>Provide feedback</a></b>
 </td></tr></table></body></html>"
   end
-  
+
   # Kluge to get around the fact that Rails does not reset objects in
   # memory after a failed transaction, thus interfering with behavior
   # of form helpers. Creates a new object from request parameters
@@ -147,4 +147,5 @@ class ApplicationController < ActionController::Base
     end
     obj
   end
+
 end

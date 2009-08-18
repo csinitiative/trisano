@@ -1,0 +1,24 @@
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        LOINC Code
+      %th
+        Test Name
+      %th
+        Scale
+      %th
+        &nbsp;
+    %tr
+      %td.forminformation
+        .formname
+          %span.loinc_code
+            = h(loinc_code.loinc_code)
+      %td
+        %span.test_name
+          = h(loinc_code.test_name)
+      %td
+        %span.scale
+          = h(loinc_code.scale.code_description)
+      %td
+        = loinc_code_tools loinc_code

@@ -16,4 +16,20 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module DiseasesHelper
+
+  def show_hide_disease_section_link
+    link_to_function '[&nbsp;Show&nbsp;|&nbsp;Hide&nbsp;Details&nbsp;]' do |page|
+      page << "$(this).up().up().up().next().toggle()"
+    end
+  end
+
+  def disease_common_test_type_check_box(common_test_type, associated_test_type_ids)
+    check = check_box_tag("disease[common_test_type_ids][]",
+                          common_test_type.id,
+                          associated_test_type_ids.include?(common_test_type.id),
+                          :id => h(common_test_type.common_name.gsub(' ', '_')),
+                          :class => 'common_test_type')
+    label_tag h(common_test_type.common_name), check + h(common_test_type.common_name)
+  end
+
 end

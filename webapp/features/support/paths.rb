@@ -17,7 +17,7 @@
 
 def path_to(page_name)
   case page_name
-  
+
   when /the homepage/i
     root_path
 
@@ -36,7 +36,40 @@ def path_to(page_name)
 
   when /the investigator user edit page/i
     "/users/4/edit"
-  
+
+  when /the common test type index page/
+    common_test_types_path
+
+  when /the new common test type page/
+    new_common_test_type_path
+
+  when /(a|the) common test type show page/
+    common_test_type_path(@common_test_type)
+
+  when /edit the common test type/
+    edit_common_test_type_path(@common_test_type)
+
+  when /manage the common test type\'s loinc codes/
+    loinc_codes_common_test_type_path(@common_test_type)
+
+  when /the admin dashboard/
+    admin_path
+
+  when /edit the disease/
+    edit_disease_path(@disease)
+
+  when /the loinc code index page/
+    loinc_codes_path
+
+  when /the new loinc code page/
+    new_loinc_code_path
+
+  when /edit the loinc code/
+    edit_loinc_code_path @loinc_code
+
+  when /the loinc code show page/
+    loinc_code_path @loinc_code
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

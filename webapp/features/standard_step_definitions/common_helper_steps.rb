@@ -61,6 +61,36 @@ Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
 end
 
 #
+# HTTP helpers
+#
+
+Then /^I should get a 403 response$/ do
+  # Why can't I say: response.should be_forbidden
+  # Or repsonse.code.should == :forbidden
+  # Or, at the very least response.code.should == 403
+  response.code.should == "403"
+end
+
+Then /^I should get a 500 response$/ do
+  response.code.should == "500"
+end
+
+Then /^I follow "(.*)" expecting a failure$/ do |link|
+  lambda{ click_link(link) }.should raise_error(Webrat::PageLoadError)
+end
+
+#
+# Verification Helpers
+#
+
+Then /^I should see a link to "([^\"]*)"$/ do |link_text|
+  response.should have_xpath("//a[text()='#{link_text}']")
+end
+
+Then /^I should not see a link to "([^\"]*)"$/ do |link_text|
+  response.should_not have_xpath("//a[text()='#{link_text}']")
+end
+
 # Other stuff
 #
 
@@ -79,4 +109,3 @@ When(/^I search for the person entity "([^\"]*)"$/) do |name|
 
   click_button "Search"
 end
-

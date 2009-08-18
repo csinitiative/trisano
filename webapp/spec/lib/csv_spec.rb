@@ -122,14 +122,15 @@ def lab_header
   %w(lab_record_id
   lab_name
   lab_test_type
-  lab_test_detail
-  lab_result
+  lab_test_result
+  lab_result_value
+  lab_units
   lab_reference_range
-  lab_interpretation
+  lab_test_status
   lab_specimen_source
   lab_collection_date
   lab_test_date
-  lab_specimen_sent_to_uphl).join(",")
+  lab_specimen_sent_to_state).join(",")
 end
 
 def treatment_header
@@ -366,15 +367,16 @@ def lab_output
   out = ""
   out << "#{@lab_result.id},"
   out << "#{@lab_result.lab_name},"
-  out << "#{@lab_result.test_type},"
-  out << "#{@lab_result.test_detail},"
-  out << "#{@lab_result.lab_result_text},"
+  out << "#{@lab_result.test_type.common_name},"
+  out << "#{@lab_result.test_result.code_description},"
+  out << "#{@lab_result.result_value},"
+  out << "#{@lab_result.units},"
   out << "#{@lab_result.reference_range},"
-  out << "#{@lab_result.interpretation.code_description},"
   out << "#{@lab_result.specimen_source.code_description},"
+  out << "#{@lab_result.test_status.code_description},"
   out << "#{@lab_result.collection_date},"
   out << "#{@lab_result.lab_test_date},"
-  out << "#{@lab_result.specimen_sent_to_uphl_yn.code_description}"
+  out << "#{@lab_result.specimen_sent_to_state.code_description}"
 end
 
 def treatment_output
@@ -486,17 +488,21 @@ def csv_mock_event(event_type)
   m.stub!(:other_data_2).and_return('Second Other Data')
   m.stub!(:deleted_at).and_return(nil)
 
+  @common_test_type = mock_model(CommonTestType)
+  @common_test_type.stub!(:common_name).and_return("Biopsy")
+
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
-  @lab_result.stub!(:test_type).and_return("Biopsy")
-  @lab_result.stub!(:test_detail).and_return("Liver")
-  @lab_result.stub!(:lab_result_text).and_return("Positive")
+  @lab_result.stub!(:test_type).and_return(@common_test_type)
+  @lab_result.stub!(:test_result).and_return(simple_reference)
+  @lab_result.stub!(:result_value).and_return("100")
+  @lab_result.stub!(:units).and_return("Gallons")
   @lab_result.stub!(:reference_range).and_return("Detected")
-  @lab_result.stub!(:interpretation).and_return(simple_reference)
   @lab_result.stub!(:specimen_source).and_return(simple_reference)
+  @lab_result.stub!(:test_status).and_return(simple_reference)
   @lab_result.stub!(:collection_date).and_return("2008-02-01")
   @lab_result.stub!(:lab_test_date).and_return("2008-02-02")
-  @lab_result.stub!(:specimen_sent_to_uphl_yn).and_return(simple_reference)
+  @lab_result.stub!(:specimen_sent_to_state).and_return(simple_reference)
   m.stub!(:lab_results).and_return([@lab_result])
 
   m.stub!(:reload).and_return(m)

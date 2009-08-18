@@ -17,23 +17,24 @@
 
 class LabResult < ActiveRecord::Base
   belongs_to :specimen_source, :class_name => 'ExternalCode'
-  belongs_to :specimen_sent_to_uphl_yn, :class_name => 'ExternalCode'
-  belongs_to :interpretation, :class_name => 'ExternalCode'
+  belongs_to :specimen_sent_to_state, :class_name => 'ExternalCode'
+  belongs_to :test_result, :class_name => 'ExternalCode'
   belongs_to :participation
   belongs_to :staged_message
+  belongs_to :test_type, :class_name => 'CommonTestType'
+  belongs_to :test_status, :class_name => 'ExternalCode'
 
   before_destroy do |lab_result|
     lab_result.participation.event.add_note("Lab result deleted")
   end
 
-  validates_presence_of :test_type
+  validates_presence_of :test_type_id
+  validates_length_of :result_value, :maximum => 255, :allow_blank => true
+  validates_length_of :units, :maximum => 50, :allow_blank => true
+  validates_length_of :reference_range, :maximum => 255, :allow_blank => true
 
   validates_date :collection_date, :allow_nil => true
   validates_date :lab_test_date, :allow_nil => true
-
-  validates_length_of :lab_result_text, :maximum => 255, :allow_blank => true
-  validates_length_of :test_type, :maximum => 255, :allow_blank => true
-  validates_length_of :test_detail, :maximum => 255, :allow_blank => true
 
   def lab_name
     participation.secondary_entity.place.name unless participation.nil?
@@ -42,10 +43,6 @@ class LabResult < ActiveRecord::Base
   def validate
     if !collection_date.blank? && !lab_test_date.blank?
       errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
-    end
-
-    if interpretation.blank? && lab_result_text.blank?
-      errors.add_to_base("One or both of 'Test result' or 'Interpretation' must be provided.")
     end
   end
 end

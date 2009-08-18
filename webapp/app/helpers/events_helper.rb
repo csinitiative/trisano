@@ -108,20 +108,24 @@ module EventsHelper
     end
   end
 
-  def add_lab_link(name, event, prefix)
-    url = event.is_a?(MorbidityEvent) ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
-    link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get)
+  def add_lab_link(name, prefix)
+    event_type = /^.+_event/.match(prefix)[0]
+    url = event_type == 'morbidity_event' ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
+    disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
+    link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
 
-  def add_lab_result_link(name, event, prefix, lab_id)
-    url = event.is_a?(MorbidityEvent) ? lab_result_form_new_cmr_path(:prefix => prefix) : lab_result_form_new_contact_event_path(:prefix => prefix)
-    link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get)
+  def add_lab_result_link(name, prefix, lab_id)
+    event_type = /^.+_event/.match(prefix)[0]
+    url = event_type == 'morbidity_event' ? lab_result_form_new_cmr_path(:prefix => prefix) : lab_result_form_new_contact_event_path(:prefix => prefix)
+    disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
+    link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
 
   def add_reporting_agency_link(name, form, options={})
     options = {:id => 'add_reporting_agency_link'}.merge(options)
     link_to_function name, nil, options do |page|
-      # 'force new' is a hack to get the Add a Reporting Agency link to always render a form regardless of new mode, edit mode, validation failure, pre-
+      # 'force new' is a hack to get the Add a Reporting Agency link to always render a form regardless of new mode, edit mode, validation failure, pre-event.
       page.update_reporting_agency('force new', form)
       page << "$('morbidity_event_reporting_agency_attributes_place_entity_attributes_place_attributes_name').value=$F('reporting_agency_search')"
     end
@@ -313,6 +317,64 @@ module EventsHelper
       out << link_to("Edit Encounter", edit_encounter_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
     end
     out
+  end
+
+  # Test type select list for Ajaxy add of new lab result
+  #   No disease selected:                     blank, all test types
+  #   Disease selected:                        blank, test types for disease, get more.
+
+  # Test type select list for new and edit will be:
+  #   new form (no disease selected):          blank, all test types.
+  #   edit form, no disease selected, new lab: blank, all test types
+  #   edit form, disease selected, new lab:    blank, test types for disease, get more.
+  #   edit form, existing lab:                 blank, saved test type, get more.
+
+  def test_type_options(event, disease, lab_result)
+    no_more = false
+    if event.nil?
+      if disease.nil?
+        # Ajax, no disease selected or Ajax, get all
+        opts = CommonTestType.all(:order => "common_name ASC")
+        no_more = true
+      else
+        # Ajax, disease selected
+        opts = disease.common_test_types
+        if opts.empty?
+          opts = CommonTestType.all(:order => "common_name ASC")
+          no_more = true
+        end
+      end
+    else
+      if event.new_record?
+        # Page load, new form
+        opts = CommonTestType.all(:order => "common_name ASC")
+        no_more = true
+      else
+        if lab_result.new_record?
+          if disease.nil?
+            # Page load, edit form, new lab, no disease
+            opts = CommonTestType.all(:order => "common_name ASC")
+            no_more = true
+          else
+            # Page load, edit form, new lab, disease
+            opts = disease.common_test_types
+            if opts.empty?
+              opts = CommonTestType.all(:order => "common_name ASC")
+              no_more = true
+            end
+          end
+        else
+          # Page load, edit form, existing lab
+          opts = CommonTestType.find_all_by_common_name(lab_result.test_type.common_name)
+        end
+      end
+    end
+    unless no_more
+      more = CommonTestType.new(:common_name => "More choices...")
+      more.id = 0  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
+      opts += [more]
+    end
+    opts
   end
 
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.

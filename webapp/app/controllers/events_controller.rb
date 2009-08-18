@@ -33,26 +33,6 @@ class EventsController < ApplicationController
     render :inline => "<%= auto_complete_result(@items, 'name') %>"
   end
 
-  def auto_complete_for_test_type
-    @items = ExternalCode.active.find(:all,
-      :conditions => ["LOWER(code_description) LIKE ? AND code_name = 'lab_test_type'", '%' + params[:test_type].downcase + '%'],
-      :order => "code_description",
-      :limit => 20
-    )
-    render :inline => "<%= auto_complete_result(@items, 'code_description') %>"
-  end
-
-  def auto_complete_for_lab_result
-    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (LOWER(TRIM(lab_result_text))) lab_result_text 
-                                        FROM lab_results 
-                                        WHERE LOWER(lab_result_text) LIKE ? 
-                                        ORDER BY LOWER(TRIM(lab_result_text)) 
-                                        LIMIT 20", 
-        '%' + params[:lab_result].downcase + '%'])
-
-    render :inline => "<%= auto_complete_result(@items, 'lab_result_text') %>"
-  end
-
   def auto_complete_for_treatment
     @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (treatment) treatment 
                                         FROM participations_treatments 
@@ -151,11 +131,22 @@ class EventsController < ApplicationController
     lab.build_place_entity
     lab.place_entity.build_place
     lab.lab_results.build
-    render :partial => 'events/lab', :object => lab, :locals => {:prefix => params[:prefix]}
+
+    @disease = params[:disease_id].blank? ? nil : Disease.find(params[:disease_id])
+    render :partial => 'events/lab', :object => lab, :locals => {:prefix => params[:prefix] }
   end
   
   def lab_result_form
+    @disease = params[:disease_id].blank? ? nil : Disease.find(params[:disease_id])
     render :partial => 'events/lab_result', :object => LabResult.new, :locals => {:prefix => params[:prefix]}
+  end
+
+  def test_type_options
+    render :inline => <<-test_opts
+      <% test_types = test_type_options(nil, nil, nil) %>
+      <option value=""/>
+      <%= options_from_collection_for_select(test_types, 'id', 'common_name') %>
+    test_opts
   end
 
   # Route an event from one jurisdiction to another

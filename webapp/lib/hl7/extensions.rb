@@ -246,6 +246,15 @@ module StagedMessages
       @obx_segment = obx_segment
     end
 
+    def set_id
+      begin
+        return nil if obx_segment.observation_date.blank?
+        obx_segment.set_id
+      rescue
+        "Could not be determined"
+      end
+    end
+
     def observation_date
       begin
         return nil if obx_segment.observation_date.blank?
@@ -257,7 +266,15 @@ module StagedMessages
 
     def result
       begin
-        obx_segment.observation_value.split(obx_segment.item_delim).join(' ') + (obx_segment.units.blank? ? '' : " #{obx_segment.units}")
+        obx_segment.observation_value.split(obx_segment.item_delim).join(' ')
+      rescue
+        "Could not be determined"
+      end
+    end
+
+    def units
+      begin
+        obx_segment.units
       rescue
         "Could not be determined"
       end
@@ -271,6 +288,14 @@ module StagedMessages
       end
     end
 
+    def loinc_code
+      begin
+        obx_segment.observation_id.split(obx_segment.item_delim)[0]
+      rescue
+        "Could not be determined"
+      end
+   end
+
     def test_type
       begin
         obx_segment.observation_id.split(obx_segment.item_delim)[1]
@@ -278,5 +303,25 @@ module StagedMessages
         "Could not be determined"
       end
     end
+
+    def status
+      begin
+        obx_segment.observation_result_status
+      rescue
+        "Could not be determined"
+      end
+    end
+
+    def trisano_status_id
+      # I'm being ultra-lean (aka lazy) here and hard coding these until there's a story
+      # that says that admins should be able to dynamically map them.
+      hl7_status_codes = { 'C' => 'F', 'F' => 'F', 'I' => 'I', 'P' => 'P', 'R' => 'P', 'S' => 'P' } 
+
+      elr_result_status = self.status.upcase
+      return nil unless hl7_status_codes.has_key?(elr_result_status)
+      status = ExternalCode.find_by_code_name_and_the_code('test_status', hl7_status_codes[elr_result_status])
+      status ? status.id : status
+    end
+
   end
 end

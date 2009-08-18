@@ -200,6 +200,7 @@ describe HumanEvent, 'parent/guardian field' do
 end
 
 describe HumanEvent, 'adding staged messages' do
+  fixtures :loinc_codes, :common_test_types
 
   it 'should raise an exception when not passed a staged message' do
     with_human_event do |event|
@@ -214,12 +215,23 @@ describe HumanEvent, 'adding staged messages' do
       event.labs.size.should == 1
       event.labs.first.place_entity.place.name.should == staged_message.message_header.sending_facility
       event.labs.first.lab_results.size.should == 1
-      event.labs.first.lab_results.first.test_type.should == staged_message.observation_request.tests.first.test_type
+      event.labs.first.lab_results.first.test_type.common_name.should == common_test_types(:hep_b_ag).common_name
       event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
       event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
+      event.labs.first.lab_results.first.units.should == staged_message.observation_request.tests.first.units
       event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
-      event.labs.first.lab_results.first.lab_result_text.should == staged_message.observation_request.tests.first.result
+      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+      event.labs.first.lab_results.first.result_value.should be_blank
       event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
+      event.labs.first.lab_results.first.test_status.code_description.should == "Final"
+    end
+  end
+
+  it 'It should assign multi-word test_results properly' do
+    with_human_event do |event|
+      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
+      event.add_labs_from_staged_message(staged_message)
+      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
     end
   end
 
@@ -229,8 +241,17 @@ describe HumanEvent, 'adding staged messages' do
       event.add_labs_from_staged_message(staged_message)
       event.labs.size.should == 1
       event.labs.first.lab_results.size.should == 2
-      event.labs.first.lab_results[0].test_type.should == staged_message.observation_request.tests[0].test_type
-      event.labs.first.lab_results[1].test_type.should == staged_message.observation_request.tests[1].test_type
+      event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
+      event.labs.first.lab_results[1].result_value.should == staged_message.observation_request.tests[1].result
+    end
+  end
+
+  it "should set the result_value if the staged message does not have a matching value" do
+    with_human_event do |event|
+      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:unknown_observation_value])
+      event.add_labs_from_staged_message(staged_message)
+      event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
+      event.labs.first.lab_results[0].test_result.should be_nil
     end
   end
 end

@@ -372,3 +372,45 @@ age_type_unknown:
   the_code: 9
   code_description: "unknown"
   
+test_type_neg:
+  id: 2400
+  code_name: "test_result"
+  the_code: "neg"
+  code_description: "Negative"
+
+test_type_pos:
+  id: 2401
+  code_name: "test_result"
+  the_code: "pos"
+  code_description: "Confirmed / Positive"
+
+test_type_rr:
+  id: 2402
+  code_name: "test_result"
+  the_code: "rr"
+  code_description: "Repeatedly reactive"
+
+test_status_final:
+  id: 2501
+  code_name: "test_status"
+  the_code: "F"
+  code_description: "Final"
+
+test_status_pending:
+  id: 2502
+  code_name: "test_status"
+  the_code: "I"
+  code_description: "Pending"
+
+test_status_prelim:
+  id: 2503
+  code_name: "test_status"
+  the_code: "P"
+  code_description: "Preliminary result"
+
+loinc_scale_ord:
+  id: 2500
+  code_name: "loinc_scale"
+  the_code: "Ord"
+  code_description: "Ordinal"
+

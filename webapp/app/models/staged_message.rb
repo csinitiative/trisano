@@ -16,11 +16,24 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class StagedMessage < ActiveRecord::Base
+  class StagedMessageError < StandardError
+  end
+
+  class UnknownLoincCode < StagedMessageError
+  end
+
+  class UnlinkedLoincCode < StagedMessageError
+  end
+
+  class BadMessageFormat < StagedMessageError
+  end
+
   class << self
     def states
-      { :pending   => 'PENDING',
-        :assigned  => 'ASSIGNED',
-        :discarded => 'DISCARDED'
+      { :pending       => 'PENDING',
+        :assigned      => 'ASSIGNED',
+        :discarded     => 'DISCARDED',
+        :unprocessable => 'UNPROCESSABLE'
       }
     end
   end
@@ -53,6 +66,10 @@ class StagedMessage < ActiveRecord::Base
     end
 
     errors.add :hl7_message, "No last name provided for patient." if self.patient.patient_last_name.blank?
+
+    self.observation_request.tests.each do |test|
+      errors.add :hl7_message, "OBX segment #{test.set_id} does not contain a LOINC code." if test.loinc_code.blank?
+    end
   end
 
   def hl7
@@ -76,7 +93,15 @@ class StagedMessage < ActiveRecord::Base
     raise(ArgumentError, "Cannot associated labs with #{event.class}") unless event.respond_to?('labs')
     raise("Staged message is already assigned to an event.") if self.state == self.class.states[:assigned]
 
-    event.add_labs_from_staged_message(self)
+    begin
+      event.add_labs_from_staged_message(self)
+    rescue StagedMessageError => assign_error
+      self.state = self.class.states[:unprocessable]
+      self.note = "#{self.note}\n\r[#{Time.now}] #{assign_error.message}"
+      self.save!
+      raise assign_error
+    end
+
     self.state = self.class.states[:assigned]
     transaction do
       event.save!

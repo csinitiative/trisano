@@ -17,14 +17,14 @@
 
 class StagedMessagesController < ApplicationController
 
-  before_filter :authorize
+  before_filter :can_manage, :only => [:index, :show, :discard, :event_search, :event]
+  before_filter :can_write, :only => [:new, :create, :edit, :update, :destroy]
 
   # GET /lab_messages
   # GET /lab_messages.xml
   def index
-    @selected = params[:message_state]
-    state = StagedMessage.states.value?(@selected) ? @selected : StagedMessage.states[:pending] 
-    @staged_messages = StagedMessage.paginate_by_state(state, :order => "created_at DESC", :page => params[:page], :per_page => 10)
+    @selected = StagedMessage.states.has_value?(params[:message_state]) ? @selected = params[:message_state] : @selected = StagedMessage.states[:pending]
+    @staged_messages = StagedMessage.paginate_by_state(@selected, :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
   # GET /staged_messages/1
@@ -97,7 +97,6 @@ class StagedMessagesController < ApplicationController
     end
   end
 
-
   def event_search
     @staged_message = StagedMessage.find(params[:id])
     if params[:name]
@@ -129,11 +128,15 @@ class StagedMessagesController < ApplicationController
 
   private
 
-  def authorize
-    can_create = User.current_user.is_entitled_to_in?(:create_event, Place.jurisdiction_by_name("Unassigned").entity_id)
-    can_update = User.current_user.is_entitled_to_in?(:update_event, Place.jurisdiction_by_name("Unassigned").entity_id)
-    unless can_create && can_update
-      render :partial => "permission_denied", :layout => true, :status => :forbidden and return
+  def can_manage
+    unless User.current_user.is_entitled_to?(:manage_staged_message)
+      render :partial => 'permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to manage staged messages" }, :status => :forbidden and return
+    end
+  end
+
+  def can_write
+    unless User.current_user.is_entitled_to?(:write_staged_message)
+      render :partial => 'permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to create/modify a staged message" }, :status => :forbidden and return
     end
   end
  
