@@ -50,9 +50,9 @@
           %span.data_postal_code= a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
         %label
           District
-          - address = event.nil? ? @person.canonical_address : event.address
-          - if address.county && address.county.jurisdiction
-            %span.data_jurisdiction_name= h(address.county.jurisdiction.name)
+        - address = event.nil? ? @person.canonical_address : event.address
+        - if address.county && address.county.jurisdiction
+          %span.data_jurisdiction_name= h(address.county.jurisdiction.name)
     
       = render_geocode_form_section(a, event)
 
