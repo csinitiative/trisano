@@ -17,7 +17,7 @@ result = trisano.submit(form, form['commit'])
 
 errors = result.search(".//div[@class = 'errorExplanation']")
 errors.each { |e|
-  error = e.search(".//ul")
+  error = e.search(".//li")
   error.each { |detail|
     raise detail.text.strip
   }
