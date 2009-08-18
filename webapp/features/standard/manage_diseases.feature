@@ -66,4 +66,4 @@ Feature: Manage disease details
     When I go to edit the disease
     And I follow "Create a new common test type"
 
-    Then I should be on "the new common test type page"
+    Then I should be on the new common test type page

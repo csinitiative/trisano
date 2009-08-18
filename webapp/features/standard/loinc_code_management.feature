@@ -98,7 +98,7 @@ Feature: Supporting LOINC codes for lab results
     And I press "Update"
 
     Then I should see ", Electron"
-    And I should be on "the loinc code show page"
+    And I should be on the loinc code show page
 
     When I follow "Edit"
     Then the "Nominal" value from Scale should be selected
@@ -138,4 +138,4 @@ Feature: Supporting LOINC codes for lab results
 
     Then I should see "Loinc code was successfully deleted"
     And I should not see "636-9"
-    And I should be on "the loinc code index page"
+    And I should be on the loinc code index page
