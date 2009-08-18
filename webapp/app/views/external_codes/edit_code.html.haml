@@ -14,14 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  = "#{@code_name.description} - #{@external_code.the_code} - Edit Code"
+  = "#{h(@code_name.description)} - #{h(@external_code.the_code)} - Edit Code"
 
 - content_for :tools do
-  = link_to '< Back to Codes', index_code_path(@code_name.code_name)
+  = link_to '&lt; Back to Codes', index_code_path(@code_name.code_name)
   %p
 
 - content_for :tools_two do
-  = button_to "New #{@code_name.description} Code", new_code_path(@code_name.code_name)
+  = button_to "New #{h(@code_name.description)} Code", new_code_path(@code_name.code_name)
 
 = error_messages_for :external_code
 

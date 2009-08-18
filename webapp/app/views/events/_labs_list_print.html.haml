@@ -15,7 +15,7 @@
 
 - ran = nil
 - unless association_recorded?(event.labs)
-  %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{event.class.name.underscore.humanize.downcase}"
+  %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{h(event.class.name.underscore.humanize.downcase)}"
 - else
   - for lab in event.labs
     - for lab_result in lab.lab_results

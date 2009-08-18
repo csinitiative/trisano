@@ -21,6 +21,15 @@ def path_to(page_name)
   when /the homepage/i
     root_path
 
+  when /the admin dashboard page/i
+    admin_path
+  
+  when /the jurisdictions page/i
+    jurisdictions_path
+
+  when /the show jurisdiction page/i
+    jurisdiction_path
+
   # Add more page name => path mappings here
   when /the new CMR page/i
     new_cmr_path

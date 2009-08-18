@@ -25,6 +25,7 @@ class Place < ActiveRecord::Base
     :order => 'code_description'
 
   validates_presence_of :name
+  validates_presence_of :short_name, :if => :is_a_jurisdiction?
 
   class << self
 
@@ -150,4 +151,11 @@ class Place < ActiveRecord::Base
   def formatted_place_descriptions
     place_descriptions.to_sentence
   end
+
+  private
+
+  def is_a_jurisdiction?
+    self.place_type_ids.include?(Code.jurisdiction_place_type_id)
+  end
+  
 end

@@ -22,11 +22,11 @@
     - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
       - core_element_print :name, place_form, :horiz do
         %span.print-label Agency name:
-        %span.print-value= place_form.object.name
+        %span.print-value= h(place_form.object.name)
         %span.print-label Types:
-        %span.print-value= place_form.object.formatted_place_descriptions
+        %span.print-value= h(place_form.object.formatted_place_descriptions)
         %span.print-label Agency Phone:
-        %span.print-value= entity_form.object.primary_phone.simple_format
+        %span.print-value= h(entity_form.object.primary_phone.simple_format)
 
 - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
   - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
@@ -35,22 +35,22 @@
       %br
       - core_element_print :first_name, p, :horiz do
         %span.print-label First name:
-        %span.print-value= p.object.first_name
+        %span.print-value= h(p.object.first_name)
       - core_element_print :last_name, p, :horiz do
         %span.print-label Last name:
-        %span.print-value= p.object.last_name
+        %span.print-value= h(p.object.last_name)
 
     - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
     - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
       - core_element_print :area_code, phone_fields, :horiz do
         %span.print-label Area code:
-        %span.print-value= phone_fields.object.area_code
+        %span.print-value= h(phone_fields.object.area_code)
       - core_element_print :phone_number, phone_fields, :horiz do
         %span.print-label Phone number:
-        %span.print-value= phone_fields.object.phone_number
+        %span.print-value= h(phone_fields.object.phone_number)
       - core_element_print :extension, phone_fields, :horiz do
         %span.print-label Extension:
-        %span.print-value= phone_fields.object.extension
+        %span.print-value= h(phone_fields.object.extension)
 
     %br
     - core_element_print :results_reported_to_clinician_date, event_form, :horiz do

@@ -19,6 +19,22 @@ class PlaceEntity < Entity
   has_one :place, :foreign_key => "entity_id", :class_name => "Place"
   accepts_nested_attributes_for :place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
 
+  named_scope :jurisdictions,
+    :joins => "INNER JOIN places on entities.id = places.entity_id INNER JOIN places_types on places.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
+    :conditions => "codes.the_code = 'J' AND codes.code_name = 'placetype'",
+    :order => 'places.name',
+    :readonly => false
+
+  named_scope :active_jurisdictions,
+    :joins => "INNER JOIN places on entities.id = places.entity_id INNER JOIN places_types on places.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
+    :conditions => "codes.the_code = 'J' AND codes.code_name = 'placetype' AND entities.deleted_at IS NULL",
+    :order => 'places.name',
+    :readonly => false
+
+  # Intended to be chained to one of the other jurisdiction named scopes
+  named_scope :excluding_unassigned,
+    :conditions => "places.name != 'Unassigned'"
+
   def self.find_for_entity_managment(search_params)
     if search_params[:participation_type].blank?
       conditions = ["LOWER(name) LIKE ? AND entities.deleted_at IS NULL", '%' + search_params[:name].downcase + '%']

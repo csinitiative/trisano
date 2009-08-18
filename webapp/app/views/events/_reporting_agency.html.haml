@@ -57,7 +57,7 @@
       = h(reporting_agency.name) || "&nbsp;"
     - core_element :agency_type, agency_form, :horiz do
       = agency_form.label(:agency_types)
-      = reporting_agency.formatted_place_descriptions
+      = h(reporting_agency.formatted_place_descriptions)
 
     - if agency_form.object.new_record?
       -# This place was added via live search. Provide a mechanism for removing the place before saving.

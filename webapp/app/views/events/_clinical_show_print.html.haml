@@ -20,39 +20,39 @@
 - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
   - core_element_print :disease_id, d, :horiz do
     %span.print-label Disease:
-    %span.print-value= @event.disease.disease.disease_name unless @event.disease.nil? || @event.disease.disease.nil?
+    %span.print-value= h(@event.disease.disease.disease_name) unless @event.disease.nil? || @event.disease.disease.nil?
   - core_element_print :disease_onset_date, d, :horiz do
     %span.print-label Onset date
-    %span.print-value= @event.disease.disease_onset_date unless @event.disease.nil? || @event.disease.disease.nil?
+    %span.print-value= h(@event.disease.disease_onset_date) unless @event.disease.nil? || @event.disease.disease.nil?
   - core_element_print :date_diagnosed, d, :horiz do
     %span.print-label Date diagnosed:
-    %span.print-value= @event.disease.date_diagnosed unless @event.disease.nil? || @event.disease.disease.nil?
+    %span.print-value= h(@event.disease.date_diagnosed) unless @event.disease.nil? || @event.disease.disease.nil?
   - core_element_print :hospitalized_id, d, :horiz do
     %span.print-label Hospitalized:
-    %span.print-value= l @event.disease.hospitalized unless @event.disease.nil?
+    %span.print-value= h(l(@event.disease.hospitalized)) unless @event.disease.nil?
   - core_element_print :died_id, d, :horiz do
     %span.print-label Died:
-    %span.print-value= l @event.disease.died unless @event.disease.nil?
+    %span.print-value= h(l(@event.disease.died)) unless @event.disease.nil?
 
 - event_form.fields_for(:interested_party, @event.interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:person_entity, @event.interested_party.person_entity, :builder => ExtendedFormBuilder) do |primary_form|
     - primary_form.fields_for(:person, @event.interested_party.person_entity.person, :builder => ExtendedFormBuilder) do |person_form|
       - core_element_print :date_of_death, person_form, :vert do
         %span.print-label Date of death:
-        %span.print-value= entity_data.person.date_of_death
+        %span.print-value= h(entity_data.person.date_of_death)
 
 - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
   - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
     - core_element_print :pregnant_id, risk_factor_form, :horiz do
       %span.print-label Pregnant:
-      %span.print-value= l @event.safe_call_chain(:interested_party, :risk_factor, :pregnant)
+      %span.print-value= h(l(@event.safe_call_chain(:interested_party, :risk_factor, :pregnant)))
     - core_element_print :pregnancy_due_date, risk_factor_form, :horiz do
       %span.print-label Pregnancy due date:
-      %span.print-value= @event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date)
+      %span.print-value= h(@event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date))
 
 %span.subsection-header Hospitalized health facilities
 - unless association_recorded?(@event.hospitalization_facilities)
-  %b{ :style => 'font-size: 11px' }="No hospitalized health facilities have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
+  %b{ :style => 'font-size: 11px' }="No hospitalized health facilities have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
 - else
   .three-valued-row
     .long
@@ -70,7 +70,7 @@
         .three-valued-row
           .long
             %span.print-value
-              = hospital.place_entity.place.name
+              = h(hospital.place_entity.place.name)
           - if hospital.hospitals_participation.nil?
             .short &nbsp;
             .short &nbsp;
@@ -79,18 +79,18 @@
             -# Debt: Strings with NBSPs are to keep columns lined up when values are missing. CSS/Markup improvement prob. a better approach
             .short
               %span.print-value
-                ="#{hospital.hospitals_participation.admission_date}&nbsp;"
+                ="#{h(hospital.hospitals_participation.admission_date)}&nbsp;"
             .short
               %span.print-value
-                ="#{hospital.hospitals_participation.discharge_date}&nbsp;"
+                ="#{h(hospital.hospitals_participation.discharge_date)}&nbsp;"
             .short
               %span.print-value
-                ="#{hospital.hospitals_participation.medical_record_number}&nbsp;"
+                ="#{h(hospital.hospitals_participation.medical_record_number)}&nbsp;"
 
 %br
 %span.subsection-header Diagnosing health facilities
 - unless association_recorded?(@event.diagnostic_facilities)
-  %b{ :style => 'font-size: 11px' }="No diganosing health facilities have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
+  %b{ :style => 'font-size: 11px' }="No diganosing health facilities have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
 - else
   .three-valued-row
     .short
@@ -104,10 +104,10 @@
     .three-valued-row
       .short
         %span.print-value
-          = diagnostic.place_entity.place.name
+          = h(diagnostic.place_entity.place.name)
       .short
         %span.print-value
-          = diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions)
+          = h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
       .short
         %span.print-value
           &nbsp;
@@ -125,7 +125,7 @@
 
 %span.subsection-header Clinicians
 - unless association_recorded?(@event.clinicians)
-  %b{ :style => 'font-size: 11px' }="No clinicians have been recorded for this #{@event.class.name.underscore.humanize.downcase}"
+  %b{ :style => 'font-size: 11px' }="No clinicians have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
 - else
   .three-valued-row
     .left
@@ -142,9 +142,9 @@
       .three-valued-row
         .left
           %span.print-value
-            = clinician_person.last_comma_first
+            = h(clinician_person.last_comma_first)
         .left
           %span.print-value
-            = clinician_phone.simple_format
+            = h(clinician_phone.simple_format)
 
 

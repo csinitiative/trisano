@@ -55,7 +55,7 @@
     %label Diseases
     = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true, :id => "diseases_selector")
     %label Items per page
-    - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
+    - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{h(c)}</option>"}.join
     = select_tag('per_page', page_options)
     %br
     = check_box_tag("do_not_show_deleted")

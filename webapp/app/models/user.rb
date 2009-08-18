@@ -52,12 +52,12 @@ class User < ActiveRecord::Base
     privs = Hash.new { |h, k| h[k] = [] }
 
     # I feel the need for speed
-    js_and_ps = User.find_by_sql("SELECT DISTINCT rm.jurisdiction_id, p.priv_name
+    js_and_ps = User.find_by_sql(["SELECT DISTINCT rm.jurisdiction_id, p.priv_name
                                   FROM users u, role_memberships rm, privileges_roles pr, privileges p
-                                  WHERE u.uid = '#{self.uid}'
+                                  WHERE u.uid = ?
                                   AND u.id = rm.user_id
                                   AND rm.role_id = pr.role_id
-                                  AND pr.privilege_id = p.id")
+                                  AND pr.privilege_id = p.id", self.uid])
 
     js_and_ps.each { |j_and_p| privs[j_and_p['jurisdiction_id'].to_i] << j_and_p['priv_name'].to_sym }
     privs

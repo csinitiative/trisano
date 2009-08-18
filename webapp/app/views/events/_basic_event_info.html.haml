@@ -28,16 +28,16 @@
 
     %td.forminformation
       .patientname
-        = name
+        = h(name)
       %small
         Date:
-        = event.event_onset_date
+        = h(event.event_onset_date)
     %td
       %b
-        = event.primary_jurisdiction.short_name
+        = h(event.primary_jurisdiction.short_name)
       %div{:id => 'secondary_jurisdictions'}
         %small
-          = event.secondary_jurisdictions.map { |j| j.short_name }.join(", ")
+          = event.secondary_jurisdictions.map { |j| h(j.short_name) }.join(", ")
           %br
     %td.tools
       = show_and_edit_event_links(event)

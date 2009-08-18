@@ -35,11 +35,11 @@
           %th= link_to_remote('Status',           :update => 'tasks', :method => :get, :url => urls_hash['status'])
       %tbody
         - meth = params[:tasks_ordered_by]
-        - unless meth.nil?
+        - unless meth.nil? 
           - tasks = tasks.sort_by do |task|
             - (task.send(meth) || (meth.to_s == 'due_date' ? '9' : '')).to_s
         - for task in tasks
-          - task_class = task.status.blank? ? "task" : "task-#{task.status.gsub("_", "-")}"
+          - task_class = task.status.blank? ? "task" : "task-#{h(task.status.gsub("_", "-"))}"
 
           %tr{ :class => task_class }
             %td

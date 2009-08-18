@@ -62,7 +62,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%  if address && address.county && address.county.jurisdiction %>
           <%  jurisdiction_name = address.county.jurisdiction.name %>
         <% end %>
-        <%= jurisdiction_name.blank? ? 'Not Applicable' : jurisdiction_name %>
+        <%= jurisdiction_name.blank? ? 'Not Applicable' : h(jurisdiction_name) %>
       <% end %>
       <% core_element :event_name, f, :horiz do -%>
         <%= f.label(:event_name) %>

@@ -46,8 +46,8 @@
                 - CsvField.morbidity_event_code_fields.each do |field|
                   %tr
                     %td= h(field.long_name)
-                    %td= radio_button_tag field.long_name, 'use_description', true
-                    %td= radio_button_tag field.long_name, 'use_code'
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
           #contact_code_field_options{ :style => "display: none;" }
             %table
               %thead
@@ -59,8 +59,8 @@
                 - CsvField.contact_event_code_fields.each do |field|
                   %tr
                     %td= h(field.long_name)
-                    %td= radio_button_tag field.long_name, 'use_description', true
-                    %td= radio_button_tag field.long_name, 'use_code'
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
           #place_code_field_options{ :style => "display: none;" }
             %table
               %thead
@@ -72,8 +72,8 @@
                 - CsvField.place_event_code_fields.each do |field|
                   %tr
                     %td= h(field.long_name)
-                    %td= radio_button_tag field.long_name, 'use_description', true
-                    %td= radio_button_tag field.long_name, 'use_code'
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
           #lab_code_field_options{ :style => "display: none;" }
             %table
               %thead
@@ -85,8 +85,8 @@
                 - CsvField.lab_code_fields.each do |field|
                   %tr
                     %td= h(field.long_name)
-                    %td= radio_button_tag field.long_name, 'use_description', true
-                    %td= radio_button_tag field.long_name, 'use_code'
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
           #treatment_code_field_options{ :style => "display: none;" }
             %table
               %thead
@@ -98,8 +98,8 @@
                 - CsvField.treatment_code_fields.each do |field|
                   %tr
                     %td= h(field.long_name)
-                    %td= radio_button_tag field.long_name, 'use_description', true
-                    %td= radio_button_tag field.long_name, 'use_code'
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
           = set_options_availability
       -# This div is needed to keep IE from drawing a button as wide as the form.
       %div{:style => "position: absolute; bottom: 1em; right: 1em;"}

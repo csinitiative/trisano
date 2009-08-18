@@ -17,9 +17,9 @@
 %ul
   - places.each do |place|
     %li{:name => "#{place.entity_id}"}
-      %span.place_name= place.name
+      %span.place_name= h(place.name)
       %br
-      %span.place_type= "&nbsp;&nbsp;#{place.formatted_place_descriptions}"
+      %span.place_type= "&nbsp;&nbsp;#{h(place.formatted_place_descriptions)}"
       - address = place.entity.canonical_address.nil? ? place.entity.addresses.last : place.entity.canonical_address
       - unless address.nil?
         %br

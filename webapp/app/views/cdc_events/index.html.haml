@@ -19,8 +19,8 @@
 %h2
   - current_mmwr = Mmwr.new
   - previous_mmwr = Mmwr.new(Date.today - 7)
-  = "The current MMWR week is #{current_mmwr.mmwr_week}"
-  = "(#{current_mmwr.mmwr_week_range.start_date} &ndash; #{current_mmwr.mmwr_week_range.end_date})"
+  = "The current MMWR week is #{h(current_mmwr.mmwr_week)}"
+  = "(#{h(current_mmwr.mmwr_week_range.start_date)} &ndash; #{h(current_mmwr.mmwr_week_range.end_date)})"
 
 - format_string = '%A, %B %d, %Y'
 
@@ -30,7 +30,7 @@
   %li
     = link_to "The weekly CDC report", formatted_current_week_cdc_events_path("dat"), :id => "cdc_weekly_report"
     %br
-    ="Includes the current (#{current_mmwr.mmwr_week}) and previous (#{previous_mmwr.mmwr_week}) MMWR weeks, encompassing #{previous_mmwr.mmwr_week_range.start_date.strftime(format_string)} through #{current_mmwr.mmwr_week_range.end_date.strftime(format_string)}"
+    ="Includes the current (#{h(current_mmwr.mmwr_week)}) and previous (#{h(previous_mmwr.mmwr_week)}) MMWR weeks, encompassing #{h(previous_mmwr.mmwr_week_range.start_date.strftime(format_string))} through #{h(current_mmwr.mmwr_week_range.end_date.strftime(format_string))}"
   %hr
 
   %li

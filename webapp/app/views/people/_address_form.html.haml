@@ -27,7 +27,7 @@
       %fieldset.vert-break
         - core_element :street_number, a, :horiz do
           = a.label(:street_number)
-          %span.data_stree_number= a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
+          %span.data_street_number= a.core_text_field(:street_number, {:size => 10, :maxlength=> 10}, event)
         - core_element :street_name, a, :horiz do
           = a.label(:street_name)
           %span.data_street_name= a.core_text_field(:street_name, {:size => 50, :maxlength=> 50}, event)
