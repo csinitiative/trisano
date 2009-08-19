@@ -33,6 +33,10 @@ module LayoutHelper
     # PLUGIN_HOOK - render_help_link()
   end
 
+  def render_system_message
+    # PLUGIN_HOOK - render_system_message()
+  end
+
   def render_footer
     # PLUGIN_HOOK - render_footer()
     

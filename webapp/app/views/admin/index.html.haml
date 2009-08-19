@@ -37,12 +37,13 @@
 = link_to 'Configure System for CDC Export', export_columns_path, :id => "admin_cdc_config"
 %br
 = link_to 'Configure System for CSV Export', csv_fields_path, :id => "admin_csv_config"
+= "<br />\n" + link_to('Send System Messages', system_messages_path, :id => "admin_system_message") rescue ""
+%br
 
 %h2 Lab Management
 = link_to 'Manage Common Test Types', common_test_types_path, :id => "admin_common_test_types"
 %br
 = link_to 'Manage LOINC Codes', loinc_codes_path, :id => "admin_loinc_codes"
-%br
 
 %h2 Entity Management
 = link_to 'Manage People', people_path, :id => "admin_people"

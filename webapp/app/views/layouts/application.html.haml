@@ -51,8 +51,11 @@
     #head
       .container
         .left
-          %a{:href => home_path, :id => 'logo'}
-            = image_tag("logo.png", :border => 0)
+          .horiz
+            %a{:href => home_path, :id => 'logo'}
+              = image_tag("logo.png", :border => 0)
+          .horiz
+            = render_system_message
         .right
           .areas
             - if User.current_user.is_entitled_to?(:create_event)
