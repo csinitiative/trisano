@@ -272,7 +272,7 @@ class FormsController < AdminController
   
   def library_admin
     begin
-      @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+      @library_elements = FormElement.library_roots
       @type = params[:type].blank? ? "question_element" : params[:type]
     rescue Exception => ex
       flash[:error] = "Unable to open the library."

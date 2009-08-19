@@ -20,11 +20,25 @@ Given /^the question "([^\"]*)" is in the library$/ do |question_text|
   @question_element = Factory.create :question_element, :question => @question, :tree_id => FormElement.next_tree_id
 end
 
+Given /^the question "([^\"]*)" in group "([^\"]*)" is in the library$/ do |question_text, group_name|
+  @group_element = GroupElement.create! :name => group_name, :tree_id => FormElement.next_tree_id
+  @question = Factory.create :question_single_line_text, :question_text => question_text
+  @question_element = Factory.create :question_element, :question => @question, :tree_id => @group_element.id
+end
+
 When /^I delete the question element$/ do
   @browser.click "//a[@id='delete-question-#{@question_element.id}']"
 end
 
 Then /^the text "(.+)" should disappear$/ do |text|
   @browser.wait_for_no_element "//*[contains(text(),'#{text}')]"
+end
+
+After('@clean_forms') do
+  Form.destroy_all
+end
+
+After('@clean_form_elements') do
+  FormElement.destroy_all
 end
 
