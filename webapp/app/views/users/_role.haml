@@ -33,7 +33,7 @@
         - else
           %td
             = rm_form.label(:jurisdiction_id)
-            = rm_form.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name)
+            = rm_form.collection_select(:jurisdiction_id, Place.jurisdictions, :entity_id, :name)
           %td
             = rm_form.label(:role_id)
             = rm_form.collection_select(:role_id, Role.find(:all, :order => :role_name), :id, :role_name)
