@@ -43,7 +43,7 @@ module LayoutHelper
     result << "</div>"
     result << "<div class='foottext'>"
     result << "<div class='top'>"
-    result << "Copyright © 2009 Collaborative Software Foundation"
+    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+2.0+RC1+Release+Notes'>TriSano™ 2.0 RC1</a>"
     result << "</div>"
     result << "<div class='bottom'>"
     result << "<a href='http://www.trisano.org/collaborate/'>Collaborate</a>"
@@ -56,6 +56,8 @@ module LayoutHelper
     result << "&nbsp;|&nbsp;"
     result << "<a href='http://github.com/csinitiative/trisano/tree/master'>Source</a>"
     result << "</div>"
+    result << "<div class='bottom'>"
+    result << "Copyright © 2009 Collaborative Software Foundation"
     result << "</div>"
 
     result
