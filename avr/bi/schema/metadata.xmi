@@ -19173,12 +19173,12 @@
         <CWM:TaggedValue xmi.id = 'a4535' tag = 'SECURITY_DETAILS_NAME' value = 'SecurityDetails'/>
         <CWM:TaggedValue xmi.id = 'a4536' tag = 'SECURITY_DETAIL_NAME' value = 'details'/>
         <CWM:TaggedValue xmi.id = 'a4537' tag = 'SECURITY_DETAIL_TYPE' value = 'All'/>
-        <CWM:TaggedValue xmi.id = 'a4538' tag = 'SECURITY_USERNAME' value = 'admin'/>
-        <CWM:TaggedValue xmi.id = 'a4539' tag = 'SECURITY_PASSWORD' value = 'josh'/>
+        <CWM:TaggedValue xmi.id = 'a4538' tag = 'SECURITY_USERNAME' value = 'joe'/>
+        <CWM:TaggedValue xmi.id = 'a4539' tag = 'SECURITY_PASSWORD' value = 'password'/>
         <CWM:TaggedValue xmi.id = 'a4540' tag = 'SECURITY_PROXY_HOST' value = ''/>
         <CWM:TaggedValue xmi.id = 'a4541' tag = 'SECURITY_PROXY_PORT' value = ''/>
         <CWM:TaggedValue xmi.id = 'a4542' tag = 'SECURITY_NON_PROXY_HOSTS'/>
-        <CWM:TaggedValue xmi.id = 'a4543' tag = 'SECURITY_FILENAME' value = '/home/josh/tmp/trisano/metadata-security'/>
+        <CWM:TaggedValue xmi.id = 'a4543' tag = 'SECURITY_FILENAME' value = ''/>
         <CWM:TaggedValue xmi.id = 'a4544' tag = 'SECURITY_URL' value = 'http://127.0.0.1:18080/pentaho/ServiceAction?action=SecurityDetails&amp;details=all'/>
       </CWM:ModelElement.taggedValue>
     </CWM:Event>
