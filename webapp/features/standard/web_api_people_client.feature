@@ -62,7 +62,7 @@ Feature: Web API People Client
   Scenario: Create person entity
     When I visit the people new page
     And I fill out the form field "person_entity[person_attributes][last_name]" with "Bourne-Thompson"
-    And I press "Create"
+    And I press "Save & Exit"
     And I search people by "last_name" with "Bourne-Thompson"
 
     Then I should find the value "Bourne-Thompson" in "data_last_name"
@@ -72,7 +72,7 @@ Feature: Web API People Client
 
     When I visit the people edit page
     And I fill out the form field "person_entity[person_attributes][last_name]" with "Bourne-Thompson"
-    And I press "Update"
+    And I press "Save & Exit"
     And I search people by "last_name" with "Bourne-Thompson"
 
     Then I should find the value "Bourne-Thompson" in "data_last_name"

@@ -18,6 +18,9 @@
 
 /- content_for :name do
 
+- content_for :tools_two do
+  = save_buttons(@person)
+
 - content_for :tools do
   = link_to '&lt; Back to People', people_path
   %p
@@ -39,4 +42,6 @@
 
   - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder, :html => {:name => 'edit_person_entity'}) do |pe|
     = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
-    = pe.submit "Update"
+    = pe.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;"
+
+= alert_if_changed(@person)

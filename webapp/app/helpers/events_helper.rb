@@ -1209,9 +1209,9 @@ module EventsHelper
     # PLUGIN_HOOK - render_geocode_search()
   end
 
-  def alert_if_changed(event)
+  def alert_if_changed(form)
     javascript_tag do
-      "var formWatcher = new FormWatch('#{get_form_id(event)}');"
+      "var formWatcher = new FormWatch('#{get_form_id(form)}');"
     end
   end
 end

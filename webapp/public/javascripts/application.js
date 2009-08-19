@@ -131,6 +131,7 @@ function add_tab_index_to_action(form) {
 function post_and_return(form_id) {
     form = document.getElementById(form_id);
     form.action = build_url_with_tab_index(form.action);
+    form.action += form.action.match(/\?/) ? "" : "?"
     form.action = form.action + "&return=true";
     formWatcher.submitted = true;
     form.submit();
@@ -139,6 +140,7 @@ function post_and_return(form_id) {
 function post_and_exit(form_id) {
     form = document.getElementById(form_id);
     form.action = build_url_with_tab_index(form.action);
+    form.action += form.action.match(/\?/) ? "" : "?"
     formWatcher.submitted = true;
     form.submit();
 }

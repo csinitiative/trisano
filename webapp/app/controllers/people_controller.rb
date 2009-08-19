@@ -101,11 +101,10 @@ class PeopleController < ApplicationController
       if @person.save
         flash[:notice] = 'Person was successfully created.'
         format.html { 
-          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            redirect_to(edit_person_url(@person) + query_str)
+            redirect_to(edit_person_url(@person))
           else
-            redirect_to(person_url(@person) + query_str)
+            redirect_to(person_url(@person))
           end
         }
         format.xml  { render :xml => @person, :status => :created, :location => @person }
@@ -122,6 +121,8 @@ class PeopleController < ApplicationController
   # PUT /people/1
   # PUT /people/1.xml
   def update
+    go_back = params.delete(:return)
+
     @person = PersonEntity.find(params[:id])
 
     unless User.current_user.is_entitled_to?(:create_event)
@@ -131,7 +132,13 @@ class PeopleController < ApplicationController
     respond_to do |format|
       if @person.update_attributes(params[:person_entity])
         flash[:notice] = 'Person was successfully updated.'
-        format.html { redirect_to(person_path(@person)) }
+        format.html {
+          if go_back
+            redirect_to(edit_person_url(@person))
+          else
+            redirect_to(person_url(@person))
+          end
+        }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

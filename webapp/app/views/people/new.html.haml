@@ -18,6 +18,9 @@
 
 /- content_for :name do
 
+- content_for :tools_two do
+  = save_buttons(@person)
+
 - content_for :tools do
   = link_to '&lt; Back to People', people_path
   %p
@@ -28,8 +31,9 @@
 
   = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
 
-  = pe.submit "Create"
+  = pe.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;"
 
 %br
 %br
 
+= alert_if_changed(@person)
