@@ -104,7 +104,7 @@ class FormElement < ActiveRecord::Base
     begin
       transaction do
         if group_element.nil?
-          tree_id = FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+          tree_id = FormElement.next_tree_id
           result = copy_children(self, nil, nil, tree_id, true)
         else
           tree_id = group_element.tree_id
@@ -301,7 +301,7 @@ class FormElement < ActiveRecord::Base
             message << "'#{self.root.name}'."
           end
         end
-        
+
         raise message
       end
     end
@@ -325,6 +325,10 @@ class FormElement < ActiveRecord::Base
         answer.destroy unless answer.nil?
       end
     end
+  end
+
+  def self.next_tree_id
+    FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
 
 end

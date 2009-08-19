@@ -30,6 +30,11 @@ When(/^I click the "(.+)" link$/) do |link|
   @browser.wait_for_page_to_load($load_time)
 end
 
+When(/^I click the "(.+)" link and wait to see "(.+)"$/) do |link, text|
+  @browser.click "link=#{link}"
+  @browser.wait_for_element "//*[contains(text(),'#{text}')]", :timeout_in_seconds => 3
+end
+
 When(/^I click the "(.+)" button$/) do |button|
   @browser.click("//input[contains(@value, '#{button}')]")
 end
