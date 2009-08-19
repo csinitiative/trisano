@@ -1341,16 +1341,6 @@ describe Form do
     end
   end
 
-  describe 'Form#next_tree_id' do
-    it 'should return tree_ids in sequence, even when called multiple times in a transaction' do
-      Form.transaction do
-        first_tree_id = Form.next_tree_id
-        second_tree_id = Form.next_tree_id
-        second_tree_id.should eql(first_tree_id +1)
-      end
-    end
-  end
-
   describe 'publishing a deactivated' do
     it 'should fail if short name already in use' do      
       Form.transaction do

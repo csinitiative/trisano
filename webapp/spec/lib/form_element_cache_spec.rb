@@ -21,7 +21,7 @@ describe FormElementCache do
   
   before(:each) do
     
-    tree_id = Form.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
+    tree_id = FormElement.next_tree_id
     
     @form_base_element = FormBaseElement.create(:tree_id => tree_id, :form_id => 1, :name => "base")
     @view_element = ViewElement.create(:tree_id => tree_id, :form_id => 1, :name => "view")

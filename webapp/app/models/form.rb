@@ -498,7 +498,7 @@ class Form < ActiveRecord::Base
   
   def initialize_form_elements
     begin
-      tree_id = Form.next_tree_id
+      tree_id = FormElement.next_tree_id
       form_base_element = FormBaseElement.create({:form_id => self.id, :tree_id => tree_id})
     
       investigator_view_element_container = InvestigatorViewElementContainer.create({:form_id => self.id, :tree_id => tree_id })
@@ -518,14 +518,10 @@ class Form < ActiveRecord::Base
     end
   end
 
-  def self.next_tree_id
-    ActiveRecord::Base.connection.select_value("SELECT nextval('tree_id_generator')").to_i
-  end
-  
   def self.copy_form_elements(from_form, to_form, include_inactive = true)
     elements = FormElementCache.new(from_form.form_base_element).full_set
     parent_id_map = {}
-    tree_id = Form.next_tree_id
+    tree_id = FormElement.next_tree_id
     inactive_element_ids = []
     
     elements.each do |e|
@@ -608,10 +604,10 @@ class Form < ActiveRecord::Base
     elements = ActiveSupport::JSON.decode(element_import_string)
     raise "The import file did not contain any content." if elements.empty?
     parent_id_map = {}
-    tree_id = Form.next_tree_id unless form_id.nil?
+    tree_id = FormElement.next_tree_id unless form_id.nil?
 
     elements.each do |e|
-      tree_id = Form.next_tree_id if (form_id.nil? && e["parent_id"].nil?)
+      tree_id = FormElement.next_tree_id if (form_id.nil? && e["parent_id"].nil?)
       values = {}
       values[:form_id] = null_safe_sanitize(form_id)
       values[:type] = "'#{sanitize_sql(["%s", e["type"]])}'"

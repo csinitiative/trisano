@@ -549,19 +549,19 @@ describe FormsController do
     end
 
     it "should render the correct rjs template on success" do
-      FormElement.stub!(:roots).and_return(@library_elements)
+      FormElement.stub!(:library_roots).and_return(@library_elements)
       do_get
       response.should render_template('forms/library_admin')
     end
     
     it "should assign the found elements for the view" do
-      FormElement.stub!(:roots).and_return(@library_elements)
+      FormElement.stub!(:library_roots).and_return(@library_elements)
       do_get
       assigns[:library_elements].should == @library_elements
     end
     
     it "should render rjs error template on failure" do
-      FormElement.stub!(:roots).and_raise
+      FormElement.stub!(:library_roots).and_raise
       do_get
       response.should render_template('rjs-error')
     end

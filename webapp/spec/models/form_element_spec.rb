@@ -463,4 +463,16 @@ describe "when executing an operation that requires form element structure valid
     
   end
 
+  describe '#next_tree_id' do
+    it 'should return tree_ids in sequence, even when called multiple times in a transaction' do
+      FormElement.transaction do
+        first_tree_id = FormElement.next_tree_id
+        second_tree_id = FormElement.next_tree_id
+        second_tree_id.should eql(first_tree_id +1)
+      end
+    end
+  end
+
+
+
 end

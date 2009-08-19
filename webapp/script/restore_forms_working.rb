@@ -37,7 +37,7 @@ corrupt_form_ids.each do |form_id|
     new_form.is_template = 'true'
     new_form.status = 'Not Published'
     new_form.save!
-    tree_id = Form.next_tree_id
+    tree_id = FormElement.next_tree_id
     original_root = FormElement.find_by_form_id_and_type_and_lft_and_parent_id(corrupt_form.id, "FormBaseElement", 1, nil)
     original_root.copy_children(original_root, nil, new_form.id, tree_id, true)
 
