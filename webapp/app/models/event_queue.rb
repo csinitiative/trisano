@@ -52,7 +52,7 @@ class EventQueue < ActiveRecord::Base
   def fix_up_views
     User.find(:all, :conditions => "event_view_settings IS NOT NULL").each do |user|
       # Remember, user.event_view_settings is a serialized hash
-      user.save! if user.event_view_settings[:queues].delete(self.queue_name)
+      user.save! if user.event_view_settings[:queues] && user.event_view_settings[:queues].delete(self.queue_name)
     end
   end
 
