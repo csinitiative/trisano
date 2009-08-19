@@ -735,25 +735,37 @@ SELECT
         WHEN events.type = 'EncounterEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_encounter_events_id,
-    places.name,
-    c.code_description AS lab_type,
-    lr.test_type,
-    lr.test_detail,
-    lr.lab_result_text,
-    lr.reference_range,
-    intec.code_description AS interpretation,
     ssec.code_description AS specimen_source,
     upsert_date(lr.collection_date) AS collection_date,
     upsert_date(lr.lab_test_date) AS lab_test_date,
-    uphlec.code_description AS specimen_sent_to_uphl
+    uphlec.code_description AS specimen_sent_to_state,
+    lr.reference_range,
+    lr.loinc_code,
+    ctt.common_name AS test_type,
+    trec.code_description AS test_result,
+    lr.result_value,
+    lr.units,
+    tsec.code_description AS test_status,
+    lr.comment,
+    places.name,
+    c.code_description AS lab_type,
+    sm.hl7_message,
+    sm.state AS staged_message_state,
+    sm.note AS staged_message_note
 FROM
     lab_results lr
-    LEFT JOIN external_codes intec
-        ON (intec.id = lr.interpretation_id)
+    LEFT JOIN staged_messages sm
+        ON (sm.id = lr.staged_message_id)
+    LEFT JOIN external_codes tsec
+        ON (tsec.id = lr.test_status_id)
+    LEFT JOIN external_codes trec
+        ON (trec.id = lr.test_result_id)
+    LEFT JOIN common_test_types ctt
+        ON (ctt.id = lr.test_type_id)
     LEFT JOIN external_codes ssec
         ON (ssec.id = lr.specimen_source_id)
     LEFT JOIN external_codes uphlec
-        ON (uphlec.id = lr.specimen_sent_to_uphl_yn_id)
+        ON (uphlec.id = lr.specimen_sent_to_state_id)
     LEFT JOIN participations p
         ON (p.id = lr.participation_id)
     LEFT JOIN events
@@ -1301,5 +1313,6 @@ ANALYZE;
 
 TRUNCATE trisano.etl_success;
 INSERT INTO trisano.etl_success (success) VALUES (TRUE);
+
 
 COMMIT;
