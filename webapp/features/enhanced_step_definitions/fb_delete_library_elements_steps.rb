@@ -26,12 +26,26 @@ Given /^the question "([^\"]*)" in group "([^\"]*)" is in the library$/ do |ques
   @question_element = Factory.create :question_element, :question => @question, :tree_id => @group_element.id
 end
 
+Given /^a value set named "([^\"]*)" exists in the library with these values:$/ do |value_set_name, table|
+  @value_set_element = ValueSetElement.create! :name => value_set_name, :tree_id => FormElement.next_tree_id
+  table.rows.each do |row|
+    @value_set_element.value_elements << ValueElement.create!(:name => row.first,
+                                                              :code => row.last,
+                                                              :tree_id => @value_set_element.tree_id)
+  end
+  @value_set_element.save!
+end
+
 When /^I delete the question element$/ do
   @browser.click "//a[@id='delete-question-#{@question_element.id}']"
 end
 
+When /^I delete the value set element$/ do
+  @browser.click "//a[@id='delete-value-set-#{@value_set_element.id}']"
+end
+
 Then /^the text "(.+)" should disappear$/ do |text|
-  @browser.wait_for_no_element "//*[contains(text(),'#{text}')]"
+  @browser.wait_for_no_element "//*[contains(text(),'#{text}')]", :timeout_in_seconds => 3
 end
 
 After('@clean_forms') do

@@ -50,7 +50,7 @@ class FormElement < ActiveRecord::Base
       end
     end
   end
-  
+
   def update_and_validate(attributes)
     begin
       transaction do
@@ -65,7 +65,7 @@ class FormElement < ActiveRecord::Base
       return nil
     end
   end
-  
+
   def destroy_and_validate
     begin
       transaction do
@@ -77,7 +77,7 @@ class FormElement < ActiveRecord::Base
       return nil
     end
   end
-  
+
   def reorder_element_children(ids)
     begin
       transaction do
@@ -88,17 +88,17 @@ class FormElement < ActiveRecord::Base
     rescue
       return nil
     end
-    
+
   end
-  
+
   def children_count_by_type(type_name)
     FormElement.calculate(:count, :type, :conditions => ["parent_id = ? and tree_id = ? and type = ?", self.id, self.tree_id, type_name])
   end
-  
+
   def children_by_type(type_name)
     FormElement.find(:all, :conditions =>["parent_id = ? and tree_id = ? and type = ?", self.id, self.tree_id, type_name], :order => :lft)
   end
-  
+
   # DEBT! Should make publish and add_to_library the same code
   def add_to_library(group_element=nil)
     begin

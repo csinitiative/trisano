@@ -16,70 +16,93 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module FormsLibraryAdminHelper
-  
-  def render_library_admin(type)
 
-    result = ""
-    type= type.to_s.camelize
+  def render_library_admin(type)
+    type = type.to_s.camelize
 
     for ungrouped_form_element in @library_elements
       next if ungrouped_form_element.is_a? GroupElement
-      
-      if ((ungrouped_form_element.class.name == type) && (ungrouped_form_element.is_a?(QuestionElement)))
-        result += render_library_admin_question(ungrouped_form_element, type)
-      elsif ((ungrouped_form_element.class.name == type) && (ungrouped_form_element.is_a?(ValueSetElement)))
-        result += render_library_admin_value_set(ungrouped_form_element, type)
-      end
-    end
-    
-    for grouped_form_element in @library_elements
-      next unless grouped_form_element.is_a? GroupElement
-      
-      result += "<p><b><id='lib_group_admin_item_#{grouped_form_element.id}'>Group: #{grouped_form_element.name}</b>"
-      
-      for child in grouped_form_element.children
-        if ((child.class.name == type) && (child.is_a?(QuestionElement)))
-          result += render_library_admin_question(child, type)
-        elsif ((child.class.name == type) && (child.is_a?(ValueSetElement)))
-          result += render_library_admin_value_set(child, type)
+
+      if ungrouped_form_element.class.name == type
+        if ungrouped_form_element.is_a? QuestionElement
+          render_library_admin_question ungrouped_form_element, type
+        elsif ungrouped_form_element.is_a? ValueSetElement
+          render_library_admin_value_set ungrouped_form_element, type
         end
       end
-      
     end
-    
-    result
-  end
-  
-  private
-  
-  def render_library_admin_question(element, type)
-    result = "<li id='question_#{element.id}' class='library-admin-item'>#{element.question.question_text} #{element.question.short_name}"
-    result += "&nbsp;&nbsp;#{element.question.data_type_before_type_cast.humanize}"
-    
-    element.children do |child|
-      result += "&nbsp;&nbsp;Value Set:&nbsp;&nbsp;#{child.name}: " if child.is_a? ValueSetElement
-      result += fml("#{child.name}&nbsp;&nbsp;") if child.is_a? ValueElement and !child.name.blank?
-    end
-    
-    result += "&nbsp;&nbsp;<a href='#' onclick=\"if (confirm('This action will delete this element and all children elements. Please confirm.')) { new Ajax.Request('../../form_elements/" + 
-      element.id.to_s + "?type=#{type.underscore}', {asynchronous:true, evalScripts:true, method:'delete'}); }; return false;\" class='delete-question' id='delete-question-" + 
-      element.id.to_s + "'>" + image_tag("delete.png", :border => 0, :alt => "Delete Question") + "</a></li>"
-  end
-  
-  def render_library_admin_value_set(element, type)
-    result = "<li id='value_set_#{element.id}' class='library-admin-item'><b>#{element.name}</b><br>"
-    #    result += "<ul>"
-    
-    element.children.each do |child|
-      if child.name.blank?
-        result += "(Blank)"
-      else
-        result += fml("", child.name, "") 
+
+    for grouped_form_element in @library_elements
+      next unless grouped_form_element.is_a? GroupElement
+
+      haml_tag :li, {:id => "lib_group_admin_item_#{grouped_form_element.id}"} do
+        haml_tag :p do
+          haml_tag :b do
+            haml_concat "Group: #{grouped_form_element.name}"
+          end
+        end
+      end
+
+      for child in grouped_form_element.children
+        if child.class.name == type
+          if child.is_a? QuestionElement
+            render_library_admin_question child, type
+          elsif child.is_a? ValueSetElement
+            render_library_admin_value_set child, type
+          end
+        end
       end
     end
-    
-    #    result += "</ul>"
-    result += "</li>"
+
+    nil
   end
-  
+
+  private
+
+  def render_library_admin_question(element, type)
+    haml_tag :li, {:id => "question_#{element.id}", :class => 'library-admin-item'} do
+      haml_concat element.question.question_text
+      haml_concat "&nbsp;"
+      haml_concat element.question.short_name
+      haml_concat "&nbsp;&nbsp;"
+      haml_concat element.question.data_type_before_type_cast.humanize
+
+      element.children do |child|
+        haml_concat "&nbsp;&nbsp;Value Set:&nbsp;&nbsp;#{child.name}: " if child.is_a? ValueSetElement
+        haml_concat fml("#{child.name}&nbsp;&nbsp;") if child.is_a? ValueElement and !child.name.blank?
+      end
+
+      haml_concat "&nbsp;&nbsp;"
+      haml_concat link_to_library_admin_delete(element, type)
+    end
+  end
+
+  def render_library_admin_value_set(element, type)
+    haml_tag :li, {:id => "value_set_#{element.id}", :class => 'library-admin-item'} do
+      haml_tag :b do
+        haml_concat element.name
+        haml_concat "&nbsp;&nbsp;"
+        haml_concat link_to_library_admin_delete(element, type)
+      end
+      haml_tag :br
+
+      element.children.each_with_index do |child, i|
+        haml_concat " | " unless i == 0
+        if child.name.blank?
+          haml_concat "(Blank)"
+        else
+          haml_concat fml("", child.name, "")
+        end
+      end
+    end
+  end
+
+  def link_to_library_admin_delete(element, type)
+    html_class_name = "delete-" + element.class.name.underscore.gsub(/_element$/, '').gsub('_', '-')
+    link_to_remote(image_tag('delete.png', :border => 0, :alt => html_class_name.titleize),
+                   :url     => form_element_path(element, :type => type.underscore),
+                   :method  => :delete,
+                   :confirm => 'This action will delete this element and all children elements. Please confirm.',
+                   :html    => {:class => html_class_name, :id => "#{html_class_name}-#{element.id}"})
+  end
 end

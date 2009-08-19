@@ -43,14 +43,14 @@ class FormElementsController <  AdminController
 
   def destroy
     @form_element = FormElement.find(params[:id])
-    
+
     if @form_element.destroy_and_validate
-      
+
       # A missing form_id means an element in the library is being destroyed, 
       # so the list of elements in the library must be rebuilt for the view (filter
       # conditions are not preserved).
       if (@form_element.form_id.blank?)
-        @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
+        @library_elements = FormElement.library_roots
         @type = params[:type].blank? ? "question_element" : params[:type]
       else
         @form = Form.find(@form_element.form_id)
@@ -61,7 +61,7 @@ class FormElementsController <  AdminController
       render :template => 'rjs-error'
     end
   end
-  
+
   def filter_elements
     begin
       @reference_element = FormElement.find(params[:reference_element_id])
@@ -82,6 +82,6 @@ class FormElementsController <  AdminController
     render(:update) do |page|
       page << "$('cdc-export-info-#{params[:id]}').#{(params[:export_column_id].blank? ? 'hide' : 'show')}();"
     end
-  end      
-    
+  end
+
 end
