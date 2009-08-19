@@ -323,7 +323,7 @@ class Form < ActiveRecord::Base
     
       File::open("#{base_path}#{form_file_name}", 'w') { |file| file << (self.to_json) }
       File::open("#{base_path}#{form_elements_file_name}", 'w') do |file|
-        file << self.form_element_cache.full_set.patched_array_to_json(:methods => [
+        file << self.form_element_cache.full_set.to_json(:methods => [
             :type, :question, :code_condition_lookup, :cdc_export_column_lookup, :cdc_export_conversion_value_lookup
           ])
       end
@@ -371,7 +371,7 @@ class Form < ActiveRecord::Base
       library_elements = []
 
       FormElement.library_roots.each do |library_root|
-        library_root_json = FormElementCache.new(library_root).full_set.patched_array_to_json(:methods => [
+        library_root_json = FormElementCache.new(library_root).full_set.to_json(:methods => [
             :type, :question, :code_condition_lookup, :cdc_export_column_lookup, :cdc_export_conversion_value_lookup
           ])
         library_elements << library_root_json[1...library_root_json.size-1]
