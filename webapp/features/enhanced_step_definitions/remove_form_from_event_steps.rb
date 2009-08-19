@@ -25,7 +25,9 @@ When(/^I check the form for removal$/) do
 end
 
 Then(/^I should no longer see the form on the event$/) do
-  edit_cmr(@browser)
+  @browser.click "link=Edit CMR"
+  @browser.wait_for_page_to_load
+  @browser.is_text_present("Person Information").should be_true
   @browser.is_text_present(@short_name).should be_true
 end
 

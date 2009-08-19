@@ -32,7 +32,7 @@ Then /^I should not see "([^\"]*)"$/ do |text|
 end
 
 After('@clean_common_test_types') do
-  CommonTestType.destroy_all
+  CommonTestType.all.each(&:delete)
 end
 
 After('@clean_lab_results') do

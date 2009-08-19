@@ -38,6 +38,7 @@ end
 
 Given(/^that form is published$/) do
   @published_form = @form.publish
+  @published_form.should_not be_nil
 end
 
 #
