@@ -26,7 +26,8 @@ class HumanEvent < Event
     :only_integer => true,
     :message => 'is negative. This is usually caused by an incorrect onset date or birth date.'
 
-  before_validation :set_age_at_onset
+  before_validation_on_create :set_age_at_onset
+  before_validation_on_update :set_age_at_onset
 
   has_one :interested_party, :foreign_key => "event_id"
 
@@ -675,15 +676,16 @@ class HumanEvent < Event
       errors.add_to_base("Local or state case status must be '#{ExternalCode.out_of_state.code_description}' or blank for an event with a #{:county} of '#{self.address.county.code_description}'")
     end
 
-    base_errors = {}
+    return if self.interested_party.nil?
     return unless bdate = self.interested_party.person_entity.person.birth_date
+    base_errors = {}
 
     self.hospitalization_facilities.each do |hf|
       if (date = hf.hospitals_participation.admission_date.try(:to_date)) && (date < bdate)
         hf.hospitals_participation.errors.add(:admission_date, "cannot be earlier than birth date") 
         base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
       end
-      if (date = hf.hospitals_participation.admission_date.try(:to_date)) && (date < bdate)
+      if (date = hf.hospitals_participation.discharge_date.try(:to_date)) && (date < bdate)
         hf.hospitals_participation.errors.add(:discharge_date, "cannot be earlier than birth date")
         base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
       end

@@ -77,7 +77,7 @@ describe ContactEvent do
       mock_user
       @disease = Factory.build(:disease)
 
-      @c = ContactEvent.new
+      @c = ContactEvent.new("interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" } } } )
       @c.build_disease_event(:disease => @disease)
       @c.build_jurisdiction(:secondary_entity_id => entities(:Davis_County).id)
       @c.save!

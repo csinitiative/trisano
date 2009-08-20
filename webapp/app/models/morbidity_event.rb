@@ -208,8 +208,11 @@ class MorbidityEvent < HumanEvent
   end
 
   def validate
-    base_errors = {}
+    super
+
+    return if self.interested_party.nil?
     return unless bdate = self.interested_party.person_entity.person.birth_date
+    base_errors = {}
 
     self.place_child_events.each do |pce|
       if (date = pce.participations_place.try(:date_of_exposure).try(:to_date)) && (date < bdate)
@@ -224,9 +227,6 @@ class MorbidityEvent < HumanEvent
         base_errors['encounters'] = "Encounter date(s) precede birth date"
       end
     end
-
-
-    super
 
     unless base_errors.empty?
       base_errors.values.each { |msg| self.errors.add_to_base(msg) }

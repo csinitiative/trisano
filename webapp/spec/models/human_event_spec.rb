@@ -42,7 +42,7 @@ describe HumanEvent, 'associations'  do
       fixtures :events
 
       before(:each) do
-        @event = HumanEvent.new
+        @event = HumanEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Green" } } })
       end
 
       it "Should not allow interested parties to be deleted via a nested attribute" do
@@ -85,7 +85,7 @@ describe HumanEvent, 'associations'  do
       fixtures :events, :entities, :places, :places_types
 
       before(:each) do
-        @event = HumanEvent.new
+        @event = HumanEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Green" } } })
       end
 
       it "should reject hospitals with no entity ID and no settings" do
@@ -163,6 +163,21 @@ end
 
 describe HumanEvent, 'parent/guardian field' do
 
+  before(:each) do
+    @event_hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name"=>"Green"
+          }
+        },
+      },
+      :created_at => DateTime.now,
+      :updated_at => DateTime.now
+    }
+  end
+
+
   it 'should exist' do
     with_human_event do |event|
       event.respond_to?(:parent_guardian).should be_true
@@ -201,6 +216,20 @@ end
 
 describe HumanEvent, 'adding staged messages' do
   fixtures :loinc_codes, :common_test_types
+
+  before(:each) do
+    @event_hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name"=>"Green"
+          }
+        },
+      },
+      :created_at => DateTime.now,
+      :updated_at => DateTime.now
+    }
+  end
 
   it 'should raise an exception when not passed a staged message' do
     with_human_event do |event|

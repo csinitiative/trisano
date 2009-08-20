@@ -262,7 +262,7 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :places_types, :users, :participations_places
+    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :places_types, :users, :participations_places, :hospitals_participations
 
     before(:each) do
       @user = users(:default_user)

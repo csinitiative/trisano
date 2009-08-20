@@ -71,8 +71,6 @@ class PlaceEvent < Event
         base_errors['epi'] = "Exposure date(s) precede patient's birth date"
       end
 
-      super
-
       unless base_errors.empty?
         base_errors.values.each { |msg| self.errors.add_to_base(msg) }
       end
