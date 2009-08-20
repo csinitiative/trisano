@@ -40,6 +40,8 @@ module FormsLibraryAdminHelper
           haml_tag :b do
             haml_concat "Group: #{grouped_form_element.name}"
           end
+          haml_concat "&nbsp;&nbsp;"
+          haml_concat link_to_library_admin_delete(grouped_form_element, type)
         end
       end
 

@@ -36,3 +36,10 @@ def save_new_form(form_name)
   response.should contain("Form was successfully created.")
   response.should contain(form_name)
 end
+
+def create_value_elements_in_value_set(value_set_element, values_table)
+  values_table.rows.each do |row|
+    value_set_element.add_child ValueElement.create!(:name => row.first, :code => row.last, :tree_id => value_set_element.tree_id)
+  end
+  value_set_element.save!
+end

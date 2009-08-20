@@ -19,13 +19,13 @@ class QuestionElement < FormElement
   has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
   has_one :value_set_element, :class_name => "ValueSetElement", :foreign_key => 'parent_id', :include => [:value_elements], :dependent => :destroy
   belongs_to :export_column
-  
+
   attr_accessor :parent_element_id
 
   validates_presence_of :question
 
   accepts_nested_attributes_for :question
-  
+
   def save_and_add_to_form
     unless export_column.nil?
       return nil if export_column.data_type.blank?

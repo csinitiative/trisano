@@ -242,7 +242,19 @@ describe QuestionElement do
       @question_element.errors[:base].include?("The short name entered is already in use on this form.").should be_true
     end
   end
-  
+
+  describe "deleted from library" do
+    before do
+      @question = Factory.create :question_single_line_text, :question_text => "Spec Question"
+      @question_element = Factory.create :question_element, :question => @question, :tree_id => FormElement.next_tree_id
+    end
+
+    it 'should delete associated question' do
+      @question_element.destroy_and_validate.should be_true
+      Question.find(:all, :conditions => {:id => @question.id}).should == []
+    end
+  end
+
   describe "when a CDC question element and created with 'save and add to form'" do
 
     fixtures :export_names, :export_columns, :export_conversion_values
@@ -250,7 +262,7 @@ describe QuestionElement do
     it "should bootstrap the question with the CDC data type" do
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event', :short_name => 'ques_ele_3')
       form.save_and_initialize_form_elements
-      
+
       question_element = QuestionElement.new({
           :parent_element_id => form.investigator_view_elements_container.id,
           :export_column_id => export_columns(:hep_jaundiced).id,

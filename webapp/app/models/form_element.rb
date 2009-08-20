@@ -18,6 +18,8 @@
 class FormElement < ActiveRecord::Base
   include Export::Cdc::FormElementExt
 
+  before_destroy :delete_questions
+
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
   has_one :question
@@ -29,7 +31,7 @@ class FormElement < ActiveRecord::Base
   }
 
   @@export_lookup_separator = "|||"
-  
+
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
   # post-saving activities in the transaction
   def save_and_add_to_form
@@ -133,7 +135,6 @@ class FormElement < ActiveRecord::Base
     rescue Exception => ex
       return nil
     end
-    
   end
 
   # Returns root node of the copied tree
@@ -159,7 +160,7 @@ class FormElement < ActiveRecord::Base
       # Do not copy value sets in a group to non-questions
       unless (child.is_a?(ValueSetElement) && child.parent.is_a?(GroupElement) && !self.is_a?(QuestionElement))
         copy_children(child, e, form_id, tree_id, is_template)
-      end      
+      end
     end
     e
   end
@@ -183,7 +184,7 @@ class FormElement < ActiveRecord::Base
       end
     end
   end
-  
+
   def validate_form_structure
     return if form.nil?
     structural_errors = form.structural_errors
@@ -194,7 +195,7 @@ class FormElement < ActiveRecord::Base
       raise errors.full_messages.join("\n")
     end
   end
-  
+
   def validate_tree_structure(element_for_errors=nil)
     structural_errors = self.structural_errors
     unless structural_errors.empty?
@@ -203,14 +204,14 @@ class FormElement < ActiveRecord::Base
           element_for_errors.errors.add_to_base(error)
         end
       end
-      raise
+      raise structural_errors.inspect
     end
   end
 
   # Contains generic nested set validation checks for the tree that this node is in.
   #
   # Form#structural_errors contains additional checks specific to a form tree.
-  def structural_errors    
+  def structural_errors
     structural_errors = []
 
     structural_errors << "Multiple root elements were detected" if FormElement.find_by_sql("select id from form_elements where tree_id = #{self.tree_id} and parent_id is null").size > 1
@@ -331,4 +332,16 @@ class FormElement < ActiveRecord::Base
     FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
 
+  protected
+
+  # A little hack to make sure that questions get deleted when a
+  # question element is deleted as part of a larger pruning operation.
+  #
+  # By default, acts_as_nested prunes children using delete_all. It
+  # can be configured to use destroy, but that has two problems
+  # 1) It's slow, 2) It's broken (it leaves gaps in the set).
+  def delete_questions
+    questions = self.children.collect {|child| child.id if child.is_a? QuestionElement}
+    Question.delete_all ['form_element_id IN (?)', questions]
+  end
 end

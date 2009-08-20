@@ -26,4 +26,21 @@ describe GroupElement do
   it "should be valid" do
     @group_element.should be_valid
   end
+
+  describe "deleting a group element" do
+    before do
+      @group_element = GroupElement.new :name => "Spec Group"
+      @group_element.save_and_add_to_form.should be_true
+      @question = Question.create! :question_text => 'Example?', :short_name => 'example', :data_type => 'single_line_text'
+      @question_element =  QuestionElement.create! :tree_id => @group_element.tree_id, :question => @question
+      @group_element.add_child @question_element
+    end
+
+    it "should delete all children" do
+      @group_element.destroy_and_validate.should be_true
+      QuestionElement.all(:conditions => {:id => @question_element.id}).should == []
+      Question.all(:conditions => {:id => @question.id}).should == []
+    end
+  end
+
 end
