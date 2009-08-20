@@ -19,7 +19,7 @@ admin_user:
   first_name:
   generational_qualifer:
   initials:
-  event_view_settings:
+  event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: ['Willy Wonka']\n:states: "
   disable: false
 
 update_cmr_user:

@@ -52,13 +52,19 @@ describe EventQueue do
 
     before(:each) do
       @user = users(:default_user)
+      users(:admin_user).event_view_settings = {:diseases => true}
+      users(:admin_user).save
       User.stub!(:current_user).and_return(@user)
       event_queues(:enterics_queue).destroy
     end
 
     it "should remove the queue in all users' default index view settings" do
       User.find(:all, :conditions => "event_view_settings IS NOT NULL").each do |user|
-        user.event_view_settings[:queues].should be_empty
+        if user == @user
+          user.event_view_settings[:queues].should be_empty
+        else
+          user.event_view_settings[:queues].should be_nil
+        end
       end
     end
 
