@@ -36,7 +36,6 @@ Feature: Web API People Client
     And I should find the value "George Mason Dr." in "data_street_name"
     And I should find the value "448" in "data_unit_number"
     And I should find the value "Utah" in "data_state"
-    And I should find the value "Beaver" in "data_county"
 
   Scenario: Searching known people entities
     Given I have a known person entity
@@ -50,7 +49,6 @@ Feature: Web API People Client
     And I should find the value "George Mason Dr." in "data_street_name"
     And I should find the value "448" in "data_unit_number"
     And I should find the value "Utah" in "data_state"
-    And I should find the value "Beaver" in "data_county"
 
   Scenario: Searching people entities with no results
     Given I have a known person entity

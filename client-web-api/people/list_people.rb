@@ -51,7 +51,7 @@ end  # parse()
 
 @trisano = TriSanoWebApi.new
 @query_string = parse(ARGV)
-@page = @trisano.get("/people?#{@query_string}").search(".//div[@class='data_person'][span[starts-with(@class, 'data_')]]")
+@page = @trisano.get("/people?#{@query_string}").search(".//tr[starts-with(@class, 'data_person ')]")
 
 @page.each { |person|
   elements = person.search(".//span[starts-with(@class, 'data_')][not(*)]")
