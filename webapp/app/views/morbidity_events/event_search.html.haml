@@ -33,32 +33,37 @@
   -else
     %table.list
       %tr
-        %th.forminformation
-          People
-        %th
+        %th Person Name
+        %th Address
+        %th Birth Date
+        %th Actions
       - @people.each do |person|
-        %tr.roll
-          %td.forminformation
-            %fieldset
-              - fields_for(person, :builder => ExtendedFormBuilder) do |f|
-                %div.data_person
+        - unless is_person_merge_entity(person)
+          - fields_for(person, :builder => ExtendedFormBuilder) do |f|
+            - f.fields_for(:person, :builder => ExtendedFormBuilder) do |name_form|
+              -# tr must start with data_person for web api
+              %tr.data_person.search-active.tabular
+                %td
                   %span.data_person_id{:style => 'display: none'}=h(person.person_entity.id)
-                  -f.fields_for(:person, :builder => ExtendedFormBuilder) do |name_form|
-                    %div.data_name
-                      %div.formname
-                        %b
-                          %span.data_first_name=h(person.first_name)
-                          %span.data_middle_name=h(person.middle_name)
-                          %span.data_last_name=h(person.last_name)
-                  = render :partial => 'people/address_show', :locals => {:address => person.person_entity.canonical_address, :f => f}
-                  = render :partial => 'people/age_show', :locals => {:person => person, :f => f, :event => nil}
-          %td
-            .tools{:style => "position: absolute; right: 25px;"}
-              = link_to 'Edit', edit_person_path(person.person_entity)
-              |
-              = link_to 'Show', person_path(person.person_entity)
-              |
-              = link_to('Create and edit CMR using this person', cmrs_path(:from_person => person.person_entity, :return => true), :method => :post) if User.current_user.is_entitled_to?(:create_event)
+                  %span.data_name
+                    %span.data_first_name=h(person.first_name)
+                    %span.data_middle_name=h(person.middle_name)
+                    %span.data_last_name=h(person.last_name)
+                %td
+                  - address = person.person_entity.canonical_address
+                  - if not address.nil? and not address.new_record?
+                    %span.data_address
+                      %span.data_street_number=h(address.street_number)
+                      %span.data_street_name=h(address.street_name)
+                      %span.data_unit_number=h(address.unit_number)
+                      - if address.city or address.state or address.postal_code
+                        %br
+                        %span.data_city=h(address.city)
+                        %span.data_state=h(l(address.state))
+                        %span.data_postal_code=h(address.postal_code)
+                %td
+                  %span.data_birth_date=h(person.birth_date)
+                %td= render_person_actions(person)
     %br
     = will_paginate @people
 - elsif defined? @events
