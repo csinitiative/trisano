@@ -41,4 +41,26 @@ class EncounterEvent < HumanEvent
     self.soft_delete
   end
 
+  private
+
+  def validate
+
+    # Check against birthday only after an interested party has been assigned, which happens after
+    # initial creation.  Look up there ^^.
+    return if self.interested_party.nil?
+
+    base_errors = {}
+    return unless bdate = self.interested_party.person_entity.person.birth_date
+
+    if (date = self.participations_encounter.encounter_date.try(:to_date)) && (date < bdate)
+      self.participations_encounter.errors.add(:encounter_date, "cannot be earlier than birth date")
+      base_errors['encounter'] = "Encounter date(s) precede birth date"
+    end
+
+    super
+
+    unless base_errors.empty?
+      base_errors.values.each { |msg| self.errors.add_to_base(msg) }
+    end
+  end
 end

@@ -217,7 +217,7 @@ class Person < ActiveRecord::Base
   protected
   def validate
     if !date_of_death.blank? && !birth_date.blank?
-      errors.add(:date_of_death, "The date of death precedes birth date") if date_of_death.to_date < birth_date.to_date
+      errors.add(:date_of_death, "cannot precede birth date") if date_of_death.to_date < birth_date.to_date
     end
   end
 

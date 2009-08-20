@@ -207,4 +207,29 @@ class MorbidityEvent < HumanEvent
     self.MMWR_year = mmwr.mmwr_year
   end
 
+  def validate
+    base_errors = {}
+    return unless bdate = self.interested_party.person_entity.person.birth_date
+
+    self.place_child_events.each do |pce|
+      if (date = pce.participations_place.try(:date_of_exposure).try(:to_date)) && (date < bdate)
+        pce.participations_place.errors.add(:date_of_exposure, "cannot be earlier than birth date")
+        base_errors['epi'] = "Epidemiological date(s) precede birth date"
+      end
+    end
+    self.encounter_child_events.each do |ece|
+      next unless ece.new_record?
+      if (date = ece.participations_encounter.try(:encounter_date).try(:to_date)) && (date < bdate)
+        ece.participations_encounter.errors.add(:encounter_date, "cannot be earlier than birth date")
+        base_errors['encounters'] = "Encounter date(s) precede birth date"
+      end
+    end
+
+
+    super
+
+    unless base_errors.empty?
+      base_errors.values.each { |msg| self.errors.add_to_base(msg) }
+    end
+  end
 end

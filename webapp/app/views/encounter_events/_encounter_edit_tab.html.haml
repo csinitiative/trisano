@@ -23,6 +23,7 @@
   %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
 
     - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
+      = error_messages_for :object => pe_fields.object
 
       %span.horiz
         =pe_fields.label(:user_id, "Investigator")

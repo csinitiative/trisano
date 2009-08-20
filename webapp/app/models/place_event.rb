@@ -60,4 +60,23 @@ class PlaceEvent < Event
       end
     end
   end
+
+  def validate
+    if parent_event && participations_place
+      base_errors = {}
+      return unless bdate = parent_event.interested_party.person_entity.person.birth_date
+
+      if (date = self.participations_place.try(:date_of_exposure).try(:to_date)) && (date < bdate)
+        self.participations_place.errors.add(:date_of_exposure, "cannot be earlier than patient's birth date")
+        base_errors['epi'] = "Exposure date(s) precede patient's birth date"
+      end
+
+      super
+
+      unless base_errors.empty?
+        base_errors.values.each { |msg| self.errors.add_to_base(msg) }
+      end
+    end
+
+  end
 end

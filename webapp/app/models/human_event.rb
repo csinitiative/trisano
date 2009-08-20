@@ -26,8 +26,7 @@ class HumanEvent < Event
     :only_integer => true,
     :message => 'is negative. This is usually caused by an incorrect onset date or birth date.'
 
-  before_validation_on_create :set_age_at_onset
-  before_validation_on_update :set_age_at_onset
+  before_validation :set_age_at_onset
 
   has_one :interested_party, :foreign_key => "event_id"
 
@@ -674,6 +673,65 @@ class HumanEvent < Event
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) || 
          ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
       errors.add_to_base("Local or state case status must be '#{ExternalCode.out_of_state.code_description}' or blank for an event with a #{:county} of '#{self.address.county.code_description}'")
+    end
+
+    base_errors = {}
+    return unless bdate = self.interested_party.person_entity.person.birth_date
+
+    self.hospitalization_facilities.each do |hf|
+      if (date = hf.hospitals_participation.admission_date.try(:to_date)) && (date < bdate)
+        hf.hospitals_participation.errors.add(:admission_date, "cannot be earlier than birth date") 
+        base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
+      end
+      if (date = hf.hospitals_participation.admission_date.try(:to_date)) && (date < bdate)
+        hf.hospitals_participation.errors.add(:discharge_date, "cannot be earlier than birth date")
+        base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
+      end
+    end
+    self.interested_party.treatments.each do |t|
+      if (date = t.treatment_date.try(:to_date)) && (date < bdate)
+        t.errors.add(:treatment_date, "cannot be earlier than birth date")
+        base_errors['treatments'] = "Treatment date(s) precede birth date"
+      end
+      if (date = t.stop_treatment_date.try(:to_date)) && (date < bdate)
+        t.errors.add(:stop_treatment_date, "cannot be earlier than birth date")
+        base_errors['treatments'] = "Treatment date(s) precede birth date"
+      end
+    end
+    risk_factor = self.interested_party.risk_factor
+    if (date = risk_factor.try(:pregnancy_due_date).try(:to_date)) && (date < bdate)
+      risk_factor.errors.add(:pregnancy_due_date, "cannot be earlier than birth date")
+      base_errors['risk_factor'] = "Risk factor date(s) precede birth date"
+    end
+    if (date = self.disease_event.try(:disease_onset_date).try(:to_date)) && (date < bdate)
+      self.disease_event.errors.add(:disease_onset_date, "cannot be earlier than birth date")
+      base_errors['disease'] = "Disease date(s) precede birth date"
+    end
+    if (date = self.disease_event.try(:date_diagnosed).try(:to_date)) && (date < bdate)
+      self.disease_event.errors.add(:date_diagnosed, "cannot be earlier than birth date")
+      base_errors['disease'] = "Disease date(s) precede birth date"
+    end
+    self.labs.each do |l|
+      l.lab_results.each do |lr|
+        if (date = lr.collection_date.try(:to_date)) && (date < bdate)
+          lr.errors.add(:collection_date, "cannot be earlier than birth date")
+          base_errors['labs'] = "Lab result date(s) precede birth date"
+        end
+        if (date = lr.lab_test_date.try(:to_date)) && (date < bdate)
+          lr.errors.add(:lab_test_date, "cannot be earlier than birth date")
+          base_errors['labs'] = "Lab result date(s) precede birth date"
+        end
+      end
+    end
+    if (date = self.results_reported_to_clinician_date.try(:to_date)) && (date < bdate)
+      self.errors.add(:results_reported_to_clinician_date, "cannot be earlier than birth date")
+    end
+    if (date = self.first_reported_PH_date.try(:to_date)) && (date < bdate)
+      self.errors.add(:first_reported_PH_date, "cannot be earlier than birth date")
+    end
+
+    unless base_errors.empty? && self.errors.empty?
+      base_errors.values.each { |msg| self.errors.add_to_base(msg) }
     end
   end
 end
