@@ -34,15 +34,15 @@ Feature: Supporting LOINC codes for lab results
 
   Scenario: Paginating the LOINC codes index page
     Given I am logged in as a super user
-    And I have 31 sequential loinc codes, starting at 20000-00
+    And I have 31 sequential loinc codes, starting at 20000-0
 
     When I go to the loinc code index page
-    Then I should see "20000-00"
-    And I should not see "20000-30"
+    Then I should see "20000-0"
+    And I should not see "20003-0"
 
     When I follow "2"
-    Then I should not see "20000-00"
-    And I should see "20000-30"
+    Then I should not see "20000-0"
+    And I should see "20003-0"
 
   Scenario: Non-administrators trying to modify LOINC codes
     Given I am logged in as an investigator

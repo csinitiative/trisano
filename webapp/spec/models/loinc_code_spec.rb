@@ -55,6 +55,12 @@ describe LoincCode do
       LoincCode.create(:loinc_code => '99999999-9' ).errors.on(:loinc_code).should be_nil
     end
 
+    it 'should be left and right trimmed' do
+      loinc = LoincCode.create(:loinc_code => '99999-9 ')
+      loinc.errors.on(:loinc_code).should be_nil
+      loinc.loinc_code.should == '99999-9'
+    end
+
   end
 
   describe 'test name' do
