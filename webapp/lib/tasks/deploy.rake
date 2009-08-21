@@ -134,7 +134,7 @@ namespace :trisano do
         form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][primary_language_id]", "")
         form.add_field!("morbidity_event[address_attributes][state_id]", "")
         form.add_field!("morbidity_event[address_attributes][county_id]", "")
-        form.add_field!("morbidity_event[jurisdiction_attributes][secondary_entity_id]", "55")
+        form.add_field!("morbidity_event[jurisdiction_attributes][secondary_entity_id]", "1")
 
         page = agent.submit form      
         raise "POST content invalid" unless (page.search("//#errorExplanation")).empty?
