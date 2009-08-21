@@ -111,13 +111,29 @@ module EventsHelper
   def add_lab_link(name, prefix)
     event_type = /^.+_event/.match(prefix)[0]
     url = event_type == 'morbidity_event' ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
+    url = case event_type
+          when 'morbidity_event'
+            lab_form_new_cmr_path(:prefix => prefix)
+          when 'contact_event'
+            lab_form_new_contact_event_path(:prefix => prefix)
+          when 'encounter_event'
+            lab_form_new_encounter_event_path(:prefix => prefix)
+          end
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
 
   def add_lab_result_link(name, prefix, lab_id)
     event_type = /^.+_event/.match(prefix)[0]
-    url = event_type == 'morbidity_event' ? lab_result_form_new_cmr_path(:prefix => prefix) : lab_result_form_new_contact_event_path(:prefix => prefix)
+    url = case event_type
+          when 'morbidity_event'
+            lab_result_form_new_cmr_path(:prefix => prefix)
+          when 'contact_event'
+            lab_result_form_new_contact_event_path(:prefix => prefix)
+          when 'encounter_event'
+            lab_result_form_new_encounter_event_path(:prefix => prefix)
+          end
+ 
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
