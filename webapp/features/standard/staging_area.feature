@@ -139,6 +139,26 @@ Feature: Staging Electronic Messages
     And I should see a note for the assigned lab
     And I should see a link back to the staged message
 
+  Scenario: Assigning lab result to a new event with an existing person
+    Given I am logged in as a user with manage_staged_message privs
+    And I have the staged message "ARUP_1"
+    And there is a morbidity event with a matching name and birth date
+    And that event also has a middle name of George
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 10000-1    | Blood Test  |
+      | 20000-2    | Urine Test  |
+      | 13954-3    | Hep-B Ag    |
+
+    When I visit the staged message show page
+    And I click 'Similar Events' for the staged message
+    And I click the 'Assign to new CMR using this person' link of the found event
+    Then I should see a 'success' message
+
+    When I visit the assigned-to event
+    Then I should see the new lab result with 'Hep-B Ag'
+    And I should see a middle name of George
+
   Scenario: Attempting to assign message with unknown LOINC code
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNKNOWN_LOINC"

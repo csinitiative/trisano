@@ -610,7 +610,7 @@ class HumanEvent < Event
       common_test_type = loinc_code.common_test_type
       raise StagedMessage::UnlinkedLoincCode, "LOINC code, #{obx.loinc_code}, is known but not linked to a common test type." if common_test_type.nil?
 
-      specimen_source = ExternalCode.find_by_sql("SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE '#{obr.specimen_source}'").first
+      specimen_source = ExternalCode.find_by_sql(["SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ?", obr.specimen_source]).first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
 
       obx_result = obx.result.gsub(/\s/, '').downcase

@@ -52,13 +52,18 @@ Then /^I should see matching results$/ do
   response.should have_selector("table#search_results")
 end
 
-Then /^there is a (.+) event with a matching name and birth date$/ do |type|
+Given /^there is a (.+) event with a matching name and birth date$/ do |type|
   @event = Factory.build("#{type}_event".to_sym)
   @event.interested_party.person_entity.person.last_name = @staged_message.patient.patient_name.split(',').first
   @event.interested_party.person_entity.person.birth_date = @staged_message.patient.birth_date
   @event.build_jurisdiction
   @event.jurisdiction.secondary_entity = Place.jurisdiction_by_name("Unassigned").entity
   @event.save!
+end
+
+Given /^that event also has a middle name of (.+)$/ do |m_name|
+  @event.interested_party.person_entity.person.middle_name = m_name
+  @event.save
 end
 
 When /^I click the '(.+)' link of the found event$/ do |link|
@@ -111,6 +116,12 @@ Then /^I should see the new lab result with '(.+)'$/ do |test_type|
   response.should contain(/#{@staged_message.observation_request.specimen_source}/i)
   response.should contain(@staged_message.observation_request.tests.first.reference_range)
   response.should contain(@staged_message.observation_request.tests.first.observation_date)
+end
+
+Then /^I should see a middle name of (.+)$/ do |m_name|
+  response.should have_selector("span[class='data_middle_name']") do |mid_name|
+    mid_name.should contain(m_name)
+  end
 end
 
 Then /^I should see the patient information$/ do
