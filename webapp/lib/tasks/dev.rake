@@ -25,10 +25,7 @@ namespace :trisano do
 
   namespace :dev do
 
-    # You can invoke a Rake task with Rake::Task["db:create:all"].invoke, but the fixture loading
-    # step below fails. Dig into that at some point.
-    desc "full rebuild of all databases"
-    task :db_rebuild_full do
+    def core_db_rebuild_tasks
       config = YAML::load_file "../distro/config.yml"
       postgres_dir = config['postgres_dir'] unless validate_config_attribute(config, 'postgres_dir')
       psql = postgres_dir + "/psql"
@@ -55,6 +52,19 @@ namespace :trisano do
       ruby "-S rake db:create:all"
       ruby "-S rake db:schema:load"
       ruby "-S rake db:migrate"
+    end
+
+    desc "full rebuild of all databases"
+    task :db_rebuild_full do
+      core_db_rebuild_tasks
+      Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
+      Rake::Task["trisano:dev:load_test_and_demo_data"].invoke
+      Rake::Task["db:test:prepare"].invoke
+    end
+
+    desc "full rebuild of all databases for a release"
+    task :release_db_rebuild_full do
+      core_db_rebuild_tasks
       Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
       Rake::Task["db:test:prepare"].invoke
     end
@@ -105,12 +115,18 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_csv_defaults.rb"
     end
 
+    desc "Load test/demo data"
+    task :load_test_and_demo_data do
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
+    end
+
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
     task :feature_prep do
       ruby "-S rake db:test:prepare"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
     end
 
     desc "Run standard features"

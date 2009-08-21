@@ -171,6 +171,8 @@ namespace :trisano do
     desc "Create database configuration file"
     task :create_db_config do
       ruby "-S rake trisano:dev:db_rebuild_full RAILS_ENV=development"
+      # True releases (no test/demo data) will need to invoke the following instead at some point
+      #ruby "-S rake trisano:dev:release_db_rebuild_full RAILS_ENV=development"
       sh "pg_dump -x -O trisano_development > ../distro/database/trisano_schema.sql"
     end
 

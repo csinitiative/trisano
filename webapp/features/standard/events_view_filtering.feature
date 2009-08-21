@@ -16,6 +16,7 @@ Feature: Filtering the Events view based on a set of selected criteria
     And I should see a listing for Green
     And I should not see a listing for Smith
 
+  @pending
   Scenario: Limiting the events view to events assigned to a specific queue  
     Given I am logged in as a super user
     And a queue named "Sample" in jurisdiction "Bear River"
