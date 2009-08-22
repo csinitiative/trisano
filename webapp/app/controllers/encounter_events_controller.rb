@@ -44,6 +44,7 @@ class EncounterEventsController < EventsController
     @event.add_note("Edited event") unless go_back
 
     respond_to do |format|
+      @event.validate_against_bday = true
       if @event.update_attributes(params[:encounter_event])
         flash[:notice] = 'Encounter event was successfully updated.'
         format.html {

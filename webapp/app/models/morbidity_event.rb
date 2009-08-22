@@ -208,6 +208,8 @@ class MorbidityEvent < HumanEvent
   end
 
   def validate
+
+    # Put other validations above this comment
     super
 
     return if self.interested_party.nil?
@@ -221,7 +223,6 @@ class MorbidityEvent < HumanEvent
       end
     end
     self.encounter_child_events.each do |ece|
-      next unless ece.new_record?
       if (date = ece.participations_encounter.try(:encounter_date).try(:to_date)) && (date < bdate)
         ece.participations_encounter.errors.add(:encounter_date, "cannot be earlier than birth date")
         base_errors['encounters'] = "Encounter date(s) precede birth date"
