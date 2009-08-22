@@ -104,7 +104,7 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    if User.current_user.disable
+    if User.current_user.disabled?
       logger.info "Login attempt with disabled UID " +  uid
       log_request_info
       render :text => "This account is not currently available. Please contact your administrator."

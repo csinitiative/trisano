@@ -49,7 +49,7 @@
             %br
             Initials:
             = h(@user.initials)
-            - if @user.disable
+            - if @user.disabled?
               %br
               This account has been disabled
         %td
@@ -57,5 +57,5 @@
             = link_to 'Edit', edit_user_path(@user)
             |
             Show
-            
+
 = render :partial => 'roles'

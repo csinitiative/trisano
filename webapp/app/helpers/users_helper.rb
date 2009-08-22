@@ -50,4 +50,11 @@ module UsersHelper
           end
       end
   end 
+
+  def link_to_toggle_sort_tools(text)
+    link_to_function text, nil do |page|
+      page.visual_effect :toggle_blind, 'sort-tools'
+    end
+  end
+
 end

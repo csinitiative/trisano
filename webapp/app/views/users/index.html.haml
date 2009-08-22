@@ -18,19 +18,36 @@
 /- content_for :name do
 /  Users
 
-/- content_for :tools do
-/  = link_to 'New user', new_user_path
+-content_for :tools do
+  =link_to_toggle_sort_tools "Change sorting"
 
 - content_for :tools_two do
   = button_to("Create new user", {:action => "new"}, { :method => :get })
 
-#rot
+.vert-break{:id => 'sort-tools', :style => 'display: none;'}
+  -form_tag users_path, :method => :get do
+    %span.horiz
+      =label_tag  :sort_by
+      =select_tag :sort_by, options_for_select([['UID', 'uid'], ['Status', 'status']], params[:sort_by] || 'uid')
+    %span.horiz
+      =label_tag  :sort_direction, 'Direction'
+      =select_tag :sort_direction, options_for_select([['Ascending', 'ASC'], ['Descending', 'DESC']], params[:sort_direction] || 'ASC')
+    %span.horiz
+      =label_tag  '&nbsp;'
+      =submit_tag "Sort", :name => 'do'
+    %span.horiz
+      =label_tag  '&nbsp;'
+      =link_to_toggle_sort_tools "Close"
+
+.vert-break#rot
   %table.list
     %tr
       %th.forminformation
         Users
       %th
-    - for user in @users.sort_by {|u| u.user_name}
+        Status
+      %th
+    - for user in @users
       %tr.roll
         %td.forminformation
           .tools
@@ -42,6 +59,9 @@
             = h(user.user_name)
             %br
             -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
+        %td
+          %span.user-status
+            =h user.status.titleize
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to 'Edit', edit_user_path(user)

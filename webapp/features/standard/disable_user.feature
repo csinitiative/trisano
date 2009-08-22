@@ -7,10 +7,10 @@ Feature: Disable user logon
     Given I am logged in as a super user
     When I go to the investigator user edit page
     And I see that the user is not yet disabled
-    And I check "user_disable"
-    And I press "update"
+    And I select "Disabled" from "Status"
+    And I press "Update"
     And I go to the investigator user edit page
-    Then the disable checkbox should still be checked
+    Then "Disabled" should be selected from "user_status"
 
   Scenario: Disabled user attempts to login
     Given I am logged in as a disabled user

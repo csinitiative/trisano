@@ -18,16 +18,16 @@
 
 Given(/^I am logged in as a disabled user$/) do
   log_in_as("investigator")
-  User.current_user.disable = true
+  User.current_user.disable
   User.current_user.save
 end
 
 When /^I see that the user is not yet disabled$/ do
-  field_with_id("user_disable").should_not be_checked
+  response.should have_xpath("//select[@id='user_status']//option[@value='active' and @selected='selected']")
 end
 
 Then /^the disable checkbox should still be checked$/ do
-  field_with_id("user_disable").should be_checked
+  response.should have_xpath("//select[@id='user_status']//option[@value='disabled' and @selected='selected']")
 end
 
 Then /^I am presented with a page saying that the account is not available$/ do

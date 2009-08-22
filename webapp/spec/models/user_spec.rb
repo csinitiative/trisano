@@ -46,13 +46,43 @@ describe User, "loaded from fixtures" do
   it "should have zero jurisdiction id for view privilege" do
     @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(0)
   end
-  
+
   it "should have zero jurisdiction id for update privilege" do
     @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(0)
   end
-  
+
   it "should have one admin jurisdiction id" do
     @user.admin_jurisdiction_ids.size.should == 1
+  end
+
+  it 'should have errors on status if no status is set' do
+    @user.status = ''
+    @user.save
+    @user.errors.on(:status).should == "can't be blank"
+  end
+
+  it "should allow a status of 'Active'" do
+    @user.status = 'active'
+    @user.save
+    @user.errors.on(:status).should == nil
+  end
+
+  it "should allow a status of 'Disabled'" do
+    @user.status = 'disabled'
+    @user.save
+    @user.errors.on(:status).should == nil
+  end
+
+  it "other statuses should cause errors" do
+    @user.status = 'no_status'
+    @user.save
+    @user.errors.on(:status).should == "can only be Active or Disabled"
+  end
+
+  it "disabled? should be based on status" do
+    @user.should_not be_disabled
+    @user.status = 'disabled'
+    @user.should be_disabled
   end
 
   describe "getting potential task assignees" do
@@ -64,7 +94,7 @@ describe User, "loaded from fixtures" do
       assignees.size.should == 0
     end
 
-    describe 'using default rules for task assignees' do 
+    describe 'using default rules for task assignees' do
       before(:each) do
         @user = users :update_cmr_user
         User.current_user = @user
@@ -643,7 +673,7 @@ end
 describe User, 'task view settings' do
   
   before(:each) do
-    @user = User.create(:uid => 'tu', :user_name => 'taskowner')
+    @user = User.create(:uid => 'tu', :user_name => 'taskowner', :status => 'active')
   end
 
   it 'should default to showing only today\'s tasks' do

@@ -70,6 +70,18 @@ def path_to(page_name)
   when /the loinc code show page/
     loinc_code_path @loinc_code
 
+  when /the users index page/
+    users_path
+
+  when /view the default user/
+    user_path User.find_by_user_name('default_user')
+
+  when /the new user page/
+    new_user_path
+
+  when /edit the user/
+    edit_user_path @user
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

@@ -138,6 +138,7 @@ end
 Factory.define :user do |u|
   u.uid { Factory.next(:uid) }
   u.user_name { Factory.next(:user_name) }
+  u.status 'active'
 end
 
 #

@@ -41,9 +41,10 @@
         = f.label(:initials)
         = f.text_field(:initials, :size => 8, :maxlength => 8)
       %span.vert-break
-        = f.label(:disable_access)
+        = f.label(:status)
+        = f.select :status, User.status_array
         %i Disable access to the system
-        = f.check_box :disable
+
       %p
 
 %table.list

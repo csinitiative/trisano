@@ -22,15 +22,15 @@ class DashboardController < ApplicationController
   # be merged in there.
   def index
     @user = User.current_user
-    if has_a_filter_applied?(params)      
+    if has_a_filter_applied?(params)
       @user.store_as_task_view_settings(params)
       render
     else
       redirect_to url_for(params.merge(@user.task_view_settings))
-    end        
+    end
   end
-  
-  private 
+
+  private
 
   def has_a_filter_applied?(params)
     params.keys.any? { |param| User.task_view_params.include?(param.to_sym) }

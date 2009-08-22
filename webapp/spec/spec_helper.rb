@@ -86,7 +86,7 @@ def mock_user
   @user.stub!(:is_entitled_to?).and_return(true)
   @user.stub!(:event_view_settings).and_return(nil)
   @user.stub!(:best_name).and_return("Johnny Johnson")
-  @user.stub!(:disable).and_return(false)
+  @user.stub!(:disabled?).and_return(false)
 
   @role_membership = mock_model(RoleMembership)
   @role = mock_model(Role)

@@ -21,11 +21,11 @@ class User < ActiveRecord::Base
   # Debt? Mess with these includes, see if they are helping or hurting
   has_many :role_memberships, :include => [:role, :jurisdiction], :dependent => :delete_all
   has_many :roles, :through => :role_memberships, :uniq => true
-  
+
   has_many :tasks, :order => 'due_date ASC'
-  
+
   validates_associated :role_memberships
-  validates_presence_of :uid, :user_name
+  validates_presence_of :uid, :user_name, :status
   validates_uniqueness_of :uid, :user_name
   validates_length_of :uid, :maximum => 50
   validates_length_of :given_name, :maximum => 127, :allow_blank => true
@@ -34,13 +34,36 @@ class User < ActiveRecord::Base
   validates_length_of :initials, :maximum => 8, :allow_blank => true
   validates_length_of :user_name, :maximum => 20, :allow_blank => true
   validates_length_of :generational_qualifer, :maximum => 8, :allow_blank => true
+  validates_each :status, :allow_blank => true do |record, attr, value|
+    record.errors.add attr, "can only be #{self.valid_status_sentence}" unless valid_statuses.include?(value)
+  end
 
   serialize :event_view_settings, Hash
   serialize :task_view_settings, Hash
   serialize :shortcut_settings, Hash
 
+  before_validation_on_create :set_initial_status
   after_validation :clear_base_error
-  
+
+  class << self
+    def status_array
+      [
+       ['Active',   'active'  ],
+       ['Disabled', 'disabled']
+      ]
+    end
+
+    def valid_statuses
+      @valid_statuses ||= status_array.collect { |status| status.last }
+    end
+
+    def valid_status_sentence
+      @valid_status_sentence ||= status_array.collect do |status|
+        status.first
+      end.to_sentence :last_word_connector => ' or ', :two_words_connector => ' or '
+    end
+  end
+
   # Lazy loads a cache of user's jurisdictions and privileges in the form: privs[jurisdiction ID] = [privilege name]
   # E.g. privs['59'] = [:create_event, :update_event]
   # Cache lasts as long as the user does, which is the length of one request.
@@ -74,7 +97,15 @@ class User < ActiveRecord::Base
     # Right now, if you're an admin anywhere, you're an admin everywhere.  We need to change this.
     is_entitled_to?(:administer)
   end
-  
+
+  def disabled?
+    self.status == 'disabled'
+  end
+
+  def disable
+    self.update_attribute(:status, 'disabled')
+  end
+
   def is_entitled_to_in?(privilege, jurisdiction_ids)
     # jurisdiction_ids may be an array or a single ID.  Convert them all to ints just to be sure.
     j_ids = Array(jurisdiction_ids).map!{ |j_id| j_id.to_i }
@@ -185,4 +216,7 @@ class User < ActiveRecord::Base
     errors.delete(:role_memberships)
   end
 
+  def set_initial_status
+    self.status = 'active' if self.status.blank?
+  end
 end
