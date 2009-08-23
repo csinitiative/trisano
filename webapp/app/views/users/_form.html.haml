@@ -52,10 +52,10 @@
     %th.forminformation
       Edit Roles
     %th
-  %tr
+  %tr#add_role_memberships
     %td
       .tools
         = add_role_link "Add Role"
-        #role_memberships
     %td
+      &nbsp;
   = render :partial => 'role', :collection => @user.role_memberships

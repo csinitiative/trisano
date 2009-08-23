@@ -19,7 +19,7 @@ module UsersHelper
   
   def add_role_link(name)
     link_to_function name do |page|
-      page.insert_html :top, :role_memberships, :partial => 'role', :object => RoleMembership.new
+      page.insert_html :after, :add_role_memberships, :partial => 'role', :object => RoleMembership.new
     end
   end
 
