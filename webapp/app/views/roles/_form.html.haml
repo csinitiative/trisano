@@ -29,10 +29,9 @@
     %th.forminformation
       Edit Privileges
     %th
-  %tr
+  %tr#add_privileges_roles
     %td
       .tools
         = add_privilege_link "Add Privilege"
-        #privileges_roles
     %td
   = render :partial => 'privilege', :collection => @role.privileges_roles

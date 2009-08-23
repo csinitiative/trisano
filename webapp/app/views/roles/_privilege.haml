@@ -27,12 +27,9 @@
 
           = pr_form.hidden_field(:privilege_id)
         - else
-          %td
-            = pr_form.label(:privilege_id)
-            = pr_form.collection_select(:privilege_id, Privilege.find(:all, :order => :priv_name), :id, :priv_name)
+          = pr_form.label(:privilege_id)
+          = pr_form.collection_select(:privilege_id, Privilege.find(:all, :order => :priv_name), :id, :priv_name)
 
   %td
     .tools
-      - if privilege.new_record?
-        %br
       = link_to_function "Remove", "$(this).up('.privileges_role').remove()", {:style => "position: absolute; right: 15px;", :id => "remove_privilege_role_link"}
