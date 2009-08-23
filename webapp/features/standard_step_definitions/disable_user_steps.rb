@@ -26,10 +26,6 @@ When /^I see that the user is not yet disabled$/ do
   response.should have_xpath("//select[@id='user_status']//option[@value='active' and @selected='selected']")
 end
 
-Then /^the disable checkbox should still be checked$/ do
-  response.should have_xpath("//select[@id='user_status']//option[@value='disabled' and @selected='selected']")
-end
-
 Then /^I am presented with a page saying that the account is not available$/ do
   visit home_path
   response.should contain("account is not currently available")

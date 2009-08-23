@@ -138,7 +138,7 @@ end
 def go_to_new_user_page
   @browser.open "/trisano/users"
   @browser.wait_for_page_to_load($load_time)
-    
+
   @browser.click "//input[@value='Create new user']"
   @browser.wait_for_page_to_load($load_time)
 end
