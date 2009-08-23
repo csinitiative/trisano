@@ -248,6 +248,13 @@ class MorbidityEventsController < EventsController
       return false
     end
 
+    if params[:last_name] || params[:first_name] || params[:birth_date] # Tests to see if any params are supplied in query string.
+      # For passing on to new_cmr
+      @last_name = params[:last_name]
+      @first_name = params[:first_name]
+      @birth_date = params[:birth_date]
+    end
+
     begin
       @export_options = params[:export_options]
 

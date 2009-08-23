@@ -46,6 +46,7 @@ namespace :trisano do
       @source_url = config['source_url']
       @feedback_url = config['feedback_url']
       @feedback_email = config['feedback_email']
+      @default_admin_uid = config['default_admin_uid']
 
       ENV["PGPASSWORD"] = @priv_password 
     end
@@ -304,5 +305,6 @@ namespace :trisano do
         return success
       end
     end
+
   end
 end

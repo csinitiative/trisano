@@ -77,10 +77,3 @@ unassigned_jurisdiction = PlaceEntity.new
 unassigned_jurisdiction.build_place(:name => "Unassigned", :short_name => "Unassigned")
 unassigned_jurisdiction.place.place_types << jurisdiction_type
 unassigned_jurisdiction.save!
-
-# Create admin user in the unassigned jurisdiction
-admin_user = User.create(:user_name => "trisano_admin", :uid => "trisano_admin")
-roles_for_admin_user = []
-roles_for_admin_user << { :role_id => admin_role.id, :jurisdiction_id => unassigned_jurisdiction.id }
-admin_user.update_attributes( { :role_membership_attributes => roles_for_admin_user } )
-

@@ -16,3 +16,4 @@ source_url: # the URL of the TriSano source code. Derivative works must set this
 support_url: # the URL of the TriSano support page.
 feedback_email: # the email for TriSano feedback
 feedback_url: # the URL of the TriSano feedback page. 
+default_admin_uid: trisano_admin # the initial user that has admin privileges
