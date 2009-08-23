@@ -12,8 +12,8 @@ Features: Attaching documents to an Event.
     When I navigate to the add attachments page
     And I wait for the page to load
     And I click and confirm the attachment "Delete" link
-    
-    Then I should not see "test-attachment" listed as an attachment
+
+    Then the text "test-attachment" should disappear
 
   Scenario: Delete an attachment from the event show screen
     Given I am logged in as a super user
