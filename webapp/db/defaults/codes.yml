@@ -718,7 +718,7 @@
 
 - code_name: "imported"
   the_code: "UT"
-  code_description: "Acquired in Utah"
+  code_description: "Acquired in-state"
   sort_order: 5
 
 - code_name: "imported"
