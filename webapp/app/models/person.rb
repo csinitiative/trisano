@@ -68,7 +68,7 @@ class Person < ActiveRecord::Base
       
       issue_query = true
       soundex_codes = []
-      raw_terms = options[:fulltext_terms].split(" ")
+      raw_terms = options[:fulltext_terms].strip.split(/\s+/)
       
       raw_terms.each do |word|
         soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
@@ -140,22 +140,22 @@ class Person < ActiveRecord::Base
 
       if options[:use_starts_with_search]
         if !options[:last_name].blank?
-          where_clause << " AND last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:last_name]]).untaint
+          where_clause << " AND last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:last_name].strip]).untaint
         end
 
         if !options[:first_name].blank?
-          where_clause << " AND first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:first_name]]).untaint
+          where_clause << " AND first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:first_name].strip]).untaint
         end
 
         if !options[:middle_name].blank?
-          where_clause << " AND middle_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:middle_name]]).untaint
+          where_clause << " AND middle_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:middle_name].strip]).untaint
         end
       else
         soundex_codes = []
         fulltext_terms = []
         raw_terms = []
-        raw_terms << options[:first_name].split(/\s+/) unless options[:first_name].nil?
-        raw_terms << options[:last_name].split(/\s+/) unless options[:last_name].nil?
+        raw_terms << options[:first_name].strip.split(/\s+/) unless options[:first_name].nil?
+        raw_terms << options[:last_name].strip.split(/\s+/) unless options[:last_name].nil?
         raw_terms = raw_terms.flatten
 
         raw_terms.each do |word|

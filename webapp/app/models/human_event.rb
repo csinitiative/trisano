@@ -100,8 +100,8 @@ class HumanEvent < Event
       validate_bdate(bdate)
 
       where_clause = []
-      where_clause << "people.last_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", last_name]).untaint}" unless last_name.blank?
-      where_clause << "people.first_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", first_name]).untaint}" unless first_name.blank?
+      where_clause << "people.last_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", last_name.strip]).untaint}" unless last_name.blank?
+      where_clause << "people.first_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", first_name.strip]).untaint}" unless first_name.blank?
       where_clause << bdate_where_clause(bdate, where_clause.size > 0) if bdate
 
       order_by_clause = []
