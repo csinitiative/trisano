@@ -13,6 +13,7 @@ Investigator:
   - investigate_event
   - add_form_to_event
   - remove_form_from_event
+  - access_avr
 Data Entry Technician:
   - create_event
   - view_event
@@ -29,6 +30,7 @@ Surveillance Manager:
   - add_form_to_event
   - remove_form_from_event
   - manage_staged_message
+  - access_avr
 LHD Manager:
   - create_event
   - view_event
@@ -38,6 +40,7 @@ LHD Manager:
   - assign_task_to_user
   - add_form_to_event
   - remove_form_from_event
+  - access_avr
 State Manager:
   - create_event
   - view_event
@@ -47,5 +50,6 @@ State Manager:
   - assign_task_to_user
   - add_form_to_event
   - remove_form_from_event
+  - access_avr
 Read-only:
   - view_event
