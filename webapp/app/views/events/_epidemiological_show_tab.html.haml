@@ -45,6 +45,7 @@
     
   %br{:clear => 'all'}
   =render :partial => 'events/place_exposures_show', :locals => {:event_form => event_form}
+  = render_geocode_places(@event, @event.place_child_events)
 
   %fieldset.form
     %legend Other

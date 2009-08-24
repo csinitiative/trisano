@@ -43,3 +43,5 @@
     - blank_place.interested_place.place_entity.build_place
 
     = add_record_link f, :place_child_events, "Add a Place Exposure", :object => blank_place, :partial => "events/place_exposure"
+    - pl_geocode = render_geocode_places(f.object, f.object.place_child_events)
+    = (pl_geocode.nil? or pl_geocode !~ /Show/ ? "" : " | " + pl_geocode)
