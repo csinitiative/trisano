@@ -28,7 +28,7 @@
   -form_tag users_path, :method => :get do
     %span.horiz
       =label_tag  :sort_by
-      =select_tag :sort_by, options_for_select([['UID', 'uid'], ['Status', 'status']], params[:sort_by] || 'uid')
+      =user_sort_by_select_tag
     %span.horiz
       =label_tag  :sort_direction, 'Direction'
       =select_tag :sort_direction, options_for_select([['Ascending', 'ASC'], ['Descending', 'DESC']], params[:sort_direction] || 'ASC')

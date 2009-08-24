@@ -11,8 +11,18 @@ Then /^user status "([^\"]*)" should not appear after user status "([^\"]*)"$/ d
   response.should_not have_xpath("//span[@id='user-status' and text()='#{second}']/following::span[@id='user-status' and text()='#{first}']")
 end
 
+Then /^user name "([^\"]*)" should not appear after user name "([^\"]*)"$/ do |first, second|
+  response.should_not have_xpath("//a[text()='#{second}']/following::a[text()='#{first}']")
+end
+
 Then /^"([^\"]*)" should be selected from "([^\"]*)"$/ do |value, field|
   response.should have_xpath("//select[@id='#{field}']//option[text()='#{value}' and @selected='selected']")
 end
+
+Given /^user "([^\"]*)" is disabled$/ do |uid|
+  @user = User.find_by_uid uid
+  @user.disable
+end
+
 
 

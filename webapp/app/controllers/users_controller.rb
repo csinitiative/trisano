@@ -21,11 +21,13 @@ class UsersController < AdminController
   # GET /users
   # GET /users.xml
   def index
-    @users = User.find :all, :order => {
-      'uid ASC'     => 'uid ASC',
-      'uid DESC'    => 'uid DESC',
-      'status ASC'  => 'status ASC',
-      'status DESC' => 'status DESC'
+    @users = User.all :order => {
+      'uid ASC'        => 'uid ASC',
+      'uid DESC'       => 'uid DESC',
+      'status ASC'     => 'status ASC',
+      'status DESC'    => 'status DESC',
+      'user_name ASC'  => 'user_name ASC',
+      'user_name DESC' => 'user_name DESC'
     }["#{params[:sort_by]} #{params[:sort_direction]}"] || 'uid ASC'
 
     respond_to do |format|

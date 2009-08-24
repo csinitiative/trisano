@@ -57,4 +57,9 @@ module UsersHelper
     end
   end
 
+  def user_sort_by_select_tag
+    options = [%w(UID uid), %w(Status status), ['User name', 'user_name']]
+    select_tag :sort_by, options_for_select(options, params[:sort_by] || 'uid')
+  end
+
 end
