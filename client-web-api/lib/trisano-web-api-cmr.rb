@@ -153,7 +153,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
         @options.date_diagnosed = dg
       end
 
-      opts.on("--hosptalized TEXT",
+      opts.on("--hospitalized TEXT",
               "Hospitalized? Yes, No, or Unknown.") do |h|
         @options.hospitalized = h
       end
@@ -278,9 +278,9 @@ class TriSanoWebApiCmr < TriSanoWebApi
         @options.lab_result_value = lrv
       end
 
-      opts.on("--lab_result_units UNITS",
+      opts.on("--lab_units UNITS",
               "Lab result units.") do |lru|
-        @options.lab_result_units = lru
+        @options.lab_units = lru
       end
 
       opts.on("--lab_reference_range RANGE",
@@ -293,14 +293,14 @@ class TriSanoWebApiCmr < TriSanoWebApi
         @options.lab_test_status = lts
       end
 
-      opts.on("--lab_speciman_source SOURCE",
-              "Lab speciman source.") do |lss|
-        @options.lab_speciman_source = lss
+      opts.on("--lab_specimen_source SOURCE",
+              "Lab specimen source.") do |lss|
+        @options.lab_specimen_source = lss
       end
 
-      opts.on("--lab_speciman_collection_date DATE",
-              "Lab speciman collection date.") do |cd|
-        @options.lab_speciman_collection_date = cd
+      opts.on("--lab_specimen_collection_date DATE",
+              "Lab specimen collection date.") do |cd|
+        @options.lab_specimen_collection_date = cd
       end
 
       opts.on("--lab_test_date DATE",
@@ -308,9 +308,9 @@ class TriSanoWebApiCmr < TriSanoWebApi
         @options.lab_test_date = ltd
       end
 
-      opts.on("--lab_speciman_sent_to_state TEXT",
+      opts.on("--lab_specimen_sent_to_state TEXT",
               "Sent to state? Yes, No, or Unknown.") do |sts|
-        @options.lab_speciman_sent_to_state = sts
+        @options.lab_specimen_sent_to_state = sts
       end
 
       opts.on("--lab_comment TEXT",
@@ -368,34 +368,19 @@ class TriSanoWebApiCmr < TriSanoWebApi
         @options.contact_telephone_delete = true
       end
 
-      opts.on("--encounter_investigator USERNAME",
-              "Encounter investigator's username.") do |ei|
-        @options.encounter_investigator = ei
-      end
-
-      opts.on("--encounter_date DATE",
-              "Encounter date.") do |ed|
-        @options.encounter_date = ed
-      end
-
-      opts.on("--encounter_location NAME",
-              "Encounter location.") do |el|
-        @options.encounter_location = el
-      end
-
       opts.on("--food_handler TEXT",
               "Food handler? Yes, No, Unknown.") do |fh|
         @options.food_handler = fh
       end
 
-      opts.on("--healthcare_work TEXT",
-              "Healthcare work? Yes, No, Unknown.") do |hw|
-        @options.healthcare_work = fw
+      opts.on("--healthcare_worker TEXT",
+              "Healthcare worker? Yes, No, Unknown.") do |hw|
+        @options.healthcare_worker = hw
       end
 
       opts.on("--group_living TEXT",
               "Group living? Yes, No, Unknown.") do |gl|
-        @options.group_living = fh
+        @options.group_living = gl
       end
 
       opts.on("--day_care_association TEXT",
@@ -407,11 +392,6 @@ class TriSanoWebApiCmr < TriSanoWebApi
               "Occupation name.") do |o|
         @options.occupation = o
       end
-
-      opts.on("--place_date_of_exposure DATE",
-              "Place date of exposure.") do |doe|
-        @options.place_date_of_exposure = doe
-      end 
 
       opts.on("--imported_from TEXT",
               "Imported from.") do |i|
@@ -440,17 +420,12 @@ class TriSanoWebApiCmr < TriSanoWebApi
 
       opts.on("--reporter_first_name NAME",
               "Report first name.") do |rfn|
-        @options.reporter_first_name
+        @options.reporter_first_name = rfn
       end
 
       opts.on("--reporter_last_name NAME",
               "Report last name.") do |rln|
-        @options.reporter_last_name
-      end
-
-      opts.on("--reporter_first_name NAME",
-              "Report first name.") do |rfn|
-        @options.reporter_first_name
+        @options.reporter_last_name = rln
       end
 
       opts.on("--reporter_telephone_area_code CODE",
@@ -511,21 +486,6 @@ class TriSanoWebApiCmr < TriSanoWebApi
       opts.on("--jurisdiction_responsible_for_investigation TEXT",
               "Jurisdiction responsible for investigation.") do |j|
         @options.jurisdiction_responsible_for_investigation = j
-      end
-
-      opts.on("--investigation_started_date DATE",
-              "Investigation started date.") do |isd|
-        @options.investigation_started_date = isd
-      end
-
-      opts.on("--investigation_completed_lhd_date DATE",
-              "Investigation completed by local health department date.") do |lcd|
-        @options.investigation_completed_lhd_date = lcd
-      end
-
-      opts.on("--review_completed_by_state_date DATE",
-              "Review completed by state date.") do |sd|
-        @options.review_completed_by_state_date = sd
       end
 
       opts.on("--acuity",
@@ -788,7 +748,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
       form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
     end
     if !@options.clinician_last_name.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][first_name]'] = @options.clinician_last_name
+      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][last_name]'] = @options.clinician_last_name
       form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
     end
     if !@options.clinician_telephone_entity_location_type.nil?
@@ -812,16 +772,97 @@ class TriSanoWebApiCmr < TriSanoWebApi
     if !@options.clinician_telephone_extension.nil?
       form['morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][extension]'] = @options.clinician_telephone_extension
     end
+    if !@options.lab_name.nil?
+      form['morbidity_event[labs_attributes][3][place_entity_attributes][place_attributes][name]'] = @options.lab_name
+    end
+    if !@options.lab_test_type.nil?
+      found = false
+      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_type_id]').options.each do |s|
+        if s.text == @options.lab_test_type
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Lab test type not found in form' if not found
+    end
+    if !@options.lab_test_result.nil?
+      found = false
+      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_result_id]').options.each do |s|
+        if s.text == @options.lab_test_result
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Lab test result option not found in form' if not found
+    end
+    if !@options.lab_result_value.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][result_value]'] = @options.lab_result_value
+    end
+    if !@options.lab_units.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][units]'] = @options.lab_units
+    end
+    if !@options.lab_reference_range.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][reference_range]'] = @options.lab_reference_range
+    end
+    if !@options.lab_test_status.nil?
+      found = false
+      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_status_id]').options.each do |s|
+        if s.text == @options.lab_test_status
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Lab test status option not found in form' if not found
+    end
+    if !@options.lab_specimen_source.nil?
+      found = false
+      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_source_id]').options.each do |s|
+        if s.text == @options.lab_specimen_source
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Clinician telephone location type not found in form' if not found
+    end
+    if !@options.lab_specimen_collection_date.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][collection_date]'] = @options.lab_specimen_collection_date
+    end
+    if !@options.lab_test_date.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][lab_test_date]'] = @options.lab_test_date
+    end
+    if !@options.lab_specimen_sent_to_state.nil?
+      found = false
+      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_sent_to_state_id]').options.each do |s|
+        if s.text == @options.lab_specimen_sent_to_state
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Lab specimen sent to date option not found in form' if not found
+    end
+    if !@options.lab_comment.nil?
+      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][comment]'] = @options.lab_comment
+    end
     if !@options.contact_first_name.nil?
       form['morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][person_attributes][first_name]'] = @options.contact_first_name
     end
     if !@options.contact_last_name.nil?
       form['morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][person_attributes][last_name]'] = @options.contact_last_name
     end
-    if !@options.disposition.nil?
+    if !@options.contact_disposition.nil?
       found = false
       form.field('morbidity_event[contact_child_events_attributes][4][participations_contact_attributes][disposition_id]').options.each do |s|
-        if s.text == @options.disposition
+        if s.text == @options.contact_disposition
           found = true
           s.select
         else
@@ -862,6 +903,36 @@ class TriSanoWebApiCmr < TriSanoWebApi
     end
     if !@options.contact_telephone_extension.nil?
       form['morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][telephones_attributes][0][extension]'] = @options.contact_telephone_extension
+    end
+    if !@options.encounter_investigator.nil?
+      found = false
+      form.field('morbidity_event[encounter_child_events_attributes][5][participations_encounter_attributes][user_id]').options.each do |s|
+        if s.text == @options.encounter_investigator
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Encounter investigator option not found in form' if not found
+    end
+    if !@options.encounter_date.nil?
+      form['morbidity_event[encounter_child_events_attributes][5][participations_encounter_attributes][encounter_date]'] = @options.encounter_date
+    end
+    if !@options.encounter_location.nil?
+      found = false
+      form.field('morbidity_event[encounter_child_events_attributes][5][participations_encounter_attributes][encounter_location_type]').options.each do |s|
+        if s.text == @options.encounter_location
+          found = true
+          s.select
+        else
+          s.unselect
+        end
+      end
+      raise 'Encounter location type option not found in form' if not found
+    end
+    if !@options.encounter_description.nil?
+      form['morbidity_event[encounter_child_events_attributes][5][participations_encounter_attributes][description]'] = @options.encounter_description
     end
     if !@options.food_handler.nil?
       found = false
@@ -914,9 +985,6 @@ class TriSanoWebApiCmr < TriSanoWebApi
     if !@options.occupation.nil?
       form['morbidity_event[interested_party_attributes][risk_factor_attributes][occupation]'] = @options.occupation
     end
-    if !@options.place_date_of_exposure.nil?
-      form['morbidity_event[place_child_events_attributes][5][participations_place_attributes][date_of_exposure]'] = @options.place_date_of_exposure
-    end
     if !@options.imported_from.nil?
       found = false
       form.field('morbidity_event[imported_from_id]').options.each do |s|
@@ -932,7 +1000,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
     if !@options.risk_factors.nil?
       form['morbidity_event[interested_party_attributes][risk_factor_attributes][risk_factors]'] = @options.risk_factors
     end
-    if !@options.risk_facotors_notes.nil?
+    if !@options.risk_factors_notes.nil?
       form['morbidity_event[interested_party_attributes][risk_factor_attributes][risk_factors_notes]'] = @options.risk_factors_notes
     end
     if !@options.other_data_1.nil?
@@ -989,7 +1057,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
       end
       raise 'State case status not found in form' if not found
     end
-    if !@options.oubreak_associated.nil?
+    if !@options.outbreak_associated.nil?
       found = false
       form.field('morbidity_event[outbreak_associated_id]').options.each do |s|
         if s.text == @options.outbreak_associated
@@ -1018,15 +1086,6 @@ class TriSanoWebApiCmr < TriSanoWebApi
         end
       end
       raise 'Jurisdiction not found in form' if not found
-    end
-    if !@options.investigation_started_date.nil?
-      form['morbidity_event[investigation_started_date]'] = @options.investigation_started_date
-    end
-    if !@options.investigation_completed_lhd_date.nil?
-      form['morbidity_event[investigation_completed_lhd_date]'] = @options.investigation_completed_lhd_date
-    end
-    if !@options.review_completed_by_state_date.nil?
-      form['morbidity_event[review_completed_by_state_date]'] = @options.review_completed_by_state_date
     end
     if !@options.acuity.nil?
       form['morbidity_event[acuity]'] = @options.acuity
