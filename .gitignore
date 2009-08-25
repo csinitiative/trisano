@@ -19,3 +19,7 @@ distro/config.yml
 webapp/config/database.yml
 webapp/config/site_config.yml
 avr/mdr.*
+webapp/public/stylesheets/action.css
+webapp/public/stylesheets/grid.css
+webapp/public/stylesheets/structure.css
+webapp/public/stylesheets/typography.css
