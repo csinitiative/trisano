@@ -9,7 +9,7 @@ class TriSanoWebApiPerson < TriSanoWebApi
     script_name = caller.last.split(':').first
     @opts = OptionParser.new("Usage: #{script_name} [options]", 40, ' ') do |opts|
       opts.separator ""
-      opts.separator "Edit options:"
+      opts.separator "Options:"
 
       if options[:show_id]
         opts.on("--id PERSON_ID",
