@@ -18,7 +18,7 @@
 
 = link_to h('<< Back'), staged_messages_path 
 
-- form_for(@staged_message) do |f|
+- form_for(@staged_message, :html => { :name => 'new_staged_message' }) do |f|
   = f.error_messages
 
   = render :partial => 'form', :locals => {:f => f}

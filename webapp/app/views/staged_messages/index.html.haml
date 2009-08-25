@@ -16,7 +16,7 @@
 - content_for :title do
   Staged Messages
 
-= link_to 'Create a staged message', new_staged_message_path if User.current_user.is_entitled_to?(:write_staged_message)
+= link_to('Create a staged message', new_staged_message_path, :rel => "http://trisano.org/relation/staged_messages_new") if User.current_user.is_entitled_to?(:write_staged_message)
 
 - form_tag(staged_messages_url, :style => "display: inline", :method => :get) do
   = select_tag("message_state", options_for_select(StagedMessage.states.values, @selected), :id => 'message_state', :onchange => "this.form.submit();", :style => "position: absolute; right: 0px")

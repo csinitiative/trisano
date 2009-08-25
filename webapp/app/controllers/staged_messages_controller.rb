@@ -56,7 +56,7 @@ class StagedMessagesController < ApplicationController
         format.html { redirect_to(@staged_message) }
         format.hl7  { head :created, :location => @staged_message }
       else
-        format.html { render :action => "new" }
+        format.html { render :action => "new", :status => :bad_request }
         format.hl7  { head :unprocessable_entity }
       end
     end

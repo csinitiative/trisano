@@ -65,7 +65,7 @@
             - can_manage_staging_area = User.current_user.is_entitled_to?(:manage_staged_message)
             - can_write_staged_message = User.current_user.is_entitled_to?(:write_staged_message)
             - if can_manage_staging_area || can_write_staged_message
-              = link_to 'STAGING AREA', staged_messages_path
+              = link_to 'STAGING AREA', staged_messages_path, :rel => "http://trisano.org/relation/staged_messages"
               |
 
             - if User.current_user.is_entitled_to?(:view_event)
