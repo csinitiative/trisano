@@ -164,18 +164,18 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id)
+        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id)
+        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id)
+        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec IS NULL)
     INNER JOIN (
         SELECT
             part.primary_entity_id
         FROM
             participations part
             INNER JOIN events
-                ON (events.id = part.event_id)
+                ON (events.id = part.event_id AND events.deleted_at IS NULL)
         WHERE
             part.type = 'InterestedParty' AND
             events.type = 'MorbidityEvent'
@@ -212,18 +212,18 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id)
+        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id)
+        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec IS NULL)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id)
+        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec IS NULL)
     INNER JOIN (
         SELECT
             part.primary_entity_id
         FROM
             participations part
             INNER JOIN events
-                ON (events.id = part.event_id)
+                ON (events.id = part.event_id AND events.deleted_at IS NULL)
         WHERE
             part.type = 'InterestedParty' AND
             events.type = 'ContactEvent'
@@ -260,18 +260,18 @@ SELECT
 FROM
     people
     LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id)
+        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
     LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id)
+        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
     LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id)
+        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
     INNER JOIN (
         SELECT
             part.primary_entity_id
         FROM
             participations part
             INNER JOIN events
-                ON (events.id = part.event_id)
+                ON (events.id = part.event_id AND events.deleted_at IS NULL)
         WHERE
             part.type = 'InterestedParty' AND
             events.type = 'EncounterEvent'
@@ -379,17 +379,17 @@ FROM events
     LEFT JOIN participations_risk_factors prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
-        ON (pplpart.primary_entity_id = pplent.id)
+        ON (pplpart.primary_entity_id = pplent.id AND pplent.deleted_at IS NULL)
     LEFT JOIN people ppl
         ON (ppl.entity_id = pplent.id)
     LEFT JOIN external_codes ifi
         ON (events.imported_from_id = ifi.id)
     LEFT JOIN external_codes scsi
-        ON (events.state_case_status_id = scsi.id)
+        ON (events.state_case_status_id = scsi.id AND scsi.deleted_at IS NULL)
     LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id)
+        ON (events.outbreak_associated_id = oaci.id AND oaci.deleted_at IS NULL)
     LEFT JOIN external_codes lcsi
-        ON (events.lhd_case_status_id = lcsi.id)
+        ON (events.lhd_case_status_id = lcsi.id AND lcsi.deleted_at IS NULL)
     LEFT JOIN users inv
         ON (events.investigator_id = inv.id)
     LEFT JOIN disease_events disev
@@ -397,43 +397,44 @@ FROM events
     LEFT JOIN diseases ds
         ON (disev.disease_id = ds.id)
     LEFT JOIN external_codes disevhosp
-        ON (disevhosp.id = disev.hospitalized_id)
+        ON (disevhosp.id = disev.hospitalized_id AND disevhosp.deleted_at IS NULL)
     LEFT JOIN external_codes disevdied
-        ON (disevdied.id = disev.died_id)
+        ON (disevdied.id = disev.died_id AND disevdied.deleted_at IS NULL)
     LEFT JOIN participations pa
         ON (pa.event_id = events.id)
     LEFT JOIN places ijpl
         ON (ijpl.entity_id = pa.secondary_entity_id)
     LEFT JOIN external_codes fhec
-        ON (prf.food_handler_id = fhec.id)
+        ON (prf.food_handler_id = fhec.id AND fhec.deleted_at IS NULL)
     LEFT JOIN external_codes hcwec
-        ON (hcwec.id = prf.healthcare_worker_id)
+        ON (hcwec.id = prf.healthcare_worker_id AND hcwec.deleted_at IS NULL)
     LEFT JOIN external_codes glec
-        ON (glec.id = prf.group_living_id)
+        ON (glec.id = prf.group_living_id AND glec.deleted_at IS NULL)
     LEFT JOIN external_codes dcaec
-        ON (dcaec.id = prf.day_care_association_id)
+        ON (dcaec.id = prf.day_care_association_id AND dcaec.deleted_at IS NULL)
     LEFT JOIN external_codes pregec
-        ON (pregec.id = prf.pregnant_id)
+        ON (pregec.id = prf.pregnant_id AND pregec.deleted_at IS NULL)
     LEFT JOIN addresses pataddr
         ON (pataddr.event_id = events.id)
     LEFT JOIN external_codes jorec
-        ON (jorec.id = pataddr.county_id)
+        ON (jorec.id = pataddr.county_id AND jorec.deleted_at IS NULL)
     LEFT JOIN places jorpl
         ON (jorpl.entity_id = jorec.jurisdiction_id)
     LEFT JOIN external_codes stateec
-        ON (stateec.id = pataddr.state_id)
+        ON (stateec.id = pataddr.state_id AND stateec.deleted_at IS NULL)
     LEFT JOIN external_codes agetypeec
-        ON (agetypeec.id = events.age_type_id)
+        ON (agetypeec.id = events.age_type_id AND agetypeec.deleted_at IS NULL)
     LEFT JOIN external_codes est_ec
-        ON (est_ec.id = ppl.age_type_id)
+        ON (est_ec.id = ppl.age_type_id AND est_ec.deleted_at IS NULL)
     LEFT JOIN participations_contacts partcon
         ON (partcon.id = events.participations_contact_id)
     LEFT JOIN external_codes partcon_disp_ec
-        ON (partcon.disposition_id = partcon_disp_ec.id)
+        ON (partcon.disposition_id = partcon_disp_ec.id AND partcon_disp_ec.deleted_at IS NULL)
     LEFT JOIN external_codes partcon_cont_ec
-        ON (partcon.contact_type_id = partcon_cont_ec.id)
+        ON (partcon.contact_type_id = partcon_cont_ec.id AND partcon_cont_ec.deleted_at IS NULL)
 WHERE
     events.type = 'MorbidityEvent' AND
+    events.deleted_at IS NULL AND
     pa.type = 'Jurisdiction' AND
     pplpart.secondary_entity_id IS NULL AND
     pplpart.type = 'InterestedParty'
@@ -552,17 +553,17 @@ FROM events
     LEFT JOIN participations_risk_factors prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
-        ON (pplpart.primary_entity_id = pplent.id)
+        ON (pplpart.primary_entity_id = pplent.id AND pplent.deleted_at IS NULL)
     LEFT JOIN people ppl
         ON (ppl.entity_id = pplent.id)
     LEFT JOIN external_codes ifi
-        ON (events.imported_from_id = ifi.id)
+        ON (events.imported_from_id = ifi.id AND ifi.deleted_at IS NULL)
     LEFT JOIN external_codes scsi
-        ON (events.state_case_status_id = scsi.id)
+        ON (events.state_case_status_id = scsi.id AND scsi.deleted_at IS NULL)
     LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id)
+        ON (events.outbreak_associated_id = oaci.id AND oaci.deleted_at IS NULL)
     LEFT JOIN external_codes lcsi
-        ON (events.lhd_case_status_id = lcsi.id)
+        ON (events.lhd_case_status_id = lcsi.id AND lcsi.deleted_at IS NULL)
     LEFT JOIN users inv
         ON (events.investigator_id = inv.id)
     LEFT JOIN disease_events disev
@@ -570,43 +571,44 @@ FROM events
     LEFT JOIN diseases ds
         ON (disev.disease_id = ds.id)
     LEFT JOIN external_codes disevhosp
-        ON (disevhosp.id = disev.hospitalized_id)
+        ON (disevhosp.id = disev.hospitalized_id AND disevhosp.deleted_at IS NULL)
     LEFT JOIN external_codes disevdied
-        ON (disevdied.id = disev.died_id)
+        ON (disevdied.id = disev.died_id AND disevdied.deleted_at IS NULL)
     LEFT JOIN participations pa
         ON (pa.event_id = events.id)
     LEFT JOIN places ijpl
         ON (ijpl.entity_id = pa.secondary_entity_id)
     LEFT JOIN external_codes fhec
-        ON (prf.food_handler_id = fhec.id)
+        ON (prf.food_handler_id = fhec.id AND fhec.deleted_at IS NULL)
     LEFT JOIN external_codes hcwec
-        ON (hcwec.id = prf.healthcare_worker_id)
+        ON (hcwec.id = prf.healthcare_worker_id AND hcwec.deleted_at IS NULL)
     LEFT JOIN external_codes glec
-        ON (glec.id = prf.group_living_id)
+        ON (glec.id = prf.group_living_id AND glec.deleted_at IS NULL)
     LEFT JOIN external_codes dcaec
-        ON (dcaec.id = prf.day_care_association_id)
+        ON (dcaec.id = prf.day_care_association_id AND dcaec.deleted_at IS NULL)
     LEFT JOIN external_codes pregec
-        ON (pregec.id = prf.pregnant_id)
+        ON (pregec.id = prf.pregnant_id AND pregec.deleted_at IS NULL)
     LEFT JOIN addresses pataddr
         ON (pataddr.event_id = events.id)
     LEFT JOIN external_codes jorec
-        ON (jorec.id = pataddr.county_id)
+        ON (jorec.id = pataddr.county_id AND jorec.deleted_at IS NULL)
     LEFT JOIN places jorpl
         ON (jorpl.entity_id = jorec.jurisdiction_id)
     LEFT JOIN external_codes stateec
-        ON (stateec.id = pataddr.state_id)
+        ON (stateec.id = pataddr.state_id AND stateec.deleted_at IS NULL)
     LEFT JOIN external_codes agetypeec
-        ON (agetypeec.id = events.age_type_id)
+        ON (agetypeec.id = events.age_type_id AND agetypeec.deleted_at IS NULL)
     LEFT JOIN external_codes est_ec
-        ON (est_ec.id = ppl.age_type_id)
+        ON (est_ec.id = ppl.age_type_id AND est_ec.deleted_at IS NULL)
     LEFT JOIN participations_contacts partcon
         ON (partcon.id = events.participations_contact_id)
     LEFT JOIN external_codes partcon_disp_ec
-        ON (partcon.disposition_id = partcon_disp_ec.id)
+        ON (partcon.disposition_id = partcon_disp_ec.id AND partcon_disp_ec.deleted_at IS NULL)
     LEFT JOIN external_codes partcon_cont_ec
-        ON (partcon.contact_type_id = partcon_cont_ec.id)
+        ON (partcon.contact_type_id = partcon_cont_ec.id AND partcon_cont_ec.deleted_at IS NULL)
 WHERE
     events.type = 'ContactEvent' AND
+    events.deleted_at IS NULL AND
     pa.type = 'Jurisdiction' AND
     pplpart.secondary_entity_id IS NULL AND
     pplpart.type = 'InterestedParty'
@@ -666,6 +668,7 @@ FROM
         ON (pl.entity_id = pr.secondary_entity_id)
 WHERE
     pr.type = 'AssociatedJurisdiction' AND
+    events.deleted_at IS NULL AND
     (
         events.type = 'ContactEvent' OR
         events.type = 'MorbidityEvent'
@@ -706,7 +709,8 @@ FROM
     JOIN hospitals_participations hpart
         ON (hpart.participation_id = p.id)
 WHERE
-    p.type = 'HospitalizationFacility'
+    p.type = 'HospitalizationFacility' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_events_hospitals
@@ -757,25 +761,25 @@ FROM
     LEFT JOIN staged_messages sm
         ON (sm.id = lr.staged_message_id)
     LEFT JOIN external_codes tsec
-        ON (tsec.id = lr.test_status_id)
+        ON (tsec.id = lr.test_status_id AND tsec.deleted_at IS NULL)
     LEFT JOIN external_codes trec
-        ON (trec.id = lr.test_result_id)
+        ON (trec.id = lr.test_result_id AND trec.deleted_at IS NULL)
     LEFT JOIN common_test_types ctt
         ON (ctt.id = lr.test_type_id)
     LEFT JOIN external_codes ssec
-        ON (ssec.id = lr.specimen_source_id)
+        ON (ssec.id = lr.specimen_source_id AND ssec.deleted_at IS NULL)
     LEFT JOIN external_codes uphlec
-        ON (uphlec.id = lr.specimen_sent_to_state_id)
+        ON (uphlec.id = lr.specimen_sent_to_state_id AND uphlec.deleted_at IS NULL)
     LEFT JOIN participations p
         ON (p.id = lr.participation_id)
     LEFT JOIN events
-        ON (p.event_id = events.id)
+        ON (p.event_id = events.id AND events.deleted_at IS NULL)
     LEFT JOIN places
         ON (places.entity_id = p.secondary_entity_id)
     LEFT JOIN places_types pt
         ON (pt.place_id = places.id)
     LEFT JOIN codes c
-        ON (c.id = pt.type_id)
+        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 ;
 
 ALTER TABLE dw_lab_results
@@ -795,7 +799,7 @@ SELECT
 FROM
     people_races pr
     LEFT JOIN external_codes ex
-        ON (pr.race_id = ex.id)
+        ON (pr.race_id = ex.id AND ex.deleted_at IS NULL)
     LEFT JOIN people p
         ON (p.entity_id = pr.entity_id)
 ;
@@ -829,9 +833,9 @@ FROM
     LEFT JOIN participations p
         ON (p.id = pt.participation_id)
     LEFT JOIN events
-        ON (events.id = p.event_id)
+        ON (events.id = p.event_id AND events.deleted_at IS NULL)
     LEFT JOIN external_codes tgec
-        ON (tgec.id = pt.treatment_given_yn_id)
+        ON (tgec.id = pt.treatment_given_yn_id AND tgec.deleted_at IS NULL)
 ;
 
 ALTER TABLE dw_events_treatments
@@ -859,7 +863,8 @@ FROM
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
-    p.type = 'Clinician'
+    p.type = 'Clinician' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_morbidity_clinicians
@@ -881,7 +886,8 @@ FROM
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
-    p.type = 'Clinician'
+    p.type = 'Clinician' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_contact_clinicians
@@ -914,9 +920,10 @@ FROM
     JOIN places_types pt
         ON (pt.place_id = pl.id)
     JOIN codes c
-        ON (c.id = pt.type_id)
+        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 WHERE
-    p.type = 'DiagnosticFacility'
+    p.type = 'DiagnosticFacility' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_events_diagnostic_facilities
@@ -953,9 +960,10 @@ FROM
     JOIN places_types pt
         ON (pt.place_id = pl.id)
     JOIN codes c
-        ON (c.id = pt.type_id)
+        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 WHERE
-    p.type = 'ReportingAgency'
+    p.type = 'ReportingAgency' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_events_reporting_agencies
@@ -988,7 +996,8 @@ FROM
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
 WHERE
-    p.type = 'Reporter'
+    p.type = 'Reporter' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_events_reporters
@@ -1018,9 +1027,9 @@ FROM
     LEFT JOIN addresses ad
         ON (ad.event_id = events.id)
     LEFT JOIN external_codes state_ec
-        ON (state_ec.id = ad.state_id)
+        ON (state_ec.id = ad.state_id AND state_ec.deleted_at IS NULL)
     LEFT JOIN external_codes county_ec
-        ON (county_ec.id = ad.county_id)
+        ON (county_ec.id = ad.county_id AND county_ec.deleted_at IS NULL)
     JOIN participations part
         ON (part.event_id = events.id AND part.type = 'InterestedPlace')
     JOIN places p
@@ -1028,9 +1037,10 @@ FROM
     LEFT JOIN places_types pt
         ON (pt.place_id = p.id)
     LEFT JOIN codes c
-        ON (c.id = pt.type_id)
+        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 WHERE
-    events.type = 'PlaceEvent'
+    events.type = 'PlaceEvent' AND
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_place_events
@@ -1049,7 +1059,7 @@ SELECT
 FROM
     participations_encounters pe
     JOIN events
-        ON (events.participations_encounter_id = pe.id)
+        ON (events.participations_encounter_id = pe.id AND events.deleted_at IS NULL)
     JOIN users u
         ON (pe.user_id = u.id)
 ;
@@ -1095,7 +1105,7 @@ FROM
     LEFT JOIN participations p
         ON (p.id = pt.participation_id)
     LEFT JOIN events
-        ON (events.id = p.event_id)
+        ON (events.id = p.event_id AND events.deleted_at IS NULL)
 WHERE
     events.type = 'EncounterEvent'
 ;
@@ -1120,7 +1130,7 @@ FROM
             INNER JOIN answers a
                 ON (a.question_id = questions.id)
             INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'MorbidityEvent')
+                ON (a.event_id = e.id AND e.type = 'MorbidityEvent' AND e.deleted_at IS NULL)
     ) f
         ON (f.id = q.id)
 ;
@@ -1143,7 +1153,7 @@ FROM
             INNER JOIN answers a
                 ON (a.question_id = questions.id)
             INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'ContactEvent')
+                ON (a.event_id = e.id AND e.type = 'ContactEvent' AND e.deleted_at IS NULL)
     ) f
         ON (f.id = q.id)
 ;
@@ -1166,7 +1176,7 @@ FROM
             INNER JOIN answers a
                 ON (a.question_id = questions.id)
             INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'EncounterEvent')
+                ON (a.event_id = e.id AND e.type = 'EncounterEvent' AND e.deleted_at IS NULL)
     ) f
         ON (f.id = q.id)
 ;
@@ -1189,7 +1199,7 @@ FROM
             INNER JOIN answers a
                 ON (a.question_id = questions.id)
             INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'PlaceEvent')
+                ON (a.event_id = e.id AND e.type = 'PlaceEvent' AND e.deleted_at IS NULL)
     ) f
         ON (f.id = q.id)
 ;
@@ -1205,7 +1215,7 @@ SELECT
 FROM
     answers a
     INNER JOIN events e
-        ON (e.id = a.event_id)
+        ON (e.id = a.event_id AND e.deleted_at IS NULL)
 WHERE
     e.type = 'MorbidityEvent'
 ;
@@ -1223,7 +1233,7 @@ SELECT
 FROM
     answers a
     INNER JOIN events e
-        ON (e.id = a.event_id)
+        ON (e.id = a.event_id AND e.deleted_at IS NULL)
 WHERE
     e.type = 'ContactEvent'
 ;
@@ -1241,7 +1251,7 @@ SELECT
 FROM
     answers a
     INNER JOIN events e
-        ON (e.id = a.event_id)
+        ON (e.id = a.event_id AND e.deleted_at IS NULL)
 WHERE
     e.type = 'EncounterEvent'
 ;
@@ -1259,7 +1269,7 @@ SELECT
 FROM
     answers a
     INNER JOIN events e
-        ON (e.id = a.event_id)
+        ON (e.id = a.event_id AND e.deleted_at IS NULL)
 WHERE
     e.type = 'PlaceEvent'
 ;

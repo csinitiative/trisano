@@ -18,13 +18,16 @@
 BEGIN;
 CREATE SCHEMA trisano;
 ALTER SCHEMA trisano OWNER TO trisano_su;
+COMMIT;
+
+BEGIN;
 CREATE SCHEMA population;
 ALTER SCHEMA population OWNER TO trisano_su;
-END;
+COMMIT;
 
 BEGIN;
 CREATE LANGUAGE plpgsql;
-END;
+COMMIT;
 
 BEGIN;
 -- NOTE: Adjust this user to the DEST_DB_USER 
