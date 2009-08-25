@@ -53,7 +53,7 @@ module UsersHelper
 
   def link_to_toggle_sort_tools(text)
     link_to_function text, nil do |page|
-      page.visual_effect :toggle_blind, 'sort-tools'
+      page.visual_effect :toggle_blind, 'sort-tools', :duration => 0.2
     end
   end
 
