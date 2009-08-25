@@ -1,81 +1,57 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'mechanize'
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
+require 'trisano-web-api.rb'
+require 'optparse'
 
-def submit(form)
-  begin
-    result = form.submit
-  rescue WWW::Mechanize::ResponseCodeError => response_error
-    local_errors = []
-    errors = response_error.page.search(".//div[@class = 'errorExplanation']")
-    errors.each { |e|
-      e.search(".//li").each { |detail|
-        local_errors << detail.text.strip
-      }
-    }
-    e = StagedMessageException.new
-    e.errors = local_errors
-    raise e
-  end
+opts = OptionParser.new do |opts|
+  script_name = caller.last.split(':').first
+  opts.banner = "Usage: #{script_name} [FILE]...\nPost FILE(s) contents or standard input as staged messages to TriSano"
+  # There are no switches, just a list of file names or stading.  Like cat.
+  opts.on("", "STDIN or list of file names containing linefeed separated HL7 messages")
 end
 
-class StagedMessageException < RuntimeError
-  @errors = []
-
-  def errors
-    @errors
-  end
-
-  def errors=(e)
-    @errors = e
-  end
+begin
+  opts.parse!
+rescue OptionParser::InvalidOption => e
+  puts e
+  puts opts
+  exit 1
 end
 
-hl7_message_good = <<HL7_MSG_GOOD
-MSH|^~\&|TRISANO|TRISANO LABS^46D0523979^CLIA|NYDOH|NY|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||JONES^JOHN^^^^^L||19840810|M||U^Unknown^HL70005|1007 FLATBUSH AVE^^BROOKLYN^NY^11234^^M||^^PH^^^718^1234567|||||||||U^Unknown^HL70189\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^ROSENKOETTER^YUKI^K||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
-HL7_MSG_GOOD
-
-hl7_message_bad = <<HL7_MSG_BAD  # No LOINC code
-MSH|^~\&|TRISANO|TRISANO LABS^46D0523979^CLIA|NYDOH|NY|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||JONES^JOHN^^^^^L||19840810|M||U^Unknown^HL70005|1007 FLATBUSH AVE^^BROOKLYN^NY^11234^^M||^^PH^^^718^1234567|||||||||U^Unknown^HL70189\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^ROSENKOETTER^YUKI^K||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
-HL7_MSG_BAD
-
-agent = WWW::Mechanize.new
+trisano_agent = TriSanoWebApi.new
 
 # Goto TriSano home page.  This is the only URL the client should be externally aware of
-base_url = ENV['TRISANO_BASE_URL'] || raise('Missing TRISANO_BASE_URL environment variable')
-home_page = agent.get(base_url)
+home_page = trisano_agent.home
 
 # Goto the "staged messages" page pointed to by the link with a 'rel' attribute of: http://trisano.org/relation/staged_messages
 # That attribute name will never change and is formally part of the API.
-message_page = agent.get(base_url + home_page.at("//a[@rel='http://trisano.org/relation/staged_messages']")['href'])
+message_page = trisano_agent.get(home_page.at("//a[@rel='http://trisano.org/relation/staged_messages']")['href'])
 
 # Goto the "new staged message" page by following the link with the 'rel' attribute: http://trisano.org/relation/staged_messages_new
 # That attribute name will never change and is formally part of the API.
-new_message_page = agent.get(base_url + new_staged_messages_link = message_page.at("//a[@rel='http://trisano.org/relation/staged_messages_new']")['href'])
+new_message_page = trisano_agent.get(new_staged_messages_link = message_page.at("//a[@rel='http://trisano.org/relation/staged_messages_new']")['href'])
 
-# Find the form with the ID 'new_staged_message'. This form ID will never change and is formally part of the API.
 # Note, form names and field names are subject to change.  Always work with IDs.
-form_name = new_message_page.at("form#new_staged_message")['name']
-hl7_form = new_message_page.form(form_name)
 
-# Populate the field with the ID 'staged_message_hl7_message' with an HL7 message.  This field name will never change and is formally part of the API.
+# Find the form with the ID 'new_staged_message' and retrieve the 'action' attribute. 
+# This form ID will never change and is formally part of the API.
+form_action = new_message_page.at("form#new_staged_message")['action']
+
+# find the field with the ID 'staged_message_hl7_message' in the form
+# This field ID will never change and is formally part of the API.
 field_name = new_message_page.at("form#new_staged_message textarea#staged_message_hl7_message")['name']
-hl7_form[field_name] = hl7_message_good
 
-# Send form to server
-begin
-  submit(hl7_form)
-rescue StagedMessageException => e
-  e.errors.each {|e| puts e}
-end
-
-# No need to repeat all the find steps to send another message
-hl7_form[field_name] = hl7_message_bad
-begin
-  submit(hl7_form)
-rescue StagedMessageException => e
-  e.errors.each {|e| puts e}
+# Get HL7 messaged from STDIN or named files
+ARGF.readlines.each_with_index do |msg, i|
+  j = i + 1
+  puts "Processing message #{j}"
+  begin
+    trisano_agent.post(form_action, {field_name => msg})
+  rescue TrisanoWebError => e
+    puts "Message number #{j} could not be processed due to the following errors:"
+    e.errors.each {|e| puts "\t* #{e}"}
+  end
 end
 
 exit 0

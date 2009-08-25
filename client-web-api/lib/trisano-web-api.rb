@@ -1,6 +1,13 @@
 require 'rubygems'
 require 'mechanize'
 
+class TrisanoWebError < StandardError
+  @errors = []
+
+  attr_accessor :errors
+  attr_accessor :response_code
+end
+
 class TriSanoWebApi 
   attr_accessor :agent
 
@@ -29,24 +36,47 @@ class TriSanoWebApi
     
   end
 
+  def home
+    @agent.get(@base_url)
+  end
+
   def get(uri)
     @agent.get(@base_url + uri)
   end
 
-  def post(uri)
-    @agent.post(@base_url + uri)
+  def post(uri, query)
+    http_action { @agent.post(@base_url + uri, query) }
   end
 
   def delete(uri)
-    @agent.delete(@base_url + uri)
+    http_action { @agent.delete(@base_url + uri) }
   end
 
-  def put(uri)
-    @agent.put(@base_url + uri)
+  def put(uri, query)
+    http_action { @agent.put(@base_url + uri, query) }
   end
 
   def submit(form, button)
-    @agent.submit(form, button)
+    http_action { @agent.submit(form, button) }
   end
 
+  private
+
+  def http_action
+    begin
+      yield
+    rescue WWW::Mechanize::ResponseCodeError => response_error
+      local_errors = []
+      errors = response_error.page.search(".//div[@class = 'errorExplanation']")
+      errors.each { |e|
+        e.search(".//li").each { |detail|
+          local_errors << detail.text.strip
+        }
+      }
+      e = TrisanoWebError.new
+      e.errors = local_errors
+      e.response_code = response_error.response_code
+      raise e
+    end
+  end
 end
