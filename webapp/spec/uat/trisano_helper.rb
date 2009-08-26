@@ -191,19 +191,18 @@ module TrisanoHelper
     browser.click 'link=EVENTS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
-        browser.is_text_present("Existing Reports") and
         browser.is_element_present("link=EVENTS"))
   end
   
   def click_nav_search(browser)
     browser.click 'link=SEARCH'
     browser.wait_for_page_to_load($load_time)
-    return (browser.is_element_present("link=People Search") and
-        browser.is_element_present("link=Event Search"))  
+    return browser.is_text_present("Event Search")
   end
   
   def click_nav_forms(browser)
-    browser.click 'link=FORMS'
+    click_nav_admin(browser)
+    browser.click 'link=Manage Forms'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("Form Information") and
         browser.is_text_present("Diseases") and

@@ -29,7 +29,6 @@ require File.dirname(__FILE__) + '/spec_helper'
       @browser.is_text_present('NEW CMR').should be_true
       @browser.is_text_present('SEARCH').should be_true
       @browser.is_text_present('ADMIN').should be_true
-      @browser.is_text_present('FORMS').should be_true
     end
     
     it 'should have a logo on the home page' do
@@ -50,18 +49,9 @@ require File.dirname(__FILE__) + '/spec_helper'
     it 'should navigate successfully to the Admin page' do
       click_nav_admin(@browser).should be_true
     end
-    
-    it 'should navigate successfully to the People Search page' do
-      click_nav_search(@browser).should be_true
-      @browser.click 'link=People Search'
-      @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present('People Search').should be_true
-    end
-    
+
     it 'should navigate successfully to the Event Search page' do
       click_nav_search(@browser).should be_true
-      @browser.click 'link=Event Search'
-      @browser.wait_for_page_to_load($load_time)
       @browser.is_text_present('Event Search').should be_true
     end
     
