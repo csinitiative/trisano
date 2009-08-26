@@ -40,7 +40,7 @@ class Participation < ActiveRecord::Base
 
   def copy_canonical_address
     canonical_address = primary_entity.canonical_address
-    unless canonical_address.nil?
+    if (!canonical_address.nil? && event.address.nil?)
       primary_entity.addresses.create({
           :event_id => event_id,
           :street_number => canonical_address.street_number,
