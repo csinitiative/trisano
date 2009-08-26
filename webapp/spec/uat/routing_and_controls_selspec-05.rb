@@ -292,7 +292,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     @browser.open "/trisano/cmrs"
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=Enterics-UtahCounty"
+    @browser.add_selection "//select[@id='queues_selector']", "label=Enterics-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -300,7 +300,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should_not be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=JoeInvestigator-SummitCounty"
+    @browser.add_selection "//select[@id='queues_selector']", "label=JoeInvestigator-SummitCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -309,7 +309,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     # By state
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='states_']", "label=New"
+    @browser.add_selection "//select[@id='states_selector']", "label=New"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -317,7 +317,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.is_text_present(@person_2).should be_true
 
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='states_']", "label=Assigned to Investigator"
+    @browser.add_selection "//div[@id='change_view']//select[@id='states_selector']", "label=Assigned to Investigator"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
@@ -327,8 +327,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "link=Change View"
 
     # By state and queue
-    @browser.add_selection "//div[@id='change_view']//select[@id='states_']", "label=New"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=Enterics-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='states_selector']", "label=New"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_selector']", "label=Enterics-UtahCounty"
     @browser.click "set_as_default_view"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
@@ -338,7 +338,7 @@ describe 'Sytem functionality for routing and workflow' do
 
     # By investigator
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='investigators_']", "label=#{@uname}"
+    @browser.add_selection "//div[@id='change_view']//select[@id='investigators_selector']", "label=#{@uname}"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 

@@ -83,9 +83,9 @@ module TrisanoAdminHelper
   
   def add_role(browser, role_attributes, index = 1)
     browser.click "link=Add Role"
-    sleep(1)
-    browser.select("//div[@id='role_memberships']//div[@class='formname'][1]//select[contains(@id, 'role_id')]", "label=#{role_attributes[:role]}")
-    browser.select("//div[@id='role_memberships']//div[@class='formname'][1]//select[contains(@id, 'jurisdiction')]", "label=#{role_attributes[:jurisdiction]}")
+    browser.wait_for_element "user_role_membership_attributes__jurisdiction_id"
+    browser.select "user_role_membership_attributes__role_id", "label=#{role_attributes[:role]}"
+    browser.select "user_role_membership_attributes__jurisdiction_id", "label=#{role_attributes[:jurisdiction]}"
   end
 
   # Entity management helpers

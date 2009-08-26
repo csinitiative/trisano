@@ -240,7 +240,7 @@ module EventsHelper
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
-        Brief note: #{text_field_tag("h(morbidity_event[note])", '')}
+        Brief note: #{text_field_tag("morbidity_event[note]", '')}
       ]
       controls += "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
       controls += routing_controls
