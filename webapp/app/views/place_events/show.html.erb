@@ -66,14 +66,17 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="place_tab">
       <%= render :partial => "events/places/show", :locals => { :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Place" } %>
+      <br clear="all"/>
     </div>
   
     <div id="investigation_tab">
       <%= render :partial => "events/investigation_show_tab" %>
+      <br clear="all"/>
     </div>
 
     <div id="notes_tab">
       <%= render :partial => "events/notes_show_tab" %>
+      <br clear="all"/>
     </div>
   <% end %>
 <% end %>

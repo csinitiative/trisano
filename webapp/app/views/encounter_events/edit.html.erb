@@ -60,23 +60,32 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <div id="encounter_tab">
       <%= render :partial => "encounter_edit_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Encounter" } %>
+      <br clear="all"/>
     </div>
     <div id="clinical_tab">
       <p>
         <%= render :partial => 'clinical_edit_tab', :locals => { :f => event_form } %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
+        <br clear="all"/>
       </p>
     </div>
     <div id="lab_info_tab">
       <p>
         <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form, :event => @event } %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
+        <br clear="all"/>
       </p>
     </div>
-    <div id="investigation_tab"><p><%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %></p></div>
+    <div id="investigation_tab">
+      <p>
+        <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
+        <br clear="all"/>
+      </p>
+    </div>
     <div id="notes_tab">
       <p>
         <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+        <br clear="all"/>
       </p>
     </div>
   <% end %>
