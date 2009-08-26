@@ -56,7 +56,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       
         <%- blank_hospital = HospitalizationFacility.new %>
         <%- blank_hospital.build_hospitals_participation %>
-        <p style="clear: both;"> <%= add_record_link f, :hospitalization_facilities, "Add a Hospital", :object => blank_hospital, :partial => 'events/hospital' %></p>
+        <p style="clear: both;"> <%= add_record_link f, :hospitalization_facilities, "Add a Hospitalization Facility", :object => blank_hospital, :partial => 'events/hospital' %></p>
       <% end %>
     </fieldset>
 

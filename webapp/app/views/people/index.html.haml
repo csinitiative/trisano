@@ -18,6 +18,10 @@
 - content_for :tools_two do
   = button_to("Create new person", {:action => "new"}, { :method => :get })
 
+- content_for :tools do
+  = link_to '&lt; Clear Search Criteria', people_path
+  %p
+
 - form_tag people_path, :method => :get do
   %span.horiz
     = label_tag :last_name

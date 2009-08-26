@@ -23,7 +23,7 @@
         to the current event. 
         %br
         %b Copies demographic information only.
-      = button_to("Create & Edit Shallow Copy", cmrs_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
+      = button_to("Create and Edit Shallow Copy", cmrs_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
     %fieldset.form
       %legend Deep Copy
       %p

@@ -176,7 +176,7 @@ class Person < ActiveRecord::Base
       order_by_clause = " last_name, first_name ASC" if order_by_clause.blank?
 
       if !options[:birth_date].blank?
-        where_clause << " AND birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint
+        where_clause << " AND ( birth_date IS NULL OR birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint + " )"
       end
 
       unless options[:show_deleted]
