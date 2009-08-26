@@ -278,8 +278,6 @@ module TrisanoHelper
 
   def navigate_to_cmr_search(browser)
     click_nav_search(browser)
-    @browser.click('link=Event Search')
-    @browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Name Criteria"))
   end
 

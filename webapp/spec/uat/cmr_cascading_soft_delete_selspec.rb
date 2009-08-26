@@ -21,7 +21,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  # $dont_kill_browser = true
 
 describe 'Soft deleting events' do
-  
+
   before(:all) do
     @cmr_last_name = get_unique_name(1) + " sd-uat"
     @contact_last_name = get_unique_name(1) + " sd-uat"
@@ -33,11 +33,11 @@ describe 'Soft deleting events' do
     @contact_last_name = nil
     @place_name = nil
   end
-  
+
   it "should create a CMR with a contact and a place" do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", @cmr_last_name
+    @browser.type "//input[contains(@id, '_attributes_last_name')]", @cmr_last_name
 
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", @contact_last_name
@@ -49,17 +49,17 @@ describe 'Soft deleting events' do
     @browser.is_text_present(@contact_last_name).should be_true
     @browser.is_text_present(@place_name).should be_true
   end
-  
+
   it "should should soft delete the morbidity event" do
     @browser.click("soft-delete")
-    @browser.get_confirmation()   
+    @browser.get_confirmation()
     @browser.wait_for_page_to_load($load_time)
     @browser.is_text_present("The event was successfully marked as deleted.").should be_true
     @browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('div.patientname-inactive')[0].getStyle('color') == "rgb(204, 204, 204)"}).should eql("true")
   end
-  
+
   it "should should have soft deleted the contact event" do
-    @browser.click("link=Edit contact event")
+    @browser.click("link=Edit")
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Show")
     @browser.wait_for_page_to_load($load_time)
@@ -68,9 +68,7 @@ describe 'Soft deleting events' do
   end
 
   it "should should have soft deleted the place event" do
-    @browser.click("link=#{@cmr_last_name}")
-    @browser.wait_for_page_to_load($load_time)
-    @browser.click("link=Edit place details")
+    @browser.click("link=Edit Place")
     @browser.wait_for_page_to_load($load_time)
     @browser.click("link=Show")
     @browser.wait_for_page_to_load($load_time)
@@ -90,8 +88,9 @@ describe 'Soft deleting events' do
   end
 
   it "should search for deleted people" do
-    navigate_to_people_search(@browser)
-    @browser.type("name", @cmr_last_name)
+    @browser.click "link=NEW CMR"
+    @browser.wait_for_page_to_load
+    @browser.type("last_name", @cmr_last_name)
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load($load_time)
   end
