@@ -677,7 +677,7 @@ class HumanEvent < Event
     end
 
     return if self.interested_party.nil?
-    return unless bdate = self.interested_party.person_entity.person.birth_date
+    return unless bdate = self.interested_party.person_entity.try(:person).try(:birth_date)
     base_errors = {}
 
     self.hospitalization_facilities.each do |hf|

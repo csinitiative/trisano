@@ -213,7 +213,7 @@ class MorbidityEvent < HumanEvent
     super
 
     return if self.interested_party.nil?
-    return unless bdate = self.interested_party.person_entity.person.birth_date
+    return unless bdate = self.interested_party.person_entity.try(:person).try(:birth_date)
     base_errors = {}
 
     self.place_child_events.each do |pce|
