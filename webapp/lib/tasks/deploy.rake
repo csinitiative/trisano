@@ -17,9 +17,8 @@
 
 require 'ftools'
 require 'fileutils'
-# Mechanize 0.8 or 0.9 switched to nokogiri which is not compatible with jruby 1.2.
-# Use 0.7 untile we upgrade to 1.3
-gem 'mechanize', '~> 0.7.6'
+gem 'mechanize', "< 0.8.0"
+require 'mechanize'
 require 'rexml/document'
 require 'rest-open-uri'
 require 'logger'
