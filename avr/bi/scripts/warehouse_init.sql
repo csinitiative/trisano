@@ -702,6 +702,7 @@ BEGIN
 
     tmp := 'DROP SCHEMA IF EXISTS ' || new_schema || ' CASCADE';
     EXECUTE tmp;
+    EXECUTE 'COMMENT ON SCHEMA staging IS ''Holds the actual warehouse data. data dictionary ignore''';
     tmp := 'ALTER SCHEMA staging RENAME TO ' || new_schema;
     EXECUTE tmp;
 
@@ -1492,8 +1493,6 @@ BEGIN
     COMMENT ON VIEW trisano.telephones_view IS 'data dictionary ignore';
     COMMENT ON VIEW trisano.treatments_view IS 'data dictionary ignore';
     COMMENT ON VIEW trisano.users_view IS 'data dictionary ignore';
-    COMMENT ON SCHEMA warehouse_a IS 'Holds the actual warehouse data. data dictionary ignore';
-    COMMENT ON SCHEMA warehouse_b IS 'Holds the actual warehouse data. data dictionary ignore';
 
     UPDATE trisano.current_schema_name SET schemaname = new_schema;
 
